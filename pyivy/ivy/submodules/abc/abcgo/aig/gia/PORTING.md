@@ -409,3 +409,16 @@ packages without tests, GIA567.287s; GIA/opt-fx vet is clean
 The family is closed; GIA's broader audit remains open. Next is giaGen.c's
 simulation/dataset utilities, with a read-only real-XOR word defect already
 characterized for a regression-before-repair.
+
+Simulation/dataset sequential review closes all13 active giaGen.c routines.
+Repair actual XOR/MUX packed-word evaluation after new red regressions; retain
+source ordinary AND behavior and file/RNG contracts. Native/scalar checks
+cover4,608 word configurations,128 dataset configurations plus constant graphs,
+1,536 reader/classifier configurations, boundary/error/ownership cases and all
+source routines. Streaming parameter/file handling removes redundant dataset
+copies; measured tradeoffs are in REVIEW_simulation_datasets.md. All19 final
+focused tests pass22.745s without skips. Frozen full-module race tests pass130
+tested packages plus three commands without tests, GIA601.497s; vet is clean
+(/tmp/abcgo-gen-final-module-race.log, /tmp/abcgo-gen-final-vet.log).
+GIA's broader review remains open. Next is the GIG reader, including a native-
+confirmed shortened-truth Boolean defect to address regression-first.

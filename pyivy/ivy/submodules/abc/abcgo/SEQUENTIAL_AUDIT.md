@@ -8744,3 +8744,47 @@ source gia.h explicitly sets XOR/MUX cost2. Correct the test expectation, not
 the already-correct implementation. Final combined focused rerun is pending;
 freeze and run full module integration only after its terminal result. No full
 family/GIA closure yet; original completion2/131.
+
+### Simulation/dataset focused closure and frozen gate
+
+Exact final focused handle46932 terminates exit0:19 tests pass without skips,
+22.745s (/tmp/abcgo-gen-final-complete-focused.log). This includes every active
+source routine, ordinary and typed packed simulation, full native dataset/
+classification matrices, malformed/EOF/label-only inputs, OR/append behavior,
+constant/no-CI/empty outputs, ownership, repeated sizes and statistics.
+The typed depth expectation now matches explicit source XOR/MUX cost2.
+
+Freeze production/tests/fixtures at9636cb604 for full uncached module race
+handle16690 (/tmp/abcgo-gen-final-module-race.log). GIA vet handle53077 already
+terminates exit0 with an empty log. Full race is still active; no family/GIA
+closure is claimed before its exact terminal result. Read-only next-family
+preparation lives in /tmp/abcgo-gig-next-review-plan.md; all native probes and
+plans stay outside tested files while this gate runs. Original completion2/131.
+
+### Simulation/dataset family frozen integration closure
+
+Exact full-module race handle16690 terminates exit0:130 tested packages pass,
+three command packages have no tests, zero FAIL/DATA RACE records. GIA601.497s,
+ABCI29.709s,BMC24.450s (/tmp/abcgo-gen-final-module-race.log). Exact GIA vet
+handle53077 terminates exit0 with an empty log (/tmp/abcgo-gen-final-vet.log).
+Production/tests/fixtures remained frozen at9636cb604 through both gates.
+All19 final focused tests pass without skips in22.745s.
+
+REVIEW_simulation_datasets.md reconciles all13 active giaGen.c routines,
+regressions-before-repair for actual XOR/MUX words, source/Go boundary
+contracts, native/scalar/RNG/file/report/classification matrices, ownership,
+streaming storage and measured compactness tradeoffs. Close this source family;
+the wider GIA inventory remains open and original package completion stays2/131.
+
+Next giaGig.c preparation stayed read-only and outside tested files during
+this gate. Actual C accepts LUT4[F] over four PIs as constant1 (maskFFFF), but
+Go reads raw15 and returns mask000F, a valid-input Boolean bug. Probes/logs:
+/tmp/abcgo-gig-truth-probe.c/.go, /tmp/abcgo-gig-short-hex-native.log and
+...-go.log. Reuse source util.Abc_TtReadHex after a new red regression, rather
+than inventing truth expansion. Original C separately rejects valid6-input
+LUTs at its erroneous k==4 assertion (line311), so native6-LUT comparison needs
+an explicit narrow correction while preserving that original failure. Go also
+silently accepts a dangling Sel whose parent isPI, which C rejects atline273,
+and suppresses the source success counts/time report. These have native/Go
+probes in/tmp and need new red tests before fixes. Full next plan is
+/tmp/abcgo-gig-next-review-plan.md. No agents/branches, no next-family code edits.

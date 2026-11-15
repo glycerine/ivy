@@ -1888,3 +1888,10 @@ ABCI29.728s,BMC24.133s,opt/fx1.475s. GIA/opt-fx vet is clean. Detailed source,
 regression, native/scalar and ownership evidence is in
 `aig/gia/REVIEW_fast_extraction.md` and `SEQUENTIAL_AUDIT.md`.
 The wider GIA review remains open; original audit completion stays2/131.
+
+Sequential GIA simulation/dataset review closes all13 giaGen.c routines after
+actual-gate word fixes, native file/classification checks and measured streaming
+simplifications. Frozen uncached full-module race tests pass130 tested packages
+plus three commands without tests: GIA601.497s, ABCI29.709s, BMC24.450s; GIA
+vet is clean. See `aig/gia/REVIEW_simulation_datasets.md` and the audit record.
+The wider GIA review remains open; original package audit completion stays2/131.

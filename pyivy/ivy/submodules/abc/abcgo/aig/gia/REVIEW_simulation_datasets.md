@@ -1,4 +1,4 @@
-# Simulation and dataset utility review (in progress)
+# Simulation and dataset utility review
 
 Scope: all 13 active routines in `src/aig/gia/giaGen.c`. Sequential review;
 no agents or branches. The wider GIA audit remains open; original completion
@@ -22,9 +22,9 @@ and vet at fffb6aa97.
    against C. Test malformed files and safe existing Go extensions separately.
 6. [x] Measure and simplify redundant buffering/whole-dataset copies while
    retaining file content, RNG behavior and valid-input contracts.
-7. [ ] Reconcile the complete source inventory, freeze code/tests/fixtures,
-   run uncached full-module race and GIA vet, inspect terminal results and
-   update all progress records before closing the family.
+7. [x] Reconcile all 13 active routines; keep production/tests/fixtures frozen
+   through uncached full-module race testing and GIA vet. Inspect terminal
+   results and update progress records before closing this source family.
 
 ## Evidence so far
 
@@ -138,12 +138,33 @@ One 150ms local before/after benchmark run:
 Logs: `/tmp/abcgo-gen-before-bench.log` and `...-after-bench.log`.
 Tiny PLA output is slightly slower and allocates three more objects. Do not
 claim a uniform speedup from short local observations. The native/scalar format
-and reader matrices pass after storage simplification. Final combined focused
-and full frozen integration gates remain pending.
+and reader matrices pass after storage simplification. The final combined focused suite and frozen full-module integration pass,
+as recorded below.
 
 ## Checkpoints
 
 - d73a89c7c: packed actual-gate repair and regressions.
 - 7fd447184: native dataset/classifier matrices and baseline benchmarks.
 
-These are red checkpoints until full-family integration is verified.
+The code checkpoints use red: until full-family integration is verified.
+- 9636cb604: streamed dataset storage and compatibility/boundary coverage.
+
+## Focused reconciliation and integration gate
+
+All 19 final focused tests pass without skips in 22.745s
+(`/tmp/abcgo-gen-final-complete-focused.log`, exact handle46932 exit0).
+This also includes the existing compiled simulation boundary test. The full
+13-routine source inventory is reconciled above.
+
+Production/tests/fixtures are frozen at9636cb604 for the uncached full-module
+race gate (exact handle16690, `/tmp/abcgo-gen-final-module-race.log`).
+GIA vet handle53077 terminates exit0 with an empty log
+(`/tmp/abcgo-gen-final-vet.log`). Exact full-module race handle16690 now
+terminates exit0: 130 tested packages pass, three command packages have no
+tests, and there are zero FAIL/DATA RACE records. GIA 601.497s, ABCI 29.709s,
+BMC 24.450s. Code/tests/fixtures remained frozen throughout both gates.
+
+Close the simulation/dataset source family. The wider GIA review and original
+131-package goal remain open; completion stays2/131. Next is giaGig.c, with
+read-only native evidence of shortened-truth Boolean loss, selection validation
+and reporting issues. Preparation is in `/tmp/abcgo-gig-next-review-plan.md`.
