@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support and mapped-edge assignment reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment and sequential enable/frame transforms reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -7158,3 +7158,36 @@ and does not close giaCof.c's audit.
 Freeze source, tests and fixtures for full uncached module race tests and GIA vet.
 Family closure awaits those checks; original completion remains 2/131 and GIA
 still has remaining families and final inventory work.
+
+### Sequential enable/frame integration green
+
+Full uncached module race tests pass all 130 tested packages; three command
+packages have no tests (/tmp/abcgo-enable-final-module-race.log). GIA vet passes
+with empty output (/tmp/abcgo-enable-final-vet.log). Source, tests and fixtures
+stayed frozen throughout both checks. Mark giaEnable.c's ten entry points reviewed,
+with native/independent state coverage, red-tested copy/recognition/interface/
+supergate/report repairs, source boundaries and compactness documented in
+REVIEW_sequential_enables.md. The cofactor-report dependency repair is separate;
+giaCof.c remains pending. Other GIA families and final inventory remain incomplete;
+original package completion stays 2/131.
+
+Read-only preparation identifies giaEra.c next, implemented by era_reach.go.
+Existing tests exercise only a small single-register ordinary example. A temporary
+actual-C driver now runs 480 ordinary configurations spanning zero/one/three/five/
+six PIs, one/three/33/65 registers, four transition patterns, three state limits and
+both miter modes. Artifacts: /tmp/abcgo-era-review-probe/{probe.c,probe,native.out}.
+Go agreement and private manager-state/hash/trace comparisons are still pending.
+The first attempt to include driver-level STG dumps hit an original C writer
+assertion (Gia_ManStgPrint's next-state range check); disable that unsupported
+source path for the preliminary ordinary result baseline, and investigate its
+state-ID/writer contract separately instead of treating it as a Go mismatch.
+
+A separate Go reproduction proves a correctness bug on valid typed input: a real
+XOR PO of PI and zero-held RO returns safe (1), while its equivalent expanded-XOR
+AIG correctly returns unsafe (0). era_reach.go's word simulator applies AND to all
+internal nodes. typed.go/typed.log preserve the reproduction under that directory.
+No fixes or regression edits were made during the integration freeze. Next add
+a red regression before repairing typed simulation, track the ordinary native
+baseline and internal state/word/hash/trace oracles, independently enumerate small
+machines, and cover limits, resizing, reports and STG output. Keep giaEra2.c's
+separate cube-reachability algorithm distinct during this first family review.
