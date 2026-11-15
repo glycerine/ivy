@@ -4634,3 +4634,13 @@ no permutation. Typed nodes and safe rejection of non-AND root domains are
 checked independently, not attributed to the C routine. Full race tests and
 vet are running. Save this checkpoint with a red prefix until those gates
 finish. Original completion stays 2/131; GIA remains active.
+
+The final constraint-extraction gate is green: full uncached race tests pass
+for GIA (170.791s) and ABCI (28.338s), recorded in
+`/tmp/abcgo-constraint-review-race.log`. GIA vet passes
+(`/tmp/abcgo-constraint-review-vet.log`). No code changed after checkpoint
+9c2bb0d29. This completes dup_with_constraint.go's collector/extraction
+review. The repair preserves the decomposition and leaf order while bounding
+repeated expansion of shared ANDs; the existing Go source-port ordering is
+retained. Other duplication routines and GIA families remain open. Original
+package completion stays 2/131; the sequential audit remains active.
