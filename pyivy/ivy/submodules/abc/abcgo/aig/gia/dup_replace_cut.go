@@ -13,22 +13,21 @@ func Gia_ManHighLightFlopLogic(p *Gia_Man_t) {
 		if Gia_ObjIsCi(obj) != 0 || obj.id == 0 {
 			continue
 		}
-		obj.fMark0 = 0
-		for _, id := range giaObjectFanins(p, obj) {
-			obj.fMark0 |= p.pObjs[id].fMark0
+		a, b, c, kind := p.Gate(obj.id)
+		mark := p.pObjs[a>>1].fMark0
+		if kind == 2 || kind == 3 || kind == 4 {
+			mark |= p.pObjs[b>>1].fMark0
 		}
+		if kind == 4 {
+			mark |= p.pObjs[c>>1].fMark0
+		}
+		obj.fMark0 = mark
 	}
 }
 func Gia_ManDupReplaceCut(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManHighLightFlopLogic(src)
 	defer Gia_ManCleanMark0(src)
-	out := Gia_ManStart(src.nObjs)
-	out.CopyIdentityFrom(src)
-	if src.PMuxes != nil {
-		out.EnableMuxes()
-	}
-	Gia_ManFillValue(src)
-	src.pObjs[0].Value = 0
+	out := giaDupMappedStart(src)
 	for _, obj := range src.pObjs {
 		if Gia_ObjIsAnd(obj) == 0 || obj.fMark0 == 0 {
 			continue
@@ -40,11 +39,11 @@ func Gia_ManDupReplaceCut(src *Gia_Man_t) *Gia_Man_t {
 			}
 		}
 	}
-	// An output driven directly by PI-only logic is also a boundary signal.
+	// Copy uncut PI-only output cones before ROs, keeping registers last.
 	for i := int32(0); i < Gia_ManCoNum(src); i++ {
 		fanin := Gia_ObjFanin0(Gia_ManCo(src, i))
 		if fanin.fMark0 == 0 && fanin.Value == ^uint32(0) {
-			fanin.Value = uint32(Gia_ManAppendCi(out))
+			Gia_ManDupOrderDfs_rec(out, src, fanin)
 		}
 	}
 	for i := int32(0); i < Gia_ManRegNum(src); i++ {
@@ -54,5 +53,6 @@ func Gia_ManDupReplaceCut(src *Gia_Man_t) *Gia_Man_t {
 		Gia_ManDupOrderDfs_rec(out, src, Gia_ManCo(src, i))
 	}
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
+	out.nConstrs = src.nConstrs
 	return out
 }

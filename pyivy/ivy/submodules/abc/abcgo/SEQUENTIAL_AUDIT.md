@@ -4508,3 +4508,20 @@ C's original filtered-new-table behavior. Top-AND review covers the
 combinational domain enforced by its ABC command caller. This completes the
 reviewed functions in dup_topand.go; other duplication and GIA families remain
 open. Original completion stays 2/131 and the sequential audit remains active.
+
+Cut-replacement checkpoint: new red regressions expose an unfaithful free PI
+for an uncut PI-only output, lost constraint roles and rejection of a valid
+simple-mode state AND. Logs are `/tmp/abcgo-cut-logic-roles-red.log` and
+`/tmp/abcgo-cut-simple-red.log`. Copy uncut PI-only output cones before
+allocating ROs, rather than replacing them by new independent inputs; this
+retains C's output logic while preserving the RO tail (which the original C
+late-input discovery can violate). Use the existing raw-copy initializer and
+retain nConstrs. Focused regressions pass (`/tmp/abcgo-cut-repairs-focused.log`).
+
+The flop highlighter now reads logical fanins directly rather than allocating
+per-node lists. Its 100-call/258-gate benchmark changes 4,136 bytes and 518
+allocations per call to zero bytes/allocations (10,772 ns to 1,575 ns in this
+sample). Logs are `/tmp/abcgo-cut-highlight-before.log` and
+`/tmp/abcgo-cut-highlight-after.log`. Expanded typed-marker/native/lifted-
+behavior checks are still pending; save this checkpoint with a red prefix at
+the requested interval. Original completion stays 2/131; GIA remains active.
