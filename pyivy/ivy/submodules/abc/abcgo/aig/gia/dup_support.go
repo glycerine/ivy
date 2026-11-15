@@ -2,10 +2,39 @@ package gia
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/misc/vec"
 	"sort"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
+
+// Internal support lists are immutable. Unary nodes and empty unions can share
+// them; Gia_ManCreateNodeSupps copies entries into independently owned results.
+func giaMergeSupports(a, b []int32) []int32 {
+	if len(a) == 0 {
+		return b
+	}
+	if len(b) == 0 {
+		return a
+	}
+	result := make([]int32, 0, len(a)+len(b))
+	i, j := 0, 0
+	for i < len(a) && j < len(b) {
+		switch {
+		case a[i] < b[j]:
+			result = append(result, a[i])
+			i++
+		case b[j] < a[i]:
+			result = append(result, b[j])
+			j++
+		default:
+			result = append(result, a[i])
+			i++
+			j++
+		}
+	}
+	return append(append(result, a[i:]...), b[j:]...)
+}
 
 func giaAllSupports(p *Gia_Man_t) [][]int32 {
 	supports := make([][]int32, p.nObjs)
@@ -16,25 +45,13 @@ func giaAllSupports(p *Gia_Man_t) [][]int32 {
 		if Gia_ObjIsCi(obj) != 0 || obj.id == 0 {
 			continue
 		}
-		var result []int32
-		for _, id := range giaObjectFanins(p, obj) {
-			a, b := result, supports[id]
-			merged := make([]int32, 0, len(a)+len(b))
-			i, j := 0, 0
-			for i < len(a) || j < len(b) {
-				if j == len(b) || i < len(a) && a[i] < b[j] {
-					merged = append(merged, a[i])
-					i++
-				} else if i == len(a) || b[j] < a[i] {
-					merged = append(merged, b[j])
-					j++
-				} else {
-					merged = append(merged, a[i])
-					i++
-					j++
-				}
-			}
-			result = merged
+		a, b, c, kind := p.Gate(obj.id)
+		result := supports[a>>1]
+		if kind == 2 || kind == 3 || kind == 4 {
+			result = giaMergeSupports(result, supports[b>>1])
+		}
+		if kind == 4 {
+			result = giaMergeSupports(result, supports[c>>1])
 		}
 		supports[obj.id] = result
 	}

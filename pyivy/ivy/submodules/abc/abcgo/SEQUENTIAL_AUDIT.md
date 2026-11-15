@@ -4556,3 +4556,39 @@ The final uncached race gate passes: GIA 164.221s and ABCI 28.219s
 dup_replace_cut.go, including logical register dependence and the cut/state
 interface. Other GIA families and the final inventory reconciliation remain
 open. Original package completion stays 2/131; the sequential audit is active.
+
+Support-computation review: inspected all six routines in dup_support.go
+against giaDup.c, including maximum's minimum value of 1, largest output's
+first-tie behavior and descending output order. New independent per-root CI
+reachability checks cover 256 graphs (32 deterministic generators, two
+physical layouts, zero/two registers, AND and real XOR/MUX/buffer forms).
+They check all nodes, reverse and repeated requests, constants, original CI
+ordinals including ROs, sorted unique supports, output ranking and source
+scratch preservation. Public result vectors are checked for independent
+storage. Empty and constant interfaces and invalid requests are covered.
+No correctness bug was found in the existing support routines.
+
+The native fixture `aig/gia/test_vectors/supports.c` compares all non-CO node
+supports, separate CO supports, maximum size and largest-output selection on
+128 ordinary-AND cases. Original C's node routine leaves CO requests empty;
+the Go port's existing CO-node support is tested independently, rather than
+claimed as a C comparison. C quicksort's incidental order within equal-size
+groups is not required in Go: both results must be descending permutations.
+
+Compactness repair: sorted support lists are immutable during propagation.
+Read logical fanins directly, share unary/empty-union lists and allocate only
+for nonempty binary unions. Public vector entries still copy the lists. The
+100-call/256-buffer benchmark changes 48,704 bytes/1,290 allocations per query
+to 40,488 bytes/263 allocations, measuring 43,199 ns before and 20,133 ns after
+on this host. These are benchmark-specific timings, not a universal speedup.
+Focused tests and actual native comparisons pass in 1.912s; logs are
+`/tmp/abcgo-support-before.log` and `/tmp/abcgo-support-after.log`. GIA vet
+passes (`/tmp/abcgo-support-review-vet.log`). Full GIA/ABCI race tests are
+running; original completion remains 2/131 and GIA remains in progress.
+
+The full uncached race gate passes: GIA 167.043s and ABCI 28.740s
+(`/tmp/abcgo-support-review-race.log`). Only import grouping changed after
+starting that gate. This completes dup_support.go's correctness and
+compactness review; no support semantics were changed. Further duplication
+routines and the GIA inventory still need review. Original completion is
+2/131; the sequential audit remains active.
