@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS and stand-alone priority cuts reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts and deep synthesis driver reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6789,3 +6789,28 @@ REVIEW_deep_synthesis.md distinguishes native scripted driver comparisons from
 real-engine integration and documents intentional source repairs, portable
 wall-clock deadlines and remaining coverage limits. Final focused tests and
 module race/vet gates follow; do not count the family complete until they pass.
+
+### Deep synthesis integration green
+
+The final focused suite, including actual-engine direct/registered-command
+integration, passes in 2.360s (/tmp/abcgo-deep-final-focused.log). Full uncached
+module race tests pass all 130 tested packages; three command packages have no
+tests (/tmp/abcgo-deep-final-module-race.log). GIA vet passes with empty output
+(/tmp/abcgo-deep-final-vet.log). Source, tests and fixtures stayed frozen through
+both integration gates. Mark giaDeep.c / giaDeep.go reviewed, with intentional
+source exceptions and coverage boundaries in REVIEW_deep_synthesis.md. Overall
+original-package completion remains 2/131; GIA is still in progress.
+
+Read-only preparation identifies the standalone giaDfs.c / giaDfs.go traversal
+family next, including its support-size helpers in support.go. Existing copy-DFS
+reviews cover different entry points and do not close this family. A temporary
+actual-C oracle and Go probe agree on 2,048 root selections (support/cone counts,
+CI/internal postorders, shared epochs and explicit leaf boundaries), 512
+sequential-closure selections and 4,608 ordered pairs of forward/backward cone
+roots. Artifacts: /tmp/abcgo-dfs-review-probe/{probe.c,probe.go,native.out,go.out}.
+Probe construction first needed valid non-CO fanins and distinct nonsimple AND
+fanins; these were fixture errors, not production bugs. This preliminary native
+agreement is not yet tracked regression coverage or a completed family review.
+Next: reconcile all entry points and source preconditions, track native and
+independent typed/constant/deep-cone tests, inspect compactness and add red
+regressions before any newly discovered bug repair.
