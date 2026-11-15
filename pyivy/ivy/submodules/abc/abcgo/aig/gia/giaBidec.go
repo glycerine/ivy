@@ -20,7 +20,7 @@ func Gia_ManConvertAigToTruth_rec(p *Gia_Man_t, obj *Gia_Obj_t, storage *Vec_Int
 	if Gia_IsComplement(obj) != 0 {
 		panic("gia: truth recursion expects regular object")
 	}
-	if index := Vec_IntGetEntry(p.vTruths, int(obj.id)); index != -1 {
+	if index := Vec_IntGetEntryFull(p.vTruths, int(obj.id)); index != -1 {
 		return giaBidecTruthWords(storage, int(words*index), int(words))
 	}
 	if obj.id == 0 {
@@ -172,6 +172,8 @@ func Gia_ManPerformBidec(src *Gia_Man_t, verbose int32) *Gia_Man_t {
 			obj.Value = uint32(Gia_ObjPerformBidec(manager, dst, src, obj, leaves, storage, visited))
 		}
 	}
+	Gia_ManDupRemapCis(dst, src)
+	Gia_ManDupRemapCos(dst, src)
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, src.nRegs)
 	giaCopyInterfaceMetadata(dst, src)

@@ -5624,3 +5624,31 @@ CI/CO remapping and property boundaries, and measure any avoidable table copies
 before changing storage. No bi-decomposition production change has been made
 while integration ran. Original completion remains 2/131; GIA and the full
 sequential audit stay active.
+
+Bi-decomposition review finds another physical/logical interface mismatch.
+Gia_ManPerformBidec appends CIs/COs in object order but omits the remap used by
+other full-interface copies. A new minimal red test reverses logical outputs
+and fails immediately (got false/true versus true/false) in
+/tmp/abcgo-bidec-ports-red.log. Restore both CI and CO remapping before cleanup;
+all input/output reversal combinations then pass. This retains Go's logical
+interface semantics even though the original C routine assumes object order.
+
+A separate red regression appends an AND after querying cut truth. New vTruths
+entries grow with zero, which is a valid cached-leaf index, so the new node
+incorrectly returns aaaaaaaa rather than 22222222
+(/tmp/abcgo-bidec-growth-red.log). Use Vec_IntGetEntryFull to extend this
+-1-sentinel cache safely. The public Go wrapper already initializes the cache
+on first use; this makes subsequent graph growth safe without requiring callers
+to know scratch lifecycle details. Both fixes pass in 0.006s together
+(/tmp/abcgo-bidec-bugs-green.log).
+
+New bidec_truth.c compares the actual C conversion across widths 0..15,
+root/edge phases, reversed leaf order, variable/constant roots: all 768 cases
+match, with scratch marks checked cleared (/tmp/abcgo-bidec-native.log,1.903s).
+Before storage changes, 100-call warmed benchmarks measure width5 at 68B /
+17 allocations / 726ns, width10 at 5,504B / 43 / 19,866ns, and width15 at
+266,293B / 65 / 1,036,412ns (/tmp/abcgo-bidec-before.log). Repeated fanin/result
+copies dominate allocation; elementary variable generation also loops over each
+truth bit. Save a red checkpoint before reducing copies while preserving
+independently owned public results. Full integration is pending. Original
+completion remains 2/131, GIA and sequential audit active.
