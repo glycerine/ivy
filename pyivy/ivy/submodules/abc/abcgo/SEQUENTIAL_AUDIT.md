@@ -4788,3 +4788,34 @@ specific to this benchmark; the retained-node/reference rules are unchanged.
 Expanded ordinary/dual/metadata and original-C checks, plus the full
 integration gate, are pending. Save this checkpoint with a red prefix.
 Original completion remains 2/131; GIA review continues.
+
+Expanded trimming checks now pass: the ordinary/PI-output matrix covers
+3,328 cases and 153,600 input/state rows across all 64 polarity patterns,
+all input/output trim toggles and constant selectors, two physical layouts
+and ordinary/real-XOR/MUX/buffer forms. Exact retained CI/CO maps, property
+roles, RO/RI order, independent Boolean output formulas, untouched source
+marks/reference cache and graph shape are checked. It includes a control PI
+used only by a real MUX after discounting PO references. Results are in
+`/tmp/abcgo-trim-matrix.log` (0.172s).
+
+The dual matrix covers 64 cases and 32,768 length-three zero-reset input
+sequences (98,304 frame comparisons), including structural equality, constant
+inequality, mixed literal phases, typed gates, DFS layouts, unused PIs and a
+constant/dynamic register. It verifies retained pair indices, exact retained
+outputs/next state and resulting role/register counts. Removed constant
+registers are compared only on states reachable from zero reset, matching
+ABC's sweep domain. Dummy PI/PO interfaces, no properties, raw simple-mode
+contradictory fanins, selector/ownership guards and odd PO counts are covered.
+Explicit CI-map output lists are checked to retain their derived role policy.
+These tests pass in `/tmp/abcgo-trim-dual-expanded.log` (0.140s).
+
+The native ordinary-trim fixture `aig/gia/test_vectors/trim.c` matches 832
+normalized ordinary-AND cases/37,888 input-state rows, retained structure,
+ports and non-CO source Value maps. C does not assign source CO Value scratch;
+the Go convention is checked independently. Constraint/bad partitions are
+also independently checked because original C drops those labels. A separate
+C witness returns `0 0 0`: no retained pair and two false outputs after
+trimming `(0,1)`, confirming the inherited constant-mismatch defect. This
+initial native run passes (`/tmp/abcgo-trim-native.log`, 1.893s). Additional
+working-domain native dual comparison and the full integration gate remain
+pending. Original completion stays 2/131; GIA remains active.
