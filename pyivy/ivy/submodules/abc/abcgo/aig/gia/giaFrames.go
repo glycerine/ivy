@@ -90,7 +90,12 @@ func Gia_ManUnrollStart(src *Gia_Man_t, params *Gia_ParFra_t) any {
 	if src == nil || params == nil || Gia_ManRegNum(src) < 0 || params.NFrames < 0 {
 		return nil
 	}
-	capacity := int64(Gia_ManObjNum(src)) * int64(maxInt(1, int(params.NFrames)))
+	reserveFrames := int64(maxInt(1, int(params.NFrames)))
+	if params.fSaveLastLit != 0 {
+		// Incremental callers can converge long before the requested bound.
+		reserveFrames = 1
+	}
+	capacity := int64(Gia_ManObjNum(src)) * reserveFrames
 	if capacity > int64(objectNoFanin) {
 		return nil
 	}

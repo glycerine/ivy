@@ -5829,3 +5829,28 @@ fixed size rather than reserving every possible frame. Next add a red unit
 regression and reserve only the current frame in incremental mode while
 retaining the requested bound and fixed-mode checks. Original completion
 remains 2/131; GIA and the full sequential audit remain active.
+
+The large-bound regression fails with the reproduced nil-unroller panic in
+/tmp/abcgo-ccof-large-bound-red.log. Gia_ManUnrollStart now reserves one source
+frame when fSaveLastLit selects incremental construction; fixed-mode capacity
+and invalid-bound checks remain unchanged, and NFrames still bounds Add calls.
+The tiny constant-safe property now converges immediately with bound1<<30.
+A native held-register case also accepts that bound and converges. The first
+native fixture used a constant root and hit C's separate cofactor-recursion
+assertion; switch only that fixture to a supported held-register property,
+keeping Go's constant-root regression. No source assertion is disabled.
+
+Another 256 three-register phased/typed/layout/reset systems agree with
+independent exhaustive nine-frame state-set simulation, including known,
+mixed known/unknown and fully unknown resets. These exercise complete public
+checks beyond the earlier one-bit machines. The final focused suite, including
+actual native large-bound execution, all cofactoring checks and existing
+unrolling guards/lifecycle tests, passes in 9.621s
+(/tmp/abcgo-ccof-final-focused.log). A repeated small-image benchmark measures
+5,917,980B/89 allocations/1,346,170ns (/tmp/abcgo-ccof-incremental-after.log);
+the functional large-bound regression is the important allocation-limit proof,
+not a claimed small-case timing improvement.
+
+Save the final red checkpoint and freeze files for another full uncached
+module race suite plus GIA vet, since the constructor changed after the prior
+integration snapshot. Original completion remains 2/131; GIA and audit active.

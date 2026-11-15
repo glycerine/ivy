@@ -575,3 +575,76 @@ func BenchmarkCircuitCofactoringResetQueries(b *testing.B) {
 		})
 	}
 }
+
+func TestCircuitCofactoringLargeBoundConvergesIncrementally(t *testing.T) {
+	src := ccofReviewMachine(0, 12)
+	var out *Gia_Man_t
+	text := hashReviewStdout(t, func() { out = Gia_ManCofTest(src, 1<<30, 0, 0, 0) })
+	if out == nil || !strings.Contains(text, "Property holds.") || !strings.Contains(text, "after 1 iterations.") {
+		t.Fatalf("large incremental bound prevented immediate convergence: %q", text)
+	}
+}
+
+func TestCircuitCofactoringThreeRegisterVerdicts(t *testing.T) {
+	cases := 0
+	for signs := 0; signs < 8; signs++ {
+		for typed := 0; typed < 2; typed++ {
+			for layout := 0; layout < 4; layout++ {
+				for _, resets := range [][]int32{{0, 0, 0}, {1, 0, 1}, {0, -1, 1}, {-1, -1, -1}} {
+					src := windowReviewGraph(signs, typed, layout)
+					Gia_ManSetRegNum(src, 3)
+					if err := src.SetAigerLatchInitialStates(resets); err != nil {
+						t.Fatal(err)
+					}
+					reachable := 0
+					for state := 0; state < 8; state++ {
+						allowed := true
+						for i, reset := range resets {
+							if reset != -1 && int(reset) != state>>i&1 {
+								allowed = false
+							}
+						}
+						if allowed {
+							reachable |= 1 << state
+						}
+					}
+					unsafe := false
+					for frame := 0; frame < 9; frame++ {
+						next := 0
+						for state := 0; state < 8; state++ {
+							if reachable>>state&1 == 0 {
+								continue
+							}
+							for pi := 0; pi < 2; pi++ {
+								outputs, err := src.Evaluate([]bool{pi != 0, state&1 != 0, state&2 != 0, state&4 != 0})
+								if err != nil {
+									t.Fatal(err)
+								}
+								unsafe = unsafe || outputs[0]
+								successor := 0
+								for i, value := range outputs[1:] {
+									if value {
+										successor |= 1 << i
+									}
+								}
+								next |= 1 << successor
+							}
+						}
+						reachable = next
+					}
+					var out *Gia_Man_t
+					text := hashReviewStdout(t, func() { out = Gia_ManCofTest(src, 9, 0, 0, 0) })
+					failed, holds := strings.Contains(text, "Property failed in frame"), strings.Contains(text, "Property holds.")
+					if failed != unsafe || holds == unsafe {
+						t.Fatalf("phase%d typed%d layout%d resets%v: unsafe%v verdict%q", signs, typed, layout, resets, unsafe, text)
+					}
+					if _, err := out.Evaluate(make([]bool, Gia_ManCiNum(out))); err != nil {
+						t.Fatal(err)
+					}
+					cases++
+				}
+			}
+		}
+	}
+	t.Logf("%d three-register systems with phased/typed/layout/reset variants agree with exhaustive nine-frame state-set simulation", cases)
+}

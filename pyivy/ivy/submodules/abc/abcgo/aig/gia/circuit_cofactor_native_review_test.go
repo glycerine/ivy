@@ -1,11 +1,13 @@
 package gia
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"regexp"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -136,5 +138,18 @@ func TestCircuitCofactoringVerboseMatchesOriginalABC(t *testing.T) {
 	elapsed := regexp.MustCompile(`Time\s*=\s*[0-9.]+ sec`)
 	if a, b := elapsed.ReplaceAllString(got, "Time=<elapsed>"), elapsed.ReplaceAllString(string(native), "Time=<elapsed>"); a != b {
 		t.Fatalf("verbose cofactoring differs\nGo:%s\nC: %s", a, b)
+	}
+}
+
+func TestCircuitCofactoringOriginalAcceptsLargeIncrementalBound(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "circuit_cofactor.c")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	output, err := exec.CommandContext(ctx, exe, "large").CombinedOutput()
+	if err != nil {
+		t.Fatalf("source large-bound cofactoring: %v\n%s", err, output)
+	}
+	if !strings.Contains(string(output), "Property holds.") || !strings.Contains(string(output), "large-result 0") {
+		t.Fatalf("source did not converge on constant-safe property: %s", output)
 	}
 }
