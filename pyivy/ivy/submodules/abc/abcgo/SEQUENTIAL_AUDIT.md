@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition and circuit-cofactoring reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring and BDD collapse reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6029,3 +6029,38 @@ selected-variable assignments checked independently
 resource/reference/reporting checks. Freeze source/tests/fixtures after the next
 checkpoint for full uncached module race tests and GIA vet. Original completion
 remains 2/131; GIA and the full sequential audit remain active.
+
+Final collapse integration is green for frozen checkpoint 30699a206. All 130
+tested module packages pass uncached race tests; three command packages have no
+tests, with no failure or race diagnostic lines
+(/tmp/abcgo-collapse-final-module-race.log). GIA passes in 297.624s, ABCI in
+29.602s and BMC in 23.926s. GIA vet passes with an empty log
+(/tmp/abcgo-collapse-final-vet.log). Only unrelated existing parent files remain
+untracked. No source, test or native-fixture edits occurred during integration.
+
+This closes the giaClp.go family review: fake names, minimum two-polarity ISOP
+selection/serialization/factoring, 1,000-cube limit, prime transfer, OR/XOR/prime
+rebuilds, trivial/failure duplication, interface metadata, collapse live-root
+fanout/reference ownership, allocation failures/retries, typed lowering,
+standalone dereferencing, and public diagnostic/test wrappers. Native exactness
+covers 6,904 selected-cover or complete-rebuild graph cases; independent truth,
+metadata, AIGER, resource, ownership and boundary checks supplement them. Repairs
+are checkpointed in e2df4a4ab, 6e7b7158f, 4c532e6d4, 18600d605 and 30699a206.
+Core peak metrics and automatic-reordering machinery retain the documented core
+limitations and still require their own sequential CUDD audit. Constants,
+dangling gates, typed gates and metadata preservation are tested Go extensions;
+none replaces the source ISOP/factoring algorithms.
+
+Next review giaCex.c's replay/value/extension/unrolling/minimization family,
+implemented across cex_replay.go, cex_values.go and cex_minimize.go with
+counterexample.go interface validation. Read-only inventory during integration
+finds per-frame [][]bool probe storage in place of source's packed bit array,
+and a SAT care-minimization workflow that omits source's priority-justification
+prepass and differs in two-order/final-core/high-effort handling. The priority
+prepass exists in sat/bmc, whose dependency on GIA prevents a direct reverse
+import; resolve that boundary faithfully rather than accepting a replacement
+algorithm. Compare actual replay and minimization behavior with C and independent
+state simulation, adding red regressions before demonstrated bug repairs. No
+counterexample production or test change has been made yet. This closes neither
+the remaining GIA families nor the whole package. Original completion remains
+2/131; GIA and the full sequential audit remain active.
