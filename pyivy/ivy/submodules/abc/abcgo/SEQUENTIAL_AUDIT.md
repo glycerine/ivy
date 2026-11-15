@@ -7430,3 +7430,34 @@ CEX assertion path. No full integration gate has run for this checkpoint.
 Next complete diagnostics/reporting, storage exhaustion and remaining function
 inspection, then final correctness/compactness review and frozen integration.
 The cube family and GIA are still open; original package completion stays 2/131.
+
+### Cube diagnostics/report repair checkpoint
+
+A red actual-C private report comparison identifies missing memory fields and
+lost time padding (/tmp/abcgo-era2-private-reports-red.log). Restore those fields
+using actual Go state/tree record sizes and pointer-slice capacities rather than
+C's fixed page allocation. Compare progress/final line terminators, counts,
+ratio, depth and widths; normalize only memory/time/address values. Cube printing,
+unused filtering, count/depth and minterm diagnostics already agree with source.
+
+A separate red driver comparison covers four transition patterns with both
+verbosity modes; it identifies missing source completion wording, verbose timing
+breakdown and unique-minterm count (/tmp/abcgo-era2-driver-reports-red.log).
+Restore those reports. Source timings use CPU ticks; Go keeps its existing wall
+clock microsecond accounting. Normalize measured timing/percent/storage values,
+not report fields or line endings.
+
+Keep the existing Go bound on the completed driver's current-state index: C reads
+the zero-filled record just past nStas and reports a spurious depth one; Go reports
+zero without reading beyond stored records. Native report comparison normalizes
+only that explicitly unsupported source depth and independently asserts Go's
+bounded zero. Valid-state private report depths match exactly.
+
+A red six-bit counter message test identifies absent witness diagnostics. Report
+the real IPo/IFrame from the validated witness (output 0, frame 32), instead of
+copying C's incorrect use of queue index/depth as output/frame labels. Retain Go's
+panic on an invalid generated witness and emit source's successful-verification
+message. All private/native-driver/witness-report tests pass in 3.782s
+(/tmp/abcgo-era2-reports-green.log). No full integration gate has run since the
+preceding cube checkpoints; storage boundary checks, final source/compactness
+pass and frozen full-module integration remain pending. Completion stays 2/131.

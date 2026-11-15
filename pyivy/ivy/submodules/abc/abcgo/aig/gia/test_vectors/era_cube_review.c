@@ -26,7 +26,29 @@ static int relations(void){
  free(a);free(b);return 0;
 }
 
-int main(int argc,char **argv){setvbuf(stdout,NULL,_IONBF,0);if(argc>1)return relations();int pis[]={0,1,3,5,6},rs[]={1,3,33,65},caps[]={100};int ip,ir,seed,limit,miter;
+
+static int reports(void) {
+ Gia_Man_t *g=graph(1,3,0);Gia_ManAre_t *p=Gia_ManAreCreate(g);
+ Gia_StaAre_t *a=Gia_ManAreCreateStaInit(p),*b;
+ Gia_ManAreCubeAddToList(p,&p->Root,a);
+ b=Gia_ManAreCreateSta(p);Gia_StaSetValue1(b,0);b->iPrev=Gia_Int2Ptr(1);
+ Gia_ManAreCubeAddToList(p,&p->Root,b);p->iStaCur=2;
+ puts("private reports");Gia_ManArePrintReport(p,0,0);Gia_ManArePrintReport(p,0,1);
+ puts("private cubes");Gia_ManArePrintCube(p,a);Gia_ManArePrintCube(p,b);
+ Gia_StaSetUnused(a);printf("print return %d\n",Gia_ManArePrintUsed(p));
+ printf("counts %d %d %d\n",Gia_ManAreDepth(p,2),Gia_ManAreListCountUsed(p),Gia_ManCountMinterms(p));
+ Gia_ManAreFree(p);return 0;
+}
+
+static int driver_reports(void) {
+ int seed,verbose;Gia_Man_t *g;
+ for(seed=0;seed<4;++seed)for(verbose=0;verbose<2;++verbose){
+  g=graph(1,3,seed);g->pName=Abc_UtilStrsav("cube_review");
+  printf("driver %d %d\n",seed,verbose);Gia_ManArePerform(g,100,0,verbose);Gia_ManStop(g);
+ }
+ return 0;
+}
+int main(int argc,char **argv){setvbuf(stdout,NULL,_IONBF,0);if(argc>1){if(!strcmp(argv[1],"--driver-reports"))return driver_reports();return !strcmp(argv[1],"--reports")?reports():relations();}int pis[]={0,1,3,5,6},rs[]={1,3,33,65},caps[]={100};int ip,ir,seed,limit,miter;
  for(ip=0;ip<5;++ip)for(ir=0;ir<4;++ir)for(seed=0;seed<4;++seed)for(limit=0;limit<1;++limit)for(miter=0;miter<2;++miter){
   Gia_Man_t *g=graph(pis[ip],rs[ir],seed);int dump=0,result;
   printf("case %d %d %d %d %d %d\n",pis[ip],rs[ir],seed,caps[limit],miter,dump);result=Gia_ManArePerform(g,caps[limit],miter,0);printf("result %d\n",result);printf("cex");if(g->pCexSeq){int bi;printf(" %d %d",g->pCexSeq->iPo,g->pCexSeq->iFrame);for(bi=0;bi<g->pCexSeq->nBits;++bi)printf("%s%d",bi?"":" ",Abc_InfoHasBit(g->pCexSeq->pData,bi));}puts("");

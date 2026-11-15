@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/vec"
 	"time"
+	"unsafe"
 )
 
 // Cofactors are ordinary hashed AIGs even when the source has real gates.
@@ -137,7 +138,14 @@ func Gia_ManArePrintReport(p *Gia_ManAre_t, start time.Time, final int32) {
 	if p.iStaCur > 0 && p.iStaCur < p.nStas {
 		depth = Gia_ManAreDepth(p, p.iStaCur)
 	}
-	fmt.Printf("States =%10d. Reached =%10d. R = %5.3f. Depth =%6d. Time = %.2f sec", p.iStaCur, p.nStas, float64(p.iStaCur)/float64(p.nStas), depth, time.Since(start).Seconds())
+	// Account for state/tree records and their storage, as the source report
+	// does, using Go allocation sizes rather than the C fixed-size pages.
+	pointerBytes := float64(unsafe.Sizeof((*Gia_StaAre_t)(nil)))
+	memory := float64(unsafe.Sizeof(*p)) +
+		float64(len(p.states))*(float64(unsafe.Sizeof(Gia_StaAre_t{}))+4*float64(p.nWords)) +
+		float64(len(p.objects))*float64(unsafe.Sizeof(Gia_ObjAre_t{})) +
+		float64(cap(p.states)+cap(p.objects))*pointerBytes
+	fmt.Printf("States =%10d. Reached =%10d. R = %5.3f. Depth =%6d. Mem =%9.2f MB.  Time =%9.2f sec", p.iStaCur, p.nStas, float64(p.iStaCur)/float64(p.nStas), depth, memory/(1<<20), time.Since(start).Seconds())
 	if final != 0 {
 		fmt.Println()
 	} else {
@@ -183,10 +191,44 @@ func Gia_ManArePerform(g *Gia_Man_t, maxStates, miter, verbose int32) int32 {
 	if p.iStaCur > 0 && p.iStaCur-1 < p.nStas {
 		depth = Gia_ManAreDepth(p, p.iStaCur-1)
 	}
-	fmt.Printf("Reached %d state cubes (%d not contained) with depth %d. Time = %.2f sec\n", p.nStas, Gia_ManAreListCountUsed(p), depth, time.Since(start).Seconds())
+	status := "Completed"
+	if result != 1 {
+		status = "Stopped"
+	}
+	fmt.Printf("%s after finding %d state cubes (%d not contained) with depth %d.  Time =%9.2f sec\n", status, p.nStas, Gia_ManAreListCountUsed(p), depth, time.Since(start).Seconds())
+	if cex := g.pCexSeq; cex != nil {
+		fmt.Printf("Output %d of miter %q was asserted in frame %d.\n", cex.IPo, g.pName, cex.IFrame)
+	}
+	if verbose != 0 {
+		total := time.Since(start).Seconds()
+		aigSeconds, cubeSeconds := float64(p.timeAig)/1e6, float64(p.timeCube)/1e6
+		for _, part := range []struct {
+			name    string
+			seconds float64
+		}{
+			{"Cofactoring", aigSeconds - cubeSeconds},
+			{"Containment", cubeSeconds},
+			{"Other      ", total - aigSeconds},
+			{"TOTAL      ", total},
+		} {
+			percent := float64(0)
+			if total > 0 {
+				percent = 100 * part.seconds / total
+			}
+			fmt.Printf("%s =%9.2f sec (%6.2f %%)\n", part.name, part.seconds, percent)
+		}
+	}
+	if g.nRegs <= 30 {
+		countStart := time.Now()
+		count := Gia_ManCountMinterms(p)
+		fmt.Printf("The number of unique state minterms in computed state cubes is %d.   Time =%9.2f sec\n", count, time.Since(countStart).Seconds())
+	}
 	Gia_ManAreFree(p)
-	if g.pCexSeq != nil && Gia_ManVerifyCex(g, g.pCexSeq, 0) == 0 {
-		panic("gia: generated reachability counterexample is invalid")
+	if g.pCexSeq != nil {
+		if Gia_ManVerifyCex(g, g.pCexSeq, 0) == 0 {
+			panic("gia: generated reachability counterexample is invalid")
+		}
+		fmt.Println("Generated counter-example verified correctly.               ")
 	}
 	return result
 }
