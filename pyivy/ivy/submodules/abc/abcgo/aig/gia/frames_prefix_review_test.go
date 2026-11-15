@@ -113,3 +113,64 @@ func TestFramesMixedSpecialPrefix(t *testing.T) {
 	}
 	t.Logf("%d mixed-gate/layout prefixes and %d independent histories", cases, rows)
 }
+
+func TestFramesDirectedNativeSpecialPrefixes(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "frames_review.c")
+	native, err := exec.Command(exe, "--directed-special").CombinedOutput()
+	if err != nil {
+		t.Fatalf("C directed prefixes: %v\n%s", err, native)
+	}
+	var got strings.Builder
+	for kind := 0; kind < 5; kind++ {
+		bound := int32(3)
+		if kind == 0 {
+			bound = 0
+		} else if kind == 1 {
+			bound = 4
+		}
+		g := Gia_ManStart(8)
+		pi := int32(-1)
+		if kind == 3 {
+			pi = Gia_ManAppendCi(g)
+		}
+		r := Gia_ManAppendCi(g)
+		if kind != 4 {
+			po := int32(0)
+			if kind < 2 {
+				po = r
+			}
+			Gia_ManAppendCo(g, po)
+		}
+		ri := r ^ 1
+		if kind == 3 {
+			ri = pi
+		}
+		Gia_ManAppendCo(g, ri)
+		Gia_ManSetRegNum(g, 1)
+		var out *Gia_Man_t
+		text := hashReviewStdout(t, func() { out = Gia_ManFramesInitSpecial(g, bound, 0) })
+		got.WriteString(text)
+		fmt.Fprintf(&got, "directed %d bound%d\n", kind, bound)
+		framesReviewDump(&got, out, "result")
+		wantInputs := int32(0)
+		if kind == 3 {
+			wantInputs = 3
+		}
+		if Gia_ManCiNum(out) != wantInputs || Gia_ManCoNum(out) != 1 || out.nRegs != 0 {
+			t.Fatal("unexpected prefix dimensions")
+		}
+		for assignment := 0; assignment < 1<<wantInputs; assignment++ {
+			values := cofReviewValues(out, assignment)
+			want := true // toggle at an event or after three completed frames
+			if kind == 3 {
+				want = assignment&4 != 0 // final PI after the full three-frame bound
+			}
+			if values[Gia_ManCo(out, 0).id] != want {
+				t.Fatalf("kind%d assignment%d has wrong preceding state", kind, assignment)
+			}
+		}
+		Gia_ManStop(out)
+		Gia_ManStop(g)
+	}
+	esopReviewCompare(t, native, got.String())
+}

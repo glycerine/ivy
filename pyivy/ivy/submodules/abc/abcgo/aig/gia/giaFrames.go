@@ -80,7 +80,7 @@ func Gia_ManUnrollDup(src *Gia_Man_t, limits *Vec_Int_t) *Gia_Man_t {
 // Gia_ManUnrollAbs packs the newly reached dependency tent of each earlier
 // timeframe, retaining the source sparse reverse-time abstraction schedule.
 func Gia_ManUnrollAbs(src *Gia_Man_t, frames int32) *Vec_Ptr_t {
-	result := vec.Vec_PtrAlloc(maxInt(0, int(frames)))
+	result := vec.Vec_PtrAlloc(max(0, int(frames)))
 	if src == nil || frames <= 0 {
 		return result
 	}
@@ -121,19 +121,4 @@ func Gia_ManFraSetDefaultParams(params *Gia_ParFra_t) {
 		return
 	}
 	*params = Gia_ParFra_t{NFrames: 32}
-}
-
-func remapGiaLiteral(mapping []int32, literal int32) int32 {
-	id := int(literal >> 1)
-	if id < 0 || id >= len(mapping) || mapping[id] < 0 {
-		panic("gia: unroll encountered an unmapped source object")
-	}
-	return mapping[id] ^ (literal & 1)
-}
-
-func maxInt(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
 }

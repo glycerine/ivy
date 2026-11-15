@@ -167,11 +167,9 @@ func (p *Gia_ManUnr_t) addStep(horizon int32) {
 			Gia_ManAppendCi(p.pNew)
 		}
 	}
-	for frame := int32(0); frame < horizon; frame++ {
+	// Earlier frames have no dependency tent and perform no reads or writes.
+	for frame := max(int32(0), horizon-int32(len(p.limits))+1); frame < horizon; frame++ {
 		tent := int(horizon - frame)
-		if tent >= len(p.limits) {
-			continue
-		}
 		for id := p.limits[tent-1]; id < p.limits[tent]; id++ {
 			obj := p.pOrder.pObjs[id]
 			var lit int32
@@ -218,6 +216,12 @@ func Gia_ManUnrollAdd(raw any, horizon int32) any {
 	}
 	for p.frame < horizon {
 		p.addStep(p.frame + 1)
+		// Small initial reservations save memory for early convergence. CI
+		// insertions can occupy every periodic object-ID resize checkpoint,
+		// so also check the load at each completed horizon.
+		if 2*Vec_IntSize(&p.pNew.vHTable) < int(Gia_ManAndNum(p.pNew)) {
+			Gia_ManHashResize(p.pNew)
+		}
 		p.frame++
 	}
 	return p.pNew
@@ -243,6 +247,12 @@ func Gia_ManUnrollStop(raw any) {
 }
 
 func Gia_ManUnroll(src *Gia_Man_t, params *Gia_ParFra_t) *Gia_Man_t {
+	// The complete wrapper promises one CO per property/frame. C checks
+	// that postcondition after construction; reject the incompatible mode
+	// before allocating an owned scheduler and graph.
+	if src != nil && params != nil && params.fSaveLastLit != 0 && params.NFrames > 0 && Gia_ManPoNum(src) > 0 {
+		panic("gia: complete unrolling requires per-frame outputs")
+	}
 	raw := Gia_ManUnrollStart(src, params)
 	if raw == nil {
 		return nil

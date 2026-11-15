@@ -36,8 +36,15 @@ static void generated_histories(void){unsigned seed;int save,step;Gia_ParFra_t p
  for(seed=0;seed<32;++seed)for(save=0;save<2;++save){g=generated_graph(seed);Gia_ManFraSetDefaultParams(&pars);pars.nFrames=3;pars.fSaveLastLit=save;p=(Gia_ManUnr_t *)Gia_ManUnrollStart(g,&pars);printf("history %u save%d step0\n",seed,save);history_snapshot(p);dump(p->pOrder,"ordered");
  for(step=1;step<=3;++step){q=(Gia_Man_t *)Gia_ManUnrollAdd(p,step);printf("history %u save%d step%d lit%d\n",seed,save,step,Gia_ManUnrollLastLit(p));history_snapshot(p);dump(q,"step");}q=p->pNew;Gia_ManUnrollStop(p);Gia_ManStop(q);Gia_ManStop(g);}}
 static void generated_special(void){unsigned seed;int frames;Gia_Man_t *g,*q;for(seed=0;seed<32;++seed)for(frames=1;frames<=3;++frames){g=generated_graph(seed);q=Gia_ManFramesInitSpecial(g,frames,0);printf("special %u f%d\n",seed,frames);dump(q,"result");Gia_ManStop(q);Gia_ManStop(g);}}
+static Gia_Man_t *directed_prefix_graph(int kind){Gia_Man_t *g=Gia_ManStart(8);int pi=-1,r;if(kind==3)pi=Gia_ManAppendCi(g);r=Gia_ManAppendCi(g);if(kind!=4)Gia_ManAppendCo(g,kind<2?r:0);Gia_ManAppendCo(g,kind==3?pi:r^1);Gia_ManSetRegNum(g,1);return g;}
+static void directed_prefixes(void){int kind,bound;Gia_Man_t *g,*q;for(kind=0;kind<5;++kind){bound=kind==0?0:kind==1?4:3;g=directed_prefix_graph(kind);q=Gia_ManFramesInitSpecial(g,bound,0);printf("directed %d bound%d\n",kind,bound);dump(q,"result");Gia_ManStop(q);Gia_ManStop(g);}}
+static void abs_power(void){Gia_Man_t *g=Gia_ManStart(8);int r=Gia_ManAppendCi(g);Vec_Ptr_t *out;struct rlimit limit={0,0};setrlimit(RLIMIT_CORE,&limit);Gia_ManAppendCo(g,r);Gia_ManAppendCo(g,r^1);Gia_ManSetRegNum(g,1);out=Gia_ManUnrollAbs(g,3);Vec_VecFree((Vec_Vec_t *)out);Gia_ManStop(g);}
+static void complete_save(void){Gia_Man_t *g=graph(),*q;Gia_ParFra_t p;struct rlimit limit={0,0};setrlimit(RLIMIT_CORE,&limit);Gia_ManFraSetDefaultParams(&p);p.nFrames=1;p.fSaveLastLit=1;q=Gia_ManUnroll(g,&p);Gia_ManStop(q);Gia_ManStop(g);}
 int main(int argc,char **argv){Gia_Man_t *g=graph(),*q;Gia_ParFra_t p;Vec_Int_t *limits,*row;Vec_Ptr_t *abs;int i,j,id;
- if(argc>1 && !strcmp(argv[1],"--generated-special")){generated_special();}
+ if(argc>1 && !strcmp(argv[1],"--abs-power")){abs_power();}
+ else if(argc>1 && !strcmp(argv[1],"--complete-save")){complete_save();}
+ else if(argc>1 && !strcmp(argv[1],"--directed-special")){directed_prefixes();}
+ else if(argc>1 && !strcmp(argv[1],"--generated-special")){generated_special();}
  else if(argc>1 && !strcmp(argv[1],"--generated-drivers")){generated_drivers();}
  else if(argc>1 && !strcmp(argv[1],"--histories")){generated_histories();}
  else if(argc>1 && !strcmp(argv[1],"--special-stale")){special_stale();}

@@ -8422,3 +8422,33 @@ allowing the source's conservative nonzero-literal stopping rule
 (/tmp/abcgo-frames-prefix-expanded-first.log,1.903s). Add directed no-input,
 no-property and forced-full-bound cases next; history lifecycle/resource,
 reports/compactness and frozen integration remain open. Completion2/131.
+
+### Directed prefix, lifecycle and streaming table regressions
+
+Five directed prefixes match unmodified native records and independently check
+no-PI/no-PO cases, event-driven zero bound and a forced full three-frame
+zero-property bound (/tmp/abcgo-frames-directed-prefix-first.log,1.906s).
+New lifecycle tests verify history/order release, stopped-handle rejection and
+returned graph independence after source scratch reuse/disposal. Packed IDs
+remain correct at4/8/16/32 source objects; an original-C child captures its
+power-of-two mask assertion. Empty graphs and zero-frame complete boundaries
+are valid Go extensions, checked separately from unsupported C constructor cases.
+
+A new complete-wrapper regression fails because save-only mode silently omits
+required frame outputs (/tmp/abcgo-frames-resource-red.log). C asserts on that
+mode; reject it before allocating owned state. Source constructor/step records,
+resource tests and generated prefixes pass7.763s after that repair and no-op
+tent-loop bounding (/tmp/abcgo-frames-resource-and-skip-repaired.log).
+
+Measure original full-map versus restored scheduler at8/64/512 horizons using
+an overlay for the old implementation. The source-shaped scheduler reduces
+long-run allocation, but512 horizons unexpectedly take3.97ms vs0.866ms before.
+Bounding skipped tents alone does not fix it (~3.92ms). A deterministic new
+load regression finds3067 gates trapped in17 hash buckets
+(/tmp/abcgo-frames-stream-hash-red.log): streamed CI insertion occupies every
+periodic object-ID resize checkpoint. Keep the small initial reserve for early
+convergence, and check hash load at each completed horizon. This adapts Go's
+allocation policy without changing source node order, history or Boolean
+operations. Exact native/resource reruns and remeasurement are pending.
+Remove unused full-map helper/remapping code; use builtin max for abstraction.
+Full source reconciliation/reports and frozen integration remain open2/131.
