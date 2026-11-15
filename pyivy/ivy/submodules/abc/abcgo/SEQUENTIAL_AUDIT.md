@@ -6308,3 +6308,40 @@ patching. Source nBTThisNc increments and phase-based decisions are commented ou
 Go leaving that counter zero is not itself a defect. No subsequent-engine source
 or test edits have been made. Original completion remains 2/131; remaining GIA
 families, final inventory and the full sequential audit remain active.
+
+Begin giaCSat.c CBS conflict-analysis/resolution review. A direct source fixture
+compares 63,648 single-root, paired-root and single-root/all-object queries across
+three heuristics, backtrack/frontier limits, random and hard reconvergent/parity
+systems. Exact verdicts/counters/ordered witnesses match, with 21,368 undecided,
+39,209 SAT and 3,071 UNSAT outcomes, maximum 27 backtracks and frontier size nine
+(/tmp/abcgo-cbs-native.log). Independently check full five-input truth tables,
+nonempty consistency of all-object cubes, implication of both queried roots,
+and assignment/reason/queue cleanup after every query. Core conflict analysis
+already agrees with source; no solver replacement is needed.
+
+Wrapper regressions fail on constant budgets, omitted phase initialization and
+reduced statistics (/tmp/abcgo-cbs-wrapper-red.log). Restore source constant
+handling before solver calls, source zero-input phase setup and complete call/
+conflict/time statistics. Unlike Cbs0, the newer C source comments out its
+constant-one message, so do not introduce that message here. Factor identical
+source statistics into a shared formatter; both engines' native fake-clock and
+zero-denominator tests match. Another 7,200 miter property statuses/witnesses,
+phase vectors and proof-zero patches now match actual C across CI/CO permutations.
+
+Source idle guards include propagation/justification heads and both clause
+sentinels; Go checked only propagation/justification tails. Root assignment also
+accepted foreign objects and COs despite source's candidate precondition.
+Regressions fail before repair (/tmp/abcgo-cbs-guards-red.log); restore the source
+idle checks and validate both roots before assigning either. Use a fixed two-root
+array, retaining the valid nil-second-root all-object convention; the first guard
+fixture mistakenly classified that documented valid form as invalid, so correct
+the fixture. Candidate ownership checks prevent modifying a foreign graph.
+
+Cbs_ManPrintClauseNew was an alias for the different old report. A regression
+fails on both report forms (/tmp/abcgo-cbs-clause-report-red.log); restore signed
+object reporting and source spacing. All new core/wrapper/guard/clause regressions
+and the chronological statistics test pass in 7.791s
+(/tmp/abcgo-cbs-repaired.log). Restore source reusable vTemp mark scratch instead
+of allocating a local visited slice on every conflict; benchmark follow-up and
+broader lifecycle coverage are pending. Save a red checkpoint before further
+work. Original completion remains 2/131; GIA and the full audit remain active.

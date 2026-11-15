@@ -22,6 +22,7 @@ type Cbs_Man_t_ struct {
 	pAig                                                                       *Gia_Man_t
 	pProp, pJust, pClauses                                                     Cbs_Que_t
 	vLevReas, vModel                                                           *Vec_Int_t
+	vTemp                                                                      []*Gia_Obj_t // reusable conflict-analysis marks
 	nSatUnsat, nSatSat, nSatUndec, nSatTotal, nConfUnsat, nConfSat, nConfUndec int32
 	timeSatUnsat, timeSatSat, timeSatUndec, timeTotal                          time.Duration
 }
@@ -83,12 +84,14 @@ func Cbs_SetDefaultParams(parameters *Cbs_Par_t) {
 	*parameters = Cbs_Par_t{nBTLimit: 1000, nJustLimit: 100, fUseHighest: 1, fVerbose: 1}
 }
 func Cbs_ManSetConflictNum(p *Cbs_Man_t, limit int32) { p.Pars.nBTLimit = limit }
-func Cbs_ManAlloc(graph *Gia_Man_t) *Cbs_Man_t {
-	for _, obj := range graph.pObjs {
-		if Gia_ObjIsXor(obj) != 0 || Gia_ObjIsMux(graph, obj) != 0 {
-			panic("gia: CBS expects ordinary AND graph")
-		}
+
+func cbsCheckGraph(graph *Gia_Man_t) {
+	if graph == nil || Gia_ManXorNum(graph) != 0 || Gia_ManMuxNum(graph) != 0 {
+		panic("gia: CBS expects ordinary AND graph")
 	}
+}
+func Cbs_ManAlloc(graph *Gia_Man_t) *Cbs_Man_t {
+	cbsCheckGraph(graph)
 	if graph.Refs == nil {
 		Gia_ManCreateRefs(graph)
 	}
@@ -232,25 +235,36 @@ func Cbs_ManClauseSize(p *Cbs_Man_t, clause int32) int32 {
 	return count
 }
 func Cbs_ManPrintClause(p *Cbs_Man_t, level, clause int32) {
-	fmt.Printf("Level %2d: ", level)
+	fmt.Printf("Level %2d : ", level)
 	for i := clause; p.pClauses.pData[i] != nil; i++ {
 		obj := p.pClauses.pData[i]
 		fmt.Printf("%d=%d(%d) ", obj.id, Cbs_VarValue(obj), Cbs_VarDecLevel(p, obj))
 	}
 	fmt.Println()
 }
-func Cbs_ManPrintClauseNew(p *Cbs_Man_t, level, clause int32) { Cbs_ManPrintClause(p, level, clause) }
+func Cbs_ManPrintClauseNew(p *Cbs_Man_t, level, clause int32) {
+	fmt.Printf("Level %2d : ", level)
+	for i := clause; p.pClauses.pData[i] != nil; i++ {
+		obj := p.pClauses.pData[i]
+		sign := '-'
+		if Cbs_VarValue(obj) != 0 {
+			sign = '+'
+		}
+		fmt.Printf("%c%d ", sign, obj.id)
+	}
+	fmt.Println()
+}
 func Cbs_ManDeriveReason(p *Cbs_Man_t, level int32) {
 	queue := &p.pClauses
 	write := queue.iHead + 1
-	var visited []*Gia_Obj_t
+	p.vTemp = p.vTemp[:0]
 	for read := write; read < queue.iTail; read++ {
 		obj := queue.pData[read]
 		if obj.fMark0 == 0 {
 			continue
 		}
 		obj.fMark0 = 0
-		visited = append(visited, obj)
+		p.vTemp = append(p.vTemp, obj)
 		nodeLevel := Cbs_VarDecLevel(p, obj)
 		if nodeLevel < level {
 			queue.pData[write] = obj
@@ -274,7 +288,7 @@ func Cbs_ManDeriveReason(p *Cbs_Man_t, level int32) {
 		panic("gia: CBS conflict has no decision")
 	}
 	queue.iTail = write
-	for _, obj := range visited {
+	for _, obj := range p.vTemp {
 		obj.fMark0 = 1
 	}
 }
@@ -449,17 +463,30 @@ func Cbs_ManSolve_rec(p *Cbs_Man_t, level int32) int32 {
 	return clause
 }
 func cbsSolve(p *Cbs_Man_t, first, second *Gia_Obj_t, all bool) int32 {
-	if p.pProp.iTail != 0 || p.pJust.iTail != 0 {
+	if p == nil {
+		panic("gia: nil CBS solver")
+	}
+	cbsCheckGraph(p.pAig)
+	if p.pProp.iHead != 0 || p.pProp.iTail != 0 || p.pJust.iHead != 0 || p.pJust.iTail != 0 || p.pClauses.iHead != 1 || p.pClauses.iTail != 1 {
 		panic("gia: CBS solver is already active")
+	}
+	roots := [2]*Gia_Obj_t{first, second}
+	count := 1
+	if second != nil {
+		count = 2
+	}
+	// Validate both roots before assigning either, so bad paired queries cannot
+	// modify the first root or a foreign graph.
+	for _, root := range roots[:count] {
+		obj := Gia_Regular(root)
+		if obj == nil || obj.id < 0 || obj.id >= p.pAig.nObjs || p.pAig.pObjs[obj.id] != obj || obj.id != 0 && Gia_ObjIsAnd(obj) == 0 && Gia_ObjIsCi(obj) == 0 {
+			panic("gia: invalid or foreign CBS root")
+		}
 	}
 	Vec_IntClear(p.vModel)
 	p.Pars.nBTThis, p.Pars.nJustThis, p.Pars.nBTThisNc = 0, 0, 0
 	status := int32(0)
-	roots := []*Gia_Obj_t{first}
-	if second != nil {
-		roots = append(roots, second)
-	}
-	for _, root := range roots {
+	for _, root := range roots[:count] {
 		obj := Gia_Regular(root)
 		if obj.id == 0 {
 			if Gia_IsComplement(root) == 0 {
@@ -501,19 +528,36 @@ func Cbs_ManSolve2(p *Cbs_Man_t, first, second *Gia_Obj_t) int32 {
 	return cbsSolve(p, first, second, true)
 }
 func Cbs_ManSatPrintStats(p *Cbs_Man_t) {
-	fmt.Printf("CO=%d AND=%d Conf=%d JustMax=%d Unsat=%d Sat=%d Undef=%d TotalTime=%s\n", Gia_ManCoNum(p.pAig), Gia_ManAndNum(p.pAig), p.Pars.nBTLimit, p.Pars.nJustLimit, p.nSatUnsat, p.nSatSat, p.nSatUndec, p.timeTotal)
+	cbsPrintStatistics(p.pAig, p.Pars.nBTLimit, p.Pars.nJustLimit, p.nSatTotal, p.timeTotal, [3]cbsStatisticsRow{
+		{"Unsat", p.nSatUnsat, p.nConfUnsat, p.timeSatUnsat},
+		{"Sat  ", p.nSatSat, p.nConfSat, p.timeSatSat},
+		{"Undef", p.nSatUndec, p.nConfUndec, p.timeSatUndec},
+	})
 }
+
 func Cbs_ManSolveMiterNc(graph *Gia_Man_t, conflicts int32, statusOut **Vec_Str_t, proveZero, verbose int32) *Vec_Int_t {
 	if graph.nRegs != 0 {
 		panic("gia: CBS miter must be combinational")
 	}
 	started := time.Now()
 	p := Cbs_ManAlloc(graph)
+	Gia_ManSetPhase(graph)
 	p.Pars.nBTLimit = conflicts
 	defer Cbs_ManStop(p)
 	statusVector := Vec_StrAlloc(int(Gia_ManPoNum(graph)))
 	store := Vec_IntAlloc(10000)
 	for index, id := range Vec_IntArray(graph.vCos) {
+		Vec_IntClear(p.vModel)
+		if Gia_ObjIsConst0(Gia_ObjFanin0(graph.pObjs[id])) != 0 {
+			if Gia_ObjFaninC0(graph.pObjs[id]) != 0 {
+				Vec_IntPush(store, int32(index))
+				Vec_IntPush(store, 0)
+				Vec_StrPush(statusVector, 0)
+			} else {
+				Vec_StrPush(statusVector, 1)
+			}
+			continue
+		}
 		start := time.Now()
 		status := Cbs_ManSolve(p, Gia_ObjChild0(graph.pObjs[id]))
 		Vec_StrPush(statusVector, byte(status))

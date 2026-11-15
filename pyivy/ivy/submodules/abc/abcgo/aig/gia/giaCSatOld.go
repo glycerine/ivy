@@ -381,28 +381,13 @@ func Cbs0_ManSolve(p *Cbs0_Man_t, root *Gia_Obj_t) int32 {
 	return status
 }
 func Cbs0_ManSatPrintStats(p *Cbs0_Man_t) {
-	fmt.Printf("CO = %8d  AND = %8d  Conf = %6d  JustMax = %5d  \n", Gia_ManCoNum(p.pAig), Gia_ManAndNum(p.pAig), p.Pars.nBTLimit, p.Pars.nJustLimit)
-	ratio := func(n, d float64) float64 {
-		if d == 0 {
-			return 0
-		}
-		return n / d
-	}
-	for _, row := range []struct {
-		label            string
-		calls, conflicts int32
-		elapsed          time.Duration
-	}{
+	cbsPrintStatistics(p.pAig, p.Pars.nBTLimit, p.Pars.nJustLimit, p.nSatTotal, p.timeTotal, [3]cbsStatisticsRow{
 		{"Unsat", p.nSatUnsat, p.nConfUnsat, p.timeSatUnsat},
 		{"Sat  ", p.nSatSat, p.nConfSat, p.timeSatSat},
 		{"Undef", p.nSatUndec, p.nConfUndec, p.timeSatUndec},
-	} {
-		fmt.Printf("%s calls %6d  (%6.2f %%)   Ave conf = %8.1f   Time =%9.2f sec (%6.2f %%)\n",
-			row.label, row.calls, 100*ratio(float64(row.calls), float64(p.nSatTotal)),
-			ratio(float64(row.conflicts), float64(row.calls)), row.elapsed.Seconds(), 100*ratio(float64(row.elapsed), float64(p.timeTotal)))
-	}
-	fmt.Printf("Total time =%9.2f sec\n", p.timeTotal.Seconds())
+	})
 }
+
 func Cbs_ManSolveMiter(g *Gia_Man_t, conflicts int32, statusOut **Vec_Str_t, verbose int32) *Vec_Int_t {
 	if g.nRegs != 0 {
 		panic("gia: CBS0 miter must be combinational")
