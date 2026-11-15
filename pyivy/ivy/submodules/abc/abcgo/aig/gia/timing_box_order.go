@@ -19,7 +19,7 @@ func Gia_ManOrderWithBoxes_rec(p *Gia_Man_t, obj *Gia_Obj_t, nodes *Vec_Int_t) i
 	if Gia_ObjIsAnd(obj) == 0 {
 		panic("gia: invalid boxed timing cone")
 	}
-	if sib := Gia_ObjSibl(p, obj.id); sib != 0 {
+	if sib := Gia_ObjSibl(p, obj.id); Gia_ObjIsBuf(obj) == 0 && sib != 0 {
 		if Gia_ManOrderWithBoxes_rec(p, Gia_ManObj(p, sib), nodes) != 0 {
 			return 1
 		}

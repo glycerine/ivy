@@ -5151,3 +5151,20 @@ review timing_unshuffle.go against giaTim.c, especially output-role and real
 gate retention. State-coordinate duplication in dup_seq.go also needs its
 remaining review; do not infer that prior copying-family repairs cover it.
 Original completion remains 2/131; GIA and the sequential audit remain active.
+
+Buffer-specific box traversal follow-up confirms another source discrepancy.
+C handles a buffer before considering choice siblings; Go followed a buffer's
+sibling. The new minimal red test adds an otherwise unused equivalent buffer
+to the resulting order (`/tmp/abcgo-box-buffer-red.log`). The compiled C
+oracle also exposes a false topological-order rejection when the equivalent
+sibling structurally depends on a future box (`/tmp/abcgo-box-buffer-native-red.log`).
+The fixture's two buffer alternatives are exhaustively verified equivalent;
+this is not an inconsistent choice annotation.
+
+Only consider choice siblings for non-buffer nodes, preserving C's buffer
+rule without allocating fanin slices. Native fixture `test_vectors/box_buffer_order.c`
+and `box_buffer_review_test.go` compare exact traversal order on eight cases
+and 128 truth rows, covering both input polarities and a sibling with/without
+the future-box dependency. Both new regressions pass after the change
+(`/tmp/abcgo-box-buffer-green.log`, 1.813s). Save a red checkpoint pending
+shared timing-family integration. Original completion remains 2/131.
