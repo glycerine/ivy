@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability and cofactor network analysis/reconstruction reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability cofactor network analysis/reconstruction and ESOP computation reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -7818,3 +7818,26 @@ Final focused ESOP tests pass in 5.617s
 (/tmp/abcgo-esop-final-focused.log). Commit the coherent checkpoint, then freeze
 production/tests/fixtures for full module race and GIA vet. Package completion
 remains 2/131; this is not yet a completed family integration checkpoint.
+
+
+### ESOP full integration and next family
+
+Consume frozen module race handle36926 and GIA vet handle84246 to terminal
+success. All 130 packages with tests pass; three commands have no tests. GIA
+passes in 482.089s, ABCI in 29.721s and BMC in 23.637s
+(/tmp/abcgo-esop-final-module-race.log). Vet output is empty
+(/tmp/abcgo-esop-final-vet.log); no race warnings or failures are present.
+Close the 14-routine giaEsop.c family review and update current validation links.
+All code/test/fixture changes were frozen throughout the full gates. Original
+package completion remains 2/131; remaining GIA families and final inventory
+still require review.
+
+Next source family is giaExist.c, primarily quant_support.go and quant_cone.go,
+plus its manager append-support hook. Read-only /tmp probes establish thirty
+native/Go MUX quantification cases with identical result literals, graph counts
+and independently verified existential truth. Two all-quantified cases crash in
+both original C and Go after an intermediate constant is treated as an AND.
+A separate public-row probe confirms append to a one-word support slice (cap999)
+overwrites the next CI's support word (2 ->12345). Add permanent red regressions
+before either repair. Detailed next plan/evidence:
+/tmp/abcgo-exist-next-review-plan.md and /tmp/abcgo-exist-review-probe.

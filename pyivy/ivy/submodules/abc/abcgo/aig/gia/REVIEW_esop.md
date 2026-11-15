@@ -88,6 +88,10 @@ stopped. Graph conversion owns its unchanged interface metadata.
 ## Validation
 
 Final focused ESOP tests pass in 5.617s
-(`/tmp/abcgo-esop-final-focused.log`). Frozen module race and GIA vet gates are
-pending; final evidence will be recorded in `../../SEQUENTIAL_AUDIT.md`.
+(`/tmp/abcgo-esop-final-focused.log`). Frozen uncached module race tests pass all 130 packages with tests, including
+GIA in 482.089s; three command packages have no tests
+(`/tmp/abcgo-esop-final-module-race.log`). GIA vet passes with empty output
+(`/tmp/abcgo-esop-final-vet.log`). Both exact handles terminated successfully
+before results were recorded in `../../SEQUENTIAL_AUDIT.md`. All 14 routines in
+this source family are reconciled.
 This family review does not complete the remaining GIA package inventory.
