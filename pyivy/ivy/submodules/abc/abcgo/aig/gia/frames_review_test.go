@@ -60,7 +60,7 @@ func TestFrames2SourceCombinationalContract(t *testing.T) {
 
 func TestFramesNativeDependencyContract(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	for _, mode := range []string{"order", "--abs", "--frames2", "--incremental"} {
+	for _, mode := range []string{"order", "--abs", "--frames2", "--incremental", "--fixed"} {
 		t.Run(mode, func(t *testing.T) {
 			var args []string
 			if mode != "order" {
@@ -102,8 +102,12 @@ func TestFramesNativeDependencyContract(t *testing.T) {
 				q := Gia_ManFrames2(g, &Gia_ParFra_t{NFrames: 3})
 				defer Gia_ManStop(q)
 				dump(q, "frames2")
-			case "--incremental":
-				raw := Gia_ManUnrollStart(g, &Gia_ParFra_t{NFrames: 3, fSaveLastLit: 1})
+			case "--incremental", "--fixed":
+				save := int32(0)
+				if mode == "--incremental" {
+					save = 1
+				}
+				raw := Gia_ManUnrollStart(g, &Gia_ParFra_t{NFrames: 3, fSaveLastLit: save})
 				defer Gia_ManUnrollStop(raw)
 				var q *Gia_Man_t
 				defer func() { Gia_ManStop(q) }()
@@ -124,5 +128,36 @@ func TestFramesNativeDependencyContract(t *testing.T) {
 			}
 			esopReviewCompare(t, native, got.String())
 		})
+	}
+}
+
+func TestFramesFixedModeHasNoSavedProperty(t *testing.T) {
+	g := frameTestGraph()
+	defer Gia_ManStop(g)
+	raw := Gia_ManUnrollStart(g, &Gia_ParFra_t{NFrames: 2})
+	q := Gia_ManUnrollAdd(raw, 1).(*Gia_Man_t)
+	defer Gia_ManStop(q)
+	defer Gia_ManUnrollStop(raw)
+	if lit := Gia_ManUnrollLastLit(raw); lit != 0 {
+		t.Fatalf("fixed mode saved property%d, source leaves LastLit0", lit)
+	}
+}
+
+func TestFramesOriginalInitializedSaveIndexFailure(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "frames_review.c")
+	cmd := exec.Command(exe, "--initialized-save")
+	cmd.Dir = t.TempDir()
+	out, err := cmd.CombinedOutput()
+	if err == nil || !strings.Contains(string(out), "Assertion") {
+		t.Fatalf("expected original C PI-index assertion, got%v\n%s", err, out)
+	}
+	g := framesReviewDependencyGraph()
+	defer Gia_ManStop(g)
+	raw := Gia_ManUnrollStart(g, &Gia_ParFra_t{NFrames: 3, FInit: 1, fSaveLastLit: 1})
+	q := Gia_ManUnrollAdd(raw, 1).(*Gia_Man_t)
+	defer Gia_ManStop(q)
+	defer Gia_ManUnrollStop(raw)
+	if Gia_ManCiNum(q) != 2 || Gia_ManUnrollLastLit(raw) != 0 {
+		t.Fatal("initialized first property should be zero with only two PI inputs")
 	}
 }

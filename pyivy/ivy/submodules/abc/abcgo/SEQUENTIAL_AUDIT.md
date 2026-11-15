@@ -8317,3 +8317,33 @@ package or rerun full integration while these required repairs remain.
 REVIEW_timeframes.md records the remaining active source reconciliation,
 existing CCof lifecycle/typed/resource behavior to retain, source edge bugs and
 comprehensive coverage plan. This is a red checkpoint; original completion2/131.
+
+### Source rolling unroller and combinational Frames2 restored
+
+Port UnrStart's dependency ranks, edge delays, compact flat history rows and
+source read/write/CI operations in frames_unroll.go. Rank/degree arrays are
+construction locals; remove the full per-frame copy map, redundant register
+state array and stopped flag. Preserve returned-graph ownership and huge
+incremental bound behavior. Jumping to a later horizon executes each missing
+source step. Ordinary history layout uses two edge columns; real-MUX graphs
+have a derived third column. Destination object IDs remain source-scheduled.
+
+Frames2 now delegates to source Unroll plus cleanup, rather than the common
+AIG-frame wrapper. All four initial native modes match exact records1.866s
+(/tmp/abcgo-frames-scheduler-first.log), including original object fields and
+all32/128/512 incremental property assignments. Add a fixed-mode regression
+against the previous implementation through an overlay: it fails because old
+Go saves property6 while C leaves LastLit0
+(/tmp/abcgo-frames-fixed-literal-red.log). Source save mode retains the last
+encountered PO, not PO0. Correct the two older tests that encoded the previous
+substitutes, backed by native fixed/save modes and combinational dimensions.
+
+The unmodified C initialized-save mode asserts at its invalid RegNum PI offset.
+A separate native child captures that assertion with core dumps disabled; Go
+keeps the corrected zero offset when no symbolic registers were allocated.
+Five native modes, this assertion characterization, lifecycle/large-bound,
+1,536 frame configurations/176,640 independent assignments and all circuit-
+cofactoring checks pass13.347s
+(/tmp/abcgo-frames-scheduler-consumers-repaired.log). This is a focused gate;
+remaining Frames/Init/Special source implementations, expanded history/native
+coverage, compactness and frozen full integration are still open. Completion2/131.

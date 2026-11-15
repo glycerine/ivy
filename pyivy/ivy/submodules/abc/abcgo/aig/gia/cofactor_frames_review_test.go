@@ -48,7 +48,7 @@ func TestCofactoringFramesMatchSequentialSimulation(t *testing.T) {
 										if save == 0 {
 											expected = append(expected, outputs[:2]...)
 										}
-										last = outputs[0]
+										last = outputs[Gia_ManPoNum(src)-1]
 										copy(state, outputs[2:])
 									}
 									values, outputs, err := graph.evaluateObjects(inputs)
@@ -59,8 +59,12 @@ func TestCofactoringFramesMatchSequentialSimulation(t *testing.T) {
 										t.Fatalf("phase%d typed%d layout%d save%d init%d disable%d frames%d assignment%d: outputs%v want%v", signs, typed, layout, save, init, disable, count, assignment, outputs, expected)
 									}
 									literal := Gia_ManUnrollLastLit(raw)
-									if got := values[literal>>1] != (literal&1 != 0); got != last {
-										t.Fatal("last-property literal disagrees with sequential simulation")
+									if save != 0 {
+										if got := values[literal>>1] != (literal&1 != 0); got != last {
+											t.Fatal("last-property literal disagrees with sequential simulation")
+										}
+									} else if literal != 0 {
+										t.Fatal("fixed mode unexpectedly saved a property literal")
 									}
 									rows++
 								}

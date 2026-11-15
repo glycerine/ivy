@@ -13,7 +13,7 @@ func frameTestGraph() *Gia_Man_t {
 }
 
 func TestGiaManUnrollRejectsInvalidFrameCounts(t *testing.T) {
-	for _, frames := range []int32{-1, 1<<30} {
+	for _, frames := range []int32{-1, 1 << 30} {
 		if got := Gia_ManUnrollStart(frameTestGraph(), &Gia_ParFra_t{NFrames: frames}); got != nil {
 			t.Fatalf("unroll start with %d frames = %v, want nil", frames, got)
 		}
@@ -84,13 +84,13 @@ func TestGiaManUnrollFixedFramesAndInitialization(t *testing.T) {
 	}
 }
 
-func TestGiaManFrames2KeepsStateInterface(t *testing.T) {
+func TestGiaManFrames2HasCombinationalInterface(t *testing.T) {
 	result := Gia_ManFrames2(frameTestGraph(), &Gia_ParFra_t{NFrames: 3})
 	if result == nil {
 		t.Fatal("frame builder returned nil")
 	}
-	if got := Gia_ManRegNum(result); got != 1 {
-		t.Fatalf("register count = %d, want 1", got)
+	if got := Gia_ManRegNum(result); got != 0 {
+		t.Fatalf("register count = %d, want 0", got)
 	}
 	if got := Gia_ManPoNum(result); got != 3 {
 		t.Fatalf("property outputs = %d, want three frame outputs", got)
