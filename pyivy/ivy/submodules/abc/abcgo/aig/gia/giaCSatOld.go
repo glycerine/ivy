@@ -109,10 +109,7 @@ func Cbs0_ManStop(p *Cbs0_Man_t) {
 	if p.pProp.iTail != 0 {
 		Cbs0_ManCancelUntil(p, 0)
 	}
-	p.pProp = Cbs0_Que_t{}
-	p.pJust = Cbs0_Que_t{}
-	p.vModel = nil
-	p.pAig = nil
+	*p = Cbs0_Man_t{}
 }
 func Cbs0_ReadModel(p *Cbs0_Man_t) *Vec_Int_t { return p.vModel }
 func Cbs0_ManCheckLimits(p *Cbs0_Man_t) int32 {
@@ -384,7 +381,27 @@ func Cbs0_ManSolve(p *Cbs0_Man_t, root *Gia_Obj_t) int32 {
 	return status
 }
 func Cbs0_ManSatPrintStats(p *Cbs0_Man_t) {
-	fmt.Printf("CBS0 CO=%d AND=%d Conf=%d JustMax=%d Unsat=%d Sat=%d Undef=%d TotalTime=%s\n", Gia_ManCoNum(p.pAig), Gia_ManAndNum(p.pAig), p.Pars.nBTLimit, p.Pars.nJustLimit, p.nSatUnsat, p.nSatSat, p.nSatUndec, p.timeTotal)
+	fmt.Printf("CO = %8d  AND = %8d  Conf = %6d  JustMax = %5d  \n", Gia_ManCoNum(p.pAig), Gia_ManAndNum(p.pAig), p.Pars.nBTLimit, p.Pars.nJustLimit)
+	ratio := func(n, d float64) float64 {
+		if d == 0 {
+			return 0
+		}
+		return n / d
+	}
+	for _, row := range []struct {
+		label            string
+		calls, conflicts int32
+		elapsed          time.Duration
+	}{
+		{"Unsat", p.nSatUnsat, p.nConfUnsat, p.timeSatUnsat},
+		{"Sat  ", p.nSatSat, p.nConfSat, p.timeSatSat},
+		{"Undef", p.nSatUndec, p.nConfUndec, p.timeSatUndec},
+	} {
+		fmt.Printf("%s calls %6d  (%6.2f %%)   Ave conf = %8.1f   Time =%9.2f sec (%6.2f %%)\n",
+			row.label, row.calls, 100*ratio(float64(row.calls), float64(p.nSatTotal)),
+			ratio(float64(row.conflicts), float64(row.calls)), row.elapsed.Seconds(), 100*ratio(float64(row.elapsed), float64(p.timeTotal)))
+	}
+	fmt.Printf("Total time =%9.2f sec\n", p.timeTotal.Seconds())
 }
 func Cbs_ManSolveMiter(g *Gia_Man_t, conflicts int32, statusOut **Vec_Str_t, verbose int32) *Vec_Int_t {
 	if g.nRegs != 0 {
@@ -397,6 +414,18 @@ func Cbs_ManSolveMiter(g *Gia_Man_t, conflicts int32, statusOut **Vec_Str_t, ver
 	statuses := Vec_StrAlloc(int(Gia_ManPoNum(g)))
 	store := Vec_IntAlloc(0)
 	for i, id := range Vec_IntArray(g.vCos) {
+		Vec_IntClear(p.vModel)
+		if Gia_ObjIsConst0(Gia_ObjFanin0(g.pObjs[id])) != 0 {
+			if Gia_ObjFaninC0(g.pObjs[id]) != 0 {
+				fmt.Println("Constant 1 output of SRM!!!")
+				Vec_IntPush(store, int32(i))
+				Vec_IntPush(store, 0)
+				Vec_StrPush(statuses, 0)
+			} else {
+				Vec_StrPush(statuses, 1)
+			}
+			continue
+		}
 		began := time.Now()
 		status := Cbs0_ManSolve(p, Gia_ObjChild0(g.pObjs[id]))
 		Vec_StrPush(statuses, byte(status))

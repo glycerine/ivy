@@ -6221,3 +6221,32 @@ inside a commented-out C block. The active source and Go both try once; no retry
 repair is warranted. No circuit-SAT production or test edit has been made during
 this integration turn. Original completion remains 2/131; remaining GIA families,
 final inventory and the full sequential audit remain active.
+
+Begin giaCSatOld.c chronological circuit-SAT review. Compare the actual Cbs0
+engine directly through a native private-API fixture, not the newer CBS command.
+Random and hard reconvergent/parity graphs yield 30,432 exact source verdict,
+per-query/cumulative backtrack/frontier counter and ordered partial-CI model
+comparisons across three heuristics and strict resource limits. Outcomes include
+8,627 undecided, 20,998 SAT and 807 UNSAT queries, with maximum 54 backtracks and
+frontier size eight (/tmp/abcgo-cbs0-native.log). Independently exhaust every
+five-input truth table and every completion of each returned partial cube;
+assert assignment/queue cleanup after all outcomes. Core solving matches C.
+
+Miter regressions fail because Go counts constant outputs as solver calls and
+sends them through limit checks. With negative budget, Go returns undecided for
+constants where C still returns their immediate verdicts
+(/tmp/abcgo-cbs0-miter-red.log). Source handles constants before calling the
+solver. Restore that branch, trivial-counterexample store encoding and source
+constant-one diagnostic. Stats also omitted source call percentages, average
+conflicts and time fractions, besides counting those constant cases incorrectly
+(/tmp/abcgo-cbs0-stats-red.log). Restore source rows and safe zero denominators.
+For lifecycle compactness, Stop cancels any active trail then zeroes the whole
+manager instead of resetting selected fields individually. All chronological
+focused tests pass in 3.793s (/tmp/abcgo-cbs0-focused.log), including exact native
+miter statuses/store/diagnostics at negative, zero and ordinary budgets.
+
+Next measure the whole-graph typed-gate scan repeated on each query. Valid GIA
+managers already maintain typed-gate counts; preserve typed rejection while
+avoiding quadratic validation cost across many small-cone queries. Save a red
+checkpoint pending that compactness review, broader guards/queue/miter tests and
+full integration. Original completion remains 2/131; GIA and audit stay active.
