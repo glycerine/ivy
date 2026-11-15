@@ -1,5 +1,22 @@
 #include "aig/gia/gia.h"
+#include "sat/bsat/satSolver.h"
+static int safe_batch;
+static int review_solve(sat_solver *,lit *,lit *,ABC_INT64_T,ABC_INT64_T,ABC_INT64_T,ABC_INT64_T);
+#define sat_solver_solve review_solve
 #include "aig/gia/giaFalse.c"
+#undef sat_solver_solve
+// Default mode is unmodified C. Safe mode changes only the demonstrated
+// original-PI transition bug, using the existing solver and same total budget.
+static int review_solve(sat_solver *s,lit *begin,lit *end,ABC_INT64_T conflicts,ABC_INT64_T propagations,ABC_INT64_T globalConflicts,ABC_INT64_T globalPropagations) {
+ int status=sat_solver_solve(s,begin,end,conflicts,propagations,globalConflicts,globalPropagations),n,i;lit *core;
+ if(!safe_batch || status!=l_False || begin==end || begin[0]!=0)return status;
+ n=sat_solver_final(s,&core);
+ for(i=0;i<n;++i)if(Abc_Lit2Var(core[i])==0){
+  ABC_INT64_T cap=conflicts>0 && (!globalConflicts || conflicts<globalConflicts)?conflicts:globalConflicts;
+  return sat_solver_solve(s,begin+1,end,conflicts,propagations,cap,globalPropagations);
+ }
+ return status;
+}
 #pragma GCC diagnostic error "-Wimplicit-function-declaration"
 static unsigned rng;
 static unsigned next_random(void){rng=rng*1664525u+1013904223u;return rng>>8;}
@@ -42,9 +59,26 @@ static void inspect_verbose(void){
   if(out)Gia_ManStop(out);Gia_ManStop(g);
  }
 }
+static int output_bits(Gia_Man_t *g,int bits){
+ int values[4096]={0},i,packed=0;Gia_Obj_t *o;assert(Gia_ManObjNum(g)<4096);
+ Gia_ManForEachCi(g,o,i)values[Gia_ObjId(g,o)]=(bits>>i)&1;
+ Gia_ManForEachAnd(g,o,i)values[i]=(values[Gia_ObjFaninId0(o,i)]^Gia_ObjFaninC0(o))&(values[Gia_ObjFaninId1(o,i)]^Gia_ObjFaninC1(o));
+ Gia_ManForEachCo(g,o,i)packed|=(values[Gia_ObjFaninId0p(g,o)]^Gia_ObjFaninC0(o))<<i;return packed;
+}
+static Gia_Man_t *reconvergent_graph(void){
+ Gia_Man_t *g=Gia_ManStart(32);int a=Gia_ManAppendCi(g),c=Gia_ManAppendCi(g),d=Gia_ManAppendCi(g);
+ int ad=Gia_ManAppendAnd(g,a,d),left=Gia_ManAppendAnd(g,c^1,ad),right=Gia_ManAppendAnd(g,c,ad^1),xnor=Gia_ManAppendAnd(g,left^1,right^1);
+ int low=Gia_ManAppendAnd(g,c,d^1),high=Gia_ManAppendAnd(g,d,xnor);Gia_ManAppendCo(g,Gia_ManAppendAnd(g,low^1,high^1));return g;
+}
+static void inspect_reconvergence(void){
+ Gia_Man_t *g,*out;int mode,bits;
+ for(mode=0;mode<2;++mode){safe_batch=mode;g=reconvergent_graph();out=Gia_ManCheckFalse2(g,32,0,0,0);printf("safety %d",mode);for(bits=0;bits<8;++bits)printf(" %d/%d",output_bits(g,bits),output_bits(out,bits));puts("");Gia_ManStop(out);Gia_ManStop(g);}
+}
 int main(int argc,char **argv){
  if(argc>1 && !strcmp(argv[1],"--batch"))inspect_batch();
+ else if(argc>1 && !strcmp(argv[1],"--safe-batch")){safe_batch=1;inspect_batch();}
  else if(argc>1 && !strcmp(argv[1],"--priority"))inspect_priority();
  else if(argc>1 && !strcmp(argv[1],"--verbose"))inspect_verbose();
+ else if(argc>1 && !strcmp(argv[1],"--reconvergence"))inspect_reconvergence();
  else inspect_single();return 0;
 }

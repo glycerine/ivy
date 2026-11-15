@@ -8127,3 +8127,24 @@ typed driver cases and the reduced ordinary regression now pass in1.737s
 explicit C correctness defect, wider batch/driver/resource coverage and final
 gates remain open. This red checkpoint does not claim full package green or
 family closure; original completion stays2/131.
+
+### Explicit original-C batch defect and corrected native comparison
+
+After the safety repair, the original batch equality test correctly diverges
+(first seed12 now rejects an unsafe hook)
+(/tmp/abcgo-false-safety-native-divergence.log). Keep this distinction explicit;
+do not make Go reproduce the wrong source result. The fixture's default modes
+still execute unmodified C. Add an optional SAT-call bridge which delegates
+unchanged, then, only for the demonstrated PI-assumption core, performs the same
+source-single-query criterion recheck with shared deadline/global conflict cap.
+No solver answers or algorithm stubs are supplied.
+
+A separate fixture mode retains the original three-input counterexample and
+checks both source/corrected outputs against its independent eight-row formula.
+It must reproduce an original-C wrong result and leave every row unchanged in
+corrected mode. Exact corrected-source batch hook/scratch records match Go, and
+every resulting ordinary graph separately passes exhaustive scalar equivalence.
+Unmodified single-query, priority and complete diagnostic comparisons still
+match. All native checks pass in9.794s
+(/tmp/abcgo-false-safety-native-repaired.log). Remaining full-driver, ownership,
+resource/compactness and final frozen gates are still open; completion2/131.

@@ -74,7 +74,7 @@ func TestFalsePathNativeSingleRebuild(t *testing.T) {
 
 func TestFalsePathNativeBatchHooksAndScratch(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "false_review.c")
-	native, err := exec.Command(exe, "--batch").CombinedOutput()
+	native, err := exec.Command(exe, "--safe-batch").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C batch hooks: %v\n%s", err, native)
 	}
@@ -107,6 +107,9 @@ func TestFalsePathNativeBatchHooksAndScratch(t *testing.T) {
 			fmt.Fprintf(&records, " %d", obj.Value)
 		}
 		records.WriteByte('\n')
+		out := Gia_ManFalseRebuild(g, hooks, 0, 0)
+		cofReviewCheckRebuild(t, g, out)
+		Gia_ManStop(out)
 		Gia_ManStop(g)
 	}
 	esopReviewCompare(t, native, records.String())
@@ -196,5 +199,47 @@ func TestFalsePathNativeVerboseReports(t *testing.T) {
 	got = clock.ReplaceAllString(got, "<time>")
 	if got != want {
 		t.Fatalf("reports differ\nGo:\n%s\nC:\n%s", got, want)
+	}
+}
+
+func TestFalsePathNativeSourceBatchCounterexample(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "false_review.c")
+	native, err := exec.Command(exe, "--reconvergence").CombinedOutput()
+	if err != nil {
+		t.Fatalf("C reconvergence: %v\n%s", err, native)
+	}
+	lines := strings.Split(strings.TrimSpace(string(native)), "\n")
+	if len(lines) != 2 {
+		t.Fatalf("native rows: %s", native)
+	}
+	originalWrong := false
+	for mode, line := range lines {
+		fields := strings.Fields(line)
+		if len(fields) != 10 || fields[0] != "safety" || fields[1] != fmt.Sprint(mode) {
+			t.Fatalf("unexpected native row: %s", line)
+		}
+		for bits, item := range fields[2:] {
+			var before, after int
+			if _, err := fmt.Sscanf(item, "%d/%d", &before, &after); err != nil {
+				t.Fatal(err)
+			}
+			a, c, d := bits&1 != 0, bits&2 != 0, bits&4 != 0
+			want := !c
+			if d {
+				want = a != c
+			}
+			if before != int(giaBool(want)) {
+				t.Fatal("native source graph differs from independent formula")
+			}
+			if mode == 0 && before != after {
+				originalWrong = true
+			}
+			if mode == 1 && after != before {
+				t.Fatalf("corrected source changed input%d: %d/%d", bits, before, after)
+			}
+		}
+	}
+	if !originalWrong {
+		t.Fatal("fixture no longer reproduces the documented original-C bug")
 	}
 }
