@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/misc/util"
 )
 
@@ -87,6 +88,16 @@ func Gia_ManHashResize(p *Gia_Man_t) {
 }
 func Gia_ManHashProfile(p *Gia_Man_t) {
 	fmt.Printf("Table size = %d. Entries = %d. Hits = %d. Misses = %d.\n", Vec_IntSize(&p.vHTable), Gia_ManAndNum(p), p.nHashHit, p.nHashMiss)
+	for i := 0; i < min(1000, Vec_IntSize(&p.vHTable)); i++ {
+		count := 0
+		for id := Vec_IntEntry(&p.vHTable, i); id != 0; id = Vec_IntEntry(&p.vHash, int(id)) {
+			count++
+		}
+		if count != 0 {
+			fmt.Printf("%d ", count)
+		}
+	}
+	fmt.Println()
 }
 func giaHashIntern(p *Gia_Man_t, a, b, c int32, appendGate func() int32) int32 {
 	if p.nObjs&255 == 0 && 2*Vec_IntSize(&p.vHTable) < int(Gia_ManAndNum(p)) {

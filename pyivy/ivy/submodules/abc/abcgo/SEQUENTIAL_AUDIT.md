@@ -5273,3 +5273,23 @@ independent coordinate/transition checks. Continue reconciling the remaining
 GIA inventory, including giaHash.go functions outside the previously reviewed
 Gia_ManRehash path. Original completion stays 2/131; GIA and the full
 sequential audit remain active.
+
+Structural-hash follow-up reviews giaHash.go outside Gia_ManRehash. A new
+red regression confirms HashProfile omitted the original bucket-occupancy
+line (`/tmp/abcgo-hash-profile-red.log`). Restore the bounded 1,000-bucket
+chain-length report after the summary. The scalar/reduction rules inspected
+so far agree with C, including intentionally different empty-input results:
+HashAndMulti returns 0, while HashAndMulti2 returns 1; an odd dual-miter tail
+is ignored by the source pair iterator.
+
+New native fixture test_vectors/hash_primitives.c includes the actual C
+implementation and compares ordinary/additional/real/simple modes. It checks
+58x58 operand pairs per mode, all 10x10x10 primary-literal triples per mode,
+and every six-symbol input vector of lengths 0..5 for all three reducers.
+Returned literals, object counts, hit/miss counters, vector mutation and
+profile output match. Independent 16-row truth tables check AND/OR/XOR,
+MUX/majority, AND reductions and paired-output miters; source Simple-mode
+construction is retained. Native coverage passes in 2.004s
+(`/tmp/abcgo-hash-primitives-native.log`). Save a red checkpoint while resize
+allocation/compactness and the remaining static helpers are being checked;
+full integration is pending. Original completion remains 2/131, GIA active.
