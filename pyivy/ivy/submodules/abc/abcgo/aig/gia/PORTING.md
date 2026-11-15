@@ -1,5 +1,17 @@
 # GIA port progress
 
+Current validation (2026-11-15): full uncached module race tests pass all 130
+packages with tests, including GIA; three command packages have no tests. GIA vet
+also passes. The sequential source-correctness/compactness audit is still in
+progress; see [SEQUENTIAL_AUDIT.md](../../SEQUENTIAL_AUDIT.md) for current scope
+and evidence. Logs: /tmp/abcgo-tas-final-module-race.log and
+/tmp/abcgo-tas-final-vet.log.
+
+The incremental porting history below contains superseded selected-file and
+incomplete-build statements. Those statements describe earlier milestones.
+
+## Historical porting log
+
 The package is incomplete. Approximately 98,000 generated Go lines still contain
 C expressions, pointer arithmetic, and unresolved dependencies. The whole package
 must pass `go test ./aig/gia` before being considered ported; selected-file tests

@@ -56,6 +56,8 @@ bool rather than uint32, reducing Go records from 76 to 48 bytes. Tests check al
 new-record fields, growth and preservation of already modified records. This does
 not introduce another SAT algorithm.
 
-The final focused Tas suite passes in 12.512s. Full race/vet integration is
-recorded in SEQUENTIAL_AUDIT.md. This review covers the CTAS family; GIA's other
+The final focused Tas suite passes in 12.512s. Full uncached module race tests pass all
+130 tested packages (three command packages have no tests); GIA vet passes.
+Logs are /tmp/abcgo-tas-final-module-race.log and /tmp/abcgo-tas-final-vet.log.
+SEQUENTIAL_AUDIT.md records the checkpoints. This review covers the CTAS family; GIA's other
 families and the sequential 131-package objective remain open.

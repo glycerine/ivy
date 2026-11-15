@@ -18,7 +18,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT and CTAS reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -6622,3 +6622,27 @@ REVIEW_circuit_tas.md records the complete family scope and distinctions for the
 unfinished C allocator experiment. Save a checkpoint and freeze source/tests/
 fixtures for full module race and GIA vet. Original completion remains 2/131;
 GIA is still in progress.
+
+CTAS integration is green: full uncached module race tests pass all 130 tested
+packages, with three command packages having no tests
+(/tmp/abcgo-tas-final-module-race.log). GIA vet exits successfully with empty
+output (/tmp/abcgo-tas-final-vet.log). Source, tests and fixtures stayed frozen
+throughout integration. Mark the giaCTas.c/tas_*.go family and the separate
+allocator-only giaCTas2.c experiment reviewed. The rest of GIA and its final
+inventory remain open; original package completion stays 2/131.
+
+Reconcile the next source family as stand-alone priority cut enumeration in
+giaCut.c / giaCut.go, separate from the previously reviewed dup_replace_cut.go
+routine. Read-only preparation during integration creates
+/tmp/abcgo-cut-review-probe/probe.c and native.out using
+/tmp/abcgo-cut-probe-build.py. Actual C completes 504 configurations over eight
+graphs containing a full eight-input cone, cut sizes 2..8, limits 2/10/50 and
+no-truth/unminimized/minimized truth modes. The independent Python verifier
+(/tmp/abcgo-cut-probe-verify.py) checks all cut ordering/dominance constraints and
+74,951 truth functions against every actual eight-input completion; unminimized
+functions also agree on every formal cut assignment. These are native baseline
+results, not yet Go agreement. Next: tracked native regression fixtures, Go/C
+cut records and truth tables, merging/dominance/tie policies, reporting and
+compact scratch. Add red regressions before any bug fix. Existing giaCut_test.go
+has only a small merge/dominance and three-input truth sample; it does not
+establish completeness of this audit.
