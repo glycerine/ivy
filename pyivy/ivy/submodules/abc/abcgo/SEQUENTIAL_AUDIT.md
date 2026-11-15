@@ -5293,3 +5293,32 @@ construction is retained. Native coverage passes in 2.004s
 (`/tmp/abcgo-hash-primitives-native.log`). Save a red checkpoint while resize
 allocation/compactness and the remaining static helpers are being checked;
 full integration is pending. Original completion remains 2/131, GIA active.
+
+Expanded hashing review now covers the remaining static helpers and lifecycle.
+The native protocol compares 13,456 operand pairs, 4,000 control/data triples,
+37,324 reducer input vectors (111,972 reducer calls), 4,032 hash keys and all
+264 qualifying ordered MUX-recognition pairs. It verifies returned literals,
+node counts, hit/miss counters, pointer/literal lookup agreement, destructive
+versus non-destructive vectors and complete profile output after stopping,
+restarting and explicitly resizing the table. Every recorded Boolean result
+is checked on all 16 primary-input assignments. Recognized control/then/else
+literals independently reproduce the NOR of the two product terms.
+
+C-style ownership transfer replaces HashResize's unnecessary old-bucket clone:
+retain the old slice and zero the destination vector before filling the new
+one. Bucket traversal cannot be overwritten; no intermediate copy is needed.
+The 100-call 480-gate construction/resize benchmark improves from 55,824B /
+520 allocations / 118,298ns per run to 53,616B / 518 allocations / 110,372ns
+(`/tmp/abcgo-hash-resize-before.log`, `/tmp/abcgo-hash-optimized.log`). These
+are measured whole-workflow figures, not isolated resize timings. Simplify
+the recognizer's translated assertion scaffolding and combine repeated
+child extraction in AddStrash, retaining all source reduction branches.
+
+Additional lifecycle tests check repeated mixed AND/real-XOR/real-MUX table
+rebuilds, same-data MUXes with distinct controls, collision-chain uniqueness
+and correct buckets, Go's deliberate buffer exclusion, and empty/stopped
+manager behavior. Buffer exclusion is a Go graph extension; the native
+HashStart routine does not accept buffer nodes. All focused hashing tests
+pass in 2.020s (`/tmp/abcgo-hash-final-focused.log`). Save another red
+checkpoint pending full module race tests and GIA vet. Original completion
+remains 2/131; GIA and the sequential audit remain active.

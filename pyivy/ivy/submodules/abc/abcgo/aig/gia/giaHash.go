@@ -67,10 +67,12 @@ func Gia_ManHashStop(p *Gia_Man_t) {
 	p.literalHash = nil
 }
 func Gia_ManHashResize(p *Gia_Man_t) {
-	old := append([]int32(nil), Vec_IntArray(&p.vHTable)...)
+	old := Vec_IntArray(&p.vHTable)
 	if len(old) == 0 {
 		panic("gia: cannot resize inactive hash")
 	}
+	// Detach old buckets before Fill so it cannot overwrite the traversal.
+	p.vHTable = Vec_Int_t{}
 	Vec_IntFill(&p.vHTable, int(util.Abc_PrimeCudd(uint32(2*Gia_ManAndNum(p)))), 0)
 	for _, head := range old {
 		for head != 0 {
@@ -272,10 +274,7 @@ func Gia_ManHashMaj(p *Gia_Man_t, a, b, c int32) int32 {
 }
 func giaHashOpposite(a, b *Gia_Obj_t) bool { return a != nil && b != nil && a == Gia_Not(b) }
 func Gia_ObjRecognizeMuxTwo(pNode0 *Gia_Obj_t, pNode1 *Gia_Obj_t, ppNodeT **Gia_Obj_t, ppNodeE **Gia_Obj_t) *Gia_Obj_t {
-	if !(Gia_IsComplement(pNode0) == 0) {
-		panic("gia: invalid structural hashing precondition")
-	}
-	if !(Gia_IsComplement(pNode1) == 0) {
+	if Gia_IsComplement(pNode0) != 0 || Gia_IsComplement(pNode1) != 0 {
 		panic("gia: invalid structural hashing precondition")
 	}
 
@@ -331,10 +330,7 @@ func Gia_ObjRecognizeMuxTwo(pNode0 *Gia_Obj_t, pNode1 *Gia_Obj_t, ppNodeT **Gia_
 			return Gia_ObjChild1(pNode0)
 		}
 	}
-	if !(false) {
-		panic("gia: invalid structural hashing precondition")
-	}
-	return nil
+	panic("gia: invalid structural hashing precondition")
 }
 
 func Gia_ManHashAndP(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) *Gia_Obj_t {
@@ -342,34 +338,19 @@ func Gia_ManHashAndP(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) *Gia_Obj_t {
 }
 
 func Gia_ManAddStrash(p *Gia_Man_t, p0 *Gia_Obj_t, p1 *Gia_Obj_t) *Gia_Obj_t {
-	var pNode0, pNode1, pFanA, pFanB, pFanC, pFanD *Gia_Obj_t
-	if !(p.fAddStrash != 0) {
+	if p.fAddStrash == 0 {
 		panic("gia: invalid structural hashing precondition")
 	}
-	pNode0 = Gia_Regular(p0)
-	pNode1 = Gia_Regular(p1)
+	pNode0, pNode1 := Gia_Regular(p0), Gia_Regular(p1)
 	if Gia_ObjIsAnd(pNode0) == 0 && Gia_ObjIsAnd(pNode1) == 0 {
 		return nil
 	}
+	var pFanA, pFanB, pFanC, pFanD *Gia_Obj_t
 	if Gia_ObjIsAnd(pNode0) != 0 {
-		pFanA = Gia_ObjChild0(pNode0)
-	} else {
-		pFanA = nil
-	}
-	if Gia_ObjIsAnd(pNode0) != 0 {
-		pFanB = Gia_ObjChild1(pNode0)
-	} else {
-		pFanB = nil
+		pFanA, pFanB = Gia_ObjChild0(pNode0), Gia_ObjChild1(pNode0)
 	}
 	if Gia_ObjIsAnd(pNode1) != 0 {
-		pFanC = Gia_ObjChild0(pNode1)
-	} else {
-		pFanC = nil
-	}
-	if Gia_ObjIsAnd(pNode1) != 0 {
-		pFanD = Gia_ObjChild1(pNode1)
-	} else {
-		pFanD = nil
+		pFanC, pFanD = Gia_ObjChild0(pNode1), Gia_ObjChild1(pNode1)
 	}
 	if Gia_IsComplement(p0) != 0 {
 		if pFanA == Gia_Not(p1) || pFanB == Gia_Not(p1) {

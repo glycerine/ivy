@@ -88,7 +88,7 @@ func TestHashPrimitivesNativeOracle(t *testing.T) {
 				}
 			}
 		}
-		g.fAddStrash = int32(giaBool(mode == 1))
+		g.fAddStrash = giaBool(mode == 1)
 		var checks []hashReviewTruth
 		check := func(lit int32, want uint16) { checks = append(checks, hashReviewTruth{lit, want}) }
 		for i, a := range pool {
@@ -104,7 +104,10 @@ func TestHashPrimitivesNativeOracle(t *testing.T) {
 					check(real, truth[i]^truth[j])
 				}
 				if mode != 3 && a >= 2 && b >= 2 && a>>1 != b>>1 {
-					lookup = Gia_ManHashLookupInt(g, a, b)
+					lookup = Gia_ManHashLookup(g, Gia_ObjFromLit(g, a), Gia_ObjFromLit(g, b))
+					if lookup != Gia_ManHashLookupInt(g, a, b) {
+						t.Fatal("pointer and literal lookup disagree")
+					}
 				}
 				fmt.Fprintf(&got, "pair %d %d %d %d %d %d %d %d %d %d %d %d\n", mode, i, j, tried, x, y, z, real, lookup, g.nObjs, g.nHashHit, g.nHashMiss)
 				check(x, truth[i]&truth[j])
@@ -171,6 +174,8 @@ func TestHashPrimitivesNativeOracle(t *testing.T) {
 			}
 		}
 		if mode != 3 {
+			Gia_ManHashStop(g)
+			Gia_ManHashStart(g)
 			Gia_ManHashResize(g)
 		}
 		fmt.Fprintf(&got, "profile %d\n", mode)
@@ -188,6 +193,7 @@ func TestHashPrimitivesNativeOracle(t *testing.T) {
 			}
 		}
 	}
+	hashStaticReviewSnapshots(t, &got)
 	if got.String() != string(native) {
 		a, b := strings.Split(string(native), "\n"), strings.Split(got.String(), "\n")
 		for i := 0; i < len(a) && i < len(b); i++ {
@@ -196,5 +202,148 @@ func TestHashPrimitivesNativeOracle(t *testing.T) {
 			}
 		}
 		t.Fatalf("line counts C%d Go%d", len(a), len(b))
+	}
+}
+
+func BenchmarkHashConstructionAndResize(b *testing.B) {
+	b.ReportAllocs()
+	for run := 0; run < b.N; run++ {
+		g := Gia_ManStart(8)
+		inputs := make([]int32, 16)
+		for i := range inputs {
+			inputs[i] = Gia_ManAppendCi(g)
+		}
+		Gia_ManHashStart(g)
+		for i := 0; i < len(inputs); i++ {
+			for j := i + 1; j < len(inputs); j++ {
+				for phase := int32(0); phase < 4; phase++ {
+					Gia_ManHashAnd(g, inputs[i]^(phase&1), inputs[j]^((phase>>1)&1))
+				}
+			}
+		}
+		Gia_ManHashResize(g)
+	}
+}
+
+func hashStaticReviewSnapshots(t *testing.T, got *strings.Builder) {
+	t.Helper()
+	literals := []int32{0, 1, 2, 3, 6, 7, 30, 31, 62, 63, 254, 255}
+	for _, a := range literals {
+		for _, b := range literals {
+			for _, control := range []int32{-1, 0, 1, 2, 63, 126, 127} {
+				for _, size := range []int32{3, 11, 67, 1009} {
+					fmt.Fprintf(got, "key %d %d %d %d %d\n", a, b, control, size, Gia_ManHashOne(a, b, control, size))
+				}
+			}
+		}
+	}
+	g := Gia_ManStart(64)
+	inputs := make([]int32, 4)
+	for i := range inputs {
+		inputs[i] = Gia_ManAppendCi(g)
+	}
+	var nodes []int32
+	for i := 0; i < 4; i++ {
+		for j := i + 1; j < 4; j++ {
+			for phase := int32(0); phase < 4; phase++ {
+				nodes = append(nodes, Gia_ManAppendAnd(g, inputs[i]^(phase&1), inputs[j]^((phase>>1)&1)))
+			}
+		}
+	}
+	values := make([][]bool, 16)
+	for mask := range values {
+		bits := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0}
+		var err error
+		values[mask], _, err = g.evaluateObjects(bits)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	for i, lit0 := range nodes {
+		for j, lit1 := range nodes {
+			x, y := Gia_ManObj(g, lit0>>1), Gia_ManObj(g, lit1>>1)
+			a, b, _, _ := g.Gate(x.id)
+			c, d, _, _ := g.Gate(y.id)
+			if a != c^1 && a != d^1 && b != c^1 && b != d^1 {
+				continue
+			}
+			var yes, no *Gia_Obj_t
+			control := Gia_ObjRecognizeMuxTwo(x, y, &yes, &no)
+			ctrl, then, otherwise := Gia_ObjToLit(g, control), Gia_ObjToLit(g, yes), Gia_ObjToLit(g, no)
+			fmt.Fprintf(got, "recognize %d %d %d %d %d\n", i, j, ctrl, then, otherwise)
+			if ctrl&1 != 0 {
+				t.Fatal("recognized control is complemented")
+			}
+			for _, assignment := range values {
+				eval := func(lit int32) bool { return assignment[lit>>1] != (lit&1 != 0) }
+				value := eval(otherwise)
+				if eval(ctrl) {
+					value = eval(then)
+				}
+				if value != (!eval(lit0) && !eval(lit1)) {
+					t.Fatalf("recognizer changed NOR-of-products for nodes %d/%d", i, j)
+				}
+			}
+		}
+	}
+}
+
+func TestTypedHashLifecycleRetainsCanonicalNodes(t *testing.T) {
+	g := Gia_ManStart(8)
+	a, b, c, d := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+	g.EnableMuxes()
+	Gia_ManHashStart(g)
+	and := Gia_ManHashAnd(g, b, c)
+	xor := Gia_ManHashXorReal(g, b, c)
+	mux0, mux1 := Gia_ManHashMuxReal(g, a, b, c), Gia_ManHashMuxReal(g, d, b, c)
+	buf := Gia_ManAppendBuf(g, a)
+	count := g.nObjs
+	verify := func() {
+		if Gia_ManHashAnd(g, c, b) != and || Gia_ManHashXorReal(g, c, b) != xor || Gia_ManHashMuxReal(g, a^1, c, b) != mux0 || Gia_ManHashMuxReal(g, d^1, c, b) != mux1 || g.nObjs != count {
+			t.Fatal("hash lifecycle changed canonical identity")
+		}
+	}
+	for repeat := 0; repeat < 3; repeat++ {
+		Gia_ManHashResize(g)
+		verify()
+		Gia_ManHashStop(g)
+		Gia_ManHashStart(g)
+		verify()
+		seen := make(map[int32]bool)
+		for bucket, head := range Vec_IntArray(&g.vHTable) {
+			for head != 0 {
+				if head < 1 || head >= g.nObjs || seen[head] {
+					t.Fatal("duplicate/invalid hash chain entry")
+				}
+				seen[head] = true
+				obj := Gia_ManObj(g, head)
+				key := Gia_ManHashOne(Gia_ObjFaninLit0p(g, obj), Gia_ObjFaninLit1p(g, obj), Gia_ObjFaninLit2p(g, obj), int32(Vec_IntSize(&g.vHTable)))
+				if int(key) != bucket {
+					t.Fatal("gate stored in wrong bucket")
+				}
+				head = Vec_IntEntry(&g.vHash, int(head))
+			}
+		}
+		if len(seen) != 4 || seen[buf>>1] {
+			t.Fatal("buffer or terminal was hashed as an ordinary gate")
+		}
+	}
+}
+
+func TestEmptyHashLifecycle(t *testing.T) {
+	g := Gia_ManStart(1)
+	Gia_ManHashStart(g)
+	Gia_ManHashResize(g)
+	profile := hashReviewStdout(t, func() { Gia_ManHashProfile(g) })
+	if !strings.HasSuffix(profile, "Misses = 0.\n\n") {
+		t.Fatalf("empty profile %q", profile)
+	}
+	Gia_ManHashStop(g)
+	if Vec_IntSize(&g.vHTable) != 0 || Vec_IntSize(&g.vHash) != 0 {
+		t.Fatal("stopped table retained entries")
+	}
+	Gia_ManHashStart(g)
+	if g.nObjs != 1 {
+		t.Fatal("hash lifecycle added graph nodes")
 	}
 }
