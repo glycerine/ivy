@@ -262,3 +262,140 @@ func TestCounterexampleCareForcedTrueAfterUnrolling(t *testing.T) {
 		}
 	}
 }
+
+func TestCounterexamplePriorityReportsEachSourceOrder(t *testing.T) {
+	p := cexReviewThreeInputGraph(7)
+	c := util.Abc_CexAlloc(1, 3, 1)
+	text := hashReviewStdout(t, func() { Gia_ManCexCareMinimize(p, 3, c, 4, 1, 1) })
+	for _, label := range []string{"Original :    ", "PI-  PPI-:    ", "PI+  PPI-:    ", "PI-  PPI+:    ", "PI+  PPI+:    ", "Final    :    "} {
+		if !strings.Contains(text, label) {
+			t.Fatalf("source priority label %q missing: %q", label, text)
+		}
+	}
+}
+
+func BenchmarkCounterexamplePriority(b *testing.B) {
+	p := cexReviewThreeInputGraph(0xe8)
+	c := util.Abc_CexAlloc(1, 3, 1)
+	c.PData[0] = 14
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		Gia_ManCexCareMinimize(p, 3, c, 4, 0, 0)
+	}
+}
+
+func cexReviewSequentialGraph(signs, typed, layout int) *Gia_Man_t {
+	p := Gia_ManStart(32)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	var r0, r1 int32
+	if layout&1 == 0 {
+		r0, r1 = Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	}
+	property := Gia_ManAppendAnd(p, a^int32(signs&1), b^int32(signs>>1&1))
+	if layout&1 != 0 {
+		Gia_ManAppendCo(p, property)
+		r0, r1 = Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	}
+	var next0, next1 int32
+	if typed != 0 {
+		p.EnableMuxes()
+		next0 = Gia_ManAppendXorReal(p, a, r0^int32(signs>>2&1))
+		next1 = Gia_ManAppendMuxReal(p, b, r1^int32(signs&1), r0)
+	} else {
+		next0 = Gia_ManAppendAnd(p, a, r0^int32(signs>>2&1))
+		next1 = Gia_ManAppendAnd(p, r1^int32(signs&1), r0)
+	}
+	if layout&1 == 0 {
+		Gia_ManAppendCo(p, property)
+	}
+	Gia_ManAppendCo(p, next0)
+	Gia_ManAppendCo(p, next1)
+	if layout&2 != 0 {
+		for _, ports := range []*Vec_Int_t{p.vCis, p.vCos} {
+			slices.Reverse(Vec_IntArray(ports))
+			for i, id := range Vec_IntArray(ports) {
+				Gia_ObjSetCioId(p.pObjs[id], int32(i))
+			}
+		}
+	}
+	Gia_ManSetRegNum(p, 2)
+	p.SetIdentity("cex-frames", "cex-frames.aig")
+	return p
+}
+func TestCounterexampleMinimizationFramesMatrix(t *testing.T) {
+	graphs, rows := 0, 0
+	for signs := 0; signs < 8; signs++ {
+		for typed := 0; typed < 2; typed++ {
+			for layout := 0; layout < 4; layout++ {
+				for _, frames := range []int32{1, 2, 3, 5} {
+					p := cexReviewSequentialGraph(signs, typed, layout)
+					out := Gia_ManFramesForCexMin(p, frames)
+					if Gia_ManRegNum(out) != 0 || Gia_ManCiNum(out) != 2*frames || Gia_ManCoNum(out) != 3 {
+						t.Fatal("unrolled interface")
+					}
+					if name, spec := out.Identity(); name != "cex-frames" || spec != "cex-frames.aig" {
+						t.Fatal("unrolled identity")
+					}
+					for mask := 0; mask < 1<<uint(2*frames); mask++ {
+						c := util.Abc_CexAlloc(2, 2, frames)
+						c.IFrame = frames - 1
+						inputs := make([]bool, 2*frames)
+						for i := range inputs {
+							inputs[i] = mask>>i&1 != 0
+							if inputs[i] {
+								bit := 2 + i
+								c.PData[bit>>5] |= 1 << uint(bit&31)
+							}
+						}
+						values, _ := cexReviewSimulate(p, c)
+						final := values[len(values)-1]
+						want := make([]bool, 3)
+						for i := range want {
+							want[i] = final[Gia_ObjId(p, Gia_ManCo(p, int32(i)))]
+						}
+						checkQuantificationOutputs(t, out, inputs, want)
+						rows++
+					}
+					graphs++
+				}
+			}
+		}
+	}
+	t.Logf("%d typed/signed/layout unrollings and %d exhaustive input histories match scalar transitions", graphs, rows)
+}
+
+func TestCounterexampleCareLiteralMaskBoundaries(t *testing.T) {
+	c := util.Abc_CexAlloc(3, 5, 17)
+	c.IFrame = 16
+	c.IPo = 2
+	for i := range c.PData {
+		c.PData[i] = ^uint32(0)
+	}
+	first := int32(11)
+	lits := []int32{first << 1, (first+31)<<1 | 1, (first + 32) << 1, (first+63)<<1 | 1, (first + 31) << 1}
+	care := Bmc_CexCareDeriveCex(c, first, lits, int32(len(lits)))
+	if care.IPo != 2 || care.IFrame != 16 || care.NRegs != 3 || care.NPis != 5 || care.NBits != c.NBits {
+		t.Fatal("derived dimensions")
+	}
+	for i := int32(0); i < c.NBits; i++ {
+		want := i == 3 || i == 34 || i == 35 || i == 66
+		if got := util.Abc_InfoHasBit(care.PData, i); got != want {
+			t.Fatalf("mask bit%d %v want%v", i, got, want)
+		}
+	}
+	if !slices.Equal(c.PData, []uint32{^uint32(0), ^uint32(0), ^uint32(0)}) {
+		t.Fatal("literal derivation changed witness")
+	}
+	if util.Abc_CexCountOnes(Bmc_CexCareDeriveCex(c, first, nil, 0)) != 0 {
+		t.Fatal("empty mask")
+	}
+	if util.Abc_CexCountOnes(Bmc_CexCareDeriveCex(c, first, []int32{first << 1, -2}, 1)) != 1 {
+		t.Fatal("selected prefix")
+	}
+	for _, bad := range []struct {
+		lits  []int32
+		count int32
+	}{{lits, -1}, {lits, 6}, {[]int32{(first - 1) << 1}, 1}, {[]int32{(first + c.NBits - c.NRegs) << 1}, 1}} {
+		cexReviewMustPanic(t, func() { Bmc_CexCareDeriveCex(c, first, bad.lits, bad.count) })
+	}
+}

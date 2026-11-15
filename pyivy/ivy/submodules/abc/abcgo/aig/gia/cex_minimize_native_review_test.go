@@ -82,12 +82,12 @@ func TestCounterexampleSequentialCareMatchesOriginalABC(t *testing.T) {
 	}
 	var expected, got strings.Builder
 	for _, line := range strings.Split(string(native), "\n") {
-		if strings.HasPrefix(line, "case ") {
+		if strings.HasPrefix(line, "case ") || strings.HasPrefix(line, "forced-true ") {
 			expected.WriteString(line)
 			expected.WriteByte('\n')
 		}
 	}
-	cases := 0
+	cases, forced := 0, 0
 	for transition := 0; transition < 16; transition++ {
 		for _, property := range []int{8, 6, 14, 2} {
 			for _, frames := range []int{2, 5, 37} {
@@ -104,15 +104,22 @@ func TestCounterexampleSequentialCareMatchesOriginalABC(t *testing.T) {
 					if Gia_ManVerifyCex(p, c, 0) == 0 {
 						continue
 					}
-					priority := Gia_ManCexCareMinimize(p, 1, c, 1, 0, 0)
-					if util.Abc_CexCountOnes(priority) == 0 {
-						continue
-					} // Separate Go constant-output regression.
+					preflight, _, _, negated := giaCexCareSATInstance(p, c)
+					preflight.Close()
+					if !negated {
+						fmt.Fprintf(&got, "forced-true %d %d %d %d\n", transition, property, frames, seed)
+						forced++
+					}
 					for effort := int32(0); effort < 2; effort++ {
 						care := Bmc_CexCareSatBasedMinimizeAig(p, c, effort, 0)
-						fmt.Fprintf(&got, "case %d %d %d %d %d mask", transition, property, frames, seed, effort)
-						cexReviewWords(&got, care.PData)
-						got.WriteByte('\n')
+						if negated {
+							fmt.Fprintf(&got, "case %d %d %d %d %d mask", transition, property, frames, seed, effort)
+							cexReviewWords(&got, care.PData)
+							got.WriteByte('\n')
+						} else if util.Abc_CexCountOnes(care) != 0 {
+							t.Fatal("forced-true unrolling retained input bits")
+						}
+
 						completions := 32
 						if frames < 5 {
 							completions = 1 << frames
@@ -155,5 +162,5 @@ func TestCounterexampleSequentialCareMatchesOriginalABC(t *testing.T) {
 		}
 		t.Fatalf("native output length Go%d C%d", got.Len(), expected.Len())
 	}
-	t.Logf("%d exact native sequential care masks, with exhaustive small and sampled 37-frame completions", cases)
+	t.Logf("%d sequential care checks, including %d source forced-true boundaries, with exhaustive small and sampled 37-frame completions", cases, forced)
 }

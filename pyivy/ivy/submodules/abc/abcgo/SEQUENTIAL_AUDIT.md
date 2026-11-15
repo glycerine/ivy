@@ -6148,3 +6148,41 @@ zero-care result and a regression, then compare all supported native cases and
 independently check Go's forced-true cases. Do not silently discard this source
 boundary. The sequential oracle and full integration remain pending; save this
 red checkpoint. Original completion remains 2/131.
+
+The isolated native assertion is a source forced-true boundary, not a numbering
+failure: unrolling yields literal1 although conservative priority justification
+can retain unnecessary input bits. Add a regression that fails in Go at this
+boundary (/tmp/abcgo-cex-forced-true-red.log), then return an empty care mask when
+adding NOT(output) contradicts the already-simplified CNF. This is a proof that
+no inputs are needed; it preserves Go's previous constant-output support instead
+of reproducing C's assertion. The sequential fixture explicitly preflights the
+source CNF and labels those cases forced-true; it does not pretend the C API
+returned a mask. Go must return zero care bits there and still satisfy independent
+transition simulation. Remaining native API masks are compared exactly.
+
+All 504 sequential care checks pass, comprising 456 exact supported native API
+masks and two Go effort modes for each of 24 source forced-true boundaries.
+Small-trace input completions are exhaustive, and 37-frame completions are
+sampled with fixed cared values (/tmp/abcgo-cex-sequential-fixed.log). The
+allocation-before-validation regression also passes after early dimension
+validation. A priority-report regression fails for omitted Original/order/Final
+labels (/tmp/abcgo-cex-priority-report-red.log); restore all source labels.
+
+For compactness, reuse priority/value/flip-flop/mark scratch across the four
+priority attempts and remove a forward-propagation Boolean result that is always
+true (source propagation returns void). The small four-order benchmark changes
+from 592B/14 allocations/4,507ns to 352B/11 allocations/4,501ns
+(/tmp/abcgo-cex-priority-before.log and /tmp/abcgo-cex-priority-after.log). Claim
+allocation reduction, not a timing improvement. The source algorithms and tie
+rules are unchanged.
+
+The final focused counterexample suite passes in 10.245s
+(/tmp/abcgo-cex-final-focused.log). It includes 256 signed/typed/logical-layout
+unrollings checked over 70,912 exhaustive input histories, alongside 1,024
+multi-register replay traces/37,888 scalar state rows, the 2,048 native replay
+cases, 2,032 native combinational masks and sequential care checks. Additional
+literal-mask tests pass across 32/64-bit boundaries, duplicate/opposite literals,
+selected prefixes, empty masks, dimensions and invalid counts/ranges
+(/tmp/abcgo-cex-literal-mask.log). Freeze source/tests/native fixtures after the
+next checkpoint for full uncached module race tests plus GIA/BMC vet. Original
+completion remains 2/131; the GIA package and sequential audit remain active.

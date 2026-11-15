@@ -35,9 +35,18 @@ func Gia_ManCexCareMinimize(p *Gia_Man_t, realPis int32, cex *util.Abc_Cex_t, tr
 	for i := int32(0); i < pis; i++ {
 		isPI[ci[i]>>1] = true
 	}
+	if verbose != 0 {
+		fmt.Print("Original :    ")
+		util.Abc_CexPrintStatsInputs(cex, realPis)
+	}
+	priorities := make([]int32, pis*frames)
+	values := make([]int32, n)
+	ff := make([]int32, frames*regs)
+	marked := make([]bool, n)
 	var best *util.Abc_Cex_t
 	for attempt := int32(0); attempt < tries; attempt++ {
-		priorities := make([]int32, pis*frames)
+		clear(values)
+		clear(marked)
 		counter := int32(0)
 		assign := func(start, end, step int32) {
 			for f := frames - 1; f >= 0; f-- {
@@ -61,13 +70,11 @@ func Gia_ManCexCareMinimize(p *Gia_Man_t, realPis int32, cex *util.Abc_Cex_t, tr
 		} else {
 			assign(0, realPis, 1)
 		}
-		values := make([]int32, n)
 		values[0] = counter << 1
 		for i := int32(0); i < regs; i++ {
 			values[co[int32(len(co))-regs+i]] = values[0]
 		}
-		ff := make([]int32, frames*regs)
-		forward := func(f int32) bool {
+		forward := func(f int32) {
 			for i := int32(0); i < pis; i++ {
 				values[ci[i]>>1] = priorities[f*pis+i]
 			}
@@ -92,7 +99,6 @@ func Gia_ManCexCareMinimize(p *Gia_Man_t, realPis int32, cex *util.Abc_Cex_t, tr
 					values[id] = values[a>>1] ^ (a & 1)
 				}
 			}
-			return true
 		}
 		for f := int32(0); f < frames; f++ {
 			for i := int32(0); i < regs; i++ {
@@ -100,16 +106,13 @@ func Gia_ManCexCareMinimize(p *Gia_Man_t, realPis int32, cex *util.Abc_Cex_t, tr
 				values[ci[pis+i]>>1] = v
 				ff[f*regs+i] = v
 			}
-			if !forward(f) {
-				return nil
-			}
+			forward(f)
 		}
 		if values[co[cex.IPo]]&1 == 0 {
 			return nil
 		}
 		care := util.Abc_CexAlloc(regs, pis, frames)
 		care.IPo, care.IFrame = cex.IPo, cex.IFrame
-		marked := make([]bool, n)
 		for f := frames - 1; f >= 0; f-- {
 			marked[co[cex.IPo]] = f == frames-1
 			for i := int32(0); i < regs; i++ {
@@ -169,11 +172,16 @@ func Gia_ManCexCareMinimize(p *Gia_Man_t, realPis int32, cex *util.Abc_Cex_t, tr
 			}
 		}
 		if verbose != 0 {
+			fmt.Print([]string{"PI-  PPI-:    ", "PI+  PPI-:    ", "PI-  PPI+:    ", "PI+  PPI+:    "}[attempt])
 			util.Abc_CexPrintStatsInputs(care, realPis)
 		}
 		if best == nil || util.Abc_CexCountOnes(care) < util.Abc_CexCountOnes(best) {
 			best = care
 		}
+	}
+	if verbose != 0 {
+		fmt.Print("Final    :    ")
+		util.Abc_CexPrintStatsInputs(best, realPis)
 	}
 	if Gia_ManCexCareVerify(p, cex, best) == 0 {
 		fmt.Println("Counter-example verification has failed.")

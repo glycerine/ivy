@@ -93,12 +93,12 @@ func Bmc_CexCareSatBasedMinimizeAig(p *Gia_Man_t, cex *util.Abc_Cex_t, highEffor
 	solver, first, assumptions, negated := giaCexCareSATInstance(p, cex)
 	defer solver.Close()
 	if !negated {
-		// A constant-true output is a supported Go extension. The priority proof
-		// already establishes that no input assignments need to be retained.
-		if countBest == 0 {
-			return best
-		}
-		panic("gia: counterexample output cannot be negated")
+		// Source asserts here. A contradiction after adding NOT(output) proves
+		// that the unrolled formula needs no retained input assignments, even
+		// when conservative priority justification selected some of them.
+		best = util.Abc_CexAlloc(cex.NRegs, cex.NPis, cex.IFrame+1)
+		best.IPo, best.IFrame = cex.IPo, cex.IFrame
+		return best
 	}
 
 	if verbose != 0 {
