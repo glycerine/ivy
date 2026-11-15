@@ -72,6 +72,15 @@ func Gia_ManAreFree(p *Gia_ManAre_t) {
 		*p = Gia_ManAre_t{}
 	}
 }
+
+// Logical source pages are retained as metadata for the flat Go storage.
+func giaArePages(count int32) int32 {
+	if count == 0 {
+		return 0
+	}
+	return 1 + (count-1)/MAX_ITEM_NUM
+}
+
 func Gia_ManAreCreateObj(p *Gia_ManAre_t) *Gia_ObjAre_t {
 	if p.nObjs == 0 {
 		p.objects = append(p.objects, &Gia_ObjAre_t{})
@@ -84,7 +93,7 @@ func Gia_ManAreCreateObj(p *Gia_ManAre_t) *Gia_ObjAre_t {
 	obj := &Gia_ObjAre_t{}
 	p.objects = append(p.objects, obj)
 	p.nObjs++
-	p.nObjPages = (p.nObjs + MAX_ITEM_NUM - 1) / MAX_ITEM_NUM
+	p.nObjPages = giaArePages(p.nObjs)
 	return obj
 }
 func Gia_ManAreCreateSta(p *Gia_ManAre_t) *Gia_StaAre_t {
@@ -99,7 +108,7 @@ func Gia_ManAreCreateSta(p *Gia_ManAre_t) *Gia_StaAre_t {
 	state := &Gia_StaAre_t{pData: make([]uint32, p.nWords)}
 	p.states = append(p.states, state)
 	p.nStas++
-	p.nStaPages = (p.nStas + MAX_ITEM_NUM - 1) / MAX_ITEM_NUM
+	p.nStaPages = giaArePages(p.nStas)
 	return state
 }
 func Gia_ManAreRycycleSta(p *Gia_ManAre_t, s *Gia_StaAre_t) {
@@ -109,7 +118,7 @@ func Gia_ManAreRycycleSta(p *Gia_ManAre_t, s *Gia_StaAre_t) {
 	if p.nStas > 1 && s == Gia_ManAreStaLast(p) {
 		p.states = p.states[:p.nStas-1]
 		p.nStas--
-		p.nStaPages = (p.nStas + MAX_ITEM_NUM - 1) / MAX_ITEM_NUM
+		p.nStaPages = giaArePages(p.nStas)
 	}
 }
 func Gia_ManAreCreateStaNew(p *Gia_ManAre_t) *Gia_StaAre_t {

@@ -7461,3 +7461,29 @@ message. All private/native-driver/witness-report tests pass in 3.782s
 (/tmp/abcgo-era2-reports-green.log). No full integration gate has run since the
 preceding cube checkpoints; storage boundary checks, final source/compactness
 pass and frozen full-module integration remain pending. Completion stays 2/131.
+
+### Cube storage-range and minterm inspection checkpoint
+
+Factor the repeated page calculation without changing its original expression,
+then add a red full-range arithmetic check. Valid counts above 2,146,435,072
+produce negative pages instead of 2,048 (/tmp/abcgo-era2-storage-range-red.log).
+Use zero for an empty store and 1+(count-1)/MAX_ITEM_NUM otherwise, avoiding signed
+addition overflow. Constructor/recycle callers share the helper. A capacity-stop
+unit simulates the exhaustion counters without allocating two billion records;
+all constructors refuse before allocation, access or counter overflow.
+
+Expanded cube/enable/native-export focused tests pass in 13.226s
+(/tmp/abcgo-era2-final-focused.log). Add independent minterm enumeration over all
+ternary cubes with zero through six variables (1,093 patterns), including OR
+into an existing cover and preserving unrelated bits. Those pass. A six-dash
+microbenchmark already measures zero allocations at 492.7ns/query
+(/tmp/abcgo-era2-minterms-before.log), so retain the idiomatic slice implementation
+instead of introducing a speculative fixed-buffer rewrite.
+
+The source pass has reached all 74 functions/accessors. Keep checking semantic
+PO feasibility before final closure: CheckPOstatus treats any nonconstant
+cofactored PO as a possible failure, so a logically zero but structurally
+nonconstant cone may reach unsatisfiable trace reconstruction. A temporary
+independent Boolean-zero reproduction is being evaluated; no conclusion or
+repair is claimed yet. Full family integration remains pending, as do final
+review notes. Original package completion stays 2/131.

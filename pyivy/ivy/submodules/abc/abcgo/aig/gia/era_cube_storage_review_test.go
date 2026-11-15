@@ -114,3 +114,26 @@ func TestCubeReachabilityHighestTreeVariable(t *testing.T) {
 		t.Fatal("highest variable lookup lost matching cube")
 	}
 }
+
+func TestCubeReachabilityPageCountRange(t *testing.T) {
+	for _, count := range []int32{0, 1, MAX_ITEM_NUM - 1, MAX_ITEM_NUM, MAX_ITEM_NUM + 1, 2 * MAX_ITEM_NUM, 2047 * MAX_ITEM_NUM, 2047*MAX_ITEM_NUM + 1, 1<<31 - 2, 1<<31 - 1} {
+		want := (int64(count) + MAX_ITEM_NUM - 1) / MAX_ITEM_NUM
+		if got := giaArePages(count); int64(got) != want {
+			t.Errorf("count%d pages%d want%d", count, got, want)
+		}
+	}
+}
+
+func TestCubeReachabilityStorageExhaustionDoesNotAllocate(t *testing.T) {
+	// Simulate the capacity counters without allocating two billion records.
+	// Exhaustion must be checked before any array access/allocation or overflow.
+	p := &Gia_ManAre_t{nObjs: 1<<31 - 1, nStas: 1<<31 - 1}
+	hashReviewStdout(t, func() {
+		if Gia_ManAreCreateObj(p) != nil || Gia_ManAreCreateSta(p) != nil || Gia_ManAreCreateStaNew(p) != nil {
+			t.Fatal("capacity exhaustion returned a record")
+		}
+	})
+	if p.nObjs != 1<<31-1 || p.nStas != 1<<31-1 || len(p.objects) != 0 || len(p.states) != 0 {
+		t.Fatal("capacity stop allocated or changed counters")
+	}
+}
