@@ -7136,3 +7136,25 @@ sequential/enable tests then pass in 1.976s
 (/tmp/abcgo-enable-final-focused.log). This narrow dependency repair does not
 close the broader giaCof.c review. Save it separately before final state checks,
 family documentation and module race/vet integration.
+
+### Sequential enable final focused checks
+
+All current sequential/enable tests pass in 1.969s
+(/tmp/abcgo-enable-final-focused.log), including final distinct-register feedback
+and ordinary structural enables with typed data. Independent initialized-frame
+coverage now spans 1,872 input sequences, including simultaneous updates of
+registers with different transition functions. Guards retain legitimate ordinary
+MUX recognition when XOR data appears deeper in its branches.
+
+Reconcile all ten giaEnable.c routines in REVIEW_sequential_enables.md. The native
+ordinary/high-frequency/verbose matrices compare 4,272 lines; direct collectors,
+copy tables, transfer, full cofactor composition and both removal variants are
+covered. Document the narrower structural recognition domain, source failure
+repairs, typed-copy extensions, port identity, reference ownership, frame-table
+lifecycle, first-seen signed class ordering and local traversal improvements.
+The reporting-only cof_duplicate.go dependency change is separately committed
+and does not close giaCof.c's audit.
+
+Freeze source, tests and fixtures for full uncached module race tests and GIA vet.
+Family closure awaits those checks; original completion remains 2/131 and GIA
+still has remaining families and final inventory work.

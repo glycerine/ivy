@@ -29,6 +29,81 @@ func TestEnableDetectionReferenceOwnership(t *testing.T) {
 	}
 }
 
+func TestEnableUnrollDistinctRegisterFeedback(t *testing.T) {
+	for _, cofactor := range []bool{false, true} {
+		p := Gia_ManStart(24)
+		p.EnableMuxes()
+		a, b, r0, r1 := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+		n0 := Gia_ManAppendXorReal(p, a, r1)
+		n1 := Gia_ManAppendMuxReal(p, b, r0, r1^1)
+		Gia_ManAppendCo(p, r0)
+		Gia_ManAppendCo(p, r1)
+		Gia_ManAppendCo(p, n0)
+		Gia_ManAppendCo(p, n1)
+		Gia_ManSetRegNum(p, 2)
+		var q *Gia_Man_t
+		if cofactor {
+			q = Gia_ManUnrollAndCofactor(p, 4, 1, 0)
+		} else {
+			q = Gia_ManUnrollInit(p, 4)
+		}
+		Gia_ManStop(p)
+		if q == nil {
+			t.Fatal("missing frame graph")
+		}
+		for mask := 0; mask < 256; mask++ {
+			in := make([]bool, 8)
+			for i := range in {
+				in[i] = mask&(1<<i) != 0
+			}
+			got, err := q.Evaluate(in)
+			if err != nil || len(got) != 8 {
+				t.Fatalf("outputs %v (%v)", got, err)
+			}
+			x, y := false, false
+			for f := 0; f < 4; f++ {
+				if got[2*f] != x || got[2*f+1] != y {
+					t.Fatalf("cofactor%t/mask%d/frame%d: outputs %v, want %t/%t", cofactor, mask, f, got, x, y)
+				}
+				nx, ny := in[2*f] != y, !y
+				if in[2*f+1] {
+					ny = x
+				}
+				x, y = nx, ny
+			}
+		}
+		Gia_ManStop(q)
+	}
+}
+
+func TestEnableRemovalAcceptsTypedDataInsideOrdinaryMux(t *testing.T) {
+	for _, operation := range []struct {
+		name string
+		copy func(*Gia_Man_t) *Gia_Man_t
+	}{{"remove", Gia_ManRemoveEnables}, {"remove2", Gia_ManRemoveEnables2}} {
+		p := Gia_ManStart(24)
+		control, a, b, r := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+		data := Gia_ManAppendXorReal(p, a, b)
+		next := Gia_ManAppendMux(p, control, data, r)
+		Gia_ManAppendCo(p, r)
+		Gia_ManAppendCo(p, next)
+		Gia_ManSetRegNum(p, 1)
+		q := operation.copy(p)
+		Gia_ManStop(p)
+		for mask := 0; mask < 16; mask++ {
+			in := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0, mask&8 != 0}
+			got, err := q.Evaluate(in)
+			if err != nil || len(got) != 2 || got[0] != in[3] || got[1] != (in[1] != in[2]) {
+				t.Fatalf("%s/mask%d: outputs %v (%v)", operation.name, mask, got, err)
+			}
+		}
+		if operation.name == "remove" {
+			assertIDs(t, q.VFlopClasses, 1)
+		}
+		Gia_ManStop(q)
+	}
+}
+
 func TestEnableControlClassesKeepFirstSeenSignedOrder(t *testing.T) {
 	for _, mixed := range []bool{false, true} {
 		t.Run(fmt.Sprint(mixed), func(t *testing.T) {
