@@ -4917,3 +4917,33 @@ algorithm in the lowering family reviewed. Continue the separate role audit
 in cofactor/quantification, balancing, rehashing and box-order rewrites,
 then reconcile the remaining GIA algorithm inventory. Original completion
 remains 2/131; the sequential audit stays active.
+
+Cofactor/quantifier bad-partition checkpoint: red regressions show bad-output
+labels lost in eight supported operation/state variants: variable cofactors
+at both values, Exist2 with/without registers, combinational Univ and the
+single-output Exist API (`/tmp/abcgo-quant-partition-red.log`). Reuse the
+paired output-role helper at the two sites that already copied nConstrs.
+No cofactor/quantifier algorithm or shared constructor changed. The minimal
+regressions pass (`/tmp/abcgo-quant-partition-focused.log`).
+
+Expanded checks pass in 0.241s (`/tmp/abcgo-quant-partition-expanded.log`).
+There are 3,616 cases/57,856 input-state rows over every valid role partition
+for the corresponding one/two/three-PO interface, every PI variable, four
+literal-phase patterns, ordinary/real-XOR/MUX/buffer forms and normal/DFS
+layouts. Each original assignment is evaluated with the variable forced to
+zero/one to form an independent expected result. Variable cofactors use the
+selected branch, existential variants OR both branches, and C's Univ rule
+ANDs only the first output while auxiliary outputs use the positive branch.
+Exist2's RI transformation follows C's component-wise OR contract; no broader
+sequential-equivalence claim is made. Every copied/rewritten vector and its
+AIGER round trip are checked, including raw header roles, register counts
+and source-role immutability.
+
+Seven derived-output controls cover guarded PI/internal-node cofactors at
+both values, block extraction, distinct-source MUX reconstruction and aliased
+MUX sources. They check exact guarded/selected Boolean values across all 16
+inputs and retain the original unclassified-output policy. This distinguishes
+the two explicit complete-output role sites from shared constructor behavior.
+Full uncached module race tests and GIA vet are running. Save this checkpoint
+with a red prefix until integration finishes. Original completion remains
+2/131; the GIA audit continues.

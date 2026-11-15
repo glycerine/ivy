@@ -57,7 +57,7 @@ func Gia_ManDupCofactorVar(src *Gia_Man_t, variable, value int32) *Gia_Man_t {
 		Gia_ManAppendCo(out, lit)
 	}
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
-	out.nConstrs = src.nConstrs
+	giaCopyOutputRoles(out, src)
 	return giaCleanComposed(out)
 }
 func Gia_ManDupMux(variable int32, positive, negative *Gia_Man_t) *Gia_Man_t {
@@ -103,7 +103,7 @@ func giaQuantify(src *Gia_Man_t, variable int32, universal, allOutputs bool) *Gi
 		Gia_ManAppendCo(out, lit)
 	}
 	Gia_ManSetRegNum(out, Gia_ManRegNum(src))
-	out.nConstrs = src.nConstrs
+	giaCopyOutputRoles(out, src)
 	return giaCleanComposed(out)
 }
 func Gia_ManDupExist(src *Gia_Man_t, variable int32) *Gia_Man_t {
