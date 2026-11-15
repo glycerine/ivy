@@ -19,11 +19,13 @@ func Gia_ManQuantDupConeSupp_rec(q, p *Gia_Man_t, obj *Gia_Obj_t, cis, objs *Vec
 	if Gia_ObjIsAnd(obj) == 0 {
 		panic("gia: unsupported quantification cone")
 	}
-	Gia_ManQuantDupConeSupp_rec(q, p, Gia_ObjFanin0(obj), cis, objs, keep, data)
-	Gia_ManQuantDupConeSupp_rec(q, p, Gia_ObjFanin1(obj), cis, objs, keep, data)
-	a := Gia_ObjCopyArray(p, Gia_ObjFaninId0(obj, obj.id)) ^ Gia_ObjFaninC0(obj)
-	b := Gia_ObjCopyArray(p, Gia_ObjFaninId1(obj, obj.id)) ^ Gia_ObjFaninC1(obj)
-	Gia_ObjSetCopyArray(p, obj.id, Gia_ManHashAnd(q, a, b))
+	// Keep the source's ordinary-AND product algorithm. Real gates are
+	// lowered here, and every logical input (including MUX control) is copied.
+	for _, fanin := range giaObjectFanins(p, obj) {
+		Gia_ManQuantDupConeSupp_rec(q, p, p.pObjs[fanin], cis, objs, keep, data)
+	}
+	read := func(lit int32) int32 { return Gia_ObjCopyArray(p, lit>>1) ^ (lit & 1) }
+	Gia_ObjSetCopyArray(p, obj.id, giaHashMappedGate(q, p, obj, read))
 	vec.Vec_IntPush(objs, obj.id)
 }
 func Gia_ManQuantDupConeSupp(p *Gia_Man_t, lit int32, keep func(any, int32) int32, data any, outCis **Vec_Int_t, outLit *int32) *Gia_Man_t {

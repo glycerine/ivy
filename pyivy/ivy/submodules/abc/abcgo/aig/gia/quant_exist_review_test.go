@@ -181,3 +181,49 @@ func TestQuantExist2RetainsUnaffectedCiCofactor(t *testing.T) {
 		t.Fatalf("got literal%d, want retained c literal%d", result, inputs[2])
 	}
 }
+
+func TestQuantExist2TypedConeTruth(t *testing.T) {
+	for _, kind := range []string{"xor", "mux", "buffer"} {
+		for phase := int32(0); phase < 2; phase++ {
+			t.Run(fmt.Sprintf("%s/phase%d", kind, phase), func(t *testing.T) {
+				defer func() {
+					if err := recover(); err != nil {
+						t.Fatalf("typed quantification panicked: %v", err)
+					}
+				}()
+				for mask := 0; mask < 8; mask++ {
+					g := Gia_ManStart(32)
+					g.EnableMuxes()
+					a, b, c := Gia_ManAppendCi(g), Gia_ManAppendCi(g), Gia_ManAppendCi(g)
+					var root int32
+					switch kind {
+					case "xor":
+						root = Gia_ManAppendXorReal(g, a, b)
+					case "mux":
+						root = Gia_ManAppendMuxReal(g, c, a, b)
+					case "buffer":
+						root = Gia_ManAppendBuf(g, a^1)
+					}
+					root ^= phase
+					truth := make([]bool, 8)
+					for bits := range truth {
+						values := cofReviewValues(g, bits)
+						truth[bits] = values[root>>1] != (root&1 != 0)
+					}
+					Gia_ManHashAlloc(g)
+					keep := func(data any, ci int32) int32 { return int32(data.(int)>>ci) & 1 }
+					result := Gia_ManQuantExist2(g, root, keep, mask)
+					for bits := range truth {
+						values := cofReviewValues(g, bits)
+						got := values[result>>1] != (result&1 != 0)
+						want := quantReviewExpected(truth, mask, bits)
+						if got != want {
+							t.Fatalf("mask%x input%d got%t want%t literal%d", mask, bits, got, want, result)
+						}
+					}
+					Gia_ManStop(g)
+				}
+			})
+		}
+	}
+}

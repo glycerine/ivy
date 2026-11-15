@@ -7883,3 +7883,26 @@ checks all sixteen assignments against independent existential enumeration,
 including all retained-input masks, both phases, both source algorithms and
 repeated masks on one growing graph. Native/support/type/depth/compactness and
 full integration review remain open; original completion stays 2/131.
+
+### Quantification native support and typed-cone checkpoint
+
+Add test_vectors/exist_review.c using the actual giaExist.c. Thirty directed
+ordinary MUX cases match unmodified C result literals, object counts and truth.
+Explicitly omit the two documented native all-quantified incremental crashes
+from native equality, while keeping their independent Go repair regressions.
+The widening matrix matches 47,187 exact records across 0/1/2/63/64/65/127/128/
+129/191/192/193 inputs: full/subset tracking, lazy CI registration, all support
+words, selected-variable masks, overlap and affected-cone counts. Initial native
+checks pass in 3.718s (/tmp/abcgo-exist-native-first.log).
+
+New typed-cone tests turn red: Exist2 treats XOR/MUX raw fanins as an AND and
+misses the MUX control (/tmp/abcgo-exist-typed-red.log). Copy every logical fanin
+and reuse giaHashMappedGate at the ordinary source-algorithm boundary. Existing
+ordinary recursion order remains unchanged. Both output phases/all keep masks
+of typed XOR/MUX/buffer tests, 4,608 generated repeated queries and native matrices
+pass in 3.736s (/tmp/abcgo-exist-typed-repaired.log).
+
+The separate incremental path still needs its typed construction/support hooks
+and cone collection checked. Independent wide-support, deep/shared-cone,
+ownership/compactness and final frozen gates remain pending. Original package
+completion remains 2/131; no family closure claimed.
