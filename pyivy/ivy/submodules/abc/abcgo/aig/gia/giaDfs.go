@@ -117,7 +117,7 @@ func Gia_ManCollectTest(p *Gia_Man_t) {
 		root := Gia_ObjId(p, Gia_ManCo(p, i))
 		Gia_ManCollectAnds(p, []int32{root}, 1, result, nil)
 	}
-	fmt.Printf("DFS from each output = %9.2f sec\n", time.Since(start).Seconds())
+	fmt.Printf("DFS from each output =%9.2f sec\n", time.Since(start).Seconds())
 }
 func Gia_ManConeSize_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	return giaDfsCollect(p, Gia_ObjId(p, obj), nil, false, true)
@@ -240,7 +240,7 @@ func Gia_ManCollectSeqTest(p *Gia_Man_t) {
 		}
 		Gia_ManCollectSeq(p, []int32{i}, 1)
 	}
-	fmt.Printf("Time = %.2f sec\n", time.Since(start).Seconds())
+	fmt.Printf("Time =%9.2f sec\n", time.Since(start).Seconds())
 }
 func Gia_ManCollectTfi_rec(p *Gia_Man_t, id int32, nodes *Vec_Int_t) {
 	giaDfsCollect(p, id, nodes, false, true)

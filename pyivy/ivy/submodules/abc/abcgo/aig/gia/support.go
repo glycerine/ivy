@@ -66,9 +66,14 @@ func Gia_ManSuppSizeOne(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 }
 func Gia_ManSuppSize(p *Gia_Man_t, nodes []int32, count int32) int32 {
 	Gia_ManIncrementTravId(p)
+	Gia_ObjSetTravIdCurrentId(p, 0)
 	total := int32(0)
 	for _, id := range nodes[:count] {
-		total += Gia_ManSuppSize_rec(p, Gia_ManObj(p, id))
+		obj := Gia_ManObj(p, id)
+		if Gia_ObjIsCo(obj) != 0 {
+			obj = Gia_ObjFanin0(obj)
+		}
+		total += Gia_ManSuppSize_rec(p, obj)
 	}
 	return total
 }
@@ -81,6 +86,6 @@ func Gia_ManSuppSizeTest(p *Gia_Man_t) int32 {
 		}
 	}
 	fmt.Printf("Nodes with small support %d (out of %d)\n", count, Gia_ManAndNum(p))
-	fmt.Printf("Time = %.2f sec\n", time.Since(started).Seconds())
+	fmt.Printf("Time =%9.2f sec\n", time.Since(started).Seconds())
 	return count
 }

@@ -6814,3 +6814,28 @@ agreement is not yet tracked regression coverage or a completed family review.
 Next: reconcile all entry points and source preconditions, track native and
 independent typed/constant/deep-cone tests, inspect compactness and add red
 regressions before any newly discovered bug repair.
+
+### DFS/support traversal checkpoint
+
+Track the actual giaDfs.c oracle, extending preliminary comparisons with support/
+cone traversal marks, all-node scans, single-node support counts, forward/reverse
+level buckets and reverse ordering. New minimal red tests show public SuppSize
+fails to premark the constant and incorrectly marks CO wrappers; the native trace
+also fails on the empty-root constant mark (/tmp/abcgo-dfs-support-marks-red.log,
+/tmp/abcgo-dfs-support-native-red.log). Restore the source wrapper's premark and
+CO-driver dispatch. Both tests then pass in 1.962s
+(/tmp/abcgo-dfs-support-marks-repaired.log).
+
+Independent fixed-point reachability tests cover typed XOR/MUX controls, buffers,
+constant outputs/drivers, dangling nodes, explicit leaf cuts and register-feedback
+closure. Combined existing/new traversal tests pass before report-format coverage
+(/tmp/abcgo-dfs-support-baseline.log). A native diagnostic comparison then exposes
+lost field padding in all three diagnostic drivers; preserve the original labels,
+progress characters and widths after the red run
+(/tmp/abcgo-dfs-reports-red.log). Timing values remain portable Go wall time.
+
+The 1,024-AND walk benchmark measures 2,059 allocations per support/CI/cone query
+and 2,065 per sequential query, largely from per-node fanin slices. Next inspect a
+bounded direct stack push and shared counting walk, preserving exact source order
+and marks, then rerun native/independent/deep tests and benchmarks before module
+race/vet gates. Original completion remains 2/131; this family is not yet closed.
