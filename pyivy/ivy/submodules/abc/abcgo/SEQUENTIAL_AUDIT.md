@@ -7399,3 +7399,34 @@ independent evidence, source boundaries and remaining work. Mixed-cube union
 invariants, resource stops, diagnostics/reporting, remaining function inspection
 and final full integration are still pending. The cube family and overall GIA
 inventory are not closed; original package completion stays 2/131.
+
+### Cube union and resource-stop review checkpoint
+
+Add an independent rooted-storage inspector and Boolean truth-set oracle. All
+27^3 = 19,683 ordered triples of three-variable ternary cubes preserve union
+coverage after every insertion. Sixteen seeded mixed-cube sequences start with
+192 disjoint eight-variable minterms to force nested trees, then add 100 cubes
+each while varying processed/unprocessed classification. Validate rooted
+membership, no lost live rows/cycles/contradictory bits and exact truth-set
+coverage. All pass in 0.461s (/tmp/abcgo-era2-union-first.log); no union algorithm
+repair is needed.
+
+A deterministic six-bit zero-input counter independently checks thirteen state
+limits in both miter modes, including strict post-successor counts, reserved
+record accounting, the first failing frame 32 and witness priority at the limit.
+These pass. A separate red regression proves a zero-budget call returns unknown
+while retaining the previous run's failure trace (/tmp/abcgo-era2-limits-red.log).
+Move trace clearing before that early return, consistent with the source's
+pre-traversal cleanup and the existing normal-run contract.
+
+A real twenty-input parity example shared by two RIs reaches the one-million
+recursive-call ceiling despite only two successor states. Check stopped status,
+no witness/SAT target, and independently evaluate restored cofactor literals on
+seven input patterns after unwinding. All counter, stale-trace and real recursive
+limit tests pass in 0.458s (/tmp/abcgo-era2-limits-repair.log). Keep the existing
+Go >= guard and safe unknown result rather than reproducing C's resource-stop
+CEX assertion path. No full integration gate has run for this checkpoint.
+
+Next complete diagnostics/reporting, storage exhaustion and remaining function
+inspection, then final correctness/compactness review and frozen integration.
+The cube family and GIA are still open; original package completion stays 2/131.

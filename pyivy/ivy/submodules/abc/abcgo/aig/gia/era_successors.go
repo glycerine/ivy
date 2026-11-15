@@ -149,11 +149,11 @@ func Gia_ManArePerform(g *Gia_Man_t, maxStates, miter, verbose int32) int32 {
 		fmt.Printf("Currently can only handle circuit with up to %d registers.\n", MAX_VARS_NUM)
 		return -1
 	}
+	g.pCexSeq = nil
 	if g.nRegs <= 0 || maxStates < 1 {
 		return -1
 	}
 	start := time.Now()
-	g.pCexSeq = nil
 	p := Gia_ManAreCreate(Gia_ManDup(g))
 	p.fMiter = miter
 	initial := Gia_ManAreCreateStaInit(p)
