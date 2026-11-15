@@ -107,6 +107,12 @@ bounded Go guard, not a replacement allocation strategy.
 
 ## Validation
 
-Final focused caller/frontier rerun, frozen full module race tests and GIA vet
-are pending. This family review does not complete the remaining GIA inventory
-or the sequential audit of the original131 packages.
+All27 focused caller/frontier tests pass without skips in3.612s
+(`/tmp/abcgo-front-final-focused.log`). Frozen uncached module race tests pass
+all130 packages with tests; three command packages have none. GIA passes in
+517.512s (`/tmp/abcgo-front-final-module-race.log`). GIA vet passes with empty
+output (`/tmp/abcgo-front-final-vet.log`). Exact handles92360 and63135 terminated
+exit0 before recording these results. All five frontier routines are reconciled;
+the three larger simulation source families retain their separate review work.
+This family does not complete the remaining GIA inventory or the sequential
+audit of the original131 packages.

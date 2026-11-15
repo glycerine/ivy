@@ -8267,3 +8267,32 @@ all five source routines, red evidence, original-C buffer defect, exact native
 ordinary records, typed boundary contracts and independent tests. Freeze code,
 tests and fixtures for the pending uncached module race/GIA vet gates. Package
 completion2/131; no family closure until the exact handles terminate.
+
+### Frontier family frozen integration closure
+
+Exact full-module race handle92360 terminates exit0 after the code/tests/fixtures
+remained frozen:130 tested packages pass, three command packages have no tests,
+zero FAIL/DATA RACE records. GIA517.512s, ABCI29.396s, BMC23.929s
+(/tmp/abcgo-front-final-module-race.log). Exact vet handle63135 terminates exit0
+with empty log (/tmp/abcgo-front-final-vet.log). All27 focused tests passed
+without skips in3.612s (/tmp/abcgo-front-final-focused.log).
+
+REVIEW_frontier.md reconciles all five giaFront.c routines, buffer source bug,
+typed encoding, direct caller gate/port fixes, native comparisons, independent
+truth/reference/unknown/count checks and measured compactness. Close this
+frontier family; the larger Sim/Switch/Tsim families retain independent full
+review work. Original package completion2/131; remaining GIA inventory is open.
+
+Next giaFrames.c: read-only actual-C and public Go probes on the same17-object
+2PI/3RO graph show limits C[1,8,15,17] vs Go[1,17], sparse Abs row sizes C4/8/9
+vs Go9/18/27 and Frames2 Cci9/co6/regs0/objs29 vs Goci9/co9/regs3/objs37.
+Source scheduling/abstraction and output roles are not interchangeable with a
+conservative clone or common AIG wrapper. Native evidence:
+/tmp/abcgo-frames-native-order.log,
+/tmp/abcgo-frames-native-abstraction.log,
+/tmp/abcgo-frames-native-frames2.log,
+/tmp/abcgo-frames-native-incremental.log; Go /tmp/abcgo-frames-go-probe.log.
+Plan /tmp/abcgo-frames-next-review-plan.md records source routines, lifecycle,
+typed/initialization boundaries and the known source edge contracts to test.
+Minimal red tests are drafted in /tmp/abcgo-frames-red-tests.go, not run yet;
+install/compile them and establish red evidence before production changes.

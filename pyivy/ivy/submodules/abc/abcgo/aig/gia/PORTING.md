@@ -375,3 +375,12 @@ its correction. Focused tests pass19.197s; frozen full module race tests pass
 (/tmp/abcgo-false-final-module-race.log). GIA vet is clean
 (/tmp/abcgo-false-final-vet.log). Earlier draft-parser limitations above are
 historical, superseded by this gate. The remaining GIA family audit is open.
+
+Frontier sequential review is complete for all five giaFront.c routines and
+their direct gate/terminal consumption boundaries. REVIEW_frontier.md records
+red-first buffer/typed/port fixes, native source evidence and independent
+unknown/multiword/switching-count tests. All27 focused tests pass3.612s; frozen
+full module race tests pass130 tested packages plus three command packages
+without tests, GIA517.512s (/tmp/abcgo-front-final-module-race.log). GIA vet is
+clean (/tmp/abcgo-front-final-vet.log). The complete Sim/Switch/Tsim source
+reviews and other GIA families remain open; next review is timeframe unrolling.
