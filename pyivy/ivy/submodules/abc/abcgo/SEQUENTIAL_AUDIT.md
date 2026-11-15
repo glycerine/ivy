@@ -8216,3 +8216,34 @@ focused rerun passes1.835s (/tmp/abcgo-front-interface-repaired.log).
 Typed representation/caller boundaries, additional compactness review and final
 frozen gates remain open. This is an intermediate checkpoint, not family or
 package closure; original package completion2/131.
+
+### Frontier typed encoding and direct consumers
+
+New64-graph roundtrip and16-graph three-consumer regressions fail before repair
+(/tmp/abcgo-front-typed-red.log): MUX controls retain references, cross-cuts
+inflate and rebuilt/simulated functions change. Preserve owned MUX metadata
+with unchanged object IDs, representation flags/counts and control lifetimes.
+For graphs with real XORs, retain the existing ordering-based type encoding by
+commutatively ordering compressed slots and restoring canonical object-pin
+order during inverse conversion. Ordinary graphs keep exact source slot records;
+no extra manager fields or per-node kind arrays are introduced. All64 typed
+roundtrips, physical fanin fields and cross-cut/scratch checks pass0.007s
+(/tmp/abcgo-front-typed-roundtrip-repaired.log).
+
+A separate ordinary reordered-port regression fails in word and ternary
+consumers, while switching already uses terminal logical indices
+(/tmp/abcgo-front-reordered-consumers-red.log). Use those indices in all three.
+Share the word gate loop between ordinary/switching simulation. Read typed MUX
+controls through their original-ID object's slot. Keep original-ID switching
+counts. Ternary real gates evaluate the original three-AND expansions using the
+existing algebra, including conservative unknown behavior.
+
+All expanded frontier tests pass3.661s
+(/tmp/abcgo-front-boundaries-focused.log):1296 unknown-input cases match an
+independent possible-value evaluator over unsimplified ordinary source
+expansions;96 multiword/count modes check every output/node against independent
+scalar truth over two repeated rounds. Test constant-true MUX controls, all four
+repeated-fanin phase pairs in simple mode with/without XORs, empty/direct/constant
+outputs and exact success diagnostics. Add owned MUX metadata mutation coverage
+and benchmark the shared loop against the previous ordinary loop before final
+frozen gates. This remains an intermediate checkpoint; completion2/131.

@@ -91,17 +91,7 @@ func giaSimulateCo(p *Gia_ManSim_t, i int32, obj *Gia_Obj_t) {
 	}
 }
 func giaSimulateNode(p *Gia_ManSim_t, obj *Gia_Obj_t) {
-	dst, a, b := Gia_SimData(p, Gia_ObjValue(obj)), Gia_SimData(p, Gia_ObjDiff0(obj)), Gia_SimData(p, Gia_ObjDiff1(obj))
-	for i := range dst {
-		x, y := a[i], b[i]
-		if Gia_ObjFaninC0(obj) != 0 {
-			x = ^x
-		}
-		if Gia_ObjFaninC1(obj) != 0 {
-			y = ^y
-		}
-		dst[i] = x & y
-	}
+	giaFrontSimulateWords(p.pAig, obj, p.pDataSim, p.nWords)
 }
 func Gia_ManSimInfoInit(p *Gia_ManSim_t) {
 	for i, id := range vec.Vec_IntArray(p.vCis2Ids) {
@@ -131,10 +121,10 @@ func Gia_ManSimulateRound(p *Gia_ManSim_t) {
 		if Gia_ObjIsAnd(obj) != 0 {
 			giaSimulateNode(p, obj)
 		} else if Gia_ObjIsCo(obj) != 0 {
-			giaSimulateCo(p, co, obj)
+			giaSimulateCo(p, Gia_ObjCioId(obj), obj)
 			co++
 		} else {
-			Gia_ManSimulateCi(p, obj, ci)
+			Gia_ManSimulateCi(p, obj, Gia_ObjCioId(obj))
 			ci++
 		}
 	}

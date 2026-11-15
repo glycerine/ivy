@@ -35,8 +35,12 @@ func Gia_ManFrontTransform(p *Gia_Man_t) {
 			}
 			obj.iDiff0 = uint32(id - frontToID[obj.iDiff0])
 		} else if Gia_ObjIsAnd(obj) != 0 {
+			xor := Gia_ObjIsXor(obj) != 0
 			obj.iDiff0 = uint32(id - frontToID[obj.iDiff0])
 			obj.iDiff1 = uint32(id - frontToID[obj.iDiff1])
+			if p.nXors != 0 && Gia_ObjIsMux(p, obj) == 0 {
+				giaFrontOrderPins(obj, xor)
+			}
 			frontToID[obj.Value] = id
 		} else {
 			frontToID[obj.Value] = id
@@ -58,10 +62,12 @@ func Gia_ManCrossCutSimple(p *Gia_Man_t) int32 {
 			maximum = current
 		}
 		if Gia_ObjIsAnd(obj) != 0 {
-			fanins := [2]*Gia_Obj_t{Gia_ObjFanin0(obj), Gia_ObjFanin1(obj)}
+			fanins := [3]*Gia_Obj_t{Gia_ObjFanin0(obj), Gia_ObjFanin1(obj)}
 			count := 2
 			if Gia_ObjIsBuf(obj) != 0 {
 				count = 1
+			} else if Gia_ObjIsMux(p, obj) != 0 {
+				fanins[2], count = Gia_ObjFanin2(p, obj), 3
 			}
 			for _, fanin := range fanins[:count] {
 				fanin.Value--
@@ -87,6 +93,11 @@ func Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {
 	Gia_ManCreateValueRefs(p)
 	result := Gia_ManStart(p.nObjs)
 	result.pName, result.PSpec = p.pName, p.PSpec
+	result.nXors, result.nMuxes, result.nBufs = p.nXors, p.nMuxes, p.nBufs
+	result.fGiaSimple = p.fGiaSimple
+	// MUX controls keep object IDs, which survive this representation change.
+	// The control object's Value gives its slot at the point of consumption.
+	result.PMuxes = append([]uint32(nil), p.PMuxes...)
 	result.nFront = 1 + int32(float32(maxCut)*1.1)
 	front := make([]byte, result.nFront)
 	position := Gia_ManFrontFindNext(front, result.nFront, 0)
@@ -124,6 +135,9 @@ func Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {
 		out := Gia_ManAppendObj(result)
 		out.iDiff0, out.fCompl0 = slot0, obj.fCompl0
 		out.iDiff1, out.fCompl1 = slot1, obj.fCompl1
+		if p.nXors != 0 && Gia_ObjIsMux(p, obj) == 0 {
+			giaFrontOrderPins(out, Gia_ObjIsXor(obj) != 0)
+		}
 		position = Gia_ManFrontFindNext(front, result.nFront, position)
 		out.Value = uint32(position)
 		fanin0.Value--
@@ -135,6 +149,13 @@ func Gia_ManFront(p *Gia_Man_t) *Gia_Man_t {
 			fanin1.Value--
 			if fanin1.Value == 0 {
 				front[slot1] = 0
+			}
+		}
+		if Gia_ObjIsMux(p, obj) != 0 {
+			control := Gia_ObjFanin2(p, obj)
+			control.Value--
+			if control.Value == 0 {
+				front[result.pObjs[control.id].Value] = 0
 			}
 		}
 		if obj.Value == 0 {
@@ -166,4 +187,14 @@ func Gia_ManFrontTest(p *Gia_Man_t) {
 		}
 	}
 	fmt.Println("Verification successful.")
+}
+
+// Keep the existing ordering-based XOR encoding in graphs with real XORs.
+// Both AND and XOR are commutative, so swapping their pins preserves meaning.
+// The inverse transform applies the same rule to restore object differences.
+func giaFrontOrderPins(obj *Gia_Obj_t, xor bool) {
+	if (obj.iDiff0 < obj.iDiff1) != xor {
+		obj.iDiff0, obj.iDiff1 = obj.iDiff1, obj.iDiff0
+		obj.fCompl0, obj.fCompl1 = obj.fCompl1, obj.fCompl0
+	}
 }

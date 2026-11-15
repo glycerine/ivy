@@ -15,17 +15,7 @@ func Gia_ManSwiSimulateCo(p *Gia_ManSwi_t, index int32, obj *Gia_Obj_t) {
 	}
 }
 func Gia_ManSwiSimulateNode(p *Gia_ManSwi_t, obj *Gia_Obj_t) {
-	dst, a, b := Gia_SwiData(p, Gia_ObjValue(obj)), Gia_SwiData(p, Gia_ObjDiff0(obj)), Gia_SwiData(p, Gia_ObjDiff1(obj))
-	for w := range dst {
-		x, y := a[w], b[w]
-		if Gia_ObjFaninC0(obj) != 0 {
-			x = ^x
-		}
-		if Gia_ObjFaninC1(obj) != 0 {
-			y = ^y
-		}
-		dst[w] = x & y
-	}
+	giaFrontSimulateWords(p.pAig, obj, p.pDataSim, p.nWords)
 }
 func Gia_ManSwiSimInfoInit(p *Gia_ManSwi_t) {
 	for i := int32(0); i < Gia_ManCiNum(p.pAig); i++ {

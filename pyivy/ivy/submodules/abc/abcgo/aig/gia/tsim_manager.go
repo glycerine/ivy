@@ -42,8 +42,7 @@ func Gia_ManTerSimulateCo(p *Gia_ManTer_t, index int32, obj *Gia_Obj_t) {
 	Gia_ManTerSimInfoSet(p.pDataSimCos, index, Gia_XsimNotCond(value, Gia_ObjFaninC0(obj)))
 }
 func Gia_ManTerSimulateNode(p *Gia_ManTer_t, obj *Gia_Obj_t) {
-	a, b := Gia_ManTerSimInfoGet(p.pDataSim, Gia_ObjDiff0(obj)), Gia_ManTerSimInfoGet(p.pDataSim, Gia_ObjDiff1(obj))
-	Gia_ManTerSimInfoSet(p.pDataSim, Gia_ObjValue(obj), Gia_XsimAndCond(a, Gia_ObjFaninC0(obj), b, Gia_ObjFaninC1(obj)))
+	giaFrontSimulateTernary(p.pAig, obj, p.pDataSim)
 }
 func Gia_ManTerSimInfoInit(p *Gia_ManTer_t) {
 	for i := int32(0); i < Gia_ManCiNum(p.pAig); i++ {
@@ -74,10 +73,10 @@ func Gia_ManTerSimulateRound(p *Gia_ManTer_t) {
 		case Gia_ObjIsAndOrConst0(obj) != 0:
 			Gia_ManTerSimulateNode(p, obj)
 		case Gia_ObjIsCi(obj) != 0:
-			Gia_ManTerSimulateCi(p, obj, ci)
+			Gia_ManTerSimulateCi(p, obj, Gia_ObjCioId(obj))
 			ci++
 		default:
-			Gia_ManTerSimulateCo(p, co, obj)
+			Gia_ManTerSimulateCo(p, Gia_ObjCioId(obj), obj)
 			co++
 		}
 	}
