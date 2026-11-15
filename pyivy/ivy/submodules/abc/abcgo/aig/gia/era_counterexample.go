@@ -2,16 +2,44 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/proof/cec/core"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
+// Initialize the source algorithm's single-frame CNF once. Register outputs
+// are free CIs here; each trace query binds its current and next state by
+// assumptions, retaining learned clauses for the following frame.
 func Gia_ManAreDeriveCexSatStart(p *Gia_ManAre_t) {
 	if p.pSat != nil {
 		panic("gia: counterexample solver already active")
 	}
-	p.pSat = struct{}{}
+	source := p.pAig
+	for _, obj := range source.pObjs {
+		if Gia_ObjIsXor(obj) != 0 || Gia_ObjIsMux(source, obj) != 0 {
+			// The source export API reads raw AND fanins. Supply the
+			// equivalent ordinary AIG before exporting real gates to CNF.
+			source = Gia_ManDupNoMuxes(source, 1)
+			defer Gia_ManStop(source)
+			break
+		}
+	}
+	graph := Gia_ManToAig(source, 0)
+	defer aig.Aig_ManStop(graph)
+	aig.Aig_ManSetRegNum(graph, 0)
+	data := cnf.Cnf_Derive(graph, Gia_ManCoNum(p.pAig))
+	if data == nil {
+		panic("gia: could not derive counterexample CNF")
+	}
+	defer cnf.Cnf_DataFree(data)
+	p.pSat = cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
+	if p.pSat == nil {
+		panic("gia: inconsistent counterexample CNF")
+	}
+	p.vSatNumCis = cnf.Cnf_DataCollectCiSatNums(data, graph)
+	p.vSatNumCos = cnf.Cnf_DataCollectCoSatNums(data, graph)
 	p.vCofVars = vec.Vec_IntAlloc(100)
 	p.vAssumps = vec.Vec_IntAlloc(100)
 }
@@ -19,83 +47,61 @@ func Gia_ManAreDeriveCexSatStop(p *Gia_ManAre_t) {
 	if p.pSat == nil || p.pTarget == nil {
 		panic("gia: counterexample solver is not active")
 	}
+	p.pSat.Close()
 	p.pSat = nil
 	p.pTarget = nil
-	p.vCofVars = nil
-	p.vAssumps = nil
+	p.vSatNumCis, p.vSatNumCos, p.vCofVars, p.vAssumps = nil, nil, nil, nil
 }
 func Gia_ManAreDeriveCexSat(p *Gia_ManAre_t, current, next *Gia_StaAre_t, output int32) {
 	if p.pSat == nil {
 		panic("gia: counterexample solver is not active")
 	}
 	g := p.pAig
-	q := Gia_ManStart(g.nObjs + 2*g.nRegs + 4)
-	Gia_ManHashAlloc(q)
-	copies := make([]int32, g.nObjs)
-	for i := int32(0); i < Gia_ManCiNum(g); i++ {
-		obj := Gia_ManCi(g, i)
-		copies[obj.id] = Gia_ManAppendCi(q)
-	}
-	edge := func(obj *Gia_Obj_t) int32 { return copies[Gia_ObjFaninId0(obj, obj.id)] ^ Gia_ObjFaninC0(obj) }
-	for _, obj := range g.pObjs {
-		if Gia_ObjIsAnd(obj) != 0 {
-			copies[obj.id] = giaHashMappedGate(q, g, obj, func(lit int32) int32 { return copies[lit>>1] ^ (lit & 1) })
-		}
-	}
-	condition := int32(1)
-	for i := int32(0); i < g.nRegs; i++ {
-		lit := copies[Gia_ManRo(g, i).id]
-		if Gia_StaHasValue0(current, i) != 0 {
-			condition = Gia_ManHashAnd(q, condition, lit^1)
-		} else if Gia_StaHasValue1(current, i) != 0 {
-			condition = Gia_ManHashAnd(q, condition, lit)
-		}
-	}
-	if next != nil {
+	vec.Vec_IntClear(p.vAssumps)
+	bind := func(state *Gia_StaAre_t, vars *Vec_Int_t, offset int32) {
 		for i := int32(0); i < g.nRegs; i++ {
-			lit := edge(Gia_ManRi(g, i))
-			if Gia_StaHasValue0(next, i) != 0 {
-				condition = Gia_ManHashAnd(q, condition, lit^1)
-			} else if Gia_StaHasValue1(next, i) != 0 {
-				condition = Gia_ManHashAnd(q, condition, lit)
+			variable := vec.Vec_IntEntry(vars, int(offset+i))
+			if Gia_StaHasValue0(state, i) != 0 {
+				vec.Vec_IntPush(p.vAssumps, bsat.Negative(variable))
+			} else if Gia_StaHasValue1(state, i) != 0 {
+				vec.Vec_IntPush(p.vAssumps, bsat.Positive(variable))
 			}
 		}
+	}
+	bind(current, p.vSatNumCis, Gia_ManPiNum(g))
+	if next != nil {
+		bind(next, p.vSatNumCos, Gia_ManPoNum(g))
 	}
 	if output >= 0 {
 		if output >= Gia_ManPoNum(g) {
 			panic("gia: invalid failing output")
 		}
-		condition = Gia_ManHashAnd(q, condition, edge(Gia_ManPo(g, output)))
+		vec.Vec_IntPush(p.vAssumps, bsat.Positive(vec.Vec_IntEntry(p.vSatNumCos, int(output))))
 	}
-	Gia_ManHashStop(q)
-	options := core.DefaultSATOptions()
-	options.ConflictLimit = 1000000
-	solver, err := core.NewManager(q, options)
-	if err != nil {
-		panic(err)
+	status := p.pSat.SolveWithResourceLimits(vec.Vec_IntArray(p.vAssumps), 1000000, 0, 0, 0)
+	if status != bsat.Satisfiable {
+		panic(fmt.Sprintf("gia: could not reconstruct reachability transition (status %d)", status))
 	}
-	result, err := solver.CheckLiteral(condition)
-	if err != nil {
-		panic(err)
+	value := func(index int32) bool {
+		v, ok := p.pSat.Value(vec.Vec_IntEntry(p.vSatNumCis, int(index)))
+		if !ok {
+			panic("gia: missing counterexample SAT model")
+		}
+		return v
 	}
-	if result.Status != core.Different || result.Counterexample == nil {
-		panic(fmt.Sprintf("gia: could not reconstruct reachability transition (status %d)", result.Status))
-	}
-	values := result.Counterexample.Inputs
 	vec.Vec_IntClear(p.vCofVars)
 	for i := int32(0); i < Gia_ManPiNum(g); i++ {
-		if values[i] {
+		if value(i) {
 			vec.Vec_IntPush(p.vCofVars, i)
 		}
 	}
 	for i := int32(0); i < g.nRegs; i++ {
-		if values[Gia_ManPiNum(g)+i] {
+		if value(Gia_ManPiNum(g) + i) {
 			Gia_StaSetValue1(current, i)
 		} else {
 			Gia_StaSetValue0(current, i)
 		}
 	}
-	Gia_ManStop(q)
 }
 func Gia_ManAreDeriveCex(p *Gia_ManAre_t, last *Gia_StaAre_t) *Abc_Cex_t {
 	if p.iOutFail < 0 || last == nil {

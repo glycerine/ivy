@@ -7337,3 +7337,33 @@ query. A source-interface binding regression is being added before restoring
 that source solver lifecycle. Its pending test is separate from this typed-gate
 checkpoint. Full integration and the remainder of the cube-family review remain
 pending; original package completion stays 2/131.
+
+### Cube counterexample solver lifecycle repair checkpoint
+
+The new SAT-binding regression fails because SatStart leaves CI/CO maps nil
+(/tmp/abcgo-era2-sat-red.log). Restore the original C lifecycle mechanically:
+convert one combinational frame, derive CNF with all COs free, load BSAT once,
+retain CI/CO SAT variable maps and query with current/next/output assumptions.
+Use the source's one-million-conflict per-query limit, read the model to complete
+current cubes/PI values, and release solver/maps at SatStop. Replace the sentinel
+with a typed *bsat.Solver. The per-frame CEC graph reconstruction is removed.
+
+Typed binding checks then expose the native export boundary's AND assumption
+(/tmp/abcgo-era2-sat-typed-boundary-red.log). Existing native-export tests explicitly
+require the C raw-fanin behavior even on real XOR/MUX encodings. Preserve that
+legacy API unchanged; lower real gates through Gia_ManDupNoMuxes before exporting
+the counterexample CNF. A preliminary global export change was discarded after
+checking this documented/native-tested contract. No export-family repair is
+claimed by this boundary adaptation.
+
+Cube, enable, AIG and native-export focused tests pass in 6.341s
+(/tmp/abcgo-era2-sat-repair.log). Expanded direct SAT tests cover ordinary/typed
+CI/CO binding and opposite polarities, plus 270 ternary current/next/output
+combinations checked against all 16 scalar input/state assignments. Impossible
+queries must fail explicitly; feasible models must belong to the independent
+witness set, complete current cubes, and reuse the same solver. All direct SAT
+tests pass in 0.014s (/tmp/abcgo-era2-sat-scalar.log).
+
+Full integration, native trace comparisons, cube union/list/tree coverage and
+remaining source/compactness review are still pending; the last full module
+race/vet checkpoint predates these cube changes. Original completion stays 2/131.

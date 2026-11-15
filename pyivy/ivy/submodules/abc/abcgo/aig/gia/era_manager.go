@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"math/bits"
 )
 
@@ -27,7 +28,7 @@ type Gia_ManAre_t struct {
 	Root                                                             Gia_PtrAre_t
 	vCiTfos, vCiLits                                                 *Vec_Vec_t
 	vCubesA, vCubesB                                                 *Vec_Int_t
-	pSat                                                             any
+	pSat                                                             *bsat.Solver
 	vSatNumCis, vSatNumCos, vCofVars, vAssumps                       *Vec_Int_t
 	pTarget                                                          *Gia_StaAre_t
 	iOutFail                                                         int32
