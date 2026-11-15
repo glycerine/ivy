@@ -14,7 +14,7 @@ func gliFlip(p *Gli_Man_t, o *Gli_Obj_t) {
 }
 func gliRandomTransition(prob float32) bool { return float32(Gia_ManRandom(0)&0xffff)/65536 < prob }
 func Gli_ManSetPiRandom(p *Gli_Man_t, prob float32) {
-	if prob <= 0 || prob >= 1 {
+	if !(0 < prob && prob < 1) {
 		panic("glitch: invalid transition probability")
 	}
 	Vec_IntClear(p.vCisChanged)
@@ -132,7 +132,9 @@ func Gli_ManSimulateSeqPref(p *Gli_Man_t, frames int32) {
 			Gli_ManRo(p, i).uSimInfo = Gli_ManRi(p, i).uSimInfo
 		}
 	}
-	p.pSimInfoPrev = make([]uint32, Gli_ManCiNum(p))
+	if len(p.pSimInfoPrev) != int(Gli_ManCiNum(p)) {
+		p.pSimInfoPrev = make([]uint32, Gli_ManCiNum(p))
+	}
 	for i := range p.pSimInfoPrev {
 		p.pSimInfoPrev[i] = Gli_ManCi(p, int32(i)).uSimInfo
 	}
@@ -154,7 +156,7 @@ func Gli_ManSetDataSaved(p *Gli_Man_t, bit int32) {
 	}
 }
 func Gli_ManSetPiRandomSeq(p *Gli_Man_t, prob float32) {
-	if prob <= 0 || prob >= 1 {
+	if !(0 < prob && prob < 1) {
 		panic("glitch: invalid transition probability")
 	}
 	for i := int32(0); i < Gli_ManCoNum(p); i++ {

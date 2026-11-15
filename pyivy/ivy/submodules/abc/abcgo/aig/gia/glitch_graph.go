@@ -7,17 +7,17 @@ import (
 
 // Gli_Obj_t uses stable object handles and Go-owned fanin/fanout slices.
 type Gli_Obj_t struct {
-	fTerm, fPhase, fPhase2, fMark         uint32
-	nFanins, nFanouts                     int32
-	Handle                                int32
-	pTruth                                []word
-	uSimInfo                              uint32
-	iFanin, iFanout, nSwitches, nGlitches int32
-	fanins, fanouts                       []*Gli_Obj_t
+	fTerm, fPhase, fPhase2, fMark uint32
+	uSimInfo                      uint32
+	nFanins, nFanouts             int32
+	Handle                        int32
+	pTruth                        []word
+	nSwitches, nGlitches          int32
+	fanins, fanouts               []*Gli_Obj_t
 }
 type Gli_Man_t struct {
 	vCis, vCos, vCisChanged, vAffected, vFrontier *Vec_Int_t
-	nObjs, nRegs, nTravIds, iObjData, nObjData    int32
+	nRegs                                         int32
 	objects                                       []*Gli_Obj_t
 	pSimInfoPrev                                  []uint32
 }
@@ -27,8 +27,8 @@ func Gli_ManCoNum(p *Gli_Man_t) int32              { return int32(Vec_IntSize(p.
 func Gli_ManPiNum(p *Gli_Man_t) int32              { return Gli_ManCiNum(p) - p.nRegs }
 func Gli_ManPoNum(p *Gli_Man_t) int32              { return Gli_ManCoNum(p) - p.nRegs }
 func Gli_ManRegNum(p *Gli_Man_t) int32             { return p.nRegs }
-func Gli_ManObjNum(p *Gli_Man_t) int32             { return p.nObjs }
-func Gli_ManNodeNum(p *Gli_Man_t) int32            { return p.nObjs - Gli_ManCiNum(p) - Gli_ManCoNum(p) }
+func Gli_ManObjNum(p *Gli_Man_t) int32             { return int32(len(p.objects)) }
+func Gli_ManNodeNum(p *Gli_Man_t) int32            { return Gli_ManObjNum(p) - Gli_ManCiNum(p) - Gli_ManCoNum(p) }
 func Gli_ManObj(p *Gli_Man_t, id int32) *Gli_Obj_t { return p.objects[id] }
 func Gli_ManCi(p *Gli_Man_t, id int32) *Gli_Obj_t {
 	return Gli_ManObj(p, Vec_IntEntry(p.vCis, int(id)))
@@ -72,7 +72,8 @@ func Gli_ManAlloc(nObjs, nRegs, nFanioPairs int32) *Gli_Man_t {
 	if nObjs < 0 || nRegs < 0 || nFanioPairs < 0 {
 		panic("glitch: negative allocation")
 	}
-	return &Gli_Man_t{nRegs: nRegs, objects: make([]*Gli_Obj_t, 0, nObjs), vCis: Vec_IntAlloc(1000), vCos: Vec_IntAlloc(1000), vCisChanged: Vec_IntAlloc(1000), vAffected: Vec_IntAlloc(1000), vFrontier: Vec_IntAlloc(1000)}
+	initial := min(nObjs, 1000)
+	return &Gli_Man_t{nRegs: nRegs, objects: make([]*Gli_Obj_t, 0, nObjs), vCis: Vec_IntAlloc(int(initial)), vCos: Vec_IntAlloc(int(initial)), vCisChanged: Vec_IntAlloc(int(initial)), vAffected: Vec_IntAlloc(int(initial)), vFrontier: Vec_IntAlloc(int(initial))}
 }
 func Gli_ManStop(p *Gli_Man_t) {
 	if p != nil {
@@ -97,9 +98,8 @@ func Gli_ManFinalize(p *Gli_Man_t) {
 		if int32(len(o.fanins)) != o.nFanins || int32(len(o.fanouts)) != o.nFanouts {
 			panic("glitch: incomplete fanin/fanout links")
 		}
-		// C reuses the construction counters as activity counters through unions.
-		// Reset both representations when starting a new simulation.
-		o.iFanin, o.iFanout = 0, 0
+		// C reuses construction counters as activity counters through unions.
+		// Slice lengths already track construction in Go; reset activity here.
 		o.nSwitches, o.nGlitches = 0, 0
 	}
 }
@@ -109,16 +109,15 @@ func Gli_ObjAddFanin(o, fanin *Gli_Obj_t) {
 	}
 	o.fanins = append(o.fanins, fanin)
 	fanin.fanouts = append(fanin.fanouts, o)
-	o.iFanin++
-	fanin.iFanout++
 }
 func Gli_ObjAlloc(p *Gli_Man_t, fanins, fanouts int32) *Gli_Obj_t {
 	if fanins < 0 || fanouts < 0 {
 		panic("glitch: negative fanin/fanout")
 	}
-	o := &Gli_Obj_t{Handle: p.nObjs, nFanins: fanins, nFanouts: fanouts, fanins: make([]*Gli_Obj_t, 0, fanins), fanouts: make([]*Gli_Obj_t, 0, fanouts)}
+	// Bound the first slice so appending fanins cannot overwrite fanouts.
+	links := make([]*Gli_Obj_t, int(fanins)+int(fanouts))
+	o := &Gli_Obj_t{Handle: Gli_ManObjNum(p), nFanins: fanins, nFanouts: fanouts, fanins: links[:0:fanins], fanouts: links[fanins:fanins]}
 	p.objects = append(p.objects, o)
-	p.nObjs++
 	return o
 }
 func Gli_ManCreateCi(p *Gli_Man_t, fanouts int32) int32 {

@@ -8896,3 +8896,23 @@ validation-independent lifetime groundwork and explicit wide-fanin safety
 extension checks. See REVIEW_glitch_simulation.md for exact regression logs and
 source defects. Save a coherent red checkpoint; validation/compactness and full
 integration are still pending. GIA/original2of131 audit remain open.
+
+### Glitch validation and compactness complete; integration pending
+
+New source-checked NaN regressions fail before repair in both input paths
+(/tmp/abcgo-glitch-nan-red.log,handle11339 exit1); match C's strict positive
+probability comparison. All19 final focused tests pass13.264s without skips
+(/tmp/abcgo-glitch-final-complete-focused.log,handle22185 exit0), including
+104 native state/RNG traces,40 native word streams,1,046 truth tables,
+independent prefix/pulse/deep/duplicate/high-fanout checks, reports, validation,
+borrowed-truth ownership and correct register offsets. Characterize C's wrong
+standalone Ro/Ri offsets separately; keep source macro-consistent Go semantics.
+
+Remove redundant construction/object counters and unused packed fields, share
+bounded link storage, reuse saved words and bound small work-vector reserves.
+Object size falls128 to112bytes. At65,536chain nodes, allocation falls17,091,982
+to16,028,178B/op and393,250 to327,697allocs/op. Small graph memory roughly halves;
+medium timing is slightly slower in the short run. Full source inventory and
+measured tradeoffs are in REVIEW_glitch_simulation.md. Save a red checkpoint,
+then freeze all code/tests/fixtures for full module race and GIA vet. GIA and
+original2/131 package audit remain open. No agents or branches.

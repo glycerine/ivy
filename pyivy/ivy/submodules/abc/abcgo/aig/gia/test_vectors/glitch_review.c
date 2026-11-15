@@ -49,6 +49,9 @@ int main(int argc,char **argv)
         Vec_IntPush(reviewIds,Gli_ManCreateNode(p,fanin,fanouts[nCi+i],&truth[i]));
     }
     for(i=0;i<nCo;i++)Vec_IntPush(reviewIds,Gli_ManCreateCo(p,Vec_IntEntry(reviewIds,outputs[i])));
+    if(mode==6){
+        printf("ports ro%d/%d ri%d/%d\n",ordinal(Gli_ManRo(p,0)->Handle),ordinal(Gli_ManCi(p,Gli_ManPiNum(p))->Handle),ordinal(Gli_ManRi(p,0)->Handle),ordinal(Gli_ManCo(p,Gli_ManPoNum(p))->Handle));goto cleanup;
+    }
     if(mode==4){printf("headerWords %d\n",(int)(sizeof(Gli_Obj_t)/4));Gli_ManPrintObjects(p);goto cleanup;}
     if(mode==3){Gli_ManSwitchesAndGlitches(p,steps,prob,atoi(argv[6]));state(p,"driver");goto random;}
     Gli_ManFinalize(p);state(p,"initial");Gia_ManRandom(1);
