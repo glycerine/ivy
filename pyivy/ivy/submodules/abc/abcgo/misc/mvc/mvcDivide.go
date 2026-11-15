@@ -15,6 +15,10 @@ func Mvc_CoverDivideInternal(c, d *Mvc_Cover_t) (q, r *Mvc_Cover_t) {
 	q, r = Mvc_CoverClone(c), Mvc_CoverClone(c)
 	mask := Mvc_CubeAlloc(c)
 	Mvc_CoverSupport(d, mask)
+	// Source division sorts the operands in place. Callers reuse their order
+	// when constructing factoring graphs after this division.
+	Mvc_CoverSort(d, nil, Mvc_CubeCompareInt)
+	Mvc_CoverSort(c, mask, Mvc_CubeCompareIntOutsideAndUnderMask)
 	Mvc_CoverList2Array(c)
 	seen := make([]bool, len(c.Array))
 	for i, first := range c.Array {
