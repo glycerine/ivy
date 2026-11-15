@@ -23,9 +23,6 @@ func Gia_ManDupMarked(src *Gia_Man_t) *Gia_Man_t {
 		objectMap[i] = -1
 	}
 	objectMap[0] = 0
-	inputs, outputs := make([]int32, 0), make([]int32, 0)
-	var registers, inputRegisters []int32
-	var ros, ris int32
 	oldPOs := Gia_ManPoNum(src)
 	ordinary := oldPOs - src.nConstrs - src.aigerBadOutputs
 	for _, obj := range src.pObjs[1:] {
@@ -38,12 +35,6 @@ func Gia_ManDupMarked(src *Gia_Man_t) *Gia_Man_t {
 		switch kind {
 		case 1:
 			literal = Gia_ManAppendCi(dst)
-			index := Gia_ObjCioId(obj)
-			inputs = append(inputs, index)
-			if Gia_ObjIsRo(src, obj) != 0 {
-				ros++
-				registers = append(registers, index-Gia_ManPiNum(src))
-			}
 		case 2:
 			literal = Gia_ManAppendAnd(dst, Gia_ObjLitCopy(src, a), Gia_ObjLitCopy(src, b))
 		case 3:
@@ -54,23 +45,43 @@ func Gia_ManDupMarked(src *Gia_Man_t) *Gia_Man_t {
 			literal = Gia_ManAppendBuf(dst, Gia_ObjLitCopy(src, a))
 		case 6:
 			literal = Gia_ManAppendCo(dst, Gia_ObjLitCopy(src, a))
-			index := Gia_ObjCioId(obj)
-			outputs = append(outputs, index)
-			if Gia_ObjIsRi(src, obj) != 0 {
-				ris++
-				inputRegisters = append(inputRegisters, index-oldPOs)
-			} else if index >= oldPOs-src.nConstrs {
-				dst.nConstrs++
-			} else if index >= ordinary {
-				dst.aigerBadOutputs++
-			}
 		default:
 			panic("gia: unsupported marked duplicate object")
 		}
 		obj.Value = uint32(literal)
 		objectMap[obj.id] = literal >> 1
 	}
-	if ros != ris {
+	// Retained ports keep logical vector order even when objects are interleaved.
+	// These source indices also drive name and register-metadata selection.
+	remapPorts := func(old, next *Vec_Int_t) []int32 {
+		indices := make([]int32, 0, Vec_IntSize(next))
+		Vec_IntClear(next)
+		for index, id := range Vec_IntArray(old) {
+			if mapped := objectMap[id]; mapped >= 0 {
+				Gia_ObjSetCioId(dst.pObjs[mapped], int32(Vec_IntSize(next)))
+				Vec_IntPush(next, mapped)
+				indices = append(indices, int32(index))
+			}
+		}
+		return indices
+	}
+	inputs, outputs := remapPorts(src.vCis, dst.vCis), remapPorts(src.vCos, dst.vCos)
+	var registers, inputRegisters []int32
+	for _, index := range inputs {
+		if index >= Gia_ManPiNum(src) {
+			registers = append(registers, index-Gia_ManPiNum(src))
+		}
+	}
+	for _, index := range outputs {
+		if index >= oldPOs {
+			inputRegisters = append(inputRegisters, index-oldPOs)
+		} else if index >= oldPOs-src.nConstrs {
+			dst.nConstrs++
+		} else if index >= ordinary {
+			dst.aigerBadOutputs++
+		}
+	}
+	if len(registers) != len(inputRegisters) {
 		panic("gia: marked duplication must retain complete RO/RI pairs")
 	}
 	for i, index := range registers {
@@ -78,7 +89,7 @@ func Gia_ManDupMarked(src *Gia_Man_t) *Gia_Man_t {
 			panic("gia: marked duplication retained mismatched register pairs")
 		}
 	}
-	Gia_ManSetRegNum(dst, ros)
+	Gia_ManSetRegNum(dst, int32(len(registers)))
 	if src.PReprs != nil && src.PNexts != nil {
 		if err := dst.TransferRepresentativesFrom(src, objectMap); err != nil {
 			panic(err)

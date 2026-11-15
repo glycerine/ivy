@@ -4704,3 +4704,27 @@ dup_attributes.go: logical ports now survive interleaving, and the listed
 attribute payloads retain independent ownership. Other duplication/GIA
 families and final package inventory reconciliation remain open. Original
 completion stays 2/131; the sequential audit remains active.
+
+Marked-duplication checkpoint: red regressions expose reordered logical ports
+and rejection of valid retained RO/RI pairs on interleaved DFS sources
+(`/tmp/abcgo-marked-ports-red.log`). Copy objects in physical source order as
+before, then rebuild retained CI/CO vectors in their original logical order.
+Use those same source indices for names, register-pair validation and metadata
+selection. This removes physical-order assumptions without changing retained
+object IDs or the marked-subgraph algorithm. Separate RO/RI counters are no
+longer necessary. Focused regressions pass
+(`/tmp/abcgo-marked-ports-focused.log`).
+
+The independent selection/state matrix now passes in 0.267s
+(`/tmp/abcgo-marked-matrix.log`): 7,168 cases and 224,576 input rows over four
+mixed/all-positive/all-negative phase patterns, two physical layouts,
+ordinary-AND/real-XOR/MUX/buffer forms, every valid subset of three register
+pairs and their branch inputs/properties, optional constant outputs and an
+optional anchor PI. MUX selection retains its anchor when needed. Checks
+cover exact outputs/next state, logical port/object maps, source mark cleanup,
+independent mark1 preservation, property/bad/constraint counts, names,
+register-class/init/reset subsets and owned metadata. Empty retained
+interfaces and surplus unused PIs are included. Additional class/choice,
+invalid-input and native-C checks are pending, as is the full integration
+gate. Save this checkpoint with a red prefix. Original completion stays
+2/131; GIA remains in progress.
