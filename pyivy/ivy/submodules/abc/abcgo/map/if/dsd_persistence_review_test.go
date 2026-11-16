@@ -239,3 +239,32 @@ func TestDsdDecodedStateOwnsRetainedStorage(t *testing.T) {
 		t.Fatal("decoded state aliases borrowed input bytes")
 	}
 }
+
+func TestDsdPersistenceMaximumSupportAndPackedFaninBit(t *testing.T) {
+	p := If_DsdManAlloc(16, 0)
+	defer If_DsdManFree(p, 0)
+	truth := make([]word, 1024)
+	truth[len(truth)-1] = word(1) << 63 // Exactly the all-ones assignment.
+	lit := If_DsdManCompute(p, truth, 16, make([]byte, 16), "")
+	path := filepath.Join(t.TempDir(), "maximum.dsd")
+	If_DsdManSave(p, path)
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Fanin count16 occupies the sign bit of the original unsigned header.
+	if flags := binary.LittleEndian.Uint32(data[24:]); flags>>27 != 16 || flags&0x80000000 == 0 {
+		t.Fatalf("packed maximum-arity header%x", flags)
+	}
+	q := If_DsdManLoad(path)
+	if q == nil {
+		t.Fatal("maximum-support file rejected")
+	}
+	defer If_DsdManFree(q, 0)
+	if !slices.Equal(If_DsdManComputeTruth(q, lit, nil), truth) {
+		t.Fatal("maximum-support function changed")
+	}
+	if If_DsdVecObj(&q.vObjs, lit>>1).nFans != 16 {
+		t.Fatal("packed unsigned fanin count was lost")
+	}
+}
