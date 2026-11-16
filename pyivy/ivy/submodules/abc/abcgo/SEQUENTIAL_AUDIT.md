@@ -9473,3 +9473,13 @@ from631..640us to1.3..1.5us, still0alloc. Full IF Go-only8.982s, focused race
 4.566s and IF/GIA vet pass. Source failure diagnostics/wider CLU dependency
 review remain open; no full LogicNode/family closure claim. Details in
 REVIEW_mapping_boundary.md. Original package audit remains2/131.
+
+### Fix four-cofactor selector output reuse
+
+New four-case red regression shows If_CluCountCofs4 retained dirty caller bits,
+unlike source zero-initialized selector accumulation. Clear both selector
+outputs before filling them. Add80 scalar dimension/three-or-four-class cases
+and exhaustive two-output derivation/pin/ownership checks. No C fixtures added.
+Full IF Go-only17.616s, focused cofactor/three-stage/structure race9.902s and
+IF/GIA vet pass. Counter free-size5 and wider three-LUT restrictions/diagnostics
+remain review work. Details in REVIEW_mapping_boundary.md. Audit remains2/131.

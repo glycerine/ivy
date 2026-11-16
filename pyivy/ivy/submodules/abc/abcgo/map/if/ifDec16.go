@@ -525,6 +525,7 @@ func If_CluCountCofs4(table []uint64, n, bound int32, cofs [][]uint64) int32 {
 	for i := 0; i < 4; i++ {
 		copy(cofs[i], unique[min(i, len(unique)-1)])
 	}
+	cofs[4][0], cofs[5][0] = 0, 0
 	for i, class := range classes {
 		if class&1 != 0 {
 			cofs[4][0] |= 1 << uint(i)

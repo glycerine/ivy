@@ -616,3 +616,32 @@ added. Missing source hex/DSD decomposition-failure diagnostics and wider CLU
 source/three-stage control-flow review remain explicit work before closing
 this row; metrics/reporting/driver reconciliation and family gate also remain.
 Original package audit stays2/131.
+
+### Four-cofactor dependency reuse regression
+
+During the three-LUT dependency review, compare `If_CluCountCofs4` and
+`If_CluDeriveDisjoint4` against `ifDec16.c:978..1023,1208..1240`. The counter's
+Go output selectors were accumulated with `|=` into caller-provided words
+without reset. C initializes `Result0/Result1=0` and assigns them to the output,
+so dirty/reused buffers must not contribute bits. Four new regression cases
+fail before the fix (exit1, `/tmp/abcgo-clu-cofactor-reuse-red.log`), with
+selectors incorrectly remaining all-ones instead of0xa/0xc or0x2/0x4.
+Clear the two destination selector words before filling them; cofactor discovery
+order and the duplicated fourth row for a three-cofactor function are unchanged.
+
+`clu_cofactor_review_test.go` then checks80 additional cases: bound sizes2..6,
+free sizes1..4 and three/four classes. Independent scalar rows establish every
+cofactor and selector, including64-row selector words and word-boundary input
+tables. Verify the two-output derivation's root pins/sentinels and every
+original assignment, plus input ownership. This covers the source derivation's
+free-support domain; the counter's additional free-size5 domain and higher-level
+structure restriction/selection review remain to be closed.
+
+The current Go derivation obtains classes directly, rather than calling this
+counter, so this is a helper output-contract fix; no new end-to-end mapping
+failure is claimed. No C fixtures/toolchain dependencies were introduced.
+Focused green exit0 (`/tmp/abcgo-clu-cofactor-reuse-green.log`); frozen full IF
+Go-only17.616s (`/tmp/abcgo-clu-cofactor-reviewed-full.log`), focused counter/
+three-stage/structure race9.902s (`/tmp/abcgo-clu-cofactor-reviewed-race.log`),
+IF/GIA vet exit0 (`/tmp/abcgo-clu-cofactor-reviewed-vet.log`). Original package
+review remains2/131; wider CLU/LogicNode and family gates remain open.
