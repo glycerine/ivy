@@ -95,6 +95,15 @@ func Gia_Iso2ManCheckIsoPair(g *Gia_Man_t, order0, order1, map0, map1 *Vec_Int_t
 		if x.Value != y.Value {
 			return 0
 		}
+		if Gia_ObjIsCo(x) != 0 {
+			// Signatures can collide, including for opposite output phases.
+			// Verify CO wiring just as we verify the AND edges below.
+			if Gia_ObjIsCo(y) == 0 || Gia_ObjFaninC0(x) != Gia_ObjFaninC0(y) ||
+				vec.Vec_IntEntry(map0, int(Gia_ObjFaninId0(x, id0))) != vec.Vec_IntEntry(map1, int(Gia_ObjFaninId0(y, id1))) {
+				return 0
+			}
+			continue
+		}
 		if Gia_ObjIsAnd(x) == 0 {
 			continue
 		}

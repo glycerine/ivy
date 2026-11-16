@@ -417,3 +417,45 @@ now omits empty levels as C does; Vec_WecPrint still emits them. Four Go-only
 goldens and full module/vec race/GIA isomorphism race/vet pass. Details and logs
 in misc/vec/REVIEW.md. Neither this dependency checkpoint nor the combinational
 matrix closes the outstanding GIA family scope.
+
+
+## Repair inherited CO verification omissions after real signature collisions
+
+A new direct regression shows the pair checker accepts ordered output tuples
+(a,b,a) and(a,b,b). The real preparation/refinement routine gives the two PIs
+equal signatures and all COs equal signatures; both traversal lengths match.
+Their output sharing cannot be matched by a PI permutation, but the C/Go checker
+checks only signatures for CO rows. The new regression fails before repair; a
+consistent(a,b,a)->(b,a,b) renaming remains accepted after repair.
+
+A separate18-AND static Go fixture produces an actual level-seven signature of
+zero, using the source's full initialization, weighted propagation and equal-child
+bias. Duplicate the DAG so candidates stay tied and uniquification adds no salts;
+only the first copy drives two opposite-phase outputs. The fixture asserts zero
+root/CO signatures and one candidate class after the real Gia_Iso2ManPerform.
+Both second-generation reduction policies incorrectly merge those outputs before
+repair and delete the complemented output. First-generation reduction is a
+passing control. An early fixture draft omitted the equal-child bias and failed
+its own construction precondition; that discarded draft is not bug evidence.
+The corrected fixture's red log reaches the actual pair/reduction failures.
+
+The graph computes a positive conjunction of three support inputs and its
+complement; their satisfying-assignment counts differ, proving no PI permutation
+can equate them. Static fixture data and all64 assignments over six total PIs
+(including the unused clone inputs) require only Go. No C source/test compiler
+is involved. Red logs /tmp/abcgo-iso-pair-{collision,mapping}-red.log; focused
+repaired isomorphism suite /tmp/abcgo-iso-pair-collision-green.log.
+
+Add the missing CO branch to Gia_Iso2ManCheckIsoPair: require a CO counterpart,
+matching output polarity and matching fanin positions in the existing maps.
+Keep source signature refinement, traversal and class-quality policies intact.
+This deliberately repairs an inherited C correctness bug; retaining the omission
+would silently discard real circuit outputs. It is not a replacement GI solver
+or Boolean minimization strategy. Other terminal-role and sequential-contract
+checks remain for the continuing pair/driver audit.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests, including the direct phase/mapping regressions and all three pipeline
+controls. Focused isomorphism race2.310s and GIA vet pass; all handles ended.
+Final logs /tmp/abcgo-iso-pair-final-{module.jsonl,race.log,vet.log}. Original
+audit2/131; the broader GIA family is not closed by this repair.

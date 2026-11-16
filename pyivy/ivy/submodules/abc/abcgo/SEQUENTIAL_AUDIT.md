@@ -10192,3 +10192,17 @@ module passes130 tested packages plus3 commands without tests, full vec
 race1.108s, focused GIA isomorphism race1.682s and vec/GIA vet pass. Detailed
 evidence in vec/REVIEW.md. This closes the GIA report dependency follow-up only;
 the sequential whole-vec and GIA audits remain open. Original audit2/131.
+
+
+### Prevent output loss after isomorphism signature collisions
+
+New red regressions expose inherited C/Go CO-verification omissions: ordered
+sharing(a,b,a) versus(a,b,b) is accepted, and a real zero-signature graph causes
+both second-generation reductions to drop a complemented output. An18-AND
+Go-only fixture validates its own signature/candidate preconditions under the
+real algorithm. Restore CO type, phase and mapped-driver checks using existing
+orders/maps. Consistent PI renaming stays accepted; first-generation reduction
+is a passing control and all64 assignments pin both retained outputs. Full
+Go-only module passes130 tested packages plus3 commands without tests; focused
+isomorphism race2.310s and GIA vet pass. REVIEW_isomorphism.md records source
+provenance and remaining pair/sequential/driver scope. Original audit2/131.
