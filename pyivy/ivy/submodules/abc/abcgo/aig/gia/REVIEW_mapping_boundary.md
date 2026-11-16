@@ -56,7 +56,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Source algorithm/scratch reviewed; 140 Go-only scalar cases plus invalid inputs; final family gate pending |
 | Gia_ManBuildFromMini | map/if/gia_mini.go | Source wrapper reviewed; balancing/large parity checks; final family gate pending |
 | Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Source recursive hash/copy algorithm reviewed; 64 Go truth/memoization cases; final family gate pending |
-| Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; callback/repeat/balancing tests; lazy small scratch; final family gate pending |
+| Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; default recorded backend and override/repeat/balancing tests; lazy small scratch; richer recorded dependency review/final gate pending |
 | Gia_ManFromIfLogicCreateLut | map/if/gia_lut.go | Source logic/records reviewed; signed multiword tests through15 inputs; final family gate pending |
 | Gia_ManFromIfLogicCreateLutSpecial | map/if/gia_lut.go | Source encoding reviewed; ordered ifDec07 dependency restored; 192 Go-only signed/permuted reconstruction cases; final family gate pending |
 | Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go, gia_lut_reports.go | Active source branches/CLU dependency/reconstruction/validation reviewed; diagnostics restored with red regressions; final family gate pending |
@@ -77,7 +77,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing duplication/constraints/boxed-order and attribute overwrite/integration reviewed; remaining optional modes pending |
+| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing/attributes/boxed integration reviewed; recorded backend connected with real phase/timing tests; richer recorded/exact-SAT dependencies pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed/SOP/DSD boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; boxed-choice integration reviewed; final family gate pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Source wrapper parameters/metadata policy reviewed; ordinary/boxed direct/registered paths covered; final family gate pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final family gate pending |
@@ -1677,3 +1677,34 @@ commands without tests), focused report race1.088s and relevant vet exits0.
 Logs: /tmp/abcgo-profile-sentinel-final-{cases.log,module.jsonl,race.log,vet.log}.
 All sessions ended. Optional recursive-library/exact-SAT delay modes and final
 source-family gates stay open; original package audit remains2/131.
+
+
+### Connect existing recorded-library backend to mapping
+
+Inspection refines the earlier optional-mode diagnosis: ABCI already contains
+Go If_CutDelayRecCost3 and Abc_RecToGia3, but IF's source call sites still panic
+or require an explicit reconstruction override. A new real-library regression
+fails before wiring (/tmp/abcgo-recorded-mapping-red.log). Register and dispatch
+the existing source implementations across the package boundary, without a
+replacement library or cut algorithm. Both candidate and best-cut recomputation
+paths now work. Explicit Go reconstruction overrides remain supported.
+
+That integration exposes missing writable If_CutPerm storage; a separate focused
+red test precedes its lazy-allocation repair. Timing retains borrowed read-only
+profiles, avoiding an allocation side effect caught by another regression.
+The dependency plan/evidence is map/if/REVIEW_recorded_dependency.md.
+
+One minimal real-backend case plus768 configurations cover64 network phases,
+three arrival profiles, registers0/1 and delay/area rounds; all8 assignments
+are checked against explicit Boolean expressions. Verify exact two-gate area,
+scalar source delay, identity, AIG representation and transferred arrivals.
+The library has all phases of a two-input AND class; missing three-input
+classes force selection of available cuts. Plain AIG results cannot use the
+source LUT-mapping hash post-pass; retain that source limitation instead of
+modifying the mapper to accept the initially invalid test combination.
+
+Frozen full Go-only module exits0 (130 tested packages,3 commands without
+tests); focused IF race1.024s, ABCI race8.398s and IF/GIA vet exit0. Logs:
+/tmp/abcgo-recorded-final-{module.jsonl,if-race.log,abci-race.log,vet.log}.
+All sessions ended. Richer recorded-class/profile selection, exact-SAT cost
+integration and final family gates remain open; original package audit2/131.

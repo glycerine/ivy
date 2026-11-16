@@ -9835,3 +9835,18 @@ remaining optional IF modes and final family checks stay open. Full Go-only
 module passes130 tested packages plus3 commands without tests; focused report
 race1.088s and relevant vet pass. Details in REVIEW_mapping_boundary.md;
 original package audit remains2/131.
+
+
+### Connect existing recorded-library mapping backend
+
+A new real-backend regression exposes IF panics despite existing ABCI library
+implementations. Register source cost/reconstruction across the package boundary;
+keep explicit builder overrides. A separate new red regression exposes missing
+writable pin storage; allocate lazily and retain allocation-free ordinary timing
+reads. Unit checks cover binding, reentrant registration and copy ownership.
+One minimal case plus768 Go-only phase/timing/register/delay-area configurations
+verify all assignments, source delay/area and metadata. Full Go-only module
+passes130 tested packages plus3 commands without tests; focused IF race1.024s,
+ABCI race8.398s and IF/GIA vet pass. See REVIEW_mapping_boundary.md and the new
+IF recorded-dependency plan. Richer library selection, exact-SAT integration and
+remaining family/package review stay open2/131.
