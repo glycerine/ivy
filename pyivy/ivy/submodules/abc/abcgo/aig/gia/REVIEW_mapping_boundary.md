@@ -1097,3 +1097,19 @@ race4.677s (`/tmp/abcgo-driver-trace-final-matrix-race.log`), IF/GIA vet exit0
 No C test vectors/compiler dependencies added. Power/timing/attribute and boxed
 outer-driver reconciliation, metrics/reports/transfers and family gate remain
 open; original package audit2/131.
+
+### Decode switching probabilities when totaling mapping power
+
+`If_ManMarkMapping_rec` added encoded float32 bits as integer values, unlike
+the C float-vector access in `src/map/if/ifUtil.c:417`. A new Go-only red test
+reported power2.1055406e+09 instead of0.75 before the fix
+(`/tmp/abcgo-power-probability-red.log`). Reuse the existing `ifSwitching`
+decoder. The regression checks two outputs sharing a cone, leaf/reference
+counts, and repeat marking without accumulation.
+
+No `.c` vectors or compiler invocations are used by this regression or the
+recent callback regressions. With CGO disabled and C tools excluded from PATH,
+the focused tests pass and full IF9.753s/GIA28.291s tests pass
+(`/tmp/abcgo-power-probability-packages.log`). Focused race1.056s and relevant
+vet pass (`/tmp/abcgo-power-probability-{race,vet}.log`). Default switching
+setup and remaining outer-driver reconciliation stay open; audit2/131.

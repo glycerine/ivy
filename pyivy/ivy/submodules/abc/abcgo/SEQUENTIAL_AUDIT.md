@@ -9603,3 +9603,12 @@ Final full Go-only module passes130 tested packages plus3 commands without
 tests. IF driver race1.269s,512-case GIA driver race4.677s and relevant vet pass.
 Details/logs in REVIEW_mapping_boundary.md. Outer power/timing/attribute and
 family review stay open; original package audit2/131.
+
+### Decode mapping power values
+
+A new Go-only regression fails before correcting integer interpretation of
+encoded float32 switching probabilities. Reuse the existing decoder; verify
+shared-cone reference counts and repeated marking. Full IF/GIA tests pass
+with CGO disabled and C tools absent from PATH; focused race and relevant vet
+pass. No `.c` test vectors added. Details in REVIEW_mapping_boundary.md;
+default switching setup and family review remain open, audit2/131.

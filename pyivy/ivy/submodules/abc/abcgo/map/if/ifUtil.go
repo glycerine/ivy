@@ -130,7 +130,7 @@ func If_ManMarkMapping_rec(p *If_Man_t, obj *If_Obj_t) float32 {
 		}
 		leaf := If_ManObj(p, leafID)
 		if p.vSwitching != nil && int(leaf.Id) < Vec_IntSize(p.vSwitching) {
-			p.dPower += float32(Vec_IntEntry(p.vSwitching, int(leaf.Id)))
+			p.dPower += ifSwitching(p, leaf.Id)
 		}
 		area += If_ManMarkMapping_rec(p, leaf)
 	}
