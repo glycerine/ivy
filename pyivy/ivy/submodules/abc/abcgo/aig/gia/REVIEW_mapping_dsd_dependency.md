@@ -250,8 +250,27 @@ merged node counts and full truths, mark values and configuration ownership
 The native comparison excludes only progress/elapsed text before explicit
 metadata records; it does not normalize any compared state.
 
-Affected full IF race, native/510-driver race and IF/GIA vet are currently
-running (handles79883/9081/80733). Consume terminal results before claiming this
-checkpoint integrated. Source binary persistence, full diagnostic/report
+Affected full IF race10.191s, native/510-driver race35.548s and IF/GIA vet
+all exit0 (handles79883/9081/80733). Logs:
+/tmp/abcgo-dsd-direct-final-if-race.log,
+/tmp/abcgo-dsd-direct-final-native-race.log,
+/tmp/abcgo-dsd-direct-final-vet.log (empty). Source binary persistence, full diagnostic/report
 behavior and broader utility boundary/configuration matrices remain open;
 this is not DSD/mapping/GIA/package completion.
+
+## Current verified state and next required work
+
+Direct canonical balancing and utility repairs are committed and pass affected
+race/vet above. Graph costs and ordering retain original C behavior; no cached
+DSS representation remains. The complete original131-package scope stays active
+with2/131 closed. This is a required dependency checkpoint inside the still-open
+GIA mapping family, not a full map/if audit.
+
+Next use new red regressions to replace remaining persistence substitutes:
+If_DsdManSave currently calls the short text printer, while original C writes
+its dsd1 binary format; If_DsdManLoad still returns nil. Verify both directions
+against freshly compiled original Save/Load, covering canonical nodes, prime
+truth/decomposition caches, counts/marks and optional cell configurations. Review
+full source diagnostics and merge/filter compatibility/configuration boundaries
+separately, then resume all remaining giaIf.c rows and its frozen full-module
+gate. Do not infer completion from the narrower green checks recorded here.

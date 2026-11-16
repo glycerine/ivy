@@ -9216,3 +9216,14 @@ pass0.009s; fresh C metadata confirms2.071s (handles43525/71063 exit0).
 Race/vet gate is live79883/9081/80733; terminal results pending. Persistence,
 full reports and larger configuration/boundary matrices remain open. Detailed
 scope in REVIEW_mapping_dsd_dependency.md; original audit2/131 stays active.
+
+### Direct DSD balancing and metadata affected gate resolves green
+
+Consume exact race/vet handles79883/9081/80733: all exit0. Full IF race10.191s;
+native261-function/1,044-partition,522-balancing (270 graphs/252 unsupported,
+9 partial), cell/metadata and510-driver race35.548s; IF/GIA vet empty. Logs:
+/tmp/abcgo-dsd-direct-final-if-race.log, ...-native-race.log, ...-vet.log.
+No production/test edits occurred during this gate. Full mapping-family module
+gate remains pending, original audit2/131. Remaining persistence substitutes
+(Save prints text; Load nil), diagnostics and configuration/boundary matrices
+are explicitly queued in REVIEW_mapping_dsd_dependency.md; goal stays active.
