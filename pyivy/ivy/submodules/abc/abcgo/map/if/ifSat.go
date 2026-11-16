@@ -56,50 +56,59 @@ func If_ManSat6ComposeLut4(table uint32, functions []word, nVars int32) word {
 		panic("if: invalid 4-LUT composition inputs")
 	}
 	var result word
-	for assignment := 0; assignment < 64; assignment++ {
-		index := 0
+	for m := uint32(0); m < 1<<uint(nVars); m++ {
+		if table>>m&1 == 0 {
+			continue
+		}
+		cube := ^word(0)
 		for v := int32(0); v < nVars; v++ {
-			if functions[v]&(word(1)<<uint(assignment)) != 0 {
-				index |= 1 << uint(v)
+			if m>>uint(v)&1 != 0 {
+				cube &= functions[v]
+			} else {
+				cube &= ^functions[v]
 			}
 		}
-		if table&(1<<uint(index)) != 0 {
-			result |= word(1) << uint(assignment)
-		}
+		result |= cube
 	}
 	return result
 }
 
 func If_ManSat6Truth(bound, free word, boundSet, sharedSet, freeSet []int32) word {
-	boundVars := make([]word, 0, len(boundSet)+len(sharedSet))
+	if len(boundSet)+len(sharedSet) > 4 || 1+len(sharedSet)+len(freeSet) > 4 {
+		panic("if: invalid 4-LUT composition inputs")
+	}
+	var functions [4]word
+	n := 0
 	for _, v := range sharedSet {
-		boundVars = append(boundVars, truth6Variable(v))
+		functions[n] = truth6Variable(v)
+		n++
 	}
 	for _, v := range boundSet {
-		boundVars = append(boundVars, truth6Variable(v))
+		functions[n] = truth6Variable(v)
+		n++
 	}
-	q := If_ManSat6ComposeLut4(uint32(bound), boundVars, int32(len(boundVars)))
-	freeVars := []word{q}
+	q := If_ManSat6ComposeLut4(uint32(bound), functions[:], int32(n))
+	functions[0] = q
+	n = 1
 	for _, v := range sharedSet {
-		freeVars = append(freeVars, truth6Variable(v))
+		functions[n] = truth6Variable(v)
+		n++
 	}
 	for _, v := range freeSet {
-		freeVars = append(freeVars, truth6Variable(v))
+		functions[n] = truth6Variable(v)
+		n++
 	}
-	return If_ManSat6ComposeLut4(uint32(free), freeVars, int32(len(freeVars)))
+	return If_ManSat6ComposeLut4(uint32(free), functions[:], int32(n))
 }
 
 func truth6Variable(v int32) word {
 	if v < 0 || v >= 6 {
 		panic("if: truth-table variable outside 0..5")
 	}
-	var truth word
-	for assignment := 0; assignment < 64; assignment++ {
-		if assignment&(1<<uint(v)) != 0 {
-			truth |= word(1) << uint(assignment)
-		}
-	}
-	return truth
+	return [...]word{
+		0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xf0f0f0f0f0f0f0f0,
+		0xff00ff00ff00ff00, 0xffff0000ffff0000, 0xffffffff00000000,
+	}[v]
 }
 
 // If_ManSatCheckXY remaps truth minterms to assumptions on the original
