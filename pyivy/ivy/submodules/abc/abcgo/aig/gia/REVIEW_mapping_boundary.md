@@ -1230,3 +1230,25 @@ full Go-only module130 tested packages passing plus3 commands without tests
 Only production repair was the separately committed slice-growth fix, backed
 by its minimal red regression. Outer boxed normalization/hash/transfers,
 optional-mode dependencies and remaining family gates stay open; audit2/131.
+
+### Restore sequential normalization's shuffle warning
+
+`src/aig/gia/giaTim.c:154..179` reorders sequential boxed CIs from
+PI/FO/box-CI to PI/box-CI/FO and prints a warning. Go performed the permutation
+but omitted the warning. A new minimal four-configuration Go-only normalization
+test fails in both sequential/hash cases before repair
+(`/tmp/abcgo-normalize-shuffle-red.log`, exit1). The new driver integration
+test independently exposes32 missing-warning failures while all Boolean
+permutation checks pass (`/tmp/abcgo-driver-boxes-shuffle-red.log`, exit1).
+Restore the exact warning at the source branch point. No permutation or
+mapping algorithm changes are needed.
+
+The minimal test verifies exact old-to-new CI literals, output truth under the
+corresponding scalar input permutation, register/interface preservation and
+silence for combinational boxes. Focused0.006s passes
+(`/tmp/abcgo-normalize-shuffle-green.log`). Frozen full Go-only module exits0:
+130 tested packages pass,3 commands without tests (IF10.132s/GIA27.670s),
+with focused GIA race1.021s and relevant vet exit0
+(`/tmp/abcgo-driver-boxes-final-{module.jsonl,gia-race.log,vet.log}`).
+All handles consumed; no C test vectors/compiler dependency added. Wider
+boxed-driver coverage follows; source-family/package audit remains open2/131.

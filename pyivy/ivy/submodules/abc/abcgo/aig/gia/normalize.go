@@ -1,6 +1,10 @@
 package gia
 
-import "github.com/glycerine/abcgo/misc/tim"
+import (
+	"fmt"
+
+	"github.com/glycerine/abcgo/misc/tim"
+)
 
 func Gia_ManIsSeqWithBoxes(p *Gia_Man_t) int32 { return giaBool(p.nRegs > 0 && Gia_ManBoxNum(p) > 0) }
 func Gia_ManIsNormalized(p *Gia_Man_t) int32 {
@@ -46,6 +50,7 @@ func Gia_ManDupNormalize(src *Gia_Man_t, hash int32) *Gia_Man_t {
 		reordered = append(reordered, inputs[cis:]...)
 		reordered = append(reordered, inputs[pis:cis]...)
 		inputs = reordered
+		fmt.Println("Warning: Shuffled CI order to be correct sequential AIG.")
 	}
 	for _, id := range inputs {
 		src.pObjs[id].Value = uint32(Gia_ManAppendCi(dst))

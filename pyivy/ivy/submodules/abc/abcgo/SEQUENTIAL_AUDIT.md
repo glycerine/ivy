@@ -9664,3 +9664,12 @@ area-recovery expansion. Full Go-only module passes130 tested packages plus3
 commands without tests; focused GIA race1.435s and relevant vet pass. See
 REVIEW_mapping_boundary.md. Outer boxed paths, optional-mode dependencies and
 remaining family/package gates remain open, audit2/131.
+
+### Restore the sequential boxed-input shuffle diagnostic
+
+Minimal normalization and full-driver regressions fail before restoring C's
+warning when sequential box inputs are reordered. Exact CI-copy literals,
+permuted scalar truth and combinational silence are covered. Full Go-only
+module passes130 tested packages plus3 commands without tests; focused GIA
+race1.021s and relevant vet pass. No algorithm/permutation changes or C vectors.
+Details in REVIEW_mapping_boundary.md; family/package audit remains open2/131.
