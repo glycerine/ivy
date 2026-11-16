@@ -1816,3 +1816,17 @@ slower first cached network, so the API must not promise a fresh optimum.
 Full Go-only module, focused exact/cache race1.159s and IF/GIA vet pass. Source
 lines/logs in map/if/REVIEW_exact_delay_dependency.md. Cache-miss bounds/resource/
 reporting, SES search and final family/package gates remain open2/131.
+
+
+### Check fresh exact synthesis and restore diagnostics
+
+Go-only tests now exercise actual synthesis through eight variables in both
+gate modes and output polarities, checking every assignment and physical path
+with an independent decoder. Depth-hint tests cover impossible/tight/unknown/
+loose bounds. New red regressions expose omitted verbose headers, incorrect
+resource-limit colors/two-digit erasure and logging of unnormalized truth.
+Restore source reporting using the owned SES specification while preserving
+caller buffers and search policy. Full Go-only module, focused exact/IF/SES
+race4.514s and IF/GIA vet pass; see REVIEW_exact_delay_dependency.md for logs.
+Single-output SES encoding/search reconciliation and final family gates remain
+open; original package audit2/131.

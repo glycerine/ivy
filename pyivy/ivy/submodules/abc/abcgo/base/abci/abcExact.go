@@ -2477,6 +2477,15 @@ func Abc_ExactDelayCost(pTruth *word, nVars int32, pArrTimeProfile *int32, pPerm
 		st.nCacheHits++
 		st.pCacheHits[nVars]++
 	} else {
+		if st.fVeryVerbose != 0 {
+			spFmt.Print(ANSI_COLOR_CYAN)
+			Abc_TtPrintHexRev(os.Stdout, sesStoreTruthWords(pTruth, nVars), nVars)
+			spFmt.Printf("%s [%d", ANSI_COLOR_RESET, normalized[0])
+			for i := int32(1); i < nVars; i++ {
+				spFmt.Printf(" %d", normalized[i])
+			}
+			spFmt.Printf("]@%d:", aigLevel)
+		}
 		maxDepth := normalized[0]
 		for i := int32(1); i < nVars; i++ {
 			if normalized[i] > maxDepth {
@@ -2510,12 +2519,22 @@ func Abc_ExactDelayCost(pTruth *word, nVars int32, pArrTimeProfile *int32, pPerm
 			candidate := Ses_ManFindMinimumSize(man)
 			if candidate == "" {
 				if st.fVeryVerbose != 0 {
-					spFmt.Printf("\b%s%d%s", ANSI_COLOR_YELLOW, man.nMaxDepth, ANSI_COLOR_RESET)
+					if man.nMaxDepth >= 10 {
+						spFmt.Print("\b")
+					}
+					color := ANSI_COLOR_YELLOW
+					if man.fHitResLimit != 0 {
+						color = ANSI_COLOR_RED
+					}
+					spFmt.Printf("\b%s%d%s", color, man.nMaxDepth, ANSI_COLOR_RESET)
 				}
 				break
 			}
 			sol = candidate
 			if st.fVeryVerbose != 0 {
+				if man.nMaxDepth >= 10 {
+					spFmt.Print("\b")
+				}
 				spFmt.Printf("\b%s%d%s", ANSI_COLOR_GREEN, man.nMaxDepth, ANSI_COLOR_RESET)
 			}
 			man.nMaxDepth--
@@ -2524,7 +2543,7 @@ func Abc_ExactDelayCost(pTruth *word, nVars int32, pArrTimeProfile *int32, pPerm
 			spFmt.Println("        ")
 		}
 		if st.pDebugEntries != nil && man.fHitResLimit != 0 {
-			Ses_StorePrintDebugEntry(st, pTruth, nVars, &normalized[0], man.nMaxDepth, sol, nVars-2)
+			Ses_StorePrintDebugEntry(st, man.pSpec, nVars, &normalized[0], man.nMaxDepth, sol, nVars-2)
 		}
 		man.timeTotal = Abc_Clock() - exactStart
 		st.nSatCalls += uint64(man.nSatCalls)

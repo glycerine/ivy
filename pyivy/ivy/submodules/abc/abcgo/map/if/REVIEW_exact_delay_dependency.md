@@ -125,3 +125,34 @@ tests), focused exact/cache/IF/store/solver race1.159s and IF/GIA vet exit0.
 Logs: /tmp/abcgo-exact-cache-final-{module.jsonl,race.log,vet.log}. All sessions
 ended. Cache-miss depth/resource/reporting and single-output SES dependencies,
 plus final GIA family/package gates, remain open; original audit2/131.
+
+
+## Cache-miss synthesis, bounds and diagnostics
+
+Twenty-four actual fresh synthesis cases cover AND/NAND supports3..8 in both
+AIG and general-gate modes. An independent scalar packed-model decoder checks
+all assignments, gate dependencies, physical pin paths, overall depth and the
+attainable binary full-support lower bounds (n-1 gates, ceil(log2(n)) depth).
+Uniform arrival shifts must reuse the cache without new SAT calls. These
+fixtures and expected results are entirely Go, including multiword truth.
+Five three-input depth hints cover zero/impossible, tight, unknown and loose
+bounds. Impossible hints preserve pins and avoid SAT; other hints synthesize
+the minimum two-gate, depth-two AND graph.
+
+New failing diagnostic regressions precede repairs to the omitted verbose
+cache-miss header, red resource-limit color and two-digit depth erasure. A
+four-input parity fixture with conflict budget1 actually reaches the solver
+resource limit; no solver stub or external tool is used. A complemented parity
+regression also exposes debug logging from the wrong truth buffer: C logs its
+normalized specification before cleanup. Log the owned SES specification,
+retaining caller truth and the compact-buffer memory repair. Red logs:
+/tmp/abcgo-exact-synthesis-report-red.log and
+/tmp/abcgo-exact-synthesis-limit-red.log. Search strategy and returned failure
+semantics are unchanged.
+
+Frozen full Go-only module exits0 (130 tested packages,3 commands without
+tests); focused exact/IF/SES race4.514s and IF/GIA vet exit0. Logs:
+/tmp/abcgo-exact-synthesis-final-{module.jsonl,race.log,vet.log}. All sessions
+ended. Single-output search/encoding dependencies still require reconciliation
+and additional varied-function/arrival cases before closing this optional mode.
+The original package audit remains2/131.
