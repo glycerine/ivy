@@ -9236,3 +9236,16 @@ Save is still a text printer and Load nil. Next implement original dsd1 binary
 records/cache/config sections and cross-language checks. Review notes include
 C padding, explicit ABI encoding and zero-LUT C shift boundary in
 REVIEW_mapping_dsd_dependency.md. Original2/131 audit and full goal stay active.
+
+### DSD source-format persistence replaces stubs
+
+New red tests preceded original dsd1 binary Save/Load restoration. Core passes
+0.026s; malformed/truncated source records0.075s and full IF3.605s
+(handles88869/35169/92694 exit0). Rebuild interning; preserve node/count/mark,
+prime truth/decomposition caches and optional cell configurations. Default path
+and nonzero C padding covered; partial allocations release on invalid input.
+Fresh C->Go->C state and byte-exact C reserialization of deterministic Go files
+pass all3 scenarios2.136s (handle81164 exit0). Explicit little-endian layout;
+Go zero-LUT loads avoid C's undefined negative shift. Race/vet and compactness
+review next; detailed remaining scope in REVIEW_mapping_dsd_dependency.md.
+Original2/131 package audit and the full goal remain active.

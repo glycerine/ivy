@@ -294,3 +294,35 @@ input and preserve source state without reproducing unchecked C reads. Keep
 zero-LUT managers without a SAT instance (source's unconditional BuildXY(0)
 in Load has undefined negative-shift behavior); observable serialized state
 must still match. Source-defined LUT2..6 cases supply the strict native gate.
+
+## Original binary persistence restored
+
+Replace Save's text output and Load's nil stub with explicit dsd1 packed-node,
+prime truth/decomposition and configuration/cell encoding. Rebuild canonical
+hash tables and retain serialized counts/marks. Zero-LUT loads own no SAT
+instance; positive LUT loads construct the actual source CNF. Validate lengths,
+node headers/topology/support, truth references and configuration dimensions;
+release partially loaded managers on error. Nonzero original C node padding is
+ignored while deterministic Go output uses zero padding. Repeated Go round
+trips are byte-stable. Default Store follows source paths; Load sets its actual
+filename. Add original PrintOne formatting to compare all persisted node state.
+
+Core regression repair passes0.026s (handle88869 exit0). All prefixes of an
+independent68-byte source record plus corrupt dimension/header/topology/cache/
+configuration cases reject without panic; extended persistence suite0.075s
+(handle35169 exit0). Full IF passes3.605s (handle92694 exit0).
+
+Fresh unmodified C writes three managers (decomposition, configured cells,
+zero-LUT). Go loads and reports every node/count/mark/structure and config word;
+C reads Go output and reserializes it byte-for-byte. Loaded primes retain
+interning. All three cases pass2.136s (handle81164 exit0;
+/tmp/abcgo-dsd-persistence-native-first.log). This verifies the established
+little-endian ABI on the native test host, including its observed zero-LUT
+load behavior; Go avoids depending on that C negative-shift implementation.
+No equality claim is made for uninitialized padding in initially C-created
+objects. Corresponding core/boundary/full logs are under
+/tmp/abcgo-dsd-persistence-{core-first-repaired,boundaries,full-if-first}.log.
+
+Affected race/vet, compactness review and broader persistence/cache/error
+matrices remain next. Full source reports and remaining utility/configuration
+boundaries and giaIf.c integration are still open; no family/package closure.
