@@ -9612,3 +9612,13 @@ shared-cone reference counts and repeated marking. Full IF/GIA tests pass
 with CGO disabled and C tools absent from PATH; focused race and relevant vet
 pass. No `.c` test vectors added. Details in REVIEW_mapping_boundary.md;
 default switching setup and family review remain open, audit2/131.
+
+### Restore default power simulation
+
+A new red Go-only regression exposes the driver's missing automatic switching
+setup. Reuse the source-derived routine in IF so GIA can call it without an
+ABCI import cycle. Cover16 phases, constants, duplicate dangling nodes, exact
+object/vector correspondence, reporting, optional override and complete graph
+truth. Full Go-only module passes130 tested packages plus3 commands without
+tests; focused race and relevant vet pass. ABCI delegation cleanup is next;
+timing/attribute/boxed review and family gates remain open, audit2/131.

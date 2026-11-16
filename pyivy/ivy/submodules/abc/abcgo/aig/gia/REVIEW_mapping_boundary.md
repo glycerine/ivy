@@ -77,7 +77,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source trace lifecycle/library/default repaired; callback and parameter reuse regressions pass; power/timing/attribute review pending |
+| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source trace lifecycle/library/default and automatic power setup repaired; callback and parameter reuse regressions pass; timing/attribute/boxed review pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
@@ -1113,3 +1113,25 @@ the focused tests pass and full IF9.753s/GIA28.291s tests pass
 (`/tmp/abcgo-power-probability-packages.log`). Focused race1.056s and relevant
 vet pass (`/tmp/abcgo-power-probability-{race,vet}.log`). Default switching
 setup and remaining outer-driver reconciliation stay open; audit2/131.
+
+### Restore automatic power simulation
+
+The driver panicked without a Go switching callback, whereas
+`src/aig/gia/giaIf.c:2360..2366` calls `If_ManComputeSwitching` directly.
+The new default/override regression fails in the default case before repair
+(`/tmp/abcgo-power-default-red.log`, exit1). Put the existing source-derived
+routine from `src/base/abci/abcIf.c:59..95` in IF, avoiding a dependency cycle.
+It copies raw AND nodes in object order, preserves complemented edges and
+IF const1, and invokes the existing GIA simulation with48 frames/16 warm-up.
+Attach its encoded vector directly without decoding/re-encoding every value.
+Retain the explicit callback as an optional override; timing-manager suppression
+keeps the source condition. ABC interface deduplication is the next step.
+
+New Go-only tests cover16 phase patterns, constant/CI outputs, shared cones,
+dangling duplicate nodes, exact object/vector alignment, verbose reporting,
+provider call count, decoded selected-map power and all output assignments.
+Focused tests pass (`/tmp/abcgo-power-default-expanded.log`). Frozen full
+Go-only module exits0 with130 tested packages passing,3 commands without tests
+(`/tmp/abcgo-power-default-module.jsonl`); focused race1.073s and IF/GIA vet
+exit0 (`/tmp/abcgo-power-default-{race,vet}.log`). No C vectors/compiler calls.
+Timing/attributes/boxed paths and remaining family gates stay open; audit2/131.

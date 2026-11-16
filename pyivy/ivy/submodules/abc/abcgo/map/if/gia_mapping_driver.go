@@ -9,7 +9,8 @@ import (
 // SetDsdManager supplies the shared decomposition manager used during mapping.
 func (p *If_Par_t_) SetDsdManager(manager *If_DsdMan_t) { p.pDsdManager = manager }
 
-// SetSwitchingProvider supplies switching probabilities when power mapping is enabled.
+// SetSwitchingProvider overrides the standard switching simulation for power mapping.
+// A nil provider uses If_ManComputeSwitching.
 func (p *If_Par_t_) SetSwitchingProvider(provider func(*If_Man_t)) { p.pFuncSwitching = provider }
 
 // SetDelayTrace overrides the standard post-mapping delay-trace reporter.
@@ -57,9 +58,10 @@ func Gia_ManPerformMappingInt(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 			fmt.Println("Switching activity computation for designs with boxes is disabled.")
 		} else {
 			if pars.pFuncSwitching == nil {
-				panic("if: power mapping requires a switching provider")
+				If_ManComputeSwitching(manager)
+			} else {
+				pars.pFuncSwitching(manager)
 			}
-			pars.pFuncSwitching(manager)
 		}
 	}
 	manager.pUserMan = pars.pReoMan
