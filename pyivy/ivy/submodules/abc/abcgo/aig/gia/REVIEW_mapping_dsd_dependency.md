@@ -206,3 +206,24 @@ nodes, keep source graph-vs-timing cost policy, and separate prime SOP arity
 from complete profile support. Remove redundant DSS/text caches only after
 native/scalar regression comparisons pass. Preserve the original XOR delay/area
 estimate (fXor=0), rather than replacing it with physical AND-gate depth.
+
+## Direct canonical balancing restored; duplicate graph removed
+
+Port Eval_rec/EvalInt and PinDelays_rec over canonical fanins, preserving
+source interleaved emission/carries and separate graph/timing costs. Prime
+SOP arity and complete cut-profile width are separate internal parameters;
+this repairs nested-prime profile loss. All four new profile/cost/order checks
+pass0.010s (handle55582 exit0). Exact fresh-C eight-case graphs, both costs,
+full-support profiles and independent complete truth checks pass2.056s
+(handle77594 exit0). The older graph-cost test now checks actual C policy:
+nonzero abstract timing area and zero construction cost, with equal delay.
+
+Remove the obsolete DSS balancing helpers and move their Boolean/signed-pin
+and counter tests onto the actual canonical APIs. Remove cached text/network;
+render canonical text on demand. Record size on amd64 is now48 bytes (previously
+72, initially144), excluding fanins/payloads. No duplicate DSS graph remains.
+/tmp/abcgo-dsd-record-size-direct.log records the size.
+Full IF passes3.568s (handle55726 exit0). All510 native output graphs plus
+canonical/partition/cell/balancing checks pass23.654s (handle89270 exit0;
+/tmp/abcgo-dsd-direct-no-cache-native.log). Expanded prime/unsupported-SOP
+coverage and affected race/vet remain next; full mapping-family gate pending.

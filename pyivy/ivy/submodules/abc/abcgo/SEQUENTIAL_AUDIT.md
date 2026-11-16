@@ -9192,3 +9192,15 @@ emission/queue carries (handle80919 exit1). Port canonical-node balancing and
 separate SOP arity from full profile support next; do not change original XOR
 estimates. Full evidence/plan in REVIEW_mapping_dsd_dependency.md. Save red
 checkpoints; original2/131 package audit and mapping/GIA remain open.
+
+### Canonical DSD balancing replaces cached DSS graph
+
+Direct source Eval/Pin recursions repair new nested-prime, cost and emission-order
+regressions; four checks pass0.010s (handle55582 exit0). Eight fresh-C complete
+graphs/costs/profiles match2.056s (handle77594 exit0), with independent truth.
+Remove obsolete helpers, duplicate DSS/text caches; test canonical APIs directly.
+amd64 record size48 bytes, formerly72/144, excluding fanin/payload storage.
+Full IF passes3.568s and510-driver/canonical native suite23.654s
+(handles55726/89270 exit0). Broader prime/unsupported-cover and race/vet checks
+remain next; no family/package closure. See REVIEW_mapping_dsd_dependency.md.
+Original audit2/131 and the full sequential objective remain active.
