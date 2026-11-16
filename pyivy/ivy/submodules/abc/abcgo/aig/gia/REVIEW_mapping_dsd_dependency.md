@@ -274,3 +274,23 @@ truth/decomposition caches, counts/marks and optional cell configurations. Revie
 full source diagnostics and merge/filter compatibility/configuration boundaries
 separately, then resume all remaining giaIf.c rows and its frozen full-module
 gate. Do not infer completion from the narrower green checks recorded here.
+
+## Persistence regression checkpoint
+
+New tests fail before production repair: Save emits text instead of dsd1,
+Load returns nil for an independent original-layout AND3 record (including
+nonzero C padding), prime/configuration round trips fail, and default store
+03.dsd is never written. /tmp/abcgo-dsd-persistence-core-red.log,
+handle7991 exit1,0.023s. Save this red checkpoint before codec work.
+
+The original format stores native packed node records (base nodes0/1 omitted),
+prime truth tables and decomposition lists, then optional configuration words
+and cell text. Interoperability checks must compare semantic records and both
+cross-language read directions; compare reserialized Go files byte-for-byte
+through C, while ignoring uninitialized padding in initial C allocations.
+Implement the established little-endian GCC/Clang dsd1 layout explicitly,
+without relying on Go struct memory layout. Validate truncated/inconsistent
+input and preserve source state without reproducing unchecked C reads. Keep
+zero-LUT managers without a SAT instance (source's unconditional BuildXY(0)
+in Load has undefined negative-shift behavior); observable serialized state
+must still match. Source-defined LUT2..6 cases supply the strict native gate.

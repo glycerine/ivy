@@ -9227,3 +9227,12 @@ No production/test edits occurred during this gate. Full mapping-family module
 gate remains pending, original audit2/131. Remaining persistence substitutes
 (Save prints text; Load nil), diagnostics and configuration/boundary matrices
 are explicitly queued in REVIEW_mapping_dsd_dependency.md; goal stays active.
+
+### New DSD binary persistence regressions precede stub replacement
+
+New Save/Load/source-layout/prime-config/default-path tests all fail before
+repair (handle7991 exit1,0.023s; /tmp/abcgo-dsd-persistence-core-red.log).
+Save is still a text printer and Load nil. Next implement original dsd1 binary
+records/cache/config sections and cross-language checks. Review notes include
+C padding, explicit ABI encoding and zero-LUT C shift boundary in
+REVIEW_mapping_dsd_dependency.md. Original2/131 audit and full goal stay active.
