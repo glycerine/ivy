@@ -14,5 +14,8 @@ int main(void)
     printf("partition %x\n",If_DsdManCheckXY(p,lit,2,1,0,1,0));
     lit=If_DsdManCompute(p,&truth,3,perm,"22");
     printf("reused %d %d\n",lit,If_DsdManObjNum(p));
+    printf("masked-feasibility %x derived %x\n",If_DsdManCheckXY(p,lit,2,0,~0u,0,0),If_DsdManCheckXY(p,lit,2,1,~0u,0,0));
+    If_DsdManAllocIsops(p,3);
+    printf("isop-lut-size %d\n",If_DsdManLutSize(p));
     If_DsdManFree(p,0);return 0;
 }

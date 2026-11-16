@@ -76,7 +76,42 @@ shortcuts/stubs. This requires restoration of the source data model and traversa
 not a special case making the three-input regression green. Keep coherent red
 checkpoints at least every ten minutes while the integration is incomplete.
 
-Final checkpoint re-run: the two exact original partition failures and invalid
+Pre-restoration checkpoint re-run: the two exact original partition failures and invalid
 flag boundary pass; the minimal canonical-contract test still fails with the
 expected Go/C differences before repair. /tmp/abcgo-mapping-dsd-final-red-checkpoint.log,
 handle36363 exit1,6.525s. Production DSD files are unchanged at this checkpoint.
+
+## Canonical core restoration checkpoint
+
+Restore original two-node allocation, signed structural hashing/comparison,
+recursive DSD operation/parser with canonical input permutations, prime truth
+interning, occurrence-based Collect/Sign, weighted AND/XOR/MUX/prime traversal
+and actual SAT high-effort fallback. The minimal native contracts pass1.997s
+(handle70086 exit0).252 fresh-C functions and1,008 ordered partition checks
+cover nested operators/prime tables, repeated/complemented inputs, masks and
+fallback; pass2.283s (handle4935 exit0). All510 actual native driver graphs now
+match15.039s (handle96545 exit0), including all126 valid structured graphs;
+the two source partition assertions remain explicitly characterized.
+
+Further new regressions precede integration repairs:
+- Pin profile uses obsolete identity instead of cut permutation: [2,2,1] versus
+  constructed paths [1,2,2] (handle62136 exit1).
+- AllocIsops wrongly changes decomposition LUT size2->3 and omits source warning
+  (handles58016/76967 exit1; the latter captures actual diagnostic output).
+- Free retains an actual SAT instance with48 variables; advertised16-input
+  allocation overruns support-indexed caches (handle61788 exit1).
+
+Use the actual cut permutation, source ISOP initialization, owned SAT destruction
+and DAU16-sized caches. The larger Go cache bounds are an explicit safe repair
+for its advertised16-input API, not a claim that C's undersized arrays are safe.
+Two older tests asserted substitute behavior (identity permutation and masking
+feasibility-only queries); reconcile them with freshly verified C contracts.
+Full IF passes3.419s (handle72782 exit0); native canonical/ISOP tests pass4.171s
+(handle41704 exit0). Exhaustive small balancing passes288 functions/2,368
+assignments after the profile repair (handle44310 exit0,0.806s).
+
+Current objects still retain transitional diagnostic/truth/DSS balancing caches.
+Next restore direct canonical-node balancing/tuning callers and remove redundant
+representations; review source persistence/merge/filter shortcuts when expanding
+the required caller inventory. No DSD family, mapping family, GIA package or
+131-package completion claim is made at this checkpoint.

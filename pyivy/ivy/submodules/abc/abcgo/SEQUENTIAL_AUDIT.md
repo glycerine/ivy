@@ -9142,3 +9142,17 @@ Earlier missing flags were harness errors, not production bugs. Preserve the2
 source failures explicitly; independent Go boundary handling remains open.
 REVIEW_mapping_dsd_dependency.md records the staged source-restoration plan.
 Save red checkpoints; no mapping/GIA completion claim. Original audit stays2/131.
+
+### Canonical DSD core replaces truth-record substitute
+
+Source allocation, structural interning/permutations, recursive truth/parser,
+weighted node traversal and actual SAT fallback now pass252 native functions,
+1,008 partition checks and all510 native driver graphs (handles4935/96545 exit0).
+New red regressions precede pin-profile, ISOP-LUT/warning, SAT ownership and
+16-input-cache repairs (handles62136/58016/76967/61788 exit1). Reconcile two old
+tests with fresh C source contracts rather than preserving substitute semantics.
+Full IF passes3.419s, native canonical checks4.171s, exhaustive small balancing
+288 functions/2,368 assignments (handles72782/41704/44310 exit0).
+REVIEW_mapping_dsd_dependency.md retains evidence and remaining direct-node
+balancing/cache compactness and caller review. Save this coherent red checkpoint;
+no family/package closure, original audit2/131 and full objective remain active.

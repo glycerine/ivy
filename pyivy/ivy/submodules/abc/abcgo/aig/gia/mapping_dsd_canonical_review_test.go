@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	if_ "github.com/glycerine/abcgo/map/if"
+	"os"
 	"os/exec"
 	"strings"
 	"testing"
@@ -30,6 +31,22 @@ func TestMappingDSDOriginalCanonicalContracts(t *testing.T) {
 	fmt.Fprintf(&got, "partition %x\n", if_.If_DsdManCheckXY(p, lit, 2, 1, 0, 1, 0))
 	lit = if_.If_DsdManCompute(p, truth, 3, perm, "22")
 	fmt.Fprintf(&got, "reused %d %d\n", lit, if_.If_DsdManObjNum(p))
+	fmt.Fprintf(&got, "masked-feasibility %x derived %x\n", if_.If_DsdManCheckXY(p, lit, 2, 0, ^uint32(0), 0, 0), if_.If_DsdManCheckXY(p, lit, 2, 1, ^uint32(0), 0, 0))
+	output, err := os.CreateTemp(t.TempDir(), "isop-warning")
+	if err != nil {
+		t.Fatal(err)
+	}
+	original := os.Stdout
+	os.Stdout = output
+	defer func() { os.Stdout = original; output.Close() }()
+	if_.If_DsdManAllocIsops(p, 3)
+	os.Stdout = original
+	warning, err := os.ReadFile(output.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	got.Write(warning)
+	fmt.Fprintf(&got, "isop-lut-size %d\n", if_.If_DsdManLutSize(p))
 	if got.String() != string(want) {
 		t.Fatalf("Go DSD:\n%soriginal C:\n%s", got.String(), want)
 	}
