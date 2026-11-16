@@ -29,10 +29,11 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 		configText = vec.Vec_StrAlloc(1000)
 	}
 	dst := Gia_ManStart(If_ManObjNum(p))
-	leaves, temp, cover, lits := Vec_IntAlloc(16), Vec_IntAlloc(16), Vec_IntAlloc(1<<16), Vec_IntAlloc(1000)
+	// LUT helpers own their factoring scratch; the source cover vector is
+	// unused here. The physical LUT scratch needs at most six entries.
+	leaves, temp, lits := Vec_IntAlloc(16), Vec_IntAlloc(16), Vec_IntAlloc(16)
 	defer Vec_IntFree(leaves)
 	defer Vec_IntFree(temp)
-	defer Vec_IntFree(cover)
 	defer Vec_IntFree(lits)
 	defer Vec_IntFree(records)
 	If_ManCleanCutData(p)
@@ -58,18 +59,18 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 					defer If_ManSatUnbuild(sat)
 				}
 				if pars.FDeriveLuts != 0 {
-					obj.iCopy = Gia_ManFromIfLogicFindLut(p, dst, cut, sat, leaves, lits, cover, offsets, records, packing)
+					obj.iCopy = Gia_ManFromIfLogicFindLut(p, dst, cut, sat, leaves, lits, nil, offsets, records, packing)
 				} else {
 					if If_CutTruthW(p, cut) == nil {
 						panic("if: missing cut truth")
 					}
-					obj.iCopy = Gia_ManFromIfLogicCreateLut(dst, p.puTempW[:p.nTruth6Words[cut.nLeaves]], leaves, cover, offsets, records)
+					obj.iCopy = Gia_ManFromIfLogicCreateLut(dst, p.puTempW[:p.nTruth6Words[cut.nLeaves]], leaves, nil, offsets, records)
 				}
 				obj.iCopy ^= int32(cut.fCompl)
 			case pars.FUseAndVars != 0 && pars.FDeriveLuts != 0 && int32(cut.nLeaves) > pars.NLutSize/2 && (pars.FUseCofVars == 0 || Vec_IntEntry(p.vTtDecs[cut.nLeaves], int(Abc_Lit2Var(cut.iCutFunc))) != 0):
-				obj.iCopy = Gia_ManFromIfLogicAndVars(dst, p, cut, leaves, temp, cover, offsets, records)
+				obj.iCopy = Gia_ManFromIfLogicAndVars(dst, p, cut, leaves, temp, nil, offsets, records)
 			case pars.FUseCofVars != 0 && pars.FDeriveLuts != 0 && int32(cut.nLeaves) > pars.NLutSize/2:
-				obj.iCopy = Gia_ManFromIfLogicCofVars(dst, p, cut, leaves, temp, cover, offsets, records)
+				obj.iCopy = Gia_ManFromIfLogicCofVars(dst, p, cut, leaves, temp, nil, offsets, records)
 			case pars.FDeriveLuts != 0 && pars.FTruth != 0 || pars.FUseDsd != 0 || pars.FUseTtPerm != 0 || pars.pFuncCell2 != nil:
 				if If_CutTruthW(p, cut) == nil {
 					panic("if: missing cut truth")
@@ -82,7 +83,7 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 						}
 					}
 				}
-				obj.iCopy = Gia_ManFromIfLogicNode(p, dst, i, leaves, temp, truth, pars.PLutStruct, cover, offsets, records, packing, ifTuneBoolInt(pars.FEnableCheck75 != 0 || pars.FEnableCheck75u != 0), pars.FEnableCheck07)
+				obj.iCopy = Gia_ManFromIfLogicNode(p, dst, i, leaves, temp, truth, pars.PLutStruct, nil, offsets, records, packing, ifTuneBoolInt(pars.FEnableCheck75 != 0 || pars.FEnableCheck75u != 0), pars.FEnableCheck07)
 				if obj.iCopy < 0 {
 					Gia_ManStop(dst)
 					return nil

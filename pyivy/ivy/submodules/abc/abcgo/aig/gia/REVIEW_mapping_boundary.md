@@ -67,7 +67,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Source unconditional assertion preserved and tested; unused unreachable helper removed; final family gate pending |
 | Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Source branches/phase/records reviewed; 600 Go-only wide selector/constant-cofactor cases; final family gate pending |
 | Gia_ManFromIfLogicAndVars | map/if/gia_cofactor.go | Source masks/phase/records reviewed; 192 Go-only wide AND/OR cases; final family gate pending |
-| Gia_ManFromIfLogic | map/if/gia_mapping.go | Pending |
+| Gia_ManFromIfLogic | map/if/gia_mapping.go | Source branch/ref/phase/finalization review in progress; 31 routing/4 terminal/retry cases; unused scratch removed; config dump and growth boundary review pending |
 | Gia_ManMappingVerify_rec | aig/gia/mapping_transfer.go | Pending |
 | Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Pending |
 | Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
@@ -959,3 +959,53 @@ race excludes the legacy optional C comparison and passes10.391s
 No C test vectors or compiler dependencies added. Active LogicNode wrapper
 review is now recorded; main Logic reconstruction/driver reconciliation,
 metrics/reporting and final family gates remain open. Original audit2/131.
+
+### Main logic reconstruction routing and unused scratch
+
+Review `gia_mapping.go` against `giaIf.c:1820..2045`: mapped-reference skipping,
+CI/CO/constant handling, pin-rotation exclusions, DSD-structure precedence,
+combined AND/cofactor mask routing, ordinary truth/permuted truth triggers,
+structural fallback, per-branch cut complementation and attached record offsets.
+No production correctness discrepancy was found in this pass. The existing Go
+nil-on-failure handling is retained and exercised by correcting parameters and
+retrying the same IF manager.
+
+`gia_mapping_review_test.go` adds31 routing/phase cases with actual four-input
+AND networks and selected cuts. Include structural, cached-truth structural,
+ordinary truth, permuted truth with/without derivation, requested structures,
+check44/check75, DSD truth/structured/undivided, AND-only, cofactor-only and both
+mask choices when both flags are set. A nonnil cost callback selects the source
+truth path without being invoked by reconstruction. Opposite cut/truth phases
+encode the same graph function; permuted cuts compensate signed CI fanins.
+For every case reconstruct twice and check independently owned mapping, skipped
+objects, exact LUT count/markers/packing, no CI mapping, topological LUT inputs,
+and all assignments for root/complement/constant0/constant1/CI/complemented-CI
+outputs. Four empty-interface cases verify exact terminal metadata and truth;
+failed reconstruction followed by retry confirms no partial graph escapes.
+
+The empty-interface test initially assumed a constant record always exists.
+Source `If_ObjIsTerm` includes only CI/CO, so the initial reference guard skips
+unreferenced constants. Correct that test expectation from source; no production
+fix was needed. An initial full/race gate caught only that assertion, and the
+final frozen gates below run after the correction.
+
+Compactness: all active LUT helpers own their factoring scratch and leave the
+source cover parameter unused. Remove the unconditional65536-int cover vector
+and pass nil through those calls; retain helper signatures. Reduce physical-LUT
+scratch from1000 to16 entries (physical LUT supports<=6, vectors still grow
+normally). The reconstruction algorithm and metadata branches stay unchanged.
+Local100ms samples before/after: structural72758/3514ns,269425/3248B,
+29/28alloc; truth81360/7505ns,271162/4984B,78/77alloc. This measures a small
+network reconstruction workload, not an application-wide speed claim. Logs
+`/tmp/abcgo-logic-driver-{before,after}.log`.
+
+Final focused Go-only cases pass (`/tmp/abcgo-logic-driver-cases.jsonl`:31 routing
+and4 empty-interface subcases plus recovery test). Frozen full module with C
+tools excluded and CGO disabled exits0:130 tested packages pass,3 commands
+without tests, no failures (`/tmp/abcgo-logic-driver-reviewed-module-final.jsonl`).
+Focused main-driver/configuration race passes1.144s
+(`/tmp/abcgo-logic-driver-reviewed-race-final.log`); IF/GIA vet exit0
+(`/tmp/abcgo-logic-driver-reviewed-vet-final.log`). No C test vectors or compiler
+dependencies added. Source configuration dump behavior and mapping-array growth
+boundary remain to finish this row; metrics/reporting and full family gate also
+stay open. Original package audit2/131.

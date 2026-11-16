@@ -9565,3 +9565,16 @@ All new vectors are Go. Full IF/GIA/KIT Go-only9.417/28.037/0.302s, focused
 race10.391s and relevant vet pass. Active LogicNode wrapper review recorded;
 main reconstruction/driver, metrics/reporting and family gate remain open.
 Details/logs in REVIEW_mapping_boundary.md. Original package audit2/131.
+
+### Main reconstruction branch review and unused cover removal
+
+Add31 actual-network routing/phase cases, four exact terminal-interface cases
+and failure/retry coverage. Check combined AND/cofactor routing, source flags,
+skipped nodes, owned repeated mappings, record/packing metadata and all outputs.
+No production correctness bug found; correct an initial test assumption about
+unreferenced constants from the source reference guard. Remove the unused256KB
+cover buffer and reduce oversized physical-LUT scratch. Local per-call memory
+falls269KB->3.2KB structural and271KB->5KB truth. Final full Go-only module:
+130 tested packages plus3 commands without tests, zero failures. Focused driver
+race1.144s and IF/GIA vet pass. Details/logs in REVIEW_mapping_boundary.md.
+Configuration I/O, mapping growth and wider family work remain open2/131.
