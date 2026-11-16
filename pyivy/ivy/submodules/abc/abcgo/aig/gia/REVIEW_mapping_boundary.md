@@ -13,7 +13,7 @@ Glitch simulation closed at89caa1ccf. Original package completion remains2/131.
    regressions before fixes, then native/scalar/error/ownership coverage.
 3. [ ] Review exact reports, persistent dump state, packing/profile boundaries,
    source precision and resource handling with native comparisons.
-4. [ ] Review mini reconstruction and parameter/GIA-to-IF boundary, choice
+4. [x] Review mini reconstruction and parameter/GIA-to-IF boundary, choice
    integrity and frame timing metadata; preserve original algorithms.
 5. [ ] Review all IF-to-GIA LUT/cofactor/config/cell reconstruction and drivers,
    with actual C and independent Boolean/metadata/ownership tests.
@@ -53,7 +53,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Source walk reviewed; dangling/64 choice-chain cases; final family gate pending |
 | If_ManCheckChoices | map/if/choice_check.go | Source diagnostics/mark cleanup reviewed; repeated Go-only checks; final family gate pending |
 | Gia_ManToIf | map/if/gia_bridge.go | Source transfer reviewed; name ownership, defaults, typed phases/references/aliases, constants, empty interfaces and 64 choice chains; frame/boxed integration gate pending |
-| Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Source algorithm/scratch reviewed; 140 Go-only scalar cases plus invalid inputs; final family gate pending |
 | Gia_ManBuildFromMini | map/if/gia_mini.go | Source wrapper reviewed; balancing/large parity checks; final family gate pending |
 | Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Source recursive hash/copy algorithm reviewed; 64 Go truth/memoization cases; final family gate pending |
 | Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; callback/repeat/balancing tests; lazy small scratch; final family gate pending |
@@ -451,3 +451,24 @@ Expanded tests0.021s, full IF Go-only1.273s, reconstruction race1.117s,
 /tmp/abcgo-module-go-only-reconstruction.jsonl. Broader mini vector checks still
 need separation from their old compiler-gated comparison, then continue LUT/
 cofactor/config/cell rows and final family gate. Original audit2/131 stays open.
+
+## Mini-AIG matrix runs without C tools
+
+Move the reusable Go case definitions/scalar evaluator out of the compiler-gated
+comparison and execute all140 in an ordinary Go-only test. Cover constants,
+variables, signed leaves, hash/append modes, complete truth, unchanged input
+leaves and source scratch-clearing behavior. Existing invalid-input checks also
+run without C. The optional native comparison retains the same cases and original
+settings; no .c fixtures or expected source outputs are generated for this work.
+
+Focused tests0.010s, full GIA Go-only23.790s, mini race1.043s and IF/GIA vet pass.
+Logs /tmp/abcgo-mapping-mini-{go-only,gia-go-only,race,vet}.log. No functional
+change. The mini/default/choice/ToIf/frame plan section is now reviewed; the final
+family integration gate remains pending, as does the overall131-package audit.
+
+Next: direct LUT reconstruction across physical sizes2..6 and supports through
+2*K-1. Exercise selected versus searched DSD partitions, signed/permuted supplied
+leaves, complemented cut functions, multiword truth, packing/mapping records and
+all input assignments. The512 driver matrix has only four primary inputs, so it
+cannot establish those larger-support reconstruction boundaries. Continue source
+LUT/cofactor/config/cell rows rather than counting driver cases as full coverage.

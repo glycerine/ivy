@@ -9391,3 +9391,13 @@ small growing mini scratch only for balancing; recorded callback benchmark drops
 3 commands without tests). Details/logs in REVIEW_mapping_boundary.md. Next move
 140 mini cases outside compiler gating; remaining LUT/config rows still pending.
 Audit remains2/131.
+
+### Mini-AIG source/scalar coverage now runs on Go alone
+
+All140 existing scalar mini cases execute independently of the optional C
+comparison. Full truth, signed leaves, constants/variables, hash modes, input
+ownership and scratch clearing pass; invalid inputs remain Go-only too. Focused
+0.010s, full GIA Go-only23.790s, race1.043s and IF/GIA vet pass. No production
+change or new C vectors. Mapping plan section4 (mini/parameters/choice/frame)
+reviewed; next larger LUT reconstruction and remaining source rows, then the
+family gate. Original package audit remains2/131.
