@@ -156,3 +156,25 @@ tests); focused exact/IF/SES race4.514s and IF/GIA vet exit0. Logs:
 ended. Single-output search/encoding dependencies still require reconciliation
 and additional varied-function/arrival cases before closing this optional mode.
 The original package audit remains2/131.
+
+
+## Remove the inherited truth-evaluation scratch overflow
+
+Ses_ManDeriveTruth clears four words per gate but the manager, like C's
+abcExact.c:252, reserved only100 words. The26th gate therefore panics in Go
+(and overruns memory in C). A new valid26-gate eight-variable packed AND-chain
+regression fails before repair at index100; log:
+/tmp/abcgo-exact-truth-scratch-red.log. Replace the fixed array with a reusable
+slice sized to four words per encoded gate. Keep operation decoding, fanin
+ordering, output inversion and borrowed-result lifetime unchanged. This is an
+explicit repair of inherited memory unsafety, not an alternate synthesis
+algorithm or a new gate-count restriction.
+
+Twelve boundary models cover supports2/6/7/8 and25/26/100 gates, including
+multiword truth, complemented outputs, repeated evaluation and reuse for a
+shorter model. Scalar AND expectations are generated in Go. Frozen full
+Go-only module exits0 (130 tested packages,3 commands without tests), focused
+exact/IF/SES race4.838s and IF/GIA vet exit0. Logs:
+/tmp/abcgo-exact-scratch-final-{module.jsonl,race.log,vet.log}. All sessions
+ended. Remaining varied-function/arrival synthesis and single-output dependency
+reconciliation are still open; original audit2/131.

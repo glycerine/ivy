@@ -341,7 +341,7 @@ type Ses_Man_t struct {
 	nGates, nStartGates, nMaxGates, fDecStructure, pDecVars                        int32
 	vStairDecVars                                                                  *Vec_Int_t
 	pStairDecFunc                                                                  [8]int32
-	pTtObjs                                                                        [100]word
+	pTtObjs                                                                        []word
 	nSimVars, nOutputVars, nGateVars, nSelectVars, nDepthVars                      int32
 	nSimOffset, nOutputOffset, nGateOffset, nSelectOffset, nDepthOffset            int32
 	fHitResLimit                                                                   int32
@@ -1033,8 +1033,14 @@ func Ses_ManDeriveTruth(pSes *Ses_Man_t, pSol string, fInvert int32) *word {
 	assert(len(pSol) >= 3 && int32(pSol[ABC_EXACT_SOL_NFUNC]) == 1, "one-function solution")
 	nGates := int32(pSol[ABC_EXACT_SOL_NGATES])
 	assert(nGates > 0 && len(pSol) >= 4+int(nGates)*4, "complete solution encoding")
-	for i := int32(0); i < 4*nGates; i++ {
-		pSes.pTtObjs[i] = 0
+	// Each gate occupies four words, including for compact specifications.
+	// C's fixed 100-word buffer overruns as soon as there are 26 gates.
+	words := int(4 * nGates)
+	if cap(pSes.pTtObjs) < words {
+		pSes.pTtObjs = make([]word, words)
+	} else {
+		pSes.pTtObjs = pSes.pTtObjs[:words]
+		clear(pSes.pTtObjs)
 	}
 	for i := int32(0); i < nGates; i++ {
 		pos := 3 + int(i)*4

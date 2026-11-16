@@ -1830,3 +1830,14 @@ caller buffers and search policy. Full Go-only module, focused exact/IF/SES
 race4.514s and IF/GIA vet pass; see REVIEW_exact_delay_dependency.md for logs.
 Single-output SES encoding/search reconciliation and final family gates remain
 open; original package audit2/131.
+
+
+### Repair inherited SES truth scratch overflow
+
+A new26-gate regression fails at the inherited100-word scratch array; truth
+evaluation needs four words per gate. Use a reusable dynamically sized buffer
+with the same packed-network evaluation. Twelve Go-only boundary models cover
+25/26/100 gates and supports2/6/7/8, inversion and shorter-model reuse. Full
+Go-only module, focused exact/IF/SES race4.838s and IF/GIA vet pass. The exact
+mode review records the source overflow and red/final logs explicitly. Remaining
+synthesis/reconciliation and final family gates stay open2/131.
