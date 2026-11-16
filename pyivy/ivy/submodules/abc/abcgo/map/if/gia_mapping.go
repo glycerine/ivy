@@ -19,6 +19,7 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 	records := vec.Vec_IntStart(1)
 	var packing, configs *Vec_Int_t
 	var configText *Vec_Str_t
+	var sat any
 	if pars.FDeriveLuts != 0 && (pars.PLutStruct != "" || pars.FEnableCheck75 != 0 || pars.FEnableCheck75u != 0 || pars.FEnableCheck07 != 0) {
 		packing = vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
 	}
@@ -52,8 +53,12 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 			}
 			switch {
 			case pars.FUseDsd != 0 && pars.PLutStruct != "":
+				if sat == nil {
+					sat = If_ManSatBuildXY(int32(pars.PLutStruct[0] - '0'))
+					defer If_ManSatUnbuild(sat)
+				}
 				if pars.FDeriveLuts != 0 {
-					obj.iCopy = Gia_ManFromIfLogicFindLut(p, dst, cut, nil, leaves, lits, cover, offsets, records, packing)
+					obj.iCopy = Gia_ManFromIfLogicFindLut(p, dst, cut, sat, leaves, lits, cover, offsets, records, packing)
 				} else {
 					if If_CutTruthW(p, cut) == nil {
 						panic("if: missing cut truth")

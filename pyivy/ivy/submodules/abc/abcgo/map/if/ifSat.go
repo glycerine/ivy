@@ -1,28 +1,55 @@
 package if_
 
 import (
+	"fmt"
 	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/dau"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-// ifSatPlan retains the public build/unbuild lifecycle. The source SAT clauses
-// express a two-level functional decomposition; the Go implementation solves
-// that exact relation from truth-table cofactors instead of constructing CNF.
-type ifSatPlan struct{ lutSize int32 }
-
+// If_ManSatBuildXY constructs the original parameterized two-LUT MUX CNF.
 func If_ManSatBuildXY(nLutSize int32) any {
 	if nLutSize < 2 || nLutSize > 6 {
 		panic("if: two-LUT decomposition supports LUT sizes 2..6")
 	}
-	return &ifSatPlan{nLutSize}
+	mintsL := int32(1) << uint(nLutSize)
+	mintsF := int32(1) << uint(2*nLutSize-1)
+	solver := bsat.NewSolver()
+	solver.SetNumVars(2*mintsL + mintsF)
+	for m := int32(0); m < mintsF; m++ {
+		solver.AddMux(2*mintsL+m, m%mintsL, mintsL+2*(m/mintsL)+1, mintsL+2*(m/mintsL), false, false, false, false)
+	}
+	return solver
 }
+
+// If_ManSatBuildXYZ constructs the original three-LUT four-way MUX CNF.
 func If_ManSatBuildXYZ(nLutSize int32) any {
 	if nLutSize < 2 || nLutSize > 6 {
 		panic("if: three-LUT decomposition supports LUT sizes 2..6")
 	}
-	return &ifSatPlan{nLutSize}
+	mintsL := int32(1) << uint(nLutSize)
+	mintsF := int32(1) << uint(3*nLutSize-2)
+	solver := bsat.NewSolver()
+	solver.SetNumVars(3*mintsL + mintsF)
+	for m := int32(0); m < mintsF; m++ {
+		base := 2*mintsL + 4*(m>>uint(2*nLutSize))
+		solver.AddMux4(3*mintsL+m, m%mintsL, mintsL+(m>>uint(nLutSize))%mintsL, base, base+1, base+2, base+3)
+	}
+	return solver
 }
-func If_ManSatUnbuild(p any) {}
+func If_ManSatUnbuild(handle any) {
+	if handle == nil {
+		return
+	}
+	solver, ok := handle.(*bsat.Solver)
+	if !ok {
+		panic("if: invalid SAT solver handle")
+	}
+	if solver != nil {
+		solver.Close()
+	}
+}
 
 func If_ManSat6ComposeLut4(table uint32, functions []word, nVars int32) word {
 	if nVars < 0 || nVars > 4 || len(functions) < int(nVars) {
@@ -84,97 +111,116 @@ func setTruthBit(truth *word, assignment int, value bool) {
 	}
 }
 
-// If_ManSatCheckXY derives bound/free LUT truth tables for a proposed variable
-// partition. For each shared assignment, bound assignments may select at most
-// two distinct free-variable cofactors; their selector is the bound LUT output.
+// If_ManSatCheckXY remaps truth minterms to assumptions on the original
+// parameterized SAT instance, solves it, and extracts both LUT configurations.
 func If_ManSatCheckXY(sat any, lutSize int32, truth []word, nVars int32, set uint32, boundOut, freeOut *word, scratch *Vec_Int_t) int32 {
 	return ifManSatCheckXY(sat, lutSize, truth, nVars, set, boundOut, freeOut, scratch)
 }
 
-// ifManSatCheckXY accepts all truth words, including cuts wider than six inputs.
-func ifManSatCheckXY(_ any, lutSize int32, truth []word, nVars int32, set uint32, boundOut, freeOut *word, scratch *Vec_Int_t) int32 {
-	if nVars < 1 || nVars > 11 || lutSize < 2 || lutSize > 6 || nVars > 2*lutSize-1 || len(truth) < (1<<uint(nVars)+63)/64 {
+func ifManSatCheckXY(handle any, lutSize int32, truth []word, nVars int32, set uint32, boundOut, freeOut *word, scratch *Vec_Int_t) int32 {
+	if nVars < 0 || lutSize < 2 || lutSize > 6 || nVars > 2*lutSize-1 || len(truth) < (1<<uint(nVars)+63)/64 {
 		return 0
 	}
-	var boundSet, sharedSet, freeSet []int32
+	var boundVars, sharedVars, freeVars [IF_MAX_FUNC_LUTSIZE]int32
+	var nBound, nShared, nFree int32
 	for v := int32(0); v < nVars; v++ {
-		switch set >> (2 * v) & 3 {
+		switch set >> uint(2*v) & 3 {
 		case 0:
-			freeSet = append(freeSet, v)
+			freeVars[nFree] = v
+			nFree++
 		case 1:
-			boundSet = append(boundSet, v)
+			boundVars[nBound] = v
+			nBound++
 		case 3:
-			sharedSet = append(sharedSet, v)
+			sharedVars[nShared] = v
+			nShared++
 		default:
 			return 0
 		}
 	}
-	if len(boundSet)+len(sharedSet) > int(lutSize) || len(sharedSet)+len(freeSet)+1 > int(lutSize) {
+	if nShared+nBound > lutSize || nShared+nFree+1 > lutSize {
 		return 0
 	}
-	if len(boundSet) == 0 || len(freeSet) == 0 {
+	// Retain the existing Go convenience of nil handles, using the same real
+	// SAT algorithm with temporary ownership rather than a substitute solver.
+	if handle == nil {
+		handle = If_ManSatBuildXY(lutSize)
+		defer If_ManSatUnbuild(handle)
+	}
+	solver, ok := handle.(*bsat.Solver)
+	mintsL := int32(1) << uint(lutSize)
+	mintsF := int32(1) << uint(2*lutSize-1)
+	if !ok || solver == nil || solver.NumVars() != 2*mintsL+mintsF {
+		panic("if: SAT instance does not match two-LUT dimensions")
+	}
+	if scratch == nil {
+		scratch = vec.Vec_IntAlloc(int(mintsF))
+	}
+	vec.Vec_IntFill(scratch, int(mintsF), -1)
+	for m := int32(0); m < int32(1)<<uint(nVars); m++ {
+		var mapped, ib, is, iff int32
+		for v := int32(0); v < nVars; v++ {
+			value := m >> uint(v) & 1
+			switch set >> uint(2*v) & 3 {
+			case 0:
+				if value != 0 {
+					mapped |= 1 << uint(lutSize+nShared+iff)
+				}
+				iff++
+			case 1:
+				if value != 0 {
+					mapped |= 1 << uint(nShared+ib)
+				}
+				ib++
+			case 3:
+				if value != 0 {
+					mapped |= 1 << uint(is)
+					mapped |= 1 << uint(lutSize+is)
+				}
+				is++
+			}
+		}
+		if vec.Vec_IntEntry(scratch, int(mapped)) != -1 {
+			panic("if: duplicate SAT minterm mapping")
+		}
+		bit := int32(truth[m>>6] >> uint(m&63) & 1)
+		vec.Vec_IntWriteEntry(scratch, int(mapped), bit)
+	}
+	count := 0
+	for m, value := range vec.Vec_IntArray(scratch) {
+		if value >= 0 {
+			vec.Vec_IntWriteEntry(scratch, count, 2*(2*mintsL+int32(m))+(1-value))
+			count++
+		}
+	}
+	vec.Vec_IntShrink(scratch, count)
+	if solver.SolveWithResourceLimits(vec.Vec_IntArray(scratch), 0, 0, 0, 0) != bsat.Satisfiable {
 		return 0
 	}
-	sharedCount, boundCount, freeCount := 1<<uint(len(sharedSet)), 1<<uint(len(boundSet)), 1<<uint(len(freeSet))
-	var boundTable, freeTable word
-	if boundOut != nil {
-		*boundOut = 0
-	}
-	if freeOut != nil {
-		*freeOut = 0
-	}
-	for shared := 0; shared < sharedCount; shared++ {
-		cofactorID := make(map[uint64]int)
-		patterns := make([]uint64, boundCount)
-		for b := 0; b < boundCount; b++ {
-			var pattern uint64
-			for f := 0; f < freeCount; f++ {
-				assignment := 0
-				for i, v := range sharedSet {
-					if shared&(1<<uint(i)) != 0 {
-						assignment |= 1 << uint(v)
-					}
-				}
-				for i, v := range boundSet {
-					if b&(1<<uint(i)) != 0 {
-						assignment |= 1 << uint(v)
-					}
-				}
-				for i, v := range freeSet {
-					if f&(1<<uint(i)) != 0 {
-						assignment |= 1 << uint(v)
-					}
-				}
-				if truthBit(truth, assignment) {
-					pattern |= uint64(1) << uint(f)
-				}
-			}
-			patterns[b] = pattern
-			if _, ok := cofactorID[pattern]; !ok {
-				cofactorID[pattern] = len(cofactorID)
+	if boundOut != nil && freeOut != nil {
+		var bound, free word
+		for m := int32(0); m < int32(1)<<uint(nShared+nBound); m++ {
+			value, _ := solver.Value(m)
+			if value {
+				bound |= 1 << uint(m)
 			}
 		}
-		if len(cofactorID) > 2 {
-			return 0
-		}
-		for b, pattern := range patterns {
-			selector := cofactorID[pattern]
-			boundIndex := shared | (b << uint(len(sharedSet)))
-			setTruthBit(&boundTable, boundIndex, selector != 0)
-			for f := 0; f < freeCount; f++ {
-				freeIndex := selector | (shared << 1) | (f << uint(1+len(sharedSet)))
-				setTruthBit(&freeTable, freeIndex, pattern&(uint64(1)<<uint(f)) != 0)
+		for m := int32(0); m < int32(1)<<uint(1+nShared+nFree); m++ {
+			value, _ := solver.Value(mintsL + m)
+			if value {
+				free |= 1 << uint(m)
 			}
 		}
-	}
-	if boundOut != nil {
-		*boundOut = abcutil.Abc_Tt6Stretch(boundTable, int32(len(sharedSet)+len(boundSet)))
-	}
-	if freeOut != nil {
-		*freeOut = abcutil.Abc_Tt6Stretch(freeTable, int32(1+len(sharedSet)+len(freeSet)))
-	}
-	if scratch != nil {
-		vec.Vec_IntClear(scratch)
+		*boundOut = abcutil.Abc_Tt6Stretch(bound, nShared+nBound)
+		*freeOut = abcutil.Abc_Tt6Stretch(free, 1+nShared+nFree)
+		if nVars == 6 && lutSize == 4 && If_ManSat6Truth(*boundOut, *freeOut, boundVars[:nBound], sharedVars[:nShared], freeVars[:nFree]) != truth[0] {
+			dau.Dau_DsdPrintFromTruth(truth, nVars)
+			result := If_ManSat6Truth(*boundOut, *freeOut, boundVars[:nBound], sharedVars[:nShared], freeVars[:nFree])
+			dau.Dau_DsdPrintFromTruth([]word{result}, nVars)
+			dau.Dau_DsdPrintFromTruth([]word{*boundOut}, nShared+nBound)
+			dau.Dau_DsdPrintFromTruth([]word{*freeOut}, 1+nShared+nFree)
+			fmt.Println("Verification failed!")
+		}
 	}
 	return 1
 }
@@ -184,6 +230,10 @@ func ifManSatCheckXY(_ any, lutSize int32, truth []word, nVars int32, set uint32
 func If_ManSatCheckXYall(pSat any, lutSize int32, truth []word, nVars int32, scratch *Vec_Int_t) uint32 {
 	if lutSize < 2 || lutSize > 6 || nVars <= lutSize || nVars > 2*lutSize-1 || len(truth) < (1<<uint(nVars)+63)/64 {
 		return 0
+	}
+	if pSat == nil {
+		pSat = If_ManSatBuildXY(lutSize)
+		defer If_ManSatUnbuild(pSat)
 	}
 	maxShared := 2*lutSize - 1 - nVars
 	var result uint32
