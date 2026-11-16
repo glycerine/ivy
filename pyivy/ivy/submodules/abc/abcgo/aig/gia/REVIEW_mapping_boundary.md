@@ -1135,3 +1135,14 @@ Go-only module exits0 with130 tested packages passing,3 commands without tests
 (`/tmp/abcgo-power-default-module.jsonl`); focused race1.073s and IF/GIA vet
 exit0 (`/tmp/abcgo-power-default-{race,vet}.log`). No C vectors/compiler calls.
 Timing/attributes/boxed paths and remaining family gates stay open; audit2/131.
+
+### Share the ABC switching entry point
+
+`base/abci.If_ManComputeSwitching` now delegates to IF, removing its duplicate
+AIG conversion and encoded-vector decode/re-encode. Its source-shaped public
+entry point remains available. Four new Go-only ABC network tests enable
+power mapping with different input phases, shared/complemented output
+uses and a direct CI output, then check every input assignment. Focused0.009s,
+full ABCI14.368s with CGO disabled and C tools excluded, and focused race1.042s
+all pass (`/tmp/abcgo-power-abci-{focused,full,race}.log`). This completes the
+delegation cleanup, not the full ABCI audit; family review stays open2/131.

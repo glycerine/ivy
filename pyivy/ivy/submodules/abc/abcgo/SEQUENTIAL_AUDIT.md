@@ -9622,3 +9622,11 @@ object/vector correspondence, reporting, optional override and complete graph
 truth. Full Go-only module passes130 tested packages plus3 commands without
 tests; focused race and relevant vet pass. ABCI delegation cleanup is next;
 timing/attribute/boxed review and family gates remain open, audit2/131.
+
+### Deduplicate the ABC switching entry point
+
+ABCI delegates to the shared IF switching routine; remove the duplicate graph
+builder and float decode/re-encode. Four Go-only end-to-end power-mapping
+cases preserve every output assignment. Full ABCI14.368s with no C toolchain,
+focused race1.042s and focused tests pass. Details in REVIEW_mapping_boundary.md.
+This dependency cleanup leaves remaining family review open, audit2/131.

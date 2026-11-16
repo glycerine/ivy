@@ -1,12 +1,52 @@
 package abci
 
 import (
+	"fmt"
+	"slices"
 	"testing"
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 	ifpkg "github.com/glycerine/abcgo/map/if"
 )
+
+func TestAbcNtkIfPowerMappingUsesSharedSimulation(t *testing.T) {
+	for phase := 0; phase < 4; phase++ {
+		t.Run(fmt.Sprintf("phase%d", phase), func(t *testing.T) {
+			n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
+			defer abc.Abc_NtkDelete(n)
+			a, b, c := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
+			x, y := a.Signal(), b.Signal()
+			if phase&1 != 0 {
+				x = x.Not()
+			}
+			if phase&2 != 0 {
+				y = y.Not()
+			}
+			manager := n.FunctionManager.(*abc.Abc_Aig_t)
+			root := abc.Abc_AigAnd(manager, abc.Abc_AigAnd(manager, x, y), c.Signal())
+			for _, signal := range []abc.Edge{root, root.Not(), b.Signal()} {
+				if err := n.AddFanin(abc.Abc_NtkCreatePo(n), signal); err != nil {
+					t.Fatal(err)
+				}
+			}
+			var pars ifpkg.If_Par_t
+			ifpkg.If_ManSetDefaultPars(&pars)
+			pars.NLutSize, pars.FTruth, pars.FPower = 4, 1, 1
+			mapped := Abc_NtkIf(n, &pars)
+			if mapped == nil {
+				t.Fatal("power mapping failed")
+			}
+			defer abc.Abc_NtkDelete(mapped)
+			for bits := 0; bits < 8; bits++ {
+				want, got := evaluateNetwork(t, n, bits), evaluateNetwork(t, mapped, bits)
+				if !slices.Equal(got, want) {
+					t.Fatalf("input%d: got%v want%v", bits, got, want)
+				}
+			}
+		})
+	}
+}
 
 func TestIfTruthToBDDPreservesTruthTable(t *testing.T) {
 	for _, reverse := range []bool{false, true} {
