@@ -372,3 +372,41 @@ race1.485s and GIA vet pass; all handles ended. Final logs:
 /tmp/abcgo-iso-classes-final-{module.jsonl,race.log,vet.log}. These checks close
 the partition/tie kernels and completion reports, not the full convergence,
 canonicalization/reduction or first-generation driver review. Original audit2/131.
+
+
+## Combinational reduction pipelines and restored reports
+
+Add72 Go-only end-to-end cases over first-generation reduction and both
+second-generation quality policies, output phases, estimate/actual modes,
+requested/omitted metadata and quiet/verbose/very-verbose execution. Known
+circuit families specify exact groups/representatives; all64 input assignments
+check reduced truth. Pin identity fields, source object counts, owned results,
+metadata lifetime after manager shutdown and permutation support/bijection.
+First-generation estimate initializes metadata while second-generation estimate
+leaves output arguments untouched. The second variant keeps ignoring dual mode,
+as C does. These differences are explicit contracts, not unified by the tests.
+
+Two canonical-key cases check all12 cones, constant encodings, exact graph-kind
+key equality and cone-local PI permutations. Normalize truth through independently
+known supports to verify the returned permutations actually align matching
+functions. Six additional pipeline cases distinguish a reconvergent three-AND
+graph from isomorphic two-AND chains even though all compute the same three-input
+conjunction. This guards against replacing structural reduction with Boolean
+minimization. Initial pipeline checks found no grouping/permutation discrepancy.
+
+Five new report regressions fail before restoring omitted source reports:
+indexed nontrivial-class listings/headings in both generations, per-candidate
+cone statistics in first-generation verbose mode, and100-output progress through
+both singleton and non-singleton paths. Reuse existing vector printers/statistics
+services and restore source candidate-label spacing. The72-case matrix confirms
+restored reporting does not change reduction/metadata behavior. Red log
+/tmp/abcgo-iso-reduction-reports-red.log; expanded/repaired focused logs
+/tmp/abcgo-iso-pipeline-{reviewed,green,expanded}.log.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests; all72 matrix leaves execute. Focused isomorphism race2.138s and GIA vet
+pass; all handles ended. Final logs /tmp/abcgo-iso-pipeline-final-
+{module.jsonl,race.log,vet.log}. Sequential/dual reduction, exact pair terminal
+checks, full convergence/source-driver reconciliation and remaining compactness
+checks stay open. Also inspect the newly reused Vec_VecPrintInt dependency's
+empty-level source discrepancy with a new red before repair. Original audit2/131.

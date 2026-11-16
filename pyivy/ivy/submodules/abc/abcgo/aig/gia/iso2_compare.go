@@ -212,7 +212,7 @@ func Gia_ManIsoReduce2(g *Gia_Man_t, outputGroups, inputPerms **Vec_Ptr_t, estim
 	classes := Gia_Iso2ManPerform(g, veryVerbose)
 	var used int
 	nontrivial := vec.Vec_WecCountNonTrivial(classes, &used)
-	fmt.Printf("Reduced %d outputs to %d candidate classes (%d outputs are in %d non-trivial classes).  Time = %.2f sec\n", Gia_ManPoNum(g), vec.Vec_WecSize(classes), used, nontrivial, time.Since(start).Seconds())
+	fmt.Printf("Reduced %d outputs to %d candidate   classes (%d outputs are in %d non-trivial classes).  Time = %.2f sec\n", Gia_ManPoNum(g), vec.Vec_WecSize(classes), used, nontrivial, time.Since(start).Seconds())
 	if estimate != 0 {
 		return Gia_ManDup(g)
 	}
@@ -228,12 +228,8 @@ func Gia_ManIsoReduce2(g *Gia_Man_t, outputGroups, inputPerms **Vec_Ptr_t, estim
 	nontrivial = vec.Vec_WecCountNonTrivial(refined, &used)
 	fmt.Printf("Reduced %d outputs to %d equivalence classes (%d outputs are in %d non-trivial classes).  Time = %.2f sec\n", Gia_ManPoNum(g), vec.Vec_WecSize(refined), used, nontrivial, time.Since(start).Seconds())
 	if verbose != 0 {
-		for i := 0; i < vec.Vec_WecSize(refined); i++ {
-			group := vec.Vec_IntArray(vec.Vec_WecEntry(refined, i))
-			if len(group) > 1 {
-				fmt.Println(group)
-			}
-		}
+		fmt.Println("Nontrivial classes:")
+		vec.Vec_WecPrint(refined, 1)
 	}
 	if inputPerms != nil {
 		*inputPerms = nil

@@ -10168,3 +10168,16 @@ and keep report-only totals local. Full Go-only module passes130 tested packages
 plus3 commands without tests; focused isomorphism race1.485s and GIA vet pass.
 REVIEW_isomorphism.md records source diagnostic caveats and remaining full
 convergence/canonicalization/reduction/driver scope. Original audit2/131.
+
+
+### Verify combinational isomorphism pipelines and restore reports
+
+Add72 Go-only reduction/flag/ownership cases, canonical-key/permutation checks
+and six structural-versus-Boolean-equivalence cases. Known groups and exhaustive
+truth check representatives without substituting a different algorithm. Five new
+red report regressions precede restoring indexed classes, verbose cone statistics
+and100-output progress. Full Go-only module passes130 tested packages plus3
+commands without tests; focused isomorphism race2.138s and GIA vet pass. Detailed
+contracts, evidence and remaining sequential/dual/pair/driver scope are in
+REVIEW_isomorphism.md. A vector-printer empty-level dependency discrepancy is
+next for its own new red/repair; this does not mark vec audited. Audit2/131.

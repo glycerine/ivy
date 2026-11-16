@@ -38,23 +38,38 @@ func Gia_ManIsoReduce(initial *Gia_Man_t, outputGroups, inputPerms **Vec_Ptr_t, 
 	}
 	var used int32
 	nontrivial := Vec_IntCountNonTrivial(candidates, &used)
-	fmt.Printf("Reduced %d outputs to %d candidate classes (%d outputs are in %d non-trivial classes).  Time = %.2f sec\n", Gia_ManPoNum(graph), vec.Vec_PtrSize(candidates), used, nontrivial, time.Since(start).Seconds())
+	fmt.Printf("Reduced %d outputs to %d candidate   classes (%d outputs are in %d non-trivial classes).  Time = %.2f sec\n", Gia_ManPoNum(graph), vec.Vec_PtrSize(candidates), used, nontrivial, time.Since(start).Seconds())
 	if estimate != 0 {
 		return Gia_ManDup(initial)
 	}
 	var groups [][]int32
 	finished := 0
-	for _, item := range vec.Vec_PtrArray(candidates) {
+	for candidateIndex, item := range vec.Vec_PtrArray(candidates) {
 		candidate := vec.Vec_IntArray(item.(*Vec_Int_t))
 		if len(candidate) < 2 {
 			groups = append(groups, append([]int32(nil), candidate...))
-			finished += len(candidate)
+			for range candidate {
+				finished++
+				if finished%100 == 0 {
+					fmt.Printf("%6d finished...\r", finished)
+				}
+			}
 			continue
+		}
+		if verbose != 0 {
+			output := candidate[0]
+			fmt.Printf("%6d %6d %6d : ", candidateIndex, len(candidate), output)
+			part := Gia_ManDupCones(graph, []int32{output}, 1, 1)
+			Gia_ManPrintStats(part, nil)
+			Gia_ManStop(part)
 		}
 		groupStart := len(groups)
 		signatures := make(map[string]int)
 		for _, output := range candidate {
 			finished++
+			if finished%100 == 0 {
+				fmt.Printf("%6d finished...\r", finished)
+			}
 			var permutation *Vec_Int_t
 			signature := Gia_ManIsoFindString(graph, output, 0, &permutation)
 			if signature == nil {
@@ -96,11 +111,8 @@ func Gia_ManIsoReduce(initial *Gia_Man_t, outputGroups, inputPerms **Vec_Ptr_t, 
 	}
 	fmt.Printf("Time = %.2f sec\n", time.Since(start).Seconds())
 	if verbose != 0 {
-		for _, group := range groups {
-			if len(group) > 1 {
-				fmt.Println(group)
-			}
-		}
+		fmt.Println("Nontrivial classes:")
+		vec.Vec_VecPrintInt(resultGroups, 1)
 	}
 	if outputGroups != nil {
 		*outputGroups = resultGroups
