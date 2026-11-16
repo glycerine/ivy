@@ -1639,8 +1639,8 @@ void log_Z3_mk_pble(Z3_context a0, unsigned a1, Z3_ast const * a2, int const * a
   U(a1);
   for (unsigned i = 0; i < a1; i++) { P(a2[i]); }
   Ap(a1);
-  for (unsigned i = 0; i < a1; i++) { U(a3[i]); }
-  Au(a1);
+  for (unsigned i = 0; i < a1; i++) { I(a3[i]); }
+  Ai(a1);
   I(a4);
   C(224);
 }
@@ -1650,8 +1650,8 @@ void log_Z3_mk_pbge(Z3_context a0, unsigned a1, Z3_ast const * a2, int const * a
   U(a1);
   for (unsigned i = 0; i < a1; i++) { P(a2[i]); }
   Ap(a1);
-  for (unsigned i = 0; i < a1; i++) { U(a3[i]); }
-  Au(a1);
+  for (unsigned i = 0; i < a1; i++) { I(a3[i]); }
+  Ai(a1);
   I(a4);
   C(225);
 }
@@ -1661,8 +1661,8 @@ void log_Z3_mk_pbeq(Z3_context a0, unsigned a1, Z3_ast const * a2, int const * a
   U(a1);
   for (unsigned i = 0; i < a1; i++) { P(a2[i]); }
   Ap(a1);
-  for (unsigned i = 0; i < a1; i++) { U(a3[i]); }
-  Au(a1);
+  for (unsigned i = 0; i < a1; i++) { I(a3[i]); }
+  Ai(a1);
   I(a4);
   C(226);
 }
