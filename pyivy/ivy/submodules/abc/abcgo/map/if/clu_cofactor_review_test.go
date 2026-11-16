@@ -62,7 +62,7 @@ func TestCluFourCofactorsOverwriteReusedOutputs(t *testing.T) {
 
 func TestCluFourCofactorDimensionsAndDerivation(t *testing.T) {
 	for bound := 2; bound <= 6; bound++ {
-		for free := 1; free <= 4; free++ {
+		for free := 1; free <= 5; free++ {
 			for count := 3; count <= 4; count++ {
 				t.Run(fmt.Sprintf("bound%d/free%d/classes%d", bound, free, count), func(t *testing.T) {
 					n := bound + free
@@ -127,6 +127,14 @@ func TestCluFourCofactorDimensionsAndDerivation(t *testing.T) {
 						if got := cofs[i+4][0]; got != want {
 							t.Fatalf("selector%d got%#x want%#x", i, got, want)
 						}
+					}
+					if !slices.Equal(truth, before) {
+						t.Fatal("source truth changed")
+					}
+					// C permits five free inputs in the counter; the derived
+					// two-output root is restricted to six inputs (free <=4).
+					if free == 5 {
+						return
 					}
 					work := slices.Clone(truth)
 					v2p, p2v := cluIdentity(int32(n))

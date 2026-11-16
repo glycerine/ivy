@@ -645,3 +645,48 @@ Go-only17.616s (`/tmp/abcgo-clu-cofactor-reviewed-full.log`), focused counter/
 three-stage/structure race9.902s (`/tmp/abcgo-clu-cofactor-reviewed-race.log`),
 IF/GIA vet exit0 (`/tmp/abcgo-clu-cofactor-reviewed-vet.log`). Original package
 review remains2/131; wider CLU/LogicNode and family gates remain open.
+
+### Three-stage connection restrictions and two-output fallback
+
+Compare `If_CluCheck3` with `ifDec16.c:1909..2075`: first decomposition's
+extended root capacity, sufficient two-node early return, failed first search's
+two-output eligibility, restriction modes' start/stop arguments, second-stage
+failure and final sentinel remapping follow source branches. No production
+change was required in this pass.
+
+`clu_structure_review_test.go` adds24 ten-input restriction cases:
+`AND(ab) XOR AND(cdef) XOR AND(ghij)` for parallel factors and
+`AND(abc) XOR AND(defghij)` for a serial chain. Source initial bound ghij has
+two cofactors. Modes0/1 admit the parallel layout; mode2 requires the first
+result in the second LUT and rejects it. Modes0/2 admit the chain; mode1
+forbids that result and rejects it. Four sign/output phases are checked. For
+success, verify bound pin sets, exact root sentinel ordering, source-derived
+base truth words (AND4 bound, XOR/AND root), every assignment, optional-output
+selection consistency and input ownership. These are constrained full-support
+fixtures; the easy-cofactor shortcut is not claimed to enforce these policies
+on all functions (its source placement precedes those group restrictions).
+
+The two-output fallback gets128 additional cases: an explicit four-input
+2-bit code selects cofactors[6,8,14,9] over two free inputs. Independent scalar
+enumeration checks every three- and four-variable set has neither a disjoint
+single-output decomposition nor one with a shared variable. The size-three
+check matters because source retries a smaller group before the fallback.
+Then enumerate all64 input-sign masks and both output phases; require two
+identical bound groups with3/4 classes, both leading root sentinels, and correct
+truth on all64 assignments. An initial parity-code fixture admitted a smaller
+first-stage group, so it did not establish fallback coverage; replace that test
+fixture rather than alter correct source behavior. No production defect was
+inferred from that initial test expectation.
+
+Extend counter dimension tests with20 free-size5 cases, checking 32-bit
+cofactors and up to64 selector bits. This closes the remaining source
+`If_CluCountCofs4` width domain. The source two-output derivation restricts free
+support to4; do not call it for those extra counter-only cases.
+
+Frozen verification: all new cases Go-only0.024s, full IF Go-only9.209s
+(`/tmp/abcgo-clu-structure-reviewed-full.log`), focused counter/restriction/
+fallback race1.113s (`/tmp/abcgo-clu-structure-reviewed-race.log`), IF/GIA vet
+exit0 (`/tmp/abcgo-clu-structure-reviewed-vet.log`). No C vectors or compiler
+dependencies added. Remaining active CLU primitives/retry configuration fidelity,
+LogicNode failure diagnostics, wider driver/reporting reconciliation and family
+gates remain open. Original package audit2/131 unchanged.

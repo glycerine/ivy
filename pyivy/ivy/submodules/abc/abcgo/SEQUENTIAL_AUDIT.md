@@ -9483,3 +9483,15 @@ and exhaustive two-output derivation/pin/ownership checks. No C fixtures added.
 Full IF Go-only17.616s, focused cofactor/three-stage/structure race9.902s and
 IF/GIA vet pass. Counter free-size5 and wider three-LUT restrictions/diagnostics
 remain review work. Details in REVIEW_mapping_boundary.md. Audit remains2/131.
+
+### Three-LUT restrictions and two-output fallback coverage
+
+Review source first/second-stage orchestration, restriction arguments and
+sentinel remapping. Add24 scalar parallel/serial restriction cases and128
+fallback cases over every input sign/output phase. Independent enumeration
+proves the fallback fixture cannot use any three/four-variable single-output
+bound set, including shared-variable forms. Extend counter coverage with20
+free-size5 cases. No production bug found. Full IF Go-only9.209s, focused race
+1.113s and IF/GIA vet pass. Details in REVIEW_mapping_boundary.md; active
+primitive/retry fidelity, diagnostics and final family review stay open.
+Original package audit remains2/131.
