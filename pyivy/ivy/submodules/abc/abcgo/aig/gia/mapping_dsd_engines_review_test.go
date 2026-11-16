@@ -35,10 +35,9 @@ func mappingDSDReviewFullSupport(truth []uint64, n int32) bool {
 	}
 	return true
 }
-func TestMappingDSDNativeCanonicalTreesAndPartitions(t *testing.T) {
-	executable := gia.CompileSourceOracleForTest(t, "if_dsd_matrix_review.c")
+func mappingDSDReviewCases() []mappingDSDReviewCase {
 	var cases []mappingDSDReviewCase
-	for _, text := range []string{"(abc)", "[abc]", "<abc>", "(!a(bc))", "((ab)[cd])", "<a(bc)[de]>", "((ab)(cd)(ef))", "[a(bc)<def>]", "E8{abc}", "<a(bc)(def)>", "(ab[cd]<efg>)", "<a(bcd)[efgh]>"} {
+	for _, text := range []string{"(abc)", "[abc]", "<abc>", "(!a(bc))", "((ab)[cd])", "<a(bc)[de]>", "((ab)(cd)(ef))", "[a(bc)<def>]", "E8{abc}", "<a(bc)(def)>", "(ab[cd]<efg>)", "<a(bcd)[efgh]>", "(abD3C5A79F01234567{cdefgh})", "(ab9E27B4D8603FA15C{cdefgh})", "(ab6D93B71CA8E50F24{cdefgh})"} {
 		n := dau.Dau_DsdFindVarNum(text)
 		cases = append(cases, mappingDSDReviewCase{n, dau.Dau_DsdToTruth(text, n)})
 	}
@@ -72,6 +71,12 @@ func TestMappingDSDNativeCanonicalTreesAndPartitions(t *testing.T) {
 		}
 		cases = append(cases, c, mappingDSDReviewCase{c.variables, inverted})
 	}
+	return cases
+}
+
+func TestMappingDSDNativeCanonicalTreesAndPartitions(t *testing.T) {
+	executable := gia.CompileSourceOracleForTest(t, "if_dsd_matrix_review.c")
+	cases := mappingDSDReviewCases()
 	var input strings.Builder
 	for _, c := range cases {
 		fmt.Fprintf(&input, "%d", c.variables)
