@@ -5,9 +5,9 @@
 static If_DsdMan_t *build(int scenario)
 {
     char *texts[]={"(ab)","[abc]","E8{abc}","E8{a(bc)d}","D3C5{abcd}"};
-    int sizes[]={2,3,3,4,4};If_DsdMan_t *p=If_DsdManAlloc(4,scenario==2?0:2);
+    int sizes[]={2,3,3,4,4};If_DsdMan_t *p=If_DsdManAlloc(scenario>=7?scenario-7:4,scenario>=7||scenario==2?0:scenario>=3?scenario:2);
     unsigned char perm[4];int i,j;word *truth;
-    for(i=0;i<5;i++)for(j=0;j<=i%3;j++) {
+    for(i=0;i<(scenario>=7?0:5);i++)for(j=0;j<=i%3;j++) {
         truth=Dau_DsdToTruth(texts[i],sizes[i]);If_DsdManCompute(p,truth,sizes[i],perm,"");
     }
     if(scenario==1){Id_DsdManTuneStr1(p,"{abcd}",0,0);If_DsdManSetLutSize(p,2);}

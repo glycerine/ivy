@@ -53,7 +53,7 @@ func mappingDSDReviewReadReport(t *testing.T, executable, path, copyPath string)
 }
 func TestMappingDSDNativePersistenceInteroperability(t *testing.T) {
 	executable := gia.CompileSourceOracleForTest(t, "if_dsd_persistence_review.c")
-	for scenario := 0; scenario < 3; scenario++ {
+	for scenario := 0; scenario < 9; scenario++ {
 		t.Run(strconv.Itoa(scenario), func(t *testing.T) {
 			dir := t.TempDir()
 			sourcePath := filepath.Join(dir, "source.dsd")
@@ -87,10 +87,12 @@ func TestMappingDSDNativePersistenceInteroperability(t *testing.T) {
 				t.Fatal("C did not reserialize the Go file byte-for-byte")
 			}
 			// A loaded node must still hit its original structural hash entry.
-			before := if_.If_DsdManObjNum(p)
-			if_.If_DsdManCompute(p, dau.Dau_DsdToTruth("D3C5{abcd}", 4), 4, make([]byte, 4), "")
-			if if_.If_DsdManObjNum(p) != before {
-				t.Fatal("loaded interning table lost a native prime structure")
+			if if_.If_DsdManVarNum(p) >= 4 {
+				before := if_.If_DsdManObjNum(p)
+				if_.If_DsdManCompute(p, dau.Dau_DsdToTruth("D3C5{abcd}", 4), 4, make([]byte, 4), "")
+				if if_.If_DsdManObjNum(p) != before {
+					t.Fatal("loaded interning table lost a native prime structure")
+				}
 			}
 		})
 	}
