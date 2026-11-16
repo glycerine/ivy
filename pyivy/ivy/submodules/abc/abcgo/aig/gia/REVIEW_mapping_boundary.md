@@ -346,3 +346,16 @@ algorithm restoration is original ifSat.c SAT flow; the full mapping family,
 GIA and original2/131 package goal remain open. Full frozen module race/vet
 will be required after the remaining mapping work, not inferred from these
 focused/caller results.
+
+## Original SAT core restoration checkpoint
+
+REVIEW_mapping_sat_dependency.md tracks the required ifSat.c dependency. New
+red tests prove observable substitute differences: no actual CNF, missing
+assumptions, rejected source-valid degenerate partitions, single-output writes
+and UNSAT output clobbering. Fresh original C confirms the source contracts.
+Restore the original XY/XYZ MUX clauses through existing BSAT helpers, incremental
+solve/assumption remap/model extraction and structured-reconstruction ownership.
+Nil convenience allocates a real temporary source solver, never the substitute.
+Initial SAT checks pass0.235s; BSAT race suite6.945s. Full dependency differential,
+search/composition/demo review, caller/resource checks and family integration
+remain open; this checkpoint is not mapping/GIA completion.

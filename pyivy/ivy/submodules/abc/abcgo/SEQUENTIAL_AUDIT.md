@@ -9077,3 +9077,18 @@ The full mapping family still requires actual ifSat.c CNF/assumption/BSAT/model
 restoration rather than its cofactor substitute, remaining frame/reconstruction/
 error coverage and final frozen module race/vet. No GIA or package completion
 claim is made; original audit2/131 and the full131-package objective remain active.
+
+### Mapping SAT substitute replaced by original core flow
+
+New regressions fail before repair for placeholder factories, erased assumptions,
+source-valid degenerate partitions, single-output writes and UNSAT output
+clobbering (handles64307/38735 exit1). Fresh original ifSat.c confirms all source
+contracts (handle3378 exit0,1.909s). Restore actual XY/XYZ MUX CNFs, BSAT solve,
+source assumptions/model extraction and handle cleanup; structured GIA now
+lazily owns/passes one actual solver. Nil convenience uses the same real SAT
+algorithm, with one solver reused across a partition search.
+
+Existing/new SAT tests pass0.235s (handle88636 exit0); full BSAT race6.945s
+(handle6484 exit0). REVIEW_mapping_sat_dependency.md retains the remaining
+native reuse/multiword/search/helper/demo and integration plan. Save each
+subpackage's changes separately. GIA/mapping and original2/131 audit remain open.
