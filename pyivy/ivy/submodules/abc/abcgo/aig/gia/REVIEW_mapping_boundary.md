@@ -33,7 +33,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManLutSizeMax | aig/gia/mapping_accessors.go, base/abci/abc_graph_compat.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManLutNum | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManLutLevel | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManLutParams | aig/gia/mapping_timing.go | Pending |
+| Gia_ManLutParams | aig/gia/mapping_timing.go | Ordinary/boxed native and independent coverage; integration pending |
 | Gia_ManSetRefsMapped | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManSetLutRefs | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManComputeOverlap2One_rec | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
@@ -48,11 +48,11 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManPrintPackingStats | aig/gia/mapping_profile.go | Pending |
 | Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Pending |
 | Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Pending |
-| Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Pending |
-| Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Pending |
+| Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Ordinary/typed/boxed coverage; integration pending |
+| Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Ordinary/typed/boxed coverage; integration pending |
 | If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Pending |
 | If_ManCheckChoices | map/if/choice_check.go | Pending |
-| Gia_ManToIf | map/if/gia_bridge.go | Pending |
+| Gia_ManToIf | map/if/gia_bridge.go | Name copy repaired; core native drivers pass; wider boundary review pending |
 | Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManBuildFromMini | map/if/gia_mini.go | Pending |
 | Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Pending |
@@ -72,17 +72,17 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Pending |
 | Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
 | Gia_ManTransferPacking | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
-| Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | Pending |
+| Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | 6,144 native ownership cases; source self-order retained |
 | Abc_FrameMiniAigSetCiArrivals | aig/gia/frame_bridge.go | Pending |
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Pending |
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Pending |
 | Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Pending |
-| Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Pending |
-| Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Pending |
+| Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
+| Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
 | Gia_ManTestStruct | map/if/gia_structure_report.go | Pending |
-| Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Earlier native/scalar review; reconcile |
+| Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Last usable cut policy and C collapse failures reviewed; integration pending |
 
 The inline If_ManFanin0Copy/If_ManFanin1Copy logic is represented by the
 phase-preserving copyEdge closure in map/if/gia_bridge.go.
@@ -314,3 +314,35 @@ retained assumptions, solver lifecycle and repeated SAT/UNSAT tests, production
 caller ownership and full-word truth checks. No substitute is accepted merely
 because SAT decisions match. This dependency, remaining source rows, resource/
 error boundaries and complete integration keep the source family and GIA open.
+
+## Corrected cut selection: final checkpoint measurement
+
+Select the last usable cut by walking source cuts backwards, skipping a merged
+root once selected. Reuse the existing destination index as scratch; emit one
+record per root. This preserves the verified policy while avoiding validation
+of all earlier duplicate candidates. The native/hash suite still passes14.640s
+(`/tmp/abcgo-mapping-hash-reverse-focused.log`,handle83094 exit0), including all
+384 driver results and new valid/invalid-cut regressions. C's cyclic/forward
+records remain separately characterized rather than copied into Go.
+
+Initial150ms timing samples were noisy, so compare the two correct selectors
+serially at500ms/count3. The ascending version is loaded through a Go overlay
+from21e174f04; the worktree stays unchanged. Median local results:
+
+| Duplicate roots | Correct ascending ns/op | Correct reverse ns/op | B/op (reverse) | Allocs/op (both) |
+| --- | --- | --- | --- | --- |
+|64|12,962|12,025|10,132|87|
+|4,096|835,374|786,978|558,326|4,127|
+|65,536|12,844,886|11,521,532|8,494,202|65,571|
+
+Allocation is unchanged (minor byte differences are measurement noise); reverse
+selection saves roughly6–10% time here. This table compares implementations of
+the corrected policy, with no universal timing claim. Logs:
+`/tmp/abcgo-mapping-hash-ascending-serial-bench.log` (handle12135 exit0) and
+`/tmp/abcgo-mapping-hash-reverse-serial-bench.log` (handle8201 exit0).
+
+All work is saved in coherent current-branch checkpoints. The next required
+algorithm restoration is original ifSat.c SAT flow; the full mapping family,
+GIA and original2/131 package goal remain open. Full frozen module race/vet
+will be required after the remaining mapping work, not inferred from these
+focused/caller results.

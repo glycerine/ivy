@@ -9059,3 +9059,21 @@ actual ifSat.c flow with the existing ported BSAT backend as a required mapping
 dependency. See /tmp/abcgo-mapping-sat-restoration-plan.md and
 REVIEW_mapping_boundary.md. No mapping/GIA/package completion claim is made;
 original audit remains2/131. Save the current corrected checkpoint regularly.
+
+### Corrected hash-cut selector keeps compact storage with less duplicate work
+
+Reverse source iteration selects the same last usable cut once per destination
+root, using its existing index as scratch. All384 native driver results plus
+hash/source-boundary tests pass14.640s (handle83094 exit0). No per-root selection
+array or dead duplicate records are introduced. Longer serial500ms/count3
+benchmarks resolve noisy short samples: median64/4096/65536-root times improve
+12,962->12,025ns,835,374->786,978ns,12,844,886->11,521,532ns relative to correct
+ascending selection; allocations remain87/4,127/65,571. These are local medians
+for two corrected implementations, not an across-workload performance claim.
+Logs and source overlays are documented in REVIEW_mapping_boundary.md;
+benchmark handles12135/8201 terminate exit0. Save this coherent red checkpoint.
+
+The full mapping family still requires actual ifSat.c CNF/assumption/BSAT/model
+restoration rather than its cofactor substitute, remaining frame/reconstruction/
+error coverage and final frozen module race/vet. No GIA or package completion
+claim is made; original audit2/131 and the full131-package objective remain active.

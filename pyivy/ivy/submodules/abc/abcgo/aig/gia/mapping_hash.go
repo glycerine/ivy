@@ -46,14 +46,14 @@ func Gia_ManDupHashMapping(src *Gia_Man_t) *Gia_Man_t {
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, Gia_ManRegNum(src))
 	mapping := Vec_IntStart(int(Gia_ManObjNum(dst)))
-	// Temporarily use the destination index to select the last source LUT for
-	// each merged root. This retains C's overwrite policy without its dead records.
-	for id := int32(1); id < Gia_ManObjNum(src); id++ {
+	// Walk backwards to select the last usable source cut once per merged
+	// root. The destination index is scratch, so no selection array is needed.
+	for id := Gia_ManObjNum(src) - 1; id > 0; id-- {
 		if Gia_ObjIsLut(src, id) == 0 {
 			continue
 		}
 		copied := int32(Gia_ManObj(src, id).Value >> 1)
-		if copied == 0 || Gia_ObjIsCi(Gia_ManObj(dst, copied)) != 0 {
+		if copied == 0 || Gia_ObjIsCi(Gia_ManObj(dst, copied)) != 0 || Vec_IntEntry(mapping, int(copied)) != 0 {
 			continue
 		}
 		// C can overwrite a merged root with a self/forward cut after hashing.
