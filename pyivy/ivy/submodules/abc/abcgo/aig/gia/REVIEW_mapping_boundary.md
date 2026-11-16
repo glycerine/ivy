@@ -1841,3 +1841,20 @@ with the same packed-network evaluation. Twelve Go-only boundary models cover
 Go-only module, focused exact/IF/SES race4.838s and IF/GIA vet pass. The exact
 mode review records the source overflow and red/final logs explicitly. Remaining
 synthesis/reconciliation and final family gates stay open2/131.
+
+
+### Reconcile single-output SES search and wide arrival depths
+
+All218 full-support three-input functions now pass both gate modes and two
+arrival profiles (872 actual syntheses), independently checking Boolean truth,
+physical pins, weighted depth and caller/cache ownership. Separate bottom-up/
+top-down tests check known AND/parity/MUX/majority gate counts. A valid model
+survives later resource failure and remains cached. Source search/encoding/
+clauses and intended heuristics are reconciled in the exact dependency review.
+
+New red wide-arrival cases expose signed-power overflow at depths31+ that
+rejects a one-gate AND. Guard powers above the int32 gate-count range; retain
+source representable bounds and search policy. Full Go-only module, expanded
+exact/IF/SES race30.099s and IF/GIA vet pass. The exact dependency document
+records arithmetic/source limitations and final logs. Optional cost runtime is
+reviewed; final family reconciliation and full-module race remain open2/131.

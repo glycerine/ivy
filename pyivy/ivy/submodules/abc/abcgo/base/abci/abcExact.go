@@ -1933,7 +1933,9 @@ func Ses_CheckDepthConsistency(pSes *Ses_Man_t) int32 {
 }
 
 func Ses_CheckGatesConsistency(pSes *Ses_Man_t, nGates int32) int32 {
-	if pSes.nMaxDepth != -1 && nGates >= int32(1)<<uint(pSes.nMaxDepth) {
+	// At depth >=31, 2^depth exceeds every nonnegative int32 gate count.
+	// Do not turn C's overflowing signed shifts into an impossible bound.
+	if pSes.nMaxDepth != -1 && pSes.nMaxDepth < 31 && nGates >= int32(1)<<uint(pSes.nMaxDepth) {
 		if pSes.fReasonVerbose != 0 {
 			spFmt.Printf("give up due to impossible depth (depth = %d, gates = %d)", pSes.nMaxDepth, nGates)
 		}
@@ -1945,7 +1947,7 @@ func Ses_CheckGatesConsistency(pSes *Ses_Man_t, nGates int32) int32 {
 		}
 		return 0
 	}
-	if pSes.fDecStructure != 0 && nGates >= (int32(1)<<uint(pSes.nMaxDepth-1))+1 {
+	if pSes.fDecStructure != 0 && pSes.nMaxDepth <= 31 && nGates >= (int32(1)<<uint(pSes.nMaxDepth-1))+1 {
 		if pSes.fReasonVerbose != 0 {
 			spFmt.Printf("give up due to impossible depth in AND-dec structure (depth = %d, gates = %d)", pSes.nMaxDepth, nGates)
 		}

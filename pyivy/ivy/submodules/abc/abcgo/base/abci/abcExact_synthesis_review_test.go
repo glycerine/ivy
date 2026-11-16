@@ -11,7 +11,7 @@ import (
 )
 
 // Evaluate the source binary solution independently of SES's truth evaluator.
-func exactSynthesisReviewModel(t *testing.T, model string, vars int, truth []word) []int8 {
+func exactSynthesisReviewModel(t *testing.T, model string, vars int, truth []word, arrivals ...[]int32) []int8 {
 	t.Helper()
 	if len(model) < 3 || int(model[0]) != vars || model[1] != 1 {
 		t.Fatal("invalid synthesis header")
@@ -57,6 +57,12 @@ func exactSynthesisReviewModel(t *testing.T, model string, vars int, truth []wor
 	}
 	trailer := 3 + 4*gates + 1
 	wantDepth := int(slices.Max(pins))
+	if len(arrivals) != 0 {
+		wantDepth = 0
+		for i, arrival := range arrivals[0] {
+			wantDepth = max(wantDepth, int(arrival)+int(pins[i]))
+		}
+	}
 	if int(model[trailer]) != wantDepth {
 		t.Fatal("model depth disagrees with physical graph")
 	}
@@ -83,6 +89,70 @@ func exactSynthesisReviewModel(t *testing.T, model string, vars int, truth []wor
 		}
 	}
 	return pins
+}
+
+func TestExactSynthesisAllFullSupportThreeInputFunctions(t *testing.T) {
+	for _, aig := range []int32{0, 1} {
+		for _, arrivals := range [][]int32{{0, 0, 0}, {0, 1, 2}} {
+			functions := 0
+			for table := 0; table < 256; table++ {
+				fullSupport := true
+				for pin := 0; pin < 3; pin++ {
+					depends := false
+					for assignment := 0; assignment < 8; assignment++ {
+						if (table>>assignment)&1 != (table>>(assignment^(1<<pin)))&1 {
+							depends = true
+						}
+					}
+					fullSupport = fullSupport && depends
+				}
+				if !fullSupport {
+					continue
+				}
+				functions++
+				t.Run(fmt.Sprintf("aig%d/arrivals%v/truth%02x", aig, arrivals, table), func(t *testing.T) {
+					exactMappingReviewStoreMode(t, aig)
+					// Repeat the three-input table through a full Go word.
+					truth := []word{uint64(table) * 0x0101010101010101}
+					original := truth[0]
+					times := slices.Clone(arrivals)
+					pins := make([]int8, 3)
+					var cost int32
+					delay := Abc_ExactDelayCost(&truth[0], 3, &times[0], pins, &cost, -1)
+					if delay == ABC_INFINITY || cost <= 0 {
+						t.Fatalf("no synthesized model: delay%d cost%d undef%d", delay, cost, s_pSesStore.nUndefCalls)
+					}
+					if truth[0] != original || !slices.Equal(times, arrivals) {
+						t.Fatal("synthesis changed caller truth or arrivals")
+					}
+					var model string
+					if Ses_StoreGetEntry(s_pSesStore, &truth[0], 3, &times[0], &model) != 1 || model == "" {
+						t.Fatal("synthesis did not store its model")
+					}
+					physicalPins := exactSynthesisReviewModel(t, model, 3, truth, arrivals)
+					if !slices.Equal(pins, physicalPins) || int(cost) != int(model[2]) {
+						t.Fatal("API cost/pin profile differs from physical model")
+					}
+					physicalDelay := int32(0)
+					for pin, arrival := range arrivals {
+						physicalDelay = max(physicalDelay, arrival+int32(pins[pin]))
+					}
+					if delay != physicalDelay || s_pSesStore.nSatCalls == 0 || s_pSesStore.nEntriesCount != 1 {
+						t.Fatal("delay or actual synthesis accounting changed")
+					}
+					for gate := 0; gate < int(model[2]); gate++ {
+						op := model[3+4*gate]
+						if op != 1 && op != 2 && op != 4 && op != 7 && (aig != 0 || op != 3) {
+							t.Fatalf("invalid operation%d in mode%d", op, aig)
+						}
+					}
+				})
+			}
+			if functions != 218 {
+				t.Fatalf("full-support three-input function inventory: got%d want218", functions)
+			}
+		}
+	}
 }
 
 func TestExactSynthesisFullSupportAndBounds(t *testing.T) {
@@ -167,6 +237,29 @@ func TestExactSynthesisDepthHints(t *testing.T) {
 				t.Fatal("cache-miss accounting changed")
 			}
 		})
+	}
+}
+
+func TestExactSynthesisWideArrivalDepths(t *testing.T) {
+	for _, gap := range []int32{29, 30, 31, 32} {
+		for _, aig := range []int32{0, 1} {
+			t.Run(fmt.Sprintf("aig%d/gap%d", aig, gap), func(t *testing.T) {
+				exactMappingReviewStoreMode(t, aig)
+				truth := exactCacheReviewAndTruth(2)
+				arrivals := []int32{0, gap}
+				pins := []int8{-7, -7}
+				var cost int32
+				delay := Abc_ExactDelayCost(&truth[0], 2, &arrivals[0], pins, &cost, gap+1)
+				// A single AND gate achieves the full-support lower bound:
+				// one unit after the later-arriving input.
+				if delay != gap+1 || cost != 1 || !slices.Equal(pins, []int8{1, 1}) {
+					t.Fatalf("wide arrival depth: delay%d cost%d pins%v", delay, cost, pins)
+				}
+				if !slices.Equal(arrivals, []int32{0, gap}) {
+					t.Fatal("query changed caller arrivals")
+				}
+			})
+		}
 	}
 }
 

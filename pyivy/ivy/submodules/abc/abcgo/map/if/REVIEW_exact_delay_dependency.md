@@ -18,9 +18,9 @@ Abc_ExactDelayCost in abcExact.c; Go already contains the SES/BSAT backend.
   calls/cache reuse, and source-unsupported GIA reconstruction.
 - [x] Reconcile network-key normalization and cached result/failure ownership
   through supports3..8, including multiword keys and source first-hit policy.
-- [ ] Review remaining cache-miss depth bounds, search/resource-limit behavior
+- [x] Review remaining cache-miss depth bounds, search/resource-limit behavior
   and reporting, including actual synthesis at supports3..8/multiword truth.
-- [ ] Reconcile the single-output SES search/encoding dependencies used by that
+- [x] Reconcile the single-output SES search/encoding dependencies used by that
   API before claiming the full optional mode reviewed.
 - [ ] Run remaining final GIA mapping-family/module gates.
 
@@ -178,3 +178,52 @@ exact/IF/SES race4.838s and IF/GIA vet exit0. Logs:
 /tmp/abcgo-exact-scratch-final-{module.jsonl,race.log,vet.log}. All sessions
 ended. Remaining varied-function/arrival synthesis and single-output dependency
 reconciliation are still open; original audit2/131.
+
+
+## Complete single-output runtime reconciliation
+
+Review the active source path from Ses_ManComputeTopDec through
+Ses_ManFindMinimumSize (abcExact.c:917..2398), plus the cost API and cache
+normalizer. This scope covers the mapping dependency, not all ABCI APIs or the
+multi-output synthesis command. Earlier solver-core notes are historical;
+their parser-blocked validation is superseded by the current Go-only/race gates.
+
+| Runtime portion | Reconciled behavior and evidence |
+| --- | --- |
+| Allocation/top decomposition/cleanup | Four-word specification slots, zero-row phase normalization, normalized arrivals, per-manager seeded sampling and restoration; compact public input is padded safely. |
+| Variable creation/indexing | Source triangular selection/depth layouts and reset/reuse of the BSAT solver; existing direct index tests and actual synthesis across all three-input functions. |
+| Truth evaluation | Source three normalized gate rows, ordered fanins, final-output phase and borrowed scratch; inherited100-word overflow repaired separately with a red regression. |
+| Truth/gate/depth clauses | Preserve source clause and assumption order, selected rows, single final output, one fanin pair, operation restrictions, stair assumptions, gate use, operand/co-lexicographic/symmetry constraints and reverse depth encoding. No new pruning or solver replacement. |
+| Consistency/bounds | Preserve source top/stair and second/third-level decomposition checks and max-gate heuristic; new wide-arrival regression repairs overflowing depth powers as described below. |
+| Solve/CEGAR | Actual BSAT resource limits and status/statistic conversion, random starting rows, first differing row refinement and source keep-row flag; scalar model evaluation independently verifies every three-input assignment. |
+| Model extraction | Preserve header/gate/output layout, truth phases, physical pin paths and normalized arrival-weighted trailer depth. |
+| Search directions | Bottom-up and top-down tested separately for AND/parity/MUX/majority with known2/2/3/4 gate counts in general mode; top-down retains its model on a smaller infeasible attempt. |
+| Cost/cache | Preserve last feasible model during depth improvement, first-hit cache policy and source success/failure counters. A conflict-budget1 AND-then-XOR case retains a valid model after later resource failure and reuses it without new SAT. |
+
+A new exhaustive Go-only matrix covers all218 full-support three-input truth
+tables, both gate modes and uniform/mixed arrival profiles:872 real fresh
+synthesis runs. The oracle decodes every gate and evaluates every assignment,
+checks allowed operations, path lengths, weighted delay, cost, cache publication
+and unchanged caller inputs. This proves returned models in this finite domain;
+it does not claim an independent exhaustive optimum proof for every function.
+The explicit AND/NAND lower-bound and named search cases provide independent
+optimal gate/depth expectations where stated.
+
+Eight wide-arrival AND cases cover gaps29..32 in both modes. Six fail before
+repair (/tmp/abcgo-exact-wide-depth-red.log): signed32-bit powers at depths31+
+become negative/zero and reject even one gate. C's signed shifts are likewise
+undefined/overflowing at these depths. Skip those comparisons when their
+mathematical power exceeds all nonnegative int32 gate counts, including the
+AND-decomposition power. A one-gate AND now meets its late-input-plus-one
+lower bound with unchanged input arrivals. This is an explicit arithmetic
+repair, retaining all representable source bounds and search heuristics.
+
+Frozen full Go-only module exits0 (130 tested packages,3 commands without
+tests), expanded exact/IF/SES race30.099s and IF/GIA vet exit0. Logs:
+/tmp/abcgo-exact-search-final-{module.jsonl,race.log,vet.log}. All sessions
+ended. The optional single-output mapping runtime is reconciled. Its source
+limitations remain: first-hit cache need not re-optimize, search/resource and
+max-gate heuristics may miss alternatives, and GIA SES reconstruction asserts.
+Do not widen those features or label the whole IF/ABCI packages audited.
+The remaining gate is the final GIA mapping-family/module reconciliation;
+original package completion remains2/131.
