@@ -24,3 +24,23 @@ func TestGiaToIfBridge(t *testing.T) {
 		t.Fatal("incorrect edge polarity")
 	}
 }
+
+func TestGiaToIfRetainsSourceName(t *testing.T) {
+	src := gia.Gia_ManStart(8)
+	src.SetIdentity("/models/design.aig", "source-spec")
+	a, b := gia.Gia_ManAppendCi(src), gia.Gia_ManAppendCi(src)
+	gia.Gia_ManAppendCo(src, gia.Gia_ManAppendAnd(src, a, b))
+	var pars If_Par_t
+	Gia_ManSetIfParsDefault(&pars)
+	pars.NLutSize = 4
+	p := Gia_ManToIf(src, &pars)
+	defer If_ManStop(p)
+	if p.pName != "/models/design.aig" {
+		t.Fatalf("IF manager name%q want original source name", p.pName)
+	}
+	src.SetIdentity("changed", "")
+	gia.Gia_ManStop(src)
+	if p.pName != "/models/design.aig" {
+		t.Fatal("source identity change or teardown damaged IF name")
+	}
+}

@@ -20,6 +20,7 @@ func Gia_ManToIf(src *gia.Gia_Man_t, pars *If_Par_t) *If_Man_t {
 		defer gia.Gia_ManCleanMark0(src)
 	}
 	result := If_ManStart(pars)
+	result.pName, _ = src.Identity()
 	copies := make([]*If_Obj_t, gia.Gia_ManObjNum(src))
 	copies[0] = If_Not(If_ManConst1(result))
 	gia.Gia_ManFillValue(src)
