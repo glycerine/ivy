@@ -9798,3 +9798,16 @@ both owners; remove the orphan C fixture. No production repair was needed.
 Full Go-only module passes130 tested packages plus3 commands without tests;
 focused transfer/hash race1.210s and relevant vet pass. Evidence in
 REVIEW_mapping_boundary.md; remaining family gates and original audit2/131.
+
+
+### Reconcile hashed mapping duplication and integration
+
+Review source copy/hash/cut order, source scratch and separate metadata
+ownership. Keep the previously characterized compact storage and invalid-cut
+repairs. New Go-only empty/terminal and32 signed collapse cases check explicit
+map/copy vectors, all assignments, dangling records and independent ownership;
+reject absent mapping before mutation. No further production defect found.
+Full Go-only module passes130 tested packages and3 commands without tests;
+focused hash plus ordinary/boxed-choice driver race21.405s and relevant vet
+pass. Hash inventory row now reconciled, final family gate pending. Details
+in REVIEW_mapping_boundary.md; remaining review and original audit2/131.

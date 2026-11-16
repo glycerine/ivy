@@ -82,7 +82,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Source wrapper parameters/metadata policy reviewed; ordinary/boxed direct/registered paths covered; final family gate pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final family gate pending |
 | Gia_ManTestStruct | map/if/gia_structure_report.go | Source KIT diagnostics/summary/limits/bounds reviewed; red regressions repaired; needless small-LUT truth computation removed; final family gate pending |
-| Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Last usable cut policy and C collapse failures reviewed; integration pending |
+| Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Source hash/copy/cut selection reconciled; compact storage and collapse repairs characterized; ordinary/typed/boxed drivers and Go-only ownership boundaries covered; final family gate pending |
 
 The inline If_ManFanin0Copy/If_ManFanin1Copy logic is represented by the
 phase-preserving copyEdge closure in map/if/gia_bridge.go.
@@ -1581,3 +1581,36 @@ transfer/hash race passes1.210s and relevant vet exits0. Logs:
 /tmp/abcgo-timing-transfer-final-{cases.log,module.jsonl,race.log,vet.log}.
 All sessions ended. Remaining hashing reconciliation, reports/optional modes
 and final family gates stay open; original package audit2/131.
+
+
+### Reconcile hashed mapping duplication and boundaries
+
+Re-read giaIf.c:2585..2636 against mapping_hash.go. CI order, copied literals,
+CO polarity/order, register count, identity and source Value scratch agree.
+Mapping and timing/configuration transfers are separate source operations;
+hashing must leave source metadata ownership intact. The backward selector
+retains the source last cut on valid inputs while emitting one compact record
+per root. Preserve the previously characterized self/forward-cut correctness
+repairs rather than reintroducing invalid source records. Typed gates retain
+their already-reviewed normalization path. Earlier measured compactness gains
+remain applicable; no further production change is needed.
+
+New Go-only cases cover empty/terminal-only mapped managers and32 signed
+simple-mode graphs containing duplicate roots, a redundant dependent cut,
+input/constant collapse and a dangling mapped gate. Explicit expected vectors
+check index size, record order, retained cuts and omission of collapsed records.
+Check all8 assignments per graph against independent Boolean expressions,
+exact source copy literals (including unassigned CO Values), independent map
+storage, source map immutability, identity/registers and configuration/packing
+ownership. An absent-map case must reject before changing source scratch.
+The fixture initially omitted the source simple-mode flag required for equal
+fanins; correct the fixture, not production's matching source precondition.
+
+This reconciles the existing typed/dependent/last-cut/collapse tests with the
+512-case ordinary and5120-case boxed-choice driver matrices; their metrics and
+Boolean/ownership assertions exercise hashing through real callers. Frozen
+hash cases pass0.009s, full Go-only module exits0 (130 tested packages plus3
+commands without tests), focused hash/driver/boxed-choice race passes21.405s
+and relevant vet exits0. Logs: /tmp/abcgo-hash-boundary-cases.log and
+/tmp/abcgo-hash-boundary-final-{module.jsonl,race.log,vet.log}. All sessions
+ended. Reports, optional modes and final family gates remain open; audit2/131.
