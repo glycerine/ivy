@@ -2,7 +2,6 @@ package gia_test
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"slices"
 	"strconv"
@@ -10,47 +9,8 @@ import (
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/gia"
-	if_ "github.com/glycerine/abcgo/map/if"
 )
 
-func mappingDriverReviewRun(t *testing.T, src *gia.Gia_Man_t, seed, mode int) *gia.Gia_Man_t {
-	t.Helper()
-	progress, err := os.CreateTemp(t.TempDir(), "mapper-progress")
-	if err != nil {
-		t.Fatal(err)
-	}
-	original := os.Stdout
-	os.Stdout = progress
-	defer func() { os.Stdout = original; progress.Close() }()
-	if mode == 4 {
-		return if_.Gia_ManPerformSopBalance(src, 8, 0, 0)
-	}
-	if mode == 5 {
-		return if_.Gia_ManPerformDsdBalance(src, 6, 8, 0, 0)
-	}
-	var pars if_.If_Par_t
-	if_.Gia_ManSetIfParsDefault(&pars)
-	if mode >= 6 {
-		size := int32(mode - 4)
-		pars.NLutSize = 2*size - 1
-		pars.FTruth, pars.FDeriveLuts, pars.FUseDsd, pars.FCutMin = 1, 1, 1, 1
-		pars.FExpRed = 0
-		pars.PLutStruct = "22"
-		if size == 3 {
-			pars.PLutStruct = "33"
-		}
-		dsd := if_.If_DsdManAlloc(pars.NLutSize, size)
-		defer if_.If_DsdManFree(dsd, 0)
-		pars.SetDsdManager(dsd)
-		return if_.Gia_ManPerformMapping(src, &pars)
-	}
-	pars.NLutSize = int32(3 + ((seed >> 1) & 1))
-	pars.FHashMapping = int32(mode & 1)
-	if mode >= 2 {
-		pars.FTruth, pars.FDeriveLuts = 1, 1
-	}
-	return if_.Gia_ManPerformMapping(src, &pars)
-}
 func TestMappingDriversWithFreshOriginalC(t *testing.T) {
 	exe := gia.CompileSourceOracleForTest(t, "mapping_driver_review.c")
 	cases := 0
@@ -59,13 +19,13 @@ func TestMappingDriversWithFreshOriginalC(t *testing.T) {
 			t.Run(fmt.Sprintf("seed%d/mode%d", seed, mode), func(t *testing.T) {
 				source, err := exec.Command(exe, strconv.Itoa(seed), strconv.Itoa(mode)).CombinedOutput()
 				if mode == 6 && (seed == 25 || seed == 56) {
-					// C chooses an oversized shared/free partition on these
-					// fixtures. Retain the exact failure as an explicit source
-					// boundary; it cannot supply an output graph to compare.
+					// These unfiltered fixtures admit an infeasible MUX cut.
+					// CheckXY returns zero, then C treats all inputs as free and
+					// asserts its SAT dimensions. Keep this setup boundary explicit.
 					if err == nil || !strings.Contains(string(source), "nLutSize + nSSet + nFSet <= 2*nLutSize - 1") {
 						t.Fatalf("original partition boundary changed: %v %s", err, source)
 					}
-					t.Log("original C rejects its selected partition; Go boundary review remains open")
+					t.Log("unfiltered C fixture admits an infeasible cut; the Go-only matrix enables DSD filtering")
 					return
 				}
 				if err != nil {

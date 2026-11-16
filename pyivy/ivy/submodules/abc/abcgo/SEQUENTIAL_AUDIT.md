@@ -9357,3 +9357,15 @@ finds earlier seed25/56 unfiltered fixtures admit a genuinely infeasible MUX;
 source cell-filter setup fixes those fixtures, not the solver. New configured
 512-case Go-only driver matrix passes, queued for its GIA commit/affected gate.
 Details in REVIEW_mapping_dsd_dependency.md. GIA mapping audit stays open2/131.
+
+### GIA Go-only driver and choice coverage committed green
+
+All512 correctly configured driver cases and64 choice-chain cases now execute
+without native tools. Preserve old native settings for historical comparisons;
+move reusable Go setup into the Go-only test file. Explicit mark-filter setup
+rejects infeasible cuts; old seed25/56 failures were unfiltered setup boundaries,
+not valid oversized partitions. Source default/choice/adapter rows reconciled in
+REVIEW_mapping_boundary.md. Focused matrices1.158s, race4.774s and IF/GIA vet pass.
+Full Go-only module gate exits0:130 tested packages,3 commands without tests;
+JSON confirms all512+64 subcases passed. Log /tmp/abcgo-module-go-only-bridge.jsonl.
+Remaining frame/IF-to-GIA rows and final family gate stay open; audit2/131.

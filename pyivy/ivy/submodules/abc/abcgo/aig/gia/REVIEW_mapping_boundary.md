@@ -28,7 +28,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 
 | Original C | Go location | Status |
 | --- | --- | --- |
-| Gia_ManSetIfParsDefault | map/if/gia_bridge.go | Pending |
+| Gia_ManSetIfParsDefault | map/if/gia_bridge.go | Source defaults/full reset reviewed; Go-only regression; final family gate pending |
 | Gia_ManLutFaninCount | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManLutSizeMax | aig/gia/mapping_accessors.go, base/abci/abc_graph_compat.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManLutNum | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
@@ -50,9 +50,9 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Pending |
 | Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Ordinary/typed/boxed coverage; integration pending |
 | Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Ordinary/typed/boxed coverage; integration pending |
-| If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Pending |
-| If_ManCheckChoices | map/if/choice_check.go | Pending |
-| Gia_ManToIf | map/if/gia_bridge.go | Name copy repaired; core native drivers pass; wider boundary review pending |
+| If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Source walk reviewed; dangling/64 choice-chain cases; final family gate pending |
+| If_ManCheckChoices | map/if/choice_check.go | Source diagnostics/mark cleanup reviewed; repeated Go-only checks; final family gate pending |
+| Gia_ManToIf | map/if/gia_bridge.go | Source transfer reviewed; name ownership, defaults, typed phases/references/aliases, constants, empty interfaces and 64 choice chains; frame/boxed integration gate pending |
 | Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManBuildFromMini | map/if/gia_mini.go | Pending |
 | Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Pending |
@@ -372,3 +372,31 @@ plan in REVIEW_mapping_dsd_dependency.md. Correct command-path flags matter:
 fCutMin=1,fExpRed=0. The corrected128-case expansion has97 exact matches,
 29 structural mismatches and2 explicit original partition-assertion failures.
 These are evidence/remaining scope, not a completed family or package audit.
+
+## Go-only adapter and complete driver matrix checkpoint
+
+Default/choice/ToIf source rows reconciled against giaIf.c. The adapter retains
+source object/value order for ordinary graphs, phase-correct typed expansions,
+CI levels and name ownership. Signed copy storage is needed for collapsed buffer
+aliases and typed expansion; replacing it with source IDs would lose those phases.
+The original C memory warning uses packed allocation sizes; no equivalent claim
+about Go heap use is made. Existing ordinary source/boxed-level evidence remains
+additional context, not a runtime C dependency for these new checks.
+
+512 configured driver/balancing cases and64 direct choice-chain cases execute
+without C tools: scalar truth/interface/identity/configuration checks, ordinary
+source-ID correspondence, expansion policy, reachable alternatives and repeated
+mark-clearing diagnostics. The older unfiltered native512-case setup is retained
+unchanged (510 source results plus2 infeasible-cut assertions); Go-only structured
+cases enable the actual source cell-filter branch and its minimum four-slot cut
+storage. Physical22/33 LUTs are distinct from that mapper storage limit.
+
+New tests pass1.158s, focused race4.774s and IF/GIA vet pass. Full-module Go-only
+JSON confirms512 driver and64 choice subcases pass,130 tested packages pass and
+3 commands have no tests. No failures. Logs /tmp/abcgo-gia-mapping-go-matrices.log,
+/tmp/abcgo-gia-mapping-go-matrices-race.log,
+/tmp/abcgo-gia-mapping-go-matrices-vet.log,
+/tmp/abcgo-module-go-only-bridge.jsonl. Older optional C comparisons still skip;
+no broad replacement/comprehensive coverage claim for them. Next frame timing
+boundaries and remaining IF-to-GIA reconstruction/configuration rows; final
+mapping-family full race/vet gate and original131-package review remain open.
