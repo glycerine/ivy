@@ -268,10 +268,11 @@ func If_ManImproveNodeUpdate(p *If_Man_t, pObj *If_Obj_t, vFront *Vec_Ptr_t) {
 	If_CutAreaDeref(p, pCut)
 	// update the node's cut
 	pCut.nLeaves = uint32(Vec_PtrSize(vFront))
+	pCut.pLeaves = pCut.pLeaves[:0]
 	// inlining of macro Vec_PtrForEachEntry
-	for i, entry := range Vec_PtrArray(vFront) {
+	for _, entry := range Vec_PtrArray(vFront) {
 		pFanin = entry.(*If_Obj_t)
-		pCut.pLeaves[i] = pFanin.Id
+		pCut.pLeaves = append(pCut.pLeaves, pFanin.Id)
 	}
 	If_CutOrder(pCut)
 	pCut.uSign = If_ObjCutSignCompute(pCut)

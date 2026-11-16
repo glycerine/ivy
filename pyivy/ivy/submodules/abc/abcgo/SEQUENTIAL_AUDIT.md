@@ -9642,3 +9642,14 @@ No production bug found; preserve and document source timed-AND power-vector
 precondition and unported optional recorded/SAT cost modes. Full IF10.416s,
 focused race1.194s and vet pass. Details in REVIEW_mapping_boundary.md;
 attribute/outer-driver/family review remains open, audit2/131.
+
+### Repair growing area-recovery cut storage
+
+New attribute integration coverage exposes an out-of-range write when a copied
+two-leaf Go cut grows to three. Add a minimal red regression before repair;
+rebuild the leaf slice with append, reusing capacity and shrinking its visible
+length when needed. Six alternating growth/shrink updates verify exact leaves,
+signature, references and mapped area. Full Go-only module passes130 tested
+packages plus3 commands without tests; focused IF race1.158s and relevant vet
+pass. Details/logs in REVIEW_mapping_boundary.md. Attribute integration and
+remaining family/package review remain open, audit2/131.

@@ -1179,3 +1179,26 @@ Focused34 cases0.070s, full Go-only IF10.416s, focused race1.194s and IF vet
 exit0 (`/tmp/abcgo-driver-timing-{valid,full,race,vet}.log`). No C vectors or
 compiler dependency added. Attributes and outer normalization/hash/transfers,
 optional-mode dependencies, and remaining family gates stay open; audit2/131.
+
+### Repair area-recovery cut storage growth
+
+A new output-attribute integration test panics in `If_ManImproveNodeUpdate`
+when the selected two-leaf cut expands to three leaves
+(`/tmp/abcgo-driver-attribute-first.log`, exit1). The new minimal independent
+`TestImproveNodeUpdateResizesCutLeaves` also panics before repair
+(`/tmp/abcgo-reduce-leaf-growth-red.log`, exit1). C's cut storage has room for
+the LUT limit, but the copied Go slice has only its current leaf count.
+Rebuild the slice with append, reusing capacity while allowing growth and
+shrinking its visible length. Retain source dereference/update/order/signature/
+reference sequencing. Do not merely lengthen to capacity: stale tail leaves
+would corrupt subsequent marking/signature calculations.
+
+The minimal Go regression alternates two/three-leaf frontiers six times,
+checking exact sorted leaves, count/limit/signature, two shared CO references,
+leaf references, and independently expected mapped area after each update.
+Focused0.004s passes (`/tmp/abcgo-reduce-leaf-growth-green.log`). Frozen full
+Go-only module exits0:130 tested packages pass,3 commands without tests
+(`/tmp/abcgo-driver-attribute-final-module.jsonl`). Focused IF race1.158s and
+IF/GIA vet exit0 (`/tmp/abcgo-driver-attribute-{if-race,vet}.log`). All handles
+consumed. No C fixtures/compiler dependency added. Attribute integration
+coverage is recorded next; remaining source family/package audit stays open2/131.
