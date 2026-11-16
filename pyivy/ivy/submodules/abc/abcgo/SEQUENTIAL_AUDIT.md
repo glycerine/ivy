@@ -9723,3 +9723,14 @@ from431776ns/3800allocs to5248ns/0allocs per report. Full Go-only module130
 tested packages pass plus3 commands without tests; focused race1.088s and
 relevant vet pass. Evidence in REVIEW_mapping_boundary.md. Remaining family
 rows/gates and original package audit remain open2/131.
+
+### Restore source mapping-verification order and diagnostics
+
+Two new red Go-only regressions expose combined object-order traversal instead
+of buffer-first/CO-vector traversal, plus missing ABC error prefix/routing.
+Restore source ordering with a shared driver check, skip the unnecessary object
+scan without buffers, and use Abc_Print. Cover short-circuit/revisit/terminal
+semantics, exact errors, CO reordering, print bridge, valid cuts and preconditions.
+Full Go-only module130 tested packages pass plus3 commands without tests;
+focused GIA race4.922s and relevant vet pass. Details/logs in
+REVIEW_mapping_boundary.md. Remaining family review stays open, audit2/131.

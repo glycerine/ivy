@@ -1,6 +1,6 @@
 package gia
 
-import "fmt"
+import abcutil "github.com/glycerine/abcgo/misc/util"
 
 func Gia_ManMappingVerify_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	if Gia_ObjIsTravIdCurrent(p, obj) != 0 {
@@ -11,7 +11,7 @@ func Gia_ManMappingVerify_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 		return 1
 	}
 	if Gia_ObjIsLut(p, obj.id) == 0 {
-		fmt.Printf("Gia_ManMappingVerify: Internal node %d does not have mapping.\n", obj.id)
+		abcutil.Abc_Print(-1, "Gia_ManMappingVerify: Internal node %d does not have mapping.\n", obj.id)
 		return 0
 	}
 	for _, id := range Gia_ObjLutFanins(p, obj.id) {
@@ -26,19 +26,27 @@ func Gia_ManMappingVerify(p *Gia_Man_t) {
 		panic("gia: mapping is absent")
 	}
 	Gia_ManIncrementTravId(p)
-	for _, obj := range p.pObjs {
-		if Gia_ObjIsBuf(obj) == 0 && Gia_ObjIsCo(obj) == 0 {
-			continue
-		}
+	verifyDriver := func(obj *Gia_Obj_t) {
 		fanin := Gia_ObjFanin0(obj)
 		if Gia_ObjIsAndNotBuf(fanin) == 0 {
-			continue
+			return
 		}
 		if Gia_ObjIsLut(p, fanin.id) == 0 {
-			fmt.Printf("Gia_ManMappingVerify: CO driver %d does not have mapping.\n", fanin.id)
-			continue
+			abcutil.Abc_Print(-1, "Gia_ManMappingVerify: CO driver %d does not have mapping.\n", fanin.id)
+			return
 		}
 		Gia_ManMappingVerify_rec(p, fanin)
+	}
+	// C visits all buffers first, then the CO vector in interface order.
+	if Gia_ManBufNum(p) != 0 {
+		for _, obj := range p.pObjs {
+			if Gia_ObjIsBuf(obj) != 0 {
+				verifyDriver(obj)
+			}
+		}
+	}
+	for i := int32(0); i < Gia_ManCoNum(p); i++ {
+		verifyDriver(Gia_ManCo(p, i))
 	}
 }
 

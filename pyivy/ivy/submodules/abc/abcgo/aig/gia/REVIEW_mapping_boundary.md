@@ -68,8 +68,8 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Source branches/phase/records reviewed; 600 Go-only wide selector/constant-cofactor cases; final family gate pending |
 | Gia_ManFromIfLogicAndVars | map/if/gia_cofactor.go | Source masks/phase/records reviewed; 192 Go-only wide AND/OR cases; final family gate pending |
 | Gia_ManFromIfLogic | map/if/gia_mapping.go | Source routing/phase/ref/finalization/config I/O reviewed; exact growth/file boundaries covered; report escaping fixed; unused scratch removed; final family gate pending |
-| Gia_ManMappingVerify_rec | aig/gia/mapping_transfer.go | Pending |
-| Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Pending |
+| Gia_ManMappingVerify_rec | aig/gia/mapping_transfer.go | Source traversal/failure/revisit/terminal behavior reviewed; error routing repaired with red regressions; final family gate pending |
+| Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Source buffer-first/CO-vector order and error routing restored; valid/missing/repeated/bridge cases covered in Go; final family gate pending |
 | Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
 | Gia_ManTransferPacking | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
 | Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | 6,144 native ownership cases; source self-order retained |
@@ -1390,3 +1390,35 @@ module exits0:130 tested packages pass,3 commands without tests
 (`/tmp/abcgo-structure-report-final-{cases.log,module.jsonl,race.log,vet.log}`).
 All handles consumed. Remaining metrics/reports/transfers, boxed choices,
 optional dependencies and final family gates stay open; original audit2/131.
+
+### Restore mapping-verification traversal and error routing
+
+Compare `giaIf.c:2054..2101`: C verifies every buffer first, then COs in
+interface-vector order. Go combined buffers/COs in object order, changing which
+missing internal cut is reported first. It also used fmt.Printf instead of
+Abc_Print(-1), losing the source Error prefix and print-bridge routing
+(`abc_global.h:366..405`). Two new Go-only direct/recursive regressions fail
+before repair on order and error prefix
+(`/tmp/abcgo-mapping-verify-red.log`, exit1).
+
+Use one shared driver-check closure for the two source-ordered passes. Skip
+the buffer scan when the manager has none and visit the CO vector directly,
+matching the source and avoiding an unnecessary full object scan on ordinary
+buffer-free networks. Route both top-level and recursive errors through the
+existing ABC print function. Preserve recursive short-circuiting, traversal
+epochs and the source rule that a revisit in the same epoch returns1 even
+after an earlier failure marked that node. Do not add a different verifier.
+
+New Go-only cases cover exact direct/repeated/internal errors and order, two
+missing leaves with only the first visited, same-epoch revisit, reordered CO
+vectors with valid Cio IDs, actual print-bridge delivery without stdout output,
+complete shared cuts, constant/CI/buffer terminal boundaries, repeated epochs,
+unchanged mapping records and the missing-mapping precondition.
+
+Focused verification/transfer cases0.009s; frozen full Go-only module exits0:
+130 tested packages pass,3 commands without tests (IF9.982s/GIA27.550s).
+Focused GIA race4.922s includes verification/transfers,216 attribute cases and
+the512-case driver matrix; relevant vet exits0
+(`/tmp/abcgo-mapping-verify-final-{cases.log,module.jsonl,race.log,vet.log}`).
+All handles consumed. Transfer test migration follows. Remaining source-family
+rows/gates and original package audit remain open2/131.
