@@ -26,20 +26,16 @@ const (
 	IF_DSD_PRIME
 )
 
-// If_DsdObj_t stores the exact truth table as the canonical semantic value.
-// The DSD spelling is cached for diagnostics; algorithms never infer behavior
-// from parsing that spelling back into a truth table.
+// If_DsdObj_t records shared canonical structure. Prime truth tables live in
+// the manager; text/network are transitional diagnostic/balancing caches.
 type If_DsdObj_t struct {
 	Id                  int32
 	Type                If_DsdType_t
 	nSupp, fMark, Count int32
 	nFans               int32
 	pFans               []int32
-	truth               []uint64
-	supportVars         []int32
 	text                string
 	network             *dau.Dss_Ntk_t
-	permutation         []byte
 }
 
 func If_DsdObjClean(p *If_DsdObj_t)      { *p = If_DsdObj_t{} }
@@ -86,12 +82,6 @@ func dsdObject(p *If_DsdMan_t, lit int32) *If_DsdObj_t {
 }
 
 func dsdWordCount(n int32) int { return (1<<uint(n) + 63) / 64 }
-
-func dsdSupport(truth []uint64, n int32) []int32 {
-	vars := make([]int32, n)
-	base := append([]uint64(nil), truth...)
-	return vars[:dau.Dau_DsdMinBase(base, n, vars)]
-}
 
 // If_DsdManAlloc creates the source constant and one generic variable.
 func If_DsdManAlloc(nVars, lutSize int32) *If_DsdMan_t {
@@ -178,14 +168,8 @@ func If_DsdManCompute(p *If_DsdMan_t, truth []word, nLeaves int32, permutation [
 	// structure, never used for interning or decomposition decisions.
 	if o.network == nil {
 		o.text = ifDsdText(p, lit&^1, nil)
-		o.truth = append([]word(nil), If_DsdManComputeTruth(p, lit&^1, nil)[:dsdWordCount(o.nSupp)]...)
 		o.network = dau.Dss_NtkCreate(o.text, o.nSupp, nil)
-		o.permutation = make([]byte, o.nSupp)
-		o.supportVars = make([]int32, o.nSupp)
-		for i := range o.permutation {
-			o.permutation[i] = byte(2 * i)
-			o.supportVars[i] = int32(i)
-		}
+
 	}
 	return lit
 }
