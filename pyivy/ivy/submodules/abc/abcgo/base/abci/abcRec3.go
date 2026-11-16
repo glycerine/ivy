@@ -331,17 +331,11 @@ func Lms_DelayMax(D1 word, D2 word, nVars int32) word {
 	}
 	return D
 }
-func lmsChooseInt(cond bool, yes, no int32) int32 {
-	if cond {
-		return yes
+func lmsPercent(count, total int32) float64 {
+	if total == 0 {
+		return 0
 	}
-	return no
-}
-func lmsChooseFloat(cond bool, yes, no float64) float64 {
-	if cond {
-		return yes
-	}
-	return no
+	return 100 * float64(count) / float64(total)
 }
 func Lms_DelayDecrement(D1 word, nVars int32) word {
 	var v int32
@@ -434,7 +428,11 @@ func Lms_GiaAreas(p *Gia_Man_t) *Vec_Str_t {
 	vAreas = Vec_StrAlloc(Gia_ManCoNum(p))
 	for i = 0; i < Gia_ManCoNum(p); i++ {
 		pObj = Gia_ManCo(p, i)
-		Vec_StrPush(vAreas, byte(lmsChooseInt(Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) != 0, Lms_ObjArea(Gia_ObjFanin0(pObj)), 0)))
+		var area byte
+		if Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) != 0 {
+			area = byte(Lms_ObjArea(Gia_ObjFanin0(pObj)))
+		}
+		Vec_StrPush(vAreas, area)
 	}
 	return vAreas
 }
@@ -758,23 +756,27 @@ func Lms_ManPrintFreqStats(p *Lms_Man_t) {
 }
 func Lms_ManPrint(p *Lms_Man_t) {
 	//    Gia_ManPrintStats( p->pGia, 0, 0 );
-	fmt.Printf("Library with %d vars has %d classes and %d AIG subgraphs with %d AND nodes.\n", p.nVars, Vec_MemEntryNum(p.vTtMem), p.nAdded, lmsChooseInt(p.pGia != nil, Gia_ManAndNum(p.pGia), 0))
+	var nodes int32
+	if p.pGia != nil {
+		nodes = Gia_ManAndNum(p.pGia)
+	}
+	fmt.Printf("Library with %d vars has %d classes and %d AIG subgraphs with %d AND nodes.\n", p.nVars, Vec_MemEntryNum(p.vTtMem), p.nAdded, nodes)
 
 	//    Lms_ManPrintFreqStats( p );
 	Lms_ManPrintFuncStats(p)
 
 	p.nAddedFuncs = Vec_MemEntryNum(p.vTtMem)
-	fmt.Printf("Subgraphs tried                             = %10d. (%6.2f %%)\n", p.nTried, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nTried)/float64(p.nTried), 0))
-	fmt.Printf("Subgraphs filtered by support size          = %10d. (%6.2f %%)\n", p.nFilterSize, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nFilterSize)/float64(p.nTried), 0))
-	fmt.Printf("Subgraphs filtered by structural redundancy = %10d. (%6.2f %%)\n", p.nFilterRedund, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nFilterRedund)/float64(p.nTried), 0))
-	fmt.Printf("Subgraphs filtered by volume                = %10d. (%6.2f %%)\n", p.nFilterVolume, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nFilterVolume)/float64(p.nTried), 0))
-	fmt.Printf("Subgraphs filtered by TT redundancy         = %10d. (%6.2f %%)\n", p.nFilterTruth, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nFilterTruth)/float64(p.nTried), 0))
-	fmt.Printf("Subgraphs filtered by error                 = %10d. (%6.2f %%)\n", p.nFilterError, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nFilterError)/float64(p.nTried), 0))
-	fmt.Printf("Subgraphs filtered by isomorphism           = %10d. (%6.2f %%)\n", p.nFilterSame, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nFilterSame)/float64(p.nTried), 0))
-	fmt.Printf("Subgraphs added                             = %10d. (%6.2f %%)\n", p.nAdded, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nAdded)/float64(p.nTried), 0))
-	fmt.Printf("Functions added                             = %10d. (%6.2f %%)\n", p.nAddedFuncs, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nAddedFuncs)/float64(p.nTried), 0))
+	fmt.Printf("Subgraphs tried                             = %10d. (%6.2f %%)\n", p.nTried, lmsPercent(p.nTried, p.nTried))
+	fmt.Printf("Subgraphs filtered by support size          = %10d. (%6.2f %%)\n", p.nFilterSize, lmsPercent(p.nFilterSize, p.nTried))
+	fmt.Printf("Subgraphs filtered by structural redundancy = %10d. (%6.2f %%)\n", p.nFilterRedund, lmsPercent(p.nFilterRedund, p.nTried))
+	fmt.Printf("Subgraphs filtered by volume                = %10d. (%6.2f %%)\n", p.nFilterVolume, lmsPercent(p.nFilterVolume, p.nTried))
+	fmt.Printf("Subgraphs filtered by TT redundancy         = %10d. (%6.2f %%)\n", p.nFilterTruth, lmsPercent(p.nFilterTruth, p.nTried))
+	fmt.Printf("Subgraphs filtered by error                 = %10d. (%6.2f %%)\n", p.nFilterError, lmsPercent(p.nFilterError, p.nTried))
+	fmt.Printf("Subgraphs filtered by isomorphism           = %10d. (%6.2f %%)\n", p.nFilterSame, lmsPercent(p.nFilterSame, p.nTried))
+	fmt.Printf("Subgraphs added                             = %10d. (%6.2f %%)\n", p.nAdded, lmsPercent(p.nAdded, p.nTried))
+	fmt.Printf("Functions added                             = %10d. (%6.2f %%)\n", p.nAddedFuncs, lmsPercent(p.nAddedFuncs, p.nTried))
 	if p.nHoleInTheWall != 0 {
-		fmt.Printf("Cuts whose logic structure has a hole       = %10d. (%6.2f %%)\n", p.nHoleInTheWall, lmsChooseFloat(p.nTried != 0, 100.0*float64(p.nHoleInTheWall)/float64(p.nTried), 0))
+		fmt.Printf("Cuts whose logic structure has a hole       = %10d. (%6.2f %%)\n", p.nHoleInTheWall, lmsPercent(p.nHoleInTheWall, p.nTried))
 	}
 
 	p.timeOther = p.timeTotal - p.timeTruth - p.timeCanon - p.timeBuild - p.timeCheck - p.timeInsert
@@ -1103,7 +1105,7 @@ func If_CutComputeDelay(p *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, DelayPro
 	var delayMax int32 = -ABC_INFINITY
 	for i = 0; i < nLeaves; i++ {
 		pLeaf = If_ManObj(p, If_CutLeaves(pCut)[int32(pCanonPerm[i])])
-		delayTemp = int32(If_ObjCutBest(pLeaf).Delay) + Lms_DelayGet(DelayProfile, i)
+		delayTemp = int32(If_ObjCutBest(pLeaf).Delay + float32(Lms_DelayGet(DelayProfile, i)))
 		delayMax = Abc_MaxInt(delayMax, delayTemp)
 	}
 	return delayMax

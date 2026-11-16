@@ -68,3 +68,32 @@ Frozen full module with CGO disabled and C compilers absent from PATH exits0:
 ABCI focused race8.398s, IF/GIA vet exits0. Logs:
 /tmp/abcgo-recorded-final-{module.jsonl,if-race.log,abci-race.log,vet.log}.
 All sessions ended. No C fixture/compiler dependency or substitute backend added.
+
+
+## Source boundary repairs during selection review
+
+Three new Go-only regressions fail before repair. If_CutComputeDelay converts
+the leaf arrival before adding the integer pin delay, whereas C assigns the
+float sum to an integer. Negative fractions crossing zero and float32 rounding
+at16777216 expose different results. Restore conversion after float addition.
+Evidence: /tmp/abcgo-TestRecordedDelayConvertsAfterFloatAddition-red.log, exit1.
+
+Lms_GiaAreas uses an eager helper for C's conditional expression, evaluating
+Lms_ObjArea on terminal/constant drivers and triggering its AND assertion.
+A terminal/constant/complemented-output fixture fails before repair; restore
+the conditional branch. Check exact areas[0,0,0,0,1,1] and delay profiles
+[0,0,0,0,0x11,0x11]. Evidence:
+/tmp/abcgo-TestRecordedLibraryTerminalAreaAndDelayProfiles-red.log, exit1.
+
+The same eager helper dereferences a nil GIA when printing a function-only
+library. A separate new regression fails at the nil access. Restore the source
+branch and replace generic conditional helpers with a guarded percentage
+helper, avoiding eager zero divisions and simplifying report expressions.
+Check zero-try and nonzero counters, class counts and absence of graph creation.
+Evidence: /tmp/abcgo-TestRecordedFunctionOnlyLibraryReport-red.log, exit1.
+
+Frozen full Go-only module exits0 (130 tested packages,3 commands without
+tests); recorded boundary/mapping race passes8.105s and IF/GIA vet exits0.
+Logs: /tmp/abcgo-recorded-boundaries-final-{module.jsonl,race.log,vet.log}.
+All sessions ended. Richer competing profiles/area ties, explicit missing-class
+and small-support selection remain open; no dependency/package closure claimed.

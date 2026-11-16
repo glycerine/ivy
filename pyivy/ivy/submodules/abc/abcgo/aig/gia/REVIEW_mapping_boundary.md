@@ -1708,3 +1708,17 @@ tests); focused IF race1.024s, ABCI race8.398s and IF/GIA vet exit0. Logs:
 /tmp/abcgo-recorded-final-{module.jsonl,if-race.log,abci-race.log,vet.log}.
 All sessions ended. Richer recorded-class/profile selection, exact-SAT cost
 integration and final family gates remain open; original package audit2/131.
+
+
+### Repair recorded-backend arithmetic and lazy conditions
+
+Three new Go-only red regressions expose premature arrival-to-int conversion,
+eager AND-area evaluation for constant/terminal outputs and eager nil-GIA
+access in function-only reports. Restore the C float-sum conversion order and
+lazy branches, simplifying percentage reporting with one guarded helper.
+Verify fractional/float32-rounding boundaries, terminal/complemented area and
+pin profiles, and function-only zero/nonzero counters. Full Go-only module
+passes130 tested packages plus3 commands without tests; focused recorded
+boundary/mapping race8.105s and IF/GIA vet pass. Logs and source reconciliation
+are in map/if/REVIEW_recorded_dependency.md. Competing profiles, missing/small
+support selection, exact-SAT and final family gates remain open; audit2/131.

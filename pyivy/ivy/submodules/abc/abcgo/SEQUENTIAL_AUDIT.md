@@ -9850,3 +9850,16 @@ passes130 tested packages plus3 commands without tests; focused IF race1.024s,
 ABCI race8.398s and IF/GIA vet pass. See REVIEW_mapping_boundary.md and the new
 IF recorded-dependency plan. Richer library selection, exact-SAT integration and
 remaining family/package review stay open2/131.
+
+
+### Repair recorded-library arithmetic and lazy conditionals
+
+New red regressions expose three ABCI dependency bugs: casting an arrival
+before adding its pin delay, evaluating AND area on non-AND drivers, and
+dereferencing a nil GIA in function-only reports. Restore source arithmetic
+and branches; replace eager conditional helpers with guarded percentages.
+Go-only tests cover negative fractions, float32 rounding, terminal profiles
+and function-only zero/nonzero reports. Full Go-only module passes130 tested
+packages plus3 commands without tests; focused recorded race8.105s and IF/GIA
+vet pass. Evidence in the mapping/recorded dependency plans. Remaining richer
+selection, exact-SAT and family/package audit stay open2/131.
