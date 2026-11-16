@@ -9875,3 +9875,15 @@ catches invalid-support guard ordering during refactoring, corrected before
 commit. Full Go-only module passes130 tested packages plus3 commands without
 tests; focused recorded race8.391s and IF/GIA vet pass. Evidence and remaining
 wide/exact-SAT work in the mapping/recorded plans. Original audit stays2/131.
+
+
+### Remove recorded truth-stretch temporary buffers
+
+New red allocation regressions expose a full8KB conversion per recorded cut.
+Preserve source prefix repetition directly, with native32-bit handling for
+small supports and the existing64-bit helper for wider blocks. All153 width
+pairs0..16 match scalar expectations and preserve untouched suffixes. Four
+benchmarks now allocate zero bytes instead of8192. Full Go-only module passes
+130 tested packages plus3 commands without tests; focused recorded race2.607s
+and IF/GIA vet pass. Details in the recorded dependency plan; wide full-path,
+exact-SAT and remaining family/package review stay open2/131.

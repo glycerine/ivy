@@ -139,3 +139,36 @@ commands without tests), focused recorded/mapping race8.391s and IF/GIA vet
 exits0. Logs: /tmp/abcgo-recorded-selection-final-{cases.log,module.jsonl,
 race.log,vet.log}. All sessions ended. Wide/multiword boundaries, exact-SAT
 integration and final mapping-family gates remain open; original audit2/131.
+
+
+## Eliminate recorded truth-stretch temporary copies
+
+Source Abc_TtStretch5 repeats a prefix in place and returns immediately when
+widths already agree. Go's lmsStretch5 converted all1024 workspace words into
+an8KB uint32 buffer and back on every cut. Four new allocation regressions
+fail before repair (/tmp/abcgo-recorded-stretch-red.log, exit1), including the
+sixteen-to-sixteen no-op case.
+
+Retain the exact source representation: below six variables repeat the first
+native uint32 into the required words; at wider sizes the source blocks align
+to whole uint64 words, so reuse the existing Abc_TtStretch6 helper. Do not scan
+or rewrite unused workspace suffixes. An independent scalar32-bit specification
+checks every153 source/target width pair0..16, with distinct halves and a poisoned
+extra word. All outputs match before/after; only redundant work is removed.
+
+Local150ms benchmark samples (indicative, not universal timing claims):
+
+| Widths | Before ns/op | After ns/op | Before B/op | After B/op |
+| --- | ---: | ---: | ---: | ---: |
+|3 to6|8218|2.892|8192|0|
+|6 to16|25796|5046|8192|0|
+|7 to16|23671|4791|8192|0|
+|16 to16|8477|2.764|8192|0|
+
+All four go from one allocation to zero. Logs:
+/tmp/abcgo-recorded-stretch-{before,after}.log. Frozen recorded cases pass0.268s;
+full Go-only module exits0 (130 tested packages,3 commands without tests),
+focused recorded/mapping race2.607s and IF/GIA vet exit0. Logs:
+/tmp/abcgo-recorded-stretch-final-{cases.log,module.jsonl,race.log,vet.log}.
+All sessions ended. Full wide signed reconstruction and exact-SAT work remain
+open; width-helper coverage alone does not close the dependency or package.

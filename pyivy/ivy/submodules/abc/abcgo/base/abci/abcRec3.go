@@ -158,13 +158,25 @@ func wordsToUint32(words []word) []uint32 {
 }
 
 func lmsStretch5(words []word, nVars, nVarsOut int32) {
-	parts := wordsToUint32(words)
-	Abc_TtStretch5(parts, nVars, nVarsOut)
-	for i := range words {
-		var bytes [8]byte
-		binary.NativeEndian.PutUint32(bytes[:4], parts[2*i])
-		binary.NativeEndian.PutUint32(bytes[4:], parts[2*i+1])
-		words[i] = word(binary.NativeEndian.Uint64(bytes[:]))
+	if nVars > nVarsOut {
+		panic("truth: reversed stretch")
+	}
+	if nVarsOut <= 5 {
+		return
+	} // Both source and destination occupy one uint32.
+	if nVars >= 6 {
+		// The source's 32-bit blocks are whole 64-bit words at these widths.
+		util.Abc_TtStretch6(words, nVars, nVarsOut)
+		return
+	}
+	// Below six variables C repeats the first native uint32, not an entire
+	// uint64. Preserve that distinction without converting the workspace.
+	var bytes [8]byte
+	binary.NativeEndian.PutUint64(bytes[:], uint64(words[0]))
+	part := word(binary.NativeEndian.Uint32(bytes[:4]))
+	repeated := part | part<<32
+	for i := 0; i < 1<<(nVarsOut-6); i++ {
+		words[i] = repeated
 	}
 }
 

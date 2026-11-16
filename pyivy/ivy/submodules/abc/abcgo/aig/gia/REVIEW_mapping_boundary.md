@@ -1737,3 +1737,15 @@ refactor side effect before invalid-support rejection. Details and logs are in
 map/if/REVIEW_recorded_dependency.md. Full Go-only module, focused8.391s race
 and IF/GIA vet pass. Wide recorded-library boundaries, exact-SAT integration
 and final family gates remain open; package audit2/131.
+
+
+### Remove recorded truth-stretch temporary conversions
+
+Four new red allocation checks expose an8KB temporary on every recorded cut,
+including same-width no-ops. Repeat the source32-bit prefix directly for small
+supports and reuse the existing64-bit stretcher for aligned wider blocks.
+All153 width pairs0..16 match an independent scalar specification and retain
+workspace suffixes. Allocations fall from8192B/one to zero in all four benchmark
+cases. Full Go-only module, focused recorded race2.607s and IF/GIA vet pass;
+logs/measurements in map/if/REVIEW_recorded_dependency.md. Full wide recorded
+reconstruction, exact-SAT and final family gates remain open; audit2/131.
