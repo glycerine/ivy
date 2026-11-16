@@ -29,19 +29,19 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Original C | Go location | Status |
 | --- | --- | --- |
 | Gia_ManSetIfParsDefault | map/if/gia_bridge.go | Pending |
-| Gia_ManLutFaninCount | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManLutSizeMax | aig/gia/mapping_accessors.go, base/abci/abc_graph_compat.go | Pending |
-| Gia_ManLutNum | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManLutLevel | aig/gia/mapping_metrics.go | Pending |
+| Gia_ManLutFaninCount | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManLutSizeMax | aig/gia/mapping_accessors.go, base/abci/abc_graph_compat.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManLutNum | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManLutLevel | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManLutParams | aig/gia/mapping_timing.go | Pending |
-| Gia_ManSetRefsMapped | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManSetLutRefs | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManComputeOverlap2One_rec | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManComputeOverlap2One | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManComputeOverlap2 | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManComputeOverlapOne_rec | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManComputeOverlapOne | aig/gia/mapping_metrics.go | Pending |
-| Gia_ManComputeOverlap | aig/gia/mapping_metrics.go | Pending |
+| Gia_ManSetRefsMapped | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManSetLutRefs | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManComputeOverlap2One_rec | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManComputeOverlap2One | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManComputeOverlap2 | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManComputeOverlapOne_rec | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManComputeOverlapOne | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManComputeOverlap | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManPrintGetMuxFanins | aig/gia/mapping_stats.go | Pending |
 | Gia_ManCountDupLut | aig/gia/mapping_stats.go | Pending |
 | Gia_ManPrintMappingStats | aig/gia/mapping_stats.go | Pending |
@@ -53,7 +53,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Pending |
 | If_ManCheckChoices | map/if/choice_check.go | Pending |
 | Gia_ManToIf | map/if/gia_bridge.go | Pending |
-| Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Pending |
+| Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManBuildFromMini | map/if/gia_mini.go | Pending |
 | Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Pending |
 | Gia_ManFromIfAig | map/if/gia_from_if.go | Pending |
@@ -128,3 +128,46 @@ without a production change, so this is coverage, not a claimed new bug fix.
 Further typed dependencies, exact dump/profile/packing/mux reports, timing,
 independent metrics/ownership and the remaining source inventory are pending.
 This checkpoint is not source-family closure or a completed GIA package audit.
+
+## Expanded core coverage checkpoint
+
+After correcting an overestimated depth in the new typed test (its data
+branches are one-level XOR/buffer nodes),64 signed typed configurations pass
+all16 input assignments. Ordinary source AND/buffer walk order is unchanged;
+real MUX controls add their actual dependencies. Both native report regressions
+now pass. Complete repaired core coverage passes12.839s without skips
+(`/tmp/abcgo-mapping-core-complete-focused.log`,handle56993 exit0). The full
+map/if caller race suite passes7.972s
+(`/tmp/abcgo-mapping-if-caller-race.log`,handle24088 exit0).
+
+All new native fixtures now directly include and freshly compile the current
+original giaIf.c, rather than relying on its prebuilt object for the reviewed
+routines. They leave its algorithms and assertions unchanged. Coverage includes:
+
+-96 exact ordinary graph/metric/reference/cone-postorder/choice/report states.
+-384 independent stack/set cone, mapped-level and reference configurations,
+ including registers, replaced reference storage and independently owned levels.
+-8 signed mux graphs exercising three- and two-leaf mux records, data-fanin
+ duplicate reports, all packing group sizes and complete mark cleanup.
+-66 node profiles plus exact persistent dump/name transitions and empty LUT
+ reports. Only elapsed-time numeric text is normalized in dump comparison;
+ other formatting, fields and stdout match exactly. These checks found no
+ further report defect beyond the two already repaired.
+-140 exact mini reconstructions: source hashed/nonhashed choices, constants,
+ variables, signed/constant/repeated leaves, prior-node literal remapping,
+ output phase, scratch retention/clearing, graph objects/literals and independent
+ complete Boolean truth tables. Invalid mini inputs are rejected. This algorithm
+ needed no production change; the source's nonhashed append policy is retained.
+
+Review of the new walk changes confirms ordinary AND ordering, buffer visitation,
+postorder recording, sibling maximum, cut stopping and source traversal epochs
+remain intact. Reusing the existing fixed-array logical-fanin helper avoids
+additional per-node slice allocation or a second walker. Metric/refcount and
+mini storage are already direct source-shaped Go; no substitute algorithm or
+new cache is introduced to simplify tests.
+
+Remaining work includes boxed timing/choice coverage and reference boundaries,
+configuration/frame metadata, IF reconstruction and all mapping drivers, error
+and resource cases, source precondition/safety-extension characterizations,
+compactness measurements and frozen full-module integration. The source family,
+GIA package and original2/131 package audit remain open.

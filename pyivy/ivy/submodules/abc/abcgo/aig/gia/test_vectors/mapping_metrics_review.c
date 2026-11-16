@@ -1,4 +1,4 @@
-#include "aig/gia/gia.h"
+#include "aig/gia/giaIf.c"
 #include <sys/resource.h>
 
 static unsigned randomState;

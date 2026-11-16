@@ -8954,3 +8954,23 @@ was already correct and receives coverage without a production change. Native
 red log /tmp/abcgo-mapping-native-red.log; dependency red log
 /tmp/abcgo-mapping-dependency-red.log. Wider source coverage/integration remain
 pending; original completion2/131 and GIA remain open. No agents or branches.
+
+### Mapping core native/independent coverage checkpoint
+
+Freshly compile original giaIf.c in all new fixtures. The complete core suite
+passes12.839s without skips (handle56993 exit0); full map/if caller race tests
+pass7.972s (handle24088 exit0). Native96 ordinary states and64 signed typed
+configurations preserve source AND/sibling/traversal behavior while repairing
+real-MUX dependencies. New384 independent metric/refcount/ownership checks,
+eight signed mux/packing/report variants,66 profiles and exact dump/name
+transitions pass. A new typed test's expected depth was corrected to match its
+one-level data branches; that expectation error is not a production bug.
+
+Mini reconstruction matches140 exact original-C graphs plus independently
+exhausted truth tables, including constants/variables, phases, hashing policy,
+repeated/constant/signed leaves, remapping and scratch clearing. No production
+mini algorithm change is needed. Source-shaped policy and actual append/hash
+primitives are retained. Remaining giaIf.c rows, timing/boundary/resource cases,
+compactness and complete frozen module race/vet are explicitly pending in
+REVIEW_mapping_boundary.md. Save a coherent red checkpoint; neither this source
+family nor GIA is complete, and original audit completion stays2/131.
