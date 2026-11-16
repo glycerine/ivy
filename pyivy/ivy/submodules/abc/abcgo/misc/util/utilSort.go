@@ -136,51 +136,123 @@ func selectionSortWords(data []uint64, decrease bool) {
 		data[i], data[best] = data[best], data[i]
 	}
 }
-func Abc_QuickSort2Inc_rec(data []uint64, l, r int32) { quickSortWords(data, l, r, false) }
-func Abc_QuickSort2Dec_rec(data []uint64, l, r int32) { quickSortWords(data, l, r, true) }
-func Abc_QuickSort3Inc_rec(data []uint64, l, r int32) { quickSortWords(data, l, r, false) }
-func Abc_QuickSort3Dec_rec(data []uint64, l, r int32) { quickSortWords(data, l, r, true) }
-func quickSortWords(data []uint64, l, r int32, decrease bool) {
-	if l >= r {
-		return
-	}
-	if r-l < 10 {
-		selectionSortWords(data[l:r+1], decrease)
-		return
-	}
-	pivot := uint32(data[(l+r)/2])
-	i, j := l, r
+func Abc_QuickSort2Inc_rec(data []uint64, l, r int32) { quickSortWords2(data, l, r, false) }
+func Abc_QuickSort2Dec_rec(data []uint64, l, r int32) { quickSortWords2(data, l, r, true) }
+func Abc_QuickSort3Inc_rec(data []uint64, l, r int32) { quickSortWords3(data, l, r, false) }
+func Abc_QuickSort3Dec_rec(data []uint64, l, r int32) { quickSortWords3(data, l, r, true) }
+
+// Keep source pivot and swap order: high-word payload order within equal
+// low-word keys is observable by callers such as GIA isomorphism refinement.
+func quickSortWords2(data []uint64, l, r int32, decrease bool) {
 	less := func(a, b uint32) bool {
 		if decrease {
 			return a > b
 		}
 		return a < b
 	}
-	for i <= j {
-		for less(uint32(data[i]), pivot) {
+	for l < r {
+		if r-l < 10 {
+			selectionSortWords(data[l:r+1], decrease)
+			return
+		}
+		pivot := uint32(data[r])
+		i, j := l-1, r
+		for {
 			i++
-		}
-		for less(pivot, uint32(data[j])) {
+			for less(uint32(data[i]), pivot) {
+				i++
+			}
 			j--
-		}
-		if i <= j {
+			for less(pivot, uint32(data[j])) {
+				if j == l {
+					break
+				}
+				j--
+			}
+			if i >= j {
+				break
+			}
 			data[i], data[j] = data[j], data[i]
-			i++
-			j--
 		}
-	}
-	if l < j {
-		quickSortWords(data, l, j, decrease)
-	}
-	if i < r {
-		quickSortWords(data, i, r, decrease)
+		data[i], data[r] = data[r], data[i]
+		// The two ranges are disjoint. Recurse on the smaller one and iterate
+		// the larger to bound stack depth without changing packed-word order.
+		if i-l < r-i {
+			quickSortWords2(data, l, i-1, decrease)
+			l = i + 1
+		} else {
+			quickSortWords2(data, i+1, r, decrease)
+			r = i - 1
+		}
 	}
 }
+
+func quickSortWords3(data []uint64, l, r int32, decrease bool) {
+	less := func(a, b uint32) bool {
+		if decrease {
+			return a > b
+		}
+		return a < b
+	}
+	for l < r {
+		if r-l < 10 {
+			selectionSortWords(data[l:r+1], decrease)
+			return
+		}
+		pivot := uint32(data[r])
+		i, j, p, q := l-1, r, l-1, r
+		for {
+			i++
+			for less(uint32(data[i]), pivot) {
+				i++
+			}
+			j--
+			for less(pivot, uint32(data[j])) {
+				if j == l {
+					break
+				}
+				j--
+			}
+			if i >= j {
+				break
+			}
+			data[i], data[j] = data[j], data[i]
+			if uint32(data[i]) == pivot {
+				p++
+				data[p], data[i] = data[i], data[p]
+			}
+			if uint32(data[j]) == pivot {
+				q--
+				data[j], data[q] = data[q], data[j]
+			}
+		}
+		data[i], data[r] = data[r], data[i]
+		j, i = i-1, i+1
+		// These strict source bounds also determine equal-key payload order.
+		for k := l; k < p; k++ {
+			data[k], data[j] = data[j], data[k]
+			j--
+		}
+		for k := r - 1; k > q; k-- {
+			data[i], data[k] = data[k], data[i]
+			i++
+		}
+		if j-l < r-i {
+			quickSortWords3(data, l, j, decrease)
+			l = i
+		} else {
+			quickSortWords3(data, i, r, decrease)
+			r = j
+		}
+	}
+}
+
 func Abc_QuickSort2(data []uint64, n, decrease int32) {
-	quickSortWords(data[:n], 0, n-1, decrease != 0)
+	quickSortWords2(data[:n], 0, n-1, decrease != 0)
 }
 func Abc_QuickSort3(data []uint64, n, decrease int32) {
-	quickSortWords(data[:n], 0, n-1, decrease != 0)
+	// Preserve the actual C wrapper, which calls the two-way routines.
+	quickSortWords2(data[:n], 0, n-1, decrease != 0)
 }
 func Abc_QuickSortCostData(costs []int32, n, decrease int32, data []uint64, result []int32) {
 	for i := int32(0); i < n; i++ {
