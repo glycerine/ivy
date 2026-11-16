@@ -9002,8 +9002,25 @@ three behaviors (handle27681 exit0,2.094s).
 Use a shared source-shaped balancing helper: translate to IF, perform actual
 mapping, rebuild through SOP/DSD AIG reconstruction, move timing/configuration
 ownership and retain identity/registers. Generic MappingInt is unchanged.
-Expanded direct/registered and64 metadata/interface/truth matrix cases plus
+Expanded direct/registered and32 metadata/interface/truth matrix cases plus
 normal mapping cross-talk checks pass; full map/if race suite passes7.997s
 (handle90332 exit0). Logs/details are in REVIEW_mapping_boundary.md. Save coherent
 GIA source-policy and map/if driver checkpoints separately. The wider mapping
 family, GIA and original2/131 audit remain open. Next inspect Gia_ManToIf name loss.
+
+### IF source-name loss repaired after a new red regression
+
+Gia_ManToIf failed to copy source identity into the IF manager; the new test
+fails with empty name before repair (handle31268 exit1). Copy the immutable Go
+name, retaining it across source rename/teardown, as C's strdup does. Fresh C
+name/policy tests pass4.112s, Go focused tests0.025s, and full map/if race suite
+8.098s (handles47836/91491/18506 all exit0). The balancing matrix is32 cases,
+not64: two engines x two register counts x four timing masks x two config states;
+its512 assignments are additional to four direct/registered regression cases.
+
+The next full-driver native test initially exposes31 hashed raw-vector layout
+differences among96 runs. All31 have identical active LUT records and all other
+structured results; C's unused records/padding are deliberately compacted by
+existing Go code. Preserve strict live records/leaf order/markers and graph/
+truth/metadata comparison while canonicalizing only physical storage offsets
+and dead records. The rerun and wider mapping-family review remain pending.

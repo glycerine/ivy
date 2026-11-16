@@ -217,10 +217,37 @@ Implement the source balancing sequence in one small shared private helper,
 keeping actual If mapping, SOP/DSD reconstruction and timing transfer. Do not
 route it through the generic driver's destructive configuration/timing setup.
 Keep the existing Go-owned per-call DSD manager lifetime. Tests cover direct and
-registered wrappers,64 metadata/interface/truth configurations plus a generic
+registered wrappers,32 metadata/interface/truth configurations plus a generic
 mapping cross-talk regression. Full map/if race suite passes7.997s
 (`/tmp/abcgo-mapping-balance-full-if-race.log`,handle90332 exit0).
 
 A separate newly inspected concern is source-name loss in Gia_ManToIf; a new
 regression is pending. Remaining family rows and full module integration remain
 open. A green caller suite does not close GIA or the whole mapping boundary.
+
+## IF source-name repair and broader driver comparison
+
+The new source-name regression fails because Gia_ManToIf returns an empty IF
+manager name (`/tmp/abcgo-mapping-if-name-red.log`,handle31268 exit1). Original
+C copies Gia_ManName into independently owned IF storage. Copy the immutable
+Go name during manager creation; renaming/stopping the source cannot alter it.
+Fresh C naming and all three balancing/general metadata policies pass4.112s
+(`/tmp/abcgo-mapping-balance-name-native.log`,handle47836 exit0). The corresponding
+Go focused suite passes0.025s (handle91491 exit0), and full map/if race tests
+pass8.098s (`/tmp/abcgo-mapping-if-name-full-race.log`,handle18506 exit0).
+
+Correct the balancing matrix count: two engines x two register counts x four
+timing masks x two configuration states is32 cases (512 assignments), in
+addition to four direct/registered regression cases. Earlier64 wording was a
+counting error, not missing test execution.
+
+The new full-driver oracle compares actual freshly compiled C with the actual
+IF-owned Go mapper, not injected test engines. Initial96 comparisons have31
+raw-vector differences, all confined to hashed mapping storage. Inspection of
+all31 shows identical active root/ordered-leaf/marker records, graph objects,
+truth, metadata and numeric statistics. C retains original-size index padding
+and unreachable duplicate records; Go's existing reviewed compaction removes
+them. Canonicalize only that storage representation in the oracle, retaining
+every active record and all other structured output. This is a documented
+representation normalization, not a production algorithm repair or omission of
+functional differences. Canonical rerun remains pending at this checkpoint.

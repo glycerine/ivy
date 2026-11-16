@@ -11,6 +11,11 @@ int main(int argc,char **argv)
     a=Gia_ManAppendCi(p);b=Gia_ManAppendCi(p);c=Gia_ManAppendCi(p);x=Gia_ManAppendAnd(p,a,b^1);root=Gia_ManAppendAnd(p,x,c);Gia_ManAppendCo(p,root^1);
     configs=p->vConfigs=Vec_IntAllocArrayCopy(configData,2);p->pCellStr=Abc_UtilStrsav("retained-cell");
     p->vCiArrs=Vec_IntAllocArrayCopy(arrivals,3);p->vCoReqs=Vec_IntAllocArrayCopy(required,1);p->vCoArrs=Vec_IntAllocArrayCopy(output,1);
+    if(atoi(argv[1])==3){
+        If_Par_t pars;If_Man_t *manager;Gia_ManSetIfParsDefault(&pars);pars.nLutSize=4;manager=Gia_ManToIf(p,&pars);
+        printf("if-name %s\n",manager->pName);ABC_FREE(p->pName);p->pName=Abc_UtilStrsav("changed");printf("after-source-rename %s\n",manager->pName);
+        If_ManStop(manager);Gia_ManStop(p);Abc_Stop();return 0;
+    }
     if(atoi(argv[1])==2){If_Par_t pars;Gia_ManSetIfParsDefault(&pars);pars.nLutSize=4;q=Gia_ManPerformMapping(p,&pars);}
     else q=atoi(argv[1])?Gia_ManPerformDsdBalance(p,6,8,0,0):Gia_ManPerformSopBalance(p,8,0,0);assert(q);
     printf("config-owner %d %s source-cleared %d\n",atoi(argv[1])==2?0:q->vConfigs==configs,q->pCellStr?q->pCellStr:"-",!p->vConfigs&&!p->pCellStr);

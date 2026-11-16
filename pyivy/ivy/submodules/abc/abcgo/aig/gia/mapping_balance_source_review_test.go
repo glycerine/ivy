@@ -26,3 +26,14 @@ func TestMappingNativeBalanceRetainsMetadata(t *testing.T) {
 		}
 	}
 }
+
+func TestMappingNativeIfSourceNameOwnership(t *testing.T) {
+	exe := compileGiaSourceOracle(t, "mapping_balance_metadata_review.c")
+	output, err := exec.Command(exe, "3").CombinedOutput()
+	if err != nil {
+		t.Fatalf("source IF naming: %v %s", err, output)
+	}
+	if string(output) != "if-name balance-review\nafter-source-rename balance-review\n" {
+		t.Fatalf("original IF name copy changed: %s", output)
+	}
+}
