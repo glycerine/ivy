@@ -10057,3 +10057,18 @@ Full Go-only module passes130 tested packages plus3 commands without tests,
 focused isomorphism race1.042s and GIA vet pass. Detailed source/portability
 notes and logs in REVIEW_isomorphism.md. The68-routine family/GIA audit stays
 open; original completion remains2/131.
+
+
+### Restore packed-sort payload order used by canonical isomorphism
+
+A new GIA regression fails on tied class IDs despite correctly sorted keys.
+The generic middle-pivot Go helper changes source label/permutation ordering.
+Eight new hand-traced utility regressions precede restoring last-pivot two-way
+and standalone three-way routines. Preserve the source quirk that QuickSort3's
+wrapper calls the two-way implementation. Bounded-stack recursion preserves
+per-partition swaps;576 Go-only key/payload/range checks and the canonical CI
+permutation regression pass. Full Go-only module passes130 tested packages plus
+3 commands without tests, full utility race1.427s, focused GIA isomorphism
+race1.046s and util/GIA vet pass. Dependency notes in util's packed-sort review
+and GIA REVIEW_isomorphism.md include red/final logs. Other utility APIs and the
+rest of the68-routine GIA family stay pending; original audit2/131.

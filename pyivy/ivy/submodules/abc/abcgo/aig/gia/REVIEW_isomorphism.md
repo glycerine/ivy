@@ -114,3 +114,30 @@ Next: check forward/backward and register signature arithmetic, then utility
 sort tie ordering and canonical PI/RO/PO traversal before making broader
 canonicalization/reduction claims. Keep source diagnostic/report omissions in
 the inventory for their own new regressions. All expectations must remain Go-only.
+
+
+## Restore source sorting payload order before canonical labeling
+
+A new hand-traced11-CI regression fails at the second packed class item:8
+instead of source2 (/tmp/abcgo-iso-canonical-ties-red.log). Both implementations
+sort the low-word signature keys, but the old middle-pivot utility sorter
+reorders equal-key high-word IDs differently. Tie breaking assigns unique labels
+in that order, which feeds canonical PI permutations. The regression checks
+source class boundaries/items and, after repair, the entire tie-label transfer
+and canonical CI/permutation output. Do not normalize this metadata difference
+away merely because both outputs remain Boolean-equivalent.
+
+Restore the packed-sort dependency's original last-pivot operations and its
+standalone three-way routines. Source QuickSort3's wrapper calls the two-way
+implementation, an important naming quirk retained by Go. Eight utility payload
+goldens fail before repair (/tmp/abcgo-iso-sort-payload-red.log);576 independent
+key/bijection/range cases cover both directions and the10/11-word cutoff. The
+source helper dependency review is in misc/util/REVIEW_packed_sort_dependency.md.
+It does not mark that full package audited.
+
+Frozen full Go-only module exits0 (130 tested packages,3 commands without tests),
+full utility race1.427s, focused isomorphism race1.046s and util/GIA vet exit0.
+Logs /tmp/abcgo-iso-sort-final-{module.jsonl,util-race.log,gia-race.log,vet.log}.
+All handles ended. Signature propagation, full canonical traversal/reduction,
+second-generation comparison and driver/report reconciliation still remain;
+this is a dependency correctness checkpoint, not68-routine family closure.
