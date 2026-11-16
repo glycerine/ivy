@@ -33,9 +33,15 @@ func Gia_ManFromIfAig(p *If_Man_t) *Gia_Man_t {
 	assert(pars.FDelayOpt != 0 || pars.FDsdBalance != 0 || pars.FUserRecLib != 0 || pars.FUserSesLib != 0, "balancing or recorded library is enabled")
 	dst := Gia_ManStart(If_ManObjNum(p))
 	Gia_ManHashAlloc(dst)
-	mini, leaves := Vec_IntAlloc(1<<16), Vec_IntAlloc(16)
-	defer Vec_IntFree(mini)
+	leaves := Vec_IntAlloc(16)
 	defer Vec_IntFree(leaves)
+	var mini *Vec_Int_t
+	if pars.FDelayOpt != 0 || pars.FDsdBalance != 0 {
+		// Most cut graphs are small; the vector grows for larger SOP/XOR covers.
+		// Recorded-library callbacks do not use a mini-AIG scratch vector at all.
+		mini = Vec_IntAlloc(2*int(pars.NLutSize) + 1)
+		defer Vec_IntFree(mini)
+	}
 	for i := int32(0); i < If_ManObjNum(p); i++ {
 		obj := If_ManObj(p, i)
 		if obj.nRefs == 0 && If_ObjIsTerm(obj) == 0 {

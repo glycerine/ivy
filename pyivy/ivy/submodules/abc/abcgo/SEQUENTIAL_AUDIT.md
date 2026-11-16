@@ -9378,3 +9378,16 @@ and signed gate delays. Existing safe Go null-resource returns retained. No
 functional mismatch or worthwhile refactor found. Full GIA Go-only27.207s,
 focused frame race and IF/GIA vet pass. Detailed logs/evidence in
 REVIEW_mapping_boundary.md. Cut-cone/reconstruction review follows; audit2/131.
+
+### IF cone reconstruction reviewed and scratch allocation reduced
+
+Add64 equivalent-choice/phase/hash cases with independent original/cut truth,
+failure recovery, constant leaves and scratch preservation. Add64 recursive
+truth/memoization cases, repeat recorded reconstruction and large parity coverage.
+No functional bug found. Preserve original algorithms while lazily allocating
+small growing mini scratch only for balancing; recorded callback benchmark drops
+269KB to7.1KB/conversion and57 to55 allocations. Full IF Go-only, focused IF and
+512-driver race, IF/GIA vet and full Go-only module gate pass (130 tested packages,
+3 commands without tests). Details/logs in REVIEW_mapping_boundary.md. Next move
+140 mini cases outside compiler gating; remaining LUT/config rows still pending.
+Audit remains2/131.

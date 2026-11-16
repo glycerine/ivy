@@ -54,14 +54,14 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | If_ManCheckChoices | map/if/choice_check.go | Source diagnostics/mark cleanup reviewed; repeated Go-only checks; final family gate pending |
 | Gia_ManToIf | map/if/gia_bridge.go | Source transfer reviewed; name ownership, defaults, typed phases/references/aliases, constants, empty interfaces and 64 choice chains; frame/boxed integration gate pending |
 | Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManBuildFromMini | map/if/gia_mini.go | Pending |
-| Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Pending |
-| Gia_ManFromIfAig | map/if/gia_from_if.go | Pending |
+| Gia_ManBuildFromMini | map/if/gia_mini.go | Source wrapper reviewed; balancing/large parity checks; final family gate pending |
+| Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Source recursive hash/copy algorithm reviewed; 64 Go truth/memoization cases; final family gate pending |
+| Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; callback/repeat/balancing tests; lazy small scratch; final family gate pending |
 | Gia_ManFromIfLogicCreateLut | map/if/gia_lut.go | Pending |
 | Gia_ManFromIfLogicCreateLutSpecial | map/if/gia_lut.go | Pending |
 | Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go | Pending |
-| Gia_ManNodeIfToGia_rec | map/if/gia_cut_cone.go (recursive closure) | Pending |
-| Gia_ManNodeIfToGia | map/if/gia_cut_cone.go | Pending |
+| Gia_ManNodeIfToGia_rec | map/if/gia_cut_cone.go (recursive closure) | Source choice traversal/phase handling reviewed; 64 equivalent-choice cases; final family gate pending |
+| Gia_ManNodeIfToGia | map/if/gia_cut_cone.go | Source cone boundary reviewed; scratch/failure/constant-leaf tests; final family gate pending |
 | Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Pending |
 | Gia_ManFromIfGetConfig | map/if/gia_config.go | Pending |
 | Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Pending |
@@ -417,3 +417,37 @@ pass. Logs /tmp/abcgo-mapping-frame-{go,gia-go-only,race}.log and
 /tmp/abcgo-mapping-frame-cone-vet.log. No C vectors/compilers used by the new
 coverage. The mapping-family final gate and remaining reconstruction rows stay
 open; original audit2/131.
+
+## Cut-cone and AIG reconstruction review
+
+Reconcile source choice search, phased alternatives, terminal copy preconditions,
+structural hash recursion, mapped-cut expansion and recorded-library callback
+order. New64 cut-cone cases use equivalent AND/NOR choices with two unusable
+outside-variable representations before a valid alternative. Independently
+verify the original choices over all16 assignments and the reconstructed cut
+truth over all4 assignments, with signed supplied leaves and both hash modes.
+Scratch data survives repeated calls, failure followed by a new valid search,
+and constant mapped leaves. Local Go memo storage preserves caller scratch;
+the source uses destructive temporary cut fields. Normal source traversal,
+phase correction and node construction order remain intact.
+
+New64 recursive-copy cases check all16 inputs and memoized graph reuse; repeated
+recorded-library reconstruction and a seven-input DSD parity graph check complete
+truth and scratch-vector growth. Existing source/Go driver matrices remain
+integration evidence for SOP/DSD/recorded construction. The unsupported source
+user-SES reconstruction branch remains explicitly unsupported, not substituted.
+
+Compactness: the source's65536-int mini vector was allocated even when recorded
+callbacks never use it. Allocate a small growing vector only for balancing.
+No algorithm/profile/node-order change. Recorded two-input benchmark (500x,
+three samples) decreases269282..269324 B/op and57 allocations to7104..7114 B/op
+and55 allocations; this is a local allocation result, not a general mapper
+speedup claim. Logs /tmp/abcgo-mapping-from-if-scratch-{before,after}.log.
+
+Expanded tests0.021s, full IF Go-only1.273s, reconstruction race1.117s,
+512-driver race4.692s and IF/GIA vet pass. Full-module Go-only gate exits0,
+130 tested packages and3 commands without tests. Logs:
+/tmp/abcgo-mapping-reconstruction-{after,if-go-only,if-race,drivers-race,vet}.log,
+/tmp/abcgo-module-go-only-reconstruction.jsonl. Broader mini vector checks still
+need separation from their old compiler-gated comparison, then continue LUT/
+cofactor/config/cell rows and final family gate. Original audit2/131 stays open.
