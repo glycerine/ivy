@@ -10206,3 +10206,15 @@ is a passing control and all64 assignments pin both retained outputs. Full
 Go-only module passes130 tested packages plus3 commands without tests; focused
 isomorphism race2.310s and GIA vet pass. REVIEW_isomorphism.md records source
 provenance and remaining pair/sequential/driver scope. Original audit2/131.
+
+
+### Preserve initial register state during counterexample PI permutation
+
+A new72-case Go-only regression exposes inherited C/Go register-prefix loss.
+Preserve full words plus a masked boundary word before remapping PI frames;
+the two-canonical-order wrapper inherits the fix. Tests pin every bit, frame
+and metadata field plus independent ownership across32-bit boundaries. Full
+Go-only module passes130 tested packages plus3 commands without tests, full
+utility race1.360s, focused GIA isomorphism race1.823s and util/GIA vet pass.
+Details in misc/util/REVIEW.md. The utility and GIA package audits stay open;
+original completion2/131.

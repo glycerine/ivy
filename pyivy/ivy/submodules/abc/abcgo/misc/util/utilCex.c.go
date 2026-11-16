@@ -247,6 +247,12 @@ func Abc_CexPermute(p *Abc_Cex_t, mapping []int32) *Abc_Cex_t {
 	q := Abc_CexAlloc(p.NRegs, p.NPis, p.IFrame+1)
 	q.IPo = p.IPo
 	q.IFrame = p.IFrame
+	// Only PIs are permuted; keep the register initialization unchanged.
+	words := p.NRegs / 32
+	copy(q.PData[:words], p.PData[:words])
+	if bits := p.NRegs % 32; bits != 0 {
+		q.PData[words] = p.PData[words] & ((uint32(1) << uint(bits)) - 1)
+	}
 	for i := p.NRegs; i < p.NBits; i++ {
 		if Abc_InfoHasBit(p.PData, i) {
 			j := p.NRegs + p.NPis*((i-p.NRegs)/p.NPis) + mapping[(i-p.NRegs)%p.NPis]
