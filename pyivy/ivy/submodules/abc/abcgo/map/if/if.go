@@ -420,7 +420,15 @@ func If_CutTruthWords(nVarsMax int32) int32 {
 }
 func If_CutPermWords(nVarsMax int32) int32        { return (nVarsMax + 3) / 4 }
 func If_CutLeafBit(pCut *If_Cut_t, i int32) int32 { return int32((pCut.uMaskFunc >> uint32(i)) & 1) }
-func If_CutPerm(pCut *If_Cut_t) []byte            { return pCut.permutation }
+
+// If_CutPerm exposes the source cut's writable pin-delay bytes. Allocate this
+// separate Go storage only for callers that use it, rather than for every cut.
+func If_CutPerm(pCut *If_Cut_t) []byte {
+	if len(pCut.permutation) < int(pCut.nLeaves) {
+		pCut.permutation = append(pCut.permutation, make([]byte, int(pCut.nLeaves)-len(pCut.permutation))...)
+	}
+	return pCut.permutation
+}
 func If_CutCopy(_ *If_Man_t, dst, src *If_Cut_t) {
 	leaves := append([]int32(nil), src.pLeaves...)
 	permutation := append([]byte(nil), src.permutation...)

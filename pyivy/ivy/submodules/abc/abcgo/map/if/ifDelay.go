@@ -50,12 +50,6 @@ func ifDelayTimes(p *If_Man_t, c *If_Cut_t) []int32 {
 	}
 	return times
 }
-func ifDelayPermutation(c *If_Cut_t) []byte {
-	if len(c.permutation) < int(c.nLeaves) {
-		c.permutation = make([]byte, c.nLeaves)
-	}
-	return c.permutation[:c.nLeaves]
-}
 func If_CutDelaySop(p *If_Man_t, c *If_Cut_t) int32 {
 	c.fUser = 1
 	if c.nLeaves == 0 {
@@ -77,7 +71,7 @@ func If_CutDelaySop(p *If_Man_t, c *If_Cut_t) int32 {
 		cost++
 	}
 	gateDelay := int32(delay + .5)
-	permutation := ifDelayPermutation(c)
+	permutation := If_CutPerm(c)[:c.nLeaves]
 	maximum := int32(0)
 	for pin, time := range times {
 		permutation[pin] = byte(gateDelay)

@@ -60,10 +60,14 @@ func Gia_ManFromIfAig(p *If_Man_t) *Gia_Man_t {
 			case pars.FDsdBalance != 0:
 				obj.iCopy = Gia_ManBuildFromMini(dst, p, cut, leaves, mini, 0, 1)
 			case pars.FUserRecLib != 0:
-				if pars.pFuncRecGia == nil {
+				build := pars.pFuncRecGia
+				if build == nil {
+					build = recordedLibraryBackend().BuildGia
+				}
+				if build == nil {
 					panic("if: recorded-library GIA builder is not configured")
 				}
-				obj.iCopy = pars.pFuncRecGia(dst, p, cut, leaves, 0)
+				obj.iCopy = build(dst, p, cut, leaves, 0)
 			default:
 				panic("if: unsupported recorded library")
 			}

@@ -224,7 +224,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 		} else if p.pPars.FDsdBalance != 0 {
 			pCut.Delay = float32(If_CutDsdBalanceEval(p, pCut, nil))
 		} else if p.pPars.FUserRecLib != 0 {
-			panic("if: recursive library delay mode is not ported")
+			pCut.Delay = float32(If_CutDelayRecCost3(p, pCut, pObj))
 		} else if p.pPars.FUserSesLib != 0 {
 			panic("if: exact SAT delay mode is not ported")
 
@@ -477,7 +477,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 			} else if p.pPars.FDsdBalance != 0 {
 				pCut.Delay = If_CutDsdBalanceEval(p, pCut, nil)
 			} else if p.pPars.FUserRecLib != 0 {
-				panic("if: recursive library delay cost is outside the ported IF subsystem")
+				pCut.Delay = float32(If_CutDelayRecCost3(p, pCut, pObj))
 			} else if p.pPars.FUserSesLib != 0 {
 				// The C implementation delegates this optional mode to its external
 				// exact-delay/SAT subsystem, which is not included in this Go package.
