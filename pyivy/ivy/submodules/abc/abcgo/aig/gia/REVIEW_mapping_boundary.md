@@ -57,12 +57,12 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManBuildFromMini | map/if/gia_mini.go | Source wrapper reviewed; balancing/large parity checks; final family gate pending |
 | Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Source recursive hash/copy algorithm reviewed; 64 Go truth/memoization cases; final family gate pending |
 | Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; callback/repeat/balancing tests; lazy small scratch; final family gate pending |
-| Gia_ManFromIfLogicCreateLut | map/if/gia_lut.go | Pending |
+| Gia_ManFromIfLogicCreateLut | map/if/gia_lut.go | Source logic/records reviewed; signed multiword tests through15 inputs; final family gate pending |
 | Gia_ManFromIfLogicCreateLutSpecial | map/if/gia_lut.go | Pending |
 | Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go | Pending |
 | Gia_ManNodeIfToGia_rec | map/if/gia_cut_cone.go (recursive closure) | Source choice traversal/phase handling reviewed; 64 equivalent-choice cases; final family gate pending |
 | Gia_ManNodeIfToGia | map/if/gia_cut_cone.go | Source cone boundary reviewed; scratch/failure/constant-leaf tests; final family gate pending |
-| Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Pending |
+| Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Source remap/SAT/packing reviewed; 400 size/phase/shared-partition cases; final family gate pending |
 | Gia_ManFromIfGetConfig | map/if/gia_config.go | Pending |
 | Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Pending |
 | Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Pending |
@@ -472,3 +472,25 @@ leaves, complemented cut functions, multiword truth, packing/mapping records and
 all input assignments. The512 driver matrix has only four primary inputs, so it
 cannot establish those larger-support reconstruction boundaries. Continue source
 LUT/cofactor/config/cell rows rather than counting driver cases as full coverage.
+
+## Larger LUT reconstruction source/scalar review
+
+New400 Go-only cases cover physical LUT2..6, supports0..2*K-1, selected/searched
+partitions, every feasible shared-input count, cut complementation and signed
+supplied leaves. Independently evaluate every input assignment, verify immutable
+leaves and inspect packed group counts, topology and physical input limits.
+Another36 cases exercise direct CreateLut at supports0/1/2/5/6/7/8/11/15 with
+both output/leaf phases, full truth/record checks and immutable caller tables.
+No functional mismatch found in these two source-shaped helpers. Full IF
+Go-only1.831s, focused race3.540s and IF/GIA vet pass. Logs:
+/tmp/abcgo-lut-reconstruction-wide.jsonl,
+/tmp/abcgo-lut-wide-{if-go-only,race,vet}.log.
+
+Inspection of the specialized4-4 path finds a separate fidelity issue in its
+ifDec07 dependency: Go substitutes generic bound/free combination enumeration
+for source6-/7-input ordered variable moves. Existing native tests compare only
+existence, not emitted configuration or graph order. This is not covered by the
+passing436 cases above. Add source-derived exact configuration regressions before
+restoring the source search/derivation. Review the five-input source helper too;
+do not call specialized4-4 or the mapping family complete while it is generic.
+No new C fixtures/compiler requirements. Original package audit remains2/131.

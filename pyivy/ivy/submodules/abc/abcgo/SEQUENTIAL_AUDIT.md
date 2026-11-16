@@ -9401,3 +9401,14 @@ ownership and scratch clearing pass; invalid inputs remain Go-only too. Focused
 change or new C vectors. Mapping plan section4 (mini/parameters/choice/frame)
 reviewed; next larger LUT reconstruction and remaining source rows, then the
 family gate. Original package audit remains2/131.
+
+### Larger LUT reconstruction coverage and next fidelity issue
+
+Review CreateLut/FindLut against source; add400 Go-only size/partition/shared/
+phase cases plus36 direct multiword cases through15 inputs, with exhaustive
+truth and mapping/packing/ownership checks. No bug found in these helpers.
+Full IF Go-only1.831s, focused race3.540s and IF/GIA vet pass. Specialized4-4
+inspection finds generic ifDec07 enumeration substituted for source ordered
+moves; exact configuration regressions and faithful restoration are next.
+Source existence-only comparisons do not establish configuration fidelity.
+Details/logs in REVIEW_mapping_boundary.md. Audit remains2/131.
