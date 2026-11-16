@@ -102,15 +102,6 @@ func truth6Variable(v int32) word {
 	return truth
 }
 
-func truthBit(truth []word, assignment int) bool {
-	return truth[assignment>>6]&(word(1)<<uint(assignment&63)) != 0
-}
-func setTruthBit(truth *word, assignment int, value bool) {
-	if value {
-		*truth |= word(1) << uint(assignment)
-	}
-}
-
 // If_ManSatCheckXY remaps truth minterms to assumptions on the original
 // parameterized SAT instance, solves it, and extracts both LUT configurations.
 func If_ManSatCheckXY(sat any, lutSize int32, truth []word, nVars int32, set uint32, boundOut, freeOut *word, scratch *Vec_Int_t) int32 {
@@ -283,5 +274,30 @@ func If_ManSatCheckXYall_int(pSat any, lutSize int32, truth []word, nVars int32,
 	return If_ManSatCheckXYall(pSat, lutSize, truth, nVars, scratch)
 }
 
-func If_ManSatTest2() {}
-func If_ManSatTest3() {}
+func If_ManSatTest2() {
+	const nVars, lutSize = 6, 4
+	solver := If_ManSatBuildXY(lutSize)
+	defer If_ManSatUnbuild(solver)
+	truth := dau.Dau_DsdToTruth("0123456789ABCDEF{abcdef}", nVars)
+	scratch := vec.Vec_IntAlloc(100)
+	defer vec.Vec_IntFree(scratch)
+	var bound, free word
+	const set = 1<<0 | 3<<2 | 1<<4 | 1<<6
+	if If_ManSatCheckXY(solver, lutSize, truth, nVars, set, &bound, &free, scratch) == 0 {
+		panic("if: example two-LUT decomposition failed")
+	}
+	dau.Dau_DsdPrintFromTruth(truth, nVars)
+	dau.Dau_DsdPrintFromTruth([]word{bound}, lutSize)
+	dau.Dau_DsdPrintFromTruth([]word{free}, lutSize)
+}
+
+func If_ManSatTest3() {
+	const nVars, lutSize = 6, 4
+	solver := If_ManSatBuildXY(lutSize)
+	defer If_ManSatUnbuild(solver)
+	truth := dau.Dau_DsdToTruth("0123456789ABCDEF{abcdef}", nVars)
+	scratch := vec.Vec_IntAlloc(100)
+	defer vec.Vec_IntFree(scratch)
+	set := If_ManSatCheckXYall(solver, lutSize, truth, nVars, scratch)
+	dau.Dau_DecPrintSet(set, nVars, 1)
+}
