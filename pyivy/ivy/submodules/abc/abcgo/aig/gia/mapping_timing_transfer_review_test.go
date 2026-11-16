@@ -1,11 +1,8 @@
 package gia
 
 import (
-	"fmt"
-	"io"
-	"os/exec"
 	"reflect"
-	"strings"
+	"slices"
 	"testing"
 
 	"github.com/glycerine/abcgo/misc/tim"
@@ -71,59 +68,38 @@ func mappingReviewTimingMetadata(mask, owner int) *Gia_Man_t {
 func mappingReviewTimingPointers(p *Gia_Man_t) []any {
 	return []any{p.vCiArrs, p.vCoReqs, p.vCoArrs, p.vCoAttrs, p.VInArrs, p.VOutReqs, p.VNamesIn, p.VNamesOut, p.VConfigs, p.PManTime, p.PAigExtra, p.vRegClasses, p.vRegInits}
 }
-func mappingReviewTimingPrint(w io.Writer, name string, p, oldSrc, oldDst *Gia_Man_t) {
-	values, source, destination := mappingReviewTimingPointers(p), mappingReviewTimingPointers(oldSrc), mappingReviewTimingPointers(oldDst)
-	var fromSrc, fromDst uint32
-	for i, value := range values {
+
+// Snapshots retain pointer identity, including independently owned empty vectors.
+// Normalize typed nil pointers so the table can express absent fields uniformly.
+func mappingReviewTimingSnapshot(p *Gia_Man_t) []any {
+	fields := mappingReviewTimingPointers(p)
+	for i, value := range fields {
 		if value == nil || reflect.ValueOf(value).IsNil() {
-			continue
-		}
-		if value == source[i] {
-			fromSrc |= 1 << i
-		}
-		if value == destination[i] {
-			fromDst |= 1 << i
+			fields[i] = nil
 		}
 	}
-	iv := func(v *Vec_Int_t) int32 {
-		if v == nil {
-			return -1
-		}
-		return Vec_IntEntry(v, 0)
-	}
-	fv := func(v *Vec_Flt_t) float32 {
-		if v == nil {
-			return -1
-		}
-		return Vec_FltEntry(v, 0)
-	}
-	pv := func(v *Vec_Ptr_t) string {
-		if v == nil {
-			return "-"
-		}
-		return Vec_PtrEntry(v, 0).(string)
-	}
-	cell := p.PCellStr
-	if cell == "" {
-		cell = "-"
-	}
-	cis := -1
-	if p.PManTime != nil {
-		cis = tim.Tim_ManCiNum(p.PManTime.(*tim.Tim_Man_t))
-	}
-	extra := "-"
-	if p.PAigExtra != nil {
-		extra = p.PAigExtra.pName
-	}
-	fmt.Fprintf(w, "%s %d %d %d %d %.2f %.2f %s %s %d %s %d %s %d %d %d %d %.2f %.2f origin %x %x\n", name, iv(p.vCiArrs), iv(p.vCoReqs), iv(p.vCoArrs), iv(p.vCoAttrs), fv(p.VInArrs), fv(p.VOutReqs), pv(p.VNamesIn), pv(p.VNamesOut), iv(p.VConfigs), cell, cis, extra, iv(p.vRegClasses), iv(p.vRegInits), p.And2Delay, p.nAnd2Delay, p.DefInArrs, p.DefOutReqs, fromSrc, fromDst)
+	return append(fields, p.PCellStr, p.And2Delay, p.nAnd2Delay, p.DefInArrs, p.DefOutReqs)
 }
-func TestMappingNativeTimingTransferMasksAndOwnership(t *testing.T) {
-	exe := compileGiaSourceOracle(t, "mapping_timing_transfer_review.c")
-	source, err := exec.Command(exe).CombinedOutput()
-	if err != nil {
-		t.Fatalf("native metadata transfer: %v %s", err, source)
+
+func TestMappingTimingTransferMasksAndOwnershipGoOnly(t *testing.T) {
+	// Groups describe the source contract, not a second transfer implementation.
+	// Pointer/string members move together, even when some are absent. Scalar
+	// defaults are copied without being cleared; only boxed nAnd2Delay moves.
+	groups := []struct {
+		present int
+		members []int
+		scalars []int
+		boxed   bool
+	}{
+		{0x00f, []int{0, 1, 2, 3}, []int{14}, false},
+		{0x030, []int{4, 5}, []int{14, 16, 17}, false},
+		{0x0c0, []int{6, 7}, nil, false},
+		{0x300, []int{8, 13}, nil, false},
+		{0x400, []int{9, 10, 11, 12, 15}, nil, true},
 	}
-	var got strings.Builder
+	zero := make([]any, 18)
+	zero[13], zero[15] = "", int32(0)
+	count := 0
 	for mask := 0; mask < 2048; mask++ {
 		for variant := 0; variant < 3; variant++ {
 			src := mappingReviewTimingMetadata(mask, 1)
@@ -132,21 +108,41 @@ func TestMappingNativeTimingTransferMasksAndOwnership(t *testing.T) {
 				dstMask = 2047
 			}
 			dst := mappingReviewTimingMetadata(dstMask, 2)
-			oldSrc, oldDst := *src, *dst
 			target := dst
 			if variant == 2 {
 				target = src
 			}
+			before := mappingReviewTimingSnapshot(src)
+			wantSource := append([]any(nil), before...)
+			wantTarget := mappingReviewTimingSnapshot(target)
+			for _, group := range groups {
+				if mask&group.present == 0 || (group.boxed && target == src) {
+					continue
+				}
+				for _, index := range group.members {
+					wantSource[index] = zero[index]
+					wantTarget[index] = before[index]
+					if target == src {
+						wantTarget[index] = zero[index]
+					}
+				}
+				for _, index := range group.scalars {
+					wantTarget[index] = before[index]
+				}
+			}
 			Gia_ManTransferTiming(target, src)
-			fmt.Fprintf(&got, "case %d %d\n", mask, variant)
-			mappingReviewTimingPrint(&got, "dst", target, &oldSrc, &oldDst)
-			mappingReviewTimingPrint(&got, "src", src, &oldSrc, &oldDst)
+			if got := mappingReviewTimingSnapshot(target); !slices.Equal(got, wantTarget) {
+				t.Fatalf("mask%x variant%d destination: got%v want%v", mask, variant, got, wantTarget)
+			}
+			if got := mappingReviewTimingSnapshot(src); !slices.Equal(got, wantSource) {
+				t.Fatalf("mask%x variant%d source: got%v want%v", mask, variant, got, wantSource)
+			}
 			Gia_ManStop(src)
 			Gia_ManStop(dst)
+			count++
 		}
 	}
-	if string(source) != got.String() {
-		esopReviewCompare(t, source, got.String())
+	if count != 6144 {
+		t.Fatalf("checked%d configurations", count)
 	}
-	t.Log("compared 6,144 source/destination/self-transfer combinations and pointer origins")
 }

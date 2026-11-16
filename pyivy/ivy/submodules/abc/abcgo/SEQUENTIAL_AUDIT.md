@@ -9786,3 +9786,15 @@ No production repair was needed. Full module passes with CGO disabled and C
 compilers absent from PATH:130 tested packages and3 commands without tests.
 Focused race17.922s and GIA/IF vet pass. Details in REVIEW_mapping_boundary.md;
 remaining family gates and original package audit remain open2/131.
+
+
+### Keep exhaustive timing-transfer checks active without C
+
+Reconcile all five source metadata groups and ABCI/WLC forwarding aliases.
+Replace the existing compiler-gated comparison with6,144 Go-only ownership
+configurations covering all presence masks, empty/populated destinations and
+source-order self-transfer. Compare pointer identities and scalar values at
+both owners; remove the orphan C fixture. No production repair was needed.
+Full Go-only module passes130 tested packages plus3 commands without tests;
+focused transfer/hash race1.210s and relevant vet pass. Evidence in
+REVIEW_mapping_boundary.md; remaining family gates and original audit2/131.

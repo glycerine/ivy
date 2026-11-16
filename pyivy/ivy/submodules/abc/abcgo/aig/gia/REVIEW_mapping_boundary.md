@@ -10,13 +10,13 @@ Glitch simulation closed at89caa1ccf. Original package completion remains2/131.
 
 1. [x] Inventory all source routines, actual Go locations and earlier evidence.
 2. [x] Review metrics, references, overlaps and choice levels; add failing
-   regressions before fixes, then native/scalar/error/ownership coverage.
+   regressions before fixes, then Go-only scalar/error/ownership coverage.
 3. [ ] Review exact reports, persistent dump state, packing/profile boundaries,
-   source precision and resource handling with native comparisons.
+   source precision and resource handling with Go-only expectations.
 4. [x] Review mini reconstruction and parameter/GIA-to-IF boundary, choice
    integrity and frame timing metadata; preserve original algorithms.
 5. [ ] Review all IF-to-GIA LUT/cofactor/config/cell reconstruction and drivers,
-   with actual C and independent Boolean/metadata/ownership tests.
+   with source reconciliation and independent Go Boolean/metadata/ownership tests.
 6. [ ] Reconcile previously reviewed hashing/transfers, fill remaining gaps,
    measure compactness, freeze tested files and run uncached full module race
    plus relevant vet. Do not claim source-family closure before all rows pass.
@@ -72,7 +72,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Source buffer-first/CO-vector order and error routing restored; valid/missing/repeated/bridge cases covered in Go; final family gate pending |
 | Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Source copy/order/pruning/marker/ownership and absent-source policy reconciled; exact Go records replace runtime C comparison; final family gate pending |
 | Gia_ManTransferPacking | aig/gia/mapping_transfer.go | Source groups1..3/remapping/count/ownership and absent-source policy reconciled; Go-only coverage; final family gate pending |
-| Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | 6,144 native ownership cases; source self-order retained |
+| Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | Source grouped ownership/defaults/self-order reconciled;6,144 Go-only cases; direct compatibility aliases reviewed; final family gate pending |
 | Abc_FrameMiniAigSetCiArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
@@ -1557,3 +1557,27 @@ and GIA/IF vet exits0. Logs: /tmp/abcgo-box-choice-complete-cases.log and
 /tmp/abcgo-box-choice-final-{module.jsonl,race.log,vet.log}. All sessions ended.
 Remaining report deviations, hashing reconciliation, optional dependencies and
 final family gates remain open; original package audit2/131.
+
+
+### Make exhaustive timing-transfer checks independent of C
+
+Re-read all metadata groups in giaIf.c:2186..2221 and the direct ABCI/WLC
+aliases. Pointer groups move when any member is present; absent members clear
+old destination fields. Scalar defaults copy without clearing the source.
+Box metadata moves only with a timing manager and a distinct destination.
+Self-transfer clears the earlier groups before the source self-check; retain
+that ordering rather than invent a different ownership policy.
+
+Replace the compiler-gated6,144-case comparison with a Go-only table of the
+five metadata groups. Cover every2048 source presence masks against empty,
+fully populated and self destinations. Compare exact pointer identities and
+scalar/string values at both owners, including clearing absent members and
+retaining box children without a timing manager. Remove the unused C fixture.
+No production defect or necessary compactness change was found.
+
+Frozen cases pass0.049s; full module with CGO disabled and C compilers absent
+from PATH exits0 (130 tested packages,3 commands without tests). Focused
+transfer/hash race passes1.210s and relevant vet exits0. Logs:
+/tmp/abcgo-timing-transfer-final-{cases.log,module.jsonl,race.log,vet.log}.
+All sessions ended. Remaining hashing reconciliation, reports/optional modes
+and final family gates stay open; original package audit2/131.
