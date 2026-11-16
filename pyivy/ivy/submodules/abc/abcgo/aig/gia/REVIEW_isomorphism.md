@@ -181,3 +181,29 @@ Logs /tmp/abcgo-iso-canonical-final-{module.jsonl,race.log,vet.log}; all handles
 ended. This covers the ordering contract after labels exist, not full refinement
 or canonical reduction. Next restore ReportTopmost traversal side effects with
 a new failing regression, then continue the remaining family. Audit2/131.
+
+
+## Restore topmost reporting traversal ownership
+
+A new regression fails on36 graph/class cases before repair. Go's temporary
+boolean array reproduces printed topmost representatives but omits C's traversal
+epoch increment and current marks. Restore Gia_ManIncrementTravId and source
+fanin marking for class ANDs and the RI driver of class ROs; use those marks
+when selecting the first unmarked representative in each class. This also
+removes the unnecessary scratch array. It does not change printed output.
+
+The Go-only oracle builds class membership from the abstract graph and checks
+exact reports, current marks after a premarked old epoch, untouched node values
+and structural/ordinary mark fields, and unchanged packed/class storage. Cases
+cover0/1/2 registers, three phase patterns and empty/all/AND-only/RO-only classes.
+The warmed empty-report check allocates0 before and after on this Go toolchain;
+do not claim an allocation reduction from that fixture. The actual new red
+failures concern traversal state, not output or allocation.
+
+Red /tmp/abcgo-iso-topmost-red.log contains36 failing leaves; focused repaired
+run /tmp/abcgo-iso-topmost-green.log exits0. Frozen full Go-only module passes
+130 tested packages plus3 commands without tests, including36 report leaves.
+Focused isomorphism race1.445s and GIA vet pass; all handles ended. Final logs:
+/tmp/abcgo-iso-topmost-final-{module.jsonl,race.log,vet.log}. Remaining driver
+reports (including missing source graph stats), full refinement/reduction and
+second-generation comparison still require reconciliation. Audit2/131.

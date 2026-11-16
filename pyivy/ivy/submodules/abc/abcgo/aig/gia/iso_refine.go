@@ -479,16 +479,16 @@ func Gia_IsoAssignOneClass3(p *Gia_IsoMan_t) {
 }
 func Gia_IsoReportTopmost(p *Gia_IsoMan_t) {
 	g := p.pGia
-	marked := make([]bool, Gia_ManObjNum(g))
+	Gia_ManIncrementTravId(g)
 	classes := vec.Vec_IntArray(p.vClasses)
 	for i := 0; i+1 < len(classes); i += 2 {
 		for k := int32(0); k < classes[i+1]; k++ {
 			obj := Gia_ManObj(g, int32(Gia_IsoGetItem(p, classes[i]+k)))
 			if Gia_ObjIsAnd(obj) != 0 {
-				marked[Gia_ObjId(g, Gia_ObjFanin0(obj))] = true
-				marked[Gia_ObjId(g, Gia_ObjFanin1(obj))] = true
+				Gia_ObjSetTravIdCurrent(g, Gia_ObjFanin0(obj))
+				Gia_ObjSetTravIdCurrent(g, Gia_ObjFanin1(obj))
 			} else if Gia_ObjIsRo(g, obj) != 0 {
-				marked[Gia_ObjId(g, Gia_ObjFanin0(Gia_ObjRoToRi(g, obj)))] = true
+				Gia_ObjSetTravIdCurrent(g, Gia_ObjFanin0(Gia_ObjRoToRi(g, obj)))
 			}
 		}
 	}
@@ -496,7 +496,7 @@ func Gia_IsoReportTopmost(p *Gia_IsoMan_t) {
 	for i := 0; i+1 < len(classes); i += 2 {
 		for k := int32(0); k < classes[i+1]; k++ {
 			id := Gia_IsoGetItem(p, classes[i]+k)
-			if !marked[id] {
+			if Gia_ObjIsTravIdCurrentId(g, int32(id)) == 0 {
 				count++
 				fmt.Printf("%5d : Obj %6d : Level = %4d.  iBegin = %4d.  Size = %4d.\n", count, id, p.pLevels[id], classes[i], classes[i+1])
 				break

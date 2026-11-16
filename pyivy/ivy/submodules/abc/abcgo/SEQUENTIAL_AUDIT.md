@@ -10093,3 +10093,14 @@ mark ownership. No additional bug found in this ordering stage. Full Go-only
 module passes130 tested packages plus3 commands without tests; focused GIA
 isomorphism race1.407s and GIA vet pass. REVIEW_isomorphism.md records limits
 and evidence. Refinement/reduction/reports remain open; original audit2/131.
+
+
+### Restore source traversal effects in topmost isomorphism reports
+
+A new36-case red regression shows the existing report gets text right but
+omits C's epoch increment and fanin marks. Restore graph traversal operations
+and remove the scratch boolean array. Tests verify exact text, mark ownership,
+unchanged node/class data and the empty-class contract using Go-only fixtures.
+Full Go-only module passes130 tested packages plus3 commands without tests;
+focused isomorphism race1.445s and GIA vet pass. Evidence/limits recorded in
+REVIEW_isomorphism.md. Remaining family/GIA scope stays open; audit2/131.
