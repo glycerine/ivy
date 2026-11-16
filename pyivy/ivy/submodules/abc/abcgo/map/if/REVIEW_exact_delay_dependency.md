@@ -1,4 +1,4 @@
-# Exact-delay mapping dependency review (in progress)
+# Exact-delay mapping dependency runtime review (reviewed)
 
 This is the optional fUserSesLib cost dependency of the sequential GIA mapping
 boundary review. It does not mark IF or ABCI audited. Source IF delegates to
@@ -22,7 +22,7 @@ Abc_ExactDelayCost in abcExact.c; Go already contains the SES/BSAT backend.
   and reporting, including actual synthesis at supports3..8/multiword truth.
 - [x] Reconcile the single-output SES search/encoding dependencies used by that
   API before claiming the full optional mode reviewed.
-- [ ] Run remaining final GIA mapping-family/module gates.
+- [x] Run remaining final GIA mapping-family/module gates.
 
 ## Source binding and behavior
 
@@ -227,3 +227,17 @@ max-gate heuristics may miss alternatives, and GIA SES reconstruction asserts.
 Do not widen those features or label the whole IF/ABCI packages audited.
 The remaining gate is the final GIA mapping-family/module reconciliation;
 original package completion remains2/131.
+
+
+## Mapping-family final gate
+
+The55+2 giaIf.c routine inventory is reconciled. Full Go-only module and full
+module race on Go fixtures pass130 tested packages plus3 command packages
+without tests. The race gate's337 optional skips equal the no-C-toolchain normal
+run's skip set, and all872 new three-input synthesis cases execute. IF/GIA vet
+passes. Final log: /tmp/abcgo-mapping-family-go-fixtures-reviewed-race.jsonl;
+GIA190.586s. The mapping-boundary review documents the earlier native-oracle
+600-second timeout and initial race-build environment error separately; neither
+is misreported as a passing run. All sessions ended. This closes this mapping
+runtime dependency, not the full IF/ABCI package audits or original131-package
+goal (still2/131 reviewed).

@@ -20,7 +20,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability cofactor network analysis/reconstruction ESOP computation and incremental support-guided quantification reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability cofactor network analysis/reconstruction ESOP computation, incremental support-guided quantification and the IF mapping boundary reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -9937,3 +9937,50 @@ network for changed arrivals; correct the API's optimality overclaim. Full
 Go-only module passes130 tested packages plus3 commands without tests; focused
 exact/cache race1.159s and IF/GIA vet pass. Further exact-miss/search analysis
 and remaining family/package review stay open2/131.
+
+
+### Restore exact-synthesis diagnostics and memory/arithmetic safety
+
+Complete the mapping cost dependency using the actual SES/BSAT source algorithm.
+New red tests precede restored verbose headers/resource-limit colors/depth erasure
+and normalized-spec failure logs. Fresh AND/NAND synthesis through supports3..8
+checks binary full-support bounds and every truth bit. A new26-gate model exposes
+inherited100-word scratch overflow; use reusable four-words-per-gate storage,
+with25/26/100-gate, inversion and reuse boundaries. Another new red matrix finds
+signed-power overflow rejecting one-gate ANDs at arrival depths31+; guard powers
+above the int32 gate-count range while retaining representable source bounds.
+
+Exhaust all218 full-support three-input functions, both gate modes and two arrival
+profiles (872 real syntheses), checking scalar truth, physical paths, weighted
+model/API delay, operations, ownership and cache publication. Separate search
+checks verify AND/parity/MUX/majority known gate counts in both search directions
+and preservation/cache reuse of a valid model after later resource failure.
+Commits f3e77b5b2,5edcdcd62,cdff9a692 are green; red/final logs and inherited
+source limitations are recorded in map/if/REVIEW_exact_delay_dependency.md.
+
+
+### Close the GIA IF-mapping source family
+
+All55 main giaIf.c routines and two inline adapters match the current inventory,
+with reconstruction/driver/recorded/exact dependencies reconciled. Review
+correctness, source flow, ownership and compactness separately; preserve documented
+source limitations and explicitly repair undefined memory/arithmetic behavior.
+Full Go-only module passes130 tested packages plus3 commands without tests;
+IF/GIA vet passes. Full-module race on Go fixtures also exits0, GIA190.586s,
+with the same337 optional skip set as the normal no-C-toolchain run. All872
+new three-input cases execute; no new C vectors are added. Logs:
+/tmp/abcgo-exact-search-final-module.jsonl,
+/tmp/abcgo-exact-search-final-vet.log,
+/tmp/abcgo-mapping-family-go-fixtures-reviewed-race.jsonl.
+
+The earlier normal-PATH race run hits GIA's default600-second deadline during
+legacy C-oracle setup after129 tested packages pass; it is not a green result.
+A restricted-PATH race setup initially lacks the assembler; absolute race-runtime
+tool resolution fixes the environment before the final passing run. Details and
+unsuccessful logs remain in REVIEW_mapping_boundary.md. All sessions are terminal.
+
+This closes the mapping source family, not GIA/IF/ABCI or the original objective.
+Original completion remains2/131. Next within GIA: giaIff.c white-box clustering
+in map/if/gia_iff.go and the two explicit giaIiff.c source stubs. Wider standalone
+IF/DSD helpers remain for the later IF package audit; do not invent missing C
+algorithms or redefine the original sequential package scope.

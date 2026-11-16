@@ -487,3 +487,20 @@ compiler, object archive or C fixture is involved in the new matrix.
 Logs /tmp/abcgo-driver-partition-debug.log and
 /tmp/abcgo-gia-mapping-driver-filtered-go-matrix.log. Separate full affected gates
 and choice-chain/frame boundary coverage follow; original audit remains2/131.
+
+
+## Mapping runtime handoff and remaining standalone scope
+
+The giaIf.c canonical DSD callers, balancing/state ownership, cell/configuration
+and marked-partition integration are reconciled in REVIEW_mapping_boundary.md.
+Full module Go-only and Go-fixture race gates pass130 tested packages plus3
+commands without tests; IF/GIA vet passes. Final race log:
+/tmp/abcgo-mapping-family-go-fixtures-reviewed-race.jsonl. Optional skips match
+the no-C-toolchain normal run exactly. The earlier unfiltered native-oracle
+600-second deadline is preserved separately in the mapping review.
+
+This closes the mapping runtime dependency. Broader inventory/utility-plan
+items above are deliberately not relabeled complete: standalone PrintDecs,
+HashProfile and the eventual full ifDsd.c/IF package audit remain pending.
+The original131-package audit is intact, with2/131 complete. Historical native
+comparisons remain supplementary evidence; all new fixtures are Go-only.

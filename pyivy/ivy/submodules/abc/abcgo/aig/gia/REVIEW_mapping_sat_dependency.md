@@ -1,4 +1,4 @@
-# Structured-mapping SAT dependency review (in progress)
+# Structured-mapping SAT dependency runtime review (reviewed)
 
 This is a required dependency of the open giaIf.c mapping-boundary audit,
 not a completed map/if or BSAT package audit. Original audit remains2/131.
@@ -14,7 +14,7 @@ The user requires faithful/mechanical ports, not substitute algorithms.
    shapes, shared/degenerate/permuted partitions and complete multiword truths.
 5. [x] Review search ordering, composition/verification helpers and original
    example entry points; repair remaining source-fidelity/ownership gaps.
-6. [ ] Review compactness and integration with structured GIA reconstruction,
+6. [x] Review compactness and integration with structured GIA reconstruction,
    then run the mapping-family frozen full-module race/vet gate.
 
 ## Source and prior substitute
@@ -139,3 +139,16 @@ New minimal native regression proves different initial objects, permutations,
 literals and reuse before any DSD production repair. This is the next required
 mapping dependency; see REVIEW_mapping_dsd_dependency.md for its concrete plan
 and corrected-source-flag matrix. Do not infer mapping closure from green SAT.
+
+
+## Final GIA mapping-family handoff
+
+Canonical DSD restoration and the remaining structured/configuration/rebuild
+callers are now reconciled in REVIEW_mapping_boundary.md. The full module
+Go-only and Go-fixture race gates pass130 tested packages plus3 commands without
+tests; IF/GIA vet passes. Final race log:
+/tmp/abcgo-mapping-family-go-fixtures-reviewed-race.jsonl. It uses the same337
+optional skip set as the no-C-toolchain normal run. The mapping document records
+the unsuccessful earlier native-oracle deadline separately. No new C fixture
+or alternate SAT solver was introduced. This closes the active mapping SAT
+runtime dependency, not the complete IF or BSAT package audits.

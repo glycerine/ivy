@@ -1,4 +1,4 @@
-# Mapping boundary review (in progress)
+# Mapping boundary review (reviewed)
 
 Scope: all 55 main routines in `src/aig/gia/giaIf.c`, plus two inline
 fanin-copy adapters. Implementations live in both aig/gia and map/if to avoid
@@ -15,74 +15,76 @@ Glitch simulation closed at89caa1ccf. Original package completion remains2/131.
    source precision and resource handling with Go-only expectations.
 4. [x] Review mini reconstruction and parameter/GIA-to-IF boundary, choice
    integrity and frame timing metadata; preserve original algorithms.
-5. [ ] Review all IF-to-GIA LUT/cofactor/config/cell reconstruction and drivers,
+5. [x] Review all IF-to-GIA LUT/cofactor/config/cell reconstruction and drivers,
    with source reconciliation and independent Go Boolean/metadata/ownership tests.
-6. [ ] Reconcile previously reviewed hashing/transfers, fill remaining gaps,
+6. [x] Reconcile previously reviewed hashing/transfers, fill remaining gaps,
    measure compactness, freeze tested files and run uncached full module race
    plus relevant vet. Do not claim source-family closure before all rows pass.
 
 ## Source inventory
 
-Pending means not yet reconciled in this family, even if old unit tests pass.
+All current rows are reconciled. The chronological checkpoints below retain
+their earlier pending statements; this inventory and the final gate supersede
+those statements for this source family.
 Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md.
 
 | Original C | Go location | Status |
 | --- | --- | --- |
-| Gia_ManSetIfParsDefault | map/if/gia_bridge.go | Source defaults/full reset reviewed; Go-only regression; final family gate pending |
-| Gia_ManLutFaninCount | aig/gia/mapping_metrics.go | Source totals reviewed; standalone and384 real mapper results plus boundaries; final family gate pending |
-| Gia_ManLutSizeMax | aig/gia/mapping_accessors.go, base/abci/abc_graph_compat.go | Source maximum/empty sentinel and direct alias reviewed; mapper/profile boundaries covered; final family gate pending |
-| Gia_ManLutNum | aig/gia/mapping_metrics.go | Source totals/dangling cuts reviewed; standalone/mapper boundaries covered; final family gate pending |
-| Gia_ManLutLevel | aig/gia/mapping_metrics.go | Source output-depth and owned levels reviewed; standalone/mapper/dangling boundaries covered; final family gate pending |
-| Gia_ManLutParams | aig/gia/mapping_timing.go | Source flat/boxed policy reviewed;96 timing-manager configurations and384 actual mapper results; final family gate pending |
-| Gia_ManSetRefsMapped | aig/gia/mapping_metrics.go | Source references/replacement reviewed; standalone/mapper/constant/terminal/dangling ownership cases; final family gate pending |
-| Gia_ManSetLutRefs | aig/gia/mapping_metrics.go | Source references/independent storage reviewed; standalone/mapper/terminal/dangling cases; final family gate pending |
-| Gia_ManComputeOverlap2One_rec | aig/gia/mapping_metrics.go | Source walk/typed dependencies reviewed; scalar cones and384 mapper results; final family gate pending |
-| Gia_ManComputeOverlap2One | aig/gia/mapping_metrics.go | Source boundary/scratch cleanup reviewed; repeated actual mapper cuts; final family gate pending |
-| Gia_ManComputeOverlap2 | aig/gia/mapping_metrics.go | Source mapping precondition restored with red cases; scalar/mapper/negative-overlap boundaries; final family gate pending |
-| Gia_ManComputeOverlapOne_rec | aig/gia/mapping_metrics.go | Source epoch walk/typed dependencies reviewed; scalar/mapper cones; final family gate pending |
-| Gia_ManComputeOverlapOne | aig/gia/mapping_metrics.go | Source per-cut epochs/boundaries reviewed; repeated mapper cuts; final family gate pending |
-| Gia_ManComputeOverlap | aig/gia/mapping_metrics.go | Source mapping precondition restored with red cases; scalar/mapper/dangling boundaries; final family gate pending |
-| Gia_ManPrintGetMuxFanins | aig/gia/mapping_stats.go | Source control/data roles and phase stripping reconciled; Go-only eight-phase/nested coverage; final family gate pending |
-| Gia_ManCountDupLut | aig/gia/mapping_stats.go | Source two/three-input selection, counts, marks and stdout routing reviewed; Go-only repeated-call fixtures; final family gate pending |
-| Gia_ManPrintMappingStats | aig/gia/mapping_stats.go | Source ABC routing repaired; precision/boxed-level/ANSI/dump-state behavior covered in Go; final family gate pending |
-| Gia_ManPrintPackingStats | aig/gia/mapping_profile.go | Source ABC routing repaired; group counts and empty maximum reconciled; exact Go-only reports; final family gate pending |
-| Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Source ABC routing/arithmetic/empty sentinel restored; counts/weighted ratios/terminal bins reviewed; Go-only reports; final family gate pending |
-| Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Source ABC routing repaired; empty and32/33-width boundaries covered in Go; final family gate pending |
-| Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed walks reviewed; scalar mapped-result depth and mixed boxed-choice driver integration reviewed; final family gate pending |
-| Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed levels reviewed; mapped-result integration; final family gate pending |
-| If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Source walk reviewed; dangling/64 choice-chain cases; final family gate pending |
-| If_ManCheckChoices | map/if/choice_check.go | Source diagnostics/mark cleanup reviewed; repeated Go-only checks; final family gate pending |
-| Gia_ManToIf | map/if/gia_bridge.go | Source transfer reviewed; name ownership, defaults, typed phases/references/aliases, constants, empty interfaces, 64 choice chains and boxed-choice integration; final family gate pending |
-| Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Source algorithm/scratch reviewed; 140 Go-only scalar cases plus invalid inputs; final family gate pending |
-| Gia_ManBuildFromMini | map/if/gia_mini.go | Source wrapper reviewed; balancing/large parity checks; final family gate pending |
-| Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Source recursive hash/copy algorithm reviewed; 64 Go truth/memoization cases; final family gate pending |
-| Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; default recorded backend and override/repeat/balancing tests; lazy small scratch; richer recorded dependency review/final gate pending |
-| Gia_ManFromIfLogicCreateLut | map/if/gia_lut.go | Source logic/records reviewed; signed multiword tests through15 inputs; final family gate pending |
-| Gia_ManFromIfLogicCreateLutSpecial | map/if/gia_lut.go | Source encoding reviewed; ordered ifDec07 dependency restored; 192 Go-only signed/permuted reconstruction cases; final family gate pending |
-| Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go, gia_lut_reports.go | Active source branches/CLU dependency/reconstruction/validation reviewed; diagnostics restored with red regressions; final family gate pending |
-| Gia_ManNodeIfToGia_rec | map/if/gia_cut_cone.go (recursive closure) | Source choice traversal/phase handling reviewed; 64 equivalent-choice cases; final family gate pending |
-| Gia_ManNodeIfToGia | map/if/gia_cut_cone.go | Source cone boundary reviewed; scratch/failure/constant-leaf tests; final family gate pending |
-| Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Source remap/SAT/packing reviewed; 400 size/phase/shared-partition cases; final family gate pending |
-| Gia_ManFromIfGetConfig | map/if/gia_config.go | Source bit/text/permutation packing reviewed; 1408 Go-only boundary/phase cases with repeated appends; final family gate pending |
-| Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Source unconditional assertion preserved and tested; unused unreachable helper removed; final family gate pending |
-| Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Source branches/phase/records reviewed; 600 Go-only wide selector/constant-cofactor cases; final family gate pending |
-| Gia_ManFromIfLogicAndVars | map/if/gia_cofactor.go | Source masks/phase/records reviewed; 192 Go-only wide AND/OR cases; final family gate pending |
-| Gia_ManFromIfLogic | map/if/gia_mapping.go | Source routing/phase/ref/finalization/config I/O reviewed; exact growth/file boundaries covered; report escaping fixed; unused scratch removed; final family gate pending |
-| Gia_ManMappingVerify_rec | aig/gia/mapping_transfer.go | Source traversal/failure/revisit/terminal behavior reviewed; error routing repaired with red regressions; final family gate pending |
-| Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Source buffer-first/CO-vector order and error routing restored; valid/missing/repeated/bridge cases covered in Go; final family gate pending |
-| Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Source copy/order/pruning/marker/ownership and absent-source policy reconciled; exact Go records replace runtime C comparison; final family gate pending |
-| Gia_ManTransferPacking | aig/gia/mapping_transfer.go | Source groups1..3/remapping/count/ownership and absent-source policy reconciled; Go-only coverage; final family gate pending |
-| Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | Source grouped ownership/defaults/self-order reconciled;6,144 Go-only cases; direct compatibility aliases reviewed; final family gate pending |
-| Abc_FrameMiniAigSetCiArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing/attributes/boxed integration reviewed; recorded runtime reviewed and exact-cost dispatch restored; source SES GIA rejection retained; deeper exact dependency/final gate pending |
-| Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed/SOP/DSD boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; boxed-choice integration reviewed; final family gate pending |
-| Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Source wrapper parameters/metadata policy reviewed; ordinary/boxed direct/registered paths covered; final family gate pending |
-| Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final family gate pending |
-| Gia_ManTestStruct | map/if/gia_structure_report.go | Source KIT diagnostics/summary/limits/bounds reviewed; red regressions repaired; needless small-LUT truth computation removed; final family gate pending |
-| Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Source hash/copy/cut selection reconciled; compact storage and collapse repairs characterized; ordinary/typed/boxed drivers and Go-only ownership boundaries covered; final family gate pending |
+| Gia_ManSetIfParsDefault | map/if/gia_bridge.go | Source defaults/full reset reviewed; Go-only regression; final gate passed |
+| Gia_ManLutFaninCount | aig/gia/mapping_metrics.go | Source totals reviewed; standalone and384 real mapper results plus boundaries; final gate passed |
+| Gia_ManLutSizeMax | aig/gia/mapping_accessors.go, base/abci/abc_graph_compat.go | Source maximum/empty sentinel and direct alias reviewed; mapper/profile boundaries covered; final gate passed |
+| Gia_ManLutNum | aig/gia/mapping_metrics.go | Source totals/dangling cuts reviewed; standalone/mapper boundaries covered; final gate passed |
+| Gia_ManLutLevel | aig/gia/mapping_metrics.go | Source output-depth and owned levels reviewed; standalone/mapper/dangling boundaries covered; final gate passed |
+| Gia_ManLutParams | aig/gia/mapping_timing.go | Source flat/boxed policy reviewed;96 timing-manager configurations and384 actual mapper results; final gate passed |
+| Gia_ManSetRefsMapped | aig/gia/mapping_metrics.go | Source references/replacement reviewed; standalone/mapper/constant/terminal/dangling ownership cases; final gate passed |
+| Gia_ManSetLutRefs | aig/gia/mapping_metrics.go | Source references/independent storage reviewed; standalone/mapper/terminal/dangling cases; final gate passed |
+| Gia_ManComputeOverlap2One_rec | aig/gia/mapping_metrics.go | Source walk/typed dependencies reviewed; scalar cones and384 mapper results; final gate passed |
+| Gia_ManComputeOverlap2One | aig/gia/mapping_metrics.go | Source boundary/scratch cleanup reviewed; repeated actual mapper cuts; final gate passed |
+| Gia_ManComputeOverlap2 | aig/gia/mapping_metrics.go | Source mapping precondition restored with red cases; scalar/mapper/negative-overlap boundaries; final gate passed |
+| Gia_ManComputeOverlapOne_rec | aig/gia/mapping_metrics.go | Source epoch walk/typed dependencies reviewed; scalar/mapper cones; final gate passed |
+| Gia_ManComputeOverlapOne | aig/gia/mapping_metrics.go | Source per-cut epochs/boundaries reviewed; repeated mapper cuts; final gate passed |
+| Gia_ManComputeOverlap | aig/gia/mapping_metrics.go | Source mapping precondition restored with red cases; scalar/mapper/dangling boundaries; final gate passed |
+| Gia_ManPrintGetMuxFanins | aig/gia/mapping_stats.go | Source control/data roles and phase stripping reconciled; Go-only eight-phase/nested coverage; final gate passed |
+| Gia_ManCountDupLut | aig/gia/mapping_stats.go | Source two/three-input selection, counts, marks and stdout routing reviewed; Go-only repeated-call fixtures; final gate passed |
+| Gia_ManPrintMappingStats | aig/gia/mapping_stats.go | Source ABC routing repaired; precision/boxed-level/ANSI/dump-state behavior covered in Go; final gate passed |
+| Gia_ManPrintPackingStats | aig/gia/mapping_profile.go | Source ABC routing repaired; group counts and empty maximum reconciled; exact Go-only reports; final gate passed |
+| Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Source ABC routing/arithmetic/empty sentinel restored; counts/weighted ratios/terminal bins reviewed; Go-only reports; final gate passed |
+| Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Source ABC routing repaired; empty and32/33-width boundaries covered in Go; final gate passed |
+| Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed walks reviewed; scalar mapped-result depth and mixed boxed-choice driver integration reviewed; final gate passed |
+| Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed levels reviewed; mapped-result integration; final gate passed |
+| If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Source walk reviewed; dangling/64 choice-chain cases; final gate passed |
+| If_ManCheckChoices | map/if/choice_check.go | Source diagnostics/mark cleanup reviewed; repeated Go-only checks; final gate passed |
+| Gia_ManToIf | map/if/gia_bridge.go | Source transfer reviewed; name ownership, defaults, typed phases/references/aliases, constants, empty interfaces, 64 choice chains and boxed-choice integration; final gate passed |
+| Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Source algorithm/scratch reviewed; 140 Go-only scalar cases plus invalid inputs; final gate passed |
+| Gia_ManBuildFromMini | map/if/gia_mini.go | Source wrapper reviewed; balancing/large parity checks; final gate passed |
+| Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Source recursive hash/copy algorithm reviewed; 64 Go truth/memoization cases; final gate passed |
+| Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; default recorded backend and override/repeat/balancing tests; lazy small scratch; recorded runtime reviewed; final gate passed |
+| Gia_ManFromIfLogicCreateLut | map/if/gia_lut.go | Source logic/records reviewed; signed multiword tests through15 inputs; final gate passed |
+| Gia_ManFromIfLogicCreateLutSpecial | map/if/gia_lut.go | Source encoding reviewed; ordered ifDec07 dependency restored; 192 Go-only signed/permuted reconstruction cases; final gate passed |
+| Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go, gia_lut_reports.go | Active source branches/CLU dependency/reconstruction/validation reviewed; diagnostics restored with red regressions; final gate passed |
+| Gia_ManNodeIfToGia_rec | map/if/gia_cut_cone.go (recursive closure) | Source choice traversal/phase handling reviewed; 64 equivalent-choice cases; final gate passed |
+| Gia_ManNodeIfToGia | map/if/gia_cut_cone.go | Source cone boundary reviewed; scratch/failure/constant-leaf tests; final gate passed |
+| Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Source remap/SAT/packing reviewed; 400 size/phase/shared-partition cases; final gate passed |
+| Gia_ManFromIfGetConfig | map/if/gia_config.go | Source bit/text/permutation packing reviewed; 1408 Go-only boundary/phase cases with repeated appends; final gate passed |
+| Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Source unconditional assertion preserved and tested; unused unreachable helper removed; final gate passed |
+| Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Source branches/phase/records reviewed; 600 Go-only wide selector/constant-cofactor cases; final gate passed |
+| Gia_ManFromIfLogicAndVars | map/if/gia_cofactor.go | Source masks/phase/records reviewed; 192 Go-only wide AND/OR cases; final gate passed |
+| Gia_ManFromIfLogic | map/if/gia_mapping.go | Source routing/phase/ref/finalization/config I/O reviewed; exact growth/file boundaries covered; report escaping fixed; unused scratch removed; final gate passed |
+| Gia_ManMappingVerify_rec | aig/gia/mapping_transfer.go | Source traversal/failure/revisit/terminal behavior reviewed; error routing repaired with red regressions; final gate passed |
+| Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Source buffer-first/CO-vector order and error routing restored; valid/missing/repeated/bridge cases covered in Go; final gate passed |
+| Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Source copy/order/pruning/marker/ownership and absent-source policy reconciled; exact Go records replace runtime C comparison; final gate passed |
+| Gia_ManTransferPacking | aig/gia/mapping_transfer.go | Source groups1..3/remapping/count/ownership and absent-source policy reconciled; Go-only coverage; final gate passed |
+| Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | Source grouped ownership/defaults/self-order reconciled;6,144 Go-only cases; direct compatibility aliases reviewed; final gate passed |
+| Abc_FrameMiniAigSetCiArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final gate passed |
+| Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final gate passed |
+| Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final gate passed |
+| Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final gate passed |
+| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing/attributes/boxed integration reviewed; recorded runtime reviewed and exact-cost dispatch restored; source SES GIA rejection retained; exact runtime reviewed; final gate passed |
+| Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed/SOP/DSD boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; boxed-choice integration reviewed; final gate passed |
+| Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Source wrapper parameters/metadata policy reviewed; ordinary/boxed direct/registered paths covered; final gate passed |
+| Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final gate passed |
+| Gia_ManTestStruct | map/if/gia_structure_report.go | Source KIT diagnostics/summary/limits/bounds reviewed; red regressions repaired; needless small-LUT truth computation removed; final gate passed |
+| Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Source hash/copy/cut selection reconciled; compact storage and collapse repairs characterized; ordinary/typed/boxed drivers and Go-only ownership boundaries covered; final gate passed |
 
 The inline If_ManFanin0Copy/If_ManFanin1Copy logic is represented by the
 phase-preserving copyEdge closure in map/if/gia_bridge.go.
@@ -1858,3 +1860,55 @@ source representable bounds and search policy. Full Go-only module, expanded
 exact/IF/SES race30.099s and IF/GIA vet pass. The exact dependency document
 records arithmetic/source limitations and final logs. Optional cost runtime is
 reviewed; final family reconciliation and full-module race remain open2/131.
+
+
+## Final family reconciliation and gate
+
+All57 source routine names match the inventory:55 main routines plus the two
+inline fanin-copy adapters, with no omitted or extra inventory names. All current
+rows now have source correspondence, correctness/ownership evidence, compactness
+review where relevant and integration checks. Reconstruction, driver, recorded
+library and single-output exact-cost dependencies are reviewed in this scope.
+This closes giaIf.c, not the rest of GIA or the standalone IF/ABCI source files.
+Uncalled DSD PrintDecs/HashProfile and other IF utilities remain for that later
+package audit; keep their broader dependency-plan items visible.
+
+Source limitations and deliberate Go repairs remain explicit in the historical
+checkpoints: preserve first-hit exact caching and unsupported SES/cell rebuilds;
+retain source search order, cut policy and mapping/packing metadata; repair
+unsafe/undefined memory/arithmetic boundaries and typed-node traversal without
+substituting an optimizer or solver. Compactness changes include direct pin
+storage, removal of duplicate canonical/text graphs and unused scratch, native
+word truth composition, zero-allocation delay reads and reusable correctly sized
+SES truth storage. Measurements and before/after logs are recorded at each change.
+
+No production/tests changed during final verification. The regular full module
+with CGO disabled and C compilers hidden exits0:130 tested packages pass,3
+commands have no tests (/tmp/abcgo-exact-search-final-module.jsonl). IF/GIA vet
+exits0 (/tmp/abcgo-exact-search-final-vet.log).
+
+An initial normal-PATH full-module race run passes129 tested packages plus3
+commands, then GIA reaches the default600-second package timeout inside a legacy
+native-comparison helper's repeated source-object scan/archive setup. No test
+assertion or race fails before that deadline. Preserve this unsuccessful run:
+/tmp/abcgo-mapping-family-final-race.jsonl. Do not report it as green. A first
+restricted-PATH race setup also fails before any tests because gcc cannot find
+the hidden assembler (/tmp/abcgo-mapping-family-go-fixtures-final-race.jsonl).
+
+The completed full-module race gate runs every package/test name with compilers
+hidden from test PATH. Absolute CC/CXX commands with -B/usr/bin/ permit only Go's
+race-runtime build tools to resolve; legacy optional native tests skip through
+their existing availability checks. No test or fixture was removed or weakened.
+Command: CGO_ENABLED=1 CC='/usr/bin/gcc -B/usr/bin/'
+CXX='/usr/bin/g++ -B/usr/bin/' PATH=/tmp/abcgo-no-c-tools
+GOCACHE=/tmp/abcgo-gocache go test -race ./... -count=1 -timeout=30m -json.
+It exits0:130 tested packages pass,3 commands have no tests; GIA190.586s.
+All872 new three-input synthesis cases execute. Its337 optional skips exactly
+match the regular no-C-toolchain run's skip set. Log:
+/tmp/abcgo-mapping-family-go-fixtures-reviewed-race.jsonl. All process handles
+are terminal. Normal tests require only Go; no new C fixtures/tool dependencies.
+
+Original package audit stays2/131. Continue within GIA with the separate
+white-box LUT clustering family giaIff.c (map/if/gia_iff.go), then the two
+source-explicit Boolean-matching stubs in giaIiff.c. Do not invent algorithms
+for those stubs or mark the whole GIA package complete from this family gate.
