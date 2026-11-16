@@ -2,7 +2,9 @@ package if_
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/extra"
 	"os"
+	"slices"
 
 	"github.com/glycerine/abcgo/bool/kit"
 	abcutil "github.com/glycerine/abcgo/misc/util"
@@ -91,22 +93,39 @@ func dsdSupport(truth []uint64, n int32) []int32 {
 	return vars[:dau.Dau_DsdMinBase(base, n, vars)]
 }
 
-// If_DsdManAlloc creates constant and variable records up front, matching the
-// source manager's literal numbering (object ID is the literal's variable).
+// If_DsdManAlloc creates the source constant and one generic variable.
 func If_DsdManAlloc(nVars, lutSize int32) *If_DsdMan_t {
 	if nVars < 0 || nVars > 16 {
 		panic("if: DSD manager supports 0..16 variables")
 	}
-	p := &If_DsdMan_t{nVars: nVars, LutSize: lutSize, vTemp1: vec.Vec_IntAlloc(16), vTemp2: vec.Vec_IntAlloc(16)}
-	Vec_PtrPush(&p.vObjs, &If_DsdObj_t{Id: 0, Type: IF_DSD_CONST0, truth: []uint64{0}})
-	for v := int32(0); v < nVars; v++ {
-		truth := make([]uint64, dsdWordCount(v+1))
-		for x := 0; x < 1<<uint(v+1); x++ {
-			if x&(1<<uint(v)) != 0 {
-				truth[x>>6] |= uint64(1) << uint(x&63)
+	p := &If_DsdMan_t{pStore: fmt.Sprintf("%02d.dsd", nVars), nVars: nVars, LutSize: lutSize, nWords: int32(dsdWordCount(nVars)), nBins: abcutil.Abc_PrimeCudd(100000), nConfigWords: 1, vTemp1: vec.Vec_IntAlloc(32), vTemp2: vec.Vec_IntAlloc(32), vCover: vec.Vec_IntAlloc(0)}
+	p.pBins = make([]int32, p.nBins)
+	p.pTtElems = make([][]word, nVars+1)
+	for v := int32(0); v <= nVars; v++ {
+		p.pTtElems[v] = make([]word, p.nWords)
+		if v == nVars {
+			continue
+		}
+		for i := range p.pTtElems[v] {
+			if v < 6 {
+				p.pTtElems[v][i] = truth6Variable(v)
+			} else if i>>uint(v-6)&1 != 0 {
+				p.pTtElems[v][i] = ^word(0)
 			}
 		}
-		Vec_PtrPush(&p.vObjs, &If_DsdObj_t{Id: v + 1, Type: IF_DSD_VAR, nSupp: 1, truth: truth, text: string(rune('a' + v))})
+	}
+	If_DsdObjAlloc(p, int32(IF_DSD_CONST0), 0)
+	If_DsdObjAlloc(p, int32(IF_DSD_VAR), 0).nSupp = 1
+	for v := int32(3); v <= nVars; v++ {
+		p.vTtMem[v] = vec.Vec_MemAlloc(dsdWordCount(v), 12)
+		vec.Vec_MemHashAlloc(p.vTtMem[v], 10000)
+		p.vTtDecs[v] = vec.Vec_PtrAlloc(1000)
+	}
+	for v := int32(2); v < nVars; v++ {
+		p.pSched[v] = extra.Extra_GreyCodeSchedule(v)
+	}
+	if lutSize != 0 {
+		p.pSat = If_ManSatBuildXY(lutSize)
 	}
 	return p
 }
@@ -131,66 +150,55 @@ func If_DsdManReadMark(p *If_DsdMan_t, lit int32) int32 { return dsdObject(p, li
 func If_DsdManSetNewAsUseless(p *If_DsdMan_t)           { p.fNewAsUseless = 1 }
 func If_DsdManGetCellStr(p *If_DsdMan_t) string         { return p.pCellStr }
 
-// If_DsdManCompute records a canonical DSD spelling and exact truth table.
-// Returned IDs follow the original even-literal convention; caller's pin map
-// is initialized to identity because the truth table is retained in source order.
-func If_DsdManCompute(p *If_DsdMan_t, truth []uint64, nLeaves int32, permutation []byte, lutStruct string) int32 {
-	if p == nil || nLeaves < 0 || nLeaves > 16 || len(truth) < dsdWordCount(nLeaves) || len(permutation) < int(nLeaves) {
+// If_DsdManCompute decomposes, canonicalizes and interns the source DSD tree.
+func If_DsdManCompute(p *If_DsdMan_t, truth []word, nLeaves int32, permutation []byte, lutStruct string) int32 {
+	if p == nil || nLeaves < 0 || nLeaves > p.nVars || len(truth) < dsdWordCount(nLeaves) || len(permutation) < int(nLeaves) {
 		panic("if: invalid DSD compute arguments")
 	}
-	words := dsdWordCount(nLeaves)
-	copyTruth := append([]uint64(nil), truth[:words]...)
+	copyTruth := make([]word, p.nWords)
+	copy(copyTruth, truth[:dsdWordCount(nLeaves)])
 	var text []byte
-	decomposeTruth := append([]uint64(nil), copyTruth...)
-	prime := dau.Dau_DsdDecompose(decomposeTruth, nLeaves, 0, 1, &text)
-	support := dsdSupport(copyTruth, nLeaves)
-	for i := range permutation {
-		permutation[i] = byte(i << 1)
+	prime := dau.Dau_DsdDecompose(copyTruth, nLeaves, 0, 1, &text)
+	if prime > 0 {
+		abcutil.Abc_TtStretch6(copyTruth, prime, p.nVars)
 	}
-	obj := &If_DsdObj_t{Id: int32(Vec_PtrSize(&p.vObjs)), Type: IF_DSD_PRIME, nSupp: int32(len(support)), nFans: nLeaves, truth: copyTruth, supportVars: support, text: string(text), network: dau.Dss_NtkCreate(string(text), nLeaves, nil), permutation: append([]byte(nil), permutation[:nLeaves]...)}
-	if prime == 0 && len(support) <= 1 {
-		obj.Type = IF_DSD_VAR
+	for i := int32(0); i < nLeaves; i++ {
+		permutation[i] = 255
 	}
-	if p.fNewAsUseless != 0 {
-		obj.fMark = 1
-		p.fNewAsUseless = 0
+	var support int32
+	lit := If_DsdManAddDsd(p, string(text), copyTruth, permutation, &support)
+	assert(support == nLeaves, "canonical DSD covers all cut leaves")
+	result := If_DsdManComputeTruth(p, lit, permutation)
+	if !slices.Equal(result[:dsdWordCount(nLeaves)], truth[:dsdWordCount(nLeaves)]) {
+		panic("if: canonical DSD verification failed")
 	}
-	Vec_PtrPush(&p.vObjs, obj)
-	p.pCellStr = lutStruct
-	return obj.Id << 1
+	If_DsdVecObjIncRef(&p.vObjs, lit>>1)
+	o := dsdObject(p, lit)
+	// Transitional diagnostic/balancing caches are derived from the canonical
+	// structure, never used for interning or decomposition decisions.
+	if o.network == nil {
+		o.text = ifDsdText(p, lit&^1, nil)
+		o.truth = append([]word(nil), If_DsdManComputeTruth(p, lit&^1, nil)[:dsdWordCount(o.nSupp)]...)
+		o.network = dau.Dss_NtkCreate(o.text, o.nSupp, nil)
+		o.permutation = make([]byte, o.nSupp)
+		o.supportVars = make([]int32, o.nSupp)
+		for i := range o.permutation {
+			o.permutation[i] = byte(2 * i)
+			o.supportVars[i] = int32(i)
+		}
+	}
+	return lit
 }
 
-// If_DsdManCheckXY searches exact two-block functional decompositions. A
-// returned set uses DAU's two-bit-per-input encoding, preserving shared pins.
 func If_DsdManCheckXY(p *If_DsdMan_t, lit, lutSize, derive int32, maskNot uint32, highEffort, verbose int32) uint32 {
-	obj := dsdObject(p, lit)
-	if obj.nSupp <= lutSize {
-		return ^uint32(0)
+	set := If_DsdManCheckXY_int(p, lit, lutSize, derive, maskNot, verbose)
+	if set == 0 && highEffort != 0 {
+		truth := If_DsdManComputeTruth(p, lit, nil)
+		set = If_ManSatCheckXYall(p.pSat, lutSize, truth, dsdObject(p, lit).nSupp, p.vTemp1)
 	}
-	if obj.nSupp < 3 || obj.nSupp > 16 {
-		return 0
-	}
-	baseTruth := append([]uint64(nil), obj.truth...)
-	dau.Dau_DsdMinBase(baseTruth, obj.nFans, make([]int32, obj.nFans))
-	sets := dau.Dau_DecFindSets(baseTruth, obj.nSupp)
-	defer vec.Vec_IntFree(sets)
-	for _, raw := range vec.Vec_IntArray(sets) {
-		set := uint32(raw)
-		var mapped uint32
-		for i, variable := range obj.supportVars {
-			mapped |= ((set >> uint(2*i)) & 3) << uint(2*variable)
-		}
-		if mapped&maskNot != 0 {
-			continue
-		}
-		var unique, shared, free int32
-		dau.Dau_DecSortSet(set, obj.nSupp, &unique, &shared, &free)
-		if unique+shared <= lutSize && free+shared+1 <= lutSize {
-			return mapped
-		}
-	}
-	return 0
+	return set
 }
+
 func If_DsdManCheckXYZ(p *If_DsdMan_t, lit, lutSize, derive, verbose int32) uint32 { return ^uint32(0) }
 
 func If_DsdManFree(p *If_DsdMan_t, verbose int32) {
