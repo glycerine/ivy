@@ -1,12 +1,14 @@
 module github.com/glycerine/ivy/goivy
 
-go 1.25.0
+go 1.26.4
 
 require (
 	4d63.com/tz v1.2.0
+	github.com/cespare/xxhash/v2 v2.3.0
 	github.com/cristalhq/base64 v0.1.2
 	github.com/glycerine/blake2b v0.0.0-20151022103502-3c8c640cd7be
 	github.com/glycerine/blake3 v1.5.2
+	github.com/glycerine/g3/pkg v0.0.46
 	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31
 	github.com/glycerine/greenpack v0.541.0
 	github.com/glycerine/idem v0.20.7
@@ -24,8 +26,8 @@ require (
 
 require (
 	4d63.com/embedfiles v0.0.0-20190311033909-995e0740726f // indirect
-	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/glycerine/fwd v1.1.4-beta.jea // indirect
+	github.com/glycerine/insdict v0.14.6 // indirect
 	github.com/glycerine/one_tree_rwmut v1.0.0 // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect

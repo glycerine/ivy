@@ -1,4 +1,4 @@
-//go:build cgo && !js && !web
+//go:build !js && !web
 
 package smt
 
@@ -88,6 +88,25 @@ func TestSolverToSMT2UsesBenchmarkFormat(t *testing.T) {
 	} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("ToSMT2() missing %q:\n%s", want, got)
+		}
+	}
+}
+
+func TestSortStringUsesHistoricalSortName(t *testing.T) {
+	ctx := NewZ3Context()
+	defer ctx.Close()
+	for _, tt := range []struct {
+		sort Z3Sort
+		want string
+	}{
+		{ctx.BoolSort(), "Bool"},
+		{ctx.IntSort(), "Int"},
+		{ctx.BvSort(8), "bv"},
+		{ctx.ArraySort(ctx.IntSort(), ctx.BoolSort()), "Array"},
+		{ctx.UninterpretedSort("a b"), "a b"},
+	} {
+		if got := tt.sort.String(); got != tt.want {
+			t.Errorf("sort name = %q, want %q", got, tt.want)
 		}
 	}
 }

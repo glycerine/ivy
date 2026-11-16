@@ -3,7 +3,8 @@
 # NOTE: keep all targets and paths explicit. Do not abstract 
 # into variables. That hurts read-ability and navigation.
 #
-# The Go Z3 bridge links against the same Z3 4.7.1 fork that Python Ivy uses.
+# The native Go checker uses pure-Go g3. Python Ivy keeps its Z3 4.7.1 fork.
+# GOFLAGS=-tags=classic_z3 selects the former native Go backend for comparison.
 WAZ_MEM_GC_HEAP_LIMIT ?=
 WAZ_CLI_MEM_GC_HEAP_LIMIT ?=
 # Z3 4.7.1's generator infers _AMD64_ from the host machine, but Emscripten

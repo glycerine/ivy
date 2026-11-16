@@ -1,4 +1,4 @@
-//go:build !js
+//go:build !js && classic_z3
 
 // inspect.go provides Z3 expression introspection methods needed for
 // converting Z3 expressions back to Ivy formulas.

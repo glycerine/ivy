@@ -1,4 +1,4 @@
-//go:build !js
+//go:build !js && classic_z3
 
 // interp.go provides CGo wrappers for Z3's Craig interpolation API.
 // These functions correspond to Z3_mk_interpolant, Z3_mk_interpolation_context,

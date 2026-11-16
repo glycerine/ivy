@@ -12,12 +12,16 @@ github.com/glycerine/blake3 v1.5.2 h1:lE+WPREJhqdWt5/va+byQccckYQwN41Uu/K+u3KRxd
 github.com/glycerine/blake3 v1.5.2/go.mod h1:c/clAKPeDtoJM2aRKbbXWCOtgra+AlmsTD9z6EH7iYo=
 github.com/glycerine/fwd v1.1.4-beta.jea h1:penEwsXMBPCMCH+iUj/HKRIuRzfESzLIk99OcttgqTU=
 github.com/glycerine/fwd v1.1.4-beta.jea/go.mod h1:N5KPZnp8z9AaPcR/9r5u2BcdqnlfcTcEGbX1In/yyIE=
+github.com/glycerine/g3/pkg v0.0.46 h1:wN1qD0UarOq55pSyxOyoDgIzCQtozQF4I5+p7zPk3k0=
+github.com/glycerine/g3/pkg v0.0.46/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
 github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 h1:gclg6gY70GLy3PbkQ1AERPfmLMMagS60DKF78eWwLn8=
 github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31/go.mod h1:Ogl1Tioa0aV7gstGFO7KhffUsb9M4ydbEbbxpcEDc24=
 github.com/glycerine/greenpack v0.541.0 h1:27vVEEmJTCXfRz7EiHqkAY+uXM54rUKHEAXxqPLC+QE=
 github.com/glycerine/greenpack v0.541.0/go.mod h1:DUVEsWj48QijXF52Jy83ibYhE1c4VIdWFH7fwAWuXbI=
 github.com/glycerine/idem v0.20.7 h1:EGR8qzHW/qjXEvXEsuR6IXvT+QFTLpr836rekmhHPhM=
 github.com/glycerine/idem v0.20.7/go.mod h1:gA9QRaEvbRow2nBLZRrTPV36h9VsZ31Kdz6e0iRVkSo=
+github.com/glycerine/insdict v0.14.6 h1:WK6fjhNICdcYBUtu25I/shHn0zPMl2kGjK9N/6MR/cs=
+github.com/glycerine/insdict v0.14.6/go.mod h1:TqTjrFgLW84SYT7b865Zs4hGPwMExvVekNC6nUGNLI0=
 github.com/glycerine/liner v0.0.0-20160121172638-72909af234e0 h1:4ZegphJXBTc4uFQ08UVoWYmQXorGa+ipXetUj83sMBc=
 github.com/glycerine/liner v0.0.0-20160121172638-72909af234e0/go.mod h1:AqJLs6UeoC65dnHxyCQ6MO31P5STpjcmgaANAU+No8Q=
 github.com/glycerine/one_tree_rwmut v1.0.0 h1:S9/US5QeXZVrXc/0tSUD58NAxKQY9CaezDcD7pwSVtI=

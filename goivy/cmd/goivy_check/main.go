@@ -1,6 +1,7 @@
 // Command goivy_check is the Go port of Python's ivy_check command.
 // It checks Ivy specifications for correctness using inductive verification,
 // model checking, or bounded model checking.
+// Native builds use the pure-Go g3 solver through goivy/smt.
 //
 // Usage:
 //
