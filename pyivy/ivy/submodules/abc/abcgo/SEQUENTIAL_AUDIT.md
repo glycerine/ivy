@@ -9092,3 +9092,13 @@ Existing/new SAT tests pass0.235s (handle88636 exit0); full BSAT race6.945s
 (handle6484 exit0). REVIEW_mapping_sat_dependency.md retains the remaining
 native reuse/multiword/search/helper/demo and integration plan. Save each
 subpackage's changes separately. GIA/mapping and original2/131 audit remain open.
+
+### Restored SAT core matches original C across reused models
+
+Fresh original ifSat.c and Go agree on420 sequential checks (385 SAT/35 UNSAT),
+all K2..6 XY/XYZ CNF shapes, shared/degenerate/permuted partitions, multiword
+truths up to11 inputs, output-pointer contracts and every retained assumption.
+Independent classification and complete model composition also pass.
+/tmp/abcgo-if-sat-native-matrix-first.log terminates PASS,2.413s. Save coverage
+with its original-C fixture. Search/helper/demo review, structured reconstruction
+and frozen module race/vet remain pending; original package audit stays2/131.

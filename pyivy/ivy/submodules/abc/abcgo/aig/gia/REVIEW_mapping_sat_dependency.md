@@ -10,7 +10,7 @@ The user requires faithful/mechanical ports, not substitute algorithms.
 2. [x] Confirm those contracts by freshly compiling unmodified ifSat.c.
 3. [x] Restore original XY/XYZ MUX CNFs, handle destruction, assumption remap,
    actual BSAT solve/reuse and paired model extraction; restore caller ownership.
-4. [ ] Compare broader native SAT/UNSAT sequences, solver reuse, all K2..6 CNF
+4. [x] Compare broader native SAT/UNSAT sequences, solver reuse, all K2..6 CNF
    shapes, shared/degenerate/permuted partitions and complete multiword truths.
 5. [ ] Review search ordering, composition/verification helpers and original
    example entry points; repair remaining source-fidelity/ownership gaps.
@@ -63,3 +63,16 @@ BSAT full race suite passes6.945s:
 Broader native/model/lifecycle coverage and mapping-family integration remain
 pending. Save coherent BSAT/IF/GIA checkpoints separately; do not infer family
 or package completion from this initial core repair.
+
+## Native reuse and complete-model matrix
+
+The new fresh-C differential matrix passes all420 checks (385 SAT,35 UNSAT),
+covering XY/XYZ variable and clause counts for K2..6, shared/empty/permuted
+partitions, multiword inputs up to11 variables, single/paired output pointers,
+and repeated SAT/UNSAT queries on the same solver. Compare every retained
+assumption and both model words with original C. Independently classify each
+truth table and verify complete model composition on every assignment.
+
+/tmp/abcgo-if-sat-native-matrix-first.log terminates PASS,2.413s (test2.38s).
+This establishes core source equivalence for the exercised cases; search order,
+example stubs and the wider mapping integration gate remain open.
