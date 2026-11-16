@@ -141,3 +141,23 @@ Logs /tmp/abcgo-iso-sort-final-{module.jsonl,util-race.log,gia-race.log,vet.log}
 All handles ended. Signature propagation, full canonical traversal/reduction,
 second-generation comparison and driver/report reconciliation still remain;
 this is a dependency correctness checkpoint, not68-routine family closure.
+
+
+## Check signature arithmetic with an independent word model
+
+Add486 Go-only scenarios across18 edge-phase patterns,0/1/2 registers,
+three initial-value profiles and three label profiles. An abstract graph model
+uses wider accumulators and explicit32-bit masks to check first-generation
+forward/backward propagation, iteration-dependent salts and RI/RO feedback.
+The same model checks second-generation initialization, weighted fanins,
+symmetry/self-feedback biases, and third-generation synchronous snapshots.
+Snapshot ownership, uniqueness, unchanged structural fields and20 direct
+update-value index/product cases are checked separately. No new arithmetic
+bug was found; production code is unchanged in this checkpoint. Tests neither
+read C files nor invoke a C compiler.
+
+Frozen full Go-only module:130 tested packages pass,3 commands have no tests;
+all486 scenario leaves execute. Focused isomorphism race passes1.146s and GIA
+vet is silent. Logs /tmp/abcgo-iso-signatures-final-{module.jsonl,race.log,vet.log};
+all process handles are now absent after completion. Canonical traversal,
+reduction/comparison and driver/report reconciliation remain open. Audit2/131.

@@ -10072,3 +10072,14 @@ permutation regression pass. Full Go-only module passes130 tested packages plus
 race1.046s and util/GIA vet pass. Dependency notes in util's packed-sort review
 and GIA REVIEW_isomorphism.md include red/final logs. Other utility APIs and the
 rest of the68-routine GIA family stay pending; original audit2/131.
+
+
+### Verify isomorphism signatures with a Go-only scalar model
+
+Add486 scenarios checking all three signature generations, complemented edges,
+register feedback, salts, wraparound, synchronous snapshots and field ownership.
+Twenty direct helper cases cover product/index boundaries. No additional
+arithmetic bug found and no production change required. Frozen full Go-only
+module passes130 tested packages plus3 commands without tests; focused GIA
+isomorphism race1.146s and GIA vet pass. Details and logs in REVIEW_isomorphism.md.
+Canonical traversal and the rest of this family remain open; audit2/131.
