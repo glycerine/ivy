@@ -73,10 +73,10 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
 | Gia_ManTransferPacking | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
 | Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | 6,144 native ownership cases; source self-order retained |
-| Abc_FrameMiniAigSetCiArrivals | aig/gia/frame_bridge.go | Pending |
-| Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Pending |
-| Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Pending |
-| Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Pending |
+| Abc_FrameMiniAigSetCiArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
+| Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
+| Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
+| Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
@@ -400,3 +400,20 @@ JSON confirms512 driver and64 choice subcases pass,130 tested packages pass and
 no broad replacement/comprehensive coverage claim for them. Next frame timing
 boundaries and remaining IF-to-GIA reconstruction/configuration rows; final
 mapping-family full race/vet gate and original131-package review remain open.
+
+## Frame timing boundary review
+
+Reconcile all four frame adapters with source. Owned input arrays are copied on
+installation/replacement; output arrays are returned independently. Nil arrays
+are checked before frame lookup and leave existing state intact. New Go-only
+checks cover replacement, caller mutation, invalid dimensions without mutation,
+nil frame/network, no output timing, empty interfaces, repeated readers and
+signed/large gate delays. Preserve safe existing Go returns where the C delay
+setter would continue after diagnosing a null frame/network. No functional fix
+or additional abstraction was needed; the straight adapters are already compact.
+
+Focused tests0.007s, full GIA Go-only27.207s, focused frame race and IF/GIA vet
+pass. Logs /tmp/abcgo-mapping-frame-{go,gia-go-only,race}.log and
+/tmp/abcgo-mapping-frame-cone-vet.log. No C vectors/compilers used by the new
+coverage. The mapping-family final gate and remaining reconstruction rows stay
+open; original audit2/131.

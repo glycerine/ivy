@@ -9369,3 +9369,12 @@ REVIEW_mapping_boundary.md. Focused matrices1.158s, race4.774s and IF/GIA vet pa
 Full Go-only module gate exits0:130 tested packages,3 commands without tests;
 JSON confirms all512+64 subcases passed. Log /tmp/abcgo-module-go-only-bridge.jsonl.
 Remaining frame/IF-to-GIA rows and final family gate stay open; audit2/131.
+
+### GIA frame timing adapters reviewed with Go-only boundaries
+
+All four source rows reconciled: copies/replacement, independent reads, nil
+validation order, absent resources, empty interfaces, rejected dimension changes
+and signed gate delays. Existing safe Go null-resource returns retained. No
+functional mismatch or worthwhile refactor found. Full GIA Go-only27.207s,
+focused frame race and IF/GIA vet pass. Detailed logs/evidence in
+REVIEW_mapping_boundary.md. Cut-cone/reconstruction review follows; audit2/131.
