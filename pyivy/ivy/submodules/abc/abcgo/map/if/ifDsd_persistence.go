@@ -2,7 +2,6 @@ package if_
 
 import (
 	"bufio"
-	"bytes"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -120,22 +119,28 @@ func If_DsdManSave(p *If_DsdMan_t, fileName string) {
 var ifDsdBadFormat = errors.New("unrecognized DSD format")
 
 type ifDsdFileReader struct {
-	input *bytes.Reader
-	err   error
+	input  []byte
+	offset int
+	err    error
 }
 
+func (r *ifDsdFileReader) remaining() int { return len(r.input) - r.offset }
+
+// Borrow raw bytes only while decoding; retained node/cache/configuration
+// values are copied into their typed owners.
 func (r *ifDsdFileReader) data(n int) []byte {
 	if r.err != nil {
 		return nil
 	}
-	if n < 0 || n > r.input.Len() {
+	if n < 0 || n > r.remaining() {
 		r.err = io.ErrUnexpectedEOF
 		return nil
 	}
-	data := make([]byte, n)
-	_, r.err = io.ReadFull(r.input, data)
+	data := r.input[r.offset : r.offset+n]
+	r.offset += n
 	return data
 }
+
 func (r *ifDsdFileReader) integer() int32 {
 	data := r.data(4)
 	if r.err != nil {
@@ -152,7 +157,7 @@ func (r *ifDsdFileReader) count(stride int) int {
 	if r.err != nil {
 		return 0
 	}
-	if int(n) > r.input.Len()/stride {
+	if int(n) > r.remaining()/stride {
 		r.err = io.ErrUnexpectedEOF
 		return 0
 	}
@@ -166,7 +171,7 @@ func (r *ifDsdFileReader) word() word {
 	return binary.LittleEndian.Uint64(data)
 }
 func ifDsdRead(data []byte, fileName string) (*If_DsdMan_t, error) {
-	r := ifDsdFileReader{input: bytes.NewReader(data)}
+	r := ifDsdFileReader{input: data}
 	if string(r.data(4)) != DSD_VERSION {
 		return nil, ifDsdBadFormat
 	}
@@ -178,7 +183,7 @@ func ifDsdRead(data []byte, fileName string) (*If_DsdMan_t, error) {
 		return nil, errors.New("invalid DSD manager dimensions")
 	}
 	minimum := int64(nodes-2)*20 + int64(max(variables-2, 0))*8 + 16
-	if minimum > int64(r.input.Len()) {
+	if minimum > int64(r.remaining()) {
 		return nil, io.ErrUnexpectedEOF
 	}
 	p := If_DsdManAlloc(variables, 0)

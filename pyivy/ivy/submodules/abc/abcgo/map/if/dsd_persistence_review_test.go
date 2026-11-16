@@ -187,3 +187,55 @@ func TestDsdLoadRejectsTruncatedAndInconsistentRecords(t *testing.T) {
 	duplicateTruth = append(duplicateTruth, valid[48:]...)
 	reject("duplicate prime truth", duplicateTruth)
 }
+
+func TestDsdPersistenceOmitsReservedBaseRecords(t *testing.T) {
+	p := If_DsdManAlloc(2, 0)
+	defer If_DsdManFree(p, 0)
+	for id := int32(0); id < 2; id++ {
+		o := If_DsdVecObj(&p.vObjs, id)
+		o.Count = 9
+		o.fMark = 1
+	}
+	path := filepath.Join(t.TempDir(), "bases.dsd")
+	If_DsdManSave(p, path)
+	q := If_DsdManLoad(path)
+	if q == nil {
+		t.Fatal("reserved-base-only file did not load")
+	}
+	defer If_DsdManFree(q, 0)
+	for id := int32(0); id < 2; id++ {
+		o := If_DsdVecObj(&q.vObjs, id)
+		if o.Count != 0 || o.fMark != 0 {
+			t.Fatal("source format does not store base counts/marks")
+		}
+	}
+}
+
+func TestDsdDecodedStateOwnsRetainedStorage(t *testing.T) {
+	p := If_DsdManAlloc(4, 2)
+	defer If_DsdManFree(p, 0)
+	If_DsdManCompute(p, dau.Dau_DsdToTruth("D3C5{abcd}", 4), 4, make([]byte, 4), "")
+	Id_DsdManTuneStr1(p, "{abcd}", 0, 0)
+	var input bytes.Buffer
+	if err := ifDsdWrite(p, &input); err != nil {
+		t.Fatal(err)
+	}
+	data := input.Bytes()
+	q, err := ifDsdRead(data, "owned.dsd")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer If_DsdManFree(q, 0)
+	var expected bytes.Buffer
+	if err := ifDsdWrite(q, &expected); err != nil {
+		t.Fatal(err)
+	}
+	clear(data)
+	var actual bytes.Buffer
+	if err := ifDsdWrite(q, &actual); err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(actual.Bytes(), expected.Bytes()) {
+		t.Fatal("decoded state aliases borrowed input bytes")
+	}
+}
