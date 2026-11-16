@@ -61,7 +61,7 @@ func TestInductionStalledRefinementReturnsResult(t *testing.T) {
 	if err := os.WriteFile(overlayPath, overlay, 0600); err != nil {
 		t.Fatal(err)
 	}
-	cmd := exec.Command("go", "test", "-race", "-count=1", "-overlay", overlayPath, "-run", "^TestInductionStalledRefinementReturnsResult$", "-v", ".")
+	cmd := exec.Command("go", fraInductionOverlayArgs(overlayPath, fraTestRaceEnabled)...)
 	cmd.Env = append(os.Environ(), "FRA_TEST_STALLED_REFINEMENT=1")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -72,3 +72,30 @@ func TestInductionStalledRefinementReturnsResult(t *testing.T) {
 	}
 }
 
+// Match the parent test's instrumentation; ordinary tests must not require
+// a C toolchain just because this regression uses a child Go test.
+func fraInductionOverlayArgs(path string, race bool) []string {
+	args := []string{"test"}
+	if race {
+		args = append(args, "-race")
+	}
+	return append(args, "-count=1", "-overlay", path, "-run", "^TestInductionStalledRefinementReturnsResult$", "-v", ".")
+}
+
+func TestInductionOverlayPreservesRaceMode(t *testing.T) {
+	for _, race := range []bool{false, true} {
+		args := fraInductionOverlayArgs("overlay.json", race)
+		found := false
+		for _, arg := range args {
+			if arg == "-race" {
+				found = true
+			}
+		}
+		if found != race {
+			t.Fatalf("race=%t: child args %q", race, args)
+		}
+		if !strings.Contains(strings.Join(args, " "), "-overlay overlay.json -run ^TestInductionStalledRefinementReturnsResult$ -v .") {
+			t.Fatalf("missing overlay or selected test: %q", args)
+		}
+	}
+}

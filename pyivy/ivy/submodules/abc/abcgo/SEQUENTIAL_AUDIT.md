@@ -9317,3 +9317,23 @@ CGO disabled. There are341 older optional skipped comparisons across49 packages;
 these are not claimed as Go-only coverage. Next check retains ordinary host tools
 while excluding C compilers; correct FRA's forced-race harness separately.
 Module log /tmp/abcgo-module-go-only-diagnostics.jsonl. No package audit closure.
+
+### Full-module Go-only gate restored
+
+A new red FRA harness test proves ordinary child tests always received -race,
+forcing CGO even for normal Go-only runs. Propagate the parent's race build mode
+using standard race/!race test build tags; ordinary runs use Go alone, while race
+runs still instrument the injected stalled-refinement branch. Production FRA
+code is unchanged; this is a test portability repair, not its package audit.
+Red /tmp/abcgo-fra-overlay-mode-red.log; no-C FRA/cmd/util tests pass2.510s,
+0.017s,0.043s; focused FRA parent+child race4.412s and FRA vet pass.
+
+The final uncached full-module gate exits0:130 tested packages pass,3 command
+packages have no tests. CGO_ENABLED=0 and filtered PATH retain normal host tools
+but exclude cc/gcc/clang/c++/ar and compiler variants. GIA27.550s, FRA3.079s.
+Log /tmp/abcgo-module-go-only-final.jsonl; helper tool directory
+/tmp/abcgo-no-c-tools. There are339 optional skipped comparisons in48 packages;
+this gate proves the project tests run without a C toolchain, not that these
+older cross-language tests have been replaced or that the131-package review is
+complete. New ordinary regressions must run with Go alone. Audit remains2/131;
+resume the GIA mapping dependency/boundary inventory sequentially.
