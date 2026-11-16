@@ -9115,3 +9115,14 @@ The compact source-shaped search,420 core cases and both examples pass
 9.263s (handle95556 exit0). Another1,152 helper cases pass1.897s before
 compactness changes (handle93156 exit0). Detailed evidence/remaining work:
 REVIEW_mapping_sat_dependency.md. Family/GIA and original2/131 audit stay open.
+
+### SAT composition uses original bitwise flow without allocation
+
+Original bitwise minterms and one fixed four-word scratch array replace64-bit
+scalar evaluation and growing slices. Native comparisons pass11.140s;
+focused native race19.880s, full IF race8.932s and IF/BSAT vet exits0
+(handles89682/44308/13193/24853). Local composition benchmark removes48 B and
+two allocations per call (sample medians1,383->135.3ns; scoped caveats/logs in
+REVIEW_mapping_sat_dependency.md). XYZ counts are covered, but its actual
+three-LUT clause behavior needs solving coverage next. Broader structured
+mapping/integration and original131-package objective remain open;2/131 closed.

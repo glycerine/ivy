@@ -12,7 +12,7 @@ The user requires faithful/mechanical ports, not substitute algorithms.
    actual BSAT solve/reuse and paired model extraction; restore caller ownership.
 4. [x] Compare broader native SAT/UNSAT sequences, solver reuse, all K2..6 CNF
    shapes, shared/degenerate/permuted partitions and complete multiword truths.
-5. [ ] Review search ordering, composition/verification helpers and original
+5. [x] Review search ordering, composition/verification helpers and original
    example entry points; repair remaining source-fidelity/ownership gaps.
 6. [ ] Review compactness and integration with structured GIA reconstruction,
    then run the mapping-family frozen full-module race/vet gate.
@@ -102,3 +102,23 @@ A further1,152 native helper comparisons pass before compactness changes:
 permuted/shared-variable complete compositions. /tmp/abcgo-if-sat-compose-before.log,
 handle93156 exit0,1.897s. Review fixed scratch and original bitwise composition
 next; structured mapping and the final integration gate remain open.
+
+## Composition compactness checkpoint
+
+Use the original bitwise minterm composition and reuse one fixed four-word
+scratch array between bound/free LUTs. Read elementary six-variable truths from
+the source constants instead of rebuilding them bit by bit. Remove two unused
+helpers left by the old cofactor substitute. All native core/search/example/
+composition comparisons pass11.140s (handle89682 exit0;
+/tmp/abcgo-if-sat-all-native-compact.log).
+
+The local300ms/count3 benchmark changes from48 B and2 allocations per composed
+function to0 B and0 allocations. Sample medians are1,383ns before versus135.3ns
+after. These numbers describe this small benchmark, not end-to-end mapping;
+the after sample ran alongside native tests and is not a general performance
+claim. Logs: /tmp/abcgo-if-sat-compose-before-bench.log (handle43821 exit0),
+/tmp/abcgo-if-sat-compose-after-bench.log (handle90186 exit0).
+Full map/if race passes8.932s (handle13193 exit0); IF/BSAT vet exits0 with no
+findings (handle24853). The complete focused native race check passes19.880s (handle44308 exit0;
+/tmp/abcgo-if-sat-all-native-compact-race.log). XYZ clause semantics beyond
+construction counts remain to be exercised before closing this dependency.
