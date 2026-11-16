@@ -3,7 +3,6 @@ package if_
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/opt/dau"
 )
 
 // Id_DsdManTuneStr1 matches stored functions to a programmable cell and saves
@@ -46,20 +45,7 @@ func Id_DsdManTuneStr1(p *If_DsdMan_t, structure string, conflicts, verbose int3
 		obj.fMark = 0
 		config := data[id*words : (id+1)*words]
 		clear(config)
-		input := append([]word(nil), obj.truth...)
-		if len(input) == 0 {
-			obj.fMark = 1
-			continue
-		}
-		if obj.Type == IF_DSD_VAR && obj.nFans == 0 {
-			input = []word{0xaaaaaaaaaaaaaaaa}
-		}
-		if obj.nFans > 0 {
-			vars := make([]int32, obj.nFans)
-			if dau.Dau_DsdMinBase(input, obj.nFans, vars) != obj.nSupp {
-				panic("if: DSD support mismatch")
-			}
-		}
+		input := If_DsdManComputeTruth(p, id<<1, nil)
 		if Ifn_NtkMatch(network, input, obj.nSupp, conflicts, verbose, 0, config) == 0 {
 			obj.fMark = 1
 			clear(config)
@@ -94,8 +80,7 @@ func If_DsdManTune(p *If_DsdMan_t, lutSize, fast, add, spec, verbose int32) {
 			continue
 		}
 		if fast == 0 {
-			truth := append([]word(nil), object.truth...)
-			dau.Dau_DsdMinBase(truth, object.nFans, make([]int32, object.nFans))
+			truth := If_DsdManComputeTruth(p, id<<1, nil)
 			if If_ManSatCheckXYall(solver, lutSize, truth, object.nSupp, scratch) != 0 {
 				continue
 			}
