@@ -126,11 +126,11 @@ func If_DsdManPermBitNum(p *If_DsdMan_t) int32 {
 }
 func If_DsdManSetLutSize(p *If_DsdMan_t, n int32)       { p.LutSize = n }
 func If_DsdManSuppSize(p *If_DsdMan_t, lit int32) int32 { return dsdObject(p, lit).nSupp }
+
+// If_DsdManCheckDec reports the stored unusable mark, as in ifDsd.c.
+// Decomposability and cell tuning cannot be inferred from support size alone.
 func If_DsdManCheckDec(p *If_DsdMan_t, lit int32) int32 {
-	if dsdObject(p, lit).nSupp > p.LutSize {
-		return 1
-	}
-	return 0
+	return If_DsdManReadMark(p, lit)
 }
 func If_DsdManReadMark(p *If_DsdMan_t, lit int32) int32 { return dsdObject(p, lit).fMark }
 func If_DsdManSetNewAsUseless(p *If_DsdMan_t)           { p.fNewAsUseless = 1 }

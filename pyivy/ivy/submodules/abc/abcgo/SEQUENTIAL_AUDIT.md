@@ -9345,3 +9345,15 @@ red tests precede repair; owned SAT/cache cleanup also survives the existing
 vector dumper's file-open panic. Full IF Go-only1.296s, DSD race5.895s and IF/GIA
 vet pass. Source-only uncalled diagnostic helpers remain queued for IF's own
 later package audit; resume the current GIA mapping-boundary rows. Audit2/131.
+
+### Correct DSD CheckDec mark lookup and adapter coverage
+
+New red CheckDec tests precede restoring the original stored-mark lookup;
+support size alone is not decomposability or tuned cell compatibility. Add
+Go-only defaults/typed polarity/reference/constant/buffer/empty-interface tests.
+Full IF Go-only and DSD/adapter race pass; IF/GIA vet passes (logs
+/tmp/abcgo-dsd-mark-bridge-{go-only,race,vet}.log). Broader driver investigation
+finds earlier seed25/56 unfiltered fixtures admit a genuinely infeasible MUX;
+source cell-filter setup fixes those fixtures, not the solver. New configured
+512-case Go-only driver matrix passes, queued for its GIA commit/affected gate.
+Details in REVIEW_mapping_dsd_dependency.md. GIA mapping audit stays open2/131.

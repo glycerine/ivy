@@ -83,3 +83,22 @@ func TestDsdMarkResetsClearSourceConfigurationState(t *testing.T) {
 		})
 	}
 }
+
+func TestDsdCheckDecUsesStoredMark(t *testing.T) {
+	p := If_DsdManAlloc(5, 3)
+	defer If_DsdManFree(p, 0)
+	for _, text := range []string{"(abcde)", "[ab]"} {
+		n := dau.Dau_DsdFindVarNum(text)
+		lit := If_DsdManCompute(p, dau.Dau_DsdToTruth(text, n), n, make([]byte, n), "")
+		// AND5 fits two LUT3s despite having support greater than one LUT.
+		// Marks can later change during cell tuning, independently of support.
+		for _, mark := range []int32{0, 1, 0} {
+			If_DsdVecObj(&p.vObjs, lit>>1).fMark = mark
+			for _, phase := range []int32{0, 1} {
+				if got := If_DsdManCheckDec(p, lit^phase); got != mark {
+					t.Errorf("%s phase%d stored mark%d, CheckDec%d", text, phase, mark, got)
+				}
+			}
+		}
+	}
+}

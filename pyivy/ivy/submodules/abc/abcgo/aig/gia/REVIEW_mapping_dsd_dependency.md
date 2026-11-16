@@ -458,3 +458,32 @@ vet pass. Logs /tmp/abcgo-dsd-free-{fixed,if-go-only,race,vet}.log.
 Uncalled source diagnostic helpers (PrintDecs, HashProfile) are not required by
 GIA's mapping path; retain them for the later complete IF package review.
 Continue GIA-to-IF/default/choice boundary rows; full audit remains2/131.
+
+### Stored decomposability marks and driver setup clarified
+
+A new Go-only regression proves CheckDec returns a support comparison instead
+of the original stored mark: AND5 fitting two LUT3s is rejected, while a tuned
+mark on XOR2 is ignored. Restore the source mark lookup, including complemented
+literals and mark updates (/tmp/abcgo-dsd-checkdec-mark-red.log, exit1).
+The passing adapter matrix also checks full default reset, all64 typed polarity
+combinations/all16 assignments, references/visits, buffer aliases, constants,
+simple-mode degenerate fanins and empty interfaces. Its initial level/setup
+expectations were corrected using XOR/MUX AND expansion and GIA simple-mode
+preconditions; these were not production bugs.
+
+New Go-only driver investigation resolves the earlier two C-abort fixtures:
+the unfiltered seed25/56 mode22 setup admits an undecomposable three-input MUX;
+CheckXY returns zero, not a valid oversized partition. The debug overlay records
+oldSet=set=0, truth E4, DSD <abc>. Do not characterize this as a solver or valid
+partition-selection bug. The old native comparisons remain unchanged so their
+historical510 valid/unfiltered outputs are not silently redefined.
+
+For the new configured Go-only matrix, enable the source PFuncCell gate and its
+DSD-mark branch, with minimum four-input mapper storage (distinct from physical
+LUT size). FUseDsdTune is not interchangeable: it requests configurable-cell
+reconstruction. All512 correctly filtered cases now pass1.043s, including
+seed25/56, with scalar truth/interface/identity/configuration checks. No C
+compiler, object archive or C fixture is involved in the new matrix.
+Logs /tmp/abcgo-driver-partition-debug.log and
+/tmp/abcgo-gia-mapping-driver-filtered-go-matrix.log. Separate full affected gates
+and choice-chain/frame boundary coverage follow; original audit remains2/131.
