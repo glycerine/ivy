@@ -9102,3 +9102,16 @@ Independent classification and complete model composition also pass.
 /tmp/abcgo-if-sat-native-matrix-first.log terminates PASS,2.413s. Save coverage
 with its original-C fixture. Search/helper/demo review, structured reconstruction
 and frozen module race/vet remain pending; original package audit stays2/131.
+
+### IF SAT examples and exact partition-search state
+
+New red native regression catches empty example entry points (handle66570
+exit1); restore source solving, printing and cleanup. Native outputs pass
+1.861s and map/if race9.328s (handles49598/84991 exit0).
+A new105-case search matrix catches the omitted original K6/seven-input
+fourth-index-loop quirk (handle79570 exit1). Preserve its repeated trials and
+complete final assumptions rather than normalizing the native output.
+The compact source-shaped search,420 core cases and both examples pass
+9.263s (handle95556 exit0). Another1,152 helper cases pass1.897s before
+compactness changes (handle93156 exit0). Detailed evidence/remaining work:
+REVIEW_mapping_sat_dependency.md. Family/GIA and original2/131 audit stay open.

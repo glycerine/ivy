@@ -237,3 +237,63 @@ func TestMappingSATNativeConstructionReuseAndModels(t *testing.T) {
 	}
 	t.Logf("%d native SAT checks (%d SAT/%d UNSAT), K2..6 XY/XYZ shapes, reused models and complete assumptions", len(cases), sat, unsat)
 }
+
+func TestMappingSATNativePartitionSearchOrder(t *testing.T) {
+	executable := gia.CompileSourceOracleForTest(t, "if_sat_matrix_review.c")
+	var cases []mappingSATReviewCase
+	for _, c := range mappingSATReviewCases() {
+		if c.variables > c.size {
+			cases = append(cases, c)
+		}
+	}
+	var input, got strings.Builder
+	for _, c := range cases {
+		fmt.Fprintf(&input, "S %d %d", c.size, c.variables)
+		for _, word := range c.truth {
+			fmt.Fprintf(&input, " %016x", word)
+		}
+		input.WriteByte('\n')
+	}
+	path := filepath.Join(t.TempDir(), "search-cases.txt")
+	if err := os.WriteFile(path, []byte(input.String()), 0600); err != nil {
+		t.Fatal(err)
+	}
+	source, err := exec.Command(executable, path).CombinedOutput()
+	if err != nil {
+		t.Fatalf("native SAT search: %v %s", err, source)
+	}
+	solvers := map[int32]any{}
+	defer func() {
+		for _, solver := range solvers {
+			if_.If_ManSatUnbuild(solver)
+		}
+	}()
+	scratch := gia.Vec_IntAlloc(2048)
+	for i, c := range cases {
+		if solvers[c.size] == nil {
+			solvers[c.size] = if_.If_ManSatBuildXY(c.size)
+		}
+		found := if_.If_ManSatCheckXYall(solvers[c.size], c.size, c.truth, c.variables, scratch)
+		if found != 0 {
+			c.set = found
+			if !mappingSATReviewSatisfiable(c) {
+				t.Fatalf("search case%d returned invalid partition %x", i, found)
+			}
+		}
+		fmt.Fprintf(&got, "search %d %x assumptions", i, found)
+		for _, literal := range gia.Vec_IntArray(scratch) {
+			fmt.Fprintf(&got, " %d", literal)
+		}
+		got.WriteByte('\n')
+	}
+	wantLines, gotLines := strings.Split(string(source), "\n"), strings.Split(got.String(), "\n")
+	if len(wantLines) != len(gotLines) {
+		t.Fatalf("search record counts C%d Go%d", len(wantLines), len(gotLines))
+	}
+	for i, want := range wantLines {
+		if want != gotLines[i] {
+			t.Fatalf("search case%d native %.180s; Go %.180s", i, want, gotLines[i])
+		}
+	}
+	t.Logf("%d reused native searches compare first partition and complete final assumptions", len(cases))
+}

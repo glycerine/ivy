@@ -76,3 +76,29 @@ truth table and verify complete model composition on every assignment.
 /tmp/abcgo-if-sat-native-matrix-first.log terminates PASS,2.413s (test2.38s).
 This establishes core source equivalence for the exercised cases; search order,
 example stubs and the wider mapping integration gate remain open.
+
+## Search ordering and source examples
+
+The source's Test2/Test3 entry points were empty Go stubs. A new native-output
+regression fails before repair: Go prints neither the derived LUT tables nor
+the selected shared partition. /tmp/abcgo-if-sat-examples-red.log,
+handle66570 exit1. Port the original algorithms, prints and cleanup; the direct
+C comparison then passes1.861s (handle49598 exit0). map/if race passes9.328s
+(handle84991 exit0; /tmp/abcgo-if-sat-examples-full-race.log).
+
+Expanded first-partition and complete-assumption comparisons expose an exact
+source quirk in K6/seven-input searches: the final shared-index loop starts at
+s[1]+1, not s[2]+1. The generic Go combination search omitted repeated smaller
+shared sets, changing final scratch and incremental solver state after UNSAT.
+The new105-search matrix fails at case61 before repair (handle79570 exit1;
+/tmp/abcgo-if-sat-search-native-first.log). Preserve this unusual source bound
+explicitly in the compact recursive enumerator. All105 searches,420 CNF/model
+checks and both examples then match original C exactly9.263s (handle95556
+exit0; /tmp/abcgo-if-sat-search-compact-repaired.log). No output normalization
+or source patch is used to conceal the boundary difference.
+
+A further1,152 native helper comparisons pass before compactness changes:
+640 arbitrary-input LUT compositions across arities0..4 and512 signed-table,
+permuted/shared-variable complete compositions. /tmp/abcgo-if-sat-compose-before.log,
+handle93156 exit0,1.897s. Review fixed scratch and original bitwise composition
+next; structured mapping and the final integration gate remain open.

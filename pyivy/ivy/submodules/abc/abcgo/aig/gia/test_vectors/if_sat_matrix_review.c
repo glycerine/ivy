@@ -19,6 +19,14 @@ int main(int argc,char **argv)
             ret=If_ManSatCheckXY(xy[k],k,truth,n,set,(outputs&1)?&bound:NULL,(outputs&2)?&free:NULL,scratch);
             printf("check %d %d %016llx %016llx assumptions",index++,ret,(unsigned long long)bound,(unsigned long long)free);
             for(i=0;i<Vec_IntSize(scratch);i++)printf(" %d",Vec_IntEntry(scratch,i));puts("");
+        }else if(op=='S'){
+            unsigned found;
+            assert(fscanf(file,"%d %d",&k,&n)==2);
+            for(i=0;i<Abc_TtWordNum(n);i++){unsigned long long value;assert(fscanf(file,"%llx",&value)==1);truth[i]=value;}
+            if(!xy[k])xy[k]=If_ManSatBuildXY(k);
+            found=If_ManSatCheckXYall(xy[k],k,truth,n,scratch);
+            printf("search %d %x assumptions",index++,found);
+            for(i=0;i<Vec_IntSize(scratch);i++)printf(" %d",Vec_IntEntry(scratch,i));puts("");
         }else return 3;
     }
     fclose(file);for(k=2;k<=6;k++)If_ManSatUnbuild(xy[k]);Vec_IntFree(scratch);return 0;
