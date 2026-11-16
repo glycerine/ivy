@@ -9998,3 +9998,17 @@ ownership checked independently. Full Go-only module passes130 tested packages
 plus3 commands without tests; full IF race77.344s and IF/GIA vet pass. Red and
 final logs plus remaining scope are in aig/gia/REVIEW_lut_clustering.md.
 LUT clustering remains in progress; original package audit stays2/131.
+
+
+### Reconcile LUT cluster selection, ties and white-box timing
+
+New red guard cases precede restoration of positive packed-root/sentinel checks
+and strict triple improvement. An independent cluster-set oracle checks1152
+DAG/phase/degree/arrival/library/output-order cases against exact selected groups,
+all node/CO times, packed postorder and summary rows. Explicit source tie tests,
+repeated white-box wrapper calls,4-/6-LUT libraries, temporary/borrowed timing
+and accessor isolation complete the giaIff.c runtime review. Full Go-only module
+passes130 tested packages plus3 commands without tests; full IF race77.317s and
+IF/GIA vet pass. Logs and source inventory in REVIEW_lut_clustering.md.
+Following giaIiff.c explicit-stub contracts remain next; GIA and original audit
+stay open2/131, with no C fixtures or substitute algorithms added.

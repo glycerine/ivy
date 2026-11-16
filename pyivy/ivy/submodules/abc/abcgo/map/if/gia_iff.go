@@ -192,6 +192,7 @@ func Gia_ManIffPerform(graph *Gia_Man_t, library *If_LibLut_t, timing *Tim_Man_t
 				p.matches[2][id] = fanin
 				pairs++
 			} else {
+				assert(three < two, "triple strictly improves pair delay")
 				p.matches[2][id], p.matches[3][id] = first, second
 				triples++
 			}
@@ -224,12 +225,18 @@ func Gia_ManIffSelect(p *Iff_Man_t) *Vec_Int_t {
 		gia.Gia_ObjSetTravIdCurrentId(p.graph, id)
 		assert(gia.Gia_ObjIsLut(p.graph, id) != 0, "selected node is a LUT")
 		a, b := p.matches[2][id], p.matches[3][id]
+		if a == -1 {
+			assert(b == -1, "valid single packing")
+		} else if b == -1 {
+			assert(a > 0, "positive packed root")
+		} else {
+			assert(a > 0 && b > 0, "positive packed roots")
+		}
 		iffExpandedFanins(p.graph, id, a, b, visit)
 		switch {
-		case a < 0:
-			assert(b < 0, "valid packing")
+		case a == -1:
 			Vec_IntPush(packing, 1)
-		case b < 0:
+		case b == -1:
 			Vec_IntPush(packing, 2)
 			Vec_IntPush(packing, a)
 		default:

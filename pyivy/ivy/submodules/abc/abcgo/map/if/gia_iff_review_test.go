@@ -1,6 +1,7 @@
 package if_
 
 import (
+	"fmt"
 	"math"
 	"slices"
 	"testing"
@@ -53,6 +54,7 @@ func iffReviewWide(t *testing.T, inputs int) (graph *Gia_Man_t, root int32) {
 	for _, leaf := range leaves[1:] {
 		root = gia.Gia_ManAppendAnd(graph, root, leaf*2)
 	}
+	Gia_ManAppendCo(graph, root)
 	root >>= 1
 	iffReviewMapping(t, graph, map[int32][]int32{root: leaves})
 	return
@@ -240,4 +242,38 @@ func TestIffReportUsesSourceMaximumComparison(t *testing.T) {
 	if got != want {
 		t.Fatalf("source comparison should recover at the next finite output: got%q want%q", got, want)
 	}
+}
+
+func TestIffSelectionRejectsInvalidPackedRootsBeforeRecursing(t *testing.T) {
+	for _, match := range [][2]int32{{0, -1}, {-2, -1}, {-1, -2}, {5, 0}} {
+		t.Run(fmt.Sprint(match), func(t *testing.T) {
+			graph, x, y, root := iffReviewTree(t)
+			p := Gia_ManIffStart(graph)
+			defer Gia_ManIffStop(p)
+			p.matches[2][root], p.matches[3][root] = match[0], match[1]
+			defer func() {
+				if recover() == nil {
+					t.Error("source requires -1 sentinels or positive packed roots")
+				}
+				if gia.Gia_ObjIsTravIdCurrentId(graph, x) != 0 || gia.Gia_ObjIsTravIdCurrentId(graph, y) != 0 {
+					t.Error("selection traversed children before validating the packed roots")
+				}
+			}()
+			Gia_ManIffSelect(p)
+		})
+	}
+}
+
+func TestIffRejectsUnorderedTripleTiming(t *testing.T) {
+	graph, _, _, _ := iffReviewTree(t)
+	lib := &If_LibLut_t{LutMax: 10}
+	lib.pLutDelays[2][0] = math.Float32frombits(0xffffffff)
+	timing := tim.Tim_ManStart(4, 1)
+	defer tim.Tim_ManStop(timing)
+	defer func() {
+		if recover() == nil {
+			t.Fatal("source requires strict triple improvement when neither prior delay compares equal")
+		}
+	}()
+	dsdReportCapture(t, func() { Gia_ManIffPerform(graph, lib, timing, 4, 3) })
 }
