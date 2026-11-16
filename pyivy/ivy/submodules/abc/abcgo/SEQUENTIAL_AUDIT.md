@@ -10117,3 +10117,15 @@ identity; two report cases pin progress. Full Go-only module passes130 tested
 packages plus3 commands without tests; focused GIA isomorphism race1.397s and
 GIA vet pass. REVIEW_isomorphism.md records evidence and remaining scope.
 The GIA family/package remains open; original completion2/131.
+
+
+### Check sequential isomorphism orders and bounded cone updates
+
+Add216 independent order cases and120 bounded-cone/update cases covering
+unsigned/tied signatures, dynamic RI roots, duplicate roots, postorder maps,
+first-visit depth limits, sequential value accumulation and mark ownership.
+Correct a fixture-only assumption about literal-sorted AND fanins and assert
+raw fixture edges; production required no change. Full Go-only module passes
+130 tested packages plus3 commands without tests; focused isomorphism race1.484s
+and GIA vet pass. REVIEW_isomorphism.md records the seven-routine checkpoint
+and remaining family scope. Original completion remains2/131.

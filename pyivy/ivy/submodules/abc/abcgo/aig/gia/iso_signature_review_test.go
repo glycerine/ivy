@@ -33,10 +33,21 @@ func isoSignatureReviewGraph(t *testing.T, registers int, phases uint32, oneOutp
 		if id != len(model.nodes) {
 			t.Fatal("fixture constructor did not append exactly one object")
 		}
+		// C's append operation stores AND fanins in increasing literal order.
+		if kind == 'a' && fanins[0] > fanins[1] {
+			fanins[0], fanins[1] = fanins[1], fanins[0]
+		}
 		node := isoSignatureReviewNode{kind: kind}
 		for _, fanin := range fanins {
 			node.edges = append(node.edges, isoSignatureReviewEdge{int(fanin >> 1), uint64(fanin & 1)})
 			node.level = max(node.level, model.nodes[fanin>>1].level+1)
+		}
+		obj := Gia_ManObj(graph, int32(id))
+		if len(fanins) > 0 && (obj.iDiff0 != uint32(id-int(fanins[0]>>1)) || obj.fCompl0 != uint32(fanins[0]&1)) {
+			t.Fatal("fixture fanin0 differs from abstract edge")
+		}
+		if len(fanins) > 1 && (obj.iDiff1 != uint32(id-int(fanins[1]>>1)) || obj.fCompl1 != uint32(fanins[1]&1)) {
+			t.Fatal("fixture fanin1 differs from abstract edge")
 		}
 		model.nodes = append(model.nodes, node)
 		return literal

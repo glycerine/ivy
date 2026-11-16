@@ -237,3 +237,36 @@ vet pass; all handles ended. Final logs /tmp/abcgo-iso2-classes-final-
 {module.jsonl,race.log,vet.log}. Source comparison/order/cone arithmetic and
 end-to-end reduction still need independent reconciliation; this checkpoint
 closes class-worklist ownership, not the family. Audit2/131.
+
+
+## Sequential cone orders and bounded updates
+
+Reconcile both order walkers/wrappers and the bounded-cone walker/wrapper/update
+against source: unsigned child-value ordering, physical fanin order on ties,
+first-visit deduplication, postorder map positions, appended RI roots, constant
+terminals and self-feedback. A separate explicit entry/exit-frame model checks
+216 order scenarios over registers, complemented edges, wide/tied values and
+empty/repeated/reordered output selections. A trailing invalid PO beyond count
+checks prefix bounds. Unvisited map entries remain untouched; old traversal
+marks are superseded. Combinational wrappers are checked on register-free graphs.
+
+An iterative bounded first-visit model checks120 cone/update scenarios: depths
+0/1/2/3/8,0/1/2 registers, four phase patterns and both candidate orders. Every
+non-CO root is checked separately. RI bridges retain depth while AND edges
+consume one unit; earlier visits claim shared nodes. Sequential in-place updates
+use already updated signatures, including32-bit wraparound. Candidate order,
+traversal counts, final marks and unrelated object fields are pinned.
+
+The first model run exposed a fixture assumption, not a production bug: its
+abstract AND edges retained call order while C/Go append sorts literals. Correct
+the specification to increasing literal order and assert raw encoded edges
+match it. Earlier commutative signature checks did not detect that assumption.
+No production change was needed. All new fixtures remain Go-only.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests, including all216+120 leaves. Focused isomorphism race1.484s and GIA vet
+pass; all handles ended. Logs /tmp/abcgo-iso2-walk-final-
+{module.jsonl,race.log,vet.log}; corrected initial run
+/tmp/abcgo-iso2-walk-reviewed.log. This reconciles seven source walk/update
+routines; exact pair checks, full refinement/reduction and drivers remain open.
+Original audit2/131.
