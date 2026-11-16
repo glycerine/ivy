@@ -59,7 +59,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; callback/repeat/balancing tests; lazy small scratch; final family gate pending |
 | Gia_ManFromIfLogicCreateLut | map/if/gia_lut.go | Source logic/records reviewed; signed multiword tests through15 inputs; final family gate pending |
 | Gia_ManFromIfLogicCreateLutSpecial | map/if/gia_lut.go | Source encoding reviewed; ordered ifDec07 dependency restored; 192 Go-only signed/permuted reconstruction cases; final family gate pending |
-| Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go | Branch/elementary/packing review in progress; 260 elementary and 224 structure cases; word scan restored; diagnostics and wider CLU dependency review pending |
+| Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go, gia_lut_reports.go | Active source branches/CLU dependency/reconstruction/validation reviewed; diagnostics restored with red regressions; final family gate pending |
 | Gia_ManNodeIfToGia_rec | map/if/gia_cut_cone.go (recursive closure) | Source choice traversal/phase handling reviewed; 64 equivalent-choice cases; final family gate pending |
 | Gia_ManNodeIfToGia | map/if/gia_cut_cone.go | Source cone boundary reviewed; scratch/failure/constant-leaf tests; final family gate pending |
 | Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Source remap/SAT/packing reviewed; 400 size/phase/shared-partition cases; final family gate pending |
@@ -920,3 +920,42 @@ IF/GIA vet exit0 (`/tmp/abcgo-clu-retry-reviewed-vet.log`). No new C fixtures or
 compiler dependencies. Active retry ordering is reviewed; remaining LogicNode
 validation/source diagnostics and wider metrics/reporting/driver/family work
 stay open. Original package audit2/131.
+
+### Restore LUT failure diagnostics and review validation boundaries
+
+`Gia_ManFromIfLogicNode` omitted the hex truth and DSD explanation emitted by
+`giaIf.c` on all three decomposition-failure branches. Three new red regressions
+fail before the repair (exit1, `/tmp/abcgo-lut-reports-red.log`). Restore the
+source pipeline: uppercase `Extra_PrintHex`, four spaces, `F = `, decomposition
+with MUX limit8 followed by expansion, source DSD literal/node formatting and
+verification, then newline and the existing node failure message. Temporary
+networks are released after printing; caller truth is unchanged.
+
+The private `gia_lut_reports.go` formats the existing KIT network using the
+source's uppercase prime hex, compact comma/star/plus separators, parentheses,
+constant/variable nodes and complemented literals. This keeps the repair scoped
+to GIA's diagnostic contract. The broader KIT decomposition package is still
+subject to its later sequential audit; this wrapper review does not close it.
+
+Exact-output Go-only failure cases use full-support majority functions with5,
+7 and8 inputs for two-LUT33, three-LUT333 and check75 respectively. Their
+DSD-prime truth is known independently, including multiword order. Assert the
+complete report and unchanged node count, mapping, packing and truth. Ten
+manual KIT-node formatting cases cover each node type and root phase, two leaf
+literal checks cover names/phases, and a non-stdout writer proves routing.
+Seven validation cases check length, invalid sizes and over-capacity exact
+messages; constants still undergo validation before easy handling. Three flag
+precedence cases show check44/check75/filter handle an otherwise invalid
+structure first, with expected packing and exhaustive Boolean truth. Source
+validation and failure paths introduce no graph/mapping records on rejection.
+
+Frozen verification: focused new cases0.010s
+(`/tmp/abcgo-lut-reports-cases.log`); full IF9.417s, GIA28.037s and KIT0.302s
+with CGO disabled and C tools excluded, exit0
+(`/tmp/abcgo-lut-reports-reviewed-packages.jsonl`); focused LUT/structure/CLU
+race excludes the legacy optional C comparison and passes10.391s
+(`/tmp/abcgo-lut-reports-reviewed-race.log`); IF/GIA/KIT vet exits0
+(`/tmp/abcgo-lut-reports-reviewed-vet.log`). All handles consumed to terminal.
+No C test vectors or compiler dependencies added. Active LogicNode wrapper
+review is now recorded; main Logic reconstruction/driver reconciliation,
+metrics/reporting and final family gates remain open. Original audit2/131.

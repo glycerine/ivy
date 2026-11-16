@@ -5,6 +5,7 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"os"
 )
 
 // Gia_ManFromIfLogicNode implements the requested LUT structure for one cut.
@@ -133,7 +134,7 @@ func Gia_ManFromIfLogicNode(p *If_Man_t, dst *Gia_Man_t, objectID int32, leaves,
 		success = If_CluCheckExt3(p, truth, n, leaf, leaf2, root, groups[0][:], groups[1][:], groups[2][:], &functions[0], &functions[1], &functions[2])
 	}
 	if success == 0 {
-		fmt.Printf("Node %d is not decomposable. Deriving LUT structures has failed.\n", objectID)
+		giaWriteLutFailure(os.Stdout, truth, n, objectID)
 		return -1
 	}
 	if packing == nil || Vec_IntSize(packing) == 0 {

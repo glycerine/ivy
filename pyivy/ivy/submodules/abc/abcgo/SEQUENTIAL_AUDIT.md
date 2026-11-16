@@ -9554,3 +9554,14 @@ make the reduced-bound flag expressions locally match C, with guard proof of
 equivalence. Full IF Go-only9.726s, focused race7.743s and IF/GIA vet pass.
 Details/logs in REVIEW_mapping_boundary.md. Source diagnostics, validation and
 wider family inventory remain open; original package audit2/131.
+
+### Restore LUT failure explanation and review validation
+
+Three new red regressions show missing source hex/DSD failure output. Restore
+GIA-local source formatting over the existing KIT MUX8/expanded network, with
+exact multiword majority failure reports and no rejected graph mutations. Add
+node/phase/writer formatting, seven validation and three flag-precedence checks.
+All new vectors are Go. Full IF/GIA/KIT Go-only9.417/28.037/0.302s, focused
+race10.391s and relevant vet pass. Active LogicNode wrapper review recorded;
+main reconstruction/driver, metrics/reporting and family gate remain open.
+Details/logs in REVIEW_mapping_boundary.md. Original package audit2/131.
