@@ -4,6 +4,7 @@ import (
 	"fmt"
 	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"slices"
 	"time"
 )
 
@@ -55,7 +56,17 @@ func Gia_Iso3Save(g *Gia_Man_t) *Vec_Int_t {
 	}
 	return result
 }
+
+// Gia_Iso3Unique sorts an owned snapshot copy, as in the source helper.
 func Gia_Iso3Unique(signatures *Vec_Int_t) int32 {
+	values := slices.Clone(vec.Vec_IntArray(signatures))
+	slices.Sort(values)
+	return int32(len(slices.Compact(values)))
+}
+
+// The C driver uses hash counting instead of its standalone copy/sort helper.
+// Specializing the one-word records avoids building an unused index mapping.
+func iso3HashUniqueCount(signatures *Vec_Int_t) int32 {
 	seen := make(map[int32]struct{}, vec.Vec_IntSize(signatures))
 	for _, value := range vec.Vec_IntArray(signatures) {
 		seen[value] = struct{}{}
@@ -69,7 +80,7 @@ func Gia_Iso3Test(g *Gia_Man_t) {
 	Gia_Iso3Init(g)
 	for i := 0; i < maxIter; i++ {
 		signatures := Gia_Iso3Save(g)
-		count := Gia_Iso3Unique(signatures)
+		count := iso3HashUniqueCount(signatures)
 		fmt.Printf("Iter %3d : %6d  out of %6d  Time = %.2f sec\n", i, count, vec.Vec_IntSize(signatures), time.Since(start).Seconds())
 		if count == previous {
 			break

@@ -10142,3 +10142,16 @@ tests; focused isomorphism race1.490s and GIA vet pass. All12 giaIso3.c source
 entry points have behavior reconciliation; its unique-count compactness decision
 and the rest of the isomorphism family remain open. Detailed evidence in
 REVIEW_isomorphism.md. Original package completion remains2/131.
+
+
+### Close the12-routine synchronous/reverse isomorphism subfamily
+
+Restore source copy/sort for the standalone uniqueness helper while preserving
+the driver's typed hash-counting path. Twenty-one Go-only cardinality cases pin
+both paths and input ownership. Local8192-entry measurements reduce standalone
+storage from152192 B/33 allocations to32768 B/1; distinct-value sorting is slower
+and the iterative driver retains its previous hashing. Full Go-only module
+passes130 tested packages plus3 commands without tests; focused isomorphism
+race1.502s and GIA vet pass. REVIEW_isomorphism.md records benchmarks, evidence
+and the completed12-routine scope. Remaining first-/second-generation checks
+and the broader GIA package stay open; original package completion2/131.

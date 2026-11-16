@@ -14,7 +14,8 @@ Review these sequentially within the open GIA package audit. The original
   output reduction, dual-output and estimate/ownership boundaries.
 - [ ] Reconcile second-generation hash/unique labels, cone traversals, sequential
   comparison and quality/skip reduction policies with the original source.
-- [ ] Review synchronous/reverse signatures, source RNG and diagnostic drivers.
+- [x] Review synchronous/reverse signatures, source RNG and giaIso3 drivers.
+- [ ] Review first-generation permutation/CEX diagnostic drivers.
 - [ ] Add red Go-only regressions before uncovered bug fixes, then independent
   scalar/classification/permutation/sequence tests and compactness checks.
 - [ ] Reconcile all source names, freeze edits, run affected race/vet and full
@@ -307,3 +308,31 @@ Frozen full Go-only module passes130 tested packages plus3 commands without
 tests, including24 reverse and12 synchronous-driver leaves. Focused isomorphism
 race1.490s and GIA vet pass; all handles ended. Final logs:
 /tmp/abcgo-iso-reverse-final-{module.jsonl,race.log,vet.log}. Original audit2/131.
+
+
+## Close giaIso3 standalone count/driver compactness review
+
+Restore the source distinction: Gia_Iso3Unique copies/sorts its snapshot while
+Gia_Iso3Test uses hash counting. The standalone helper now clones, sorts and
+compacts an int32 slice; its input remains unchanged. Keep the existing typed
+hash counter in a private driver helper, specializing C's one-word hash count
+and avoiding an unused representative mapping. The driver keeps its previous
+complexity and implementation. This is a source/compactness reconciliation,
+not a new functional bug; existing boundary/driver regressions stay active.
+
+Twenty-one Go-only cardinality cases check both paths at sizes0/1/2/255/256/257/
+8192 with equal,127-way tied and bijective wide values. Three100ms samples of
+the unchanged standalone benchmark at8192 entries show152192 B/33 allocations
+before and32768 B/1 allocation after. Sorting trades speed for space on distinct
+values: sample medians about238us before versus684us after (ties182us versus
+264us; all-equal177us versus25us). Do not describe this as a general speedup;
+the iterative driver retains hash counting. Logs:
+/tmp/abcgo-iso-unique-before-bench.log and /tmp/abcgo-iso-unique-reviewed.log.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests; all21 cardinality leaves execute. Focused isomorphism race1.502s and GIA
+vet pass; all handles ended. Final logs /tmp/abcgo-iso-unique-final-
+{module.jsonl,race.log,vet.log}. Together with signature-model and reverse/driver
+checkpoints, this closes review of all12 giaIso3.c routines. The other56 source
+routines in this family, and the larger GIA audit, retain their documented
+open checks; original package completion remains2/131.
