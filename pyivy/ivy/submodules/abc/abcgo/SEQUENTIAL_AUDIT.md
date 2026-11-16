@@ -10083,3 +10083,13 @@ arithmetic bug found and no production change required. Frozen full Go-only
 module passes130 tested packages plus3 commands without tests; focused GIA
 isomorphism race1.146s and GIA vet pass. Details and logs in REVIEW_isomorphism.md.
 Canonical traversal and the rest of this family remain open; audit2/131.
+
+
+### Check canonical graph traversal and register ordering
+
+Add648 independent Go-only graph scenarios for exact canonical CI/AND/CO order,
+PI permutations, register pairing, single/multi-output value updates and traversal
+mark ownership. No additional bug found in this ordering stage. Full Go-only
+module passes130 tested packages plus3 commands without tests; focused GIA
+isomorphism race1.407s and GIA vet pass. REVIEW_isomorphism.md records limits
+and evidence. Refinement/reduction/reports remain open; original audit2/131.

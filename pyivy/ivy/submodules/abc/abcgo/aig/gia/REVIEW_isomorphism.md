@@ -161,3 +161,23 @@ all486 scenario leaves execute. Focused isomorphism race passes1.146s and GIA
 vet is silent. Logs /tmp/abcgo-iso-signatures-final-{module.jsonl,race.log,vet.log};
 all process handles are now absent after completion. Canonical traversal,
 reduction/comparison and driver/report reconciliation remain open. Audit2/131.
+
+
+## Canonical traversal against an independent graph specification
+
+Add648 Go-only cases over18 phase patterns,0/1/2 registers, one/two primary
+outputs, three small unique-label orders, and requested/omitted PI permutations.
+An abstract DAG oracle uses insertion sorting and independent postorder traversal.
+It checks exact CI/AND/CO order, PI permutation, RO-to-RI pairing, constant and
+dangling cones, superseded traversal marks, and unchanged object fields. Only
+multi-PO values may change; the single-PO value must remain untouched, as in C.
+These labels stay in C's defined signed-comparison range; this test does not
+assert a particular qsort ordering for equal output keys or emulate overflow.
+No traversal discrepancy was found, and production remains unchanged.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests; all648 leaf cases execute. Focused isomorphism race1.407s and GIA vet pass.
+Logs /tmp/abcgo-iso-canonical-final-{module.jsonl,race.log,vet.log}; all handles
+ended. This covers the ordering contract after labels exist, not full refinement
+or canonical reduction. Next restore ReportTopmost traversal side effects with
+a new failing regression, then continue the remaining family. Audit2/131.

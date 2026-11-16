@@ -24,7 +24,7 @@ type isoSignatureReviewModel struct {
 	regs  [][2]int // RI, RO
 }
 
-func isoSignatureReviewGraph(t *testing.T, registers int, phases uint32) (*Gia_Man_t, isoSignatureReviewModel) {
+func isoSignatureReviewGraph(t *testing.T, registers int, phases uint32, oneOutput ...bool) (*Gia_Man_t, isoSignatureReviewModel) {
 	t.Helper()
 	graph := Gia_ManStart(24)
 	model := isoSignatureReviewModel{nodes: []isoSignatureReviewNode{{kind: 'c'}}}
@@ -60,7 +60,9 @@ func isoSignatureReviewGraph(t *testing.T, registers int, phases uint32) (*Gia_M
 	and(phase(0, 8), phase(y, 9)) // Unused gate still participates in signatures.
 	co := func(literal int32) int32 { return add(Gia_ManAppendCo(graph, literal), 'o', literal) }
 	co(phase(root, 10))
-	co(phase(0, 11))
+	if len(oneOutput) == 0 || !oneOutput[0] {
+		co(phase(0, 11))
+	}
 	for i, ro := range ros {
 		fanin := z
 		if i == 1 {
