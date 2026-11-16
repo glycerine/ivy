@@ -140,7 +140,7 @@ func decConfigTruth(z uint64, n int32) []uint64 {
 	}
 	return out
 }
-func If_Dec6Truth(z uint64) uint64 { return decConfigTruth(z, 6)[0] }
+func If_Dec6Truth(z uint64) uint64 { return dec07Truth6(z) }
 func If_Dec6Verify(t, z uint64) {
 	if If_Dec6Truth(z) != t {
 		panic("six-input LUT decomposition verification failed")

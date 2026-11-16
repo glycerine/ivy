@@ -9424,3 +9424,16 @@ reconstruction cases pass full truth/packing checks. Full IF Go-only1.707s,
 focused decomposition/LUT race5.437s and IF/GIA vet pass. Separate correctness/
 permutation review and broader gates follow. Details in
 REVIEW_mapping_dec07_dependency.md. The GIA/IF/131-package audit remains open2/131.
+
+### Ordered LUT4 dependency correctness pass and final affected gate
+
+Source branch review plus256 permutation trials/163840 scalar bit comparisons,
+later-free-triple ordering,512 scalar configuration checks and15 reduced-support
+compatibility cases pass. Restore bounded source word composition, removing the
+8-byte allocation from configuration verification; drop dead local inverse-map
+updates. No generic fallback retained. Full Go-only module exits0:130 tested
+packages,3 commands without tests;400+36+192 LUT cases execute. Focused IF race
+4.011s,512-driver/140-mini race4.703s and IF/GIA vet pass. Active ordered LUT4
+and specialized reconstruction reviewed; wider reconstruction/configuration
+inventory and family gate remain open. Details in REVIEW_mapping_dec07_dependency.md.
+Original package audit stays2/131.

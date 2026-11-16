@@ -80,7 +80,7 @@ func dec07Count7(t [2]uint64) int {
 	return 2
 }
 func dec07Derive(t [2]uint64, width uint) (mask, zero, one uint64) {
-	lowMask := uint64(1)<<width - 1
+	lowMask := (uint64(1) << width) - 1
 	zero = t[0] & lowMask
 	one = zero
 	for i := uint(1); i < 16; i++ {
@@ -109,11 +109,9 @@ func dec07Disjoint6(t uint64, p2v [7]int) uint64 {
 	z |= upper<<32 | upper<<40
 	return z | uint64(p2v[0])<<48 | uint64(p2v[1])<<52 | uint64(7)<<56
 }
-func dec07Shared6(t uint64, shared int, p2v, v2p [7]int) uint64 {
+func dec07Shared6(t uint64, shared int, p2v [7]int) uint64 {
 	for i := shared; i < 5; i++ {
 		t = dec07Swap6(t, i)
-		v2p[p2v[i]]++
-		v2p[p2v[i+1]]--
 		p2v[i], p2v[i+1] = p2v[i+1], p2v[i]
 	}
 	c0, c1 := dec07Cofactor6(t, 5, false), dec07Cofactor6(t, 5, true)
@@ -146,7 +144,7 @@ func If_Dec6Perform(t uint64, derive int32) uint64 {
 						if derive == 0 {
 							result = 1
 						} else {
-							result = dec07Shared6(t, x, p2v, v2p)
+							result = dec07Shared6(t, x, p2v)
 						}
 						break
 					}
@@ -277,4 +275,54 @@ func If_Dec5Perform(t uint64, derive int32) uint64 {
 		}
 	}
 	return 0
+}
+
+func dec07ComposeLut4(table uint16, fans [4]uint64) uint64 {
+	var result uint64
+	for minterm := 0; minterm < 16; minterm++ {
+		if table>>uint(minterm)&1 == 0 {
+			continue
+		}
+		cube := ^uint64(0)
+		for pin, value := range fans {
+			if minterm>>uint(pin)&1 != 0 {
+				cube &= value
+			} else {
+				cube &^= value
+			}
+		}
+		result |= cube
+	}
+	return result
+}
+
+// Word-parallel composition from If_Dec6Truth. Sentinel6 represents an unused
+// input; choose zero for it rather than read C's uninitialized temporary slot.
+func dec07Truth6(config uint64) uint64 {
+	if config == 0 {
+		panic("zero LUT configuration")
+	}
+	var fans [4]uint64
+	for pin := range fans {
+		v := int32(config >> uint(16+4*pin) & 7)
+		if v == 7 {
+			panic("LUT references its own output")
+		}
+		if v < 6 {
+			fans[pin] = truth6Variable(v)
+		}
+	}
+	bound := dec07ComposeLut4(uint16(config), fans)
+	for pin := range fans {
+		v := int32(config >> uint(48+4*pin) & 7)
+		switch v {
+		case 7:
+			fans[pin] = bound
+		case 6:
+			fans[pin] = 0
+		default:
+			fans[pin] = truth6Variable(v)
+		}
+	}
+	return dec07ComposeLut4(uint16(config>>32), fans)
 }

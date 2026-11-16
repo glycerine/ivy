@@ -57,3 +57,44 @@ Before closure: separately review the port, explicitly check ordered permutation
 helpers against scalar remapping (including the cross-word swap), broaden source
 priority/configuration evidence, then freeze and run affected/full-module gates.
 The wider LUT/cofactor/config/cell inventory and mapping-family gate stay open.
+
+## Separate correctness and compactness pass
+
+Review the restoration against each active source branch, including cofactor
+coding, first shared candidate retention, later disjoint preference and five-input
+sentinel packing. Additional Go-only checks pass:
+
+- 256 permutation trials,1664 ordered moves and163840 scalar bit comparisons,
+  with inverse-map checks and cross-word seven-input moves.
+- A source-derived later-free-triple configuration for
+  AND(a,b,c,d) XOR AND(e,f,g), checking accumulated variable order.
+- 512 generated configuration comparisons against independent scalar decoding,
+  including unused sentinel6 pins whose truth fields ignore those inputs.
+- 15 reduced-support cases retain earlier safe Go behavior outside the source
+  full-support/cofactor assertions. No generic search fallback is retained.
+
+Restore source word-parallel six-input configuration composition too. The old
+per-minterm decoder allocated during every five-input verification. Bounded word
+composition agrees with scalar decoding; choose zero for unused pins instead of
+reading the source's uninitialized temporary slots. Drop dead inverse-map updates
+from the local shared-derivation copy; the outer search maps are unchanged.
+A focused20000x benchmark (three samples) goes from8 B/1 allocation per call to
+0 B/0 allocations. Local timings845..1075ns before versus65..100ns after are
+specific to this configuration, not a general mapping speedup claim. Logs:
+/tmp/abcgo-dec07-permutation-scalar.log,
+/tmp/abcgo-dec07-reduced-support.log,
+/tmp/abcgo-dec07-truth-{before,after}.log.
+
+Frozen final gate: full-module Go-only exits0,130 tested packages pass and3
+commands have no tests. JSON confirms400 partition,36 direct multiword and192
+specialized reconstruction cases executed. Decomposition/LUT race4.011s,
+512-driver/140-mini race4.703s and IF/GIA vet pass. The targeted final race run
+explicitly excludes the older optional C comparison; ordinary new tests require
+only Go. Logs /tmp/abcgo-module-go-only-dec07.jsonl,
+/tmp/abcgo-dec07-reviewed-{go-only,race,vet}.log,
+/tmp/abcgo-dec07-drivers-race.log.
+
+The active5/6/7-input decomposition dependency and specialized reconstruction
+are reviewed at this checkpoint. Other ifDec07 utilities/IF source families are
+not thereby closed. Continue the remaining Gia_ManFromIfLogicNode/cofactor/
+configuration/cell rows and final full mapping-family gate; original audit2/131.
