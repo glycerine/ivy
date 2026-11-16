@@ -4,7 +4,9 @@ Review every package in `go list ./...` order, one at a time. For each package,
 inspect production files and existing tests against the original C, review
 correctness and compactness, add a red regression before fixing any uncovered
 bug, and run meaningful package checks. Commit coherent package changes.
-Use `test_vectors` for fixtures. Prior reviews are evidence to inspect, not
+Use `test_vectors` for fixtures. New regression fixtures and expected results
+must be Go-only: do not add `.c` vectors or require a C toolchain to test the
+project. Validate with CGO disabled and no C compilers on PATH. Prior reviews are evidence to inspect, not
 proof that this audit has been completed. No parallel package or agent work.
 
 Baseline: 131 packages (128 with tests, three command packages without tests).
@@ -9772,3 +9774,15 @@ is reconciled; mapping-boundary plan step2 is now complete. Full Go-only module
 passes130 tested packages plus3 commands without tests; focused race4.586s and
 relevant vet pass. Details in REVIEW_mapping_boundary.md. Remaining family
 rows/gates and original package audit remain open2/131.
+
+
+### Cover boxed choices with Go-only fixtures
+
+Record the requirement that new regression vectors and expectations use Go
+and require no C toolchain. Add256 boxed-choice bridge configurations and5120
+mapping/balancing driver configurations, checking all32 assignments against
+explicit formulas, choice links, levels, normalization and timing ownership.
+No production repair was needed. Full module passes with CGO disabled and C
+compilers absent from PATH:130 tested packages and3 commands without tests.
+Focused race17.922s and GIA/IF vet pass. Details in REVIEW_mapping_boundary.md;
+remaining family gates and original package audit remain open2/131.

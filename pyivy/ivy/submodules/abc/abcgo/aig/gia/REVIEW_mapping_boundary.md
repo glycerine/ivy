@@ -48,11 +48,11 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManPrintPackingStats | aig/gia/mapping_profile.go | Source ABC routing repaired; group counts and empty maximum reconciled; exact Go-only reports; final family gate pending |
 | Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Source ABC routing repaired; counts/weighted ratios/terminal bins reviewed; Go-only reports; final family gate pending |
 | Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Source ABC routing repaired; empty and32/33-width boundaries covered in Go; final family gate pending |
-| Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed walks reviewed; scalar mapped-result depth integration; mixed boxed-choice driver coverage remains in step5 |
+| Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed walks reviewed; scalar mapped-result depth and mixed boxed-choice driver integration reviewed; final family gate pending |
 | Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed levels reviewed; mapped-result integration; final family gate pending |
 | If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Source walk reviewed; dangling/64 choice-chain cases; final family gate pending |
 | If_ManCheckChoices | map/if/choice_check.go | Source diagnostics/mark cleanup reviewed; repeated Go-only checks; final family gate pending |
-| Gia_ManToIf | map/if/gia_bridge.go | Source transfer reviewed; name ownership, defaults, typed phases/references/aliases, constants, empty interfaces and 64 choice chains; frame/boxed integration gate pending |
+| Gia_ManToIf | map/if/gia_bridge.go | Source transfer reviewed; name ownership, defaults, typed phases/references/aliases, constants, empty interfaces, 64 choice chains and boxed-choice integration; final family gate pending |
 | Gia_ManBuildFromMiniInt | aig/gia/mapping_mini.go | Source algorithm/scratch reviewed; 140 Go-only scalar cases plus invalid inputs; final family gate pending |
 | Gia_ManBuildFromMini | map/if/gia_mini.go | Source wrapper reviewed; balancing/large parity checks; final family gate pending |
 | Gia_ManFromIfAig_rec | map/if/gia_from_if.go | Source recursive hash/copy algorithm reviewed; 64 Go truth/memoization cases; final family gate pending |
@@ -78,7 +78,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing duplication/constraints/boxed-order and attribute overwrite/integration reviewed; remaining optional modes pending |
-| Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed/SOP/DSD boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; boxed-choice integration and final family gate pending |
+| Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed/SOP/DSD boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; boxed-choice integration reviewed; final family gate pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Source wrapper parameters/metadata policy reviewed; ordinary/boxed direct/registered paths covered; final family gate pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final family gate pending |
 | Gia_ManTestStruct | map/if/gia_structure_report.go | Source KIT diagnostics/summary/limits/bounds reviewed; red regressions repaired; needless small-LUT truth computation removed; final family gate pending |
@@ -1532,3 +1532,28 @@ Focused metrics/driver/choice race4.586s and relevant vet exit0
 handles consumed. No C fixture/compiler dependency added. Remaining report
 deviations, hashing/boxed-choice integration, optional dependencies and final
 family gates remain open; original package audit2/131.
+
+
+### Cover boxed choices through mapping and balancing
+
+Add a Go fixture with two independent choice classes feeding two timing boxes.
+Every AND is reachable structurally or through a choice edge, preserving the
+source choice-level precondition. Across all256 phase masks, check both IF
+choice links, source mark cleanup, disabled expansion, scalar CI levels and
+absence of dangling alternatives. No new production defect was found.
+
+Exercise5120 driver configurations:256 phase masks, combinational/sequential
+interfaces, structural/truth/SOP/DSD mapping with hashing independently on/off,
+and dedicated SOP/DSD wrappers. Alternate direct and registered wrappers. Check
+all32 input assignments against explicit Boolean formulas, interface counts,
+normalization, LUT versus AIG representation and timing ownership. Preserve
+the source general driver's sequential CI shuffle and warning; dedicated
+balancing wrappers retain the source CI convention.
+
+All new fixtures and expectations are Go-only. Focused cases pass4.620s;
+full module with CGO disabled and C compilers absent from PATH exits0 with130
+tested packages passing and3 commands without tests. Focused race passes17.922s
+and GIA/IF vet exits0. Logs: /tmp/abcgo-box-choice-complete-cases.log and
+/tmp/abcgo-box-choice-final-{module.jsonl,race.log,vet.log}. All sessions ended.
+Remaining report deviations, hashing reconciliation, optional dependencies and
+final family gates remain open; original package audit2/131.
