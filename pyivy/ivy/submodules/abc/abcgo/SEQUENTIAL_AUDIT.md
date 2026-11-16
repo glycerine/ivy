@@ -10027,3 +10027,16 @@ the preceding frozen chunk. Logs /tmp/abcgo-iff-reviewed-final-{module.jsonl,
 stub-race.log,vet.log}; detailed inventory in REVIEW_lut_clustering.md. All
 sessions ended. These source families are reviewed; GIA remains in progress and
 the original audit remains2/131.
+
+
+### Start isomorphism review and repair dangling-level storage
+
+Inventory68 source routines across giaIso.c/giaIso2.c/giaIso3.c. A new red
+preparation regression finds inherited output-only level allocation indexing
+past the array for deeper unused cones. Include all AND levels without pruning
+nodes or changing class ordering. A separate new red case restores explicit
+constant/CI initialization from C. Twenty-four Go-only depth/output/register
+cases check independent classes, packed IDs/signatures and unchanged node values.
+Full Go-only module passes130 tested packages plus3 commands without tests,
+focused isomorphism race1.025s and GIA vet pass. Logs and remaining68-routine
+scope in REVIEW_isomorphism.md. Family/GIA review stays open, audit2/131.

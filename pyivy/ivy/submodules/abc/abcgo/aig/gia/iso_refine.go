@@ -91,10 +91,17 @@ func Gia_IsoPrint(p *Gia_IsoMan_t, iter int32, elapsed int64) {
 // Gia_IsoPrepare creates initial equivalence classes based on graph levels.
 func Gia_IsoPrepare(p *Gia_IsoMan_t) {
 	var maxLevel int32
+	p.pLevels[0] = 0
+	for i := int32(0); i < Gia_ManCiNum(p.pGia); i++ {
+		p.pLevels[Gia_ObjId(p.pGia, Gia_ManCi(p.pGia, i))] = 0
+	}
 	for id := int32(1); id < p.nObjs; id++ {
 		obj := Gia_ManObj(p.pGia, id)
 		if Gia_ObjIsAnd(obj) != 0 {
 			p.pLevels[id] = 1 + max(p.pLevels[Gia_ObjFaninId0(obj, id)], p.pLevels[Gia_ObjFaninId1(obj, id)])
+			// Classes include dangling nodes too. C's output-only maximum
+			// underallocates its level table when an unused cone is deeper.
+			maxLevel = max(maxLevel, p.pLevels[id])
 		}
 	}
 	for i := int32(0); i < Gia_ManCoNum(p.pGia); i++ {
