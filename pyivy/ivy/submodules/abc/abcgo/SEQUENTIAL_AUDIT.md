@@ -9519,3 +9519,14 @@ of allocating/rebuilding every row. Local16-input two-class sample drops from
 focused CLU/structure race5.477s and IF/GIA vet pass. Details/logs in
 REVIEW_mapping_boundary.md. Retry/shared/diagnostic and wider family work
 remain open; original package audit2/131.
+
+### Shared-variable decomposition review and scratch simplification
+
+Add696 scalar selection/derivation cases through16 inputs, covering shared pin
+moves, three/four classes, constant shared branches, all phases/signs, complete
+truth, pin/sentinel metadata and output storage. Six rejection-state checks
+also pass. No correctness bug found. Reuse candidate cofactor buffers and join
+remaining functions with source word copies instead of allocated bit loops;
+four fewer production lines and lower local allocation. Full IF Go-only9.450s
+and GIA27.935s, focused race7.764s and IF/GIA vet pass. Details/logs in
+REVIEW_mapping_boundary.md. Retry/diagnostic/family work stays open2/131.

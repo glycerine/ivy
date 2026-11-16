@@ -708,17 +708,13 @@ func If_CluDeriveNonDisjoint(table []uint64, n int32, v2p, p2v []int32, g, r *If
 	truth1 := If_CluDeriveDisjoint(b, n-1, v2p, p2v, g, nil)
 	g.nVars++
 	boundTruth := truth0 | truth1<<uint(1<<uint(g.nVars-1))
-	out := make([]uint64, If_CluWordNum(free+2))
-	for assignment := 0; assignment < 1<<uint(free+2); assignment++ {
-		cof := a
-		if assignment&(1<<uint(free+1)) != 0 {
-			cof = b
-		}
-		if ifTruthBit(cof, assignment&((1<<uint(free+1))-1)) {
-			ifTruthSet(out, assignment)
-		}
+	if free+1 < 6 {
+		table[0] = a[0] | b[0]<<uint(1<<uint(free+1))
+	} else {
+		words := If_CluWordNum(free + 1)
+		copy(table[:words], a[:words])
+		copy(table[words:2*words], b[:words])
 	}
-	copy(table, out)
 	*r = If_Grp_t{nVars: free + 2}
 	copy(r.pVars[:], p2v[:free])
 	r.pVars[free], r.pVars[free+1] = n, g.pVars[g.nVars-1]
@@ -728,8 +724,8 @@ func If_CluCheckNonDisjointGroup(table []uint64, n int32, v2p, p2v []int32, g *I
 	if g.nMyu != 3 && g.nMyu != 4 {
 		return 0
 	}
+	a, b := make([]uint64, If_CluWordNum(n)), make([]uint64, If_CluWordNum(n))
 	for v := int32(0); v < g.nVars; v++ {
-		a, b := make([]uint64, If_CluWordNum(n)), make([]uint64, If_CluWordNum(n))
 		If_CluCofactors(table, n, v2p[g.pVars[v]], a, b)
 		if If_CluCountCofs(a, n, g.nVars, 0, nil) > 2 || If_CluCountCofs(b, n, g.nVars, 0, nil) > 2 {
 			continue

@@ -779,3 +779,49 @@ excludes the legacy optional C comparison and passes5.477s
 (`/tmp/abcgo-clu-count-reviewed-vet.log`). No C fixtures or compiler dependencies
 added. Reduced-bound retry/shared-selection exactness, source failure diagnostics
 and the wider family inventory remain open. Original package audit2/131.
+
+### Shared-variable selection and derivation review
+
+Compare `If_CluCheckNonDisjointGroup` and `If_CluDeriveNonDisjoint` against
+`ifDec16.c:1240..1307`. The source tries bound variables in order, accepts only
+when both shared-variable cofactors have at most two classes, moves the selected
+variable to the highest position, and refreshes the group's original pin IDs.
+Derivation builds separate zero/one shared-branch functions, concatenates their
+bound truth bits and remaining truth, and names the original shared pin after
+the bound-result sentinel. No correctness discrepancy was found.
+
+`clu_shared_review_test.go` adds696 scalar cases: bound3..6; free support
+1/2/4/5/6/9/10/13 when total<=16; shared pin at low/middle/high bound position;
+three and four cofactor classes; both output phases and alternating input signs.
+Three-class fixtures have a constant shared-variable branch, checking duplicate
+single-cofactor derivation too. The one-free-variable four-class fixture uses
+four distinct functions of that input, since parity and AND coincide there.
+Every case checks exact selected pin order, inverse permutation maps and every
+bit after moving the shared variable, then all reconstructed assignments.
+Check root sentinel/shared pin metadata, preservation of the bound group and
+untouched remaining storage beyond the derived truth. Six additional rejected
+class-state checks preserve the truth, both maps and group. No C test fixtures
+or compiler invocation are needed.
+
+Source-style compactness changes: reuse the two cofactor buffers across candidate
+variables, as C does, and replace the bit-by-bit concatenation/allocation with
+one small-word join or two word copies. Net production change is four fewer
+lines. Dirty scratch cannot leak because cofactoring overwrites every active
+word; the matrix covers candidates before the successful shared pin and both
+small/large concatenation branches.
+
+Local100ms samples, before/after:16-input shared selection60191/27590ns,
+105218/23298B,45/35alloc; shared derivation37537/23828ns,18689/18177B,13/12alloc.
+These are focused microbenchmarks, not application-wide speed claims. Logs
+`/tmp/abcgo-clu-shared-before.log`,
+`/tmp/abcgo-clu-shared-derive-before.log`,
+`/tmp/abcgo-clu-shared-after.log`.
+
+Frozen verification: `/tmp/abcgo-clu-shared-cases.jsonl` confirms696 new scalar
+subcases pass. Full IF9.450s and GIA27.935s with C tools excluded and CGO disabled,
+exit0 (`/tmp/abcgo-clu-shared-reviewed-packages.jsonl`); focused CLU/structure
+race excludes legacy optional C comparison and passes7.764s
+(`/tmp/abcgo-clu-shared-reviewed-race.log`); IF/GIA vet exit0
+(`/tmp/abcgo-clu-shared-reviewed-vet.log`). Reduced-bound retry configuration
+fidelity, missing source failure diagnostics and wider GIA family reconciliation
+remain open. Original package audit remains2/131.
