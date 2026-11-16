@@ -154,18 +154,24 @@ func Gia_Iso2ManCheckIsoClassOne(g *Gia_Man_t, class, roots, order0, order1, map
 	}
 	vec.Vec_IntShrink(class, kept)
 }
+
+// Gia_Iso2ManCheckIsoClassesSkip transfers accepted class buffers into the
+// result, clearing their input levels. Rejected classes remain in the input.
 func Gia_Iso2ManCheckIsoClassesSkip(g *Gia_Man_t, classes *Vec_Wec_t) *Vec_Wec_t {
 	result := vec.Vec_WecAlloc(2 * vec.Vec_WecSize(classes))
 	roots, o0, o1 := vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000)
 	m0, m1 := vec.Vec_IntStart(int(Gia_ManObjNum(g))), vec.Vec_IntStart(int(Gia_ManObjNum(g)))
+	counter := 0
 	for i := 0; i < vec.Vec_WecSize(classes); i++ {
+		if i%50 == 0 {
+			fmt.Printf("Finished %8d outputs (out of %8d)...\r", counter, Gia_ManPoNum(g))
+		}
 		class := vec.Vec_WecEntry(classes, i)
 		values := vec.Vec_IntArray(class)
+		counter += len(values)
 		if len(values) < 2 || Gia_Iso2ManCheckIsoClassOneSkip(g, class, roots, o0, o1, m0, m1) != 0 {
-			level := vec.Vec_WecPushLevel(result)
-			for _, v := range values {
-				vec.Vec_IntPush(level, v)
-			}
+			*vec.Vec_WecPushLevel(result) = *class
+			vec.Vec_IntZero(class)
 		} else {
 			for _, v := range values {
 				vec.Vec_IntPush(vec.Vec_WecPushLevel(result), v)
@@ -174,24 +180,26 @@ func Gia_Iso2ManCheckIsoClassesSkip(g *Gia_Man_t, classes *Vec_Wec_t) *Vec_Wec_t
 	}
 	return result
 }
+
+// Gia_Iso2ManCheckIsoClasses consumes classes as a growing worklist. Retained
+// buffers move to the result; rejected members are appended for later splitting.
 func Gia_Iso2ManCheckIsoClasses(g *Gia_Man_t, classes *Vec_Wec_t) *Vec_Wec_t {
 	result := vec.Vec_WecAlloc(2 * vec.Vec_WecSize(classes))
 	roots, o0, o1 := vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000), vec.Vec_IntAlloc(1000)
 	m0, m1 := vec.Vec_IntStart(int(Gia_ManObjNum(g))), vec.Vec_IntStart(int(Gia_ManObjNum(g)))
-	var queue [][]int32
+	next := vec.Vec_IntAlloc(100)
+	counter := 0
 	for i := 0; i < vec.Vec_WecSize(classes); i++ {
-		queue = append(queue, append([]int32(nil), vec.Vec_IntArray(vec.Vec_WecEntry(classes, i))...))
-	}
-	for i := 0; i < len(queue); i++ {
-		class := vec.Vec_IntAllocArrayCopy(queue[i], len(queue[i]))
-		next := vec.Vec_IntAlloc(0)
-		Gia_Iso2ManCheckIsoClassOne(g, class, roots, o0, o1, m0, m1, next)
-		level := vec.Vec_WecPushLevel(result)
-		for _, v := range vec.Vec_IntArray(class) {
-			vec.Vec_IntPush(level, v)
+		if i%50 == 0 {
+			fmt.Printf("Finished %8d outputs (out of %8d)...\r", counter, Gia_ManPoNum(g))
 		}
+		class := vec.Vec_WecEntry(classes, i)
+		Gia_Iso2ManCheckIsoClassOne(g, class, roots, o0, o1, m0, m1, next)
+		counter += vec.Vec_IntSize(class)
+		*vec.Vec_WecPushLevel(result) = *class
+		vec.Vec_IntZero(class)
 		if vec.Vec_IntSize(next) > 0 {
-			queue = append(queue, append([]int32(nil), vec.Vec_IntArray(next)...))
+			vec.Vec_IntAppend(vec.Vec_WecPushLevel(classes), next)
 		}
 	}
 	return result

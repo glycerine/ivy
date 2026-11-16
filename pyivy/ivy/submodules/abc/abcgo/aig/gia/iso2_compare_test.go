@@ -29,6 +29,11 @@ func TestIso2ExactConeComparison(t *testing.T) {
 	if got := vec.Vec_IntArray(vec.Vec_WecEntry(result, 1)); !reflect.DeepEqual(got, []int32{2}) {
 		t.Fatalf("distinct class %v", got)
 	}
+	// Full-quality checking consumes its worklist, as in the original C.
+	classes = vec.Vec_WecStart(1)
+	for i := int32(0); i < 3; i++ {
+		vec.Vec_WecPush(classes, 0, i)
+	}
 	skip := Gia_Iso2ManCheckIsoClassesSkip(g, classes)
 	if vec.Vec_WecSize(skip) != 3 {
 		t.Fatalf("skip mode should separate all candidates: %d", vec.Vec_WecSize(skip))

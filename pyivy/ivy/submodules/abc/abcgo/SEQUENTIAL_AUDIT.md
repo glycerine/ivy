@@ -10104,3 +10104,16 @@ unchanged node/class data and the empty-class contract using Go-only fixtures.
 Full Go-only module passes130 tested packages plus3 commands without tests;
 focused isomorphism race1.445s and GIA vet pass. Evidence/limits recorded in
 REVIEW_isomorphism.md. Remaining family/GIA scope stays open; audit2/131.
+
+
+### Consume second-generation isomorphism class worklists
+
+New red regressions expose copied/retained buffers instead of source ownership
+transfer, plus omitted50-class progress reports. Restore the growing input
+worklist, accepted-buffer transfers and skip-mode rejected-input retention.
+Remove the extra copied queue and reuse reject scratch. Sixteen Go-only matrix
+cases check exact split order, worklist relocation, consumed capacity and buffer
+identity; two report cases pin progress. Full Go-only module passes130 tested
+packages plus3 commands without tests; focused GIA isomorphism race1.397s and
+GIA vet pass. REVIEW_isomorphism.md records evidence and remaining scope.
+The GIA family/package remains open; original completion2/131.

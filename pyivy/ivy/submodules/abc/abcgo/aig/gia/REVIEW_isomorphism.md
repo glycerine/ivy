@@ -207,3 +207,33 @@ Focused isomorphism race1.445s and GIA vet pass; all handles ended. Final logs:
 /tmp/abcgo-iso-topmost-final-{module.jsonl,race.log,vet.log}. Remaining driver
 reports (including missing source graph stats), full refinement/reduction and
 second-generation comparison still require reconciliation. Audit2/131.
+
+
+## Consume second-generation class buffers as in C
+
+New ownership regressions fail in10 of16 matrix cases before repair. Existing
+Go produces correct class membership but copies accepted buffers and retains
+input worklists instead of consuming them. Restore the source contracts:
+full-quality checking uses its input vector as a growing worklist, compacts
+each class, transfers its buffer to the result and appends rejected members
+for later splitting. Skip mode transfers only accepted buffers; rejected
+classes remain in the input and their result singletons are copies. Reuse one
+reject vector instead of allocating/copying a second queue and per-class vectors.
+The existing comparison test now creates a fresh input for its independent
+skip-mode run, since the full-quality call consumes its previous input.
+
+Sixteen Go-only scenarios cover four partitions, both policies and both output
+phases. Independently specified cone kinds predict exact breadth-first splitting
+order, including empty and singleton classes. Exact initial vector capacity
+forces worklist relocation on appended splits; pointer checks prove accepted
+buffers move without copying, while consumed capacities become zero. Two new
+progress regressions also fail before restoring source reports every50 classes.
+Red logs /tmp/abcgo-iso2-classes-{red,progress-red}.log; focused repaired log
+/tmp/abcgo-iso2-classes-green.log. No source file is a runtime test vector.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests; all16 ownership leaves execute. Focused isomorphism race1.397s and GIA
+vet pass; all handles ended. Final logs /tmp/abcgo-iso2-classes-final-
+{module.jsonl,race.log,vet.log}. Source comparison/order/cone arithmetic and
+end-to-end reduction still need independent reconciliation; this checkpoint
+closes class-worklist ownership, not the family. Audit2/131.
