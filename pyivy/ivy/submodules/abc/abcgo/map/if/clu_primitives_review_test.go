@@ -124,7 +124,17 @@ func TestCluSixteenInputThreeLutReconstruction(t *testing.T) {
 			if first.nVars != 6 || second.nVars != 6 || root.nVars != 6 {
 				t.Fatalf("groups first%+v second%+v root%+v", first, second, root)
 			}
-			for index, want := range [3][]int32{{0, 1, 2, 3, 4, 5}, {16, 6, 7, 8, 9, 10}, {17, 11, 12, 13, 14, 15}} {
+			expectedPins := [3][]int32{{0, 1, 2, 3, 4, 5}, {16, 6, 7, 8, 9, 10}, {17, 11, 12, 13, 14, 15}}
+			if phase&2 != 0 {
+				// Per-word priority cannot remove the sparse negative
+				// cofactors at the high support sizes. The easy first
+				// search fails, so C uses its initial high-six bound set.
+				// The next stage removes four positive free pins, then its
+				// high negative pin becomes detectable at seven inputs
+				// because each cofactor is now a single word.
+				expectedPins = [3][]int32{{10, 11, 12, 13, 14, 15}, {16, 0, 1, 2, 4, 6}, {17, 3, 5, 7, 8, 9}}
+			}
+			for index, want := range expectedPins {
 				got := []If_Grp_t{first, second, root}[index]
 				if !slices.Equal(got.pVars[:6], want) {
 					t.Fatalf("group%d pins%v want%v", index, got.pVars[:6], want)

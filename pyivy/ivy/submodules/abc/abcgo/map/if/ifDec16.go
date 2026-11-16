@@ -578,25 +578,48 @@ func If_CluCountCofs4(table []uint64, n, bound int32, cofs [][]uint64) int32 {
 	return int32(len(unique))
 }
 func If_CluDetectSpecialCaseCofs(table []uint64, n, v int32) int32 {
-	size := 1 << uint(n)
-	states := [6]bool{true, true, true, true, true, true}
-	for assignment := 0; assignment < size; assignment++ {
-		if assignment&(1<<uint(v)) != 0 {
-			continue
+	words := If_CluWordNum(n)
+	var states [6]int32
+	classify := func(zero, one, mask uint64) {
+		// Preserve the C per-word priority and its unmasked complement test.
+		switch {
+		case zero == 0:
+			states[0]++
+		case zero == mask:
+			states[1]++
+		case one == 0:
+			states[2]++
+		case one == mask:
+			states[3]++
+		case zero == ^one:
+			states[4]++
+		case zero == one:
+			states[5]++
 		}
-		a, b := ifTruthBit(table, assignment), ifTruthBit(table, assignment|(1<<uint(v)))
-		states[0] = states[0] && !a
-		states[1] = states[1] && a
-		states[2] = states[2] && !b
-		states[3] = states[3] && b
-		states[4] = states[4] && (a != b)
-		states[5] = states[5] && (a == b)
 	}
-	for i := 0; i < 5; i++ {
-		if states[i] {
-			return int32(i)
+	if v < 6 {
+		var pattern [1]uint64
+		abcutil.Abc_TtIthVar(pattern[:], v, 6)
+		mask := ^pattern[0]
+		for _, value := range table[:words] {
+			classify(value&mask, (value&pattern[0])>>uint(1<<uint(v)), mask)
+		}
+	} else {
+		step := int32(1) << uint(v-6)
+		for start := int32(0); start < words; start += 2 * step {
+			for i := start; i < start+step; i++ {
+				classify(table[i], table[i+step], ^uint64(0))
+			}
+		}
+		words /= 2
+	}
+	for state := 0; state < 5; state++ {
+		if states[state] == words {
+			return int32(state)
 		}
 	}
+	// Unlike C's assertion for an unused variable, retain the existing Go
+	// no-match result for reduced-support callers.
 	return -1
 }
 func If_CluDecUsingCofs(table []uint64, n, leaf int32) If_Grp_t {

@@ -9530,3 +9530,16 @@ remaining functions with source word copies instead of allocated bit loops;
 four fewer production lines and lower local allocation. Full IF Go-only9.450s
 and GIA27.935s, focused race7.764s and IF/GIA vet pass. Details/logs in
 REVIEW_mapping_boundary.md. Retry/diagnostic/family work stays open2/131.
+
+### Restore source easy-cofactor word priority
+
+New red regressions expose global Boolean detection replacing C's ordered
+per-word classification, admitting extra low-variable XOR shortcuts and changing
+bound selection. Restore C word priority and literal masked/unmasked complement
+comparison; retain the existing safe no-match for unused variables. Add252
+state/dimension cases and exact parity configuration regression. Correct prior
+signed16-input pin expectations from C's word-boundary transitions, retaining
+exhaustive truth checks. Full Go-only module passes130 tested packages plus3
+commands without tests. Focused CLU/structure race8.495s,512-driver race4.524s
+and IF/GIA vet pass. Details/logs in REVIEW_mapping_boundary.md. Retry,
+diagnostic and family work remain open; original package audit2/131.

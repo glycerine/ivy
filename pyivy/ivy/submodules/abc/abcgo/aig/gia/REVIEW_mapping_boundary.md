@@ -825,3 +825,55 @@ race excludes legacy optional C comparison and passes7.764s
 (`/tmp/abcgo-clu-shared-reviewed-vet.log`). Reduced-bound retry configuration
 fidelity, missing source failure diagnostics and wider GIA family reconciliation
 remain open. Original package audit remains2/131.
+
+### Restore source easy-cofactor classification and resulting bound order
+
+Inspection of `ifDec16.c:1048..1110` exposes a fidelity bug in the Go detector:
+it tested global Boolean properties independently; C increments exactly one
+state per word through an ordered else-if chain, then requires every word to
+have that state. Restore that word classification and priority. Preserve C's
+literal `Cof0 == ~Cof1` comparison after low-variable masking: low-variable
+XOR does not match, while high-variable full-word XOR can. Even high-variable
+XOR is skipped when earlier constant-cofactor states consume some words.
+This retains source search flow rather than silently strengthening its easy
+classifier. Keep the existing Go no-match result for an unused variable where
+C asserts; no active full-support case is changed by that safety extension.
+
+New regressions fail before the repair (exit1,
+`/tmp/abcgo-clu-easy-order-red.log`): low-variable parity wrongly reports state4;
+mixed zero-word/constant-cofactor priority wrongly reports state2; six-input
+parity wrongly takes the easy low-four group instead of C's initial high-four
+bound set. The corrected complete parity decomposition requires bound pins
+[2,3,4,5], root pins[6,0,1], bound truth6996699669966996 and root truth
+9696969696969696. Both configurations compute parity, but only the corrected
+selection follows this source flow.
+
+`clu_easy_review_test.go` adds252 dimension/state cases across3/6/7/10/16
+inputs and every variable, all four constant-cofactor states, low/high XOR and
+a genuine no-match function. Explicit mixed-word zero/one and high-XOR fixtures
+check priority across words. Source truth remains unchanged. No C fixtures or
+compiler invocation are used.
+
+Correct an earlier sixteen-input test's signed-case pin expectations: they had
+encoded the old global shortcut, not source classification. For alternating
+negative even pins, sparse negative cofactors fail source uniform-word priority
+above the single-word boundary. The initial easy search fails, and C uses the
+high-six group[10,11,12,13,14,15]. The next stage removes positive9/7/5/3; at
+seven remaining inputs the negative8 cofactor becomes a single word and is
+removed next. Therefore second group[16,0,1,2,4,6], root[17,3,5,7,8,9]. Retain
+all65536 scalar assignments for both output phases; do not weaken that truth
+coverage to accommodate changed metadata.
+
+Pre-final full IF passes9.970s (`/tmp/abcgo-clu-easy-reviewed-full.log`). The
+final frozen full module with CGO disabled and C tools excluded exits0
+(`/tmp/abcgo-clu-easy-reviewed-module.jsonl`):130 tested packages pass,3 commands
+without tests, zero failures; JSON verifies all252 new dimension cases run.
+Focused CLU/structure race excludes legacy optional C comparison and passes
+8.495s (`/tmp/abcgo-clu-easy-reviewed-race.log`); IF/GIA vet exit0
+(`/tmp/abcgo-clu-easy-reviewed-vet.log`). Reduced-bound retry configuration
+fidelity, missing source failure diagnostics and wider family reconciliation
+remain open. Original package audit2/131 unchanged.
+
+The512-case Go-only GIA mapping-driver race also passes4.524s after the
+classification repair (`/tmp/abcgo-clu-easy-reviewed-drivers-race.log`). All
+verification handles were consumed to terminal exit0 before this commit.
