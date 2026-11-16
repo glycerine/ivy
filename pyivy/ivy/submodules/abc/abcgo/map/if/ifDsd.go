@@ -177,13 +177,18 @@ func If_DsdManFree(p *If_DsdMan_t, verbose int32) {
 	if p == nil {
 		return
 	}
+	// Release the owner even if the existing vector dump API panics on I/O.
+	defer func() {
+		If_ManSatUnbuild(p.pSat)
+		// All remaining caches, vectors and records are Go-owned.
+		*p = If_DsdMan_t{}
+	}()
 	if verbose != 0 {
 		If_DsdManPrint(p, "", 0, 0, 0, 0, 0)
+		for v := int32(3); v <= p.nVars; v++ {
+			vec.Vec_MemDumpTruthTables(p.vTtMem[v], fmt.Sprintf("dumpdsd%02d", v), int(v))
+		}
 	}
-	If_ManSatUnbuild(p.pSat)
-	// All remaining allocations are Go-owned vectors, slices and node records.
-	// Clear the owner as a whole so all caches become collectible together.
-	*p = If_DsdMan_t{}
 }
 
 func If_DsdManCleanMarks(p *If_DsdMan_t, verbose int32) {

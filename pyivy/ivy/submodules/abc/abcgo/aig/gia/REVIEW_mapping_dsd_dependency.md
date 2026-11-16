@@ -444,3 +444,17 @@ report the broader GIA gate as green. Logs /tmp/abcgo-dsd-dump-if-race.log,
 /tmp/abcgo-dsd-dump-vet.log, /tmp/abcgo-dsd-dump-callers-go-only.log.
 Standalone decomposition-cache reports and verbose Free cache dumping remain
 to reconcile; wider mapping-family and original131-package work remains open.
+
+### Verbose teardown cache output restored
+
+Go-only red tests prove verbose Free omits all original per-arity cache dumps.
+Restore tt_dumpdsdNN_NN.txt files, including empty caches, and the existing vector
+API's dump reports. Ensure owned SAT state and manager caches are released even
+if that API panics on a file-open error. Both normal and failing-I/O teardown
+paths are covered; source filenames, raw table words and empty-cache behavior
+are checked independently. /tmp/abcgo-dsd-free-red.log exits1 before repair;
+focused Go-only tests pass, full IF Go-only1.296s, DSD-only race5.895s and IF/GIA
+vet pass. Logs /tmp/abcgo-dsd-free-{fixed,if-go-only,race,vet}.log.
+Uncalled source diagnostic helpers (PrintDecs, HashProfile) are not required by
+GIA's mapping path; retain them for the later complete IF package review.
+Continue GIA-to-IF/default/choice boundary rows; full audit remains2/131.

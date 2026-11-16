@@ -9337,3 +9337,11 @@ this gate proves the project tests run without a C toolchain, not that these
 older cross-language tests have been replaced or that the131-package review is
 complete. New ordinary regressions must run with Go alone. Audit remains2/131;
 resume the GIA mapping dependency/boundary inventory sequentially.
+
+### DSD verbose teardown passing checkpoint
+
+Restore source per-arity prime cache files during verbose teardown. New Go-only
+red tests precede repair; owned SAT/cache cleanup also survives the existing
+vector dumper's file-open panic. Full IF Go-only1.296s, DSD race5.895s and IF/GIA
+vet pass. Source-only uncalled diagnostic helpers remain queued for IF's own
+later package audit; resume the current GIA mapping-boundary rows. Audit2/131.
