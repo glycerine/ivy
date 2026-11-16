@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/bool/kit"
 	"github.com/glycerine/abcgo/opt/dau"
+	"io"
 	"strings"
 )
 
@@ -151,4 +152,17 @@ func ifDsdText(p *If_DsdMan_t, lit int32, perm []byte) string {
 	var support int32
 	ifDsdTextRec(p, lit, perm, &support, &result)
 	return result.String()
+}
+
+// If_DsdManPrintOne prints one canonical record in the original source format.
+func If_DsdManPrintOne(out io.Writer, p *If_DsdMan_t, id int32, perm []byte, newLine int32) {
+	o := If_DsdVecObj(&p.vObjs, id)
+	var text strings.Builder
+	var support int32
+	ifDsdTextRec(p, id<<1, perm, &support, &text)
+	assert(support == o.nSupp, "printed DSD visits complete support")
+	fmt.Fprintf(out, "%6d : %2d %8d %d  %s", id, o.nSupp, o.Count, o.fMark, text.String())
+	if newLine != 0 {
+		fmt.Fprintln(out)
+	}
 }

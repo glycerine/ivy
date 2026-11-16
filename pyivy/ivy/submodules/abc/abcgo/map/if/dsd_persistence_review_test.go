@@ -64,7 +64,7 @@ func TestDsdPersistenceRetainsPrimeAndCellState(t *testing.T) {
 		t.Run(map[bool]string{false: "decomposition", true: "cell"}[configured], func(t *testing.T) {
 			p := If_DsdManAlloc(4, 2)
 			defer If_DsdManFree(p, 0)
-			for _, text := range []string{"(ab)", "[abc]", "E8{abc}", "E8{a(bc)d}", "17E8{abcd}"} {
+			for _, text := range []string{"(ab)", "[abc]", "E8{abc}", "E8{a(bc)d}", "17E8{abcd}", "D3C5{abcd}"} {
 				n := dau.Dau_DsdFindVarNum(text)
 				If_DsdManCompute(p, dau.Dau_DsdToTruth(text, n), n, make([]byte, n), "")
 			}
@@ -128,4 +128,62 @@ func TestDsdSaveUsesDefaultStorePath(t *testing.T) {
 	if data, err := os.ReadFile("03.dsd"); err != nil || len(data) < 4 || string(data[:4]) != "dsd1" {
 		t.Fatalf("default store not written: %v", err)
 	}
+}
+
+func TestDsdLoadRejectsTruncatedAndInconsistentRecords(t *testing.T) {
+	// Invalid-file diagnostics are expected; capture them to keep verbose test
+	// output from looking like an application failure.
+	output, err := os.CreateTemp(t.TempDir(), "invalid-load-output")
+	if err != nil {
+		t.Fatal(err)
+	}
+	original := os.Stdout
+	os.Stdout = output
+	defer func() { os.Stdout = original; output.Close() }()
+	valid := dsdReviewSourceFile()
+	path := filepath.Join(t.TempDir(), "invalid.dsd")
+	reject := func(label string, data []byte) {
+		t.Helper()
+		if err := os.WriteFile(path, data, 0600); err != nil {
+			t.Fatal(err)
+		}
+		if p := If_DsdManLoad(path); p != nil {
+			If_DsdManFree(p, 0)
+			t.Fatalf("accepted invalid DSD %s", label)
+		}
+	}
+	for size := 0; size < len(valid); size++ {
+		reject("truncated prefix", valid[:size])
+	}
+	for _, mutation := range []struct {
+		name   string
+		offset int
+		value  uint32
+	}{
+		{"variables", 4, 17}, {"negative variables", 4, 0xffffffff}, {"LUT size", 8, 1}, {"node count", 12, 1}, {"huge count", 12, 0x7fffffff},
+		{"huge node", 16, 0x7fffffff}, {"node ID", 20, 3}, {"node type", 24, 7 | 3<<3 | 3<<27}, {"support", 24, 3 | 2<<3 | 3<<27},
+		{"self fanin", 28, 4}, {"negative fanin", 28, 0xffffffff}, {"constant fanin", 28, 0}, {"excess decompositions", 48, 1}, {"config width", 52, 0},
+	} {
+		data := append([]byte(nil), valid...)
+		binary.LittleEndian.PutUint32(data[mutation.offset:], mutation.value)
+		reject(mutation.name, data)
+	}
+	prime := append([]byte(nil), valid[:44]...)
+	prime = binary.LittleEndian.AppendUint32(prime, 0)
+	prime = append(prime, valid[44:]...)
+	binary.LittleEndian.PutUint32(prime[24:], 6|3<<3|3<<27)
+	reject("missing prime truth", prime)
+	duplicate := append([]byte(nil), valid[:44]...)
+	record := append([]byte(nil), valid[16:44]...)
+	binary.LittleEndian.PutUint32(record[4:], 3)
+	duplicate = append(duplicate, record...)
+	duplicate = append(duplicate, valid[44:]...)
+	binary.LittleEndian.PutUint32(duplicate[12:], 4)
+	reject("duplicate canonical node", duplicate)
+	duplicateTruth := append([]byte(nil), valid[:44]...)
+	duplicateTruth = binary.LittleEndian.AppendUint32(duplicateTruth, 2)
+	duplicateTruth = binary.LittleEndian.AppendUint64(duplicateTruth, 0x1717171717171717)
+	duplicateTruth = binary.LittleEndian.AppendUint64(duplicateTruth, 0x1717171717171717)
+	duplicateTruth = append(duplicateTruth, valid[48:]...)
+	reject("duplicate prime truth", duplicateTruth)
 }

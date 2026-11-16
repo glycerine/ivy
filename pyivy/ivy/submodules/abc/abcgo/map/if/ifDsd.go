@@ -373,8 +373,6 @@ func If_DsdManPrint(p *If_DsdMan_t, fileName string, number, support, occurs, du
 		}
 	}
 }
-func If_DsdManSave(p *If_DsdMan_t, fileName string) { If_DsdManPrint(p, fileName, 0, 0, 0, 0, 0) }
-func If_DsdManLoad(fileName string) *If_DsdMan_t    { return nil }
 
 func If_CutDsdBalancePinDelays(p *If_Man_t, cut *If_Cut_t, permutation []byte) int32 {
 	if len(permutation) < int(cut.nLeaves) {
