@@ -9168,3 +9168,16 @@ fresh C matches all cell marks/configs and confirms the11-input two6-LUT case
 (handles58058/18760 exit0). These tuning edits require affected race checks next.
 Direct balancing/cache compactness remains open; details in
 REVIEW_mapping_dsd_dependency.md. No family/package closure; original2/131.
+
+### DSD record compactness and affected integration gate
+
+Remove now-unread complete-truth/support/permutation fields and their payload
+allocations after direct canonical tuning restoration. amd64 record size drops
+144->72 bytes (excluding payloads); no whole-design speed/memory claim.
+Diagnostic/DSS balancing caches remain pending direct canonical balancing.
+Full IF race10.089s, native DSD/510-driver race29.161s and IF/GIA vet exit0
+(handles65076/16159/7560). Exact native marks/configurations,1,008 partition
+checks and252 canonical sequences remain green. See
+REVIEW_mapping_dsd_dependency.md for logs, remaining source diagnostics,
+balancing, caller/persistence review and mapping-family integration scope.
+Original audit remains2/131; no family/package/goal completion claim.

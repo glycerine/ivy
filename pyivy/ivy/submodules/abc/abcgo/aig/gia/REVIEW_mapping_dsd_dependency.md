@@ -155,3 +155,31 @@ cell-only comparison already passed2.078s (handle39722 exit0).
 Full IF/native race evidence above predates these tuning changes; rerun the
 appropriate affected checks before treating the new checkpoint as integrated.
 Direct canonical balancing and removal of redundant object caches remain next.
+
+## Redundant record caches removed; affected race gate passes
+
+After both tuners consume direct canonical truth, whole-function truth,
+support-index and input-permutation fields have no readers. Remove those three
+slice fields and their allocations/copies, plus the unused support helper.
+Shared canonical structure and manager-owned prime truth remain authoritative.
+On amd64 unsafe.Sizeof reports144->72 bytes per DSD object, excluding backing
+allocations; those three payload allocations are also eliminated. This is a
+record-size measurement, not a whole-design memory/performance benchmark.
+/tmp/abcgo-dsd-record-size-before.log and ...-after.log record the sizes.
+Diagnostic text and DSS balancing network caches still remain; restore direct
+canonical-node balancing before removing them.
+
+Fresh affected verification after tuning and cache edits:
+- Full map/if race10.089s (handle65076 exit0;
+  /tmp/abcgo-dsd-canonical-compact-full-if-race.log).
+- Native canonical/partition/cell/driver race29.161s (handle16159 exit0;
+  /tmp/abcgo-dsd-canonical-compact-native-race.log), including510 output graphs,
+  the2 explicit source partition assertions,252 canonical function sequences,
+  1,008 partition checks and exact cell configuration contracts.
+- IF/GIA vet exits0 with empty log (handle7560;
+  /tmp/abcgo-dsd-canonical-compact-vet.log).
+
+Remaining source-fidelity work includes direct canonical balancing, full verbose
+DSD diagnostics, the source helper/caller inventory and persistence/merge/filter
+shortcuts. The mapping-family frozen full-module race/vet gate has not yet run.
+Do not treat these affected checks as the full GIA or131-package completion gate.
