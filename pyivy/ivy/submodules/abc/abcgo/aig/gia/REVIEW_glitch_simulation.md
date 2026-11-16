@@ -1,4 +1,4 @@
-# Glitch simulation review (in progress)
+# Glitch simulation review (complete)
 
 Scope: all 24 graph/simulation routines in `src/aig/gia/giaGlitch.c`, plus
 inline graph accessors. Work is sequential, without agents or branches.
@@ -14,7 +14,7 @@ GIG reader review closed at2beee0de9; wider GIA audit remains open (2/131).
 4. [x] Add independent truth/pulse/sequential oracles, boundary/validation and
    ownership coverage. Characterize source defects separately from Go safety.
 5. [x] Measure and simplify redundant storage without algorithm substitution.
-6. [ ] Reconcile every routine; freeze code/tests/fixtures for uncached full
+6. [x] Reconcile every routine; freeze code/tests/fixtures for uncached full
    module race testing and GIA vet; record terminal evidence and commit.
 
 ## Initial findings to verify
@@ -137,3 +137,21 @@ Final focused coverage, including the added accessor/growing-hint and deep
 fanout tests, passes all19 tests without skips in13.264s
 (`/tmp/abcgo-glitch-final-complete-focused.log`,handle22185 exit0).
 Only the frozen full-module race/vet integration gate remains for this family.
+
+## Frozen integration and conclusion
+
+Production, tests and native fixture remained frozen at01fd7ffe4. The full
+uncached module race command completed successfully (handle53237 exit0):130
+tested packages and three command packages without tests, zero failures/race
+diagnostics. GIA625.463s, ABCI29.128s, BMC23.876s. GIA vet completed successfully
+(handle32660 exit0), with an empty log. Logs:
+`/tmp/abcgo-glitch-final-module-race.log`, `/tmp/abcgo-glitch-final-vet.log`.
+
+All24 active source routines and inline graph accessors are now reconciled.
+Counter reset, NaN rejection and reports were repaired after new red tests;
+source event/RNG/sequential algorithms and borrowed-truth semantics remain.
+Native, independent and resource/validation checks pass after the measured
+storage simplifications. Earlier pending notes describe intermediate stages.
+This closes the glitch source family only. GIA and the wider package audit
+remain open (original completion2/131). Next is the remaining giaIf.c mapping
+boundary, including its implementations placed in map/if to avoid a cycle.

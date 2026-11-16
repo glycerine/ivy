@@ -8916,3 +8916,23 @@ medium timing is slightly slower in the short run. Full source inventory and
 measured tradeoffs are in REVIEW_glitch_simulation.md. Save a red checkpoint,
 then freeze all code/tests/fixtures for full module race and GIA vet. GIA and
 original2/131 package audit remain open. No agents or branches.
+
+### Glitch simulation frozen full integration closes the source family
+
+All24 active giaGlitch.c routines plus inline graph accessors are reconciled.
+Final focused coverage passes19 tests without skips in13.264s. Freeze production,
+tests and fixture at01fd7ffe4 for the complete uncached module race gate:
+130 tested packages plus three command packages without tests pass, with zero
+failures/race diagnostics. GIA625.463s, ABCI29.128s, BMC23.876s. Exact race
+handle53237 terminates exit0; vet handle32660 terminates exit0 with empty output.
+Logs: /tmp/abcgo-glitch-final-module-race.log and
+/tmp/abcgo-glitch-final-vet.log. REVIEW_glitch_simulation.md records every source
+routine, regression-before-repair evidence, native/source-defect distinctions,
+independent coverage, ownership and measured allocation/timing tradeoffs.
+
+This closes only the source family; GIA remains under review, original package
+completion2/131. Next is the remaining giaIf.c mapping boundary, whose IF-typed
+implementations also live in map/if. Existing typed hash/transfer reviews remain
+valid; inventory all other source routines before claiming that family complete.
+Read-only preparation is /tmp/abcgo-mapping-next-review-plan.md with function
+locations in /tmp/abcgo-mapping-function-locations.txt. No agents or branches.

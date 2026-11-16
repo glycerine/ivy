@@ -1908,3 +1908,13 @@ three commands without tests, GIA604.963s; GIA vet is clean. See
 /tmp/abcgo-gig-final-module-race.log and /tmp/abcgo-gig-final-vet.log.
 The wider GIA review remains open; original package audit completion is2/131.
 Next source family: giaGlitch.c glitch simulation.
+
+Sequential GIA glitch-simulation review closes all24 active giaGlitch.c routines
+and graph accessors after regression-first counter reset, NaN validation and
+report repairs. Native/state/RNG and independent truth/prefix/pulse tests pass
+with compacted graph storage. All19 focused tests pass13.264s without skips.
+Frozen uncached full-module race tests pass130 tested packages plus three
+commands without tests: GIA625.463s, ABCI29.128s, BMC23.876s; GIA vet is clean.
+See aig/gia/REVIEW_glitch_simulation.md and SEQUENTIAL_AUDIT.md for exact evidence,
+source-defect distinctions and measured tradeoffs. GIA remains under audit;
+original package completion stays2/131. Remaining giaIf.c mapping is next.
