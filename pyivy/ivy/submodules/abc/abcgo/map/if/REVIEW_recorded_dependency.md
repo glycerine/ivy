@@ -14,8 +14,10 @@ Go keeps library ownership in base/abci and dispatch in map/if to avoid cycles.
 - [x] Exercise real mapping, timing, phases, registers and delay/area rounds.
 - [x] Review competing delay profiles/area ties and missing-class/small-support
   behavior with independent physical profiles and Boolean reconstruction.
-- [ ] Check the six-to-sixteen-variable and multiword storage/reconstruction
-  boundaries before dependency closure.
+- [x] Check source-supported IF reconstruction widths6..15, sixteen-variable
+  LMS storage/profiles, multiword keys and the truth-cache rejection boundary.
+- [ ] Reconcile C char area signedness at the253-node recording limit; current
+  physical-profile fixtures use areas below128.
 - [ ] Reconcile remaining exact-SAT cost integration separately.
 
 ## Findings and repair
@@ -172,3 +174,41 @@ focused recorded/mapping race2.607s and IF/GIA vet exit0. Logs:
 /tmp/abcgo-recorded-stretch-final-{cases.log,module.jsonl,race.log,vet.log}.
 All sessions ended. Full wide signed reconstruction and exact-SAT work remain
 open; width-helper coverage alone does not close the dependency or package.
+
+
+## Wide recorded-library keys, phases and reconstruction limits
+
+Add Go-only canonical-minterm libraries with independent scalar truth and
+physical-depth expectations. The canonicalizer supplies the stored key; an
+actual chain/balanced GIA realizes it, and scalar evaluation verifies every
+rebuilt input assignment. Mixed/small/full supports distinguish cut word count
+from library word count, exercising prefix stretching and unused library CIs.
+
+The initial matrix tries sixteen-variable IF truth mapping and is rejected by
+the existing guard (/tmp/abcgo-recorded-wide-first.log). Source LMS_VAR_MAX is16,
+but source IF_MAX_FUNC_LUTSIZE is15 and its truth-cache arrays have16 slots.
+Constructing IF truth mode at16 would index past them. Preserve the supported
+source domain and Go's rejection instead of widening arrays or bypassing the
+precondition. This was an invalid fixture assumption, not a production defect.
+
+Full paths cover widths6..15 and supports2,3,5,6/full width:372 signed cases,
+744 raw/hashed reconstructed graphs and1,063,648 explicit assignments. Check
+multiword keys, canonical permutations, pin profiles, source cost/arrival,
+IF timing readback and exact physical area. Twelve additional sixteen-variable
+LMS-only cases cover small/full supports,1024-word storage, both graph shapes
+and source four-bit depth saturation. A16-input chain's physical depth15 becomes
+profile14 because C saturates the CI-offset nibble before subtracting at the CO;
+characterize that storage behavior without claiming valid16-input IF mapping.
+
+Precondition tests retain rejection of unsupported IF width and verify that
+library-limit mismatch or construction-mode use fail before preparing state
+or altering cut cost. No production change was needed beyond the separately
+committed truth-stretch optimization. Source char area values above127 remain
+a separate inspection item: source recording allows up to253 internal nodes,
+so signedness needs reconciliation before declaring all runtime cases reviewed.
+
+Frozen recorded cases pass1.708s; full Go-only module exits0 (130 tested packages
+plus3 commands without tests), focused recorded/mapping race10.982s and IF/GIA
+vet exits0. Logs: /tmp/abcgo-recorded-wide-final-{cases.log,module.jsonl,race.log,
+vet.log}. All sessions ended. Byte-area policy, exact-SAT integration and final
+mapping-family/package gates remain open; original audit2/131.

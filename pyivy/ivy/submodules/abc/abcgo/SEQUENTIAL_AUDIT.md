@@ -9887,3 +9887,16 @@ benchmarks now allocate zero bytes instead of8192. Full Go-only module passes
 130 tested packages plus3 commands without tests; focused recorded race2.607s
 and IF/GIA vet pass. Details in the recorded dependency plan; wide full-path,
 exact-SAT and remaining family/package review stay open2/131.
+
+
+### Cover wide recorded-library paths and preserve source bounds
+
+Go-only fixtures check372 signed cases across source IF widths6..15,744 raw/
+hashed graphs and1,063,648 explicit assignments, plus12 sixteen-variable LMS
+storage/profile cases. Verify multiword keys, permutations, timing, area and
+early library preconditions. Source LMS supports storage16 while IF truth
+arrays stop at15; retain that limit instead of widening the implementation to
+accept an invalid fixture. Full Go-only module passes130 tested packages plus
+3 commands without tests; focused recorded race10.982s and IF/GIA vet pass.
+Evidence and remaining byte-area/exact-SAT work in the recorded/mapping plans;
+original package audit stays2/131.

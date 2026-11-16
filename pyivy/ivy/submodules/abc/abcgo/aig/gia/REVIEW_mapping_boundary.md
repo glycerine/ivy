@@ -1749,3 +1749,18 @@ workspace suffixes. Allocations fall from8192B/one to zero in all four benchmark
 cases. Full Go-only module, focused recorded race2.607s and IF/GIA vet pass;
 logs/measurements in map/if/REVIEW_recorded_dependency.md. Full wide recorded
 reconstruction, exact-SAT and final family gates remain open; audit2/131.
+
+
+### Cover wide recorded-library reconstruction and source limits
+
+New Go-only fixtures cover source-supported IF widths6..15 with372 signed
+cost/reconstruction cases,744 rebuilt graphs and1,063,648 explicit assignments.
+Check narrow/full supports in wider libraries, multiword keys, permutations,
+pin timing and area. Twelve sixteen-variable LMS storage/profile cases cover
+1024-word keys and source nibble saturation; retain IF's15-variable truth-cache
+limit instead of treating the initially rejected16-variable fixture as a port
+bug. Test library initialization preconditions before state mutation. No further
+production repair required. Full Go-only module, focused10.982s recorded race
+and IF/GIA vet pass. Details/logs in map/if/REVIEW_recorded_dependency.md.
+C char area signedness near the253-node recording limit, exact-SAT integration
+and final family gates remain open; original package audit2/131.
