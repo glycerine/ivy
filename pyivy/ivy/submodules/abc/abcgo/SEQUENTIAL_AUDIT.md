@@ -9630,3 +9630,15 @@ builder and float decode/re-encode. Four Go-only end-to-end power-mapping
 cases preserve every output assignment. Full ABCI14.368s with no C toolchain,
 focused race1.042s and focused tests pass. Details in REVIEW_mapping_boundary.md.
 This dependency cleanup leaves remaining family review open, audit2/131.
+
+### Cover mapping-driver timing ownership and precedence
+
+Add32 Go-only cases across four active mapping modes, boxed/unboxed timing
+and all plain constraint-presence combinations. Verify exact fractional/unit
+arrivals, independent timing clone/teardown, unchanged source timing, output
+arrival replacement policy and all graph truth. Two terminal-only power cases
+check source warning/provider suppression even with a boxless timing manager.
+No production bug found; preserve and document source timed-AND power-vector
+precondition and unported optional recorded/SAT cost modes. Full IF10.416s,
+focused race1.194s and vet pass. Details in REVIEW_mapping_boundary.md;
+attribute/outer-driver/family review remains open, audit2/131.

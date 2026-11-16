@@ -77,7 +77,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source trace lifecycle/library/default and automatic power setup repaired; callback and parameter reuse regressions pass; timing/attribute/boxed review pending |
+| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing duplication/constraints/boxed-order reviewed; output attributes and remaining optional modes pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
@@ -1146,3 +1146,36 @@ uses and a direct CI output, then check every input assignment. Focused0.009s,
 full ABCI14.368s with CGO disabled and C tools excluded, and focused race1.042s
 all pass (`/tmp/abcgo-power-abci-{focused,full,race}.log`). This completes the
 delegation cleanup, not the full ABCI audit; family review stays open2/131.
+
+### Review timing-manager duplication and suppression
+
+Compare `Gia_ManPerformMappingInt` with `giaIf.c:2360..2402`: its temporary
+timing manager is a duplicate, using unit delays for SOP/LUT/DSD balancing
+and original delays otherwise. Nonempty timing metadata overrides plain
+arrival/required arrays during timing propagation. Output arrivals replace
+the source vector only when a CI-arrival or CO-required vector was present,
+with float-to-int truncation. Existing source-shaped production code agrees.
+
+New Go-only matrix in `gia_driver_timing_review_test.go` covers32 cases:
+four active mapping modes, boxed/unboxed timing, and all four plain constraint
+presence combinations. Verify fractional original delays, unit-converted box
+arcs, exact CO arrivals, independent temporary timing, stopped temporary
+manager, unchanged source timing serialization, retained/replaced output
+vectors, and every Boolean assignment. Box inputs precede their output CIs
+as required by the inner driver. Two initial test setups lacked the required
+LUT structure/DSD managers; correcting those fixtures made all valid cases
+pass with no production repair.
+
+Two terminal-only cases also verify the exact source power-suppression warning
+and provider suppression whenever a timing manager exists, even with zero
+boxes. This does not claim that source power mapping of timed AND networks is
+supported: the source driver leaves fPower enabled without vSwitching, while
+its cut power routines require a nonnil vector. Preserve that source limitation
+rather than silently inventing a different power algorithm or flag policy.
+Recorded-library and exact-SAT cost modes likewise remain explicitly unported
+in IF and are not claimed covered by these four active modes.
+
+Focused34 cases0.070s, full Go-only IF10.416s, focused race1.194s and IF vet
+exit0 (`/tmp/abcgo-driver-timing-{valid,full,race,vet}.log`). No C vectors or
+compiler dependency added. Attributes and outer normalization/hash/transfers,
+optional-mode dependencies, and remaining family gates stay open; audit2/131.
