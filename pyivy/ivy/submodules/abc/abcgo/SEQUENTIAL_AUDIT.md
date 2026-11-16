@@ -10040,3 +10040,20 @@ cases check independent classes, packed IDs/signatures and unchanged node values
 Full Go-only module passes130 tested packages plus3 commands without tests,
 focused isomorphism race1.025s and GIA vet pass. Logs and remaining68-routine
 scope in REVIEW_isomorphism.md. Family/GIA review stays open, audit2/131.
+
+
+### Restore isomorphism candidate marks and reuse uniqueness storage
+
+A new red state regression finds Go ignores the source's initially marked
+candidate handling. Preserve first-object lookup, duplicate marks, ordered
+compaction, clearing and sorted label/salt assignment using an owned reusable
+Go map and typed singleton slice. Remove dead per-manager comparison buffers
+and unused bookkeeping; real comparison routines retain their own buffers.
+New warm64-candidate regressions go from3/18 allocations to0. Independent scalar
+classification checks64 cases through257 candidates, wide/zero/duplicate values,
+mark ownership and salt wraparound. Local constructor measurements improve from
+about104.5KB/19 allocations to1232B/7; no general pipeline speedup is claimed.
+Full Go-only module passes130 tested packages plus3 commands without tests,
+focused isomorphism race1.042s and GIA vet pass. Detailed source/portability
+notes and logs in REVIEW_isomorphism.md. The68-routine family/GIA audit stays
+open; original completion remains2/131.

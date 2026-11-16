@@ -2,21 +2,20 @@ package gia
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/misc/vec"
-	"sort"
+	"slices"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 const iso2PrimeC uint32 = 49
 
 type Gia_Iso2Man_t struct {
-	pGia                                                           *Gia_Man_t
-	nObjs, nUniques                                                int32
-	vUniques, vTied, vTable, vPlaces                               *Vec_Int_t
-	vSingles                                                       *Vec_Ptr_t
-	vVec0, vVec1, vMap0, vMap1                                     *Vec_Int_t
-	nIters                                                         int32
-	timeStart, timeSim, timeRefine, timeSort, timeOther, timeTotal int64
+	pGia             *Gia_Man_t
+	nUniques, nIters int32
+	vUniques, vTied  *Vec_Int_t
+	vSingles         []*Gia_Obj_t
+	firstByValue     map[uint32]int32
 }
 
 func Gia_Iso2ManCollectTies(g *Gia_Man_t) *Vec_Int_t {
@@ -100,7 +99,11 @@ func Gia_Iso2ManUpdate(p *Gia_Iso2Man_t, level int32) {
 }
 func Gia_Iso2ManStart(g *Gia_Man_t) *Gia_Iso2Man_t {
 	n := int(Gia_ManObjNum(g))
-	p := &Gia_Iso2Man_t{pGia: g, nObjs: int32(n), vUniques: vec.Vec_IntStartFull(n), vTied: Gia_Iso2ManCollectTies(g), vTable: vec.Vec_IntStart(max(2, 2*n+1)), vPlaces: vec.Vec_IntAlloc(1000), vSingles: vec.Vec_PtrAlloc(1000), vVec0: vec.Vec_IntAlloc(10000), vVec1: vec.Vec_IntAlloc(10000), vMap0: vec.Vec_IntStart(n), vMap1: vec.Vec_IntStart(n)}
+	tied := Gia_Iso2ManCollectTies(g)
+	p := &Gia_Iso2Man_t{
+		pGia: g, vUniques: vec.Vec_IntStartFull(n), vTied: tied,
+		vSingles: make([]*Gia_Obj_t, 0, min(1000, vec.Vec_IntSize(tied))), firstByValue: make(map[uint32]int32),
+	}
 	vec.Vec_IntWriteEntry(p.vUniques, 0, 0)
 	p.nUniques = 1
 	return p
@@ -114,34 +117,41 @@ func Gia_Iso2ManPrint(p *Gia_Iso2Man_t, elapsed int64, verbose int32) {
 	if verbose == 0 {
 		return
 	}
-	fmt.Printf("Iter %4d :  Entries =%8d.  Uniques =%8d.  Singles =%8d.  %9.2f sec\n", p.nIters, vec.Vec_IntSize(p.vTied), p.nUniques, vec.Vec_PtrSize(p.vSingles), float64(elapsed)/float64(time.Second))
+	fmt.Printf("Iter %4d :  Entries =%8d.  Uniques =%8d.  Singles =%8d.  %9.2f sec\n", p.nIters, vec.Vec_IntSize(p.vTied), p.nUniques, len(p.vSingles), float64(elapsed)/float64(time.Second))
 	p.nIters++
 }
 func Gia_ObjCompareByValue2(a, b **Gia_Obj_t) int32 { return Gia_ObjCompareByValue(a, b) }
 
 // Gia_Iso2ManUniqify assigns labels to unique signatures and retains ties.
 func Gia_Iso2ManUniqify(p *Gia_Iso2Man_t) int32 {
-	counts := make(map[uint32]int)
-	for _, id := range vec.Vec_IntArray(p.vTied) {
-		counts[Gia_ManObj(p.pGia, id).Value]++
-	}
-	var tied []int32
-	var singles []*Gia_Obj_t
+	// Preserve C's first-object lookup, tied marks and in-place compaction.
+	// The owned Go map replaces its probing table and touched-slot vector.
 	for _, id := range vec.Vec_IntArray(p.vTied) {
 		obj := Gia_ManObj(p.pGia, id)
-		if counts[obj.Value] == 1 {
-			singles = append(singles, obj)
+		if first, found := p.firstByValue[obj.Value]; found {
+			Gia_ManObj(p.pGia, first).fMark0 = 1
+			obj.fMark0 = 1
 		} else {
-			tied = append(tied, id)
+			p.firstByValue[obj.Value] = id
 		}
 	}
-	vec.Vec_IntClear(p.vTied)
-	for _, id := range tied {
-		vec.Vec_IntPush(p.vTied, id)
+	clear(p.firstByValue)
+	tied := vec.Vec_IntArray(p.vTied)
+	kept := 0
+	p.vSingles = p.vSingles[:0]
+	for _, id := range vec.Vec_IntArray(p.vTied) {
+		obj := Gia_ManObj(p.pGia, id)
+		if obj.fMark0 == 0 {
+			p.vSingles = append(p.vSingles, obj)
+		} else {
+			obj.fMark0 = 0
+			tied[kept] = id
+			kept++
+		}
 	}
-	vec.Vec_PtrClear(p.vSingles)
-	sort.SliceStable(singles, func(i, j int) bool { return int32(singles[i].Value) < int32(singles[j].Value) })
-	for _, obj := range singles {
+	vec.Vec_IntShrink(p.vTied, kept)
+	slices.SortFunc(p.vSingles, func(a, b *Gia_Obj_t) int { return int(Gia_ObjCompareByValue2(&a, &b)) })
+	for _, obj := range p.vSingles {
 		id := Gia_ObjId(p.pGia, obj)
 		obj.Value += s_256Primes[p.nUniques&ISO_MASK]
 		if vec.Vec_IntEntry(p.vUniques, int(id)) != -1 {
@@ -149,9 +159,8 @@ func Gia_Iso2ManUniqify(p *Gia_Iso2Man_t) int32 {
 		}
 		vec.Vec_IntWriteEntry(p.vUniques, int(id), p.nUniques)
 		p.nUniques++
-		vec.Vec_PtrPush(p.vSingles, obj)
 	}
-	return int32(len(singles))
+	return int32(len(p.vSingles))
 }
 func Gia_Iso2ManDerivePoClasses(g *Gia_Man_t) *Vec_Wec_t {
 	classes := vec.Vec_WecAlloc(int(Gia_ManPoNum(g)))

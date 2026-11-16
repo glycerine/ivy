@@ -57,3 +57,60 @@ tests), focused existing/new isomorphism race1.025s and GIA vet exit0. Logs:
 /tmp/abcgo-iso-prepare-final-{module.jsonl,race.log,vet.log}. All sessions ended.
 Only this preparation checkpoint is closed; the family and full GIA package
 remain in progress, original package completion2/131.
+
+
+## Second-generation uniqueness state and compact owned workspace
+
+New regressions fail before repair (/tmp/abcgo-iso2-owned-storage-red.log):
+Go ignores an initially marked candidate (returns2 singletons instead of C's1),
+and warmed64-candidate classification allocates3 times for all ties or18 times
+for all singletons. Source's normal verification assumption is clean candidate
+marks; its actual enabled code also consumes initially marked candidates into
+the tied list and clears their mark0. Preserve that defined state transition,
+including marks on noncandidates remaining untouched.
+
+Follow the original ordered operations: remember each signature's first object,
+mark duplicate objects, compact ties in place, clear consumed marks, sort unique
+objects and assign incremented labels/signature salts. An owned Go map replaces
+the C probing table/touched-slot vector; map iteration is never used, so hash
+bucket placement cannot alter output order. Clear the map after the lookup pass
+and reuse a typed singleton slice. Existing safe signed32 comparator semantics
+remain; singleton signatures are distinct, so sort stability is immaterial.
+C's subtracting comparator can overflow. Wide-signature tests pin the existing
+portable Go ordering; defined-range C comparisons keep the same order.
+
+Remove unused comparison vectors/maps and never-read count/timing fields from
+this opaque Go manager. C's comparison entry points allocate their actual local
+buffers separately; no runtime comparison state or source search is removed.
+The first-occurrence map grows with encountered signatures, while the singleton
+buffer starts bounded by candidate count. A separate review confirms all256
+prime constants match both original source tables; tests do not read C files.
+
+Sixty-four independent scalar cases cover candidate counts0/1/2/3/8/17/64/257,
+zero/dense/unique/wide signatures and initially marked candidates. Quadratic
+classification and insertion ordering check exact kept IDs, labels, salted
+values, mark0 consumption and untouched mark1. The257-input case covers salt
+index wraparound. Warm64-candidate tests now allocate0 for both extreme classes.
+Existing output reduction/comparison tests remain active.
+
+The unchanged local100ms/count3 construction benchmark goes from104520..104525
+B/op and19 allocations to1232 B/op and7 allocations. Sample medians37507ns
+before and1044ns after describe this64-candidate constructor only, not an
+end-to-end isomorphism speedup. Logs:
+/tmp/abcgo-iso2-manager-before-bench.log,
+/tmp/abcgo-iso2-owned-reviewed.log (final benchmark plus existing/new tests).
+An intermediate1296 B result is superseded after sizing singleton capacity
+from candidates instead of total objects.
+
+Frozen full Go-only module exits0:130 tested packages pass,3 commands have no
+tests. JSON confirms64 scalar leaf cases execute; focused isomorphism race1.042s
+and GIA vet exit0. Logs /tmp/abcgo-iso2-owned-final-{module.jsonl,race.log,vet.log}.
+All handles ended. This closes uniqueness workspace/mark reconciliation only;
+remaining refinement, canonical ordering, sequential comparison, drivers and
+reports in the68-routine family still require review. Original audit2/131.
+
+
+Next: check forward/backward and register signature arithmetic, then utility
+sort tie ordering and canonical PI/RO/PO traversal before making broader
+canonicalization/reduction claims. Keep source diagnostic/report omissions in
+the inventory for their own new regressions. All expectations must remain Go-only.
