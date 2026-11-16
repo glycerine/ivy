@@ -12,8 +12,10 @@ Go keeps library ownership in base/abci and dispatch in map/if to avoid cycles.
 - [x] Default reconstruction to Abc_RecToGia3; preserve explicit Go overrides.
 - [x] Restore writable pin storage without allocating for ordinary timing reads.
 - [x] Exercise real mapping, timing, phases, registers and delay/area rounds.
-- [ ] Review richer recorded classes, competing delay profiles/area ties and
-  missing-class/small-support behavior independently before dependency closure.
+- [x] Review competing delay profiles/area ties and missing-class/small-support
+  behavior with independent physical profiles and Boolean reconstruction.
+- [ ] Check the six-to-sixteen-variable and multiword storage/reconstruction
+  boundaries before dependency closure.
 - [ ] Reconcile remaining exact-SAT cost integration separately.
 
 ## Findings and repair
@@ -97,3 +99,43 @@ tests); recorded boundary/mapping race passes8.105s and IF/GIA vet exits0.
 Logs: /tmp/abcgo-recorded-boundaries-final-{module.jsonl,race.log,vet.log}.
 All sessions ended. Richer competing profiles/area ties, explicit missing-class
 and small-support selection remain open; no dependency/package closure claimed.
+
+
+## Competing recorded implementations and compact selection
+
+Reconcile If_CutFindBestStruct, If_CutDelayRecCost3 and Abc_RecToGia3 against
+abcRec3.c:895..1173: canonicalize, look up adjacent PO ranges, minimize output
+arrival, break delay ties by area, retain the first equal delay/area candidate,
+remap pin depths to cut order and rebuild the chosen physical cone. Trivial
+cuts deliberately cost1 even when their rebuilt graph has no gates. Missing
+classes set maximum cost and leave the optional best-PO output unchanged;
+trivial cases also leave canonical-output parameters untouched. Preserve those
+source policies rather than normalizing them into different behavior.
+
+New Go-only library has16 explicit truth groups with five implementations each.
+Independent profiles[222,221,212,122,122] and areas[3,2,2,2,2] check all80
+stored records and17 class offsets. Across64 phase/timing configurations, a
+stable-sort oracle ranks the manual profiles independently of the production
+scan. Check selected PO, delay/area, canonical pin remapping, required-time
+propagation for integer arrivals, both raw/hashed reconstruction modes, all8
+assignments, two-gate area and clean library marks after repeated rebuilding.
+
+Additional tests cover a missing three-input class in a two-input library and
+eight constant/positive/negative single-support cases with support reduction
+on/off. Check sentinel pin delays, unchanged unused output arguments, direct
+zero-gate rebuilding and all assignments. No C fixture/compiler is used.
+
+Simplify the two delay/selection helpers with scoped locals, shared trivial-cut
+handling and removal of the source's permanently disabled diagnostic block.
+Keep the original linear scan and tie policy. Inspection during this refactor
+catches assertion ordering: invalid holey multi-input support must fail before
+cost/pin writes. A new red regression demonstrates the temporary mutation
+(/tmp/abcgo-recorded-selection-guard-red.log, exit1); restore the source guard
+order before finishing. This was a refactor defect caught before committing,
+not a newly discovered defect in the previously committed implementation.
+
+Frozen cases pass0.417s; full Go-only module exits0 (130 tested packages plus3
+commands without tests), focused recorded/mapping race8.391s and IF/GIA vet
+exits0. Logs: /tmp/abcgo-recorded-selection-final-{cases.log,module.jsonl,
+race.log,vet.log}. All sessions ended. Wide/multiword boundaries, exact-SAT
+integration and final mapping-family gates remain open; original audit2/131.

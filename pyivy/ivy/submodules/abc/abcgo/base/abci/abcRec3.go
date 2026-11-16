@@ -1097,127 +1097,73 @@ func Abc_NtkRecAdd3(pNtk *Abc_Ntk_t, fUseSOPB int32) {
 
 **********************************************************************
 */
-func If_CutComputeDelay(p *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, DelayProfile word) int32 {
-	var pLeaf *If_Obj_t
-	var nLeaves int32 = If_CutLeaveNum(pCut)
-	var i int32
-	var delayTemp int32
-	var delayMax int32 = -ABC_INFINITY
-	for i = 0; i < nLeaves; i++ {
-		pLeaf = If_ManObj(p, If_CutLeaves(pCut)[int32(pCanonPerm[i])])
-		delayTemp = int32(If_ObjCutBest(pLeaf).Delay + float32(Lms_DelayGet(DelayProfile, i)))
-		delayMax = Abc_MaxInt(delayMax, delayTemp)
+func If_CutComputeDelay(p *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, delayProfile word) int32 {
+	delayMax := int32(-ABC_INFINITY)
+	for i := int32(0); i < If_CutLeaveNum(pCut); i++ {
+		leaf := If_ManObj(p, If_CutLeaves(pCut)[pCanonPerm[i]])
+		delay := int32(If_ObjCutBest(leaf).Delay + float32(Lms_DelayGet(delayProfile, i)))
+		delayMax = Abc_MaxInt(delayMax, delay)
 	}
 	return delayMax
 }
-func If_CutFindBestStruct(pIfMan *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, puCanonPhase *uint32, pBestPo *int32) int32 {
-	var p *Lms_Man_t = s_pMan3
-	var i int32
-	var pTruthId *int32
-	var iFirstPo int32
-	var iFirstPoNext int32
-	var iBestPo int32
-	var BestDelay int32 = ABC_INFINITY
-	var BestArea int32 = ABC_INFINITY
-	var Delay int32
-	var Area int32
-	var uSupport int32
-	var nLeaves int32 = If_CutLeaveNum(pCut)
-	var pPerm []byte = If_CutPerm(pCut)
-	var DelayProfile word
-	var clk abctime
-	If_CutSetUser(pCut, 1)
-	// compute support
-	uSupport = Abc_TtSupport(If_CutTruthWordSlice(pIfMan, pCut), nLeaves)
-	if uSupport == 0 {
-		If_CutSetCost(pCut, uint32(1))
-		for i = 0; i < nLeaves; i++ {
-			pPerm[i] = IF_BIG_CHAR
-		}
-		return 0
-	}
-	if Abc_TtSuppIsMinBase(uSupport) == 0 || uSupport == 1 {
-		assert(Abc_TtSuppOnlyOne(uSupport) != 0, "Abc_TtSuppOnlyOne(uSupport)")
-		If_CutSetCost(pCut, uint32(1))
-		for i = 0; i < nLeaves; i++ {
-			pPerm[i] = IF_BIG_CHAR
-		}
-		pPerm[Abc_TtSuppFindFirst(uSupport)] = 0
-		return int32(If_ObjCutBest(If_ManObj(pIfMan, If_CutLeaves(pCut)[Abc_TtSuppFindFirst(uSupport)])).Delay)
-	}
-	assert(Gia_WordCountOnes(uSupport) == nLeaves, "Gia_WordCountOnes(uSupport) == nLeaves")
 
-	// semicanonicize the function
-	clk = Abc_Clock()
+func If_CutFindBestStruct(pIfMan *If_Man_t, pCut *If_Cut_t, pCanonPerm []byte, puCanonPhase *uint32, pBestPo *int32) int32 {
+	p := s_pMan3
+	nLeaves := If_CutLeaveNum(pCut)
+	pPerm := If_CutPerm(pCut)
+	If_CutSetUser(pCut, 1)
+	support := Abc_TtSupport(If_CutTruthWordSlice(pIfMan, pCut), nLeaves)
+	if support == 0 || Abc_TtSuppIsMinBase(support) == 0 || support == 1 {
+		if support != 0 {
+			assert(Abc_TtSuppOnlyOne(support) != 0, "Abc_TtSuppOnlyOne(uSupport)")
+		}
+		If_CutSetCost(pCut, 1)
+		for i := int32(0); i < nLeaves; i++ {
+			pPerm[i] = IF_BIG_CHAR
+		}
+		if support == 0 {
+			return 0
+		}
+		pin := Abc_TtSuppFindFirst(support)
+		pPerm[pin] = 0
+		return int32(If_ObjCutBest(If_ManObj(pIfMan, If_CutLeaves(pCut)[pin])).Delay)
+	}
+	assert(Gia_WordCountOnes(support) == nLeaves, "Gia_WordCountOnes(uSupport) == nLeaves")
+
+	clk := Abc_Clock()
 	copy(p.pTemp1[:], If_CutTruthWordSlice(pIfMan, pCut))
-	*puCanonPhase = Abc_TtCanonicize(p.pTemp1[:], nLeaves, pCanonPerm[:])
+	*puCanonPhase = Abc_TtCanonicize(p.pTemp1[:], nLeaves, pCanonPerm)
 	lmsStretch5(p.pTemp1[:], nLeaves, p.nVars)
 	p.timeCanon += Abc_Clock() - clk
-
-	// get TT ID for the given class
-	pTruthId = Vec_MemHashLookup(p.vTtMem, p.pTemp1[:])
-	if *pTruthId == -1 {
+	truthID := Vec_MemHashLookup(p.vTtMem, p.pTemp1[:])
+	if *truthID == -1 {
 		If_CutSetCost(pCut, uint32(IF_COST_MAX))
 		If_CutSetUseless(pCut, 1)
 		return ABC_INFINITY
 	}
 
-	// note that array p->vTruthPo contains the first PO for the given truth table
-	// other POs belonging to the same equivalence class follow immediately after this one
-	// to iterate through the POs, we need to perform the following steps
-
-	// find the first PO of this class
-	iFirstPo = Vec_IntEntry(p.vTruthPo, *pTruthId)
-	// find the first PO of the next class
-	iFirstPoNext = Vec_IntEntry(p.vTruthPo, *pTruthId+1)
-	// iterate through the subgraphs of this class
-	iBestPo = -1
-	for i = iFirstPo; i < iFirstPoNext; i++ {
-		Delay = If_CutComputeDelay(pIfMan, pCut, pCanonPerm, Vec_WrdEntry(p.vDelays, i))
-		Area = int32(Vec_StrEntry(p.vAreas, i))
-		if iBestPo == -1 || BestDelay > Delay || (BestDelay == Delay && BestArea > Area) {
-			iBestPo = i
-			BestDelay = Delay
-			BestArea = Area
+	// Implementations of a class occupy adjacent POs. Keep the first one
+	// on a delay/area tie, matching the source scan order.
+	first := Vec_IntEntry(p.vTruthPo, *truthID)
+	next := Vec_IntEntry(p.vTruthPo, *truthID+1)
+	best := int32(-1)
+	bestDelay, bestArea := int32(ABC_INFINITY), int32(ABC_INFINITY)
+	for i := first; i < next; i++ {
+		delay := If_CutComputeDelay(pIfMan, pCut, pCanonPerm, Vec_WrdEntry(p.vDelays, i))
+		area := int32(Vec_StrEntry(p.vAreas, i))
+		if best == -1 || bestDelay > delay || bestDelay == delay && bestArea > area {
+			best, bestDelay, bestArea = i, delay, area
 		}
 	}
 	if pBestPo != nil {
-		*pBestPo = iBestPo
+		*pBestPo = best
 	}
-
-	// mark as user cut.
-	DelayProfile = Vec_WrdEntry(p.vDelays, iBestPo)
-	If_CutSetCost(pCut, uint32(Vec_StrEntry(p.vAreas, iBestPo)))
-	for i = 0; i < nLeaves; i++ {
-		pPerm[int32(pCanonPerm[i])] = byte(Lms_DelayGet(DelayProfile, i))
+	profile := Vec_WrdEntry(p.vDelays, best)
+	If_CutSetCost(pCut, uint32(Vec_StrEntry(p.vAreas, best)))
+	for i := int32(0); i < nLeaves; i++ {
+		pPerm[pCanonPerm[i]] = byte(Lms_DelayGet(profile, i))
 	}
-	if false {
-		var Max int32
-		var Two int32
-		var pTimes [16]int32
-		for i = 0; i < nLeaves; i++ {
-			pTimes[i] = int32(int32(If_ObjCutBest(If_CutLeaf(pIfMan, pCut, i)).Delay))
-		}
-		for i = 0; i < If_CutLeaveNum(pCut); i++ {
-			Max = Abc_MaxInt(Max, pTimes[i])
-		}
-		for i = 0; i < If_CutLeaveNum(pCut); i++ {
-			if pTimes[i] != Max {
-				Two = Abc_MaxInt(Two, pTimes[i])
-			}
-		}
-		if Two+2 < Max && Max+3 < BestDelay {
-			for i = 0; i < If_CutLeaveNum(pCut); i++ {
-				fmt.Printf("%3d ", pTimes[i])
-			}
-			for ; i < If_ManLutSize(pIfMan); i++ {
-				fmt.Printf("    ")
-			}
-			fmt.Printf("-> %3d   ", BestDelay)
-			Dau_DsdPrintFromTruth(If_CutTruthWordSlice(pIfMan, pCut), If_CutLeaveNum(pCut))
-		}
-	}
-	return BestDelay
+	return bestDelay
 }
 func If_CutDelayRecCost3(pIfMan *If_Man_t, pCut *If_Cut_t, pObj *If_Obj_t) int32 {
 	var p *Lms_Man_t = s_pMan3

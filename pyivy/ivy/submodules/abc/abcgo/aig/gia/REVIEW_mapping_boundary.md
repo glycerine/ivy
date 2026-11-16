@@ -1722,3 +1722,18 @@ passes130 tested packages plus3 commands without tests; focused recorded
 boundary/mapping race8.105s and IF/GIA vet pass. Logs and source reconciliation
 are in map/if/REVIEW_recorded_dependency.md. Competing profiles, missing/small
 support selection, exact-SAT and final family gates remain open; audit2/131.
+
+
+### Review recorded profile selection, ties and trivial cuts
+
+A new80-implementation Go library checks independent pin-depth/area tables and
+class offsets. Sixty-four phase/timing cases verify actual source selection,
+pin mapping, timing propagation and128 raw/hashed reconstructions against all
+assignments. Cover missing classes and eight constant/single-support reduction
+cases, including source cost1 for zero-gate results and unchanged unused output
+arguments. Simplify the source scan helpers and remove permanently disabled
+diagnostics. A separate red guard-order test catches and prevents a temporary
+refactor side effect before invalid-support rejection. Details and logs are in
+map/if/REVIEW_recorded_dependency.md. Full Go-only module, focused8.391s race
+and IF/GIA vet pass. Wide recorded-library boundaries, exact-SAT integration
+and final family gates remain open; package audit2/131.

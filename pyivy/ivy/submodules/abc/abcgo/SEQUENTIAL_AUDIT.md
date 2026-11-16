@@ -9863,3 +9863,15 @@ and function-only zero/nonzero reports. Full Go-only module passes130 tested
 packages plus3 commands without tests; focused recorded race8.105s and IF/GIA
 vet pass. Evidence in the mapping/recorded dependency plans. Remaining richer
 selection, exact-SAT and family/package audit stay open2/131.
+
+
+### Review recorded profile selection and simplify its helpers
+
+Independent Go physical profiles/areas cover80 library records,64 phase/timing
+selections and128 raw/hashed reconstructions. Test source tie order, pin mapping,
+required timing, missing classes and constant/single-support costs/rebuilding.
+Simplify the selection helpers while preserving the scan; a new red regression
+catches invalid-support guard ordering during refactoring, corrected before
+commit. Full Go-only module passes130 tested packages plus3 commands without
+tests; focused recorded race8.391s and IF/GIA vet pass. Evidence and remaining
+wide/exact-SAT work in the mapping/recorded plans. Original audit stays2/131.
