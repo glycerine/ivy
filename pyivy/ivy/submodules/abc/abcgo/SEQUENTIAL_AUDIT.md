@@ -9746,3 +9746,16 @@ No production transfer defect found beyond verification repaired separately.
 Final full Go-only module, focused GIA race and vet pass as recorded above;
 details in REVIEW_mapping_boundary.md. Remaining family/package audit stays
 open2/131.
+
+### Restore ABC routing and reconcile mapping reports
+
+Six new red Go-only report cases expose direct fmt output bypassing C's
+Abc_Print path. Restore bridge routing for mapping/packing/node/LUT reports;
+retain the duplicate-fanin report's source stdout path. Reconcile MUX roles,
+two/three-input counting, mark cleanup, packing/profile boundaries and shared
+dump history. New Go-only tests cover exact reports on stdout/bridge, scalar
+boxed levels, signed/nested MUXes, repeated counts,32/33-input profiles and
+append/name behavior across paths. Full Go-only module130 tested packages
+pass plus3 commands without tests; focused race1.084s and relevant vet pass.
+See REVIEW_mapping_boundary.md. Remaining metrics/integration/family gates
+and original package audit remain open2/131.

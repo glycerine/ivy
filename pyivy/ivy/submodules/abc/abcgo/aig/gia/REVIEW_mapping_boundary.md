@@ -42,12 +42,12 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManComputeOverlapOne_rec | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManComputeOverlapOne | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
 | Gia_ManComputeOverlap | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManPrintGetMuxFanins | aig/gia/mapping_stats.go | Pending |
-| Gia_ManCountDupLut | aig/gia/mapping_stats.go | Pending |
-| Gia_ManPrintMappingStats | aig/gia/mapping_stats.go | Pending |
-| Gia_ManPrintPackingStats | aig/gia/mapping_profile.go | Pending |
-| Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Pending |
-| Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Pending |
+| Gia_ManPrintGetMuxFanins | aig/gia/mapping_stats.go | Source control/data roles and phase stripping reconciled; Go-only eight-phase/nested coverage; final family gate pending |
+| Gia_ManCountDupLut | aig/gia/mapping_stats.go | Source two/three-input selection, counts, marks and stdout routing reviewed; Go-only repeated-call fixtures; final family gate pending |
+| Gia_ManPrintMappingStats | aig/gia/mapping_stats.go | Source ABC routing repaired; precision/boxed-level/ANSI/dump-state behavior covered in Go; final family gate pending |
+| Gia_ManPrintPackingStats | aig/gia/mapping_profile.go | Source ABC routing repaired; group counts and empty maximum reconciled; exact Go-only reports; final family gate pending |
+| Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Source ABC routing repaired; counts/weighted ratios/terminal bins reviewed; Go-only reports; final family gate pending |
+| Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Source ABC routing repaired; empty and32/33-width boundaries covered in Go; final family gate pending |
 | Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Ordinary/typed/boxed coverage; integration pending |
 | Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Ordinary/typed/boxed coverage; integration pending |
 | If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Source walk reviewed; dangling/64 choice-chain cases; final family gate pending |
@@ -1450,3 +1450,45 @@ pass on the frozen final tree, as recorded in the preceding section. No
 additional production change was required for record transfer. Remaining
 metrics/reports, hashing/boxed-choice reconciliation, optional dependencies
 and final family gates stay open; original package audit2/131.
+
+### Restore ABC routing and reconcile mapping reports
+
+Source `giaIf.c:453..667` sends mapping statistics, packing statistics and
+node/LUT profiles through Abc_Print(1). Go used fmt.Printf/Println, bypassing
+the installed print bridge. Six new report-path regressions fail before repair
+(`/tmp/abcgo-mapping-report-bridge-red.log`, exit1). Restore the existing ABC
+print path while retaining report text and grouping. `Gia_ManCountDupLut`
+uses plain printf in C; retain its stdout behavior and test that the bridge
+does not receive that separate report.
+
+Reconcile MUX reporting with `giaIf.c:391..450`: strip literal phases while
+preserving positive-control data roles, visit mapped MUX roots in order, select
+one data fanin for two-input cuts using existing marks, count occurrences and
+clean both mark sets before/after reporting. The returned/printed Total excludes
+MUX occurrences while the percentage includes them, exactly as in C. New
+independent fixtures exercise both two/three-input branches, reused primary
+inputs, repeated MUX data, fallback fanin selection and repeated clean runs.
+No further counting/selection discrepancy was found.
+
+New Go-only coverage includes22 exact report/routing configurations (stdout
+and bridge),64 boxed-level reports checked against construction-time scalar
+levels, eight signed/nested MUX configurations, duplicate counts/mark cleanup,
+empty packing maximum-1, terminal-bin weighting, source float32 average1.07,
+empty LUT reporting and the accepted32/rejected33-input profile boundary.
+ANSI text follows the source non-Windows report branch. Existing Go guards
+for empty denominators, empty-name initialization and file-open failures remain
+unchanged; ordinary source-domain formulas and dump formatting are preserved.
+
+`mapping_dump_go_review_test.go` independently checks exact append/spacing and
+name transitions across two temporary paths. The source name/time history is
+shared across paths: continuing the same name in a new file does not emit a
+fresh header. Normalize only elapsed numeric text. An unmapped graph creates
+no dump file. Existing optional native comparisons remain historical/additional
+evidence; no C vector or compiler dependency is introduced by these tests.
+
+Frozen focused cases0.024s (`/tmp/abcgo-mapping-report-complete-cases.log`);
+full Go-only module exits0 with130 tested packages passing plus3 commands
+without tests. Focused reports/verification race1.084s and relevant vet exit0
+(`/tmp/abcgo-mapping-report-complete-{module.jsonl,race.log,vet.log}`). All
+handles consumed. Remaining metrics/reference/overlap integration, hashing,
+boxed choices, optional dependencies and final family gates remain open2/131.

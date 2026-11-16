@@ -1,6 +1,6 @@
 package gia
 
-import "fmt"
+import abcutil "github.com/glycerine/abcgo/misc/util"
 
 func Gia_ManPrintPackingStats(p *Gia_Man_t) {
 	if p.VPacking == nil {
@@ -27,13 +27,13 @@ func Gia_ManPrintPackingStats(p *Gia_Man_t) {
 	if entries != data[0] {
 		panic("gia: packing count mismatch")
 	}
-	fmt.Printf("Packing (N=%d)  :  ", maximum)
+	abcutil.Abc_Print(1, "Packing (N=%d)  :  ", maximum)
 	var total int32
 	for size := 1; size <= maximum; size++ {
-		fmt.Printf("%d x LUT = %d   ", size, counts[size])
+		abcutil.Abc_Print(1, "%d x LUT = %d   ", size, counts[size])
 		total += int32(size) * counts[size]
 	}
-	fmt.Printf("Total = %d   Total LUT = %d\n", entries, total)
+	abcutil.Abc_Print(1, "Total = %d   Total LUT = %d\n", entries, total)
 }
 func Gia_ManPrintNodeProfile(counts []int32, sizeMax int32) {
 	if sizeMax < 0 || int(sizeMax) >= len(counts) {
@@ -44,24 +44,24 @@ func Gia_ManPrintNodeProfile(counts []int32, sizeMax int32) {
 		total += counts[i]
 		weighted += i * counts[i]
 	}
-	fmt.Printf("LUT = %d : ", total)
+	abcutil.Abc_Print(1, "LUT = %d : ", total)
 	for i := int32(2); i <= sizeMax; i++ {
 		percent := float64(0)
 		if total != 0 {
 			percent = 100 * float64(counts[i]) / float64(total)
 		}
-		fmt.Printf("%d=%d %.1f %%  ", i, counts[i], percent)
+		abcutil.Abc_Print(1, "%d=%d %.1f %%  ", i, counts[i], percent)
 	}
-	fmt.Printf("Ave = %.2f\n", float64(weighted)/float64(max(total, 1)))
+	abcutil.Abc_Print(1, "Ave = %.2f\n", float64(weighted)/float64(max(total, 1)))
 }
 func Gia_ManPrintLutStats(p *Gia_Man_t) {
 	maximum := Gia_ManLutSizeMax(p)
 	if maximum > 32 {
-		fmt.Printf("The max LUT size (%d) is too large.\n", maximum)
+		abcutil.Abc_Print(1, "The max LUT size (%d) is too large.\n", maximum)
 		return
 	}
 	if maximum < 0 {
-		fmt.Println("LUT = 0 : Ave = 0.00")
+		abcutil.Abc_Print(1, "LUT = 0 : Ave = 0.00\n")
 		return
 	}
 	counts := make([]int32, maximum+1)
