@@ -123,6 +123,20 @@ Abstract:
                                   infeasible candidate forever on a rule with
                                   a universally quantified body (pkg/AUDIT.md
                                   duality zbug round 3).
+    z3_4_7_1_duality_mixed_rewrite iZ3 rejects a rewrite of a formula that
+                                  propagate_values mixed across frames, and
+                                  localizes an and-elim from one into a
+                                  quantified interpolant (pkg/AUDIT.md
+                                  duality_iz3).
+    z3_4_7_1_duality_second_round_rewrite iZ3 rejects a rewrite of a
+                                  formula that two propagate_values rounds
+                                  mixed across frames (pkg/AUDIT.md
+                                  duality_iz3 round 2).
+    z3_4_7_1_duality_itp_unchecked_sat Duality trusts an SMT sat that
+                                  never checked a rule's quantifier (MBQI is
+                                  for interpolant quantifiers only) and
+                                  answers sat for an underivable query
+                                  (pkg/AUDIT.md duality_itp_sat).
     z3_4_7_1_implicant_nested_array_eq once a nested array index makes
                                   model_implicant::eval_array_eq mark the
                                   equality true, a later differing index
@@ -295,6 +309,15 @@ Abstract:
                                   Datalog front end reads `X = ""` on an
                                   int domain as an uninitialized number
                                   (pkg/AUDIT.md cmd_context_01-F9 follow-up).
+    z3_4_7_1_simple_joins_rule_order join_planner::run emits the result
+                                  rules in rule-pointer address order
+                                  instead of source order (fork fix,
+                                  owner decision 2026-11-15).
+    z3_4_7_1_str_container_id_order theory_str walks std::map/std::set
+                                  containers keyed by expr pointers, so
+                                  z3str3's axioms and models follow heap
+                                  addresses (fork fix, owner decision
+                                  2026-11-15).
 
     Run: ./test-z3 z3_4_7_1_dom_simplify_root   (etc.)
 --*/
@@ -354,6 +377,7 @@ Abstract:
 #include "muz/base/dl_util.h"
 #include "muz/fp/datalog_parser.h"
 #include "util/warning.h"
+#include "muz/rel/dl_mk_simple_joins.h"
 void register_z3_replayer_cmds(z3_replayer & in);
 #include <iostream>
 #ifndef _WINDOWS
@@ -1662,10 +1686,11 @@ void tst_z3_4_7_1_duality_quantify_arrays_requery() {
     expect_script_output("duality_quantify_arrays_requery", script, "sat\nunsat\nsat\n");
 }
 
-// A Duality query that throws (here iZ3 refuses the arithmetic rewrite
-// proof of the err query) has already replaced the saved duality_data with
-// a fresh one whose old_rs is null. The next query dereferences that null
-// solver to swap back its counterexample and segfaults. ok is reachable
+// A Duality query that throws (here iZ3's chain_ineqs throws
+// bad_ineq_inference on the err query) has already replaced the saved
+// duality_data with a fresh one whose old_rs is null. The next query
+// dereferences that null solver to swap back its counterexample and
+// segfaults. ok is reachable
 // (s = 1 gives p(1, 1)), so the second query must answer sat.
 // pkg/AUDIT.md duality_01-F3 (follow-up: the Duality scale pipeline test).
 void tst_z3_4_7_1_duality_failed_query_requery() {
@@ -1684,7 +1709,7 @@ void tst_z3_4_7_1_duality_failed_query_requery() {
         "(query err)\n"
         "(query ok)\n";
     expect_script_output("duality_failed_query_requery", script,
-                         "(error \"query failed: theory not supported by interpolation or bad proof\")\nunknown\nsat\n");
+                         "(error \"query failed: bad_ineq_inference\")\nunknown\nsat\n");
 }
 
 // model_implicant::eval_array_eq on arrays of arrays: at index 1 the values
@@ -1889,6 +1914,131 @@ void tst_z3_4_7_1_duality_rejected_candidate_loop() {
         "(query err)\n";
     expect_script_output("duality_rejected_candidate_loop", script,
                          "(error \"query failed: incompleteness\")\nunknown\n");
+}
+
+// err <- p(x) & forall z. z > x, with p = {0..3}. No p value makes the
+// quantifier true, so err is not derivable (unsat). Duality's solvers use MBQI
+// only for interpolant quantifiers (mbqi.id=itp); the rule's quantifier is
+// never checked and z3 answered sat with a derivation. The fork validates such
+// a counterexample with a full solver and reports incompleteness. A valid
+// quantified counterexample keeps its sat. pkg/AUDIT.md duality_itp_sat.
+void tst_z3_4_7_1_duality_itp_unchecked_sat() {
+    char const* script =
+        "(set-option :fixedpoint.engine duality)\n"
+        "(declare-rel p (Int))\n"
+        "(declare-rel err ())\n"
+        "(declare-var x Int)\n"
+        "(declare-var y Int)\n"
+        "(rule (=> (= x 0) (p x)))\n"
+        "(rule (=> (and (p x) (= y (+ x 1)) (< x 3)) (p y)))\n"
+        "(rule (=> (and (p x) (forall ((z Int)) (> z x))) err))\n"
+        "(query err)\n";
+    expect_script_output("duality_itp_unchecked_sat", script,
+                         "(error \"query failed: incompleteness\")\nunknown\n");
+    char const* valid =
+        "(set-option :fixedpoint.engine duality)\n"
+        "(declare-rel p (Int))\n"
+        "(declare-rel err ())\n"
+        "(declare-var x Int)\n"
+        "(declare-var y Int)\n"
+        "(rule (=> (= x 0) (p x)))\n"
+        "(rule (=> (and (p x) (= y (+ x 1)) (< x 3)) (p y)))\n"
+        "(rule (=> (and (p x) (forall ((z Int)) (or (> z x) (<= z x)))) err))\n"
+        "(query err)\n";
+    expect_script_output("duality_itp_unchecked_sat_valid", valid, "sat\n");
+}
+
+// propagate_values substitutes @p_x_2 for x_3 in node 3's edge, giving
+// (and (= @p_x_2 1) (and @b_4 ...)), which mixes the frames; the rewrite
+// that flattens it is no assumption of any frame and translate_main refused
+// it ("theory not supported by interpolation or bad proof", unknown). err is
+// unreachable (q1 is empty, q0 = {0, 1}). In the second script the
+// conjunction (and @b_4 (= x_4 7) (= @p_x_2 9) ...) is split by and-elim,
+// which make_axiom localizes with a fresh variable: the interpolant is
+// quantified. The fork renames the substituted constants back, so both
+// certificates are quantifier free. pkg/AUDIT.md duality_iz3.
+void tst_z3_4_7_1_duality_mixed_rewrite() {
+    char const* script =
+        "(set-option :fixedpoint.engine duality)\n"
+        "(declare-rel q0 (Int))\n"
+        "(declare-rel q1 (Int))\n"
+        "(declare-rel err ())\n"
+        "(declare-var x Int)\n"
+        "(declare-var x1 Int)\n"
+        "(rule (=> (and (= x 0)) (q0 x)))\n"
+        "(rule (=> (and (q1 x) (>= x 2) (= x1 0)) (q1 x1)))\n"
+        "(rule (=> (and (q0 x) (<= x 0) (= x1 1)) (q0 x1)))\n"
+        "(rule (=> (and (q1 x) (= x 11) (= x1 x)) (q0 x1)))\n"
+        "(rule (=> (and (q0 x) (> x 2)) err))\n"
+        "(query err :print-certificate true)\n";
+    expect_script_output("duality_mixed_rewrite", script,
+                         "unsat\n"
+                         "(fixedpoint \n"
+                         "(define-fun err () Bool\n"
+                         "  false)\n"
+                         "(define-fun @Fail!0 () Bool\n"
+                         "  false)\n"
+                         "(define-fun q0 ((x!0 Int)) Bool\n"
+                         "  (or (= x!0 0) (= x!0 1)))\n"
+                         "(define-fun q1 ((x!0 Int)) Bool\n"
+                         "  false)\n"
+                         ")\n"
+                         "\n");
+    char const* elim =
+        "(set-option :fixedpoint.engine duality)\n"
+        "(declare-rel q0 (Int))\n"
+        "(declare-rel q1 (Int))\n"
+        "(declare-rel q2 (Int))\n"
+        "(declare-rel err ())\n"
+        "(declare-var x Int)\n"
+        "(declare-var x1 Int)\n"
+        "(rule (=> (and (= x 2)) (q0 x)))\n"
+        "(rule (=> (and (q0 x) (= x 7) (= x1 (+ x 2))) (q2 x1)))\n"
+        "(rule (=> (and (q0 x) (< x 5) (= x1 x)) (q1 x1)))\n"
+        "(rule (=> (and (q1 x) (>= x 1) (= x1 (+ x 3))) (q1 x1)))\n"
+        "(rule (=> (and (q1 x) (<= x (+ x 1)) (= x1 (- x 3)) (q0 x)) (q1 x1)))\n"
+        "(rule (=> (and (q2 x) (> x (- x 2))) err))\n"
+        "(query err :print-certificate true)\n";
+    expect_script_output("duality_mixed_and_elim", elim,
+                         "unsat\n"
+                         "(fixedpoint \n"
+                         "(define-fun err () Bool\n"
+                         "  false)\n"
+                         "(define-fun @Fail!0 () Bool\n"
+                         "  false)\n"
+                         "(define-fun q0 ((x!0 Int)) Bool\n"
+                         "  (= x!0 2))\n"
+                         "(define-fun q2 ((x!0 Int)) Bool\n"
+                         "  false)\n"
+                         ")\n"
+                         "\n");
+}
+
+// In an err query, propagate_values substitutes across frames in two
+// rounds, so the congruence before a rewrite already starts from a mixed
+// formula and the rewrite stays mixed after renaming back the constants of
+// that congruence; translate_main refused it ("theory not supported by
+// interpolation or bad proof"). The fork also renames through the proof's
+// other hypothesis-free constant equations. err is reachable: q0(2, 1),
+// q0(2, 2), q0(4, 2), q0(4, 4), q0(8, 2), q0(8, 8) and 8 >= 5.
+// pkg/AUDIT.md duality_iz3 round 2.
+void tst_z3_4_7_1_duality_second_round_rewrite() {
+    char const* script =
+        "(set-option :fixedpoint.engine duality)\n"
+        "(declare-rel q0 (Int Int))\n"
+        "(declare-rel err ())\n"
+        "(declare-var x Int)\n"
+        "(declare-var y Int)\n"
+        "(declare-var x1 Int)\n"
+        "(declare-var y1 Int)\n"
+        "(rule (=> (and (= x 2) (= y 1)) (q0 x y)))\n"
+        "(rule (=> (and (q0 x y) (= y 9) (= x1 (+ y 1)) (= y1 (+ x 2))) (q0 x1 y1)))\n"
+        "(rule (=> (and (q0 x y) (= x1 (+ y y)) (= y1 2)) (q0 x1 y1)))\n"
+        "(rule (=> (and (q0 x y) (= x1 x) (= y1 x)) (q0 x1 y1)))\n"
+        "(rule (=> (and (q0 x y) (= y 12) (= x1 (+ y 1)) (= y1 (- y 3))) (q0 x1 y1)))\n"
+        "(rule (=> (and (q0 x y) (>= y 5)) err))\n"
+        "(query err)\n";
+    expect_script_output("duality_second_round_rewrite", script, "sat\n");
 }
 
 // PDR proof trace for Goal :- P(x), with P(x) a fact. The query!0 root and
@@ -3374,4 +3524,89 @@ void tst_z3_4_7_1_qe_sat_projection_canceled() {
         "(get-info :reason-unknown)\n");
     std::cout << "qe_sat_projection_canceled:\n" << out;
     ENSURE(out == "unknown\n(:reason-unknown \"max. resource limit exceeded\")\n");
+}
+
+// join_planner::run built its result by walking m_rules_content, a map keyed
+// by rule pointers with an address hash (ptr_hash<rule>), so the order of the
+// result rules followed heap addresses: the relation load/register order and
+// the -v output changed from build to build. The fork walks the source rules
+// in source order (owner decision 2026-11-15: heap-address orders iterate by
+// a stable id). The source has twelve rules with at most two tails, which
+// the planner keeps, and one rule with three tails, which it rewrites; the
+// kept rules must come back in source order.
+void tst_z3_4_7_1_simple_joins_rule_order() {
+    ast_manager m;
+    reg_decl_plugins(m);
+    smt_params fparams;
+    datalog::register_engine re;
+    datalog::context ctx(m, re, fparams);
+    datalog::parser* p = datalog::parser::create(ctx, m);
+    std::string prog = "V 16\n\nE(x:V,y:V)\nT(x:V,y:V)\n";
+    for (unsigned i = 0; i < 12; ++i) {
+        prog += "P" + std::to_string(i) + "(x:V)\n";
+    }
+    for (unsigned i = 0; i < 12; ++i) {
+        if (i == 5) {
+            prog += "T(X,Z) :- E(X,Y), E(Y,Z), E(Z,X).\n";
+        }
+        prog += "P" + std::to_string(i) + "(X) :- E(X,Y).\n";
+    }
+    ENSURE(p->parse_string(prog.c_str()));
+    dealloc(p);
+    datalog::rule_set& source = ctx.get_rules();
+    ENSURE(source.get_num_rules() == 13);
+    datalog::mk_simple_joins sj(ctx);
+    datalog::rule_set* result = sj(source);
+    ENSURE(result);
+    ENSURE(result->get_num_rules() > source.get_num_rules());
+    bool ok = true;
+    for (unsigned i = 0; i < source.get_num_rules(); ++i) {
+        datalog::rule* s = source.get_rule(i);
+        datalog::rule* r = result->get_rule(i);
+        std::cout << "simple_joins_rule_order " << i << ": source " << s->get_decl()->get_name()
+                  << ", result " << r->get_decl()->get_name() << "\n";
+        if (s->get_decl() != r->get_decl() || (i != 5 && s != r)) {
+            ok = false;
+        }
+    }
+    dealloc(result);
+    ENSURE(ok);
+}
+
+// theory_str (z3str3) kept its dependence-analysis and grounding state in
+// std::map/std::set containers keyed by expr pointers, so the walks over
+// them, and with them the order of the axioms and the model, followed heap
+// addresses (for example get_grounded_concats grounds a variable through
+// varEqConcatMap[node].begin(), the concat at the lowest address). The fork
+// orders those containers by AST id (owner decision 2026-11-15). With id
+// order this problem gets the model below; with address order z3 4.7.1
+// printed c = "abcabcabcabcabcabcabc" (release build and test-z3, 2026-11).
+void tst_z3_4_7_1_str_container_id_order() {
+    char const* script =
+        "(set-option :smt.string_solver z3str3)\n"
+        "(declare-const a String)\n"
+        "(declare-const b String)\n"
+        "(declare-const c String)\n"
+        "(declare-const d String)\n"
+        "(declare-const x String)\n"
+        "(declare-const y String)\n"
+        "(assert (= c d))\n"
+        "(assert (str.contains (str.++ d (str.++ c (str.++ y x))) (str.++ (str.++ a c) (str.++ x c))))\n"
+        "(assert (= d (str.++ (str.++ \"abc\" y) y)))\n"
+        "(check-sat)\n"
+        "(get-model)\n";
+    expect_script_output("str_container_id_order", script,
+        "sat\n"
+        "(model \n"
+        "  (define-fun c () String\n"
+        "    \"abcabcabcabcabc\")\n"
+        "  (define-fun y () String\n"
+        "    \"abcabc\")\n"
+        "  (define-fun d () String\n"
+        "    \"abcabcabcabcabc\")\n"
+        "  (define-fun x () String\n"
+        "    \"abcabcabc\")\n"
+        "  (define-fun a () String\n"
+        "    \"bc\")\n"
+        ")\n");
 }

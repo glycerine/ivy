@@ -256,6 +256,9 @@ int main(int argc, char ** argv) {
     TST(z3_4_7_1_duality_print_answer);
     TST(z3_4_7_1_duality_proof_hyper_resolve);
     TST(z3_4_7_1_duality_rejected_candidate_loop);
+    TST(z3_4_7_1_duality_itp_unchecked_sat);
+    TST(z3_4_7_1_duality_mixed_rewrite);
+    TST(z3_4_7_1_duality_second_round_rewrite);
     TST(z3_4_7_1_pdr_proof_nullary_root);
     TST(z3_4_7_1_pdr_proof_duplicate_leaf);
     TST(z3_4_7_1_pdr_boogie_without_proof_trace);
@@ -300,6 +303,8 @@ int main(int argc, char ** argv) {
     TST(z3_4_7_1_dl_string_to_uint64_blank);
     TST(z3_4_7_1_bmc_linear_hyper_res_positions);
     TST(z3_4_7_1_qe_sat_projection_canceled);
+    TST(z3_4_7_1_simple_joins_rule_order);
+    TST(z3_4_7_1_str_container_id_order);
     TST(ext_numeral);
     TST(interval);
     TST(f2n);

@@ -72,6 +72,12 @@ the g3 fork's `src/` tree:
   `FORK FIX` comment in 469bcbdd6)
 * g3 commit 047e3d468: fix 96 below (red test in g3 commit df6c3cf06,
   `FORK FIX` comments in the fix commit)
+* g3 commits 6044bbcd4 and 96159413f: fixes 97-98 below (red tests in g3
+  commits 966187a42 and fa595827a, `FORK FIX` comments in the fix commits)
+* g3 commits 1473e5d07 and e6a24e040: fixes 99-100 below (red tests in g3
+  commits 5dc0e4c22 and 06764a57b, `FORK FIX` comments in the fix commits)
+* g3 commit ff6f079e3: fix 101 below (red test in g3 commit e01903763,
+  `FORK FIX` comments in the fix commit)
 
 They are copied here unchanged.
 
@@ -173,6 +179,11 @@ They are copied here unchanged.
 | 94 | Linear BMC hyper-resolution positions recorded as (0,1) | local fix (still present upstream) | `muz/bmc/dl_bmc_engine.cpp` |
 | 95 | qe-sat: a resource-limited projection check fails a `VERIFY` and segfaults | local fix (qe-sat was removed upstream) | `qe/qe_sat_tactic.cpp` |
 | 96 | Duality livelocks re-proposing a candidate the feasibility check already rejected | local fix (Duality removed upstream) | `duality/duality_solver.cpp` |
+| 97 | Simple-joins result rule order depends on heap addresses (pointer-keyed map) | local fix (still present upstream); id/source order as g3 | `muz/rel/dl_mk_simple_joins.cpp` |
+| 98 | theory_str iterates pointer-keyed maps and sets in address order | local fix (theory_str removed upstream); AST-id order as g3 | `smt/theory_str.{h,cpp}` |
+| 99 | Duality answers an unsound `sat` when an edge solver with `mbqi.id=itp` ignores a quantifier | local fix (Duality removed upstream): validate the counterexample | `muz/duality/duality_dl_interface.cpp` |
+| 100 | iZ3 refuses rewrite and and-elim steps on formulas propagate_values mixed across frames (Duality "Unsupported proof rule") | local fix (iZ3 removed upstream) | `interp/iz3translate.cpp` |
+| 101 | iZ3 still refuses a mixed rewrite whose congruence side is already mixed (second propagate_values round) | local fix (iZ3 removed upstream) | `interp/iz3translate.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2038,6 +2049,76 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/duality/duality_solver.cpp` (`FORK FIX #96`): count state changes (`ExpandNode` :702, `Update` :1593, `Extend` :1745; member at :296) and, in `SolveMainInt` (:1106), throw the existing `Solver::Incompleteness` when an already rejected candidate returns with no state change since. `dl_interface::query` reports it as "query failed: incompleteness" and `unknown`, as g3 does.
 
 **Test.** `TST(z3_4_7_1_duality_rejected_candidate_loop)`, `src/test/z3_4_7_1_bugs.cpp:1880` (registered at `src/test/main.cpp:259`).
+
+---
+
+## 97. Simple joins: rule order from heap addresses
+
+**Upstream:** still present (5.4.2 walks `m_rules_content`).
+
+**Symptom.** The rules `join_planner::run` produces come out in an order that depends on heap addresses, so compiled register numbers and load order change between builds and runs (e.g. `datalog_query_sequence_three -v:2`: "load path into 0 / load edge into 1" swapped).
+
+**Cause.** `m_rules_content` is keyed by rule pointers with `ptr_hash<rule>`, and `run` iterates it.
+
+**Fix.** `src/muz/rel/dl_mk_simple_joins.cpp:708` (`FORK FIX #97`): walk `source.get_rule(ri)` in source order and look each rule up in `m_rules_content` (owner decision 2026-11-15: heap-address order is replaced by id order in both the fork and g3; g3 already walked source order).
+
+**Test.** `TST(z3_4_7_1_simple_joins_rule_order)`, `src/test/z3_4_7_1_bugs.cpp:3397` (registered at `src/test/main.cpp:304`).
+
+---
+
+## 98. theory_str: pointer-ordered containers
+
+**Upstream:** theory_str was removed upstream.
+
+**Symptom.** z3str3 models, the "concats N" verbose lines and recursion depth depend on heap addresses (e.g. a model `c = "abcabcabcabcabcabcabc"` vs g3's).
+
+**Cause.** Every `std::map<expr*,...>` and `std::set<expr*>` in theory_str is iterated in pointer order, including `varEqConcatMap[node].begin()`.
+
+**Fix.** `src/smt/theory_str.h:44-66` (`FORK FIX #98`) adds id comparators (`str_expr_id_lt`, `str_expr_vector_id_lt`, `str_expr_pair_id_lt`) and aliases used by every such container in `theory_str.{h,cpp}`; comment at `theory_str.cpp:5750`. g3 orders the same containers by AST id.
+
+**Test.** `TST(z3_4_7_1_str_container_id_order)`, `src/test/z3_4_7_1_bugs.cpp:3444` (registered at `src/test/main.cpp:305`).
+
+---
+
+## 99. Duality: unchecked quantified `sat`
+
+**Upstream:** Duality was removed upstream.
+
+**Symptom.** Duality answers `sat` with an invalid counterexample when a rule or background axiom has a quantifier that the edge solvers (configured with `mbqi.id=itp`, MBQI only for interpolant quantifiers) never checked; on a generated corpus with brute-force answers z3 gave 336 wrong `sat` answers.
+
+**Cause.** Duality trusts any edge-solver `sat`; with `mbqi.id=itp` the non-interpolant quantifiers are not instantiated.
+
+**Fix.** `src/muz/duality/duality_dl_interface.cpp:140` and the call in `query` at `:536` (`FORK FIX #99`): before answering `sat`, `validate_counterexample` instantiates each counterexample step's original clause with fresh constants, replaces positively occurring predicate atoms by the facts derived by earlier steps, and checks the whole with a full `smt_solver` (proofs off); anything but `l_true` throws `Solver::Incompleteness` ("query failed: incompleteness", `unknown`). Quantifier-free counterexamples are accepted unchanged. g3 does the same (pkg/duality/counterexample_validation.go).
+
+**Test.** `TST(z3_4_7_1_duality_itp_unchecked_sat)`, `src/test/z3_4_7_1_bugs.cpp:1921` (registered at `src/test/main.cpp:260`).
+
+---
+
+## 100. iZ3: rewrites and eliminations on mixed formulas
+
+**Upstream:** iZ3 was removed upstream.
+
+**Symptom.** Duality queries fail with "Unsupported proof rule" (or later on skolemization) when a proof contains a `rewrite` (singleton `and`, flattened `and`, `(=> true a)`) or an and-elim / not-or-elim on a formula that mixes frames.
+
+**Cause.** `asserted_formulas::propagate_values` substitutes constants for constants, directed by decl ids, so an equality from one frame is substituted into another frame's assertion. A rewrite of such a mixed formula belongs to no frame, and `translate_main` refuses it; elims of mixed conjunctions were localized into quantified interpolants.
+
+**Fix.** `src/interp/iz3translate.cpp:1250-1416` and hooks at `:2006`, `:2019` (`FORK FIX #100`): `localize_rewrite` and `localize_elim` map the substituted constants back, take the step locally and return to the original terms by congruence or modus ponens; if the renamed step is still not local, the old behavior applies. g3 does the same (pkg/interp/translation_localize.go). Interpolants pass iz3check on the 81-script Duality corpus.
+
+**Test.** `TST(z3_4_7_1_duality_mixed_rewrite)`, `src/test/z3_4_7_1_bugs.cpp:1956` (registered at `src/test/main.cpp:261`).
+
+---
+
+## 101. iZ3: twice-mixed rewrites
+
+**Upstream:** iZ3 was removed upstream.
+
+**Symptom.** After fix 100, a Duality query can still fail with "theory not supported by interpolation or bad proof" when a rewrite's congruence left side was itself mixed by an earlier propagate_values round, so renaming with the congruence's own constant equalities leaves the step mixed (e.g. the 128 corpus script; spacer answers sat).
+
+**Cause.** `localize_rewrite` (fix 100) only uses the constant-to-constant equalities proved inside the step's own congruence.
+
+**Fix.** `src/interp/iz3translate.cpp:1263` (`global_theta`), `collect_global_equivs` at `:1380`, `proof_busy` at `:1400`, the retry in `localize_rewrite` at `:1377`ff, and the root setup in `translate()` at `:2336`/`:2382` (`FORK FIX #101`): when the rewrite stays mixed, retry with the proof's other hypothesis-free constant equalities (depth first, first proof of each constant wins), skipping any equality whose proof is still being translated (`proof_busy`, a null `translate_main` memo entry) to avoid recursion cycles. g3 does the same (pkg/interp/translation_localize.go, `clauseBusy`/`termBusy`). Interpolants pass iz3check.
+
+**Test.** `TST(z3_4_7_1_duality_second_round_rewrite)`, `src/test/z3_4_7_1_bugs.cpp:2025` (registered at `src/test/main.cpp:262`).
 
 ---
 
