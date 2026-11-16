@@ -226,7 +226,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 		} else if p.pPars.FUserRecLib != 0 {
 			pCut.Delay = float32(If_CutDelayRecCost3(p, pCut, pObj))
 		} else if p.pPars.FUserSesLib != 0 {
-			panic("if: exact SAT delay mode is not ported")
+			pCut.Delay = ifCutExactDelay(p, pObj, pCut)
 
 		} else if p.pPars.FDelayOptLut != 0 {
 			pCut.Delay = float32(If_CutLutBalanceEval(p, pCut))
@@ -479,9 +479,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 			} else if p.pPars.FUserRecLib != 0 {
 				pCut.Delay = float32(If_CutDelayRecCost3(p, pCut, pObj))
 			} else if p.pPars.FUserSesLib != 0 {
-				// The C implementation delegates this optional mode to its external
-				// exact-delay/SAT subsystem, which is not included in this Go package.
-				panic("if: exact SAT delay cost requires the unported ABC exact-delay subsystem")
+				pCut.Delay = ifCutExactDelay(p, pObj, pCut)
 			} else if p.pPars.FDelayOptLut != 0 {
 				pCut.Delay = float32(If_CutLutBalanceEval(p, pCut))
 			} else if p.pPars.NGateSize > 0 {
