@@ -251,3 +251,31 @@ them. Canonicalize only that storage representation in the oracle, retaining
 every active record and all other structured output. This is a documented
 representation normalization, not a production algorithm repair or omission of
 functional differences. Canonical rerun remains pending at this checkpoint.
+
+## Expanded driver/cut-policy checkpoint (boundary repair pending)
+
+The initial96 driver comparisons pass4.421s after storage-only normalization
+(`/tmp/abcgo-mapping-driver-native-active-records.log`,handle76378 exit0).
+Expand to384 runs with higher phase bits, K=3/4 LUTs, independent register
+counts, choices, generic truth/structural paths and actual SOP/DSD engines.
+This exposes six live-cut policy differences: C overwrites merged roots with
+the last source cut, while Go had retained the first. A new minimal red test
+fails before repair (`/tmp/abcgo-mapping-hash-last-cut-red.log`,handle15272 exit1).
+
+Select the last cut in a first pass using the destination index as scratch,
+then emit one compact record per destination root. This preserves source cut
+selection without dead records or an additional selection array. The384 native
+runs and existing/minimal hash tests pass11.601s
+(`/tmp/abcgo-mapping-driver-last-cut-repaired.log`,handle31412 exit0). Active
+LUT records use the original iterator's object1-and-up domain. Explicitly
+characterize source seed16/hash mode retaining a redundant two-leaf object0
+record: neither LUT iterator counts it, and Go already omits it. Constant
+physical nodes/COs and every truth assignment remain compared.
+
+Do not accept last-cut selection without checking hash collapse. A new boundary
+regression now fails: x AND duplicate(x) collapses to x, and the last cut becomes
+self-referential (`root3 leaves[3 3]`).
+`/tmp/abcgo-mapping-hash-self-cut-red.log`,handle22663 exit1. Save this red
+checkpoint, then characterize the original C boundary and retain the last usable
+cut rather than introducing a cycle. This is an active repair, not a completed
+source family or a green integration claim.

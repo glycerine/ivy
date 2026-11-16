@@ -136,3 +136,74 @@ func TestDupHashMappingPreservesDependentLUTCuts(t *testing.T) {
 		}
 	}
 }
+
+func TestDupHashMappingRetainsLastMergedCut(t *testing.T) {
+	p := Gia_ManStart(16)
+	defer Gia_ManStop(p)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x, y := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, b)
+	Gia_ManAppendCo(p, x)
+	Gia_ManAppendCo(p, y^1)
+	p.VMapping = Vec_IntStart(int(p.nObjs))
+	for _, row := range []struct {
+		root   int32
+		leaves []int32
+	}{{x >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{a >> 1, b >> 1, c >> 1}}} {
+		Vec_IntWriteEntry(p.VMapping, int(row.root), int32(Vec_IntSize(p.VMapping)))
+		Vec_IntPush(p.VMapping, int32(len(row.leaves)))
+		for _, leaf := range row.leaves {
+			Vec_IntPush(p.VMapping, leaf)
+		}
+		Vec_IntPush(p.VMapping, row.root)
+	}
+	q := Gia_ManDupHashMapping(p)
+	defer Gia_ManStop(q)
+	root := Gia_ObjFaninId0p(q, Gia_ManCo(q, 0))
+	if got := Gia_ObjLutFanins(q, root); !slices.Equal(got, []int32{a >> 1, b >> 1, c >> 1}) {
+		t.Fatalf("merged cut%v want source's last cut [%d %d %d]", got, a>>1, b>>1, c>>1)
+	}
+	if Gia_ManLutNum(q) != 1 {
+		t.Fatal("compaction should retain one live record")
+	}
+	for mask := 0; mask < 8; mask++ {
+		inputs := []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}
+		got, err := q.Evaluate(inputs)
+		value := inputs[0] && inputs[1]
+		if err != nil || !slices.Equal(got, []bool{value, !value}) {
+			t.Fatalf("assignment%d got%v err%v", mask, got, err)
+		}
+	}
+}
+
+func TestDupHashMappingRejectsCollapsedSelfCut(t *testing.T) {
+	p := Gia_ManStart(16)
+	defer Gia_ManStop(p)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x, z := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, b)
+	y := Gia_ManAppendAnd(p, x, z)
+	Gia_ManAppendCo(p, y)
+	p.VMapping = Vec_IntStart(int(p.nObjs))
+	for _, row := range []struct {
+		root   int32
+		leaves []int32
+	}{{x >> 1, []int32{a >> 1, b >> 1}}, {z >> 1, []int32{a >> 1, b >> 1}}, {y >> 1, []int32{x >> 1, z >> 1}}} {
+		Vec_IntWriteEntry(p.VMapping, int(row.root), int32(Vec_IntSize(p.VMapping)))
+		Vec_IntPush(p.VMapping, int32(len(row.leaves)))
+		for _, leaf := range row.leaves {
+			Vec_IntPush(p.VMapping, leaf)
+		}
+		Vec_IntPush(p.VMapping, row.root)
+	}
+	q := Gia_ManDupHashMapping(p)
+	defer Gia_ManStop(q)
+	root := Gia_ObjFaninId0p(q, Gia_ManCo(q, 0))
+	leaves := Gia_ObjLutFanins(q, root)
+	for _, leaf := range leaves {
+		if leaf == root {
+			t.Fatalf("hashing introduced a cyclic LUT cut: root%d leaves%v", root, leaves)
+		}
+	}
+	if !slices.Equal(leaves, []int32{a >> 1, b >> 1}) {
+		t.Fatalf("last usable cut lost: %v", leaves)
+	}
+}

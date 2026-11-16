@@ -9024,3 +9024,20 @@ structured results; C's unused records/padding are deliberately compacted by
 existing Go code. Preserve strict live records/leaf order/markers and graph/
 truth/metadata comparison while canonicalizing only physical storage offsets
 and dead records. The rerun and wider mapping-family review remain pending.
+
+### Expanded mapping drivers reveal merged-cut policy and collapse boundary
+
+Fresh original-C driver coverage expands96 to384 runs across choices, registers,
+K3/K4, truth/structural mapping, hashing and actual SOP/DSD balancing. A new red
+minimal test proves Go kept the first merged LUT cut while C keeps the last
+(handle15272 exit1). Select the last cut using the existing destination index
+as scratch and emit compact records. All384 native comparisons plus hash tests
+pass11.601s (handle31412 exit0). Canonicalize only dead mapping storage and the
+original LUT iterator's constant-free domain; source's redundant object0 record
+is explicitly characterized and physical constant truth still checked.
+
+A new follow-up red test catches a cycle when hashing collapses the last cut
+onto its own leaf: root3 cut[3 3] (handle22663 exit1). Save a red checkpoint now;
+next retain the last usable topological cut and characterize C's boundary.
+Detailed logs/plans are in REVIEW_mapping_boundary.md. Wider family/GIA audit
+and original2/131 goal remain open, with full integration still pending.
