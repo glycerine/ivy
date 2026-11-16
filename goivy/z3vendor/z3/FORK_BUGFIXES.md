@@ -80,6 +80,8 @@ the g3 fork's `src/` tree:
   `FORK FIX` comments in the fix commit)
 * g3 commits ca711590e and 124110e7a: fixes 102-103 below (red tests in g3
   commits 541401db9 and 98a5c9b8d, `FORK FIX` comments in the fix commits)
+* g3 commits 543dfc268 and 607582d05: fixes 104-105 below (red tests in g3
+  commits 97cb47b53 and b669b839f, `FORK FIX` comments in the fix commits)
 
 They are copied here unchanged.
 
@@ -188,6 +190,8 @@ They are copied here unchanged.
 | 101 | iZ3 still refuses a mixed rewrite whose congruence side is already mixed (second propagate_values round) | local fix (iZ3 removed upstream) | `interp/iz3translate.cpp` |
 | 102 | Datalog product-relation kinds accepted for any signature, then segfault reading a missing spec | local fix | `muz/rel/dl_product_relation.cpp`, `muz/rel/dl_relation_manager.h` |
 | 103 | Sieve plugin refuses its own kinds, products lose their sieves, aligned union calls a null functor | local fix | `muz/rel/dl_sieve_relation.cpp`, `muz/rel/dl_product_relation.cpp` |
+| 104 | z3str3 reads `str.in.re` terms popped out of the context (segfault in `get_assignment`, or a final-check loop) | narrower than upstream 077f2248c / 4fc64ab57 / c1a0ce086 (theory_str later removed) | `smt/theory_str.cpp` |
+| 105 | z3str3 legacy regex unroll dereferences a missing `unroll_tries_map` entry | local fix (legacy unroll solver later removed upstream) | `smt/theory_str.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2147,6 +2151,34 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/muz/rel/dl_sieve_relation.cpp:204` (`can_handle_signature` with kind), `:266` (`mk_full` with kind), declarations in `dl_sieve_relation.h`, and `src/muz/rel/dl_product_relation.cpp:652`, which reports a missing diagonal union as an error before doing any work (`FORK FIX #103`). g3 does the same (pkg/muz/rel/dl_sieve_relation.go).
 
 **Test.** `TST(z3_4_7_1_sieve_kinds)`, `src/test/z3_4_7_1_bugs.cpp:3657` (registered at `src/test/main.cpp:310`).
+
+---
+
+## 104. z3str3: regex membership terms after pop
+
+**Upstream:** 077f2248c (fix #3756) pins every `set_up_axioms` term in `m_trail`; 4fc64ab57 re-internalizes a regex term that is no longer internalized; c1a0ce086 (#3818) resets theory_str state in `init_search_eh`; theory_str was removed in fcd3a70c9. The fix here is narrower and changes no AST order in g3's 1441-vector corpus.
+
+**Symptom.** Under z3str3 with the default `str.regex_automata=true`, a `str.in.re` term asserted inside push/pop is read by the next check-sat after the pop: z3 segfaults in `smt::context::get_assignment` called from `theory_str::final_check_eh`, or (when only the reads are guarded) final check loops forever because `gen_len_val_options_for_free_var` still refuses value testing for the variable.
+
+**Cause.** `instantiate_axiom_RegexIn` records the term by raw pointer in `regex_in_bool_map`, `regex_in_var_reg_str_map`, `regex_terms`, `regex_terms_by_string` and `axiomatized_terms`; neither `pop_scope_eh` nor the trail removes the entries, and in automata mode nothing keeps the term alive.
+
+**Fix.** `src/smt/theory_str.cpp` (`FORK FIX #104`): `instantiate_axiom_RegexIn` pins the term in `m_trail` (`:1865`), and four readers skip a term that is not `b_internalized`: the final-check `regex_terms` loop (`:9938`), the `regex_terms_by_string` intersection loop after the length readers (`:10498`), the path-constraint completeness loop (`:10728`), and the `gen_len_val_options_for_free_var` regex gate (`:12202`). g3 does the same (pkg/smtcore theory_str regex stages and sequential options).
+
+**Test.** `TST(z3_4_7_1_str_regex_pop)`, `src/test/z3_4_7_1_bugs.cpp:3695` (registered at `src/test/main.cpp:311`).
+
+---
+
+## 105. z3str3: legacy regex unroll tries map
+
+**Upstream:** the legacy unroll solver and later theory_str were removed upstream.
+
+**Symptom.** With `smt.str.regex_automata=false`, any regex membership that needs an unroll, e.g. `x in (re.+ (str.to.re "a"))` in a single check-sat, segfaults in `gen_unroll_conditional_options`.
+
+**Cause.** `unroll_tries_map[var][unrolls]` uses `obj_map::operator[]`, which is a find that never inserts; no entry is ever added, so the release build dereferences null.
+
+**Fix.** `src/smt/theory_str.cpp:11518` (`FORK FIX #105`): `gen_unroll_conditional_options` inserts an empty map for the variable when it is missing. g3 already had insert-on-miss semantics.
+
+**Test.** `TST(z3_4_7_1_str_regex_unroll_tries)`, `src/test/z3_4_7_1_bugs.cpp:3723` (registered at `src/test/main.cpp:312`).
 
 ---
 
