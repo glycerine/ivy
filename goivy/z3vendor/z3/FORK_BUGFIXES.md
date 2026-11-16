@@ -82,6 +82,9 @@ the g3 fork's `src/` tree:
   commits 541401db9 and 98a5c9b8d, `FORK FIX` comments in the fix commits)
 * g3 commits 543dfc268 and 607582d05: fixes 104-105 below (red tests in g3
   commits 97cb47b53 and b669b839f, `FORK FIX` comments in the fix commits)
+* g3 commits 95a41b7f6, cdd4a72f5 and 0ba697b1f: fixes 106-108 below (red
+  tests in g3 commits d36c8ce02, 10b5f2ebe and 61ceb4fae, `FORK FIX`
+  comments in the fix commits)
 
 They are copied here unchanged.
 
@@ -192,6 +195,9 @@ They are copied here unchanged.
 | 103 | Sieve plugin refuses its own kinds, products lose their sieves, aligned union calls a null functor | local fix | `muz/rel/dl_sieve_relation.cpp`, `muz/rel/dl_product_relation.cpp` |
 | 104 | z3str3 reads `str.in.re` terms popped out of the context (segfault in `get_assignment`, or a final-check loop) | narrower than upstream 077f2248c / 4fc64ab57 / c1a0ce086 (theory_str later removed) | `smt/theory_str.cpp` |
 | 105 | z3str3 legacy regex unroll dereferences a missing `unroll_tries_map` entry | local fix (legacy unroll solver later removed upstream) | `smt/theory_str.cpp` |
+| 106 | check_relation operations throw `std::bad_cast` when an argument is another plugin's relation | local fix | `muz/rel/check_relation.cpp` |
+| 107 | table_relation_plugin asks its table plugin for a signature it cannot handle (sparse_table segfault) | local fix | `muz/rel/dl_table_relation.cpp` |
+| 108 | `table_base::complement` stops on `VERIFY(sig.first_functional() == 1)` for several non-functional columns | local fix | `muz/rel/dl_base.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2179,6 +2185,42 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/smt/theory_str.cpp:11518` (`FORK FIX #105`): `gen_unroll_conditional_options` inserts an empty map for the variable when it is missing. g3 already had insert-on-miss semantics.
 
 **Test.** `TST(z3_4_7_1_str_regex_unroll_tries)`, `src/test/z3_4_7_1_bugs.cpp:3723` (registered at `src/test/main.cpp:312`).
+
+---
+
+## 106. Datalog: check_relation operations on other plugins' relations
+
+**Symptom.** "terminate called after throwing an instance of 'std::bad_cast'" from `check_relation_plugin::mk_join_fn` under `instr_join::perform`, when `datalog.check_relation` is set and a predicate the checked plugin cannot handle is joined with one it can (e.g. the p_E_chk_bound_relation / p_E_chk_interval_relation probes, or check_relation(doc) over a Bool table through the C API).
+
+**Cause.** The binary `mk_*_fn` of `check_relation_plugin` assumed every argument was a `check_relation` (`dynamic_cast` to a reference).
+
+**Fix.** `src/muz/rel/check_relation.cpp:157`-`:164` (`is_checked`) and its uses at `:220`, `:251`, `:524`, `:532`, `:717` (`FORK FIX #106`): the functor factories return `nullptr` unless every argument is a check_relation, so the relation manager falls back to the default functors. g3 already behaved this way.
+
+**Test.** `TST(z3_4_7_1_check_relation_mixed_join)`, `src/test/z3_4_7_1_bugs.cpp:3740` (registered at `src/test/main.cpp:313`).
+
+---
+
+## 107. Datalog: table relations of signatures their table rejects
+
+**Symptom.** Segfault in `sparse_table::column_layout::make_byte_aligned_end` from `table_relation_plugin::mk_empty` <- `check_relation_plugin::mk_full` <- `sieve_relation_plugin::full` <- `product_relation_plugin` join (`datalog.check_relation tr_sparse`, a Bool predicate and a negated (Int, Bool) predicate).
+
+**Cause.** `table_relation_plugin` did not check `can_handle_signature` before asking its table plugin for a table.
+
+**Fix.** `src/muz/rel/dl_table_relation.cpp:53` (`mk_empty`) and `:71` (`mk_full_relation`) (`FORK FIX #107`): use a table plugin that can handle the signature. g3 does the same (pkg/muz/rel table relation plugin).
+
+**Test.** `TST(z3_4_7_1_table_relation_unhandled_signature)`, `src/test/z3_4_7_1_bugs.cpp:3777` (registered at `src/test/main.cpp:314`).
+
+---
+
+## 108. Datalog: table complement of several columns
+
+**Symptom.** "Failed to verify: sig.first_functional() == 1" followed by a segfault, from `table_base::complement` <- `plugin_object::mk_full` <- `product_relation_plugin` `join_fn::get_full_tableish_relation` (doc favourite, a two-column udoc predicate joined with a Bool table into an unseeded head).
+
+**Cause.** The complement loop only handles one non-functional column.
+
+**Fix.** `src/muz/rel/dl_base.cpp:386` (`FORK FIX #108`): enumerate all non-functional columns. g3's `TableRelationPlugin.MkFull` follows z3's `mk_full` (an empty helper table, then its complement).
+
+**Test.** `TST(z3_4_7_1_table_complement_columns)`, `src/test/z3_4_7_1_bugs.cpp:3801` (registered at `src/test/main.cpp:315`).
 
 ---
 

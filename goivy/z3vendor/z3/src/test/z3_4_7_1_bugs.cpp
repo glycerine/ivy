@@ -3729,3 +3729,108 @@ void tst_z3_4_7_1_str_regex_unroll_tries() {
         "(check-sat)\n";
     expect_script_output("str_regex_unroll_tries", script, "sat\n");
 }
+
+// With datalog.check_relation doc, the Bool predicate p (no udoc signature)
+// holds a table_relation and q a check_relation over udoc. The join of p and
+// q asks check_relation_plugin::mk_join_fn, whose get() dynamic_cast threw
+// std::bad_cast for the table: z3 4.7.1 aborts. The fixed plugin offers no
+// operation unless every argument is a check_relation, so relation_manager
+// joins through the product relation (which keeps no correlation of its
+// inner relations). pkg/AUDIT.md FUZZ-F5 (relation plugins).
+void tst_z3_4_7_1_check_relation_mixed_join() {
+    char const* script =
+        "(set-option :fixedpoint.engine datalog)\n"
+        "(set-option :fixedpoint.datalog.check_relation doc)\n"
+        "(set-option :fixedpoint.xform.inline_linear false)\n"
+        "(set-option :fixedpoint.xform.inline_eager false)\n"
+        "(declare-rel p (Bool))\n"
+        "(declare-rel q ((_ BitVec 3)))\n"
+        "(declare-rel r ((_ BitVec 3)))\n"
+        "(declare-var x Bool)\n"
+        "(declare-var y (_ BitVec 3))\n"
+        "(rule (p true))\n"
+        "(rule (q #b101))\n"
+        "(rule (=> (and (p x) (q y)) (r y)))\n"
+        "(query r :print-answer true)\n";
+    expect_script_output("check_relation_mixed_join", script,
+        "sat\n"
+        "(and (= (:var 0) #b101)\n"
+        "     (or (= (:var 0) #b000)\n"
+        "         (= (:var 0) #b001)\n"
+        "         (= (:var 0) #b010)\n"
+        "         (= (:var 0) #b011)\n"
+        "         (= (:var 0) #b100)\n"
+        "         (= (:var 0) #b101)\n"
+        "         (= (:var 0) #b110)\n"
+        "         (= (:var 0) #b111)))\n");
+}
+
+// check_relation over tr_sparse: r (Bool) holds a check_relation, the
+// negated p (Int, Bool) a product relation. The product join of r with the
+// unbound Int column's full relation makes a sieve over check_relation whose
+// inner signature is empty (no Int column for tr_sparse), and
+// table_relation_plugin::mk_empty created a sparse_table of the empty
+// signature, which sparse_table_plugin cannot handle: z3 4.7.1 segfaults in
+// column_layout::make_byte_aligned_end. The fixed plugin gives a signature
+// its table plugin cannot handle the appropriate plugin's table (as
+// mk_from_table does). pkg/AUDIT.md FUZZ-F5 (relation plugins).
+void tst_z3_4_7_1_table_relation_unhandled_signature() {
+    char const* script =
+        "(set-option :fixedpoint.engine datalog)\n"
+        "(set-option :fixedpoint.datalog.check_relation tr_sparse)\n"
+        "(declare-rel p (Int Bool))\n"
+        "(declare-rel r (Bool))\n"
+        "(declare-var x Int)\n"
+        "(declare-var b Bool)\n"
+        "(rule (r true))\n"
+        "(rule (=> (and (r b) (not (p x b))) (r false)))\n"
+        "(query r :print-answer true)\n";
+    expect_script_output("table_relation_unhandled_signature", script,
+        "sat\n"
+        "(or (= (:var 0) true) (= (:var 0) false))\n");
+}
+
+// The join of p (a udoc relation, the doc favourite) and t (a Bool table)
+// into h is a product_relation join that needs a full table_relation over
+// p's two-column signature (get_full_tableish_relation); table_base::
+// complement handled one column only and z3 4.7.1 stops on
+// VERIFY(sig.first_functional() == 1). The fixed complement enumerates every
+// row of several columns. The answer keeps no correlation of the product's
+// inner relations, as for the other product joins.
+// pkg/AUDIT.md FUZZ-F5 (relation plugins).
+void tst_z3_4_7_1_table_complement_columns() {
+    char const* script =
+        "(set-option :fixedpoint.engine datalog)\n"
+        "(set-option :fixedpoint.datalog.default_relation doc)\n"
+        "(define-sort V () (_ BitVec 2))\n"
+        "(declare-rel p (V V))\n"
+        "(declare-rel t (Bool))\n"
+        "(declare-rel h (V V Bool))\n"
+        "(declare-var x V)\n"
+        "(declare-var y V)\n"
+        "(declare-var b Bool)\n"
+        "(rule (p #b00 #b01))\n"
+        "(rule (t true))\n"
+        "(rule (=> (and (p x y) (t b)) (h x y b)))\n"
+        "(query h :print-answer true)\n";
+    expect_script_output("table_complement_columns", script,
+        "sat\n"
+        "(and (= (:var 0) #b00)\n"
+        "     (= (:var 1) #b01)\n"
+        "     (or (and (= (:var 0) #b00) (= (:var 1) #b00) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b00) (= (:var 1) #b01) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b00) (= (:var 1) #b10) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b00) (= (:var 1) #b11) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b01) (= (:var 1) #b00) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b01) (= (:var 1) #b01) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b01) (= (:var 1) #b10) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b01) (= (:var 1) #b11) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b10) (= (:var 1) #b00) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b10) (= (:var 1) #b01) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b10) (= (:var 1) #b10) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b10) (= (:var 1) #b11) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b11) (= (:var 1) #b00) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b11) (= (:var 1) #b01) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b11) (= (:var 1) #b10) (= (:var 2) true))\n"
+        "         (and (= (:var 0) #b11) (= (:var 1) #b11) (= (:var 2) true))))\n");
+}
