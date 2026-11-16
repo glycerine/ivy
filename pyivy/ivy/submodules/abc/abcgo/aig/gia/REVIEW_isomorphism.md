@@ -16,7 +16,7 @@ Review these sequentially within the open GIA package audit. The original
 - [ ] Reconcile second-generation hash/unique labels, cone traversals, sequential
   comparison and quality/skip reduction policies with the original source.
 - [x] Review synchronous/reverse signatures, source RNG and giaIso3 drivers.
-- [ ] Review first-generation permutation/CEX diagnostic drivers.
+- [x] Review first-generation permutation/CEX diagnostic drivers.
 - [ ] Add red Go-only regressions before uncovered bug fixes, then independent
   scalar/classification/permutation/sequence tests and compactness checks.
 - [ ] Reconcile all source names, freeze edits, run affected race/vet and full
@@ -489,3 +489,47 @@ util/GIA vet pass; all handles ended. Logs /tmp/abcgo-cex-permute-final-
 nonzero initial counterexample bits; see misc/util/REVIEW.md. Remaining dual,
 full-convergence, terminal-role and first-generation CEX-driver checks stay open.
 Original audit2/131.
+
+
+## First-generation permutation/CEX diagnostic drivers
+
+Reconcile Gia_IsoTestOld, Gia_IsoTestGenPerm and Gia_IsoTest with the source.
+The old driver does full unique labeling, so duplicate POs still report separate
+singletons; four output-count/verbosity combinations preserve that source policy.
+The permutation generator keeps C's full-range swap loop and tests sizes0/1/2/3/
+31/33/257 for bijection. Go's portable RNG replaces platform-dependent libc rand;
+no matching C seed stream or modulo bias is claimed. The generator is diagnostic,
+not part of canonical refinement.
+
+Six deterministic structural PI permutations exercise the actual duplication/
+combination/reduction/canonical-map/CEX-remapping pipeline. A uniquely positioned
+asymmetric three-input register transition permits independent raw PI-bit checks.
+Enumerate both initial register states and all traces of lengths1/2/3:7008
+witnesses. Check every remapped PI record, unchanged initial state, source packet
+ownership and scalar-predicted validity in both original and permuted circuits.
+This includes the counterexample utility's separately committed prefix repair.
+
+Eight new red report cases precede restoring Vec_IntPrint in the CEX driver.
+Zero/one-PI, one/two-frame and both initial-state cases check source formatting
+and valid/invalid messages. Two further red cases show inherited C/Go panic for
+unused global PIs: canonical orders are cone-local, but the CEX helper requires
+a full global PI order. Driver-local isoCexPIOrder projects canonical indices
+through sequential support in source CIO order, then pairs unused PIs in index
+order. It keeps library metadata cone-local and retains the full-support fast
+path. This repairs the index-domain boundary without replacing the isomorphism
+algorithm or assuming a particular generated random permutation.
+
+Six additional deterministic permutation cases cover non-prefix support{0,2},
+checking768 two-frame witnesses and unchanged local metadata. Completely unused
+PI interfaces also preserve CEX validity. All fixture construction/data are Go;
+no C source or compiler is a runtime dependency. Red logs
+/tmp/abcgo-iso-driver-{red,unused-red}.log; repaired focused logs
+/tmp/abcgo-iso-driver-{green,reviewed}.log.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests; all6 full-support,6 partial-support,8 report and2 unused-driver leaves
+execute. Focused isomorphism race1.937s and GIA vet pass; all handles ended.
+Final logs /tmp/abcgo-iso-driver-final-{module.jsonl,race.log,vet.log}. This closes
+the three diagnostic source routines. Full canonicalization/convergence, dual
+reduction, remaining terminal-role checks and dormant mux-signature recognition
+still require reconciliation before closing the68-routine family. Audit2/131.

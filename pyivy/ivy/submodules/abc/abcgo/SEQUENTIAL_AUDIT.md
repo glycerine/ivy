@@ -10230,3 +10230,17 @@ check registered cones, opposite phases and constants. Full Go-only module
 passes130 tested packages plus3 commands without tests; focused isomorphism
 race1.823s and util/GIA vet pass. Detailed evidence and open driver/dual/pair
 scope in REVIEW_isomorphism.md. Original completion remains2/131.
+
+
+### Reconcile isomorphism CEX drivers and repair support projection
+
+All six PI permutations and7008 full-support traces verify canonical-map CEX
+remapping, initial state and independent raw input records. Restore source
+vector reporting after eight new red cases. Two new unused-input cases expose
+a panic from mixing cone-local and global PI indices; lift orders only inside
+the driver and complete unused inputs without changing public local metadata.
+Six non-prefix-support cases verify768 additional witnesses. Keep the source
+old-driver count policy and full-range diagnostic swaps with portable Go RNG.
+Full Go-only module passes130 tested packages plus3 commands without tests;
+focused isomorphism race1.937s and GIA vet pass. The three diagnostic routines
+are reconciled; remaining scope/evidence in REVIEW_isomorphism.md. Audit2/131.

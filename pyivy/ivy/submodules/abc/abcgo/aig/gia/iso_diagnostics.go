@@ -20,6 +20,8 @@ func Gia_IsoTestOld(p *Gia_Man_t, verbose int32) {
 		fmt.Println("Nontrivial classes:")
 	}
 }
+
+// Keep C's full-range swap loop with Go's portable random source.
 func Gia_IsoTestGenPerm(n int32) *Vec_Int_t {
 	if n < 0 {
 		panic("gia: negative permutation size")
@@ -37,7 +39,8 @@ func Gia_IsoTest(p *Gia_Man_t, cex *Abc_Cex_t, verbose int32) {
 		panic("gia: isomorphism CEX test needs one output and registers")
 	}
 	permutation := Gia_IsoTestGenPerm(Gia_ManPiNum(p))
-	fmt.Printf("Considering random permutation of the primary inputs of the AIG:\n%v\n", vec.Vec_IntArray(permutation))
+	fmt.Println("Considering random permutation of the primary inputs of the AIG:")
+	vec.Vec_IntPrint(permutation)
 	permuted := Gia_ManDupPerm(p, permutation)
 	defer Gia_ManStop(permuted)
 	doubled := Gia_ManDupAppendNew(p, permuted)
@@ -53,7 +56,7 @@ func Gia_IsoTest(p *Gia_Man_t, cex *Abc_Cex_t, verbose int32) {
 	if !ok0 || !ok1 {
 		panic("gia: output permutations unavailable")
 	}
-	mapped := abcutil.Abc_CexPermuteTwo(cex, vec.Vec_IntArray(old), vec.Vec_IntArray(next))
+	mapped := abcutil.Abc_CexPermuteTwo(cex, isoCexPIOrder(p, old), isoCexPIOrder(permuted, next))
 	if Gia_ManVerifyCex(p, cex, 0) != 0 {
 		fmt.Println("CEX for the init AIG is valid.")
 	} else {
@@ -64,4 +67,39 @@ func Gia_IsoTest(p *Gia_Man_t, cex *Abc_Cex_t, verbose int32) {
 	} else {
 		fmt.Println("CEX for the perm AIG is not valid.")
 	}
+}
+
+// isoCexPIOrder lifts cone-local canonical indices to the full PI interface.
+// Pair unused inputs in increasing order; they cannot affect this output cone.
+func isoCexPIOrder(graph *Gia_Man_t, local *Vec_Int_t) []int32 {
+	count := int(Gia_ManPiNum(graph))
+	if vec.Vec_IntSize(local) == count {
+		return vec.Vec_IntArray(local)
+	}
+	inSupport := make([]bool, count)
+	for _, id := range vec.Vec_IntArray(Gia_ManCollectSeq(graph, []int32{0}, 1)) {
+		obj := Gia_ManObj(graph, id)
+		if Gia_ObjIsPi(graph, obj) != 0 {
+			inSupport[Gia_ObjCioId(obj)] = true
+		}
+	}
+	support := make([]int32, 0, vec.Vec_IntSize(local))
+	for pi, used := range inSupport {
+		if used {
+			support = append(support, int32(pi))
+		}
+	}
+	if len(support) != vec.Vec_IntSize(local) {
+		panic("gia: canonical PI order does not match sequential support")
+	}
+	result := make([]int32, 0, count)
+	for _, index := range vec.Vec_IntArray(local) {
+		result = append(result, support[index])
+	}
+	for pi, used := range inSupport {
+		if !used {
+			result = append(result, int32(pi))
+		}
+	}
+	return result
 }
