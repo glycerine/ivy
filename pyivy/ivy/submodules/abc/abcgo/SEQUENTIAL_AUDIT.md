@@ -9156,3 +9156,15 @@ Full IF passes3.419s, native canonical checks4.171s, exhaustive small balancing
 REVIEW_mapping_dsd_dependency.md retains evidence and remaining direct-node
 balancing/cache compactness and caller review. Save this coherent red checkpoint;
 no family/package closure, original audit2/131 and full objective remain active.
+
+### Canonical DSD tuning consumes source truth reconstruction
+
+Core native/driver race passes26.720s, full IF race9.892s, IF/GIA vet exits0
+(handles64469/21268/87778). New red tests then expose unsupported base nodes and
+nested-support panic in cell tuning (handle6627 exit1), and a nil-cache panic
+when two-LUT tuning reaches an internal ten-input AND (handle60479 exit1).
+Use original direct ComputeTruth in both tuners. Three regressions pass0.087s;
+fresh C matches all cell marks/configs and confirms the11-input two6-LUT case
+(handles58058/18760 exit0). These tuning edits require affected race checks next.
+Direct balancing/cache compactness remains open; details in
+REVIEW_mapping_dsd_dependency.md. No family/package closure; original2/131.

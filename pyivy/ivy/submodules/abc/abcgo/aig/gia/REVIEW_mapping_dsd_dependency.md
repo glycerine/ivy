@@ -115,3 +115,43 @@ Next restore direct canonical-node balancing/tuning callers and remove redundant
 representations; review source persistence/merge/filter shortcuts when expanding
 the required caller inventory. No DSD family, mapping family, GIA package or
 131-package completion claim is made at this checkpoint.
+
+## Race gate and next direct-node caller work
+
+The restored canonical core passes full IF race9.892s (handle21268 exit0,
+/tmp/abcgo-dsd-canonical-full-if-race.log) and IF/GIA vet (handle87778 exit0,
+empty /tmp/abcgo-dsd-canonical-vet.log). Native driver/canonical race passes26.720s (handle64469 exit0;
+/tmp/abcgo-dsd-canonical-native-drivers-race.log).
+
+Read-only review identifies a concrete next regression: Id_DsdManTuneStr1 reads
+obj.truth, which is empty for the initial constant/generic variable and for
+canonical internal structures never submitted as root Compute calls. It then
+incorrectly marks these nodes unmatched. Source computes truth directly from
+each canonical record. Add a new red test (including constant/variable and
+internal nodes) before repairing this caller. Also replace full-truth nFans
+minimization in tuning with original direct ComputeTruth semantics: nFans is
+now structural arity, not complete support. Remove redundant object truth,
+DSS network, permutation and support caches only after the direct canonical
+balancing/tuning/report callers pass native and independent checks.
+
+## Canonical tuning caller repair
+
+New red tests prove cell tuning rejects the initial constant/variable and panics
+on a nested canonical root when using obsolete complete-truth/arity caches
+(handle6627 exit1, /tmp/abcgo-dsd-canonical-tuning-red.log). Compute truth directly
+from each canonical node, as source does. A further new red test catches the
+same obsolete-cache path in two-LUT tuning: internal ten-input AND never
+submitted as a Compute root, then XOR the eleventh input (handle60479 exit1;
+/tmp/abcgo-dsd-canonical-two-lut-tuning-red.log). Direct source reconstruction
+repairs both caller paths without copying or min-base processing cached tables.
+
+All three regressions pass0.087s (handle58058 exit0). Fresh original C matches
+every canonical cell-tuning mark/configuration word and confirms the11-input
+function fits two6-LUTs:2.122s (handle18760 exit0;
+/tmp/abcgo-dsd-canonical-all-tuning-native.log). The test compares explicit stable
+contract records, excluding only source progress/elapsed diagnostics. The first
+cell-only comparison already passed2.078s (handle39722 exit0).
+
+Full IF/native race evidence above predates these tuning changes; rerun the
+appropriate affected checks before treating the new checkpoint as integrated.
+Direct canonical balancing and removal of redundant object caches remain next.
