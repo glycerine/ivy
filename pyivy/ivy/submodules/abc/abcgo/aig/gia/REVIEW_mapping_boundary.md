@@ -78,8 +78,8 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing duplication/constraints/boxed-order and attribute overwrite/integration reviewed; remaining optional modes pending |
-| Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; balancing/choice integration and final family gate pending |
-| Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
+| Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed/SOP/DSD boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; boxed-choice integration and final family gate pending |
+| Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Source wrapper parameters/metadata policy reviewed; ordinary/boxed direct/registered paths covered; final family gate pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final family gate pending |
 | Gia_ManTestStruct | map/if/gia_structure_report.go | Pending |
 | Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Last usable cut policy and C collapse failures reviewed; integration pending |
@@ -1321,3 +1321,33 @@ interning and boxed cases,512-case GIA driver race4.453s, and relevant vet pass
 (`/tmp/abcgo-balance-state-final-{module.jsonl,if-race.log,gia-race.log,vet.log}`).
 All handles consumed. No C vectors/compiler dependency added. Boxed-balancing
 coverage is recorded next; remaining family rows/gates and audit2/131 stay open.
+
+### Reconcile general-driver and balancing-wrapper boxed policies
+
+Extend `TestMappingDriverBoxedNormalizationAndOwnership` by96 configurations
+for SOP and DSD balancing, bringing that matrix to288. Verify the general
+driver installs unit box delays for these modes, giving independently expected
+arrivals1/3/5, replaces output-arrival metadata accordingly, drops obsolete
+cell configuration, and returns normalized AIGs without LUT/packing records.
+The original timing manager/table values and all Boolean outputs survive the
+normalization/metadata chain. Exclude the source-invalid combination of
+interleaved input, standalone LUT hashing and AIG balancing: that hash entry
+point requires LUT records, which balancing does not produce. No substitute
+hash/mapping algorithm is added to make the invalid combination appear valid.
+
+Add256 dedicated-wrapper configurations:16 phases, normalized/interleaved
+input, direct/registered SOP/DSD engines and relaxation0/20. Reconcile literal
+wrapper parameter assignments against `giaIf.c:2464..2530`. These wrappers do
+not install timing constraints into IF; they preserve existing configuration,
+input timing, old CO arrivals90/91/92, original timing/model/name pointer
+ownership and all graph truth, then return normalized AIGs. General-driver
+and dedicated-wrapper policies remain separate as in C. Reuse the existing
+Go-only box fixture and temporary global-frame isolation for the DSD cache.
+
+No further production discrepancy was found. Focused boxed cases0.431s
+(`/tmp/abcgo-driver-balances-final-cases.log`); final state-inclusive cases,
+full Go-only module, race/vet evidence are recorded in the preceding section
+(`/tmp/abcgo-balance-state-final-*`). No C vectors/compiler dependency added.
+The file now covers610 configurations including earlier sequential and invalid
+box-order cases. Boxed choices, remaining metrics/reports/transfers,
+optional recorded/SAT dependencies and final family gates remain open2/131.

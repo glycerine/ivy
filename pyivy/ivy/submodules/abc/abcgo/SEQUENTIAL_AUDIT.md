@@ -9698,3 +9698,15 @@ frame. Full Go-only module130 tested packages pass plus3 commands without
 tests; focused IF race4.882s,512-case GIA driver race4.453s and relevant vet
 pass. Details in REVIEW_mapping_boundary.md. Remaining family review stays
 open; original package audit2/131.
+
+### Cover boxed balancing and wrapper policy differences
+
+Extend general boxed mapping by96 SOP/DSD cases; verify unit timing1/3/5,
+configuration replacement and normalized AIG results. Add256 direct/registered
+SOP/DSD wrapper cases with relaxation0/20, proving preservation of existing
+configuration/timing/name/model ownership and old output-arrival metadata.
+All graph assignments are checked; source-invalid standalone LUT hashing of
+an AIG-only balancing result remains outside the valid domain. Final full
+Go-only module, focused IF/GIA race and vet pass as recorded above. No further
+production repair or C fixture added. See REVIEW_mapping_boundary.md;
+boxed-choice integration and remaining family/package gates stay open2/131.

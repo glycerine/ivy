@@ -70,7 +70,12 @@ func TestMappingDriverBoxedNormalizationAndOwnership(t *testing.T) {
 	for signs := 0; signs < 16; signs++ {
 		for _, normalized := range []bool{false, true} {
 			for hash := int32(0); hash < 2; hash++ {
-				for mode := 0; mode < 3; mode++ {
+				for mode := 0; mode < 5; mode++ {
+					// The source non-boxed hash branch requires LUT mapping; AIG
+					// balancing produces no LUT records for that combination.
+					if mode >= 3 && !normalized && hash != 0 {
+						continue
+					}
 					t.Run(fmt.Sprintf("signs%d/normalized%t/hash%d/mode%d", signs, normalized, hash, mode), func(t *testing.T) {
 						src, frame := driverBoxesReviewGraph(t, signs, normalized, false)
 						timing, extra := src.BoxTiming()
@@ -85,10 +90,23 @@ func TestMappingDriverBoxedNormalizationAndOwnership(t *testing.T) {
 						if mode == 2 {
 							pars.FEnableCheck07 = 1
 						}
+						wantTimes := []float32{5.5, 8, 11.25}
+						if mode >= 3 {
+							pars.FExpRed = 0
+							wantTimes = []float32{1, 3, 5}
+							if mode == 3 {
+								pars.FDelayOpt = 1
+							} else {
+								pars.FDsdBalance, pars.FUseDsd = 1, 1
+								dsd := If_DsdManAlloc(4, 0)
+								defer If_DsdManFree(dsd, 0)
+								pars.SetDsdManager(dsd)
+							}
+						}
 						writes := 0
 						pars.pFuncWrite = func(p *If_Man_t) int32 {
 							writes++
-							for i, want := range []float32{5.5, 8, 11.25} {
+							for i, want := range wantTimes {
 								if got := If_ObjArrTime(If_ObjFanin0(If_ManCo(p, int32(i)))); got != want {
 									t.Errorf("CO%d arrival %g, want %g", i, got, want)
 								}
@@ -104,7 +122,7 @@ func TestMappingDriverBoxedNormalizationAndOwnership(t *testing.T) {
 						if writes != 1 || strings.Contains(output, "Gia_ManMappingVerify:") {
 							t.Fatalf("mapping/verification failed: %q", output)
 						}
-						if (gia.Gia_ManIsNormalized(result) != 0) != (normalized || hash != 0) {
+						if (gia.Gia_ManIsNormalized(result) != 0) != (normalized || hash != 0 || mode >= 3) {
 							t.Fatal("unexpected final object ordering")
 						}
 						gotTiming, gotExtra := result.BoxTiming()
@@ -128,11 +146,15 @@ func TestMappingDriverBoxedNormalizationAndOwnership(t *testing.T) {
 						// Replacing the frame slot closes the old source, which no
 						// longer owns the transferred metadata.
 						frame.SetResource("pGia", result)
-						if got := gia.Abc_FrameMiniAigReadCoArrivals(frame); !slices.Equal(got, []int32{5, 8, 11}) {
+						wantArrivals := []int32{int32(wantTimes[0]), int32(wantTimes[1]), int32(wantTimes[2])}
+						if got := gia.Abc_FrameMiniAigReadCoArrivals(frame); !slices.Equal(got, wantArrivals) {
 							t.Fatalf("CO arrivals %v", got)
 						}
 						if result.MappedDelay != int32(pars.FinalDelay) || result.MappedArea != int32(pars.FinalArea) {
 							t.Fatal("mapping summary not copied")
+						}
+						if (result.VMapping == nil) != (mode >= 3) {
+							t.Fatal("unexpected mapping representation")
 						}
 						if mode == 2 {
 							data := gia.Vec_IntArray(result.VPacking)
@@ -254,6 +276,74 @@ func TestMappingDriverSequentialBoxShuffle(t *testing.T) {
 						}
 					}
 				})
+			}
+		}
+	}
+}
+
+func TestBalanceWrappersBoxedMetadataPolicy(t *testing.T) {
+	balanceReviewIsolateFrame(t)
+	for signs := 0; signs < 16; signs++ {
+		for _, normalized := range []bool{false, true} {
+			for kind := 0; kind < 4; kind++ {
+				for _, relax := range []int32{0, 20} {
+					t.Run(fmt.Sprintf("signs%d/normalized%t/kind%d/relax%d", signs, normalized, kind, relax), func(t *testing.T) {
+						src, frame := driverBoxesReviewGraph(t, signs, normalized, false)
+						timing, extra := src.BoxTiming()
+						before := tim.Tim_ManSave(timing, 0)
+						configs, namesIn, namesOut := src.VConfigs, src.VNamesIn, src.VNamesOut
+						var result *Gia_Man_t
+						dsdReportCapture(t, func() {
+							switch kind {
+							case 0:
+								result = Gia_ManPerformSopBalance(src, 8, relax, 0)
+							case 1:
+								result = Gia_ManPerformDsdBalance(src, 4, 8, relax, 0)
+							case 2:
+								result = gia.Gia_ManPerformSopBalance(src, 8, relax, 0)
+							case 3:
+								result = gia.Gia_ManPerformDsdBalance(src, 4, 8, relax, 0)
+							}
+						})
+						if result == nil {
+							t.Fatal("balancing failed")
+						}
+						defer Gia_ManStop(result)
+						gotTiming, gotExtra := result.BoxTiming()
+						if gotTiming != timing || gotExtra != extra || !bytes.Equal(before, tim.Tim_ManSave(timing, 0)) {
+							t.Fatal("balancing changed box timing/model ownership or values")
+						}
+						if result.VConfigs != configs || result.PCellStr != "obsolete-cell" || result.VNamesIn != namesIn || result.VNamesOut != namesOut {
+							t.Fatal("balancing discarded configuration/name metadata")
+						}
+						if oldTiming, oldExtra := src.BoxTiming(); oldTiming != nil || oldExtra != nil || src.VConfigs != nil || src.PCellStr != "" || src.VNamesIn != nil || src.VNamesOut != nil {
+							t.Fatal("source retained moved metadata")
+						}
+						arrivals, required, _, _ := result.MappingInputs()
+						oldArrivals, oldRequired, _, _ := src.MappingInputs()
+						if !slices.Equal(arrivals, []int32{30, 31, 32, 33}) || !slices.Equal(required, []int32{60, 61, 62}) || oldArrivals != nil || oldRequired != nil {
+							t.Fatal("constraint metadata ownership changed")
+						}
+						if result.VMapping != nil || result.VPacking != nil || gia.Gia_ManIsNormalized(result) == 0 {
+							t.Fatal("balancing returned an unexpected representation")
+						}
+						if name, spec := result.Identity(); name != "outer-box-review" || spec != "outer-box-spec" {
+							t.Fatal("balancing lost identity")
+						}
+						frame.SetResource("pGia", result)
+						if got := gia.Abc_FrameMiniAigReadCoArrivals(frame); !slices.Equal(got, []int32{90, 91, 92}) {
+							t.Fatalf("balancing recomputed output arrival metadata: %v", got)
+						}
+						for x := 0; x < 16; x++ {
+							a, b, c, d := x&1 != 0, x&2 != 0, x&4 != 0, x&8 != 0
+							want := []bool{a && (b != (signs&1 != 0)), c && (b != (signs&2 != 0)), ((d != (signs&4 != 0)) && c) != (signs&8 != 0)}
+							got, err := result.Evaluate([]bool{a, b, c, d})
+							if err != nil || !slices.Equal(got, want) {
+								t.Fatalf("input%d: got%v want%v err%v", x, got, want, err)
+							}
+						}
+					})
+				}
 			}
 		}
 	}
