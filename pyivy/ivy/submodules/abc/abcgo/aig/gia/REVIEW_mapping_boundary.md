@@ -67,7 +67,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Source unconditional assertion preserved and tested; unused unreachable helper removed; final family gate pending |
 | Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Source branches/phase/records reviewed; 600 Go-only wide selector/constant-cofactor cases; final family gate pending |
 | Gia_ManFromIfLogicAndVars | map/if/gia_cofactor.go | Source masks/phase/records reviewed; 192 Go-only wide AND/OR cases; final family gate pending |
-| Gia_ManFromIfLogic | map/if/gia_mapping.go | Source branch/ref/phase/finalization review in progress; 31 routing/4 terminal/retry cases; unused scratch removed; config dump and growth boundary review pending |
+| Gia_ManFromIfLogic | map/if/gia_mapping.go | Source routing/phase/ref/finalization/config I/O reviewed; exact growth/file boundaries covered; report escaping fixed; unused scratch removed; final family gate pending |
 | Gia_ManMappingVerify_rec | aig/gia/mapping_transfer.go | Pending |
 | Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Pending |
 | Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
@@ -1009,3 +1009,43 @@ Focused main-driver/configuration race passes1.144s
 dependencies added. Source configuration dump behavior and mapping-array growth
 boundary remain to finish this row; metrics/reporting and full family gate also
 stay open. Original package audit2/131.
+
+### Configuration output and mapping-array growth boundaries
+
+Finish the main reconstruction row's I/O and growth review against
+`giaIf.c:1978..2041`. Source prints filenames verbatim inside quotes; Go `%q`
+added escaping for valid quote/backslash filename bytes. Four new red cases
+(two filename forms times success/open-failure) fail before the repair
+(`/tmp/abcgo-mapping-config-report-red.log`, exit1). Restore quoted `%s` in both
+messages. Reuse `extra.Extra_FileNameGeneric` as the source caller does, removing
+duplicated inline logic; the existing Go path-aware handling of dotted directory
+names is unchanged. Retain existing Go WriteFile error handling and mapped graph
+ownership when the side report cannot be written.
+
+`gia_mapping_boundary_review_test.go` adds12 configuration I/O cases: plain,
+multiple-dot, extensionless, quoted, backslash and unnamed filenames, each with
+successful output or an existing-directory open failure. All files live in test
+temporary directories. On Windows skip the two literal filename forms prohibited
+there; this is unrelated to C-toolchain availability. Prefill successful targets
+with longer content and check exact truncation, source low-bit-first config text,
+spacing and attached metadata consistency. On open failure the complete mapped
+graph/configuration remains usable; evaluate every assignment on both paths.
+The unnamed prefix intentionally retains the source double underscore.
+
+A terminal-only tuned case verifies zero configuration rows still truncate the
+report to an empty file and retain header[0,1]/cell metadata. A real shared-cone
+case selects two three-input cuts that bypass a common AND: independent LUT
+reconstruction creates11 GIA objects from10 IF objects. This forces offset-array
+growth rather than shrinkage. Check adjusted root offsets/markers, unmapped CO
+slots, skipped original shared node and all output assignments. Growth and the
+empty-file case pass without production repairs.
+
+Frozen verification: focused I/O/growth0.095s
+(`/tmp/abcgo-mapping-config-report-green.log`); full IF9.423s, GIA28.552s and
+extra2.666s with CGO disabled and C tools excluded, exit0
+(`/tmp/abcgo-mapping-config-reviewed-packages.jsonl`); main-driver/configuration
+race1.250s (`/tmp/abcgo-mapping-config-reviewed-race.log`); IF/GIA vet exit0
+(`/tmp/abcgo-mapping-config-reviewed-vet.log`). All handles consumed to terminal.
+No C test vectors or compiler dependencies added. Main logic reconstruction row
+review is recorded; outer mapping/balance drivers, metrics/reporting, transfer
+reconciliation and final family gates remain open. Original package audit2/131.

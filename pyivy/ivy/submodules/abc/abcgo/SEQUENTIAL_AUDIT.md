@@ -9578,3 +9578,15 @@ falls269KB->3.2KB structural and271KB->5KB truth. Final full Go-only module:
 130 tested packages plus3 commands without tests, zero failures. Focused driver
 race1.144s and IF/GIA vet pass. Details/logs in REVIEW_mapping_boundary.md.
 Configuration I/O, mapping growth and wider family work remain open2/131.
+
+### Configuration report fidelity and mapping growth boundary
+
+Four new red cases expose Go quoting of filenames replacing C's verbatim quoted
+report text. Restore source messages and reuse the existing filename helper.
+Add12 Go-only I/O cases, an empty config report/truncation case and real11-object
+GIA versus10-object IF mapping growth. Check exact file text/metadata and all
+Boolean outputs, including usable graph return on open failure. Full IF/GIA/
+extra Go-only9.423/28.552/2.666s, focused driver race1.250s and IF/GIA vet pass.
+Main logic reconstruction row reviewed; outer drivers/metrics/reports/transfers
+and family gate stay open. Details/logs in REVIEW_mapping_boundary.md. Original
+package audit remains2/131.

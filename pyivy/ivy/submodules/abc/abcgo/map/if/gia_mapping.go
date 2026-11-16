@@ -3,9 +3,9 @@ package if_
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/extra"
 	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -152,17 +152,15 @@ func Gia_ManFromIfLogic(p *If_Man_t) *Gia_Man_t {
 		}
 	}
 	if configText != nil {
-		name := p.pName
-		if name == "" {
-			name = "nameless_"
-		} else if dot, slash := strings.LastIndexByte(name, '.'), strings.LastIndexAny(name, "/\\"); dot > slash {
-			name = name[:dot]
+		name := "nameless_"
+		if p.pName != "" {
+			name = extra.Extra_FileNameGeneric(p.pName)
 		}
 		path := name + "_configs.txt"
 		if err := os.WriteFile(path, vec.Vec_StrArray(configText), 0666); err != nil {
-			fmt.Printf("Cannot open file %q.\n", path)
+			fmt.Printf("Cannot open file \"%s\".\n", path)
 		} else {
-			fmt.Printf("Finished dumping configs into file %q.\n", path)
+			fmt.Printf("Finished dumping configs into file \"%s\".\n", path)
 		}
 	}
 	return dst
