@@ -205,12 +205,15 @@ func If_DsdManFree(p *If_DsdMan_t, verbose int32) {
 	if p == nil {
 		return
 	}
-	p.vObjs = Vec_Ptr_t{}
-	vec.Vec_WrdFree(p.vConfigs)
-	p.vConfigs = nil
-	p.vTemp1 = nil
-	p.vTemp2 = nil
+	if verbose != 0 {
+		If_DsdManPrint(p, "", 0, 0, 0, 0, 0)
+	}
+	If_ManSatUnbuild(p.pSat)
+	// All remaining allocations are Go-owned vectors, slices and node records.
+	// Clear the owner as a whole so all caches become collectible together.
+	*p = If_DsdMan_t{}
 }
+
 func If_DsdManCleanMarks(p *If_DsdMan_t, verbose int32) {
 	for _, e := range Vec_PtrArray(&p.vObjs) {
 		e.(*If_DsdObj_t).fMark = 0
@@ -231,7 +234,29 @@ func If_DsdManCleanOccur(p *If_DsdMan_t, verbose int32) {
 		e.(*If_DsdObj_t).Count = 0
 	}
 }
-func If_DsdManAllocIsops(p *If_DsdMan_t, nLutSize int32) { p.LutSize = nLutSize }
+func If_DsdManAllocIsops(p *If_DsdMan_t, nLutSize int32) {
+	if p.vIsops[3] != nil {
+		return
+	}
+	if Vec_PtrSize(&p.vObjs) > 2 {
+		fmt.Println("Warning: DSD manager is already started without ISOPs.")
+	}
+	for v := int32(3); v <= nLutSize; v++ {
+		p.vIsops[v] = vec.Vec_WecAlloc(100)
+		for i := 0; i < vec.Vec_MemEntryNum(p.vTtMem[v]); i++ {
+			level := vec.Vec_WecPushLevel(p.vIsops[v])
+			cover, complement := ifDsdPrimeCover(vec.Vec_MemReadEntry(p.vTtMem[v], i), v)
+			if complement >= 0 && len(cover) <= 8 {
+				for _, cube := range cover {
+					Vec_IntPush(level, cube)
+				}
+				p.vIsopComplement[v] = append(p.vIsopComplement[v], complement != 0)
+			} else {
+				p.vIsopComplement[v] = append(p.vIsopComplement[v], false)
+			}
+		}
+	}
+}
 func If_DsdManMerge(p, other *If_DsdMan_t) {
 	if p == nil || other == nil {
 		return
@@ -382,7 +407,7 @@ func If_CutDsdBalancePinDelays(p *If_Man_t, cut *If_Cut_t, permutation []byte) i
 		times[i] = int32(If_ObjCutBest(If_CutLeaf(p, cut, int32(i))).Delay)
 	}
 	var support int32
-	delay, profile := dsdDelayRec(obj.network, obj.network.Root, obj.permutation, times, &support, int32(cut.nLeaves))
+	delay, profile := dsdDelayRec(obj.network, obj.network.Root, If_CutDsdPerm(p, cut), times, &support, int32(cut.nLeaves))
 	assert(support == int32(cut.nLeaves), "support == cut.nLeaves")
 	If_CutPinDelayTranslate(profile, int32(cut.nLeaves), permutation)
 	return delay

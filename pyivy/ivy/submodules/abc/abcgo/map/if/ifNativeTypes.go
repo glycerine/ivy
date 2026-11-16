@@ -15,19 +15,20 @@ type Ifn_Obj_t struct {
 // Vector fields that were embedded C structs remain values; variable-length
 // truth/configuration data is represented by Go slices.
 type If_DsdMan_t_ struct {
-	pStore                                                string
-	nVars, LutSize, nWords, nBins                         int32
-	pBins                                                 []int32
-	pMem                                                  *Mem_Flex_t
-	vObjs                                                 Vec_Ptr_t
-	vNexts, vTruths                                       Vec_Int_t
-	vTemp1, vTemp2                                        *Vec_Int_t
-	pTtElems                                              [][]word
-	vTtMem                                                [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Mem_t
-	vTtDecs                                               [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Ptr_t
-	vIsops                                                [IF_MAX_FUNC_LUTSIZE + 1]*Vec_Wec_t
-	vIsopComplement                                       [IF_MAX_FUNC_LUTSIZE + 1][]bool
-	pSched                                                [IF_MAX_FUNC_LUTSIZE][]int32
+	pStore                        string
+	nVars, LutSize, nWords, nBins int32
+	pBins                         []int32
+	pMem                          *Mem_Flex_t
+	vObjs                         Vec_Ptr_t
+	vNexts, vTruths               Vec_Int_t
+	vTemp1, vTemp2                *Vec_Int_t
+	pTtElems                      [][]word
+	// DSD uses DAU's full 16-input domain, including support-index16.
+	vTtMem                                                [17]*Vec_Mem_t
+	vTtDecs                                               [17]*Vec_Ptr_t
+	vIsops                                                [17]*Vec_Wec_t
+	vIsopComplement                                       [17][]bool
+	pSched                                                [16][]int32
 	nTtBits, nConfigWords                                 int32
 	vConfigs                                              *Vec_Wrd_t
 	pTtGia                                                any

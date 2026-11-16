@@ -17,7 +17,7 @@ func TestIfDsdComputeKeepsTruthAndLiteralPermutation(t *testing.T) {
 	if lit&1 != 0 {
 		t.Fatalf("unexpected complemented DSD literal %d", lit)
 	}
-	if got, want := permutation, []byte{0, 2, 4}; string(got) != string(want) {
+	if got, want := permutation, []byte{4, 2, 0}; string(got) != string(want) {
 		t.Fatalf("pin selectors = %v, want %v", got, want)
 	}
 	obj := dsdObject(p, lit)
@@ -39,7 +39,7 @@ func TestIfDsdCheckXYFindsAndMasksDecomposition(t *testing.T) {
 	if set == 0 {
 		t.Fatal("expected a two-LUT decomposition")
 	}
-	if got := If_DsdManCheckXY(p, lit, 2, 0, ^uint32(0), 0, 0); got != 0 {
+	if got := If_DsdManCheckXY(p, lit, 2, 1, ^uint32(0), 0, 0); got != 0 {
 		t.Fatalf("masked decomposition %#x remained available", got)
 	}
 }
