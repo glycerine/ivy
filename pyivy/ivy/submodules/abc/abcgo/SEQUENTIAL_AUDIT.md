@@ -8974,3 +8974,19 @@ primitives are retained. Remaining giaIf.c rows, timing/boundary/resource cases,
 compactness and complete frozen module race/vet are explicitly pending in
 REVIEW_mapping_boundary.md. Save a coherent red checkpoint; neither this source
 family nor GIA is complete, and original audit completion stays2/131.
+
+### Mapping boxed timing and transfer ownership coverage
+
+All128 repeated native boxed/fallback states pass2.339s with independent valid
+network level expectations, disabled arcs, multiple ports and source fallback.
+All6,144 original-C timing transfers pass2.099s across2,048 presence masks,
+empty/populated destinations and self-transfer, including pointer origins and
+resource gating. No production change was needed. Logs are
+/tmp/abcgo-mapping-box-levels-first.log and
+/tmp/abcgo-mapping-timing-transfer-first.log; handles76413/22770 terminate exit0.
+
+Preserve source-ordered destructive self-transfer, already explicitly covered.
+Next inspect the balancing wrappers' use of the general mapping driver: it
+clears configuration metadata that C's balancing paths retain for transfer.
+Add a new failing regression before any repair. Mapping source-family closure,
+GIA and original2/131 package audit remain open. Save a coherent red checkpoint.

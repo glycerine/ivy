@@ -171,3 +171,28 @@ configuration/frame metadata, IF reconstruction and all mapping drivers, error
 and resource cases, source precondition/safety-extension characterizations,
 compactness measurements and frozen full-module integration. The source family,
 GIA package and original2/131 package audit remain open.
+
+## Boxed levels and timing metadata checkpoint
+
+Freshly compiled original giaIf.c and giaTim.c agree with Go on128 repeated
+boxed/fallback states across64 seeds. Valid cases also match independent
+construction-time level expectations, including multiple box inputs/outputs,
+disabled arcs, varied finite delays, dangling box interfaces and separate LUT
+versus choice-level semantics. Invalid box order retains the original warning
+and structural-level fallback. No production timing change was needed.
+`/tmp/abcgo-mapping-box-levels-first.log`,handle76413 exit0,2.339s.
+
+Fresh original giaIf.c matches6,144 timing metadata transfers:2,048 presence
+masks with absent/populated destinations and self-transfer. Compare all values,
+source clearing, unchanged scalar fields and exact source/destination pointer
+origins, including partial groups and boxed-resource gating. Fixture allocations
+are tracked independently so destructive self-transfer/overwrites do not leak
+in the oracle. Existing source-ordered self-transfer is intentional and retained.
+`/tmp/abcgo-mapping-timing-transfer-first.log`,handle22770 exit0,2.099s.
+
+Inspection finds a separate concern for the next red test: the SOP/DSD balance
+wrappers reuse the general mapping driver. That driver clears cell configuration
+metadata, whereas the original balancing paths do not clear it before moving
+timing/configuration data to their results. Confirm this loss before repair.
+Family-wide remaining reconstruction/driver/frame/error/compactness/integration
+work is still open; these coverage milestones do not close GIA or map/if.
