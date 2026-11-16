@@ -63,8 +63,8 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManNodeIfToGia_rec | map/if/gia_cut_cone.go (recursive closure) | Source choice traversal/phase handling reviewed; 64 equivalent-choice cases; final family gate pending |
 | Gia_ManNodeIfToGia | map/if/gia_cut_cone.go | Source cone boundary reviewed; scratch/failure/constant-leaf tests; final family gate pending |
 | Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Source remap/SAT/packing reviewed; 400 size/phase/shared-partition cases; final family gate pending |
-| Gia_ManFromIfGetConfig | map/if/gia_config.go | Pending |
-| Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Pending |
+| Gia_ManFromIfGetConfig | map/if/gia_config.go | Source bit/text/permutation packing reviewed; 1408 Go-only boundary/phase cases with repeated appends; final family gate pending |
+| Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Source unconditional assertion preserved and tested; unused unreachable helper removed; final family gate pending |
 | Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Source branches/phase/records reviewed; 600 Go-only wide selector/constant-cofactor cases; final family gate pending |
 | Gia_ManFromIfLogicAndVars | map/if/gia_cofactor.go | Source masks/phase/records reviewed; 192 Go-only wide AND/OR cases; final family gate pending |
 | Gia_ManFromIfLogic | map/if/gia_mapping.go | Pending |
@@ -533,3 +533,37 @@ C tools excluded from PATH pass (8.429s,
 bi-decomposition0.471s. These tests add no C-tool dependency. Remaining node,
 configuration/cell, reporting and final family gates stay open; original
 package audit remains2/131.
+
+### Programmable configuration packing and disabled cell entry point
+
+Compare `Gia_ManFromIfGetConfig` with `giaIf.c:1567..1633`. Truth bits precede
+cell-to-DSD-to-cut permutation literals; cut leaf copy polarity is folded into
+each literal; the final bit XORs DSD, cut and result phases. Source low-bit-first
+text, including spaces after each sign bit and between fields, is retained.
+Appending increments the configuration count without changing the size header.
+No production packing discrepancy was found.
+
+`gia_config_review_test.go` adds1408 cases, each appending two configurations.
+Domains1/2/3/4/7/8/14/15 exercise input literal widths (the source IF cut limit
+is15, even though the DSD manager supports16). Truth widths0/1/31/32/33/63/64/
+65/127/128/129 cover 32/64-bit boundaries and final partial words. Two cell
+permutations, composed cut permutations and signed copy literals, plus all eight
+DSD/cut/result phase combinations, are checked against independent scalar bit
+strings decoded into32-bit chunks. Full text, zero padding, append offsets and
+borrowed configuration/permutation ownership are checked. No C fixtures or
+compiler invocations are used. Existing nil-text and real tuned-cell round-trip
+tests also run.
+
+`Gia_ManFromIfLogicFindCell` begins with unconditional `assert(0)` in source.
+The public Go panic remains immediate (tested with all nil arguments), rather
+than enabling a path the source disables. Remove the40-line private helper
+with no callers that duplicated the unreachable post-assert body. This reduces
+unused machinery without changing active behavior; it does not claim that
+programmable-cell reconstruction has been enabled or audited as an active path.
+
+Frozen verification after the removal: full IF tests with C tools excluded and
+CGO disabled pass8.353s (`/tmp/abcgo-config-reviewed-full.log`); focused new and
+existing configuration/round-trip race tests pass1.326s
+(`/tmp/abcgo-config-reviewed-race.log`); IF/GIA vet exits0
+(`/tmp/abcgo-config-reviewed-vet.log`). Wider LogicNode/CLU and mapping-driver
+source reconciliation and final family gates remain open. Original audit2/131.

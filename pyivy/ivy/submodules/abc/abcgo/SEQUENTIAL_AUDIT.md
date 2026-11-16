@@ -9449,3 +9449,15 @@ phases, record links and source ownership pass. No production defect found.
 Full IF Go-only8.429s, new-case race65.730s and IF/GIA vet pass. No C fixtures
 or compiler invocations added. Details in REVIEW_mapping_boundary.md. Wider
 GIA/configuration review stays open; original audit remains2/131.
+
+### Programmable configuration packing and disabled cell path review
+
+Compare source truth/permutation/phase/text packing. Add1408 Go-only cases,
+each appending twice, covering1..15-input width boundaries, 32/64-bit truth
+boundaries, composed permutations/signed copies and all output phases. Exact
+words/text, padding, append positions and ownership pass. No packing bug found.
+Preserve/test the public unconditional source assertion; remove the uncalled
+40-line Go helper duplicating its unreachable body. Full IF Go-only8.353s,
+focused configuration race1.326s and IF/GIA vet pass. Details in
+REVIEW_mapping_boundary.md; remaining reconstruction/driver/reporting rows and
+final family gate stay open. Original audit remains2/131.
