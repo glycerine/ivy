@@ -2,7 +2,10 @@ package if_
 
 import (
 	"fmt"
+	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/opt/dau"
+	"os"
 )
 
 func If_DsdManCollect_rec(p *If_DsdMan_t, id int32, nodes, firsts *Vec_Int_t, support *int32) {
@@ -117,6 +120,10 @@ func If_DsdManCheckMux(p *If_DsdMan_t, first int32, mask uint32, o *If_DsdObj_t,
 func If_DsdManCheckPrime(p *If_DsdMan_t, first int32, mask uint32, o *If_DsdObj_t, total, lut, derive, verbose int32) uint32 {
 	assert(o.nFans > 2 && o.nSupp > lut, "nontrivial prime DSD decomposition")
 	sets := Vec_PtrEntry(p.vTtDecs[o.nFans], int(If_DsdObjTruthId(p, o))).(*Vec_Int_t)
+	if verbose != 0 {
+		fmt.Println()
+		dau.Dau_DecPrintSets(sets, o.nFans)
+	}
 	var sizes, firsts [16]int32
 	If_DsdManGetSuppSizes(p, o, sizes[:])
 	limit := lut - (total - o.nSupp + 1)
@@ -161,7 +168,7 @@ func If_DsdManCheckPrime(p *If_DsdMan_t, first int32, mask uint32, o *If_DsdObj_
 func If_DsdManCheckXY_int(p *If_DsdMan_t, lit, lut, derive int32, mask uint32, verbose int32) uint32 {
 	root := dsdObject(p, lit)
 	if verbose != 0 {
-		fmt.Println(ifDsdText(p, lit&^1, nil))
+		If_DsdManPrintOne(os.Stdout, p, root.Id, nil, 0)
 	}
 	if root.nSupp <= lut {
 		if verbose != 0 {
@@ -173,6 +180,10 @@ func If_DsdManCheckXY_int(p *If_DsdMan_t, lit, lut, derive int32, mask uint32, v
 	for i, id := range Vec_IntArray(p.vTemp1) {
 		o := If_DsdVecObj(&p.vObjs, id)
 		if o.nSupp <= lut && root.nSupp-o.nSupp <= lut-1 {
+			if verbose != 0 {
+				fmt.Print("    Dec using node ")
+				If_DsdManPrintOne(os.Stdout, p, id, nil, 1)
+			}
 			first := Vec_IntEntry(p.vTemp2, i)
 			sign := If_DsdSign_rec(p, o, &first)
 			if sign&mask == 0 {
@@ -197,6 +208,20 @@ func If_DsdManCheckXY_int(p *If_DsdMan_t, lit, lut, derive int32, mask uint32, v
 				sign = If_DsdManCheckPrime(p, first, mask, o, root.nSupp, lut, derive, verbose)
 			}
 			if sign != 0 {
+				if verbose != 0 {
+					fmt.Print("    ")
+					switch kind {
+					case IF_DSD_AND:
+						abcutil.Abc_TtPrintBinary([]word{word(sign)}, 4)
+						fmt.Println("    Using multi-input AND/XOR node")
+					case IF_DSD_MUX:
+						abcutil.Abc_TtPrintBinary([]word{word(sign)}, 4)
+						fmt.Println("    Using multi-input MUX node")
+					case IF_DSD_PRIME:
+						dau.Dau_DecPrintSet(sign, o.nFans, 0)
+						fmt.Println("    Using prime node")
+					}
+				}
 				return sign
 			}
 		}

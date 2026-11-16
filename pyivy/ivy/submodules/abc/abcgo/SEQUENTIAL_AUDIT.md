@@ -9278,3 +9278,12 @@ Checkpoint commits should close passing coherent chunks instead of marking
 all work red merely because the larger family audit remains open. Use red only
 when committing actually failing/incomplete work for preservation. Remaining DSD
 verbose/dump APIs, mapping rows and full integration gate stay open; audit2/131.
+
+### Passing DSD verbose diagnostics chunk
+
+Red Go-only regressions precede source-shaped verbose partition reports; restore
+record prefix, candidates and acceptance/set-family explanations without changing
+partition selection. Full IF race and IF/GIA vet pass. New tests cover quiet mode,
+complemented roots, masks, existence-only answers, weighted MUX and prime helpers.
+See REVIEW_mapping_dsd_dependency.md. Dump APIs/mapping closure still pending;
+original package audit remains2/131.

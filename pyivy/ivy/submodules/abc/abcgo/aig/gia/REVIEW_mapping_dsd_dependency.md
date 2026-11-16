@@ -399,3 +399,18 @@ retain source-derived expected data rather than add executable .c test vectors.
 This is a passing report-options chunk, not a mapping-family completion claim.
 Truth-table dumping and verbose decomposition diagnostics remain open, along
 with the earlier utility/driver rows and full mapping integration gate.
+
+### Verbose partition diagnostics
+
+Go-only regressions reproduce missing IDs/counts, candidate reports and accepted
+partition explanations before repair (/tmp/abcgo-dsd-verbose-red.log, exit1).
+Restore source PrintOne prefix, subtree reporting before mask rejection,
+AND/XOR/MUX accepted-mask explanation, prime set-family listing and selected-set
+formatting. Partition traversal, decision ordering and masks are unchanged.
+Tests explicitly check complemented root reporting, derive=0, blocked candidates,
+quiet output, shared-control MUX helper and weighted prime-family boundaries.
+Two initial MUX/prime test expectations were corrected using source support-limit
+arithmetic before production edits; they were not algorithm bugs. No C fixtures
+or compilers are used by the new tests. Repaired focused tests pass0.011s;
+full IF race and IF/GIA vet pass (logs /tmp/abcgo-dsd-verbose-if-race.log and
+/tmp/abcgo-dsd-verbose-vet.log). Dump APIs and wider mapping audit remain open.
