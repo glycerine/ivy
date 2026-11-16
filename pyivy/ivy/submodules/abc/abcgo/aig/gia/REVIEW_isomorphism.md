@@ -8,8 +8,9 @@ Review these sequentially within the open GIA package audit. The original
 ## Plan
 
 - [x] Locate original routines, actual Go implementations and existing tests.
-- [ ] Reconcile first-generation level classes, packed fields, unsigned
-  signatures, sorting/ties, forward/backward refinement and convergence.
+- [x] Reconcile first-generation level classes, packed fields, unsigned
+  signature arithmetic, sorting and tie-accounting kernels.
+- [ ] Reconcile full forward/backward refinement and convergence.
 - [ ] Review canonical traversal, PI/register permutations, serialized keys,
   output reduction, dual-output and estimate/ownership boundaries.
 - [ ] Reconcile second-generation hash/unique labels, cone traversals, sequential
@@ -336,3 +337,38 @@ vet pass; all handles ended. Final logs /tmp/abcgo-iso-unique-final-
 checkpoints, this closes review of all12 giaIso3.c routines. The other56 source
 routines in this family, and the larger GIA audit, retain their documented
 open checks; original package completion remains2/131.
+
+
+## First-generation partition/tie accounting and completion reports
+
+Forty-two Go-only partition cases independently group keys across empty and
+multi-class workspaces,2/3/10/11/13-member classes, equal/distinct/dense/wide
+values and deterministic mixed values. Check unsigned key ordering, singleton
+labels in class/key order, class boundaries, entry/singleton counters, packed-ID
+bijection and untouched signatures/ordinary marks. Uniform classes retain their
+payload order, and sentinel words outside classes remain unchanged. Earlier
+source tie-payload goldens still pin order within nonuniform tied partitions.
+
+Five tie-policy cases check active highest-level assignment and both experimental
+variants, preserving counter accumulation and class removal. The experimental
+variants intentionally label only one member of larger classes before dropping
+the class, as C does; do not advertise them as complete tie strategies. Variant2
+retains Go's accurate selected-class diagnostic rather than C's post-compaction
+loop index (which prints the last old index instead). No algorithm/state change
+was needed in these kernels. The class printer's source format is also pinned.
+
+Two new verbose regressions fail before restoring the missing full-refinement
+completion snapshot and six timing rows. A hand-traced1-CI/1-PO graph expects
+iterations0,2 for full refinement versus0,1,2 for forward-only mode, then Start/
+Simulate/Refine/Sort/Other/TOTAL percentages. Both quiet-mode paths remain silent.
+Use the existing time-percentage printer. Compute total/other durations locally
+and remove their redundant manager fields plus the never-used vLevCounts pointer.
+Red /tmp/abcgo-iso-classes-red.log; repaired focused log
+/tmp/abcgo-iso-classes-green.log.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests; all42 partition,5 tie and2 verbose leaves execute. Focused isomorphism
+race1.485s and GIA vet pass; all handles ended. Final logs:
+/tmp/abcgo-iso-classes-final-{module.jsonl,race.log,vet.log}. These checks close
+the partition/tie kernels and completion reports, not the full convergence,
+canonicalization/reduction or first-generation driver review. Original audit2/131.

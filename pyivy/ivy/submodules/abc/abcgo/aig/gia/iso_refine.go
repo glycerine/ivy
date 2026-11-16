@@ -47,12 +47,12 @@ var s_256Primes = [ISO_MASK + 1]uint32{
 }
 
 type Gia_IsoMan_t struct {
-	pGia                                                           *Gia_Man_t
-	nObjs, nUniques, nSingles, nEntries                            int32
-	pLevels, pUniques                                              []int32
-	pStoreW                                                        []word
-	vLevCounts, vClasses, vClasses2                                *Vec_Int_t
-	timeStart, timeSim, timeRefine, timeSort, timeOther, timeTotal int64
+	pGia                                     *Gia_Man_t
+	nObjs, nUniques, nSingles, nEntries      int32
+	pLevels, pUniques                        []int32
+	pStoreW                                  []word
+	vClasses, vClasses2                      *Vec_Int_t
+	timeStart, timeSim, timeRefine, timeSort int64
 }
 
 func Gia_IsoGetValue(p *Gia_IsoMan_t, i int32) uint32 { return uint32(p.pStoreW[i]) }
@@ -421,6 +421,19 @@ func Gia_IsoDeriveEquivPos(g *Gia_Man_t, forward, verbose int32) *Vec_Ptr_t {
 				}
 			}
 		}
+		if verbose != 0 {
+			Gia_IsoPrint(p, iteration+2, time.Since(total).Nanoseconds())
+		}
+	}
+	if verbose != 0 {
+		elapsed := time.Since(total).Nanoseconds()
+		other := elapsed - p.timeStart - p.timeSim - p.timeRefine
+		abcutil.Abc_PrintTimeP(1, "Start    ", p.timeStart, elapsed)
+		abcutil.Abc_PrintTimeP(1, "Simulate ", p.timeSim, elapsed)
+		abcutil.Abc_PrintTimeP(1, "Refine   ", p.timeRefine-p.timeSort, elapsed)
+		abcutil.Abc_PrintTimeP(1, "Sort     ", p.timeSort, elapsed)
+		abcutil.Abc_PrintTimeP(1, "Other    ", other, elapsed)
+		abcutil.Abc_PrintTimeP(1, "TOTAL    ", elapsed, elapsed)
 	}
 	var result *Vec_Ptr_t
 	if Gia_ManPoNum(g) > 1 {

@@ -10155,3 +10155,16 @@ passes130 tested packages plus3 commands without tests; focused isomorphism
 race1.502s and GIA vet pass. REVIEW_isomorphism.md records benchmarks, evidence
 and the completed12-routine scope. Remaining first-/second-generation checks
 and the broader GIA package stay open; original package completion2/131.
+
+
+### Verify isomorphism class accounting and restore completion reports
+
+Add42 independent unsigned partition cases and5 source tie-policy cases, checking
+labels, boundaries, counters, payload membership and untouched graph state.
+Preserve the experimental variants' incomplete larger-class policy explicitly.
+New red verbose regressions precede restoring the final full-refinement snapshot
+and six timing categories; quiet paths stay silent. Remove unused manager fields
+and keep report-only totals local. Full Go-only module passes130 tested packages
+plus3 commands without tests; focused isomorphism race1.485s and GIA vet pass.
+REVIEW_isomorphism.md records source diagnostic caveats and remaining full
+convergence/canonicalization/reduction/driver scope. Original audit2/131.
