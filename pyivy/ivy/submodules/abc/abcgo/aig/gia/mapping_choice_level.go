@@ -33,10 +33,13 @@ func Gia_ManChoiceLevel_rec(p *Gia_Man_t, obj *Gia_Obj_t) {
 		Gia_ManChoiceLevel_rec(p, fanin)
 		level = Gia_ObjLevel(p, fanin)
 	case Gia_ObjIsAnd(obj) != 0:
-		a, b := Gia_ObjFanin0(obj), Gia_ObjFanin1(obj)
-		Gia_ManChoiceLevel_rec(p, a)
-		Gia_ManChoiceLevel_rec(p, b)
-		level = 1 + max(Gia_ObjLevel(p, a), Gia_ObjLevel(p, b))
+		fanins, count := giaQuantFanins(p, obj)
+		for _, id := range fanins[:count] {
+			fanin := Gia_ManObj(p, id)
+			Gia_ManChoiceLevel_rec(p, fanin)
+			level = max(level, Gia_ObjLevel(p, fanin))
+		}
+		level++
 		if sibling := Gia_ObjSiblObj(p, obj.id); sibling != nil {
 			Gia_ManChoiceLevel_rec(p, sibling)
 			level = max(level, Gia_ObjLevel(p, sibling))

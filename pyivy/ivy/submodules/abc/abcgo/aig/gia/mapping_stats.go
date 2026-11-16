@@ -106,7 +106,8 @@ func Gia_ManPrintMappingStats(p *Gia_Man_t, dumpFile string) {
 	}
 	var average float64
 	if n := Gia_ManCoNum(p); n != 0 {
-		average = float64(totalLevel) / float64(n)
+		// C divides after converting the sum to float, then promotes for printing.
+		average = float64(float32(totalLevel) / float32(n))
 	}
 	fmt.Printf("Mapping (K=%d)  :  \033[1;33mlut =%7d\033[0m  \033[1;32medge =%8d\033[0m  \033[1;31mlev =%5d\033[0m \033[1;31m(%.2f)\033[0m  ", maxSize, luts, fanins, maxLevel, average)
 	if timing, ok := p.PManTime.(*tim.Tim_Man_t); ok && tim.Tim_ManBoxNum(timing) > 0 {

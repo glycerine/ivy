@@ -12,7 +12,7 @@ func Gia_ManPrintPackingStats(p *Gia_Man_t) {
 	}
 	var counts [4]int32
 	entries := int32(0)
-	maximum := 0
+	maximum := -1
 	for i := 1; i < len(data); {
 		size := int(data[i])
 		i++

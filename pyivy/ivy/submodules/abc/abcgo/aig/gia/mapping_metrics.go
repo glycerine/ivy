@@ -70,7 +70,11 @@ func Gia_ManComputeOverlap2One_rec(p *Gia_Man_t, id int32, label *Vec_Str_t, vis
 	if Gia_ObjIsAnd(obj) == 0 {
 		panic("gia: LUT cone reaches non-cut input")
 	}
-	count := Gia_ManComputeOverlap2One_rec(p, Gia_ObjFaninId0(obj, id), label, visited) + Gia_ManComputeOverlap2One_rec(p, Gia_ObjFaninId1(obj, id), label, visited)
+	var count int32
+	fanins, n := giaQuantFanins(p, obj)
+	for _, fanin := range fanins[:n] {
+		count += Gia_ManComputeOverlap2One_rec(p, fanin, label, visited)
+	}
 	Vec_IntPush(visited, id)
 	return count + 1
 }
@@ -108,7 +112,12 @@ func Gia_ManComputeOverlapOne_rec(p *Gia_Man_t, id int32) int32 {
 	if Gia_ObjIsAnd(obj) == 0 {
 		panic("gia: LUT cone reaches non-cut input")
 	}
-	return 1 + Gia_ManComputeOverlapOne_rec(p, Gia_ObjFaninId0(obj, id)) + Gia_ManComputeOverlapOne_rec(p, Gia_ObjFaninId1(obj, id))
+	count := int32(1)
+	fanins, n := giaQuantFanins(p, obj)
+	for _, fanin := range fanins[:n] {
+		count += Gia_ManComputeOverlapOne_rec(p, fanin)
+	}
+	return count
 }
 func Gia_ManComputeOverlapOne(p *Gia_Man_t, id int32) int32 {
 	Gia_ManIncrementTravId(p)

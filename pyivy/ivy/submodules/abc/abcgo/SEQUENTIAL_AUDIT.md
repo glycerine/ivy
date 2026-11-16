@@ -8936,3 +8936,21 @@ implementations also live in map/if. Existing typed hash/transfer reviews remain
 valid; inventory all other source routines before claiming that family complete.
 Read-only preparation is /tmp/abcgo-mapping-next-review-plan.md with function
 locations in /tmp/abcgo-mapping-function-locations.txt. No agents or branches.
+
+### Mapping boundary inventory and first typed-dependency repairs
+
+Inventory all55 main giaIf.c routines plus two inline adapters across GIA and
+map/if. Keep the already-reviewed hash and transfer evidence; leave every other
+row explicitly pending until reconciled. REVIEW_mapping_boundary.md records the
+full plan. New red regressions show real MUX controls omitted from choice levels
+and both overlap walkers: depth1 vs4, cone count1 vs4. Reuse logical-fanin walks
+without changing ordinary source AND/sibling/traversal behavior.
+
+After repair,96 actual-C ordinary graph states match exactly across metrics,
+references, levels, choice links, cone postorders, overlap and reports. New red
+report cases expose source float32 average rounding (1.07vs1.06) and empty
+packing maximum(-1vs0); restore those source details. Missing-mapping rejection
+was already correct and receives coverage without a production change. Native
+red log /tmp/abcgo-mapping-native-red.log; dependency red log
+/tmp/abcgo-mapping-dependency-red.log. Wider source coverage/integration remain
+pending; original completion2/131 and GIA remain open. No agents or branches.
