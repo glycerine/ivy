@@ -9900,3 +9900,14 @@ accept an invalid fixture. Full Go-only module passes130 tested packages plus
 3 commands without tests; focused recorded race10.982s and IF/GIA vet pass.
 Evidence and remaining byte-area/exact-SAT work in the recorded/mapping plans;
 original package audit stays2/131.
+
+
+### Reconcile recorded area bytes and volume limits
+
+Document existing portable unsigned area counts, including their intentional
+difference from signed-char C promotion above127. New Go-only trees cover area
+126..251, tied selection and sole high-byte candidates, plus72 raw/hashed truth
+checks. Correct source volume interpretation:253 includes cut leaves. Full
+Go-only module passes130 tested packages plus3 commands without tests; focused
+recorded race11.160s and IF/GIA vet pass. Recorded runtime dependency rows are
+reviewed, with exact-SAT and final family checks still open; original audit2/131.

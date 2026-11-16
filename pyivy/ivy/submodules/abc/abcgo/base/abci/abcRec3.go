@@ -433,6 +433,9 @@ func Lms_ObjArea(pObj *Gia_Obj_t) int32 {
 	Lms_ObjAreaMark_rec(pObj)
 	return Lms_ObjAreaUnmark_rec(pObj)
 }
+
+// Areas are unsigned gate counts. C's plain char can promote counts above 127
+// to negative values; retaining byte counts preserves the area ordering.
 func Lms_GiaAreas(p *Gia_Man_t) *Vec_Str_t {
 	var vAreas *Vec_Str_t
 	var pObj *Gia_Obj_t

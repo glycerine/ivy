@@ -16,8 +16,8 @@ Go keeps library ownership in base/abci and dispatch in map/if to avoid cycles.
   behavior with independent physical profiles and Boolean reconstruction.
 - [x] Check source-supported IF reconstruction widths6..15, sixteen-variable
   LMS storage/profiles, multiword keys and the truth-cache rejection boundary.
-- [ ] Reconcile C char area signedness at the253-node recording limit; current
-  physical-profile fixtures use areas below128.
+- [x] Reconcile C char area storage as unsigned gate counts; cover127/128 and
+  the source253-node traversal-volume limit, including cut leaves.
 - [ ] Reconcile remaining exact-SAT cost integration separately.
 
 ## Findings and repair
@@ -212,3 +212,38 @@ plus3 commands without tests), focused recorded/mapping race10.982s and IF/GIA
 vet exits0. Logs: /tmp/abcgo-recorded-wide-final-{cases.log,module.jsonl,race.log,
 vet.log}. All sessions ended. Byte-area policy, exact-SAT integration and final
 mapping-family/package gates remain open; original audit2/131.
+
+
+## Reconcile recorded area-byte interpretation
+
+Source stores physical AND counts in Vec_Str_t, whose elements are plain char,
+then promotes them to int during area tie breaking and to a12-bit unsigned
+Cost field. C char signedness and out-of-range conversion are implementation
+dependent; repository flags do not force unsigned char. On a signed-char build,
+128 may promote to-128 and win a delay tie against127, then become3968 in the
+12-bit Cost field. Reproducing that platform quirk would break nonnegative
+gate-count ordering. Retain Go's existing unsigned byte interpretation, matching
+unsigned-char builds and the stated vAreas gate-count meaning. Document this
+portable numeric interpretation at Lms_GiaAreas; no production comparison or
+selection algorithm is replaced, and no new numeric policy is introduced here.
+This explicitly does not claim bit-for-bit equivalence to signed-char C builds
+for counts above127.
+
+Correct the earlier volume description: If_CutTraverse in ifUtil.c:565..581
+pushes cut leaves before internal nodes. abcRec3.c:752 rejects traversal volume
+greater than253, not253 internal ANDs. A two-input cut can have at most251
+internal nodes under that check. New valid raw trees cover126,127,128,129,250,
+251 with equal exact depth8, below nibble saturation. Sixty-four stored area/
+profile records and36 signed/timing cases check both cross-boundary ties and
+sole128/251 implementations. Seventy-two raw/hashed rebuilds verify all4
+assignments and expected physical sharing. The first test incorrectly expected
+hashing alone to minimize every redundant tree to one gate; correct the fixture
+expectation to require actual sharing and preserved truth, without changing
+source structural hashing into Boolean minimization.
+
+Frozen recorded cases pass1.735s; full Go-only module exits0 (130 tested packages,
+3 commands without tests), focused recorded/mapping race11.160s and IF/GIA vet
+exit0. Logs: /tmp/abcgo-recorded-area-final-{cases.log,module.jsonl,race.log,
+vet.log}. All sessions ended. All recorded runtime-dependency plan rows are
+reviewed; exact-SAT integration is the separate remaining optional cost mode.
+Final mapping-family/package gates and original audit remain open2/131.

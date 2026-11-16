@@ -1764,3 +1764,17 @@ production repair required. Full Go-only module, focused10.982s recorded race
 and IF/GIA vet pass. Details/logs in map/if/REVIEW_recorded_dependency.md.
 C char area signedness near the253-node recording limit, exact-SAT integration
 and final family gates remain open; original package audit2/131.
+
+
+### Reconcile recorded area-byte counts and source volume
+
+Preserve existing unsigned gate-count interpretation for C plain-char storage;
+document the signed-char-build quirk explicitly rather than adopting negative
+area ties. Source recording's253-node traversal includes cut leaves, giving
+251 internal nodes for two-input cuts. New equal-depth physical trees cover
+126/127/128/129/250/251 area bytes,36 signed/timing selections and72 raw/hashed
+rebuilds. Sole128/251 candidates retain positive costs; cross-boundary ties pick
+the smaller graph. Full Go-only module, focused recorded race11.160s and IF/GIA
+vet pass. Detailed policy/source evidence in map/if/REVIEW_recorded_dependency.md.
+Recorded runtime rows are reconciled; exact-SAT and final family gates stay
+open, with original package audit2/131.
