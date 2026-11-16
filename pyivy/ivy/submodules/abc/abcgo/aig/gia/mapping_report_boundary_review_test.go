@@ -156,3 +156,28 @@ func TestMappingStatsOpenFailurePreservesHistory(t *testing.T) {
 		t.Fatalf("successful retry: %q", data)
 	}
 }
+
+func TestMappingNodeProfileAcceptsEmptySentinel(t *testing.T) {
+	for i, counts := range [][]int32{nil, {}, {9, 7, 5}} {
+		for _, sizeMax := range []int32{-1, -2, -1 << 31} {
+			for _, bridge := range []bool{false, true} {
+				t.Run(fmt.Sprintf("counts%d/max%d/bridge%t", i, sizeMax, bridge), func(t *testing.T) {
+					old := abcutil.PrintBridge
+					defer func() { abcutil.PrintBridge = old }()
+					var text strings.Builder
+					abcutil.PrintBridge = nil
+					if bridge {
+						abcutil.PrintBridge = func(message string) { text.WriteString(message) }
+					}
+					output := hashReviewStdout(t, func() { Gia_ManPrintNodeProfile(counts, sizeMax) })
+					if bridge {
+						output = text.String()
+					}
+					if want := "LUT = 0 : Ave = 0.00\n"; output != want {
+						t.Fatalf("got%q want%q", output, want)
+					}
+				})
+			}
+		}
+	}
+}

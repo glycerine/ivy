@@ -11,7 +11,7 @@ Glitch simulation closed at89caa1ccf. Original package completion remains2/131.
 1. [x] Inventory all source routines, actual Go locations and earlier evidence.
 2. [x] Review metrics, references, overlaps and choice levels; add failing
    regressions before fixes, then Go-only scalar/error/ownership coverage.
-3. [ ] Review exact reports, persistent dump state, packing/profile boundaries,
+3. [x] Review exact reports, persistent dump state, packing/profile boundaries,
    source precision and resource handling with Go-only expectations.
 4. [x] Review mini reconstruction and parameter/GIA-to-IF boundary, choice
    integrity and frame timing metadata; preserve original algorithms.
@@ -46,7 +46,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManCountDupLut | aig/gia/mapping_stats.go | Source two/three-input selection, counts, marks and stdout routing reviewed; Go-only repeated-call fixtures; final family gate pending |
 | Gia_ManPrintMappingStats | aig/gia/mapping_stats.go | Source ABC routing repaired; precision/boxed-level/ANSI/dump-state behavior covered in Go; final family gate pending |
 | Gia_ManPrintPackingStats | aig/gia/mapping_profile.go | Source ABC routing repaired; group counts and empty maximum reconciled; exact Go-only reports; final family gate pending |
-| Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Source ABC routing repaired; counts/weighted ratios/terminal bins reviewed; Go-only reports; final family gate pending |
+| Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Source ABC routing/arithmetic/empty sentinel restored; counts/weighted ratios/terminal bins reviewed; Go-only reports; final family gate pending |
 | Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Source ABC routing repaired; empty and32/33-width boundaries covered in Go; final family gate pending |
 | Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed walks reviewed; scalar mapped-result depth and mixed boxed-choice driver integration reviewed; final family gate pending |
 | Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed levels reviewed; mapped-result integration; final family gate pending |
@@ -1647,3 +1647,33 @@ Logs: /tmp/abcgo-report-boundary-final-{cases.log,module.jsonl,race.log,vet.log}
 All sessions ended. A newly inspected empty-profile sentinel discrepancy still
 needs its own red regression/repair before step3 closes. Optional modes and
 final family gates remain open; original audit2/131.
+
+
+### Restore empty profile sentinel and close report review
+
+Source Gia_ManPrintNodeProfile loops through nSizeMax inclusively, so a negative
+maximum denotes no bins and prints the empty profile without accessing counts.
+This is the -1 sentinel passed by source Gia_ManPrintLutStats on an empty map.
+Go rejected the public profile call while its wrapper duplicated the expected
+empty output. A new minimal nil-count/-1 regression fails with the inappropriate
+panic before repair (/tmp/abcgo-profile-sentinel-red.log, exit1).
+
+Remove the lower-bound rejection while retaining Go's length validation for
+nonnegative maxima. Delegate the empty-LUT wrapper to the shared profile
+formatter. Eighteen Go-only configurations cover -1, -2 and INT32_MIN; nil,
+empty and deliberately unvisited populated counts; stdout and ABC bridge.
+All print the same source empty profile. No counting algorithm is replaced.
+
+Step3 is complete: ordinary and boundary reports, source float precision,
+MUX counting/marks, packing/profile limits, persistent cross-path/name state,
+clock origin and I/O ownership/failure handling are reconciled. Existing
+historical C comparisons are additional evidence; the active review regressions
+need only Go. Keep documented defensive behavior for undefined C invalid-I/O
+and bounds cases and the shared portable clock policy; defined source arithmetic
+and unnamed initialization are now restored rather than silently changed.
+
+Frozen cases pass0.029s; full Go-only module exits0 (130 tested packages plus3
+commands without tests), focused report race1.088s and relevant vet exits0.
+Logs: /tmp/abcgo-profile-sentinel-final-{cases.log,module.jsonl,race.log,vet.log}.
+All sessions ended. Optional recursive-library/exact-SAT delay modes and final
+source-family gates stay open; original package audit remains2/131.

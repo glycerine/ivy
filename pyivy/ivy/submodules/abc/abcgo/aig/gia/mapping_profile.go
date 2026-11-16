@@ -36,7 +36,7 @@ func Gia_ManPrintPackingStats(p *Gia_Man_t) {
 	abcutil.Abc_Print(1, "Total = %d   Total LUT = %d\n", entries, total)
 }
 func Gia_ManPrintNodeProfile(counts []int32, sizeMax int32) {
-	if sizeMax < 0 || int(sizeMax) >= len(counts) {
+	if int(sizeMax) >= len(counts) {
 		panic("gia: invalid LUT profile")
 	}
 	var total, weighted int32
@@ -58,7 +58,7 @@ func Gia_ManPrintLutStats(p *Gia_Man_t) {
 		return
 	}
 	if maximum < 0 {
-		abcutil.Abc_Print(1, "LUT = 0 : Ave = 0.00\n")
+		Gia_ManPrintNodeProfile(nil, maximum)
 		return
 	}
 	counts := make([]int32, maximum+1)

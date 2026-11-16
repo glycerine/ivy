@@ -9823,3 +9823,15 @@ retain safe handling where C dereferences a failed fopen result. Full Go-only
 module passes130 tested packages plus3 commands without tests; focused report
 race1.086s and relevant vet pass. See REVIEW_mapping_boundary.md. Empty-profile
 sentinel reconciliation and remaining family/package audit stay open2/131.
+
+
+### Restore empty profile sentinel and close mapping reports
+
+A new red regression exposes rejection of the source empty-profile -1 sentinel.
+Allow negative maxima to describe no bins and delegate empty-LUT output to the
+same formatter. Eighteen Go-only boundary/routing configurations pass, including
+nil/unvisited counts and INT32_MIN. Mapping-boundary plan step3 is complete;
+remaining optional IF modes and final family checks stay open. Full Go-only
+module passes130 tested packages plus3 commands without tests; focused report
+race1.088s and relevant vet pass. Details in REVIEW_mapping_boundary.md;
+original package audit remains2/131.
