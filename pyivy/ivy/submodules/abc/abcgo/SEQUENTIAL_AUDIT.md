@@ -9263,3 +9263,18 @@ race3.374s. Go16-input packed-sign-bit/full-truth and all persistence boundaries
 pass focused race1.172s (handles47575/91033 exit0). Detailed logs/overlay in
 REVIEW_mapping_dsd_dependency.md. Remaining diagnostics/utility matrices and
 GIA mapping/module gate stay open; original2/131 audit and full goal active.
+
+### Passing DSD report chunk and Go-only test policy
+
+Restore report statistics, occurrence bins, sampling, filtering and original
+stdout/file routing. Replace the latest C fixture/compiler test with 32 Go-only
+option/routing cases plus prime-descendant, histogram-boundary and open-error
+checks. An old-body overlay reproduces failure; repaired IF race10.334s and
+IF/GIA vet pass. Full IF also passes1.221s with CGO disabled and no C tools on
+PATH. Existing optional native comparisons elsewhere still need migration;
+future regression fixtures must not require a C toolchain.
+
+Checkpoint commits should close passing coherent chunks instead of marking
+all work red merely because the larger family audit remains open. Use red only
+when committing actually failing/incomplete work for preservation. Remaining DSD
+verbose/dump APIs, mapping rows and full integration gate stay open; audit2/131.

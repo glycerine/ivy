@@ -3,7 +3,6 @@ package if_
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/extra"
-	"os"
 	"slices"
 
 	abcutil "github.com/glycerine/abcgo/misc/util"
@@ -350,28 +349,6 @@ func If_DsdManGetFuncConfig(p *If_DsdMan_t, lit int32) []word {
 		return nil
 	}
 	return data[start:end:end]
-}
-func If_DsdManPrint(p *If_DsdMan_t, fileName string, number, support, occurs, dump, verbose int32) {
-	if fileName == "" {
-		for i, e := range Vec_PtrArray(&p.vObjs) {
-			o := e.(*If_DsdObj_t)
-			if support == 0 || o.nSupp == support {
-				fmt.Printf("%d %s\n", i, ifDsdText(p, int32(i)<<1, nil))
-			}
-		}
-		return
-	}
-	f, err := os.Create(fileName)
-	if err != nil {
-		return
-	}
-	defer f.Close()
-	for i, e := range Vec_PtrArray(&p.vObjs) {
-		o := e.(*If_DsdObj_t)
-		if support == 0 || o.nSupp == support {
-			fmt.Fprintf(f, "%d %s\n", i, ifDsdText(p, int32(i)<<1, nil))
-		}
-	}
 }
 
 func If_CutDsdBalancePinDelays(p *If_Man_t, cut *If_Cut_t, permutation []byte) int32 {

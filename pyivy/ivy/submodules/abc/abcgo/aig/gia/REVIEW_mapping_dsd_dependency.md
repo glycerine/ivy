@@ -369,3 +369,33 @@ now have source/scalar evidence. Full DSD diagnostics/verbose behavior, broader
 utility compatibility/configuration matrices and the remaining giaIf.c rows
 are still open, followed by its full-module frozen gate. Original audit2/131;
 no DSD/mapping/GIA/package/goal completion claim.
+
+### Report options closed with Go-only regressions
+
+The former Print stub ignored statistics, occurrence histograms, sampling and
+verbosity. The report implementation now follows the source distribution and
+occurrence algorithms, count-based ordering and support/sampling filters. It
+preserves the source's stdout/file routing (including rank prefixes on stdout).
+Storage rows estimate Go representations instead of pretending to measure C
+allocations. Dead source counters were omitted; source time reporting remains.
+
+Removed the newly added if_dsd_reports_review.c and its runtime compiler test.
+Its replacement lives in map/if/dsd_reports_review_test.go: 32 option/routing
+combinations with hand-specified logical rows and records, plus prime-descendant
+classification, occurrence decade boundaries and file-open failure. No C source,
+compiler, ABC object archive or native executable is needed by these tests.
+A read-only overlay with the old Print body reproduces the failure using these
+Go-only tests (exit1, /tmp/abcgo-dsd-reports-go-before.log); repaired tests pass.
+
+Affected checks: full IF race10.334s, IF/GIA vet exit0, full IF with CGO_ENABLED=0
+and PATH=/usr/local/bin (no cc/gcc/ar) passes1.221s. Logs:
+/tmp/abcgo-dsd-reports-if-race.log,
+/tmp/abcgo-dsd-reports-vet.log,
+/tmp/abcgo-dsd-reports-if-go-only.log.
+Older optional compiler-dependent comparisons elsewhere are not migrated by
+this change. Going forward, ordinary regression coverage must run with Go alone;
+retain source-derived expected data rather than add executable .c test vectors.
+
+This is a passing report-options chunk, not a mapping-family completion claim.
+Truth-table dumping and verbose decomposition diagnostics remain open, along
+with the earlier utility/driver rows and full mapping integration gate.
