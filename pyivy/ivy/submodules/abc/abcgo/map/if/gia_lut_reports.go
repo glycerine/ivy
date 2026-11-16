@@ -43,19 +43,25 @@ func giaWriteSourceDsd(w io.Writer, ntk *kit.Kit_DsdNtk_t, lit int32) {
 	fmt.Fprint(w, ")")
 }
 
-func giaWriteLutFailure(w io.Writer, truth []word, n, objectID int32) {
-	words := make([]uint32, 2*len(truth))
-	for i, value := range truth {
-		words[2*i], words[2*i+1] = uint32(value), uint32(value>>32)
-	}
-	extra.Extra_PrintHex(w, words, n)
-	fmt.Fprint(w, "    F = ")
+// Match Kit_DsdPrintFromTruth, whose source caller supplies the newline.
+func giaWriteSourceDsdFromTruth(w io.Writer, words []uint32, n int32) {
+	fmt.Fprint(w, "F = ")
 	original := kit.Kit_DsdDecomposeMux(words, n, 8)
 	defer kit.Kit_DsdNtkFree(original)
 	expanded := kit.Kit_DsdExpand(original)
 	defer kit.Kit_DsdNtkFree(expanded)
 	giaWriteSourceDsd(w, expanded, kit.Kit_DsdNtkRootLit(expanded))
 	kit.Kit_DsdVerify(expanded, words, n)
+}
+
+func giaWriteLutFailure(w io.Writer, truth []word, n, objectID int32) {
+	words := make([]uint32, 2*len(truth))
+	for i, value := range truth {
+		words[2*i], words[2*i+1] = uint32(value), uint32(value>>32)
+	}
+	extra.Extra_PrintHex(w, words, n)
+	fmt.Fprint(w, "    ")
+	giaWriteSourceDsdFromTruth(w, words, n)
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, "Node %d is not decomposable. Deriving LUT structures has failed.\n", objectID)
 }

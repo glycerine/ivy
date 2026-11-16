@@ -81,7 +81,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed/SOP/DSD boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; boxed-choice integration and final family gate pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Source wrapper parameters/metadata policy reviewed; ordinary/boxed direct/registered paths covered; final family gate pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final family gate pending |
-| Gia_ManTestStruct | map/if/gia_structure_report.go | Pending |
+| Gia_ManTestStruct | map/if/gia_structure_report.go | Source KIT diagnostics/summary/limits/bounds reviewed; red regressions repaired; needless small-LUT truth computation removed; final family gate pending |
 | Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Last usable cut policy and C collapse failures reviewed; integration pending |
 
 The inline If_ManFanin0Copy/If_ManFanin1Copy logic is represented by the
@@ -1351,3 +1351,42 @@ full Go-only module, race/vet evidence are recorded in the preceding section
 The file now covers610 configurations including earlier sequential and invalid
 box-order cases. Boxed choices, remaining metrics/reports/transfers,
 optional recorded/SAT dependencies and final family gates remain open2/131.
+
+### Restore structure-report diagnostics and skip unused small-LUT truth
+
+Compare `giaIf.c:2536..2572` with `gia_structure_report.go`: C uses
+`Kit_DsdPrintFromTruth` (KIT decomposition/expansion/verification and its exact
+F-prefix/prime/separator syntax), while Go substituted DAU's printer. Go also
+omitted the four trailing spaces in the final summary. New Go-only empty,
+small and mixed report regressions fail before repair
+(`/tmp/abcgo-structure-report-red.log`, exit1); the mixed case exposes both
+formatter and whitespace differences. An initial unused test import was fixed
+before gathering these behavioral failures.
+
+Extract the existing source-format KIT truth writer from LUT-failure reporting
+and share it with `Gia_ManTestStruct`. Keep callers responsible for newlines,
+as in C. Existing LUT-failure diagnostics remain exactly covered. Restore the
+summary spacing. Match C's branch order by counting LUTs with at most five
+inputs without computing their truth tables; only six/seven-input LUTs need
+the shared truth extractor and 4-4 check. No replacement decomposition or new
+cache is introduced.
+
+New actual AIG/cut fixtures are generated entirely in Go and independently
+checked against scalar threshold logic on every input assignment. Expected
+prime text comes from scalar truth words and the physical root phase, not
+from either production formatter. Cover empty/2..5-input counts, decomposable
+AND6/AND7, nondecomposable majority6/majority7, exact66.67%/33.33% summaries,
+independent ten-diagnostic caps for six/seven-input LUTs, repeated reports,
+unchanged mapping records and eight-input rejection. No C vectors/compiler
+dependency added.
+
+For200 five-input LUTs, a100-iteration benchmark changes from431776ns/op,
+242289B/op and3800allocs/op to5248ns/op,69B/op and0allocs/op
+(`/tmp/abcgo-structure-report-bench-{before,after}.log`). The semantic change
+is only eliminating truth extraction unused by the source count-only branch.
+Focused reports and prior LUT-diagnostic regressions0.015s; full Go-only
+module exits0:130 tested packages pass,3 commands without tests
+(IF10.728s/GIA29.115s); focused race1.088s and relevant vet exit0
+(`/tmp/abcgo-structure-report-final-{cases.log,module.jsonl,race.log,vet.log}`).
+All handles consumed. Remaining metrics/reports/transfers, boxed choices,
+optional dependencies and final family gates stay open; original audit2/131.

@@ -9710,3 +9710,16 @@ an AIG-only balancing result remains outside the valid domain. Final full
 Go-only module, focused IF/GIA race and vet pass as recorded above. No further
 production repair or C fixture added. See REVIEW_mapping_boundary.md;
 boxed-choice integration and remaining family/package gates stay open2/131.
+
+### Restore source structure reports and remove unused truth work
+
+New red regressions expose DAU formatting substituted for source KIT output
+and missing summary spacing. Share the existing source-format KIT writer with
+LUT-failure diagnostics, preserving both callers. Restore C's count-only branch
+for LUTs up to five inputs. Go-only scalar-checked graphs cover exact reports,
+ratios, six/seven-input classification, independent print caps, repeatability,
+mapping preservation and eight-input rejection. A200-small-LUT benchmark drops
+from431776ns/3800allocs to5248ns/0allocs per report. Full Go-only module130
+tested packages pass plus3 commands without tests; focused race1.088s and
+relevant vet pass. Evidence in REVIEW_mapping_boundary.md. Remaining family
+rows/gates and original package audit remain open2/131.
