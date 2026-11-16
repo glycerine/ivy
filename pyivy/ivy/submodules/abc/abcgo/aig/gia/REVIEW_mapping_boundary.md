@@ -196,3 +196,31 @@ metadata, whereas the original balancing paths do not clear it before moving
 timing/configuration data to their results. Confirm this loss before repair.
 Family-wide remaining reconstruction/driver/frame/error/compactness/integration
 work is still open; these coverage milestones do not close GIA or map/if.
+
+## Balancing driver repair: preserve the original metadata policy
+
+New Go regressions fail in all four direct/registered SOP/DSD entry points:
+cell configurations disappear and existing output arrivals91 become14. Source
+inspection shows balancing uses its own translate/map/rebuild path, while Go
+reused general MappingInt, which intentionally clears configurations and installs
+input timing constraints. The first test harness needed qualified GIA aliases;
+behavioral red evidence is `/tmp/abcgo-mapping-balance-metadata-behavior-red.log`,
+handle38586 exit1, after that harness correction.
+
+Fresh original-C SOP and DSD balancing retain the configuration pointer and
+cell string, move source ownership, retain input timing and output arrival91,
+and preserve identity/truth. The generic C mapping path intentionally clears
+the old configuration and computes arrival14. All three native policies pass
+(`/tmp/abcgo-mapping-balance-native-policies.log`,handle27681 exit0,2.094s).
+
+Implement the source balancing sequence in one small shared private helper,
+keeping actual If mapping, SOP/DSD reconstruction and timing transfer. Do not
+route it through the generic driver's destructive configuration/timing setup.
+Keep the existing Go-owned per-call DSD manager lifetime. Tests cover direct and
+registered wrappers,64 metadata/interface/truth configurations plus a generic
+mapping cross-talk regression. Full map/if race suite passes7.997s
+(`/tmp/abcgo-mapping-balance-full-if-race.log`,handle90332 exit0).
+
+A separate newly inspected concern is source-name loss in Gia_ManToIf; a new
+regression is pending. Remaining family rows and full module integration remain
+open. A green caller suite does not close GIA or the whole mapping boundary.

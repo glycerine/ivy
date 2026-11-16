@@ -8990,3 +8990,20 @@ Next inspect the balancing wrappers' use of the general mapping driver: it
 clears configuration metadata that C's balancing paths retain for transfer.
 Add a new failing regression before any repair. Mapping source-family closure,
 GIA and original2/131 package audit remain open. Save a coherent red checkpoint.
+
+### Balancing metadata loss repaired after new red regressions
+
+All four direct/registered SOP/DSD wrappers discarded configuration metadata
+and rewrote output arrivals91 to14. New behavioral red tests fail before repair
+(handle38586 exit1). Original C retains that metadata for balancing; its generic
+mapping path intentionally replaces it. Fresh native policy tests prove all
+three behaviors (handle27681 exit0,2.094s).
+
+Use a shared source-shaped balancing helper: translate to IF, perform actual
+mapping, rebuild through SOP/DSD AIG reconstruction, move timing/configuration
+ownership and retain identity/registers. Generic MappingInt is unchanged.
+Expanded direct/registered and64 metadata/interface/truth matrix cases plus
+normal mapping cross-talk checks pass; full map/if race suite passes7.997s
+(handle90332 exit0). Logs/details are in REVIEW_mapping_boundary.md. Save coherent
+GIA source-policy and map/if driver checkpoints separately. The wider mapping
+family, GIA and original2/131 audit remain open. Next inspect Gia_ManToIf name loss.
