@@ -2,7 +2,10 @@ package if_
 
 import (
 	"fmt"
+	"sync"
+
 	"github.com/glycerine/abcgo/aig/gia"
+	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/misc/tim"
 )
 
@@ -198,14 +201,28 @@ func Gia_ManPerformSopBalance(src *Gia_Man_t, cuts, relax, verbose int32) *Gia_M
 	return giaPerformBalance(src, &pars, nil)
 }
 
+// The source retains the canonical manager in the global frame. Serialize
+// balancing calls because the shared manager's interning tables are mutable.
+var giaDsdBalanceMu sync.Mutex
+
 // Gia_ManPerformDsdBalance maps and rebuilds an AIG using DSD balancing.
 func Gia_ManPerformDsdBalance(src *Gia_Man_t, lutSize, cuts, relax, verbose int32) *Gia_Man_t {
+	giaDsdBalanceMu.Lock()
+	defer giaDsdBalanceMu.Unlock()
 	var pars If_Par_t
 	If_ManSetDefaultPars(&pars)
 	pars.NCutsMax, pars.NRelaxRatio, pars.FVerbose = cuts, relax, verbose
 	pars.NLutSize, pars.FDsdBalance, pars.FUseDsd, pars.FCutMin, pars.FTruth, pars.FExpRed = lutSize, 1, 1, 1, 1, 0
-	manager := If_DsdManAlloc(lutSize, 0)
-	defer If_DsdManFree(manager, 0)
+	var manager *If_DsdMan_t
+	if value := abcmain.Abc_FrameReadManDsd2(); value != nil {
+		var ok bool
+		manager, ok = value.(*If_DsdMan_t)
+		assert(ok && manager != nil, "frame has a valid second DSD manager")
+		assert(lutSize <= manager.nVars, "shared DSD manager supports LUT size")
+	} else {
+		manager = If_DsdManAlloc(lutSize, 0)
+		abcmain.Abc_FrameSetManDsd2(manager)
+	}
 	pars.SetDsdManager(manager)
 	return giaPerformBalance(src, &pars, manager)
 }

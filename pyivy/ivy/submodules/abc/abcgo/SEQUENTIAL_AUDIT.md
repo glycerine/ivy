@@ -9686,3 +9686,15 @@ packages plus3 commands without tests; focused IF race1.536s, normalization
 race1.021s and relevant vet pass. Only production discrepancy was the missing
 shuffle warning repaired separately. See REVIEW_mapping_boundary.md. Wider
 balancing/choice integration, remaining family rows and gates stay open2/131.
+
+### Restore shared DSD balancing state
+
+New red regression exposes private per-call manager allocation where C retains
+the second frame-owned DSD database. Restore frame reuse and serialize shared
+interning across balancing calls. Cover repeated canonical-record reuse,
+preinstalled larger-manager preservation, ISOPs, eight concurrent callers and
+full graph truth. Isolate the seven-input fixture in a source-compatible fresh
+frame. Full Go-only module130 tested packages pass plus3 commands without
+tests; focused IF race4.882s,512-case GIA driver race4.453s and relevant vet
+pass. Details in REVIEW_mapping_boundary.md. Remaining family review stays
+open; original package audit2/131.

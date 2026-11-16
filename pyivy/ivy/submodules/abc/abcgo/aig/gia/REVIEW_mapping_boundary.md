@@ -80,7 +80,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing duplication/constraints/boxed-order and attribute overwrite/integration reviewed; remaining optional modes pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; balancing/choice integration and final family gate pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
-| Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
+| Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final family gate pending |
 | Gia_ManTestStruct | map/if/gia_structure_report.go | Pending |
 | Gia_ManDupHashMapping | aig/gia/mapping_hash.go | Last usable cut policy and C collapse failures reviewed; integration pending |
 
@@ -1289,3 +1289,35 @@ GIA warning race1.021s and relevant vet pass
 All handles consumed. Wider balancing/choice integration, remaining transfers/
 metrics/reports, optional recorded/SAT dependencies and final source-family
 gate stay open; original package audit2/131.
+
+### Restore the frame-owned DSD balancing database
+
+`giaIf.c:2507..2517` initializes the second global-frame DSD manager only if
+absent, then borrows it for mapping. Go instead allocated/freed a private
+manager on every call. Beyond needless rebuilding, this hid all learned
+decompositions from subsequent balancing and commands such as `dsd_save -b`.
+New `TestDsdBalanceRetainsFrameManager` fails before repair because pManDsd2
+remains absent (`/tmp/abcgo-balance-state-red.log`, exit1).
+
+Restore the source frame resource and reuse its existing canonical database;
+IF teardown continues to borrow rather than free it. A mutex serializes
+balancing calls that share the mutable interning tables. Validate the borrowed
+type/capacity as explicit Go checks of source preconditions. Do not replace or
+grow an existing database silently. The seven-input test now owns a fresh
+frame with sufficient capacity, avoiding dependence on a previous six-input
+session, as required by the source manager-capacity contract.
+
+New Go-only tests verify three identical runs retain manager identity and
+canonical object count, initialized ISOPs, complete graph truth, reuse of a
+preinstalled eight-input manager with preexisting XOR records unchanged, and
+eight concurrent balancing callers. Test frames restore the previous global
+frame and free their owned database; no production cache/algorithm substitute
+is introduced. This restores the source cache that was missing.
+
+Focused expanded cases0.444s (`/tmp/abcgo-balance-state-expanded.log`), full
+Go-only module130 tested packages pass plus3 commands without tests
+(IF10.330s/ABCI14.238s/GIA28.841s), focused IF race4.882s including shared
+interning and boxed cases,512-case GIA driver race4.453s, and relevant vet pass
+(`/tmp/abcgo-balance-state-final-{module.jsonl,if-race.log,gia-race.log,vet.log}`).
+All handles consumed. No C vectors/compiler dependency added. Boxed-balancing
+coverage is recorded next; remaining family rows/gates and audit2/131 stay open.

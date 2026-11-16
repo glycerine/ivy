@@ -96,6 +96,8 @@ func BenchmarkGiaFromIfRecordedScratch(b *testing.B) {
 }
 
 func TestGiaFromIfDsdLargerMiniGraph(t *testing.T) {
+	// Like the source, this request needs a manager with at least seven inputs.
+	balanceReviewIsolateFrame(t)
 	src := gia.Gia_ManStart(64)
 	defer gia.Gia_ManStop(src)
 	var root int32
