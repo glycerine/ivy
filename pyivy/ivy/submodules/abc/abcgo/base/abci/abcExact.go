@@ -2496,7 +2496,12 @@ func Abc_ExactDelayCost(pTruth *word, nVars int32, pArrTimeProfile *int32, pPerm
 			}
 		}
 		exactStart := Abc_Clock()
-		man := Ses_ManAlloc(pTruth, nVars, 1, maxDepth, &normalized[0], st.fMakeAIG, st.nBTLimit, st.fVerbose)
+		// SES uses a fixed four-word slot per output, while cost callers such
+		// as IF provide only the active truth words. Normalize an owned padded
+		// slot so allocator inversion cannot touch another caller allocation.
+		var spec [4]word
+		copy(spec[:], sesStoreTruthWords(pTruth, nVars))
+		man := Ses_ManAlloc(&spec[0], nVars, 1, maxDepth, &normalized[0], st.fMakeAIG, st.nBTLimit, st.fVerbose)
 		man.fVeryVerbose = st.fVeryVerbose
 		man.pSat = st.pSat
 		man.nStartGates = nVars - 2

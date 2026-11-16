@@ -1,4 +1,4 @@
-# Recorded-library mapping dependency review (in progress)
+# Recorded-library mapping runtime review (reviewed)
 
 This is a dependency of the sequential GIA mapping-boundary review, not a
 completed audit of IF or ABCI. The source functions are in abcRec3.c and IF;
@@ -18,7 +18,8 @@ Go keeps library ownership in base/abci and dispatch in map/if to avoid cycles.
   LMS storage/profiles, multiword keys and the truth-cache rejection boundary.
 - [x] Reconcile C char area storage as unsigned gate counts; cover127/128 and
   the source253-node traversal-volume limit, including cut leaves.
-- [ ] Reconcile remaining exact-SAT cost integration separately.
+- [x] Connect the separate exact-SAT cost backend; deeper backend review
+  continues in REVIEW_exact_delay_dependency.md.
 
 ## Findings and repair
 
@@ -247,3 +248,12 @@ exit0. Logs: /tmp/abcgo-recorded-area-final-{cases.log,module.jsonl,race.log,
 vet.log}. All sessions ended. All recorded runtime-dependency plan rows are
 reviewed; exact-SAT integration is the separate remaining optional cost mode.
 Final mapping-family/package gates and original audit remain open2/131.
+
+
+## Handoff to exact-delay dependency review
+
+Recorded runtime rows above are reconciled. IF's separate SES call sites now
+connect to the existing ABCI exact-synthesis backend, preserving C's unsupported
+GIA reconstruction assertion. The new REVIEW_exact_delay_dependency.md tracks
+its remaining normalization/search/cache review. This closes no IF/ABCI package
+or final mapping-family gate; original package audit remains2/131.

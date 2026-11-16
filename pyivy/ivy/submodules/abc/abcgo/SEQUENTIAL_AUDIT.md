@@ -9911,3 +9911,17 @@ checks. Correct source volume interpretation:253 includes cut leaves. Full
 Go-only module passes130 tested packages plus3 commands without tests; focused
 recorded race11.160s and IF/GIA vet pass. Recorded runtime dependency rows are
 reviewed, with exact-SAT and final family checks still open; original audit2/131.
+
+
+### Connect exact-SAT IF costs and fix compact truth memory safety
+
+A new real-backend red regression exposes two unported IF cost call sites despite
+an existing ABCI/BSAT implementation. Register and dispatch it, preserving source
+failure markers, successful-cost behavior and unsupported GIA reconstruction.
+A new focused race regression then exposes four-word SES access to a compact
+one-word truth; pad an owned specification at the public cost boundary on cache
+miss. Add48 actual mapping cases plus callback, byte-adapter and memory tests.
+Final full Go-only module passes130 tested packages plus3 commands without
+tests; focused IF race1.033s, ABCI exact/store race1.169s and IF/GIA vet pass.
+Recorded runtime review hands off to REVIEW_exact_delay_dependency.md for the
+remaining backend/search/cache analysis. Final family/package audit stays2/131.

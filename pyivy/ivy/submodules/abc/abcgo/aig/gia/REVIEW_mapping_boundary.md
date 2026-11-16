@@ -77,7 +77,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing/attributes/boxed integration reviewed; recorded backend connected with real phase/timing tests; richer recorded/exact-SAT dependencies pending |
+| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing/attributes/boxed integration reviewed; recorded runtime reviewed and exact-cost dispatch restored; source SES GIA rejection retained; deeper exact dependency/final gate pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed/SOP/DSD boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; boxed-choice integration reviewed; final family gate pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Source wrapper parameters/metadata policy reviewed; ordinary/boxed direct/registered paths covered; final family gate pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy and frame-owned canonical-manager reuse repaired; state/concurrency and ordinary/boxed integration covered; final family gate pending |
@@ -1778,3 +1778,28 @@ the smaller graph. Full Go-only module, focused recorded race11.160s and IF/GIA
 vet pass. Detailed policy/source evidence in map/if/REVIEW_recorded_dependency.md.
 Recorded runtime rows are reconciled; exact-SAT and final family gates stay
 open, with original package audit2/131.
+
+
+### Connect exact-delay IF cost calls and repair compact truth safety
+
+A new real IF/SES regression fails at the old unported panic before integration.
+Connect both fUserSesLib evaluation sites to the existing ABCI/BSAT backend
+through a small registry, retaining local-cost/success quirks and source failure
+markers. Unit tests check callback buffers/structural bound, reentrant dispatch,
+visit cleanup, infinity flags and unsupported GIA reconstruction. C's GIA path
+asserts for SES; do not invent a rebuild implementation for it.
+
+The first race gate exposes an existing unsafe four-word view of IF's compact
+one-word truth. A separate new compact-input regression fails under checkptr
+before repairing Abc_ExactDelayCost to pad an owned specification on cache miss.
+Keep lower-level SES layout/search and caller data intact. The detailed plan,
+source lines and both red logs are in map/if/REVIEW_exact_delay_dependency.md.
+
+The minimal real case plus48 AND/XOR phase/timing/gate-mode configurations use
+actual SAT synthesis/cache reuse, correct selected truth/pin delay and source
+area behavior. Verify signed/inactive adapter bytes and both compact truth
+polarities. Final full Go-only module passes130 tested packages plus3 commands
+without tests; focused IF race1.033s, ABCI exact/store race1.169s and IF/GIA vet
+exit0. Logs: /tmp/abcgo-exact-if-reviewed-{module.jsonl,if-race.log,abci-race.log,
+vet.log}. All sessions ended. Recorded runtime is reviewed; full exact-cost/SES
+backend dependency and final family/package gates remain open2/131.
