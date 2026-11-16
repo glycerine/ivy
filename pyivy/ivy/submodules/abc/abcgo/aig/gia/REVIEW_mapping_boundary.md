@@ -65,8 +65,8 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Source remap/SAT/packing reviewed; 400 size/phase/shared-partition cases; final family gate pending |
 | Gia_ManFromIfGetConfig | map/if/gia_config.go | Pending |
 | Gia_ManFromIfLogicFindCell | map/if/gia_cell.go | Pending |
-| Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Pending |
-| Gia_ManFromIfLogicAndVars | map/if/gia_cofactor.go | Pending |
+| Gia_ManFromIfLogicCofVars | map/if/gia_cofactor.go | Source branches/phase/records reviewed; 600 Go-only wide selector/constant-cofactor cases; final family gate pending |
+| Gia_ManFromIfLogicAndVars | map/if/gia_cofactor.go | Source masks/phase/records reviewed; 192 Go-only wide AND/OR cases; final family gate pending |
 | Gia_ManFromIfLogic | map/if/gia_mapping.go | Pending |
 | Gia_ManMappingVerify_rec | aig/gia/mapping_transfer.go | Pending |
 | Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Pending |
@@ -494,3 +494,42 @@ passing436 cases above. Add source-derived exact configuration regressions befor
 restoring the source search/derivation. Review the five-input source helper too;
 do not call specialized4-4 or the mapping family complete while it is generic.
 No new C fixtures/compiler requirements. Original package audit remains2/131.
+
+### Cofactor and AND/OR reconstruction source review
+
+Compare `gia_cofactor.go` with `giaIf.c:1688..1820`: cofactor-variable
+selection, complemented cut truth, minimization/remapping, the four constant
+cofactor branches, mux leaf order and negative selector/root markers match.
+The Go LUT helper temporarily adds an ordinary mux record and removes that
+record before appending the source marker; tests verify earlier cofactor records
+remain reachable. AND/OR reconstruction uses the regular stored truth, OR-phase
+complement before/after derivation, ascending mask inputs, and both independent
+output-complement flags. No production defect or useful compactness change was
+identified in these two routines.
+
+`map/if/gia_cofactor_review_test.go` adds independent scalar definitions, without
+C fixtures or compiler invocations:
+
+- 600 cofactor cases: 3/6/7/9/13 inputs, selector0/middle/last, both nonconstant
+  cofactors and each of the four constant-cofactor branches, all combinations
+  of truth phase, cut phase and signed alternating leaves. Full support is
+  retained in every generated function.
+- 192 AND/OR cases: 4/6/7/8/11/12 inputs, contiguous/interleaved disjoint masks,
+  both operators and the same phase/sign combinations. Each side fits one
+  six-input LUT, including unequal support sizes.
+- Every assignment is checked against the scalar Boolean definition, plus
+  root/selector markers, side records and mapping links, and ownership of
+  stored truth/leaf literals. No decomposition routine supplies expected truth.
+
+The suspected unguarded smaller-group retry in `If_CluCheck` is present in the
+original C too; retain its ordering rather than adding a speculative fix.
+This does not close the wider CLU/configuration review.
+
+Frozen production/test verification: full IF tests with `CGO_ENABLED=0` and
+C tools excluded from PATH pass (8.429s,
+`/tmp/abcgo-cofactor-reviewed-full.log`). All792 new cases pass under race
+(65.730s, `/tmp/abcgo-cofactor-reviewed-race.log`); IF/GIA vet exits0
+(`/tmp/abcgo-cofactor-reviewed-vet.log`). Focused non-race cofactor6.182s and
+bi-decomposition0.471s. These tests add no C-tool dependency. Remaining node,
+configuration/cell, reporting and final family gates stay open; original
+package audit remains2/131.

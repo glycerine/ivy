@@ -9437,3 +9437,15 @@ packages,3 commands without tests;400+36+192 LUT cases execute. Focused IF race
 and specialized reconstruction reviewed; wider reconstruction/configuration
 inventory and family gate remain open. Details in REVIEW_mapping_dec07_dependency.md.
 Original package audit stays2/131.
+
+### Cofactor and AND/OR reconstruction wide Go-only coverage
+
+Review both source reconstruction routines for phase, support/remapping and
+negative mapping markers. Add600 scalar cofactor cases through13 inputs,
+including low/middle/high selectors, both internal cofactors and all four
+constant branches; add192 AND/OR cases through12 inputs with contiguous and
+interleaved masks. Exhaustive assignments, signed leaves, independent truth/cut
+phases, record links and source ownership pass. No production defect found.
+Full IF Go-only8.429s, new-case race65.730s and IF/GIA vet pass. No C fixtures
+or compiler invocations added. Details in REVIEW_mapping_boundary.md. Wider
+GIA/configuration review stays open; original audit remains2/131.
