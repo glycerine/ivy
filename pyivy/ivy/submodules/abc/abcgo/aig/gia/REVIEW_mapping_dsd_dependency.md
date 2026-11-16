@@ -57,11 +57,11 @@ be reported as behavioral Go regressions.
 2. [ ] Inventory all ifDsd.c routines and current public callers. Restore source
    manager/object invariants: two initial nodes, hash-consed signed structure,
    support/reference counts, prime truth storage and scratch/SAT ownership.
-3. [ ] Port original compare/sort/create/find-or-add and recursive AddDsd logic.
+3. [x] Port original compare/sort/create/find-or-add and recursive AddDsd logic.
    Preserve canonical permutations and literal complementation. Test repeated,
    permuted and phase-equivalent AND/XOR/MUX/prime structures against fresh C;
    retain independent full truth verification.
-4. [ ] Restore Collect/Sign and AND/XOR/MUX/prime CheckXY traversal and ordering,
+4. [x] Restore core Collect/Sign and AND/XOR/MUX/prime CheckXY traversal and ordering,
    masks and derive policy, then actual high-effort SAT fallback. Add new red
    boundary/decision tests before each additional discovered bug repair.
 5. [ ] Reconcile balancing, cell/configuration, marks, interning and persistence
@@ -258,7 +258,7 @@ all exit0 (handles79883/9081/80733). Logs:
 behavior and broader utility boundary/configuration matrices remain open;
 this is not DSD/mapping/GIA/package completion.
 
-## Current verified state and next required work
+## Pre-persistence checkpoint and planned scope
 
 Direct canonical balancing and utility repairs are committed and pass affected
 race/vet above. Graph costs and ordering retain original C behavior; no cached
@@ -326,3 +326,46 @@ objects. Corresponding core/boundary/full logs are under
 Affected race/vet, compactness review and broader persistence/cache/error
 matrices remain next. Full source reports and remaining utility/configuration
 boundaries and giaIf.c integration are still open; no family/package closure.
+
+## Persistence compactness, boundaries and affected integration
+
+Read scalar/record slices directly from the buffered file instead of allocating
+and copying a temporary buffer for every field. Retained node fans, prime/cache
+words, configuration data and cell text have their own typed ownership. A test
+overwrites all borrowed input bytes after decoding and checks reserialization
+is unchanged. Reserved base-node counts/marks are intentionally omitted, as C
+specifies. Focused ownership/boundary suite passes0.104s and native interop2.143s
+(handles15160/61317 exit0).
+
+Frozen affected gate after codec/compactness edits:
+- Full IF race9.456s (handle37301 exit0).
+- Full focused native/510-driver/522-balancing race37.961s
+  (handle86148 exit0), including persistence.
+- Direct caller base/abci race28.296s (handle35504 exit0).
+- IF/GIA vet exits0, empty /tmp/abcgo-dsd-persistence-if-gia-vet.log.
+
+The broader vet invocation also included base/abci and exits1 (handle69566):
+24 existing findings (14 unkeyed timing literals,9 unreachable statements,
+1 self-assignment). A read-only Go overlay restores pre-persistence IF code
+and masks the new codec; base/abci vet still yields the same24 diagnostic
+multiset (handle61370 exit1). ABCI source is unchanged. Log/overlay:
+/tmp/abcgo-dsd-persistence-abci-baseline-vet.log and
+/tmp/abcgo-dsd-persistence-vet-baseline/overlay.json. These findings remain
+queued for ABCI's sequential audit, not silently reported as a clean broad vet.
+
+Further test-only expansion verifies all supported LUT sizes0,2..6, cell state,
+and zero/one-variable managers:9 C->Go->C cases pass race3.374s
+(handle47575 exit0). Source C's zero-LUT behavior remains host-specific; Go
+has no negative shift. A Go16-input AND round trip checks the packed fanin
+count's unsigned sign bit and full65,536-assignment truth. Expanded focused
+persistence race passes1.172s (handle91033 exit0). Logs:
+/tmp/abcgo-dsd-persistence-all-dimensions-native-race.log,
+/tmp/abcgo-dsd-persistence-all-boundaries-race.log.
+No production changes followed the frozen affected gate; only these targeted
+test/fixture expansions were added and run under race.
+
+Core canonical/parser/partition, direct balancing, metadata and binary persistence
+now have source/scalar evidence. Full DSD diagnostics/verbose behavior, broader
+utility compatibility/configuration matrices and the remaining giaIf.c rows
+are still open, followed by its full-module frozen gate. Original audit2/131;
+no DSD/mapping/GIA/package/goal completion claim.

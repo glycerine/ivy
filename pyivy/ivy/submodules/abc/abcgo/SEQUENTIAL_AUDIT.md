@@ -9249,3 +9249,17 @@ pass all3 scenarios2.136s (handle81164 exit0). Explicit little-endian layout;
 Go zero-LUT loads avoid C's undefined negative shift. Race/vet and compactness
 review next; detailed remaining scope in REVIEW_mapping_dsd_dependency.md.
 Original2/131 package audit and the full goal remain active.
+
+### DSD persistence affected gate, ABI boundaries and vet baseline
+
+Compact slice decoder owns retained storage; destructive-input and reserved-base
+record tests pass. Frozen full IF race9.456s, native/510-driver/522-balance race
+37.961s and caller ABCI race28.296s (handles37301/86148/35504 exit0). IF/GIA vet
+exits0. Expanded ABCI vet has24 old findings: read-only pre-persistence overlay
+reproduces the exact diagnostic multiset (handles69566/61370 exit1), ABCI files
+unchanged. Preserve those for its later audit; do not claim broad vet is green.
+Test-only9-case cross-language expansion covers LUT0/2..6 and lower domains;
+race3.374s. Go16-input packed-sign-bit/full-truth and all persistence boundaries
+pass focused race1.172s (handles47575/91033 exit0). Detailed logs/overlay in
+REVIEW_mapping_dsd_dependency.md. Remaining diagnostics/utility matrices and
+GIA mapping/module gate stay open; original2/131 audit and full goal active.
