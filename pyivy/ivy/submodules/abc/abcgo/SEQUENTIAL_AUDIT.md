@@ -9461,3 +9461,15 @@ Preserve/test the public unconditional source assertion; remove the uncalled
 focused configuration race1.326s and IF/GIA vet pass. Details in
 REVIEW_mapping_boundary.md; remaining reconstruction/driver/reporting rows and
 final family gate stay open. Original audit remains2/131.
+
+### Structure reconstruction coverage and elementary scan improvement
+
+Add260 signed elementary cases,52 constant reuse checks and224 unequal/two/
+three-LUT reconstruction cases with exhaustive scalar truth and metadata.
+Preserve the source greedy rejection, verified by independent cofactor/order
+trace rather than substituting a complete search. Restore source word-level
+elementary comparisons with early mismatch exit: local15-input lookup falls
+from631..640us to1.3..1.5us, still0alloc. Full IF Go-only8.982s, focused race
+4.566s and IF/GIA vet pass. Source failure diagnostics/wider CLU dependency
+review remain open; no full LogicNode/family closure claim. Details in
+REVIEW_mapping_boundary.md. Original package audit remains2/131.

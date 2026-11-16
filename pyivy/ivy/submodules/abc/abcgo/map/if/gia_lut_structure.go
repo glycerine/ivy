@@ -88,14 +88,24 @@ func Gia_ManFromIfLogicNode(p *If_Man_t, dst *Gia_Man_t, objectID int32, leaves,
 		}
 		return 0
 	}
-	// Look for elementary truth tables without static shared scratch state.
+	// Match elementary tables a word at a time, as in the source. Small
+	// variables repeat one word; larger variables alternate whole words.
 	for variable := int32(0); variable < n; variable++ {
+		var pattern [1]word
+		if variable < 6 {
+			abcutil.Abc_TtIthVar(pattern[:], variable, 6)
+		}
 		equal, opposite := true, true
-		for x := 0; x < 1<<uint(n); x++ {
-			bit := truth[x>>6] >> uint(x&63) & 1
-			value := uint64(x >> uint(variable) & 1)
-			equal = equal && bit == value
-			opposite = opposite && bit != value
+		for i, actual := range truth[:words] {
+			expected := pattern[0]
+			if variable >= 6 && i>>uint(variable-6)&1 != 0 {
+				expected = ^word(0)
+			}
+			equal = equal && actual == expected
+			opposite = opposite && actual == ^expected
+			if !equal && !opposite {
+				break
+			}
 		}
 		if equal {
 			return Vec_IntEntry(leaves, int(variable))

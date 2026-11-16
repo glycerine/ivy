@@ -59,7 +59,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManFromIfAig | map/if/gia_from_if.go | Source reconstruction reviewed; callback/repeat/balancing tests; lazy small scratch; final family gate pending |
 | Gia_ManFromIfLogicCreateLut | map/if/gia_lut.go | Source logic/records reviewed; signed multiword tests through15 inputs; final family gate pending |
 | Gia_ManFromIfLogicCreateLutSpecial | map/if/gia_lut.go | Source encoding reviewed; ordered ifDec07 dependency restored; 192 Go-only signed/permuted reconstruction cases; final family gate pending |
-| Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go | Pending |
+| Gia_ManFromIfLogicNode | map/if/gia_lut_structure.go | Branch/elementary/packing review in progress; 260 elementary and 224 structure cases; word scan restored; diagnostics and wider CLU dependency review pending |
 | Gia_ManNodeIfToGia_rec | map/if/gia_cut_cone.go (recursive closure) | Source choice traversal/phase handling reviewed; 64 equivalent-choice cases; final family gate pending |
 | Gia_ManNodeIfToGia | map/if/gia_cut_cone.go | Source cone boundary reviewed; scratch/failure/constant-leaf tests; final family gate pending |
 | Gia_ManFromIfLogicFindLut | map/if/gia_lut.go | Source remap/SAT/packing reviewed; 400 size/phase/shared-partition cases; final family gate pending |
@@ -567,3 +567,52 @@ existing configuration/round-trip race tests pass1.326s
 (`/tmp/abcgo-config-reviewed-race.log`); IF/GIA vet exits0
 (`/tmp/abcgo-config-reviewed-vet.log`). Wider LogicNode/CLU and mapping-driver
 source reconciliation and final family gates remain open. Original audit2/131.
+
+### LUT structure reconstruction and elementary lookup
+
+Compare `gia_lut_structure.go` with `giaIf.c:1106..1388`. Structure validation,
+capacity and small-LUT paths, constant record reuse, leaf/result polarity,
+ordered check75 alternatives and bound/intermediate/root pin sentinels follow
+source control flow. The scalar elementary scan unnecessarily examined every
+assignment for every candidate, even after both equal/opposite tests failed.
+Replace it with the source word comparison: small-variable patterns repeat per
+word; high variables alternate whole words. Stop after both comparisons fail.
+No mutable global tables or allocation are introduced. The canonical stretched
+truth-table contract is preserved for supports below6.
+
+New Go-only `gia_structure_review_test.go` coverage:
+
+- 260 elementary cases across4..16 inputs, every input and both phases, with
+  signed leaves, exact returned literals, no extra nodes/mapping/packing and
+  borrowed truth unchanged. Sixteen inputs exercise the standalone structure
+  function's elementary path, not the15-input IF cut-storage domain.
+- 52 repeated constant calls check a single shared constant record and no
+  packing, across the same domains.
+- 224 reconstructed cases across14 structures (33/34/43/44/45/54/55/66 and
+  333/343/444/456/654/666), near-single and capacity domains through15 inputs,
+  conjunction and XOR-of-conjunction families, signed/reversed leaves and both
+  output phases. Check every assignment, actual physical LUT sizes, mapping,
+  packing and ownership. Bound groups use the high variables so the source
+  greedy search's initial partition is known to succeed. Capacity cases that
+  need a third LUT exercise its intermediate/root sentinels.
+- One independent source-order trace locks down greedy rejection of realizable
+  `(abcd) XOR (efg)` in a4-4 structure. Scalar cofactor enumeration of the C
+  loops gives final orders[2,6,5,1,0,3,4] and[0,2,6,3,4,1,5], both with4 cofactors.
+  Verify the Go group/order and each bit of its permuted truth. The algorithm
+  is not a complete existence oracle; do not replace it with a new search.
+  The initial broader low-variable family layout exposed this limitation;
+  rejection alone was not treated as a port bug.
+
+Local15-input elementary benchmark:631416..639611ns/op before versus
+1289..1517ns/op after, both0B/0alloc (three300ms runs). This measures only the
+lookup workload, not an end-to-end mapping speedup. Logs:
+`/tmp/abcgo-structure-elementary-{before,after}.log`.
+
+Final frozen production/test gate: full IF Go-only8.982s
+(`/tmp/abcgo-structure-reviewed-full.log`), focused structure race4.566s
+(`/tmp/abcgo-structure-reviewed-race.log`), IF/GIA vet exits0
+(`/tmp/abcgo-structure-reviewed-vet.log`). No C vectors/compiler dependencies
+added. Missing source hex/DSD decomposition-failure diagnostics and wider CLU
+source/three-stage control-flow review remain explicit work before closing
+this row; metrics/reporting/driver reconciliation and family gate also remain.
+Original package audit stays2/131.
