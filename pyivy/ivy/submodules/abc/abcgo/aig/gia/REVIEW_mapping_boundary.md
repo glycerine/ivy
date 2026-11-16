@@ -279,3 +279,38 @@ self-referential (`root3 leaves[3 3]`).
 checkpoint, then characterize the original C boundary and retain the last usable
 cut rather than introducing a cycle. This is an active repair, not a completed
 source family or a green integration claim.
+
+## Hash-collapse boundary repair and current integration status
+
+The forward-cut regression also fails before its guard: root5 leaves[1 2 6]
+(`/tmp/abcgo-mapping-hash-forward-cut-red.log`,handle89158 exit1). Fresh C
+characterization reproduces last-cut selection and both source failures exactly:
+root4 cut[1 2 3], root4 self-cut[4 4], and root5 forward-cut[1 2 6]
+(`/tmp/abcgo-mapping-hash-source-boundaries.log`,handle50258 exit0,1.985s).
+
+Keep the last source cut whose mapped leaves precede the destination root.
+Hash collapse cannot replace a usable earlier cut with a self/forward record.
+This is an explicit correctness repair beyond those C boundary bugs, not a
+claim that the invalid source metadata was reproduced. Valid-domain cut policy
+and all384 complete native driver results still match. Hash-focused/native
+checks pass13.522s (handle83191 exit0); full map/if race tests pass8.110s
+(handle75750 exit0). Broader focused GIA coverage then passes75.457s without
+failures or skips (`/tmp/abcgo-mapping-through-drivers-focused.log`,handle54778
+exit0). Full frozen module race/vet is still pending for this mapping family.
+
+## Required source-fidelity restoration still open
+
+Inspection confirms `map/if/ifSat.go` explicitly replaces original SAT with
+cofactor classification. BuildXY/XYZ return a placeholder plan, Unbuild is a
+no-op, and CheckXY ignores its solver argument. This may solve the same Boolean
+relation on supported partitions but violates the user's requirement for a
+faithful mechanical port rather than substitute algorithms. Restore original
+ifSat.c CNF construction, remapped assumptions, actual ported BSAT solve/reuse
+and model extraction before closing structured-LUT reconstruction/FindLut.
+
+The next regression/implementation plan is
+`/tmp/abcgo-mapping-sat-restoration-plan.md`. It includes fresh C boundary cases,
+retained assumptions, solver lifecycle and repeated SAT/UNSAT tests, production
+caller ownership and full-word truth checks. No substitute is accepted merely
+because SAT decisions match. This dependency, remaining source rows, resource/
+error boundaries and complete integration keep the source family and GIA open.

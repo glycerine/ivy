@@ -207,3 +207,37 @@ func TestDupHashMappingRejectsCollapsedSelfCut(t *testing.T) {
 		t.Fatalf("last usable cut lost: %v", leaves)
 	}
 }
+
+func TestDupHashMappingRejectsCollapsedForwardCut(t *testing.T) {
+	p := Gia_ManStart(20)
+	defer Gia_ManStop(p)
+	a, b, c, d := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	x, duplicate := Gia_ManAppendAnd(p, a, b), Gia_ManAppendAnd(p, a, b)
+	later := Gia_ManAppendAnd(p, c, d)
+	y := Gia_ManAppendAnd(p, x, duplicate)
+	Gia_ManAppendCo(p, y)
+	p.VMapping = Vec_IntStart(int(p.nObjs))
+	for _, row := range []struct {
+		root   int32
+		leaves []int32
+	}{{x >> 1, []int32{a >> 1, b >> 1}}, {duplicate >> 1, []int32{a >> 1, b >> 1}}, {later >> 1, []int32{c >> 1, d >> 1}}, {y >> 1, []int32{a >> 1, b >> 1, later >> 1}}} {
+		Vec_IntWriteEntry(p.VMapping, int(row.root), int32(Vec_IntSize(p.VMapping)))
+		Vec_IntPush(p.VMapping, int32(len(row.leaves)))
+		for _, leaf := range row.leaves {
+			Vec_IntPush(p.VMapping, leaf)
+		}
+		Vec_IntPush(p.VMapping, row.root)
+	}
+	q := Gia_ManDupHashMapping(p)
+	defer Gia_ManStop(q)
+	root := Gia_ObjFaninId0p(q, Gia_ManCo(q, 0))
+	leaves := Gia_ObjLutFanins(q, root)
+	for _, leaf := range leaves {
+		if leaf >= root {
+			t.Fatalf("hashing introduced a non-topological cut: root%d leaves%v", root, leaves)
+		}
+	}
+	if !slices.Equal(leaves, []int32{a >> 1, b >> 1}) {
+		t.Fatalf("last usable cut lost: %v", leaves)
+	}
+}

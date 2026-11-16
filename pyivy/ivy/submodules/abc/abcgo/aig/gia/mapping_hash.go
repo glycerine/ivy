@@ -2,7 +2,8 @@ package gia
 
 // Gia_ManDupHashMapping structurally hashes an AIG and copies LUT records
 // through the old-to-new node map. Merged roots retain the last source cut,
-// as in C, with one compact record per destination root.
+// as in C, with one compact record per destination root. Hash-collapsed cuts
+// must still have leaves preceding their root.
 func Gia_ManDupHashMapping(src *Gia_Man_t) *Gia_Man_t {
 	if Gia_ManHasMapping(src) == 0 {
 		panic("gia: mapping is absent")
@@ -55,7 +56,18 @@ func Gia_ManDupHashMapping(src *Gia_Man_t) *Gia_Man_t {
 		if copied == 0 || Gia_ObjIsCi(Gia_ManObj(dst, copied)) != 0 {
 			continue
 		}
-		Vec_IntWriteEntry(mapping, int(copied), id)
+		// C can overwrite a merged root with a self/forward cut after hashing.
+		// Keep the last usable source cut, retaining the topological invariant.
+		usable := true
+		for _, fanin := range Gia_ObjLutFanins(src, id) {
+			if int32(Gia_ManObj(src, fanin).Value>>1) >= copied {
+				usable = false
+				break
+			}
+		}
+		if usable {
+			Vec_IntWriteEntry(mapping, int(copied), id)
+		}
 	}
 	for copied := int32(1); copied < Gia_ManObjNum(dst); copied++ {
 		sourceID := Vec_IntEntry(mapping, int(copied))

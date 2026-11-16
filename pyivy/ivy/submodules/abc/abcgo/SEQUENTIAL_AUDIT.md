@@ -9041,3 +9041,21 @@ onto its own leaf: root3 cut[3 3] (handle22663 exit1). Save a red checkpoint now
 next retain the last usable topological cut and characterize C's boundary.
 Detailed logs/plans are in REVIEW_mapping_boundary.md. Wider family/GIA audit
 and original2/131 goal remain open, with full integration still pending.
+
+### Last usable hash cuts and explicit original-C boundary failures
+
+New red forward-cut test fails root5 leaves[1 2 6] (handle89158 exit1), alongside
+the new self-cut regression. Fresh original C confirms both invalid boundaries
+and valid last-cut selection (handle50258 exit0,1.985s). Keep the last usable
+source cut with mapped leaves preceding its root; preserve compact storage.
+All384 driver/native and hash checks pass13.522s, full map/if race8.110s
+(handles83191/75750 exit0). Broader focused GIA checks pass75.457s without
+failures/skips (handle54778 exit0). Full frozen module race/vet remains pending.
+
+Concrete remaining fidelity gap: map/if/ifSat.go uses cofactor classification
+instead of the original SAT CNF/assumption/solve/model algorithm, with placeholder
+BuildXY/XYZ and no-op Unbuild. The user explicitly rejects substitutes; restore
+actual ifSat.c flow with the existing ported BSAT backend as a required mapping
+dependency. See /tmp/abcgo-mapping-sat-restoration-plan.md and
+REVIEW_mapping_boundary.md. No mapping/GIA/package completion claim is made;
+original audit remains2/131. Save the current corrected checkpoint regularly.
