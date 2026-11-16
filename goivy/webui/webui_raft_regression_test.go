@@ -89,9 +89,13 @@ func TestRaftWrapperInductionDoesNotStallOnLogMatching(t *testing.T) {
 
 	var logMatchingAt time.Time
 	var heartbeatDeadline <-chan time.Time
+	var logMatchingDeadline <-chan time.Time
 	heartbeatSeen := false
 	reachedConjecture22 := false
-	overall := time.After(45 * time.Second)
+	// g3 takes longer than native Z3 on later conjectures (particularly
+	// committed_iff_in_commit_log). Bound the targeted log_matching check
+	// separately, while still requiring the entire induction proof to pass.
+	overall := time.After(2 * time.Minute)
 	for {
 		select {
 		case msg := <-progress:
@@ -99,6 +103,7 @@ func TestRaftWrapperInductionDoesNotStallOnLogMatching(t *testing.T) {
 			if strings.Contains(msg, "Checking conjecture 21 of 46: log_matching") {
 				logMatchingAt = time.Now()
 				heartbeatDeadline = time.After(6 * time.Second)
+				logMatchingDeadline = time.After(15 * time.Second)
 				continue
 			}
 			if !logMatchingAt.IsZero() && strings.Contains(msg, "Still checking conjecture 21 of 46: log_matching") {
@@ -109,6 +114,7 @@ func TestRaftWrapperInductionDoesNotStallOnLogMatching(t *testing.T) {
 			if !logMatchingAt.IsZero() && strings.Contains(msg, "Checking conjecture 22 of 46:") {
 				reachedConjecture22 = true
 				heartbeatDeadline = nil
+				logMatchingDeadline = nil
 				if !heartbeatSeen && time.Since(logMatchingAt) > 3*time.Second {
 					t.Fatalf("log_matching advanced without heartbeat only after %s", time.Since(logMatchingAt))
 				}
@@ -128,9 +134,12 @@ func TestRaftWrapperInductionDoesNotStallOnLogMatching(t *testing.T) {
 		case <-heartbeatDeadline:
 			cancel()
 			t.Fatal("timed out waiting for a log_matching heartbeat")
+		case <-logMatchingDeadline:
+			cancel()
+			t.Fatal("timed out waiting for log_matching to advance to conjecture 22")
 		case <-overall:
 			cancel()
-			t.Fatal("timed out waiting for induction progress past log_matching")
+			t.Fatal("timed out waiting for the complete induction proof")
 		}
 	}
 }
