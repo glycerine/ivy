@@ -10129,3 +10129,16 @@ raw fixture edges; production required no change. Full Go-only module passes
 130 tested packages plus3 commands without tests; focused isomorphism race1.484s
 and GIA vet pass. REVIEW_isomorphism.md records the seven-routine checkpoint
 and remaining family scope. Original completion remains2/131.
+
+
+### Restore isomorphism graph statistics and verify signature drivers
+
+New direct/wrapper report regressions expose missing standard statistics calls
+and their forward-level side effects. Restore the two source calls. Add24
+wide-scalar reverse/RNG scenarios,12 independent synchronous-driver scenarios,
+exact reverse/two-graph reports, multiset counts and data-copy/uniqueness boundary
+checks. Full Go-only module passes130 tested packages plus3 commands without
+tests; focused isomorphism race1.490s and GIA vet pass. All12 giaIso3.c source
+entry points have behavior reconciliation; its unique-count compactness decision
+and the rest of the isomorphism family remain open. Detailed evidence in
+REVIEW_isomorphism.md. Original package completion remains2/131.

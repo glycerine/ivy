@@ -270,3 +270,40 @@ pass; all handles ended. Logs /tmp/abcgo-iso2-walk-final-
 /tmp/abcgo-iso2-walk-reviewed.log. This reconciles seven source walk/update
 routines; exact pair checks, full refinement/reduction and drivers remain open.
 Original audit2/131.
+
+
+## Reverse signatures and source report side effects
+
+Two new report regressions fail before repair. Gia_IsoCompareVecs prints
+invented abbreviated graph counts instead of the two source Gia_ManPrintStats
+calls. Besides missing names/statistics, that omission leaves reverse levels
+in place: the standard statistics routine recomputes forward levels when
+existing level storage is present. Restore those two calls. The direct test
+pins this level side effect and names/standard headers, then exact signed-value
+multiset counts with duplicates and unequal level counts. Collected data keeps
+requested order and owns its copy; object lists remain unchanged. A separate
+two-graph driver regression reproduces the missing statistics through the wrapper.
+Red logs /tmp/abcgo-iso-reverse-{red,two-red}.log; repaired focused logs
+/tmp/abcgo-iso-reverse-{green,reviewed}.log.
+
+Twenty-four independent reverse-signature scenarios cover0/1/2 registers, four
+phase patterns and zero/near-wrap initial values. Abstract reverse levels and
+wide scalar multiply-with-carry arithmetic check every bucket/value, two
+accumulating invocations, unchanged ordinary marks/edges, untouched traversal
+epochs, reset-sample consumption and the next global RNG sample. The reverse
+report driver pins every level/object line. Twelve synchronous-driver scenarios
+check exact iteration counts and final values against independent count-stability
+iteration; source intentionally stops when distinct counts repeat, not when
+signature vectors are identical. Four uniqueness boundary vectors include empty,
+all-equal and high-bit values, preserving input order. All fixtures are Go-only.
+
+All12 giaIso3.c entry points now have source behavior reconciliation and
+independent arithmetic or driver/ownership checks. Before closing that subfamily,
+finish the compactness assessment of its standalone unique-count helper
+(source copy/sort versus the current Go map) and its driver dependency.
+This does not close the remaining giaIso.c/giaIso2.c routines or full GIA audit.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests, including24 reverse and12 synchronous-driver leaves. Focused isomorphism
+race1.490s and GIA vet pass; all handles ended. Final logs:
+/tmp/abcgo-iso-reverse-final-{module.jsonl,race.log,vet.log}. Original audit2/131.

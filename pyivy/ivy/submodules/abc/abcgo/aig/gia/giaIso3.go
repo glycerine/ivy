@@ -118,8 +118,8 @@ func Gia_IsoCollectData(g *Gia_Man_t, objects *Vec_Int_t) *Vec_Int_t {
 	return result
 }
 func Gia_IsoCompareVecs(a *Gia_Man_t, levelsA *Vec_Wec_t, b *Gia_Man_t, levelsB *Vec_Wec_t) {
-	fmt.Printf("Graph 1: %d inputs, %d ANDs, %d outputs.\n", Gia_ManCiNum(a), Gia_ManAndNum(a), Gia_ManCoNum(a))
-	fmt.Printf("Graph 2: %d inputs, %d ANDs, %d outputs.\n", Gia_ManCiNum(b), Gia_ManAndNum(b), Gia_ManCoNum(b))
+	Gia_ManPrintStats(a, nil)
+	Gia_ManPrintStats(b, nil)
 	count := min(vec.Vec_WecSize(levelsA), vec.Vec_WecSize(levelsB))
 	fmt.Printf("Printing %d shared levels:\n", count)
 	for i := 0; i < count; i++ {
