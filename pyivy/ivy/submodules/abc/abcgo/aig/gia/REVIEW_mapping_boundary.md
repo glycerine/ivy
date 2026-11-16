@@ -9,7 +9,7 @@ Glitch simulation closed at89caa1ccf. Original package completion remains2/131.
 ## Plan
 
 1. [x] Inventory all source routines, actual Go locations and earlier evidence.
-2. [ ] Review metrics, references, overlaps and choice levels; add failing
+2. [x] Review metrics, references, overlaps and choice levels; add failing
    regressions before fixes, then native/scalar/error/ownership coverage.
 3. [ ] Review exact reports, persistent dump state, packing/profile boundaries,
    source precision and resource handling with native comparisons.
@@ -29,27 +29,27 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Original C | Go location | Status |
 | --- | --- | --- |
 | Gia_ManSetIfParsDefault | map/if/gia_bridge.go | Source defaults/full reset reviewed; Go-only regression; final family gate pending |
-| Gia_ManLutFaninCount | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManLutSizeMax | aig/gia/mapping_accessors.go, base/abci/abc_graph_compat.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManLutNum | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManLutLevel | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManLutParams | aig/gia/mapping_timing.go | Ordinary/boxed native and independent coverage; integration pending |
-| Gia_ManSetRefsMapped | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManSetLutRefs | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManComputeOverlap2One_rec | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManComputeOverlap2One | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManComputeOverlap2 | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManComputeOverlapOne_rec | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManComputeOverlapOne | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
-| Gia_ManComputeOverlap | aig/gia/mapping_metrics.go | Core coverage passes; integration/boundaries pending |
+| Gia_ManLutFaninCount | aig/gia/mapping_metrics.go | Source totals reviewed; standalone and384 real mapper results plus boundaries; final family gate pending |
+| Gia_ManLutSizeMax | aig/gia/mapping_accessors.go, base/abci/abc_graph_compat.go | Source maximum/empty sentinel and direct alias reviewed; mapper/profile boundaries covered; final family gate pending |
+| Gia_ManLutNum | aig/gia/mapping_metrics.go | Source totals/dangling cuts reviewed; standalone/mapper boundaries covered; final family gate pending |
+| Gia_ManLutLevel | aig/gia/mapping_metrics.go | Source output-depth and owned levels reviewed; standalone/mapper/dangling boundaries covered; final family gate pending |
+| Gia_ManLutParams | aig/gia/mapping_timing.go | Source flat/boxed policy reviewed;96 timing-manager configurations and384 actual mapper results; final family gate pending |
+| Gia_ManSetRefsMapped | aig/gia/mapping_metrics.go | Source references/replacement reviewed; standalone/mapper/constant/terminal/dangling ownership cases; final family gate pending |
+| Gia_ManSetLutRefs | aig/gia/mapping_metrics.go | Source references/independent storage reviewed; standalone/mapper/terminal/dangling cases; final family gate pending |
+| Gia_ManComputeOverlap2One_rec | aig/gia/mapping_metrics.go | Source walk/typed dependencies reviewed; scalar cones and384 mapper results; final family gate pending |
+| Gia_ManComputeOverlap2One | aig/gia/mapping_metrics.go | Source boundary/scratch cleanup reviewed; repeated actual mapper cuts; final family gate pending |
+| Gia_ManComputeOverlap2 | aig/gia/mapping_metrics.go | Source mapping precondition restored with red cases; scalar/mapper/negative-overlap boundaries; final family gate pending |
+| Gia_ManComputeOverlapOne_rec | aig/gia/mapping_metrics.go | Source epoch walk/typed dependencies reviewed; scalar/mapper cones; final family gate pending |
+| Gia_ManComputeOverlapOne | aig/gia/mapping_metrics.go | Source per-cut epochs/boundaries reviewed; repeated mapper cuts; final family gate pending |
+| Gia_ManComputeOverlap | aig/gia/mapping_metrics.go | Source mapping precondition restored with red cases; scalar/mapper/dangling boundaries; final family gate pending |
 | Gia_ManPrintGetMuxFanins | aig/gia/mapping_stats.go | Source control/data roles and phase stripping reconciled; Go-only eight-phase/nested coverage; final family gate pending |
 | Gia_ManCountDupLut | aig/gia/mapping_stats.go | Source two/three-input selection, counts, marks and stdout routing reviewed; Go-only repeated-call fixtures; final family gate pending |
 | Gia_ManPrintMappingStats | aig/gia/mapping_stats.go | Source ABC routing repaired; precision/boxed-level/ANSI/dump-state behavior covered in Go; final family gate pending |
 | Gia_ManPrintPackingStats | aig/gia/mapping_profile.go | Source ABC routing repaired; group counts and empty maximum reconciled; exact Go-only reports; final family gate pending |
 | Gia_ManPrintNodeProfile | aig/gia/mapping_profile.go | Source ABC routing repaired; counts/weighted ratios/terminal bins reviewed; Go-only reports; final family gate pending |
 | Gia_ManPrintLutStats | aig/gia/mapping_profile.go | Source ABC routing repaired; empty and32/33-width boundaries covered in Go; final family gate pending |
-| Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Ordinary/typed/boxed coverage; integration pending |
-| Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Ordinary/typed/boxed coverage; integration pending |
+| Gia_ManChoiceLevel_rec | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed walks reviewed; scalar mapped-result depth integration; mixed boxed-choice driver coverage remains in step5 |
+| Gia_ManChoiceLevel | aig/gia/mapping_choice_level.go | Source ordinary/typed/boxed levels reviewed; mapped-result integration; final family gate pending |
 | If_ManCheckChoices_rec | map/if/choice_check.go (ifDanglingChoices closure) | Source walk reviewed; dangling/64 choice-chain cases; final family gate pending |
 | If_ManCheckChoices | map/if/choice_check.go | Source diagnostics/mark cleanup reviewed; repeated Go-only checks; final family gate pending |
 | Gia_ManToIf | map/if/gia_bridge.go | Source transfer reviewed; name ownership, defaults, typed phases/references/aliases, constants, empty interfaces and 64 choice chains; frame/boxed integration gate pending |
@@ -1492,3 +1492,43 @@ without tests. Focused reports/verification race1.084s and relevant vet exit0
 (`/tmp/abcgo-mapping-report-complete-{module.jsonl,race.log,vet.log}`). All
 handles consumed. Remaining metrics/reference/overlap integration, hashing,
 boxed choices, optional dependencies and final family gates remain open2/131.
+
+### Restore overlap preconditions and close core metrics review
+
+Both aggregate overlap functions in `giaIf.c:328..379` assert mapping exists.
+Go had no explicit check: an empty manager returned0 and nonempty managers
+failed later through nil vector access. Six new Go-only shape/method cases
+fail before repair (`/tmp/abcgo-mapping-overlap-guard-red.log`, exit1).
+Restore the precondition before allocating scratch or advancing traversal.
+This refines the earlier checkpoint: its nonempty panic test did not establish
+that a proper guard existed or that empty managers were rejected.
+
+Re-read the count/maximum/level/parameter/reference and both overlap walks
+against their C counterparts. Existing shared Go reference/level helpers keep
+their source formulas and independently owned arrays; no replacement mapping
+algorithm or new cache is added. Preserve total counts over all indexed cuts,
+depth only over CO drivers, and overlap subtracting all physical AND nodes.
+
+New boundary fixtures cover empty mapped graphs, constants/complemented COs,
+register terminals, owned references, dangling indexed cuts and an unindexed
+physical node. The latter intentionally gives source overlap-1 while output
+depth remains0 despite a dangling LUT at depth2. Ninety-six parameter cases
+exercise real boxes, an empty timing manager and no manager across32 scalar
+graphs. Flat calls must ignore and preserve the cached box levels.
+
+The existing512-case Go-only driver matrix now checks metrics on all384 LUT
+results (AIG-only balance modes have no LUT mapping). Independent topological
+levels and explicit set/stack physical-cone enumeration verify every count,
+size, level, aggregate/per-cut overlap, scratch mark cleanup, physical choice
+depth and both reference arrays, including replacement and alias freedom.
+Earlier384 standalone scalar graphs, typed dependency cases and historical
+ordinary/boxed native comparisons remain additional evidence. Step2 is closed;
+mixed boxed-choice drivers and the final family gate remain separate work.
+
+Frozen focused cases1.053s (`/tmp/abcgo-mapping-metrics-final-cases.log`);
+full Go-only module exits0:130 tested packages pass,3 commands without tests.
+Focused metrics/driver/choice race4.586s and relevant vet exit0
+(`/tmp/abcgo-mapping-metrics-final-{module.jsonl,race.log,vet.log}`). All
+handles consumed. No C fixture/compiler dependency added. Remaining report
+deviations, hashing/boxed-choice integration, optional dependencies and final
+family gates remain open; original package audit2/131.

@@ -93,6 +93,9 @@ func Gia_ManComputeOverlap2One(p *Gia_Man_t, id int32, label *Vec_Str_t, visited
 	return count
 }
 func Gia_ManComputeOverlap2(p *Gia_Man_t) int32 {
+	if Gia_ManHasMapping(p) == 0 {
+		panic("gia: mapping is absent")
+	}
 	label := Vec_StrStart(int(p.nObjs))
 	visited := Vec_IntAlloc(100)
 	count := -Gia_ManAndNum(p)
@@ -127,6 +130,9 @@ func Gia_ManComputeOverlapOne(p *Gia_Man_t, id int32) int32 {
 	return Gia_ManComputeOverlapOne_rec(p, id)
 }
 func Gia_ManComputeOverlap(p *Gia_Man_t) int32 {
+	if Gia_ManHasMapping(p) == 0 {
+		panic("gia: mapping is absent")
+	}
 	count := -Gia_ManAndNum(p)
 	for id := int32(1); id < p.nObjs; id++ {
 		if Gia_ObjIsLut(p, id) != 0 {

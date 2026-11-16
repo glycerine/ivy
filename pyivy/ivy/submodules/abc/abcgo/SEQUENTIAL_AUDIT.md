@@ -9759,3 +9759,16 @@ append/name behavior across paths. Full Go-only module130 tested packages
 pass plus3 commands without tests; focused race1.084s and relevant vet pass.
 See REVIEW_mapping_boundary.md. Remaining metrics/integration/family gates
 and original package audit remain open2/131.
+
+### Close core mapping metrics/reference/overlap review
+
+New red boundary cases expose missing overlap preconditions: empty managers
+silently returned0 while nonempty ones failed later through nil access. Restore
+the source guard before scratch/traversal changes. Add terminal/dangling/negative
+overlap and96 timing-manager parameter cases. Extend384 real LUT-driver results
+with independent scalar metric/reference/level and stack/set cone checks,
+scratch reuse and ownership assertions. Earlier standalone/typed/native evidence
+is reconciled; mapping-boundary plan step2 is now complete. Full Go-only module
+passes130 tested packages plus3 commands without tests; focused race4.586s and
+relevant vet pass. Details in REVIEW_mapping_boundary.md. Remaining family
+rows/gates and original package audit remain open2/131.

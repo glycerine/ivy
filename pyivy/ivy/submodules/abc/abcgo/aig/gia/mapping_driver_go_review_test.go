@@ -99,6 +99,7 @@ func TestMappingDriversGoOnlyTruthAndMetadata(t *testing.T) {
 					if result.VMapping == nil {
 						t.Fatal("LUT mapping is missing")
 					}
+					mappingDriverReviewCheckMetrics(t, result)
 					if result.VConfigs != nil || result.PCellStr != "" {
 						t.Fatal("general mapping retained obsolete cell configuration")
 					}
