@@ -9495,3 +9495,15 @@ free-size5 cases. No production bug found. Full IF Go-only9.209s, focused race
 1.113s and IF/GIA vet pass. Details in REVIEW_mapping_boundary.md; active
 primitive/retry fidelity, diagnostics and final family review stay open.
 Original package audit remains2/131.
+
+### Repair CLU sixteen-input support and remove cofactor allocations
+
+A new red word-domain regression exposes CLU's accidental dependence on the
+mapper15-input limit; restore CLU's own0..16 formula without changing cut limits.
+Add544 scalar cofactor cases and four full16-input 6-6-6 decompositions with
+all assignments, pins/sentinels and ownership. Restore source word-mask/half
+cofactoring, removing two allocations per call; local microbenchmarks improve
+substantially without an application-wide speed claim. Full Go-only module
+passes130 tested packages plus3 commands without tests, no failures. Focused
+Go-case CLU/structure race5.303s and IF/GIA vet pass. Details/logs in
+REVIEW_mapping_boundary.md. Wider source-family audit stays open2/131.

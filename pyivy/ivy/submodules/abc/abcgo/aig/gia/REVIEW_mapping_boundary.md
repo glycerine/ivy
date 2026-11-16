@@ -690,3 +690,48 @@ exit0 (`/tmp/abcgo-clu-structure-reviewed-vet.log`). No C vectors or compiler
 dependencies added. Remaining active CLU primitives/retry configuration fidelity,
 LogicNode failure diagnostics, wider driver/reporting reconciliation and family
 gates remain open. Original package audit2/131 unchanged.
+
+### CLU sixteen-input boundary repair and cofactor word operations
+
+New scalar cofactor coverage reaches a real domain mismatch: CLU declares
+`CLU_VAR_MAX=16` and the source word count at `ifDec16.c:130..133` accepts16,
+but Go delegated to `ifTruthWords`, which correctly limits mapper cuts to15.
+`TestCluWordCountDomain` fails before the fix at16 (exit1,
+`/tmp/abcgo-clu-sixteen-red.log`). Give CLU its own bounded0..16 size formula;
+leave the mapper's15-input cut limit unchanged. Check every legal word count
+and retain panic for negative/out-of-domain requests.
+
+Review cofactoring against `ifDec16.c:1025..1054`. Replace generic copied
+bit-by-bit transforms with the source operations: small-variable word masks
+and high-variable repeated halves. No shared scratch or allocations are needed.
+This is a faithful performance improvement rather than a change of algorithm.
+`clu_primitives_review_test.go` adds544 cases covering1..16 inputs, every
+variable, random/constant0/constant1/sparse patterns, dirty destination words,
+every resulting bit, exact untouched output suffixes and source ownership.
+Small input functions use canonical stretched truth tables.
+
+Four further16-input 6-6-6 decompositions check both truth phases and alternating
+input signs. Every one of65536 assignments is checked independently, along with
+source easy-cofactor bound pins and both sentinels16/17. These use a CLU
+parameter object, not an invalid16-input IF cut. All three LUTs are necessary
+at this support size. The tests confirm the size repair reaches full stage
+orchestration and intermediate truth tables, beyond the word-count helper.
+
+Local100ms cofactor benchmark samples, before/after, zero allocations after:
+6-input variable3:676.4ns/5.083ns (formerly16B,2alloc);
+10-input variable7:7924ns/18.75ns (formerly256B,2alloc);
+16-input variable15:1198413ns/715.8ns (formerly16384B,2alloc).
+The before cofactor benchmark is taken after the word-count repair so16 inputs
+can run; this isolates the word implementation improvement. Logs
+`/tmp/abcgo-clu-cofactors-{before,after}.log`. These local microbenchmarks do not
+claim a proportional application-wide improvement.
+
+Frozen final verification: full module with C tools excluded and CGO disabled
+exits0 (`/tmp/abcgo-clu-sixteen-module.jsonl`):130 tested packages pass,3 commands
+without tests, no failures; JSON confirms all544 scalar cofactor cases execute.
+Focused CLU/structure race excludes the optional legacy C comparison and passes
+5.303s (`/tmp/abcgo-clu-sixteen-race-go-cases.log`); IF/GIA vet exits0
+(`/tmp/abcgo-clu-sixteen-vet.log`). An earlier race6.763s included that preexisting
+optional comparison; the final focused gate uses only Go cases. No new C vectors
+or compiler dependencies added. Remaining primitive/retry exactness, source
+failure diagnostics and wider GIA family inventory remain open. Audit2/131.

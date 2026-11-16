@@ -5,6 +5,8 @@ import (
 	"math/bits"
 	"slices"
 	"sort"
+
+	abcutil "github.com/glycerine/abcgo/misc/util"
 )
 
 const (
@@ -60,7 +62,14 @@ func If_CluPrimeCudd(p uint32) uint32 {
 		p++
 	}
 }
-func If_CluWordNum(nVars int32) int32   { return int32(ifTruthWords(int(nVars))) }
+
+// CLU supports sixteen inputs independently of the mapper's fifteen-input cuts.
+func If_CluWordNum(nVars int32) int32 {
+	if nVars < 0 || nVars > CLU_VAR_MAX {
+		panic("if: truth support outside range")
+	}
+	return 1 << uint(max(0, nVars-6))
+}
 func If_CluCountOnes(t uint64) int32    { return int32(bits.OnesCount64(t)) }
 func If_CluClear(out []uint64, n int32) { clear(out[:If_CluWordNum(n)]) }
 func If_CluFill(out []uint64, n int32) {
@@ -191,8 +200,22 @@ func If_CluCofactors(table []uint64, n, v int32, zero, one []uint64) {
 	if v < 0 || v >= n {
 		panic("if: cofactor variable outside support")
 	}
-	cluTransform(zero, table, n, func(a int) int { return a &^ (1 << uint(v)) })
-	cluTransform(one, table, n, func(a int) int { return a | (1 << uint(v)) })
+	words := If_CluWordNum(n)
+	if v < 6 {
+		for i, value := range table[:words] {
+			zero[i] = abcutil.Abc_Tt6Cofactor0(value, v)
+			one[i] = abcutil.Abc_Tt6Cofactor1(value, v)
+		}
+		return
+	}
+	step := int32(1) << uint(v-6)
+	for start := int32(0); start < words; start += 2 * step {
+		for i := start; i < start+step; i++ {
+			low, high := table[i], table[i+step]
+			zero[i], zero[i+step] = low, low
+			one[i], one[i+step] = high, high
+		}
+	}
 }
 func If_CluHasVar(table []uint64, n, v int32) int32 {
 	for assignment := 0; assignment < 1<<uint(n); assignment++ {
