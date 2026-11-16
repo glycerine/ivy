@@ -78,7 +78,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing duplication/constraints/boxed-order and attribute overwrite/integration reviewed; remaining optional modes pending |
-| Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Pending |
+| Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Ordinary/truth/packed boxed normalization, hashing, ownership, sequential CI permutation and early failure reviewed with Go-only integration; balancing/choice integration and final family gate pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
 | Gia_ManTestStruct | map/if/gia_structure_report.go | Pending |
@@ -1252,3 +1252,40 @@ with focused GIA race1.021s and relevant vet exit0
 (`/tmp/abcgo-driver-boxes-final-{module.jsonl,gia-race.log,vet.log}`).
 All handles consumed; no C test vectors/compiler dependency added. Wider
 boxed-driver coverage follows; source-family/package audit remains open2/131.
+
+### Review boxed outer-driver ownership and normalization
+
+Reconcile `giaIf.c:2412..2451` with the Go wrapper: normalized boxed input
+is interleaved before mapping, then normalized again with optional hashing;
+already-interleaved input takes the ordinary branch and is normalized only
+when hashing is requested. Timing is moved along each chain, mapping and
+packing copied through temporary Value literals, and temporary graphs stopped.
+The source's conditional check for mapping returning its input is unnecessary
+for the current Go adapters: both reconstruction paths allocate a new graph.
+
+`gia_driver_boxes_review_test.go` adds Go-only integration coverage:
+
+-192 combinational cases:16 phase masks, normalized/interleaved source,
+ hashing on/off, and structural/truth/4-4 packing reconstruction. Exact scalar
+ arrivals5.5/8/11.25 are checked in the mapper; copied output vectors truncate
+ to5/8/11. Check source timing-table/terminal values unchanged, original timing
+ and box-model pointers moved to the result, plain constraint/name ownership,
+ cleared cell configuration, copied summary/identity, final object ordering,
+ valid remapped packing groups and every Boolean assignment.
+-64 sequential cases cover the source PI/FO/box-CI entry convention, resulting
+ PI/box-CI/FO permutation only in the normalization branch, correct register and
+ terminal counts, mapped truth under independent scalar input permutation,
+ and exact shuffle warning. The ordinary/hash-only branch retains CI order.
+-Two repeated invalid-order configurations reject a future-box dependency
+ before mapping, leaving source timing/configuration/name pointers and data,
+ output-arrival vectors, graph functionality and parameter timing slots intact.
+
+No further production discrepancy was found beyond the separately repaired
+missing normalization warning. No C vector/compiler dependency was added.
+Focused258 configurations0.173s, full Go-only module130 tested packages pass
+plus3 commands without tests (IF10.132s/GIA27.670s), focused IF race1.536s,
+GIA warning race1.021s and relevant vet pass
+(`/tmp/abcgo-driver-boxes-final-{cases.log,module.jsonl,if-race.log,gia-race.log,vet.log}`).
+All handles consumed. Wider balancing/choice integration, remaining transfers/
+metrics/reports, optional recorded/SAT dependencies and final source-family
+gate stay open; original package audit2/131.

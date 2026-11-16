@@ -9673,3 +9673,16 @@ permuted scalar truth and combinational silence are covered. Full Go-only
 module passes130 tested packages plus3 commands without tests; focused GIA
 race1.021s and relevant vet pass. No algorithm/permutation changes or C vectors.
 Details in REVIEW_mapping_boundary.md; family/package audit remains open2/131.
+
+### Cover boxed mapping normalization and ownership chains
+
+Add258 Go-only configurations:192 signed combinational cases across source
+ordering, hashing and structural/truth/packed reconstruction;64 sequential
+input-permutation cases; and two repeated invalid-order rejections. Check
+scalar arrivals, exact final truth/interface/order, mapping/packing transfer,
+timing/model/name ownership, unchanged original timing values, configuration
+replacement and failure preservation. Full Go-only module passes130 tested
+packages plus3 commands without tests; focused IF race1.536s, normalization
+race1.021s and relevant vet pass. Only production discrepancy was the missing
+shuffle warning repaired separately. See REVIEW_mapping_boundary.md. Wider
+balancing/choice integration, remaining family rows and gates stay open2/131.
