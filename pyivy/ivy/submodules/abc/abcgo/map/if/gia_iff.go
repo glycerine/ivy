@@ -2,10 +2,12 @@ package if_
 
 import (
 	"fmt"
+	"math"
+
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/tim"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"math"
 )
 
 // Iff_Man_t holds delay and clustering choices for a mapped GIA.
@@ -20,7 +22,7 @@ type Iff_Man_t struct {
 func Gia_ManIffStart(graph *Gia_Man_t) *Iff_Man_t {
 	p := &Iff_Man_t{graph: graph, times: make([]float32, Gia_ManObjNum(graph))}
 	for i := range p.times {
-		p.times[i] = -1
+		p.times[i] = math.Float32frombits(0xffffffff) // Vec_FltStartFull byte fill.
 	}
 	for _, k := range []int{2, 3} {
 		p.matches[k] = make([]int32, len(p.times))
@@ -73,13 +75,45 @@ func iffExpandedFanins(graph *Gia_Man_t, root, skip2, skip3 int32, visit func(in
 	}
 }
 func Gia_IffObjCount(graph *Gia_Man_t, root, skip2, skip3 int32) int32 {
-	seen := make(map[int32]struct{})
-	iffExpandedFanins(graph, root, skip2, skip3, func(id int32) { seen[id] = struct{}{} })
-	return int32(len(seen))
+	gia.Gia_ManIncrementTravId(graph)
+	var count int32
+	iffExpandedFanins(graph, root, skip2, skip3, func(id int32) {
+		if gia.Gia_ObjIsTravIdCurrentId(graph, id) == 0 {
+			gia.Gia_ObjSetTravIdCurrentId(graph, id)
+			count++
+		}
+	})
+	return count
 }
 func Gia_IffObjTimeOne(p *Iff_Man_t, root, skip2, skip3 int32) float32 {
-	delay := float32(-math.MaxFloat32)
-	iffExpandedFanins(p.graph, root, skip2, skip3, func(id int32) { delay = max(delay, p.times[id]) })
+	delay := -float32(util.ABC_INFINITY)
+	visit := func(id int32) {
+		if delay < p.times[id] {
+			delay = p.times[id]
+		}
+	}
+	for _, id := range gia.Gia_ObjLutFanins(p.graph, root) {
+		if id != skip2 && id != skip3 {
+			visit(id)
+		}
+	}
+	if skip2 == -1 {
+		return delay
+	}
+	for _, id := range gia.Gia_ObjLutFanins(p.graph, skip2) {
+		if id != skip3 {
+			visit(id)
+		}
+	}
+	if skip3 == -1 {
+		return delay
+	}
+	for _, id := range gia.Gia_ObjLutFanins(p.graph, skip3) {
+		if id != skip2 {
+			visit(id)
+		}
+	}
+	assert(delay >= 0, "nonnegative triple boundary arrival")
 	return delay
 }
 func Gia_IffObjTimeTwo(p *Iff_Man_t, root int32, fanin *int32, minimum float32) float32 {
@@ -88,9 +122,10 @@ func Gia_IffObjTimeTwo(p *Iff_Man_t, root int32, fanin *int32, minimum float32) 
 		if gia.Gia_ObjIsCi(Gia_ManObj(p.graph, id)) != 0 {
 			continue
 		}
+		value := Gia_IffObjTimeOne(p, root, id, -1)
 		size := Gia_IffObjCount(p.graph, root, id, -1)
 		assert(size <= p.library.LutMax, "cluster fits LUT library")
-		value := Gia_IffObjTimeOne(p, root, id, -1) + p.library.pLutDelays[size][0]
+		value += p.library.pLutDelays[size][0]
 		if value < minimum {
 			minimum, *fanin = value, id
 		}
@@ -107,9 +142,10 @@ func Gia_IffObjTimeThree(p *Iff_Man_t, root int32, first, second *int32, minimum
 			if a == b || gia.Gia_ObjIsCi(Gia_ManObj(p.graph, b)) != 0 {
 				continue
 			}
+			value := Gia_IffObjTimeOne(p, root, a, b)
 			size := Gia_IffObjCount(p.graph, root, a, b)
 			assert(size <= p.library.LutMax, "cluster fits LUT library")
-			value := Gia_IffObjTimeOne(p, root, a, b) + p.library.pLutDelays[size][0]
+			value += p.library.pLutDelays[size][0]
 			if value < minimum {
 				minimum, *first, *second = value, a, b
 			}
@@ -125,7 +161,7 @@ func Gia_ManIffPerform(graph *Gia_Man_t, library *If_LibLut_t, timing *Tim_Man_t
 	p.times[0] = 0
 	tim.Tim_ManIncrementTravId(timing)
 	var all, pairs, triples int32
-	maximum := float32(-math.MaxFloat32)
+	maximum := -float32(util.ABC_INFINITY)
 	for id := int32(1); id < Gia_ManObjNum(graph); id++ {
 		obj := Gia_ManObj(graph, id)
 		switch {
@@ -164,7 +200,7 @@ func Gia_ManIffPerform(graph *Gia_Man_t, library *If_LibLut_t, timing *Tim_Man_t
 		case gia.Gia_ObjIsCo(obj) != 0:
 			p.times[id] = p.times[gia.Gia_ObjFaninId0p(graph, obj)]
 			tim.Tim_ManSetCoArrival(timing, int(gia.Gia_ObjCioId(obj)), p.times[id])
-			maximum = max(maximum, p.times[id])
+			maximum = util.Abc_MaxFloat(maximum, p.times[id])
 		default:
 			panic("if: invalid IFF object")
 		}
@@ -173,18 +209,19 @@ func Gia_ManIffPerform(graph *Gia_Man_t, library *If_LibLut_t, timing *Tim_Man_t
 	return p
 }
 func Gia_ManIffSelect(p *Iff_Man_t) *Vec_Int_t {
-	packing := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
-	seen := make([]bool, Gia_ManObjNum(p.graph))
-	seen[0] = true
+	packing := vec.Vec_IntAlloc(int(Gia_ManObjNum(p.graph)))
+	Vec_IntPush(packing, 0)
+	gia.Gia_ManIncrementTravId(p.graph)
+	gia.Gia_ObjSetTravIdCurrentId(p.graph, 0)
 	for i := int32(0); i < Gia_ManCiNum(p.graph); i++ {
-		seen[gia.Gia_ObjId(p.graph, Gia_ManCi(p.graph, i))] = true
+		gia.Gia_ObjSetTravIdCurrent(p.graph, Gia_ManCi(p.graph, i))
 	}
 	var visit func(int32)
 	visit = func(id int32) {
-		if seen[id] {
+		if gia.Gia_ObjIsTravIdCurrentId(p.graph, id) != 0 {
 			return
 		}
-		seen[id] = true
+		gia.Gia_ObjSetTravIdCurrentId(p.graph, id)
 		assert(gia.Gia_ObjIsLut(p.graph, id) != 0, "selected node is a LUT")
 		a, b := p.matches[2][id], p.matches[3][id]
 		iffExpandedFanins(p.graph, id, a, b, visit)
@@ -230,7 +267,11 @@ func Gia_ManIffTest(graph *Gia_Man_t, library *If_LibLut_t, verbose int32) {
 		return
 	}
 	if degree < 0 {
-		fmt.Printf("LUT library does not support packing %d-LUTs.\n", size)
+		if size == 4 {
+			fmt.Println("LUT library for packing 4-LUTs should have 7 or 10 inputs.")
+		} else {
+			fmt.Println("LUT library for packing 6-LUTs should have 11 or 16 inputs.")
+		}
 		return
 	}
 	if verbose != 0 {

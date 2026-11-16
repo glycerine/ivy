@@ -9984,3 +9984,17 @@ Original completion remains2/131. Next within GIA: giaIff.c white-box clustering
 in map/if/gia_iff.go and the two explicit giaIiff.c source stubs. Wider standalone
 IF/DSD helpers remain for the later IF package audit; do not invent missing C
 algorithms or redefine the original sequential package scope.
+
+
+### Restore LUT-clustering boundaries and traversal ownership
+
+Start the next GIA family, giaIff.c, implemented in map/if/gia_iff.go (ten main
+routines/eight accessors). Twelve new Go-only regressions fail before fixing
+unset float bits, NaN/empty comparison behavior, triple validation/order, source
+diagnostics and missing traversal epochs. Reuse GIA traversal storage instead
+of per-count maps/selection flags; warmed sixteen-input boundary counts drop
+from5 allocations to0, with exact counts, packed postorder and source mark
+ownership checked independently. Full Go-only module passes130 tested packages
+plus3 commands without tests; full IF race77.344s and IF/GIA vet pass. Red and
+final logs plus remaining scope are in aig/gia/REVIEW_lut_clustering.md.
+LUT clustering remains in progress; original package audit stays2/131.
