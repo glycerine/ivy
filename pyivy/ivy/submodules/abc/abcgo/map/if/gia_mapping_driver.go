@@ -153,17 +153,37 @@ func Gia_ManPerformMapping(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 	return result
 }
 
+// giaPerformBalance follows the balancing wrappers in giaIf.c. Unlike the
+// general mapping driver, they preserve cell configurations and existing timing
+// metadata, and do not install arrival/required constraints in the mapper.
+func giaPerformBalance(src *Gia_Man_t, pars *If_Par_t, dsd *If_DsdMan_t) *Gia_Man_t {
+	manager := Gia_ManToIf(src, pars)
+	defer If_ManStop(manager)
+	if dsd != nil {
+		manager.pIfDsdMan = dsd
+		If_DsdManAllocIsops(dsd, pars.NLutSize)
+	}
+	if If_ManPerformMapping(manager) == 0 {
+		return nil
+	}
+	result := Gia_ManFromIfAig(manager)
+	if result == nil {
+		return nil
+	}
+	gia.Gia_ManTransferTiming(result, src)
+	name, spec := src.Identity()
+	result.SetIdentity(name, spec)
+	Gia_ManSetRegNum(result, Gia_ManRegNum(src))
+	return result
+}
+
 // Gia_ManPerformSopBalance maps and rebuilds an AIG using SOP balancing.
 func Gia_ManPerformSopBalance(src *Gia_Man_t, cuts, relax, verbose int32) *Gia_Man_t {
 	var pars If_Par_t
 	If_ManSetDefaultPars(&pars)
 	pars.NCutsMax, pars.NRelaxRatio, pars.FVerbose = cuts, relax, verbose
 	pars.NLutSize, pars.FDelayOpt, pars.FCutMin, pars.FTruth, pars.FExpRed = 6, 1, 1, 1, 0
-	result := Gia_ManPerformMappingInt(src, &pars)
-	if result != nil {
-		gia.Gia_ManTransferTiming(result, src)
-	}
-	return result
+	return giaPerformBalance(src, &pars, nil)
 }
 
 // Gia_ManPerformDsdBalance maps and rebuilds an AIG using DSD balancing.
@@ -175,9 +195,5 @@ func Gia_ManPerformDsdBalance(src *Gia_Man_t, lutSize, cuts, relax, verbose int3
 	manager := If_DsdManAlloc(lutSize, 0)
 	defer If_DsdManFree(manager, 0)
 	pars.SetDsdManager(manager)
-	result := Gia_ManPerformMappingInt(src, &pars)
-	if result != nil {
-		gia.Gia_ManTransferTiming(result, src)
-	}
-	return result
+	return giaPerformBalance(src, &pars, manager)
 }
