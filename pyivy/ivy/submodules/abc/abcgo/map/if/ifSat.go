@@ -233,6 +233,7 @@ func If_ManSatCheckXYall(pSat any, lutSize int32, truth []word, nVars int32, scr
 		var chooseBound func(int32, int32) bool
 		chooseBound = func(depth, start int32) bool {
 			if depth == lutSize {
+				var second int32
 				var chooseShared func(int32, int32, uint32) bool
 				chooseShared = func(remaining, start int32, set uint32) bool {
 					if remaining == 0 {
@@ -242,7 +243,15 @@ func If_ManSatCheckXYall(pSat any, lutSize int32, truth []word, nVars int32, scr
 						}
 						return false
 					}
-					for i := start; i <= lutSize-remaining; i++ {
+					// Preserve ifSat.c's unusual s[3] = s[1]+1 bound.
+					// Its repeated partitions affect solver state and scratch.
+					if sharedCount == 4 && remaining == 1 {
+						start = second + 1
+					}
+					for i := start; i < lutSize; i++ {
+						if sharedCount == 4 && remaining == 3 {
+							second = i
+						}
 						if chooseShared(remaining-1, i+1, set|(3<<uint(2*bound[i]))) {
 							return true
 						}
