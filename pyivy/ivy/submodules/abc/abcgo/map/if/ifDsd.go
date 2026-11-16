@@ -188,11 +188,15 @@ func If_DsdManFree(p *If_DsdMan_t, verbose int32) {
 }
 
 func If_DsdManCleanMarks(p *If_DsdMan_t, verbose int32) {
+	p.pCellStr = ""
+	vec.Vec_WrdFree(p.vConfigs)
+	p.vConfigs = nil
 	for _, e := range Vec_PtrArray(&p.vObjs) {
 		e.(*If_DsdObj_t).fMark = 0
 	}
 }
 func If_DsdManInvertMarks(p *If_DsdMan_t, verbose int32) {
+	p.pCellStr = ""
 	for _, e := range Vec_PtrArray(&p.vObjs) {
 		o := e.(*If_DsdObj_t)
 		if o.fMark == 0 {
@@ -230,30 +234,106 @@ func If_DsdManAllocIsops(p *If_DsdMan_t, nLutSize int32) {
 		}
 	}
 }
+func If_DsdManHasMarks(p *If_DsdMan_t) int32 {
+	for _, entry := range Vec_PtrArray(&p.vObjs) {
+		if entry.(*If_DsdObj_t).fMark != 0 {
+			return 1
+		}
+	}
+	return 0
+}
 func If_DsdManMerge(p, other *If_DsdMan_t) {
 	if p == nil || other == nil {
 		return
 	}
-	for i := 1; i < Vec_PtrSize(&other.vObjs); i++ {
-		o := *If_DsdVecObj(&other.vObjs, int32(i))
-		o.Id = int32(Vec_PtrSize(&p.vObjs))
-		Vec_PtrPush(&p.vObjs, &o)
+	if p.nVars < other.nVars {
+		fmt.Println("The number of variables should be the same or smaller.")
+		return
 	}
+	if p.LutSize != other.LutSize {
+		fmt.Println("LUT size should be the same.")
+		return
+	}
+	assert(p.nTtBits == other.nTtBits && p.nConfigWords == other.nConfigWords, "merged DSD configuration dimensions agree")
+	if If_DsdManHasMarks(p) != If_DsdManHasMarks(other) {
+		old, new := "", ""
+		if If_DsdManHasMarks(p) == 0 {
+			old = "no "
+		}
+		if If_DsdManHasMarks(other) == 0 {
+			new = "no "
+		}
+		fmt.Printf("Warning! Old manager has %smarks while new manager has %smarks.\n", old, new)
+	}
+	mapping := make([]int32, If_DsdManObjNum(other))
+	mapping[1] = 1
+	configurations := p.vConfigs != nil && other.vConfigs != nil
+	if configurations {
+		vec.Vec_WrdFillExtra(p.vConfigs, int(p.nConfigWords*(If_DsdManObjNum(p)+If_DsdManObjNum(other))), 0)
+	}
+	var fans [16]int32
+	for i := int32(2); i < If_DsdManObjNum(other); i++ {
+		o := If_DsdVecObj(&other.vObjs, i)
+		for k, fan := range o.pFans {
+			fans[k] = mapping[fan>>1]<<1 | fan&1
+		}
+		var truth []word
+		if o.Type == IF_DSD_PRIME {
+			truth = If_DsdObjTruth(other, o)
+		}
+		id := If_DsdObjFindOrAdd(p, int32(o.Type), fans[:], o.nFans, truth)
+		if o.fMark != 0 {
+			If_DsdVecObj(&p.vObjs, id).fMark = 1
+		}
+		if configurations && int(p.nConfigWords*i) < len(vec.Vec_WrdArray(other.vConfigs)) {
+			from, to := p.nConfigWords*i, p.nConfigWords*id
+			copy(vec.Vec_WrdArray(p.vConfigs)[to:to+p.nConfigWords], vec.Vec_WrdArray(other.vConfigs)[from:from+p.nConfigWords])
+		}
+		mapping[i] = id
+	}
+	if configurations {
+		vec.Vec_WrdShrink(p.vConfigs, int(p.nConfigWords*If_DsdManObjNum(p)))
+	}
+}
+func If_DsdManFilter_rec(dst, src *If_DsdMan_t, id int32, mapping *Vec_Int_t) {
+	if Vec_IntEntry(mapping, int(id)) >= 0 {
+		return
+	}
+	o := If_DsdVecObj(&src.vObjs, id)
+	for _, fan := range o.pFans {
+		If_DsdManFilter_rec(dst, src, fan>>1, mapping)
+	}
+	var fans [16]int32
+	for k, fan := range o.pFans {
+		fans[k] = Vec_IntEntry(mapping, int(fan>>1))<<1 | fan&1
+	}
+	var truth []word
+	if o.Type == IF_DSD_PRIME {
+		truth = If_DsdObjTruth(src, o)
+	}
+	copied := If_DsdObjFindOrAdd(dst, int32(o.Type), fans[:], o.nFans, truth)
+	target := If_DsdVecObj(&dst.vObjs, copied)
+	if o.fMark != 0 {
+		target.fMark = 1
+	}
+	target.Count = o.Count
+	vec.Vec_IntWriteEntry(mapping, int(id), copied)
 }
 func If_DsdManFilter(p *If_DsdMan_t, limit int32) *If_DsdMan_t {
 	if p == nil {
 		return nil
 	}
-	q := If_DsdManAlloc(p.nVars, p.LutSize)
-	for i := 0; i < Vec_PtrSize(&p.vObjs); i++ {
-		o := If_DsdVecObj(&p.vObjs, int32(i))
-		if i < int(p.nVars+1) || limit <= 0 || o.nSupp <= limit {
-			clone := *o
-			clone.Id = int32(Vec_PtrSize(&q.vObjs))
-			Vec_PtrPush(&q.vObjs, &clone)
+	result := If_DsdManAlloc(p.nVars, p.LutSize)
+	mapping := vec.Vec_IntStartFull(Vec_PtrSize(&p.vObjs))
+	defer vec.Vec_IntFree(mapping)
+	vec.Vec_IntWriteEntry(mapping, 0, 0)
+	vec.Vec_IntWriteEntry(mapping, 1, 1)
+	for id := int32(2); id < If_DsdManObjNum(p); id++ {
+		if If_DsdVecObj(&p.vObjs, id).Count >= limit {
+			If_DsdManFilter_rec(result, p, id, mapping)
 		}
 	}
-	return q
+	return result
 }
 
 // If_DsdManGetFuncConfig returns the stored cell-input permutation and
