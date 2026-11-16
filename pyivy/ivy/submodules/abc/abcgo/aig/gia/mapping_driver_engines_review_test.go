@@ -30,6 +30,20 @@ func mappingDriverReviewRun(t *testing.T, src *gia.Gia_Man_t, seed, mode int) *g
 	}
 	var pars if_.If_Par_t
 	if_.Gia_ManSetIfParsDefault(&pars)
+	if mode >= 6 {
+		size := int32(mode - 4)
+		pars.NLutSize = 2*size - 1
+		pars.FTruth, pars.FDeriveLuts, pars.FUseDsd, pars.FCutMin = 1, 1, 1, 1
+		pars.FExpRed = 0
+		pars.PLutStruct = "22"
+		if size == 3 {
+			pars.PLutStruct = "33"
+		}
+		dsd := if_.If_DsdManAlloc(pars.NLutSize, size)
+		defer if_.If_DsdManFree(dsd, 0)
+		pars.SetDsdManager(dsd)
+		return if_.Gia_ManPerformMapping(src, &pars)
+	}
 	pars.NLutSize = int32(3 + ((seed >> 1) & 1))
 	pars.FHashMapping = int32(mode & 1)
 	if mode >= 2 {
@@ -41,9 +55,19 @@ func TestMappingDriversWithFreshOriginalC(t *testing.T) {
 	exe := gia.CompileSourceOracleForTest(t, "mapping_driver_review.c")
 	cases := 0
 	for seed := 1; seed <= 64; seed++ {
-		for mode := 0; mode < 6; mode++ {
+		for mode := 0; mode < 8; mode++ {
 			t.Run(fmt.Sprintf("seed%d/mode%d", seed, mode), func(t *testing.T) {
 				source, err := exec.Command(exe, strconv.Itoa(seed), strconv.Itoa(mode)).CombinedOutput()
+				if mode == 6 && (seed == 25 || seed == 56) {
+					// C chooses an oversized shared/free partition on these
+					// fixtures. Retain the exact failure as an explicit source
+					// boundary; it cannot supply an output graph to compare.
+					if err == nil || !strings.Contains(string(source), "nLutSize + nSSet + nFSet <= 2*nLutSize - 1") {
+						t.Fatalf("original partition boundary changed: %v %s", err, source)
+					}
+					t.Log("original C rejects its selected partition; Go boundary review remains open")
+					return
+				}
 				if err != nil {
 					t.Fatalf("native mapping: %v %s", err, source)
 				}
@@ -86,9 +110,19 @@ func TestMappingDriversWithFreshOriginalC(t *testing.T) {
 				if string(source) != got {
 					t.Fatalf("complete mapping result differs\nGo:\n%s\nC:\n%s", got, source)
 				}
+				cases++
 			})
-			cases++
 		}
 	}
 	t.Logf("compared %d complete native mapping/balancing graphs, metadata, mappings and truth tables", cases)
+}
+
+func TestMappingStructuredOriginalCutMinBoundary(t *testing.T) {
+	executable := gia.CompileSourceOracleForTest(t, "mapping_driver_review.c")
+	for _, mode := range []string{"8", "9"} {
+		output, err := exec.Command(executable, "1", mode).CombinedOutput()
+		if err == nil || !strings.Contains(string(output), "If_DsdManSuppSize(p->pIfDsdMan, If_CutDsdLit(p, pCut)) == (int)pCut->nLeaves") {
+			t.Fatalf("original unminimized DSD boundary mode%s: err%v output%s", mode, err, output)
+		}
+	}
 }

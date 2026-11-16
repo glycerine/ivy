@@ -359,3 +359,16 @@ Nil convenience allocates a real temporary source solver, never the substitute.
 Initial SAT checks pass0.235s; BSAT race suite6.945s. Full dependency differential,
 search/composition/demo review, caller/resource checks and family integration
 remain open; this checkpoint is not mapping/GIA completion.
+
+## Structured mapping dependency checkpoint
+
+ifSat.c core/search/examples/composition now use actual source CNF and BSAT;
+native core420, search105, helper1,152 and XYZ960 cases, including race evidence,
+are recorded in REVIEW_mapping_sat_dependency.md. The structured22/33 caller
+matrix exposes ifDsd.go's truth-record/partition-enumeration substitute. A new
+minimal red native test proves missing canonical interning/permutations. Restore
+the original DSD representation and traversal under the concrete sequential
+plan in REVIEW_mapping_dsd_dependency.md. Correct command-path flags matter:
+fCutMin=1,fExpRed=0. The corrected128-case expansion has97 exact matches,
+29 structural mismatches and2 explicit original partition-assertion failures.
+These are evidence/remaining scope, not a completed family or package audit.

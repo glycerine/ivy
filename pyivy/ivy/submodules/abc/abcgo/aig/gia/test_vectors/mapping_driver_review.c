@@ -51,7 +51,15 @@ int main(int argc,char **argv)
     struct rlimit core={0,0};Gia_Man_t *p,*q;int mode;If_Par_t pars;
     setrlimit(RLIMIT_CORE,&core);setvbuf(stdout,NULL,_IONBF,0);if(argc!=3&&argc!=4)return 2;Abc_Start();mode=atoi(argv[2]);p=build((unsigned)strtoul(argv[1],NULL,10));
     if(mode<4){Gia_ManSetIfParsDefault(&pars);pars.nLutSize=3+((strtoul(argv[1],NULL,10)>>1)&1);pars.fHashMapping=mode&1;if(mode>=2){pars.fTruth=1;pars.fDeriveLuts=1;}q=Gia_ManPerformMapping(p,&pars);}
-    else if(mode==4)q=Gia_ManPerformSopBalance(p,8,0,0);else q=Gia_ManPerformDsdBalance(p,6,8,0,0);
+    else if(mode==4)q=Gia_ManPerformSopBalance(p,8,0,0);
+    else if(mode==5)q=Gia_ManPerformDsdBalance(p,6,8,0,0);
+    else {
+        int size=(mode==6||mode==8)?2:3;
+        Gia_ManSetIfParsDefault(&pars);pars.nLutSize=2*size-1;
+        pars.fTruth=pars.fDeriveLuts=pars.fUseDsd=1;pars.fCutMin=mode<8;pars.fExpRed=mode>=8;pars.pLutStruct=size==2?"22":"33";
+        Abc_FrameSetManDsd(If_DsdManAlloc(pars.nLutSize,size));
+        q=Gia_ManPerformMapping(p,&pars);
+    }
     assert(q);
     if(argc==4){int offset=q->vMapping?Vec_IntEntry(q->vMapping,0):0;printf("reserved-constant-record %d active-luts %d\n",offset?Vec_IntEntry(q->vMapping,offset):-1,q->vMapping?Gia_ManLutNum(q):-1);}
     report(q);Gia_ManStop(q);Gia_ManStop(p);Abc_Stop();return 0;

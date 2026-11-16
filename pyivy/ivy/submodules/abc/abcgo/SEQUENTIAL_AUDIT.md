@@ -9126,3 +9126,19 @@ two allocations per call (sample medians1,383->135.3ns; scoped caveats/logs in
 REVIEW_mapping_sat_dependency.md). XYZ counts are covered, but its actual
 three-LUT clause behavior needs solving coverage next. Broader structured
 mapping/integration and original131-package objective remain open;2/131 closed.
+
+### XYZ solver semantics pass; structured mapping exposes DSD substitute
+
+All960 original-C/direct-evaluation XYZ queries pass; exact SAT/UNSAT status
+checks pass race56.067s (handle11200 exit0). Canonical DSD is the next actual
+fidelity gap: a new minimal behavioral red test shows4 vs2 initial objects,
+identity vs reversed permutation, and failure to intern repeated AND3 objects
+(handle42103 exit1,2.004s). No DSD production repair precedes that regression.
+
+Corrected structured-driver settings follow ABC's command path (cut minimization
+on, expansion reduction off).128 new cases yield97 matching graphs,29 different
+structures and2 source partition-assertion failures (handle82991 exit1,8.101s).
+Earlier missing flags were harness errors, not production bugs. Preserve the2
+source failures explicitly; independent Go boundary handling remains open.
+REVIEW_mapping_dsd_dependency.md records the staged source-restoration plan.
+Save red checkpoints; no mapping/GIA completion claim. Original audit stays2/131.

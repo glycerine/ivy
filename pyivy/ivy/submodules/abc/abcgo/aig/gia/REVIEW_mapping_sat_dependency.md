@@ -122,3 +122,20 @@ Full map/if race passes8.932s (handle13193 exit0); IF/BSAT vet exits0 with no
 findings (handle24853). The complete focused native race check passes19.880s (handle44308 exit0;
 /tmp/abcgo-if-sat-all-native-compact-race.log). XYZ clause semantics beyond
 construction counts remain to be exercised before closing this dependency.
+
+## XYZ semantics and structured caller follow-up
+
+A new native XYZ test fixes all three LUT parameter tables and checks both
+correct and deliberately flipped output assumptions on reused solvers. All960
+SAT/UNSAT queries across K2..6 agree with source and direct LUT evaluation.
+Initial test passes19.601s (handle44394 exit0); its tightened exact-status
+assertions pass under race56.067s (handle11200 exit0). Logs:
+/tmp/abcgo-if-sat-xyz-native-first.log and /tmp/abcgo-if-sat-xyz-native-race.log.
+
+Structured22/33 driver expansion exposes another substitute in ifDsd.go:
+identity permutations and independent truth records instead of canonical DSD
+interning, plus truth-partition enumeration instead of source node traversal.
+New minimal native regression proves different initial objects, permutations,
+literals and reuse before any DSD production repair. This is the next required
+mapping dependency; see REVIEW_mapping_dsd_dependency.md for its concrete plan
+and corrected-source-flag matrix. Do not infer mapping closure from green SAT.
