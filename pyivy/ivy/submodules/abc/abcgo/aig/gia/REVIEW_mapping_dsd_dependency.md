@@ -183,3 +183,26 @@ Remaining source-fidelity work includes direct canonical balancing, full verbose
 DSD diagnostics, the source helper/caller inventory and persistence/merge/filter
 shortcuts. The mapping-family frozen full-module race/vet gate has not yet run.
 Do not treat these affected checks as the full GIA or131-package completion gate.
+
+## Direct canonical balancing: new red contracts
+
+Before replacing DSS balancing, a new nested-prime regression (E8{a(bc)d})
+panics in pin-profile reconstruction: three prime fanins cover four actual
+cut variables, while the old helper truncates profile operations to arity3.
+The corrected behavioral log is /tmp/abcgo-dsd-nested-prime-profile-behavior-red.log
+(handle11325 exit1). The first expanded test also read the AIG after its
+source-shaped verifier cleared vector length; that harness mistake was fixed
+before collecting the behavioral red evidence. The base AND3 path check passes.
+
+Fresh original ifDsd.c confirms exact recursive emission order and source cost
+policies across8 cases (handle25306 exit0,2.054s;
+/tmp/abcgo-dsd-balancing-original-contracts.log). New regressions then fail:
+construction-mode cost2 versus source0; composite AND/XOR/MUX emits children
+before queue carries instead of interleaving source recursion and carries
+(handle80919 exit1, /tmp/abcgo-dsd-graph-cost-order-red.log).
+
+Next port original Eval_rec/EvalInt and PinDelays_rec directly over canonical
+nodes, keep source graph-vs-timing cost policy, and separate prime SOP arity
+from complete profile support. Remove redundant DSS/text caches only after
+native/scalar regression comparisons pass. Preserve the original XOR delay/area
+estimate (fXor=0), rather than replacing it with physical AND-gate depth.

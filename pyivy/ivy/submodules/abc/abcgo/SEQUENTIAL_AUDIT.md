@@ -9181,3 +9181,14 @@ checks and252 canonical sequences remain green. See
 REVIEW_mapping_dsd_dependency.md for logs, remaining source diagnostics,
 balancing, caller/persistence review and mapping-family integration scope.
 Original audit remains2/131; no family/package/goal completion claim.
+
+### Direct DSD balancing regressions precede cache removal
+
+New nested-prime profile regression panics before repair (handle11325 exit1),
+after correcting a test-only verifier/vector-length issue. Fresh source8-case
+balance characterization passes2.054s (handle25306 exit0). New source-contract
+regressions fail construction cost2 vs0 and different interleaving of AIG
+emission/queue carries (handle80919 exit1). Port canonical-node balancing and
+separate SOP arity from full profile support next; do not change original XOR
+estimates. Full evidence/plan in REVIEW_mapping_dsd_dependency.md. Save red
+checkpoints; original2/131 package audit and mapping/GIA remain open.
