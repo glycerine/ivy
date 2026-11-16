@@ -414,3 +414,33 @@ arithmetic before production edits; they were not algorithm bugs. No C fixtures
 or compilers are used by the new tests. Repaired focused tests pass0.011s;
 full IF race and IF/GIA vet pass (logs /tmp/abcgo-dsd-verbose-if-race.log and
 /tmp/abcgo-dsd-verbose-vet.log). Dump APIs and wider mapping audit remain open.
+
+### DSD dump option and elementary-table boundaries
+
+New Go-only tests fail before repair: dump=1 creates neither output file, and
+truth of the reserved variable panics in a zero-input manager
+(/tmp/abcgo-dsd-dump-red.log, exit1). Restore tts_nondsd.txt/tts_all.txt output,
+source arity ordering, unique-per-cache tables and support filters. Fix the
+source's omitted arity check so IDs local to separate prime caches are never
+conflated or used against the wrong bitmap. Stream repeated elementary truth
+words when requested width exceeds a prime table's formal-input arity, rather
+than copying C's out-of-bounds read. Lower-domain Go extension emits one hex
+digit where the original hex helper requires at least two inputs.
+
+Restore the source's direct generic-variable truth path, generating elementary
+words instead of retaining all 16 full input tables. Tests independently check
+all bits at domains0/1/2/6/7/16, high input permutations and both phases.
+Mixed-arity tables and duplicate suppression, 7-/16-input weighted structures,
+all composed truth bits, disabled dumps and both open-error paths are covered.
+A separate red test proves zero-domain distribution totals alias the variable's
+support slot (3 instead of2); dedicated total storage fixes that source boundary
+(/tmp/abcgo-dsd-zero-total-red.log, exit1).
+
+Focused expanded tests pass0.033s; full IF race10.050s and IF/GIA vet pass.
+Go-only affected-package run: IF1.297s and ABCI13.985s pass, but GIA fails its
+existing token audit because local SAT-test variables named free are mistaken
+for C free() calls. That checker false positive is the next repair; do not
+report the broader GIA gate as green. Logs /tmp/abcgo-dsd-dump-if-race.log,
+/tmp/abcgo-dsd-dump-vet.log, /tmp/abcgo-dsd-dump-callers-go-only.log.
+Standalone decomposition-cache reports and verbose Free cache dumping remain
+to reconcile; wider mapping-family and original131-package work remains open.

@@ -9287,3 +9287,14 @@ partition selection. Full IF race and IF/GIA vet pass. New tests cover quiet mod
 complemented roots, masks, existence-only answers, weighted MUX and prime helpers.
 See REVIEW_mapping_dsd_dependency.md. Dump APIs/mapping closure still pending;
 original package audit remains2/131.
+
+### Passing IF dump and elementary-truth chunk
+
+Go-only red tests precede restored dump=1 files, arity-local deduplication,
+safe support-width extension and reserved-variable truth at zero-input domains.
+Independent scalar tests cover composed truth through16 inputs. A further red
+catches total/support slot collision (3 structures instead of2), now repaired.
+Full IF race10.050s and IF/GIA vet pass; Go-only IF/ABCI pass. Broader GIA tests
+expose a false-positive source checker banning local variables named free;
+that gate remains red until the checker is repaired with its own regression.
+Remaining DSD diagnostic details and mapping inventory remain open; audit2/131.

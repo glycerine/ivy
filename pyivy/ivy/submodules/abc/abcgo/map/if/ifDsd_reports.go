@@ -24,9 +24,10 @@ func If_DsdManCheckNonDec_rec(p *If_DsdMan_t, id int32) int32 {
 }
 
 func If_DsdManPrintDistrib(p *If_DsdMan_t) {
-	// An extra total slot also accommodates the manager's 16-input domain.
+	// Keep totals separate from all support slots, including the reserved
+	// variable (support one) in a zero-input manager.
 	var objects, primes, classes, structures, nonDSD, marked [18]int
-	total := int(p.nVars) + 1
+	const total = 17
 	for v := 3; v <= int(p.nVars); v++ {
 		classes[v] = vec.Vec_MemEntryNum(p.vTtMem[v])
 		classes[total] += classes[v]
@@ -52,8 +53,10 @@ func If_DsdManPrintDistrib(p *If_DsdMan_t) {
 	}
 	fmt.Println("***** DSD MANAGER STATISTICS *****")
 	fmt.Println("Support     Obj   ObjNDSD            NPNNDSD                  Str   StrNDSD             Marked  ")
-	for i := 0; i <= total; i++ {
-		if i == total {
+	for row := 0; row <= int(p.nVars)+1; row++ {
+		i := row
+		if row == int(p.nVars)+1 {
+			i = total
 			fmt.Print("All : ")
 		} else {
 			fmt.Printf("%3d : ", i)
@@ -185,7 +188,10 @@ func If_DsdManPrint(p *If_DsdMan_t, fileName string, number, support, occurs, du
 	if occurs != 0 {
 		If_DsdManPrintOccurs(os.Stdout, p)
 	}
-	// Truth-table dumping remains a separate, unfinished diagnostic API.
+	if dump != 0 {
+		If_DsdManDumpDsd(p, support)
+		If_DsdManDumpAll(p, support)
+	}
 	if verbose == 0 {
 		return
 	}

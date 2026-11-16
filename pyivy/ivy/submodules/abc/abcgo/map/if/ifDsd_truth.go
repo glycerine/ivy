@@ -89,6 +89,30 @@ func If_DsdManComputeTruthPtr(p *If_DsdMan_t, lit int32, perm []byte, result []w
 		}
 		return
 	}
+	// The source has a direct generic-variable path, including managers with
+	// no input domain. Generate its elementary table without indexing the
+	// manager's result scratch slot or retaining 16 full elementary tables.
+	if dsdObject(p, lit).Type == IF_DSD_VAR {
+		pin := int32(0)
+		if perm != nil {
+			pin = int32(perm[0])
+		}
+		variable := pin >> 1
+		assert(variable < 16, "DSD variable permutation fits elementary tables")
+		for i := range result {
+			value := word(0)
+			if variable < 6 {
+				value = truth6Variable(variable)
+			} else if i>>uint(variable-6)&1 != 0 {
+				value = ^word(0)
+			}
+			if (pin^lit)&1 != 0 {
+				value = ^value
+			}
+			result[i] = value
+		}
+		return
+	}
 	var support int32
 	If_DsdManComputeTruth_rec(p, lit, result, perm, &support)
 	assert(support == dsdObject(p, lit).nSupp, "DSD truth visits complete support")

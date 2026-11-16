@@ -171,3 +171,13 @@ func TestDsdReportOpenFailure(t *testing.T) {
 		t.Fatalf("open failure: %q", got)
 	}
 }
+
+func TestDsdReportZeroDomainTotals(t *testing.T) {
+	p := If_DsdManAlloc(0, 0)
+	defer If_DsdManFree(p, 0)
+	output := dsdReportCapture(t, func() { If_DsdManPrintDistrib(p) })
+	want := "All :         2         0   0.00 %         0   0.00 %           2         0   0.00 %         0   0.00 %\n"
+	if !strings.HasSuffix(output, want) {
+		t.Fatalf("reserved objects counted incorrectly:\n%s", output)
+	}
+}
