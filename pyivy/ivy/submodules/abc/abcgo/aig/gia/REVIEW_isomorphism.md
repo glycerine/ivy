@@ -459,3 +459,33 @@ tests, including the direct phase/mapping regressions and all three pipeline
 controls. Focused isomorphism race2.310s and GIA vet pass; all handles ended.
 Final logs /tmp/abcgo-iso-pair-final-{module.jsonl,race.log,vet.log}. Original
 audit2/131; the broader GIA family is not closed by this repair.
+
+
+## Sequential reduction against a finite transition system
+
+Twelve Go-only cases exercise first-generation reduction and both second-
+generation quality policies, two output phases and estimate/actual modes. Two
+isomorphic components each contain the coupled cycle q'=input&&!r, r'=q.
+Outputs include both component functions, the first function's complement and
+a constant. Actual reduction keeps groups[0,1],[2],[3], two representative-state
+registers and both original PIs; estimate retains all four registers/outputs.
+
+An independent boolean transition system enumerates all16 initial register
+states and64 three-frame PI sequences for each case:36,864 frames total. Check
+every retained output and every next-state bit, not just final-frame truth.
+This pins source register discovery/order, cyclic feedback, state pruning,
+complement polarity and estimate interfaces. First-generation PI permutations
+are cone-local[0] for both matched components; the second variant returns none.
+Two additional canonical-key cases retain register-cone identity and distinguish
+opposite phases and constant cones; constant PI permutations remain empty.
+No new sequential discrepancy was found in these cases.
+
+This test file was frozen during the counterexample-permutation dependency gate:
+full Go-only module passes130 tested packages plus3 commands without tests; all
+12 transition and2 key leaves execute. Focused isomorphism race1.823s and
+util/GIA vet pass; all handles ended. Logs /tmp/abcgo-cex-permute-final-
+{module.jsonl,util-race.log,gia-race.log,vet.log}; initial focused run
+/tmp/abcgo-iso-sequential-first.log. The accompanying utility repair preserves
+nonzero initial counterexample bits; see misc/util/REVIEW.md. Remaining dual,
+full-convergence, terminal-role and first-generation CEX-driver checks stay open.
+Original audit2/131.

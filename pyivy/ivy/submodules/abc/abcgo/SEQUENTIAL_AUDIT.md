@@ -10218,3 +10218,15 @@ Go-only module passes130 tested packages plus3 commands without tests, full
 utility race1.360s, focused GIA isomorphism race1.823s and util/GIA vet pass.
 Details in misc/util/REVIEW.md. The utility and GIA package audits stay open;
 original completion2/131.
+
+
+### Check sequential isomorphism reduction and canonical keys
+
+Add12 finite-transition-system cases for all three reduction modes, output phases
+and estimate/actual modes. Enumerate16 initial states and64 three-frame sequences
+each, checking36,864 frames of output and register-transition behavior. Pin
+register pruning/order and cone-local PI permutations. Two canonical-key cases
+check registered cones, opposite phases and constants. Full Go-only module
+passes130 tested packages plus3 commands without tests; focused isomorphism
+race1.823s and util/GIA vet pass. Detailed evidence and open driver/dual/pair
+scope in REVIEW_isomorphism.md. Original completion remains2/131.
