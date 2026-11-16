@@ -171,7 +171,7 @@ func Vec_VecSortByFirstInt(p *Vec_Vec_t, reverse int) {
 func Vec_VecPrintInt(p *Vec_Vec_t, skipSingles int) {
 	for i := range len(p.data) {
 		v := Vec_VecEntryInt(p, i)
-		if skipSingles != 0 && len(v.data) == 1 {
+		if len(v.data) == 0 || skipSingles != 0 && len(v.data) == 1 {
 			continue
 		}
 		fmt.Printf(" %4d : {", i)

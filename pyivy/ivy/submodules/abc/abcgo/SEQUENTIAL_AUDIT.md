@@ -10181,3 +10181,14 @@ commands without tests; focused isomorphism race2.138s and GIA vet pass. Detaile
 contracts, evidence and remaining sequential/dual/pair/driver scope are in
 REVIEW_isomorphism.md. A vector-printer empty-level dependency discrepancy is
 next for its own new red/repair; this does not mark vec audited. Audit2/131.
+
+
+### Repair the vector printer dependency's empty-level policy
+
+Two new red golden cases precede suppressing empty Vec_VecPrintInt rows, while
+two Vec_WecPrint cases preserve its different source policy. Tests also pin
+singleton skipping, later rows, value order and read-only behavior. Full Go-only
+module passes130 tested packages plus3 commands without tests, full vec
+race1.108s, focused GIA isomorphism race1.682s and vec/GIA vet pass. Detailed
+evidence in vec/REVIEW.md. This closes the GIA report dependency follow-up only;
+the sequential whole-vec and GIA audits remain open. Original audit2/131.

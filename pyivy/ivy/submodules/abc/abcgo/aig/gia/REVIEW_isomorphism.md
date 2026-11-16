@@ -410,3 +410,10 @@ pass; all handles ended. Final logs /tmp/abcgo-iso-pipeline-final-
 checks, full convergence/source-driver reconciliation and remaining compactness
 checks stay open. Also inspect the newly reused Vec_VecPrintInt dependency's
 empty-level source discrepancy with a new red before repair. Original audit2/131.
+
+
+The vector-printer dependency follow-up is resolved separately: Vec_VecPrintInt
+now omits empty levels as C does; Vec_WecPrint still emits them. Four Go-only
+goldens and full module/vec race/GIA isomorphism race/vet pass. Details and logs
+in misc/vec/REVIEW.md. Neither this dependency checkpoint nor the combinational
+matrix closes the outstanding GIA family scope.

@@ -57,3 +57,23 @@ records created by mutation resolve deterministically to their lowest ID. Hash
 allocation indexes existing records. Regression tests cover each path. Raw record
 slices remain borrowed mutable views; callers editing those views directly must
 rehash before lookup, as with the source API's mutable storage.
+
+
+## Dependency follow-up during the sequential GIA audit
+
+A new Go-only regression finds Vec_VecPrintInt emits empty-level rows that
+C's nested entry iterator never emits. Suppress only those rows in this printer.
+Vec_WecPrint intentionally prints empty levels in C and retains that behavior.
+Four literal golden cases distinguish both printers with/without singleton
+skipping, leading/interior/trailing empty levels, later nonempty levels after
+skipped singletons, negative values and duplicates. Printing must preserve data.
+Two Vec_Vec cases fail before repair; the two Vec_Wec cases already pass.
+Red /tmp/abcgo-vec-print-empty-red.log; full repaired vec suite
+/tmp/abcgo-vec-print-empty-green.log. Tests need only the Go toolchain.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests. Full vec race1.108s, focused GIA isomorphism race1.682s and vec/GIA vet
+pass; all handles ended. Logs /tmp/abcgo-vec-print-final-
+{module.jsonl,vec-race.log,gia-race.log,vet.log}. This is a printer dependency
+repair discovered while reviewing GIA, not completion of the sequential whole-vec
+audit; original package completion stays2/131.
