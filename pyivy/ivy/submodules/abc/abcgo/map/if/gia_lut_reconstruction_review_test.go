@@ -241,3 +241,100 @@ func TestLutCreationMultiwordTruthAndSignedLeaves(t *testing.T) {
 		}
 	}
 }
+
+func lutSpecialReviewValue(n, family, phase, assignment int) bool {
+	values := make([]bool, n)
+	for pin := range values {
+		source := pin
+		if phase&8 != 0 {
+			source = n - 1 - pin
+		}
+		values[pin] = assignment>>source&1 != 0
+		if phase&1 != 0 && pin%2 == 0 {
+			values[pin] = !values[pin]
+		}
+	}
+	bound := values[0] && values[1] && values[2] && values[3]
+	rest := true
+	for _, value := range values[4:] {
+		rest = rest && value
+	}
+	var result bool
+	switch family {
+	case 0:
+		result = bound != rest
+	case 1:
+		for _, value := range values {
+			result = result != value
+		}
+	case 2:
+		result = ((values[0] && values[1]) != (values[2] || values[3])) != rest
+	case 3:
+		h := values[0] != values[1] != (values[2] && values[3])
+		switch n {
+		case 5:
+			result = (h && values[0]) != (values[1] && values[4])
+		case 6:
+			result = (h && values[0]) != rest
+		case 7:
+			result = h != rest
+		}
+	}
+	return result != (phase&2 != 0)
+}
+
+func TestLutSpecialSourceConfigurationsReconstruct(t *testing.T) {
+	for n := 5; n <= 7; n++ {
+		for family := 0; family < 4; family++ {
+			for phase := 0; phase < 16; phase++ {
+				t.Run(fmt.Sprintf("inputs%d/family%d/phase%d", n, family, phase), func(t *testing.T) {
+					truth := make([]word, 1<<uint(max(0, n-6)))
+					for assignment := 0; assignment < len(truth)*64; assignment++ {
+						if lutSpecialReviewValue(n, family, phase, assignment) {
+							truth[assignment>>6] |= 1 << uint(assignment&63)
+						}
+					}
+					before := slices.Clone(truth)
+					dst := Gia_ManStart(64)
+					defer Gia_ManStop(dst)
+					leaves, temp := vec.Vec_IntAlloc(n), vec.Vec_IntAlloc(0)
+					mapping, records := vec.Vec_IntAlloc(0), vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+					packing := vec.Vec_IntAllocArrayCopy([]int32{0}, 1)
+					defer vec.Vec_IntFree(leaves)
+					defer vec.Vec_IntFree(temp)
+					defer vec.Vec_IntFree(mapping)
+					defer vec.Vec_IntFree(records)
+					defer vec.Vec_IntFree(packing)
+					for pin := 0; pin < n; pin++ {
+						lit := Gia_ManAppendCi(dst)
+						if phase&4 != 0 && pin%2 != 0 {
+							lit ^= 1
+						}
+						vec.Vec_IntPush(leaves, lit)
+					}
+					root := Gia_ManFromIfLogicCreateLutSpecial(dst, truth, leaves, temp, nil, mapping, records, packing)
+					if !slices.Equal(truth, before) {
+						t.Fatal("special decomposition modified caller truth")
+					}
+					lutReconstructionReviewCheckPacking(t, dst, root, 4, n, mapping, records, packing)
+					Gia_ManAppendCo(dst, root)
+					for assignment := 0; assignment < 1<<uint(n); assignment++ {
+						input := make([]bool, n)
+						logical := assignment
+						for pin := range input {
+							input[pin] = assignment>>pin&1 != 0
+							if phase&4 != 0 && pin%2 != 0 {
+								logical ^= 1 << pin
+							}
+						}
+						want := lutSpecialReviewValue(n, family, phase, logical)
+						got, err := dst.Evaluate(input)
+						if err != nil || !slices.Equal(got, []bool{want}) {
+							t.Fatalf("assignment%d got%v want%t err%v", assignment, got, want, err)
+						}
+					}
+				})
+			}
+		}
+	}
+}

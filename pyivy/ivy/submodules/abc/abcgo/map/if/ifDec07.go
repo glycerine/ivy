@@ -1,5 +1,5 @@
-// Two-LUT4 decomposition from ifDec07.c. Cofactor matrices express the same
-// bound/free-variable search without aliasing truth words or mutating inputs.
+// Truth utilities and configuration evaluation for the ifDec07.c port.
+// The source ordered searches and derivation live in ifDec07_ordered.go.
 package if_
 
 import (
@@ -99,95 +99,6 @@ func decComplement(n int, variables []int) []int {
 	return result
 }
 
-// decCascade derives H(B), G(F,H). Shared pins partition the cofactor matrix;
-// each partition must contain at most two distinct column functions.
-func decCascade(t []uint64, n int, bound, free []int) (uint64, bool) {
-	var shared, outside []int
-	boundMask := 0
-	for _, v := range bound {
-		boundMask |= 1 << uint(v)
-	}
-	for _, v := range free {
-		if boundMask>>uint(v)&1 != 0 {
-			shared = append(shared, v)
-		} else {
-			outside = append(outside, v)
-		}
-	}
-	type group struct {
-		patterns [2]uint64
-		count    int
-	}
-	groups := make([]group, 1<<uint(len(shared)))
-	var h uint64
-	for b := 0; b < 16; b++ {
-		base := decInsert(b, bound)
-		var pattern uint64
-		for f := 0; f < 1<<uint(len(outside)); f++ {
-			pattern |= decBit(t, base|decInsert(f, outside)) << uint(f)
-		}
-		group := &groups[decProject(base, shared)]
-		code := 0
-		if group.count == 0 {
-			group.patterns[0] = pattern
-			group.count = 1
-		} else if pattern != group.patterns[0] {
-			if group.count == 1 {
-				group.patterns[1] = pattern
-				group.count = 2
-			} else if pattern != group.patterns[1] {
-				return 0, false
-			}
-			code = 1
-		}
-		h |= uint64(code) << uint(b)
-	}
-	var g uint64
-	for assignment := 0; assignment < 16; assignment++ {
-		minterm := decInsert(assignment&7, free)
-		group := groups[decProject(minterm, shared)]
-		code := assignment >> 3
-		if group.count == 1 {
-			code = 0
-		}
-		g |= (group.patterns[code] >> uint(decProject(minterm, outside)) & 1) << uint(assignment)
-	}
-	z := h | g<<32
-	for pin, v := range bound {
-		z |= uint64(v) << uint(16+4*pin)
-	}
-	for pin, v := range free {
-		z |= uint64(v) << uint(48+4*pin)
-	}
-	z |= uint64(7) << 60
-	return z, true
-}
-func decPerformSmall(t []uint64, n int, derive int32) uint64 {
-	decCheck(t, int32(n))
-	var result uint64
-	decCombinations(n, 4, func(bound []int) bool {
-		outside := decComplement(n, bound)
-		return decCombinations(4, 7-n, func(sharedIndices []int) bool {
-			free := append([]int(nil), outside...)
-			for _, index := range sharedIndices {
-				free = append(free, bound[index])
-			}
-			z, ok := decCascade(t, n, bound, free)
-			if !ok {
-				return false
-			}
-			result = z
-			if derive == 0 {
-				result = 1
-			}
-			return true
-		})
-	})
-	return result
-}
-func If_Dec5Perform(t uint64, derive int32) uint64   { return decPerformSmall([]uint64{t}, 5, derive) }
-func If_Dec6Perform(t uint64, derive int32) uint64   { return decPerformSmall([]uint64{t}, 6, derive) }
-func If_Dec7Perform(t []uint64, derive int32) uint64 { return decPerformSmall(t, 7, derive) }
 func decConfigTruth(z uint64, n int32) []uint64 {
 	if z == 0 {
 		panic("zero LUT configuration")

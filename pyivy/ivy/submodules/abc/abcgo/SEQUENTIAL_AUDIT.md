@@ -9412,3 +9412,15 @@ inspection finds generic ifDec07 enumeration substituted for source ordered
 moves; exact configuration regressions and faithful restoration are next.
 Source existence-only comparisons do not establish configuration fidelity.
 Details/logs in REVIEW_mapping_boundary.md. Audit remains2/131.
+
+### Restore source ordered LUT4 decomposition
+
+Twelve new red source-derived configuration/priority cases precede replacing the
+generic5/6/7-input combination substitute with the original ordered moves,
+cofactor tests/derivation and source pin/don't-care conventions. Preserve later
+disjoint preference over an earlier shared candidate. No substitute solver or
+C vectors added. Exact cases and old generated cascades pass;192 new specialized
+reconstruction cases pass full truth/packing checks. Full IF Go-only1.707s,
+focused decomposition/LUT race5.437s and IF/GIA vet pass. Separate correctness/
+permutation review and broader gates follow. Details in
+REVIEW_mapping_dec07_dependency.md. The GIA/IF/131-package audit remains open2/131.
