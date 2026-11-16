@@ -110,3 +110,16 @@ func TestSortStringUsesHistoricalSortName(t *testing.T) {
 		}
 	}
 }
+
+func TestBooleanSingletonsPreserveApplicationShape(t *testing.T) {
+	ctx := NewZ3Context()
+	defer ctx.Close()
+	p := ctx.BoolConst("p")
+	s := ctx.NewZ3Solver()
+	s.Assert(ctx.And(p))
+	s.Assert(ctx.Or(p))
+	want := "(asserts (a and (c p Bool)) (a or (c p Bool)))"
+	if got := s.CanonZ3Assertions(); got != want {
+		t.Fatalf("singleton connective shape = %s, want %s", got, want)
+	}
+}

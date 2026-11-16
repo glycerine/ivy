@@ -150,9 +150,6 @@ func (ctx *Z3Context) And(args ...Z3Expr) Z3Expr {
 	if len(args) == 0 {
 		return ctx.BoolVal(true)
 	}
-	if len(args) == 1 {
-		return args[0]
-	}
 	return ctx.AndApp(args...)
 }
 func (ctx *Z3Context) AndApp(args ...Z3Expr) Z3Expr {
@@ -161,9 +158,6 @@ func (ctx *Z3Context) AndApp(args ...Z3Expr) Z3Expr {
 func (ctx *Z3Context) Or(args ...Z3Expr) Z3Expr {
 	if len(args) == 0 {
 		return ctx.BoolVal(false)
-	}
-	if len(args) == 1 {
-		return args[0]
 	}
 	return ctx.newExpr(handle(ctx.c.Or(exprHandles(args)...)))
 }
