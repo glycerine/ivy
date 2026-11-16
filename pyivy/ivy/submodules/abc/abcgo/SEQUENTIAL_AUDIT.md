@@ -9204,3 +9204,15 @@ Full IF passes3.568s and510-driver/canonical native suite23.654s
 (handles55726/89270 exit0). Broader prime/unsupported-cover and race/vet checks
 remain next; no family/package closure. See REVIEW_mapping_dsd_dependency.md.
 Original audit2/131 and the full sequential objective remain active.
+
+### Expanded DSD balancing and source manager utilities
+
+Fresh-C522 balancing cases pass:270 graphs/252 unsupported,9 partial outputs;
+261 canonical functions/1,044 partition checks (handle78942 exit0,4.341s).
+New red regressions catch Filter7-vs4 nodes, Merge7-vs5 nodes and stale mark/
+configuration state (handle77533 exit1). Restore original count thresholds,
+recursive remapping/interning and clean/invert ownership policies. New tests
+pass0.009s; fresh C metadata confirms2.071s (handles43525/71063 exit0).
+Race/vet gate is live79883/9081/80733; terminal results pending. Persistence,
+full reports and larger configuration/boundary matrices remain open. Detailed
+scope in REVIEW_mapping_dsd_dependency.md; original audit2/131 stays active.

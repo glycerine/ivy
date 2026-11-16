@@ -227,3 +227,31 @@ Full IF passes3.568s (handle55726 exit0). All510 native output graphs plus
 canonical/partition/cell/balancing checks pass23.654s (handle89270 exit0;
 /tmp/abcgo-dsd-direct-no-cache-native.log). Expanded prime/unsupported-SOP
 coverage and affected race/vet remain next; full mapping-family gate pending.
+
+## Expanded direct balancing and metadata utilities
+
+Expanded fresh-C matrix passes522 balancing decisions:270 complete graphs,
+252 unsupported cuts,9 retain partial construction. Compare exact partial/full
+AIGs, timing/construction costs and full-support profiles; verify complete
+Boolean truth independently for supported graphs. Canonical coverage expands
+to261 functions/1,044 ordered partition checks with nested unsupported primes.
+/tmp/abcgo-dsd-direct-expanded-native-first.log, handle78942 exit0,4.341s.
+
+New red manager-utility tests precede further repairs: Filter produces7 instead
+of4 nodes (uses support instead of occurrence threshold and duplicates bases);
+Merge produces7 instead of5 nodes (clones instead of interning/remapping);
+Clean/Invert retain cell descriptions, and Clean retains configurations
+(handle77533 exit1, /tmp/abcgo-dsd-manager-metadata-red.log).
+Port original compatibility checks, recursive dependency remapping, structural
+interning, source occurrence/mark/configuration policies and mark reset state.
+All new tests pass0.009s (handle43525 exit0). Fresh original C confirms filtered/
+merged node counts and full truths, mark values and configuration ownership
+(handle71063 exit0,2.071s; /tmp/abcgo-dsd-manager-metadata-native.log).
+The native comparison excludes only progress/elapsed text before explicit
+metadata records; it does not normalize any compared state.
+
+Affected full IF race, native/510-driver race and IF/GIA vet are currently
+running (handles79883/9081/80733). Consume terminal results before claiming this
+checkpoint integrated. Source binary persistence, full diagnostic/report
+behavior and broader utility boundary/configuration matrices remain open;
+this is not DSD/mapping/GIA/package completion.
