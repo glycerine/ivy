@@ -406,10 +406,13 @@ func Gia_IsoDeriveEquivPos(g *Gia_Man_t, forward, verbose int32) *Vec_Ptr_t {
 	if forward != 0 {
 		run(false, 2)
 	} else {
-		for Vec_IntSize(p.vClasses) > 0 {
-			a, b := run(false, 2), run(true, 2)
-			if !a && !b {
-				break
+		if Vec_IntSize(p.vClasses) > 0 {
+			// C confirms stability even if the preceding round emptied classes.
+			for iteration < maxIter {
+				a, b := run(false, 2), run(true, 2)
+				if !a && !b {
+					break
+				}
 			}
 		}
 		for Vec_IntSize(p.vClasses) > 0 {

@@ -10244,3 +10244,20 @@ old-driver count policy and full-range diagnostic swaps with portable Go RNG.
 Full Go-only module passes130 tested packages plus3 commands without tests;
 focused isomorphism race1.937s and GIA vet pass. The three diagnostic routines
 are reconciled; remaining scope/evidence in REVIEW_isomorphism.md. Audit2/131.
+
+
+### Verify full canonicalization and restore final convergence confirmation
+
+Add108 independent graph/copy/register-pairing cases with1008 exhaustive CI
+assignments,108 scratch-independent complete-label cases and12 dormant XOR/MUX
+salt cases. A new red trace precedes restoring C's final stability round after
+classes empty, while retaining Go's bounded iteration guard. Full Go-only
+module passes130 tested packages plus3 commands without tests; focused
+isomorphism race2.018s and GIA vet pass. Detailed evidence and cap-testing
+limits are in REVIEW_isomorphism.md. Dual reduction, pair-role checks and final
+family reconciliation remain open; original package completion2/131.
+
+User requested a pause for repository maintenance after committing current work.
+The sequential audit is paused at this green GIA checkpoint; resume with the
+remaining dual-output and pair-verification work. No new package work or agents
+were started during wrap-up.

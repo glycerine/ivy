@@ -10,7 +10,7 @@ Review these sequentially within the open GIA package audit. The original
 - [x] Locate original routines, actual Go implementations and existing tests.
 - [x] Reconcile first-generation level classes, packed fields, unsigned
   signature arithmetic, sorting and tie-accounting kernels.
-- [ ] Reconcile full forward/backward refinement and convergence.
+- [x] Reconcile full forward/backward refinement and convergence.
 - [ ] Review canonical traversal, PI/register permutations, serialized keys,
   output reduction, dual-output and estimate/ownership boundaries.
 - [ ] Reconcile second-generation hash/unique labels, cone traversals, sequential
@@ -533,3 +533,50 @@ Final logs /tmp/abcgo-iso-driver-final-{module.jsonl,race.log,vet.log}. This clo
 the three diagnostic source routines. Full canonicalization/convergence, dual
 reduction, remaining terminal-role checks and dormant mux-signature recognition
 still require reconciliation before closing the68-routine family. Audit2/131.
+
+
+## Full canonicalization, complete labels and final stability round
+
+Add108 Go-only canonicalization cases over0/1/2 registers,18 phase patterns and
+one/two POs. Independently compute reachable gates from the abstract graph while
+keeping all CIs/COs. Verify the source copy-literal mapping is a bijection onto
+the new graph, preserves every selected node kind and phased edge, preserves
+RO/RI pairing and identity strings, removes only unreachable gates and leaves
+source structural/ordinary mark fields unchanged. Exhaustively evaluate all1008
+CI assignments across these fixtures, comparing every retained node to the
+abstract boolean model under the derived input permutation. This checks graph
+and transition preservation, not universal completeness of canonical labeling
+for arbitrary graph-isomorphism instances.
+
+Another108 cases run full refinement twice with different scratch poisons.
+Every object, including dangling gates, receives exactly one label in1..N; the
+constant retains label1, output classes follow source singleton semantics, and
+labels do not depend on incoming Value fields. Twelve XOR/MUX recognition cases
+check source salt indices, complemented input patterns,32-bit wraparound and
+untouched fields. The recognition helper remains dormant in the main algorithm,
+as it is in C; no new invocation is introduced.
+
+A new hand-traced regression fails before repair: the asymmetric two-PI AND
+resolves its last class during backward refinement, and Go skips C's final
+stability round. Its old iteration trace0..5,7 must be0..9,11. Restore that
+confirmation round even after classes become empty. Keep the explicit iteration
+guard: source C's redundant outer loop can hang when the cap is reached; Go
+retains bounded simulation and then strictly reduces unresolved entries through
+tie assignment. The10000-pass cap is reviewed by inspection, not forced by these
+small fixtures. Red /tmp/abcgo-iso-convergence-red.log; repaired focused suite
+/tmp/abcgo-iso-full-canonical-green.log.
+
+Frozen full Go-only module passes130 tested packages plus3 commands without
+tests; all108 canonicalization,108 label and12 salt leaves execute. Focused
+isomorphism race2.018s and GIA vet pass; all handles ended. Final logs
+/tmp/abcgo-iso-full-canonical-final-{module.jsonl,race.log,vet.log}. Remaining
+dual-output reduction, terminal-role/hash-filter checks and final68-routine
+inventory reconciliation stay open. Original package completion remains2/131.
+
+## Requested pause checkpoint
+
+Current canonicalization/convergence work is verified and committed before the
+user-requested repository-maintenance pause. No dual-output implementation or
+test changes have started. Resume at dual-output reduction and its metadata/
+preprocessing boundaries, then the remaining pair-role checks and source-name
+inventory. The full GIA and131-package objectives remain incomplete.
