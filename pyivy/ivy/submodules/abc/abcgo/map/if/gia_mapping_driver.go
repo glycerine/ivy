@@ -12,7 +12,7 @@ func (p *If_Par_t_) SetDsdManager(manager *If_DsdMan_t) { p.pDsdManager = manage
 // SetSwitchingProvider supplies switching probabilities when power mapping is enabled.
 func (p *If_Par_t_) SetSwitchingProvider(provider func(*If_Man_t)) { p.pFuncSwitching = provider }
 
-// SetDelayTrace supplies the optional post-mapping delay-trace reporter.
+// SetDelayTrace overrides the standard post-mapping delay-trace reporter.
 func (p *If_Par_t_) SetDelayTrace(trace func(*Gia_Man_t)) { p.pFuncDelayTrace = trace }
 
 // Gia_ManPerformMappingInt maps one GIA in its current interface order.
@@ -98,14 +98,24 @@ func Gia_ManPerformMappingInt(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 		}
 		src.SetMappingOutputArrivals(out)
 	}
+	// The source tears down IF and its owned constraints before reporting.
+	If_ManStop(manager)
+	pars.pTimesArr, pars.pTimesReq = nil, nil
 	name, spec := src.Identity()
 	result.SetIdentity(name, spec)
 	Gia_ManSetRegNum(result, Gia_ManRegNum(src))
 	if pars.FVerboseTrace != 0 {
-		if pars.pFuncDelayTrace == nil {
-			panic("if: verbose delay trace requires a reporter")
+		// PLutLib is an interface; a nil typed pointer must stay a nil context.
+		result.PLutLib = nil
+		if pars.PLutLib != nil {
+			result.PLutLib = pars.PLutLib
 		}
-		pars.pFuncDelayTrace(result)
+		defer func() { result.PLutLib = nil }()
+		if pars.pFuncDelayTrace != nil {
+			pars.pFuncDelayTrace(result)
+		} else {
+			gia.Gia_ManDelayTraceLutPrint(result, 1)
+		}
 	}
 	return result
 }

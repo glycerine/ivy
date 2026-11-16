@@ -77,7 +77,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Pending |
+| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source trace lifecycle/library/default repaired; callback and parameter reuse regressions pass; power/timing/attribute review pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
@@ -1049,3 +1049,51 @@ race1.250s (`/tmp/abcgo-mapping-config-reviewed-race.log`); IF/GIA vet exit0
 No C test vectors or compiler dependencies added. Main logic reconstruction row
 review is recorded; outer mapping/balance drivers, metrics/reporting, transfer
 reconciliation and final family gates remain open. Original package audit2/131.
+
+### Restore outer-driver delay reporting lifecycle and defaults
+
+Compare `Gia_ManPerformMappingInt` with `giaIf.c:2369..2408` and manager teardown
+at `ifMan.c:297..298`. Three source-facing problems are found:
+
+- Go deferred mapper teardown until after the post-mapping reporter. C stops
+  IF and clears its owned timing-array fields before identity/reporting. Besides
+  retaining unnecessary state, Go therefore rejects reuse of the same parameters
+  from a reporting callback with `timing arrays start empty`.
+- C temporarily attaches the selected LUT library while tracing and clears it
+  afterward. Go omitted the context, so a standard trace used unit delay even
+  with a selected library.
+- Go required an injected reporter when verbose tracing was enabled, although
+  the standard `Gia_ManDelayTraceLutPrint` already exists. C calls it directly.
+
+New regressions fail before the repairs: eight context/timing/library cases and
+a functional nested-parameter-reuse failure
+(`/tmp/abcgo-driver-trace-red.log`, exit1); two default-reporter cases fail
+before adding the standard fallback
+(`/tmp/abcgo-driver-default-trace-red.log`, exit1). Stop IF and clear timing slots
+at the source normal-path point, retaining idempotent deferred cleanup for early
+exits. Attach the library for reporting, avoiding a typed-nil interface, and
+clear it via defer even if a Go reporter panics. The injected hook remains an
+optional override; nil uses the existing standard reporter with verbosity1.
+No substitute timing algorithm is added.
+
+`gia_driver_callbacks_review_test.go` checks live constraints in the write
+callback, stopped mapper/empty parameter slots and copied identity during
+reporting, optional library pointer identity, preserved library values, final
+borrow cleanup and every Boolean assignment. Reentrant reporting successfully
+maps again with the same parameters. A panic-and-retry case verifies cleanup
+and usable source inputs/library. Four default/custom plus unit/library cases
+invoke the actual GIA reporter and require exactly one report: delay1 without
+library, delay7 with the supplied library. All vectors are Go. The frame owns
+the source graph and stays live for each test's mappings.
+
+Frozen final verification: focused cases0.015s
+(`/tmp/abcgo-driver-trace-final-cases.log`); full Go-only module with C tools
+excluded and CGO disabled exits0:130 tested packages pass,3 commands without
+tests, zero failures (`/tmp/abcgo-driver-trace-final-module.jsonl`). Focused
+IF driver/callback/balancing race1.269s
+(`/tmp/abcgo-driver-trace-final-race.log`),512-case Go-only GIA driver matrix
+race4.677s (`/tmp/abcgo-driver-trace-final-matrix-race.log`), IF/GIA vet exit0
+(`/tmp/abcgo-driver-trace-final-vet.log`). All handles consumed to terminal.
+No C test vectors/compiler dependencies added. Power/timing/attribute and boxed
+outer-driver reconciliation, metrics/reports/transfers and family gate remain
+open; original package audit2/131.

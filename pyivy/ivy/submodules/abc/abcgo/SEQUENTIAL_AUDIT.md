@@ -9590,3 +9590,16 @@ extra Go-only9.423/28.552/2.666s, focused driver race1.250s and IF/GIA vet pass.
 Main logic reconstruction row reviewed; outer drivers/metrics/reports/transfers
 and family gate stay open. Details/logs in REVIEW_mapping_boundary.md. Original
 package audit remains2/131.
+
+### Restore mapping delay-trace context and lifecycle
+
+New red regressions expose late mapper/timing cleanup, missing selected LUT
+library during tracing, and an unnecessary panic without an injected reporter.
+Restore source cleanup order, temporary library context and standard reporter
+fallback; retain optional overrides and panic-safe borrow cleanup. Cover all
+timing-array presence/library combinations, actual reported delay1 versus7,
+parameter reuse from a callback and panic/retry, with full Boolean truth.
+Final full Go-only module passes130 tested packages plus3 commands without
+tests. IF driver race1.269s,512-case GIA driver race4.677s and relevant vet pass.
+Details/logs in REVIEW_mapping_boundary.md. Outer power/timing/attribute and
+family review stay open; original package audit2/131.
