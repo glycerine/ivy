@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"sync"
-	"time"
 
 	"github.com/glycerine/abcgo/misc/tim"
 	abcutil "github.com/glycerine/abcgo/misc/util"
@@ -62,7 +61,7 @@ func Gia_ManCountDupLut(p *Gia_Man_t) int32 {
 var giaMappingStatsState struct {
 	sync.Mutex
 	name  string
-	since time.Time
+	since int64
 }
 
 // Gia_ManPrintMappingStats reports LUT count, edges and mapped depth. If a
@@ -105,11 +104,8 @@ func Gia_ManPrintMappingStats(p *Gia_Man_t, dumpFile string) {
 	for i := int32(0); i < Gia_ManCoNum(p); i++ {
 		totalLevel += levels[Gia_ObjFaninId0p(p, Gia_ManCo(p, i))]
 	}
-	var average float64
-	if n := Gia_ManCoNum(p); n != 0 {
-		// C divides after converting the sum to float, then promotes for printing.
-		average = float64(float32(totalLevel) / float32(n))
-	}
+	// Preserve C's float intermediate and NaN when there are no COs.
+	average := float64(float32(totalLevel) / float32(Gia_ManCoNum(p)))
 	abcutil.Abc_Print(1, "Mapping (K=%d)  :  \033[1;33mlut =%7d\033[0m  \033[1;32medge =%8d\033[0m  \033[1;31mlev =%5d\033[0m \033[1;31m(%.2f)\033[0m  ", maxSize, luts, fanins, maxLevel, average)
 	if timing, ok := p.PManTime.(*tim.Tim_Man_t); ok && tim.Tim_ManBoxNum(timing) > 0 {
 		abcutil.Abc_Print(1, "\033[1;31mlevB =%5d\033[0m  ", Gia_ManLutLevelWithBoxes(p))
@@ -129,12 +125,11 @@ func Gia_ManPrintMappingStats(p *Gia_Man_t, dumpFile string) {
 		return
 	}
 	defer table.Close()
-	now := time.Now()
-	if giaMappingStatsState.name != p.pName || giaMappingStatsState.since.IsZero() {
+	if giaMappingStatsState.name != p.pName {
 		fmt.Fprintf(table, "\n%s  %d %d %d ", p.pName, Gia_ManAndNum(p), luts, Gia_ManLutLevelWithBoxes(p))
 		giaMappingStatsState.name = p.pName
 	} else {
-		fmt.Fprintf(table, " %d %d %.2f", luts, Gia_ManLutLevelWithBoxes(p), now.Sub(giaMappingStatsState.since).Seconds())
+		fmt.Fprintf(table, " %d %d %.2f", luts, Gia_ManLutLevelWithBoxes(p), float64(abcutil.Abc_Clock()-giaMappingStatsState.since)/float64(abcutil.CLOCKS_PER_SEC))
 	}
-	giaMappingStatsState.since = now
+	giaMappingStatsState.since = abcutil.Abc_Clock()
 }

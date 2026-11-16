@@ -1614,3 +1614,36 @@ commands without tests), focused hash/driver/boxed-choice race passes21.405s
 and relevant vet exits0. Logs: /tmp/abcgo-hash-boundary-cases.log and
 /tmp/abcgo-hash-boundary-final-{module.jsonl,race.log,vet.log}. All sessions
 ended. Reports, optional modes and final family gates remain open; audit2/131.
+
+
+### Restore report arithmetic and unnamed dump history
+
+The earlier report checkpoint documented finite-zero substitutions and forced
+initial unnamed headers as Go extensions. Reconciliation against source
+shows both change defined behavior. Two new Go-only regressions fail before
+repair (/tmp/abcgo-report-boundary-red.log, exit1): two graph shapes on both
+stdout/bridge print0.00 instead of NaN, empty profile percentages print0.0,
+and an unnamed first dump emits an extra header.
+
+Restore direct source divisions (including the float32 CO-average intermediate)
+and keep only the source's guarded profile average. IEEE NaN is formatted by
+Go as NaN; platform C printf capitalization/sign is not imposed on Go. Remove
+the extra first-use header condition. Replace separate time.Time bookkeeping
+with shared Abc_Clock ticks, initialized to zero as in source, and update the
+clock after writing. The existing shared helper uses portable monotonic elapsed
+time, rather than C's platform-specific thread CPU time; this is its documented
+module-wide clock policy, not a new local timing algorithm.
+
+New tests verify initial unnamed continuation text, clock-origin bounds and
+saved ticks, plus failed-open diagnostics/history preservation and a successful
+retry. Retain the existing safe return on failed fopen: C proceeds with a NULL
+FILE pointer (undefined behavior), which is not a meaningful behavior to copy.
+This failure handling does not alter valid source output or cut algorithms.
+Removing the special arithmetic branches also makes the report code smaller.
+
+Frozen report cases pass0.030s; full Go-only module exits0 (130 tested packages,
+3 commands without tests), focused report race1.086s and relevant vet exits0.
+Logs: /tmp/abcgo-report-boundary-final-{cases.log,module.jsonl,race.log,vet.log}.
+All sessions ended. A newly inspected empty-profile sentinel discrepancy still
+needs its own red regression/repair before step3 closes. Optional modes and
+final family gates remain open; original audit2/131.

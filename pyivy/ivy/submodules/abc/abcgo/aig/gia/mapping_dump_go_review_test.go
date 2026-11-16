@@ -5,13 +5,12 @@ import (
 	"path/filepath"
 	"regexp"
 	"testing"
-	"time"
 )
 
 func TestMappingStatsGoOnlyPersistentAppend(t *testing.T) {
 	giaMappingStatsState.Lock()
 	oldName, oldSince := giaMappingStatsState.name, giaMappingStatsState.since
-	giaMappingStatsState.name, giaMappingStatsState.since = "", time.Time{}
+	giaMappingStatsState.name, giaMappingStatsState.since = "", 0
 	giaMappingStatsState.Unlock()
 	defer func() {
 		giaMappingStatsState.Lock()

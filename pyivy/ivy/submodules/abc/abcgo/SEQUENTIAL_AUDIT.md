@@ -9811,3 +9811,15 @@ Full Go-only module passes130 tested packages and3 commands without tests;
 focused hash plus ordinary/boxed-choice driver race21.405s and relevant vet
 pass. Hash inventory row now reconciled, final family gate pending. Details
 in REVIEW_mapping_boundary.md; remaining review and original audit2/131.
+
+
+### Restore mapping report boundary semantics
+
+New red Go-only regressions expose finite-zero substitutions for source NaN
+results and an extra header on the first unnamed dump. Restore source division
+and name-history rules, using the shared Abc_Clock helper instead of separate
+wall-time state. Add clock-origin, failed-open/history and retry coverage;
+retain safe handling where C dereferences a failed fopen result. Full Go-only
+module passes130 tested packages plus3 commands without tests; focused report
+race1.086s and relevant vet pass. See REVIEW_mapping_boundary.md. Empty-profile
+sentinel reconciliation and remaining family/package audit stay open2/131.

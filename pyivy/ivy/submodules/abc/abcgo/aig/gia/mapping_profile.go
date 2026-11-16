@@ -46,10 +46,7 @@ func Gia_ManPrintNodeProfile(counts []int32, sizeMax int32) {
 	}
 	abcutil.Abc_Print(1, "LUT = %d : ", total)
 	for i := int32(2); i <= sizeMax; i++ {
-		percent := float64(0)
-		if total != 0 {
-			percent = 100 * float64(counts[i]) / float64(total)
-		}
+		percent := 100 * float64(counts[i]) / float64(total)
 		abcutil.Abc_Print(1, "%d=%d %.1f %%  ", i, counts[i], percent)
 	}
 	abcutil.Abc_Print(1, "Ave = %.2f\n", float64(weighted)/float64(max(total, 1)))
