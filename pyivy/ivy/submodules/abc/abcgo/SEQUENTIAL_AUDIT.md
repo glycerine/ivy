@@ -9298,3 +9298,22 @@ Full IF race10.050s and IF/GIA vet pass; Go-only IF/ABCI pass. Broader GIA tests
 expose a false-positive source checker banning local variables named free;
 that gate remains red until the checker is repaired with its own regression.
 Remaining DSD diagnostic details and mapping inventory remain open; audit2/131.
+
+### GIA source-audit false positive repaired
+
+The broader no-C-toolchain run exposed TestNoLiveCFreeCallsInGia flagging SAT
+partition variables named free, not actual C calls. New red checker cases verify
+locals/parameters/selectors and a missed reversed string-nil comparison. Use
+Go parser/AST call nodes and retain legacy reference/string checks. Fourteen
+Go-only cases pass, including real/parenthesized/macro calls and ignored
+comments/strings; focused race3.090s and IF/GIA vet pass. The full GIA Go-only
+suite passes26.749s. Logs /tmp/abcgo-gia-release-audit-{red,fixed,race,vet}.log.
+
+The whole-module run with CGO=0 and PATH=/usr/local/bin has127 passing packages,
+3 command packages without tests,3 failing packages. Two failures (base/cmd,
+misc/util) need ordinary shell utilities also excluded by that overly strict
+PATH; proof/fra unconditionally forces -race in a child Go test and fails with
+CGO disabled. There are341 older optional skipped comparisons across49 packages;
+these are not claimed as Go-only coverage. Next check retains ordinary host tools
+while excluding C compilers; correct FRA's forced-race harness separately.
+Module log /tmp/abcgo-module-go-only-diagnostics.jsonl. No package audit closure.

@@ -1,7 +1,9 @@
 package gia
 
 import (
-	"go/scanner"
+	"fmt"
+	"go/ast"
+	"go/parser"
 	"go/token"
 	"os"
 	"path/filepath"
@@ -20,40 +22,86 @@ func TestNoLiveCFreeCallsInGia(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		fset := token.NewFileSet()
-		f := fset.AddFile(path, fset.Base(), len(source))
-		var scan scanner.Scanner
-		// Remaining generated C syntax is deliberately tolerated: this audit checks
-		// executable tokens for frees, never matches comments or string literals.
-		scan.Init(f, source, func(token.Position, string) {}, 0)
-		previous := token.ILLEGAL
-		type scanned struct {
-			kind token.Token
-			text string
+		for _, issue := range giaReleaseSourceIssues(path, source) {
+			t.Error(issue)
 		}
-		var recent []scanned
-		for {
-			pos, tok, lit := scan.Scan()
-			if tok == token.EOF {
-				break
+	}
+}
+
+// Inspect compiled Go syntax: a variable called free is not a C free() call.
+// Also retain the earlier checks for untranslated reference/string operations.
+func giaReleaseSourceIssues(path string, source []byte) []string {
+	fset := token.NewFileSet()
+	file, err := parser.ParseFile(fset, path, source, 0)
+	if err != nil {
+		return []string{err.Error()}
+	}
+	var issues []string
+	report := func(pos token.Pos, message string) {
+		issues = append(issues, fmt.Sprintf("%s at %s", message, fset.Position(pos)))
+	}
+	isNil := func(e ast.Expr) bool { name, ok := ast.Unparen(e).(*ast.Ident); return ok && name.Name == "nil" }
+	checkStringNil := func(left, right ast.Expr) {
+		if !isNil(right) {
+			return
+		}
+		field, ok := ast.Unparen(left).(*ast.SelectorExpr)
+		if ok && (field.Sel.Name == "pName" || field.Sel.Name == "pSpec" || field.Sel.Name == "pCellStr") {
+			report(field.Pos(), "string field used with nil")
+		}
+	}
+	ast.Inspect(file, func(node ast.Node) bool {
+		switch n := node.(type) {
+		case *ast.CallExpr:
+			if name, ok := ast.Unparen(n.Fun).(*ast.Ident); ok && (name.Name == "free" || name.Name == "ABC_FREE") {
+				report(name.Pos(), "C free call remains")
 			}
-			if tok == token.IDENT && (lit == "ABC_FREE" || lit == "free") {
-				t.Errorf("C free token remains at %s", fset.Position(pos))
+		case *ast.SelectorExpr:
+			if n.Sel.Name == "pRefs" {
+				report(n.Sel.Pos(), "legacy manager ref spelling")
 			}
-			if previous == token.PERIOD && tok == token.IDENT && lit == "pRefs" {
-				t.Errorf("legacy manager ref spelling at %s", fset.Position(pos))
+		case *ast.BinaryExpr:
+			if n.Op == token.EQL || n.Op == token.NEQ {
+				checkStringNil(n.X, n.Y)
+				checkStringNil(n.Y, n.X)
 			}
-			if tok == token.IDENT && lit == "nil" && len(recent) >= 3 {
-				selector, field, operator := recent[len(recent)-3], recent[len(recent)-2], recent[len(recent)-1]
-				if selector.kind == token.PERIOD && field.kind == token.IDENT && (field.text == "pName" || field.text == "pSpec" || field.text == "pCellStr") && (operator.kind == token.ASSIGN || operator.kind == token.EQL || operator.kind == token.NEQ) {
-					t.Errorf("string field used with nil at %s", fset.Position(pos))
+		case *ast.AssignStmt:
+			if len(n.Lhs) == len(n.Rhs) {
+				for i := range n.Lhs {
+					checkStringNil(n.Lhs[i], n.Rhs[i])
 				}
 			}
-			recent = append(recent, scanned{tok, lit})
-			if len(recent) > 3 {
-				recent = recent[1:]
-			}
-			previous = tok
 		}
+		return true
+	})
+	return issues
+}
+
+func TestReleaseSourceAuditDistinguishesCalls(t *testing.T) {
+	for _, tc := range []struct {
+		name, source string
+		count        int
+	}{
+		{"local-free", `func f() { free := uint64(1); _ = free >> 1 }`, 0},
+		{"parameter-free", `func f(free []int) []int { return append(free, 1) }`, 0},
+		{"field-free", `func f(p *T) { p.free(1) }`, 0},
+		{"call-free", `func f(p *T) { free(p) }`, 1},
+		{"wrapped-call-free", `func f(p *T) { (free)(p) }`, 1},
+		{"call-macro", `func f(p *T) { ABC_FREE(p) }`, 1},
+		{"comment", "// free(p)\nfunc f() {}", 0},
+		{"string", `func f() { _ = "free(p)" }`, 0},
+		{"comment-in-call", `func f(p *T) { free /* detail */ (p) }`, 1},
+		{"refs", `func f(p *T) { _ = p.pRefs }`, 1},
+		{"string-nil", `func f(p *T) { p.pName = nil }`, 1},
+		{"string-nil-comparison", `func f(p *T) bool { return p.pSpec != nil }`, 1},
+		{"string-nil-reversed", `func f(p *T) bool { return nil == p.pCellStr }`, 1},
+		{"valid-string", `func f(p *T) { p.pName = "" }`, 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			issues := giaReleaseSourceIssues("fixture.go", []byte("package gia\n"+tc.source))
+			if len(issues) != tc.count {
+				t.Fatalf("issues %v, want %d", issues, tc.count)
+			}
+		})
 	}
 }
