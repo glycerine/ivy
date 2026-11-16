@@ -9543,3 +9543,14 @@ exhaustive truth checks. Full Go-only module passes130 tested packages plus3
 commands without tests. Focused CLU/structure race8.495s,512-driver race4.524s
 and IF/GIA vet pass. Details/logs in REVIEW_mapping_boundary.md. Retry,
 diagnostic and family work remain open; original package audit2/131.
+
+### Reduced-bound retry selection and reverse-order fidelity
+
+Add six independent scalar source traces with22 intermediate searches. Check
+exact counts, candidate/permutation order, all permuted bits, final selections
+and reconstructed truth. Preserve C's unguarded smaller retry, including valid
+candidate overwrites and subsequent reverse selection. No behavioral bug found;
+make the reduced-bound flag expressions locally match C, with guard proof of
+equivalence. Full IF Go-only9.726s, focused race7.743s and IF/GIA vet pass.
+Details/logs in REVIEW_mapping_boundary.md. Source diagnostics, validation and
+wider family inventory remain open; original package audit2/131.

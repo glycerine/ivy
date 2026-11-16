@@ -844,10 +844,10 @@ func If_CluCheck(p *If_Man_t, truth []uint64, n, start, stop, leaf, root int32, 
 			group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf, boolInt(leaf+root == n+1))
 			if group.nVars == 0 {
 				if n < leaf+root-2 {
-					group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf-1, boolInt(leaf+root == n+1))
+					group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf-1, boolInt(leaf-1+root == n+1))
 				}
 				if leaf > 4 && n < leaf+root-3 {
-					group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf-2, boolInt(leaf+root == n+1))
+					group = If_CluFindGroup(work, n, start, stop, v2p, p2v, leaf-2, boolInt(leaf-2+root == n+1))
 				}
 				if group.nVars == 0 {
 					If_CluReverseOrder(work, n, v2p, p2v, start)

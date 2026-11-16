@@ -877,3 +877,46 @@ remain open. Original package audit2/131 unchanged.
 The512-case Go-only GIA mapping-driver race also passes4.524s after the
 classification repair (`/tmp/abcgo-clu-easy-reviewed-drivers-race.log`). All
 verification handles were consumed to terminal exit0 before this commit.
+
+### Reduced-bound retry and reverse-order source traces
+
+Review `If_CluCheck` retry control flow against `ifDec16.c:1623..1670` and
+`If_CluFindGroup`'s two greedy rounds. An independent scalar enumeration of
+Boolean cofactor row sets, original-variable permutations, source >= tie rules
+and shared-variable tests supplies six fixed Go vectors. No Go decomposition
+routine or C compiler generates expected results at test time. The temporary
+research trace used Python, but committed tests contain Go literals and require
+only Go.
+
+`clu_retry_review_test.go` checks22 intermediate searches over full-support
+8-input tables, leaf/root6/6: original bound6, reduced5, reduced4 and reverse6.
+The six traces include total failure, reduced4 success after reduced5 failure,
+a valid reduced5 shared candidate replaced by reduced4 disjoint success,
+reverse6 shared success after both smaller searches fail, and reverse6 shared
+success after discarding an earlier valid reduced5 disjoint candidate. A second
+failure trace checks different retained cofactor counts. C deliberately does
+not guard the second smaller search on the first smaller result; preserve the
+observed overwrite and resulting final choice.
+
+Every intermediate count, candidate pin order and complete variable order is
+fixed independently. Validate inverse maps and every bit of each permuted truth,
+then final wrapper selection, clearing of failed outputs, full reconstructed
+truth for success, selection-only consistency and original input ownership.
+Verify these fixtures do not bypass the retries through the easy detector.
+All six paths match; no behavioral port bug was found in this retry pass.
+
+Use the actual reduced bound in the disjoint-flag expressions, matching C's
+temporary decrement. This two-expression cleanup is equivalent under the guards:
+for the first retry n<=leaf+root-3, so (leaf-1)+root>=n+2; the second guard gives
+n<=leaf+root-4, so (leaf-2)+root>=n+2. Both flags are always false there. This
+makes each call locally consistent without changing source behavior or claiming
+an observed failure.
+
+Frozen verification: focused source traces0.006s
+(`/tmp/abcgo-clu-retry-source-order.log`), full IF Go-only9.726s
+(`/tmp/abcgo-clu-retry-reviewed-full.log`), focused CLU/structure race excluding
+legacy optional C comparison7.743s (`/tmp/abcgo-clu-retry-reviewed-race.log`),
+IF/GIA vet exit0 (`/tmp/abcgo-clu-retry-reviewed-vet.log`). No new C fixtures or
+compiler dependencies. Active retry ordering is reviewed; remaining LogicNode
+validation/source diagnostics and wider metrics/reporting/driver/family work
+stay open. Original package audit2/131.
