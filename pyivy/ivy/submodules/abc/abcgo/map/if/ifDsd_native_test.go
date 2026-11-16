@@ -21,8 +21,9 @@ func TestIfDsdComputeKeepsTruthAndLiteralPermutation(t *testing.T) {
 		t.Fatalf("pin selectors = %v, want %v", got, want)
 	}
 	obj := dsdObject(p, lit)
-	if got := dau.Dau_DsdToTruth(obj.text, 3); got[0] != truth[0] {
-		t.Fatalf("DSD text %q evaluates to %#x, want %#x", obj.text, got[0], truth[0])
+	text := ifDsdText(p, lit, permutation)
+	if got := dau.Dau_DsdToTruth(text, 3); got[0] != truth[0] {
+		t.Fatalf("DSD text %q evaluates to %#x, want %#x", text, got[0], truth[0])
 	}
 	if obj.nSupp != 3 {
 		t.Fatalf("support = %d, want 3", obj.nSupp)
@@ -45,10 +46,13 @@ func TestIfDsdCheckXYFindsAndMasksDecomposition(t *testing.T) {
 }
 
 func TestIfDsdDelayRecUsesAssociativeCounter(t *testing.T) {
-	text, _ := dau.DecomposeDSD(dau.Dau_DsdToTruth("(ab)", 2), 2)
-	network := dau.Dss_NtkCreate(text, 2, nil)
+	p := If_DsdManAlloc(2, 0)
+	defer If_DsdManFree(p, 0)
+	perm := make([]byte, 2)
+	lit := If_DsdManCompute(p, dau.Dau_DsdToTruth("(ab)", 2), 2, perm, "")
 	var support int32
-	delay, profile := dsdDelayRec(network, network.Root, []byte{0, 2}, []int32{2, 5}, &support, 2)
+	var profile uint64
+	delay := If_CutDsdBalancePinDelays_rec(p, lit>>1, []int32{2, 5}, &profile, &support, 2, perm)
 	if support != 2 {
 		t.Fatalf("visited support %d, want 2", support)
 	}
@@ -68,8 +72,13 @@ func TestDsdBalanceProducesEquivalentCompactAig(t *testing.T) {
 		{"(ab)", 2}, {"[abc]", 3}, {"<abc>", 3}, {"(!a[bc])", 3}, {"(!96{abc}d)", 4},
 	} {
 		t.Run(tc.text, func(t *testing.T) {
-			network := dau.Dss_NtkCreate(tc.text, tc.n, nil)
-			original := dau.Dau_DsdToTruth(tc.text, tc.n)[0]
+			p := If_DsdManAlloc(tc.n, 0)
+			defer If_DsdManFree(p, 0)
+			If_DsdManAllocIsops(p, tc.n)
+			originalTruth := dau.Dau_DsdToTruth(tc.text, tc.n)
+			original := originalTruth[0]
+			permutation := make([]byte, tc.n)
+			lit := If_DsdManCompute(p, originalTruth, tc.n, permutation, "")
 			for _, complementPins := range []bool{false, true} {
 				pins := make([]byte, tc.n)
 				times := make([]int32, tc.n)
@@ -83,14 +92,14 @@ func TestDsdBalanceProducesEquivalentCompactAig(t *testing.T) {
 				aig := Vec_IntAlloc(0)
 				defer Vec_IntFree(aig)
 				var area int32
-				delay, root := ifDsdBalance(network, network.Root, pins, times, aig, tc.n, &area)
+				canonicalPins := make([]byte, tc.n)
+				for i, pin := range permutation {
+					canonicalPins[i] = pins[pin>>1] ^ (pin & 1)
+				}
+				delay := If_CutDsdBalanceEvalInt(p, lit, times, aig, &area, canonicalPins)
 				if delay < 0 {
 					t.Fatalf("cannot balance %s", tc.text)
 				}
-				if root>>1 != tc.n+int32(Vec_IntSize(aig)/2)-1 {
-					t.Fatalf("root %d is not last in %v", root, Vec_IntArray(aig))
-				}
-				Vec_IntPush(aig, root&1)
 				got := If_AigVerifyArray(aig, tc.n)
 				var want uint64
 				for assignment := 0; assignment < 64; assignment++ {
@@ -126,8 +135,13 @@ func TestDsdBalanceManagerProducesAig(t *testing.T) {
 	defer Vec_IntFree(aig)
 	for _, complement := range []uint32{0, 1} {
 		cut.fCompl = complement
+		timingDelay := If_CutDsdBalanceEval(p, cut, nil)
+		if timingDelay < 0 || cut.Cost == 0 {
+			t.Fatalf("timing-only delay %v cost %d", timingDelay, cut.Cost)
+		}
 		delay := If_CutDsdBalanceEval(p, cut, aig)
-		if delay < 0 || cut.fUser == 0 || cut.Cost == 0 {
+		// Source graph construction leaves the abstract timing cost at zero.
+		if delay != timingDelay || cut.fUser == 0 || cut.Cost != 0 {
 			t.Fatalf("delay %v cost %d", delay, cut.Cost)
 		}
 		want := truth[0]

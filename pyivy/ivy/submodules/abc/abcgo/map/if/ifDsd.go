@@ -6,7 +6,6 @@ import (
 	"os"
 	"slices"
 
-	"github.com/glycerine/abcgo/bool/kit"
 	abcutil "github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dau"
@@ -27,15 +26,13 @@ const (
 )
 
 // If_DsdObj_t records shared canonical structure. Prime truth tables live in
-// the manager; text/network are transitional diagnostic/balancing caches.
+// the manager; occurrence permutations belong to the cuts that use a node.
 type If_DsdObj_t struct {
 	Id                  int32
 	Type                If_DsdType_t
 	nSupp, fMark, Count int32
 	nFans               int32
 	pFans               []int32
-	text                string
-	network             *dau.Dss_Ntk_t
 }
 
 func If_DsdObjClean(p *If_DsdObj_t)      { *p = If_DsdObj_t{} }
@@ -163,14 +160,6 @@ func If_DsdManCompute(p *If_DsdMan_t, truth []word, nLeaves int32, permutation [
 		panic("if: canonical DSD verification failed")
 	}
 	If_DsdVecObjIncRef(&p.vObjs, lit>>1)
-	o := dsdObject(p, lit)
-	// Transitional diagnostic/balancing caches are derived from the canonical
-	// structure, never used for interning or decomposition decisions.
-	if o.network == nil {
-		o.text = ifDsdText(p, lit&^1, nil)
-		o.network = dau.Dss_NtkCreate(o.text, o.nSupp, nil)
-
-	}
 	return lit
 }
 
@@ -287,7 +276,7 @@ func If_DsdManPrint(p *If_DsdMan_t, fileName string, number, support, occurs, du
 		for i, e := range Vec_PtrArray(&p.vObjs) {
 			o := e.(*If_DsdObj_t)
 			if support == 0 || o.nSupp == support {
-				fmt.Printf("%d %s\n", i, o.text)
+				fmt.Printf("%d %s\n", i, ifDsdText(p, int32(i)<<1, nil))
 			}
 		}
 		return
@@ -300,76 +289,12 @@ func If_DsdManPrint(p *If_DsdMan_t, fileName string, number, support, occurs, du
 	for i, e := range Vec_PtrArray(&p.vObjs) {
 		o := e.(*If_DsdObj_t)
 		if support == 0 || o.nSupp == support {
-			fmt.Fprintf(f, "%d %s\n", i, o.text)
+			fmt.Fprintf(f, "%d %s\n", i, ifDsdText(p, int32(i)<<1, nil))
 		}
 	}
 }
 func If_DsdManSave(p *If_DsdMan_t, fileName string) { If_DsdManPrint(p, fileName, 0, 0, 0, 0, 0) }
 func If_DsdManLoad(fileName string) *If_DsdMan_t    { return nil }
-
-func dsdSopCover(obj *dau.Dss_Obj_t) *Vec_Int_t {
-	truth32 := make([]uint32, (len(obj.Truth) * 2))
-	for i, word := range obj.Truth {
-		truth32[2*i], truth32[2*i+1] = uint32(word), uint32(word>>32)
-	}
-	var cover []uint32
-	kit.Kit_TruthIsop(truth32, int32(len(obj.Fans)), &cover, 0)
-	result := vec.Vec_IntAlloc(len(cover))
-	for _, cube := range cover {
-		vec.Vec_IntPush(result, int32(cube))
-	}
-	return result
-}
-
-// dsdDelayRec mirrors the source recursion: variables inherit arrival times,
-// muxes cost two stages, prime nodes use their ISOP, and associative nodes use
-// the logarithmic counter scheduler.
-func dsdDelayRec(network *dau.Dss_Ntk_t, obj *dau.Dss_Obj_t, pinMap []byte, times []int32, support *int32, all int32) (int32, uint64) {
-	obj = dau.Dss_Regular(obj)
-	switch obj.Type {
-	case dau.DAU_DSD_VAR:
-		if int(obj.Var) >= len(pinMap) {
-			panic("if: DSD variable outside permutation")
-		}
-		pin := int(Abc_Lit2Var(int32(pinMap[obj.Var])))
-		if pin >= len(times) {
-			panic("if: DSD variable outside cut")
-		}
-		*support++
-		return times[pin], If_CutPinDelayInit(int32(pin))
-	case dau.DAU_DSD_MUX:
-		if len(obj.Fans) != 3 {
-			panic("if: malformed DSD mux")
-		}
-		delays, profiles := make([]int32, 3), make([]uint64, 3)
-		for i, lit := range obj.Fans {
-			delays[i], profiles[i] = dsdDelayRec(network, dau.Dss_Lit2Obj(network.Objects, lit), pinMap, times, support, all)
-		}
-		profile := If_CutPinDelayMax(If_CutPinDelayMax(profiles[0], profiles[1], all, 1), If_CutPinDelayMax(profiles[0], profiles[2], all, 1), all, 1)
-		return 2 + max(delays[0], max(delays[1], delays[2])), profile
-	case dau.DAU_DSD_PRIME:
-		delays, profiles := make([]int32, len(obj.Fans)), make([]uint64, len(obj.Fans))
-		for i, lit := range obj.Fans {
-			delays[i], profiles[i] = dsdDelayRec(network, dau.Dss_Lit2Obj(network.Objects, lit), pinMap, times, support, all)
-		}
-		cover := dsdSopCover(obj)
-		defer vec.Vec_IntFree(cover)
-		var profile uint64
-		delay := If_CutSopBalancePinDelaysInt(cover, delays, profiles, int32(len(obj.Fans)), &profile)
-		return delay, profile
-	case dau.DAU_DSD_AND, dau.DAU_DSD_XOR:
-		var count int32
-		delays, profiles, counters := make([]int32, len(obj.Fans)), make([]uint64, len(obj.Fans)), make([]int32, len(obj.Fans))
-		var delay int32
-		for i, lit := range obj.Fans {
-			delays[i], profiles[i] = dsdDelayRec(network, dau.Dss_Lit2Obj(network.Objects, lit), pinMap, times, support, all)
-			delay = If_LogCounterPinDelays(counters, &count, profiles, delays[i], profiles[i], all, 0)
-		}
-		return delay, If_LogPinDelaysMulti(profiles, count, all, 0)
-	default:
-		panic("if: unsupported DSD node type")
-	}
-}
 
 func If_CutDsdBalancePinDelays(p *If_Man_t, cut *If_Cut_t, permutation []byte) int32 {
 	if len(permutation) < int(cut.nLeaves) {
@@ -382,17 +307,11 @@ func If_CutDsdBalancePinDelays(p *If_Man_t, cut *If_Cut_t, permutation []byte) i
 		permutation[0] = 0
 		return int32(If_ObjCutBest(If_CutLeaf(p, cut, 0)).Delay)
 	}
-	obj := dsdObject(p.pIfDsdMan, If_CutDsdLit(p, cut))
-	if obj.network == nil {
-		return -1
-	}
-	times := make([]int32, cut.nLeaves)
-	for i := range times {
-		times[i] = int32(If_ObjCutBest(If_CutLeaf(p, cut, int32(i))).Delay)
-	}
+	times := ifDelayTimes(p, cut)
 	var support int32
-	delay, profile := dsdDelayRec(obj.network, obj.network.Root, If_CutDsdPerm(p, cut), times, &support, int32(cut.nLeaves))
-	assert(support == int32(cut.nLeaves), "support == cut.nLeaves")
+	var profile word
+	delay := If_CutDsdBalancePinDelays_rec(p.pIfDsdMan, If_CutDsdLit(p, cut)>>1, times, &profile, &support, int32(cut.nLeaves), If_CutDsdPerm(p, cut))
+	assert(support == int32(cut.nLeaves), "DSD profile visits complete support")
 	If_CutPinDelayTranslate(profile, int32(cut.nLeaves), permutation)
 	return delay
 }
@@ -418,90 +337,9 @@ func If_CutDsdBalanceEval(p *If_Man_t, cut *If_Cut_t, aig *Vec_Int_t) float32 {
 		cut.Cost = 0
 		return If_ObjCutBest(If_CutLeaf(p, cut, 0)).Delay
 	}
-	obj := dsdObject(p.pIfDsdMan, lit)
-	if obj.network == nil {
-		return -1
-	}
 	times := ifDelayTimes(p, cut)
 	var area int32
-	delay, root := ifDsdBalance(obj.network, obj.network.Root, If_CutDsdPerm(p, cut), times, aig, int32(cut.nLeaves), &area)
-	if delay < 0 {
-		return -1
-	}
-	if aig != nil {
-		area = int32(vec.Vec_IntSize(aig) / 2)
-		if root>>1 != int32(cut.nLeaves)+area-1 {
-			panic("if: DSD AIG root is not final")
-		}
-		vec.Vec_IntPush(aig, root&1^lit&1^int32(cut.fCompl))
-	}
+	delay := If_CutDsdBalanceEvalInt(p.pIfDsdMan, lit^int32(cut.fCompl), times, aig, &area, If_CutDsdPerm(p, cut))
 	cut.Cost = uint32(area)
 	return float32(delay)
-}
-
-// ifDsdBalance builds the compact AND graph while preserving DSD edge phases.
-// area is accumulated for timing-only callers; graph callers count emitted ANDs.
-func ifDsdBalance(network *dau.Dss_Ntk_t, edge *dau.Dss_Obj_t, pins []byte, times []int32, aig *Vec_Int_t, support int32, area *int32) (int32, int32) {
-	phase := dau.Dss_IsComplement(edge)
-	obj := dau.Dss_Regular(edge)
-	if obj.Type == dau.DAU_DSD_VAR {
-		if obj.Var < 0 || int(obj.Var) >= len(pins) {
-			panic("if: invalid DSD variable")
-		}
-		lit := int32(pins[obj.Var])
-		pin := lit >> 1
-		if pin < 0 || int(pin) >= len(times) {
-			panic("if: invalid DSD pin")
-		}
-		return times[pin], lit ^ phase
-	}
-	delays := make([]int32, len(obj.Fans))
-	lits := make([]int32, len(obj.Fans))
-	for i, fan := range obj.Fans {
-		delays[i], lits[i] = ifDsdBalance(network, dau.Dss_Lit2Obj(network.Objects, fan), pins, times, aig, support, area)
-		if delays[i] < 0 {
-			return -1, 0
-		}
-	}
-	switch obj.Type {
-	case dau.DAU_DSD_MUX:
-		if len(lits) != 3 {
-			panic("if: invalid DSD mux")
-		}
-		var root int32
-		if aig == nil {
-			*area += 3
-		} else {
-			root = If_LogCreateMux(aig, lits[0], lits[1], lits[2], support)
-		}
-		return 2 + max(delays[0], delays[1], delays[2]), root ^ phase
-	case dau.DAU_DSD_PRIME:
-		cover := dsdSopCover(obj)
-		defer vec.Vec_IntFree(cover)
-		var root int32
-		delay := ifCutSopBalanceEvalInt(cover, delays, lits, aig, &root, int32(len(lits)), support, area)
-		return delay, root ^ phase
-	case dau.DAU_DSD_AND, dau.DAU_DSD_XOR:
-		if len(lits) == 0 {
-			panic("if: empty DSD operator")
-		}
-		var count, delay int32
-		queue, queuedLits := make([]int32, len(lits)), make([]int32, len(lits))
-		xor := int32(0)
-		if obj.Type == dau.DAU_DSD_XOR {
-			xor = 1
-		}
-		for i := range lits {
-			delay = If_LogCounterAddAig(queue, &count, queuedLits, delays[i], lits[i], aig, support, 0, xor)
-		}
-		var root int32
-		if aig == nil {
-			*area += int32(len(lits) - 1)
-		} else {
-			root = If_LogCreateAndXorMulti(aig, queuedLits, count, support, xor)
-		}
-		return delay, root ^ phase
-	default:
-		panic("if: unsupported DSD node")
-	}
 }

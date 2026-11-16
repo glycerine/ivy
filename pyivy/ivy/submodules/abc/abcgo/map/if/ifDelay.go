@@ -120,6 +120,9 @@ func ifValidSop(cover *Vec_Int_t, times []int32, n int32) bool {
 	return used == (1<<uint(n))-1
 }
 func If_CutSopBalancePinDelaysInt(cover *Vec_Int_t, times []int32, faninProfiles []uint64, n int32, result *uint64) int32 {
+	return ifCutSopBalancePinDelaysInt(cover, times, faninProfiles, n, n, result)
+}
+func ifCutSopBalancePinDelaysInt(cover *Vec_Int_t, times []int32, faninProfiles []uint64, n, support int32, result *uint64) int32 {
 	if !ifValidSop(cover, times, n) || len(faninProfiles) < int(n) || result == nil {
 		return -1
 	}
@@ -131,13 +134,13 @@ func If_CutSopBalancePinDelaysInt(cover *Vec_Int_t, times []int32, faninProfiles
 		for pin := int32(0); pin < n; pin++ {
 			literal := uint32(entry) >> uint(pin*2) & 3
 			if literal == 1 || literal == 2 {
-				delay = If_LogCounterPinDelays(andTimes, &andCount, andProfiles, times[pin], faninProfiles[pin], n, 0)
+				delay = If_LogCounterPinDelays(andTimes, &andCount, andProfiles, times[pin], faninProfiles[pin], support, 0)
 			}
 		}
-		profile := If_LogPinDelaysMulti(andProfiles, andCount, n, 0)
-		delay = If_LogCounterPinDelays(orTimes, &orCount, orProfiles, delay, profile, n, 0)
+		profile := If_LogPinDelaysMulti(andProfiles, andCount, support, 0)
+		delay = If_LogCounterPinDelays(orTimes, &orCount, orProfiles, delay, profile, support, 0)
 	}
-	*result = If_LogPinDelaysMulti(orProfiles, orCount, n, 0)
+	*result = If_LogPinDelaysMulti(orProfiles, orCount, support, 0)
 	return delay
 }
 func If_CutSopBalancePinDelaysIntInt(cover *Vec_Int_t, times []int32, n int32, permutation []byte) int32 {
