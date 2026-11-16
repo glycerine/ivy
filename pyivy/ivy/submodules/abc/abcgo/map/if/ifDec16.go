@@ -498,22 +498,40 @@ func cluCofactorRows(table []uint64, n, bound, shift int32) ([][]uint64, []int) 
 	if bound < 1 || bound >= n || bound > 7 {
 		panic("if: invalid bound cofactor dimensions")
 	}
-	var unique [][]uint64
+	unique := make([][]uint64, 0, 5)
 	classes := make([]int, 1<<uint(bound))
+	words, span := int(If_CluWordNum(free)), 1<<uint(free)
+	var small [1]uint64
+	var scratch []uint64
 	for row := range classes {
-		cof := make([]uint64, If_CluWordNum(free))
-		for assignment := 0; assignment < 1<<uint(free); assignment++ {
-			bit := int(shift) + (row << uint(free)) + assignment
-			if ifTruthBit(table, bit) {
-				ifTruthSet(cof, assignment)
+		start := int(shift) + row*span
+		var cof []uint64
+		switch {
+		case free < 6 && (start&63)+span <= 64:
+			small[0] = table[start>>6] >> uint(start&63) & ((uint64(1) << uint(span)) - 1)
+			cof = small[:]
+		case free >= 6 && start&63 == 0:
+			cof = table[start>>6 : (start>>6)+words]
+		default:
+			// Preserve the existing Go bit-offset behavior for unaligned
+			// requests outside the source's aligned row layout.
+			if scratch == nil {
+				scratch = make([]uint64, words)
 			}
+			clear(scratch)
+			for assignment := 0; assignment < span; assignment++ {
+				if ifTruthBit(table, start+assignment) {
+					ifTruthSet(scratch, assignment)
+				}
+			}
+			cof = scratch
 		}
 		class := 0
 		for class < len(unique) && !slices.Equal(unique[class], cof) {
 			class++
 		}
 		if class == len(unique) {
-			unique = append(unique, cof)
+			unique = append(unique, append([]uint64(nil), cof...))
 		}
 		classes[row] = class
 		if len(unique) == 5 {

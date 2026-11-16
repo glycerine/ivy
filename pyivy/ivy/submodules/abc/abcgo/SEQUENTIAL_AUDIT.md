@@ -9507,3 +9507,15 @@ substantially without an application-wide speed claim. Full Go-only module
 passes130 tested packages plus3 commands without tests, no failures. Focused
 Go-case CLU/structure race5.303s and IF/GIA vet pass. Details/logs in
 REVIEW_mapping_boundary.md. Wider source-family audit stays open2/131.
+
+### Cofactor row classification review and allocation reduction
+
+Add495 scalar counter cases through16 inputs (bound2..7, one/five-class
+boundaries, source small-free offsets, output-write rules and ownership) plus21
+existing-Go unaligned offset/row ownership cases. No correctness defect found.
+Restore masked-word/word-slice row extraction; copy only distinct rows instead
+of allocating/rebuilding every row. Local16-input two-class sample drops from
+67alloc/8776B/101us to4alloc/896B/2us. Full IF Go-only8.262s and GIA28.191s,
+focused CLU/structure race5.477s and IF/GIA vet pass. Details/logs in
+REVIEW_mapping_boundary.md. Retry/shared/diagnostic and wider family work
+remain open; original package audit2/131.

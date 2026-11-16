@@ -735,3 +735,47 @@ Focused CLU/structure race excludes the optional legacy C comparison and passes
 optional comparison; the final focused gate uses only Go cases. No new C vectors
 or compiler dependencies added. Remaining primitive/retry exactness, source
 failure diagnostics and wider GIA family inventory remain open. Audit2/131.
+
+### Ordinary cofactor counting dimensions, ownership and row extraction
+
+Compare the active counter with `ifDec16.c:903..977`: classify rows in discovery
+order, stop at five distinct classes, return duplicate first cofactor when
+there is only one, and write the two cofactors/selector only for at most two
+classes. Bound size7 is count-only; six-input selectors fit one word. No
+functional discrepancy was found in this pass.
+
+`clu_count_review_test.go` adds495 scalar dimension/output cases: bound2..7,
+free1..14 where total support<=16, one through five classes (limited by the
+available rows/functions), aligned offset0 and the source small-free upper-half
+offset. Sparse distinct functions differ at widely separated positions,
+including the final multiword bit; equal prefixes cannot merge different rows.
+Check exact discovery-ordered cofactor words/selector and untouched suffixes.
+For three or more classes every output word must remain untouched. Input truth
+remains owned by the caller. This checks the source scalar-word versus
+multiword boundary and the five-class cutoff rather than only successful
+mapping instances.
+
+Replace per-row bit reconstruction/allocation with the source extraction:
+small cofactors come from masked words and aligned large cofactors from word
+slices. Copy only newly discovered rows, retaining the previous Go ownership
+contract. Reuse scratch only for the existing unaligned Go offset extension,
+which is outside the source caller's aligned layout. Twenty-one additional
+Go-compatibility cases cover unaligned offsets1/3/63 and free1..7, including
+cross-word small rows, and prove unique rows do not borrow input or each other's
+scratch storage. Do not infer C semantics for these extension cases.
+
+Local100ms counter samples (before/after):6-input bound4:813.6/419.2ns,
+328/272B,19/4alloc;10-input bound4:2316/423.1ns,328/272B,19/4alloc;
+16-input bound6:100723/1955ns,8776/896B,67/4alloc. This is a two-class counter
+microbenchmark, not an application-wide speed claim. Logs
+`/tmp/abcgo-clu-count-{before,after}.log`. Source tests and ownership extension
+all pass (`/tmp/abcgo-clu-count-cases.jsonl` verifies495+21 subcases).
+
+Frozen gate after the row-extraction change: full IF8.262s and full GIA28.191s
+with CGO disabled and C tools excluded, exit0/no failures
+(`/tmp/abcgo-clu-count-reviewed-packages.jsonl`). Focused CLU/structure race
+excludes the legacy optional C comparison and passes5.477s
+(`/tmp/abcgo-clu-count-reviewed-race.log`); IF/GIA vet exit0
+(`/tmp/abcgo-clu-count-reviewed-vet.log`). No C fixtures or compiler dependencies
+added. Reduced-bound retry/shared-selection exactness, source failure diagnostics
+and the wider family inventory remain open. Original package audit2/131.
