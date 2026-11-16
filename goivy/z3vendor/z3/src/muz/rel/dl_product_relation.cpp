@@ -90,7 +90,11 @@ namespace datalog {
     }
 
     bool product_relation_plugin::can_handle_signature(const relation_signature & s, family_id k) {
-        return true;
+        // FORK FIX #102 (g3 audit, see FORK_BUGFIXES.md): returned true for every
+        // signature; mk_empty(s, k) then read the missing spec of a signature the
+        // kind was not made for (a Bool predicate declared interval_relation +
+        // bound_relation) and crashed.
+        return m_spec_store.contains_kind(s, k);
     }
 
     product_relation& product_relation_plugin::get(relation_base& r) {
@@ -645,6 +649,17 @@ namespace datalog {
             product_relation* delta = get(_delta);
             SASSERT(tgt.size()==src.size()); //moreover, we want the subrelations of the two relations to be aligned
             unsigned num = tgt.size();
+            // FORK FIX #103 (g3 audit, see FORK_BUGFIXES.md): VERIFY(can_do_inner_union(i,i))
+            // below only reported a missing union and the release build then called
+            // a null union (crash); report the unsupported union before any work.
+            for (unsigned i = 0; i < num; ++i) {
+                if (!can_do_inner_union(i, i)) {
+                    std::stringstream sstm;
+                    sstm << "trying to perform unsupported union operation on relations of kinds "
+                         << tgt[i].get_plugin().get_name() << " and " << src[i].get_plugin().get_name();
+                    throw default_exception(sstm.str());
+                }
+            }
             ptr_vector<relation_base> side_results;
             ptr_vector<relation_base> side_deltas;
 

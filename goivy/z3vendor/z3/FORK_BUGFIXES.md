@@ -78,6 +78,8 @@ the g3 fork's `src/` tree:
   commits 5dc0e4c22 and 06764a57b, `FORK FIX` comments in the fix commits)
 * g3 commit ff6f079e3: fix 101 below (red test in g3 commit e01903763,
   `FORK FIX` comments in the fix commit)
+* g3 commits ca711590e and 124110e7a: fixes 102-103 below (red tests in g3
+  commits 541401db9 and 98a5c9b8d, `FORK FIX` comments in the fix commits)
 
 They are copied here unchanged.
 
@@ -184,6 +186,8 @@ They are copied here unchanged.
 | 99 | Duality answers an unsound `sat` when an edge solver with `mbqi.id=itp` ignores a quantifier | local fix (Duality removed upstream): validate the counterexample | `muz/duality/duality_dl_interface.cpp` |
 | 100 | iZ3 refuses rewrite and and-elim steps on formulas propagate_values mixed across frames (Duality "Unsupported proof rule") | local fix (iZ3 removed upstream) | `interp/iz3translate.cpp` |
 | 101 | iZ3 still refuses a mixed rewrite whose congruence side is already mixed (second propagate_values round) | local fix (iZ3 removed upstream) | `interp/iz3translate.cpp` |
+| 102 | Datalog product-relation kinds accepted for any signature, then segfault reading a missing spec | local fix | `muz/rel/dl_product_relation.cpp`, `muz/rel/dl_relation_manager.h` |
+| 103 | Sieve plugin refuses its own kinds, products lose their sieves, aligned union calls a null functor | local fix | `muz/rel/dl_sieve_relation.cpp`, `muz/rel/dl_product_relation.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2119,6 +2123,30 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/interp/iz3translate.cpp:1263` (`global_theta`), `collect_global_equivs` at `:1380`, `proof_busy` at `:1400`, the retry in `localize_rewrite` at `:1377`ff, and the root setup in `translate()` at `:2336`/`:2382` (`FORK FIX #101`): when the rewrite stays mixed, retry with the proof's other hypothesis-free constant equalities (depth first, first proof of each constant wins), skipping any equality whose proof is still being translated (`proof_busy`, a null `translate_main` memo entry) to avoid recursion cycles. g3 does the same (pkg/interp/translation_localize.go, `clauseBusy`/`termBusy`). Interpolants pass iz3check.
 
 **Test.** `TST(z3_4_7_1_duality_second_round_rewrite)`, `src/test/z3_4_7_1_bugs.cpp:2025` (registered at `src/test/main.cpp:262`).
+
+---
+
+## 102. Datalog: product kinds for another signature
+
+**Symptom.** Segfault in `product_relation_plugin::mk_empty(s, kind)` from `get_relation` or `mk_unary_singleton` registers of a product-kind predicate, e.g. `(declare-rel r (Bool Bool) interval_relation bound_relation)` with a fact; 12 crash probes.
+
+**Cause.** `product_relation_plugin::can_handle_signature(s, kind)` returned `true` for every signature, so a kind made for one signature was used for another whose spec is missing.
+
+**Fix.** `src/muz/rel/dl_product_relation.cpp:93` and `rel_spec_store::contains_kind` at `src/muz/rel/dl_relation_manager.h:695` (`FORK FIX #102`): a product kind is accepted only for the signature it was made for. g3 already behaved this way.
+
+**Test.** `TST(z3_4_7_1_product_kind_spec)`, `src/test/z3_4_7_1_bugs.cpp:3635` (registered at `src/test/main.cpp:309`).
+
+---
+
+## 103. Datalog: sieve kinds in product relations
+
+**Symptom.** Segfault, or "Failed to verify: can_do_inner_union(i,i)" followed by a crash, in `product_relation_plugin::aligned_union_fn` on a negated mixed Int/Bool predicate with an unbound Int column, under any default relation; 77 crash probes.
+
+**Cause.** The sieve plugin refused its own kinds in `can_handle_signature(s, kind)`, so products lost their sieves (the empty union target and `convert_spec` built tables or full relations instead), and the `VERIFY` does not stop the null union call.
+
+**Fix.** `src/muz/rel/dl_sieve_relation.cpp:204` (`can_handle_signature` with kind), `:266` (`mk_full` with kind), declarations in `dl_sieve_relation.h`, and `src/muz/rel/dl_product_relation.cpp:652`, which reports a missing diagonal union as an error before doing any work (`FORK FIX #103`). g3 does the same (pkg/muz/rel/dl_sieve_relation.go).
+
+**Test.** `TST(z3_4_7_1_sieve_kinds)`, `src/test/z3_4_7_1_bugs.cpp:3657` (registered at `src/test/main.cpp:310`).
 
 ---
 
