@@ -1,4 +1,4 @@
-# White-box LUT clustering review (in progress)
+# White-box LUT clustering and matching stubs (reviewed)
 
 Scope: ten main routines and eight accessors in giaIff.c, implemented in
 map/if/gia_iff.go to avoid an import cycle. The following giaIiff.c contains
@@ -16,8 +16,8 @@ package audit. Original package completion remains2/131.
   delays, CI arrival profiles and white-box timing/ownership in Go fixtures.
 - [x] Review compactness separately, including count/selection scratch; retain
   original enumeration and clustering policy.
-- [ ] Cover both giaIiff.c source stubs with unchanged-output assertions.
-- [ ] Freeze files, run affected race/vet and full Go-only module integration,
+- [x] Cover both giaIiff.c source stubs with unchanged-output assertions.
+- [x] Freeze files, run affected race/vet and full Go-only module integration,
   reconcile all source routines and update the sequential audit.
 
 Initial inspection: Vec_FltStartFull uses all-one float bits (NaN), while Go
@@ -104,3 +104,31 @@ Keep source clustering policy even when alternative packing could be better.
 No optimizer, matcher or C fixture/compiler dependency is added. Compactness
 removes repeated map/flag scratch and reuses traversal storage while preserving
 kind2/3 accessor meaning and the source-shaped match representation.
+
+
+## Source Boolean-matching stubs and final family gate
+
+Both routines in giaIiff.c are explicit stubs: Gia_ManDeriveMatches returns0;
+Gia_ManIiffTest returnsNULL. The Go implementations already preserve that
+behavior. Add comments explaining the source limitation, not an invented
+matcher. New Go-only tests cover nil arguments and populated pointer/vector/
+paged-memory outputs, preserving identities and contents. The test entry point
+accepts an absent input file with all flag values -1/0/1, returnsnil, preserves
+the borrowed graph's size/mapping/packing and all four independent AND-not
+truth assignments, and creates no files. No C fixture or compiler is needed.
+
+All ten giaIff.c main routines, eight accessors and both giaIiff.c stubs are
+reconciled. A final separate inspection confirms source enumeration, strict
+comparison/order, NaN/empty bounds, traversal ownership, partial-cluster
+selection, box timing and wrapper lifetime policies. Keep source clustering
+heuristics and the source's unimplemented matcher; do not optimize them into
+other algorithms. Earlier pending statements above are historical checkpoints.
+
+Final frozen full Go-only module exits0:130 tested packages pass,3 commands have
+no tests; both new stub tests execute. Affected full IF race77.317s from the
+preceding frozen chunk remains valid (IF unchanged); new GIA stub race1.021s
+and IF/GIA vet exit0. Logs:
+/tmp/abcgo-iff-matrix-final-race.log,
+/tmp/abcgo-iff-reviewed-final-{module.jsonl,stub-race.log,vet.log}.
+All handles are terminal. This closes these two GIA source families; GIA/IF
+package audits and the full131-package objective remain open,2/131 complete.

@@ -20,7 +20,7 @@ source workflows and tests are covered by that audit. Current review: `aig/gia`.
 | --- | --- | --- | --- |
 | 1 | `.` | reviewed | Root review below; race tests and vet pass. |
 | 2 | `aig/aig` | reviewed | All 52 files reconciled; native source matrices, final race suite, vet and module integration gates pass. |
-| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability cofactor network analysis/reconstruction ESOP computation, incremental support-guided quantification and the IF mapping boundary reviewed; remaining families and final inventory pending. |
+| 3 | `aig/gia` | in progress | Graph/manager, copies, hashing, balancing, windows, bi-decomposition, circuit-cofactoring, BDD collapse, counterexample replay/minimization and chronological/conflict-analysis/watched-clause circuit SAT, CTAS, stand-alone priority cuts, deep synthesis, DFS/support, mapped-edge assignment sequential enable/frame transforms, explicit/cube reachability cofactor network analysis/reconstruction ESOP computation, incremental support-guided quantification, the IF mapping boundary and white-box LUT clustering/matching-stub families reviewed; remaining families and final inventory pending. |
 | 4 | `aig/gia/mf` | pending | |
 | 5 | `aig/gia/satcost` | pending | |
 | 6 | `aig/hop` | pending | |
@@ -10012,3 +10012,18 @@ passes130 tested packages plus3 commands without tests; full IF race77.317s and
 IF/GIA vet pass. Logs and source inventory in REVIEW_lut_clustering.md.
 Following giaIiff.c explicit-stub contracts remain next; GIA and original audit
 stay open2/131, with no C fixtures or substitute algorithms added.
+
+
+### Close LUT clustering and retain explicit matching source stubs
+
+Reconcile all ten giaIff.c routines/eight accessors and both giaIiff.c entry
+points. The latter are explicit0/NULL stubs in C; retain zero/nil in Go and
+explain their source limitation rather than inventing a matcher. New Go-only
+checks preserve pointer/vector/paged-memory contents and borrowed graph truth,
+need no input file and create no file outputs. Final full Go-only module passes
+130 tested packages plus3 commands without tests, both new stub tests execute,
+GIA stub race1.021s and IF/GIA vet pass. Full IF race77.317s is unchanged from
+the preceding frozen chunk. Logs /tmp/abcgo-iff-reviewed-final-{module.jsonl,
+stub-race.log,vet.log}; detailed inventory in REVIEW_lut_clustering.md. All
+sessions ended. These source families are reviewed; GIA remains in progress and
+the original audit remains2/131.
