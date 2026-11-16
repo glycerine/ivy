@@ -575,11 +575,8 @@ func Abc_ExactNormalizeArrivalTimesForNetwork(nVars int32, pArrTimeProfile *int3
 		return
 	}
 	nGates := int32(pSol[ABC_EXACT_SOL_NGATES])
-	if nGates < 0 || nGates > 100 {
-		return
-	}
 	need := 3 + int(nGates)*4
-	if len(pSol) < need || nVars+nGates > 100 {
+	if len(pSol) < need {
 		return
 	}
 	levels := make([]int32, int(nVars+nGates))
@@ -2439,8 +2436,9 @@ func Abc_ExactStats() {
 	printExactRuntime("ALL      ", st.timeTotal)
 }
 
-// Abc_ExactDelayCost returns the best output arrival time and the source-order
-// pin delays for the optimal cached/synthesized network.
+// Abc_ExactDelayCost returns source-order pin delays and an output arrival
+// from the first matching cached model or the source synthesis search.
+// Cache hits do not re-optimize for a different arrival profile.
 func Abc_ExactDelayCost(pTruth *word, nVars int32, pArrTimeProfile *int32, pPerm []int8, cost *int32, aigLevel int32) int32 {
 	st := s_pSesStore
 	assert(st != nil, "exact manager is running")

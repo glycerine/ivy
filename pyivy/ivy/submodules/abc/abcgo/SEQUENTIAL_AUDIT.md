@@ -9925,3 +9925,15 @@ Final full Go-only module passes130 tested packages plus3 commands without
 tests; focused IF race1.033s, ABCI exact/store race1.169s and IF/GIA vet pass.
 Recorded runtime review hands off to REVIEW_exact_delay_dependency.md for the
 remaining backend/search/cache analysis. Final family/package audit stays2/131.
+
+
+### Fix exact-cache network normalization size restriction
+
+New red cases expose an artificial100-node limit despite a dynamic level slice
+and no matching C restriction. Remove it; verify source-normalized large cached
+models and supports3..8 key/result ownership, multiword comparisons and failure
+counters. Preserve/document source first-hit caching, which can reuse a slower
+network for changed arrivals; correct the API's optimality overclaim. Full
+Go-only module passes130 tested packages plus3 commands without tests; focused
+exact/cache race1.159s and IF/GIA vet pass. Further exact-miss/search analysis
+and remaining family/package review stay open2/131.

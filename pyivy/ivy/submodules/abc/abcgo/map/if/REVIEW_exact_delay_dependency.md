@@ -16,8 +16,10 @@ Abc_ExactDelayCost in abcExact.c; Go already contains the SES/BSAT backend.
   a new focused failing memory-safety regression.
 - [x] Check AND/XOR phases, arrival profiles, AIG/general gate modes, actual SAT
   calls/cache reuse, and source-unsupported GIA reconstruction.
-- [ ] Review complete Abc_ExactDelayCost normalization, bounds, result/cache
-  lifecycle and resource-limit cases, including supports3..8/multiword truth.
+- [x] Reconcile network-key normalization and cached result/failure ownership
+  through supports3..8, including multiword keys and source first-hit policy.
+- [ ] Review remaining cache-miss depth bounds, search/resource-limit behavior
+  and reporting, including actual synthesis at supports3..8/multiword truth.
 - [ ] Reconcile the single-output SES search/encoding dependencies used by that
   API before claiming the full optional mode reviewed.
 - [ ] Run remaining final GIA mapping-family/module gates.
@@ -77,3 +79,49 @@ no tests. Focused IF race1.033s, ABCI exact/API/store race1.169s, IF/GIA vet exi
 Logs: /tmp/abcgo-exact-if-reviewed-{module.jsonl,if-race.log,abci-race.log,
 vet.log}. All sessions ended. Deeper exact-cost/SES dependencies and final
 mapping-family/package audit remain open; original package completion2/131.
+
+
+## Restore dynamically sized network normalization
+
+Source Abc_ExactNormalizeArrivalTimesForNetwork (abcExact.c:510..560) sizes its
+level vector from the network; it has no100-node limit. Go's dynamic-slice port
+nevertheless returned early for more than100 gates or100 total inputs/gates.
+Seven new boundary cases include99/100/101-node totals and full eight-variable
+chains. Four cases fail before repair (/tmp/abcgo-exact-network-size-red.log,
+exit1). Remove the artificial limits; retain input-size and forward-fanin checks
+before copying levels back. Serialized byte fields bound the allocation size.
+A99-gate cached-cost case verifies actual normalized-key reuse, not just the
+standalone helper.
+
+Go-only packed networks use the source header/gate/trailer layout. Independent
+chain path depths give normalized keys[0,0,1,2,...], allowing exact expectations
+without C tools or calling the production normalizer as its own oracle. Thirty-
+six cached queries across supports3..8 cover offsets, variable arrival orders,
+full-word truth comparisons/hash collisions and unchanged caller truth/arrivals/
+inactive pin bytes. Cache hits must perform no SAT calls or extra insertions.
+Both proven/limit-marked empty-cache categories retain infinity cost, unchanged
+pins and their original insertion counters without retrying synthesis.
+
+## Preserve source cache selection without overstating optimality
+
+Source Ses_StoreGetEntry tests entries in list order after normalizing each
+query against that entry's network. Abc_ExactDelayCost accepts the first hit
+and ignores AigLevel on that path. It does not choose a fresh optimum for every
+new arrival profile. A new explicit example stores two AND3 networks with
+pin depths[2,2,1] and[1,2,2]. For arrivals[0,0,9], the newest matching network
+returns11 although the older one gives10. Preserve the C cache/search policy;
+changing its optimization strategy would be a separate algorithm change.
+Correct the Go API comment, which previously claimed an optimal cached result.
+This is a source-inherited optimization limitation, not a new Go fallback.
+
+The source GetEntry loop also fails to advance after a synthesized-entry
+normalization miss; Go's existing for-loop advances safely. Valid records
+created by the same network-normalization routine match their stored key.
+Retain safe iteration rather than introduce a source hang for inconsistent
+records. No new policy, model approximation or solver substitution is added.
+
+Frozen full Go-only module exits0 (130 tested packages,3 commands without
+tests), focused exact/cache/IF/store/solver race1.159s and IF/GIA vet exit0.
+Logs: /tmp/abcgo-exact-cache-final-{module.jsonl,race.log,vet.log}. All sessions
+ended. Cache-miss depth/resource/reporting and single-output SES dependencies,
+plus final GIA family/package gates, remain open; original audit2/131.

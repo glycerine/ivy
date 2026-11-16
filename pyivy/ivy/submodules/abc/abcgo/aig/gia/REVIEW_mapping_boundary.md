@@ -1803,3 +1803,16 @@ without tests; focused IF race1.033s, ABCI exact/store race1.169s and IF/GIA vet
 exit0. Logs: /tmp/abcgo-exact-if-reviewed-{module.jsonl,if-race.log,abci-race.log,
 vet.log}. All sessions ended. Recorded runtime is reviewed; full exact-cost/SES
 backend dependency and final family/package gates remain open2/131.
+
+
+### Restore exact-cache normalization beyond100 nodes
+
+A new red boundary regression exposes a Go-only gate/total-node limit absent
+from C's dynamic network normalizer. Remove it and verify99-gate cached-cost
+reuse. New Go-only cache cases cover supports3..8, normalized keys, multiword
+collisions, caller ownership, cached failures/counters and source first-hit
+selection. Document the inherited limitation: changed arrivals can reuse a
+slower first cached network, so the API must not promise a fresh optimum.
+Full Go-only module, focused exact/cache race1.159s and IF/GIA vet pass. Source
+lines/logs in map/if/REVIEW_exact_delay_dependency.md. Cache-miss bounds/resource/
+reporting, SES search and final family/package gates remain open2/131.
