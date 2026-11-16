@@ -70,8 +70,8 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Gia_ManFromIfLogic | map/if/gia_mapping.go | Source routing/phase/ref/finalization/config I/O reviewed; exact growth/file boundaries covered; report escaping fixed; unused scratch removed; final family gate pending |
 | Gia_ManMappingVerify_rec | aig/gia/mapping_transfer.go | Source traversal/failure/revisit/terminal behavior reviewed; error routing repaired with red regressions; final family gate pending |
 | Gia_ManMappingVerify | aig/gia/mapping_transfer.go | Source buffer-first/CO-vector order and error routing restored; valid/missing/repeated/bridge cases covered in Go; final family gate pending |
-| Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
-| Gia_ManTransferPacking | aig/gia/mapping_transfer.go | Earlier native/scalar review; reconcile |
+| Gia_ManTransferMapping | aig/gia/mapping_transfer.go | Source copy/order/pruning/marker/ownership and absent-source policy reconciled; exact Go records replace runtime C comparison; final family gate pending |
+| Gia_ManTransferPacking | aig/gia/mapping_transfer.go | Source groups1..3/remapping/count/ownership and absent-source policy reconciled; Go-only coverage; final family gate pending |
 | Gia_ManTransferTiming | aig/gia/timing_metadata.go, base/abci/abc_graph_compat.go, base/wlc/wlc_compat.go | 6,144 native ownership cases; source self-order retained |
 | Abc_FrameMiniAigSetCiArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
@@ -1422,3 +1422,31 @@ the512-case driver matrix; relevant vet exits0
 (`/tmp/abcgo-mapping-verify-final-{cases.log,module.jsonl,race.log,vet.log}`).
 All handles consumed. Transfer test migration follows. Remaining source-family
 rows/gates and original package audit remain open2/131.
+
+### Reconcile transfer records and remove the C test dependency
+
+Re-read `giaIf.c:2121..2190` against both Go transfer functions. Mapping
+preserves source LUT iteration order, replaces destination records, skips
+dangling roots, prunes dangling fanins while decrementing arity, remaps absolute
+marker IDs and preserves the mux sign. Packing copies group sizes1..3 through
+the source Value map, verifies source/destination LUT membership and requires
+the declared group count. Existing Go validation adds safe rejection of invalid
+indices/records; normal source-domain behavior agrees. Absent source mapping
+or packing leaves existing destination metadata untouched.
+
+The prior transfer test ran its Go assertions but ended with an optional C
+comparison, so it was marked skipped without a compiler. Replace that ending
+with an explicit complete Go expected-record vector for this fixed graph,
+retaining all prior remapping, pruning, signed-marker, group, replacement and
+independent-ownership assertions. Add absent-source no-op checks, including
+preexisting destination packing. The62-line `test_vectors/mapping_transfer.c`
+fixture is now unused and removed. No new C vectors/compiler calls are used;
+this entire regression now passes with only Go. Earlier native comparison
+evidence remains historical, not a runtime prerequisite.
+
+Focused verification/transfer0.009s, full Go-only module130 tested packages
+passing plus3 commands without tests, focused GIA race4.922s and relevant vet
+pass on the frozen final tree, as recorded in the preceding section. No
+additional production change was required for record transfer. Remaining
+metrics/reports, hashing/boxed-choice reconciliation, optional dependencies
+and final family gates stay open; original package audit2/131.

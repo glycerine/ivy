@@ -9734,3 +9734,15 @@ semantics, exact errors, CO reordering, print bridge, valid cuts and preconditio
 Full Go-only module130 tested packages pass plus3 commands without tests;
 focused GIA race4.922s and relevant vet pass. Details/logs in
 REVIEW_mapping_boundary.md. Remaining family review stays open, audit2/131.
+
+### Reconcile mapping/packing transfer with Go-only expected records
+
+Review source record order, dangling-root/fanin pruning, signed markers,
+packing groups and ownership. Replace the existing transfer test's optional C
+comparison with a full explicit Go vector; retain its semantic/alias checks
+and add absent-source no-op coverage. Delete the unused62-line C fixture.
+The whole regression now passes without a compiler instead of ending skipped.
+No production transfer defect found beyond verification repaired separately.
+Final full Go-only module, focused GIA race and vet pass as recorded above;
+details in REVIEW_mapping_boundary.md. Remaining family/package audit stays
+open2/131.

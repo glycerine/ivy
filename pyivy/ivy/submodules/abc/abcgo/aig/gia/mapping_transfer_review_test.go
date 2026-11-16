@@ -1,15 +1,14 @@
 package gia
 
 import (
-	"fmt"
-	"os/exec"
 	"slices"
-	"strings"
 	"testing"
 )
 
 func TestMappingTransferRemapsPrunesAndPreservesMuxSigns(t *testing.T) {
 	p, q := Gia_ManStart(1), Gia_ManStart(1)
+	defer Gia_ManStop(p)
+	defer Gia_ManStop(q)
 	a, b, c, unused := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 	qc, qa, qb := Gia_ManAppendCi(q), Gia_ManAppendCi(q), Gia_ManAppendCi(q)
 	roots, copies := make([]int32, 7), make([]int32, 6)
@@ -82,30 +81,39 @@ func TestMappingTransferRemapsPrunesAndPreservesMuxSigns(t *testing.T) {
 	if !slices.Equal(Vec_IntArray(p.VMapping), originalMapping) || !slices.Equal(Vec_IntArray(p.VPacking), originalPacking) {
 		t.Fatal("transfer modified source records")
 	}
-	var got strings.Builder
-	for _, record := range []struct {
-		name string
-		data *Vec_Int_t
-	}{{"mapping", q.VMapping}, {"packing", q.VPacking}} {
-		got.WriteString(record.name)
-		for _, entry := range Vec_IntArray(record.data) {
-			fmt.Fprintf(&got, " %d", entry)
-		}
-		got.WriteByte('\n')
+	// Exact source record order: copied roots are 21,18,15,12,9,6;
+	// the remapped CI order is qa=2, qb=3, qc=1.
+	wantMapping := []int32{
+		0, 0, 0, 0, 0, 0, 53, 0, 0, 48, 0, 0, 43, 0,
+		0, 38, 0, 0, 33, 0, 0, 28, 0, 0, 0, 0, 0, 0,
+		3, 2, 3, 1, 21,
+		3, 2, 3, 1, -18,
+		3, 2, 3, 1, 15,
+		3, 2, 3, 1, -12,
+		3, 2, 3, 1, 9,
+		3, 2, 3, 1, -6,
+	}
+	if !slices.Equal(Vec_IntArray(q.VMapping), wantMapping) {
+		t.Fatalf("mapping %v, want %v", Vec_IntArray(q.VMapping), wantMapping)
 	}
 	Vec_IntWriteEntry(q.VPacking, 2, 0)
 	Vec_IntWriteEntry(q.VMapping, 0, 42)
 	if !slices.Equal(Vec_IntArray(p.VMapping), originalMapping) || !slices.Equal(Vec_IntArray(p.VPacking), originalPacking) {
 		t.Fatal("destination records alias source records")
 	}
-	// Compare complete destination records with the original C routines, not
-	// another implementation of the transfer algorithm in the test.
-	exe := compileGiaSourceOracle(t, "mapping_transfer.c")
-	want, err := exec.Command(exe).CombinedOutput()
-	if err != nil {
-		t.Fatalf("C mapping transfer: %v: %s", err, want)
-	}
-	if got.String() != string(want) {
-		t.Fatalf("Go:\n%sC:\n%s", got.String(), want)
+}
+
+func TestMappingTransfersWithoutSourceMetadataAreNoops(t *testing.T) {
+	src, dst := Gia_ManStart(1), Gia_ManStart(1)
+	defer Gia_ManStop(src)
+	defer Gia_ManStop(dst)
+	dst.VMapping, dst.VPacking = Vec_IntStart(1), Vec_IntStart(1)
+	mapping, packing := dst.VMapping, dst.VPacking
+	output := hashReviewStdout(t, func() {
+		Gia_ManTransferMapping(dst, src)
+		Gia_ManTransferPacking(dst, src)
+	})
+	if output != "" || dst.VMapping != mapping || dst.VPacking != packing || !slices.Equal(Vec_IntArray(mapping), []int32{0}) || !slices.Equal(Vec_IntArray(packing), []int32{0}) {
+		t.Fatal("absent source metadata replaced destination metadata")
 	}
 }
