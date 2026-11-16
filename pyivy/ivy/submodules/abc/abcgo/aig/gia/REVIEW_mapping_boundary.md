@@ -77,7 +77,7 @@ Earlier reviewed rows retain prior native/scalar evidence in SEQUENTIAL_AUDIT.md
 | Abc_FrameMiniAigSetCoRequireds | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigReadCoArrivals | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
 | Abc_FrameMiniAigSetAndGateDelay | aig/gia/frame_bridge.go | Source semantics/ownership reviewed; Go-only boundary matrix; final family gate pending |
-| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing duplication/constraints/boxed-order reviewed; output attributes and remaining optional modes pending |
+| Gia_ManPerformMappingInt | map/if/gia_mapping_driver.go | Source lifecycle/trace/default power repaired; timing duplication/constraints/boxed-order and attribute overwrite/integration reviewed; remaining optional modes pending |
 | Gia_ManPerformMapping | map/if/gia_mapping_driver.go | Pending |
 | Gia_ManPerformSopBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
 | Gia_ManPerformDsdBalance | aig/gia/balance_engines.go, map/if/gia_mapping_driver.go | Metadata policy repaired; native/core coverage; wider cases pending |
@@ -1202,3 +1202,31 @@ Go-only module exits0:130 tested packages pass,3 commands without tests
 IF/GIA vet exit0 (`/tmp/abcgo-driver-attribute-{if-race,vet}.log`). All handles
 consumed. No C fixtures/compiler dependency added. Attribute integration
 coverage is recorded next; remaining source family/package audit stays open2/131.
+
+### Cover output-attribute order and expansion interaction
+
+Reconcile `giaIf.c:2371..2377` and `ifMap.c` cut filtering: attributes are
+assigned to each CO's regular driver, not the CO itself; nonzero (including
+negative) values normalize to one. Later outputs sharing a driver overwrite
+earlier settings, including clearing them with zero. Marked drivers reject
+cuts equal to the LUT limit during enumeration. Source `ifReduce.c` expansion
+does not consult fSpec and may subsequently expand those cuts to the full
+limit; preserve this source behavior rather than adding a new restriction.
+
+New `mapping_attribute_go_review_test.go` covers216 Go-only configurations:
+six attribute pairs for each of two shared driver pairs, inner/outer/hashed
+drivers, and expansion enabled/disabled. Verify actual selected LUT widths,
+shared/complemented COs and a marked direct CI, exact attribute data/ownership,
+and all eight input assignments. The private-field initializer exists only in
+`mapping_attribute_export_test.go`, absent from the production API. No C test
+vector or compiler is used. The initial expected width ignored source
+expansion; the final test explicitly covers both policies, without changing
+production to satisfy that incorrect initial expectation.
+
+Focused216 cases0.140s (`/tmp/abcgo-driver-attribute-source-policy.log`), frozen
+full Go-only module130 tested packages passing plus3 commands without tests
+(IF10.411s/GIA27.537s), focused GIA race1.435s and relevant vet all pass
+(`/tmp/abcgo-driver-attribute-{final-module.jsonl,gia-race.log,vet.log}`).
+Only production repair was the separately committed slice-growth fix, backed
+by its minimal red regression. Outer boxed normalization/hash/transfers,
+optional-mode dependencies and remaining family gates stay open; audit2/131.

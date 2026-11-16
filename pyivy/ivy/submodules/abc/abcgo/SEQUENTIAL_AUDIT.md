@@ -9653,3 +9653,14 @@ signature, references and mapped area. Full Go-only module passes130 tested
 packages plus3 commands without tests; focused IF race1.158s and relevant vet
 pass. Details/logs in REVIEW_mapping_boundary.md. Attribute integration and
 remaining family/package review remain open, audit2/131.
+
+### Cover output-attribute order through final mapping
+
+Add216 Go-only cases spanning shared-driver overwrite order, zero/negative
+attributes, inner/outer/hashed mapping and expansion on/off. Check exact LUT
+widths, attribute ownership/data and every graph assignment. Preserve the
+source distinction between enumeration restrictions and later unrestricted
+area-recovery expansion. Full Go-only module passes130 tested packages plus3
+commands without tests; focused GIA race1.435s and relevant vet pass. See
+REVIEW_mapping_boundary.md. Outer boxed paths, optional-mode dependencies and
+remaining family/package gates remain open, audit2/131.
