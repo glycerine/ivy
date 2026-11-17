@@ -97,6 +97,8 @@ the g3 fork's `src/` tree:
   `FORK FIX` comment in the fix commit)
 * g3 commit e1402e49a: fixes 115-119 below (red tests in g3 commit 6d35e5439,
   `FORK FIX` comments in the fix commit)
+* g3 commit 68656a40b: fix 120 below (red test and `FORK FIX` comments in
+  the same commit)
 
 They are copied here unchanged.
 
@@ -221,6 +223,7 @@ They are copied here unchanged.
 | 117 | `sparse_table` `negated_join_fn` uses src2's join column numbers as src2's own columns | local fix | `muz/rel/dl_sparse_table.cpp` |
 | 118 | `relation_manager::mk_filter_by_intersection_fn(table)` asks for a negation filter, so intersection removes the shared rows | local fix | `muz/rel/dl_relation_manager.cpp` |
 | 119 | `sparse_table` `negated_join_fn` never looks up an all-zero first key | local fix | `muz/rel/dl_sparse_table.cpp` |
+| 120 | `xform.bit_blast` drops the facts in the blasted predicates' relations, so a satisfiable query answers unsat | local fix | `muz/transforms/dl_mk_bit_blast.cpp`, `muz/rel/rel_context.cpp`, `muz/rel/rel_context.h`, `muz/base/dl_context.h` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2376,6 +2379,18 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/muz/rel/dl_sparse_table.cpp:1354` (`FORK FIX #119`): look the first keys up.
 
 **Test.** `TST(z3_4_7_1_sparse_negated_join_zero_key)`, `src/test/z3_4_7_1_bugs.cpp:4308` (registered at `src/test/main.cpp:326`).
+
+---
+
+## 120. Datalog: bit-blasting drops the facts of the blasted predicates
+
+**Symptom.** With `fixedpoint.xform.bit_blast=true`, facts added with `Z3_fixedpoint_add_fact` (or left in a relation by an earlier query) are ignored: with the fact p(1) and the rule q(x) :- p(x), the query exists x. q(x) answers unsat (sat without bit_blast). Upstream master's `dl_mk_bit_blast.cpp` still rewrites the rules only.
+
+**Cause.** `mk_bit_blast` replaces every predicate whose arguments are all bit-vectors by a fresh predicate over their bits and rewrites the rules, but the original predicate's relation in `rel_context`, which holds the facts, is never consulted by the new rules.
+
+**Fix.** `src/muz/transforms/dl_mk_bit_blast.cpp:311` (`FORK FIX #120`): after building the model converter, call `rel_context_base::add_bit_blasted_facts(old, new)` for each blasted predicate. `src/muz/rel/rel_context.cpp:575` copies the rows of a table relation into the new predicate, each bit-vector column expanded into its bits, low bit first. The virtual is declared in `src/muz/base/dl_context.h:133` (empty default for engines without relations) and overridden in `src/muz/rel/rel_context.h:104`. g3 already copied the facts.
+
+**Test.** `TST(z3_4_7_1_bit_blast_add_fact)`, `src/test/z3_4_7_1_bugs.cpp:4349` (registered at `src/test/main.cpp:326`).
 
 ---
 
