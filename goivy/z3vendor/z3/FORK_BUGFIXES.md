@@ -95,6 +95,8 @@ the g3 fork's `src/` tree:
   `FORK FIX` comment in the fix commit)
 * g3 commit 34e04b88d: fix 114 below (red test in g3 commit d658343f7,
   `FORK FIX` comment in the fix commit)
+* g3 commit e1402e49a: fixes 115-119 below (red tests in g3 commit 6d35e5439,
+  `FORK FIX` comments in the fix commit)
 
 They are copied here unchanged.
 
@@ -214,6 +216,11 @@ They are copied here unchanged.
 | 112 | `rule_transformer` leaks the rule set it is building when a plugin throws (e.g. `xform.karr`) | local fix | `muz/base/dl_rule_transformer.cpp` |
 | 113 | `tbv_manager::set(tbv&, uint64, hi, lo)` shifts `1ULL` by 64 or more for columns wider than 64 bits (UB; wrong udoc facts) | local fix | `muz/rel/tbv.cpp` |
 | 114 | `mpz_manager::gcd` reads the cell of an inline operand when the other equals INT_MAX stored as a cell (segfault) | local fix | `util/mpz.cpp` |
+| 115 | `sparse_table` `negated_join_fn` removes rows in increasing offset order, so `remove_offset` drops the wrong rows | local fix | `muz/rel/dl_sparse_table.cpp` |
+| 116 | `sparse_table::contains_fact` compares the wrong cells when the table has functional columns | local fix | `muz/rel/dl_sparse_table.cpp` |
+| 117 | `sparse_table` `negated_join_fn` uses src2's join column numbers as src2's own columns | local fix | `muz/rel/dl_sparse_table.cpp` |
+| 118 | `relation_manager::mk_filter_by_intersection_fn(table)` asks for a negation filter, so intersection removes the shared rows | local fix | `muz/rel/dl_relation_manager.cpp` |
+| 119 | `sparse_table` `negated_join_fn` never looks up an all-zero first key | local fix | `muz/rel/dl_sparse_table.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2309,6 +2316,66 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/util/mpz.cpp:735`-`:739` (`FORK FIX #114`): the entry swap also swaps when `a1` is inline and `b1` is a cell. g3's `mpz_gcd.go` has the same fix (`TestIntegerGCDIntMaxCell`).
 
 **Test.** `TST(z3_4_7_1_gcd_int_max_cell)`, `src/test/z3_4_7_1_bugs.cpp:4081` (registered at `src/test/main.cpp:321`).
+
+---
+
+## 115. Datalog: sparse negated join removes the wrong rows
+
+**Symptom.** `filter_by_negated_join` (e.g. lazy_table filter by negation of a lazy join) leaves rows and indexer disagreeing: t = {1, 2, 3, 4} minus {1, 4} iterates {2, 4}.
+
+**Cause.** `remove_offset` moves the last row into the removed slot, but the offsets to remove were collected and removed in increasing order.
+
+**Fix.** `src/muz/rel/dl_sparse_table.cpp:1327` (`FORK FIX #115`): remove the largest offsets first, as `negation_filter_fn` does.
+
+**Test.** `TST(z3_4_7_1_sparse_negated_join_order)`, `src/test/z3_4_7_1_bugs.cpp:4110` (registered at `src/test/main.cpp:322`).
+
+---
+
+## 116. Datalog: sparse contains_fact with functional columns
+
+**Symptom.** An index table holding (0) reports that it contains (1); (1, 2, 3) with two functional columns makes (1, 0, 3) contained.
+
+**Cause.** The cells are compared from `functional_columns()` on, but the functional columns are the last ones.
+
+**Fix.** `src/muz/rel/dl_sparse_table.cpp:539` (`FORK FIX #116`): compare the columns before `sz - func_col_cnt`.
+
+**Test.** `TST(z3_4_7_1_sparse_contains_fact_functional)`, `src/test/z3_4_7_1_bugs.cpp:4167` (registered at `src/test/main.cpp:323`).
+
+---
+
+## 117. Datalog: sparse negated join column numbers of the second source
+
+**Symptom.** t = {(1,1), (1,5)} minus the join {(1,1,5)} on both columns removes (1,5) instead of (1,1).
+
+**Cause.** A column of src2 keeps its number in the joined signature when used as src2's own column.
+
+**Fix.** `src/muz/rel/dl_sparse_table.cpp:1311` (`FORK FIX #117`): subtract src1's column count.
+
+**Test.** `TST(z3_4_7_1_sparse_negated_join_second_columns)`, `src/test/z3_4_7_1_bugs.cpp:4210` (registered at `src/test/main.cpp:324`).
+
+---
+
+## 118. Datalog: table intersection filter is a negation filter
+
+**Symptom.** product_relation's aligned union intersects table relations by removing the rows the other has (the m_E_* probes run `filter_by_negation` where the intersection belongs). Outputs happen to agree; rlimit counts and table recycling differ.
+
+**Cause.** `relation_manager::mk_filter_by_intersection_fn(table)` asks the table plugins for `mk_filter_by_negation_fn`.
+
+**Fix.** `src/muz/rel/dl_relation_manager.cpp:1487` (`FORK FIX #118`): ask for `mk_filter_by_intersection_fn`; no table plugin has one, so the default join and union are used, as g3 does. The m_E_* probes' rlimit count becomes 93 (was 73).
+
+**Test.** `TST(z3_4_7_1_table_intersection_filter)`, `src/test/z3_4_7_1_bugs.cpp:4262` (registered at `src/test/main.cpp:325`).
+
+---
+
+## 119. Datalog: sparse negated join misses an all-zero first key
+
+**Symptom.** t = {0} minus {0} joined with {0} keeps its row.
+
+**Cause.** The key buffers start as zeros and are looked up only when `update_key` reports a change, so a first key of all zeros is never looked up.
+
+**Fix.** `src/muz/rel/dl_sparse_table.cpp:1354` (`FORK FIX #119`): look the first keys up.
+
+**Test.** `TST(z3_4_7_1_sparse_negated_join_zero_key)`, `src/test/z3_4_7_1_bugs.cpp:4308` (registered at `src/test/main.cpp:326`).
 
 ---
 
