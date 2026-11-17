@@ -348,6 +348,12 @@ Abstract:
                                   never inserts: the first unroll of a
                                   regex membership segfaults (fork fix,
                                   AST-id fidelity audit 2026-11-16).
+    z3_4_7_1_inliner_linear_facts with xform.inline_eager=false,
+                                  mk_rule_inliner never collects the
+                                  predicates with facts, so inline_linear
+                                  inlines a predicate whose relation holds
+                                  API facts and the facts are lost
+                                  (pkg/AUDIT.md FUZZ-F5).
 
     Run: ./test-z3 z3_4_7_1_dom_simplify_root   (etc.)
 --*/
@@ -3833,4 +3839,202 @@ void tst_z3_4_7_1_table_complement_columns() {
         "         (and (= (:var 0) #b11) (= (:var 1) #b01) (= (:var 2) true))\n"
         "         (and (= (:var 0) #b11) (= (:var 1) #b10) (= (:var 2) true))\n"
         "         (and (= (:var 0) #b11) (= (:var 1) #b11) (= (:var 2) true))))\n");
+}
+
+// xform.inline_eager=false with xform.inline_linear_branch: middle has an
+// API fact (Z3_fixedpoint_add_fact, a relation fact) and a rule from seed;
+// left and right read middle. mk_rule_inliner::count_pred_occurrences
+// (rel_context::collect_non_empty_predicates into m_preds_with_facts) runs
+// only in plan_inlining, i.e. with eager inlining, so inline_linear does not
+// know middle has facts, inlines it into left and right, and its fact
+// (true) is lost: z3 4.7.1 answers left = right = {false}.
+// pkg/AUDIT.md FUZZ-F5.
+void tst_z3_4_7_1_inliner_linear_facts() {
+    Z3_config cfg = Z3_mk_config();
+    Z3_context c = Z3_mk_context(cfg);
+    Z3_del_config(cfg);
+    Z3_fixedpoint fp = Z3_mk_fixedpoint(c);
+    Z3_fixedpoint_inc_ref(c, fp);
+    Z3_params p = Z3_mk_params(c);
+    Z3_params_inc_ref(c, p);
+    Z3_params_set_symbol(c, p, Z3_mk_string_symbol(c, "engine"), Z3_mk_string_symbol(c, "datalog"));
+    Z3_params_set_bool(c, p, Z3_mk_string_symbol(c, "xform.inline_eager"), false);
+    Z3_params_set_bool(c, p, Z3_mk_string_symbol(c, "xform.inline_linear_branch"), true);
+    Z3_fixedpoint_set_params(c, fp, p);
+    Z3_sort B = Z3_mk_bool_sort(c);
+    char const* names[4] = { "seed", "middle", "left", "right" };
+    Z3_func_decl d[4];
+    for (unsigned i = 0; i < 4; ++i) {
+        d[i] = Z3_mk_func_decl(c, Z3_mk_string_symbol(c, names[i]), 1, &B, B);
+        Z3_fixedpoint_register_relation(c, fp, d[i]);
+    }
+    unsigned zero = 0, one = 1;
+    Z3_fixedpoint_add_fact(c, fp, d[0], 1, &zero);
+    Z3_fixedpoint_add_fact(c, fp, d[1], 1, &one);
+    Z3_ast x = Z3_mk_bound(c, 0, B);
+    Z3_symbol xs = Z3_mk_string_symbol(c, "x");
+    unsigned pairs[3][2] = { {0, 1}, {1, 2}, {1, 3} };
+    for (unsigned i = 0; i < 3; ++i) {
+        Z3_ast body = Z3_mk_implies(c, Z3_mk_app(c, d[pairs[i][0]], 1, &x), Z3_mk_app(c, d[pairs[i][1]], 1, &x));
+        Z3_fixedpoint_add_rule(c, fp, Z3_mk_forall(c, 0, 0, nullptr, 1, &B, &xs, body), Z3_mk_string_symbol(c, names[pairs[i][1]]));
+    }
+    Z3_func_decl q[2] = { d[2], d[3] };
+    Z3_lbool r = Z3_fixedpoint_query_relations(c, fp, 2, q);
+    std::string answer = Z3_ast_to_string(c, Z3_fixedpoint_get_answer(c, fp));
+    std::string expected =
+        "(and (or (= (:var 0) true) (= (:var 0) false))\n"
+        "     (or (= (:var 0) true) (= (:var 0) false)))";
+    std::cout << "inliner_linear_facts: " << r << "\nexpected\n" << expected << "\ngot\n" << answer << "\n";
+    Z3_params_dec_ref(c, p);
+    Z3_fixedpoint_dec_ref(c, fp);
+    Z3_del_context(c);
+    ENSURE(r == Z3_L_TRUE);
+    ENSURE(answer == expected);
+}
+
+static std::string g_z3_4_7_1_expl_error;
+static void z3_4_7_1_expl_error_handler(Z3_context c, Z3_error_code e) {
+    g_z3_4_7_1_expl_error = Z3_get_error_msg(c, e);
+}
+
+// Shared by the generate_explanations tests below: e(S,S) facts 0->1,
+// 1->2, path its transitive closure (rules "base" and "step"), queried
+// through Z3_fixedpoint_query (rel_context::query(expr*) applies
+// mk_explanations).
+static Z3_lbool z3_4_7_1_explanations_query(bool doc_favourite) {
+    Z3_config cfg = Z3_mk_config();
+    Z3_context c = Z3_mk_context(cfg);
+    Z3_del_config(cfg);
+    Z3_set_error_handler(c, z3_4_7_1_expl_error_handler);
+    g_z3_4_7_1_expl_error.clear();
+    Z3_fixedpoint fp = Z3_mk_fixedpoint(c);
+    Z3_fixedpoint_inc_ref(c, fp);
+    Z3_params p = Z3_mk_params(c);
+    Z3_params_inc_ref(c, p);
+    Z3_params_set_symbol(c, p, Z3_mk_string_symbol(c, "engine"), Z3_mk_string_symbol(c, "datalog"));
+    Z3_params_set_bool(c, p, Z3_mk_string_symbol(c, "datalog.generate_explanations"), true);
+    if (doc_favourite) {
+        Z3_params_set_symbol(c, p, Z3_mk_string_symbol(c, "datalog.default_relation"), Z3_mk_string_symbol(c, "doc"));
+    }
+    Z3_fixedpoint_set_params(c, fp, p);
+    Z3_sort S = Z3_mk_finite_domain_sort(c, Z3_mk_string_symbol(c, "S"), 4);
+    Z3_sort B = Z3_mk_bool_sort(c);
+    Z3_sort SS[3] = { S, S, S };
+    Z3_func_decl e = Z3_mk_func_decl(c, Z3_mk_string_symbol(c, "e"), 2, SS, B);
+    Z3_func_decl path = Z3_mk_func_decl(c, Z3_mk_string_symbol(c, "path"), 2, SS, B);
+    Z3_func_decl node = Z3_mk_func_decl(c, Z3_mk_string_symbol(c, "node"), 1, SS, B);
+    Z3_fixedpoint_register_relation(c, fp, e);
+    Z3_fixedpoint_register_relation(c, fp, path);
+    Z3_fixedpoint_register_relation(c, fp, node);
+    unsigned f01[2] = { 0, 1 }, f12[2] = { 1, 2 };
+    Z3_fixedpoint_add_fact(c, fp, e, 2, f01);
+    Z3_fixedpoint_add_fact(c, fp, e, 2, f12);
+    Z3_ast x = Z3_mk_bound(c, 0, S), y = Z3_mk_bound(c, 1, S), z = Z3_mk_bound(c, 2, S);
+    Z3_symbol names[3] = { Z3_mk_string_symbol(c, "v0"), Z3_mk_string_symbol(c, "v1"), Z3_mk_string_symbol(c, "v2") };
+    Z3_ast xy[2] = { x, y }, yz[2] = { y, z }, xz[2] = { x, z };
+    Z3_ast base = Z3_mk_implies(c, Z3_mk_app(c, e, 2, xy), Z3_mk_app(c, path, 2, xy));
+    Z3_fixedpoint_add_rule(c, fp, Z3_mk_forall(c, 0, 0, nullptr, 2, SS, names, base), Z3_mk_string_symbol(c, "base"));
+    Z3_ast t2[2] = { Z3_mk_app(c, path, 2, xy), Z3_mk_app(c, e, 2, yz) };
+    Z3_ast step = Z3_mk_implies(c, Z3_mk_and(c, 2, t2), Z3_mk_app(c, path, 2, xz));
+    Z3_fixedpoint_add_rule(c, fp, Z3_mk_forall(c, 0, 0, nullptr, 3, SS, names, step), Z3_mk_string_symbol(c, "step"));
+    Z3_ast q;
+    if (doc_favourite) {
+        q = Z3_mk_exists(c, 0, 0, nullptr, 2, SS, names, Z3_mk_app(c, path, 2, xy));
+    }
+    else {
+        // node(y) :- path(x, y), x != y: the condition mixes the table
+        // columns x, y with the explanation columns.
+        Z3_ast t4[2] = { Z3_mk_app(c, path, 2, xy), Z3_mk_not(c, Z3_mk_eq(c, x, y)) };
+        Z3_ast diff = Z3_mk_implies(c, Z3_mk_and(c, 2, t4), Z3_mk_app(c, node, 1, &y));
+        Z3_fixedpoint_add_rule(c, fp, Z3_mk_forall(c, 0, 0, nullptr, 2, SS, names, diff), Z3_mk_string_symbol(c, "diff"));
+        q = Z3_mk_exists(c, 0, 0, nullptr, 1, SS, names, Z3_mk_app(c, node, 1, &x));
+    }
+    Z3_lbool r = Z3_fixedpoint_query(c, fp, q);
+    Z3_params_dec_ref(c, p);
+    Z3_fixedpoint_dec_ref(c, fp);
+    Z3_del_context(c);
+    return r;
+}
+
+// generate_explanations with an interpreted tail over both the table and
+// the explanation columns (x != y next to e = diff(e1)):
+// finite_product_relation's filter_interpreted_fn substitutes the table
+// values into the condition and asks the inner (explanation) plugin for a
+// filter; explanation_relation_plugin has none for a conjunction, and 4.7.1
+// called the null functor (SIGSEGV). The fixed fork throws the
+// instructions' unsupported-operation exception. pkg/AUDIT.md FUZZ-F5.
+void tst_z3_4_7_1_fpr_filter_interpreted() {
+    Z3_lbool r = z3_4_7_1_explanations_query(false);
+    std::cout << "fpr_filter_interpreted: " << r << " " << g_z3_4_7_1_expl_error << "\n";
+    ENSURE(r == Z3_L_UNDEF);
+    ENSURE(g_z3_4_7_1_expl_error == "trying to perform unsupported filter_interpreted operation on a relation of kind fact_explanation");
+}
+
+// generate_explanations with datalog.default_relation=doc: mk_explanations'
+// transform_facts unites the product of a doc relation and the fact
+// explanation (a product_relation) into the explained relation (a
+// finite_product_relation), which has no such union; 4.7.1 called the null
+// union functor (SIGSEGV). The fixed fork throws. pkg/AUDIT.md FUZZ-F5.
+void tst_z3_4_7_1_explanations_doc_union() {
+    Z3_lbool r = z3_4_7_1_explanations_query(true);
+    std::cout << "explanations_doc_union: " << r << " " << g_z3_4_7_1_expl_error << "\n";
+    ENSURE(r == Z3_L_UNDEF);
+    ENSURE(g_z3_4_7_1_expl_error == "trying to perform unsupported union operation on relations of kinds fpr_fact_explanation and product_relation");
+}
+
+// A rule_transformer plugin that throws: z3 4.7.1's
+// rule_transformer::operator() held the current rule set in a raw pointer
+// (new_rules) and never freed it when the plugin threw, so its rules and
+// their ASTs lived until the ast_manager died. mk_karr_invariants throws
+// this way on every rule set (its inner datalog context rejects the
+// loop-counter rules' Int columns), e.g. with fixedpoint.engine=spacer and
+// xform.karr=true. The fixed fork frees the set while unwinding.
+namespace {
+    class z3_4_7_1_throwing_transform : public datalog::rule_transformer::plugin {
+        bool m_throw;
+    public:
+        z3_4_7_1_throwing_transform(bool t): plugin(1), m_throw(t) {}
+        datalog::rule_set * operator()(datalog::rule_set const & source) override {
+            if (m_throw) {
+                throw default_exception("transform failed");
+            }
+            return nullptr;
+        }
+    };
+}
+
+static bool z3_4_7_1_run_throwing_transform(ast_manager& m, bool do_throw) {
+    datalog::register_engine re;
+    smt_params fp;
+    datalog::context ctx(m, re, fp);
+    sort* b = m.mk_bool_sort();
+    func_decl_ref pd(m.mk_func_decl(symbol("leak_p"), 1, &b, b), m);
+    ctx.register_predicate(pd, false);
+    expr* t = m.mk_true();
+    app_ref head(m.mk_app(pd, 1, &t), m);
+    ctx.add_rule(head, symbol::null);
+    datalog::rule_set& rules = ctx.get_rules();
+    datalog::rule_transformer tr(ctx);
+    tr.register_plugin(alloc(z3_4_7_1_throwing_transform, do_throw));
+    bool thrown = false;
+    try {
+        tr(rules);
+    }
+    catch (default_exception&) {
+        thrown = true;
+    }
+    return thrown;
+}
+
+void tst_z3_4_7_1_transformer_throw_leak() {
+    ast_manager m;
+    reg_decl_plugins(m);
+    // A plugin that declines (returns no rule set) frees everything.
+    bool warm = z3_4_7_1_run_throwing_transform(m, false);
+    unsigned before = m.get_num_asts();
+    bool thrown = z3_4_7_1_run_throwing_transform(m, true);
+    unsigned after = m.get_num_asts();
+    std::cout << "transformer_throw_leak: thrown " << thrown << " ASTs before " << before << " after " << after << "\n";
+    ENSURE(!warm && thrown);
+    ENSURE(after == before);
 }

@@ -85,6 +85,12 @@ the g3 fork's `src/` tree:
 * g3 commits 95a41b7f6, cdd4a72f5 and 0ba697b1f: fixes 106-108 below (red
   tests in g3 commits d36c8ce02, 10b5f2ebe and 61ceb4fae, `FORK FIX`
   comments in the fix commits)
+* g3 commit 54601015d: fix 109 below (red test in g3 commit 930056541,
+  `FORK FIX` comment in the fix commit)
+* g3 commits d04ee6e17 and 1986d9747: fixes 110-111 below (red tests in g3
+  commits 5abfed8ff and 27502ffed, `FORK FIX` comments in the fix commits)
+* g3 commit 0b9b30eba: fix 112 below (red test in g3 commit 8ea2ebfe8,
+  `FORK FIX` comment in the fix commit)
 
 They are copied here unchanged.
 
@@ -198,6 +204,10 @@ They are copied here unchanged.
 | 106 | check_relation operations throw `std::bad_cast` when an argument is another plugin's relation | local fix | `muz/rel/check_relation.cpp` |
 | 107 | table_relation_plugin asks its table plugin for a signature it cannot handle (sparse_table segfault) | local fix | `muz/rel/dl_table_relation.cpp` |
 | 108 | `table_base::complement` stops on `VERIFY(sig.first_functional() == 1)` for several non-functional columns | local fix | `muz/rel/dl_base.cpp` |
+| 109 | `inline_linear` inlines away predicates that hold relation facts when `xform.inline_eager=false` | local fix | `muz/transforms/dl_mk_rule_inliner.cpp` |
+| 110 | `finite_product_relation` `filter_interpreted_fn` calls a null inner filter functor (SIGSEGV) | local fix | `muz/rel/dl_finite_product_relation.cpp` |
+| 111 | `mk_explanations` with `default_relation doc` calls a null union functor in `transform_facts` (SIGSEGV) | local fix | `muz/rel/dl_mk_explanations.cpp` |
+| 112 | `rule_transformer` leaks the rule set it is building when a plugin throws (e.g. `xform.karr`) | local fix | `muz/base/dl_rule_transformer.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2221,6 +2231,54 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/muz/rel/dl_base.cpp:386` (`FORK FIX #108`): enumerate all non-functional columns. g3's `TableRelationPlugin.MkFull` follows z3's `mk_full` (an empty helper table, then its complement).
 
 **Test.** `TST(z3_4_7_1_table_complement_columns)`, `src/test/z3_4_7_1_bugs.cpp:3801` (registered at `src/test/main.cpp:315`).
+
+---
+
+## 109. Datalog: linear inlining loses relation facts
+
+**Symptom.** Wrong answer. Facts added with `Z3_fixedpoint_add_fact` to a predicate disappear when that predicate's rule is inlined into its readers: with `xform.inline_eager=false` and `xform.inline_linear_branch=true`, a query answers {false} instead of {true, false}.
+
+**Cause.** `mk_rule_inliner` fills `m_preds_with_facts` (`count_pred_occurrences` -> `rel_context::collect_non_empty_predicates`) only from `plan_inlining`, which runs only with `xform.inline_eager`. `inline_linear` then treats every predicate as fact-free.
+
+**Fix.** `src/muz/transforms/dl_mk_rule_inliner.cpp:860` (`FORK FIX #109`): `mk_rule_inliner::operator()` collects the non-empty predicates before `inline_linear` when eager inlining is off. g3 was already correct; its `TestAPIFixedpointInlinerLinearFacts` holds the fixed answer.
+
+**Test.** `TST(z3_4_7_1_inliner_linear_facts)`, `src/test/z3_4_7_1_bugs.cpp:3852` (registered at `src/test/main.cpp:316`).
+
+---
+
+## 110. Datalog: explanations with an interpreted tail over table columns
+
+**Symptom.** Segfault with `datalog.generate_explanations` on a rule with an interpreted tail over table and explanation columns, e.g. `node(y) :- path(x,y), x != y`.
+
+**Cause.** `finite_product_relation`'s `filter_interpreted_fn` calls the inner relation filter functor without checking that the plugin returned one.
+
+**Fix.** `src/muz/rel/dl_finite_product_relation.cpp:1368` and `:1427` (`FORK FIX #110`): throw "trying to perform unsupported filter_interpreted operation on a relation of kind fact_explanation" instead. g3 reports the same error.
+
+**Test.** `TST(z3_4_7_1_fpr_filter_interpreted)`, `src/test/z3_4_7_1_bugs.cpp:3966` (registered at `src/test/main.cpp:317`).
+
+---
+
+## 111. Datalog: explanations with `default_relation doc`
+
+**Symptom.** Segfault with `datalog.generate_explanations` and `datalog.default_relation=doc`.
+
+**Cause.** `mk_explanations::transform_facts` calls the join and union functors of the finite-product/product relation without checking for null.
+
+**Fix.** `src/muz/rel/dl_mk_explanations.cpp:856` and `:871` (`FORK FIX #111`): throw when the join or union functor is missing. g3 reports the same error.
+
+**Test.** `TST(z3_4_7_1_explanations_doc_union)`, `src/test/z3_4_7_1_bugs.cpp:3978` (registered at `src/test/main.cpp:318`).
+
+---
+
+## 112. Datalog: rule transformer leaks rules when a plugin throws
+
+**Symptom.** With `xform.karr=true`, `mk_karr_invariants` always throws (its inner datalog context's `check_rules` rejects the loop counter's Int column). The rule set being built, and the ASTs of its rules, stay allocated until `~ast_manager`: a leak, and AST deletion order that differs from a correct implementation.
+
+**Cause.** `rule_transformer::operator()` calls each plugin with no cleanup of `new_rules` on an exception.
+
+**Fix.** `src/muz/base/dl_rule_transformer.cpp:94` (`FORK FIX #112`): catch, deallocate `new_rules`, rethrow. g3 already frees them; its AST event digests for `fixedpoint_spacer_karr_infinite_sorts.smt2` were recorded from the fixed fork.
+
+**Test.** `TST(z3_4_7_1_transformer_throw_leak)`, `src/test/z3_4_7_1_bugs.cpp:4029` (registered at `src/test/main.cpp:319`): the AST count must return to its value before the throw.
 
 ---
 
