@@ -22,6 +22,8 @@ require (
 	github.com/ugorji/go/codec v1.3.1
 )
 
+replace github.com/glycerine/g3/pkg => /home/jaten/g3/pkg
+
 //replace github.com/glycerine/rate => ../../rate
 
 require (

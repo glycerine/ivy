@@ -101,6 +101,8 @@ the g3 fork's `src/` tree:
   the same commit)
 * g3 commit b862f6c32: fix 121 below (red test and `FORK FIX` comments in
   the same commit)
+* g3 commit 1be404a41: fix 122 below (red test and `FORK FIX` comment in
+  the same commit)
 
 They are copied here unchanged.
 
@@ -227,6 +229,7 @@ They are copied here unchanged.
 | 119 | `sparse_table` `negated_join_fn` never looks up an all-zero first key | local fix | `muz/rel/dl_sparse_table.cpp` |
 | 120 | `xform.bit_blast` drops the facts in the blasted predicates' relations, so a satisfiable query answers unsat | local fix | `muz/transforms/dl_mk_bit_blast.cpp`, `muz/rel/rel_context.cpp`, `muz/rel/rel_context.h`, `muz/base/dl_context.h` |
 | 121 | `xform.bit_blast` still drops the facts of a blasted predicate whose relation is not a table (doc, check_relation): fix 120 copied table rows only | local fix | `muz/rel/rel_context.cpp` |
+| 122 | A solver made by `Z3_solver_translate` crashes at its next use after `Z3_solver_reset` (null solver factory) | local fix | `api/api_solver.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2406,6 +2409,18 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/muz/rel/rel_context.cpp:582` (`FORK FIX #121` at :584 and :610): keep the table path and, for any other relation, ask `contains_fact` of every tuple of the bit-vector columns' domains (first column slowest), then add the found tuples to the blasted predicate as fix 120 does. More than 24 bits in all throws `default_exception("bit-blast: relation of more than 24 bits cannot be enumerated")` instead of silently dropping the facts. g3 does the same.
 
 **Test.** `TST(z3_4_7_1_bit_blast_relation_fact)`, `src/test/z3_4_7_1_bugs.cpp:4416` (registered at `src/test/main.cpp:327`): the fix-120 scenario with `default_relation=doc` and with `check_relation=tr_sparse`.
+
+---
+
+## 122. API: a translated solver crashes after Z3_solver_reset
+
+**Symptom.** After `Z3_solver_translate(c, s, d)` and `Z3_solver_reset(d, t)`, the next call on `t` that initializes the solver (`Z3_solver_assert`, `Z3_solver_check`, `Z3_solver_push`, ...) segfaults.
+
+**Cause.** `Z3_solver_translate` stores the new `Z3_solver_ref` with a null `m_solver_factory`. `Z3_solver_reset` sets `m_solver = nullptr`, and the next `init_solver` calls `(*(s->m_solver_factory))(...)` through the null factory.
+
+**Fix.** `src/api/api_solver.cpp:48` (`FORK FIX #122`): `init_solver_core` throws `default_exception("solver was created by Z3_solver_translate and has no factory: it cannot be rebuilt after Z3_solver_reset")`, so the API reports `Z3_EXCEPTION` and the handle can still be reset or released. g3 reports the same error.
+
+**Test.** `TST(z3_4_7_1_solver_translate_reset)`, `src/test/z3_4_7_1_bugs.cpp:4431` (registered at `src/test/main.cpp:328`).
 
 ---
 
