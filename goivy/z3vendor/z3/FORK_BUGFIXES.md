@@ -91,6 +91,10 @@ the g3 fork's `src/` tree:
   commits 5abfed8ff and 27502ffed, `FORK FIX` comments in the fix commits)
 * g3 commit 0b9b30eba: fix 112 below (red test in g3 commit 8ea2ebfe8,
   `FORK FIX` comment in the fix commit)
+* g3 commit ca1f814c4: fix 113 below (red test in g3 commit 8d6be5d29,
+  `FORK FIX` comment in the fix commit)
+* g3 commit 34e04b88d: fix 114 below (red test in g3 commit d658343f7,
+  `FORK FIX` comment in the fix commit)
 
 They are copied here unchanged.
 
@@ -208,6 +212,8 @@ They are copied here unchanged.
 | 110 | `finite_product_relation` `filter_interpreted_fn` calls a null inner filter functor (SIGSEGV) | local fix | `muz/rel/dl_finite_product_relation.cpp` |
 | 111 | `mk_explanations` with `default_relation doc` calls a null union functor in `transform_facts` (SIGSEGV) | local fix | `muz/rel/dl_mk_explanations.cpp` |
 | 112 | `rule_transformer` leaks the rule set it is building when a plugin throws (e.g. `xform.karr`) | local fix | `muz/base/dl_rule_transformer.cpp` |
+| 113 | `tbv_manager::set(tbv&, uint64, hi, lo)` shifts `1ULL` by 64 or more for columns wider than 64 bits (UB; wrong udoc facts) | local fix | `muz/rel/tbv.cpp` |
+| 114 | `mpz_manager::gcd` reads the cell of an inline operand when the other equals INT_MAX stored as a cell (segfault) | local fix | `util/mpz.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2279,6 +2285,30 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/muz/base/dl_rule_transformer.cpp:94` (`FORK FIX #112`): catch, deallocate `new_rules`, rethrow. g3 already frees them; its AST event digests for `fixedpoint_spacer_karr_infinite_sorts.smt2` were recorded from the fixed fork.
 
 **Test.** `TST(z3_4_7_1_transformer_throw_leak)`, `src/test/z3_4_7_1_bugs.cpp:4029` (registered at `src/test/main.cpp:319`): the AST count must return to its value before the throw.
+
+---
+
+## 113. Datalog: udoc facts in bit-vector columns wider than 64 bits
+
+**Symptom.** Wrong answer. Under `datalog.default_relation=doc`, `Z3_fixedpoint_add_fact` of 5 to `p((_ BitVec 160))` answers `#x0000000500000000000000050000000000000005`: the value repeats in every 64-bit lane.
+
+**Cause.** `tbv_manager::set(tbv&, uint64, hi, lo)` tests bit `i` with `1ULL << i` for every bit of the column; for `i >= 64` the shift is undefined (x86 masks it to `i % 64`).
+
+**Fix.** `src/muz/rel/tbv.cpp:140` (`FORK FIX #113`): bits at or above 64 are zero. g3 routes such predicates to udoc relations as `mk_empty_relation` does and sets the bits from the numeral of any width.
+
+**Test.** `TST(z3_4_7_1_tbv_wide_uint64)`, `src/test/z3_4_7_1_bugs.cpp:4049` (registered at `src/test/main.cpp:320`).
+
+---
+
+## 114. Numerals: gcd of an inline value and INT_MAX stored in a cell
+
+**Symptom.** Segfault (null `m_ptr` dereference) in `mpz_manager::gcd`, e.g. from `mpq_manager::set(q, 0x7fffffff, 0x7fffffff)` normalizing the fraction.
+
+**Cause.** `set(mpz&, uint64)` keeps values `>= INT_MAX` in a cell, so INT_MAX can be a cell while an equal value is inline. The Lehmer gcd entry swaps its operands only by magnitude; with a small `a1` and a big `b1` of equal value it does not swap and then reads `size(a1)` through the inline operand's null cell pointer. Upstream z3 has the same code.
+
+**Fix.** `src/util/mpz.cpp:735`-`:739` (`FORK FIX #114`): the entry swap also swaps when `a1` is inline and `b1` is a cell. g3's `mpz_gcd.go` has the same fix (`TestIntegerGCDIntMaxCell`).
+
+**Test.** `TST(z3_4_7_1_gcd_int_max_cell)`, `src/test/z3_4_7_1_bugs.cpp:4081` (registered at `src/test/main.cpp:321`).
 
 ---
 

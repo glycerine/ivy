@@ -354,6 +354,12 @@ Abstract:
                                   inlines a predicate whose relation holds
                                   API facts and the facts are lost
                                   (pkg/AUDIT.md FUZZ-F5).
+    z3_4_7_1_gcd_int_max_cell     mpz set(uint64_t) stores INT_MAX in a
+                                  cell, so gcd of an inline INT_MAX and
+                                  that cell enters the Lehmer loop with
+                                  an inline a1 and dereferences its null
+                                  cell; mpq set(q, INT_MAX, INT_MAX)
+                                  crashes (g3 audit, numeral small paths).
 
     Run: ./test-z3 z3_4_7_1_dom_simplify_root   (etc.)
 --*/
@@ -408,6 +414,8 @@ Abstract:
 #include "ast/dl_decl_plugin.h"
 #include "muz/rel/dl_sieve_relation.h"
 #include "muz/rel/rel_context.h"
+#include "muz/rel/tbv.h"
+#include "util/mpq.h"
 #include "ast/rewriter/expr_safe_replace.h"
 #include "ast/rewriter/th_rewriter.h"
 #include "muz/base/dl_util.h"
@@ -4037,4 +4045,53 @@ void tst_z3_4_7_1_transformer_throw_leak() {
     std::cout << "transformer_throw_leak: thrown " << thrown << " ASTs before " << before << " after " << after << "\n";
     ENSURE(!warm && thrown);
     ENSURE(after == before);
+}
+
+// tbv_manager::set(tbv&, uint64_t val, hi, lo) tests bit i of val with
+// (1ULL << i) for every i < hi - lo + 1: for a column wider than 64 bits
+// (a udoc relation of a wide bit-vector, whose fact numerals that fit in
+// 64 bits take this overload) the shift is undefined; x86 masks the count,
+// so 5 in a 160-bit column became 5 * (1 + 2^64 + 2^128). The fixed fork
+// sets the bits above 63 to 0. pkg/AUDIT.md FUZZ-F5.
+void tst_z3_4_7_1_tbv_wide_uint64() {
+    tbv_manager tm(160);
+    tbv* v = tm.allocate0();
+    volatile unsigned hi = 159;
+    tm.set(*v, rational(5), hi, 0);
+    unsigned ones = 0;
+    bool high = false;
+    for (unsigned i = 0; i < 160; ++i) {
+        if ((*v)[i] == BIT_1) {
+            ++ones;
+            high = high || i >= 64;
+        }
+    }
+    tm.deallocate(v);
+    std::cout << "tbv_wide_uint64: ones " << ones << " above bit 63 " << high << "\n";
+    ENSURE(ones == 2 && !high);
+}
+
+// mpz_manager::set(mpz&, uint64_t) keeps a value inline only when it is
+// strictly below INT_MAX, so INT_MAX itself is stored in a cell, while
+// set(mpz&, int64_t) keeps INT_MAX inline. gcd of the two equal values is
+// not both-small, so it takes the Lehmer path: lt(a1, b1) is false, the
+// operands are not swapped, b1 (the cell) is not small, and the loop reads
+// a1.m_ptr->m_size of the inline a1 (a null cell pointer). mpq's
+// set(q, int64_t, uint64_t) normalizes through that gcd.
+void tst_z3_4_7_1_gcd_int_max_cell() {
+    unsynch_mpz_manager zm;
+    scoped_mpz a(zm), b(zm), c(zm);
+    zm.set(a, static_cast<int64_t>(INT_MAX));
+    zm.set(b, static_cast<uint64_t>(INT_MAX));
+    std::cout << "gcd_int_max_cell: a small " << zm.is_small(a) << " b small " << zm.is_small(b) << std::endl;
+    zm.gcd(a, b, c);
+    std::cout << "gcd_int_max_cell: gcd " << zm.to_string(c) << "\n";
+    ENSURE(zm.eq(c, a));
+    zm.gcd(b, a, c);
+    ENSURE(zm.eq(c, a));
+    unsynch_mpq_manager qm;
+    scoped_mpq q(qm);
+    qm.set(q, static_cast<int64_t>(INT_MAX), static_cast<uint64_t>(INT_MAX));
+    std::cout << "gcd_int_max_cell: fraction " << qm.to_string(q) << "\n";
+    ENSURE(qm.is_one(q));
 }
