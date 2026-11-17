@@ -99,6 +99,8 @@ the g3 fork's `src/` tree:
   `FORK FIX` comments in the fix commit)
 * g3 commit 68656a40b: fix 120 below (red test and `FORK FIX` comments in
   the same commit)
+* g3 commit b862f6c32: fix 121 below (red test and `FORK FIX` comments in
+  the same commit)
 
 They are copied here unchanged.
 
@@ -224,6 +226,7 @@ They are copied here unchanged.
 | 118 | `relation_manager::mk_filter_by_intersection_fn(table)` asks for a negation filter, so intersection removes the shared rows | local fix | `muz/rel/dl_relation_manager.cpp` |
 | 119 | `sparse_table` `negated_join_fn` never looks up an all-zero first key | local fix | `muz/rel/dl_sparse_table.cpp` |
 | 120 | `xform.bit_blast` drops the facts in the blasted predicates' relations, so a satisfiable query answers unsat | local fix | `muz/transforms/dl_mk_bit_blast.cpp`, `muz/rel/rel_context.cpp`, `muz/rel/rel_context.h`, `muz/base/dl_context.h` |
+| 121 | `xform.bit_blast` still drops the facts of a blasted predicate whose relation is not a table (doc, check_relation): fix 120 copied table rows only | local fix | `muz/rel/rel_context.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2391,6 +2394,18 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/muz/transforms/dl_mk_bit_blast.cpp:311` (`FORK FIX #120`): after building the model converter, call `rel_context_base::add_bit_blasted_facts(old, new)` for each blasted predicate. `src/muz/rel/rel_context.cpp:575` copies the rows of a table relation into the new predicate, each bit-vector column expanded into its bits, low bit first. The virtual is declared in `src/muz/base/dl_context.h:133` (empty default for engines without relations) and overridden in `src/muz/rel/rel_context.h:104`. g3 already copied the facts.
 
 **Test.** `TST(z3_4_7_1_bit_blast_add_fact)`, `src/test/z3_4_7_1_bugs.cpp:4349` (registered at `src/test/main.cpp:326`).
+
+---
+
+## 121. Datalog: bit-blasting drops the facts of non-table relations
+
+**Symptom.** Fix 120 copies only a table relation's rows into the bit-blasted predicate. With `datalog.default_relation=doc`, or `datalog.check_relation=tr_sparse` (a check_relation wrapping the table), the fact p(1) added with `Z3_fixedpoint_add_fact` stays behind and q(x) :- p(x), exists x. q(x) answers unsat again. Upstream master's `dl_mk_bit_blast.cpp` still has no fact handling.
+
+**Cause.** `rel_context::add_bit_blasted_facts` returned early unless `r->from_table()`; relations that are not tables have no row iterator.
+
+**Fix.** `src/muz/rel/rel_context.cpp:582` (`FORK FIX #121` at :584 and :610): keep the table path and, for any other relation, ask `contains_fact` of every tuple of the bit-vector columns' domains (first column slowest), then add the found tuples to the blasted predicate as fix 120 does. More than 24 bits in all throws `default_exception("bit-blast: relation of more than 24 bits cannot be enumerated")` instead of silently dropping the facts. g3 does the same.
+
+**Test.** `TST(z3_4_7_1_bit_blast_relation_fact)`, `src/test/z3_4_7_1_bugs.cpp:4416` (registered at `src/test/main.cpp:327`): the fix-120 scenario with `default_relation=doc` and with `check_relation=tr_sparse`.
 
 ---
 
