@@ -14,6 +14,8 @@ github.com/glycerine/fwd v1.1.4-beta.jea h1:penEwsXMBPCMCH+iUj/HKRIuRzfESzLIk99O
 github.com/glycerine/fwd v1.1.4-beta.jea/go.mod h1:N5KPZnp8z9AaPcR/9r5u2BcdqnlfcTcEGbX1In/yyIE=
 github.com/glycerine/g3/pkg v0.0.46 h1:wN1qD0UarOq55pSyxOyoDgIzCQtozQF4I5+p7zPk3k0=
 github.com/glycerine/g3/pkg v0.0.46/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
+github.com/glycerine/g3/pkg v0.0.57 h1:G8vxMePchy2FvjeW+6StLCSqkY7FAv6DYn7WwyrXk/4=
+github.com/glycerine/g3/pkg v0.0.57/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
 github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 h1:gclg6gY70GLy3PbkQ1AERPfmLMMagS60DKF78eWwLn8=
 github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31/go.mod h1:Ogl1Tioa0aV7gstGFO7KhffUsb9M4ydbEbbxpcEDc24=
 github.com/glycerine/greenpack v0.541.0 h1:27vVEEmJTCXfRz7EiHqkAY+uXM54rUKHEAXxqPLC+QE=
