@@ -4867,3 +4867,107 @@ void tst_z3_4_7_1_interp_read_single_quantifier() {
     std::remove(file_name);
     ENSURE(quantifier);
 }
+
+// FORK FIX #138: pdr.cache_mode is cast to PDR_CACHE_MODE unchecked, and
+// reachable_cache::add_reachable / is_reachable reached UNREACHABLE() for a
+// mode above 2 (undefined behavior in the release build, an assertion in a
+// debug build) as soon as the PDR search closed a node. An unknown mode now
+// caches nothing, as NO_CACHE (pkg/AUDIT.md muz_fp_04-F4).
+void tst_z3_4_7_1_pdr_cache_mode_out_of_range() {
+    // The datalog commands are not registered in a plain API context, so
+    // the rules and queries go through the fixedpoint API.
+    char const* rules =
+        "(declare-rel inv (Int))\n"
+        "(declare-rel err ())\n"
+        "(declare-var x Int)\n"
+        "(rule (inv 0))\n"
+        "(rule (=> (and (inv x) (< x 5)) (inv (+ x 1))))\n"
+        "(rule (=> (and (inv x) (> x 3)) err))\n"
+        "(query err)\n"
+        "(query inv)\n";
+    Z3_config cfg = Z3_mk_config();
+    Z3_context ctx = Z3_mk_context(cfg);
+    Z3_del_config(cfg);
+    Z3_fixedpoint fp = Z3_mk_fixedpoint(ctx);
+    Z3_fixedpoint_inc_ref(ctx, fp);
+    Z3_params p = Z3_mk_params(ctx);
+    Z3_params_inc_ref(ctx, p);
+    Z3_params_set_symbol(ctx, p, Z3_mk_string_symbol(ctx, "engine"), Z3_mk_string_symbol(ctx, "pdr"));
+    Z3_params_set_uint(ctx, p, Z3_mk_string_symbol(ctx, "pdr.cache_mode"), 5);
+    Z3_fixedpoint_set_params(ctx, fp, p);
+    Z3_ast_vector qs = Z3_fixedpoint_from_string(ctx, fp, rules);
+    Z3_ast_vector_inc_ref(ctx, qs);
+    std::string out;
+    for (unsigned i = 0; i < Z3_ast_vector_size(ctx, qs); ++i) {
+        Z3_lbool r = Z3_fixedpoint_query(ctx, fp, Z3_ast_vector_get(ctx, qs, i));
+        out += r == Z3_L_TRUE ? "sat\n" : r == Z3_L_FALSE ? "unsat\n" : "unknown\n";
+    }
+    Z3_ast_vector_dec_ref(ctx, qs);
+    Z3_params_dec_ref(ctx, p);
+    Z3_fixedpoint_dec_ref(ctx, fp);
+    Z3_del_context(ctx);
+    std::cout << "pdr_cache_mode_out_of_range: " << out;
+    ENSURE(out == "sat\nsat\n");
+}
+
+// FORK FIX #139: parse_declare_datatypes inserts a psort_dt_decl for each
+// (name arity) header before it parses the bodies, and a declaration that
+// failed (here: unknown sort B) left those headers declared as datatype
+// sorts without a definition. Declaring constants of the sort worked, but
+// any use that needs the definition crashed (SIGSEGV), and (declare-sort A)
+// reported "sort already defined". The fork erases the headers of a
+// declaration that fails before its datatypes are committed; here C, the
+// header inserted before A's refusal, is erased too.
+void tst_z3_4_7_1_datatype_failed_headers_erased() {
+#ifndef _WINDOWS
+    std::cout.flush();
+    std::cerr.flush();
+    int fds[2];
+    ENSURE(pipe(fds) == 0);
+    pid_t pid = fork();
+    ENSURE(pid >= 0);
+    if (pid == 0) {
+        close(fds[0]);
+        std::ostringstream out;
+        {
+            cmd_context ctx;
+            ctx.set_solver_factory(mk_smt_strategic_solver_factory());
+            ctx.set_regular_stream(out);
+            ctx.set_diagnostic_stream(out);
+            std::istringstream in("(declare-datatypes ((A 0)) (((a (x B)))))(declare-fun p (A) Bool)(declare-const y A)(assert (p y))(check-sat)\n"
+            "(declare-sort A)\n"
+            "(declare-datatypes ((C 0) (A 0)) (((c)) ((a (x B)))))(declare-const w C)\n"
+            "(echo \"end\")\n"
+            "");
+            parse_smt2_commands(ctx, in);
+        }
+        std::string text = out.str();
+        ssize_t written = write(fds[1], text.c_str(), text.size());
+        (void)written;
+        close(fds[1]);
+        _exit(0);
+    }
+    close(fds[1]);
+    std::string text;
+    char buf[256];
+    ssize_t n;
+    while ((n = read(fds[0], buf, sizeof(buf))) > 0)
+        text.append(buf, static_cast<size_t>(n));
+    close(fds[0]);
+    int status = 0;
+    ENSURE(waitpid(pid, &status, 0) == pid);
+    std::cout << "datatype_failed_headers_erased: exited " << WIFEXITED(status)
+              << " signal " << (WIFSIGNALED(status) ? WTERMSIG(status) : 0) << " output:\n" << text;
+    ENSURE(WIFEXITED(status) && WEXITSTATUS(status) == 0);
+    ENSURE(text ==
+           "(error \"line 1 column 20: invalid datatype declaration, unknown sort 'B'\")\n"
+            "(error \"line 1 column 58: Parsing function declaration. Expecting sort list '(': unknown sort 'A'\")\n"
+            "(error \"line 1 column 83: Invalid constant declaration: unknown sort 'A'\")\n"
+            "(error \"line 1 column 96: unknown constant y\")\n"
+            "sat\n"
+            "(error \"line 3 column 30: sort already defined A\")\n"
+            "(error \"line 3 column 70: Invalid constant declaration: unknown sort 'C'\")\n"
+            "end\n"
+            "");
+#endif
+}

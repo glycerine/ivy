@@ -131,6 +131,10 @@ the g3 fork's `src/` tree:
   commit)
 * g3 commit 4b0fa2df0: fix 137 below (test and `FORK FIX` comment in the same
   commit)
+* g3 commit 03e87e3c2: fix 138 below (test and `FORK FIX` comments in the same
+  commit)
+* g3 commit 4a222c24e: fix 139 below (red test and `FORK FIX` comments in the
+  same commit; the test's registration followed in 2a387e415)
 
 They are copied here unchanged.
 
@@ -273,6 +277,8 @@ They are copied here unchanged.
 | 135 | `z3_replayer::read_int64` overflows `int64_t` (UB) past INT64_MAX and when negating INT64_MIN | local fix | `api/z3_replayer.cpp` |
 | 136 | `declare-datatypes` with a `par` binder longer than the header arity crashes (SIGSEGV) | local fix | `parsers/smt2/smt2parser.cpp` |
 | 137 | `iZ3_parse` applies `Z3_to_app` to a lone quantified assertion (UB) and reports a parse error | local fix | `api/api_interp.cpp` |
+| 138 | An out-of-range `pdr.cache_mode` reaches `UNREACHABLE()` (UB in release) in the PDR reachable cache | local fix | `muz/pdr/pdr_reachable_cache.cpp` |
+| 139 | A failed `declare-datatypes` leaves its header sorts declared without a definition, and later uses crash (SIGSEGV) | local fix | `parsers/smt2/smt2parser.cpp`, `cmd_context/cmd_context.cpp`, `cmd_context/cmd_context.h` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2644,6 +2650,30 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/api/api_interp.cpp:514` (`FORK FIX #137`): keep a non-application result as the one assertion. g3 already did.
 
 **Test.** `TST(z3_4_7_1_interp_read_single_quantifier)`, `src/test/z3_4_7_1_bugs.cpp:4848` (registered at `src/test/main.cpp:341`). Red on the unfixed fork (the quantifier is not read).
+
+---
+
+## 138. PDR: an out-of-range cache_mode reaches UNREACHABLE()
+
+**Symptom.** With `fixedpoint.pdr.cache_mode` above 2, the PDR reachable cache reaches `UNREACHABLE()` as soon as the search closes a node: undefined behavior in the release build (which happens to fall through and answer as for mode 0), an assertion failure in a debug build.
+
+**Cause.** The parameter is cast to `PDR_CACHE_MODE` without a range check, and `reachable_cache::add_reachable` and `is_reachable` have `UNREACHABLE()` as their default case.
+
+**Fix.** `src/muz/pdr/pdr_reachable_cache.cpp:75, :113` (`FORK FIX #138`): an unknown mode caches nothing, as `NO_CACHE`. g3 already ran it so.
+
+**Test.** `TST(z3_4_7_1_pdr_cache_mode_out_of_range)`, `src/test/z3_4_7_1_bugs.cpp:4876` (registered at `src/test/main.cpp:342`): a PDR query with cache_mode 5 through the fixedpoint API answers sat, sat. The release build passes it before the fix too; built with `-fsanitize=unreachable`, the unfixed file stops at its unreachable point.
+
+---
+
+## 139. SMT2: a failed declare-datatypes leaves undefined header sorts
+
+**Symptom.** After a `declare-datatypes` that fails (an unknown field sort, missing bodies, ...), its header sorts stay declared without a definition. Declaring a constant of such a sort works, but any later use that needs the definition crashes z3 with SIGSEGV, e.g. `(declare-datatypes ((A 0)) (((a (x B)))))(declare-fun p (A) Bool)(declare-const y A)(assert (p y))(check-sat)`; and `(declare-sort A)` then fails with "sort already defined".
+
+**Cause.** `parse_sort_decl_or_params` inserts a `psort_dt_decl` for each `(name arity)` header before the bodies are parsed, and nothing removes them when the declaration then fails.
+
+**Fix.** `src/parsers/smt2/smt2parser.cpp:60, :860, :2136, :2161`, `src/cmd_context/cmd_context.cpp:1162` and `src/cmd_context/cmd_context.h:400` (`FORK FIX #139`): a declaration that fails before its datatypes are committed erases the headers it inserted (new `cmd_context::undo_psort_decls`, in global and scoped mode). g3 never published the headers of a failed declaration; it also gained the "sort already defined N" check at the header that z3 makes.
+
+**Test.** `TST(z3_4_7_1_datatype_failed_headers_erased)`, `src/test/z3_4_7_1_bugs.cpp:4921` (registered at `src/test/main.cpp:343`): runs the example in a forked child; signal 11 before the fix, a clean exit after.
 
 ---
 
