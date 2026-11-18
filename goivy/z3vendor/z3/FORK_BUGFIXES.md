@@ -135,6 +135,8 @@ the g3 fork's `src/` tree:
   commit)
 * g3 commit 4a222c24e: fix 139 below (red test and `FORK FIX` comments in the
   same commit; the test's registration followed in 2a387e415)
+* g3 commit 5db8a38a0: change 140 below, a declared divergence by owner
+  decision (the g3 side is 4b5b9fa90)
 
 They are copied here unchanged.
 
@@ -279,6 +281,7 @@ They are copied here unchanged.
 | 137 | `iZ3_parse` applies `Z3_to_app` to a lone quantified assertion (UB) and reports a parse error | local fix | `api/api_interp.cpp` |
 | 138 | An out-of-range `pdr.cache_mode` reaches `UNREACHABLE()` (UB in release) in the PDR reachable cache | local fix | `muz/pdr/pdr_reachable_cache.cpp` |
 | 139 | A failed `declare-datatypes` leaves its header sorts declared without a definition, and later uses crash (SIGSEGV) | local fix | `parsers/smt2/smt2parser.cpp`, `cmd_context/cmd_context.cpp`, `cmd_context/cmd_context.h` |
+| 140 | (Declared divergence, not a bug.) The AST table is an insertion-ordered insdict instead of a chashtable, so its iteration order and capacity match g3's | owner decision | `util/insdict.h`, `ast/ast.h`, `ast/ast.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2674,6 +2677,20 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/parsers/smt2/smt2parser.cpp:60, :860, :2136, :2161`, `src/cmd_context/cmd_context.cpp:1162` and `src/cmd_context/cmd_context.h:400` (`FORK FIX #139`): a declaration that fails before its datatypes are committed erases the headers it inserted (new `cmd_context::undo_psort_decls`, in global and scoped mode). g3 never published the headers of a failed declaration; it also gained the "sort already defined N" check at the header that z3 makes.
 
 **Test.** `TST(z3_4_7_1_datatype_failed_headers_erased)`, `src/test/z3_4_7_1_bugs.cpp:4921` (registered at `src/test/main.cpp:343`): runs the example in a forked child; signal 11 before the fix, a clean exit after.
+
+---
+
+## 140. AST table: insertion-ordered insdict instead of chashtable (declared divergence)
+
+**This is not a bug fix.** By owner decision (2026-11-18), the fork changes behavior that 4.7.1 defines, so that z3 and g3 can agree on it exactly.
+
+**What differed.** `ast_table` was a `chashtable<ast*, obj_ptr_hash<ast>, ast_eq_proc>`, whose capacity depends on hash collisions in its cellar and whose iteration order is its slot-and-chain order. That capacity is printed by `ast_manager::compact_memory`'s `(ast-table ...)` IF_VERBOSE(10) lines (and decides whether compact_memory rebuilds the table), and the iteration order decides the `~ast_manager` leak loop, `compress_ids` and `set_next_expr_id`. g3's AST table is insertion-ordered.
+
+**Change.** `ast/ast.cpp:1446, ast/ast.h:921, util/insdict.h:14` (`FORK FIX #140`): `src/util/insdict.h` is a C++11 port of the core of the Go `github.com/glycerine/insdict` v0.14.6 (dense insertion-ordered entries with holes, an open-addressed index of entry positions with 7-bit hash tags, CPython perturbed probing, rebuild when entries plus holes reach 2/3 of the index), with key, hash and equality template parameters. `ast_table` derives from `insdict<ast*, ast_insdict_hash, ast_eq_proc>`; `capacity()` is the insdict index length. g3's `astCanonicalTable` has the same structure, and g3 ports `compact_memory` and its two verbose lines.
+
+**Effect.** Release z3's stdout and `-st` statistics (other than time, memory and allocation counts) are unchanged on all 1548 g3 test vectors. The `(ast-table ...)` lines change on the 41 vectors that print them, and g3 now prints the same lines. The mk/del event stream changes only in the leak loop, on 10 vectors. AST-heavy runs are about 5% slower in z3 (an extra indirection); g3 is unchanged.
+
+**Test.** `TST(insdict)`, `src/test/insdict.cpp:611` (registered at `src/test/main.cpp:193`): a port of insdict's Go tests, including golden capacity and order vectors produced by the Go insdict itself.
 
 ---
 
