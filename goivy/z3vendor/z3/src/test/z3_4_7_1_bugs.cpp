@@ -4719,3 +4719,151 @@ void tst_z3_4_7_1_sls_restart_shift() {
     ENSURE(shift31 == UINT_MAX);
     ENSURE(shift40 == UINT_MAX);
 }
+
+// FORK FIX #134: opt_stream_buffer::parse_int (the WCNF and OPB readers)
+// accumulated in a signed int, so a WCNF literal or OPB variable index past
+// INT_MAX overflowed (UB), and the WCNF reader took abs() of INT_MIN. The
+// fork accumulates and takes the magnitude in unsigned arithmetic, which
+// gives the wraparound the release build showed with defined behavior:
+// 4294967298 wraps to 2, -4294967298 to -2 and -2147483648 stays INT_MIN
+// (variable 2147483648, printed k!-2147483648). The values are pinned here; the undefined
+// arithmetic itself shows under -fsanitize=signed-integer-overflow.
+void tst_z3_4_7_1_opt_parse_int_wrap() {
+    ast_manager m;
+    reg_decl_plugins(m);
+    std::ostringstream out;
+    {
+        opt::context opt(m);
+        unsigned_vector handles;
+        std::istringstream in("p wcnf 3 2 9\n9 4294967298 -4294967298 0\n9 -2147483648 0\n");
+        parse_wcnf(opt, in, handles);
+        expr_ref_vector hard(m);
+        opt.get_hard_constraints(hard);
+        out << "wcnf:";
+        for (expr* e : hard) out << " " << mk_pp(e, m);
+    }
+    {
+        opt::context opt(m);
+        unsigned_vector handles;
+        std::istringstream in("1 x4294967299 >= 1 ;\n");
+        parse_opb(opt, in, handles);
+        expr_ref_vector hard(m);
+        opt.get_hard_constraints(hard);
+        out << " opb:";
+        for (expr* e : hard) out << " " << mk_pp(e, m);
+    }
+    std::string text = out.str();
+    std::cout << "opt_parse_int_wrap: " << text << "\n";
+    ENSURE(text == "wcnf: (or k!2 (not k!2)) (not k!-2147483648) opb: (>= (ite k!3 1 0) 1)");
+}
+
+// FORK FIX #135: z3_replayer::read_int64 (the log's "I" integer argument)
+// accumulated in int64_t, so a value past INT64_MAX overflowed (UB), and
+// negating INT64_MIN did too. The fork accumulates in uint64_t, which gives
+// the wraparound the release build showed with defined behavior. The values
+// are pinned here; the undefined arithmetic itself shows under
+// -fsanitize=signed-integer-overflow.
+namespace {
+    int64_t z3_4_7_1_replayer_int64s[4];
+    void z3_4_7_1_replayer_int64_probe(z3_replayer & in) {
+        for (unsigned i = 0; i < 4; ++i)
+            z3_4_7_1_replayer_int64s[i] = in.get_int64(i);
+    }
+}
+
+void tst_z3_4_7_1_replayer_int64_wrap() {
+    std::istringstream log("I 9223372036854775807\nI 9223372036854775808\nI -9223372036854775808\nI 18446744073709551617\nC 0\n");
+    z3_replayer r(log);
+    r.register_cmd(0, z3_4_7_1_replayer_int64_probe, "probe");
+    r.parse();
+    std::cout << "replayer_int64_wrap:";
+    for (int64_t v : z3_4_7_1_replayer_int64s) std::cout << " " << v;
+    std::cout << "\n";
+    ENSURE(z3_4_7_1_replayer_int64s[0] == INT64_MAX);
+    ENSURE(z3_4_7_1_replayer_int64s[1] == INT64_MIN);
+    ENSURE(z3_4_7_1_replayer_int64s[2] == INT64_MIN);
+    ENSURE(z3_4_7_1_replayer_int64s[3] == 1);
+}
+
+// FORK FIX #136: parse_declare_datatypes made each datatype of its
+// (name arity) header's arity whatever the par binder said, so a binder
+// longer than the header left psort variables indexing past the
+// datatype's parameters, and z3 crashed (SIGSEGV) instantiating the sort.
+// The fork reports the mismatch:
+// (error "line 1 column 39: datatype sort D declares arity 0 but defines 1 parameters")
+// The crash kills the process, so the script runs in a forked child.
+void tst_z3_4_7_1_datatype_par_beyond_header() {
+#ifndef _WINDOWS
+    std::cout.flush();
+    std::cerr.flush();
+    int fds[2];
+    ENSURE(pipe(fds) == 0);
+    pid_t pid = fork();
+    ENSURE(pid >= 0);
+    if (pid == 0) {
+        close(fds[0]);
+        std::ostringstream out;
+        {
+            cmd_context ctx;
+            ctx.set_solver_factory(mk_smt_strategic_solver_factory());
+            ctx.set_regular_stream(out);
+            ctx.set_diagnostic_stream(out);
+            std::istringstream in("(declare-datatypes ((D 0)) ((par (T) ((mk (f T))))))\n"
+                                  "(declare-datatypes ((E 1)) ((par (T U) ((mk2 (g U))))))\n"
+                                  "(echo \"after\")\n");
+            parse_smt2_commands(ctx, in);
+        }
+        std::string text = out.str();
+        ssize_t written = write(fds[1], text.c_str(), text.size());
+        (void)written;
+        close(fds[1]);
+        _exit(0);
+    }
+    close(fds[1]);
+    std::string text;
+    char buf[256];
+    ssize_t n;
+    while ((n = read(fds[0], buf, sizeof(buf))) > 0)
+        text.append(buf, static_cast<size_t>(n));
+    close(fds[0]);
+    int status = 0;
+    ENSURE(waitpid(pid, &status, 0) == pid);
+    std::cout << "datatype_par_beyond_header: exited " << WIFEXITED(status)
+              << " signal " << (WIFSIGNALED(status) ? WTERMSIG(status) : 0) << " output:\n" << text;
+    ENSURE(WIFEXITED(status) && WEXITSTATUS(status) == 0);
+    ENSURE(text ==
+           "(error \"line 1 column 39: datatype sort D declares arity 0 but defines 1 parameters\")\n"
+           "(error \"line 2 column 40: datatype sort E declares arity 1 but defines 2 parameters\")\n"
+           "after\n");
+#endif
+}
+
+// FORK FIX #137: iZ3_parse (Z3_read_interpolation_problem) takes the
+// arguments of Z3_parse_smtlib2_file's result as the assertions. That result
+// is api::context::mk_and of the assertions, so a single assertion is the
+// formula itself, and Z3_to_app on a quantified one reinterprets the
+// quantifier as an application (UB: the argument count and arguments are
+// read from the quantifier's own fields). The fork keeps a non-application
+// result as the one assertion.
+void tst_z3_4_7_1_interp_read_single_quantifier() {
+    char const* file_name = "z3_4_7_1_interp_read_single_quantifier.smt2";
+    {
+        std::ofstream out(file_name);
+        out << "(declare-fun p (Int) Bool)\n(assert (forall ((x Int)) (p x)))\n";
+    }
+    Z3_config cfg = Z3_mk_config();
+    Z3_context ctx = Z3_mk_context(cfg);
+    Z3_del_config(cfg);
+    unsigned num = 0, num_theory = 0;
+    Z3_ast* cnsts = nullptr;
+    Z3_ast* theory = nullptr;
+    Z3_string error = nullptr;
+    int ok = Z3_read_interpolation_problem(ctx, &num, &cnsts, nullptr, file_name, &error, &num_theory, &theory);
+    std::string first = (ok && num > 0) ? Z3_ast_to_string(ctx, cnsts[0]) : std::string();
+    std::cout << "interp_read_single_quantifier: ok " << ok << " num " << num << " first " << first
+              << " error " << (ok || !error ? "" : error) << "\n";
+    bool quantifier = ok && num == 1 && Z3_get_ast_kind(ctx, cnsts[0]) == Z3_QUANTIFIER_AST;
+    Z3_del_context(ctx);
+    std::remove(file_name);
+    ENSURE(quantifier);
+}

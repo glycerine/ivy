@@ -123,6 +123,14 @@ the g3 fork's `src/` tree:
   no red test, by owner decision, since no input reaches either)
 * g3 commit cdaee84db: fix 133 below (red test and `FORK FIX` comment in the
   same commit)
+* g3 commit 11c989784: fix 134 below (test and `FORK FIX` comment in the same
+  commit)
+* g3 commit b388b90f3: fix 135 below (test and `FORK FIX` comment in the same
+  commit)
+* g3 commit 0eba9582d: fix 136 below (test and `FORK FIX` comment in the same
+  commit)
+* g3 commit 4b0fa2df0: fix 137 below (test and `FORK FIX` comment in the same
+  commit)
 
 They are copied here unchanged.
 
@@ -261,6 +269,10 @@ They are copied here unchanged.
 | 131 | Duality `CandidateFeasible` leaks its checker and solver scope on the recursion-bound early return | local fix | `duality/duality_solver.cpp` |
 | 132 | `interval_manager::nth_root_pos` compares against an unset `one`, so 0 < A < 1 gives the reversed interval [1, A] | local fix | `math/interval/interval_def.h` |
 | 133 | SLS `check_restart` computes `2 << (restarts >> 1)` in a signed int, which overflows (UB) from shift 30 on | local fix | `tactic/sls/sls_engine.cpp` |
+| 134 | `opt_stream_buffer::parse_int` (WCNF/OPB) overflows a signed `int` (UB) past INT_MAX | local fix | `opt/opt_parse.cpp` |
+| 135 | `z3_replayer::read_int64` overflows `int64_t` (UB) past INT64_MAX and when negating INT64_MIN | local fix | `api/z3_replayer.cpp` |
+| 136 | `declare-datatypes` with a `par` binder longer than the header arity crashes (SIGSEGV) | local fix | `parsers/smt2/smt2parser.cpp` |
+| 137 | `iZ3_parse` applies `Z3_to_app` to a lone quantified assertion (UB) and reports a parse error | local fix | `api/api_interp.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2584,6 +2596,54 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/tactic/sls/sls_engine.cpp:633` (`FORK FIX #133`): compute it in unsigned arithmetic and saturate at UINT_MAX once the shift would overflow. g3 already saturated there.
 
 **Test.** `TST(z3_4_7_1_sls_restart_shift)`, `src/test/z3_4_7_1_bugs.cpp:4707` (registered at `src/test/main.cpp:337`): before the fix it prints `3205 2147483653 5 51205` and fails at `shift31 == UINT_MAX`.
+
+---
+
+## 134. OPB/WCNF: integers past INT_MAX overflow a signed int
+
+**Symptom.** A WCNF literal or an OPB variable index larger than INT_MAX is read with signed overflow, which is undefined behavior; the WCNF `read_clause` also takes `abs()` of INT_MIN. The release build happens to wrap (4294967298 reads as 2).
+
+**Cause.** `opt_stream_buffer::parse_int` accumulates in a signed `int`.
+
+**Fix.** `src/opt/opt_parse.cpp:98, :141` (`FORK FIX #134`): accumulate, and take the magnitude, in `unsigned`, as fix 125 did for DIMACS. Results are the release build's wraparound, now with defined behavior. g3 already wrapped.
+
+**Test.** `TST(z3_4_7_1_opt_parse_int_wrap)`, `src/test/z3_4_7_1_bugs.cpp:4731` (registered at `src/test/main.cpp:338`). The test passes before the fix in the release build too, since that build happened to wrap; it is red with the unfixed file built with `-fsanitize=signed-integer-overflow`.
+
+---
+
+## 135. API replayer: 64-bit integers overflow
+
+**Symptom.** An API log `I` argument larger than INT64_MAX, or the negation of INT64_MIN, is read with signed overflow (undefined behavior). The release build happens to wrap.
+
+**Cause.** `z3_replayer::read_int64` accumulates in `int64_t`.
+
+**Fix.** `src/api/z3_replayer.cpp:229` (`FORK FIX #135`): accumulate in `uint64_t`; results are the release build's wraparound (9223372036854775808 reads as INT64_MIN), now with defined behavior. g3 already wrapped.
+
+**Test.** `TST(z3_4_7_1_replayer_int64_wrap)`, `src/test/z3_4_7_1_bugs.cpp:4774` (registered at `src/test/main.cpp:339`). Replays a log into a probe command. Passes before the fix in the release build; red with the unfixed file built with `-fsanitize=signed-integer-overflow -fno-sanitize-recover`.
+
+---
+
+## 136. SMT2: a par binder past the datatype header arity crashes
+
+**Symptom.** `(declare-datatypes ((D 0)) ((par (T) ((mk (f T))))))` crashes z3 with SIGSEGV (exit status 139).
+
+**Cause.** `parse_declare_datatypes` gives each datatype its header's parameter count whatever the `par` binder says, so the binder's extra psort variables index past the datatype's parameters when the sort is instantiated.
+
+**Fix.** `src/parsers/smt2/smt2parser.cpp:968` (`FORK FIX #136`): report the mismatch in `parse_datatype_dec` once the binder and the constructor list's `(` are read: `(error "line 1 column 39: datatype sort D declares arity 0 but defines 1 parameters")`, the text and position g3 already gave.
+
+**Test.** `TST(z3_4_7_1_datatype_par_beyond_header)`, `src/test/z3_4_7_1_bugs.cpp:4795` (registered at `src/test/main.cpp:340`). Runs the parser in a forked child: signal 11 before the fix, a clean exit with the error after.
+
+---
+
+## 137. Interpolation reader: a single quantified assertion is misread
+
+**Symptom.** `Z3_read_interpolation_problem` on a file whose only assertion is quantified, e.g. `(assert (forall ((x Int)) (p x)))`, reports "SMTLIB parse error: " and returns false.
+
+**Cause.** `iZ3_parse` takes the arguments of `Z3_parse_smtlib2_file`'s result as the assertions. That result is `mk_and` of the assertions, so a single assertion is the formula itself, and `Z3_to_app` on a quantifier reads it as an application (undefined behavior).
+
+**Fix.** `src/api/api_interp.cpp:514` (`FORK FIX #137`): keep a non-application result as the one assertion. g3 already did.
+
+**Test.** `TST(z3_4_7_1_interp_read_single_quantifier)`, `src/test/z3_4_7_1_bugs.cpp:4848` (registered at `src/test/main.cpp:341`). Red on the unfixed fork (the quantifier is not read).
 
 ---
 
