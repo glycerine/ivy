@@ -2,6 +2,7 @@
 # Copyright (c) Microsoft Corporation. All Rights Reserved.
 #
 from .ivy_art import *
+import os
 import pickle
 from .ivy_interp import Interp, eval_state_facts
 from functools import partial
@@ -2623,7 +2624,7 @@ def clear_rules(modname):
         if s.startswith('p_'):
             del d[s]
 
-def read_module(f,nested=False):
+def read_module(f,nested=False,target_dir=None):
     #print('python side xtracer.enabled=', xtracer.enabled, '\n', file=sys.stdout, flush=True)
     if __debug__: xtracer.trace("init.ReadModule ENTER file=%s nested=%s" % (xtracer.normalize_filename(f.name) if hasattr(f,'name') else '?', str(nested)))
     from . import ivy_logic_parser
@@ -2644,8 +2645,16 @@ def read_module(f,nested=False):
                 clear_rules('ivy_parser')
                 importlib.reload(ivy_logic_parser)
                 importlib.reload(ivy_parser)
-        ivy_parser.importer = import_module
-        decls = parse(s,nested)
+        if not nested:
+            filename = getattr(f, 'name', None)
+            if isinstance(filename, str):
+                target_dir = os.path.dirname(os.path.abspath(filename))
+        previous_importer = getattr(ivy_parser, 'importer', import_module)
+        ivy_parser.importer = partial(import_module, target_dir=target_dir)
+        try:
+            decls = parse(s,nested)
+        finally:
+            ivy_parser.importer = previous_importer
     elif header == '//lang dafny1':
         decls = dc.parse_to_ivy(s)
     else:
@@ -2657,19 +2666,34 @@ def read_module(f,nested=False):
     if __debug__: xtracer.trace("init.ReadModule EXIT file=%s decls=%d" % (xtracer.normalize_filename(f.name) if hasattr(f,'name') else '?', len(decls.decls) if hasattr(decls,'decls') else 0))
     return decls
 
-def import_module(name):
+def module_paths(name, target_dir):
+    filename = name + '.ivy'
+    yield filename
+    try:
+        std_dir = iu.get_std_include_dir()
+    except (OSError, IvyError):
+        if target_dir is None:
+            raise
+    else:
+        yield os.path.join(std_dir, filename)
+    if target_dir is not None:
+        yield os.path.join(target_dir, filename)
+
+def import_module(name, target_dir=None):
     if __debug__: xtracer.trace("init.ImportModule ENTER name=%s" % name)
-    fname = name + '.ivy'
-    try: 
-        f = open(fname,'r')
-    except Exception:
-        fname = os.path.join(iu.get_std_include_dir(),fname)
+    for fname in module_paths(name, target_dir):
         try:
-            f = open(fname,'r')
-        except Exception:
-            raise IvyError(None,"module {} not found in current directory or module path".format(name))
-    with iu.SourceFile(fname):
-        mod = read_module(f,nested=True)
+            f = open(fname, 'r')
+        except OSError:
+            continue
+        with f, iu.SourceFile(fname):
+            mod = read_module(f, nested=True, target_dir=target_dir)
+        break
+    else:
+        locations = "current directory or module path"
+        if target_dir is not None:
+            locations = "current directory, module path, or input file directory ({})".format(target_dir)
+        raise IvyError(None, "module {} not found in {}".format(name, locations))
     if __debug__: xtracer.trace("init.ImportModule EXIT name=%s" % name)
     return mod
 
