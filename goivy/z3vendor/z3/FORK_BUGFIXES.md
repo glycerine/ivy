@@ -117,6 +117,8 @@ the g3 fork's `src/` tree:
   same commit)
 * g3 commits bfc3c3af7 and 4ae5719ce: fix 129 below (`FORK FIX` comments and
   red test; the test's farkas case was corrected in the following commit)
+* g3 commit 9384a953c: fix 130 below (red test and `FORK FIX` comment in the
+  same commit; the g3 side is documented in 5caafdc4b)
 
 They are copied here unchanged.
 
@@ -251,6 +253,7 @@ They are copied here unchanged.
 | 127 | `seq_rewriter::mk_re_loop` folds a bound of 2^31 or more into a negative `re.loop` parameter | local fix | `ast/rewriter/seq_rewriter.cpp` |
 | 128 | An OPB constraint that ends before its relation becomes an Int "hard constraint", and `optimize()` crashes (SIGSEGV) | local fix | `opt/opt_parse.cpp` |
 | 129 | `proof_checker` reaches `UNREACHABLE()` (UB in release) on every rejection, and has no case for the true-axiom | local fix | `ast/proofs/proof_checker.cpp` |
+| 130 | The API log escapes a byte >= 0x80 from a signed char, so z3's own replayer rejects the log | local fix | `api/z3_logger.h` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2526,6 +2529,18 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/ast/proofs/proof_checker.cpp:15, :230` (`FORK FIX #129`): outside debug builds `UNREACHABLE()` is a no-op in this file, so the checker returns false as written; and `check1_basic` accepts `PR_TRUE` as an axiom. g3 does the same (its muz coalesce proofs use the true-axiom).
 
 **Test.** `TST(z3_4_7_1_proof_checker_rejects)`, `src/test/z3_4_7_1_bugs.cpp:4622` (registered at `src/test/main.cpp:335`): the true-axiom is accepted and a farkas lemma with a symbolic coefficient is rejected (before the fix the test dumps core).
+
+---
+
+## 130. API log: bytes >= 0x80 are escaped wrongly
+
+**Symptom.** With an API log (`Z3_open_log`), a string or symbol containing a byte of 0x80 or more, such as the UTF-8 lead byte 0xC3, is written as a garbled escape (for example `\0*/`), and z3's own replayer then fails with "invalid scaped character".
+
+**Cause.** `ll_escaped` computes the three decimal escape digits from a `char`, which is signed, so a byte of 0x80 or more is negative and its digits come out as other characters.
+
+**Fix.** `src/api/z3_logger.h:62` (`FORK FIX #130`): take the byte as `unsigned char`, so 0xC3 is written `\195`. g3 already escaped the unsigned byte.
+
+**Test.** `TST(z3_4_7_1_log_escape_high_byte)`, `src/test/z3_4_7_1_bugs.cpp:4650` (registered at `src/test/main.cpp:336`).
 
 ---
 
