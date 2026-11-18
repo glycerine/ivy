@@ -119,6 +119,8 @@ the g3 fork's `src/` tree:
   red test; the test's farkas case was corrected in the following commit)
 * g3 commit 9384a953c: fix 130 below (red test and `FORK FIX` comment in the
   same commit; the g3 side is documented in 5caafdc4b)
+* g3 commits e3f8e2295 and fa64812f0: fixes 131 and 132 below (`FORK FIX` comments;
+  no red test, by owner decision, since no input reaches either)
 
 They are copied here unchanged.
 
@@ -254,6 +256,8 @@ They are copied here unchanged.
 | 128 | An OPB constraint that ends before its relation becomes an Int "hard constraint", and `optimize()` crashes (SIGSEGV) | local fix | `opt/opt_parse.cpp` |
 | 129 | `proof_checker` reaches `UNREACHABLE()` (UB in release) on every rejection, and has no case for the true-axiom | local fix | `ast/proofs/proof_checker.cpp` |
 | 130 | The API log escapes a byte >= 0x80 from a signed char, so z3's own replayer rejects the log | local fix | `api/z3_logger.h` |
+| 131 | Duality `CandidateFeasible` leaks its checker and solver scope on the recursion-bound early return | local fix | `duality/duality_solver.cpp` |
+| 132 | `interval_manager::nth_root_pos` compares against an unset `one`, so 0 < A < 1 gives the reversed interval [1, A] | local fix | `math/interval/interval_def.h` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2541,6 +2545,30 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/api/z3_logger.h:62` (`FORK FIX #130`): take the byte as `unsigned char`, so 0xC3 is written `\195`. g3 already escaped the unsigned byte.
 
 **Test.** `TST(z3_4_7_1_log_escape_high_byte)`, `src/test/z3_4_7_1_bugs.cpp:4650` (registered at `src/test/main.cpp:336`).
+
+---
+
+## 131. Duality: CandidateFeasible leaks its checker
+
+**Symptom.** None visible: the leak changes no answer or output. Each candidate rejected because a child is past the recursion bound leaves a checker RPFP, and a pushed solver scope, behind.
+
+**Cause.** `CandidateFeasible` allocates a checker and calls `Push()`, and the normal exit calls `Pop(1)` and deletes it, but the `BOUNDED` early return does neither.
+
+**Fix.** `src/duality/duality_solver.cpp:882` (`FORK FIX #131`): pop and delete the checker before the early return. g3 already released it.
+
+**Test.** None: the leak has no observable effect, and checking it would mean inspecting internal solver scope levels through a hand-built RPFP (owner decision 2026-11-18 to land it without a red test).
+
+---
+
+## 132. Intervals: nth_root_pos uses an unset `one`
+
+**Symptom.** In the conservative fallback of `nth_root_pos`, an argument with 0 < A < 1 yields the reversed interval [1, A] instead of [A, 1].
+
+**Cause.** The fallback declares `_scoped_numeral<numeral_manager> one(m())` and tests `m().lt(A, one)` without ever setting `one`, so it compares against 0.
+
+**Fix.** `src/math/interval/interval_def.h:369` (`FORK FIX #132`): set `one` to 1 before the comparison. g3 already did.
+
+**Test.** None: the branch runs only when both directed-rounding checks fail, which no SMT input reaches; a test would need a custom imprecise numeral manager (owner decision 2026-11-18 to land it without a red test).
 
 ---
 
