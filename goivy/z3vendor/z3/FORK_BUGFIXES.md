@@ -103,6 +103,8 @@ the g3 fork's `src/` tree:
   the same commit)
 * g3 commit 1be404a41: fix 122 below (red test and `FORK FIX` comment in
   the same commit)
+* g3 commit 5245f70b5: fix 123 below (red test and `FORK FIX` comment in
+  the same commit)
 
 They are copied here unchanged.
 
@@ -230,6 +232,7 @@ They are copied here unchanged.
 | 120 | `xform.bit_blast` drops the facts in the blasted predicates' relations, so a satisfiable query answers unsat | local fix | `muz/transforms/dl_mk_bit_blast.cpp`, `muz/rel/rel_context.cpp`, `muz/rel/rel_context.h`, `muz/base/dl_context.h` |
 | 121 | `xform.bit_blast` still drops the facts of a blasted predicate whose relation is not a table (doc, check_relation): fix 120 copied table rows only | local fix | `muz/rel/rel_context.cpp` |
 | 122 | A solver made by `Z3_solver_translate` crashes at its next use after `Z3_solver_reset` (null solver factory) | local fix | `api/api_solver.cpp` |
+| 123 | `mpfx_manager::div` loses the rounding carry out of a short quotient, so the result becomes epsilon | local fix | `util/mpfx.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2421,6 +2424,18 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/api/api_solver.cpp:48` (`FORK FIX #122`): `init_solver_core` throws `default_exception("solver was created by Z3_solver_translate and has no factory: it cannot be rebuilt after Z3_solver_reset")`, so the API reports `Z3_EXCEPTION` and the handle can still be reset or released. g3 reports the same error.
 
 **Test.** `TST(z3_4_7_1_solver_translate_reset)`, `src/test/z3_4_7_1_bugs.cpp:4431` (registered at `src/test/main.cpp:328`).
+
+---
+
+## 123. mpfx: division loses the rounding carry of a short quotient
+
+**Symptom.** In a 2+1-word `mpfx_manager` rounding toward plus infinity, (2^64 - 2^-32) / 2^32 gives 1/2^32 instead of 2^32.
+
+**Cause.** `div` computes a quotient of `q_sz` words and, for an inexact result rounded away from zero, increments `m_total_sz` words of the quotient buffer. When `q_sz < m_total_sz` it then copies only `q_sz` words, so a carry out of them lands in a stale buffer word and is dropped; the copied words are all zero and `div` sets epsilon.
+
+**Fix.** `src/util/mpfx.cpp:485` (`FORK FIX #123`): clear the quotient words from `q_sz` to `m_total_sz` and copy all `m_total_sz` words. g3's word-array mpfx does the same (`TestFixedPointDivisionCarryPastQuotientWords`).
+
+**Test.** `TST(z3_4_7_1_mpfx_div_carry)`, `src/test/z3_4_7_1_bugs.cpp:4465` (registered at `src/test/main.cpp:329`).
 
 ---
 
