@@ -51,8 +51,10 @@ def normalize_filename(f):
     # Build list of include directory prefixes to normalize.
     # The include path may be under the source tree or under a venv.
     prefixes = []
-    #from . import ivy_utils as iu
-    std_dir = iu.get_std_include_dir()
+    try:
+        std_dir = iu.get_std_include_dir()
+    except (OSError, iu.IvyError):
+        std_dir = None
     if std_dir:
         base_dir = os.path.dirname(std_dir)
         if base_dir and not base_dir.endswith(os.sep):
