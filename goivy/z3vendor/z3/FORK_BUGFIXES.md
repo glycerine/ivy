@@ -121,6 +121,8 @@ the g3 fork's `src/` tree:
   same commit; the g3 side is documented in 5caafdc4b)
 * g3 commits e3f8e2295 and fa64812f0: fixes 131 and 132 below (`FORK FIX` comments;
   no red test, by owner decision, since no input reaches either)
+* g3 commit cdaee84db: fix 133 below (red test and `FORK FIX` comment in the
+  same commit)
 
 They are copied here unchanged.
 
@@ -258,6 +260,7 @@ They are copied here unchanged.
 | 130 | The API log escapes a byte >= 0x80 from a signed char, so z3's own replayer rejects the log | local fix | `api/z3_logger.h` |
 | 131 | Duality `CandidateFeasible` leaks its checker and solver scope on the recursion-bound early return | local fix | `duality/duality_solver.cpp` |
 | 132 | `interval_manager::nth_root_pos` compares against an unset `one`, so 0 < A < 1 gives the reversed interval [1, A] | local fix | `math/interval/interval_def.h` |
+| 133 | SLS `check_restart` computes `2 << (restarts >> 1)` in a signed int, which overflows (UB) from shift 30 on | local fix | `tactic/sls/sls_engine.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2569,6 +2572,18 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/math/interval/interval_def.h:369` (`FORK FIX #132`): set `one` to 1 before the comparison. g3 already did.
 
 **Test.** None: the branch runs only when both directed-rounding checks fail, which no SMT input reaches; a test would need a custom imprecise numeral manager (owner decision 2026-11-18 to land it without a red test).
+
+---
+
+## 133. SLS: the restart increment overflows a signed int
+
+**Symptom.** After enough restarts (shift 30 and up), the SLS engine's next-restart increment `2 << (restarts >> 1)` overflows a signed `int`, which is undefined behavior; in the release build the increment wraps to small or nonsensical values (e.g. 2147483653 for shift 31).
+
+**Cause.** `sls_engine::check_restart` computes the increment as a signed shift of a plain `int`.
+
+**Fix.** `src/tactic/sls/sls_engine.cpp:633` (`FORK FIX #133`): compute it in unsigned arithmetic and saturate at UINT_MAX once the shift would overflow. g3 already saturated there.
+
+**Test.** `TST(z3_4_7_1_sls_restart_shift)`, `src/test/z3_4_7_1_bugs.cpp:4707` (registered at `src/test/main.cpp:337`): before the fix it prints `3205 2147483653 5 51205` and fails at `shift31 == UINT_MAX`.
 
 ---
 
