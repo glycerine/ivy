@@ -115,6 +115,8 @@ the g3 fork's `src/` tree:
   same commit, with the g3 side of audit ast_rewriter_05-F6)
 * g3 commit f73df4151: fix 128 below (red test and `FORK FIX` comment in the
   same commit)
+* g3 commits bfc3c3af7 and 4ae5719ce: fix 129 below (`FORK FIX` comments and
+  red test; the test's farkas case was corrected in the following commit)
 
 They are copied here unchanged.
 
@@ -248,6 +250,7 @@ They are copied here unchanged.
 | 126 | `default_table_filter_interpreted_and_project_fn` never frees its filtered clone, so a lazy table's filter condition lives until `~ast_manager` | local fix | `muz/rel/dl_relation_manager.cpp` |
 | 127 | `seq_rewriter::mk_re_loop` folds a bound of 2^31 or more into a negative `re.loop` parameter | local fix | `ast/rewriter/seq_rewriter.cpp` |
 | 128 | An OPB constraint that ends before its relation becomes an Int "hard constraint", and `optimize()` crashes (SIGSEGV) | local fix | `opt/opt_parse.cpp` |
+| 129 | `proof_checker` reaches `UNREACHABLE()` (UB in release) on every rejection, and has no case for the true-axiom | local fix | `ast/proofs/proof_checker.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2511,6 +2514,18 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/opt/opt_parse.cpp:280` (`FORK FIX #128`): when no relation was read, report `(error line N "unexpected end of input" expected ">=", "=" or "<=")` in the reader's own error style and exit 3, as its other errors do. g3 does the same (vector `opb_constraint_without_relation.opb`).
 
 **Test.** `TST(z3_4_7_1_opb_constraint_without_relation)`, `src/test/z3_4_7_1_bugs.cpp:4592` (registered at `src/test/main.cpp:334`): runs the reader in a forked child; signal 11 before the fix, exit status 3 after.
+
+---
+
+## 129. Proof checker: every rejection is undefined behavior
+
+**Symptom.** Checking a proof that the checker rejects, for example a farkas lemma with a non-rational coefficient, or any proof that uses the true-axiom (`PR_TRUE`), crashes or behaves unpredictably in the release build.
+
+**Cause.** Every rejection path in `proof_checker` calls `UNREACHABLE()` before `return false`, and in the release build `UNREACHABLE()` is `__builtin_unreachable()`, so reaching it is undefined behavior. `check1_basic` also has no case for `PR_TRUE`, so the sound true-axiom falls into the default branch and its `UNREACHABLE()`.
+
+**Fix.** `src/ast/proofs/proof_checker.cpp:15, :230` (`FORK FIX #129`): outside debug builds `UNREACHABLE()` is a no-op in this file, so the checker returns false as written; and `check1_basic` accepts `PR_TRUE` as an axiom. g3 does the same (its muz coalesce proofs use the true-axiom).
+
+**Test.** `TST(z3_4_7_1_proof_checker_rejects)`, `src/test/z3_4_7_1_bugs.cpp:4622` (registered at `src/test/main.cpp:335`): the true-axiom is accepted and a farkas lemma with a symbolic coefficient is rejected (before the fix the test dumps core).
 
 ---
 
