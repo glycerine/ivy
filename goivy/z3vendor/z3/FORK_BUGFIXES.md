@@ -105,6 +105,16 @@ the g3 fork's `src/` tree:
   the same commit)
 * g3 commit 5245f70b5: fix 123 below (red test and `FORK FIX` comment in
   the same commit)
+* g3 commit 93c44dd46: fix 124 below (red test and `FORK FIX` comments in
+  the same commit)
+* g3 commit d1a69fa63: fix 125 below (test and `FORK FIX` comments in the same
+  commit)
+* g3 commit bc887e4b2: fix 126 below (red test and `FORK FIX` comment in the
+  same commit)
+* g3 commit 51f649bba: fix 127 below (red test and `FORK FIX` comment in the
+  same commit, with the g3 side of audit ast_rewriter_05-F6)
+* g3 commit f73df4151: fix 128 below (red test and `FORK FIX` comment in the
+  same commit)
 
 They are copied here unchanged.
 
@@ -233,6 +243,11 @@ They are copied here unchanged.
 | 121 | `xform.bit_blast` still drops the facts of a blasted predicate whose relation is not a table (doc, check_relation): fix 120 copied table rows only | local fix | `muz/rel/rel_context.cpp` |
 | 122 | A solver made by `Z3_solver_translate` crashes at its next use after `Z3_solver_reset` (null solver factory) | local fix | `api/api_solver.cpp` |
 | 123 | `mpfx_manager::div` loses the rounding carry out of a short quotient, so the result becomes epsilon | local fix | `util/mpfx.cpp` |
+| 124 | `hilbert_basis::add_ge`/`add_eq`/`add_le` accept a magnitude of 2^63 as INT64_MIN, so saturation runs for about 2^63 steps | local fix | `math/hilbert/hilbert_basis.cpp` |
+| 125 | The DIMACS reader overflows a signed `int` (UB) on a literal beyond 32 bits, and takes `abs` of INT_MIN | local fix | `sat/dimacs.cpp` |
+| 126 | `default_table_filter_interpreted_and_project_fn` never frees its filtered clone, so a lazy table's filter condition lives until `~ast_manager` | local fix | `muz/rel/dl_relation_manager.cpp` |
+| 127 | `seq_rewriter::mk_re_loop` folds a bound of 2^31 or more into a negative `re.loop` parameter | local fix | `ast/rewriter/seq_rewriter.cpp` |
+| 128 | An OPB constraint that ends before its relation becomes an Int "hard constraint", and `optimize()` crashes (SIGSEGV) | local fix | `opt/opt_parse.cpp` |
 
 Every changed site has a comment that starts with "backport of upstream",
 "BACKPORT upstream", or "FORK FIX".
@@ -2436,6 +2451,66 @@ no witness is found (g3 AUDIT.md duality_01-F4).
 **Fix.** `src/util/mpfx.cpp:485` (`FORK FIX #123`): clear the quotient words from `q_sz` to `m_total_sz` and copy all `m_total_sz` words. g3's word-array mpfx does the same (`TestFixedPointDivisionCarryPastQuotientWords`).
 
 **Test.** `TST(z3_4_7_1_mpfx_div_carry)`, `src/test/z3_4_7_1_bugs.cpp:4465` (registered at `src/test/main.cpp:329`).
+
+---
+
+## 124. Hilbert basis: a 2^63 bound or coefficient is accepted as INT64_MIN
+
+**Symptom.** `hilbert_basis::add_ge(v, b)` or `add_eq(v, b)` with b = 2^63, or `add_le(v, b)` with a coefficient of 2^63, is accepted, and saturation then needs on the order of 2^63 resolution steps (the Karr relation's dualization reached 99 GB in g3 before g3 diverged here).
+
+**Cause.** `add_ge` and `add_eq` store `to_numeral(-b)`, and `add_le` negates its rational coefficients before calling `add_ge`. Negating the rational first turns 2^63, which is not an int64, into -2^63, which is, so `to_numeral` accepts INT64_MIN instead of throwing `checked_int64::overflow_exception`.
+
+**Fix.** `src/math/hilbert/hilbert_basis.cpp:714, :727, :743` (`FORK FIX #124`): `add_ge` and `add_eq` store `-to_numeral(b)`, and `add_le` builds its row directly as `to_numeral(b)` followed by `-to_numeral(v[i])`. The checked_int64 negation throws on INT64_MIN, so such a row reports the overflow at once. g3 already converted first (`pkg/math/hilbert/hilbert_basis.go`, `addRow`).
+
+**Test.** `TST(z3_4_7_1_hilbert_int64_min)`, `src/test/z3_4_7_1_bugs.cpp:4503` (registered at `src/test/main.cpp:330`): add_ge, add_eq and add_le each throw the overflow.
+
+---
+
+## 125. DIMACS: a literal beyond 32 bits overflows a signed int
+
+**Symptom.** A DIMACS literal that does not fit in 32 bits, such as `1 4294967298 0`, is read with signed overflow, which is undefined behavior. The release build happens to wrap (4294967298 reads as 2, and the input answers sat); `abs(INT_MIN)` in `read_clause` is undefined as well.
+
+**Cause.** `parse_int` accumulates `val = val*10 + digit` in an `int`, and `read_clause` takes `abs(parsed_lit)`.
+
+**Fix.** `src/sat/dimacs.cpp:66, :107` (`FORK FIX #125`): `parse_int` accumulates in `unsigned` and returns the wrapped value as `int`, and `read_clause` takes the magnitude in `unsigned`. Results are unchanged from the release build, now with defined behavior. g3 reads DIMACS the same way (`pkg/sat/dimacs.go`) and prints the same `(error, "unexpected char: N")` diagnostic with exit status 3.
+
+**Test.** `TST(z3_4_7_1_dimacs_wrap)`, `src/test/z3_4_7_1_bugs.cpp:4518` (registered at `src/test/main.cpp:331`): `1 4294967298 0` and `-4294967298 3 0` give 4 variables and 2 clauses. The test passes before the fix too, because the release build already wrapped; it pins the wrap that the undefined code only happened to give.
+
+---
+
+## 126. Datalog: filter-and-project leaks its filtered table clone
+
+**Symptom.** With a lazy table, a datalog filter-and-project leaves its condition alive until the `ast_manager` is destroyed, long after the rule sets and the execution context are gone (this is the owner behind the datalog AST-order finding g0111). The clone and its filter leak with it.
+
+**Cause.** `relation_manager::default_table_filter_interpreted_and_project_fn::operator()` clones its input (`t2 = tb.clone()`), filters and projects the clone, and returns the projection without deallocating the clone. A lazy table's clone keeps its `lazy_table_filter_interpreted`, which holds a reference to the condition.
+
+**Fix.** `src/muz/rel/dl_relation_manager.cpp:1469` (`FORK FIX #126`): deallocate the clone after projecting it, and before throwing "projection does not exist".
+
+**Test.** `TST(z3_4_7_1_filter_project_clone_leak)`, `src/test/z3_4_7_1_bugs.cpp:4536` (registered at `src/test/main.cpp:332`): a lazy_sparse table through the functor; after deleting the functor, result and table, the condition's reference count is back to the caller's (4.7.1: 1 -> 2).
+
+---
+
+## 127. Sequences: re.loop bounds of 2^31 or more become negative
+
+**Symptom.** `(re.loop r 2147483648)` is rewritten to `((_ re.loop -2147483648) r)`, and `(re.loop r 1 2147483648)` to `((_ re.loop 1 -2147483648) r)`: the loop bound turns negative.
+
+**Cause.** `seq_rewriter::mk_re_loop` folds a numeral bound whenever it `is_unsigned()`, but `mk_loop` stores its bounds in an int parameter, so an unsigned value of 2^31 or more wraps to a negative int.
+
+**Fix.** `src/ast/rewriter/seq_rewriter.cpp:1446` (`FORK FIX #127`): fold only bounds that are at most INT_MAX; larger ones stay as the unfolded `(re.loop r n)` term. g3 does the same (`pkg/ast/rewriter/seq_rewriter.go`; vector `z3_bug_re_loop_int_bound.smt2`).
+
+**Test.** `TST(z3_4_7_1_re_loop_int_bound)`, `src/test/z3_4_7_1_bugs.cpp:4575` (registered at `src/test/main.cpp:333`).
+
+---
+
+## 128. OPB: a constraint truncated before its relation crashes
+
+**Symptom.** An OPB file whose last constraint ends before `>=`, `=` or `<=`, such as `1 x1 >= 1;` followed by `1 x2` at end of file, makes z3 crash with SIGSEGV (exit status 139).
+
+**Cause.** `opb::parse_constraint` reads terms until it sees a relation or end of input, then calls `opt.add_hard_constraint(t)`. At end of input `t` is still the Int-sorted sum of the terms, and `optimize()` crashes on the non-Boolean hard constraint.
+
+**Fix.** `src/opt/opt_parse.cpp:280` (`FORK FIX #128`): when no relation was read, report `(error line N "unexpected end of input" expected ">=", "=" or "<=")` in the reader's own error style and exit 3, as its other errors do. g3 does the same (vector `opb_constraint_without_relation.opb`).
+
+**Test.** `TST(z3_4_7_1_opb_constraint_without_relation)`, `src/test/z3_4_7_1_bugs.cpp:4592` (registered at `src/test/main.cpp:334`): runs the reader in a forked child; signal 11 before the fix, exit status 3 after.
 
 ---
 

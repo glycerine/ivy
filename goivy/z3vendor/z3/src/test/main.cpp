@@ -327,6 +327,11 @@ int main(int argc, char ** argv) {
     TST(z3_4_7_1_bit_blast_relation_fact);
     TST(z3_4_7_1_solver_translate_reset);
     TST(z3_4_7_1_mpfx_div_carry);
+    TST(z3_4_7_1_hilbert_int64_min);
+    TST(z3_4_7_1_dimacs_wrap);
+    TST(z3_4_7_1_filter_project_clone_leak);
+    TST(z3_4_7_1_re_loop_int_bound);
+    TST(z3_4_7_1_opb_constraint_without_relation);
     TST(ext_numeral);
     TST(interval);
     TST(f2n);

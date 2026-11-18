@@ -405,6 +405,9 @@ Abstract:
 #include "opt/opt_parse.h"
 #include "opt/opt_cmds.h"
 #include "util/mpfx.h"
+#include "math/hilbert/hilbert_basis.h"
+#include "sat/dimacs.h"
+#include "sat/sat_solver.h"
 #include <fstream>
 #include <cstdio>
 #include "api/z3_replayer.h"
@@ -430,6 +433,7 @@ void register_z3_replayer_cmds(z3_replayer & in);
 #include <unistd.h>
 #include <cstdlib>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #endif
 
 namespace {
@@ -4475,4 +4479,137 @@ void tst_z3_4_7_1_mpfx_div_carry() {
     std::string r = m.to_string(c);
     std::cout << "mpfx_div_carry: " << m.to_string(a) << " / " << m.to_string(b) << " = " << r << "\n";
     ENSURE(r == "4294967296");
+}
+
+// FORK FIX #124: hilbert_basis::add_ge/add_eq negated the bound, and add_le
+// the coefficients, as rationals before to_numeral, so a magnitude of 2^63
+// became INT64_MIN and was accepted; saturation then needs on the order of
+// 2^63 resolution steps. With the fix the value is converted first and
+// negated with checked_int64, which reports the overflow at once.
+static bool z3_4_7_1_hilbert_overflows(int which) {
+    reslimit rl;
+    hilbert_basis hb(rl);
+    rational two63 = power(rational(2), 63);
+    rational_vector v;
+    v.push_back(which == 2 ? two63 : rational(1));
+    try {
+        if (which == 0) hb.add_ge(v, two63);
+        else if (which == 1) hb.add_eq(v, two63);
+        else hb.add_le(v, rational(0));
+    }
+    catch (checked_int64<true>::overflow_exception &) {
+        return true;
+    }
+    return false;
+}
+
+void tst_z3_4_7_1_hilbert_int64_min() {
+    bool ge = z3_4_7_1_hilbert_overflows(0);
+    bool eq = z3_4_7_1_hilbert_overflows(1);
+    bool le = z3_4_7_1_hilbert_overflows(2);
+    std::cout << "hilbert_int64_min: add_ge " << ge << " add_eq " << eq << " add_le " << le << "\n";
+    ENSURE(ge && eq && le);
+}
+
+// FORK FIX #125: dimacs parse_int accumulated a literal in a signed int, so
+// a literal beyond 32 bits overflowed (UB), and read_clause took abs() of
+// it. The fork accumulates and takes the magnitude in unsigned arithmetic,
+// which gives the wraparound the release build showed with defined
+// behavior: 4294967298 wraps to 2 and -4294967298 to -2.
+void tst_z3_4_7_1_dimacs_wrap() {
+    params_ref p;
+    reslimit rl;
+    sat::solver s(p, rl, nullptr);
+    std::istringstream in("1 4294967298 0\n-4294967298 3 0\n");
+    parse_dimacs(in, s);
+    std::cout << "dimacs_wrap: num_vars " << s.num_vars() << " num_clauses " << s.num_clauses() << "\n";
+    ENSURE(s.num_vars() == 4);
+    ENSURE(s.num_clauses() == 2);
+}
+
+// FORK FIX #126: relation_manager::default_table_filter_interpreted_and_project_fn
+// cloned its input table (t2 = tb.clone()), filtered and projected the
+// clone, and never deallocated it. A lazy table's clone holds its
+// lazy_table_filter_interpreted, which holds the condition: the condition
+// kept a reference until ~ast_manager (g3 audit: g0111's check_relation
+// filter conditions). After the functor, its result and the table are
+// deleted, only the caller's reference to the condition remains.
+void tst_z3_4_7_1_filter_project_clone_leak() {
+    ast_manager m;
+    reg_decl_plugins(m);
+    datalog::register_engine re;
+    smt_params fp;
+    params_ref params;
+    params.set_sym("engine", symbol("datalog"));
+    datalog::context ctx(m, re, fp, params);
+    datalog::relation_manager & rmgr = ctx.get_rel_context()->get_rmanager();
+    datalog::table_plugin * lp = rmgr.get_table_plugin(symbol("lazy_sparse"));
+    ENSURE(lp);
+    datalog::table_signature sig;
+    sig.push_back(4);
+    sig.push_back(4);
+    datalog::scoped_rel<datalog::table_base> t = lp->mk_empty(sig);
+    datalog::table_fact f;
+    f.push_back(1);
+    f.push_back(2);
+    t->add_fact(f);
+    app_ref cond(m.mk_not(m.mk_false()), m);
+    unsigned before = cond->get_ref_count();
+    unsigned removed[1] = { 1 };
+    {
+        scoped_ptr<datalog::table_transformer_fn> fn =
+            rmgr.mk_filter_interpreted_and_project_fn(*t, cond, 1, removed);
+        ENSURE(fn);
+        datalog::scoped_rel<datalog::table_base> res = (*fn)(*t);
+        ENSURE(res);
+        res->get_size_estimate_rows();
+    }
+    t = nullptr;
+    unsigned after = cond->get_ref_count();
+    std::cout << "filter_project_clone_leak: condition references " << before << " -> " << after << "\n";
+    ENSURE(after == before);
+}
+
+// FORK FIX #127: seq_rewriter::mk_re_loop folded any unsigned bound into
+// mk_loop's int parameter, so (re.loop r 2147483648) became the negative
+// loop ((_ re.loop -2147483648) r). Bounds beyond INT_MAX now stay unfolded.
+void tst_z3_4_7_1_re_loop_int_bound() {
+    expect_script_output("re_loop_int_bound",
+        "(simplify (re.loop (str.to.re \"a\") 2147483648))\n"
+        "(simplify (re.loop (str.to.re \"a\") 1 2147483648))\n"
+        "(simplify (re.loop (str.to.re \"a\") 2147483647))\n",
+        "(re.loop (str.to.re \"a\") 2147483648)\n"
+        "(re.loop (str.to.re \"a\") 1 2147483648)\n"
+        "((_ re.loop 2147483647) (str.to.re \"a\"))\n");
+}
+
+// FORK FIX #128: opb::parse_constraint adds the term itself as a hard
+// constraint when the input ends before ">=", "=" or "<=". The term is an
+// Int-sorted sum of ites, so optimize() crashed (SIGSEGV). The fork
+// reports the truncated constraint like the reader's other errors:
+// (error line N "unexpected end of input" expected ">=", "=" or "<=")
+// and exit(3). The reader exits, so the check runs in a child process.
+void tst_z3_4_7_1_opb_constraint_without_relation() {
+#ifndef _WINDOWS
+    std::cout.flush();
+    std::cerr.flush();
+    pid_t pid = fork();
+    ENSURE(pid >= 0);
+    if (pid == 0) {
+        ast_manager m;
+        reg_decl_plugins(m);
+        opt::context opt(m);
+        unsigned_vector handles;
+        std::istringstream in("1 x1 >= 1 ;\n1 x2\n");
+        parse_opb(opt, in, handles);
+        opt.optimize();
+        _exit(0);
+    }
+    int status = 0;
+    ENSURE(waitpid(pid, &status, 0) == pid);
+    std::cout << "opb_constraint_without_relation: exited " << WIFEXITED(status)
+              << " status " << (WIFEXITED(status) ? WEXITSTATUS(status) : -1)
+              << " signal " << (WIFSIGNALED(status) ? WTERMSIG(status) : 0) << "\n";
+    ENSURE(WIFEXITED(status) && WEXITSTATUS(status) == 3);
+#endif
 }
