@@ -570,7 +570,7 @@ func TestHermesRMWo3(t *testing.T) {
 
 func TestSHT(t *testing.T) {
 	path := "ivy-lang-examples/doc/examples/sht/sht.ivy"
-	cfg := &goldenConfig{path: path}
+	cfg := &goldenConfig{args: []string{"isolate=iso_dm"}, path: path}
 	GoldenPathCompareIvyCheck(t, cfg) // verbose=false, diffStop=true
 }
 
