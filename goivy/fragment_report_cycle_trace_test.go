@@ -41,6 +41,9 @@ func captureStdout(t *testing.T, f func()) string {
 // raises past it (and past check_feu's EXIT). goivy deferred EXIT, so it
 // wrote it on the error path too.
 func TestReportCycleTracesExitOnlyWithoutCycle(t *testing.T) {
+	if !xtracer.Enabled {
+		t.Skip("traces are compiled out (-tags xtrace_off)")
+	}
 	c := newChecker(nil, nil)
 	n := NewUFNode()
 	var err error
