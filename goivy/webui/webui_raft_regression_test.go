@@ -42,10 +42,10 @@ func TestRaftWrapperInductionUsesAbstractIncludedProofModel(t *testing.T) {
 	if sess.InductionModule == nil || sess.InductionModule.Sig == nil {
 		t.Fatal("InductionModule should be populated")
 	}
-	if _, ok := sess.CompiledModule.Sig.Interp["node"]; !ok {
+	if _, ok := sess.CompiledModule.Sig.Interp.Get2("node"); !ok {
 		t.Fatal("concrete wrapper fixture should interpret node for randomized testing")
 	}
-	if _, ok := sess.InductionModule.Sig.Interp["node"]; ok {
+	if _, ok := sess.InductionModule.Sig.Interp.Get2("node"); ok {
 		t.Fatal("induction should use the included abstract Raft proof model, not the wrapper's finite node interpretation")
 	}
 	if got, want := len(sess.InductionModule.LabeledConjs), len(sess.CompiledModule.LabeledConjs); got != want {
