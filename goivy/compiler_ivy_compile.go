@@ -898,8 +898,9 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 							if err != nil {
 								return fmt.Errorf("scenario from place: %w", err)
 							}
+							// Python: AssumeAction(find_symbol(p.rep)), no lineno; only
+							// the whole transition gets seq.lineno = tr.lineno.
 							assm := NewAssumeAction(sym)
-							assm.SetLineno(tr.GetLineno())
 							seq = append(seq, assm)
 						}
 					}
@@ -909,7 +910,6 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 						if atom, ok := p.(*Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
 							assn := NewAssignAction(sym, &LogicOr{})
-							assn.SetLineno(tr.GetLineno())
 							seq = append(seq, assn)
 						}
 					}
@@ -919,7 +919,6 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 						if atom, ok := p.(*Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
 							assn := NewAssignAction(sym, &LogicAnd{})
-							assn.SetLineno(tr.GetLineno())
 							seq = append(seq, assn)
 						}
 					}
@@ -955,7 +954,6 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 						if atom, ok := p.(*Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
 							assn := NewAssignAction(sym, &LogicOr{})
-							assn.SetLineno(tr.GetLineno())
 							seq = append(seq, assn)
 						}
 					}
@@ -965,14 +963,12 @@ func (as *ARGSetup) scenario(scen *ScenarioDef) error {
 						if atom, ok := p.(*Atom); ok {
 							sym, _ := sig.FindSymbol(atom.Rep, false)
 							assn := NewAssignAction(sym, &LogicAnd{})
-							assn.SetLineno(tr.GetLineno())
 							seq = append(seq, assn)
 						}
 					}
 				}
 				seq = append(seq, body)
 				seqAction := NewSequence(seq...)
-				seqAction.SetLineno(tr.GetLineno())
 
 				// IfAction(And(sources...), seq)
 				var conds []Expr
