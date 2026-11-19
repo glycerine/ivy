@@ -491,9 +491,12 @@ def cycle(arcs,first=lambda x:x[0],second=lambda x:x[1]):
     """ finds a cycle of arcs in a graph. first maps arcs to
     hashable tails, second maps arcs to hashable heads.
     returns a list of arcs forming a cycle, or None. """
-    m = collections.defaultdict(set)
+    # dict, not set: iterate each node's arcs in insertion order, so the
+    # cycle found does not depend on hashing (PYTHONHASHSEED). Go:
+    # checker.findCycle uses an InsMap per node.
+    m = collections.defaultdict(dict)
     for arc in arcs:
-        m[first(arc)].add(arc)
+        m[first(arc)][arc] = None
     heap = set()
     stack = set()
     path = []
