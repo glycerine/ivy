@@ -829,6 +829,11 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 	l2sInitActions = append(l2sInitActions, setLineno(NewAssumeAction(cfg.NotLf), lineno))
 
 	if model.Init != nil {
+		// Python: if not hasattr(model.init,'lineno'):
+		//             model.init.lineno = None  # Hack: fix this
+		if !actionHasLocSet(model.Init) {
+			model.Init.SetLineno(Location{})
+		}
 		model.Init = PostfixAction(model.Init, l2sInitActions)
 	}
 

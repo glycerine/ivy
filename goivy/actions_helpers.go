@@ -71,7 +71,9 @@ func PrefixAction(action ActionsAction, stmts []ActionsAction) ActionsAction {
 	nodes = append(nodes, action)
 	res := NewSequence(nodes...)
 	CopyFormalsTo(action, res)
-	if action.GetLineno().Line != 0 || action.GetLineno().Filename != "" {
+	// Python: if hasattr(self,"lineno"): res.lineno = self.lineno
+	// (copied even when it is None).
+	if actionHasLocSet(action) {
 		res.SetLineno(action.GetLineno())
 	}
 	return res
@@ -89,7 +91,9 @@ func PostfixAction(action ActionsAction, stmts []ActionsAction) ActionsAction {
 	}
 	res := NewSequence(nodes...)
 	CopyFormalsTo(action, res)
-	if action.GetLineno().Line != 0 || action.GetLineno().Filename != "" {
+	// Python: if hasattr(self,"lineno"): res.lineno = self.lineno
+	// (copied even when it is None).
+	if actionHasLocSet(action) {
 		res.SetLineno(action.GetLineno())
 	}
 	return res

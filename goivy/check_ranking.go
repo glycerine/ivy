@@ -623,6 +623,11 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 	rankingInitActions = append(rankingInitActions, setLineno(NewAssumeAction(icfg.NotLf), lineno))
 
 	if model.Init != nil {
+		// Python: if not hasattr(model.init,'lineno'):
+		//             model.init.lineno = None  # Hack: fix this
+		if !actionHasLocSet(model.Init) {
+			model.Init.SetLineno(Location{})
+		}
 		model.Init = PostfixAction(model.Init, rankingInitActions)
 	}
 

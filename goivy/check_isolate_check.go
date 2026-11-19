@@ -240,9 +240,16 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 		fmt.Println("\n    The following initializers are present:")
 		inits := make([]NamedAction, len(mod.Initializers))
 		copy(inits, mod.Initializers)
-		sort.Slice(inits, func(i, j int) bool { return inits[i].Name < inits[j].Name })
+		// Python sorted(...) is stable.
+		sort.SliceStable(inits, func(i, j int) bool { return inits[i].Name < inits[j].Name })
 		for _, na := range inits {
-			fmt.Printf("initializer:        %s %s\n", PrettyActionLineno(na.Action), na.Name)
+			// Python: lineno = "{}".format(pretty_lineno(action))
+			//         if lineno == "None": lineno = "(internal)"
+			lineno := PrettyActionLineno(na.Action)
+			if lineno == "None" {
+				lineno = "(internal)"
+			}
+			fmt.Printf("initializer:        %s %s\n", lineno, na.Name)
 		}
 	}
 
@@ -1542,4 +1549,13 @@ func reachable(starts []string, successors func(string) []string) map[string]boo
 		}
 	}
 	return visited
+}
+
+// actionHasLocSet reports whether the action's lineno attribute was set
+// (Python hasattr(action,'lineno')), even to None.
+func actionHasLocSet(a ActionsAction) bool {
+	if h, ok := a.(interface{ HasLineno() bool }); ok {
+		return h.HasLineno()
+	}
+	return false
 }

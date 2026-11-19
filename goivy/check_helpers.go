@@ -59,9 +59,14 @@ func PrettyActionLineno(a ActionsAction) string {
 	if a == nil {
 		return "(internal) "
 	}
+	// Python pretty_lineno: str(ast.lineno) if hasattr(ast,'lineno') else
+	// '(internal) '. A lineno set to None prints "None".
 	loc := a.GetLineno()
 	if loc.Filename != "" || loc.Line > 0 {
 		return loc.String()
+	}
+	if actionHasLocSet(a) {
+		return "None"
 	}
 	return "(internal) "
 }
