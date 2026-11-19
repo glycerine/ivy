@@ -666,6 +666,10 @@ func (d *RelationDecl) String() string { return "relation" }
 // ConstantDecl declares a constant (individual).
 type ConstantDecl struct {
 	DeclBase
+	// Fresh marks Python's FreshConstantDecl, a ConstantDecl subclass that
+	// only differs in its class: every isinstance(x, ConstantDecl) check
+	// matches it, so goivy keeps it a *ConstantDecl and flags it here.
+	Fresh bool
 }
 
 func (cfg *AstConfig) NewConstantDecl(args ...Node) *ConstantDecl {
@@ -675,7 +679,8 @@ func (cfg *AstConfig) NewConstantDecl(args ...Node) *ConstantDecl {
 }
 
 func (d *ConstantDecl) Clone(args []Node) Node {
-	return &ConstantDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
+	// Python clone keeps the class (FreshConstantDecl stays fresh).
+	return &ConstantDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}, Fresh: d.Fresh}
 }
 func (d *ConstantDecl) String() string { return "individual" }
 
@@ -695,15 +700,12 @@ func (d *ParameterDecl) Clone(args []Node) Node {
 }
 func (d *ParameterDecl) String() string { return "parameter" }
 
-// FreshConstantDecl declares a fresh constant.
-type FreshConstantDecl struct {
-	ConstantDecl
-}
-
-func (cfg *AstConfig) NewFreshConstantDecl(cd ConstantDecl) *FreshConstantDecl {
-	f := &FreshConstantDecl{ConstantDecl: cd}
-	f.Cfg = cfg
-	return f
+// NewFreshConstantDecl is Python FreshConstantDecl(arg): a ConstantDecl
+// flagged Fresh.
+func (cfg *AstConfig) NewFreshConstantDecl(arg Node) *ConstantDecl {
+	d := cfg.NewConstantDecl(arg)
+	d.Fresh = true
+	return d
 }
 
 // DestructorDecl declares a destructor.

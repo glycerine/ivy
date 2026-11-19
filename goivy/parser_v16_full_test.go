@@ -1025,7 +1025,7 @@ property true
 	}
 	var fresh int
 	for _, arg := range body.Args() {
-		if _, ok := arg.(*FreshConstantDecl); ok {
+		if cd, ok := arg.(*ConstantDecl); ok && cd.Fresh {
 			fresh++
 		}
 	}

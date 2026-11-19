@@ -39,6 +39,9 @@ func (d *RelationDecl) Canon() Canonical {
 }
 
 func (d *ConstantDecl) Canon() Canonical {
+	if d.Fresh {
+		return Canonical(fmt.Sprintf("(freshConstantDecl%v)", d.DeclBase.canonFields()))
+	}
 	return Canonical(fmt.Sprintf("(constantDecl%v)", d.DeclBase.canonFields()))
 }
 
@@ -190,10 +193,6 @@ func (d *SubclassDecl) Canon() Canonical {
 
 func (d *PropertyDecl) Canon() Canonical {
 	return Canonical(fmt.Sprintf("(propertyDecl%v)", d.DeclBase.canonFields()))
-}
-
-func (d *FreshConstantDecl) Canon() Canonical {
-	return Canonical(fmt.Sprintf("(freshConstantDecl%v)", d.DeclBase.canonFields()))
 }
 
 func (d *GhostTypeDef) Canon() Canonical {

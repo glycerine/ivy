@@ -228,9 +228,6 @@ func getTypeNamesFromDecl(decl Node, names *TypeNames) {
 		// Python ConstantDecl.get_type_names (ivy_ast.py:996-998):
 		//     for c in self.args: tterm_type_names(c, names)
 		getTypeNamesFromConstantArgs(d.Args(), names)
-	case *FreshConstantDecl:
-		// Python FreshConstantDecl inherits ConstantDecl.get_type_names.
-		getTypeNamesFromConstantArgs(d.Args(), names)
 	case *DestructorDecl:
 		// Python DestructorDecl inherits ConstantDecl.get_type_names.
 		getTypeNamesFromConstantArgs(d.Args(), names)

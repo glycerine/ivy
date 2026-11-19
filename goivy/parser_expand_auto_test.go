@@ -15,7 +15,7 @@ func TestGetTypeNamesFromConstantLikeDecls(t *testing.T) {
 		decl Node
 	}{
 		{name: "constant", decl: cfg.NewConstantDecl(newTypedAtom("c"))},
-		{name: "fresh", decl: cfg.NewFreshConstantDecl(*cfg.NewConstantDecl(newTypedAtom("f")))},
+		{name: "fresh", decl: cfg.NewFreshConstantDecl(newTypedAtom("f"))},
 		{name: "destructor", decl: cfg.NewDestructorDecl(newTypedAtom("d"))},
 		{name: "constructor", decl: cfg.NewConstructorDecl(newTypedAtom("k"))},
 	}
