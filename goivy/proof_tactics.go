@@ -77,9 +77,10 @@ func (pc *ProofChecker) letTactic(decls []*LabeledFormula, proof *LetTactic) ([]
 	subgoal := pc.astCfg().NewLabeledFormula(goal.Label, WrapImplies(pc.astCfg(), cond, goal.Formula))
 	subgoal.SetLineno(goal.GetLineno())
 
-	result := []*LabeledFormula{subgoal}
-	result = append(result, decls[1:]...)
 	xtracer.Trace("proof.letTactic EXIT HASH canon=%v", subgoal.Canon())
+	// Python: return attrib_goals(proof,[subgoal]) + decls[1:]
+	result := attribGoals(proof, []*LabeledFormula{subgoal})
+	result = append(result, decls[1:]...)
 	return result, nil
 }
 
