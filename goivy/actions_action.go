@@ -508,8 +508,39 @@ func (s *SomeCondition) Sexp() NodeKey {
 		return NodeKey(fmt.Sprintf("(some params:%s fmla:%s)", params, fmla))
 	}
 }
-func (s *SomeCondition) Args() []Node           { return nil }
-func (s *SomeCondition) Clone(args []Node) Node { return s }
+// Args mirrors ivy_ast.Some.args: [*params, fmla] or [*params, fmla, index].
+func (s *SomeCondition) Args() []Node {
+	res := make([]Node, 0, len(s.Params)+2)
+	for _, p := range s.Params {
+		res = append(res, p)
+	}
+	res = append(res, s.Fmla)
+	if s.Index != nil {
+		res = append(res, s.Index)
+	}
+	return res
+}
+
+// Clone mirrors Python AST.clone(args) on a Some.
+func (s *SomeCondition) Clone(args []Node) Node {
+	n := len(s.Params)
+	if len(args) != len(s.Args()) {
+		return s
+	}
+	r := &SomeCondition{Base: s.Base, Kind: s.Kind, Params: make([]*Const, n)}
+	for i := 0; i < n; i++ {
+		if c, ok := args[i].(*Const); ok {
+			r.Params[i] = c
+		} else {
+			r.Params[i] = s.Params[i]
+		}
+	}
+	r.Fmla, _ = args[n].(Expr)
+	if s.Index != nil {
+		r.Index, _ = args[n+1].(Expr)
+	}
+	return r
+}
 func (s *SomeCondition) String() string {
 	parts := make([]string, len(s.Params))
 	for i, p := range s.Params {

@@ -17,6 +17,16 @@ func TypeName(v interface{}) string {
 	if _, ok := v.(*nativeAtomExpr); ok {
 		return "Atom"
 	}
+	if sc, ok := v.(*SomeCondition); ok {
+		// Python class names of ivy_ast.Some / SomeMin / SomeMax.
+		switch sc.Kind {
+		case "some_min":
+			return "SomeMin"
+		case "some_max":
+			return "SomeMax"
+		}
+		return "Some"
+	}
 	t := reflect.TypeOf(v)
 	for t.Kind() == reflect.Ptr {
 		t = t.Elem()
