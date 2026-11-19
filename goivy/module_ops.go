@@ -1521,12 +1521,12 @@ func SortsClauses(clauses *Clauses) map[NodeKey]Sort {
 	}
 	result := make(map[NodeKey]Sort)
 	for _, f := range clauses.Fmlas {
-		for k, s := range SortsAst(f) {
+		for k, s := range SortsAst(f).All() {
 			result[k] = s
 		}
 	}
 	for _, d := range clauses.Defs {
-		for k, s := range SortsAst(d) {
+		for k, s := range SortsAst(d).All() {
 			result[k] = s
 		}
 	}

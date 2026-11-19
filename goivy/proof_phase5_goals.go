@@ -83,8 +83,8 @@ func CheckNameClash(g1, g2 *LabeledFormula) error {
 	xtracer.Trace("proof.CheckNameClash ENTER g1Label=%s g2Label=%s", g1.LabelForTrace(), g2.LabelForTrace())
 	d1 := GoalDefns(g1)
 	d2 := GoalDefns(g2)
-	for k := range d1 {
-		if _, exists := d2[k]; exists {
+	for k := range d1.All() {
+		if _, exists := d2.Get2(k); exists {
 			xtracer.Trace("proof.CheckNameClash EXIT err=clash key=%s", string(k))
 			return &ProofError{Msg: "premise of subgoal clashes with context"}
 		}
@@ -98,12 +98,12 @@ func CheckNameClash(g1, g2 *LabeledFormula) error {
 // Corresponds to Python's check_premises_provided (ivy_proof.py:586-593).
 func CheckPremisesProvided(g1, g2 *LabeledFormula, sig *Sig) error {
 	defns := GoalDefns(g2)
-	for k, thing := range GoalDefns(g1) {
+	for k, thing := range GoalDefns(g1).All() {
 		// Python: syms = [] if il.is_lambda(thing) else [thing]
 		if _, isLam := thing.(*Lambda); isLam {
 			continue
 		}
-		if _, ok := defns[k]; !ok && !sig.Contains(thing) {
+		if _, ok := defns.Get2(k); !ok && !sig.Contains(thing) {
 			return &ProofError{Msg: fmt.Sprintf("premise %v does not match anything in the environment", thing)}
 		}
 	}
@@ -165,8 +165,8 @@ func GetUnprovidedDefns(g1, g2 *LabeledFormula) []Node {
 				continue
 			}
 			k := Key(sym)
-			if _, inDefns := defns[k]; !inDefns {
-				if _, inFree := free[k]; !inFree {
+			if _, inDefns := defns.Get2(k); !inDefns {
+				if _, inFree := free.Get2(k); !inFree {
 					result = append(result, prem)
 				}
 			}
@@ -222,7 +222,7 @@ func GoalSubgoals(cfg *AstConfig, schema, goal *LabeledFormula, loc Location) ([
 func FmlaVocab(fmla Expr) map[NodeKey]Expr {
 	result := make(map[NodeKey]Expr)
 	// Python: lu.used_sorts_ast(fmla)
-	for k, s := range SortsAst(fmla) {
+	for k, s := range SortsAst(fmla).All() {
 		result[k] = s
 	}
 	// Use clauseops.UsedSymbolsAST for symbols
@@ -249,7 +249,7 @@ func CheckSchemaCapture(schema, goal *LabeledFormula) error {
 	for _, s := range gvocab.Sorts {
 		gSortSet[IvySortName(s)] = true
 	}
-	for _, sym := range fvocab {
+	for _, sym := range fvocab.All() {
 		name := fmt.Sprint(sym)
 		if gSymSet[name] || gSortSet[name] {
 			return &CaptureError{Msg: fmt.Sprintf("%q is captured when importing %q", sym, schema.LabelName())}
@@ -267,17 +267,19 @@ func CheckAlphaCapture(goal *LabeledFormula, match map[NodeKey]Expr) error {
 	}
 	free := GoalFree(goal)
 	defns := GoalDefns(goal)
-	for k, s := range free {
+	for k, s := range free.All() {
 		if _, inRev := revMatch[k]; inRev {
 			if _, inMatch := match[k]; !inMatch {
-				return &CaptureError{Msg: fmt.Sprintf("%q is captured by renaming", s)}
+				// Python: '"{}" is captured by renaming "{}"'.format(s,rev_match[s])
+				return &CaptureError{Msg: fmt.Sprintf("\"%v\" is captured by renaming \"%v\"", s, revMatch[k])}
 			}
 		}
 	}
-	for k, s := range defns {
+	for k, s := range defns.All() {
 		if _, inRev := revMatch[k]; inRev {
 			if _, inMatch := match[k]; !inMatch {
-				return &CaptureError{Msg: fmt.Sprintf("%q is captured by renaming", s)}
+				// Python: '"{}" is captured by renaming "{}"'.format(s,rev_match[s])
+				return &CaptureError{Msg: fmt.Sprintf("\"%v\" is captured by renaming \"%v\"", s, revMatch[k])}
 			}
 		}
 	}

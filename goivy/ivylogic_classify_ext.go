@@ -258,13 +258,16 @@ func SymbolsOverUniversals(fmlas []Expr) []*Const {
 }
 
 // universalVariablesRec is the recursive helper for UniversalVariables.
-func universalVariablesRec(fmla Expr, pos bool, univs map[NodeKey]Expr) {
+func universalVariablesRec(fmla Expr, pos bool, univs *InsMap[NodeKey, Expr]) {
 	if IsQuantifier(fmla) {
 		isFA := IsForall(fmla)
 		if pos == isFA {
 			vars := BinderVars(fmla)
 			for _, v := range vars {
-				univs[Key(v)] = v
+				// Python dict.update: an existing key keeps its position.
+				if _, ok := univs.Get2(Key(v)); !ok {
+					univs.Set(Key(v), v)
+				}
 			}
 			return
 		}
@@ -289,12 +292,14 @@ func universalVariablesRec(fmla Expr, pos bool, univs map[NodeKey]Expr) {
 // after skolemization.
 // Corresponds to Python's universal_variables.
 func UniversalVariables(fmlas []Expr) []*LogicVariable {
-	univs := make(map[NodeKey]Expr)
+	// Python: an insertion-ordered dict (first occurrence), not a Go map,
+	// whose iteration order is random.
+	univs := NewInsMap[NodeKey, Expr]()
 	for _, fmla := range fmlas {
 		universalVariablesRec(fmla, true, univs)
 	}
-	result := make([]*LogicVariable, 0, len(univs))
-	for _, node := range univs {
+	result := make([]*LogicVariable, 0, univs.Len())
+	for _, node := range univs.All() {
 		if vv, ok := node.(*LogicVariable); ok {
 			result = append(result, vv)
 		}

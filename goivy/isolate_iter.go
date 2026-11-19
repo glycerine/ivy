@@ -134,11 +134,16 @@ func hasAttribute(mod *Module, name string) bool {
 
 // GetIsolateActions returns the set of action names present in an isolate.
 // Corresponds to Python get_isolate_actions().
-func GetIsolateActions(mod *Module, iso IsolateDefIface) map[string]bool {
-	result := make(map[string]bool)
+//
+// Python returns an insertion-ordered dict (iter_isolate order); so does
+// this (an InsMap, not a randomly ordered Go map).
+func GetIsolateActions(mod *Module, iso IsolateDefIface) *InsMap[string, bool] {
+	result := NewInsMap[string, bool]()
 	IterIsolate(mod, iso, func(name string) {
 		if _, ok := mod.Actions.Get2(name); ok {
-			result[name] = true
+			if _, seen := result.Get2(name); !seen {
+				result.Set(name, true)
+			}
 		}
 	}, true, true)
 	return result
@@ -219,23 +224,26 @@ func GetIsolatePostConjs(mod *Module, iso IsolateDefIface) []*LabeledFormula {
 // An action is exported if it's in the module's exports and present in the
 // isolate, or if it calls an action outside the isolate.
 // Corresponds to Python get_isolate_exports().
-func GetIsolateExports(mod *Module, callGraph map[string][]string, iso IsolateDefIface) map[string]bool {
+//
+// Python: dict.fromkeys(act for act in actions if ...), in the order of
+// get_isolate_actions; so this returns an InsMap in that order.
+func GetIsolateExports(mod *Module, callGraph map[string][]string, iso IsolateDefIface) *InsMap[string, bool] {
 	isoActions := GetIsolateActions(mod, iso)
 	modExports := make(map[string]bool)
 	for _, exp := range mod.Exports {
 		modExports[exp.Exported()] = true
 	}
-	exports := make(map[string]bool)
-	for act := range isoActions {
+	exports := NewInsMap[string, bool]()
+	for act := range isoActions.All() {
 		if modExports[act] {
-			exports[act] = true
+			exports.Set(act, true)
 			continue
 		}
 		// Check if any caller of this action is outside the isolate
 		if callers, ok := callGraph[act]; ok {
 			for _, caller := range callers {
-				if !isoActions[caller] {
-					exports[act] = true
+				if !isoActions.Get(caller) {
+					exports.Set(act, true)
 					break
 				}
 			}

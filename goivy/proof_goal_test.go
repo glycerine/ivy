@@ -60,11 +60,11 @@ func TestGoalDefns_ConstPrem(t *testing.T) {
 	goal := mkLF(proofTestAstCfg.NewAtom("g"), sb)
 
 	defns := GoalDefns(goal)
-	if len(defns) != 1 {
-		t.Fatalf("expected 1 definition, got %d", len(defns))
+	if defns.Len() != 1 {
+		t.Fatalf("expected 1 definition, got %d", defns.Len())
 	}
 	// The key should match the Const.
-	if _, ok := defns[Key(c)]; !ok {
+	if _, ok := defns.Get2(Key(c)); !ok {
 		t.Error("expected definition keyed by Const")
 	}
 }
@@ -79,8 +79,8 @@ func TestGoalDefns_VariablePrem(t *testing.T) {
 	goal := mkLF(proofTestAstCfg.NewAtom("g"), sb)
 
 	defns := GoalDefns(goal)
-	if len(defns) != 0 {
-		t.Errorf("expected 0 definitions for Variable premise (Bug 5 fix), got %d", len(defns))
+	if defns.Len() != 0 {
+		t.Errorf("expected 0 definitions for Variable premise (Bug 5 fix), got %d", defns.Len())
 	}
 }
 
@@ -91,8 +91,8 @@ func TestGoalDefns_UninterpSortPrem(t *testing.T) {
 	goal := mkLF(proofTestAstCfg.NewAtom("g"), sb)
 
 	defns := GoalDefns(goal)
-	if len(defns) != 1 {
-		t.Fatalf("expected 1 definition for UninterpretedSort premise, got %d", len(defns))
+	if defns.Len() != 1 {
+		t.Fatalf("expected 1 definition for UninterpretedSort premise, got %d", defns.Len())
 	}
 }
 
@@ -100,8 +100,8 @@ func TestGoalDefns_NoPremises(t *testing.T) {
 	conc := proofMkConst("conc", proofMkSort("S"))
 	goal := mkLF(proofTestAstCfg.NewAtom("g"), conc)
 	defns := GoalDefns(goal)
-	if len(defns) != 0 {
-		t.Errorf("expected 0 definitions for no premises, got %d", len(defns))
+	if defns.Len() != 0 {
+		t.Errorf("expected 0 definitions for no premises, got %d", defns.Len())
 	}
 }
 

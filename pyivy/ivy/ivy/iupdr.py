@@ -198,6 +198,8 @@ def interactive_updr():
 
         # propagate phase
         for i in range(1, len(frames)):
-            facts_to_check = (set(ta.arg_get_conjuncts(frames[i-1])) -
-                              set(ta.arg_get_conjuncts(frames[i])))
+            # ordered, not set difference: frames[i-1]'s order, independent
+            # of hashing.
+            _later = set(ta.arg_get_conjuncts(frames[i]))
+            facts_to_check = [f for f in dict.fromkeys(ta.arg_get_conjuncts(frames[i-1])) if f not in _later]
             t.recalculate_facts(frames[i], list(facts_to_check))

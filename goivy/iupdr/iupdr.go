@@ -637,14 +637,20 @@ func exprsFromAny(in any) []goivy.Expr {
 // `set(prev) - set(cur)` for sets of formula expressions. Membership uses
 // pointer-identity, mirroring Python's default object hashing for
 // non-hashable formula instances (Python uses id(x)).
+// setDifference is Python's propagate step
+// [f for f in dict.fromkeys(prev) if f not in set(cur)]: prev's order,
+// each fact once, compared structurally (Key), not by pointer identity.
 func setDifference(prev, cur []goivy.Expr) []goivy.Expr {
-	curSet := make(map[goivy.Expr]bool, len(cur))
+	curSet := make(map[goivy.NodeKey]bool, len(cur))
 	for _, c := range cur {
-		curSet[c] = true
+		curSet[goivy.Key(c)] = true
 	}
+	seen := make(map[goivy.NodeKey]bool, len(prev))
 	out := make([]goivy.Expr, 0, len(prev))
 	for _, p := range prev {
-		if !curSet[p] {
+		k := goivy.Key(p)
+		if !curSet[k] && !seen[k] {
+			seen[k] = true
 			out = append(out, p)
 		}
 	}

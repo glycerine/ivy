@@ -166,7 +166,8 @@ class RecalculateFacts(Tactic):
         )
         implied = ta.implied_facts(
             forward_image(arg_get_fact(pred), action),
-            list(set(facts) - set(already_implied)),
+            # ordered, not set difference: facts' order, independent of hashing.
+            [f for f in dict.fromkeys(facts) if f not in set(already_implied)],
         )
         if len(implied) > 0:
             for fact in implied:
@@ -283,8 +284,9 @@ class UPDR(Tactic):
 
                 # propagate phase
                 for i in range(1, len(frames)):
-                    facts_to_check = (set(arg_get_conjuncts(frames[i-1])) -
-                                      set(arg_get_conjuncts(frames[i])))
+                    # ordered, not set difference: frames[i-1]'s order.
+                    _later = set(arg_get_conjuncts(frames[i]))
+                    facts_to_check = [f for f in dict.fromkeys(arg_get_conjuncts(frames[i-1])) if f not in _later]
                     recalculate_facts(frames[i], list(facts_to_check))
 
             assert ic.interrupted

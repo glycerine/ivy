@@ -953,10 +953,10 @@ func AvoidCaptureProblem(cfg *AstConfig, prob *MatchProblem, match map[NodeKey]E
 		used = append(used, name)
 	}
 	if prob.SchemaLF != nil {
-		for _, sym := range GoalDefns(prob.SchemaLF) {
+		for _, sym := range GoalDefns(prob.SchemaLF).All() {
 			used = append(used, ExprName(sym))
 		}
-		for _, sym := range GoalFree(prob.SchemaLF) {
+		for _, sym := range GoalFree(prob.SchemaLF).All() {
 			if v, ok := sym.(*LogicVariable); ok {
 				used = append(used, v.Name)
 			}
@@ -1322,7 +1322,7 @@ func RenameGoal(cfg *AstConfig, goal *LabeledFormula, renaming Node) (*LabeledFo
 		// is in rmap, create old→new mapping
 		defns := GoalDefns(g)
 		match := make(map[NodeKey]Expr)
-		for k, node := range defns {
+		for k, node := range defns.All() {
 			name := nodeNameStr(node)
 			if name == "" {
 				continue
@@ -1494,7 +1494,7 @@ func applyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 	// Python: bound = [s for s in goal_defns(x) if s not in match]
 	//         with il.BindSymbols(env, bound): ... apply_match(match, conc, env)
 	env := make(map[NodeKey]bool)
-	for k := range GoalDefns(goal) {
+	for k := range GoalDefns(goal).All() {
 		if _, inMatch := match[k]; !inMatch {
 			env[k] = true
 		}

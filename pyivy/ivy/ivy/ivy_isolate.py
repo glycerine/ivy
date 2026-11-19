@@ -598,17 +598,19 @@ def get_loc_mods(mod,actname):
 
 def find_references(mod,syms,new_actions):
     syms = set(syms)
-    refs = set()
+    # dict, not set: report references in the order found, independent of
+    # hashing. Go: FindReferences returns an InsMap.
+    refs = dict()
     for x in mod.labeled_axioms+mod.labeled_props+mod.labeled_inits+mod.labeled_conjs+mod.definitions:
         if syms.intersection(lu.used_symbols_ast(x.formula)):
-            refs.add(x.lineno)
+            refs[x.lineno] = None
     for x in list(new_actions.values()):
         action_syms = lu.used_symbols_ast(x)
         if __debug__:
             for sym in action_syms:
                 xtracer.trace("isolate.collectActionSymNames.add %s" % sym)
         if syms.intersection(action_syms):
-            refs.add(x.lineno)
+            refs[x.lineno] = None
     if __debug__: xtracer.trace("isolate.FindReferences n_syms=%d n_refs=%d" % (len(syms), len(refs)))
     return refs
     
@@ -2206,10 +2208,12 @@ def iter_isolate(mod,iso,fun,verified=True,present=True):
 # Get the set of actions present in an isolate. 
 
 def get_isolate_actions(mod,iso):
-    actions = set()
+    # dict, not set: iter_isolate order, independent of hashing. Go:
+    # GetIsolateActions returns an InsMap.
+    actions = dict()
     def fun(name):
         if name in mod.actions:
-            actions.add(name)
+            actions[name] = None
     iter_isolate(mod,iso,fun)
     return actions
 
@@ -2248,7 +2252,8 @@ def get_isolate_post_conjs(mod,iso):
 def get_isolate_exports(mod,cg,iso):
     actions = get_isolate_actions(mod,iso)
     mod_exports = set(exp.exported() for exp in mod.exports)
-    exports = set(act for act in actions if act in mod_exports
+    # dict, not set: in the order of actions (see get_isolate_actions).
+    exports = dict.fromkeys(act for act in actions if act in mod_exports
                   or any((x not in actions) for x in cg[act]))
     return exports
 

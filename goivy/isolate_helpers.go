@@ -1107,12 +1107,18 @@ func GetLocMods(mod *Module, actname string) []string {
 // find_references: find line numbers referencing given symbols
 // -----------------------------------------------------------------------
 
-// FindReferences returns the set of line numbers in the module's axioms,
-// properties, inits, conjectures, definitions, and actions that reference
-// any of the given symbol names.
-// Corresponds to Python find_references (lines 565-573).
-func FindReferences(mod *Module, syms map[string]bool, newActions *InsMap[string, ActionsAction]) map[int]bool {
-	refs := make(map[int]bool)
+// FindReferences returns the locations in the module's axioms, properties,
+// inits, conjectures, definitions, and actions that reference any of the
+// given symbol names, in the order found.
+// Corresponds to Python find_references, whose refs is an
+// insertion-ordered dict of lineno (file and line) -> None.
+func FindReferences(mod *Module, syms map[string]bool, newActions *InsMap[string, ActionsAction]) *InsMap[string, Location] {
+	refs := NewInsMap[string, Location]()
+	add := func(loc Location) {
+		if _, ok := refs.Get2(loc.String()); !ok {
+			refs.Set(loc.String(), loc)
+		}
+	}
 
 	// Check labeled formulas
 	allFormulas := make([]*LabeledFormula, 0)
@@ -1133,7 +1139,7 @@ func FindReferences(mod *Module, syms map[string]bool, newActions *InsMap[string
 		fSyms := isolateUsedSymbolNames(fmla)
 		for _, s := range fSyms {
 			if syms[s] {
-				refs[lf.Lineno()] = true
+				add(lf.Base.Loc)
 				break
 			}
 		}
@@ -1144,14 +1150,13 @@ func FindReferences(mod *Module, syms map[string]bool, newActions *InsMap[string
 		actSyms := collectActionSymNames(act)
 		for s := range actSyms {
 			if syms[s] {
-				loc := act.GetLineno()
-				refs[loc.Line] = true
+				add(act.GetLineno())
 				break
 			}
 		}
 	}
 
-	xtracer.Trace("isolate.FindReferences n_syms=%d n_refs=%d", len(syms), len(refs))
+	xtracer.Trace("isolate.FindReferences n_syms=%d n_refs=%d", len(syms), refs.Len())
 	return refs
 }
 

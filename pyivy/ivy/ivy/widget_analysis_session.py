@@ -1071,7 +1071,7 @@ class TransitionViewWidget(ConceptSessionControls):
                 assert False, lit
         self.concept_session.widget = self
         self.render_graph(pre_only=True)
-        self.pre_graph.selected = tuple(set(chain(*(elements for fact, elements in self.facts_list.value))))
+        self.pre_graph.selected = tuple(dict.fromkeys(chain(*(elements for fact, elements in self.facts_list.value))))
 
 
     def autodetect_transitive(self):
@@ -1259,7 +1259,7 @@ class TransitionViewWidget(ConceptSessionControls):
             else:
                 assert False, lit
 
-        return tuple(set(elements))
+        return tuple(dict.fromkeys(elements))
 
 
 class AnalysisSessionWidget(object):

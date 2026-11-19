@@ -334,8 +334,16 @@ func unwrapCompiledNode(x Node) Node {
 
 // GoalDefns returns the symbols and types defined in the premises of a goal.
 // Corresponds to Python goal_defns (ivy_proof.py:540-547).
-func GoalDefns(goal *LabeledFormula) map[NodeKey]Expr {
-	res := make(map[NodeKey]Expr)
+//
+// Python returns an insertion-ordered dict (premise order); so does this
+// (an InsMap, not a randomly ordered Go map).
+func GoalDefns(goal *LabeledFormula) *InsMap[NodeKey, Expr] {
+	res := NewInsMap[NodeKey, Expr]()
+	put := func(k NodeKey, v Expr) {
+		if _, ok := res.Get2(k); !ok {
+			res.Set(k, v)
+		}
+	}
 	for _, p := range GoalPrems(goal) {
 		p = unwrapCompiledNode(p)
 		// Python: isinstance(x, ia.ConstantDecl) and isinstance(x.args[0], il.Symbol)
@@ -343,13 +351,13 @@ func GoalDefns(goal *LabeledFormula) map[NodeKey]Expr {
 			args := cd.Args()
 			if len(args) > 0 {
 				if c, ok := unwrapCompiledNode(args[0]).(*Const); ok {
-					res[Key(c)] = c
+					put(Key(c), c)
 				}
 			}
 		}
 		// Python: elif isinstance(x, il.UninterpretedSort): res.add(x)
 		if us, ok := p.(*UninterpretedSort); ok {
-			res[Key(us)] = us
+			put(Key(us), us)
 		}
 	}
 	return res
@@ -466,10 +474,18 @@ func GoalVocabBound(goal *LabeledFormula) *Vocab {
 // symbols, and variables that are not bound in the goal's premises.
 // Symmetric with GoalVocab — when conc is *ast.TemporalModels, extracts
 // conc.Fmla as the formula to scan.
-func GoalFree(goal *LabeledFormula) map[NodeKey]Expr {
+//
+// Python returns an insertion-ordered dict (first occurrence, sorts then
+// symbols then variables per formula); so does this.
+func GoalFree(goal *LabeledFormula) *InsMap[NodeKey, Expr] {
 	xtracer.Trace("proof.GoalFree ENTER label=%s", goal.LabelForTrace())
 	bound := make(map[NodeKey]Expr)
-	res := make(map[NodeKey]Expr)
+	res := NewInsMap[NodeKey, Expr]()
+	put := func(k NodeKey, v Expr) {
+		if _, ok := res.Get2(k); !ok {
+			res.Set(k, v)
+		}
+	}
 
 	// Python fmla_vocab: collects used_sorts_ast, used_symbols_ast, used_variables_ast
 	var recFmla func(Expr)
@@ -478,23 +494,23 @@ func GoalFree(goal *LabeledFormula) map[NodeKey]Expr {
 			return
 		}
 		// Python: lu.used_sorts_ast(fmla)
-		for sKey, s := range SortsAst(fmla) {
+		for sKey, s := range SortsAst(fmla).All() {
 			if sExpr, ok := s.(Expr); ok {
 				if bound[sKey] == nil {
-					res[sKey] = sExpr
+					put(sKey, sExpr)
 				}
 			}
 		}
 		// Python: lu.used_symbols_ast(fmla)
 		for cKey, cNode := range UsedSymbolsAst(fmla).All() {
 			if bound[cKey] == nil {
-				res[cKey] = cNode
+				put(cKey, cNode)
 			}
 		}
 		// Python: lu.used_variables_ast(fmla)
 		for vKey, vNode := range FreeVariables(fmla).All() {
 			if bound[vKey] == nil {
-				res[vKey] = vNode
+				put(vKey, vNode)
 			}
 		}
 	}
@@ -502,8 +518,13 @@ func GoalFree(goal *LabeledFormula) map[NodeKey]Expr {
 	var rec func(*LabeledFormula)
 	rec = func(g *LabeledFormula) {
 		defns := GoalDefns(g)
-		// Add defns to bound
-		for d, dn := range defns {
+		// Python il.BindSymbols(bound, defns): bind, remembering symbols
+		// that were already bound so that exit restores them.
+		var saved []NodeKey
+		for d, dn := range defns.All() {
+			if _, was := bound[d]; was {
+				saved = append(saved, d)
+			}
 			bound[d] = dn
 		}
 		for _, pg := range GoalPremGoals(g) {
@@ -514,21 +535,28 @@ func GoalFree(goal *LabeledFormula) map[NodeKey]Expr {
 			}
 		}
 		recFmla(ConcAsExpr(GoalConc(g)))
-		// Remove defns from bound (restore)
-		for d := range defns {
+		// BindSymbols.__exit__: unbind, then re-bind the saved symbols.
+		savedVals := make(map[NodeKey]Expr, len(saved))
+		for _, d := range saved {
+			savedVals[d] = bound[d]
+		}
+		for d := range defns.All() {
 			delete(bound, d)
+		}
+		for _, d := range saved {
+			bound[d] = savedVals[d]
 		}
 	}
 	rec(goal)
 	{
-		items := make([]string, 0, len(res))
-		for _, v := range res {
+		items := make([]string, 0, res.Len())
+		for _, v := range res.All() {
 			items = append(items, fmt.Sprint(v))
 		}
 		sort.Strings(items)
 		xtracer.Trace("proof.GoalFree items=[%s]", strings.Join(items, ","))
 	}
-	xtracer.Trace("proof.GoalFree EXIT nfree=%d", len(res))
+	xtracer.Trace("proof.GoalFree EXIT nfree=%d", res.Len())
 	return res
 }
 
@@ -853,7 +881,7 @@ func compileExprVocabLF(lf *LabeledFormula, vocab *Vocab, mod *Module) (*Labeled
 
 // isInVocabOrFree checks whether sym is in the vocab's sorts/symbols or in the free set.
 // Python: sym in vocab.sorts or sym in vocab.symbols or sym in free
-func isInVocabOrFree(sym *Const, vocab *Vocab, free map[NodeKey]Expr) bool {
+func isInVocabOrFree(sym *Const, vocab *Vocab, free *InsMap[NodeKey, Expr]) bool {
 	symKey := Key(sym)
 	for _, s := range vocab.Sorts {
 		if s != nil && s.Sexp() == sym.Sexp() {
@@ -865,7 +893,7 @@ func isInVocabOrFree(sym *Const, vocab *Vocab, free map[NodeKey]Expr) bool {
 			return true
 		}
 	}
-	if _, ok := free[symKey]; ok {
+	if _, ok := free.Get2(symKey); ok {
 		return true
 	}
 	return false

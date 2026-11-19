@@ -342,7 +342,9 @@ def invariance_tactic(prover,goals,proof):
         res = stmt.clone(args)
 
         # now add any needed temporal events after this statement
-        event_props = set()
+        # dict, not set: events in the order found, independent of hashing.
+        # Go: temporal.go eventProps is an InsMap.
+        event_props = dict()
 
         # first, if it is a call, we must consider any events associated with
         # the return
@@ -352,7 +354,7 @@ def invariance_tactic(prover,goals,proof):
             exiting = [l for l in callee.labels if l not in labels] # environments we exit on return
             for label in exiting:
                 for prop in envprops[label]:
-                    event_props.add(prop)
+                    event_props[prop] = None
 
         # Second, if a symbol is modified, we must add events for every property that
         # depends on the symbol, but only if we are not in the environment of that property. 
@@ -360,7 +362,7 @@ def invariance_tactic(prover,goals,proof):
         for sym in stmt.modifies():
             for prop in symprops[sym]:
                 if prop.environ not in labels:
-                    event_props.add(prop)
+                    event_props[prop] = None
                     
         # Now, for every property event, we update the property state (none in this case)
         # and also assert the property semantic constraint. 

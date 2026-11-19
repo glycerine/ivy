@@ -1757,7 +1757,7 @@ func CreateConjActions(mod *Module) error {
 		name string
 		def  IsolateDefInterface
 	}
-	myexports := make(map[string]map[string]bool) // iso name → exported actions
+	myexports := make(map[string]*InsMap[string, bool]) // iso name → exported actions (Python order)
 	objects := make(map[string][]isoEntry)        // verified object → isolates
 	cg := mod.CallGraph()
 
@@ -1784,28 +1784,31 @@ func CreateConjActions(mod *Module) error {
 			lbl = parts[0]
 		}
 
-		var actionSet map[string]bool
+		// Python: actions = dict.fromkeys(exp.exported() for exp in mod.exports)
+		// or actions.update(dict.fromkeys(myexports[isol.name()])) per isolate:
+		// insertion order, each name once.
+		actionSet := NewInsMap[string, bool]()
+		add := func(act string) {
+			if _, ok := actionSet.Get2(act); !ok {
+				actionSet.Set(act, true)
+			}
+		}
 		if lbl == "this" {
-			// Top-level: all exported actions
-			actionSet = make(map[string]bool)
 			for _, exp := range mod.Exports {
-				actionSet[exp.Exported()] = true
+				add(exp.Exported())
 			}
 		} else {
-			// Isolate-scoped: only that isolate's exports
-			actionSet = make(map[string]bool)
 			for _, entry := range objects[lbl] {
-				for act := range myexports[entry.name] {
-					actionSet[act] = true
+				for act := range myexports[entry.name].All() {
+					add(act)
 				}
 			}
 		}
 
-		actionNames := make([]string, 0, len(actionSet))
-		for act := range actionSet {
+		actionNames := make([]string, 0, actionSet.Len())
+		for act := range actionSet.All() {
 			actionNames = append(actionNames, act)
 		}
-		sort.Strings(actionNames)
 		mod.ConjActions[origLbl] = actionNames
 	}
 
@@ -1816,7 +1819,7 @@ func CreateConjActions(mod *Module) error {
 	if doCheckInterference {
 		actionIsos := make(map[string]map[string]bool)
 		for ison, actions := range myexports {
-			for action := range actions {
+			for action := range actions.All() {
 				if actionIsos[action] == nil {
 					actionIsos[action] = make(map[string]bool)
 				}
@@ -1834,17 +1837,21 @@ func CreateConjActions(mod *Module) error {
 			memo := make(map[string]bool)
 			conjs := GetIsolateConjs(mod, isol, false, true)
 			exports := myexports[ison]
-			roots := reachable(sortedBoolMapKeys(exports), func(x string) []string { return cg[x] })
+			var exportList []string
+			for a := range exports.All() {
+				exportList = append(exportList, a)
+			}
+			roots := reachable(exportList, func(x string) []string { return cg[x] })
 			for _, conj := range conjs {
 				lbl := labelName(conj.Label)
-				actions := append([]string(nil), mod.ConjActions[lbl]...)
-				sort.Strings(actions)
-				for _, action := range actions {
+				// Python iterates conj_actions[label] in its insertion order.
+				for _, action := range mod.ConjActions[lbl] {
 					for _, ison1 := range sortedBoolMapKeys(actionIsos[action]) {
 						if ison1 != ison && !memo[action] {
 							memo[action] = true
-							if roots[action] && !exports[action] {
-								for _, victim := range sortedBoolMapKeys(exports) {
+							if roots[action] && !exports.Get(action) {
+								// Python: for victim in exports (insertion order).
+								for _, victim := range exportList {
 									victimRoots := reachable([]string{victim}, func(x string) []string { return cg[x] })
 									if victimRoots[action] && action != victim {
 										return NewIvyError(conj, fmt.Sprintf("isolate %s depends on invariant %s which might not hold because action %s is called from within action %s, which invalidates the invariant.", ison, lbl, victim, action))

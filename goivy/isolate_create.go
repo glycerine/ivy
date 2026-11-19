@@ -832,13 +832,13 @@ func ApplyPresentConjectures(isol IsolateDefIface, mod *Module) []BracketEntry {
 	myExports := GetIsolateExports(mod, cg, isol)
 
 	// Dump exports sorted for cross-language comparison
-	exportNames := make([]string, 0, len(myExports))
-	for a := range myExports {
+	exportNames := make([]string, 0, myExports.Len())
+	for a := range myExports.All() {
 		exportNames = append(exportNames, a)
 	}
 	sort.Strings(exportNames)
 	xtracer.Trace("check.ApplyPresentConjectures n_exports=%d n_conjs=%d n_postConjs=%d",
-		len(myExports), len(filteredConjs), len(filteredPostConjs))
+		myExports.Len(), len(filteredConjs), len(filteredPostConjs))
 	for _, a := range exportNames {
 		xtracer.Trace("check.ApplyPresentConjectures EXPORT %s", a)
 	}
@@ -855,7 +855,7 @@ func ApplyPresentConjectures(isol IsolateDefIface, mod *Module) []BracketEntry {
 		xtracer.Trace("check.ApplyPresentConjectures CONJ_ACTIONS %s -> %s", k, fmtStrList(vals))
 	}
 	var brackets []BracketEntry
-	for actname := range myExports {
+	for actname := range myExports.All() {
 		var assumes []ActionsAction
 		for _, c := range filteredConjs {
 			assumes = append(assumes, conjToAssume(c))
@@ -874,7 +874,7 @@ func ApplyPresentConjectures(isol IsolateDefIface, mod *Module) []BracketEntry {
 		if labelName != "" {
 			if actnames, ok := mod.ConjActions[labelName]; ok {
 				for _, actname := range actnames {
-					if !myExports[actname] {
+					if !myExports.Get(actname) {
 						posts[actname] = append(posts[actname], conjToAssume(conj))
 					}
 				}

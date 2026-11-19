@@ -474,7 +474,7 @@ func TestGoalFree(t *testing.T) {
 	body := &LogicAnd{Terms: []Expr{x}}
 	lf := mkLF(proofTestAstCfg.NewAtom("test"), body)
 	free := GoalFree(lf)
-	if len(free) == 0 {
+	if free.Len() == 0 {
 		t.Error("expected free variables")
 	}
 }

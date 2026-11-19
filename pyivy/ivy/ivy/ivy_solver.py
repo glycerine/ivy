@@ -1623,7 +1623,9 @@ def model_facts(h,ignore,clauses1,upclose=False):
           if not ignore(r)
           for l in relation_model_to_clauses(h,r,n)]
     # values of functions in formula
-    fns = set(f for (f,arity) in functions_clauses(clauses1) if not ignore(f) and arity >= 1)
+    # dict.fromkeys, not set: first-occurrence order, independent of
+    # hashing. Go: ModelFacts iterates the used symbols in order.
+    fns = dict.fromkeys(f for (f,arity) in functions_clauses(clauses1) if not ignore(f) and arity >= 1)
     vf = [[l] for f in fns for l in function_model_to_clauses(h,f)]
     res = uc + vc + vr + vf
     return Clauses(res)

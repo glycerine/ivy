@@ -24,7 +24,7 @@ func SkolemizeGoalE(cfg *AstConfig, goal *LabeledFormula, prenex bool) (*Labeled
 		usedNames[s.Name] = struct{}{}
 	}
 	free := GoalFree(goal)
-	for _, node := range free {
+	for _, node := range free.All() {
 		if c, ok := node.(*Const); ok {
 			usedNames[c.Name] = struct{}{}
 		}

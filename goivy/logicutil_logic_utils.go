@@ -15,13 +15,21 @@ import (
 
 // SortsAst collects all sorts used in an AST.
 // Returns map keyed by SortKey (structural identity) with Sort values.
-func SortsAst(ast Expr) map[NodeKey]Sort {
-	result := make(map[NodeKey]Sort)
+// SortsAst is Python's used_sorts_ast = gen_to_ordered_dict(sorts_ast): the
+// sorts in first-occurrence order (an InsMap, not a randomly ordered map).
+func SortsAst(ast Expr) *InsMap[NodeKey, Sort] {
+	result := NewInsMap[NodeKey, Sort]()
 	sortsAstRec(ast, result)
 	return result
 }
 
-func sortsAstRec(ast Expr, result map[NodeKey]Sort) {
+func sortsAstRec(ast Expr, result *InsMap[NodeKey, Sort]) {
+	// dict.fromkeys keeps the first occurrence's position.
+	put := func(s Sort) {
+		if _, ok := result.Get2(SortKey(s)); !ok {
+			result.Set(SortKey(s), s)
+		}
+	}
 	// Matches Python sorts_ast (ivy_logic_utils.py:632-645):
 	// For is_app(ast) [App OR bare Const OR 0-arity NamedBinder]:
 	//   if is_binder(rep): recurse into rep.body
@@ -36,12 +44,12 @@ func sortsAstRec(ast Expr, result map[NodeKey]Sort) {
 	yieldFuncSort := func(s Sort) {
 		if fs, ok := s.(*LogicFunctionSort); ok {
 			rng := fs.Range()
-			result[SortKey(rng)] = rng
+			put(rng)
 			for _, d := range fs.Domain() {
-				result[SortKey(d)] = d
+				put(d)
 			}
 		} else {
-			result[SortKey(s)] = s
+			put(s)
 		}
 	}
 	if app, ok := ast.(*Apply); ok {
@@ -58,7 +66,7 @@ func sortsAstRec(ast Expr, result map[NodeKey]Sort) {
 		// recurse into body (not the binder's .sort).
 		sortsAstRec(nb.Body, result)
 	} else if v, ok := ast.(*LogicVariable); ok {
-		result[SortKey(v.VSort)] = v.VSort
+		put(v.VSort)
 	}
 	for _, c := range ast.Children() {
 		sortsAstRec(c, result)

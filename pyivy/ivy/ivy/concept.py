@@ -769,7 +769,8 @@ def get_structure_renaming(state, order_relations=()):
     order_relations = frozenset(order_relations)
 
     # add node_info results for universe elements
-    elements = list(set([uc for s in state.universe for uc in state.universe[s]]))
+    # dict.fromkeys, not set: first-occurrence order, independent of hashing.
+    elements = list(dict.fromkeys([uc for s in state.universe for uc in state.universe[s]]))
 
     # name according to topological sort
     # TODO: make this not specific to leader example

@@ -542,7 +542,7 @@ def symbols_over_universals(fmlas):
 def universal_variables_rec(fmla,pos,univs):
     if is_quantifier(fmla):
         if pos == isinstance(fmla,lg.ForAll):
-            univs.update(fmla.variables)
+            univs.update(dict.fromkeys(fmla.variables))
             return
     if isinstance(fmla,Implies):
         universal_variables_rec(fmla.args[0],not pos,univs),
@@ -556,7 +556,9 @@ def universal_variables_rec(fmla,pos,univs):
 def universal_variables(fmlas):
     """ Return the set of variables quantified universally after skolemization."""
 
-    univs = set()
+    # dict, not set: insertion (first-occurrence) order, independent of
+    # hashing. Go: UniversalVariables uses an InsMap.
+    univs = dict()
     for fmla in fmlas:
         universal_variables_rec(fmla,True,univs)
     return univs

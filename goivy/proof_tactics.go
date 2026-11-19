@@ -625,7 +625,7 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 		if pc.Stale[sym.Name] {
 			return nil, &ProofError{Msg: fmt.Sprintf("%s is not fresh", sym.Name)}
 		}
-		if _, inDefns := goalDefns[Key(sym)]; inDefns {
+		if _, inDefns := goalDefns.Get2(Key(sym)); inDefns {
 			return nil, &ProofError{Msg: fmt.Sprintf("%s is not fresh", sym.Name)}
 		}
 

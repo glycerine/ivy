@@ -406,10 +406,11 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 						actname, called, strings.Join(modNames, ","))
 					refs := FindReferences(mod, cmods, newActions)
 					refStr := ""
-					for ln := range refs {
-						refStr += fmt.Sprintf("\n%d referenced here", ln)
+					// Python: '\n' + str(ln) + 'referenced here', in found order.
+					for _, ln := range refs.All() {
+						refStr += "\n" + ln.String() + "referenced here"
 					}
-					return fmt.Errorf("call out to %s may have visible effect on %s%s",
+					return fmt.Errorf("Call out to %s may have visible effect on %s%s",
 						called, joinStrings(modNames, ","), refStr)
 				}
 
@@ -497,10 +498,11 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 					sort.Strings(modNames)
 					refs := FindReferences(mod, filteredMods, newActions)
 					refStr := ""
-					for ln := range refs {
-						refStr += fmt.Sprintf("\n%d referenced here", ln)
+					// Python: '\n' + str(ln) + 'referenced here', in found order.
+					for _, ln := range refs.All() {
+						refStr += "\n" + ln.String() + "referenced here"
 					}
-					return fmt.Errorf("external call to %s may have visible effect on %s%s",
+					return fmt.Errorf("External call to %s may have visible effect on %s%s",
 						called, joinStrings(modNames, ","), refStr)
 				}
 			}

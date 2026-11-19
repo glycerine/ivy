@@ -784,7 +784,14 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 		}
 		res := stmt.ActionClone(newArgs)
 
-		eventProps := make(map[string]Expr) // deduped by string
+		// Python event_props: an insertion-ordered dict of props (it was a
+		// set), deduplicated structurally (Key), not a random-order map.
+		eventProps := NewInsMap[NodeKey, Expr]()
+		addProp := func(prop Expr) {
+			if _, ok := eventProps.Get2(Key(prop)); !ok {
+				eventProps.Set(Key(prop), prop)
+			}
+		}
 
 		// If it is a call, check for events on return
 		if call, ok := stmt.(*LogicCallAction); ok {
@@ -801,7 +808,7 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 							envprops[l] = nil
 						}
 						for _, prop := range envprops[l] {
-							eventProps[fmt.Sprint(prop)] = prop
+							addProp(prop)
 						}
 					}
 				}
@@ -823,15 +830,15 @@ func InvarianceTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node
 			for _, prop := range symprops[sk] {
 				env := EnvironStr(prop)
 				if !labelSet[env] {
-					eventProps[fmt.Sprint(prop)] = prop
+					addProp(prop)
 				}
 			}
 		}
 
 		// Add property events
 		var events []ActionsAction
-		for key, prop := range eventProps {
-			loc := propLines[key]
+		for _, prop := range eventProps.All() {
+			loc := propLines[fmt.Sprint(prop)]
 			events = append(events, TemporalPropEvent(prop, loc))
 		}
 

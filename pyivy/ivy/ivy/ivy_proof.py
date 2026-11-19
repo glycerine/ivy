@@ -749,12 +749,14 @@ def goal_prefix_prems(goal,prems,lineno):
 # Get the symbols and types defined in the premises of a goal
 
 def goal_defns(goal):
-    res = set()
+    # dict, not set: premise order, independent of hashing. Go: GoalDefns
+    # returns an InsMap.
+    res = dict()
     for x in goal_prems(goal):
         if isinstance(x,ia.ConstantDecl) and isinstance(x.args[0],il.Symbol):
-            res.add(x.args[0])
+            res[x.args[0]] = None
         elif isinstance(x,il.UninterpretedSort):
-            res.add(x)
+            res[x] = None
     return res
 
 # Get all the premises of a goal that are goals
@@ -893,7 +895,7 @@ def goal_free(goal):
     def rec_fmla(fmla,res):
         for y in fmla_vocab(fmla):
             if y not in bound:
-                res.add(y)
+                res[y] = None
     def rec(goal,res):
         defns = goal_defns(goal)
         with il.BindSymbols(bound,defns):
@@ -903,7 +905,9 @@ def goal_free(goal):
                 else:
                     rec_fmla(x.formula,res)
             rec_fmla(goal_conc(goal),res)
-    res = set()
+    # dict, not set: first-occurrence order, independent of hashing. Go:
+    # GoalFree returns an InsMap.
+    res = dict()
     rec(goal,res)
     if __debug__:
         _gf_items = sorted([str(x) for x in res])
@@ -923,7 +927,9 @@ def check_schema_capture(schema,goal):
 
 def check_alpha_capture(goal,match):
     rev_match = dict((y,x) for x,y in match.items())
-    for s in goal_free(goal).union(goal_defns(goal)):
+    free_and_defns = dict(goal_free(goal))
+    free_and_defns.update(goal_defns(goal))
+    for s in free_and_defns:
         if s in rev_match and s not in match:
             raise CaptureError(None,'"{}" is captured by renaming "{}"'.format(s,rev_match[s]))
 

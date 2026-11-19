@@ -2271,7 +2271,9 @@ def apply_assert_proofs(mod,prover):
         if __debug__: xtracer.trace("compiler.apply_assert_proofs action[%d]=%s" % (action_idx, actname))
         action_idx += 1
         action = mod.actions[actname]
-        with ivy_logic.WithSymbols(list(set(action.formal_params+action.formal_returns))):
+        # dict.fromkeys, not set: dedupe keeping params-then-returns order,
+        # independent of hashing. Go: ApplyAssertProofs.
+        with ivy_logic.WithSymbols(list(dict.fromkeys(action.formal_params+action.formal_returns))):
             mod.actions[actname] = action.copy_formals(recur(action))
     
 def check_properties(mod):

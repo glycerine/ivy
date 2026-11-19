@@ -2242,7 +2242,7 @@ func ApplyAssertProofsWithProver(mod *Module, prover ProofCheckerInterface) erro
 		if !ok {
 			continue
 		}
-		// Python: with ivy_logic.WithSymbols(list(set(action.formal_params+action.formal_returns)))
+		// Python: with ivy_logic.WithSymbols(list(dict.fromkeys(action.formal_params+action.formal_returns)))
 		formals := uniqueSymbols(act.GetFormalParams(), act.GetFormalReturns())
 		if mod.Sig != nil && len(formals) > 0 {
 			ws := NewWithSymbols(mod.Sig, formals)
@@ -3088,18 +3088,15 @@ func extractLocalSymbols(locals []Expr) []*Const {
 
 // uniqueSymbols merges two symbol slices, deduplicating by name.
 // Python: list(set(action.formal_params + action.formal_returns))
+// uniqueSymbols is Python list(dict.fromkeys(params+returns)): the
+// symbols in params-then-returns order, each (name and sort, i.e. Key)
+// once.
 func uniqueSymbols(params, returns []*Const) []*Const {
-	seen := make(map[string]bool)
+	seen := make(map[NodeKey]bool)
 	var result []*Const
-	for _, s := range params {
-		if s != nil && !seen[s.Name] {
-			seen[s.Name] = true
-			result = append(result, s)
-		}
-	}
-	for _, s := range returns {
-		if s != nil && !seen[s.Name] {
-			seen[s.Name] = true
+	for _, s := range append(append([]*Const{}, params...), returns...) {
+		if s != nil && !seen[Key(s)] {
+			seen[Key(s)] = true
 			result = append(result, s)
 		}
 	}
