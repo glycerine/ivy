@@ -408,9 +408,7 @@ func (c *Compiler) CompileInlineCall(self *Atom, args []Expr, methodcall bool) (
 				isaSym := NewConst("*>", isaSort)
 				isaApp, _ := NewApply(isaSym, keyArg, tmpSym)
 				// Python: ivy_ast.Some(tmpsym, isa_expr)
-				someCond := IvyExists([]*LogicVariable{
-					{Name: tmpSym.Name, VSort: vsort},
-				}, isaApp)
+				someCond := &SomeCondition{Params: []*Const{tmpSym}, Fmla: isaApp, Kind: "some"}
 				ifAction := NewIfAction(someCond,
 					newCall,
 					call)
