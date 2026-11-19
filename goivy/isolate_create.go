@@ -237,6 +237,7 @@ func CreateIsolate(iso string, mod *Module) error {
 	afterInits := mod.Mixins.Get("init")
 	mod.Mixins.Delkey("init")
 	xtracer.Trace("check.CreateIsolate.postInitDel mod.Mixins.Len=%d", mod.Mixins.Len())
+	traceInitAfter(mod, "postInitDel")
 
 	// Python line 1580: mod.exports.extend(ExportDef(Atom(a.mixer()), Atom('')) for a in after_inits)
 	for _, ai := range afterInits {
@@ -386,6 +387,7 @@ func CreateIsolate(iso string, mod *Module) error {
 	}
 
 	xtracer.Trace("check.CreateIsolate after_isolate_component")
+	traceInitAfter(mod, "after_isolate_component")
 
 	// === Post-isolate_component steps, in Python order (lines 1899-1954) ===
 
@@ -405,6 +407,7 @@ func CreateIsolate(iso string, mod *Module) error {
 		}
 	}
 	xtracer.Trace("check.CreateIsolate after_label_public")
+	traceInitAfter(mod, "after_label_public")
 
 	// Python line 1901-1907: Create one big external action if requested
 	extAction := ""
@@ -440,6 +443,7 @@ func CreateIsolate(iso string, mod *Module) error {
 		mod.PublicActions.Set(extAction, true)
 	}
 	xtracer.Trace("check.CreateIsolate after_ext_action")
+	traceInitAfter(mod, "after_ext_action")
 
 	// Python line 1911: slv.check_compat()
 	// Check native interpretations of symbols for compatibility.
@@ -451,6 +455,7 @@ func CreateIsolate(iso string, mod *Module) error {
 		}
 	}
 	xtracer.Trace("check.CreateIsolate after_check_compat")
+	traceInitAfter(mod, "after_check_compat")
 
 	// Python line 1915: mod.update_conjs()
 	// Update conjectures (generate concept spaces)
@@ -469,6 +474,7 @@ func CreateIsolate(iso string, mod *Module) error {
 		}
 	}
 	xtracer.Trace("check.CreateIsolate after_cone_of_influence")
+	traceInitAfter(mod, "after_cone_of_influence")
 
 	// Python line 1939: fix_initializers(mod, after_inits)
 	xtracer.Trace("check.CreateIsolate before_fix_initializers n_afterInits=%d", len(afterInits))

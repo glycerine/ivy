@@ -58,21 +58,14 @@ func (a *DerivedUpdate) GetUpdateAxioms(updated []*Const, action Action) ([]*Con
 			depExpr = rhs
 		}
 	}
-	deps := make(map[string]bool)
-	for _, sym := range UsedSymbolsAst(depExpr).All() {
-		if c, ok := sym.(*Const); ok {
-			deps[c.Name] = true
-		}
-	}
-
-	// Check if defines is not in updated and any dependency is in updated
-	updatedSet := make(map[string]bool)
-	for _, u := range updated {
-		updatedSet[u.Name] = true
-	}
-	if !updatedSet[defSym.Name] {
+	// Python compares Symbols (name and sort): `defines not in updated and
+	// any(x in self.dependencies for x in updated)`. UsedSymbolsAst is keyed
+	// by Key, which includes the sort, so a symbol whose sort was stripped
+	// by strip_isolate does not match its unstripped dependency.
+	deps := UsedSymbolsAst(depExpr)
+	if !symbolKeyIn(defSym, updated) {
 		for _, u := range updated {
-			if deps[u.Name] {
+			if _, ok := deps.Get2(Key(u)); ok {
 				updated = append(updated, defSym)
 				break
 			}
@@ -131,3 +124,15 @@ func (a *DerivedUpdate) Sexp() NodeKey {
 	return NodeKey(fmt.Sprintf("(DerivedUpdate defn:%v)", defn))
 }
 func (a *DerivedUpdate) Canon() Canonical { return Canonical(a.Sexp()) }
+
+// symbolKeyIn is Python's `sym in syms` over a list of Symbols, which
+// compares name and sort (Key), not the name alone.
+func symbolKeyIn(sym *Const, syms []*Const) bool {
+	k := Key(sym)
+	for _, s := range syms {
+		if Key(s) == k {
+			return true
+		}
+	}
+	return false
+}

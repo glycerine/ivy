@@ -559,7 +559,12 @@ def check_isolate(trace_hook = None):
     fc_start = time.time()
 
     if __debug__: xtracer.trace("check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)")
-    ifc.check_fragment()
+    try:
+        ifc.check_fragment()
+    except iu.IvyError:
+        # Go: check_isolate_check.go traces the same line on its error return.
+        if __debug__: xtracer.trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment() with error")
+        raise
     if __debug__: xtracer.trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().")
 
     fc_end = time.time()

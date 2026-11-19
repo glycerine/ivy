@@ -2227,17 +2227,11 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []*Const, action ActionsAction) ([
 
 	// Python: self.dependencies = used_symbols_ast(fmla) — computed at __init__.
 	// Go re-computes each call (acceptable for now).
-	deps := make(map[string]bool)
-	CollectSymNames(a.Body, deps)
-
-	// Check if defines is not in updated and any dependency is in updated
-	updatedSet := make(map[string]bool)
-	for _, u := range updated {
-		updatedSet[u.Name] = true
-	}
-	if !updatedSet[defines.Name] {
+	// Symbols compare by name and sort (Key), as in Python.
+	deps := UsedSymbolsAst(a.Body)
+	if !symbolKeyIn(defines, updated) {
 		for _, u := range updated {
-			if deps[u.Name] {
+			if _, ok := deps.Get2(Key(u)); ok {
 				updated = append(updated, defines)
 				break
 			}

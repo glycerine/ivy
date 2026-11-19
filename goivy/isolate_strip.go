@@ -79,6 +79,7 @@ func stripActionFullRec(action ActionsAction, stripMap StripMap, mod *Module,
 		}
 		// Strip the callee's leading parameters.
 		stripParams := StripMapLookup(calleeName, stripMap, mod)
+		var r ActionsAction
 		if len(stripParams) > 0 {
 			newCallee := stripNodeFull(a.Callee, stripMap, mod, binding)
 			newReturns := make([]Expr, len(a.ActualReturns))
@@ -87,9 +88,31 @@ func stripActionFullRec(action ActionsAction, stripMap StripMap, mod *Module,
 			}
 			allArgs := []Expr{newCallee}
 			allArgs = append(allArgs, newReturns...)
-			return a.ActionClone(allArgs)
+			r = a.ActionClone(allArgs)
+		} else {
+			r = a.ActionClone(newArgs)
 		}
-		return a.ActionClone(newArgs)
+		// Python: call = ast.args[0].clone(args[len(strip_params):]), where
+		// args are the call atom's arguments run through strip_action. The
+		// atom is the call's args[0] (AstCallee); ActionClone copies the old
+		// one, so strip it here too, or later passes still see the isolate
+		// parameters (sht.ivy iso_dm after init: imap.set(prm:X,0,0)).
+		if a.AstCallee != nil {
+			terms := make([]Node, len(a.AstCallee.Terms))
+			for i, t := range a.AstCallee.Terms {
+				if e, ok := t.(Expr); ok {
+					terms[i] = stripNodeFull(e, stripMap, mod, binding)
+				} else {
+					terms[i] = t
+				}
+			}
+			n := len(stripParams)
+			if n > len(terms) {
+				n = len(terms)
+			}
+			r.(*LogicCallAction).AstCallee = a.AstCallee.Clone(terms[n:]).(*Atom)
+		}
+		return r
 
 	case *LogicAssignAction:
 		// Python lines 260-266: Handle init_params for initializer actions.
@@ -273,8 +296,60 @@ func stripNodeFull(node Expr, stripMap StripMap, mod *Module, binding map[NodeKe
 		}
 	}
 
-	// Fall through to regular strip logic.
-	return stripNode(node, stripMap, mod)
+	// Python strip_action on a term: args = [strip_action(arg,...) for arg
+	// in ast.args] with the same strip_binding at every level; an
+	// application whose symbol has isolate parameters drops them (and the
+	// matching domain sorts); every other node is ast.clone(args). The
+	// recursion must reach terms nested in Definitions, quantifiers and
+	// connectives, as Python's does.
+	switch n := node.(type) {
+	case *Apply:
+		newTerms := make([]Expr, len(n.Terms))
+		for i, t := range n.Terms {
+			newTerms[i] = stripNodeFull(t, stripMap, mod, binding)
+		}
+		if c, ok := n.Func.(*Const); ok {
+			stripParams := StripMapLookup(c.Name, stripMap, mod)
+			if len(stripParams) > 0 && len(newTerms) >= len(stripParams) {
+				strippedTerms := newTerms[len(stripParams):]
+				newSym := NewConst(c.Name, StripSort(c.CSort, len(stripParams)))
+				if len(strippedTerms) == 0 {
+					return newSym
+				}
+				result, err := NewApply(newSym, strippedTerms...)
+				if err != nil {
+					return node
+				}
+				return result
+			}
+		}
+		if len(newTerms) == 0 {
+			return n.Func
+		}
+		result, err := NewApply(n.Func, newTerms...)
+		if err != nil {
+			return node
+		}
+		return result
+	case *Const, *LogicVariable:
+		return node
+	}
+	args := node.Args()
+	if len(args) == 0 {
+		return node
+	}
+	newArgs := make([]Node, len(args))
+	for i, a := range args {
+		if e, ok := a.(Expr); ok {
+			newArgs[i] = stripNodeFull(e, stripMap, mod, binding)
+		} else {
+			newArgs[i] = a
+		}
+	}
+	if c, ok := node.Clone(newArgs).(Expr); ok {
+		return c
+	}
+	return node
 }
 
 // StripAction removes isolate parameters from an action recursively.

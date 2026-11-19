@@ -79,7 +79,9 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	// Python: ifc.check_fragment()
 	xtracer.Trace("check/isolate_check.go: CheckIsolate about to call fragment.CheckFragment(mod, false)")
 	if err := CheckFragment(mod, false); err != nil {
-		xtracer.Trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment() but with error: %v", err)
+		// Python ivy_check.py traces the same line (one line, without the
+		// multi-line message) before re-raising.
+		xtracer.Trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment() with error")
 		return err
 	}
 	xtracer.Trace("check/isolate_check.go: CheckIsolate back from fragment.CheckFragment().")

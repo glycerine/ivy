@@ -1666,6 +1666,14 @@ def loop_action(action,mod):
     ia.type_check_action(action,mod) # make sure all is legal
     return action
 
+def trace_init_after(mod,stage):
+    # Debug: follow the after-init actions through create_isolate
+    # (Go: traceInitAfter in isolate_trace_init_after.go).
+    for name in sorted(n for n in mod.actions if 'init[after]' in n):
+        a = mod.actions[name]
+        calls = [len(s.args[0].args) for s in a.iter_subactions() if isinstance(s,ia.CallAction)]
+        xtracer.trace("isolate.trace_init_after stage=%s name=%s nparams=%d calls=[%s]" % (stage, name, len(getattr(a,'formal_params',[])), ','.join(str(c) for c in calls)))
+
 def fix_initializers(mod,after_inits):
         things = set()
         for m in after_inits:
@@ -1780,6 +1788,7 @@ def create_isolate(iso,mod = None,**kwargs):
         after_inits = mod.mixins["init"]
         del  mod.mixins["init"]
         if __debug__: xtracer.trace("check.CreateIsolate.postInitDel mod.Mixins.Len=%d" % len(mod.mixins))
+        if __debug__: trace_init_after(mod,"postInitDel")
         mod.exports.extend(ivy_ast.ExportDef(ivy_ast.Atom(a.mixer()),ivy_ast.Atom('')) for a in after_inits)
 
         # check all mixin declarations
@@ -1929,6 +1938,7 @@ def create_isolate(iso,mod = None,**kwargs):
                     mod.public_actions[a] = True
 
         if __debug__: xtracer.trace("check.CreateIsolate after_isolate_component")
+        if __debug__: trace_init_after(mod,"after_isolate_component")
 
         # Create one big external action if requested
 
@@ -1936,6 +1946,7 @@ def create_isolate(iso,mod = None,**kwargs):
         for name in mod.public_actions:
             mod.actions[name].label = name
         if __debug__: xtracer.trace("check.CreateIsolate after_label_public")
+        if __debug__: trace_init_after(mod,"after_label_public")
         ext = kwargs['ext'] if 'ext' in kwargs else ext_action.get()
         if __debug__: xtracer.trace("check.CreateIsolate before_ext_action ext=\"%s\"" % (ext if ext is not None else ""))
         if ext is not None:
@@ -1945,12 +1956,14 @@ def create_isolate(iso,mod = None,**kwargs):
             mod.public_actions[ext] = True;
             mod.actions[ext] = ext_act;
         if __debug__: xtracer.trace("check.CreateIsolate after_ext_action")
+        if __debug__: trace_init_after(mod,"after_ext_action")
 
         # Check native interpretations of symbols
 
         if __debug__: xtracer.trace("check.CreateIsolate before_check_compat")
         slv.check_compat()
         if __debug__: xtracer.trace("check.CreateIsolate after_check_compat")
+        if __debug__: trace_init_after(mod,"after_check_compat")
 
         # Make concept spaces from the conjecture
 
@@ -1981,6 +1994,7 @@ def create_isolate(iso,mod = None,**kwargs):
                         iu.warn(mod.actions[a],"action {} is implicitly exported".format(anorm))
 
         if __debug__: xtracer.trace("check.CreateIsolate after_cone_of_influence")
+        if __debug__: trace_init_after(mod,"after_cone_of_influence")
 
         if __debug__: xtracer.trace("check.CreateIsolate before_fix_initializers n_afterInits=%d" % len(after_inits))
         fix_initializers(mod,after_inits)

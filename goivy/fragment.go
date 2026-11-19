@@ -703,8 +703,10 @@ func (c *checker) reportArc(a arc) string {
 
 func (c *checker) reportCycle(cycle []arc) error {
 	xtracer.Trace("fragment/checker.reportCycle ENTER")
-	defer xtracer.Trace("fragment/checker.reportCycle EXIT")
 	if len(cycle) == 0 {
+		// Python traces EXIT only here: with a cycle, report_feu_error
+		// raises past the EXIT line.
+		xtracer.Trace("fragment/checker.reportCycle EXIT")
 		return nil
 	}
 	xtracer.Trace("fragment/checker.reportCycle report cycle error")
@@ -749,7 +751,13 @@ func CheckFEU(
 ) (err error) {
 
 	xtracer.Trace("fragment CheckFEU ENTER")
-	defer xtracer.Trace("fragment CheckFEU EXIT")
+	// Python traces EXIT only when check_feu returns normally; an FEU
+	// error raises past it.
+	defer func() {
+		if err == nil {
+			xtracer.Trace("fragment CheckFEU EXIT")
+		}
+	}()
 
 	c := newChecker(sig, interp)
 
