@@ -166,6 +166,9 @@ func GetFormalSortAnnotation(n Node) string {
 			return fmt.Sprint(v.ASort)
 		}
 		return ""
+	case *KeyArg:
+		// Python KeyArg is an App subclass.
+		return GetFormalSortAnnotation(v.App)
 	case *Symbol:
 		if v.Sort != nil {
 			return fmt.Sprint(v.Sort)
@@ -985,6 +988,10 @@ type ThunkAction struct {
 	Sort         Node // the sort/type
 	Body         Node // the body sequence
 	Continuation Node // optional: set by lower_var_stmts when appending scoped continuation
+	// ExtraArgs holds Python args beyond args[4]: lower_var_stmts appends a
+	// continuation with stmt.clone(stmt.args + [Sequence(...)]) even when
+	// the thunk already has one. Only canon and traversal see them.
+	ExtraArgs []Node
 }
 
 func (cfg *AstConfig) NewThunkAction(label, action, sort, body Node) *ThunkAction {
@@ -997,6 +1004,7 @@ func (t *ThunkAction) Args() []Node {
 	args := []Node{t.Label, t.Action, t.Sort, t.Body}
 	if t.Continuation != nil {
 		args = append(args, t.Continuation)
+		args = append(args, t.ExtraArgs...)
 	}
 	return args
 }
@@ -1004,6 +1012,9 @@ func (t *ThunkAction) Clone(args []Node) Node {
 	c := &ThunkAction{Base: t.Base, Label: args[0], Action: args[1], Sort: args[2], Body: args[3]}
 	if len(args) > 4 {
 		c.Continuation = args[4]
+	}
+	if len(args) > 5 {
+		c.ExtraArgs = append([]Node(nil), args[5:]...)
 	}
 	return c
 }
@@ -1014,12 +1025,10 @@ func (t *ThunkAction) String() string {
 	}
 	return s
 }
+// Canon matches Python's canon of the ThunkAction: its args (label,
+// action, sort, body and, when present, the continuation) as children.
 func (t *ThunkAction) Canon() Canonical {
-	cont := "nil"
-	if t.Continuation != nil {
-		cont = string(t.Continuation.Canon())
-	}
-	return Canonical(fmt.Sprintf("(thunkAction%v label:%v action:%v sort:%v body:%v continuation:%v)", t.Base.canonFields(), nodeCanon(t.Label), nodeCanon(t.Action), nodeCanon(t.Sort), nodeCanon(t.Body), cont))
+	return Canonical(fmt.Sprintf("(thunkAction%v children:%v)", t.Base.canonFields(), SliceCanon(t.Args())))
 }
 
 // TemporalModels represents M |= phi.

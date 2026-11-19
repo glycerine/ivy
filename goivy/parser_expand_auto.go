@@ -189,6 +189,9 @@ func nodeSort(n Node) string {
 		if x.ASort != nil {
 			return fmt.Sprint(x.ASort)
 		}
+	case *KeyArg:
+		// Python KeyArg is an App subclass.
+		return nodeSort(x.App)
 	}
 	return ""
 }

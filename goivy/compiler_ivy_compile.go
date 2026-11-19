@@ -403,10 +403,10 @@ func CollectActions(decls []Node) *TopContext {
 
 				// Find keypos: index of first KeyArg
 				keypos := 0
+				// Python: no break, so the last KeyArg wins.
 				for idx, p := range formals {
 					if _, isKey := p.(*KeyArg); isKey {
 						keypos = idx
-						break
 					}
 				}
 

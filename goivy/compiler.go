@@ -1387,6 +1387,10 @@ func (c *Compiler) CompileWithSortInference(node Node) (Node, error) {
 // CompileConst compiles a constant declaration, adding it to the signature.
 func (c *Compiler) CompileConst(v Node, sig *Sig) (*Const, error) {
 	xtracer.Trace("compiler.CompileConst ENTER")
+	// Python KeyArg is an App subclass (same rep, args, sort, lineno).
+	if k, ok := v.(*KeyArg); ok {
+		v = k.App
+	}
 	var name string
 	var sortArgs []Node
 	var sortNode Node

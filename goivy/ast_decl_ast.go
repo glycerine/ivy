@@ -475,6 +475,9 @@ func prefixNodes(nodes []Node, s string) []Node {
 			result[i] = a.Prefix(s)
 		case *App:
 			result[i] = a.Prefix(s)
+		case *KeyArg:
+			// Python KeyArg is an App subclass: prefix clones it as a KeyArg.
+			result[i] = &KeyArg{App: a.App.Prefix(s)}
 		case *Variable:
 			// Python: Variable.prefix creates an App with prefixed rep, preserving sort
 			repSym := &Symbol{Rep: s + a.Rep}
@@ -564,6 +567,8 @@ func dropPrefixNodes(nodes []Node, s string) []Node {
 			result[i] = a.DropPrefix(s)
 		case *App:
 			result[i] = a.DropPrefix(s)
+		case *KeyArg:
+			result[i] = &KeyArg{App: a.App.DropPrefix(s)}
 		default:
 			result[i] = n
 		}
@@ -633,6 +638,9 @@ func rewriteParam(p Node, rw AstRewriter) Node {
 			res.ASort = RewriteSortNode(rw, n.ASort, n.Cfg)
 		}
 		return res
+	case *KeyArg:
+		// Python: type(p)(p.rep) -- a new KeyArg.
+		return &KeyArg{App: rewriteParam(n.App, rw).(*App)}
 	default:
 		// Fallback — formal params should always be App or Atom
 		return AstRewrite(p, rw)

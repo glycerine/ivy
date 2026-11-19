@@ -18,3 +18,16 @@ func TestAstRewriteEmptySequenceAddsReference(t *testing.T) {
 		t.Fatalf("loc %+v ref %+v", loc, loc.Reference)
 	}
 }
+
+// Python lower_var_stmts clones a thunk with stmt.args + [Sequence(...)],
+// so a thunk lowered twice has a sixth arg; canon shows it
+// (test/disk_token_ring.ivy).
+func TestThunkActionKeepsExtraArgs(t *testing.T) {
+	cfg := NewAstConfig()
+	th := &ThunkAction{Label: cfg.NewAtom("l"), Action: cfg.NewAtom("f"), Sort: cfg.NewAtom("t"), Body: cfg.NewSequence()}
+	once := th.Clone(append(th.Args(), cfg.NewSequence(cfg.NewAtom("a")))).(*ThunkAction)
+	twice := once.Clone(append(once.Args(), cfg.NewSequence())).(*ThunkAction)
+	if n := len(twice.Args()); n != 6 {
+		t.Fatalf("args %d, want 6: %v", n, twice.Canon())
+	}
+}

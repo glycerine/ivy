@@ -2937,10 +2937,12 @@ lparam:
     | PARSER_TOK_CARET SYMBOLx PARSER_TOK_COLON atype
     {
         xtracer.Trace("parser.p_lparam_caret_variable_colon_symbol ENTER (lparam)")
-        // Python: p[0] = KeyArg(p[2]); p[0].sort = p[4]
+        // Python: p[0] = KeyArg(p[2]); p[0].lineno = get_lineno(p,2); p[0].sort = p[4]
         a := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol($2.Val, nil))
         a.ASort = $4
-        $$ = a
+        k := parser17Acfg(parser17lex).NewKeyArg(a)
+        k.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
+        $$ = k
     }
     ;
 

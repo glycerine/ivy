@@ -257,6 +257,18 @@ func (m *ivyAccum) declareAllowRedef(decl Node, allowRedef bool) {
 			m.define(name, declLineno, cls, allowRedef)
 		}
 	}
+	// Python ActionDecl.defines():
+	//   res = [(c.defines(),lineno(c)) for c in self.args]
+	//   for a in self.args: res.extend(a.iter_internal_defines())
+	if ad, ok := decl.(*ActionDecl); ok {
+		for _, arg := range ad.Args() {
+			if d, ok := arg.(*ActionDef); ok {
+				for _, idf := range astIterInternalDefines(d.Body) {
+					m.define(idf.name, idf.loc, "", allowRedef)
+				}
+			}
+		}
+	}
 	m.decls = append(m.decls, decl)
 	if xtracer.Enabled {
 		canonical := decl.Canon()
@@ -377,4 +389,33 @@ func declHasCommonAttribute(decl Node) bool {
 		return hasAttributeNode(db.Attributes, "common")
 	}
 	return false
+}
+
+type astInternalDefine struct {
+	name string
+	loc  Location
+}
+
+// astIterInternalDefines is Python Action.iter_internal_defines on a parsed
+// action: it recurses through sub-actions, and a ThunkAction yields
+// (label, lineno) and (label.run, lineno) without descending into its body.
+func astIterInternalDefines(n Node) []astInternalDefine {
+	if n == nil {
+		return nil
+	}
+	if th, ok := n.(*ThunkAction); ok {
+		label := ""
+		if a, ok := th.Label.(*Atom); ok {
+			label = a.Rep
+		} else {
+			label = fmt.Sprint(th.Label)
+		}
+		loc := th.GetLineno()
+		return []astInternalDefine{{label, loc}, {label + ".run", loc}}
+	}
+	var res []astInternalDefine
+	for _, a := range n.Args() {
+		res = append(res, astIterInternalDefines(a)...)
+	}
+	return res
 }
