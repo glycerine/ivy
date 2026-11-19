@@ -1038,7 +1038,8 @@ func CheckModule(mod *Module) error {
 		sort.Strings(isolates)
 		if mod.Cfg.Coverage {
 			if missing := CheckIsolateCompleteness(mod); len(missing) > 0 {
-				return fmt.Errorf("some assertions are not checked")
+				// Python: raise iu.IvyError(None,"Some assertions are not checked")
+				return fmt.Errorf("Some assertions are not checked")
 			}
 		}
 	} else {

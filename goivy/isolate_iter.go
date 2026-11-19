@@ -341,21 +341,32 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 
 	// Process each isolate
 	for _, isol := range mod.Isolates.All() {
-		vNames := isol.VerifiedNames()
-		pNames := isol.PresentNames()
-		verified, _ := GetIsolateInfo(mod, vNames, pNames, "impl")
-
-		// Compute verified and present action sets
+		// Python:
+		//   verified,present = get_isolate_info(mod,isolate,'impl')
+		//   save_privates = mod.privates
+		//   set_privates(mod,isolate)
+		//   verified_actions = ... vstartswith_eq_some(a,verified,mod)
+		//   present_actions = ... startswith_eq_some(a,present,mod)
+		//   mod.privates = save_privates
+		// set_privates rebinds mod.privates to a new set; goivy's
+		// SetPrivatesFull mutates the map, so save a copy.
+		verified, present := GetIsolateInfoFull(mod, isol, "impl", nil)
+		savePrivates := make(map[string]bool, len(mod.Privates))
+		for k, v := range mod.Privates {
+			savePrivates[k] = v
+		}
+		SetPrivatesFull(mod, isol, "")
 		verifiedActions := make(map[string]bool)
 		presentActions := make(map[string]bool)
 		for a := range mod.Actions.All() {
 			if VStartsWithEqSome(a, verified, mod, nil) {
 				verifiedActions[a] = true
 			}
-			if StartsWithEqSome(a, verified, mod, nil) {
+			if StartsWithEqSome(a, present, mod, nil) {
 				presentActions[a] = true
 			}
 		}
+		mod.Privates = savePrivates
 
 		// Track checked and context
 		for a := range verifiedActions {
