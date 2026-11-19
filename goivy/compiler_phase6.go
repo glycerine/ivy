@@ -2627,11 +2627,6 @@ func getModVerifying(mod *Module) bool {
 	return GetModVerifying(mod)
 }
 
-// getModFreshPropID generates a fresh prop ID via the module's CompilerConfig.
-func getModFreshPropID(mod *Module) int64 {
-	return GetModFreshPropID(mod)
-}
-
 // IvyCompileTheory compiles theory declarations into the module.
 // Corresponds to Python's ivy_compile_theory(mod, decls).
 // Python does NOT create a new compiler — it reuses the implicit global state.
