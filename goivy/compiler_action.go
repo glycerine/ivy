@@ -767,12 +767,15 @@ func (c *Compiler) CompileCall(calleeNode Node, returnNodes []Node) (ActionsActi
 			// Python lines 581-589: compile return targets, set ReturnContext,
 			// then call compile_field_reference
 			// Python: ReturnContext([a.cmpl() for a in self.args[1:]]) — uses cmpl, not compile
-			var returnLgNodes []Expr
+			// Non-nil even when empty: Python's ReturnContext([]) has values
+			// == [], which is not None (compile_inline_call then expects no
+			// return values instead of allocating one).
+			returnLgNodes := []Expr{}
 			for _, r := range returnNodes {
 				compiled, err := c.Cmpl(r)
 				if err != nil {
 					c.ExprCtx = savedCtx
-					return nil, fmt.Errorf("compiling call return: %w", err)
+					return nil, err
 				}
 				returnLgNodes = append(returnLgNodes, compiled)
 			}
