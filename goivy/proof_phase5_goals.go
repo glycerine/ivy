@@ -297,13 +297,11 @@ func CheckRenaming(goal *LabeledFormula, renaming Node) error {
 		if !ok {
 			continue
 		}
-		lAtom, lok := defn.Lhs.(*Atom)
-		rAtom, rok := defn.Rhs.(*Atom)
+		l, lok := renamingRep(defn.Lhs)
+		r, rok := renamingRep(defn.Rhs)
 		if !lok || !rok {
 			continue
 		}
-		l := lAtom.Rep
-		r := rAtom.Rep
 		if prev, exists := fwd[l]; exists {
 			return &ProofError{Msg: fmt.Sprintf("%q is renamed to both %q and %q", l, prev, r)}
 		}

@@ -81,18 +81,19 @@ func AssertToAssume(action ActionsAction, kinds map[string]bool, iuCfg *IvyUtils
 		return assertToAssumeChildren(a, kinds, iuCfg)
 
 	case *LogicSubgoalAction:
-		// Python checks class identity: AssertAction.assert_to_assume(kinds)
-		// computes mykind = type(self) and only converts when mykind is in
-		// the kinds list (ivy_actions.py:396-403). Since SubgoalAction is its
-		// own class (ivy_actions.py:416-421), type(SubgoalAction()) is NOT
-		// AssertAction — passing ['assert'] (or [AssertAction]) does NOT
-		// downgrade SubgoalActions. Match Python by only converting when the
-		// caller explicitly opts in via "subgoal".
-		if kinds["subgoal"] {
+		// Python AssertAction.assert_to_assume:
+		//   mykind = self.kind if hasattr(self,'kind') else type(self)
+		// apply_assert_proof sets sga.kind = type(the proved action), kept in
+		// SubgoalKind; without it the subgoal's own class ("subgoal") counts.
+		kind := a.SubgoalKind
+		if kind == "" {
+			kind = "subgoal"
+		}
+		if kinds[kind] {
 			assume := NewAssumeAction(a.Formula)
 			assume.ActionBase = a.ActionBase
 			assume.LF = a.LF // Python: AssumeAction(*self.args) preserves LF
-			assume.Kind = "subgoal"
+			assume.Kind = kind
 			assume.Annotation = a.Annotation
 			return assume
 		}

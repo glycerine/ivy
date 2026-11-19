@@ -1199,64 +1199,15 @@ func applyMatchAltRec(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) E
 		return callNullary(replacement)
 
 	case *ForAll:
-		// Python: with il.BindSymbols(env, fmla.variables):
-		//   fmla = fmla.clone_binder([apply_match_alt_rec(match, v, env) for v in fmla.variables], args[0])
-		// Add bound variables to env before recursing into vars and body
-		for _, v := range t.Variables {
-			env[Key(v)] = true
-		}
-		newVars := make([]*LogicVariable, len(t.Variables))
-		for i, v := range t.Variables {
-			newV := applyMatchAltRec(match, v, env)
-			if nv, ok := newV.(*LogicVariable); ok {
-				newVars[i] = nv
-			} else {
-				newVars[i] = v
-			}
-		}
-		newBody := applyMatchAltRec(match, t.Body, env)
-		// Remove bound variables from env (restore)
-		for _, v := range t.Variables {
-			delete(env, Key(v))
-		}
+		newVars, newBody := applyMatchAltBinder(match, t.Variables, t.Body, env)
 		return &ForAll{Variables: newVars, Body: newBody}
 
 	case *LogicExists:
-		for _, v := range t.Variables {
-			env[Key(v)] = true
-		}
-		newVars := make([]*LogicVariable, len(t.Variables))
-		for i, v := range t.Variables {
-			newV := applyMatchAltRec(match, v, env)
-			if nv, ok := newV.(*LogicVariable); ok {
-				newVars[i] = nv
-			} else {
-				newVars[i] = v
-			}
-		}
-		newBody := applyMatchAltRec(match, t.Body, env)
-		for _, v := range t.Variables {
-			delete(env, Key(v))
-		}
+		newVars, newBody := applyMatchAltBinder(match, t.Variables, t.Body, env)
 		return &LogicExists{Variables: newVars, Body: newBody}
 
 	case *Lambda:
-		for _, v := range t.Variables {
-			env[Key(v)] = true
-		}
-		newVars := make([]*LogicVariable, len(t.Variables))
-		for i, v := range t.Variables {
-			newV := applyMatchAltRec(match, v, env)
-			if nv, ok := newV.(*LogicVariable); ok {
-				newVars[i] = nv
-			} else {
-				newVars[i] = v
-			}
-		}
-		newBody := applyMatchAltRec(match, t.Body, env)
-		for _, v := range t.Variables {
-			delete(env, Key(v))
-		}
+		newVars, newBody := applyMatchAltBinder(match, t.Variables, t.Body, env)
 		return &Lambda{Variables: newVars, Body: newBody}
 	}
 
@@ -1309,15 +1260,11 @@ func ApplyMatchSort(match map[NodeKey]Expr, sort Sort) Sort {
 	if sort == nil {
 		return nil
 	}
-	// Check if sort itself is in match (as a node)
-	// Sorts are not directly lg.Expr, so we look for named sorts
-	if us, ok := sort.(*UninterpretedSort); ok {
-		sym := NewConst(us.Name, TopS)
-		k := Key(sym)
-		if replacement, exists := match[k]; exists {
-			if newSort, ok := replacement.(Sort); ok {
-				return newSort
-			}
+	// Python: match.get(sort,sort) -- keyed by the sort itself, as MatchSort
+	// and ApplyMatchFunc key sort entries (Key(sort)).
+	if replacement, exists := match[Key(sort)]; exists {
+		if newSort, ok := replacement.(Sort); ok {
+			return newSort
 		}
 	}
 	return sort
@@ -1357,9 +1304,10 @@ func RenameGoal(cfg *AstConfig, goal *LabeledFormula, renaming Node) (*LabeledFo
 		if !ok {
 			continue
 		}
-		if lAtom, ok := defn.Lhs.(*Atom); ok {
-			if rAtom, ok := defn.Rhs.(*Atom); ok {
-				rmap[lAtom.Rep] = rAtom.Rep
+		// Python: x.lhs().rep, x.rhs().rep -- atoms or variables.
+		if l, ok := renamingRep(defn.Lhs); ok {
+			if r, ok := renamingRep(defn.Rhs); ok {
+				rmap[l] = r
 			}
 		}
 	}
@@ -1420,27 +1368,36 @@ func RenameGoal(cfg *AstConfig, goal *LabeledFormula, renaming Node) (*LabeledFo
 
 		// Alpha-rename the conclusion. ApplyToConc unwraps *ast.TemporalModels
 		// so the rename runs on the inner formula and the wrapper is preserved.
+		// Python: goal = clone_goal(goal,goal_prems(goal),il.alpha_rename(rmap,goal_conc(goal)))
+		// -- a direct call (no apply_to_conc trace); errors raise.
 		conc := GoalConc(g)
-		if conc != nil {
-			var renameErr error
-			newConc := ApplyToConc(conc, func(c Expr) Expr {
-				renamed, err := AlphaRename(rmap, c)
+		var newConc Node = conc
+		switch c := conc.(type) {
+		case Expr:
+			renamed, err := AlphaRename(rmap, c)
+			if err != nil {
+				return nil, err
+			}
+			newConc = renamed
+		case *TemporalModels:
+			if inner, ok := c.Fmla.(Expr); ok {
+				renamed, err := AlphaRename(rmap, inner)
 				if err != nil {
-					renameErr = err
-					return c
+					return nil, err
 				}
-				return renamed
-			})
-			if renameErr == nil {
-				g = CloneGoal(cfg, g, GoalPrems(g), newConc)
+				newConc = c.Clone([]Node{renamed})
 			}
 		}
+		g = CloneGoal(cfg, g, GoalPrems(g), newConc)
 
-		// Rename the goal's own label
+		// Python: goal = goal.rename(rmap.get(goal.name,goal.name)) -- always
+		// (the clone traces even when the name is unchanged).
 		goalName := g.LabelName()
-		if newName, ok := rmap[goalName]; ok {
-			g = g.Rename(newName)
+		newName := goalName
+		if n, ok := rmap[goalName]; ok {
+			newName = n
 		}
+		g = g.Rename(newName)
 
 		return g, nil
 	}
@@ -1455,6 +1412,8 @@ func nodeNameStr(n Expr) string {
 		return t.Name
 	case *LogicVariable:
 		return t.Name
+	case *UninterpretedSort:
+		return t.Name // Python: goal_defns includes sorts (x.name)
 	default:
 		return ""
 	}
@@ -1468,6 +1427,8 @@ func renameNode(n Expr, newName string) Expr {
 	case *LogicVariable:
 		v, _ := NewVariable(newName, t.VSort)
 		return v
+	case *UninterpretedSort:
+		return &UninterpretedSort{Name: newName} // Python: sort.rename
 	default:
 		return n
 	}
@@ -1707,3 +1668,48 @@ func CompileWitnessList(proof Node, goal *LabeledFormula, mod *Module) []Expr {
 var _ = EqualModAlpha
 var _ = NewUniqueRenamer
 var _ Node
+
+// renamingRep is Python's .rep of one side of a renaming entry (an atom or
+// a variable, e.g. "<Z/Y>").
+func renamingRep(n Node) (string, bool) {
+	switch x := n.(type) {
+	case *Atom:
+		return x.Rep, true
+	case *Variable:
+		return x.Rep, true
+	}
+	return "", false
+}
+
+// applyMatchAltBinder is the binder branch of Python's apply_match_alt_rec:
+//
+//	args = [apply_match_alt_rec(match,f,env) for f in fmla.args]   # body, env unchanged
+//	with il.BindSymbols(env,fmla.variables):
+//	    fmla = fmla.clone_binder([apply_match_alt_rec(match,v,env) for v in fmla.variables],args[0])
+//
+// BindSymbols saves variables already in env and restores them on exit.
+func applyMatchAltBinder(match map[NodeKey]Expr, vars []*LogicVariable, body Expr, env map[NodeKey]bool) ([]*LogicVariable, Expr) {
+	newBody := applyMatchAltRec(match, body, env)
+	var saved []NodeKey
+	for _, v := range vars {
+		if env[Key(v)] {
+			saved = append(saved, Key(v))
+		}
+		env[Key(v)] = true
+	}
+	newVars := make([]*LogicVariable, len(vars))
+	for i, v := range vars {
+		if nv, ok := applyMatchAltRec(match, v, env).(*LogicVariable); ok {
+			newVars[i] = nv
+		} else {
+			newVars[i] = v
+		}
+	}
+	for _, v := range vars {
+		delete(env, Key(v))
+	}
+	for _, k := range saved {
+		env[k] = true
+	}
+	return newVars, newBody
+}

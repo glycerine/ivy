@@ -747,7 +747,9 @@ func TestConjSetup_DefinitionClearsLastFact(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
 
-	conjDecl := cfg.NewConjectureDecl(cfg.NewLabeledFormula(cfg.NewAtom("inv1"), cfg.NewAtom("body")))
+	// The conjecture must compile: like Python, ConjSetup now raises on a
+	// conjecture compile error (an undeclared symbol) instead of skipping it.
+	conjDecl := cfg.NewConjectureDecl(cfg.NewLabeledFormula(cfg.NewAtom("inv1"), cfg.NewAtom("true")))
 	defDecl := cfg.NewDefinitionDecl(cfg.NewAtom("def_body"))
 	proofDecl := cfg.NewProofDecl(cfg.NewAtom("proof_step"))
 
@@ -767,7 +769,7 @@ func TestConjSetup_TheoremClearsLastFact(t *testing.T) {
 	cfg := NewAstConfig()
 	c := newTestCompiler()
 
-	conjDecl := cfg.NewConjectureDecl(cfg.NewLabeledFormula(cfg.NewAtom("inv1"), cfg.NewAtom("body")))
+	conjDecl := cfg.NewConjectureDecl(cfg.NewLabeledFormula(cfg.NewAtom("inv1"), cfg.NewAtom("true")))
 	thDecl := cfg.NewTheoremDecl(cfg.NewAtom("th_body"))
 	proofDecl := cfg.NewProofDecl(cfg.NewAtom("proof_step"))
 
