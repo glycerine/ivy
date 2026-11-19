@@ -25,7 +25,10 @@ func parserDeclareInclude(cfg *AstConfig, top *ivyAccum, current *ivyAccum, impo
 	xtracer.Trace("parser.include ENTER name=%s", name)
 	modDeclCount := 0
 	if importer != nil {
+		// Python: global parent_object; parent_object = "this"
+		top.pendingParentObject = "this"
 		mod, err := importer(name, top)
+		top.pendingParentObject = ""
 		if err != nil {
 			xtracer.Trace("parser.include ERROR name=%s err=%v", name, err)
 			parserReportImportError(top, loc, err)
@@ -62,6 +65,10 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 				modules:  mod.Modules,
 				included: mod.Included,
 				objects:  make(map[string]interface{}),
+				defined:  mod.defined, // Python: module.defined as to_pref
+			}
+			if module.defined == nil {
+				module.defined = make(map[string][]definedEntry)
 			}
 			if module.modules == nil {
 				module.modules = make(map[string]*ModuleDecl)

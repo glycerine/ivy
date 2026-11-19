@@ -167,10 +167,14 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 	saveAttrs := ivy.attributes
 	ivy.attributes = filterCommonAttrs(ivy.attributes)
 
-	// Python: module.defined — tracks which names the module defines
-	// Use the module's defined map directly; fall back to collecting from decls
-	// if the map isn't populated (for backward compat).
-	defined := collectDefined(module.decls)
+	// Python: subst_prefix_atoms_ast(decl,subst,pref,module.defined,...):
+	// to_pref is module.defined itself, which includes names a continuation
+	// object inherited via get_object_defined. An empty dict is still a
+	// to_pref (nothing prefixed), so keep the set non-nil.
+	defined := make(map[string]bool, len(module.defined))
+	for name := range module.defined {
+		defined[name] = true
+	}
 
 	// Python lines 142-145: static = module.static.copy()
 	//   for name,dfs in module.defined.items():
@@ -432,7 +436,15 @@ func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
 	}
 	entries, ok := ivy.defined[name]
 	if !ok || len(entries) == 0 {
+		xtracer.Trace("parser.get_object_defined EXIT name=%s n=None", name)
 		return nil
+	}
+	// Python returns x[2] for a 3-tuple and None otherwise; goivy keeps
+	// x[2] in ObjectDefined (nil for None or a 2-tuple).
+	if entries[0].ObjectDefined == nil {
+		xtracer.Trace("parser.get_object_defined EXIT name=%s n=None", name)
+	} else {
+		xtracer.Trace("parser.get_object_defined EXIT name=%s n=%d", name, len(entries[0].ObjectDefined))
 	}
 	return entries[0].ObjectDefined
 }
@@ -445,7 +457,14 @@ func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
 //	    if name in self.defined:
 //	        self.defined[name] = [(x[0], x[1], defined) for x in self.defined[name]]
 func setObjectDefined(ivy *ivyAccum, name string, moduleDefined map[string][]definedEntry) {
-	xtracer.Trace("parser.set_object_defined ENTER")
+	if xtracer.Enabled {
+		n := "None"
+		if moduleDefined != nil {
+			n = fmt.Sprint(len(moduleDefined))
+		}
+		_, in := ivy.defined[name]
+		xtracer.Trace("parser.set_object_defined ENTER name=%s n=%s inDefined=%s", name, n, BoolPythonStr(in))
+	}
 	if moduleDefined != nil {
 		// Deep copy: Python's defaultdict(list, ((k, v.copy()) ...))
 		copied := make(map[string][]definedEntry, len(moduleDefined))

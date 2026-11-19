@@ -17,6 +17,9 @@ type ParseResult struct {
 	Decls    []Node
 	Modules  map[string]*ModuleDecl
 	Included map[string]bool
+	// defined is the parsed module's Ivy.defined (Python module.defined),
+	// used as to_pref when the module is imported with "using".
+	defined map[string][]definedEntry
 }
 
 // definedEntry matches Python's tuple elements stored in Ivy.defined[name]:
@@ -43,6 +46,10 @@ type definedEntry struct {
 // module body in Definition(name, ivyAccum), matching Python where
 // the Ivy instance IS the module body RHS.
 type ivyAccum struct {
+	// pendingParentObject is Python's global parent_object as set by
+	// include ("this") for the nested parse it starts: that parse's
+	// top-level Ivy consumes it and shares this module's defined dict.
+	pendingParentObject string
 	parent     *ivyAccum // link to enclosing scope; matches Python's global stack
 	decls      []Node
 	modules    map[string]*ModuleDecl
@@ -309,6 +316,7 @@ func (m *ivyAccum) toResult() *ParseResult {
 		Decls:    m.decls,
 		Modules:  m.modules,
 		Included: m.included,
+		defined:  m.defined,
 	}
 }
 

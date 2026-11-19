@@ -83,6 +83,11 @@ func (cfg *parseConfig) applyToParser17(lex *parser17LexAdapter) {
 		lex.included = cfg.included
 	}
 	lex.accum = cfg.parentAccum
+	if cfg.parentAccum != nil {
+		// Python: the nested parse's first Ivy() consumes parent_object.
+		lex.parentObjName = cfg.parentAccum.pendingParentObject
+		cfg.parentAccum.pendingParentObject = ""
+	}
 	lex.nested = cfg.nested
 	lex.filename = cfg.filename
 	if cfg.astCfg != nil {
@@ -98,6 +103,11 @@ func (cfg *parseConfig) applyToParser16(lex *parser16LexAdapter) {
 		lex.included = cfg.included
 	}
 	lex.accum = cfg.parentAccum
+	if cfg.parentAccum != nil {
+		// Python: the nested parse's first Ivy() consumes parent_object.
+		lex.parentObjName = cfg.parentAccum.pendingParentObject
+		cfg.parentAccum.pendingParentObject = ""
+	}
 	lex.nested = cfg.nested
 	lex.filename = cfg.filename
 	if cfg.astCfg != nil {

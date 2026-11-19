@@ -392,11 +392,13 @@ class Ivy(object):
         if name in self.defined:
             x = self.defined[name][0]
             if len(x) >= 3:
+                if __debug__: xtracer.trace("parser.get_object_defined EXIT name=%s n=%s" % (name, len(x[2]) if x[2] is not None else 'None'))
                 return x[2]
+        if __debug__: xtracer.trace("parser.get_object_defined EXIT name=%s n=None" % name)
         return None
 
     def set_object_defined(self,name,defined):
-        if __debug__: xtracer.trace("parser.set_object_defined ENTER")
+        if __debug__: xtracer.trace("parser.set_object_defined ENTER name=%s n=%s inDefined=%s" % (name, len(defined) if defined is not None else 'None', name in self.defined))
 #        print ('name: {}, defined: {}'.format(name,defined))
         if defined is not None:
             defined = defaultdict(list,((k,v.copy()) for k,v in defined.items()))
