@@ -36,13 +36,20 @@ type ActionTerm struct {
 
 // String returns a human-readable representation of the action term.
 func (at *ActionTerm) String() string {
+	// Python: params use il.typed_sym_to_str (no fml: stripping).
+	params := func(ps []*Const, text string) string {
+		if len(ps) == 0 {
+			return ""
+		}
+		parts := make([]string, len(ps))
+		for i, p := range ps {
+			parts[i] = TypedSymToStr(p)
+		}
+		return text + "(" + strings.Join(parts, ",") + ")"
+	}
 	res := "action"
-	if len(at.Inputs) > 0 {
-		res += ParamsToStr(at.Inputs)
-	}
-	if len(at.Outputs) > 0 {
-		res += " returns" + ParamsToStr(at.Outputs)
-	}
+	res += params(at.Inputs, "")
+	res += params(at.Outputs, " returns")
 	res += "{" + at.Stmt.String() + "}"
 	return res
 }
