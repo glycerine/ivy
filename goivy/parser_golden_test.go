@@ -568,6 +568,13 @@ func TestHermesRMWo3(t *testing.T) {
 	GoldenPathCompareIvyCheck(t, cfg) // verbose=false, diffStop=true
 }
 
+func TestSHT(t *testing.T) {
+	//path := "ivy-lang-examples/doc/examples/sht/sht.ivy"
+	path := "goivy/test_vectors/sht.ivy"
+	cfg := &goldenConfig{path: path}
+	GoldenPathCompareIvyCheck(t, cfg) // verbose=false, diffStop=true
+}
+
 func TestGolden16All(t *testing.T) {
 	off := os.Getenv("XTRACE_OFF")
 	if off != "" {

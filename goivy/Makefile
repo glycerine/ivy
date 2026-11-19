@@ -48,6 +48,10 @@ gold-hermes:
 	if [ -f log.gold-hermes ]; then mv log.gold-hermes log.gold-hermes.prev; fi
 	go test -v -timeout=0 -count=1 -run TestHermesRMWo3 &> log.gold-hermes
 
+gold-sht:
+	if [ -f log.gold-sht ]; then mv log.gold-sht log.gold-sht.prev; fi
+	go test -v -timeout=0 -count=1 -run TestSHT &> log.gold-sht
+
 echo:
 	if [ -f log.echo ]; then mv log.echo log.echo.prev; fi
 	go test -v -timeout=0 -count=1 -run TestEchoDotIvy &> log.echo
