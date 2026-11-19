@@ -964,8 +964,9 @@ func (c *Compiler) CmplSort(name string) (Sort, error) {
 	resolved := ResolveAlias(name, c.Module)
 	sort, err := c.Sig.FindSort(resolved, false)
 	if err != nil {
-		xtracer.Trace("compiler.CmplSort error")
-		vv("compiler.CmplSort error: name=%s resolved=%s sigSorts=%v err=%v", name, resolved, c.Sig.SortNames(), err)
+		// Python: one line, err printed as str(IvyError).
+		xtracer.Trace("compiler.CmplSort error name=%s resolved=%s sigSorts=%s err=%s",
+			name, resolved, strings.Join(c.Sig.SortNames(), ","), pyErrorString(err))
 	}
 	return sort, err
 }
@@ -1319,8 +1320,7 @@ func (c *Compiler) SortifyWithInference(astNode Node) (Expr, error) {
 	// with ASTContext(ast): res = sort_infer(res)
 	result, err := c.SortInfer(res)
 	if err != nil {
-		loc := astNode.GetLineno()
-		return nil, fmt.Errorf("at %v: %w", loc, err)
+		return nil, astContextError(astNode, err)
 	}
 	preserveAssertLikeLF(result, res)
 	return result, nil

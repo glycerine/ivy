@@ -110,7 +110,7 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	xtracer.Trace("compiler.DomainSetup ENTER")
 	domainInterp := NewDomainSetup(c)
 	if err := domainInterp.ProcessDecls(decls); err != nil {
-		return fmt.Errorf("domain setup: %w", err)
+		return err // Python adds no prefix
 	}
 	// fix_constructors: ensure constructor sorts are properly set
 	FixConstructors(mod)
@@ -122,7 +122,7 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	xtracer.Trace("compiler.ConjSetup ENTER")
 	conjInterp := NewConjSetup(c)
 	if err := conjInterp.ProcessDecls(decls); err != nil {
-		return fmt.Errorf("conjecture setup: %w", err)
+		return err // Python adds no prefix
 	}
 	xtracer.Trace("compiler.ConjSetup EXIT")
 	mod.CanonSnapshot("after-conj-setup")
@@ -132,7 +132,7 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	xtracer.Trace("compiler.ARGSetup ENTER")
 	argInterp := NewARGSetup(c)
 	if err := argInterp.ProcessDecls(decls); err != nil {
-		return fmt.Errorf("ARG setup: %w", err)
+		return err // Python adds no prefix
 	}
 	xtracer.Trace("compiler.ARGSetup EXIT mod.Mixins.Len=%d", mod.Mixins.Len())
 	mod.CanonSnapshot("after-arg-setup")
@@ -457,8 +457,8 @@ func (cs *ConjSetup) ProcessDecls(decls []Node) error {
 				}
 				compiled, err := cs.Compiler.ThingLF(lf)
 				if err != nil {
-					pp("ConjSetup: compiling conjecture: %v", err)
-					continue
+					// Python: cax = ax.compile() raises, inside ASTContext(decl).
+					return astContextError(decl, err)
 				}
 				xtracer.Trace("compiler.ConjSetup.conjecture compiled")
 				cs.Compiler.Module.LabeledConjs = append(cs.Compiler.Module.LabeledConjs, compiled)
@@ -493,8 +493,8 @@ func (cs *ConjSetup) ProcessDecls(decls []Node) error {
 				// unknown nodes unchanged — matching Python's default cmpl().
 				compiled, err := cs.Compiler.CompileTactic(arg)
 				if err != nil {
-					pp("ConjSetup: compiling proof: %v", err)
-					continue
+					// Python: pf.compile() raises, inside ASTContext(decl).
+					return astContextError(decl, err)
 				}
 				cs.Compiler.Module.Proofs = append(cs.Compiler.Module.Proofs, ProofEntry{
 					Formula: cs.lastFact,
@@ -545,7 +545,7 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 				xtracer.Trace("compiler.ARGSetup.action ENTER name=%s", name)
 				action, err := as.Compiler.CompileAction(ad)
 				if err != nil {
-					return err
+					return astContextError(decl, err)
 				}
 				// Defensive: ensure the registered action carries a source
 				// Location, falling back to the ActionDef's Loc set by the
@@ -617,7 +617,7 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 					xtracer.Trace("compiler.ARGSetup.export ENTER name=%s", name)
 					if err := CheckIsAction(mod, name); err != nil {
 						xtracer.Trace("compiler.ARGSetup.export FAIL name=%s err=%v", name, err)
-						return err
+						return astContextError(decl, err)
 					}
 					mod.Exports = append(mod.Exports, expDef)
 					xtracer.Trace("compiler.ARGSetup.export EXIT name=%s", name)
@@ -633,7 +633,7 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 					if atom, ok := impDef.Imported.(*Atom); ok {
 						name := atom.Relname()
 						if err := CheckIsAction(mod, name); err != nil {
-							return err
+							return astContextError(decl, err)
 						}
 					}
 				}
@@ -705,7 +705,7 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 					}
 				}
 				if err != nil {
-					return fmt.Errorf("compiling init: %w", err)
+					return astContextError(decl, err)
 				}
 				if formula != nil {
 					xtracer.Trace("compiler.ARGSetup.init compiled sort=%v", formula.NodeSort())
@@ -748,7 +748,7 @@ func (as *ARGSetup) ProcessDecls(decls []Node) error {
 			for _, arg := range n.DeclArgs {
 				if sdef, ok := arg.(*ScenarioDef); ok {
 					if err := as.scenario(sdef); err != nil {
-						return err
+						return astContextError(decl, err)
 					}
 				}
 			}
@@ -1671,7 +1671,15 @@ func CheckDefinitions(mod *Module) (err error) {
 		if d, ok := dmap[NodeKey(defKey)]; ok {
 			proof, hasProof := pmap[d.ID]
 			if !hasProof {
-				return NewIvyError(d, fmt.Sprintf("definition of %s requires a recursion schema", defKey))
+				// Python: 'definition of {} requires a recursion schema'.format(d.formula.defines())
+				// -- str(Symbol), the name.
+				defName := defKey
+				if ld, ok := d.Formula.(*LogicDefinition); ok {
+					if c, ok := ld.Defines().(*Const); ok {
+						defName = c.Name
+					}
+				}
+				return NewIvyError(d, fmt.Sprintf("definition of %s requires a recursion schema", defName))
 			}
 			// Python: prover.admit_definition(d, pmap[d.id])
 			if _, err := defProver.AdmitDefinition(d, proof); err != nil {

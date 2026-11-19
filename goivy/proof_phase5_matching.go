@@ -1168,11 +1168,35 @@ func applyMatchAltRec(match map[NodeKey]Expr, fmla Expr, env map[NodeKey]bool) E
 		return replacement
 
 	case *Const:
-		k := Key(t)
-		if replacement, exists := match[k]; exists {
-			return replacement
+		// Python: a constant is an application with no arguments --
+		//   if fmla.rep in match: return apply_fun(match_get(match,fmla.rep,env),[])
+		//   func = apply_match_func(match,fmla.rep); func = match_get(match,func,env,func)
+		//   return func()
+		// so a matched Lambda([], body) is called (giving body).
+		callNullary := func(r Expr) Expr {
+			if lam, ok := r.(*Lambda); ok {
+				res, lerr := LambdaApply(lam, nil)
+				if lerr != nil {
+					return fmla
+				}
+				return res
+			}
+			return r
 		}
-		return fmla
+		k := Key(t)
+		if _, exists := match[k]; exists {
+			replacement, err := MatchGet(match, t, env, t)
+			if err != nil {
+				return fmla
+			}
+			return callNullary(replacement)
+		}
+		newC := ApplyMatchFunc(match, t)
+		replacement, err := MatchGet(match, newC, env, newC)
+		if err != nil {
+			return fmla
+		}
+		return callNullary(replacement)
 
 	case *ForAll:
 		// Python: with il.BindSymbols(env, fmla.variables):
@@ -1493,17 +1517,9 @@ func applyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 			args := cd.Args()
 			if len(args) > 0 {
 				if sym, ok := unwrapCompiledNode(args[0]).(*Const); ok {
-					newSym := ApplyMatchFunc(match, sym)
-					symKey := Key(newSym)
-					if rep, found := match[symKey]; found {
-						if repNode, ok := rep.(Node); ok {
-							newPrems = append(newPrems, cd.Clone([]Node{repNode}))
-						} else {
-							newPrems = append(newPrems, cd.Clone([]Node{newSym}))
-						}
-					} else {
-						newPrems = append(newPrems, cd.Clone([]Node{newSym}))
-					}
+					// Python: x.clone([apply_match_func_alt(match,x.args[0],env)]) --
+					// the symbol itself first, then its sort-mapped form.
+					newPrems = append(newPrems, cd.Clone([]Node{ApplyMatchFuncAlt(match, sym, nil)}))
 				} else {
 					newPrems = append(newPrems, p)
 				}
@@ -1600,17 +1616,9 @@ func applyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *Labe
 			args := cd.Args()
 			if len(args) > 0 {
 				if sym, ok := unwrapCompiledNode(args[0]).(*Const); ok {
-					newSym := ApplyMatchFunc(match, sym)
-					symKey := Key(newSym)
-					if rep, found := match[symKey]; found {
-						if repNode, ok := rep.(Node); ok {
-							newPrems = append(newPrems, cd.Clone([]Node{repNode}))
-						} else {
-							newPrems = append(newPrems, cd.Clone([]Node{newSym}))
-						}
-					} else {
-						newPrems = append(newPrems, cd.Clone([]Node{newSym}))
-					}
+					// Python: x.clone([apply_match_func_alt(match,x.args[0],env)]) --
+					// the symbol itself first, then its sort-mapped form.
+					newPrems = append(newPrems, cd.Clone([]Node{ApplyMatchFuncAlt(match, sym, nil)}))
 				} else {
 					newPrems = append(newPrems, p)
 				}

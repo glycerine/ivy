@@ -443,7 +443,9 @@ def cmpl_sort(sortname):
     try:
         return ivy_logic.find_sort(resolved)
     except IvyError as e:
-        if __debug__: xtracer.trace("compiler.CmplSort error\n  name=%s resolved=%s sigSorts=%s err=%s" % (sortname, resolved, list(ivy_logic.sig.sorts.keys()), e))
+        # One line, as goivy traces it (goivy prefixes continuation lines
+        # with a source location, so a second line cannot match).
+        if __debug__: xtracer.trace("compiler.CmplSort error name=%s resolved=%s sigSorts=%s err=%s" % (sortname, resolved, ','.join(ivy_logic.sig.sorts.keys()), e))
         raise
 
 def cmpl_native_expr(self):

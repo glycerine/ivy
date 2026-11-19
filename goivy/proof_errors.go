@@ -4,20 +4,18 @@
 // and skolemization. Ported from Python ivy_proof.py.
 package goivy
 
-import "fmt"
-
 // Redefinition is raised when a symbol is defined more than once.
 type Redefinition struct {
 	Msg  string
 	Node interface{} // the AST node where the error occurred (may be nil)
 }
 
-func (e *Redefinition) Error() string {
-	if e.Node != nil {
-		return fmt.Sprintf("redefinition: %s (at %v)", e.Msg, e.Node)
-	}
-	return fmt.Sprintf("redefinition: %s", e.Msg)
-}
+// Error formats like Python's iu.IvyError, of which Redefinition is a plain
+// subclass: str(lineno) + "error: " + msg, or msg when unlocated.
+func (e *Redefinition) Error() string { return proofErrorString(e.Node, e.Msg) }
+
+// HasLocation reports whether the error carries a source location.
+func (e *Redefinition) HasLocation() bool { _, ok := proofErrorLoc(e.Node); return ok }
 
 // Circular is raised when a definition creates a circular dependency.
 type Circular struct {
@@ -25,12 +23,12 @@ type Circular struct {
 	Node interface{}
 }
 
-func (e *Circular) Error() string {
-	if e.Node != nil {
-		return fmt.Sprintf("circular: %s (at %v)", e.Msg, e.Node)
-	}
-	return fmt.Sprintf("circular: %s", e.Msg)
-}
+// Error formats like Python's iu.IvyError, of which Circular is a plain
+// subclass: str(lineno) + "error: " + msg, or msg when unlocated.
+func (e *Circular) Error() string { return proofErrorString(e.Node, e.Msg) }
+
+// HasLocation reports whether the error carries a source location.
+func (e *Circular) HasLocation() bool { _, ok := proofErrorLoc(e.Node); return ok }
 
 // NoMatch is raised when a schema does not match the goal.
 type NoMatch struct {
@@ -38,12 +36,12 @@ type NoMatch struct {
 	Node interface{}
 }
 
-func (e *NoMatch) Error() string {
-	if e.Node != nil {
-		return fmt.Sprintf("no match: %s (at %v)", e.Msg, e.Node)
-	}
-	return fmt.Sprintf("no match: %s", e.Msg)
-}
+// Error formats like Python's iu.IvyError, of which NoMatch is a plain
+// subclass: str(lineno) + "error: " + msg, or msg when unlocated.
+func (e *NoMatch) Error() string { return proofErrorString(e.Node, e.Msg) }
+
+// HasLocation reports whether the error carries a source location.
+func (e *NoMatch) HasLocation() bool { _, ok := proofErrorLoc(e.Node); return ok }
 
 // ProofError is raised for general proof-related errors.
 type ProofError struct {
@@ -51,12 +49,12 @@ type ProofError struct {
 	Node interface{}
 }
 
-func (e *ProofError) Error() string {
-	if e.Node != nil {
-		return fmt.Sprintf("proof error: %s (at %v)", e.Msg, e.Node)
-	}
-	return fmt.Sprintf("proof error: %s", e.Msg)
-}
+// Error formats like Python's iu.IvyError, of which ProofError is a plain
+// subclass: str(lineno) + "error: " + msg, or msg when unlocated.
+func (e *ProofError) Error() string { return proofErrorString(e.Node, e.Msg) }
+
+// HasLocation reports whether the error carries a source location.
+func (e *ProofError) HasLocation() bool { _, ok := proofErrorLoc(e.Node); return ok }
 
 // CaptureError is raised when a substitution would cause variable capture.
 type CaptureError struct {
@@ -64,9 +62,31 @@ type CaptureError struct {
 	Node interface{}
 }
 
-func (e *CaptureError) Error() string {
-	if e.Node != nil {
-		return fmt.Sprintf("capture error: %s (at %v)", e.Msg, e.Node)
+// Error formats like Python's iu.IvyError, of which CaptureError is a plain
+// subclass: str(lineno) + "error: " + msg, or msg when unlocated.
+func (e *CaptureError) Error() string { return proofErrorString(e.Node, e.Msg) }
+
+// HasLocation reports whether the error carries a source location.
+func (e *CaptureError) HasLocation() bool { _, ok := proofErrorLoc(e.Node); return ok }
+
+// proofErrorLoc is the location of the node a proof error was raised at,
+// if it has one (Python: ast.lineno when hasattr(ast,'lineno')).
+func proofErrorLoc(node interface{}) (Location, bool) {
+	n, ok := node.(Node)
+	if !ok || n == nil {
+		return Location{}, false
 	}
-	return fmt.Sprintf("capture error: %s", e.Msg)
+	loc := n.GetLineno()
+	if loc.Line > 0 || loc.Filename != "" {
+		return loc, true
+	}
+	return Location{}, false
+}
+
+// proofErrorString formats a proof error the way Python's IvyError does.
+func proofErrorString(node interface{}, msg string) string {
+	if loc, ok := proofErrorLoc(node); ok {
+		return formatIvyErrorAt(loc, msg)
+	}
+	return msg
 }

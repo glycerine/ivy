@@ -34,16 +34,19 @@ func mkLF(label, formula Node) *LabeledFormula {
 
 // --- Error type tests ---
 
+// Python's proof errors are plain iu.IvyError subclasses: an unlocated
+// error's str() is just the message (no type prefix); see
+// TestProofErrorsFormatLikeIvyError for the located form.
 func TestErrorTypes(t *testing.T) {
 	tests := []struct {
 		err error
 		msg string
 	}{
-		{&Redefinition{Msg: "x"}, "redefinition: x"},
-		{&Circular{Msg: "y"}, "circular: y"},
-		{&NoMatch{Msg: "z"}, "no match: z"},
-		{&ProofError{Msg: "w"}, "proof error: w"},
-		{&CaptureError{Msg: "v"}, "capture error: v"},
+		{&Redefinition{Msg: "x"}, "x"},
+		{&Circular{Msg: "y"}, "y"},
+		{&NoMatch{Msg: "z"}, "z"},
+		{&ProofError{Msg: "w"}, "w"},
+		{&CaptureError{Msg: "v"}, "v"},
 	}
 	for _, tc := range tests {
 		if tc.err.Error() != tc.msg {
@@ -52,9 +55,10 @@ func TestErrorTypes(t *testing.T) {
 	}
 }
 
+// A node without a location adds nothing (Python: Location() prints "").
 func TestErrorsWithNode(t *testing.T) {
 	e := &Redefinition{Msg: "dup", Node: "somenode"}
-	if e.Error() != "redefinition: dup (at somenode)" {
+	if e.Error() != "dup" {
 		t.Errorf("unexpected error: %s", e.Error())
 	}
 }
@@ -728,12 +732,13 @@ func TestExtractTerms(t *testing.T) {
 	}
 }
 
+// Python extract_terms with no terms returns il.Lambda([], inst).
 func TestExtractTermsEmpty(t *testing.T) {
 	s := proofMkSort("S")
 	c := proofMkConst("c", s)
 	lam := ExtractTerms(c, nil, nil)
-	if lam != nil {
-		t.Error("expected nil for empty terms")
+	if lam == nil || len(lam.Variables) != 0 || Key(lam.Body) != Key(c) {
+		t.Errorf("expected Lambda([], c), got %#v", lam)
 	}
 }
 

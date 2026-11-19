@@ -91,7 +91,6 @@ func (pc *ProofChecker) letTactic(decls []*LabeledFormula, proof *LetTactic) ([]
 func (pc *ProofChecker) assumeTactic(decls []*LabeledFormula, proof *AssumeTactic, isGlobal bool) ([]*LabeledFormula, error) {
 	xtracer.Trace("proof.assumeTactic ENTER ndecls=%d isGlobal=%v", len(decls), isGlobal)
 	if len(decls) == 0 {
-		xtracer.Trace("proof.assumeTactic EXIT err=noGoals")
 		return nil, &ProofError{Msg: "assume tactic: no goals"}
 	}
 	decl := decls[0]
@@ -102,7 +101,6 @@ func (pc *ProofChecker) assumeTactic(decls []*LabeledFormula, proof *AssumeTacti
 		schemaName = fmt.Sprint(proof.SchemaName)
 	}
 	if schemaName == "" {
-		xtracer.Trace("proof.assumeTactic EXIT err=noSchemaName")
 		return nil, &ProofError{Msg: "assume tactic: no schema name"}
 	}
 
@@ -128,7 +126,6 @@ func (pc *ProofChecker) assumeTactic(decls []*LabeledFormula, proof *AssumeTacti
 		var err error
 		schema, err = pc.LookupSchema(schemaName, decl, proof, false)
 		if err != nil {
-			xtracer.Trace("proof.assumeTactic EXIT err=noSchema schema=%s", schemaName)
 			return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
 				"No property %s exists in the current context", schemaName)}
 		}
@@ -140,7 +137,6 @@ func (pc *ProofChecker) assumeTactic(decls []*LabeledFormula, proof *AssumeTacti
 	// Python: prob, pmatch = self.setup_schema_matching(decl, proof, schema, allow_witness=True)
 	prob, pmatch, err := pc.SetupSchemaMatchingRaw(decl, proof.Ren, proof.Matches, schema, true)
 	if err != nil {
-		xtracer.Trace("proof.assumeTactic EXIT err=%v schema=%s", err, schemaName)
 		return nil, err
 	}
 
@@ -181,7 +177,6 @@ func (pc *ProofChecker) assumeTactic(decls []*LabeledFormula, proof *AssumeTacti
 	rawConc := GoalConc(prem)
 	newConc, werr := WitnessAst(true, nil, witnessMap, rawConc)
 	if werr != nil {
-		xtracer.Trace("proof.assumeTactic EXIT err=witnessSubst schema=%s err=%v", schemaName, werr)
 		return nil, &ProofError{Node: proof, Msg: fmt.Sprintf(
 			"assume tactic witness substitution: %v", werr)}
 	}

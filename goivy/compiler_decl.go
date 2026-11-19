@@ -27,7 +27,8 @@ func NewDomainSetup(c *Compiler) *DomainSetup {
 func (d *DomainSetup) ProcessDecls(decls []Node) error {
 	for _, decl := range decls {
 		if err := d.ProcessDecl(decl); err != nil {
-			return fmt.Errorf("at %s: %w", decl.GetLineno(), err)
+			// Python IvyDeclInterp.__call__: with ASTContext(decl).
+			return astContextError(decl, err)
 		}
 	}
 	return nil
@@ -369,7 +370,8 @@ func addDefinitionChecks(defn Expr) error {
 func (d *DomainSetup) AddDefinition(ldf *LabeledFormula, astDefNode *Definition) error {
 	if compiled, ok := ldf.Formula.(Expr); ok {
 		if err := addDefinitionChecks(compiled); err != nil {
-			return err
+			// Python raises these as IvyError(ldf, ...): located at ldf.
+			return astContextError(ldf, err)
 		}
 	}
 

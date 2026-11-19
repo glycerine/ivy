@@ -543,9 +543,8 @@ func ApplyMatchFreesyms(match map[NodeKey]Expr, freesyms *InsMap[NodeKey, Expr])
 // the given terms do not occur in t. Returns nil if the extraction
 // would introduce non-constant variables.
 func ExtractTerms(inst Expr, terms []Expr, constants map[NodeKey]Expr) *Lambda {
-	if len(terms) == 0 {
-		return nil
-	}
+	// Python extract_terms has no special case for no terms: it returns
+	// il.Lambda([], inst), which Lambda accepts.
 	vars := make([]*LogicVariable, len(terms))
 	for i, t := range terms {
 		name := fmt.Sprintf("V%d", i)

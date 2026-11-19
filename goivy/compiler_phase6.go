@@ -36,8 +36,13 @@ func sigSortValues(sig *Sig) []Sort {
 func (c *Compiler) Thing(node Node) (Expr, error) {
 	xtracer.Trace(fmt.Sprintf("compiler.Thing ENTER type=%s", compilerTypeName(node)))
 	result, err := c.CompileNode(node)
+	if err != nil {
+		// Python: with ASTContext(self) around the compile; the error
+		// raises past the return trace.
+		return result, astContextError(node, err)
+	}
 	xtracer.Trace(fmt.Sprintf("compiler.Thing return type=%s", compilerTypeName(node)))
-	return result, err
+	return result, nil
 }
 
 // ThingLF compiles a LabeledFormula via CompileLF, matching Python's
@@ -58,8 +63,11 @@ func (c *Compiler) ThingLF(lf *LabeledFormula) (*LabeledFormula, error) {
 	xtracer.Trace("compiler.CompileNode return case=LabeledFormula")
 	xtracer.Trace("compiler.CompileLabeledFormula ENTER")
 	result, err := c.CompileLF(lf)
+	if err != nil {
+		return result, astContextError(lf, err)
+	}
 	xtracer.Trace("compiler.Thing return type=LabeledFormula")
-	return result, err
+	return result, nil
 }
 
 // OtherThing compiles an AST node with default arg compilation.

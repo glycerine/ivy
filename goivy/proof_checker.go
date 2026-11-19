@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
@@ -228,6 +229,39 @@ func (pc *ProofChecker) LookupSchema(name string, goal *LabeledFormula, errNode 
 //   - ProofTactic -> proof_tactic
 //   - WitnessTactic -> witness_tactic
 func (pc *ProofChecker) ApplyProof(goals []*LabeledFormula, proof Node) ([]*LabeledFormula, error) {
+	// Python: with ia.ASTContext(proof): ... -- a raised error without a
+	// location gets the proof step's. errProofNone is Python's None result.
+	res, err := pc.applyProofInner(goals, proof)
+	if err != nil && !errors.Is(err, errProofNone) {
+		return nil, astContextError(proof, err)
+	}
+	return res, err
+}
+
+// errProofNone stands for Python's None result of apply_proof / match_schema
+// ("the goal does not match"), as distinct from [] (no goals left).
+var errProofNone = errors.New("proof step result is None")
+
+// applyProofExit writes Python's ApplyProof EXIT trace for a tactic result:
+// only when the tactic returned (a raised error writes none); ngoals is -1
+// for None. withErrNil appends Python's literal " err=<nil>".
+func applyProofExit(name string, withErrNil bool, res []*LabeledFormula, err error) ([]*LabeledFormula, error) {
+	if err != nil && !errors.Is(err, errProofNone) {
+		return nil, err
+	}
+	n := len(res)
+	if err != nil {
+		n = -1
+	}
+	if withErrNil {
+		xtracer.Trace("proof.ApplyProof EXIT proofType=%s ngoals=%d err=<nil>", name, n)
+	} else {
+		xtracer.Trace("proof.ApplyProof EXIT proofType=%s ngoals=%d", name, n)
+	}
+	return res, err
+}
+
+func (pc *ProofChecker) applyProofInner(goals []*LabeledFormula, proof Node) ([]*LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, nil
 	}
@@ -245,21 +279,15 @@ func (pc *ProofChecker) ApplyProof(goals []*LabeledFormula, proof Node) ([]*Labe
 		xtracer.Trace("proof.ApplyProof dispatch name=SchemaInstantiation")
 		m, err := pc.MatchSchema(goals[0], p)
 		if err != nil {
-			xtracer.Trace("proof.ApplyProof EXIT proofType=SchemaInstantiation err=%v", err)
-			return nil, err
+			// errProofNone: Python result None, traced as ngoals=-1.
+			return applyProofExit("SchemaInstantiation", false, nil, err)
 		}
-		if m == nil {
-			xtracer.Trace("proof.ApplyProof EXIT proofType=SchemaInstantiation err=NoMatch")
-			return nil, &NoMatch{Msg: "goal does not match the given schema"}
-		}
-		xtracer.Trace("proof.ApplyProof EXIT proofType=SchemaInstantiation ngoals=%d", len(m)+len(goals)-1)
-		return append(m, goals[1:]...), nil
+		return applyProofExit("SchemaInstantiation", false, append(m, goals[1:]...), nil)
 
 	case *ComposeTactics:
 		xtracer.Trace("proof.ApplyProof dispatch name=ComposeTactics")
 		res, err := pc.composeProofs(goals, p.Tactics)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=ComposeTactics ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("ComposeTactics", true, res, err)
 
 	case *NullTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=NullTactic")
@@ -269,84 +297,70 @@ func (pc *ProofChecker) ApplyProof(goals []*LabeledFormula, proof Node) ([]*Labe
 	case *ShowGoalsTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=ShowGoalsTactic")
 		res := pc.showGoalsTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=ShowGoalsTactic ngoals=%d", len(res))
-		return res, nil
+		return applyProofExit("ShowGoalsTactic", false, res, nil)
 
 	case *DeferGoalTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=DeferGoalTactic")
 		res := pc.deferGoalTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=DeferGoalTactic ngoals=%d", len(res))
-		return res, nil
+		return applyProofExit("DeferGoalTactic", false, res, nil)
 
 	case *ForgetTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=ForgetTactic")
 		res, err := pc.forgetTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=ForgetTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("ForgetTactic", true, res, err)
 
 	case *ProofTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=ProofTactic")
 		res, err := pc.proofTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=ProofTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("ProofTactic", true, res, err)
 
 	case *TacticTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=TacticTactic")
 		res, err := pc.tacticTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=TacticTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("TacticTactic", true, res, err)
 
 	case *LetTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=LetTactic")
 		res, err := pc.letTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=LetTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("LetTactic", true, res, err)
 
 	case *AssumeGlobalTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=AssumeTactic")
 		res, err := pc.assumeTactic(goals, &p.AssumeTactic, true)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=AssumeTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("AssumeTactic", true, res, err)
 
 	case *AssumeTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=AssumeTactic")
 		res, err := pc.assumeTactic(goals, p, false)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=AssumeTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("AssumeTactic", true, res, err)
 
 	case *UnfoldTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=UnfoldTactic")
 		res, err := pc.unfoldTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=UnfoldTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("UnfoldTactic", true, res, err)
 
 	case *IfTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=IfTactic")
 		res, err := pc.ifTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=IfTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("IfTactic", true, res, err)
 
 	case *PropertyTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=PropertyTactic")
 		res, err := pc.propertyTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=PropertyTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("PropertyTactic", true, res, err)
 
 	case *FunctionTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=FunctionTactic")
 		res, err := pc.functionTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=FunctionTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("FunctionTactic", true, res, err)
 
 	case *WitnessTactic:
 		xtracer.Trace("proof.ApplyProof dispatch name=WitnessTactic")
 		res, err := pc.witnessTactic(goals, p)
-		xtracer.Trace("proof.ApplyProof EXIT proofType=WitnessTactic ngoals=%d err=%v", len(res), err)
-		return res, err
+		return applyProofExit("WitnessTactic", true, res, err)
 	}
 
-	// Fallback: unrecognised proof type.
-	xtracer.Trace("proof.ApplyProof EXIT proofType=%s err=unknown", TypeName(proof))
+	// Fallback: unrecognised proof type (Python: assert False).
 	return nil, &ProofError{Msg: fmt.Sprintf("unknown proof type %T", proof)}
 }
 
@@ -408,6 +422,7 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 
 			somatch := Match(pat, inst, prob.FreeSyms, prob.Constants)
 			if somatch == nil {
+				xtracer.Trace("proof.MatchSchema EXIT err=matchFailed")
 				return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 			}
 			ApplyMatchToProblem(pc.astCfg(), somatch, prob)
@@ -429,6 +444,7 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 		somatch := Match(prob.Pat, prob.Inst, prob.FreeSyms, prob.Constants)
 		if somatch == nil {
 			xtracer.Trace("proof.MatchSchema EXIT err=matchFailed")
+			// Python: raise NoMatch(proof,"goal does not match the given schema")
 			return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 		}
 		ApplyMatchToProblem(pc.astCfg(), somatch, prob)
@@ -558,8 +574,12 @@ func (pc *ProofChecker) AdmitProposition(prop *LabeledFormula, proof Node, exist
 	}
 	var err error
 	subgoals, err = pc.ApplyProof(subgoals, proof)
+	if errors.Is(err, errProofNone) {
+		// Python: if subgoals is None: trace; raise NoMatch(proof, ...)
+		xtracer.Trace("proof.AdmitProposition EXIT err=%s", "goal does not match the given schema")
+		return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
+	}
 	if err != nil {
-		xtracer.Trace("proof.AdmitProposition EXIT err=%v", err)
 		return nil, err
 	}
 	pc.Axioms = append(pc.Axioms, prop)
@@ -622,7 +642,10 @@ func (pc *ProofChecker) composeProofs(decls []*LabeledFormula, proofs []Node) ([
 		}
 		decls, err = pc.ApplyProof(decls, proof)
 		if err != nil {
-			xtracer.Trace("proof.composeProofs EXIT err=%v step=%d", err, i)
+			if errors.Is(err, errProofNone) {
+				// Python: decls is None -> trace ndecls=-1, return None.
+				xtracer.Trace("proof.composeProofs EXIT ndecls=-1 step=%d", i)
+			}
 			return nil, err
 		}
 		if len(decls) == 0 {

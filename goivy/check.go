@@ -1252,6 +1252,15 @@ func printTopLevelError(err error) {
 		fmt.Fprintln(os.Stderr, ie.Error())
 		return
 	}
+	// Python's proof errors are IvyError subclasses and print the same way.
+	var le interface {
+		error
+		HasLocation() bool
+	}
+	if errors.As(err, &le) && le.HasLocation() {
+		fmt.Fprintln(os.Stderr, le.Error())
+		return
+	}
 	fmt.Fprintf(os.Stderr, "error: %v\n", err)
 }
 

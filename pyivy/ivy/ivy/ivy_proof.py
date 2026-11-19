@@ -1383,7 +1383,9 @@ def match_get(match,sym,env,default=None):
             del save[0]
     if val is not None:
         vocab = lu.used_symbols_ast(val)
-        vocab.update(lu.variables_ast(val))
+        # used_symbols_ast now returns an ordered dict (was a set): add the
+        # variables as keys, as set.update did.
+        vocab.update(dict.fromkeys(lu.variables_ast(val)))
         for v in vocab:
             if v in env:
                 raise_capture(v)

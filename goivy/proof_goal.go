@@ -201,8 +201,11 @@ func CloneGoal(cfg *AstConfig, goal *LabeledFormula, prems []Node, conc Node) *L
 // Corresponds to Python's x.clone([x.label, fmla]) pattern (ivy_proof.py:988).
 func CloneGoalPreserveID(cfg *AstConfig, goal *LabeledFormula, prems []Node, conc Node) *LabeledFormula {
 	xtracer.Trace("proof.CloneGoalPreserveID ENTER label=%s nprems=%d concType=%s id=%d", goal.LabelForTrace(), len(prems), TypeName(conc), goal.ID)
+	// Python apply_match_goal: a SchemaBody goal is rebuilt with
+	// fmla.clone(prems+[conc]) and stays a SchemaBody even with no premises.
+	_, wasSchema := goal.Formula.(*SchemaBody)
 	var formula Node
-	if len(prems) > 0 {
+	if len(prems) > 0 || wasSchema {
 		elems := make([]Node, len(prems)+1)
 		copy(elems, prems)
 		elems[len(prems)] = conc
