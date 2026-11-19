@@ -870,7 +870,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 				// Python: if act.check_unprovable.get(): print("SKIPPED\n"); return
 				// Check BEFORE entering theory context (matching Python ordering).
 				if mod.Cfg.OnlyCheckUnprovable {
-					fmt.Println("SKIPPED")
+					fmt.Print("SKIPPED\n\n") // Python: print("SKIPPED\n")
 					wsorts.Exit()
 					ws.Exit()
 					return nil
@@ -879,7 +879,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 				err := method(withLocalMod)
 				if err != nil {
 					mod.Cfg.Failures++
-					fmt.Println("FAIL")
+					fmt.Print("FAIL\n\n") // Python: print("FAIL\n")
 					err, failureTarget := applyGoalTraceHookToFailure(goal, err)
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
@@ -900,7 +900,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 					ws.Exit()
 					return err
 				}
-				fmt.Println("PASS")
+				fmt.Print("PASS\n\n") // Python: print("PASS\n")
 				cleanup()
 				wsorts.Exit()
 				ws.Exit()
@@ -963,7 +963,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 				// Python: if act.check_unprovable.get(): print("SKIPPED\n"); return
 				// Check BEFORE entering theory context (matching Python ordering).
 				if mod.Cfg.OnlyCheckUnprovable {
-					fmt.Println("SKIPPED")
+					fmt.Print("SKIPPED\n\n") // Python: print("SKIPPED\n")
 					wsorts.Exit()
 					ws.Exit()
 					return nil
@@ -972,7 +972,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 				err := method(withLocalMod)
 				if err != nil {
 					mod.Cfg.Failures++
-					fmt.Println("FAIL")
+					fmt.Print("FAIL\n\n") // Python: print("FAIL\n")
 					err, failureTarget := applyGoalTraceHookToFailure(goal, err)
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
@@ -993,7 +993,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 					ws.Exit()
 					return err
 				}
-				fmt.Println("PASS")
+				fmt.Print("PASS\n\n") // Python: print("PASS\n")
 				cleanup()
 				wsorts.Exit()
 				ws.Exit()
