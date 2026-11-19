@@ -929,8 +929,10 @@ func AstRewrite(x Node, rewrite AstRewriter) Node {
 		if rw, ok := x.(AstRewritable); ok {
 			return rw.Rewrite(rewrite)
 		}
-		// Python: hasattr(x, 'args') fallback
-		if args := x.Args(); args != nil {
+		// Python: hasattr(x, 'args') fallback. An empty Sequence has
+		// args == () in Python (goivy: nil), and is still cloned.
+		_, isSeq := x.(*Sequence)
+		if args := x.Args(); args != nil || isSeq {
 			newArgs := AstRewriteSlice(args, rewrite)
 			res := x.Clone(newArgs)
 			// Python: AST.clone() calls lineno_add_ref(self.lineno) (ivy_ast.py:35)
