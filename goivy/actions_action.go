@@ -793,10 +793,12 @@ func (a *LogicChoiceAction) ActionClone(args []Expr) ActionsAction {
 func (a *LogicChoiceAction) String() string {
 	parts := make([]string, len(a.Branches))
 	for i, b := range a.Branches {
+		// Python: ''.join('if * ' + bracket_action(x) + '\nelse ' for x in
+		// self.args[0:-1]) + bracket_action(self.args[-1])
 		if i < len(a.Branches)-1 {
-			parts[i] = "if * {" + fmt.Sprint(b) + "}\nelse "
+			parts[i] = "if * " + bracketActionExpr(b, 0) + "\nelse "
 		} else {
-			parts[i] = "{" + fmt.Sprint(b) + "}"
+			parts[i] = bracketActionExpr(b, 0)
 		}
 	}
 	return strings.Join(parts, "")
@@ -1057,7 +1059,8 @@ func (a *LogicLetAction) String() string {
 	for i, b := range a.Bindings {
 		parts[i] = fmt.Sprint(b)
 	}
-	return "let " + strings.Join(parts, ",") + " {" + fmt.Sprint(a.Body) + "}"
+	// Python: 'let ' + ','.join(...) + ' ' + bracket_action(self.args[-1])
+	return "let " + strings.Join(parts, ",") + " " + bracketActionExpr(a.Body, 0)
 }
 func (a *LogicLetAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
 func (a *LogicLetAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }

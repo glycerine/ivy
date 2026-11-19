@@ -36,4 +36,11 @@ func TestActionStringsMatchPython(t *testing.T) {
 	if !strings.Contains(got, "\ninvariant [asrt1] a\n") || !strings.HasSuffix(got, "\n{call f(a, b)}") {
 		t.Fatalf("while: %q", got)
 	}
+
+	// ChoiceAction: ''.join('if * ' + bracket_action(x) + '\nelse ' ...)
+	// + bracket_action(last) (test/comp_liveness1.ivy).
+	ch := NewChoiceActionOn(NewActionsConfig(), NewSequence(call), call)
+	if got := ch.String(); got != "if * {call f(a, b)}\nelse {call f(a, b)}" {
+		t.Fatalf("choice: %q", got)
+	}
 }
