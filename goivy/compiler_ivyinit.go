@@ -88,9 +88,8 @@ func readModuleWithParent(filename string, nested bool, cfg *Config, parent *ivy
 	source := string(data)
 	header, rest, hasRest := strings.Cut(source, "\n")
 	header = strings.TrimSpace(header)
-	if header == "" {
-		return nil, fmt.Errorf("empty file: %s", filename)
-	}
+	// Python read_module has no empty-file check: a blank first line
+	// falls through to the "#lang ivyN.N" error.
 
 	var sb strings.Builder
 	sb.WriteByte('\n') // newline at beginning to preserve line numbers (matches Python)
@@ -139,7 +138,7 @@ func readModuleWithParent(filename string, nested bool, cfg *Config, parent *ivy
 		return result, nil
 	}
 
-	return nil, fmt.Errorf("file must begin with \"#lang ivyN.N\"")
+	return nil, langHeaderError(filename)
 }
 
 // ReadModuleFromString parses an Ivy source string (with #lang header),
@@ -177,9 +176,8 @@ func readModuleFromNamedStringWithParent(filename, source string, nested bool, c
 
 	header, rest, hasRest := strings.Cut(source, "\n")
 	header = strings.TrimSpace(header)
-	if header == "" {
-		return nil, fmt.Errorf("empty file: %s", filename)
-	}
+	// Python read_module has no empty-file check: a blank first line
+	// falls through to the "#lang ivyN.N" error.
 
 	var sb strings.Builder
 	sb.WriteByte('\n') // preserve line numbers, matching ReadModule.
@@ -225,7 +223,7 @@ func readModuleFromNamedStringWithParent(filename, source string, nested bool, c
 		return result, nil
 	}
 
-	return nil, fmt.Errorf("file must begin with \"#lang ivyN.N\"")
+	return nil, langHeaderError(filename)
 }
 
 // ImportModule reads and parses a module by name, looking first in the
@@ -407,4 +405,11 @@ func IvyInit(cfg *Config, args []string, reg *ParameterRegistry) (*AnalysisGraph
 
 	ag := NewAnalysisGraph(mod)
 	return ag, nil
+}
+
+// langHeaderError is Python read_module's
+//   err = IvyError(None,'file must begin with "#lang ivyN.N"')
+//   err.lineno = Location(iu.filename,1)
+func langHeaderError(filename string) error {
+	return &IvyError{Msg: `file must begin with "#lang ivyN.N"`, Loc: Location{Filename: filename, Line: 1}, HasLoc: true}
 }
