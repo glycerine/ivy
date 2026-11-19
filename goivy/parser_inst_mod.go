@@ -505,21 +505,6 @@ func stackLookup(ivy *ivyAccum, name string) *ModuleDecl {
 	return nil
 }
 
-// collectDefined collects names defined by a list of declarations.
-// Matches Python module.defined — a defaultdict(list) mapping name → [(lineno, cls)].
-// We return a simple set of names for SubstPrefixAtomsAst's toPref parameter.
-func collectDefined(decls []Node) map[string]bool {
-	defined := make(map[string]bool)
-	for _, d := range decls {
-		if definer, ok := d.(interface{ Defines() []string }); ok {
-			for _, name := range definer.Defines() {
-				defined[name] = true
-			}
-		}
-	}
-	return defined
-}
-
 // collectStatic collects module.static plus "static" names (types and destructors).
 // Matches Python module.static + the TypeDecl/DestructorDecl check in inst_mod.
 func collectStatic(module *ivyAccum) map[string]bool {
