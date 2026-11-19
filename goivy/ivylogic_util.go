@@ -457,14 +457,22 @@ func (vu *VariableUniqifier) Undo(fmla Expr) Expr {
 // clash with the given set of variables.
 func AlphaAvoid(fmla Expr, vs []*LogicVariable) Expr {
 	vu := NewVariableUniqifier(nil)
-	// Reserve names of vs and free variables
+	// Python: freevars = set(vs); freevars.update(free_variables(fmla));
+	// for v in freevars: vu.rn(v.name) -- each distinct variable once.
+	reserved := make(map[NodeKey]bool)
 	for _, v := range vs {
-		vu.rn.Rename(v.Name)
+		if !reserved[Key(v)] {
+			reserved[Key(v)] = true
+			vu.rn.Rename(v.Name)
+		}
 	}
 	fvs := FreeVariablesList(fmla)
 	vmap := make(map[NodeKey]*LogicVariable)
 	for _, v := range fvs {
-		vu.rn.Rename(v.Name)
+		if !reserved[Key(v)] {
+			reserved[Key(v)] = true
+			vu.rn.Rename(v.Name)
+		}
 		vmap[Key(v)] = v // preserve free variable
 	}
 	for _, v := range vs {
@@ -493,10 +501,16 @@ func AlphaAvoidMap(fmla Expr, vs map[NodeKey]Expr) Expr {
 			vu.rn.Rename(us.Name)
 		}
 	}
+	// Python: freevars = set(vs); freevars.update(free_variables(fmla))
+	// -- a set, so a free variable already in vs is reserved only once.
 	fvs := FreeVariablesList(fmla)
 	vmap := make(map[NodeKey]*LogicVariable)
+	reserved := make(map[NodeKey]bool)
 	for _, v := range fvs {
-		vu.rn.Rename(v.Name)
+		if _, inVs := vs[Key(v)]; !inVs && !reserved[Key(v)] {
+			reserved[Key(v)] = true
+			vu.rn.Rename(v.Name)
+		}
 		vmap[Key(v)] = v // preserve free variable
 	}
 	// Preserve variable values in vs
