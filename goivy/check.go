@@ -281,7 +281,7 @@ func CheckTemporals(mod *Module) error {
 		propLabel := fmt.Sprint(prop.Label)
 		isAssumedByACL := aclCfg != nil && aclCfg.IsAssumed(propLabel)
 		if prop.Assumed || isAssumedByACL {
-			fmt.Println("  ivy_check temporal: admitting axiom...\n", PrettyLF(prop, 0))
+			fmt.Println("  ivy_check temporal: admitting axiom...\n", PrettyLF(prop, 8)) // Python: pretty_lf(prop), indent=8
 			if isAssumedByACL {
 				fmt.Printf("     ... admitting %s as axiom because it is an externally assumed property and unchecked property file is supplied.\n", propLabel)
 			}
