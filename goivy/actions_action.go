@@ -711,9 +711,18 @@ func (a *LogicWhileAction) ActionClone(args []Expr) ActionsAction {
 func (a *LogicWhileAction) String() string {
 	res := "while " + fmt.Sprint(a.Cond) + "\n"
 	for _, inv := range a.Invariants {
-		res += "invariant " + fmt.Sprint(inv) + "\n"
+		// Python: 'invariant ' + str(inv.args[0]) -- the (labeled) formula.
+		var arg0 interface{} = inv
+		if as, ok := inv.(*LogicAssertAction); ok {
+			if as.LF != nil {
+				arg0 = as.LF
+			} else {
+				arg0 = as.Formula
+			}
+		}
+		res += "invariant " + fmt.Sprint(arg0) + "\n"
 	}
-	res += "{" + fmt.Sprint(a.Body) + "}"
+	res += bracketActionExpr(a.Body, 0) // Python: bracket_action(self.args[1])
 	return res
 }
 func (a *LogicWhileAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
@@ -813,7 +822,13 @@ func (a *LogicCallAction) String() string {
 		}
 		res += strings.Join(parts, ",") + " := "
 	}
-	res += fmt.Sprint(a.Callee)
+	// Python: str(self.args[0]) -- the call's Atom (AstCallee), whose args
+	// are joined with ", ".
+	if a.AstCallee != nil {
+		res += a.AstCallee.String()
+	} else {
+		res += fmt.Sprint(a.Callee)
+	}
 	return res
 }
 func (a *LogicCallAction) CalleeName() string {
@@ -964,7 +979,8 @@ func (a *LogicLocalAction) String() string {
 	for i, l := range a.Locals {
 		parts[i] = fmt.Sprint(l)
 	}
-	return "local " + strings.Join(parts, ",") + " {" + fmt.Sprint(a.Body) + "}"
+	// Python: 'local ' + ','.join(my_str(a) ...) + ' ' + bracket_action(body)
+	return "local " + strings.Join(parts, ",") + " " + bracketActionExpr(a.Body, 0)
 }
 func (a *LogicLocalAction) IterCalls() []string             { return defaultIterCalls(a.ActionArgs()) }
 func (a *LogicLocalAction) IterSubactions() []ActionsAction { return defaultIterSubactions(a) }

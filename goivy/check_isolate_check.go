@@ -576,7 +576,8 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 					}
 					mod.Cfg.CheckLineno = oldCheckedAssert
 				} else {
-					fmt.Println("")
+					// Python: print("\n") -- the "\n" plus print's own newline.
+					fmt.Print("\n\n")
 				}
 			}
 		}
