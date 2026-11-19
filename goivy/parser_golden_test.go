@@ -569,8 +569,7 @@ func TestHermesRMWo3(t *testing.T) {
 }
 
 func TestSHT(t *testing.T) {
-	//path := "ivy-lang-examples/doc/examples/sht/sht.ivy"
-	path := "goivy/test_vectors/sht.ivy"
+	path := "ivy-lang-examples/doc/examples/sht/sht.ivy"
 	cfg := &goldenConfig{path: path}
 	GoldenPathCompareIvyCheck(t, cfg) // verbose=false, diffStop=true
 }
