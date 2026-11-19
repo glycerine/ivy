@@ -2445,12 +2445,8 @@ func CheckProperties(mod *Module) error {
 		subs := map[string]Expr{v.Name: name}
 		body = SubstituteByName(body, subs)
 		body = IvyDropUniversals(body)
-		acfg := mod.Cfg.AstCfg
-		newProp := acfg.NewLabeledFormula(prop.Label, body)
-		newProp.SetLineno(prop.GetLineno())
-		newProp.Temporal = prop.Temporal
-		newProp.ID = getModFreshPropID(mod)
-		return newProp
+		// Python: prop = prop.clone_with_fresh_id([prop.label,fmla])
+		return prop.CloneWithFreshID([]Node{prop.Label, body})
 	}
 
 	// Create ProofChecker — Python: prover = ivy_proof.ProofChecker(mod.labeled_axioms, mod.definitions, mod.schemata)
