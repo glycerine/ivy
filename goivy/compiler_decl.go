@@ -1503,11 +1503,22 @@ func (d *DomainSetup) Named(node Node) error {
 	used := make(map[string]struct{}, len(lhs.Terms))
 	targs := make([]Expr, 0, len(lhs.Terms))
 
+	// Python: with ivy_logic.UnsortedContext():
+	//             args = [arg.compile() for arg in lhs.args]
+	uc := NewUnsortedContext(d.Compiler.Sig)
+	uc.Enter()
+	compiledArgs := make([]Expr, 0, len(lhs.Terms))
 	for _, arg := range lhs.Terms {
 		compiled, err := d.Compiler.Thing(arg)
 		if err != nil {
+			uc.Exit()
 			return err
 		}
+		compiledArgs = append(compiledArgs, compiled)
+	}
+	uc.Exit()
+	for i, arg := range lhs.Terms {
+		compiled := compiledArgs[i]
 		argName, argSort, ok := namedDeclArgNameSort(compiled)
 		if !ok {
 			return NewIvyError(arg, fmt.Sprintf("cannot infer sort for %T", compiled))

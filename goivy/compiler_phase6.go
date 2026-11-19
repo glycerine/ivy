@@ -1565,14 +1565,17 @@ func (c *Compiler) CompilePropertyTactic(node Node) (Node, error) {
 		// Python: with ivy_logic.UnsortedContext(): args = [arg.compile() for arg in name.args]
 		nameArgs := name.Args()
 		compiledArgs := make([]Node, len(nameArgs))
+		uc := NewUnsortedContext(c.Sig)
+		uc.Enter()
 		for i, arg := range nameArgs {
 			compiled, err := c.Thing(arg)
 			if err != nil {
-				compiledArgs[i] = arg
-				continue
+				uc.Exit()
+				return nil, err // Python propagates compile errors
 			}
 			compiledArgs[i] = c.Module.Cfg.AstCfg.NewCompiledNode(compiled)
 		}
+		uc.Exit()
 		name = name.Clone(compiledArgs)
 	}
 	proof, err := c.CompileTactic(pt.Proof)

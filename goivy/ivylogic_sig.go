@@ -277,7 +277,9 @@ func (s *Sig) String() string {
 // FindSort looks up a sort by name in the signature.
 // If allowUnsorted is true, unknown sorts are created as UninterpretedSort.
 func (s *Sig) FindSort(name string, allowUnsorted bool) (Sort, error) {
-	if allowUnsorted {
+	// Python _find_sort reads the global allow_unsorted that
+	// UnsortedContext sets; goivy keeps it on the Sig.
+	if allowUnsorted || s.AllowUnsorted {
 		if name == "S" {
 			xtracer.Trace("compiler.FindSort allowUnsorted name=S HASH canon=%s", s.Canon())
 			return TopS, nil
