@@ -5,7 +5,6 @@ package goivy
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -16,11 +15,13 @@ import (
 // Pushes vocab symbols/sorts onto the signature, compiles the expression,
 // and performs sort inference with the vocab's variables.
 // Corresponds to Python's compile_expr_vocab.
-func CompileExprVocab(expr Node, vocab *Vocab, mod *Module) Expr {
+// Errors are Python's: compile and sort_infer_list raise inside
+// ASTContext(expr), so they carry expr's location.
+func CompileExprVocab(expr Node, vocab *Vocab, mod *Module) (Expr, error) {
 	xtracer.Trace("proof.CompileExprVocab ENTER exprType=%s", TypeName(expr))
 	if expr == nil {
 		xtracer.Trace("proof.CompileExprVocab EXIT exprNil")
-		return nil
+		return nil, nil
 	}
 
 	// Get the module's sig (or create a fresh one)
@@ -39,7 +40,8 @@ func CompileExprVocab(expr Node, vocab *Vocab, mod *Module) Expr {
 	// Check if the expression is a sort reference
 	if atom, ok := expr.(*Atom); ok {
 		if s, exists := sig.Sorts.Get2(atom.Rep); exists {
-			return sortToNode(s)
+			xtracer.Trace("proof.CompileExprVocab EXIT viaSort")
+			return sortToNode(s), nil
 		}
 	}
 
@@ -54,12 +56,8 @@ func CompileExprVocab(expr Node, vocab *Vocab, mod *Module) Expr {
 	c := NewCompiler(sig, mod)
 	compiled, err := c.Thing(expr)
 	if err != nil {
-		// Fallback: try simple symbol lookup
-		compiled = compileSimple(expr, vocab)
-		if compiled == nil {
-			xtracer.Trace("proof.CompileExprVocab EXIT err=compileFailed err=%v", err)
-			return nil
-		}
+		// Python: expr.compile() raises inside ASTContext(expr).
+		return nil, astContextError(expr, err)
 	}
 
 	// Sort inference: infer sorts on [compiled] + vocab.variables
@@ -70,19 +68,11 @@ func CompileExprVocab(expr Node, vocab *Vocab, mod *Module) Expr {
 	}
 	inferred, err := SortInferList(terms, nil, nil)
 	if err != nil {
-		// On sort-infer failure, dump the vocab so we can see which
-		// variables were available for unification. This helps diagnose
-		// cases where Go and Python disagree about vocab contents.
-		vocabStrs := make([]string, 0, len(vocab.Variables))
-		for _, v := range vocab.Variables {
-			vocabStrs = append(vocabStrs, fmt.Sprintf("%s:%s", v.Name, v.VSort))
-		}
-		xtracer.Trace("proof.CompileExprVocab EXIT sortInferErr=%v vocabVars=[%s] HASH canon=%v",
-			err, strings.Join(vocabStrs, ","), compiled.Canon())
-		return compiled // return without sort inference on error
+		// Python: sort_infer_list raises inside ASTContext(expr).
+		return nil, astContextError(expr, err)
 	}
 	xtracer.Trace("proof.CompileExprVocab EXIT HASH canon=%v", inferred[0].Canon())
-	return inferred[0]
+	return inferred[0], nil
 }
 
 // CompileExprVocabExt compiles an expression using a vocabulary without
@@ -643,7 +633,7 @@ func ParameterizeSchema(cfg *AstConfig, sorts []Sort, schema *LabeledFormula) *L
 // If allowWitness is true, extends leftGoal's vocab with used variables
 // from the left goal's conclusion.
 // Corresponds to Python's compile_match_list.
-func CompileMatchList(proofMatch []Node, leftGoal, rightGoal *LabeledFormula, allowWitness bool, mod *Module) []*Definition {
+func CompileMatchList(proofMatch []Node, leftGoal, rightGoal *LabeledFormula, allowWitness bool, mod *Module) ([]*Definition, error) {
 	leftVocab := GoalVocab(leftGoal)
 	rightVocab := GoalVocab(rightGoal)
 	if allowWitness {
@@ -665,11 +655,17 @@ func CompileMatchList(proofMatch []Node, leftGoal, rightGoal *LabeledFormula, al
 		if !ok {
 			continue
 		}
-		x := CompileExprVocab(defn.Lhs, leftVocab, mod)
-		y := CompileExprVocab(defn.Rhs, rightVocab, mod)
+		x, err := CompileExprVocab(defn.Lhs, leftVocab, mod)
+		if err != nil {
+			return nil, err
+		}
+		y, err := CompileExprVocab(defn.Rhs, rightVocab, mod)
+		if err != nil {
+			return nil, err
+		}
 		result = append(result, mod.Cfg.AstCfg.NewDefinition(x, y))
 	}
-	return result
+	return result, nil
 }
 
 // extractSymbol extracts a *lg.Const from an ast.Node.
@@ -754,12 +750,12 @@ func CompileOneMatch(lhs, rhs Expr, freesyms *InsMap[NodeKey, Expr], constants m
 // Returns *iu.InsMap to preserve Python dict's insertion-order iteration
 // (CPython 3.7+). Callers that need to match Python's xtrace emission
 // order iterate via result.All(); lookup-only callers can Get2(k).
-func CompileMatchFull(proofMatch []Node, prob *MatchProblem, decl *LabeledFormula, allowWitness bool, mod *Module) *InsMap[NodeKey, Expr] {
+func CompileMatchFull(proofMatch []Node, prob *MatchProblem, decl *LabeledFormula, allowWitness bool, mod *Module) (*InsMap[NodeKey, Expr], error) {
 	xtracer.Trace("proof.CompileMatchFull ENTER nProofMatch=%d declLabel=%s allowWitness=%v", len(proofMatch), decl.LabelForTrace(), allowWitness)
 	schema := prob.SchemaLF
 	if schema == nil {
 		xtracer.Trace("proof.CompileMatchFull EXIT schemaLFNil")
-		return nil
+		return nil, nil
 	}
 	// Python: freesyms = prob.freesyms.copy() -- an ordered dict.
 	freesyms := prob.FreeSyms.Clone()
@@ -781,7 +777,10 @@ func CompileMatchFull(proofMatch []Node, prob *MatchProblem, decl *LabeledFormul
 			}
 		}
 	}
-	compiledMatches := CompileMatchList(proofMatch, schema, decl, allowWitness, mod)
+	compiledMatches, err := CompileMatchList(proofMatch, schema, decl, allowWitness, mod)
+	if err != nil {
+		return nil, err
+	}
 	// Python's compile_match:
 	//   matches = [compile_one_match(m.lhs(),m.rhs(),...) for m in matches]
 	//   res = merge_matches(*matches)
@@ -822,7 +821,7 @@ func CompileMatchFull(proofMatch []Node, prob *MatchProblem, decl *LabeledFormul
 		n = result.Len()
 	}
 	xtracer.Trace("proof.CompileMatchFull EXIT nmatches=%d nresult=%d", len(matches), n)
-	return result
+	return result, nil
 }
 
 // MergeMatchesIns is the InsMap-preserving variant of MergeMatches.
@@ -1634,7 +1633,7 @@ func applyMatchGoalNodeNonAlt(cfg *AstConfig, match map[NodeKey]Expr, goal *Labe
 // that bound variables in the conc are visible when compiling witness
 // expressions. Without this, witness terms like `P = _P` where P is a
 // bound var of the goal can't resolve P's sort, leaving P as TopSort.
-func CompileWitnessList(proof Node, goal *LabeledFormula, mod *Module) []Expr {
+func CompileWitnessList(proof Node, goal *LabeledFormula, mod *Module) ([]Expr, error) {
 	xtracer.Trace("proof.CompileWitnessList ENTER nArgs=%d goalLabel=%s", len(proof.Args()), goal.LabelForTrace())
 	vocab := GoalVocab(goal)
 	// Python: the_goal_vocab.variables.extend(list(logic_util.used_variables(goal_conc(goal))))
@@ -1652,7 +1651,10 @@ func CompileWitnessList(proof Node, goal *LabeledFormula, mod *Module) []Expr {
 	}
 	var result []Expr
 	for i, arg := range proof.Args() {
-		compiled := CompileExprVocab(arg, vocab, mod)
+		compiled, err := CompileExprVocab(arg, vocab, mod)
+		if err != nil {
+			return nil, err
+		}
 		if compiled != nil {
 			xtracer.Trace("proof.CompileWitnessList arg=%d HASH canon=%v", i, compiled.Canon())
 			result = append(result, compiled)
@@ -1661,7 +1663,7 @@ func CompileWitnessList(proof Node, goal *LabeledFormula, mod *Module) []Expr {
 		}
 	}
 	xtracer.Trace("proof.CompileWitnessList EXIT nresult=%d", len(result))
-	return result
+	return result, nil
 }
 
 // Ensure unused imports don't cause errors.

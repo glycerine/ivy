@@ -41,17 +41,9 @@ func (pc *ProofChecker) letTactic(decls []*LabeledFormula, proof *LetTactic) ([]
 		if len(defArgs) >= 2 {
 			equality = pc.astCfg().NewAtom("=", defArgs[0], defArgs[1])
 		}
-		compiled := CompileExprVocab(equality, vocab, pc.Mod)
-		if compiled == nil {
-			// Fallback: try direct extraction without compilation
-			if len(defArgs) >= 2 {
-				lhs := astNodeToLogicNode(defArgs[0])
-				rhs := astNodeToLogicNode(defArgs[1])
-				if lhs != nil && rhs != nil {
-					eqs = append(eqs, &Eq{T1: lhs, T2: rhs})
-				}
-			}
-			continue
+		compiled, err := CompileExprVocab(equality, vocab, pc.Mod)
+		if err != nil {
+			return nil, err // Python: compile_expr_vocab raises
 		}
 		// Extract LHS and RHS from compiled equality (il.Equals(a.args[0], a.args[1]))
 		if eq, ok := compiled.(*Eq); ok {
@@ -516,7 +508,10 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 	}
 	if cut == nil {
 		// Fallback: compile as expression, wrap in LabeledFormula
-		compiled := CompileExprVocab(proof.Prop, vocab, pc.Mod)
+		compiled, err := CompileExprVocab(proof.Prop, vocab, pc.Mod)
+		if err != nil {
+			return nil, err // Python: compile_expr_vocab raises
+		}
 		if compiled != nil {
 			cut = pc.astCfg().NewLabeledFormula(nil, compiled)
 			cut.SetLineno(proof.Prop.GetLineno())
@@ -745,7 +740,10 @@ func (pc *ProofChecker) witnessTactic(decls []*LabeledFormula, proof *WitnessTac
 	}
 
 	// Python: wits = compile_witness_list(proof, decls[0])
-	wits := CompileWitnessList(proof, goal, pc.Mod)
+	wits, err := CompileWitnessList(proof, goal, pc.Mod)
+	if err != nil {
+		return nil, err
+	}
 	xtracer.Trace("proof.witnessTactic compiled nwits=%d", len(wits))
 
 	// Python: for wit in wits: if not il.is_variable(wit.args[0]): raise error

@@ -15,7 +15,6 @@ func (pc *ProofChecker) SetupMatching(decl *LabeledFormula, proof *SchemaInstant
 	xtracer.Trace("proof.SetupMatching ENTER schemaName=%s declLabel=%s", schemaName, decl.LabelForTrace())
 	schema, err := pc.LookupSchema(schemaName, decl, proof, false)
 	if err != nil {
-		xtracer.Trace("proof.SetupMatching EXIT err=%v", err)
 		return nil, nil, err
 	}
 	prob, pm, e := pc.SetupSchemaMatching(decl, proof, schema, false, mod)
@@ -24,7 +23,6 @@ func (pc *ProofChecker) SetupMatching(decl *LabeledFormula, proof *SchemaInstant
 		n = pm.Len()
 	}
 	if e != nil {
-		xtracer.Trace("proof.SetupMatching EXIT err=%v npmatch=%d", e, n)
 	} else {
 		xtracer.Trace("proof.SetupMatching EXIT npmatch=%d", n)
 	}
@@ -60,7 +58,6 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 		var err error
 		schema, err = RenameGoal(pc.astCfg(), schema, ren)
 		if err != nil {
-			xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT err=renameGoal err=%v", err)
 			return nil, nil, err
 		}
 	}
@@ -92,7 +89,10 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 
 	// Step 6: Compile symbolic matches
 	// Python: pmatch = compile_match(proof_match, prob, decl, allow_witness)
-	pmatch := CompileMatchFull(proofMatches, prob, decl, allowWitness, pc.Mod)
+	pmatch, err := CompileMatchFull(proofMatches, prob, decl, allowWitness, pc.Mod)
+	if err != nil {
+		return nil, nil, err
+	}
 	if pmatch == nil && len(proofMatches) > 0 {
 		xtracer.Trace("proof.SetupSchemaMatchingRaw EXIT err=matchInconsistent nmatches=%d", len(proofMatches))
 		return nil, nil, &ProofError{Msg: "Match is inconsistent"}

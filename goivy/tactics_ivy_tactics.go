@@ -180,7 +180,10 @@ func compileTacticLets(mod *Module, cfg *AstConfig, goal *LabeledFormula, proofN
 			return nil, nil, nil, fmt.Errorf("let binding must have two arguments")
 		}
 		atom := cfg.NewAtom("=", args[0], args[1])
-		compiled := CompileExprVocab(atom, vocab, mod)
+		compiled, err := CompileExprVocab(atom, vocab, mod)
+		if err != nil {
+			return nil, nil, nil, err // Python: compile_expr_vocab raises
+		}
 		if compiled == nil {
 			return nil, nil, nil, fmt.Errorf("could not compile let binding: %v", letNode)
 		}
