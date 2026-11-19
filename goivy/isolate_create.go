@@ -223,6 +223,14 @@ func CreateIsolate(iso string, mod *Module) error {
 		}
 	}
 
+	// Python: if iso is not None: check_with_parameters(mod,iso)
+	// -- before apply_present_conjectures.
+	if iso != "" {
+		if err := CheckWithParameters(mod, iso); err != nil {
+			return err
+		}
+	}
+
 	// Apply present conjectures (version >= 1.7)
 	// Python calls this FIRST, before initializer exports, mixin/delegate/export checks.
 	var brackets []BracketEntry
@@ -281,13 +289,6 @@ func CreateIsolate(iso string, mod *Module) error {
 		var err error
 		extraWith, extraStrip, err = createImportWrappers(iso, mod)
 		if err != nil {
-			return err
-		}
-	}
-
-	// Validate with-parameters
-	if iso != "" {
-		if err := CheckWithParameters(mod, iso); err != nil {
 			return err
 		}
 	}
