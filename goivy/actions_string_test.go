@@ -44,3 +44,10 @@ func TestActionStringsMatchPython(t *testing.T) {
 		t.Fatalf("choice: %q", got)
 	}
 }
+
+// Python SubgoalAction inherits AssertAction.__str__ (test/liveness_mc1.ivy).
+func TestSubgoalActionPrintsAsAssert(t *testing.T) {
+	if got := NewSubgoalAction(NewConst("p", Boolean)).String(); got != "assert p" {
+		t.Fatalf("%q", got)
+	}
+}

@@ -1798,9 +1798,8 @@ func (a *LogicSubgoalAction) ActionClone(args []Expr) ActionsAction {
 	}
 	return r
 }
-func (a *LogicSubgoalAction) String() string {
-	return fmt.Sprintf("subgoal(%s)", a.Formula)
-}
+// String: Python SubgoalAction inherits AssertAction.__str__ ("assert ..."),
+// which LogicSubgoalAction gets from the embedded LogicAssertAction.
 
 // --- VarAction ---
 
