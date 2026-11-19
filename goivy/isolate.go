@@ -1422,7 +1422,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 					continue
 				}
 				if xtracer.Enabled {
-					lbl := ""
+					lbl := "None" // Python: str(y.label) of None
 					if lf.Label != nil {
 						lbl = ReprNode(lf.Label)
 					}
