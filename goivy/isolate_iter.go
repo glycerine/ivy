@@ -429,6 +429,8 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 				missing = append(missing, IsolateError{
 					Caller: actname,
 					Callee: callee,
+					Mixer:  callee,
+					Mixee:  callee,
 					Msg:    "assertion is not checked",
 				})
 			}
@@ -439,6 +441,8 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 					missing = append(missing, IsolateError{
 						Caller: actname,
 						Callee: callee,
+						Mixer:  callee,
+						Mixee:  callee,
 						Kind:   "require",
 						Msg:    "requires assertion is not checked",
 					})
@@ -468,6 +472,8 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 							missing = append(missing, IsolateError{
 								Caller: actname,
 								Callee: mixed,
+								Mixer:  mixed,
+								Mixee:  mixin.Mixee(),
 								Kind:   "require",
 								Msg:    "requires assertion in mixin is not checked",
 							})
@@ -494,6 +500,8 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 							missing = append(missing, IsolateError{
 								Caller: actname,
 								Callee: mixed,
+								Mixer:  mixed,
+								Mixee:  mixin.Mixee(),
 								Msg:    "assertion in mixin is not checked",
 							})
 						}
@@ -513,6 +521,8 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 			missing = append(missing, IsolateError{
 				Caller: "external",
 				Callee: callee,
+				Mixer:  callee,
+				Mixee:  callee,
 				Msg:    "assertion is not checked when called from the environment",
 			})
 		}
@@ -529,11 +539,41 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 						missing = append(missing, IsolateError{
 							Caller: "external",
 							Callee: mixed,
+							Mixer:  mixed,
+							Mixee:  mixin.Mixee(),
 							Msg:    "assertion in mixin is not checked when called from environment",
 						})
 					}
 				}
 			}
+		}
+	}
+
+	// Python:
+	//   if missing:
+	//       for x,y,z in missing:
+	//           mixer = y.mixer() if isinstance(y,ivy_ast.MixinDef) else y
+	//           mixee = y.mixee() if isinstance(y,ivy_ast.MixinDef) else y
+	//           print(iu.IvyError(find_some_assertion(mod,mixer,kind=z),"assertion is not checked"))
+	//           if mixee != mixer:
+	//               print(iu.IvyError(mod.actions[mixee],"...in action {}".format(mixee)))
+	//           if x == "external":
+	//               print("error: ...when called from the environment")
+	//           else:
+	//               print(iu.IvyError(find_some_call(mod,x,mixee),"...when called from {}".format(x)))
+	for _, m := range missing {
+		fmt.Println(pyErrorString(NewIvyError(actionNode(findSomeAssertionKind(mod, m.Mixer, m.Kind)), "assertion is not checked")))
+		if m.Mixee != m.Mixer {
+			var mixeeAct Node
+			if act, ok := mod.Actions.Get2(m.Mixee); ok {
+				mixeeAct = act
+			}
+			fmt.Println(pyErrorString(NewIvyError(mixeeAct, fmt.Sprintf("...in action %s", m.Mixee))))
+		}
+		if m.Caller == "external" {
+			fmt.Println("error: ...when called from the environment")
+		} else {
+			fmt.Println(pyErrorString(NewIvyError(actionNode(FindSomeCall(mod, m.Caller, m.Mixee)), fmt.Sprintf("...when called from %s", m.Caller))))
 		}
 	}
 
@@ -543,6 +583,8 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 		if prop.Label != nil {
 			label := lfLabelName(prop)
 			if label != "" && !checkedProps[label] && !done[label] {
+				// Python: print(iu.IvyError(prop,"property {} not checked".format(label)))
+				fmt.Println(pyErrorString(NewIvyError(prop, fmt.Sprintf("property %s not checked", label))))
 				missing = append(missing, IsolateError{
 					Caller: label,
 					Callee: "",
@@ -560,6 +602,8 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 type IsolateError struct {
 	Caller string
 	Callee string
+	Mixer  string // Python: y.mixer() for a mixin entry, else the callee
+	Mixee  string // Python: y.mixee() for a mixin entry, else the callee
 	Kind   string // "assert", "require", or ""
 	Msg    string
 }
@@ -646,4 +690,31 @@ func versionLE(a, b string) bool {
 		}
 	}
 	return true // equal
+}
+
+// findSomeAssertionKind is Python's find_some_assertion(mod,actname,kind):
+// the first AssertAction (or subclass) in the action, or with kind
+// "require" the first RequiresAction.
+func findSomeAssertionKind(mod *Module, actname string, kind string) ActionsAction {
+	if kind != "require" {
+		return FindSomeAssertion(mod, actname)
+	}
+	act, ok := mod.Actions.Get2(actname)
+	if !ok {
+		return nil
+	}
+	for _, sub := range act.IterSubactions() {
+		if _, ok := sub.(*LogicRequiresAction); ok {
+			return sub
+		}
+	}
+	return nil
+}
+
+// actionNode converts a possibly-nil action to a Node without a typed nil.
+func actionNode(a ActionsAction) Node {
+	if a == nil {
+		return nil
+	}
+	return a
 }
