@@ -71,10 +71,14 @@ func parser17DeclareUnprovableInvariant(cfg *AstConfig, top *ivyAccum, lf *Label
 }
 
 func parser17DeclareAction(cfg *AstConfig, top *ivyAccum, impex Node, isMethod bool, name string, formals []Node, returns []Node, body Node, fallbackLoc Location) {
+	// Python: adef = p[7]
+	//         if not hasattr(adef,'lineno'): adef.lineno = get_lineno(p,4)
 	lineno := fallbackLoc
 	if body != nil {
 		if b, ok := body.(interface{ HasLocSet() bool }); ok && b.HasLocSet() {
 			lineno = body.GetLineno()
+		} else {
+			body.SetLineno(fallbackLoc)
 		}
 	}
 

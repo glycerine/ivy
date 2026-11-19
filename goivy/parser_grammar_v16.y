@@ -387,7 +387,8 @@ top:
     {
         xtracer.Trace("parser.p_top_optimpex_action_symbol_optargs_optreturns_eq_action ENTER (top)")
         $$ = $1
-        parser17DeclareAction(parser16Acfg(parser16lex), $$, $2, $3.Val == "method", $4.Val, $5, $6, $7, tok16Lineno(parser16lex.(*parser16LexAdapter), $3))
+        // Python: get_lineno(p,4), the SYMBOL's line.
+        parser17DeclareAction(parser16Acfg(parser16lex), $$, $2, $3.Val == "method", $4.Val, $5, $6, $7, tok16Lineno(parser16lex.(*parser16LexAdapter), $4))
     }
     | top PARSER16_TOK_MIXIN callatom PARSER16_TOK_BEFORE callatom
     {
