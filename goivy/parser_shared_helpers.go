@@ -246,10 +246,10 @@ func handleBeforeAfterV16(cfg *AstConfig, kind string, atom *Atom, action Node, 
 func parserFreshDecls(cfg *AstConfig, decls []Node) []Node {
 	out := make([]Node, len(decls))
 	for i, d := range decls {
-		if cd, ok := d.(*ConstantDecl); ok {
-			fresh := cfg.NewFreshConstantDecl(*cd)
-			fresh.SetLineno(cd.GetLineno())
-			out[i] = fresh
+		// Python: FreshConstantDecl(x.args[0]) if isinstance(x,ConstantDecl)
+		// -- a new decl of the first arg only, with no lineno or attributes.
+		if cd, ok := d.(*ConstantDecl); ok && len(cd.DeclArgs) > 0 {
+			out[i] = cfg.NewFreshConstantDecl(*cfg.NewConstantDecl(cd.DeclArgs[0]))
 			continue
 		}
 		out[i] = d

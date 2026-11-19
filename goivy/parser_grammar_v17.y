@@ -2080,8 +2080,7 @@ schdecl:
     | PARSER_TOK_FRESH PARSER_TOK_FUNCTION funs
     {
         xtracer.Trace("parser.p_schdecl_fresh_funcdecl ENTER (schdecl)")
-        $$ = make([]Node, len($3))
-        copy($$, $3)
+        $$ = parserFreshDecls(parser17Acfg(parser17lex), $3)
     }
     | PARSER_TOK_INDIV funs
     {
@@ -2092,8 +2091,7 @@ schdecl:
     | PARSER_TOK_FRESH PARSER_TOK_INDIV funs
     {
         xtracer.Trace("parser.p_schdecl_fresh_indivdecl ENTER (schdecl)")
-        $$ = make([]Node, len($3))
-        copy($$, $3)
+        $$ = parserFreshDecls(parser17Acfg(parser17lex), $3)
     }
     | PARSER_TOK_RELATION rels
     {
@@ -2104,8 +2102,7 @@ schdecl:
     | PARSER_TOK_FRESH PARSER_TOK_RELATION rels
     {
         xtracer.Trace("parser.p_schdecl_fresh_relation_rel ENTER (schdecl)")
-        $$ = make([]Node, len($3))
-        copy($$, $3)
+        $$ = parserFreshDecls(parser17Acfg(parser17lex), $3)
     }
     | PARSER_TOK_TYPE SYMBOLx
     {
