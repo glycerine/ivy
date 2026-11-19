@@ -53,6 +53,8 @@ func NewZ3Context() *Z3Context {
 	fail(err)
 	return &Z3Context{c: c, roots: make(map[ast.ASTHandle]bool)}
 }
+
+// used in g3_solver.go:56 Z3Solver.CheckAssumptions()
 func (ctx *Z3Context) do(f func()) {
 	ctx.mu.Lock()
 	defer ctx.mu.Unlock()

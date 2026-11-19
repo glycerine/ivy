@@ -5,7 +5,7 @@
 // Z3 expressions and checking satisfiability.
 //
 // This package wraps the Z3 C API directly via CGo
-// rather than depending on
+// rather than depending on a 3rd party wrapping api such as
 // go-z3, because go-z3 lacks quantifier support
 // (ForAll/Exists) which is
 // essential for Ivy's first-order logic.
