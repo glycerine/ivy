@@ -110,7 +110,7 @@ func TestApplyMatchGoalNodeDoesNotTraceRecursiveWrapper(t *testing.T) {
 func TestApplyMatchToProblemRunsEmptyAvoidCaptureRename(t *testing.T) {
 	cfg := NewAstConfig()
 	schema := cfg.NewLabeledFormula(cfg.NewAtom("schema"), True)
-	prob := NewMatchProblem(nil, True, True, map[NodeKey]Expr{}, map[NodeKey]Expr{})
+	prob := NewMatchProblem(nil, True, True, nodeKeySetOf(map[NodeKey]Expr{}), map[NodeKey]Expr{})
 	prob.SchemaLF = schema
 
 	out := captureActionUpdateStdout(t, func() {

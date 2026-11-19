@@ -12,10 +12,10 @@ type MatchProblem struct {
 	SchemaLF    *LabeledFormula  // the schema as a LabeledFormula (may be nil)
 	Pat         Expr             // pattern to match (conclusion of schema)
 	Inst        Expr             // instance to match against (conclusion of goal)
-	FreeSyms    map[NodeKey]Expr // free symbols in the schema
+	FreeSyms    *InsMap[NodeKey, Expr] // free symbols in the schema; Python: insertion-ordered dict
 	Constants   map[NodeKey]Expr // constants (free variables of the goal)
 	PremMatches []Expr           // premise match patterns (for Tuple matching)
-	RevMap      map[NodeKey]Expr // reverse mapping for nonce symbols
+	RevMap      *InsMap[NodeKey, Expr] // reverse mapping for nonce symbols; Python: dict
 	// TuplePats and TupleInsts are set by AddPremMatch when premise
 	// matching creates combined premise+conclusion patterns.
 	// nil means no tuple matching; non-nil activates per-element matching.
@@ -25,10 +25,11 @@ type MatchProblem struct {
 }
 
 // NewMatchProblem creates a MatchProblem.
-func NewMatchProblem(schema, pat, inst Expr, freesyms, constants map[NodeKey]Expr) *MatchProblem {
-	fs := make(map[NodeKey]Expr, len(freesyms))
-	for k, v := range freesyms {
-		fs[k] = v
+func NewMatchProblem(schema, pat, inst Expr, freesyms *InsMap[NodeKey, Expr], constants map[NodeKey]Expr) *MatchProblem {
+	// Python: self.freesyms = dict.fromkeys(freesyms) -- keeps order.
+	fs := NewInsMap[NodeKey, Expr]()
+	for k, v := range freesyms.All() {
+		fs.Set(k, v)
 	}
 	cs := make(map[NodeKey]Expr, len(constants))
 	for k, v := range constants {
@@ -40,13 +41,13 @@ func NewMatchProblem(schema, pat, inst Expr, freesyms, constants map[NodeKey]Exp
 		Inst:      inst,
 		FreeSyms:  fs,
 		Constants: cs,
-		RevMap:    make(map[NodeKey]Expr),
+		RevMap:    NewInsMap[NodeKey, Expr](),
 	}
 }
 
 func (mp *MatchProblem) String() string {
-	syms := make([]string, 0, len(mp.FreeSyms))
-	for s := range mp.FreeSyms {
+	syms := make([]string, 0, mp.FreeSyms.Len())
+	for s := range mp.FreeSyms.All() {
 		syms = append(syms, fmt.Sprint(s))
 	}
 	return fmt.Sprintf("{pat:%s,inst:%s,freesyms:%v}", mp.Pat, mp.Inst, syms)
@@ -68,14 +69,14 @@ func FuncSorts(c *Const) []Sort {
 
 // FuncsMatch checks whether two constants match structurally:
 // same name, same arity, and non-free sorts agree.
-func FuncsMatch(pat, inst *Const, freesyms map[NodeKey]Expr) bool {
+func FuncsMatch(pat, inst *Const, freesyms *InsMap[NodeKey, Expr]) bool {
 	ps := FuncSorts(pat)
 	is := FuncSorts(inst)
 	if pat.Name != inst.Name || len(ps) != len(is) {
 		return false
 	}
 	for i := range ps {
-		if freesyms[Key(ps[i])] == nil && !ps[i].Equal(is[i]) {
+		if freesyms.Get(Key(ps[i])) == nil && !ps[i].Equal(is[i]) {
 			return false
 		}
 	}
@@ -86,11 +87,11 @@ func FuncsMatch(pat, inst *Const, freesyms map[NodeKey]Expr) bool {
 // Same top-level operator and same number of arguments.
 // Quantifiers do not match anything.
 // A function symbol matches if it has the same name and non-free sorts agree.
-func HeadsMatch(pat, inst Expr, freesyms map[NodeKey]Expr) bool {
+func HeadsMatch(pat, inst Expr, freesyms *InsMap[NodeKey, Expr]) bool {
 	if IsApp(pat) && IsApp(inst) {
 		pc := appFunc(pat)
 		ic := appFunc(inst)
-		if pc != nil && ic != nil && freesyms[Key(pc)] == nil {
+		if pc != nil && ic != nil && freesyms.Get(Key(pc)) == nil {
 			return FuncsMatch(pc, ic, freesyms) && len(NodeArgs(pat)) == len(NodeArgs(inst))
 		}
 		return false
@@ -127,8 +128,8 @@ func LambdaSorts(lam *Lambda) []Sort {
 }
 
 // MatchSort matches a sort: if pat is free, map it to inst; otherwise require equality.
-func MatchSort(pat, inst Sort, freesyms map[NodeKey]Expr) map[NodeKey]Expr {
-	if freesyms[Key(pat)] != nil {
+func MatchSort(pat, inst Sort, freesyms *InsMap[NodeKey, Expr]) map[NodeKey]Expr {
+	if freesyms.Get(Key(pat)) != nil {
 		return map[NodeKey]Expr{Key(pat): inst}
 	}
 	if pat.Equal(inst) {
@@ -191,8 +192,8 @@ func EquivAlpha(x, y Expr) bool {
 // Match matches an instance to a pattern.
 // Returns an assignment sigma to freesyms such that sigma(pat) =_alpha inst.
 // Returns nil on failure.
-func Match(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Expr {
-	xtracer.Trace("proof.Match ENTER patType=%s instType=%s nfreesyms=%d", TypeName(pat), TypeName(inst), len(freesyms))
+func Match(pat, inst Expr, freesyms *InsMap[NodeKey, Expr], constants map[NodeKey]Expr) map[NodeKey]Expr {
+	xtracer.Trace("proof.Match ENTER patType=%s instType=%s nfreesyms=%d", TypeName(pat), TypeName(inst), freesyms.Len())
 	if IsQuantifier(pat) {
 		result := MatchQuants(pat, inst, freesyms, constants)
 		xtracer.Trace("proof.Match EXIT viaQuants success=%v", result != nil)
@@ -224,7 +225,7 @@ func Match(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Exp
 	// If pat is a free application, try to extract lambda
 	if IsApp(pat) {
 		c := appFunc(pat)
-		if c != nil && freesyms[Key(c)] != nil {
+		if c != nil && freesyms.Get(Key(c)) != nil {
 			patArgs := NodeArgs(pat)
 			B := ExtractTerms(inst, patArgs, constants)
 			if B != nil {
@@ -247,7 +248,7 @@ func Match(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Exp
 }
 
 // MatchQuants matches quantified formulas.
-func MatchQuants(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Expr {
+func MatchQuants(pat, inst Expr, freesyms *InsMap[NodeKey, Expr], constants map[NodeKey]Expr) map[NodeKey]Expr {
 	if sameNodeType(pat, inst) {
 		patVars := BinderVars(pat)
 		instVars := BinderVars(inst)
@@ -256,11 +257,11 @@ func MatchQuants(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeK
 		}
 		// temporarily add pat.variables to freesyms
 		for _, v := range patVars {
-			freesyms[Key(v)] = v
+			freesyms.Set(Key(v), v)
 		}
 		defer func() {
 			for _, v := range patVars {
-				delete(freesyms, Key(v))
+				freesyms.Delkey(Key(v))
 			}
 		}()
 
@@ -294,12 +295,12 @@ func MatchQuants(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeK
 // FOMatch computes a partial first-order match.
 // Matches free FO variables to ground terms, but ignores variable
 // occurrences under free second-order symbols.
-func FOMatch(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Expr {
+func FOMatch(pat, inst Expr, freesyms *InsMap[NodeKey, Expr], constants map[NodeKey]Expr) map[NodeKey]Expr {
 	xtracer.Trace("proof.FOMatch ENTER patType=%s instType=%s", TypeName(pat), TypeName(inst))
 	if v, ok := pat.(*LogicVariable); ok {
-		if freesyms[Key(v)] != nil && allVariablesAreConstants(inst, constants) {
+		if freesyms.Get(Key(v)) != nil && allVariablesAreConstants(inst, constants) {
 			res := map[NodeKey]Expr{Key(v): inst}
-			if freesyms[Key(v.VSort)] != nil {
+			if freesyms.Get(Key(v.VSort)) != nil {
 				res[Key(v.VSort)] = inst.NodeSort()
 				return res
 			}
@@ -313,14 +314,14 @@ func FOMatch(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]E
 		// temporarily remove pat.variables from freesyms
 		saved := make(map[NodeKey]Expr)
 		for _, v := range patVars {
-			if freesyms[Key(v)] != nil {
+			if freesyms.Get(Key(v)) != nil {
 				saved[Key(v)] = v
-				delete(freesyms, Key(v))
+				freesyms.Delkey(Key(v))
 			}
 		}
 		defer func() {
 			for k := range saved {
-				freesyms[k] = saved[k]
+				freesyms.Set(k, saved[k])
 			}
 		}()
 		return FOMatch(BinderBody(pat), BinderBody(inst), freesyms, constants)
@@ -343,12 +344,12 @@ func FOMatch(pat, inst Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]E
 // quants is a set of symbol keys to exclude (not-in-quants check).
 // Python: compose_matches(freesyms, mat1, mat2, quants) where quants can be
 // a list of variables or a dict — both checked with `sym not in quants`.
-func ComposeMatches(freesyms map[NodeKey]Expr, mat1, mat2 map[NodeKey]Expr, quants map[NodeKey]Expr) map[NodeKey]Expr {
+func ComposeMatches(freesyms *InsMap[NodeKey, Expr], mat1, mat2 map[NodeKey]Expr, quants map[NodeKey]Expr) map[NodeKey]Expr {
 	if mat1 == nil || mat2 == nil {
 		return nil
 	}
 	res := make(map[NodeKey]Expr)
-	for symKey, symNode := range freesyms {
+	for symKey, symNode := range freesyms.All() {
 		if quants[symKey] != nil {
 			continue
 		}
@@ -522,14 +523,18 @@ func ApplyMatchFunc(match map[NodeKey]Expr, c *Const) *Const {
 
 // ApplyMatchFreesyms applies a match to the free symbols set, returning a new set
 // without the matched symbols.
-func ApplyMatchFreesyms(match map[NodeKey]Expr, freesyms map[NodeKey]Expr) map[NodeKey]Expr {
-	result := make(map[NodeKey]Expr)
-	for sym := range freesyms {
+func ApplyMatchFreesyms(match map[NodeKey]Expr, freesyms *InsMap[NodeKey, Expr]) *InsMap[NodeKey, Expr] {
+	// Python: dict.fromkeys(apply_match_sym(match,sym) for sym in freesyms
+	// if sym not in match) -- freesyms' order, each result once.
+	result := NewInsMap[NodeKey, Expr]()
+	for sym, symNode := range freesyms.All() {
 		if _, matched := match[sym]; matched {
 			continue
 		}
-		symNode := freesyms[sym]
-		result[Key(ApplyMatchSym(match, symNode))] = ApplyMatchSym(match, symNode)
+		applied := ApplyMatchSym(match, symNode)
+		if _, ok := result.Get2(Key(applied)); !ok {
+			result.Set(Key(applied), applied)
+		}
 	}
 	return result
 }

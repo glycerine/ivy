@@ -369,7 +369,7 @@ func TransformDefnMatch(cfg *AstConfig, prob *MatchProblem) *MatchProblem {
 		x := concSorts[i]
 		y := declSorts[i]
 		xKey := Key(x)
-		if _, isFree := prob.FreeSyms[xKey]; isFree {
+		if _, isFree := prob.FreeSyms.Get2(xKey); isFree {
 			if existing, exists := dmatch[xKey]; exists {
 				if !existing.Equal(y) {
 					fmt.Printf("lhs sorts didn't match: %v, %v\n", x, y)
@@ -390,7 +390,7 @@ func TransformDefnMatch(cfg *AstConfig, prob *MatchProblem) *MatchProblem {
 
 	// Remove concargs from freesyms
 	for _, arg := range concargs {
-		delete(freesyms, Key(arg))
+		freesyms.Delkey(Key(arg))
 	}
 
 	// Remove declargs from constants
@@ -696,7 +696,7 @@ func extractSymbol(n Node) *Const {
 //  2. Non-UninterpretedSort RHS → compute vmatch (sort-variable matches),
 //     apply vmatch to lhs, run match, compose
 //  3. UninterpretedSort RHS → match_sort
-func CompileOneMatch(lhs, rhs Expr, freesyms, constants map[NodeKey]Expr) map[NodeKey]Expr {
+func CompileOneMatch(lhs, rhs Expr, freesyms *InsMap[NodeKey, Expr], constants map[NodeKey]Expr) map[NodeKey]Expr {
 	if _, isVar := lhs.(*LogicVariable); isVar {
 		return FOMatch(lhs, rhs, freesyms, constants)
 	}
@@ -717,7 +717,7 @@ func CompileOneMatch(lhs, rhs Expr, freesyms, constants map[NodeKey]Expr) map[No
 			if !inRhs {
 				continue
 			}
-			if freesyms[Key(v.VSort)] == nil {
+			if freesyms.Get(Key(v.VSort)) == nil {
 				continue
 			}
 			// {v.sort: rhsvs[v.name].sort}
@@ -761,14 +761,23 @@ func CompileMatchFull(proofMatch []Node, prob *MatchProblem, decl *LabeledFormul
 		xtracer.Trace("proof.CompileMatchFull EXIT schemaLFNil")
 		return nil
 	}
-	freesyms := copyNodeMap(prob.FreeSyms)
+	// Python: freesyms = prob.freesyms.copy() -- an ordered dict.
+	freesyms := prob.FreeSyms.Clone()
+	if freesyms == nil {
+		freesyms = NewInsMap[NodeKey, Expr]()
+	}
 	if allowWitness {
 		// Unwrap *ast.TemporalModels to scan the inner formula. In practice
 		// schemata don't have TemporalModels conclusions, but unwrapping is safe.
+		// Python: freesyms.update(dict.fromkeys(logic_util.used_variables(...)))
+		// (used_variables is a frozenset in Python; its order is not yet fixed
+		// on either side).
 		conc := ConcAsExpr(GoalConc(schema))
 		if conc != nil {
 			for k, v := range UsedVariables(conc) {
-				freesyms[k] = v
+				if _, ok := freesyms.Get2(k); !ok {
+					freesyms.Set(k, v)
+				}
 			}
 		}
 	}
@@ -917,24 +926,45 @@ func ApplyMatchMatch(match, origMatch map[NodeKey]Expr, applyFn func(map[NodeKey
 	return result
 }
 
+// renamePair is one entry of Python's cmatch: an original free symbol and
+// its renamed copy, in prob.freesyms order.
+type renamePair struct {
+	key       NodeKey
+	orig, new Expr
+}
+
 // RenameProblem renames symbols in a matching problem.
-// Corresponds to Python's rename_problem.
-func RenameProblem(cfg *AstConfig, match map[NodeKey]Expr, prob *MatchProblem) {
+// Corresponds to Python's rename_problem(match, prob), where match is the
+// ordered cmatch of avoid_capture_problem:
+//
+//	prob.freesyms = dict.fromkeys(match.get(sym,sym) for sym in prob.freesyms)
+//	prob.revmap.update((y,x) for x,y in match.items())
+func RenameProblem(cfg *AstConfig, pairs []renamePair, prob *MatchProblem) {
+	match := make(map[NodeKey]Expr, len(pairs))
+	for _, p := range pairs {
+		match[p.key] = p.new
+	}
 	if prob.SchemaLF != nil {
 		prob.SchemaLF = ApplyMatchGoalNode(cfg, match, prob.SchemaLF)
 	}
 	prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
-	newFreeSyms := make(map[NodeKey]Expr, len(prob.FreeSyms))
-	for k, sym := range prob.FreeSyms {
+	newFreeSyms := NewInsMap[NodeKey, Expr]()
+	add := func(k NodeKey, v Expr) {
+		if _, ok := newFreeSyms.Get2(k); !ok {
+			newFreeSyms.Set(k, v)
+		}
+	}
+	for k, sym := range prob.FreeSyms.All() {
 		if replacement, ok := match[k]; ok {
-			newFreeSyms[Key(replacement)] = replacement
+			add(Key(replacement), replacement)
 		} else {
-			newFreeSyms[k] = sym
+			add(k, sym)
 		}
 	}
 	prob.FreeSyms = newFreeSyms
-	for k, v := range match {
-		prob.RevMap[Key(v)] = prob.FreeSyms[k]
+	// revmap maps each renamed symbol back to the original (x), in match order.
+	for _, p := range pairs {
+		prob.RevMap.Set(Key(p.new), p.orig)
 	}
 }
 
@@ -963,13 +993,23 @@ func AvoidCaptureProblem(cfg *AstConfig, prob *MatchProblem, match map[NodeKey]E
 		}
 	}
 	rn := NewUniqueRenamer("", used)
-	cmatch := make(map[NodeKey]Expr)
-	for k, sym := range prob.FreeSyms {
-		if c, ok := sym.(*Const); ok {
+	// Python: cmatch = dict((v,v.rename(rn)) for v in prob.freesyms
+	//                       if v.name in matchnames and v not in match)
+	// -- in freesyms order, so the renamer hands out names in that order.
+	var cmatch []renamePair
+	for k, sym := range prob.FreeSyms.All() {
+		if _, inMatch := match[k]; inMatch {
+			continue
+		}
+		switch c := sym.(type) {
+		case *Const:
 			if matchNames[c.Name] {
-				if _, inMatch := match[k]; !inMatch {
-					newName := rn.Rename(c.Name)
-					cmatch[k] = NewConst(newName, c.CSort)
+				cmatch = append(cmatch, renamePair{k, c, NewConst(rn.Rename(c.Name), c.CSort)})
+			}
+		case *LogicVariable:
+			if matchNames[c.Name] {
+				if nv, err := NewVariable(rn.Rename(c.Name), c.VSort); err == nil {
+					cmatch = append(cmatch, renamePair{k, c, nv})
 				}
 			}
 		}
@@ -1261,13 +1301,17 @@ func ApplyMatchSort(match map[NodeKey]Expr, sort Sort) Sort {
 
 // ApplyMatchFreesymsAlt applies a match to free symbols and filters out matched ones.
 // Corresponds to Python's apply_match_freesyms_alt.
-func ApplyMatchFreesymsAlt(match map[NodeKey]Expr, freesyms map[NodeKey]Expr) map[NodeKey]Expr {
-	result := make(map[NodeKey]Expr)
-	for _, sym := range freesyms {
+func ApplyMatchFreesymsAlt(match map[NodeKey]Expr, freesyms *InsMap[NodeKey, Expr]) *InsMap[NodeKey, Expr] {
+	// Python: msyms = [apply_match_sym(match,sym) for sym in freesyms];
+	// [sym for sym in msyms if sym not in match] -- freesyms' order.
+	result := NewInsMap[NodeKey, Expr]()
+	for _, sym := range freesyms.All() {
 		newSym := ApplyMatchSym(match, sym)
 		newK := Key(newSym)
 		if _, inMatch := match[newK]; !inMatch {
-			result[newK] = newSym
+			if _, ok := result.Get2(newK); !ok {
+				result.Set(newK, newSym)
+			}
 		}
 	}
 	return result

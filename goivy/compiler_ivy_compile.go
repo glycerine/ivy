@@ -1557,13 +1557,17 @@ func CheckDefinitions(mod *Module) error {
 		// Python: side_effects = dict(); for action in list(mod.actions.values()):
 		//             for sub in action.iter_subactions():
 		//                 for s in sub.modifies(): side_effects[s] = sub
-		modified := make(map[NodeKey]bool)
+		// side_effects[s] = the first subaction that modifies s (Python
+		// assigns only when s is not yet a key).
+		sideEffects := NewInsMap[NodeKey, ActionsAction]()
 		for _, actVal := range mod.Actions.All() {
 			if act, ok := actVal.(ActionsAction); ok {
 				for _, sub := range act.IterSubactions() {
 					mods := ModifiesSingle(sub, interferenceActCfg)
 					for _, sym := range mods {
-						modified[Key(sym)] = true
+						if _, ok := sideEffects.Get2(Key(sym)); !ok {
+							sideEffects.Set(Key(sym), sub)
+						}
 					}
 				}
 			}
@@ -1608,35 +1612,13 @@ func CheckDefinitions(mod *Module) error {
 				interferenceDefMap[compilerDefinesKey(def)] = def.Rhs
 			}
 		}
-		// Check axioms: no side-effected symbol may appear in axiom deps
-		// Python: if not opt_mutax.get(): ...
+		// Python: if not opt_mutax.get(): axioms; then definitions.
 		optMutax := OptMutax.GetBool()
 		if mod.Cfg != nil {
 			optMutax = mod.Cfg.OptMutax
 		}
-		if !optMutax {
-			for _, lf := range mod.LabeledAxioms {
-				if !lf.IsTemporal() {
-					deps := make(map[NodeKey]bool)
-					GetSymbolDependencies(interferenceDefMap, deps, lf.Formula)
-					for sym := range deps {
-						if modified[sym] {
-							xtracer.Trace("compiler.ActionInterferenceCheck FAIL axiom immutable sym=%s", sym)
-							return NewIvyError(lf, fmt.Sprintf("immutable symbol assigned: %s", sym))
-						}
-					}
-				}
-			}
-		}
-		// Check definitions: LHS must not be modified
-		for _, lf := range mod.Definitions {
-			if def, ok := lf.Formula.(*LogicDefinition); ok {
-				key := compilerDefinesKey(def)
-				if modified[key] {
-					xtracer.Trace("compiler.ActionInterferenceCheck FAIL defn immutable key=%s", key)
-					return NewIvyError(lf, fmt.Sprintf("immutable symbol assigned: %s", key))
-				}
-			}
+		if err := checkImmutableAssigned(mod, sideEffects, interferenceDefMap, optMutax); err != nil {
+			return err
 		}
 	}
 	xtracer.Trace("compiler.ActionInterferenceCheck EXIT")
@@ -1758,7 +1740,7 @@ func CreateConjActions(mod *Module) error {
 		def  IsolateDefInterface
 	}
 	myexports := make(map[string]*InsMap[string, bool]) // iso name → exported actions (Python order)
-	objects := make(map[string][]isoEntry)        // verified object → isolates
+	objects := make(map[string][]isoEntry)              // verified object → isolates
 	cg := mod.CallGraph()
 
 	for isoName, isol := range mod.Isolates.All() {

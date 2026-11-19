@@ -193,7 +193,8 @@ func GoalSubgoals(cfg *AstConfig, schema, goal *LabeledFormula, loc Location) ([
 
 	gpms := GoalPremGoals(resultGoal)
 
-	var subgoals []*LabeledFormula
+	// Python: a list comprehension -- [] (matched, nothing left), never None.
+	subgoals := []*LabeledFormula{}
 	for _, sp := range GoalPremGoals(schema) {
 		alreadyPresent := false
 		for _, gpm := range gpms {

@@ -440,7 +440,7 @@ func IsEnumerated(term Expr) bool {
 // the interpretation. Corresponds to Python's is_canonical_sort (ivy_logic.py:1451-1455).
 func IsCanonicalSort(sig *Sig, sort Sort) bool {
 	if _, ok := sort.(*UninterpretedSort); ok {
-		interp, exists := sig.Interp[IvySortName(sort)]
+		interp, exists := sig.Interp.Get2(IvySortName(sort))
 		if !exists {
 			return true
 		}
@@ -455,7 +455,7 @@ func IsCanonicalSort(sig *Sig, sort Sort) bool {
 // (ivy_logic.py:1457-1462).
 func CanonizeSort(sig *Sig, sort Sort) Sort {
 	if _, ok := sort.(*UninterpretedSort); ok {
-		interp, exists := sig.Interp[IvySortName(sort)]
+		interp, exists := sig.Interp.Get2(IvySortName(sort))
 		if exists {
 			if uiSort, ok := interp.(*UninterpretedSort); ok {
 				return CanonizeSort(sig, uiSort)

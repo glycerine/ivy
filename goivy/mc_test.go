@@ -1783,7 +1783,7 @@ func TestIsFiniteSortWithInterp(t *testing.T) {
 
 func TestToAigerFiniteSortUsesModuleInterp(t *testing.T) {
 	mod := New()
-	mod.Sig.Interp["id"] = "bv[2]"
+	mod.Sig.Interp.Set("id", "bv[2]")
 	id := &UninterpretedSort{Name: "id"}
 	if !toAigerFiniteSort(mod, id) {
 		t.Error("ToAiger finite-sort checks must treat interpreted id as finite")

@@ -821,8 +821,8 @@ func CheckFEU(
 
 		// Dump sig.Interp keys for cross-language comparison
 		if c.sig != nil {
-			interpKeys := make([]string, 0, len(c.sig.Interp))
-			for k := range c.sig.Interp {
+			interpKeys := make([]string, 0, c.sig.Interp.Len())
+			for k := range c.sig.Interp.All() {
 				interpKeys = append(interpKeys, k)
 			}
 			sort.Strings(interpKeys)
@@ -1100,7 +1100,7 @@ func CheckFragment(m *Module, precondsOnly bool) error {
 
 	interp := make(map[string]interface{})
 	if m.Sig != nil {
-		for k, v := range m.Sig.Interp {
+		for k, v := range m.Sig.Interp.All() {
 			interp[k] = v
 		}
 	}

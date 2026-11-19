@@ -514,7 +514,7 @@ func (g *Generator) emitSortDecls(w *cppWriter) {
 			g.emitCPPTypeDecl(w, s, it)
 			return
 		}
-		if _, interpreted := g.Mod.Sig.Interp[name]; interpreted {
+		if _, interpreted := g.Mod.Sig.Interp.Get2(name); interpreted {
 			return
 		}
 		switch st := s.(type) {
@@ -800,7 +800,7 @@ func (g *Generator) isPlainVariantSubtypeName(name string) bool {
 		}
 	}
 	if g.Mod.Sig != nil {
-		if _, ok := g.Mod.Sig.Interp[name]; ok {
+		if _, ok := g.Mod.Sig.Interp.Get2(name); ok {
 			return false
 		}
 	}
@@ -829,7 +829,7 @@ func (g *Generator) cardinalitySortNames() []string {
 			return
 		}
 		if requireInterp {
-			if _, ok := g.Mod.Sig.Interp[name]; !ok {
+			if _, ok := g.Mod.Sig.Interp.Get2(name); !ok {
 				return
 			}
 		}
@@ -840,7 +840,7 @@ func (g *Generator) cardinalitySortNames() []string {
 		add(name, true)
 	}
 	var leftovers []string
-	for name := range g.Mod.Sig.Interp {
+	for name := range g.Mod.Sig.Interp.All() {
 		if !seen[name] {
 			leftovers = append(leftovers, name)
 		}

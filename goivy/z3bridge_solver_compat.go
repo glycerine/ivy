@@ -36,7 +36,7 @@ func (s *Solver) CheckNativeCompatSym(sym *Const) (retErr error) {
 		if r := recover(); r != nil {
 			interpName := ""
 			if s.sig != nil {
-				if interp, ok := s.sig.Interp[sym.Name]; ok {
+				if interp, ok := s.sig.Interp.Get2(sym.Name); ok {
 					interpName = fmt.Sprintf("%v", interp)
 				}
 			}
@@ -129,7 +129,7 @@ func CheckNativeCompatSymStatic(sig *Sig, sym *Const) error {
 func checkSortCompat(sig *Sig, s Sort) error {
 	// Check that the sort either has no interpretation or a compatible one
 	name := IvySortName(s)
-	interp, ok := sig.Interp[name]
+	interp, ok := sig.Interp.Get2(name)
 	if !ok {
 		return nil // no interpretation = OK
 	}
@@ -155,7 +155,7 @@ func (s *Solver) CheckCompat() []error {
 	if s.sig == nil {
 		return nil
 	}
-	for name := range s.sig.Interp {
+	for name := range s.sig.Interp.All() {
 		entry, ok := s.sig.Symbols.Get2(name)
 		if !ok {
 			continue
@@ -183,7 +183,7 @@ func (s *Solver) CheckCompat() []error {
 func CheckCompatStatic(sig *Sig) []error {
 	xtracer.Trace("ivy_solver.py:374 check_compat() ENTER")
 	var errs []error
-	for name := range sig.Interp {
+	for name := range sig.Interp.All() {
 		entry, ok := sig.Symbols.Get2(name)
 		if !ok {
 			continue
@@ -293,7 +293,7 @@ func (s *Solver) ModelIfNone(clauses *Clauses, implied *Clauses, model *Herbrand
 	var uninterpSorts []Sort
 	if s.sig != nil {
 		for name, sort := range s.sig.Sorts.All() {
-			if _, interp := s.sig.Interp[name]; !interp {
+			if _, interp := s.sig.Interp.Get2(name); !interp {
 				if _, isUS := sort.(*UninterpretedSort); isUS {
 					uninterpSorts = append(uninterpSorts, sort)
 				}

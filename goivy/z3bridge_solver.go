@@ -481,7 +481,7 @@ func (s *Solver) natConstraintForSymbol(sym Expr) []Expr {
 	if rng == nil {
 		return nil
 	}
-	interp, ok := s.sig.Interp[IvySortName(rng)]
+	interp, ok := s.sig.Interp.Get2(IvySortName(rng))
 	if !ok {
 		return nil
 	}
@@ -518,7 +518,7 @@ func (s *Solver) rangeConstraintsForSymbol(sym Expr) []Expr {
 	if rng == nil {
 		return nil
 	}
-	interp, ok := s.sig.Interp[IvySortName(rng)]
+	interp, ok := s.sig.Interp.Get2(IvySortName(rng))
 	if !ok {
 		return nil
 	}

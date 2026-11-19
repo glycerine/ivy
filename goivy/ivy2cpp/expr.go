@@ -2133,7 +2133,7 @@ func (g *Generator) rangeSortFor(s goivy.Sort) (*goivy.RangeSort, bool) {
 		return st, true
 	case *goivy.UninterpretedSort:
 		if g != nil && g.Mod != nil && g.Mod.Sig != nil {
-			if rs, ok := g.Mod.Sig.Interp[st.Name].(*goivy.RangeSort); ok {
+			if rs, ok := g.Mod.Sig.Interp.Get(st.Name).(*goivy.RangeSort); ok {
 				return rs, true
 			}
 		}

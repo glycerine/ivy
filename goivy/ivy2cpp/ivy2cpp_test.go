@@ -5588,7 +5588,7 @@ func TestReplMainFunctionSortedParam(t *testing.T) {
 	mod.SortOrder = append(mod.SortOrder, "color")
 	slot := &goivy.UninterpretedSort{Name: "slot"}
 	mod.Sig.Sorts.Set("slot", slot)
-	mod.Sig.Interp["slot"] = &goivy.RangeSort{Name: "slot", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "1"}}
+	mod.Sig.Interp.Set("slot", &goivy.RangeSort{Name: "slot", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "1"}})
 	mod.SortOrder = append(mod.SortOrder, "slot")
 	// Function-sorted param: tbl : slot -> color
 	fs, err := goivy.NewFunctionSort(slot, color)
@@ -8693,7 +8693,7 @@ func newTestGeneratorWithInterps(interps map[string]string) *Generator {
 	mod.Cfg = goivy.NewConfig()
 	mod.Sig = goivy.NewSigOn(mod.Cfg.IuCfg)
 	for sortName, interp := range interps {
-		mod.Sig.Interp[sortName] = interp
+		mod.Sig.Interp.Set(sortName, interp)
 	}
 	return &Generator{Mod: mod}
 }

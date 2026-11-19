@@ -24,7 +24,10 @@ class CaptureError(iu.IvyError):
 
 class MatchProblem(object):
     def __init__(self,schema,pat,inst,freesyms,constants,prem_matches=[]):
-        self.schema,self.pat,self.inst,self.freesyms,self.constants = schema,pat,inst,set(freesyms),constants
+        # freesyms: insertion-ordered dict, not set, so iterating it (e.g.
+        # avoid_capture_problem's renaming) is independent of hashing. Go:
+        # MatchProblem.FreeSyms is an InsMap.
+        self.schema,self.pat,self.inst,self.freesyms,self.constants = schema,pat,inst,dict.fromkeys(freesyms),constants
         self.prem_matches=prem_matches
         self.revmap = dict()
     def __str__(self):
@@ -1021,7 +1024,7 @@ def show_match(m):
 def match_problem(schema,decl):
     """ Creating a matching problem from a schema and a declaration """
     vocab = goal_vocab(schema)
-    freesyms = set(vocab.symbols + vocab.sorts + vocab.variables)
+    freesyms = dict.fromkeys(vocab.symbols + vocab.sorts + vocab.variables)
     constants = set(v for v in goal_free(decl) if il.is_variable(v))
     return MatchProblem(schema,goal_conc(schema),goal_conc(decl),freesyms,constants)
 
@@ -1174,7 +1177,7 @@ def compile_match(proof_match,prob,decl,allow_witness=False):
     schema = prob.schema
     freesyms = prob.freesyms.copy()
     if allow_witness:
-        freesyms.update(logic_util.used_variables(goal_conc(schema)))
+        freesyms.update(dict.fromkeys(logic_util.used_variables(goal_conc(schema))))
     matches = compile_match_list(proof_match,schema,decl,allow_witness=allow_witness)
     matches = [compile_one_match(m.lhs(),m.rhs(),freesyms,prob.constants) for m in matches]
     res = merge_matches(*matches)
@@ -1272,7 +1275,7 @@ def apply_match_to_problem(match,prob,apply_match):
 def rename_problem(match,prob):
     prob.schema = apply_match_goal(match,prob.schema,apply_match_alt)
     prob.pat = apply_match_alt(match,prob.pat)
-    prob.freesyms = set(match.get(sym,sym) for sym in prob.freesyms)
+    prob.freesyms = dict.fromkeys(match.get(sym,sym) for sym in prob.freesyms)
     prob.revmap.update((y,x) for x,y in match.items())
 
 def avoid_capture_problem(prob,match):
@@ -1459,7 +1462,7 @@ def apply_match_sort(match,sort):
     return match.get(sort,sort)
 
 def apply_match_freesyms(match,freesyms):
-    return set(apply_match_sym(match,sym) for sym in freesyms if sym not in match)
+    return dict.fromkeys(apply_match_sym(match,sym) for sym in freesyms if sym not in match)
 
 def apply_match_freesyms_alt(match,freesyms):
     msyms = [apply_match_sym(match,sym) for sym in freesyms]
@@ -1979,14 +1982,15 @@ class AddSymbols(object):
             if sym in self.symset:
                 self.saved.append(sym)
                 self.remove(sym)
-            self.symset.add(sym)
+            # symset is an insertion-ordered dict (match freesyms), not a set.
+            self.symset[sym] = None
         return self
     def __exit__(self,exc_type, exc_val, exc_tb):
         global sig
         for sym in self.symlist:
-            self.symset.remove(sym)
+            del self.symset[sym]
         for sym in self.saved:
-            self.symset.add(sym)
+            self.symset[sym] = None
         return False # don't block any exceptions
 
 class RemoveSymbols(object):
@@ -2004,7 +2008,7 @@ class RemoveSymbols(object):
     def __exit__(self,exc_type, exc_val, exc_tb):
         global sig
         for sym in self.saved:
-            self.symset.add(sym)
+            self.symset[sym] = None  # symset: insertion-ordered dict
         return False # don't block any exceptions
 
 registered_tactics = dict()

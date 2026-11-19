@@ -20,7 +20,7 @@ func (m *Module) Canon() Canonical {
 	parts = append(parts, "conjs:"+canonLFSlice(m.LabeledConjs))
 	if m.Sig != nil {
 		parts = append(parts, "sig.sorts:"+canonSortMap(m.Sig.Sorts))
-		parts = append(parts, "sig.interp:"+canonInterpMap(m.Sig.Interp))
+		parts = append(parts, "sig.interp:"+canonInterpMap(m.Sig.Interp.AsMap()))
 	}
 	parts = append(parts, "schemata:"+canonInsMapSchemata(m.Schemata))
 	if m.InitCond != nil {
@@ -61,7 +61,7 @@ func (m *Module) CanonSnapshot(label string) {
 	// Group 3: Signature
 	if m.Sig != nil {
 		xtracer.Trace("module.CanonSnapshot %s sig.sorts=%s", label, canonSortMap(m.Sig.Sorts))
-		xtracer.Trace("module.CanonSnapshot %s sig.interp=%s", label, canonInterpMap(m.Sig.Interp))
+		xtracer.Trace("module.CanonSnapshot %s sig.interp=%s", label, canonInterpMap(m.Sig.Interp.AsMap()))
 	}
 
 	// Group 4: Relations and functions

@@ -181,7 +181,7 @@ func IsInLogic(sig *Sig, term Expr, logic string) bool {
 		}
 		cs := UsedSymbolsAst(term)
 		for _, c := range cs.All() {
-			if _, ok := sig.Interp[ExprName(c)]; ok {
+			if _, ok := sig.Interp.Get2(ExprName(c)); ok {
 				return false
 			}
 		}
@@ -191,7 +191,7 @@ func IsInLogic(sig *Sig, term Expr, logic string) bool {
 	case LogicFO:
 		cs := UsedSymbolsAst(term)
 		for _, c := range cs.All() {
-			if _, ok := sig.Interp[ExprName(c)]; ok {
+			if _, ok := sig.Interp.Get2(ExprName(c)); ok {
 				return false
 			}
 		}

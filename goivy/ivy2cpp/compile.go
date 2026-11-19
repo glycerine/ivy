@@ -509,7 +509,7 @@ func snapshotCPPInterface(mod *goivy.Module) cppInterfaceSnapshot {
 		for name, sort := range mod.Sig.Sorts.All() {
 			snap.Sorts[name] = sort
 		}
-		for name, sort := range mod.Sig.Interp {
+		for name, sort := range mod.Sig.Interp.All() {
 			snap.Interps[name] = sort
 		}
 	}
@@ -607,10 +607,10 @@ func restoreSortForCPPInterface(mod *goivy.Module, snap cppInterfaceSnapshot, so
 	}
 	if interp, ok := snap.Interps[name]; ok {
 		if mod.Sig.Interp == nil {
-			mod.Sig.Interp = map[string]interface{}{}
+			mod.Sig.Interp = goivy.NewInsMap[string, interface{}]()
 		}
-		if _, exists := mod.Sig.Interp[name]; !exists {
-			mod.Sig.Interp[name] = interp
+		if _, exists := mod.Sig.Interp.Get2(name); !exists {
+			mod.Sig.Interp.Set(name, interp)
 		}
 	}
 	if destrs, ok := snap.SortDestructors[name]; ok {

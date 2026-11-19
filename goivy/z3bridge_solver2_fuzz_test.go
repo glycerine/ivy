@@ -272,7 +272,7 @@ func FuzzSortCard(f *testing.F) {
 				width = 1
 			}
 			sig = NewSig()
-			sig.Interp["mybv"] = "bv[" + string(rune('0'+width%10)) + "]"
+			sig.Interp.Set("mybv", "bv[" + string(rune('0'+width%10)) + "]")
 			sort = &UninterpretedSort{Name: "mybv"}
 		case 3:
 			sort = &UninterpretedSort{Name: "T"}
@@ -348,7 +348,7 @@ func FuzzNumeralToZ3Clamping(f *testing.F) {
 		runOnZ3Thread2(t, func(t *testing.T) {
 			rs := &RangeSort{Name: "bounded", Lb: NumeralBound{Value: lb}, Ub: NumeralBound{Value: ub}}
 			sig := NewSig()
-			sig.Interp["bounded"] = rs
+			sig.Interp.Set("bounded", rs)
 			mod := NewWithSig(sig)
 			s := NewSolver(mod, nil)
 
@@ -476,9 +476,9 @@ func FuzzQuantConstraintsNatRange(f *testing.F) {
 			sig := NewSig()
 			switch interpKind % 3 {
 			case 0:
-				sig.Interp["mysort"] = "nat"
+				sig.Interp.Set("mysort", "nat")
 			case 1:
-				sig.Interp["mysort"] = &RangeSort{Name: "mysort", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "10"}}
+				sig.Interp.Set("mysort", &RangeSort{Name: "mysort", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "10"}})
 			case 2:
 				// No interpretation
 			}

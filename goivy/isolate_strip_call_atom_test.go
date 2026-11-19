@@ -28,7 +28,7 @@ func TestStripActionFullStripsCallAtomParams(t *testing.T) {
 	call := NewCallActionOn(NewActionsConfig(), MustApply(NewConst(name, setSort), prmX, k0, v0))
 	call.AstCallee = acfg.NewAtom(name, prmX, k0, v0)
 
-	stripMap := StripMap{"proto.impl.dm": {"me"}}
+	stripMap := StripMapOf(StripPair{"proto.impl.dm", []string{"me"}})
 	binding := map[NodeKey]string{Key(prmX): "me"}
 	res := StripActionFull(call, stripMap, m, binding, true, nil)
 

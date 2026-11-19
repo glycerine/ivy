@@ -506,22 +506,25 @@ func IsTautologyEquality(t Expr) bool {
 }
 
 // pushableMap is a map with push/pop semantics for alpha-conversion.
+// pushableMap is Python's logic_util.pushable_map, keyed like Python's dict
+// by the variable's value (NodeKey: name and sort), not by object identity.
 type pushableMap struct {
 	stack []pushEntry
-	m     map[*LogicVariable]int
+	m     map[NodeKey]int
 }
 
 type pushEntry struct {
-	key *LogicVariable
+	key NodeKey
 	val int
 	had bool
 }
 
 func newPushableMap() *pushableMap {
-	return &pushableMap{m: make(map[*LogicVariable]int)}
+	return &pushableMap{m: make(map[NodeKey]int)}
 }
 
-func (pm *pushableMap) push(key *LogicVariable, val int) {
+func (pm *pushableMap) push(v *LogicVariable, val int) {
+	key := Key(v)
 	old, had := pm.m[key]
 	pm.stack = append(pm.stack, pushEntry{key, old, had})
 	pm.m[key] = val
@@ -537,9 +540,9 @@ func (pm *pushableMap) pop() {
 	}
 }
 
-func (pm *pushableMap) get(key *LogicVariable) (int, bool) {
-	v, ok := pm.m[key]
-	return v, ok
+func (pm *pushableMap) get(v *LogicVariable) (int, bool) {
+	n, ok := pm.m[Key(v)]
+	return n, ok
 }
 
 // EqualModAlpha returns true if t and u are syntactically equal modulo

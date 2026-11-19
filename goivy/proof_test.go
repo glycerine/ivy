@@ -64,7 +64,7 @@ func TestErrorsWithNode(t *testing.T) {
 func TestMatchProblemString(t *testing.T) {
 	s := proofMkSort("S")
 	x := proofMkVar("X", s)
-	mp := NewMatchProblem(x, x, x, map[NodeKey]Expr{Key(x): True}, nil)
+	mp := NewMatchProblem(x, x, x, nodeKeySetOf(map[NodeKey]Expr{Key(x): True}), nil)
 	str := mp.String()
 	if len(str) == 0 {
 		t.Error("expected non-empty string")
@@ -113,7 +113,7 @@ func TestFuncsMatch(t *testing.T) {
 	fs2, _ := NewFunctionSort(s2, Boolean)
 	c4 := proofMkConst("p", fs2)
 	freesyms := map[NodeKey]Expr{Key(s): True}
-	if !FuncsMatch(c1, c4, freesyms) {
+	if !FuncsMatch(c1, c4, nodeKeySetOf(freesyms)) {
 		t.Error("should match when sort is free")
 	}
 }
@@ -145,7 +145,7 @@ func TestMatchSort(t *testing.T) {
 
 	// Free sort: should produce mapping
 	free := map[NodeKey]Expr{Key(s1): True}
-	m := MatchSort(s1, s2, free)
+	m := MatchSort(s1, s2, nodeKeySetOf(free))
 	if m == nil || len(m) != 1 {
 		t.Fatal("expected match")
 	}
@@ -246,7 +246,7 @@ func TestMatchVariable(t *testing.T) {
 
 	// Variable pat vs variable inst with same type: heads_match returns true
 	free := map[NodeKey]Expr{Key(x): x}
-	m := Match(x, y, free, nil)
+	m := Match(x, y, nodeKeySetOf(free), nil)
 	if m == nil {
 		t.Fatal("expected match for variable->variable")
 	}
@@ -266,7 +266,7 @@ func TestMatchApp(t *testing.T) {
 	inst, _ := NewApply(p, y)
 
 	free := map[NodeKey]Expr{Key(x): x}
-	m := Match(pat, inst, free, nil)
+	m := Match(pat, inst, nodeKeySetOf(free), nil)
 	if m == nil {
 		t.Fatal("expected match for app")
 	}
@@ -300,7 +300,7 @@ func TestFOMatchVariable(t *testing.T) {
 
 	free := map[NodeKey]Expr{Key(x): x}
 	constants := map[NodeKey]Expr{}
-	m := FOMatch(x, c, free, constants)
+	m := FOMatch(x, c, nodeKeySetOf(free), constants)
 	if m == nil {
 		t.Fatal("expected fo match")
 	}
@@ -317,7 +317,7 @@ func TestFOMatchNoMatch(t *testing.T) {
 	// Y is not a constant, so X should not match Y
 	free := map[NodeKey]Expr{Key(x): x}
 	constants := map[NodeKey]Expr{}
-	m := FOMatch(x, y, free, constants)
+	m := FOMatch(x, y, nodeKeySetOf(free), constants)
 	if m != nil && len(m) > 0 {
 		// FOMatch returns empty dict on no match for head cases
 		if _, ok := m[Key(x)]; ok {
@@ -340,7 +340,7 @@ func TestMatchQuants(t *testing.T) {
 	fa2 := &ForAll{Variables: []*LogicVariable{y}, Body: body2}
 
 	free := map[NodeKey]Expr{}
-	m := MatchQuants(fa1, fa2, free, nil)
+	m := MatchQuants(fa1, fa2, nodeKeySetOf(free), nil)
 	if m == nil {
 		t.Fatal("expected match for quantified formulas")
 	}
@@ -689,7 +689,7 @@ func TestComposeMatches(t *testing.T) {
 	free := map[NodeKey]Expr{Key(x): x}
 	mat1 := map[NodeKey]Expr{Key(x): y}
 	mat2 := map[NodeKey]Expr{Key(y): proofMkConst("c", s2)}
-	result := ComposeMatches(free, mat1, mat2, nil)
+	result := ComposeMatches(nodeKeySetOf(free), mat1, mat2, nil)
 	if result == nil {
 		t.Fatal("expected non-nil result")
 	}
@@ -745,11 +745,11 @@ func TestApplyMatchFreesyms(t *testing.T) {
 
 	free := map[NodeKey]Expr{Key(s): s, Key(s2): s2}
 	match := map[NodeKey]Expr{Key(s): s2}
-	result := ApplyMatchFreesyms(match, free)
-	if result[Key(s)] != nil {
+	result := ApplyMatchFreesyms(match, nodeKeySetOf(free))
+	if result.Get(Key(s)) != nil {
 		t.Error("matched symbol should not be in result")
 	}
-	if result[Key(s2)] == nil {
+	if result.Get(Key(s2)) == nil {
 		t.Error("unmatched symbol should remain")
 	}
 }
@@ -821,7 +821,7 @@ func FuzzMatch(f *testing.F) {
 		constants := map[NodeKey]Expr{}
 
 		// Match variable to variable (same type)
-		m := Match(x, y, free, constants)
+		m := Match(x, y, nodeKeySetOf(free), constants)
 		if patFree {
 			// Should match: same type, free var
 			if m == nil {

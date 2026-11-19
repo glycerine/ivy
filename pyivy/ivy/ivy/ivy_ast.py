@@ -1892,7 +1892,10 @@ def symbols_ivy_ast(ast):
             val_type = type(val).__name__
             if not isinstance(val, NamedBinder):
                 #name = val.name
-                xtracer.trace("vocab.add src=%s name=%s val_type=%s\nstr(ast)=%s ; vars(ast)=%s" % (src, name, val_type, str(ast), vars(ast) ))
+                # One line, as goivy traces it: the former "\nstr(ast)=...;
+                # vars(ast)=..." continuation printed object reprs (with
+                # memory addresses) that no other run can reproduce.
+                xtracer.trace("vocab.add src=%s name=%s val_type=%s" % (src, name, val_type))
         yield ast.rep
     if ast != None and not isinstance(ast,str):
 #        if not hasattr(ast,'args'):

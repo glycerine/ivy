@@ -129,15 +129,21 @@ func (pc *ProofChecker) SetupSchemaMatching(
 func buildMatchProblem(schema, decl *LabeledFormula) *MatchProblem {
 	vocab := GoalVocab(schema)
 
-	freesyms := make(map[NodeKey]Expr)
+	// Python: freesyms = dict.fromkeys(vocab.symbols + vocab.sorts + vocab.variables)
+	freesyms := NewInsMap[NodeKey, Expr]()
+	add := func(k NodeKey, v Expr) {
+		if _, ok := freesyms.Get2(k); !ok {
+			freesyms.Set(k, v)
+		}
+	}
 	for _, sym := range vocab.Symbols {
-		freesyms[Key(sym)] = sym
+		add(Key(sym), sym)
 	}
 	for _, s := range vocab.Sorts {
-		freesyms[Key(s)] = s
+		add(Key(s), s)
 	}
 	for _, v := range vocab.Variables {
-		freesyms[Key(v)] = v
+		add(Key(v), v)
 	}
 
 	// Python: constants = set(v for v in goal_free(decl) if il.is_variable(v))
@@ -191,11 +197,14 @@ func ApplyMatchToProblem(cfg *AstConfig, match map[NodeKey]Expr, prob *MatchProb
 	prob.FreeSyms = ApplyMatchFreesyms(match, prob.FreeSyms)
 
 	// Remove matched symbols from revmap
-	for k := range prob.RevMap {
-		if _, matched := match[k]; matched {
-			delete(prob.RevMap, k)
+	// Python: prob.revmap = dict((x,y) for x,y in prob.revmap.items() if x not in match)
+	keptRev := NewInsMap[NodeKey, Expr]()
+	for k, v := range prob.RevMap.All() {
+		if _, matched := match[k]; !matched {
+			keptRev.Set(k, v)
 		}
 	}
+	prob.RevMap = keptRev
 }
 
 // ApplyMatchToProblemNonAlt applies a match map using the non-alt (non-capture-checking)
@@ -211,11 +220,14 @@ func ApplyMatchToProblemNonAlt(cfg *AstConfig, match map[NodeKey]Expr, prob *Mat
 	// Non-alt: use ApplyMatch (no capture detection)
 	prob.Pat = ApplyMatch(match, prob.Pat)
 	prob.FreeSyms = ApplyMatchFreesyms(match, prob.FreeSyms)
-	for k := range prob.RevMap {
-		if _, matched := match[k]; matched {
-			delete(prob.RevMap, k)
+	// Python: prob.revmap = dict((x,y) for x,y in prob.revmap.items() if x not in match)
+	keptRev := NewInsMap[NodeKey, Expr]()
+	for k, v := range prob.RevMap.All() {
+		if _, matched := match[k]; !matched {
+			keptRev.Set(k, v)
 		}
 	}
+	prob.RevMap = keptRev
 }
 
 // DetectNonceSymbols checks that no nonce symbols from avoid_capture remain
@@ -224,9 +236,11 @@ func ApplyMatchToProblemNonAlt(cfg *AstConfig, match map[NodeKey]Expr, prob *Mat
 //
 // Python: ivy_proof.py:1020-1028
 func DetectNonceSymbols(prob *MatchProblem) error {
-	for _, sym := range prob.RevMap {
+	// Python: for sym in list(prob.revmap.values()):
+	//   raise CaptureError(None,'Symbol {} in schema clashes with {} in goal.\nSuggest renaming or instantiating it.'.format(sym,sym))
+	for _, sym := range prob.RevMap.All() {
 		return &CaptureError{
-			Msg: fmt.Sprintf("Symbol %s in schema clashes with corresponding symbol in goal. Suggest renaming or instantiating it.", sym),
+			Msg: fmt.Sprintf("Symbol %v in schema clashes with %v in goal.\nSuggest renaming or instantiating it.", sym, sym),
 		}
 	}
 	return nil

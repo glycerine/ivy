@@ -175,7 +175,7 @@ func TestMakeThunkZ3ConstantPrimitiveBVInterpFastPath(t *testing.T) {
 	mod, node, _ := newThunkZ3TestModule(t)
 	word := &goivy.UninterpretedSort{Name: "word"}
 	mod.Sig.Sorts.Set("word", word)
-	mod.Sig.Interp["word"] = "bv[8]"
+	mod.Sig.Interp.Set("word", "bv[8]")
 	mod.SortOrder = append(mod.SortOrder, "word")
 	x, err := goivy.NewVariable("X", node)
 	if err != nil {

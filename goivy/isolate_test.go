@@ -747,9 +747,7 @@ func TestStripMapLookup(t *testing.T) {
 	m := mkModule()
 	m.Sig = NewSig()
 
-	sm := StripMap{
-		"server": {"s"},
-	}
+	sm := StripMapOf(StripPair{"server", []string{"s"}})
 
 	// "server.foo" starts with "server.", should match.
 	result := StripMapLookup("server.foo", sm, m)
@@ -769,7 +767,7 @@ func TestStripMapLookupGlobalParam(t *testing.T) {
 	m.Sig = NewSig()
 	m.SetAttribute("x.global_parameter", true)
 
-	sm := StripMap{"x": {"p"}}
+	sm := StripMapOf(StripPair{"x", []string{"p"}})
 	result := StripMapLookup("x", sm, m)
 	if result != nil {
 		t.Error("global parameter should return nil")
@@ -781,7 +779,7 @@ func TestStripMapLookupSort(t *testing.T) {
 	m.Sig = NewSig()
 	m.Sig.Sorts.Set("mysort", isolateMkSort("mysort"))
 
-	sm := StripMap{"mysort": {"p"}}
+	sm := StripMapOf(StripPair{"mysort", []string{"p"}})
 	result := StripMapLookup("mysort", sm, m)
 	if result != nil {
 		t.Error("sort name should return nil")
@@ -792,7 +790,7 @@ func TestStripMapLookupSort(t *testing.T) {
 
 func TestStripIsolateEmpty(t *testing.T) {
 	m := mkModule()
-	err := StripIsolate(m, StripMap{}, nil)
+	err := StripIsolate(m, StripMapOf(), nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -807,7 +805,7 @@ func TestStripIsolateStripsFormalParams(t *testing.T) {
 	act.SetFormalReturns([]*Const{isolateMkConst("r")})
 	m.Actions.Set("server.do", act)
 
-	sm := StripMap{"server": {"s"}}
+	sm := StripMapOf(StripPair{"server", []string{"s"}})
 	err := StripIsolate(m, sm, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

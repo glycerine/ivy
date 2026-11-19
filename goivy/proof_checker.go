@@ -446,8 +446,12 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 		return nil, &NoMatch{Msg: "schema is not a labeled formula after matching"}
 	}
 	result, err := GoalSubgoals(pc.astCfg(), prob.SchemaLF, goal, proof.GetLineno())
-	xtracer.Trace("proof.MatchSchema EXIT nsubgoals=%d err=%v", len(result), err)
-	return result, err
+	if err != nil {
+		// Python: goal_subgoals raises; no EXIT trace.
+		return result, err
+	}
+	xtracer.Trace("proof.MatchSchema EXIT nsubgoals=%d", len(result))
+	return result, nil
 }
 
 // InstSchema instantiates a schema against a goal using the given match.
@@ -641,7 +645,9 @@ func (pc *ProofChecker) showGoalsTactic(decls []*LabeledFormula, proof *ShowGoal
 	xtracer.Trace("proof.showGoalsTactic ENTER ndecls=%d", len(decls))
 	fmt.Println()
 	loc := proof.GetLineno()
-	fmt.Printf("line %d: Proof goals:\n", loc.Line)
+	// Python: print('{}Proof goals:'.format(proof.lineno)) -- the full
+	// location (file and line), as str(LocationTuple) prints it.
+	fmt.Printf("%sProof goals:\n", loc.String())
 	for _, decl := range decls {
 		fmt.Println()
 		fmt.Println("theorem " + decl.String())

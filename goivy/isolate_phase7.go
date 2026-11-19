@@ -54,7 +54,7 @@ func GetStripParams(mod *Module, name string, args []Expr, stripMap StripMap, st
 // StripNative strips isolate parameters from a single native declaration.
 // Corresponds to Python's strip_native (ivy_isolate.py lines 323-331).
 func StripNative(native interface{}, stripMap StripMap, mod *Module) interface{} {
-	if len(stripMap) == 0 {
+	if stripMap.Len() == 0 {
 		return native
 	}
 	// Process the native's referenced symbols (args[2:]).
@@ -80,7 +80,7 @@ func StripNative(native interface{}, stripMap StripMap, mod *Module) interface{}
 // declarations.
 // Corresponds to Python's strip_natives (ivy_isolate.py lines 333-336).
 func StripNativesSlice(natives []interface{}, stripMap StripMap, mod *Module) []interface{} {
-	if len(stripMap) == 0 {
+	if stripMap.Len() == 0 {
 		return natives
 	}
 	result := make([]interface{}, len(natives))

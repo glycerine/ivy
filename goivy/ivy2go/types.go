@@ -506,7 +506,7 @@ func (g *Generator) emitSortDecls(w *goWriter) {
 			}
 			return
 		}
-		if _, interpreted := g.Mod.Sig.Interp[name]; interpreted {
+		if _, interpreted := g.Mod.Sig.Interp.Get2(name); interpreted {
 			// e.g., strlit / nat — these have a fixed mapping handled
 			// by goScalarType. Nothing to declare.
 			return

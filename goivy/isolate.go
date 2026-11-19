@@ -303,7 +303,7 @@ func startsWithEqSomeRec(name string, prefixes map[string]bool, mod *Module) boo
 // axioms/properties/definitions/signatures, runs interference checking,
 // applies cone-of-influence, strips isolate parameters, and computes
 // init_cond.
-func IsolateComponent(mod *Module, isolateName string, extraWith []string, extraStrip map[string][]string, afterInits []string) error {
+func IsolateComponent(mod *Module, isolateName string, extraWith []string, extraStrip StripMap, afterInits []string) error {
 	isoCfg := mod.Cfg.IsolateCfg
 	// implementationMap tracks mixee->mixer for implement mixins
 	implementationMap := make(map[string]string)
@@ -335,7 +335,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 
 	// Handle interpret_all_sorts
 	if !isoCfg.InterpretAllSorts && mod.Sig != nil {
-		for typeName := range mod.Sig.Interp {
+		for typeName := range mod.Sig.Interp.All() {
 			_, inHier := mod.Hierarchy.Get2(typeName)
 			cond1 := present[typeName] && !inHier
 			cond2 := false
@@ -351,7 +351,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 				}
 			}
 			if !(cond1 || cond2) {
-				delete(mod.Sig.Interp, typeName)
+				mod.Sig.Interp.Delkey(typeName)
 			}
 		}
 	}
@@ -1816,7 +1816,7 @@ func formulaToClauses(fmla Expr) *Clauses {
 
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
 func stripIsolateWrapper(mod *Module, iso interface{}, implMixins *InsMap[string, []IsolateMixinIface],
-	allAfterInits map[string]bool, extraStrip map[string][]string) {
+	allAfterInits map[string]bool, extraStrip StripMap) {
 	_, isIDI := iso.(IsolateDefIface)
 	xtracer.Trace("strip.stripIsolateWrapper isIsolateDefInterface=%v", isIDI)
 	if idef, ok := iso.(IsolateDefIface); ok {

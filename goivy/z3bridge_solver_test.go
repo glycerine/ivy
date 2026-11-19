@@ -38,10 +38,10 @@ func TestSoftSolverCoreOrderMatchesCppRuntimeFast(t *testing.T) {
 	} {
 		mod.Sig.Sorts.Set(name, sort)
 	}
-	mod.Sig.Interp[node.Name] = "bv[2]"
-	mod.Sig.Interp[ts.Name] = "bv[4]"
-	mod.Sig.Interp[version.Name] = "int"
-	mod.Sig.Interp[value.Name] = "bv[4]"
+	mod.Sig.Interp.Set(node.Name, "bv[2]")
+	mod.Sig.Interp.Set(ts.Name, "bv[4]")
+	mod.Sig.Interp.Set(version.Name, "int")
+	mod.Sig.Interp.Set(value.Name, "bv[4]")
 	opts := DefaultSolverOptions()
 	opts.MacroFinder = false
 	solver := NewSolver(mod, opts)
@@ -2356,7 +2356,7 @@ func TestZ3BridgeArraySortRoundtrip(t *testing.T) {
 	// and verify the Ivy sort name roundtrips.
 	// Python requires sig.interp to interpret sort names as arrays.
 	sig := NewSig()
-	sig.Interp["arr[node][value]"] = "arr[node][value]"
+	sig.Interp.Set("arr[node][value]", "arr[node][value]")
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
 
@@ -2670,7 +2670,7 @@ func TestZ3BridgeSortFromZ3RoundTrip(t *testing.T) {
 // TestSortLookupStrbv verifies strbv[N] interpretation maps to BitVecSort(N).
 func TestZ3BridgeSortLookupStrbv(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mystr"] = "strbv[16]"
+	sig.Interp.Set("mystr", "strbv[16]")
 	s := NewSolverFromSig(sig, nil)
 
 	mySort := &UninterpretedSort{Name: "mystr"}
@@ -2690,7 +2690,7 @@ func TestZ3BridgeSortLookupStrbv(t *testing.T) {
 // TestSortLookupIntbv verifies intbv[N] interpretation maps to BitVecSort(N).
 func TestZ3BridgeSortLookupIntbv(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["myint"] = "intbv[32]"
+	sig.Interp.Set("myint", "intbv[32]")
 	s := NewSolverFromSig(sig, nil)
 
 	mySort := &UninterpretedSort{Name: "myint"}
@@ -2710,7 +2710,7 @@ func TestZ3BridgeSortLookupIntbv(t *testing.T) {
 // TestSortLookupStrlit verifies strlit interpretation maps to StringSort.
 func TestZ3BridgeSortLookupStrlit(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["s"] = "strlit"
+	sig.Interp.Set("s", "strlit")
 	s := NewSolverFromSig(sig, nil)
 
 	mySort := &UninterpretedSort{Name: "s"}
@@ -2814,11 +2814,11 @@ func TestZ3BridgeRangeSortBoundsNumeric(t *testing.T) {
 func TestZ3BridgeSortCardRangeSortViaInterp(t *testing.T) {
 	sig := NewSig()
 	// Sort "myrange" is uninterpreted, but its interpretation is a RangeSort
-	sig.Interp["myrange"] = &RangeSort{
+	sig.Interp.Set("myrange", &RangeSort{
 		Name: "myrange",
 		Lb:   NumeralBound{Value: "0"},
 		Ub:   NumeralBound{Value: "7"},
-	}
+	})
 	sort := &UninterpretedSort{Name: "myrange"}
 	card := SortCard(sort, sig)
 	if card != 8 {
@@ -2831,14 +2831,14 @@ func TestZ3BridgeSortCardStrbvIntbv(t *testing.T) {
 	sig := NewSig()
 
 	// strbv[8] → 2^8 = 256
-	sig.Interp["s8"] = "strbv[8]"
+	sig.Interp.Set("s8", "strbv[8]")
 	sort8 := &UninterpretedSort{Name: "s8"}
 	if card := SortCard(sort8, sig); card != 256 {
 		t.Fatalf("expected SortCard=256 for strbv[8], got %d", card)
 	}
 
 	// intbv[4] → 2^4 = 16
-	sig.Interp["i4"] = "intbv[4]"
+	sig.Interp.Set("i4", "intbv[4]")
 	sort4 := &UninterpretedSort{Name: "i4"}
 	if card := SortCard(sort4, sig); card != 16 {
 		t.Fatalf("expected SortCard=16 for intbv[4], got %d", card)
@@ -2850,7 +2850,7 @@ func TestZ3BridgeSortCardStrbvIntbv(t *testing.T) {
 // TestBfeToZ3_BracketFormat verifies bfe[lo][hi] format (Python's format) parses correctly.
 func TestZ3BridgeBfeToZ3_BracketFormat(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mybv"] = "bv[16]"
+	sig.Interp.Set("mybv", "bv[16]")
 	s := NewSolverFromSig(sig, nil)
 
 	bvSort := &UninterpretedSort{Name: "mybv"}
@@ -2868,7 +2868,7 @@ func TestZ3BridgeBfeToZ3_BracketFormat(t *testing.T) {
 // TestBfeToZ3_ColonFormatStillWorks verifies bfe[lo:hi] format is still supported.
 func TestZ3BridgeBfeToZ3_ColonFormatStillWorks(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mybv"] = "bv[16]"
+	sig.Interp.Set("mybv", "bv[16]")
 	s := NewSolverFromSig(sig, nil)
 
 	bvSort := &UninterpretedSort{Name: "mybv"}
@@ -2886,7 +2886,7 @@ func TestZ3BridgeBfeToZ3_ColonFormatStillWorks(t *testing.T) {
 // TestBfeToZ3_BracketFormatZeroWidth verifies bfe[5][3] (hi < lo) returns zero BV.
 func TestZ3BridgeBfeToZ3_BracketFormatZeroWidth(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mybv"] = "bv[16]"
+	sig.Interp.Set("mybv", "bv[16]")
 	s := NewSolverFromSig(sig, nil)
 
 	bvSort := &UninterpretedSort{Name: "mybv"}
@@ -2910,8 +2910,8 @@ func TestZ3BridgeBfeToZ3_BracketFormatZeroWidth(t *testing.T) {
 // TestBfeToZ3_BracketFormatIntInput verifies bfe with IntSort input uses Int2Bv.
 func TestZ3BridgeBfeToZ3_BracketFormatIntInput(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["myint"] = "int"
-	sig.Interp["mybv"] = "bv[8]"
+	sig.Interp.Set("myint", "int")
+	sig.Interp.Set("mybv", "bv[8]")
 	s := NewSolverFromSig(sig, nil)
 
 	intSort := &UninterpretedSort{Name: "myint"}
@@ -3059,11 +3059,11 @@ func TestZ3BridgeEnumEqBinaryEncoding(t *testing.T) {
 // The inner value should be IntVal(15) (a Z3 integer), not Const("15", IntSort).
 func TestZ3BridgeNumeralRangeClamping(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["bounded"] = &RangeSort{
+	sig.Interp.Set("bounded", &RangeSort{
 		Name: "bounded",
 		Lb:   NumeralBound{Value: "0"},
 		Ub:   NumeralBound{Value: "10"},
-	}
+	})
 	s := NewSolverFromSig(sig, nil)
 
 	// Numeral "15" with sort "bounded" should be clamped to [0,10]
@@ -3129,7 +3129,7 @@ func TestZ3BridgeClausesCaseKeepsSameNumeralNamesSortDistinct(t *testing.T) {
 func TestZ3BridgeNatSubUsesZ3PyReflectedComparison(t *testing.T) {
 	sig := NewSig()
 	timeSort := &UninterpretedSort{Name: "time"}
-	sig.Interp["time"] = "nat"
+	sig.Interp.Set("time", "nat")
 	s := NewSolverFromSig(sig, nil)
 	ctx := s.Context()
 
@@ -3157,7 +3157,7 @@ func TestZ3BridgeNatSubUsesZ3PyReflectedComparison(t *testing.T) {
 func TestZ3BridgeBVArithmeticBuiltinsDispatchLikeZ3Py(t *testing.T) {
 	sig := NewSig()
 	bvSort := &UninterpretedSort{Name: "t"}
-	sig.Interp["t"] = "bv[2]"
+	sig.Interp.Set("t", "bv[2]")
 	s := NewSolverFromSig(sig, nil)
 	ctx := s.Context()
 
@@ -3199,7 +3199,7 @@ func TestZ3BridgeRangeClampedSubUsesZ3PyReflectedComparison(t *testing.T) {
 // are plain integer values (not uninterpreted constants).
 func TestZ3BridgeNumeralNoClamping(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["myint"] = "int"
+	sig.Interp.Set("myint", "int")
 	s := NewSolverFromSig(sig, nil)
 
 	// Numeral "42" with int-interpreted sort → IntVal(42)
@@ -3222,7 +3222,7 @@ func TestZ3BridgeNumeralNoClamping(t *testing.T) {
 // TestNumeralToZ3_IntValue verifies NumeralToZ3 creates IntVal directly.
 func TestZ3BridgeNumeralToZ3_IntValue(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["myint"] = "int"
+	sig.Interp.Set("myint", "int")
 	s := NewSolverFromSig(sig, nil)
 
 	num := NewConst("42", &UninterpretedSort{Name: "myint"})
@@ -3239,7 +3239,7 @@ func TestZ3BridgeNumeralToZ3_IntValue(t *testing.T) {
 // TestNumeralToZ3_BvValue verifies NumeralToZ3 creates BvVal for BV sorts.
 func TestZ3BridgeNumeralToZ3_BvValue(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mybv"] = "bv[8]"
+	sig.Interp.Set("mybv", "bv[8]")
 	s := NewSolverFromSig(sig, nil)
 
 	num := NewConst("255", &UninterpretedSort{Name: "mybv"})
@@ -3258,7 +3258,7 @@ func TestZ3BridgeNumeralToZ3_BvValue(t *testing.T) {
 // TestNumeralToZ3_HexValue verifies NumeralToZ3 parses hex like Python's int(name, 0).
 func TestZ3BridgeNumeralToZ3_HexValue(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["myint"] = "int"
+	sig.Interp.Set("myint", "int")
 	s := NewSolverFromSig(sig, nil)
 
 	num := NewConst("0xff", &UninterpretedSort{Name: "myint"})
@@ -3275,7 +3275,7 @@ func TestZ3BridgeNumeralToZ3_HexValue(t *testing.T) {
 // TestNumeralToZ3_StringValue verifies NumeralToZ3 creates StringVal for strlit sorts.
 func TestZ3BridgeNumeralToZ3_StringValue(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mystr"] = "strlit"
+	sig.Interp.Set("mystr", "strlit")
 	s := NewSolverFromSig(sig, nil)
 
 	num := NewConst(`"hello"`, &UninterpretedSort{Name: "mystr"})
@@ -3677,7 +3677,7 @@ func TestZ3BridgeTranslateComparisonUninterpretedSort(t *testing.T) {
 func TestZ3BridgeTranslateComparisonInterpretedSort(t *testing.T) {
 	mySort := z3UnintSort("mysort")
 	sig := NewSig()
-	sig.Interp["mysort"] = "int"
+	sig.Interp.Set("mysort", "int")
 
 	s := NewSolverFromSig(sig, nil)
 
@@ -3708,7 +3708,7 @@ func TestZ3BridgeTranslateComparisonInterpretedSort(t *testing.T) {
 func TestZ3BridgeTranslateComparisonBVSort(t *testing.T) {
 	mySort := z3UnintSort("mybv")
 	sig := NewSig()
-	sig.Interp["mybv"] = "bv[8]"
+	sig.Interp.Set("mybv", "bv[8]")
 
 	s := NewSolverFromSig(sig, nil)
 
@@ -3739,7 +3739,7 @@ func TestZ3BridgeTranslateComparisonBVSort(t *testing.T) {
 func TestZ3BridgePolymorphicAddBVInterpDefinition(t *testing.T) {
 	nodeSort := z3UnintSort("node")
 	sig := NewSig()
-	sig.Interp["node"] = "bv[1]"
+	sig.Interp.Set("node", "bv[1]")
 	s := NewSolverFromSig(sig, nil)
 
 	addSort, err := NewFunctionSort(nodeSort, nodeSort, nodeSort)

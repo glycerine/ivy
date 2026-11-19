@@ -283,7 +283,7 @@ func defargNameSort(n Node) (string, string, bool) {
 // applyMatchAltRec then preserved the vacuous `ForAll([P], body_with__P)`
 // wrapping — the divergence observed at log.golden.2hr index 2411549.
 func isWitVar(key NodeKey, val Expr, prob *MatchProblem) bool {
-	if _, inFree := prob.FreeSyms[key]; inFree {
+	if _, inFree := prob.FreeSyms.Get2(key); inFree {
 		xtracer.Trace("proof.isWitVar key=%s result=%v reason=inFreeSyms", string(key), false)
 		return false
 	}
@@ -558,15 +558,21 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 		// Python: if not il.is_exists(fmla) or len(fmla.variables) != 1:
 		if !IsExists(fmla) || len(BinderVars(fmla)) != 1 {
 			xtracer.Trace("proof.propertyTactic EXIT err=notExistential")
-			return nil, &ProofError{Msg: "property is not existential"}
+			// Python: raise IvyError(proof,'property is not existential')
+			return nil, NewIvyError(proof, "property is not existential")
 		}
 		evar := BinderVars(fmla)[0]
 		rng := evar.VSort
 
 		// Python: vmap = dict((x.name, x) for x in lu.variables_ast(fmla))
+		// Keys in first-occurrence order (vmapOrder); later values overwrite.
 		varsList := VariablesAstList(fmla)
 		vmap := make(map[string]*LogicVariable, len(varsList))
+		var vmapOrder []string
 		for _, v := range varsList {
+			if _, ok := vmap[v.Name]; !ok {
+				vmapOrder = append(vmapOrder, v.Name)
+			}
 			vmap[v.Name] = v
 		}
 
@@ -580,7 +586,7 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 
 			// Python: if a.name in used: raise IvyError(lhs,'repeat parameter: ...')
 			if used[aName] {
-				return nil, &ProofError{Msg: fmt.Sprintf("repeat parameter: %s", aName)}
+				return nil, NewIvyError(lhs, fmt.Sprintf("repeat parameter: %s", aName))
 			}
 			used[aName] = true
 
@@ -590,12 +596,12 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 				// Python: if not (il.is_topsort(a.sort) or a.sort != v.sort):
 				vSortName := SortName(v.VSort)
 				if !aIsTop && aSortName == vSortName {
-					return nil, &ProofError{Msg: fmt.Sprintf("bad sort for %s", aName)}
+					return nil, NewIvyError(lhs, fmt.Sprintf("bad sort for %s", aName))
 				}
 			} else {
 				// Python: if il.is_topsort(a.sort): raise IvyError(...)
 				if aIsTop {
-					return nil, &ProofError{Msg: fmt.Sprintf("cannot infer sort for %s", aName)}
+					return nil, NewIvyError(lhs, fmt.Sprintf("cannot infer sort for %s", aName))
 				}
 				paramVar := &LogicVariable{Name: aName, VSort: &UninterpretedSort{Name: aSortName}}
 				targs = append(targs, paramVar)
@@ -603,9 +609,9 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 		}
 
 		// Python: for x in vmap: if x not in used: raise IvyError(...)
-		for x := range vmap {
+		for _, x := range vmapOrder {
 			if !used[x] {
-				return nil, &ProofError{Msg: fmt.Sprintf("%s must be a parameter of %s", x, lhs.Rep)}
+				return nil, NewIvyError(lhs, fmt.Sprintf("%s must be a parameter of %s", x, lhs.Rep))
 			}
 		}
 

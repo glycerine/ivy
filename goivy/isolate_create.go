@@ -38,7 +38,7 @@ type exportStub struct {
 func (e *exportStub) Exported() string { return e.name }
 func (e *exportStub) Scope() string    { return "" }
 
-func createImportWrappers(iso string, mod *Module) ([]string, map[string][]string, error) {
+func createImportWrappers(iso string, mod *Module) ([]string, StripMap, error) {
 	implMap := SetUpImplementationMap(mod)
 	outcalls := make(map[string]bool)
 	origImports := make(map[string]bool)
@@ -111,7 +111,7 @@ func createImportWrappers(iso string, mod *Module) ([]string, map[string][]strin
 	}
 
 	extraWith := []string{}
-	extraStrip := make(map[string][]string)
+	extraStrip := NewInsMap[string, []string]()
 	outcallNames := make([]string, 0, len(outcalls))
 	for name := range outcalls {
 		outcallNames = append(outcallNames, name)
@@ -168,8 +168,8 @@ func createImportWrappers(iso string, mod *Module) ([]string, map[string][]strin
 		}
 		if iso != "" && isoExists && origImports[name] {
 			stripNames := isolateParamStripNames(isoDef.Params())
-			extraStrip[impname] = stripNames
-			extraStrip[extname] = stripNames
+			extraStrip.Set(impname, stripNames)
+			extraStrip.Set(extname, stripNames)
 		}
 	}
 
@@ -276,7 +276,7 @@ func CreateIsolate(iso string, mod *Module) error {
 	}
 
 	extraWith := []string{}
-	extraStrip := map[string][]string{}
+	extraStrip := NewInsMap[string, []string]()
 	if isoCfg.CreateImports {
 		var err error
 		extraWith, extraStrip, err = createImportWrappers(iso, mod)
@@ -528,29 +528,40 @@ func getModCone(mod *Module) map[string]bool {
 func CheckWithParameters(mod *Module, isolateName string) error {
 	isoDef, ok := mod.Isolates.Get2(isolateName)
 	if !ok {
-		return fmt.Errorf("undefined isolate: %s", isolateName)
+		return &IvyError{Msg: fmt.Sprintf("undefined isolate: %s", isolateName)}
 	}
 
-	verified := make(map[string]bool)
-	for _, a := range isoDef.VerifiedNames() {
-		verified[a] = true
-	}
-	present := make(map[string]bool)
-	for _, a := range isoDef.PresentNames() {
-		present[a] = true
-	}
-	for v := range verified {
-		present[v] = true
-	}
-
-	// Collect all known definition names
-	derived := make(map[string]bool)
-	for _, ldf := range mod.Definitions {
-		if ldf != nil {
-			n := lfLabelName(ldf)
-			if n != "" {
-				derived[n] = true
+	// Python: present = dict.fromkeys(present names); present.update(verified)
+	// -- insertion order, each name once.
+	var present []string
+	seenPresent := make(map[string]bool)
+	for _, names := range [][]string{isoDef.PresentNames(), isoDef.VerifiedNames()} {
+		for _, a := range names {
+			if !seenPresent[a] {
+				seenPresent[a] = true
+				present = append(present, a)
 			}
+		}
+	}
+
+	// Collect all known definition names. Python: for version <= 1.6 the
+	// defined symbol's name (ldf.formula.args[0].rep.name), else ldf.name.
+	derived := make(map[string]bool)
+	v16 := mod.Cfg != nil && mod.Cfg.IuCfg != nil && VersionLE(mod.Cfg.IuCfg.GetStringVersion(), "1.6")
+	for _, ldf := range mod.Definitions {
+		if ldf == nil {
+			continue
+		}
+		if v16 {
+			if def, ok := ldf.Formula.(*LogicDefinition); ok {
+				if c, ok := def.Defines().(*Const); ok {
+					derived[c.Name] = true
+				}
+			}
+			continue
+		}
+		if n := lfLabelName(ldf); n != "" {
+			derived[n] = true
 		}
 	}
 
@@ -580,7 +591,7 @@ func CheckWithParameters(mod *Module, isolateName string) error {
 		}
 	}
 
-	for name := range present {
+	for _, name := range present {
 		if name == "this" {
 			continue
 		}
@@ -591,7 +602,7 @@ func CheckWithParameters(mod *Module, isolateName string) error {
 			if _, ok := mod.Sig.Sorts.Get2(name); ok {
 				continue
 			}
-			if _, ok := mod.Sig.Interp[name]; ok {
+			if _, ok := mod.Sig.Interp.Get2(name); ok {
 				continue
 			}
 			if _, ok := mod.Sig.Symbols.Get2(name); ok {
@@ -604,7 +615,7 @@ func CheckWithParameters(mod *Module, isolateName string) error {
 		if derived[name] || propnames[name] || objs[name] {
 			continue
 		}
-		return fmt.Errorf("%s is not an object, action, sort, definition, interpreted function or property", name)
+		return NewIvyError(isoDef, fmt.Sprintf("%s is not an object, action, sort, definition, interpreted function or property", name))
 	}
 	return nil
 }

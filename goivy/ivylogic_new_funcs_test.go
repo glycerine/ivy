@@ -36,7 +36,7 @@ func TestIsDefaultNumericSort(t *testing.T) {
 func TestIsInterpretedSort(t *testing.T) {
 	sig := NewSig()
 	s := &UninterpretedSort{Name: "nat"}
-	sig.Interp["nat"] = "int"
+	sig.Interp.Set("nat", "int")
 
 	if !IsInterpretedSort(sig, s) {
 		t.Error("nat should be interpreted")
@@ -53,7 +53,7 @@ func TestIsUninterpretedSort(t *testing.T) {
 		t.Error("node should be uninterpreted")
 	}
 
-	sig.Interp["node"] = "int"
+	sig.Interp.Set("node", "int")
 	if IsUninterpretedSort(sig, s) {
 		t.Error("node with interp should not be uninterpreted")
 	}
@@ -62,7 +62,7 @@ func TestIsUninterpretedSort(t *testing.T) {
 func TestSortInterp(t *testing.T) {
 	sig := NewSig()
 	s := &UninterpretedSort{Name: "nat"}
-	sig.Interp["nat"] = "bv[8]"
+	sig.Interp.Set("nat", "bv[8]")
 
 	interp := SortInterp(sig, s)
 	if interp != "bv[8]" {
@@ -76,7 +76,7 @@ func TestSortInterp(t *testing.T) {
 
 func TestIsInterpretedSymbol(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["nat"] = "int"
+	sig.Interp.Set("nat", "int")
 
 	// Numeral with interpreted sort
 	natSort := &UninterpretedSort{Name: "nat"}
@@ -346,7 +346,7 @@ func TestIsInLogic(t *testing.T) {
 	}
 
 	// FO with interpreted symbol should fail
-	sig.Interp["p"] = "int"
+	sig.Interp.Set("p", "int")
 	if IsInLogic(sig, c, LogicFO) {
 		t.Error("interpreted symbol should not be in FO logic")
 	}
@@ -451,7 +451,7 @@ func TestImplementType(t *testing.T) {
 	sig := NewSig()
 	s := &UninterpretedSort{Name: "nat"}
 	ImplementType(sig, s, "bv[8]")
-	if sig.Interp["nat"] != "bv[8]" {
+	if sig.Interp.Get("nat") != "bv[8]" {
 		t.Error("ImplementType should set interp")
 	}
 }

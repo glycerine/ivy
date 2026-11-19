@@ -28,7 +28,7 @@ func TestStripLabeledFormulaStripsInsideDefinition(t *testing.T) {
 	lhs := MustApply(NewConst(name, gapSort), x, k, mm)
 	lf := NewAstConfig().NewLabeledFormula(NewAstConfig().NewAtom("proto.impl.dm.impl.imap"), NewDefinition(lhs, True))
 
-	res := StripLabeledFormula(lf, StripMap{"proto.impl.dm": {"me"}}, m)
+	res := StripLabeledFormula(lf, StripMapOf(StripPair{"proto.impl.dm", []string{"me"}}), m)
 
 	def, ok := res.Formula.(*LogicDefinition)
 	if !ok {

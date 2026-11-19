@@ -1017,7 +1017,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 	if nt, ok := rhs.(*NativeType); ok {
 		xtracer.Trace("compiler.DomainSetup.interpret branch=nativeType")
 		// Python: if lhs in interp or lhs in self.domain.native_types:
-		if _, exists := interp[lhs]; exists {
+		if _, exists := interp.Get2(lhs); exists {
 			return NewIvyError(node, fmt.Sprintf("%s is already interpreted", lhs))
 		}
 		if _, exists := mod.NativeTypes[lhs]; exists {
@@ -1063,7 +1063,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 
 	// Python: self.domain.interps[lhs].append(thing)
 	mod.Interps[lhs] = append(mod.Interps[lhs], node)
-	if _, exists := interp[lhs]; !exists {
+	if _, exists := interp.Get2(lhs); !exists {
 		mod.InterpOrder = append(mod.InterpOrder, lhs)
 	}
 
@@ -1074,7 +1074,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 
 	// BB3: Already interpreted check
 	// Python: if lhs in interp:
-	if existing, exists := interp[lhs]; exists {
+	if existing, exists := interp.Get2(lhs); exists {
 		xtracer.Trace("compiler.DomainSetup.interpret branch=already-interpreted")
 		// Python: if interp[lhs] != rhs: raise IvyError(...)
 		if existingStr, ok := existing.(string); ok && existingStr == rhsName {
@@ -1101,7 +1101,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 		lo := d.compileBound(rng.Lo, lhs, sort, node)
 		hi := d.compileBound(rng.Hi, lhs, sort, node)
 		rangeSort := &RangeSort{Name: lhs, Lb: lo, Ub: hi}
-		interp[lhs] = rangeSort
+		interp.Set(lhs, rangeSort)
 		// Python: compile_theory(self.domain, lhs, interp[lhs])
 		// get_theory_schemata maps RangeSort → "int"
 		if err := d.Compiler.CompileTheory(lhs, rangeSort); err != nil {
@@ -1121,7 +1121,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 		}
 		ext := enumSort.Extension()
 		sort := &LogicEnumeratedSort{Name: lhs, Extension: ext}
-		interp[lhs] = sort
+		interp.Set(lhs, sort)
 		// Python: for c in sort.defines(): register constructors
 		for _, c := range ext {
 			if existingSort, hasSig := sig.Sorts.Get2(lhs); hasSig {
@@ -1147,7 +1147,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 		if !IsSolverSort(rhsName) {
 			return NewIvyError(node, fmt.Sprintf("%s not a native sort", rhsName))
 		}
-		interp[lhs] = rhsName
+		interp.Set(lhs, rhsName)
 		// Python: if z == 'sort' and isinstance(rhs, str): compile_theory(...)
 		if err := d.Compiler.CompileTheory(lhs, rhsName); err != nil {
 			return err
@@ -1163,7 +1163,7 @@ func (d *DomainSetup) Interpret(node Node) error {
 		if !IsSolverOp(rhsName) {
 			return NewIvyError(node, fmt.Sprintf("%s not a native symbol", rhsName))
 		}
-		interp[lhs] = rhsName
+		interp.Set(lhs, rhsName)
 		xtracer.Trace("compiler.DomainSetup.interpret return=solver-symbol")
 		return nil
 	}
@@ -1488,8 +1488,14 @@ func (d *DomainSetup) Named(node Node) error {
 	}
 	rng := ex.Variables[0].VSort
 
+	// Python: vmap = dict((x.name,x) for x in lu.variables_ast(cond)) --
+	// keys in first-occurrence order (vmapOrder), later values overwrite.
 	vmap := make(map[string]*LogicVariable)
+	var vmapOrder []string
 	for _, v := range VariablesAstList(cond) {
+		if _, ok := vmap[v.Name]; !ok {
+			vmapOrder = append(vmapOrder, v.Name)
+		}
 		vmap[v.Name] = v
 	}
 	used := make(map[string]struct{}, len(lhs.Terms))
@@ -1505,24 +1511,24 @@ func (d *DomainSetup) Named(node Node) error {
 			return NewIvyError(arg, fmt.Sprintf("cannot infer sort for %T", compiled))
 		}
 		if _, dup := used[argName]; dup {
-			return NewIvyError(arg, fmt.Sprintf("repeat parameter: %s", argName))
+			return NewIvyError(lhs, fmt.Sprintf("repeat parameter: %s", argName))
 		}
 		used[argName] = struct{}{}
 		if v, found := vmap[argName]; found {
 			targs = append(targs, v)
 			if !IsTopSort(argSort) && SortEqual(argSort, v.VSort) {
-				return NewIvyError(arg, fmt.Sprintf("bad sort for %s", argName))
+				return NewIvyError(lhs, fmt.Sprintf("bad sort for %s", argName))
 			}
 		} else {
 			if IsTopSort(argSort) {
-				return NewIvyError(arg, fmt.Sprintf("cannot infer sort for %s", argName))
+				return NewIvyError(lhs, fmt.Sprintf("cannot infer sort for %s", argName))
 			}
 			targs = append(targs, compiled)
 		}
 	}
-	for name := range vmap {
+	for _, name := range vmapOrder {
 		if _, ok := used[name]; !ok {
-			return NewIvyError(node, fmt.Sprintf("%s must be a parameter of %s", name, lhs.Rep))
+			return NewIvyError(lhs, fmt.Sprintf("%s must be a parameter of %s", name, lhs.Rep))
 		}
 	}
 
@@ -1807,7 +1813,7 @@ func (d *DomainSetup) Implementtype(node Node) error {
 	if _, ok := mod.NativeTypes[impd]; ok {
 		return NewIvyError(lf, fmt.Sprintf("%s is already interpreted", impd))
 	}
-	if _, ok := sig.Interp[impd]; ok {
+	if _, ok := sig.Interp.Get2(impd); ok {
 		return NewIvyError(lf, fmt.Sprintf("%s is already interpreted", impd))
 	}
 	impdSort := sig.Sorts.Get(impd)

@@ -104,7 +104,7 @@ func (t *Translator) quantConstraints(vars []*LogicVariable, z3Vars []smt.Z3Expr
 	var cnstrs []smt.Z3Expr
 	for i, v := range vars {
 		sortName := IvySortName(v.VSort)
-		itp, ok := t.s.sig.Interp[sortName]
+		itp, ok := t.s.sig.Interp.Get2(sortName)
 		if !ok {
 			continue
 		}
@@ -218,7 +218,7 @@ func (t *Translator) Numeral(name string, sort Sort) (*smt.Z3Expr, error) {
 	}
 
 	if t.s != nil && t.s.sig != nil && t.s.HandleRangeSorts {
-		if itp, ok := t.s.sig.Interp[sortName]; ok {
+		if itp, ok := t.s.sig.Interp.Get2(sortName); ok {
 			if rs, isRS := itp.(*RangeSort); isRS {
 				lb, ub, err2 := t.s.RangeSortBoundsToZ3(rs)
 				if err2 == nil {
@@ -1192,7 +1192,7 @@ func (t *Translator) translateVarOrConst(name string, sort Sort) (smt.Z3Expr, er
 		// Python ivy_solver.py:511:
 		//   elif ivy_logic.is_enumerated(term) and ivy_logic.is_interpreted_sort(term.sort):
 		//       res = enumerated_to_numeral(term)
-		if _, interped := t.s.sig.Interp[es.Name]; interped {
+		if _, interped := t.s.sig.Interp.Get2(es.Name); interped {
 			xtracer.Trace("ivy_solver.py:441 enumerated_to_numeral() ENTER")
 			if !EnableInterpretedEnums {
 				return smt.Z3Expr{}, fmt.Errorf("cannot interpret enumerated type %q as a native sort (not yet supported)", es.Name)
@@ -1318,7 +1318,7 @@ func (t *Translator) cachedEnumConstSort(sort Sort) *LogicEnumeratedSort {
 	if t == nil || t.s == nil || t.s.sig == nil {
 		return nil
 	}
-	if interp, ok := t.s.sig.Interp[sortDisplayName(sort)]; ok {
+	if interp, ok := t.s.sig.Interp.Get2(sortDisplayName(sort)); ok {
 		if es, ok := interp.(*LogicEnumeratedSort); ok {
 			return es
 		}
@@ -1330,7 +1330,7 @@ func (t *Translator) cachedEnumConstSort(sort Sort) *LogicEnumeratedSort {
 // sort that the enum is interpreted as. Called when EnableInterpretedEnums
 // is true and the enum sort has a numeric interpretation in sig.Interp.
 func (t *Translator) enumeratedToNumeralZ3(ordinal int, es *LogicEnumeratedSort) (smt.Z3Expr, error) {
-	itp := t.s.sig.Interp[es.Name]
+	itp := t.s.sig.Interp.Get(es.Name)
 	switch v := itp.(type) {
 	case string:
 		switch v {

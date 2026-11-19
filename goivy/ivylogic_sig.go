@@ -34,7 +34,7 @@ type Sig struct {
 	Sorts              *InsMap[string, Sort]
 	Symbols            *InsMap[string, *SymbolEntry]
 	Constructors       map[string]bool
-	Interp             map[string]interface{} // sort name → interpretation
+	Interp             *InsMap[string, interface{}] // sort name → interpretation; Python sig.interp: insertion-ordered dict
 	DefaultSort        Sort                   // nil means unset
 	DefaultNumericSort Sort
 	AllowUnsorted      bool // when true, unknown sorts are accepted
@@ -56,7 +56,7 @@ func NewSigOn(iuCfg *IvyUtilsConfig) *Sig {
 		Sorts:              NewInsMap[string, Sort](),
 		Symbols:            NewInsMap[string, *SymbolEntry](),
 		Constructors:       make(map[string]bool),
-		Interp:             make(map[string]interface{}),
+		Interp:             NewInsMap[string, interface{}](),
 		DefaultNumericSort: &UninterpretedSort{Name: "int"},
 	}
 	// bool is always present
@@ -76,7 +76,7 @@ func (s *Sig) Copy() *Sig {
 		Sorts:              NewInsMap[string, Sort](),
 		Symbols:            NewInsMap[string, *SymbolEntry](),
 		Constructors:       make(map[string]bool, len(s.Constructors)),
-		Interp:             make(map[string]interface{}, len(s.Interp)),
+		Interp:             s.Interp.Clone(),
 		DefaultSort:        s.DefaultSort,
 		DefaultNumericSort: s.DefaultNumericSort,
 		AllowUnsorted:      s.AllowUnsorted,
@@ -89,9 +89,6 @@ func (s *Sig) Copy() *Sig {
 	}
 	for k, v := range s.Constructors {
 		res.Constructors[k] = v
-	}
-	for k, v := range s.Interp {
-		res.Interp[k] = v
 	}
 	return res
 }

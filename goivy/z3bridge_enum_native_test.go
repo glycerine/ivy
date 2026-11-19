@@ -75,7 +75,7 @@ func TestInterpretedEnumConstCacheHitUsesOuterSort(t *testing.T) {
 	if err := sig.AddSort(hostSort); err != nil {
 		t.Fatalf("AddSort: %v", err)
 	}
-	sig.Interp["ip.host"] = hostEnum
+	sig.Interp.Set("ip.host", hostEnum)
 	sig.Constructors["host1"] = true
 	sig.Constructors["router"] = true
 	sig.Constructors["host2"] = true
@@ -233,7 +233,7 @@ func TestEnumeratedToNumeral_FlagOff(t *testing.T) {
 	sig.Constructors["green"] = true
 	sig.Constructors["blue"] = true
 	sig.AddSort(es)
-	sig.Interp["color"] = "int" // interpret color as int
+	sig.Interp.Set("color", "int") // interpret color as int
 
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
@@ -253,7 +253,7 @@ func TestEnumeratedToNumeral_FlagOff(t *testing.T) {
 func TestEnumeratedToNumeralZ3_Int(t *testing.T) {
 	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
-	sig.Interp["color"] = "int"
+	sig.Interp.Set("color", "int")
 
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
@@ -277,7 +277,7 @@ func TestEnumeratedToNumeralZ3_Int(t *testing.T) {
 func TestEnumeratedToNumeralZ3_Nat(t *testing.T) {
 	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
-	sig.Interp["color"] = "nat"
+	sig.Interp.Set("color", "nat")
 
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
@@ -299,7 +299,7 @@ func TestEnumeratedToNumeralZ3_Nat(t *testing.T) {
 func TestEnumeratedToNumeralZ3_Bv(t *testing.T) {
 	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
-	sig.Interp["color"] = "bv[2]"
+	sig.Interp.Set("color", "bv[2]")
 
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
@@ -328,7 +328,7 @@ func TestEnumeratedToNumeralZ3_BvOverflow(t *testing.T) {
 		Extension: []string{"a", "b", "c", "d", "e"},
 	}
 	sig := NewSig()
-	sig.Interp["big"] = "bv[2]" // bv[2] holds 0..3, enum has 5 values
+	sig.Interp.Set("big", "bv[2]") // bv[2] holds 0..3, enum has 5 values
 
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
@@ -353,11 +353,11 @@ func TestEnumeratedToNumeralZ3_BvOverflow(t *testing.T) {
 func TestEnumeratedToNumeralZ3_RangeSort(t *testing.T) {
 	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
-	sig.Interp["color"] = &RangeSort{
+	sig.Interp.Set("color", &RangeSort{
 		Name: "color_range",
 		Lb:   NumeralBound{Value: "0"},
 		Ub:   NumeralBound{Value: "5"},
-	}
+	})
 
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
@@ -380,7 +380,7 @@ func TestEnumeratedToNumeralZ3_RangeSort(t *testing.T) {
 func TestEnumeratedToNumeralZ3_UnsupportedInterp(t *testing.T) {
 	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
-	sig.Interp["color"] = "float" // not a supported native sort
+	sig.Interp.Set("color", "float") // not a supported native sort
 
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()
@@ -398,7 +398,7 @@ func TestEnumeratedToNumeralZ3_UnsupportedInterp(t *testing.T) {
 func TestEnumeratedToNumeralZ3_BadBvWidth(t *testing.T) {
 	es := &LogicEnumeratedSort{Name: "color", Extension: []string{"red", "green", "blue"}}
 	sig := NewSig()
-	sig.Interp["color"] = "bv[abc]" // bad width
+	sig.Interp.Set("color", "bv[abc]") // bad width
 
 	s := NewSolverFromSig(sig, nil)
 	tr := s.Translator()

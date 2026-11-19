@@ -1198,7 +1198,8 @@ func CheckModule(mod *Module) error {
 
 	fmt.Println()
 	if mod.Cfg.Failures > 0 {
-		return fmt.Errorf("check/isolate_check.go:1126: failed checks: %d", mod.Cfg.Failures)
+		// Python: raise iu.IvyError(None,"failed checks: {}".format(failures))
+		return &IvyError{Msg: fmt.Sprintf("failed checks: %d", mod.Cfg.Failures)}
 	}
 	if mod.Cfg.CheckedAction != "" && !mod.Cfg.CheckedActionFound {
 		return fmt.Errorf("%s is not an exported action of any isolate",

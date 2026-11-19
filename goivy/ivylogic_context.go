@@ -59,7 +59,7 @@ func UninterpretedSorts(sig *Sig) []Sort {
 	for _, s := range sig.Sorts.All() {
 		if _, ok := s.(*UninterpretedSort); ok {
 			name := IvySortName(s)
-			if _, hasInterp := sig.Interp[name]; !hasInterp {
+			if _, hasInterp := sig.Interp.Get2(name); !hasInterp {
 				result = append(result, s)
 			}
 		}

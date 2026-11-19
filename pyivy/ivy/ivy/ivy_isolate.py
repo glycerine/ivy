@@ -515,10 +515,13 @@ def get_calls_mods(mod,summarized_actions,actname,calls,mods,mixins,loops,interf
     if actname in calls or actname not in summarized_actions:
         return
     action = mod.actions[actname]
-    acalls = set()
-    amods = set()
-    amixins = set()
-    aloops = set()
+    # dicts, not sets: insertion order, independent of hashing (calls feed
+    # the interfering-callback message, loops the "loop here" lines). Go:
+    # GetCallsModsRecFull uses InsMaps.
+    acalls = dict()
+    amods = dict()
+    amixins = dict()
+    aloops = dict()
     calls[actname] = acalls
     mods[actname] = amods
     mixins[actname] = amixins
@@ -527,11 +530,11 @@ def get_calls_mods(mod,summarized_actions,actname,calls,mods,mixins,loops,interf
         for sym in sub.modifies():
             if __debug__: xtracer.trace("isolate.GetCallsModsRecFull mod actname=%s sym=%s type=%s" % (actname, sym, type(sub).__name__))
             if sym in interf_syms:
-                amods.add(sym)
+                amods[sym] = None
         if isinstance(sub,ia.CallAction):
             calledname = sub.args[0].rep
             if calledname not in summarized_actions:
-                acalls.add(calledname)
+                acalls[calledname] = None
             get_calls_mods(mod,summarized_actions,calledname,calls,mods,mixins,loops,interf_syms)
             if calledname in calls:
                 acalls.update(calls[calledname])
@@ -539,11 +542,11 @@ def get_calls_mods(mod,summarized_actions,actname,calls,mods,mixins,loops,interf
                 amods.update(mods[calledname])
                 aloops.update(loops[calledname])
         if isinstance(sub,ia.WhileAction) and not isinstance(sub.args[-1],ia.Ranking):
-            aloops.add(sub)
+            aloops[sub] = None
     for mixin in mod.mixins[actname]:
         calledname = mixin.args[0].relname
         if calledname not in summarized_actions:
-            amixins.add(calledname)
+            amixins[calledname] = None
         get_calls_mods(mod,summarized_actions,calledname,calls,mods,mixins,loops,interf_syms)
         if calledname in calls:
             acalls.update(calls[calledname])
@@ -568,7 +571,7 @@ def get_callouts_action(mod,new_actions,summarized_actions,callouts,action,acall
                 head = False
             if has_unsummarized_mixins(mod,calledname,summarized_actions,ivy_ast.MixinAfterDef):
                 tail = False
-            acallouts[(3 if tail else 1) if head else (2 if tail else 0)].add(calledname)
+            acallouts[(3 if tail else 1) if head else (2 if tail else 0)][calledname] = None
         else:
             get_callouts(mod,new_actions,summarized_actions,calledname,callouts)
             # TODO update acallouts correctly
@@ -584,7 +587,8 @@ def get_callouts(mod,new_actions,summarized_actions,actname,callouts):
     if actname in callouts or actname in summarized_actions:
         return
     if __debug__: xtracer.trace("isolate.GetCallouts actname=%s" % actname)
-    acallouts = (set(),set(),set(),set())
+    # dicts, not sets: insertion order, independent of hashing.
+    acallouts = (dict(),dict(),dict(),dict())
     callouts[actname] = acallouts
     action = new_actions[actname]
     get_callouts_action(mod,new_actions,summarized_actions,callouts,action,acallouts,True,True)

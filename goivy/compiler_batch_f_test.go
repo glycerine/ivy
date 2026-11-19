@@ -849,7 +849,7 @@ func TestCheckDefinitions_InterpretedSymbolError(t *testing.T) {
 	mod := New()
 	cfg := mod.Cfg.AstCfg
 	// Mark "myint" as interpreted in the signature
-	mod.Sig.Interp["myint"] = &UninterpretedSort{Name: "int"}
+	mod.Sig.Interp.Set("myint", &UninterpretedSort{Name: "int"})
 
 	// Definition of "myint" should be rejected
 	defMyint := makeLabeledDef(cfg, "def_myint", makeLogicDef("myint"))

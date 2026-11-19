@@ -2708,7 +2708,7 @@ func (c *Compiler) CompileTheories() error {
 		xtracer.Trace("compiler.CompileTheories EXIT")
 		return nil
 	}
-	for name, value := range mod.Sig.Interp {
+	for name, value := range mod.Sig.Interp.All() {
 		// Only compile if the name is a known sort
 		if _, hasSortEntry := mod.Sig.Sorts.Get2(name); !hasSortEntry {
 			continue
@@ -2979,44 +2979,56 @@ func CheckMutax(mod *Module, mutaxEnabled bool) error {
 	// Collect all symbols modified by actions, keyed by structural identity.
 	// Python: side_effects = {s: sub for sub in action.iter_subactions() for s in sub.modifies()}
 	// All comparisons use compiled Symbol objects with structural equality.
-	modified := make(map[NodeKey]bool)
+	// Python: side_effects[s] = the first subaction that modifies s.
+	sideEffects := NewInsMap[NodeKey, ActionsAction]()
 	for _, actVal := range mod.Actions.All() {
 		if act, ok := actVal.(ActionsAction); ok {
 			for _, sub := range act.IterSubactions() {
 				for _, sym := range Modifies(sub) {
-					modified[Key(sym)] = true
+					if _, ok := sideEffects.Get2(Key(sym)); !ok {
+						sideEffects.Set(Key(sym), sub)
+					}
 				}
 			}
 		}
 	}
-	// Build definition map: NodeKey -> rhs formula
 	// Python: mp = dict((lf.formula.defines(), lf.formula.rhs()) for lf in mod.definitions)
-	// mod.definitions contains compiled *lg.LogicDefinition objects.
 	defMap := make(map[NodeKey]interface{})
 	for _, lf := range mod.Definitions {
 		if def, ok := lf.Formula.(*LogicDefinition); ok {
-			defMap[Key(def.Defines())] = def.Rhs
+			defMap[compilerDefinesKey(def)] = def.Rhs
 		}
 	}
-	// Check axioms: collect transitive symbol dependencies from each axiom formula
-	for _, lf := range mod.LabeledAxioms {
-		deps := make(map[NodeKey]bool)
-		GetSymbolDependencies(defMap, deps, lf.Formula)
-		for sym := range deps {
-			if modified[sym] {
-				return &IvyError{Msg: fmt.Sprintf(
-					"immutable symbol assigned: %s", sym)}
+	return checkImmutableAssigned(mod, sideEffects, defMap, false)
+}
+
+// checkImmutableAssigned is the tail of Python's action interference check
+// (ivy_compiler.py): unless opt_mutax, no symbol an axiom (non-temporal)
+// depends on, and no defined symbol, may be modified by an action. The
+// error is located at side_effects[s], the first subaction modifying s, and
+// names the axiom's or definition's location, as in Python.
+func checkImmutableAssigned(mod *Module, sideEffects *InsMap[NodeKey, ActionsAction], defMap map[NodeKey]interface{}, optMutax bool) error {
+	if !optMutax {
+		for _, lf := range mod.LabeledAxioms {
+			if lf.IsTemporal() {
+				continue
+			}
+			deps := NewInsMap[NodeKey, bool]()
+			GetSymbolDependencies(defMap, deps, lf.Formula)
+			for sym := range deps.All() {
+				if sub, ok := sideEffects.Get2(sym); ok {
+					xtracer.Trace("compiler.ActionInterferenceCheck FAIL axiom immutable sym=%s", sym)
+					return NewIvyError(sub, "immutable symbol assigned. \n"+lf.Base.Loc.String()+" info: symbol is used in axiom here")
+				}
 			}
 		}
 	}
-	// Check definitions: the LHS symbol must not be modified
-	// Python: s = lf.formula.lhs().rep; if s in side_effects: ...
 	for _, lf := range mod.Definitions {
 		if def, ok := lf.Formula.(*LogicDefinition); ok {
-			lhsKey := Key(def.Defines())
-			if modified[lhsKey] {
-				return &IvyError{Msg: fmt.Sprintf(
-					"immutable symbol assigned: %s", lhsKey)}
+			key := compilerDefinesKey(def)
+			if sub, ok := sideEffects.Get2(key); ok {
+				xtracer.Trace("compiler.ActionInterferenceCheck FAIL defn immutable key=%s", key)
+				return NewIvyError(sub, "immutable symbol assigned. \n"+lf.Base.Loc.String()+" Symbol is defined here")
 			}
 		}
 	}
@@ -3027,29 +3039,31 @@ func CheckMutax(mod *Module, mutaxEnabled bool) error {
 // Returns map[lg.NodeKey]bool using lg.Key(sym) for *lg.Const (structural
 // equality over name+sort) and plain name for pre-compilation AST nodes.
 // Handles both ast.Node (pre-compilation) and lg.Expr (post-compilation).
-func collectFormulaSymbols(fmla interface{}) map[NodeKey]bool {
-	result := make(map[NodeKey]bool)
+//
+// The keys keep first-occurrence order, like Python's used_symbols_ast.
+func collectFormulaSymbols(fmla interface{}) *InsMap[NodeKey, bool] {
+	result := NewInsMap[NodeKey, bool]()
 	collectFormulaSymbolsRec(fmla, result)
 	return result
 }
 
-func collectFormulaSymbolsRec(fmla interface{}, result map[NodeKey]bool) {
+func collectFormulaSymbolsRec(fmla interface{}, result *InsMap[NodeKey, bool]) {
 	if fmla == nil {
 		return
 	}
 	switch n := fmla.(type) {
 	case *Atom:
-		result[NodeKey(n.Rep)] = true
+		result.Set(NodeKey(n.Rep), true)
 		for _, arg := range n.Terms {
 			collectFormulaSymbolsRec(arg, result)
 		}
 	case *Symbol:
-		result[NodeKey(n.Rep)] = true
+		result.Set(NodeKey(n.Rep), true)
 	case *Const:
-		result[Key(n)] = true
+		result.Set(Key(n), true)
 	case Expr:
 		for k := range UsedSymbolsAst(n).All() {
-			result[k] = true
+			result.Set(k, true)
 		}
 	case Node:
 		for _, arg := range n.Args() {
@@ -3062,11 +3076,11 @@ func collectFormulaSymbolsRec(fmla interface{}, result map[NodeKey]bool) {
 // For each symbol found in t, it adds it to res; if that symbol has a
 // definition in defMap, it recurses into the definition's RHS.
 // Corresponds to Python's get_symbol_dependencies (ivy_compiler.py:1662-1667).
-func GetSymbolDependencies(defMap map[NodeKey]interface{}, res map[NodeKey]bool, t interface{}) {
+func GetSymbolDependencies(defMap map[NodeKey]interface{}, res *InsMap[NodeKey, bool], t interface{}) {
 	syms := collectFormulaSymbols(t)
-	for s := range syms {
-		if !res[s] {
-			res[s] = true
+	for s := range syms.All() {
+		if _, seen := res.Get2(s); !seen {
+			res.Set(s, true)
 			if rhs, ok := defMap[s]; ok {
 				GetSymbolDependencies(defMap, res, rhs)
 			}

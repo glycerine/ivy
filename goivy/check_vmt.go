@@ -249,7 +249,7 @@ func createArraySortRec(sig *Sig, dom []Sort, i int, rng Sort) (string, []Sort) 
 	if _, ok := sig.Sorts.Get2(name); !ok {
 		asort := &UninterpretedSort{Name: name}
 		sig.Sorts.Set(name, asort)
-		sig.Interp[name] = name
+		sig.Interp.Set(name, name)
 	}
 	return name, append([]Sort{sig.Sorts.Get(name)}, ssorts...)
 }

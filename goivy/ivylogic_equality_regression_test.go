@@ -30,7 +30,7 @@ func TestGetSortRefinement_StructuralKeys(t *testing.T) {
 		t.Fatal(err)
 	}
 	// Interp maps sort name → another uninterpreted sort → makes it non-canonical.
-	sig.Interp["mytype"] = canonical
+	sig.Interp.Set("mytype", canonical)
 
 	refinement := GetSortRefinement(sig)
 

@@ -437,7 +437,7 @@ func (s *Solver) NumeralToZ3(num *Const) (smt.Z3Expr, error) {
 	//           lb,ub = range_sort_bounds_to_z3(itp)
 	//           val = z3.If(val < lb, lb, z3.If(ub < val, ub, val))
 	if s.sig != nil && s.HandleRangeSorts {
-		if itp, ok := s.sig.Interp[sortName]; ok {
+		if itp, ok := s.sig.Interp.Get2(sortName); ok {
 			if rs, isRS := itp.(*RangeSort); isRS {
 				lb, ub, err2 := s.RangeSortBoundsToZ3(rs)
 				if err2 == nil {

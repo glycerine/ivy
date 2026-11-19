@@ -961,7 +961,55 @@ func (cfg *AstConfig) NewSchemaBody(elems ...Node) *SchemaBody {
 
 func (s *SchemaBody) Args() []Node           { return s.Elems }
 func (s *SchemaBody) Clone(args []Node) Node { return &SchemaBody{Base: s.Base, Elems: args} }
-func (s *SchemaBody) String() string         { return "{...}" }
+// String is Python's SchemaBody.__str__ (ivy_ast.py): the premises and the
+// conclusion, one per line, nested schemata indented.
+func (s *SchemaBody) String() string {
+	var lines []string
+	indent := func(ind int, str string) {
+		lines = append(lines, strings.Repeat("    ", ind)+str)
+	}
+	propdecl := func(x *LabeledFormula) string {
+		if x.Explicit {
+			return "explicit property "
+		}
+		return "property "
+	}
+	var sub func(thing *SchemaBody, ind int)
+	sub = func(thing *SchemaBody, ind int) {
+		indent(0, "{\n")
+		for _, x := range thing.Prems() {
+			x = unwrapCompiledNode(x)
+			switch p := x.(type) {
+			case *LabeledFormula:
+				if sb, ok := p.Formula.(*SchemaBody); ok {
+					label := ""
+					if p.Label != nil {
+						label = fmt.Sprintf("[%v] ", p.Label)
+					}
+					indent(ind+1, propdecl(p)+label)
+					sub(sb, ind+1)
+				} else {
+					indent(ind+1, propdecl(p)+p.String()+"\n")
+				}
+			case *UninterpretedSort:
+				indent(ind+1, "type "+p.String()+"\n")
+			default:
+				// Python: sym_decl_to_str(x.args[0]) if it is a Symbol, else str(x.args[0])
+				if args := x.Args(); len(args) > 0 {
+					foob := fmt.Sprint(args[0])
+					if c, ok := unwrapCompiledNode(args[0]).(*Const); ok {
+						foob = SymDeclToStr(c)
+					}
+					indent(ind+1, foob+"\n")
+				}
+			}
+		}
+		indent(ind+1, "property "+fmt.Sprint(thing.Conc())+"\n")
+		indent(ind, "}\n")
+	}
+	sub(s, 0)
+	return strings.Join(lines, "")
+}
 func (s *SchemaBody) Prems() []Node {
 	if len(s.Elems) <= 1 {
 		return nil

@@ -75,7 +75,8 @@ func GetCallsModsRec(
 	mod *Module,
 	summarizedActions map[string]bool,
 	actname string,
-	calls, mods map[string]map[string]bool,
+	calls map[string]*InsMap[string, bool],
+	mods map[string]map[string]bool,
 	loops ...map[string][]ActionsAction,
 ) {
 	GetCallsModsRecFull(mod, summarizedActions, actname, calls, mods, nil, nil, loops...)
@@ -89,8 +90,9 @@ func GetCallsModsRecFull(
 	mod *Module,
 	summarizedActions map[string]bool,
 	actname string,
-	calls, mods map[string]map[string]bool,
-	mixins map[string]map[string]bool,
+	calls map[string]*InsMap[string, bool],
+	mods map[string]map[string]bool,
+	mixins map[string]*InsMap[string, bool],
 	interfSyms map[string]bool,
 	loops ...map[string][]ActionsAction,
 ) {
@@ -106,9 +108,11 @@ func GetCallsModsRecFull(
 		return
 	}
 
-	acalls := make(map[string]bool)
+	// Python acalls/amixins: insertion-ordered dicts (were sets); calls
+	// feed the interfering-callback message.
+	acalls := NewInsMap[string, bool]()
 	amods := make(map[string]bool)
-	amixins := make(map[string]bool)
+	amixins := NewInsMap[string, bool]()
 	calls[actname] = acalls
 	mods[actname] = amods
 	if mixins != nil {
@@ -136,7 +140,7 @@ func GetCallsModsRecFull(
 		// Python line 509: Detect WhileAction without Ranking.
 		if wa, ok := sub.(*LogicWhileAction); ok && loopMap != nil {
 			if !whileHasRanking(wa) {
-				loopMap[actname] = append(loopMap[actname], wa)
+				loopMap[actname] = appendLoopsOnce(loopMap[actname], wa)
 			}
 		}
 
@@ -144,19 +148,19 @@ func GetCallsModsRecFull(
 		if ca, ok := sub.(*LogicCallAction); ok {
 			calledName := CanonAct(ca.CalleeName())
 			if !summarizedActions[calledName] {
-				acalls[calledName] = true
+				insSetAdd(acalls, calledName)
 			}
 			GetCallsModsRecFull(mod, summarizedActions, calledName, calls, mods, mixins, interfSyms, loops...)
 			if subcalls, ok := calls[calledName]; ok {
-				for c := range subcalls {
-					acalls[c] = true
+				for c := range subcalls.All() {
+					insSetAdd(acalls, c)
 				}
 			}
 			// Python line 506: mixins of callees count as callees
 			if mixins != nil {
 				if submixins, ok := mixins[calledName]; ok {
-					for c := range submixins {
-						acalls[c] = true
+					for c := range submixins.All() {
+						insSetAdd(acalls, c)
 					}
 				}
 			}
@@ -167,7 +171,7 @@ func GetCallsModsRecFull(
 			}
 			if loopMap != nil {
 				if calledLoops, ok := loopMap[calledName]; ok {
-					loopMap[actname] = append(loopMap[actname], calledLoops...)
+					loopMap[actname] = appendLoopsOnce(loopMap[actname], calledLoops...)
 				}
 			}
 		}
@@ -179,20 +183,20 @@ func GetCallsModsRecFull(
 			calledName := mixin.Mixer()
 			if !summarizedActions[calledName] {
 				if mixins != nil {
-					amixins[calledName] = true
+					insSetAdd(amixins, calledName)
 				}
 			}
 			GetCallsModsRecFull(mod, summarizedActions, calledName, calls, mods, mixins, interfSyms, loops...)
 			if subcalls, ok := calls[calledName]; ok {
-				for c := range subcalls {
-					acalls[c] = true
+				for c := range subcalls.All() {
+					insSetAdd(acalls, c)
 				}
 			}
 			// Python line 518: mixins of mixins count as mixins
 			if mixins != nil {
 				if submixins, ok := mixins[calledName]; ok {
-					for c := range submixins {
-						amixins[c] = true
+					for c := range submixins.All() {
+						insSetAdd(amixins, c)
 					}
 				}
 			}
@@ -203,7 +207,7 @@ func GetCallsModsRecFull(
 			}
 			if loopMap != nil {
 				if calledLoops, ok := loopMap[calledName]; ok {
-					loopMap[actname] = append(loopMap[actname], calledLoops...)
+					loopMap[actname] = appendLoopsOnce(loopMap[actname], calledLoops...)
 				}
 			}
 		}
@@ -305,9 +309,9 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 	}
 
 	// Compute calls, mods, mixins, and loops for all summarized actions.
-	calls := make(map[string]map[string]bool)
+	calls := make(map[string]*InsMap[string, bool])
 	mods := make(map[string]map[string]bool)
-	mixinDeps := make(map[string]map[string]bool)
+	mixinDeps := make(map[string]*InsMap[string, bool])
 	loops := make(map[string][]ActionsAction)
 	locmods := make(map[string]map[string]bool) // Python line 582
 	// Sort summarizedActions keys to get deterministic iteration order matching Python
@@ -320,7 +324,7 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 			locmods[actname][s] = true
 		}
 		xtracer.Trace("isolate.GetCallsModsRecFull actname=%s calls=%s mods=%s",
-			actname, strings.Join(isolateSortedKeys(calls[actname]), ","), strings.Join(isolateSortedKeys(mods[actname]), ","))
+			actname, strings.Join(insSortedKeys(calls[actname]), ","), strings.Join(isolateSortedKeys(mods[actname]), ","))
 		xtracer.Trace("isolate.GetLocMods actname=%s locmods=%s",
 			actname, strings.Join(isolateSortedKeys(locmods[actname]), ","))
 	}
@@ -410,14 +414,21 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 					for _, ln := range refs.All() {
 						refStr += "\n" + ln.String() + "referenced here"
 					}
-					return fmt.Errorf("Call out to %s may have visible effect on %s%s",
-						called, joinStrings(modNames, ","), refStr)
+					return NewIvyError(action, fmt.Sprintf("Call out to %s may have visible effect on %s%s",
+						called, joinStrings(modNames, ","), refStr))
 				}
 
-				// Python lines 611-615: Check termination per called action.
+				// Python: cloops = loops[called]
+				//   if check_term and cloops: raise IvyError(action,"Call out to {} may not
+				//   terminate (needs a decreases clause){}".format(called,refs)), refs being
+				//   '\n' + str(lp.lineno) + 'loop here' per loop, in loops' order.
 				if checkTerm {
 					if calledLoops, ok := loops[called]; ok && len(calledLoops) > 0 {
-						return fmt.Errorf("call out to %s may not terminate (needs a decreases clause)", called)
+						refs := ""
+						for _, lp := range calledLoops {
+							refs += "\n" + lp.GetLineno().String() + "loop here"
+						}
+						return NewIvyError(action, fmt.Sprintf("Call out to %s may not terminate (needs a decreases clause)%s", called, refs))
 					}
 				}
 			}
@@ -426,29 +437,19 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 		// Python lines 616-622: Check for interfering callbacks via callouts.
 		if co, ok := callouts[actname]; ok {
 			midcalls := co[0] // index 0 = middle position (not head, not tail)
-			for midcall := range midcalls {
-				if mcalls, ok := calls[midcall]; ok && len(mcalls) > 0 {
+			// Python: for midcall in sorted(callouts[actname][0]):
+			for _, midcall := range isolateSortedKeys(midcalls) {
+				if mcalls, ok := calls[midcall]; ok && mcalls.Len() > 0 {
 					if mmods, ok := mods[midcall]; ok && len(mmods) > 0 {
-						callbackNames := make([]string, 0, len(mcalls))
-						for c := range mcalls {
+						// Python: ','.join(callbacks), in calls' insertion order.
+						callbackNames := make([]string, 0, mcalls.Len())
+						for c := range mcalls.All() {
 							callbackNames = append(callbackNames, c)
 						}
-						sort.Strings(callbackNames)
-						return fmt.Errorf("call to %s may cause interfering callback to %s",
-							midcall, joinStrings(callbackNames, ","))
+						return NewIvyError(action, fmt.Sprintf("Call to %s may cause interfering callback to %s",
+							midcall, joinStrings(callbackNames, ",")))
 					}
 				}
-			}
-		}
-	}
-
-	// Also do a standalone termination check over all loops for summarized actions,
-	// catching cases where a summarized action has loops but isn't called by
-	// any non-summarized action.
-	if checkTerm {
-		for actname, actLoops := range loops {
-			if len(actLoops) > 0 {
-				return fmt.Errorf("action %s contains a loop without a decreases clause", actname)
 			}
 		}
 	}
@@ -502,8 +503,9 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 					for _, ln := range refs.All() {
 						refStr += "\n" + ln.String() + "referenced here"
 					}
-					return fmt.Errorf("External call to %s may have visible effect on %s%s",
-						called, joinStrings(modNames, ","), refStr)
+					// Python: raise iu.IvyError(None, ...) -- no location.
+					return &IvyError{Msg: fmt.Sprintf("External call to %s may have visible effect on %s%s",
+						called, joinStrings(modNames, ","), refStr)}
 				}
 			}
 		}
@@ -844,6 +846,47 @@ func TransitiveCallees(actionName string, graph map[string][]string) map[string]
 func isolateSortedKeys(m map[string]bool) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+// insSetAdd is Python d[k] = None on an insertion-ordered dict used as a
+// set: a new key goes last, an existing key keeps its position.
+func insSetAdd(m *InsMap[string, bool], k string) {
+	if _, ok := m.Get2(k); !ok {
+		m.Set(k, true)
+	}
+}
+
+// appendLoopsOnce is Python aloops[sub] = None / aloops.update(...): loops
+// (compared by identity, as Python's AST objects are) in insertion order,
+// each once.
+func appendLoopsOnce(dst []ActionsAction, loops ...ActionsAction) []ActionsAction {
+	for _, l := range loops {
+		dup := false
+		for _, d := range dst {
+			if d == l {
+				dup = true
+				break
+			}
+		}
+		if !dup {
+			dst = append(dst, l)
+		}
+	}
+	return dst
+}
+
+// insSortedKeys returns an InsMap's keys sorted (for traces that Python
+// prints with sorted()).
+func insSortedKeys(m *InsMap[string, bool]) []string {
+	if m == nil {
+		return nil
+	}
+	keys := make([]string, 0, m.Len())
+	for k := range m.All() {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)

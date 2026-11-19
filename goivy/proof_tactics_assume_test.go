@@ -400,7 +400,7 @@ func TestIsWitVar_BoundVariableKey(t *testing.T) {
 	schema := mkLF(proofTestAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
 
 	// prob.FreeSyms excludes P (bound), matching Python goal_vocab semantics.
-	prob := NewMatchProblem(nil, fa, fa, map[NodeKey]Expr{}, nil)
+	prob := NewMatchProblem(nil, fa, fa, nodeKeySetOf(map[NodeKey]Expr{}), nil)
 	prob.SchemaLF = schema
 
 	// Match {P: _P} — key P is a Variable, val _P is a Const.
@@ -412,7 +412,7 @@ func TestIsWitVar_BoundVariableKey(t *testing.T) {
 
 	// Sanity: a symbol-LHS key that IS in prob.FreeSyms must NOT be a witness.
 	sym := proofMkConst("f", procSort)
-	probFS := NewMatchProblem(nil, fa, fa, map[NodeKey]Expr{Key(sym): sym}, nil)
+	probFS := NewMatchProblem(nil, fa, fa, nodeKeySetOf(map[NodeKey]Expr{Key(sym): sym}), nil)
 	probFS.SchemaLF = schema
 	if isWitVar(Key(sym), underP, probFS) {
 		t.Error("isWitVar should return false for symbol-LHS key already in FreeSyms")
@@ -445,7 +445,7 @@ func TestIsWitVar_DropsForAllViaWitnessAst(t *testing.T) {
 	schema := mkLF(proofTestAstCfg.NewAtom("ifabric_rw_fair_ax"), fa)
 
 	// prob with P excluded from FreeSyms (bound variable semantics).
-	prob := NewMatchProblem(nil, fa, fa, map[NodeKey]Expr{}, nil)
+	prob := NewMatchProblem(nil, fa, fa, nodeKeySetOf(map[NodeKey]Expr{}), nil)
 	prob.SchemaLF = schema
 
 	// Simulate the pmatch split manually: pmatch = {P: _P}.

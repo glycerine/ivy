@@ -426,7 +426,7 @@ func (h *HerbrandModel) getModelConstant(c *Const) *Const {
 	// the model value is a numeral — map it back to the enum constant name.
 	if EnableInterpretedEnums {
 		if es, ok2 := sort.(*LogicEnumeratedSort); ok2 && h.sig != nil {
-			if _, interped := h.sig.Interp[es.Name]; interped {
+			if _, interped := h.sig.Interp.Get2(es.Name); interped {
 				if idx, err := strconv.Atoi(result.Name); err == nil && idx >= 0 && idx < len(es.Extension) {
 					return NewConst(es.Extension[idx], sort)
 				}
@@ -451,7 +451,7 @@ func (h *HerbrandModel) mineInterpretedConstants(model *smt.Model, vocab []*Cons
 
 	// Build set of interpreted sorts (Python: sorts = ivy_logic.interpreted_sorts())
 	interpSorts := make(map[string]Sort)
-	for name := range h.sig.Interp {
+	for name := range h.sig.Interp.All() {
 		if s, ok := h.sig.Sorts.Get2(name); ok {
 			interpSorts[name] = s
 		}
@@ -830,7 +830,7 @@ func SortCard(sort Sort, sig *Sig) int {
 	}
 	if sig != nil {
 		sortName := IvySortName(sort)
-		if itp, ok := sig.Interp[sortName]; ok {
+		if itp, ok := sig.Interp.Get2(sortName); ok {
 			// Check if interpretation is a RangeSort with numeric bounds.
 			// Python: itp = ivy_logic.sig.interp.get(sort.name,None)
 			//         if isinstance(itp, ivy_logic.RangeSort) and is_numeral(itp.ub)

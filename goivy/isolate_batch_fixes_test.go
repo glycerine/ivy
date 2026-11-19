@@ -54,7 +54,7 @@ func mkModuleWithSig() *Module {
 			Symbols:      NewInsMap[string, *SymbolEntry](),
 			Sorts:        NewInsMap[string, Sort](),
 			Constructors: make(map[string]bool),
-			Interp:       make(map[string]interface{}),
+			Interp:       NewInsMap[string, interface{}](),
 		}
 	}
 	return m
@@ -175,7 +175,7 @@ func TestStripIsolateVersion16ClearsParams(t *testing.T) {
 	sym := NewConst("p", Boolean)
 	m.Params = append(m.Params, sym)
 
-	stripMap := StripMap{"server": {"s"}}
+	stripMap := StripMapOf(StripPair{"server", []string{"s"}})
 	// Add a symbol that matches the strip map
 	m.Sig.Symbols.Set("server.x", &SymbolEntry{Name: "server.x", Sort: Boolean})
 
@@ -197,7 +197,7 @@ func TestStripIsolateVersion17KeepsParams(t *testing.T) {
 	sym := NewConst("p", Boolean)
 	m.Params = append(m.Params, sym)
 
-	stripMap := StripMap{"server": {"s"}}
+	stripMap := StripMapOf(StripPair{"server", []string{"s"}})
 	m.Sig.Symbols.Set("server.x", &SymbolEntry{Name: "server.x", Sort: Boolean})
 
 	err := StripIsolate(m, stripMap, nil)
@@ -351,7 +351,7 @@ func TestGetStripBinding_BasicApply(t *testing.T) {
 	m.Sig.Symbols.Set("f", &SymbolEntry{Name: "f", Sort: sort1})
 
 	// Create strip map: f has 1 strip param "s"
-	stripMap := StripMap{"f": {"s"}}
+	stripMap := StripMapOf(StripPair{"f", []string{"s"}})
 
 	// Create Apply(f, X) where X is a variable.
 	// Need a FunctionSort for NewApply to succeed.
@@ -384,7 +384,7 @@ func TestGetStripBinding_BasicApply(t *testing.T) {
 
 func TestGetStripBinding_NoMatch(t *testing.T) {
 	m := mkModuleWithSig()
-	stripMap := StripMap{"g": {"s"}}
+	stripMap := StripMapOf(StripPair{"g", []string{"s"}})
 
 	fSym := NewConst("f", Boolean)
 	binding := make(map[NodeKey]string)
@@ -401,7 +401,7 @@ func TestGetStripBinding_Conflict(t *testing.T) {
 	m := mkModuleWithSig()
 	sort1 := isolateMkSort("T")
 
-	stripMap := StripMap{"f": {"s1"}, "g": {"s2"}}
+	stripMap := StripMapOf(StripPair{"f", []string{"s1"}}, StripPair{"g", []string{"s2"}})
 
 	fnSort, _ := NewFunctionSort(sort1, Boolean)
 	xVar, _ := NewVariable("X", sort1)
@@ -444,7 +444,7 @@ func TestStripActionFull_BindingSubstitution(t *testing.T) {
 	act := NewAssignAction(xVar, True)
 
 	m.Cfg.IsolateCfg.StripAddedSymbols = nil
-	result := StripActionFull(act, StripMap{}, m, binding, false, nil)
+	result := StripActionFull(act, StripMapOf(), m, binding, false, nil)
 	if result == nil {
 		t.Fatal("StripActionFull returned nil")
 	}
@@ -468,7 +468,7 @@ func TestStripLabeledFormula_WithBinding(t *testing.T) {
 	}
 	m.Sig.Symbols.Set("f", &SymbolEntry{Name: "f", Sort: fnSort})
 
-	stripMap := StripMap{"f": {"s"}}
+	stripMap := StripMapOf(StripPair{"f", []string{"s"}})
 
 	// Create a labeled formula with Apply(f, X)
 	fSym := NewConst("f", fnSort)
@@ -508,7 +508,7 @@ func TestStripIsolate_UsesStripActionFull(t *testing.T) {
 
 	m.Actions.Set("server.f", act)
 
-	stripMap := StripMap{"server": {"s"}}
+	stripMap := StripMapOf(StripPair{"server", []string{"s"}})
 	err := StripIsolate(m, stripMap, nil)
 	if err != nil {
 		t.Fatalf("StripIsolate error: %v", err)
@@ -600,7 +600,7 @@ func TestGetCallsModsRec_DetectsLoops(t *testing.T) {
 	})
 
 	summarized := map[string]bool{"foo": true}
-	calls := make(map[string]map[string]bool)
+	calls := make(map[string]*InsMap[string, bool])
 	mods := make(map[string]map[string]bool)
 	loops := make(map[string][]ActionsAction)
 
@@ -623,7 +623,7 @@ func TestGetCallsModsRec_NoLoopWithRanking(t *testing.T) {
 	})
 
 	summarized := map[string]bool{"foo": true}
-	calls := make(map[string]map[string]bool)
+	calls := make(map[string]*InsMap[string, bool])
 	mods := make(map[string]map[string]bool)
 	loops := make(map[string][]ActionsAction)
 
@@ -634,24 +634,38 @@ func TestGetCallsModsRec_NoLoopWithRanking(t *testing.T) {
 	}
 }
 
+// Python check_interference raises the termination error only for a call
+// out of a non-summarized action: "Call out to {} may not terminate (needs
+// a decreases clause)" plus '\n' + str(lp.lineno) + 'loop here' per loop.
+// A summarized action with a loop that nothing unsummarized calls is not an
+// error (goivy used to reject it with a Go-only message).
 func TestCheckInterferenceFull_TerminationCheck(t *testing.T) {
 	cond := True
 	body := NewSequence()
 	wa := NewWhileAction(cond, body) // no ranking
+	wa.SetLineno(Location{Filename: "f.ivy", Line: 4})
 
 	m := mkModuleWithSig()
 	m.Actions.Set("bar", NewSequence(wa))
-
 	summarized := map[string]bool{"bar": true}
 	newActions := NewInsMap[string, ActionsAction]()
 	newActions.Set("bar", NewSequence(wa))
-
 	m.Cfg.IsolateCfg.DoCheckInterference = true
 
-	err := CheckInterferenceFull(m, newActions, summarized,
-		nil, true, nil, nil, nil) // checkTerm=true
-	if err == nil {
-		t.Error("expected termination error for loop without decreases clause")
+	if err := CheckInterferenceFull(m, newActions, summarized, nil, true, nil, nil, nil); err != nil {
+		t.Fatalf("uncalled summarized loop: got %v, want no error (Python)", err)
+	}
+
+	call := NewCallActionOn(NewActionsConfig(), NewConst("bar", TopS))
+	call.AstCallee = NewAstConfig().NewAtom("bar")
+	main := NewSequence(call)
+	main.SetLineno(Location{Filename: "f.ivy", Line: 9})
+	m.Actions.Set("main", main)
+	newActions.Set("main", main)
+	err := CheckInterferenceFull(m, newActions, summarized, nil, true, nil, nil, nil)
+	want := "f.ivy: line 9: error: Call out to bar may not terminate (needs a decreases clause)\nf.ivy: line 4: loop here"
+	if err == nil || err.Error() != want {
+		t.Fatalf("got %v\nwant %s", err, want)
 	}
 }
 
@@ -999,7 +1013,7 @@ func TestGetCallsModsRec_BackwardCompat(t *testing.T) {
 		"foo": NewSequence(),
 	})
 	summarized := map[string]bool{"foo": true}
-	calls := make(map[string]map[string]bool)
+	calls := make(map[string]*InsMap[string, bool])
 	mods := make(map[string]map[string]bool)
 
 	// Call without loops param (old behavior)

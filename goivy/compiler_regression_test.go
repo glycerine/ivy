@@ -18,14 +18,14 @@ func TestGetSymbolDependenciesIncludesAppliedFunctionDefinitions(t *testing.T) {
 	defMap := map[NodeKey]interface{}{
 		Key(derived): MustApply(a, x),
 	}
-	deps := make(map[NodeKey]bool)
+	deps := NewInsMap[NodeKey, bool]()
 
 	GetSymbolDependencies(defMap, deps, MustApply(derived, x))
 
-	if !deps[Key(derived)] {
+	if !deps.Get(Key(derived)) {
 		t.Fatalf("dependencies did not include applied function %s", derived)
 	}
-	if !deps[Key(a)] {
+	if !deps.Get(Key(a)) {
 		t.Fatalf("dependencies did not follow %s definition to %s", derived, a)
 	}
 }

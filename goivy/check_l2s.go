@@ -266,7 +266,7 @@ func isTheoryFiniteSort(name string, m *Module) bool {
 	if !ok {
 		return false
 	}
-	th := GetSortTheory(s, m.Sig.Interp)
+	th := GetSortTheory(s, m.Sig.Interp.AsMap())
 	if t, ok := th.(*Theory); ok {
 		return t.Finite
 	}

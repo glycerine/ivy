@@ -459,7 +459,7 @@ func snapshotGoInterface(mod *goivy.Module) goInterfaceSnapshot {
 		for name, sort := range mod.Sig.Sorts.All() {
 			snap.Sorts[name] = sort
 		}
-		for name, sort := range mod.Sig.Interp {
+		for name, sort := range mod.Sig.Interp.All() {
 			snap.Interps[name] = sort
 		}
 	}
@@ -543,12 +543,12 @@ func restoreSortForGoInterface(mod *goivy.Module, snap goInterfaceSnapshot, sort
 				ensureSortOrderName(mod, snap, name)
 			}
 		}
-		if _, ok := mod.Sig.Interp[name]; !ok {
+		if mod.Sig.Interp == nil {
+			mod.Sig.Interp = goivy.NewInsMap[string, interface{}]()
+		}
+		if _, ok := mod.Sig.Interp.Get2(name); !ok {
 			if interp, found := snap.Interps[name]; found {
-				if mod.Sig.Interp == nil {
-					mod.Sig.Interp = map[string]interface{}{}
-				}
-				mod.Sig.Interp[name] = interp
+				mod.Sig.Interp.Set(name, interp)
 			}
 		}
 	}

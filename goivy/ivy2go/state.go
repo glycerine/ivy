@@ -170,7 +170,7 @@ func (g *Generator) cardinalitySortNames() []string {
 		seen[name] = true
 		names = append(names, name)
 	}
-	for name := range g.Mod.Sig.Interp {
+	for name := range g.Mod.Sig.Interp.All() {
 		add(name)
 	}
 	for _, name := range g.Mod.SortOrder {

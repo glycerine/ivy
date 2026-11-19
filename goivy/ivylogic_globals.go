@@ -32,10 +32,10 @@ func IsInterpretedSort(sig *Sig, s Sort) bool {
 	s = CanonizeSort(sig, s)
 	switch cs := s.(type) {
 	case *UninterpretedSort:
-		_, ok := sig.Interp[cs.Name]
+		_, ok := sig.Interp.Get2(cs.Name)
 		return ok
 	case *LogicEnumeratedSort:
-		_, ok := sig.Interp[cs.Name]
+		_, ok := sig.Interp.Get2(cs.Name)
 		return ok
 	default:
 		return false
@@ -49,7 +49,7 @@ func IsUninterpretedSort(sig *Sig, s Sort) bool {
 		return false
 	}
 	name := IvySortName(s)
-	_, hasInterp := sig.Interp[name]
+	_, hasInterp := sig.Interp.Get2(name)
 	return !hasInterp
 }
 
@@ -80,7 +80,7 @@ func IsInterpretedSymbol(sig *Sig, s Expr) bool {
 // or nil if none exists.
 func SortInterp(sig *Sig, s Sort) interface{} {
 	name := IvySortName(s)
-	interp, ok := sig.Interp[name]
+	interp, ok := sig.Interp.Get2(name)
 	if !ok {
 		return nil
 	}
@@ -89,7 +89,7 @@ func SortInterp(sig *Sig, s Sort) interface{} {
 
 // ImplementType sets the interpretation of sort1 to sort2 in the signature.
 func ImplementType(sig *Sig, sort1 Sort, sort2 interface{}) {
-	sig.Interp[IvySortName(sort1)] = sort2
+	sig.Interp.Set(IvySortName(sort1), sort2)
 }
 
 // BindSymbols provides enter/exit scoping for a set of symbols in a
@@ -233,7 +233,7 @@ func (sd *SortAsDefault) Exit() {
 // has_infinite_interpretation.
 func HasInfiniteInterpretation(sig *Sig, s Sort) bool {
 	name := IvySortName(s)
-	interp, ok := sig.Interp[name]
+	interp, ok := sig.Interp.Get2(name)
 	if !ok {
 		return false
 	}

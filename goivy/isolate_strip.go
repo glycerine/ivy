@@ -11,7 +11,26 @@ import (
 // StripMap maps component names to their isolate parameter names.
 // When a component has isolate parameters, we need to strip those parameters
 // from all references within the isolated module.
-type StripMap map[string][]string
+//
+// Python's strip_map is a dict: strip_map_lookup returns the parameters of
+// the first matching prefix in insertion order, so this is an InsMap (a Go
+// map's random order could pick a different prefix).
+type StripMap = *InsMap[string, []string]
+
+// StripPair is one name -> isolate parameters entry, for StripMapOf.
+type StripPair struct {
+	Name   string
+	Params []string
+}
+
+// StripMapOf builds a StripMap with the given entries in order.
+func StripMapOf(pairs ...StripPair) StripMap {
+	m := NewInsMap[string, []string]()
+	for _, p := range pairs {
+		m.Set(p.Name, p.Params)
+	}
+	return m
+}
 
 // StripMapLookup looks up the strip parameters for a given symbol name.
 // Returns nil if the name should not be stripped (e.g., it is a global parameter,
@@ -37,7 +56,7 @@ func StripMapLookup(name string, stripMap StripMap, mod *Module) []string {
 	}
 
 	// Check each prefix in the strip map.
-	for prefix, params := range stripMap {
+	for prefix, params := range stripMap.All() {
 		cc := mod.Cfg.IuCfg.ComposeCharacter
 		if strings.HasPrefix(name+cc, prefix+cc) {
 			// Check for "common" attribute override.
@@ -360,7 +379,7 @@ func stripNodeFull(node Expr, stripMap StripMap, mod *Module, binding map[NodeKe
 // processes child nodes. Constants and variables that appear in the
 // strip binding are replaced with the corresponding isolate parameter symbols.
 func StripAction(action ActionsAction, stripMap StripMap, mod *Module) ActionsAction {
-	if len(stripMap) == 0 {
+	if stripMap.Len() == 0 {
 		return action
 	}
 	return stripActionRec(action, stripMap, mod)
@@ -485,7 +504,7 @@ func stripNodes(nodes []Expr, stripMap StripMap, mod *Module) []Expr {
 // It builds a strip_binding from the formula, then strips isolate parameters
 // from the formula body using the binding, and adjusts the label.
 func StripLabeledFormula(lf *LabeledFormula, stripMap StripMap, mod *Module) *LabeledFormula {
-	if len(stripMap) == 0 {
+	if stripMap.Len() == 0 {
 		return lf
 	}
 
@@ -559,7 +578,7 @@ func StripLabeledFormula(lf *LabeledFormula, stripMap StripMap, mod *Module) *La
 
 // StripLabeledFormulas strips isolate parameters from a slice of labeled formulas in place.
 func StripLabeledFormulas(lfs []*LabeledFormula, stripMap StripMap, mod *Module) []*LabeledFormula {
-	if len(stripMap) == 0 {
+	if stripMap.Len() == 0 {
 		return lfs
 	}
 	// Python lines 317-318: check for SchemaBody — cannot strip from theorems.
@@ -683,7 +702,7 @@ func astSortName(node Node) string {
 // Corresponds to Python strip_isolate (lines 341-456).
 func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 	implMixins *InsMap[string, []IsolateMixinIface], allAfterInits map[string]bool,
-	extraStrip map[string][]string) error {
+	extraStrip StripMap) error {
 
 	isoCfg := mod.Cfg.IsolateCfg
 	// Python: global num_isolate_params, strip_added_symbols
@@ -752,7 +771,7 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 
 	// Step 2: Build the strip map from isolate parameter bindings.
 	// Python lines 362-370
-	stripMap := make(StripMap)
+	stripMap := NewInsMap[string, []string]()
 	if ap, ok := isolate.(isolateAtomProvider); ok {
 		allAtoms := append(ap.Verified(), ap.Present()...)
 		for _, node := range allAtoms {
@@ -777,7 +796,7 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 				}
 				params[i] = paramName
 			}
-			stripMap[name] = params
+			stripMap.Set(name, params)
 		}
 	}
 
@@ -787,14 +806,17 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 		for _, m := range ms {
 			if isMixinImplement(m) {
 				mixerParams := StripMapLookup(CanonAct(m.Mixer()), stripMap, mod)
-				stripMap[m.Mixee()] = mixerParams
+				stripMap.Set(m.Mixee(), mixerParams)
 			}
 		}
 	}
 
 	// Apply extra_strip
-	for k, v := range extraStrip {
-		stripMap[k] = v
+	// Python: strip_map.update(extra_strip), in extra_strip's order.
+	if extraStrip != nil {
+		for k, v := range extraStrip.All() {
+			stripMap.Set(k, v)
+		}
 	}
 
 	// Delegate to StripIsolate for the actual stripping.
@@ -967,7 +989,7 @@ func StripIsolate(mod *Module, stripMap StripMap, allAfterInits map[string]bool)
 	// Strip labeled formulas.
 	xtracer.Trace("strip.StripIsolate before_strip_lfs axioms=%d props=%d conjs=%d inits=%d defs=%d stripMap=%d",
 		len(mod.LabeledAxioms), len(mod.LabeledProps), len(mod.LabeledConjs),
-		len(mod.LabeledInits), len(mod.Definitions), len(stripMap))
+		len(mod.LabeledInits), len(mod.Definitions), stripMap.Len())
 	mod.LabeledAxioms = StripLabeledFormulas(mod.LabeledAxioms, stripMap, mod)
 	mod.LabeledProps = StripLabeledFormulas(mod.LabeledProps, stripMap, mod)
 	mod.LabeledConjs = StripLabeledFormulas(mod.LabeledConjs, stripMap, mod)

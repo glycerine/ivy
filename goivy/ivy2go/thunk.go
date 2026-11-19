@@ -509,7 +509,7 @@ func (g *Generator) isNumericOrEnumeratedConstant(sym goivy.Expr) bool {
 		return true
 	}
 	if g != nil && g.Mod != nil && g.Mod.Sig != nil {
-		if itp, ok := g.Mod.Sig.Interp[sortName(c.CSort)]; ok {
+		if itp, ok := g.Mod.Sig.Interp.Get2(sortName(c.CSort)); ok {
 			if _, isEnum := itp.(*goivy.LogicEnumeratedSort); isEnum {
 				return true
 			}

@@ -464,7 +464,7 @@ func (g *Generator) sortInterpString(s goivy.Sort) (string, bool) {
 	if name == "" {
 		return "", false
 	}
-	text, ok := g.Mod.Sig.Interp[name].(string)
+	text, ok := g.Mod.Sig.Interp.Get(name).(string)
 	return text, ok
 }
 

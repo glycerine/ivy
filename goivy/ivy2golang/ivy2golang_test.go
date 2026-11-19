@@ -40,7 +40,7 @@ func newGoTestGeneratorWithInterps(interps map[string]string) *Generator {
 	mod.Cfg = goivy.NewConfig()
 	mod.Sig = goivy.NewSigOn(mod.Cfg.IuCfg)
 	for name, interp := range interps {
-		mod.Sig.Interp[name] = interp
+		mod.Sig.Interp.Set(name, interp)
 	}
 	return &Generator{Mod: mod}
 }
@@ -17430,7 +17430,7 @@ func newFunctionParamTestModule(t *testing.T) *goivy.Module {
 	mod.SortOrder = append(mod.SortOrder, "color")
 	slot := &goivy.UninterpretedSort{Name: "slot"}
 	mod.Sig.Sorts.Set("slot", slot)
-	mod.Sig.Interp["slot"] = &goivy.RangeSort{Name: "slot", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "1"}}
+	mod.Sig.Interp.Set("slot", &goivy.RangeSort{Name: "slot", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "1"}})
 	mod.SortOrder = append(mod.SortOrder, "slot")
 	fs, err := goivy.NewFunctionSort(slot, color)
 	if err != nil {
@@ -17453,7 +17453,7 @@ func newFunctionSortedActionParamTestModule(t *testing.T) *goivy.Module {
 	mod.SortOrder = append(mod.SortOrder, "color")
 	slot := &goivy.UninterpretedSort{Name: "slot"}
 	mod.Sig.Sorts.Set("slot", slot)
-	mod.Sig.Interp["slot"] = &goivy.RangeSort{Name: "slot", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "1"}}
+	mod.Sig.Interp.Set("slot", &goivy.RangeSort{Name: "slot", Lb: goivy.NumeralBound{Value: "0"}, Ub: goivy.NumeralBound{Value: "1"}})
 	mod.SortOrder = append(mod.SortOrder, "slot")
 	fs, err := goivy.NewFunctionSort(slot, color)
 	if err != nil {
@@ -40424,7 +40424,7 @@ func TestRestoreSortForGoInterfaceInitializesInterpMap(t *testing.T) {
 		}
 	}()
 	restoreSortForGoInterface(mod, snap, sort, map[string]bool{})
-	if got := mod.Sig.Interp["idx"]; got != "int" {
+	if got := mod.Sig.Interp.Get("idx"); got != "int" {
 		t.Fatalf("restored interpretation = %#v, want int", got)
 	}
 	if got, ok := mod.SortDestructors.Get2("idx"); !ok || len(got) != 1 || got[0] != field {

@@ -288,7 +288,8 @@ func CheckTemporals(mod *Module) error {
 			pc.AdmitAxiom(prop)
 		} else {
 			fmt.Print("\n    The following temporal property is being proved:\n\n")
-			fmt.Print(PrettyLF(prop, 4) + " ...\n")
+			// Python: print(pretty_lf(prop) + ' ...') -- pretty_lf's default indent is 8.
+			fmt.Print(PrettyLF(prop, 8) + " ...\n")
 
 			// Python: proof = pmap.get(prop.id, None)
 			pf := pmap[prop.ID]
@@ -1357,9 +1358,10 @@ func startLoaded(filename string, cfg *Config, load func(mod *Module) error) err
 	if mod.Cfg.UsedSorry {
 		fmt.Println("OK, but used 'sorry'")
 	} else {
+		// Python traces EXIT here, before printing OK (not on the sorry branch).
+		xtracer.Trace("check.start EXIT")
 		fmt.Println("OK")
 	}
-	xtracer.Trace("check.start EXIT")
 	return nil
 }
 

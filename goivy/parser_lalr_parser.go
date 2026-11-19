@@ -422,6 +422,10 @@ func (l *parser17LexAdapter) Lex(lval *parser17SymType) int {
 // Mirrors Python p_error (ivy_parser.py:3598-3606): if there is a current
 // token report its lineno+value; otherwise (EOF) report "unexpected end of input".
 func (l *parser17LexAdapter) Error(s string) {
+	// Python p_error traces ENTER, builds a ParseError (whose __init__
+	// traces) and passes it to report_error (which traces).
+	xtracer.Trace("parser.p_error ENTER")
+	xtracer.Trace("parser.__init__ ENTER")
 	pe := &ParseError{Filename: l.filename, Message: s}
 	if l.lastTok.Type == EOF {
 		pe.Message = "unexpected end of input"
@@ -429,5 +433,6 @@ func (l *parser17LexAdapter) Error(s string) {
 		pe.Lineno = l.lastTok.Line
 		pe.Token = l.lastTok.Value
 	}
+	xtracer.Trace("parser.report_error ENTER")
 	l.err = pe
 }

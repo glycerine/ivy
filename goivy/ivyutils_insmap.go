@@ -176,7 +176,14 @@ func EasyHashUint32(key uint32) uint64 { return Mix64(uint64(key)) }
 func EasyHashUint64(key uint64) uint64 { return Mix64(key) }
 
 // Len returns the number of live entries.
-func (d *InsMap[K, V]) Len() int { return d.live }
+// Len returns the number of entries. A nil *InsMap is empty, like a nil
+// Go map.
+func (d *InsMap[K, V]) Len() int {
+	if d == nil {
+		return 0
+	}
+	return d.live
+}
 
 // Get returns the value for k, or the zero value if absent.
 func (d *InsMap[K, V]) Get(k K) (v V) {
@@ -186,7 +193,7 @@ func (d *InsMap[K, V]) Get(k K) (v V) {
 
 // Get2 returns the value for k and whether it was present.
 func (d *InsMap[K, V]) Get2(k K) (v V, found bool) {
-	if d.live == 0 {
+	if d == nil || d.live == 0 {
 		return
 	}
 	var h uint64
@@ -495,6 +502,9 @@ func (d *InsMap[K, V]) All() iter.Seq2[K, V] {
 //
 // The custom hash function (if any) and any state captured by it are also shared.
 func (d *InsMap[K, V]) Clone() (r *InsMap[K, V]) {
+	if d == nil {
+		return nil
+	}
 	r = &InsMap[K, V]{
 		hash:    d.hash,
 		indices: append([]int64(nil), d.indices...),
@@ -504,4 +514,18 @@ func (d *InsMap[K, V]) Clone() (r *InsMap[K, V]) {
 		tags:    append([]byte(nil), d.tags...),
 	}
 	return
+}
+
+// AsMap returns a plain Go map with the same entries, for callees that
+// only look values up (its iteration order is random, so never range over
+// it where order can be observed).
+func (d *InsMap[K, V]) AsMap() map[K]V {
+	if d == nil {
+		return nil
+	}
+	m := make(map[K]V, d.Len())
+	for k, v := range d.All() {
+		m[k] = v
+	}
+	return m
 }

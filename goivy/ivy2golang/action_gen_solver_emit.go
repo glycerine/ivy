@@ -252,7 +252,7 @@ func (g *Generator) runtimeActionSolverNeedsRangeBoundParam(sym stateSymbol) boo
 	if g == nil || g.Mod == nil || g.Mod.Sig == nil || sym.Name == "" || !g.isParamName(sym.Name) {
 		return false
 	}
-	rs, ok := g.Mod.Sig.Interp[sortName(sym.Sort)].(*goivy.RangeSort)
+	rs, ok := g.Mod.Sig.Interp.Get(sortName(sym.Sort)).(*goivy.RangeSort)
 	if !ok || rs == nil {
 		return false
 	}
@@ -515,7 +515,7 @@ func (g *Generator) emitRuntimeSolverSupport(w *goWriter) {
 		w.linef("_ = mod.Sig.AddSort(%s)", g.goIvySortExpr(s))
 	}
 	for _, interp := range g.runtimeSolverInterps() {
-		w.linef("mod.Sig.Interp[%q] = %s", interp.name, interp.valueExpr)
+		w.linef("mod.Sig.Interp.Set(%q, %s)", interp.name, interp.valueExpr)
 	}
 	for _, ctor := range g.runtimeSolverConstructors() {
 		w.linef("mod.Sig.Constructors[%q] = true", ctor)
@@ -903,8 +903,8 @@ func (g *Generator) runtimeSolverInterps() []runtimeSolverInterp {
 		return nil
 	}
 	seen := map[string]bool{}
-	out := make([]runtimeSolverInterp, 0, len(g.Mod.Sig.Interp)+len(g.Mod.NativeTypes))
-	for name, value := range g.Mod.Sig.Interp {
+	out := make([]runtimeSolverInterp, 0, g.Mod.Sig.Interp.Len()+len(g.Mod.NativeTypes))
+	for name, value := range g.Mod.Sig.Interp.All() {
 		expr, ok := g.goIvyInterpValueExpr(value)
 		if !ok {
 			continue

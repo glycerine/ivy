@@ -623,7 +623,7 @@ func (s *Solver) LookupNative(thing *Const, table func(string) any, kind string)
 	name := thing.Name
 
 	// Python line 313: z3name = ivy_logic.sig.interp.get(thing.name)
-	z3name, hasInterp := s.sig.Interp[name]
+	z3name, hasInterp := s.sig.Interp.Get2(name)
 
 	// Python line 314: if z3name == None:
 	if !hasInterp {
@@ -640,7 +640,7 @@ func (s *Solver) LookupNative(thing *Const, table func(string) any, kind string)
 			if fs, ok := thing.CSort.(*LogicFunctionSort); ok {
 				rngSort := fs.Range()
 				rngName := sortToName(rngSort)
-				if _, inInterp := s.sig.Interp[rngName]; inInterp {
+				if _, inInterp := s.sig.Interp.Get2(rngName); inInterp {
 					z3arrSort, err := s.tr.TranslateSort(rngSort)
 					if err == nil && z3arrSort.Kind() == smt.SortArray {
 						domSort := z3arrSort.ArrayDomain()
@@ -706,7 +706,7 @@ func (s *Solver) lookupPolymorphicNative(sym *Const, table func(string) any) any
 
 	// Python line 323: if sort in sig.interp and not isinstance(sig.interp[sort], EnumeratedSort):
 	domName := sortToName(domSort)
-	interp, ok := s.sig.Interp[domName]
+	interp, ok := s.sig.Interp.Get2(domName)
 	if !ok {
 		return nil
 	}
@@ -1173,7 +1173,7 @@ func SolverName(sym *Const, sig *Sig, bfeCheck func(*Const) bool) (string, error
 				if name == "arrcst" {
 					domName = sortToName(fs.Range())
 				}
-				if interp, has := sig.Interp[domName]; has {
+				if interp, has := sig.Interp.Get2(domName); has {
 					if _, isEnum := interp.(*LogicEnumeratedSort); !isEnum {
 						xtracer.Trace("ivy_solver.py:74 solver_name() EXIT 2")
 						return "", nil // native interpretation
@@ -1192,7 +1192,7 @@ func SolverName(sym *Const, sig *Sig, bfeCheck func(*Const) bool) (string, error
 
 	// Python: if name in ivy_logic.sig.interp: return None
 	if sig != nil {
-		if _, has := sig.Interp[name]; has {
+		if _, has := sig.Interp.Get2(name); has {
 			xtracer.Trace("ivy_solver.py:82 solver_name() EXIT 3")
 			return "", nil // interpreted
 		}

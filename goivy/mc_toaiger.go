@@ -20,7 +20,7 @@ type ToAigerResult struct {
 func toAigerFiniteSort(mod *Module, sort Sort) bool {
 	var interp map[string]interface{}
 	if mod != nil && mod.Sig != nil {
-		interp = mod.Sig.Interp
+		interp = mod.Sig.Interp.AsMap()
 	}
 	return IsFiniteSortWithInterp(sort, interp)
 }
@@ -263,7 +263,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	mcIteCtr := &mod.Cfg.McIteCtr
 	var interp map[string]interface{}
 	if mod.Sig != nil {
-		interp = mod.Sig.Interp
+		interp = mod.Sig.Interp.AsMap()
 	}
 	elimDefs := make([]*IvyDefinition, len(trans.Defs))
 	for i, df := range trans.Defs {
@@ -302,7 +302,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	sortConstants := MineConstants(mod, trans, mineTarget)
 	sortConstants2 := MineConstants2(mod, trans, invariant)
 
-	qelim := NewQelim(sortConstants, sortConstants2, mod.Cfg.IuCfg, mod.Cfg.FullQI, mod.Sig.Interp)
+	qelim := NewQelim(sortConstants, sortConstants2, mod.Cfg.IuCfg, mod.Cfg.FullQI, mod.Sig.Interp.AsMap())
 	qeFmlas, qeDefs, newInvariant := qelim.Apply(trans.Fmlas, defsToNodes(trans.Defs), invariant, indHyps)
 	invariant = newInvariant
 	trans = NewClauses(qeFmlas, nodesToDefs(qeDefs), trans.Annot)
@@ -321,7 +321,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 	xtracer.Trace("mc.ToAiger postAxiomInst nAxioms=%d nTRfmlas=%d nTRdefs=%d HASH canon= trans=%s", len(axs), len(trans.Fmlas), len(trans.Defs), trans.Canon())
 
 	// Step 4e: Table lookup for finite-domain functions
-	trans, invariant = ToTableLookup(trans, invariant, mod.Sig.Interp)
+	trans, invariant = ToTableLookup(trans, invariant, mod.Sig.Interp.AsMap())
 
 	// Step 4f: Propositional abstraction
 	stVarSet := make(map[string]bool, len(stVars))
@@ -329,7 +329,7 @@ func ToAiger(mod *Module, method string) (*ToAigerResult, error) {
 		stVarSet[sv.Name] = true
 	}
 
-	propAbs := NewPropAbs(stVarSet, sortConstants, mod.Sig.Interp)
+	propAbs := NewPropAbs(stVarSet, sortConstants, mod.Sig.Interp.AsMap())
 	propAbs.Constructors = mod.Sig.Constructors
 	paFmlas, paDefs := propAbs.Apply(trans.Fmlas, defsToNodes(trans.Defs))
 	trans = NewClauses(paFmlas, nodesToDefs(paDefs), trans.Annot)

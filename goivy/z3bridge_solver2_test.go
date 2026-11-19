@@ -17,7 +17,7 @@ import (
 // translates to ForAll(X, Implies(0<=X, P(X))).
 func TestQuantConstraints_NatForAll(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mynat"] = "nat"
+	sig.Interp.Set("mynat", "nat")
 	s := NewSolverFromSig(sig, nil)
 
 	natSort := &UninterpretedSort{Name: "mynat"}
@@ -55,7 +55,7 @@ func TestQuantConstraints_NatForAll(t *testing.T) {
 
 func TestRawForAllSkipsNatQuantConstraints(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mynat"] = "nat"
+	sig.Interp.Set("mynat", "nat")
 	s := NewSolverFromSig(sig, nil)
 
 	natSort := &UninterpretedSort{Name: "mynat"}
@@ -84,7 +84,7 @@ func TestRawForAllSkipsNatQuantConstraints(t *testing.T) {
 // translates to Exists(X, And(0<=X, P(X))).
 func TestQuantConstraints_NatExists(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mynat"] = "nat"
+	sig.Interp.Set("mynat", "nat")
 	s := NewSolverFromSig(sig, nil)
 
 	natSort := &UninterpretedSort{Name: "mynat"}
@@ -126,7 +126,7 @@ func TestQuantConstraints_NatExists(t *testing.T) {
 func TestQuantConstraints_RangeSort(t *testing.T) {
 	rs := &RangeSort{Name: "myrange", Lb: NumeralBound{Value: "2"}, Ub: NumeralBound{Value: "5"}}
 	sig := NewSig()
-	sig.Interp["myrange"] = rs
+	sig.Interp.Set("myrange", rs)
 	s := NewSolverFromSig(sig, nil)
 
 	rangeSort := &UninterpretedSort{Name: "myrange"}
@@ -404,7 +404,7 @@ func TestEncodeEqualityZ3(t *testing.T) {
 func TestNumeralToZ3_RangeClamping(t *testing.T) {
 	rs := &RangeSort{Name: "bounded", Lb: NumeralBound{Value: "0"}, Ub: NumeralBound{Value: "10"}}
 	sig := NewSig()
-	sig.Interp["bounded"] = rs
+	sig.Interp.Set("bounded", rs)
 	s := NewSolverFromSig(sig, nil)
 
 	// Numeral 15 should be clamped to 10
@@ -566,7 +566,7 @@ func TestSortCard_RangeSort(t *testing.T) {
 // TestSortCard_BV checks cardinality of a BV sort.
 func TestSortCard_BV(t *testing.T) {
 	sig := NewSig()
-	sig.Interp["mybv"] = "bv[8]"
+	sig.Interp.Set("mybv", "bv[8]")
 	sort := &UninterpretedSort{Name: "mybv"}
 	card := SortCard(sort, sig)
 	if card != 256 {
