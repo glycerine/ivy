@@ -3002,6 +3002,17 @@ func CheckMutax(mod *Module, mutaxEnabled bool) error {
 	return checkImmutableAssigned(mod, sideEffects, defMap, false)
 }
 
+// modifiedSymName is Python's str(s) for a symbol s that sub modifies:
+// the symbol's name (falling back to its key).
+func modifiedSymName(sub ActionsAction, key NodeKey) string {
+	for _, m := range Modifies(sub) {
+		if Key(m) == key {
+			return m.Name
+		}
+	}
+	return string(key)
+}
+
 // checkImmutableAssigned is the tail of Python's action interference check
 // (ivy_compiler.py): unless opt_mutax, no symbol an axiom (non-temporal)
 // depends on, and no defined symbol, may be modified by an action. The
@@ -3017,7 +3028,7 @@ func checkImmutableAssigned(mod *Module, sideEffects *InsMap[NodeKey, ActionsAct
 			GetSymbolDependencies(defMap, deps, lf.Formula)
 			for sym := range deps.All() {
 				if sub, ok := sideEffects.Get2(sym); ok {
-					xtracer.Trace("compiler.ActionInterferenceCheck FAIL axiom immutable sym=%s", sym)
+					xtracer.Trace("compiler.ActionInterferenceCheck FAIL axiom immutable sym=%s", modifiedSymName(sub, sym))
 					return NewIvyError(sub, "immutable symbol assigned. \n"+lf.Base.Loc.String()+" info: symbol is used in axiom here")
 				}
 			}
@@ -3027,7 +3038,7 @@ func checkImmutableAssigned(mod *Module, sideEffects *InsMap[NodeKey, ActionsAct
 		if def, ok := lf.Formula.(*LogicDefinition); ok {
 			key := compilerDefinesKey(def)
 			if sub, ok := sideEffects.Get2(key); ok {
-				xtracer.Trace("compiler.ActionInterferenceCheck FAIL defn immutable key=%s", key)
+				xtracer.Trace("compiler.ActionInterferenceCheck FAIL defn immutable key=%s", modifiedSymName(sub, key))
 				return NewIvyError(sub, "immutable symbol assigned. \n"+lf.Base.Loc.String()+" Symbol is defined here")
 			}
 		}

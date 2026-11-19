@@ -1245,6 +1245,13 @@ func printTopLevelError(err error) {
 		fmt.Fprintln(os.Stderr, err.Error())
 		return
 	}
+	// Python ErrorPrinter prints str(IvyError) = str(lineno) + 'error: ' +
+	// msg; a located IvyError's Error() already has that form.
+	var ie *IvyError
+	if errors.As(err, &ie) && ie.HasLoc {
+		fmt.Fprintln(os.Stderr, ie.Error())
+		return
+	}
 	fmt.Fprintf(os.Stderr, "error: %v\n", err)
 }
 

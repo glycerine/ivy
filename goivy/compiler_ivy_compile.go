@@ -1440,9 +1440,14 @@ func AttachProofs(mod *Module) error {
 
 // CheckDefinitions validates definitions for cycles and redefinition.
 // Corresponds to Python's check_definitions (ivy_compiler.py:1696-1776).
-func CheckDefinitions(mod *Module) error {
+func CheckDefinitions(mod *Module) (err error) {
 	xtracer.Trace("compiler.CheckDefinitions ENTER")
-	defer xtracer.Trace("compiler.CheckDefinitions EXIT")
+	// Python traces EXIT only on a normal return; its errors raise past it.
+	defer func() {
+		if err == nil {
+			xtracer.Trace("compiler.CheckDefinitions EXIT")
+		}
+	}()
 
 	// Get definitions that have no dependence on proofs.
 	// stale uses structural keys (Sexp) matching Python's Symbol-as-dict-key semantics.
