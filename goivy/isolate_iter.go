@@ -329,7 +329,9 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 	}
 	_ = delegatedTo
 
-	// Build implementation map from implement mixins
+	// Build implementation map from implement mixins. Python fills the
+	// global implementation_map here, and startswith_eq_some and
+	// vstartswith_eq_some map each name through it, so pass it to them.
 	implementationMap := make(map[string]string)
 	for _, ms := range mod.Mixins.All() {
 		for _, m := range ms {
@@ -359,10 +361,10 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 		verifiedActions := make(map[string]bool)
 		presentActions := make(map[string]bool)
 		for a := range mod.Actions.All() {
-			if VStartsWithEqSome(a, verified, mod, nil) {
+			if VStartsWithEqSome(a, verified, mod, implementationMap) {
 				verifiedActions[a] = true
 			}
-			if StartsWithEqSome(a, present, mod, nil) {
+			if StartsWithEqSome(a, present, mod, implementationMap) {
 				presentActions[a] = true
 			}
 		}
@@ -413,7 +415,7 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 
 	// Check all action calls
 	for actname, action := range mod.Actions.All() {
-		if StartsWithEqSome(actname, trusted, mod, nil) {
+		if StartsWithEqSome(actname, trusted, mod, implementationMap) {
 			continue
 		}
 		for _, callee := range action.IterCalls() {
@@ -475,7 +477,7 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 					if !HasAssertions(mod, mixed) || isMixinImplement(mixin) {
 						continue
 					}
-					if mixin.IsAfter() && StartsWithEqSome(callee, trusted, mod, nil) {
+					if mixin.IsAfter() && StartsWithEqSome(callee, trusted, mod, implementationMap) {
 						continue
 					}
 
