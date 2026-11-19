@@ -102,7 +102,7 @@ func TestAttachProofs_LabelMatchesConjecture(t *testing.T) {
 func TestAttachProofs_LabelMatchesIsolate(t *testing.T) {
 	mod := New()
 	acfg := NewAstConfig()
-	mod.Isolates["myiso"] = acfg.NewIsolateDef(nil, 0)
+	mod.Isolates.Set("myiso", acfg.NewIsolateDef(nil, 0))
 	mod.Proofs = []ProofEntry{makeLabelOnlyProof("myiso", proofNode("iso_proof"))}
 
 	err := AttachProofs(mod)
@@ -285,7 +285,7 @@ func FuzzAttachProofs(f *testing.F) {
 		acfg := NewAstConfig()
 		for i := uint8(0); i < nIsos; i++ {
 			name := string(rune('a'+i)) + "_iso"
-			mod.Isolates[name] = acfg.NewIsolateDef(nil, 0)
+			mod.Isolates.Set(name, acfg.NewIsolateDef(nil, 0))
 			allLabels = append(allLabels, name)
 		}
 
@@ -328,7 +328,7 @@ func FuzzAttachProofs(f *testing.F) {
 				}
 			}
 			for k := range mod.IsolateProofs {
-				if _, ok := mod.Isolates[k]; !ok {
+				if _, ok := mod.Isolates.Get2(k); !ok {
 					t.Errorf("IsolateProofs key %q is not a valid isolate", k)
 				}
 			}

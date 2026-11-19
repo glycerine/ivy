@@ -165,7 +165,7 @@ func SetPrivatesFull(mod *Module, iso interface{}, suff string) {
 
 	// Set vprivates on module
 	mod.VPrivates = make(map[string]bool)
-	for _, isol := range mod.Isolates {
+	for _, isol := range mod.Isolates.All() {
 		for _, v := range isol.VerifiedNames() {
 			mod.VPrivates[v] = true
 		}
@@ -177,7 +177,7 @@ func SetPrivatesFull(mod *Module, iso interface{}, suff string) {
 		ProcessName() string
 	}
 	if pd, ok := iso.(processDef); ok && pd.IsProcess() {
-		for _, isol := range mod.Isolates {
+		for _, isol := range mod.Isolates.All() {
 			if pd2, ok2 := interface{}(isol).(processDef); ok2 && pd2.IsProcess() {
 				if pd.ProcessName() != pd2.ProcessName() {
 					mod.Privates[pd2.ProcessName()] = true
@@ -283,7 +283,7 @@ func GetIsolateInfoFull(mod *Module, iso interface{}, kind string, extraWith []s
 
 	// Handle attributes (kind or "private")
 	vp := make(map[string]bool)
-	for _, isol := range mod.Isolates {
+	for _, isol := range mod.Isolates.All() {
 		for _, v := range isol.VerifiedNames() {
 			vp[v] = true
 		}
@@ -535,7 +535,7 @@ func copySymSet(s *InsMap[NodeKey, Expr]) *InsMap[NodeKey, Expr] {
 func GetPropDependencies(mod *Module) []PropDep {
 	// Build depmap: for each verified name, map to all verified+present names
 	depmap := make(map[string][]string)
-	for _, isol := range mod.Isolates {
+	for _, isol := range mod.Isolates.All() {
 		allNames := append(isol.VerifiedNames(), isol.PresentNames()...)
 		for _, v := range isol.VerifiedNames() {
 			depmap[v] = append(depmap[v], allNames...)
@@ -635,7 +635,7 @@ func GetPropsProvedInIsolate(mod *Module, iso interface{}) (proved, notProved []
 
 	// For version > 1.6: mark verified names from other isolates as private
 	idef, _ := iso.(IsolateDefIface)
-	for _, otherIso := range mod.Isolates {
+	for _, otherIso := range mod.Isolates.All() {
 		if interface{}(otherIso) == iso {
 			continue
 		}

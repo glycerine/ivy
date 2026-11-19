@@ -427,10 +427,10 @@ func TestCreateIsolateRejectsMissingMixinAction(t *testing.T) {
 	m.Mixins.Set("a", []MixinDef{
 		cfg.NewMixinBeforeDef(cfg.NewAtom("missing_monitor"), cfg.NewAtom("a")),
 	})
-	m.Isolates["iso"] = cfg.NewIsolateDef(
+	m.Isolates.Set("iso", cfg.NewIsolateDef(
 		[]Node{cfg.NewAtom("iso"), cfg.NewAtom("a")},
 		0,
-	)
+	))
 
 	err := CreateIsolate("iso", m)
 	if err == nil {
@@ -488,7 +488,7 @@ func TestAddExternPrecondKeepsSingletonAndLikePython(t *testing.T) {
 func TestIsolateComponentFound(t *testing.T) {
 	m := mkModule()
 	acfg := NewAstConfig()
-	m.Isolates["test_iso"] = acfg.NewIsolateDef(nil, 0)
+	m.Isolates.Set("test_iso", acfg.NewIsolateDef(nil, 0))
 	err := IsolateComponent(m, "test_iso", nil, nil, nil)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)

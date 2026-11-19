@@ -40,7 +40,7 @@ func TestHandleTemporals_ActionGetsLabels(t *testing.T) {
 	mod := New()
 	seq := NewSequence()
 	mod.Actions.Set("act1", seq)
-	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1"}, nil)
+	mod.Isolates.Set("iso1", makeTestIsolateDef([]string{"act1"}, nil))
 
 	HandleTemporals(mod)
 
@@ -79,8 +79,8 @@ func TestHandleTemporals_MultipleIsolates(t *testing.T) {
 	mod := New()
 	seq := NewSequence()
 	mod.Actions.Set("act1", seq)
-	mod.Isolates["isoA"] = makeTestIsolateDef([]string{"act1"}, nil)
-	mod.Isolates["isoB"] = makeTestIsolateDef([]string{"act1"}, nil)
+	mod.Isolates.Set("isoA", makeTestIsolateDef([]string{"act1"}, nil))
+	mod.Isolates.Set("isoB", makeTestIsolateDef([]string{"act1"}, nil))
 
 	HandleTemporals(mod)
 
@@ -107,8 +107,8 @@ func TestHandleTemporals_MultipleActions(t *testing.T) {
 	mod.Actions.Set("act2", seq2)
 	mod.Actions.Set("act3", seq3)
 
-	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1", "act2"}, nil)
-	mod.Isolates["iso2"] = makeTestIsolateDef([]string{"act2", "act3"}, nil)
+	mod.Isolates.Set("iso1", makeTestIsolateDef([]string{"act1", "act2"}, nil))
+	mod.Isolates.Set("iso2", makeTestIsolateDef([]string{"act2", "act3"}, nil))
 
 	HandleTemporals(mod)
 
@@ -133,7 +133,7 @@ func TestHandleTemporals_GetLabelsWorks(t *testing.T) {
 	mod := New()
 	seq := NewSequence()
 	mod.Actions.Set("act1", seq)
-	mod.Isolates["iso1"] = makeTestIsolateDef([]string{"act1"}, nil)
+	mod.Isolates.Set("iso1", makeTestIsolateDef([]string{"act1"}, nil))
 
 	HandleTemporals(mod)
 
@@ -203,7 +203,7 @@ func FuzzHandleTemporals(f *testing.F) {
 					verified = append(verified, an)
 				}
 			}
-			mod.Isolates[isoName] = makeTestIsolateDef(verified, nil)
+			mod.Isolates.Set(isoName, makeTestIsolateDef(verified, nil))
 		}
 
 		// Should not panic

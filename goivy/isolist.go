@@ -17,7 +17,7 @@ func ListIsolates(pathToDotIvy string) (isoList []string, err error) {
 	if err != nil {
 		return nil, err
 	}
-	for name := range mod.Isolates {
+	for name := range mod.Isolates.All() {
 		isoList = append(isoList, name)
 	}
 	sort.Strings(isoList)

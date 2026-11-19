@@ -344,7 +344,7 @@ type AnalysisGraph struct {
 	Predicates    map[string]Node
 	Assertions    []*LabeledFormula
 	Mixins        *InsMap[string, []MixinDef]
-	Isolates      map[string]*IsolateDef
+	Isolates      *InsMap[string, *IsolateDef]
 	Exports       []Exporter
 	Delegates     []Delegator
 	PublicActions *InsMap[string, bool]

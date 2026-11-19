@@ -48,7 +48,7 @@ type Module struct {
 	Instantiations []LogicInstantiation
 
 	// Isolates
-	Isolates      map[string]*IsolateDef
+	Isolates      *InsMap[string, *IsolateDef] // Python mod.isolates: insertion-ordered dict
 	IsolateInfo   *IsolateInfo
 	IsolateProofs map[string]Node
 	IsolateProof  Node
@@ -276,7 +276,7 @@ func (m *Module) Clear() {
 	m.Assertions = nil
 	m.Mixins = NewInsMap[string, []MixinDef]()
 	m.PublicActions = NewInsMap[string, bool]()
-	m.Isolates = make(map[string]*IsolateDef)
+	m.Isolates = NewInsMap[string, *IsolateDef]()
 	m.Exports = nil
 	m.Imports = nil
 	m.Delegates = nil
@@ -345,12 +345,12 @@ func (m *Module) SetAttribute(name string, value interface{}) {
 
 // Copy creates a semi-shallow copy of the module.
 func (m *Module) Copy() *Module {
-	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", m.Actions.Len(), len(m.Isolates))
+	xtracer.Trace("module.Copy ENTER actions=%d isolates=%d", m.Actions.Len(), m.Isolates.Len())
 	c := New()
 	*c.Cfg = *m.Cfg
 
 	// defer after c is declared so we can report its counts
-	defer func() { xtracer.Trace("module.Copy EXIT actions=%d isolates=%d", c.Actions.Len(), len(c.Isolates)) }()
+	defer func() { xtracer.Trace("module.Copy EXIT actions=%d isolates=%d", c.Actions.Len(), c.Isolates.Len()) }()
 
 	// Copy slices (shallow)
 	c.AllRelations = copyNodeSlice(m.AllRelations)
@@ -410,10 +410,7 @@ func (m *Module) Copy() *Module {
 	}
 	c.Schemata = copyInsMapNode(m.Schemata)
 	c.Theorems = copyMapNode(m.Theorems)
-	c.Isolates = make(map[string]*IsolateDef, len(m.Isolates))
-	for k, v := range m.Isolates {
-		c.Isolates[k] = v
-	}
+	c.Isolates = m.Isolates.Clone()
 	c.Predicates = copyMapNode(m.Predicates)
 	c.DestructorSorts = copyMapSort(m.DestructorSorts)
 	c.ConstructorSorts = copyMapSort(m.ConstructorSorts)

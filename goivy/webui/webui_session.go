@@ -260,11 +260,11 @@ func webUIIvySource(content []byte) string {
 }
 
 func webUIIsolateNames(mod *goivy.Module) []string {
-	if mod == nil || len(mod.Isolates) == 0 {
+	if mod == nil || mod.Isolates.Len() == 0 {
 		return nil
 	}
-	names := make([]string, 0, len(mod.Isolates))
-	for name, iso := range mod.Isolates {
+	names := make([]string, 0, mod.Isolates.Len())
+	for name, iso := range mod.Isolates.All() {
 		if name == "this" && webUIImplicitThisIsolate(iso) {
 			continue
 		}
@@ -437,7 +437,7 @@ func (s *Session) LoadFileContentWithIsolate(filename string, content []byte, is
 		}
 	}
 	if activeIsolate != "" && activeIsolate != NoIsolatesFoundChoice {
-		if _, ok := mod.Isolates[activeIsolate]; !ok {
+		if _, ok := mod.Isolates.Get2(activeIsolate); !ok {
 			err := fmt.Errorf("undefined isolate: %s", activeIsolate)
 			s.emit(Event{Type: "compiler_error", Data: map[string]string{
 				"phase": "compile", "error": err.Error(),

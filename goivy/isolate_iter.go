@@ -77,7 +77,7 @@ func IterIsolate(mod *Module, iso IsolateDefIface, fun func(string), verified, p
 
 	// Record all isolate roots to detect sub-isolates
 	vp := make(map[string]bool)
-	for _, isol := range mod.Isolates {
+	for _, isol := range mod.Isolates.All() {
 		for _, v := range isol.VerifiedNames() {
 			vp[v] = true
 		}
@@ -257,7 +257,7 @@ func GetIsolateExports(mod *Module, callGraph map[string][]string, iso IsolateDe
 // Corresponds to Python get_isolate_map().
 func GetIsolateMap(mod *Module, verified, present bool) map[string][]string {
 	result := make(map[string][]string)
-	for isoName, isol := range mod.Isolates {
+	for isoName, isol := range mod.Isolates.All() {
 		name := isoName // capture for closure
 		IterIsolate(mod, isol, func(n string) {
 			result[n] = append(result[n], name)
@@ -340,7 +340,7 @@ func CheckIsolateCompleteness(mod *Module) []IsolateError {
 	}
 
 	// Process each isolate
-	for _, isol := range mod.Isolates {
+	for _, isol := range mod.Isolates.All() {
 		vNames := isol.VerifiedNames()
 		pNames := isol.PresentNames()
 		verified, _ := GetIsolateInfo(mod, vNames, pNames, "impl")

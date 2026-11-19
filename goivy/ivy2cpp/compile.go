@@ -68,12 +68,12 @@ func CompileAndGenerateAll(filename string, params map[string]string, cfg Config
 		// Python ivy_to_cpp.py:4612-4618 rewrites a non-extract isolate
 		// named on the command line into an ExtractDef for repl in 1.7+.
 		if cfg.Target == "repl" && languageVersionAtLeast(isoMod, "1.7") {
-			if iso, ok := isoMod.Isolates[isolate]; ok && iso != nil && !iso.IsExtract() {
+			if iso, ok := isoMod.Isolates.Get2(isolate); ok && iso != nil && !iso.IsExtract() {
 				iso.Kind = "extract"
 				iso.WithArgs = len(iso.Elems)
 			}
 			if requestedIsolate == "" && isolate == "this" {
-				addDefaultReplSpecMixinPresents(isoMod, isoMod.Isolates[isolate])
+				addDefaultReplSpecMixinPresents(isoMod, isoMod.Isolates.Get(isolate))
 			}
 		}
 		// Python ivy_to_cpp.py:4620-4622 — compile_with_invariants is
@@ -354,15 +354,15 @@ func selectedIsolates(mod *goivy.Module, requested string) []string {
 		return []string{requested}
 	}
 	if requested == "all" {
-		names := make([]string, 0, len(mod.Isolates))
-		for name := range mod.Isolates {
+		names := make([]string, 0, mod.Isolates.Len())
+		for name := range mod.Isolates.All() {
 			names = append(names, name)
 		}
 		sort.Strings(names)
 		return names
 	}
 	if languageVersionAtLeast(mod, "1.7") {
-		if _, ok := mod.Isolates["this"]; ok {
+		if _, ok := mod.Isolates.Get2("this"); ok {
 			return []string{"this"}
 		}
 	}

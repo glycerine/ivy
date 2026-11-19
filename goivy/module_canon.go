@@ -710,18 +710,19 @@ func canonExprMap(m map[string]Expr) string {
 }
 
 // canonIsolateMap returns canonical form of map[string]*ast.IsolateDef.
-func canonIsolateMap(m map[string]*IsolateDef) string {
-	if len(m) == 0 {
+func canonIsolateMap(m *InsMap[string, *IsolateDef]) string {
+	if m == nil || m.Len() == 0 {
 		return "(hash)"
 	}
-	keys := make([]string, 0, len(m))
-	for k := range m {
+	// Sorted, as Python's canon snapshot prints it.
+	keys := make([]string, 0, m.Len())
+	for k := range m.All() {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
 	var parts []string
 	for _, k := range keys {
-		parts = append(parts, fmt.Sprintf("%s:%s", k, string(m[k].Canon())))
+		parts = append(parts, fmt.Sprintf("%s:%s", k, string(m.Get(k).Canon())))
 	}
 	return fmt.Sprintf("(hash %s)", strings.Join(parts, " "))
 }

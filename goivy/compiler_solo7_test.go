@@ -29,7 +29,7 @@ func TestIvyCompile_VersionGuard_ThisIsolate_V17(t *testing.T) {
 		t.Fatalf("IvyCompile: %v", err)
 	}
 
-	if _, ok := mod.Isolates["this"]; !ok {
+	if _, ok := mod.Isolates.Get2("this"); !ok {
 		t.Error("version 1.7: expected 'this' isolate to be created")
 	}
 }
@@ -49,7 +49,7 @@ func TestIvyCompile_VersionGuard_ThisIsolate_V16(t *testing.T) {
 		t.Fatalf("IvyCompile: %v", err)
 	}
 
-	if _, ok := mod.Isolates["this"]; ok {
+	if _, ok := mod.Isolates.Get2("this"); ok {
 		t.Error("version 1.6: expected 'this' isolate NOT to be created")
 	}
 }
@@ -66,14 +66,14 @@ func TestIvyCompile_VersionGuard_ExistingIsolate(t *testing.T) {
 	existing := cfg.NewIsolateDef(
 		[]Node{cfg.NewAtom("this"), cfg.NewAtom("myobj")}, 1,
 	)
-	mod.Isolates["this"] = existing
+	mod.Isolates.Set("this", existing)
 
 	err := IvyCompile(nil, mod, true)
 	if err != nil {
 		t.Fatalf("IvyCompile: %v", err)
 	}
 
-	got := mod.Isolates["this"]
+	got := mod.Isolates.Get("this")
 	if got != existing {
 		t.Error("existing 'this' isolate was overwritten")
 	}

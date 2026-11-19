@@ -319,7 +319,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		)
 	} else {
 		var ok bool
-		iso, ok = mod.Isolates[isolateName]
+		iso, ok = mod.Isolates.Get2(isolateName)
 		if !ok {
 			return fmt.Errorf("undefined isolate: %s", isolateName)
 		}

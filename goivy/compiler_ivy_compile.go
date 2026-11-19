@@ -185,13 +185,13 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 
 	// Python lines 2220-2225: if not iu.version_le(iu.get_string_version(),"1.6"):
 	if !VersionLE(mod.Cfg.IuCfg.GetStringVersion(), "1.6") {
-		if _, ok := mod.Isolates["this"]; !ok {
+		if _, ok := mod.Isolates.Get2("this"); !ok {
 			cfg := mod.Cfg.AstCfg
 			isol := cfg.NewIsolateDef(
 				[]Node{cfg.NewAtom("this"), cfg.NewAtom("this")},
 				0,
 			)
-			mod.Isolates["this"] = isol
+			mod.Isolates.Set("this", isol)
 		}
 	}
 
@@ -295,7 +295,7 @@ func addGlobalObjectsToIsolates(mod *Module) {
 	if len(globalObjects) == 0 {
 		return
 	}
-	for _, iso := range mod.Isolates {
+	for _, iso := range mod.Isolates.All() {
 		iso.Elems = append(iso.Elems, globalObjects...)
 		iso.WithArgs += len(globalObjects)
 	}
@@ -1427,7 +1427,7 @@ func AttachProofs(mod *Module) error {
 				Formula: target,
 				Proof:   pf.Proof,
 			})
-		} else if _, ok := mod.Isolates[lab]; ok {
+		} else if _, ok := mod.Isolates.Get2(lab); ok {
 			mod.IsolateProofs[lab] = pf.Proof
 		} else {
 			xtracer.Trace("compiler.AttachProofs EXIT")
@@ -1761,7 +1761,7 @@ func CreateConjActions(mod *Module) error {
 	objects := make(map[string][]isoEntry)        // verified object → isolates
 	cg := mod.CallGraph()
 
-	for isoName, isol := range mod.Isolates {
+	for isoName, isol := range mod.Isolates.All() {
 		myexports[isoName] = GetIsolateExports(mod, cg, isol)
 		for _, v := range isol.VerifiedNames() {
 			objects[v] = append(objects[v], isoEntry{isoName, isol})
@@ -1827,13 +1827,8 @@ func CreateConjActions(mod *Module) error {
 			}
 		}
 
-		isoNames := make([]string, 0, len(mod.Isolates))
-		for ison := range mod.Isolates {
-			isoNames = append(isoNames, ison)
-		}
-		sort.Strings(isoNames)
-		for _, ison := range isoNames {
-			isol := mod.Isolates[ison]
+		// Python: for ison,isol in mod.isolates.items() -- insertion order.
+		for ison, isol := range mod.Isolates.All() {
 			memo := make(map[string]bool)
 			conjs := GetIsolateConjs(mod, isol, false, true)
 			exports := myexports[ison]
@@ -2112,7 +2107,7 @@ func registerIsolateDecl(declArgs []Node, mod *Module) {
 			isoDef = cloneIsolateForARGSetup(isoDef)
 			name := isoDef.IsoName()
 			xtracer.Trace("compiler.ARGSetup.isolate ENTER name=%s", name)
-			mod.Isolates[name] = isoDef
+			mod.Isolates.Set(name, isoDef)
 			xtracer.Trace("compiler.ARGSetup.isolate EXIT name=%s", name)
 		}
 	}

@@ -76,7 +76,7 @@ func createImportWrappers(iso string, mod *Module) ([]string, map[string][]strin
 	var isoDef *IsolateDef
 	isoExists := false
 	if iso != "" {
-		isoDef, isoExists = mod.Isolates[iso]
+		isoDef, isoExists = mod.Isolates.Get2(iso)
 	}
 	if isoExists {
 		verified, present := GetIsolateInfoFull(mod, isoDef, "impl", nil)
@@ -214,8 +214,8 @@ func CreateIsolate(iso string, mod *Module) error {
 
 	// From version 1.7, if no isolate specified and there is only one, use it.
 	if iso == "" && versionLE("1.7", isoCfg.IvyVersion) {
-		isoNames := make([]string, 0, len(mod.Isolates))
-		for name := range mod.Isolates {
+		isoNames := make([]string, 0, mod.Isolates.Len())
+		for name := range mod.Isolates.All() {
 			isoNames = append(isoNames, name)
 		}
 		if len(isoNames) == 1 {
@@ -227,7 +227,7 @@ func CreateIsolate(iso string, mod *Module) error {
 	// Python calls this FIRST, before initializer exports, mixin/delegate/export checks.
 	var brackets []BracketEntry
 	if iso != "" {
-		if isoDef, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
+		if isoDef, ok := mod.Isolates.Get2(iso); ok && versionLE("1.7", isoCfg.IvyVersion) {
 			brackets = ApplyPresentConjectures(isoDef, mod)
 		}
 	}
@@ -308,7 +308,7 @@ func CreateIsolate(iso string, mod *Module) error {
 
 	// Construct the isolate
 	if iso != "" {
-		if _, ok := mod.Isolates[iso]; !ok {
+		if _, ok := mod.Isolates.Get2(iso); !ok {
 			return fmt.Errorf("undefined isolate: %s", iso)
 		}
 		afterInitNames := make([]string, 0, len(afterInits))
@@ -320,7 +320,7 @@ func CreateIsolate(iso string, mod *Module) error {
 			return err
 		}
 	} else {
-		if len(mod.Isolates) > 0 && isoCfg.ConeOfInfluence {
+		if mod.Isolates.Len() > 0 && isoCfg.ConeOfInfluence {
 			return fmt.Errorf("no isolate specified on command line")
 		}
 		// Apply all mixins in no particular order
@@ -489,7 +489,7 @@ func CreateIsolate(iso string, mod *Module) error {
 
 	// Python line 1944-1946: Apply bracket actions for present conjectures (version >= 1.7)
 	if iso != "" {
-		if _, ok := mod.Isolates[iso]; ok && versionLE("1.7", isoCfg.IvyVersion) {
+		if _, ok := mod.Isolates.Get2(iso); ok && versionLE("1.7", isoCfg.IvyVersion) {
 			xtracer.Trace("check.CreateIsolate before_bracket_actions n_brackets=%d", len(brackets))
 			for _, b := range brackets {
 				xtracer.Trace("check.CreateIsolate bracket_action actname=%s n_before=%d n_after=%d", b.ActName, len(b.Before), len(b.After))
@@ -526,7 +526,7 @@ func getModCone(mod *Module) map[string]bool {
 //
 // Corresponds to Python check_with_parameters (lines 777-806).
 func CheckWithParameters(mod *Module, isolateName string) error {
-	isoDef, ok := mod.Isolates[isolateName]
+	isoDef, ok := mod.Isolates.Get2(isolateName)
 	if !ok {
 		return fmt.Errorf("undefined isolate: %s", isolateName)
 	}

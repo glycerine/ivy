@@ -1017,7 +1017,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 // This corresponds to Python's check_module.
 func CheckModule(mod *Module) error {
 	if xtracer.Enabled {
-		xtracer.Trace("check.CheckModule ENTER isolates=%d", len(mod.Isolates))
+		xtracer.Trace("check.CheckModule ENTER isolates=%d", mod.Isolates.Len())
 	}
 	var isolates []string
 
@@ -1030,8 +1030,8 @@ func CheckModule(mod *Module) error {
 	//         else: isolates = sorted(list(im.module.isolates))
 	if mod.Cfg.Isolate != "" {
 		isolates = []string{mod.Cfg.Isolate}
-	} else if len(mod.Isolates) > 0 {
-		for name := range mod.Isolates {
+	} else if mod.Isolates.Len() > 0 {
+		for name := range mod.Isolates.All() {
 			isolates = append(isolates, name)
 		}
 		sort.Strings(isolates)
@@ -1068,7 +1068,7 @@ func CheckModule(mod *Module) error {
 		if isolate != "" {
 			// Check if isolate has anything to verify or is trusted
 			// Python: if len(idef.verified()) == 0 or isinstance(idef, ivy_ast.TrustedIsolateDef): continue
-			if idef, exists := mod.Isolates[isolate]; exists {
+			if idef, exists := mod.Isolates.Get2(isolate); exists {
 				if len(idef.Verified()) == 0 || idef.Trusted {
 					continue
 				}

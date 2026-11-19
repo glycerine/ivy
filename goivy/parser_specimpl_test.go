@@ -195,10 +195,10 @@ func TestProcessAttributesStoresCommonAsString(t *testing.T) {
 func TestAddGlobalObjectsToIsolatesUsesAttributeInsertionOrder(t *testing.T) {
 	mod := New()
 	cfg := mod.Cfg.AstCfg
-	mod.Isolates["client"] = cfg.NewIsolateDef(
+	mod.Isolates.Set("client", cfg.NewIsolateDef(
 		[]Node{cfg.NewAtom("client"), cfg.NewAtom("client")},
 		0,
-	)
+	))
 
 	mod.SetAttribute("b.global", "yes")
 	mod.SetAttribute("a.global", "yes")
@@ -207,7 +207,7 @@ func TestAddGlobalObjectsToIsolatesUsesAttributeInsertionOrder(t *testing.T) {
 
 	addGlobalObjectsToIsolates(mod)
 
-	iso := mod.Isolates["client"]
+	iso := mod.Isolates.Get("client")
 	got := make([]string, 0, len(iso.Elems)-2)
 	for _, elem := range iso.Elems[2:] {
 		got = append(got, NodeRep(elem))

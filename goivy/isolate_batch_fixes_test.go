@@ -812,7 +812,7 @@ func TestCheckIsolateCompleteness_CheckedProperty(t *testing.T) {
 	iso := cfg.NewIsolateDef(
 		[]Node{cfg.NewAtom("test_iso"), cfg.NewAtom("myprop")}, 0,
 	)
-	m.Isolates["test_iso"] = iso
+	m.Isolates.Set("test_iso", iso)
 
 	result := CheckIsolateCompleteness(m)
 	for _, err := range result {

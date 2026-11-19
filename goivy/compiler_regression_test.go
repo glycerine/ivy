@@ -67,9 +67,9 @@ export bar.a
 	}
 
 	// Verify bar is registered in mod.Isolates
-	if _, ok := mod.Isolates["bar"]; !ok {
-		keys := make([]string, 0, len(mod.Isolates))
-		for k := range mod.Isolates {
+	if _, ok := mod.Isolates.Get2("bar"); !ok {
+		keys := make([]string, 0, mod.Isolates.Len())
+		for k := range mod.Isolates.All() {
 			keys = append(keys, k)
 		}
 		t.Errorf("bar not found in mod.Isolates; have keys: %v", keys)
@@ -109,7 +109,7 @@ isolate parametrized(n:key) = {
 		t.Fatalf("IvyCompile error: %v", err)
 	}
 
-	iso, ok := mod.Isolates["parametrized"]
+	iso, ok := mod.Isolates.Get2("parametrized")
 	if !ok {
 		t.Fatal("parametrized isolate was not registered")
 	}

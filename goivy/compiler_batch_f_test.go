@@ -435,12 +435,12 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	// Isolate iso_a verifies obj_a, iso_b verifies obj_b
-	mod.Isolates["iso_a"] = cfg.NewIsolateDef(
+	mod.Isolates.Set("iso_a", cfg.NewIsolateDef(
 		[]Node{cfg.NewAtom("iso_a"), cfg.NewAtom("obj_a")}, 0,
-	)
-	mod.Isolates["iso_b"] = cfg.NewIsolateDef(
+	))
+	mod.Isolates.Set("iso_b", cfg.NewIsolateDef(
 		[]Node{cfg.NewAtom("iso_b"), cfg.NewAtom("obj_b")}, 0,
-	)
+	))
 
 	CreateConjActions(mod)
 
@@ -490,9 +490,9 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	mod.Exports = append(mod.Exports, exp1, exp2)
 
 	// iso1 verifies "obj"
-	mod.Isolates["iso1"] = cfg.NewIsolateDef(
+	mod.Isolates.Set("iso1", cfg.NewIsolateDef(
 		[]Node{cfg.NewAtom("iso1"), cfg.NewAtom("obj")}, 0,
-	)
+	))
 
 	CreateConjActions(mod)
 
