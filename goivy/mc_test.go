@@ -483,19 +483,6 @@ func TestAigerGetState(t *testing.T) {
 	}
 }
 
-func TestAigerDebug(t *testing.T) {
-	a := NewAiger([]string{"x"}, []string{"s"}, []string{"o"})
-	a.Set("s", a.MustLit("s"))
-	a.Set("o", a.True())
-	dbg := a.Debug()
-	if !strings.Contains(dbg, "inputs:") {
-		t.Error("Debug output should contain 'inputs:'")
-	}
-	if !strings.Contains(dbg, "latches:") {
-		t.Error("Debug output should contain 'latches:'")
-	}
-}
-
 func TestAigerGateGeneration(t *testing.T) {
 	a := NewAiger([]string{"a", "b", "c"}, nil, nil)
 	aLit := a.MustLit("a")
@@ -1109,14 +1096,6 @@ func TestMatchNestedPushPop(t *testing.T) {
 	}
 	if m.Map["A"] != "1" {
 		t.Error("A should still be bound")
-	}
-}
-
-func TestStrMap(t *testing.T) {
-	m := map[string]string{"x": "1"}
-	s := StrMap(m)
-	if !strings.Contains(s, "x:1") {
-		t.Errorf("StrMap should contain 'x:1', got %s", s)
 	}
 }
 

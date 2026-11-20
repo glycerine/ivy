@@ -256,22 +256,3 @@ func (a *Aiger) GetState(post string) map[string]byte {
 	}
 	return res
 }
-
-// Debug prints debug information about the circuit.
-func (a *Aiger) Debug() string {
-	var b strings.Builder
-	fmt.Fprintf(&b, "inputs: %v\n", a.Inputs)
-	fmt.Fprintf(&b, "latches: %v\n", a.Latches)
-	fmt.Fprintf(&b, "outputs: %v\n", a.Outputs)
-	fmt.Fprintln(&b, "map:")
-	for x, y := range a.VarMap {
-		fmt.Fprintf(&b, "  %s = %d\n", x, y)
-	}
-	fmt.Fprintln(&b, "values:")
-	for x, y := range a.Values {
-		fmt.Fprintf(&b, "  %s = %d\n", x, y)
-	}
-	fmt.Fprintln(&b, "self:")
-	fmt.Fprint(&b, a.String())
-	return b.String()
-}

@@ -1,9 +1,6 @@
 package goivy
 
-import (
-	"fmt"
-	"strings"
-)
+import "strings"
 
 // Match implements unification with a push/pop stack for backtracking.
 // This is used for schema matching in axiom expansion.
@@ -80,15 +77,6 @@ func (m *MCMatch) Copy() map[string]string {
 		cp[k] = v
 	}
 	return cp
-}
-
-// StrMap returns a string representation of a map.
-func StrMap(m map[string]string) string {
-	parts := make([]string, 0, len(m))
-	for k, v := range m {
-		parts = append(parts, fmt.Sprintf("%s:%s", k, v))
-	}
-	return "{" + strings.Join(parts, ",") + "}"
 }
 
 // MatchSchemaPrems yields all possible match maps by matching schema

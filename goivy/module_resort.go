@@ -160,17 +160,3 @@ func ResortAliasesMap(amap map[string]string, subs map[NodeKey]*SortRefinement) 
 	}
 	return result
 }
-
-// InstantiateNonEPR instantiates non-EPR formulas with the given ground terms.
-// Corresponds to Python's instantiate_non_epr.
-func InstantiateNonEPR(nonEPR map[string]Expr, groundTerms []Expr) []Expr {
-	var result []Expr
-	for _, fmla := range nonEPR {
-		// For each non-EPR formula, substitute ground terms for the
-		// non-variable parameters.
-		// This is a simplified version; the full implementation would
-		// iterate over all valid instantiations.
-		result = append(result, fmla)
-	}
-	return result
-}

@@ -100,20 +100,6 @@ func LitEq(lit1, lit2 *LogicLiteral) bool {
 	return lit1.Polarity == lit2.Polarity && lit1.Atom.Equal(lit2.Atom)
 }
 
-// UsedVariableNamesAst returns the names of all used variables in an AST.
-// Corresponds to Python's used_variable_names_ast
-// (ivy_logic_utils.py:1206-1208).
-func UsedVariableNamesAst(ast Expr) []string {
-	vars := UsedVariables(ast)
-	result := make([]string, 0, len(vars))
-	for _, v := range vars {
-		if vv, ok := v.(*LogicVariable); ok {
-			result = append(result, vv.Name)
-		}
-	}
-	return result
-}
-
 // VariablesDistinctAst renames variables in ast1 so they don't occur in ast2.
 // Corresponds to Python's variables_distinct_ast
 // (ivy_logic_utils.py:1210-1214).
