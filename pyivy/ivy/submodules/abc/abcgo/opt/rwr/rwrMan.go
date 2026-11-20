@@ -20,9 +20,7 @@ func Rwr_ManStart(precompute int32) *Rwr_Man_t {
 	}
 	p.nClasses = 5
 	p.nTravIds = 1
-	for _, perm := range npn.Permutations() {
-		p.pPerms4 = append(p.pPerms4, append([]byte(nil), perm[:]...))
-	}
+	p.pPerms4 = npn.Permutations()
 	p.vLevNums = make([]int32, 0, 50)
 	p.vFanins = make([]any, 0, 50)
 	p.vFaninsCur = make([]any, 0, 50)

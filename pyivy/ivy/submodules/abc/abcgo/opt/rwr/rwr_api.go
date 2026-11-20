@@ -3,6 +3,9 @@ package rwr
 import (
 	"fmt"
 	"os"
+	"sort"
+
+	"github.com/glycerine/abcgo/aig/ivy"
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/bool/dec"
@@ -18,20 +21,13 @@ func Rwr_RewriteCuts(p *Rwr_Man_t, net Rwr_Network, root any, cuts []Rwr_Cut, re
 	if p == nil {
 		panic("rwr: nil rewrite manager")
 	}
-	if p.rewriteLibrary == nil {
-		p.rewriteLibrary = rwrStartLibrary()
+	if p.vClasses == nil {
+		// The Go API also accepts a zero-value or precompute-only manager.
+		normal := Rwr_ManStart(0)
+		p.vClasses, p.pMapInv = normal.vClasses, normal.pMapInv
+		p.pMap, p.pPerms, p.pPhases, p.pPerms4 = normal.pMap, normal.pPerms, normal.pPhases, normal.pPerms4
 	}
-	lib := p.rewriteLibrary
-	choice := lib.rwrRewriteCuts(net, root, cuts, required, fUseZeros != 0)
-	p.nNodesConsidered = int32(lib.nNodesConsidered)
-	p.nNodesRewritten = int32(lib.nNodesRewritten)
-	p.nNodesGained = int32(lib.nNodesGained)
-	p.nCutsGood = int32(lib.nCutsGood)
-	p.nCutsBad = int32(lib.nCutsBad)
-	p.nSubgraphs = int32(lib.nSubgraphs)
-	for i, score := range lib.classScores {
-		p.nScores[i] = int32(score)
-	}
+	choice := p.rwrRewriteCuts(net, root, cuts, required, fUseZeros != 0)
 	if choice.graph == nil {
 		return -1
 	}
@@ -121,26 +117,38 @@ func (n *abcRewriteNetwork) CountGraph(root any, graph *dec.Dec_Graph_t, saved, 
 
 // Rwr_ScoresClean clears per-library rewrite scoring counters.
 func Rwr_ScoresClean(p *Rwr_Man_t) {
-	for i := range p.nScores {
-		p.nScores[i] = 0
-	}
-	if p.rewriteLibrary != nil {
-		for i := range p.rewriteLibrary.classScores {
-			p.rewriteLibrary.classScores[i] = 0
-		}
-		for i := range p.rewriteLibrary.scores {
-			p.rewriteLibrary.scores[i] = 0
-			p.rewriteLibrary.gains[i] = 0
-			p.rewriteLibrary.added[i] = 0
+	for _, class := range p.vClasses {
+		for _, node := range class {
+			node.nScore, node.nGain, node.nAdded = 0, 0, 0
 		}
 	}
 }
 
-// Rwr_ScoresReport reports NPN classes selected by the rewrite pass.
+// Rwr_ScoresReport orders classes by total gain and prints the scored graphs.
 func Rwr_ScoresReport(p *Rwr_Man_t) {
-	for class, score := range p.nScores {
-		if score != 0 {
-			fmt.Fprintf(os.Stdout, "CLASS %3d: Rewrites = %6d\n", class, score)
+	type classGain struct{ class, gain int }
+	var ranked []classGain
+	for class, nodes := range p.vClasses {
+		var gain int
+		for _, node := range nodes {
+			gain += int(node.nGain)
+		}
+		ranked = append(ranked, classGain{class, gain})
+	}
+	sort.SliceStable(ranked, func(i, j int) bool { return ranked[i].gain > ranked[j].gain })
+	for _, entry := range ranked {
+		if entry.gain == 0 {
+			break
+		}
+		class := p.vClasses[entry.class]
+		truth := uint32(p.pMapInv[entry.class])
+		fmt.Fprintf(os.Stdout, "CLASS %3d: Subgr = %3d. Total gain = %6d.  %016b  ", entry.class, len(class), entry.gain, truth)
+		ivy.Ivy_TruthDsdComputePrint(truth | truth<<16)
+		for i, node := range class {
+			if node.nScore != 0 {
+				fmt.Fprintf(os.Stdout, "    %2d: S=%5d. A=%5d. G=%6d. ", i, node.nScore, node.nAdded, node.nGain)
+				dec.Dec_GraphPrint(os.Stdout, node.graph, nil, "")
+			}
 		}
 	}
 }

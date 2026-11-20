@@ -2,7 +2,6 @@ package rwr
 
 import (
 	"github.com/glycerine/abcgo/bool/dec"
-	"github.com/glycerine/abcgo/misc/extra/npn"
 )
 
 // rwrNetwork is the portion of the ABC network used by Rwr_NodeRewrite.
@@ -38,11 +37,11 @@ type rwrChoice struct {
 
 // rwrRewriteCuts ports the cut loop of Rwr_NodeRewrite. The caller supplies
 // cuts following the trivial self cut, matching C's pCut = pCut->pNext.
-func (p *rwrLibrary) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, required int32, useZeros bool) rwrChoice {
+func (p *Rwr_Man_t) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, required int32, useZeros bool) rwrChoice {
 	p.nNodesConsidered++
 	result := rwrChoice{gain: -1}
 	var bestTruth uint16
-	perms := npn.Permutations()
+	var fanins [4]any
 	for _, cut := range cuts {
 		if len(cut.Leaves) < 4 {
 			continue
@@ -50,9 +49,8 @@ func (p *rwrLibrary) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, req
 		if len(cut.Leaves) != 4 {
 			panic("rwr: expected four-leaf cut")
 		}
-		phase := p.phases[cut.Truth]
-		perm := perms[p.permutations[cut.Truth]]
-		fanins := make([]any, 4)
+		phase := p.pPhases[cut.Truth]
+		perm := p.pPerms4[p.pPerms[cut.Truth]]
 		valid, single := true, 0
 		for i := range fanins {
 			fanin, ok := net.Lookup(cut.Leaves[perm[i]])
@@ -76,14 +74,14 @@ func (p *rwrLibrary) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, req
 		if single > 2 {
 			continue
 		}
-		net.MarkBoundary(fanins, 1)
+		net.MarkBoundary(fanins[:], 1)
 		saved := net.LabelMFFC(root)
-		net.MarkBoundary(fanins, -1)
-		graph, gain := p.rwrEvaluateCut(cut.Truth, fanins, saved, func(graph *dec.Dec_Graph_t) int32 {
+		net.MarkBoundary(fanins[:], -1)
+		graph, gain := p.rwrEvaluateCut(cut.Truth, fanins[:], saved, func(graph *dec.Dec_Graph_t) int32 {
 			return net.CountGraph(root, graph, saved, required)
 		})
 		if graph != nil && gain > result.gain {
-			result = rwrChoice{graph, append([]any(nil), fanins...), phase&16 != 0, gain}
+			result = rwrChoice{graph, append(result.fanins[:0], fanins[:]...), phase&16 != 0, gain}
 			bestTruth = cut.Truth
 		}
 	}
@@ -91,8 +89,8 @@ func (p *rwrLibrary) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, req
 		for i, fanin := range result.fanins {
 			dec.Dec_GraphSetLeafFunc(result.graph, int32(i), fanin)
 		}
-		p.classScores[p.classMap[bestTruth]]++
-		p.nNodesGained += int(result.gain)
+		p.nScores[p.pMap[bestTruth]]++
+		p.nNodesGained += result.gain
 		if useZeros || result.gain > 0 {
 			p.nNodesRewritten++
 		}

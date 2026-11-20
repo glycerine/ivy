@@ -13,7 +13,7 @@ type Rwr_Man_t struct {
 	pPhases, pPerms, pMap                                                  []byte
 	pMapInv                                                                []uint16
 	pPractical                                                             []bool
-	pPerms4                                                                [][]byte
+	pPerms4                                                                [24][4]byte
 	vForest                                                                []*Rwr_Node_t
 	pTable                                                                 []*Rwr_Node_t
 	vClasses                                                               [][]*Rwr_Node_t
@@ -27,7 +27,6 @@ type Rwr_Man_t struct {
 	nScores                                                                [222]int32
 	nCutsGood, nCutsBad, nSubgraphs                                        int32
 	timeStart, timeCut, timeRes, timeEval, timeMffc, timeUpdate, timeTotal int64
-	rewriteLibrary                                                         *rwrLibrary
 }
 
 // Rwr_NodeRef carries the bit C stores in the low bit of a node pointer.

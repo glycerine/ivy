@@ -173,3 +173,11 @@ The native driver in opt/cut/test_vectors/perf_truth.c uses the same leaf placem
 | 12 | 294,756–299,156 | 2,662–2,834 | 2,796 |
 
 The one-thread i10 read/balance/rewrite stage took 120.9–123.4 ms over three trials, with 2,004 ANDs and depth 36. Cut and extra package race tests passed, including the native small-function truth and phase fixtures.
+
+### Score the rewrite manager's own decomposition graphs
+
+The rewrite path previously rebuilt its canonicalization tables, decoded a second forest and constructed a second set of candidate graphs on the first node. A winning four-input XOR gave gain two while the initialized manager's winning node still had zero score, gain and added nodes. A separate regression showed the score report omitted candidate gains and cleanup erased the class count while retaining the candidate scores. Both tests failed on the previous implementation.
+
+The evaluator now uses the manager's own class lists, graphs, permutation table and per-node scores. Score reporting and clearing follow rwrEva.c. The native class-order fixture checks all 222 classes against the actual manager, and an independent test decoder checks the candidate graph functions. Complete rewrite package race tests passed.
+
+The i10 read/balance/rewrite stage reached 103.8–107.7 ms/op, 36.2 MB and 571,640 allocations, down from 120.9–123.4 ms and 42.9 MB. The complete Go demo finished in 1.37 s in one run, including 0.41 s rewriting and 0.89 s verification. Native CEC independently proved the exported BLIF equivalent to i10.

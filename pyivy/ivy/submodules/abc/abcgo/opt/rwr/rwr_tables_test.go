@@ -32,8 +32,16 @@ func TestCanonicalDecompositionsPreserveTruth(t *testing.T) {
 	forest := rwrLoadForest(s_RwtAigSubgraphs)
 	canonical, _, _, classMap := npn.Extra_Truth4VarNPN()
 	classes, _ := rwrClassifyForest(forest, canonical, classMap)
-	for _, nodes := range classes {
-		for _, id := range nodes {
+	manager := Rwr_ManStart(0)
+	for class, nodes := range classes {
+		if len(nodes) != len(manager.vClasses[class]) {
+			t.Fatalf("class %d has %d candidates, want %d", class, len(manager.vClasses[class]), len(nodes))
+		}
+		for i, id := range nodes {
+			actual := manager.vClasses[class][i]
+			if int(actual.Id) != id || uint16(dec.Dec_GraphDeriveTruth(actual.graph)) != forest[id].truth {
+				t.Fatalf("class %d candidate %d disagrees with independently decoded forest", class, i)
+			}
 			graph := rwrDecomposition(forest, id)
 			if got := uint16(dec.Dec_GraphDeriveTruth(graph)); got != forest[id].truth {
 				t.Fatalf("node %d: decomposition %#x, want %#x", id, got, forest[id].truth)
@@ -43,13 +51,13 @@ func TestCanonicalDecompositionsPreserveTruth(t *testing.T) {
 }
 
 func TestStartedLibraryCanReconstructFunctions(t *testing.T) {
-	p := rwrStartLibrary()
+	p := Rwr_ManStart(0)
 	permutations := npn.Permutations()
 	count := 0
-	for class, nodes := range p.classes {
-		for _, id := range nodes {
-			if p.graphs[id] == nil || p.inverse[class] != p.forest[id].truth {
-				t.Fatalf("missing graph or inverse mapping for node %d", id)
+	for class, nodes := range p.vClasses {
+		for _, node := range nodes {
+			if node.graph == nil || p.pMapInv[class] != node.uTruth {
+				t.Fatalf("missing graph or inverse mapping for node %d", node.Id)
 			}
 			count++
 		}
@@ -58,7 +66,7 @@ func TestStartedLibraryCanReconstructFunctions(t *testing.T) {
 		t.Fatal("library has no canonical implementations")
 	}
 	for truth := 0; truth < 1<<16; truth++ {
-		got := npn.Transform(p.canonical[truth], p.phases[truth], permutations[p.permutations[truth]])
+		got := npn.Transform(p.puCanons[truth], p.pPhases[truth], permutations[p.pPerms[truth]])
 		if got != uint16(truth) {
 			t.Fatalf("truth %#x reconstructed as %#x", truth, got)
 		}
@@ -66,10 +74,10 @@ func TestStartedLibraryCanReconstructFunctions(t *testing.T) {
 }
 
 func TestCutEvaluationSelectsStrictlyBetterCandidate(t *testing.T) {
-	p := rwrStartLibrary()
+	p := Rwr_ManStart(0)
 	class := -1
-	for i, nodes := range p.classes {
-		if len(nodes) >= 4 && dec.Dec_GraphLeaveNum(p.graphs[nodes[0]]) == 4 {
+	for i, nodes := range p.vClasses {
+		if len(nodes) >= 4 && dec.Dec_GraphLeaveNum(nodes[0].graph) == 4 {
 			class = i
 			break
 		}
@@ -77,10 +85,10 @@ func TestCutEvaluationSelectsStrictlyBetterCandidate(t *testing.T) {
 	if class < 0 {
 		t.Fatal("fixture needs a class with four implementations")
 	}
-	nodes := p.classes[class]
+	nodes := p.vClasses[class]
 	inputs := []any{1, 2, 3, 4}
 	calls := 0
-	best, gain := p.rwrEvaluateCut(p.inverse[class], inputs, 5, func(g *dec.Dec_Graph_t) int32 {
+	best, gain := p.rwrEvaluateCut(p.pMapInv[class], inputs, 5, func(g *dec.Dec_Graph_t) int32 {
 		for i, want := range inputs {
 			if dec.Dec_GraphLeafFunc(g, int32(i)) != want {
 				t.Fatalf("leaf %d not assigned", i)
@@ -99,10 +107,10 @@ func TestCutEvaluationSelectsStrictlyBetterCandidate(t *testing.T) {
 			return 5
 		}
 	})
-	if calls != len(nodes) || p.nSubgraphs != len(nodes) || gain != 4 || best != p.graphs[nodes[2]] {
+	if calls != len(nodes) || int(p.nSubgraphs) != len(nodes) || gain != 4 || best != nodes[2].graph {
 		t.Fatalf("calls=%d candidates=%d gain=%d", calls, p.nSubgraphs, gain)
 	}
-	if p.scores[nodes[1]] != 1 || p.gains[nodes[1]] != 2 || p.added[nodes[1]] != 3 || p.scores[nodes[2]] != 1 || p.gains[nodes[2]] != 4 || p.added[nodes[2]] != 1 || p.scores[nodes[3]] != 0 {
+	if nodes[1].nScore != 1 || nodes[1].nGain != 2 || nodes[1].nAdded != 3 || nodes[2].nScore != 1 || nodes[2].nGain != 4 || nodes[2].nAdded != 1 || nodes[3].nScore != 0 {
 		t.Fatal("candidate scoring does not follow C's strict-improvement rule")
 	}
 }
@@ -116,7 +124,7 @@ func TestPracticalClassesSentinel(t *testing.T) {
 			t.Fatalf("classes out of order at %d", i)
 		}
 	}
-	practical := rwrPracticalClasses()
+	practical := Rwr_ManGetPractical(&Rwr_Man_t{nFuncs: 1 << 16})
 	count := 0
 	for _, yes := range practical {
 		if yes {

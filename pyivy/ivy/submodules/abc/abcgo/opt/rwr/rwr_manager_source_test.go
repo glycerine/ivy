@@ -18,11 +18,11 @@ func TestSourceManagerClassOrdering(t *testing.T) {
 	if _, err = fmt.Fscan(in, &nodes, &classes); err != nil {
 		t.Fatal(err)
 	}
-	p := rwrStartLibrary()
-	if len(p.forest) != nodes || len(p.classes) != classes {
-		t.Fatalf("source nodes/classes %d/%d Go %d/%d", nodes, classes, len(p.forest), len(p.classes))
+	p := Rwr_ManStart(0)
+	if len(p.vForest) != nodes || len(p.vClasses) != classes {
+		t.Fatalf("source nodes/classes %d/%d Go %d/%d", nodes, classes, len(p.vForest), len(p.vClasses))
 	}
-	for class, list := range p.classes {
+	for class, list := range p.vClasses {
 		var count int
 		if _, err = fmt.Fscan(in, &count); err != nil {
 			t.Fatal(err)
@@ -30,14 +30,14 @@ func TestSourceManagerClassOrdering(t *testing.T) {
 		if len(list) != count {
 			t.Fatalf("class %d C=%d Go=%d", class, count, len(list))
 		}
-		for _, id := range list {
+		for _, node := range list {
 			var sourceID int
 			var truth uint16
 			if _, err = fmt.Fscanf(in, " %d:%d", &sourceID, &truth); err != nil {
 				t.Fatal(err)
 			}
-			if id != sourceID || p.forest[id].truth != truth {
-				t.Fatalf("class %d C=%d:%d Go=%d:%d", class, sourceID, truth, id, p.forest[id].truth)
+			if int(node.Id) != sourceID || node.uTruth != truth {
+				t.Fatalf("class %d C=%d:%d Go=%d:%d", class, sourceID, truth, node.Id, node.uTruth)
 			}
 		}
 	}
