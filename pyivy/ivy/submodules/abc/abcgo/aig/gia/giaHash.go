@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 func Gia_ManHashOne(a, b, c, size int32) int32 {
@@ -14,17 +15,19 @@ func Gia_ManHashOne(a, b, c, size int32) int32 {
 // HashFind returns a stable vector slot until the next append/resize. Callers
 // reacquire it after allocation, as in the original linked-bucket table.
 func Gia_ManHashFind(p *Gia_Man_t, a, b, c int32) *int32 {
-	if Vec_IntSize(&p.vHTable) == 0 {
+	buckets := vec.Vec_IntArray(&p.vHTable)
+	if len(buckets) == 0 {
 		panic("gia: structural hash is not started")
 	}
-	slot := Vec_IntEntryP(&p.vHTable, int(Gia_ManHashOne(a, b, c, int32(Vec_IntSize(&p.vHTable)))))
+	slot := &buckets[Gia_ManHashOne(a, b, c, int32(len(buckets)))]
+	links := vec.Vec_IntArray(&p.vHash)
 	for *slot != 0 {
 		id := *slot
 		obj := p.pObjs[id]
 		if Gia_ObjFaninLit0(obj, id) == a && Gia_ObjFaninLit1(obj, id) == b && (p.PMuxes == nil || Gia_ObjFaninLit2(p, id) == c) {
 			break
 		}
-		slot = Vec_IntEntryP(&p.vHash, int(id))
+		slot = &links[id]
 	}
 	return slot
 }
@@ -47,6 +50,7 @@ func Gia_ManHashAlloc(p *Gia_Man_t) {
 		size = Gia_ManAndNum(p) + 1000
 	}
 	Vec_IntFill(&p.vHTable, int(util.Abc_PrimeCudd(uint32(size))), 0)
+	vec.Vec_IntGrow(&p.vHash, max(vec.Vec_IntSize(&p.vHTable), int(p.nObjs)))
 	Vec_IntFill(&p.vHash, int(p.nObjs), 0)
 }
 func Gia_ManHashStart(p *Gia_Man_t) {
@@ -111,8 +115,13 @@ func giaHashIntern(p *Gia_Man_t, a, b, c int32, appendGate func() int32) int32 {
 		return *slot << 1
 	}
 	p.nHashMiss++
+	// Appending one gate also appends one hash link. A link slot remains
+	// valid unless that append grows the backing array.
+	grows := vec.Vec_IntSize(&p.vHash) == vec.Vec_IntCap(&p.vHash)
 	literal := appendGate()
-	slot = Gia_ManHashFind(p, a, b, c)
+	if grows {
+		slot = Gia_ManHashFind(p, a, b, c)
+	}
 	*slot = literal >> 1
 	return literal
 }

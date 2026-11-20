@@ -140,3 +140,37 @@ func TestKitAndNativeHashShareActiveTable(t *testing.T) {
 		t.Fatal("stopped hash lost canonical gate")
 	}
 }
+
+func BenchmarkHashAndChain(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		p := Gia_ManStart(64)
+		a, x := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+		Gia_ManHashAlloc(p)
+		for i := int32(0); i < 4096; i++ {
+			y := Gia_ManHashAnd(p, a, x^(i&1))
+			if Gia_ManHashAnd(p, x^(i&1), a) != y {
+				b.Fatal("hash lookup missed a commuted AND")
+			}
+			a = y
+		}
+		Gia_ManHashStop(p)
+		Gia_ManStop(p)
+	}
+}
+
+func TestHashInsertionAtLinkCapacity(t *testing.T) {
+	p := Gia_ManStart(16)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	Gia_ManHashAlloc(p)
+	// Force collisions, then force the second gate to grow the link array.
+	Vec_IntFill(&p.vHTable, 1, 0)
+	first := Gia_ManHashAnd(p, a, b)
+	links := Vec_IntArray(&p.vHash)
+	p.vHash = *Vec_IntAllocArray(links[:len(links):len(links)], len(links))
+	second := Gia_ManHashAnd(p, a^1, b)
+	third := Gia_ManHashAnd(p, a, b^1)
+	if Gia_ManHashLookupInt(p, a, b) != first || Gia_ManHashLookupInt(p, a^1, b) != second || Gia_ManHashLookupInt(p, a, b^1) != third {
+		t.Fatal("lost a colliding entry across hash link growth")
+	}
+}
