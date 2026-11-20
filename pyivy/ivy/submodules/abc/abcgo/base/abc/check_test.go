@@ -1,6 +1,10 @@
 package abc
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/glycerine/abcgo/misc/nm"
+)
 
 func validCheckedLogic() *Network {
 	n := NewNetwork("checked")
@@ -128,5 +132,165 @@ func TestSignalComparisonOrdersLatchesByOutputNames(t *testing.T) {
 	}
 	if Abc_NtkCompareSignals(makeNetwork(false), makeNetwork(true), 0, 1) != 1 {
 		t.Fatal("latches sorted by box names instead of output names")
+	}
+}
+
+func TestFullNetworkCheckUsesOwningHashManager(t *testing.T) {
+	n := Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 0)
+	defer Abc_NtkDelete(n)
+	m := n.FunctionManager.(*Abc_Aig_t)
+	a, b := Abc_NtkCreatePi(n), Abc_NtkCreatePi(n)
+	a.SetName("a")
+	b.SetName("b")
+	gate := Abc_AigAnd(m, a, b)
+	po := Abc_NtkCreatePo(n)
+	po.SetName("y")
+	Abc_ObjAddFanin(po, gate)
+	if Abc_NtkDoCheck(n) != 1 {
+		t.Fatal("valid strashed network failed")
+	}
+	Abc_AigAndDelete(m, gate.Object)
+	if Abc_NtkDoCheck(n) != 0 {
+		t.Error("whole-network check accepted AND removed from owning hash table")
+	}
+}
+
+func TestNetworkCheckRejectsDuplicateObjectSlots(t *testing.T) {
+	n := NewNetwork("duplicate slot")
+	node := n.NewObject(ObjectPI)
+	n.objects = append(n.objects, node)
+	if err := n.Check(); err == nil {
+		t.Error("same object accepted at two IDs")
+	}
+}
+
+func TestAigCheckRejectsMissingAndDuplicateGateEntries(t *testing.T) {
+	n := Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 0)
+	defer Abc_NtkDelete(n)
+	m := n.FunctionManager.(*Abc_Aig_t)
+	a, b, c := Abc_NtkCreatePi(n), Abc_NtkCreatePi(n), Abc_NtkCreatePi(n)
+	first := Abc_AigAnd(m, a, b)
+	second := Abc_AigAnd(m, first, c)
+	original := append([]*Object(nil), n.kindOrder[ObjectNode]...)
+	defer func() { n.kindOrder[ObjectNode] = original }()
+	for _, set := range [][]*Object{{first.Object}, {first.Object, first.Object}, {first.Object, second.Object, first.Object}} {
+		n.kindOrder[ObjectNode] = set
+		if Abc_AigCheck(m) != 0 {
+			t.Errorf("accepted gate inventory %v", set)
+		}
+	}
+}
+
+func TestNetworkCheckMatchesEveryReciprocalPin(t *testing.T) {
+	n := NewNetwork("mixed degree")
+	src := make([]*Object, 96)
+	for i := range src {
+		src[i] = n.NewObject(ObjectPI)
+	}
+	wide := n.NewObject(ObjectNode)
+	for i := range 192 {
+		if err := n.AddFanin(wide, src[i%len(src)].Signal()); err != nil {
+			t.Fatal(err)
+		}
+	}
+	second := n.NewObject(ObjectNode)
+	for _, i := range []int{0, 1, 0} {
+		if err := n.AddFanin(second, src[i].Signal()); err != nil {
+			t.Fatal(err)
+		}
+	}
+	hole := n.NewObject(ObjectNode)
+	if err := n.DeleteObject(hole); err != nil {
+		t.Fatal(err)
+	}
+	if err := n.Check(); err != nil {
+		t.Fatal(err)
+	}
+	// Keep both overall numbers of edges and both destination multiplicities.
+	src[3].fanouts[0], src[0].fanouts[2] = src[0].fanouts[2], src[3].fanouts[0]
+	if err := n.Check(); err == nil {
+		t.Error("accepted exchanged reciprocal edges")
+	}
+	src[3].fanouts[0], src[0].fanouts[2] = src[0].fanouts[2], src[3].fanouts[0]
+	if err := n.Check(); err != nil {
+		t.Fatal(err)
+	}
+	src[0].fanouts = append(src[0].fanouts, wide)
+	if err := n.Check(); err == nil {
+		t.Error("accepted excess duplicate fanout")
+	}
+}
+
+func TestNetworkCheckAuditsAllObjectInventories(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		corrupt func(*Network)
+	}{
+		{"extra box", func(n *Network) { n.boxes = append(n.boxes, n.cis[0]) }},
+		{"missing logic node", func(n *Network) { delete(n.kindOrder, ObjectNode) }},
+		{"wrong logic node", func(n *Network) { n.kindOrder[ObjectNode] = []*Object{n.cis[0]} }},
+		{"nil box", func(n *Network) { n.boxes = append(n.boxes, nil) }},
+		{"foreign box", func(n *Network) { n.boxes = append(n.boxes, NewNetwork("other").NewObject(ObjectWhitebox)) }},
+		{"missing whitebox", func(n *Network) { n.NewObject(ObjectWhitebox); n.boxes = nil }},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			n := validCheckedLogic()
+			tc.corrupt(n)
+			if Abc_NtkDoCheck(n) != 0 {
+				t.Error("invalid inventory accepted")
+			}
+		})
+	}
+}
+func TestCheckLatchRejectsMissingObject(t *testing.T) {
+	if Abc_NtkCheckLatch(validCheckedLogic(), nil) != 0 {
+		t.Fatal("accepted missing latch")
+	}
+}
+func TestCheckNamesTracksBothTerminalKinds(t *testing.T) {
+	n := NewNetwork("names")
+	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	a.SetName("shared")
+	b.SetName("second")
+	y := n.NewObject(ObjectPO)
+	y.SetName("shared")
+	Abc_ObjAddFanin(y, a)
+	if Abc_NtkCheckNames(n) != 1 {
+		t.Fatal("direct same-name output rejected")
+	}
+	b.SetName("shared")
+	if Abc_NtkCheckNames(n) != 0 {
+		t.Fatal("duplicate input name accepted")
+	}
+	b.SetName("second")
+	z := n.NewObject(ObjectPO)
+	Abc_ObjAddFanin(z, a)
+	if Abc_NtkCheckNames(n) != 0 {
+		t.Fatal("unnamed output accepted")
+	}
+	z.SetName("shared")
+	if Abc_NtkCheckNames(n) != 0 {
+		t.Fatal("duplicate output name accepted")
+	}
+	z.SetName("second")
+	if Abc_NtkCheckNames(n) != 0 {
+		t.Fatal("misconnected namesake accepted")
+	}
+	z.SetName("out")
+	nm.Nm_ManStoreIdName(n.names, 4711, int32(ObjectPO), "stale", "")
+	if Abc_NtkCheckNames(n) != 0 {
+		t.Fatal("deleted name ID accepted")
+	}
+}
+func TestCheckAigRejectsCachedTrivialPairs(t *testing.T) {
+	n := NewNetwork("reductions")
+	m := Abc_AigAlloc(n)
+	a := n.NewObject(ObjectPI).Signal()
+	for _, b := range []Edge{a, a.Not(), n.One(), n.One().Not()} {
+		gate := Abc_AigAndCreate(m, a, b)
+		if Abc_AigCheck(m) != 0 {
+			t.Errorf("accepted reducible AND with second operand %+v", b)
+		}
+		Abc_AigDeleteNode(m, gate.Object)
 	}
 }

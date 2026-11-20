@@ -1,9 +1,11 @@
 #include "base/abc/abc.h"
 #include "base/io/ioAbc.h"
 #include "base/main/main.h"
+#include "base/cmd/cmd.h"
 #include "proof/fraig/fraig.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 /* Matches BenchmarkI10NativeResynthesisCEC. Load the same pair before timing
@@ -12,11 +14,26 @@ int main(int argc, char **argv)
 {
     int count = argc == 4 ? atoi(argv[3]) : 0;
     if (count <= 0) {
-        fprintf(stderr, "usage: perf_cec original.aig resynthesized.aig iterations\n");
+        fprintf(stderr, "usage: perf_cec original.aig {resynthesized.aig|check} iterations\n");
         return 1;
     }
     Abc_Start();
     Abc_Ntk_t *left = Io_ReadAiger(argv[1], 1);
+    if (left && strcmp(argv[2], "check") == 0) {
+        if (Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), "set checkfio"))
+            return 1;
+        struct timespec begin, end;
+        clock_gettime(CLOCK_MONOTONIC, &begin);
+        for (int i = 0; i < count; ++i)
+            if (!Abc_NtkDoCheck(left))
+                return 2;
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        double us = (end.tv_sec-begin.tv_sec)*1e6 + (end.tv_nsec-begin.tv_nsec)*1e-3;
+        printf("%d ANDs, %.3f us/check\n", Abc_NtkNodeNum(left), us/count);
+        Abc_NtkDelete(left);
+        Abc_Stop();
+        return 0;
+    }
     Abc_Ntk_t *right = Io_ReadAiger(argv[2], 1);
     if (!left || !right)
         return 1;

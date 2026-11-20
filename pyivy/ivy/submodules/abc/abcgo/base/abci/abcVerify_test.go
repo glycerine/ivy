@@ -163,3 +163,17 @@ func BenchmarkI10NativeResynthesisCEC(b *testing.B) {
 	}
 	b.ReportMetric(float64(nodes), "miter-ANDs/op")
 }
+
+func BenchmarkI10NetworkCheck(b *testing.B) {
+	n, err := abcio.ReadAiger("../../../i10.aig", true)
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer abc.Abc_NtkDelete(n)
+	b.ReportAllocs()
+	for b.Loop() {
+		if abc.Abc_NtkDoCheck(n) != 1 {
+			b.Fatal("i10 failed network check")
+		}
+	}
+}

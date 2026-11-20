@@ -1,7 +1,6 @@
 package abc
 
 import (
-	"github.com/glycerine/abcgo/misc/nm"
 	"sort"
 	"strings"
 )
@@ -21,33 +20,25 @@ func Abc_NtkDoCheck(n *Network) int32 {
 	if n == nil || n.Type < uint8(ABC_NTK_NETLIST) || n.Type > uint8(ABC_NTK_STRASH) || n.Function < uint8(ABC_FUNC_SOP) || n.Function > uint8(ABC_FUNC_BLACKBOX) {
 		return 0
 	}
-	if n.Check() != nil || Abc_NtkCheckPis(n) == 0 || Abc_NtkCheckPos(n) == 0 {
-		return 0
-	}
-	if !checkCombinedTerminals(n, n.cis, true) || !checkCombinedTerminals(n, n.cos, false) {
+	if n.Check() != nil || !checkObjectInventories(n) || !checkPiPins(n) || !checkPoPins(n) {
 		return 0
 	}
 	if Abc_NtkCheckNames(n) == 0 {
 		return 0
 	}
 	onlyLatches := true
-	for _, box := range n.Boxes() {
+	for _, box := range n.boxes {
 		if box.Kind != ObjectLatch {
 			onlyLatches = false
 		}
 	}
-	if onlyLatches && (len(n.cis) != len(n.ObjectsOfKind(ObjectPI))+len(n.Boxes()) || len(n.cos) != len(n.ObjectsOfKind(ObjectPO))+len(n.Boxes())) {
+	if onlyLatches && (len(n.cis) != len(n.kindOrder[ObjectPI])+len(n.boxes) || len(n.cos) != len(n.kindOrder[ObjectPO])+len(n.boxes)) {
 		return 0
 	}
 	if n.Function == uint8(ABC_FUNC_BLACKBOX) {
 		return 1
 	}
-	for _, o := range n.Objects() {
-		if Abc_NtkCheckObj(n, o) == 0 {
-			return 0
-		}
-	}
-	nets := n.ObjectsOfKind(ObjectNet)
+	nets := n.kindOrder[ObjectNet]
 	if n.Type != uint8(ABC_NTK_NETLIST) && len(nets) > 0 {
 		return 0
 	}
@@ -57,93 +48,142 @@ func Abc_NtkDoCheck(n *Network) int32 {
 		}
 	}
 	if n.Type == uint8(ABC_NTK_STRASH) {
-		if Abc_AigCheck(Abc_AigAlloc(n)) == 0 {
+		manager, ok := n.FunctionManager.(*Abc_Aig_t)
+		if !ok {
+			manager = Abc_AigAlloc(n)
+		}
+		if manager == nil || manager.Network != n || checkAigNodes(manager) == 0 {
 			return 0
 		}
 	} else {
-		for _, o := range n.ObjectsOfKind(ObjectNode) {
+		for _, o := range n.kindOrder[ObjectNode] {
 			if Abc_NtkCheckNode(n, o) == 0 {
 				return 0
 			}
 		}
 	}
-	for _, latch := range n.ObjectsOfKind(ObjectLatch) {
+	for _, latch := range n.kindOrder[ObjectLatch] {
 		if Abc_NtkCheckLatch(n, latch) == 0 {
 			return 0
 		}
 	}
 	return 1
 }
-func checkCombinedTerminals(n *Network, objects []*Object, input bool) bool {
-	seen := map[*Object]bool{}
-	for _, o := range objects {
-		if !n.contains(o) || seen[o] || (input && !o.IsCI()) || (!input && !o.IsCO()) {
+
+// Check the per-kind order and the disjoint CI, CO and box orders against
+// the live ID table. A combined-list entry must already have a per-kind entry.
+func checkObjectInventories(n *Network) bool {
+	seen := make([]byte, len(n.objects))
+	for kind, objects := range n.kindOrder {
+		if kind <= ObjectNone || kind > ObjectBlackbox {
 			return false
 		}
-		seen[o] = true
+		for _, o := range objects {
+			if !n.contains(o) || o.Kind != kind || seen[o.ID] != 0 {
+				return false
+			}
+			seen[o.ID] = 1
+		}
 	}
-	for _, o := range n.Objects() {
-		if ((input && o.IsCI()) || (!input && o.IsCO())) && !seen[o] {
+	for _, list := range []struct {
+		objects []*Object
+		kinds   uint32
+	}{
+		{n.cis, 1<<ObjectPI | 1<<ObjectBO},
+		{n.cos, 1<<ObjectPO | 1<<ObjectBI},
+		{n.boxes, 1<<ObjectLatch | 1<<ObjectWhitebox | 1<<ObjectBlackbox},
+	} {
+		for _, o := range list.objects {
+			if !n.contains(o) || list.kinds&(1<<o.Kind) == 0 || seen[o.ID] != 1 {
+				return false
+			}
+			seen[o.ID] = 2
+		}
+	}
+	for id, o := range n.objects {
+		if o == nil {
+			continue
+		}
+		if seen[id] == 0 || (o.IsCI() || o.IsCO() || o.Kind >= ObjectLatch) && seen[id] != 2 {
 			return false
 		}
 	}
 	return true
 }
+
 func checkKindOrder(n *Network, kind ObjectKind) bool {
-	seen := map[*Object]bool{}
-	for _, o := range n.ObjectsOfKind(kind) {
-		if !n.contains(o) || seen[o] || o.Kind != kind {
+	seen := make([]bool, len(n.objects))
+	for _, o := range n.kindOrder[kind] {
+		if !n.contains(o) || o.Kind != kind || seen[o.ID] {
 			return false
 		}
-		seen[o] = true
+		seen[o.ID] = true
 	}
-	for _, o := range n.Objects() {
-		if o.Kind == kind && !seen[o] {
+	for id, o := range n.objects {
+		if o != nil && o.Kind == kind && !seen[id] {
 			return false
 		}
 	}
 	return true
 }
+
 func Abc_NtkCheckNames(n *Network) int32 {
 	if n.Type == uint8(ABC_NTK_NETLIST) {
 		return 1
 	}
-	for _, o := range append(n.Inputs(), n.Outputs()...) {
-		if !n.contains(o) {
+	names := make(map[string]*Object, len(n.cis)+len(n.cos))
+	for _, ci := range n.cis {
+		if !n.contains(ci) {
 			return 0
 		}
-		if _, exists := n.names.Lookup(int32(o.ID)); !exists {
+		name, ok := n.names.Lookup(int32(ci.ID))
+		if !ok || names[name] != nil {
 			return 0
 		}
+		names[name] = ci
 	}
-	for _, id := range nm.Nm_ManReturnNameIds(n.names) {
+	for _, co := range n.cos {
+		if !n.contains(co) {
+			return 0
+		}
+		name, ok := n.names.Lookup(int32(co.ID))
+		if !ok {
+			return 0
+		}
+		if ci, used := names[name]; used && (ci == nil || len(co.fanins) != 1 || co.fanins[0].Object != ci) {
+			return 0
+		}
+		// A nil entry marks an output name that cannot appear again.
+		names[name] = nil
+	}
+	for id := range n.names.IDs() {
 		if n.Object(int(id)) == nil {
 			return 0
 		}
 	}
-	return abcBool(Abc_NtkCheckUniqueCiNames(n) != 0 && Abc_NtkCheckUniqueCoNames(n) != 0 && Abc_NtkCheckUniqueCioNames(n) != 0)
+	return 1
 }
 func Abc_NtkCheckPis(n *Network) int32 {
-	if !checkKindOrder(n, ObjectPI) {
-		return 0
-	}
-	for _, o := range n.ObjectsOfKind(ObjectPI) {
+	return abcBool(checkKindOrder(n, ObjectPI) && checkPiPins(n))
+}
+func checkPiPins(n *Network) bool {
+	for _, o := range n.kindOrder[ObjectPI] {
 		if o.Data != nil || len(o.fanins) != 0 {
-			return 0
+			return false
 		}
 	}
-	return 1
+	return true
 }
 func Abc_NtkCheckPos(n *Network) int32 {
-	if !checkKindOrder(n, ObjectPO) {
-		return 0
-	}
-	for _, o := range n.ObjectsOfKind(ObjectPO) {
+	return abcBool(checkKindOrder(n, ObjectPO) && checkPoPins(n))
+}
+func checkPoPins(n *Network) bool {
+	for _, o := range n.kindOrder[ObjectPO] {
 		if o.Data != nil || len(o.fanins) != 1 || len(o.fanouts) != 0 {
-			return 0
+			return false
 		}
 	}
-	return 1
+	return true
 }
 func Abc_NtkCheckObj(n *Network, o *Object) int32 {
 	if !n.contains(o) {
@@ -253,12 +293,15 @@ func latchInitValue(o *Object) int {
 	}
 }
 func Abc_NtkCheckLatch(n *Network, o *Object) int32 {
+	if !n.contains(o) || o.Kind != ObjectLatch {
+		return 0
+	}
 	init := latchInitValue(o)
-	if !n.contains(o) || o.Kind != ObjectLatch || init < int(ABC_INIT_ZERO) || init > int(ABC_INIT_DC) || len(o.fanins) != 1 || len(o.fanouts) != 1 {
+	if init < int(ABC_INIT_ZERO) || init > int(ABC_INIT_DC) || len(o.fanins) != 1 || len(o.fanouts) != 1 {
 		return 0
 	}
 	input, output := o.fanins[0].Object, o.fanouts[0]
-	return abcBool(input.Kind == ObjectBI && output.Kind == ObjectBO && len(input.fanins) == 1 && len(input.fanouts) == 1 && len(output.fanins) == 1)
+	return abcBool(n.contains(input) && n.contains(output) && input.Kind == ObjectBI && output.Kind == ObjectBO && len(input.fanins) == 1 && len(input.fanouts) == 1 && len(output.fanins) == 1)
 }
 func compareNamedObjects(a, b []*Object) int32 {
 	if len(a) != len(b) {
@@ -376,7 +419,7 @@ func Abc_NtkIsAcyclicHierarchy_rec(n *Network) int32 {
 func Abc_NtkIsAcyclicHierarchy(n *Network) int32 { return Abc_NtkIsAcyclicHierarchy_rec(n) }
 func Abc_NtkNamesCompare(a, b *string) int32     { return int32(strings.Compare(*a, *b)) }
 func uniqueNames(objects []*Object) int32 {
-	seen := map[string]bool{}
+	seen := make(map[string]bool, len(objects))
 	for _, o := range objects {
 		name := o.Name()
 		if seen[name] {
@@ -386,14 +429,14 @@ func uniqueNames(objects []*Object) int32 {
 	}
 	return 1
 }
-func Abc_NtkCheckUniqueCiNames(n *Network) int32 { return uniqueNames(n.Inputs()) }
-func Abc_NtkCheckUniqueCoNames(n *Network) int32 { return uniqueNames(n.Outputs()) }
+func Abc_NtkCheckUniqueCiNames(n *Network) int32 { return uniqueNames(n.cis) }
+func Abc_NtkCheckUniqueCoNames(n *Network) int32 { return uniqueNames(n.cos) }
 func Abc_NtkCheckUniqueCioNames(n *Network) int32 {
-	names := map[string]*Object{}
-	for _, o := range n.Inputs() {
+	names := make(map[string]*Object, len(n.cis))
+	for _, o := range n.cis {
 		names[o.Name()] = o
 	}
-	for _, o := range n.Outputs() {
+	for _, o := range n.cos {
 		if input := names[o.Name()]; input != nil {
 			if len(o.fanins) != 1 || o.fanins[0].Object != input {
 				return 0

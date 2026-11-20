@@ -54,27 +54,34 @@ func Abc_AigCleanup(m *Abc_Aig_t) int32 {
 	return int32(before - len(m.Network.ObjectsOfKind(ObjectNode)))
 }
 func Abc_AigCheck(m *Abc_Aig_t) int32 {
-	if err := m.Network.Check(); err != nil {
+	if m.Network.Check() != nil || !checkKindOrder(m.Network, ObjectNode) {
 		return 0
 	}
-	seen := map[[2]Edge]*Object{}
-	for _, o := range m.Network.ObjectsOfKind(ObjectNode) {
+	return checkAigNodes(m)
+}
+
+func checkAigNodes(m *Abc_Aig_t) int32 {
+	for _, o := range m.Network.kindOrder[ObjectNode] {
 		if !aigNode(o) || m.excluded[o] {
 			return 0
 		}
-		key := edgePair(o.fanins[0], o.fanins[1])
-		if seen[key] != nil {
+		if o.Choice != nil {
+			choices := map[*Object]bool{o: true}
+			for choice := o.Choice; choice != nil; choice = choice.Choice {
+				if !m.Network.contains(choice) || choices[choice] || len(choice.fanouts) > 0 {
+					return 0
+				}
+				choices[choice] = true
+			}
+		}
+		a, b := o.fanins[0], o.fanins[1]
+		if a.Object == b.Object || a.Object == m.Network.constant || b.Object == m.Network.constant || Abc_ObjFanoutNum(a.Object) == 0 || Abc_ObjFanoutNum(b.Object) == 0 {
 			return 0
 		}
-		seen[key] = o
-		choices := map[*Object]bool{o: true}
-		for choice := o.Choice; choice != nil; choice = choice.Choice {
-			if !m.Network.contains(choice) || choices[choice] || len(choice.fanouts) > 0 {
-				return 0
-			}
-			choices[choice] = true
+		if m.Network.hashed[edgePair(a, b)] == o.Signal() {
+			continue
 		}
-		e, ok := m.Network.lookupAnd(key[0], key[1])
+		e, ok := m.Network.lookupAnd(a, b)
 		if !ok || e.Object != o || e.Complement {
 			return 0
 		}

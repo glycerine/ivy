@@ -328,9 +328,16 @@ func (n *Network) Topological(roots []*Object) ([]*Object, error) {
 
 // Check verifies reciprocal edges, object ownership and terminal arities.
 func (n *Network) Check() error {
-	counts := make(map[[2]*Object]int)
-	for _, o := range n.Objects() {
-		if !n.contains(o) {
+	// Group each fanin by source so its expected destinations can be
+	// compared with the fanout list in linear time, including duplicate pins.
+	offsets := make([]int, len(n.objects)+1)
+	fanins := 0
+	for id, o := range n.objects {
+		offsets[id+1] = offsets[id]
+		if o == nil {
+			continue
+		}
+		if o.network != n || o.ID != id {
 			return fmt.Errorf("invalid ownership")
 		}
 		if (o.Kind == ObjectPI || o.Kind == ObjectConst1) && len(o.fanins) != 0 {
@@ -339,24 +346,80 @@ func (n *Network) Check() error {
 		if (o.IsCO() || o.Kind == ObjectNet) && len(o.fanins) > 1 {
 			return fmt.Errorf("output has multiple fanins")
 		}
+		offsets[id+1] += len(o.fanouts)
+		fanins += len(o.fanins)
+	}
+	if fanins != offsets[len(n.objects)] {
+		return fmt.Errorf("fanin/fanout mismatch")
+	}
+	destinations := make([]int, fanins)
+	cursor := append([]int(nil), offsets[:len(n.objects)]...)
+	for id, o := range n.objects {
+		if o == nil {
+			continue
+		}
 		for _, e := range o.fanins {
 			if !n.contains(e.Object) {
 				return fmt.Errorf("foreign fanin")
 			}
-			counts[[2]*Object{e.Object, o}]++
+			source := e.Object.ID
+			if cursor[source] == offsets[source+1] {
+				return fmt.Errorf("fanin/fanout mismatch")
+			}
+			destinations[cursor[source]] = id
+			cursor[source]++
 		}
 	}
-	for _, o := range n.Objects() {
-		for _, d := range o.fanouts {
-			key := [2]*Object{o, d}
-			counts[key]--
+	// Equal total sizes and bounded insertion filled every source range.
+	counts := cursor
+	clear(counts)
+	for id, o := range n.objects {
+		if o == nil {
+			continue
+		}
+		for _, dest := range destinations[offsets[id]:offsets[id+1]] {
+			counts[dest]++
+		}
+		for _, dest := range o.fanouts {
+			if !n.contains(dest) || counts[dest.ID] == 0 {
+				return fmt.Errorf("fanin/fanout mismatch")
+			}
+			counts[dest.ID]--
 		}
 	}
-	for _, count := range counts {
-		if count != 0 {
-			return fmt.Errorf("fanin/fanout mismatch")
+	// The connection scratch is now free for a topological cycle check.
+	return n.checkAcyclic(counts, offsets[:0])
+}
+
+func (n *Network) checkAcyclic(remaining, ready []int) error {
+	live := 0
+	for id, o := range n.objects {
+		if o == nil {
+			continue
+		}
+		live++
+		if !o.IsCI() {
+			remaining[id] = len(o.fanins)
+		}
+		if remaining[id] == 0 {
+			ready = append(ready, id)
 		}
 	}
-	_, err := n.Topological(n.Objects())
-	return err
+	for i := 0; i < len(ready); i++ {
+		for _, dest := range n.objects[ready[i]].fanouts {
+			if dest.IsCI() {
+				continue
+			}
+			remaining[dest.ID]--
+			if remaining[dest.ID] == 0 {
+				ready = append(ready, dest.ID)
+			}
+		}
+	}
+	if len(ready) != live {
+		// Recover the precise offending DFS back edge for the diagnostic.
+		_, err := n.Topological(n.Objects())
+		return err
+	}
+	return nil
 }

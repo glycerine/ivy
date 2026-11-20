@@ -88,3 +88,27 @@ func TestZeroValueManager(t *testing.T) {
 		t.Fatal(name, ok)
 	}
 }
+
+func TestIDsReflectDeletionAndAllowEarlyStop(t *testing.T) {
+	p := Nm_ManCreate(0)
+	for _, id := range []int32{1, 6, 8} {
+		Nm_ManStoreIdName(p, id, 2, "shared", "")
+	}
+	ids := p.IDs()
+	Nm_ManDeleteIdName(p, 6)
+	seen := map[int32]int{}
+	for id := range ids {
+		seen[id]++
+	}
+	if !reflect.DeepEqual(seen, map[int32]int{1: 1, 8: 1}) {
+		t.Fatalf("stored IDs %v", seen)
+	}
+	visits := 0
+	for range ids {
+		visits++
+		break
+	}
+	if visits != 1 {
+		t.Fatalf("visited %d before stopping", visits)
+	}
+}

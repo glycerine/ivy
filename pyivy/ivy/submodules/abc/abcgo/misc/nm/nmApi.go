@@ -2,7 +2,9 @@ package nm
 
 import (
 	"fmt"
-	"sort"
+	"iter"
+	"maps"
+	"slices"
 )
 
 func Nm_ManCreate(size int32) *Nm_Man_t {
@@ -56,12 +58,15 @@ func Nm_ManFindIdByNameTwoTypes(p *Nm_Man_t, name string, a, b int32) int32 {
 // C implementation returned hash-bin heads only; Go has no hash-bin interface.
 func Nm_ManReturnNameIds(p *Nm_Man_t) []int32 {
 	ids := make([]int32, 0, len(p.byID))
-	for id := range p.byID {
+	for id := range p.IDs() {
 		ids = append(ids, id)
 	}
-	sort.Slice(ids, func(i, j int) bool { return ids[i] < ids[j] })
+	slices.Sort(ids)
 	return ids
 }
+
+// IDs yields each stored object ID in unspecified order.
+func (p *Manager) IDs() iter.Seq[int32] { return maps.Keys(p.byID) }
 
 // Lookup distinguishes a missing ID from an explicitly stored empty name.
 func (p *Manager) Lookup(id int32) (string, bool) {
