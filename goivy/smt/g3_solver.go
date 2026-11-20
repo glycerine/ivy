@@ -60,9 +60,9 @@ func (s *Z3Solver) Check() Z3CheckResult { return s.CheckAssumptions(nil) }
 func (s *Z3Solver) CheckVerificationCondition() Z3CheckResult {
 	var result Z3CheckResult
 	s.ctx.do(func() {
-		proved, err := s.c.ProveUnsatByOrderAbstraction()
-		fail(err)
-		if proved {
+		// The optional solver can exhaust its own setup resources even when
+		// the concrete solver already has everything it needs to decide.
+		if proved, err := s.c.ProveUnsatByOrderAbstraction(); err == nil && proved {
 			result = Unsat
 			return
 		}
