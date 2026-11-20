@@ -3,6 +3,7 @@ package cudd
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"strings"
 	"testing"
 	"unsafe"
@@ -416,4 +417,22 @@ func TestCuddFirstCubeReturnsInitializedEmptyGenerator(t *testing.T) {
 		t.Fatal("empty function yielded a cube")
 	}
 	Cudd_GenFree(gen)
+}
+
+func TestMintermCountUsesRequestedScaleAcrossVariableLevels(t *testing.T) {
+	dd := core.NewBDDManager(8)
+	defer core.Cudd_Quit(dd)
+	f := core.Cudd_bddAnd(dd, dd.Vars[6], core.Cudd_Not(dd.Vars[7]))
+	for _, tc := range []struct {
+		n    int32
+		want float64
+	}{{0, .25}, {1, .5}, {2, 1}, {4, 4}} {
+		if got := Cudd_CountMinterm(dd, f, tc.n); got != tc.want {
+			t.Errorf("nvars %d gives %g, want %g", tc.n, got, tc.want)
+		}
+		var scaled EpDouble
+		if code := Cudd_EpdCountMinterm(dd, f, tc.n, &scaled); code != 0 || math.Ldexp(scaled.Value, scaled.Exponent) != tc.want {
+			t.Errorf("nvars %d extended count %+v status %d, want %g", tc.n, scaled, code, tc.want)
+		}
+	}
 }

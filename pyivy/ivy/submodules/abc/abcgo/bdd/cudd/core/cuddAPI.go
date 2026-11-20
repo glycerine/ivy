@@ -112,7 +112,7 @@ func Cudd_ReadBackground(dd *DdManager) *DdNode {
 	return dd.Background
 }
 func Cudd_SetBackground(dd *DdManager, background *DdNode) {
-	if dd != nil && !dd.closed && background != nil && background.manager == dd && background.family == 2 {
+	if dd.validAdd(background) {
 		dd.Background = background
 	}
 }

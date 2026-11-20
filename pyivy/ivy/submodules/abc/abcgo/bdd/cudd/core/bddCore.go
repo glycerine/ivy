@@ -8,6 +8,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/glycerine/abcgo/bdd/epd"
 	"github.com/glycerine/abcgo/bdd/mtr"
 )
 
@@ -982,28 +983,69 @@ func Cudd_CountMinterm(dd *DdManager, f *DdNode, nvars int) float64 {
 	if !(dd.valid(f) || dd.validAdd(f)) || nvars < 0 {
 		return math.NaN()
 	}
-	memo := map[*DdNode]float64{}
-	var probability func(*DdNode) float64
-	probability = func(n *DdNode) float64 {
-		if p, ok := memo[n]; ok {
-			return p
-		}
-		r := Cudd_Regular(n)
-		var p float64
-		if Cudd_IsConstant(r) {
-			if r != dd.Zero && r != dd.Background {
-				p = 1
-			}
-		} else {
-			p = (probability(r.T) + probability(r.E)) / 2
-		}
-		if Cudd_IsComplement(n) {
-			p = 1 - p
-		}
-		memo[n] = p
-		return p
+	if nvars > 1023 {
+		count := extendedMintermCount(dd, f, nvars)
+		return math.Ldexp(count.Value, count.Exponent)
 	}
-	return math.Ldexp(probability(f), nvars)
+	return mintermCount(dd, f, math.Ldexp(1, nvars), func(a, b float64) float64 {
+		return 0.5*a + 0.5*b
+	})
+}
+
+// Cudd_EpdCountMinterm retains a separate binary exponent when the count
+// exceeds the range of float64. The result uses a Frexp-style fraction.
+func Cudd_EpdCountMinterm(dd *DdManager, f *DdNode, nvars int, out *epd.EpDouble) int32 {
+	if out == nil {
+		return CUDD_OUT_OF_MEM
+	}
+	if !(dd.valid(f) || dd.validAdd(f)) || nvars < 0 {
+		*out = epd.EpDouble{}
+		return CUDD_OUT_OF_MEM
+	}
+	*out = extendedMintermCount(dd, f, nvars)
+	return 0
+}
+
+func extendedMintermCount(dd *DdManager, f *DdNode, nvars int) epd.EpDouble {
+	unit := epd.EpDouble{Value: 1, Exponent: nvars}
+	value := mintermCount(dd, f, unit, func(a, b epd.EpDouble) epd.EpDouble {
+		var sum epd.EpDouble
+		epd.EpdAdd3(&a, &b, &sum)
+		if sum.Value != 0 {
+			sum.Exponent--
+		}
+		return sum
+	})
+	if value.Value != 0 {
+		value.Value *= 0.5
+		value.Exponent++
+	}
+	return value
+}
+
+// Each decision divides the weight between its cofactors. Propagating edge
+// polarity down both branches preserves sparse complemented cubes.
+func mintermCount[T any](dd *DdManager, f *DdNode, maximum T, mean func(T, T) T) T {
+	memo := make(map[*DdNode]T)
+	var zero T
+	var visit func(*DdNode) T
+	visit = func(n *DdNode) T {
+		r := Cudd_Regular(n)
+		if r.Index == bddConstantIndex {
+			if n == dd.LogicZero || n == dd.Background {
+				return zero
+			}
+			return maximum
+		}
+		if value, ok := memo[n]; ok {
+			return value
+		}
+		invert := Cudd_IsComplement(n)
+		value := mean(visit(Cudd_NotCond(r.T, invert)), visit(Cudd_NotCond(r.E, invert)))
+		memo[n] = value
+		return value
+	}
+	return visit(f)
 }
 
 func (dd *DdManager) constant(value float64) *DdNode {

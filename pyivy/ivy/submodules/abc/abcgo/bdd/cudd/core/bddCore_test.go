@@ -303,3 +303,35 @@ func TestReviewPermutationValidationAndConstantReferences(t *testing.T) {
 		t.Fatal("node statistics exclude constants")
 	}
 }
+
+func TestMintermCountOfSparseComplementedCube(t *testing.T) {
+	dd := NewBDDManager(80)
+	defer Cudd_Quit(dd)
+	cube := dd.One
+	for i := 79; i >= 0; i-- {
+		cube = Cudd_bddAnd(dd, Cudd_Not(dd.Vars[i]), cube)
+	}
+	if got := Cudd_CountMinterm(dd, cube, 80); got != 1 {
+		t.Errorf("all-zero cube has %g minterms, want 1", got)
+	}
+	if got := Cudd_CountMinterm(dd, cube, 79); got != 0.5 {
+		t.Errorf("scaled all-zero cube count %g, want 0.5", got)
+	}
+	Cudd_SetBackground(dd, dd.PlusInfinity)
+	if got := Cudd_CountMinterm(dd, dd.Zero, 4); got != 16 {
+		t.Errorf("non-background ADD zero has count %g, want 16", got)
+	}
+}
+
+func TestExtendedMintermCountKeepsRareWideCube(t *testing.T) {
+	const width = 1200
+	dd := NewBDDManager(width)
+	defer Cudd_Quit(dd)
+	cube := dd.One
+	for i := width - 1; i >= 0; i-- {
+		cube = Cudd_BddNode(dd, i, dd.LogicZero, cube)
+	}
+	if count := Cudd_CountMinterm(dd, cube, width); count != 1 {
+		t.Fatalf("wide single assignment counted as %g", count)
+	}
+}

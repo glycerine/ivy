@@ -3,7 +3,6 @@ package cudd
 import (
 	"fmt"
 	"math"
-	"math/big"
 	"os"
 	"unsafe"
 
@@ -606,60 +605,11 @@ func Cudd_SharingSize(nodeArray []*DdNode, n int32) int32 {
 *****************************************************************************
 */
 func Cudd_CountMinterm(manager *DdManager, node *DdNode, nvars int32) float64 {
-	count := cuddMintermCountExact(manager, node, int(nvars))
-	if count == nil {
-		return float64(CUDD_OUT_OF_MEM)
+	value := core.Cudd_CountMinterm(manager, node, int(nvars))
+	if math.IsNaN(value) {
+		return CUDD_OUT_OF_MEM
 	}
-	value, _ := new(big.Float).SetInt(count).Float64()
 	return value
-
-} /* end of Cudd_CountMinterm */
-
-func cuddMintermCountExact(manager *DdManager, node *DdNode, nvars int) *big.Int {
-	if manager == nil || node == nil || nvars < 0 {
-		return nil
-	}
-	type state struct {
-		edge  *DdNode
-		level int
-	}
-	memo := make(map[state]*big.Int)
-	var count func(*DdNode, int) *big.Int
-	count = func(edge *DdNode, level int) *big.Int {
-		if level > nvars {
-			return new(big.Int)
-		}
-		key := state{edge: edge, level: level}
-		if cached, ok := memo[key]; ok {
-			return new(big.Int).Set(cached)
-		}
-		regular := Cudd_Regular(edge)
-		if Cudd_IsConstant(regular) {
-			result := new(big.Int)
-			if edge != manager.Background && edge != Cudd_Not(manager.One) {
-				result.Lsh(big.NewInt(1), uint(nvars-level))
-			}
-			memo[key] = new(big.Int).Set(result)
-			return result
-		}
-		index := int(regular.Index)
-		variableLevel := index
-		if index < len(manager.Perm) && manager.Perm[index] >= 0 {
-			variableLevel = manager.Perm[index]
-		}
-		if variableLevel < level || variableLevel >= nvars {
-			return new(big.Int)
-		}
-		complement := Cudd_IsComplement(edge)
-		thenCount := count(Cudd_NotCond(Cudd_T(regular), complement), variableLevel+1)
-		elseCount := count(Cudd_NotCond(Cudd_E(regular), complement), variableLevel+1)
-		result := new(big.Int).Add(thenCount, elseCount)
-		result.Lsh(result, uint(variableLevel-level))
-		memo[key] = new(big.Int).Set(result)
-		return result
-	}
-	result := count(node, 0)
-	return result
 }
 
 /*
@@ -719,24 +669,7 @@ func Cudd_CountPath(node *DdNode) float64 {
 *****************************************************************************
 */
 func Cudd_EpdCountMinterm(manager *DdManager, node *DdNode, nvars int32, epd *EpDouble) int32 {
-	if epd == nil {
-		return CUDD_OUT_OF_MEM
-	}
-	count := cuddMintermCountExact(manager, node, int(nvars))
-	if count == nil {
-		*epd = EpDouble{}
-		return CUDD_OUT_OF_MEM
-	}
-	if count.Sign() == 0 {
-		*epd = EpDouble{}
-		return 0
-	}
-	fraction := new(big.Float).SetPrec(64)
-	exponent := new(big.Float).SetPrec(64).SetInt(count).MantExp(fraction)
-	value, _ := fraction.Float64()
-	*epd = EpDouble{Value: value, Exponent: exponent}
-	return 0
-
+	return core.Cudd_EpdCountMinterm(manager, node, int(nvars), epd)
 } /* end of Cudd_EpdCountMinterm */
 
 /*
