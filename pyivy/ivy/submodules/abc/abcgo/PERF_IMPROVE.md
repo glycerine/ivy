@@ -213,3 +213,9 @@ The allocation profile attributed 55% of sampled objects to conflict analysis an
 New allocation tests first measured four allocations per repeated conflict, one per backtrack and four reserved entries per unwatched literal. All pass after the changes. The initial trail implementation also panicked when an assumption contradicted a pending root unit. A one-variable regression reproduced the failure before the correction and verifies a subsequent unrestricted solve. Complete race tests passed for bsat, proof, fra, fracomb and Ivy.
 
 The seven-pigeon solve now allocates 301,256 bytes in 1,967 objects, down from 438,112 bytes in 6,050 objects, with identical search counters. Under concurrent system load, alternating 500-solve wall times ranged from 8.52–9.79 ms before and 8.10–9.30 ms after. The timing ranges overlap. The fixed i10 proof averaged 132.5 MB and 3.74 million objects over five calls.
+
+### Build four-input NPN classes by swapping cofactors
+
+Building the canonicalization tables spent 85% of Go's sampled CPU time in Transform. Native's two permutation functions took 87% of flat samples. Go now permutes each representative once per column and computes its 16 input phases by swapping the cofactors of each permuted variable. Visiting the resulting table in ABC's phase and permutation order preserves its chosen witnesses. All four result arrays still belong to each caller.
+
+Consecutive 300-iteration runs on CPU 12 measured 4.986 ms for previous Go, 0.835 ms for revised Go and 10.817 ms for the original uninstrumented C source compiled with GCC -O3. Both Go revisions allocate 327,680 bytes in four arrays. The native driver is misc/extra/npn/test_vectors/perf_npn.c. Exhaustive reconstruction, the native table digest and independent mutation of all output arrays passed. Race tests passed for npn, dec, rwr and rwt.

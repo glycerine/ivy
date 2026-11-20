@@ -7,6 +7,16 @@ import (
 	"testing"
 )
 
+func BenchmarkFourInputNPNTables(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		canon, phase, perm, class := Extra_Truth4VarNPN()
+		if canon[0xfffe] != 1 || phase[0xffff] != 16 || perm[1] != 0 || class[1] != 1 {
+			b.Fatal("incorrect four-input NPN tables")
+		}
+	}
+}
+
 func TestExhaustiveCanonicalization(t *testing.T) {
 	c, p, r, m := Extra_Truth4VarNPN()
 	permutations := Permutations()
@@ -59,11 +69,11 @@ func TestPermutationOrderAndFreshTables(t *testing.T) {
 	if len(seen) != 24 {
 		t.Fatal("duplicates")
 	}
-	c, _, _, _ := Extra_Truth4VarNPN()
-	c[0] = 9
-	d, _, _, _ := Extra_Truth4VarNPN()
-	if d[0] != 0 {
-		t.Fatal("tables alias")
+	c, phase, perm, class := Extra_Truth4VarNPN()
+	c[0], phase[0xffff], perm[1], class[1] = 9, 1, 23, 99
+	d, phase2, perm2, class2 := Extra_Truth4VarNPN()
+	if d[0] != 0 || phase2[0xffff] != 16 || perm2[1] != 0 || class2[1] != 1 {
+		t.Fatal("caller mutation changed another set of tables")
 	}
 }
 

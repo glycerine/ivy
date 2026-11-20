@@ -79,17 +79,30 @@ func Extra_Truth4VarNPN() (canons []uint16, phases, perms, classes []byte) {
 		}
 		classes[truth] = byte(nClasses)
 		nClasses++
-		// Filling both outputs below makes the C complemented-input loop redundant.
-		for phase := byte(0); phase < 16; phase++ {
-			for k, permutation := range permutations {
-				transformed := Transform(uint16(truth), phase, permutation)
+		// Permute once per column. Negating an input then swaps the
+		// two cofactors of its destination variable in that column.
+		var orbit [16][24]uint16
+		for k, perm := range permutations {
+			orbit[0][k] = Transform(uint16(truth), 0, perm)
+			for v, dest := range perm {
+				shift := 1 << dest
+				mask := [4]uint16{0xaaaa, 0xcccc, 0xf0f0, 0xff00}[dest]
+				for phase := 0; phase < 1<<v; phase++ {
+					f := orbit[phase][k]
+					orbit[phase|(1<<v)][k] = (f&mask)>>shift | (f&^mask)<<shift
+				}
+			}
+		}
+		// Visit phases then permutations in ABC order to retain its first witness.
+		for phase, row := range &orbit {
+			for k, transformed := range row {
 				if canons[transformed] == 0 {
 					canons[transformed] = uint16(truth)
-					phases[transformed] = phase
+					phases[transformed] = byte(phase)
 					perms[transformed] = byte(k)
 					opposite := ^transformed
 					canons[opposite] = uint16(truth)
-					phases[opposite] = phase | 16
+					phases[opposite] = byte(phase) | 16
 					perms[opposite] = byte(k)
 				} else if canons[transformed] != uint16(truth) {
 					panic("overlapping NPN classes")
