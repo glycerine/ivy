@@ -456,67 +456,53 @@ func funcSortsNode(n Expr) []Sort {
 // patterns for matching.
 //
 // Python: ivy_proof.py:835-855
-func AddPremMatch(proofMatch []Node, prob *MatchProblem, goal *LabeledFormula, checker *ProofChecker) ([]Node, *MatchProblem) {
+func AddPremMatch(proofMatch []Node, prob *MatchProblem, goal *LabeledFormula, checker *ProofChecker) ([]Node, *MatchProblem, error) {
 	if prob.SchemaLF == nil {
-		return proofMatch, prob
+		return proofMatch, prob, nil
 	}
 	sprems := GoalPremsByName(prob.SchemaLF)
 
-	var pats []Expr
-	var insts []Expr
+	// Python:
+	//   for m in proof_match:
+	//       lhs,rhs = m.args
+	//       if isinstance(lhs,ia.Atom) and len(lhs.args) == 0:
+	//           sprem = sprems.get(lhs.rep,None)
+	//           if sprem is not None:
+	//               if isinstance(rhs,ia.Atom) and len(rhs.args) == 0:
+	//                   gprem = context.lookup_schema(rhs.rep,goal,rhs)
+	//                   pats.append(sprem); insts.append(gprem); continue
+	//       new_match.append(m)
+	var pats []Node
+	var insts []Node
 	var newMatch []Node
-
 	for _, m := range proofMatch {
 		defn, ok := m.(*Definition)
 		if !ok {
 			newMatch = append(newMatch, m)
 			continue
 		}
-		lAtom, lIsAtom := defn.Lhs.(*Atom)
-		if !lIsAtom || len(lAtom.Terms) > 0 {
-			newMatch = append(newMatch, m)
-			continue
+		if lAtom, ok := defn.Lhs.(*Atom); ok && len(lAtom.Terms) == 0 {
+			if sprem, exists := sprems[lAtom.Relname()]; exists && sprem != nil {
+				if rAtom, ok := defn.Rhs.(*Atom); ok && len(rAtom.Terms) == 0 {
+					gprem, err := checker.LookupSchema(rAtom.Relname(), goal, rAtom, false)
+					if err != nil {
+						return nil, nil, err // Python: lookup_schema raises
+					}
+					pats = append(pats, sprem)
+					insts = append(insts, gprem)
+					continue
+				}
+			}
 		}
-		sprem, exists := sprems[lAtom.Relname()]
-		if !exists {
-			newMatch = append(newMatch, m)
-			continue
-		}
-		rAtom, rIsAtom := defn.Rhs.(*Atom)
-		if !rIsAtom || len(rAtom.Terms) > 0 {
-			newMatch = append(newMatch, m)
-			continue
-		}
-		// Look up the RHS as a schema — Python: context.lookup_schema(rhs.rep, goal, rhs)
-		gprem, err := checker.LookupSchema(rAtom.Relname(), goal, rAtom, false)
-		if err != nil {
-			newMatch = append(newMatch, m)
-			continue
-		}
-		// Premise pattern matching needs lg.Expr; reject TemporalModels premises
-		// (schemata don't apply to temporal-models goals — Python ivy_proof.py:429).
-		premConc := GoalConcExpr(sprem)
-		gpremConc := GoalConcExpr(gprem)
-		if premConc != nil && gpremConc != nil {
-			pats = append(pats, premConc)
-			insts = append(insts, gpremConc)
-		} else {
-			newMatch = append(newMatch, m)
-		}
+		newMatch = append(newMatch, m)
 	}
 
 	if len(pats) > 0 {
-		// Combine premise patterns with main pattern/instance
 		// Python: pat = ia.Tuple(*(pats + [prob.pat]))
 		//         inst = ia.Tuple(*(insts + [prob.inst]))
-		allPats := make([]Expr, 0, len(pats)+1)
-		allPats = append(allPats, pats...)
-		allPats = append(allPats, prob.Pat)
-
-		allInsts := make([]Expr, 0, len(insts)+1)
-		allInsts = append(allInsts, insts...)
-		allInsts = append(allInsts, prob.Inst)
-
+		//         prob = MatchProblem(prob.schema,pat,inst,prob.freesyms,prob.constants,pats)
+		patTuple := append(append([]Node{}, pats...), prob.Pat)
+		instTuple := append(append([]Node{}, insts...), prob.Inst)
 		prob = &MatchProblem{
 			Schema:      prob.Schema,
 			SchemaLF:    prob.SchemaLF,
@@ -525,13 +511,13 @@ func AddPremMatch(proofMatch []Node, prob *MatchProblem, goal *LabeledFormula, c
 			FreeSyms:    prob.FreeSyms,
 			Constants:   prob.Constants,
 			PremMatches: pats,
-			RevMap:      prob.RevMap,
-			TuplePats:   allPats,
-			TupleInsts:  allInsts,
+			RevMap:      NewInsMap[NodeKey, Expr](), // Python: a new MatchProblem has revmap = dict()
+			PatTuple:    patTuple,
+			InstTuple:   instTuple,
 		}
 	}
 
-	return newMatch, prob
+	return newMatch, prob, nil
 }
 
 // ParameterizeSchema adds initial parameters to all free symbols in a schema.
@@ -948,7 +934,7 @@ func RenameProblem(cfg *AstConfig, pairs []renamePair, prob *MatchProblem) {
 	if prob.SchemaLF != nil {
 		prob.SchemaLF = ApplyMatchGoalNode(cfg, match, prob.SchemaLF)
 	}
-	prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
+	applyMatchToPat(match, prob, true) // Python: prob.pat = apply_match_alt(match,prob.pat)
 	newFreeSyms := NewInsMap[NodeKey, Expr]()
 	add := func(k NodeKey, v Expr) {
 		if _, ok := newFreeSyms.Get2(k); !ok {

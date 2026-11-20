@@ -402,36 +402,24 @@ func (pc *ProofChecker) MatchSchema(goal *LabeledFormula, proof *SchemaInstantia
 
 	// Step 3+4: Match (with Tuple handling for premise matches)
 	// Python: if isinstance(prob.pat, ia.Tuple): ...
-	if prob.TuplePats != nil {
-		// Tuple matching: match each (pat, inst) pair sequentially
-		for i := range prob.TuplePats {
-			pat := prob.TuplePats[i]
-			inst := prob.TupleInsts[i]
-
-			fomatch := FOMatch(pat, inst, prob.FreeSyms, prob.Constants)
+	if prob.PatTuple != nil {
+		// Python: for idx in range(len(prob.pat.args)):
+		//     fomatch = fo_match(prob.pat.args[idx],prob.inst.args[idx],...)
+		//     if fomatch is not None: apply_match_to_problem(fomatch,prob,apply_match)
+		//     somatch = match(prob.pat.args[idx],prob.inst.args[idx],...)
+		//     if somatch is None: raise NoMatch(...)
+		//     apply_match_to_problem(somatch,prob,apply_match_alt)
+		for idx := range prob.PatTuple {
+			fomatch := foMatchTupleElem(prob.PatTuple[idx], prob.InstTuple[idx], prob.FreeSyms, prob.Constants)
 			if fomatch != nil {
-				ApplyMatchToProblem(pc.astCfg(), fomatch, prob)
-				// Update remaining tuple patterns with this match
-				if len(fomatch) > 0 {
-					for j := i + 1; j < len(prob.TuplePats); j++ {
-						prob.TuplePats[j] = ApplyMatch(fomatch, prob.TuplePats[j])
-						prob.TupleInsts[j] = ApplyMatch(fomatch, prob.TupleInsts[j])
-					}
-				}
+				ApplyMatchToProblemNonAlt(pc.astCfg(), fomatch, prob)
 			}
-
-			somatch := Match(pat, inst, prob.FreeSyms, prob.Constants)
+			somatch := matchTupleElem(prob.PatTuple[idx], prob.InstTuple[idx], prob.FreeSyms, prob.Constants)
 			if somatch == nil {
 				xtracer.Trace("proof.MatchSchema EXIT err=matchFailed")
 				return nil, &NoMatch{Node: proof, Msg: "goal does not match the given schema"}
 			}
 			ApplyMatchToProblem(pc.astCfg(), somatch, prob)
-			if len(somatch) > 0 {
-				for j := i + 1; j < len(prob.TuplePats); j++ {
-					prob.TuplePats[j] = ApplyMatchAlt(somatch, prob.TuplePats[j], nil)
-					prob.TupleInsts[j] = ApplyMatchAlt(somatch, prob.TupleInsts[j], nil)
-				}
-			}
 		}
 	} else {
 		// Non-tuple: single pattern matching

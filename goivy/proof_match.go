@@ -14,14 +14,15 @@ type MatchProblem struct {
 	Inst        Expr             // instance to match against (conclusion of goal)
 	FreeSyms    *InsMap[NodeKey, Expr] // free symbols in the schema; Python: insertion-ordered dict
 	Constants   map[NodeKey]Expr // constants (free variables of the goal)
-	PremMatches []Expr           // premise match patterns (for Tuple matching)
+	PremMatches []Node           // Python prem_matches: the schema premises matched
 	RevMap      *InsMap[NodeKey, Expr] // reverse mapping for nonce symbols; Python: dict
-	// TuplePats and TupleInsts are set by AddPremMatch when premise
-	// matching creates combined premise+conclusion patterns.
-	// nil means no tuple matching; non-nil activates per-element matching.
-	// Python: when add_prem_match creates ia.Tuple patterns.
-	TuplePats  []Expr
-	TupleInsts []Expr
+	// PatTuple and InstTuple are Python's ia.Tuple pattern and instance
+	// built by add_prem_match: the premise LabeledFormulas followed by the
+	// original pattern/instance. When PatTuple is non-nil it is the
+	// problem's pattern (Python prob.pat); Pat and Inst are its last
+	// elements as built.
+	PatTuple  []Node
+	InstTuple []Node
 }
 
 // NewMatchProblem creates a MatchProblem.

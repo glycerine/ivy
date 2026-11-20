@@ -85,7 +85,11 @@ func (pc *ProofChecker) SetupSchemaMatchingRaw(
 	// Step 5: Process premise matches
 	// Python: proof_match, prob = add_prem_match(proof.match(), prob, decl, self)
 	proofMatches := matches
-	proofMatches, prob = AddPremMatch(proofMatches, prob, decl, pc)
+	var perr error
+	proofMatches, prob, perr = AddPremMatch(proofMatches, prob, decl, pc)
+	if perr != nil {
+		return nil, nil, perr
+	}
 
 	// Step 6: Compile symbolic matches
 	// Python: pmatch = compile_match(proof_match, prob, decl, allow_witness)
@@ -191,7 +195,7 @@ func ApplyMatchToProblem(cfg *AstConfig, match map[NodeKey]Expr, prob *MatchProb
 	}
 
 	// Apply match to pattern — use ApplyMatchAlt for capture safety
-	prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
+	applyMatchToPat(match, prob, true)
 
 	// Update free symbols — Python uses non-alt apply_match_freesyms here.
 	prob.FreeSyms = ApplyMatchFreesyms(match, prob.FreeSyms)
@@ -218,7 +222,7 @@ func ApplyMatchToProblemNonAlt(cfg *AstConfig, match map[NodeKey]Expr, prob *Mat
 		prob.SchemaLF = ApplyMatchGoalNodeNonAlt(cfg, match, prob.SchemaLF)
 	}
 	// Non-alt: use ApplyMatch (no capture detection)
-	prob.Pat = ApplyMatch(match, prob.Pat)
+	applyMatchToPat(match, prob, false)
 	prob.FreeSyms = ApplyMatchFreesyms(match, prob.FreeSyms)
 	// Python: prob.revmap = dict((x,y) for x,y in prob.revmap.items() if x not in match)
 	keptRev := NewInsMap[NodeKey, Expr]()
@@ -311,4 +315,19 @@ func GoalFreeVars(g *LabeledFormula) []*LogicVariable {
 	}
 	xtracer.Trace("proof.GoalFreeVars EXIT nvars=%d", len(result))
 	return result
+}
+
+// applyMatchToPat is Python's prob.pat = apply_match(match, prob.pat) (or
+// apply_match_alt): the pattern is the premise tuple when add_prem_match
+// built one.
+func applyMatchToPat(match map[NodeKey]Expr, prob *MatchProblem, alt bool) {
+	if prob.PatTuple != nil {
+		prob.PatTuple = applyMatchTuple(match, prob.PatTuple, alt)
+		return
+	}
+	if alt {
+		prob.Pat = ApplyMatchAlt(match, prob.Pat, nil)
+	} else {
+		prob.Pat = ApplyMatch(match, prob.Pat)
+	}
 }

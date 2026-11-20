@@ -742,7 +742,8 @@ func (c *Compiler) compileIte(n *Ite) (Expr, error) {
 }
 
 func (c *Compiler) compileDefinition(n *Definition) (Expr, error) {
-	xtracer.Trace("compiler.CompileDefinition ENTER\n  (via CompileNode op_pairs path, NOT compile_defn)")
+	// Reached via the CompileNode op_pairs path, not compile_defn.
+	xtracer.Trace("compiler.CompileDefinition ENTER")
 	args, err := c.compileArgs(n)
 	if err != nil || len(args) < 2 {
 		return nil, err
