@@ -159,11 +159,6 @@ func EncodeAIG(graph *aig.Graph, nOutputs int) (*CNF, error) {
 	result.pClauses = cloneClauses(result.Clauses)
 	result.pObj2Clause = append([]int32(nil), result.Obj2Clause...)
 	result.pObj2Count = append([]int32(nil), result.Obj2Count...)
-	result.nClauses = int32(len(result.Clauses))
-	result.nLiterals = 0
-	for _, clause := range result.Clauses {
-		result.nLiterals += int32(len(clause))
-	}
 	return result, nil
 }
 
@@ -187,9 +182,18 @@ func boolBit(v bool) int32 {
 	return 0
 }
 func cloneClauses(clauses [][]int32) [][]int32 {
+	total := 0
+	for _, clause := range clauses {
+		total += len(clause)
+	}
 	out := make([][]int32, len(clauses))
-	for i := range clauses {
-		out[i] = append([]int32(nil), clauses[i]...)
+	literals := make([]int32, total)
+	for i, clause := range clauses {
+		if n := len(clause); n != 0 {
+			out[i] = literals[:n:n]
+			copy(out[i], clause)
+			literals = literals[n:]
+		}
 	}
 	return out
 }

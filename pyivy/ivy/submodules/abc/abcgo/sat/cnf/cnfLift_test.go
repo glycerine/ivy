@@ -64,3 +64,20 @@ func TestDataDupOwnsOptionalMetadata(t *testing.T) {
 		t.Fatal("duplicate aliases source metadata")
 	}
 }
+
+func TestLiftAndFlipRepeatedOffsets(t *testing.T) {
+	data := NewMappedCNF(6, [][]int32{nil, {0, 3}, nil, {4, 7}, nil}, nil, nil, nil)
+	flips := vec.Vec_IntAlloc(4)
+	for _, i := range []int32{3, 1, 3, 3, 1} {
+		vec.Vec_IntPush(flips, i)
+	}
+	Cnf_DataLiftAndFlipLits(data, 3, flips)
+	// The literal at offset 1 is lifted twice, the one at offset 3 three times.
+	want := [][]int32{nil, {0, 15}, nil, {4, 24}, nil}
+	if !reflect.DeepEqual(data.Clauses, want) || !reflect.DeepEqual(data.pClauses, want) {
+		t.Fatalf("repeated offsets: got %v / %v, want %v", data.Clauses, data.pClauses, want)
+	}
+	if !reflect.DeepEqual(vec.Vec_IntArray(flips), []int32{3, 1, 3, 3, 1}) {
+		t.Fatal("changed caller offsets")
+	}
+}

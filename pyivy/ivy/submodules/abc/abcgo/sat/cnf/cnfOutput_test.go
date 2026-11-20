@@ -158,3 +158,45 @@ func TestLiteralPolaritiesPackFromLowBits(t *testing.T) {
 		t.Fatalf("four-input polarity byte %v, want [170]", got)
 	}
 }
+
+func TestSolverLoadsFrameClausesInProofOrder(t *testing.T) {
+	g := aig.NewGraph()
+	lo := g.NewInput()
+	g.AddOutput(lo.Not())
+	aig.Aig_ManSetRegNum(g, 1)
+	data := NewMappedCNF(2, [][]int32{{0, 2}, {1, 3}}, []int32{-1, 0, 1}, nil, nil)
+	data.pMan = g
+	s := bsat.NewSolver()
+	s.EnableClauseStore()
+	if Cnf_DataWriteIntoSolverInt(s, data, 2, 0) == nil {
+		t.Fatal("loading consistent formula failed")
+	}
+	stored := s.ReleaseClauseStore()
+	defer bsat.Sto_ManFree(stored)
+	var got [][]int32
+	for _, c := range stored.Clauses() {
+		got = append(got, c.Literals)
+	}
+	want := [][]int32{{0, 2}, {1, 3}, {2, 5}, {3, 4}, {4, 6}, {5, 7}}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("stored proof roots %v, want %v", got, want)
+	}
+	if !reflect.DeepEqual(data.Clauses, [][]int32{{0, 2}, {1, 3}}) {
+		t.Fatal("frame construction changed input CNF")
+	}
+}
+
+func TestSecondSolverLoaderProducesResolutionProof(t *testing.T) {
+	data := NewMappedCNF(2, [][]int32{{0, 2}, {1, 2}, {0, 3}, {1, 3}}, nil, nil, nil)
+	problem, ok := any(Cnf_DataWriteIntoSolver2(data, 1, 0)).(*bsat.Solver2)
+	if !ok || problem == nil {
+		t.Fatal("CNF loader did not return the proof-logging solver")
+	}
+	defer problem.Close()
+	if problem.Solve() != bsat.Unsatisfiable {
+		t.Fatal("four binary clauses must conflict")
+	}
+	if len(problem.ProofCore()) != 4 {
+		t.Fatalf("root clauses in resolution proof: %v", problem.ProofCore())
+	}
+}

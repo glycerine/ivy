@@ -103,13 +103,16 @@ func Cnf_DataSetPackedClauses(p *Cnf_Dat_t, variables int32, offsets, literals [
 	if p == nil || variables < 0 || len(offsets) == 0 || offsets[0] != 0 || offsets[len(offsets)-1] != int32(len(literals)) {
 		panic("cnf: invalid packed clauses")
 	}
+	storage := append([]int32(nil), literals...)
 	clauses := make([][]int32, len(offsets)-1)
 	for i := range clauses {
 		beg, end := offsets[i], offsets[i+1]
 		if beg < 0 || end < beg || end > int32(len(literals)) {
 			panic("cnf: invalid clause offsets")
 		}
-		clauses[i] = append([]int32(nil), literals[beg:end]...)
+		if end > beg {
+			clauses[i] = storage[beg:end:end]
+		}
 	}
 	p.nVars, p.Variables = variables, int(variables)
 	p.nClauses = int32(len(clauses))

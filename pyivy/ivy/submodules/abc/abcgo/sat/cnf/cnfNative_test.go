@@ -354,3 +354,39 @@ func TestCnfDataAddXorClauseTruthTable(t *testing.T) {
 		}
 	}
 }
+
+func TestEncodeAIGSkipsDeletedObjectIDs(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	unused := g.AND(a, b)
+	kept := g.AND(a.Not(), b)
+	co := g.AddOutput(kept)
+	if removed := aig.Aig_ManCleanup(g); removed != 1 {
+		t.Fatalf("removed %d gates", removed)
+	}
+	data, err := EncodeAIG(g, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if data.VarNums[unused.NodeID()] != -1 || data.VarNums[co.NodeID()] != 3 || data.Variables != 4 {
+		t.Fatalf("deleted node used a variable: map %v, variables %d", data.VarNums, data.Variables)
+	}
+}
+
+func TestDataAllocRetainsGraphAndDeclaredDimensions(t *testing.T) {
+	g := aig.NewGraph()
+	x := g.NewInput()
+	g.AddOutput(x)
+	d := Cnf_DataAlloc(g, 5, 2, 3)
+	if d.pMan != g || Cnf_DataVarNum(d) != 5 || Cnf_DataClauseNum(d) != 2 || Cnf_DataLiteralNum(d) != 3 {
+		t.Fatalf("graph retained %v, shape %d/%d/%d", d.pMan == g, Cnf_DataVarNum(d), Cnf_DataClauseNum(d), Cnf_DataLiteralNum(d))
+	}
+	if !reflect.DeepEqual(d.VarNums, []int32{-1, -1, -1}) || len(Cnf_DataClauses(d)) != 2 {
+		t.Fatalf("object and clause storage %v / %v", d.VarNums, Cnf_DataClauses(d))
+	}
+	d.Clauses[0] = []int32{0, 2}
+	d.Clauses[1] = []int32{1}
+	if !reflect.DeepEqual(Cnf_DataClause(d, 1), []int32{1}) {
+		t.Fatal("allocated clause slot missing")
+	}
+}

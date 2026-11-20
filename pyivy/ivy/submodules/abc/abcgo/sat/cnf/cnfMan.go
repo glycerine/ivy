@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"slices"
 	"strings"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -62,7 +63,8 @@ func Cnf_DataAlloc(graph *Aig_Man_t, variables, clauseCount, literalCount int32)
 	if variables < 0 || clauseCount < 0 || literalCount < 0 {
 		return nil
 	}
-	result := &Cnf_Dat_t_{Variables: int(variables), nVars: variables, Clauses: make([][]int32, 0, clauseCount), pClauses: make([][]int32, 0, clauseCount)}
+	clauses := make([][]int32, clauseCount)
+	result := &Cnf_Dat_t_{pMan: graph, Variables: int(variables), nVars: variables, nClauses: clauseCount, nLiterals: literalCount, Clauses: clauses, pClauses: clauses}
 	if graph != nil {
 		result.VarNums = make([]int32, aigObjectCount(graph))
 		for i := range result.VarNums {
@@ -70,14 +72,13 @@ func Cnf_DataAlloc(graph *Aig_Man_t, variables, clauseCount, literalCount int32)
 		}
 		result.pVarNums = append([]int32(nil), result.VarNums...)
 	}
-	_ = literalCount
 	return result
 }
 func aigObjectCount(graph *Aig_Man_t) int {
 	if graph == nil {
 		return 0
 	}
-	return len(graph.Nodes())
+	return int(aig.Aig_ManObjNumMax(graph))
 }
 
 func Cnf_DataDup(src *Cnf_Dat_t) *Cnf_Dat_t {
@@ -161,18 +162,27 @@ func Cnf_DataLiftAndFlipLits(cnf *Cnf_Dat_t, variables int32, flips *Vec_Int_t) 
 	if cnf == nil || flips == nil {
 		return
 	}
-	indices := make(map[int32]bool, vec.Vec_IntSize(flips))
-	for _, i := range vec.Vec_IntArray(flips) {
-		indices[i] = true
+	indices := vec.Vec_IntArray(flips)
+	if !slices.IsSorted(indices) {
+		indices = slices.Clone(indices)
+		slices.Sort(indices)
 	}
-	index := int32(0)
-	for ci := range cnf.Clauses {
-		for li, lit := range cnf.Clauses[ci] {
-			if indices[index] {
-				cnf.Clauses[ci][li] = (lit ^ 1) + variables<<1
-			}
-			index++
+	// Collected offsets are already sorted. Walk the clause boundaries once
+	// and apply each occurrence, including repeated offsets in supplied lists.
+	clause, start := 0, 0
+	for _, index := range indices {
+		if index < 0 {
+			continue
 		}
+		for clause < len(cnf.Clauses) && int(index)-start >= len(cnf.Clauses[clause]) {
+			start += len(cnf.Clauses[clause])
+			clause++
+		}
+		if clause == len(cnf.Clauses) {
+			break
+		}
+		lit := &cnf.Clauses[clause][int(index)-start]
+		*lit = (*lit ^ 1) + 2*variables
 	}
 	cnf.pClauses = cloneClauses(cnf.Clauses)
 }
@@ -253,46 +263,50 @@ func Cnf_DataWriteIntoFileGz(cnf *Cnf_Dat_t, filename string, readable int32, fo
 	_ = writer.Close()
 }
 
-func Cnf_DataWriteIntoSolverInt(sat *bsat.Solver, cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
-	if sat == nil || cnf == nil || frames < 1 {
+type frameSolver interface {
+	*bsat.Solver | *bsat.Solver2
+	AddClause(...bsat.Literal) bool
+	NumVars() int32
+	SetNumVars(int32)
+	Simplify() bool
+}
+
+func loadFrameClauses[S frameSolver](sat S, cnf *Cnf_Dat_t, frames int32, init int32) S {
+	if sat == nil || cnf == nil || frames < 1 || cnf.Variables < 0 ||
+		cnf.Variables > (1<<30)/int(frames) || frames > 1 && cnf.pMan == nil {
 		return nil
 	}
-	for sat.NumVars() < int32(cnf.Variables)*frames {
-		sat.NewVariable()
+	stride := int32(cnf.Variables)
+	if total := stride * frames; total > sat.NumVars() {
+		sat.SetNumVars(total)
 	}
-	for frame := int32(0); frame < frames; frame++ {
-		for _, clause := range cnf.Clauses {
-			lits := make([]bsat.Literal, len(clause))
-			for i, lit := range clause {
-				variable := int32(lit>>1) + frame*int32(cnf.Variables)
-				if lit&1 != 0 {
-					lits[i] = bsat.Negative(variable)
-				} else {
-					lits[i] = bsat.Positive(variable)
-				}
-			}
-			if !sat.AddClause(lits...) {
-				return nil
-			}
-		}
-	}
-	if frames > 1 {
-		if cnf.pMan == nil {
-			return nil
-		}
-		stride := int32(cnf.Variables)
-		for frame := int32(1); frame < frames; frame++ {
+	var lifted []bsat.Literal
+	for f := int32(0); f < frames; f++ {
+		if f > 0 {
 			for i := int32(0); i < aig.Aig_ManRegNum(cnf.pMan); i++ {
 				li, lo := aig.Aig_ManLi(cnf.pMan, i), aig.Aig_ManLo(cnf.pMan, i)
-				liVar, loVar := cnf.VarNums[li.NodeID()], cnf.VarNums[lo.NodeID()]
-				if liVar < 0 || loVar < 0 {
+				left, right := cnf.VarNums[li.NodeID()], cnf.VarNums[lo.NodeID()]
+				if left < 0 || right < 0 {
 					return nil
 				}
-				left := liVar + (frame-1)*stride
-				right := loVar + frame*stride
-				if !sat.AddClause(bsat.Negative(left), bsat.Positive(right)) || !sat.AddClause(bsat.Positive(left), bsat.Negative(right)) {
+				left += (f - 1) * stride
+				right += f * stride
+				if !sat.AddClause(bsat.Positive(left), bsat.Negative(right)) ||
+					!sat.AddClause(bsat.Negative(left), bsat.Positive(right)) {
 					return nil
 				}
+			}
+		}
+		for _, clause := range cnf.Clauses {
+			if f != 0 {
+				lifted = slices.Grow(lifted[:0], len(clause))[:len(clause)]
+				for i, lit := range clause {
+					lifted[i] = lit + 2*f*stride
+				}
+				clause = lifted
+			}
+			if !sat.AddClause(clause...) {
+				return nil
 			}
 		}
 	}
@@ -310,24 +324,31 @@ func Cnf_DataWriteIntoSolverInt(sat *bsat.Solver, cnf *Cnf_Dat_t, frames int32, 
 	}
 	return sat
 }
-func Cnf_DataWriteIntoSolver(cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
-	return Cnf_DataWriteIntoSolverInt(bsat.NewSolver(), cnf, frames, init)
+
+func Cnf_DataWriteIntoSolverInt(sat *bsat.Solver, cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
+	return loadFrameClauses(sat, cnf, frames, init)
 }
-func Cnf_DataWriteIntoSolver2(cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
-	return Cnf_DataWriteIntoSolver(cnf, frames, init)
+func Cnf_DataWriteIntoSolver(cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver {
+	return loadFrameClauses(bsat.NewSolver(), cnf, frames, init)
+}
+func Cnf_DataWriteIntoSolver2(cnf *Cnf_Dat_t, frames int32, init int32) *bsat.Solver2 {
+	return loadFrameClauses(bsat.NewSolver2(), cnf, frames, init)
 }
 func Cnf_DataWriteOrClause(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
-	outputs, ok := cnfOutputLiterals(solver, cnf)
+	return Cnf_DataWriteOrClause2(solver, cnf)
+}
+func Cnf_DataWriteOrClause2[S frameSolver](solver S, cnf *Cnf_Dat_t) int32 {
+	if solver == nil {
+		return 0
+	}
+	outputs, ok := cnfOutputLiterals(cnf)
 	if !ok || !solver.AddClause(outputs...) {
 		return 0
 	}
 	return 1
 }
-func Cnf_DataWriteOrClause2(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
-	return Cnf_DataWriteOrClause(solver, cnf)
-}
-func cnfOutputLiterals(solver *bsat.Solver, cnf *Cnf_Dat_t) ([]bsat.Literal, bool) {
-	if solver == nil || cnf == nil || cnf.pMan == nil {
+func cnfOutputLiterals(cnf *Cnf_Dat_t) ([]bsat.Literal, bool) {
+	if cnf == nil || cnf.pMan == nil {
 		return nil, false
 	}
 	outputs := cnf.pMan.Outputs()
@@ -342,8 +363,8 @@ func cnfOutputLiterals(solver *bsat.Solver, cnf *Cnf_Dat_t) ([]bsat.Literal, boo
 	return literals, true
 }
 func Cnf_DataWriteAndClauses(solver *bsat.Solver, cnf *Cnf_Dat_t) int32 {
-	outputs, ok := cnfOutputLiterals(solver, cnf)
-	if !ok {
+	outputs, ok := cnfOutputLiterals(cnf)
+	if solver == nil || !ok {
 		return 0
 	}
 	for _, output := range outputs {
