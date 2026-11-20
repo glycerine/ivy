@@ -1,6 +1,10 @@
 package cnf
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/glycerine/abcgo/aig/aig"
+)
 
 var s_pManCnf *Cnf_Man_t
 var s_manCnfMu sync.Mutex
@@ -30,6 +34,7 @@ func Cnf_DeriveMappingArray(graph *Aig_Man_t) *Vec_Int_t {
 	manager := Cnf_ManStart()
 	manager.pManAig = graph
 	Cnf_DeriveMapping(manager)
+	defer aig.Aig_ManResetRefs(graph)
 	mapped := Cnf_ManScanMapping(manager, 1, 0)
 	result := Cnf_ManWriteCnfMapping(manager, mapped)
 	Cnf_ManStop(manager)
@@ -46,6 +51,7 @@ func Cnf_DeriveWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, nOutputs int32) *Cn
 	}
 	manager.pManAig = graph
 	Cnf_DeriveMapping(manager)
+	defer aig.Aig_ManResetRefs(graph)
 	mapped := Cnf_ManScanMapping(manager, 1, 1)
 	return Cnf_ManWriteCnf(manager, mapped, nOutputs)
 }

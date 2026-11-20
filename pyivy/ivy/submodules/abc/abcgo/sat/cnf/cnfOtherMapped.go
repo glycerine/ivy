@@ -65,6 +65,7 @@ func deriveOtherMapped(manager *Cnf_Man_t, graph *aig.Graph, skipTruthMin bool) 
 			leaves[i] = int32(e.NodeID())
 		}
 		manager.selectedCuts[id] = Cnf_CutFromTruth(leaves, []uint32{uint32(best.Truth) | uint32(best.Truth)<<16})
+		manager.selectedCuts[id].Cost = byte(len(covers[best.Truth]) + len(covers[^best.Truth]))
 		return nil
 	}
 	for _, edge := range graph.LiveEdges() {
@@ -72,6 +73,7 @@ func deriveOtherMapped(manager *Cnf_Man_t, graph *aig.Graph, skipTruthMin bool) 
 			return nil, err
 		}
 	}
+	defer aig.Aig_ManResetRefs(graph)
 	mapped := Cnf_ManScanMapping(manager, 1, 1)
 	result, err := writeOtherMapped(manager, mapped, covers)
 	if err != nil {

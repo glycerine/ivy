@@ -12,77 +12,96 @@ import (
 )
 
 func Aig_ManScanMapping_rec(manager *Cnf_Man_t, object *Aig_Obj_t, mapped *Vec_Ptr_t) int32 {
-	return scanMapping(manager, edgeValue(object), mapped, false, make(map[int]bool))
+	return scanMapping(manager, edgeValue(object), mapped, true, true)
 }
 func Aig_ManScanMapping(manager *Cnf_Man_t, collect int32) *Vec_Ptr_t {
-	result := vec.Vec_PtrAllocExact(0)
-	if manager == nil || manager.pManAig == nil {
-		return result
-	}
-	if len(manager.selectedCuts) == 0 {
-		Cnf_DeriveMapping(manager)
-	}
-	visited := make(map[int]bool)
-	for _, output := range manager.pManAig.Outputs() {
-		node := manager.pManAig.Node(output)
-		scanMapping(manager, node.Fanins[0], result, false, visited)
-	}
-	if collect == 0 {
-		vec.Vec_PtrClear(result)
-	}
-	return result
+	return scanOutputs(manager, collect != 0, true, true)
 }
 func Cnf_ManScanMapping_rec(manager *Cnf_Man_t, object *Aig_Obj_t, mapped *Vec_Ptr_t, preorder int32) int32 {
-	return scanMapping(manager, edgeValue(object), mapped, preorder != 0, make(map[int]bool))
+	return scanMapping(manager, edgeValue(object), mapped, preorder != 0, false)
 }
 func Cnf_ManScanMapping(manager *Cnf_Man_t, collect, preorder int32) *Vec_Ptr_t {
-	result := vec.Vec_PtrAllocExact(0)
+	return scanOutputs(manager, collect != 0, preorder != 0, false)
+}
+
+func scanOutputs(manager *Cnf_Man_t, collect, preorder, darCosts bool) *Vec_Ptr_t {
 	if manager == nil || manager.pManAig == nil {
-		return result
+		if collect {
+			return vec.Vec_PtrAllocExact(0)
+		}
+		return nil
 	}
 	if len(manager.selectedCuts) == 0 {
 		Cnf_DeriveMapping(manager)
 	}
-	visited := make(map[int]bool)
-	for _, output := range manager.pManAig.Outputs() {
-		node := manager.pManAig.Node(output)
-		scanMapping(manager, node.Fanins[0], result, preorder != 0, visited)
+	g := manager.pManAig
+	for id := range aig.Aig_ManObjNumMax(g) {
+		edge := aig.Aig_ManObj(g, id)
+		if g.ValidEdge(edge) {
+			aig.Aig_ObjClearRef(g, edge)
+		}
 	}
-	if collect == 0 {
-		vec.Vec_PtrClear(result)
+	var mapped *Vec_Ptr_t
+	if collect {
+		mapped = vec.Vec_PtrAllocExact(min(1000, g.NodeCount()))
 	}
-	return result
+	manager.aArea = 0
+	for i := range g.OutputCount() {
+		edge := aig.Aig_ManCo(g, int32(i))
+		if n := g.Node(edge); n.Kind == aig.Output {
+			edge = n.Fanins[0]
+		}
+		manager.aArea += scanMapping(manager, edge, mapped, preorder, darCosts)
+	}
+	return mapped
 }
-func scanMapping(manager *Cnf_Man_t, edge aig.Edge, mapped *Vec_Ptr_t, preorder bool, visited map[int]bool) int32 {
-	if manager == nil || manager.pManAig == nil || edge == aig.InvalidEdge {
+
+// Each reference is an incoming edge in the selected mapping. Only the
+// first visit to a gate contributes its cost and traverses its cut leaves.
+func scanMapping(manager *Cnf_Man_t, edge aig.Edge, mapped *Vec_Ptr_t, preorder, darCosts bool) int32 {
+	if manager == nil || manager.pManAig == nil || !manager.pManAig.ValidEdge(edge) {
+		return 0
+	}
+	g := manager.pManAig
+	edge = aig.Aig_Regular(edge)
+	node := g.Node(edge)
+	aig.Aig_ObjRef(g, edge)
+	if node.Refs != 0 || node.Kind == aig.Input || node.Kind == aig.Constant {
 		return 0
 	}
 	id := edge.NodeID()
-	if id <= 0 || id >= len(manager.selectedCuts) || visited[id] {
+	if id >= len(manager.selectedCuts) || node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
 		return 0
 	}
-	node := manager.pManAig.Node(edge)
-	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr && node.Kind != aig.Buffer {
-		return 0
+	if mapped != nil && preorder {
+		vec.Vec_PtrPush(mapped, edge)
 	}
-	visited[id] = true
-	cut := manager.selectedCuts[id]
-	cost := int32(1)
-	if preorder {
-		vec.Vec_PtrPushUnique(mapped, edge)
-	}
-	if cut != nil {
+	var cost int32
+	switch cut := manager.selectedCuts[id]; {
+	case node.MarkB && node.Kind != aig.Buffer:
+		var leaves []aig.Edge
+		aig.Aig_ObjCollectSuper(g, edge, &leaves)
+		cost = int32(len(leaves) + 1)
+		for _, leaf := range leaves {
+			cost += scanMapping(manager, leaf, mapped, preorder, darCosts)
+		}
+	case cut != nil:
+		cost = int32(cut.Cost)
+		if darCosts && len(cut.truth) != 0 {
+			truth := uint16(cut.truth[0])
+			cost = int32(manager.pSopSizes[truth]) + int32(manager.pSopSizes[^truth])
+		}
 		for _, leaf := range cut.pFanins {
-			cost += scanMapping(manager, aig.Edge(uint32(leaf)<<1), mapped, preorder, visited)
+			cost += scanMapping(manager, aig.Edge(uint32(leaf)<<1), mapped, preorder, darCosts)
 		}
-	} else {
-		cost += scanMapping(manager, node.Fanins[0], mapped, preorder, visited)
-		if node.Kind == aig.And || node.Kind == aig.ExclusiveOr {
-			cost += scanMapping(manager, node.Fanins[1], mapped, preorder, visited)
+	default:
+		cost = 1 + scanMapping(manager, node.Fanins[0], mapped, preorder, darCosts)
+		if node.Kind != aig.Buffer {
+			cost += scanMapping(manager, node.Fanins[1], mapped, preorder, darCosts)
 		}
 	}
-	if !preorder {
-		vec.Vec_PtrPushUnique(mapped, edge)
+	if mapped != nil && !preorder {
+		vec.Vec_PtrPush(mapped, edge)
 	}
 	return cost
 }
@@ -293,4 +312,3 @@ func Cnf_DataSolveFromFile(filename string, conflictLimit, _ int32, _ int32, _ i
 	}
 	return 0
 }
-
