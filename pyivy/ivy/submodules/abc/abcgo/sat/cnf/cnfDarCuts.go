@@ -13,7 +13,6 @@ func cnfApplyDarMapping(manager *Cnf_Man_t, skipTruthMin bool) error {
 		return fmt.Errorf("cnf: missing mapping graph")
 	}
 	g := manager.pManAig
-	aig.Aig_ManCleanup(g)
 	cuts, err := dar.Dar_ManComputeCutSlots(g, 10, skipTruthMin)
 	if err != nil {
 		return err

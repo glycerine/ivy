@@ -1,4 +1,5 @@
 package core
+
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"reflect"
@@ -125,5 +126,79 @@ func TestCutEnumeratorTruth(t *testing.T) {
 	again := NewCutEnumerator(g, 32).Cuts(root.Not())
 	if again[0].Truth != ^NewCutEnumerator(g, 32).Cuts(root)[0].Truth {
 		t.Fatal("root phase")
+	}
+}
+
+func TestWholeGraphCutEnumerationDropsDanglingCones(t *testing.T) {
+	for _, physical := range []bool{true, false} {
+		g := aig.NewGraph()
+		a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+		kept := g.AND(a, b)
+		unused := g.AND(kept, c)
+		tail := g.AND(unused, b.Not())
+		g.AddOutput(kept)
+		var contains func(aig.Edge) bool
+		if physical {
+			cuts, err := Dar_ManComputeCutSlots(g, 10, false)
+			if err != nil {
+				t.Fatal(err)
+			}
+			contains = func(e aig.Edge) bool { _, ok := cuts[e]; return ok }
+		} else {
+			cuts, err := Dar_ManComputeCuts(g, 10, false)
+			if err != nil {
+				t.Fatal(err)
+			}
+			contains = func(e aig.Edge) bool { _, ok := cuts[e]; return ok }
+		}
+		if contains(unused) || contains(tail) || !contains(kept) || !contains(c) ||
+			!aig.Aig_ObjIsNone(g, unused) || !aig.Aig_ObjIsNone(g, tail) || g.Node(kept).Refs != 1 {
+			t.Errorf("physical %v: dangling cone retained, kept gate refs %d", physical, g.Node(kept).Refs)
+		}
+	}
+}
+
+func TestCutMergeOwnedSortedSet(t *testing.T) {
+	a := Cut{Leaves: []aig.Edge{8, 2, 8}}
+	b := Cut{Leaves: []aig.Edge{6, 4, 2}}
+	merged, ok := Dar_CutMerge(a, b)
+	if !ok || !reflect.DeepEqual(merged.Leaves, []aig.Edge{2, 4, 6, 8}) {
+		t.Fatalf("union %v, ok %v", merged.Leaves, ok)
+	}
+	merged.Leaves[0] = 12
+	if a.Leaves[1] != 2 || b.Leaves[2] != 2 {
+		t.Fatal("merged leaves alias a caller buffer")
+	}
+	oversized := Cut{Leaves: []aig.Edge{6, 4, 10, 12}}
+	if got := testing.AllocsPerRun(100, func() {
+		if _, ok := Dar_CutMerge(a, oversized); ok {
+			t.Fatal("accepted six leaves")
+		}
+	}); got != 0 {
+		t.Fatalf("rejected merge allocated %.0f objects", got)
+	}
+}
+
+func TestCutStretchAllFourInputPlacements(t *testing.T) {
+	all := []aig.Edge{2, 4, 6, 8}
+	for mask := 0; mask < 16; mask++ {
+		var leaves []aig.Edge
+		for i, leaf := range all {
+			if mask&(1<<i) != 0 {
+				leaves = append(leaves, leaf)
+			}
+		}
+		for value := 0; value < 1<<(1<<len(leaves)); value++ {
+			have := cutStretch(Cut{leaves, uint16(value)}, all)
+			for assignment := 0; assignment < 16; assignment++ {
+				input := 0
+				for i, leaf := range leaves {
+					input |= ((assignment >> (leaf.NodeID() - 1)) & 1) << i
+				}
+				if (int(have)>>assignment)&1 != (value>>input)&1 {
+					t.Fatalf("placement %04b function %04x assignment %d: %04x", mask, value, assignment, have)
+				}
+			}
+		}
 	}
 }

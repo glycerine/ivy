@@ -1,9 +1,9 @@
 package core
+
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"math/bits"
-	"sort"
 )
 
 // Cut describes a function over up to four sorted, regular graph edges.
@@ -18,18 +18,26 @@ func Dar_WordCountOnes(word uint32) int32 { return int32(bits.OnesCount32(word))
 
 // Dar_CutMerge returns the ordered union, or false when it exceeds four inputs.
 func Dar_CutMerge(a, b Cut) (Cut, bool) {
-	leaves := append(append([]aig.Edge(nil), a.Leaves...), b.Leaves...)
-	sort.Slice(leaves, func(i, j int) bool { return leaves[i] < leaves[j] })
-	unique := leaves[:0]
-	for _, e := range leaves {
-		if len(unique) == 0 || unique[len(unique)-1] != e {
-			unique = append(unique, e)
+	var sorted [4]aig.Edge
+	n := 0
+	for _, cut := range [2]Cut{a, b} {
+		for _, edge := range cut.Leaves {
+			i := 0
+			for i < n && sorted[i] < edge {
+				i++
+			}
+			if i < n && sorted[i] == edge {
+				continue
+			}
+			if n == len(sorted) {
+				return Cut{}, false
+			}
+			copy(sorted[i+1:], sorted[i:n])
+			sorted[i] = edge
+			n++
 		}
 	}
-	if len(unique) > 4 {
-		return Cut{}, false
-	}
-	return Cut{Leaves: unique}, true
+	return Cut{Leaves: append([]aig.Edge(nil), sorted[:n]...)}, true
 }
 func Dar_CutCheckDominance(a, b Cut) bool {
 	for _, e := range a.Leaves {
@@ -46,7 +54,46 @@ func Dar_CutCheckDominance(a, b Cut) bool {
 	}
 	return true
 }
+
+// A proper subset has at most three inputs and 256 distinct functions.
+// Each row expands a compact function onto the selected four-variable positions.
+var stretchedCutTruth = func() (table [15][256]uint16) {
+	for phase := range table {
+		for assignment := 0; assignment < 16; assignment++ {
+			src, bit := 0, 0
+			for i := 0; i < 4; i++ {
+				if phase&(1<<i) != 0 {
+					src |= ((assignment >> i) & 1) << bit
+					bit++
+				}
+			}
+			for value := range table[phase] {
+				table[phase][value] |= uint16((value>>src)&1) << assignment
+			}
+		}
+	}
+	return table
+}()
+
 func cutStretch(c Cut, leaves []aig.Edge) uint16 {
+	phase, used := 0, 0
+	for i, leaf := range leaves {
+		if used < len(c.Leaves) && c.Leaves[used] == leaf {
+			phase |= 1 << i
+			used++
+		}
+	}
+	if used == len(c.Leaves) {
+		if phase == 15 {
+			return c.Truth
+		}
+		return stretchedCutTruth[phase][byte(c.Truth)]
+	}
+	// The public truth operation also accepts a reordered boundary.
+	return stretchUnorderedCut(c, leaves)
+}
+
+func stretchUnorderedCut(c Cut, leaves []aig.Edge) uint16 {
 	var mapping [4]int
 	for i, e := range c.Leaves {
 		mapping[i] = -1
@@ -85,22 +132,17 @@ func Dar_CutTruth(c, a, b Cut, complementA, complementB bool) uint16 {
 func Dar_CutSuppMinimize(c *Cut) bool {
 	original := len(c.Leaves)
 	for variable := len(c.Leaves) - 1; variable >= 0; variable-- {
-		dependent := false
-		for index := 0; index < 16; index++ {
-			if index&(1<<variable) == 0 && ((c.Truth>>index)^(c.Truth>>(index|(1<<variable))))&1 != 0 {
-				dependent = true
-				break
-			}
-		}
-		if dependent {
+		step := 1 << variable
+		lowMask := [4]uint16{0x5555, 0x3333, 0x0f0f, 0x00ff}
+		if (c.Truth^(c.Truth>>step))&lowMask[variable] != 0 {
 			continue
 		}
-		var reduced uint16
-		for index := 0; index < 16; index++ {
-			old := (index & ((1 << variable) - 1)) | ((index >> variable) << (variable + 1))
-			reduced |= ((c.Truth >> (old & 15)) & 1) << index
+		var cofactor uint16
+		mask := uint16(1<<step - 1)
+		for dst := 0; dst < 8; dst += step {
+			cofactor |= ((c.Truth >> (2 * dst)) & mask) << dst
 		}
-		c.Truth = reduced
+		c.Truth = cofactor | cofactor<<8
 		c.Leaves = append(c.Leaves[:variable], c.Leaves[variable+1:]...)
 	}
 	return len(c.Leaves) != original
@@ -171,14 +213,10 @@ func (m *CutEnumerator) Cuts(edge aig.Edge) []Cut {
 
 // Dar_ManComputeCutSlots exposes the source physical slot order.
 func Dar_ManComputeCutSlots(g *aig.Graph, limit int, skipTruthMin bool) (map[aig.Edge][]CutSlot, error) {
-	if g == nil || limit < 2 {
-		return nil, fmt.Errorf("dar: invalid cut request")
-	}
-	if err := g.Check(); err != nil {
+	m, err := wholeGraphCutEnumerator(g, limit, skipTruthMin)
+	if err != nil {
 		return nil, err
 	}
-	m := NewCutEnumerator(g, limit)
-	m.skipTruthMin = skipTruthMin
 	result := make(map[aig.Edge][]CutSlot)
 	for _, e := range g.LiveEdges() {
 		result[e] = m.Slots(e)
@@ -211,21 +249,6 @@ func darComputeSlots(g *aig.Graph, nodes []aig.Node, limit int, skipTruthMin boo
 		}
 		return sum
 	}
-	dominates := func(a, b Cut) bool {
-		for _, x := range a.Leaves {
-			found := false
-			for _, y := range b.Leaves {
-				if x == y {
-					found = true
-					break
-				}
-			}
-			if !found {
-				return false
-			}
-		}
-		return true
-	}
 	signature := func(c Cut) uint32 {
 		var sig uint32
 		for _, e := range c.Leaves {
@@ -243,10 +266,10 @@ func darComputeSlots(g *aig.Graph, nodes []aig.Node, limit int, skipTruthMin boo
 			old := set[j].Cut
 			os := signature(old)
 			if len(old.Leaves) > len(c.Leaves) {
-				if os&cs == cs && dominates(c, old) {
+				if os&cs == cs && Dar_CutCheckDominance(c, old) {
 					set[j].Used = false
 				}
-			} else if os&cs == os && dominates(old, c) {
+			} else if os&cs == os && Dar_CutCheckDominance(old, c) {
 				set[index].Used = false
 				return true
 			}
@@ -274,18 +297,6 @@ func darComputeSlots(g *aig.Graph, nodes []aig.Node, limit int, skipTruthMin boo
 			}
 		}
 		panic("dar: cut slots exhausted")
-	}
-	expand := func(c Cut, merged []aig.Edge, assignment int) bool {
-		index := 0
-		for i, e := range c.Leaves {
-			for j, x := range merged {
-				if e == x {
-					index |= ((assignment >> uint(j)) & 1) << uint(i)
-					break
-				}
-			}
-		}
-		return c.Truth&(1<<uint(index)) != 0
 	}
 	var build func(aig.Edge) error
 	build = func(edge aig.Edge) error {
@@ -340,19 +351,18 @@ func darComputeSlots(g *aig.Graph, nodes []aig.Node, limit int, skipTruthMin boo
 				if filter(set, index) {
 					continue
 				}
-				var truth uint16
-				for assignment := 0; assignment < 16; assignment++ {
-					x := expand(left.Cut, merged.Leaves, assignment) != a.Complemented()
-					y := expand(right.Cut, merged.Leaves, assignment) != b.Complemented()
-					v := x && y
-					if node.Kind == aig.ExclusiveOr {
-						v = x != y
-					}
-					if v {
-						truth |= 1 << uint(assignment)
-					}
+				x, y := cutStretch(left.Cut, merged.Leaves), cutStretch(right.Cut, merged.Leaves)
+				if a.Complemented() {
+					x = ^x
 				}
-				set[index].Cut.Truth = truth
+				if b.Complemented() {
+					y = ^y
+				}
+				if node.Kind == aig.ExclusiveOr {
+					set[index].Cut.Truth = x ^ y
+				} else {
+					set[index].Cut.Truth = x & y
+				}
 				if !skipTruthMin && Dar_CutSuppMinimize(&set[index].Cut) {
 					if filter(set, index) {
 						return fmt.Errorf("dar: invalid minimized cut")
@@ -377,20 +387,26 @@ func darComputeSlots(g *aig.Graph, nodes []aig.Node, limit int, skipTruthMin boo
 // node. skipTruthMin preserves syntactically present but functionally unused
 // boundary variables, matching the source cut-enumeration switch.
 func Dar_ManComputeCuts(g *aig.Graph, limit int, skipTruthMin bool) (map[aig.Edge][]Cut, error) {
-	if g == nil {
-		return nil, fmt.Errorf("dar: nil graph")
-	}
-	if limit < 2 {
-		return nil, fmt.Errorf("dar: cut limit must be at least two")
-	}
-	if err := g.Check(); err != nil {
+	m, err := wholeGraphCutEnumerator(g, limit, skipTruthMin)
+	if err != nil {
 		return nil, err
 	}
-	m := NewCutEnumerator(g, limit)
-	m.skipTruthMin = skipTruthMin
 	result := make(map[aig.Edge][]Cut)
 	for _, e := range g.LiveEdges() {
 		result[e] = m.Cuts(e)
 	}
 	return result, nil
+}
+
+func wholeGraphCutEnumerator(g *aig.Graph, limit int, skipTruthMin bool) (*CutEnumerator, error) {
+	if g == nil || limit < 2 {
+		return nil, fmt.Errorf("dar: invalid cut request")
+	}
+	if err := g.Check(); err != nil {
+		return nil, err
+	}
+	aig.Aig_ManCleanup(g)
+	m := NewCutEnumerator(g, limit)
+	m.skipTruthMin = skipTruthMin
+	return m, nil
 }
