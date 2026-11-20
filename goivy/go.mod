@@ -8,7 +8,7 @@ require (
 	github.com/cristalhq/base64 v0.1.2
 	github.com/glycerine/blake2b v0.0.0-20151022103502-3c8c640cd7be
 	github.com/glycerine/blake3 v1.5.2
-	github.com/glycerine/g3/pkg v0.1.6-0.20261120122859-fe15489ffd20
+	github.com/glycerine/g3/pkg v0.1.6-0.20261120132849-c3f2cd1104e5
 	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31
 	github.com/glycerine/greenpack v0.541.0
 	github.com/glycerine/idem v0.20.7
