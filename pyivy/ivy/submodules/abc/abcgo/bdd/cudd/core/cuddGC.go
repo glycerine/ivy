@@ -2,7 +2,7 @@ package core
 
 import "time"
 
-// Cudd_GarbageCollect performs mark-and-sweep over the Go unique maps. Nodes
+// Cudd_GarbageCollect performs mark-and-sweep over the unique tables. Nodes
 // with references and manager-owned variable/terminal roots are retained,
 // along with every node reachable through their children.
 func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
@@ -15,9 +15,10 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	}
 	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
 	marked := make(map[*DdNode]bool)
-	incoming := dd.incomingReferences()
-	stack := make([]*DdNode, 0, len(dd.unique)+len(dd.addUnique)+len(dd.zddUnique))
-	tables := []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique}
+	incoming := make(map[*DdNode]uint64)
+	dd.countIncomingReferences(incoming)
+	stack := make([]*DdNode, 0, dd.unique.count+dd.addUnique.count+dd.zddUnique.count)
+	tables := []*uniqueTable{&dd.unique, &dd.addUnique, &dd.zddUnique}
 	mark := func(n *DdNode) {
 		if n != nil {
 			n = Cudd_Regular(n)
@@ -40,7 +41,7 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 		mark(n)
 	}
 	for _, table := range tables {
-		for _, n := range table {
+		for _, n := range table.entries {
 			if n.Ref == ^uint32(0) || uint64(n.Ref) > incoming[n] {
 				mark(n)
 			}
@@ -59,10 +60,10 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	}
 	deleted := 0
 	for _, table := range tables {
-		for key, n := range table {
+		for key, n := range table.entries {
 			if !marked[n] {
 				dd.sweepNode(n)
-				delete(table, key)
+				table.remove(key)
 				deleted++
 			}
 		}

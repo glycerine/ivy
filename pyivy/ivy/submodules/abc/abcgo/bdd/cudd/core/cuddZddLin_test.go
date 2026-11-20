@@ -82,7 +82,7 @@ func TestZddLinearAdjacentTransformMatchesSourceCofactorMapping(t *testing.T) {
 	if !reflect.DeepEqual(dd.InvPermZ, []int{0, 1}) {
 		t.Fatalf("linear transform changed level order: %v", dd.InvPermZ)
 	}
-	for key, node := range dd.zddUnique {
+	for key, node := range dd.zddUnique.entries {
 		if key.index != node.Index || key.t != node.T || key.e != node.E {
 			t.Fatal("linear transform left a stale unique-table key")
 		}

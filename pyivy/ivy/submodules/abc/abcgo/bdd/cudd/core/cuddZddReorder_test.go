@@ -62,7 +62,7 @@ func TestZddReduceHeapSiftBoundariesAndSemantics(t *testing.T) {
 		t.Fatal(err)
 	}
 	order := append([]int(nil), dd.InvPermZ...)
-	if Cudd_zddReduceHeap(dd, CUDD_REORDER_SIFT, len(dd.zddUnique)+1) != 1 || !reflect.DeepEqual(order, dd.InvPermZ) || Cudd_ReadReorderings(dd) != 0 {
+	if Cudd_zddReduceHeap(dd, CUDD_REORDER_SIFT, dd.zddUnique.count+1) != 1 || !reflect.DeepEqual(order, dd.InvPermZ) || Cudd_ReadReorderings(dd) != 0 {
 		t.Fatal("minsize boundary did not skip reordering")
 	}
 	if Cudd_zddReduceHeap(dd, CUDD_REORDER_NONE, 0) != 1 || Cudd_ReadReorderings(dd) != 0 {

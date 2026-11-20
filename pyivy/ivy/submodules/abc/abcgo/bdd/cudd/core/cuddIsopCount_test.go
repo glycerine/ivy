@@ -17,8 +17,8 @@ func TestBoundedISOPCountsMatchCovers(t *testing.T) {
 			t.Fatal("cover count", table, count)
 		}
 		if count > 0 {
-			before, next := len(dd.unique), dd.nextID
-			if limited, n := CountISOPBounded(dd, f, f, count-1, 1000000); limited != nil || n != -1 || len(dd.unique) != before || dd.nextID != next {
+			before, next := dd.unique.count, dd.nextID
+			if limited, n := CountISOPBounded(dd, f, f, count-1, 1000000); limited != nil || n != -1 || dd.unique.count != before || dd.nextID != next {
 				t.Fatal("cube limit/rollback", table, n)
 			}
 		}
@@ -29,9 +29,9 @@ func TestBoundedISOPNodeBudgetAndStateRestoration(t *testing.T) {
 	for table := 1; table < 255; table++ {
 		dd := NewBDDManager(3)
 		f := bddFromTruth(dd, uint8(table), 3)
-		before, next := len(dd.unique), dd.nextID
+		before, next := dd.unique.count, dd.nextID
 		result, count := CountISOPBounded(dd, f, f, 100, 0)
-		if len(dd.unique) != before || dd.allocationLimited {
+		if dd.unique.count != before || dd.allocationLimited {
 			t.Fatal("node budget state")
 		}
 		if result == nil {

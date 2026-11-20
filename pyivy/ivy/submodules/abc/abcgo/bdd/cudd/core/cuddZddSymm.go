@@ -592,7 +592,7 @@ func zddSymmKeys(dd *DdManager, variable int) int {
 	level := dd.PermZ[variable]
 	idx := variable
 	n := 0
-	for _, node := range dd.zddUnique {
+	for _, node := range dd.zddUnique.entries {
 		if int(node.Index) == idx && dd.PermZ[node.Index] == level {
 			n++
 		}

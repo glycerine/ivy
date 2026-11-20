@@ -86,11 +86,10 @@ func (dd *DdManager) addNode(index uint32, t, e *DdNode) *DdNode {
 	if t == e {
 		return t
 	}
-	if dd.addUnique == nil {
-		dd.addUnique = map[bddUniqueKey]*DdNode{}
-	}
 	key := bddUniqueKey{index, t, e}
-	if n := dd.addUnique[key]; n != nil {
+	entry := dd.addUnique.find(key)
+	if entry != nil && entry.node != nil {
+		n := entry.node
 		reclaimNode(n)
 		return n
 	}
@@ -98,7 +97,7 @@ func (dd *DdManager) addNode(index uint32, t, e *DdNode) *DdNode {
 	dd.nextID += 2
 	Cudd_Ref(t)
 	Cudd_Ref(e)
-	dd.addUnique[key] = n
+	dd.addUnique.insert(key, n, entry)
 	return n
 }
 func Cudd_addConst(dd *DdManager, value float64) *DdNode {

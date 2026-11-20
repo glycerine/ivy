@@ -59,7 +59,7 @@ func TestBDDISOPLimitRestoresPreexistingRefs(t *testing.T) {
 		f := bddFromTruth(dd, uint8(truth), 3)
 		Cudd_Ref(f)
 		refs := map[*DdNode]uint32{dd.One: dd.One.Ref}
-		for _, n := range dd.unique {
+		for _, n := range dd.unique.entries {
 			refs[n] = n.Ref
 		}
 		if r, _ := CountISOPBounded(dd, f, f, 1, 100); r == nil {
@@ -81,7 +81,7 @@ func TestBDDAndLimitRestoresPreexistingRefs(t *testing.T) {
 	Cudd_Ref(f)
 	Cudd_Ref(g)
 	refs := map[*DdNode]uint32{dd.One: dd.One.Ref}
-	for _, n := range dd.unique {
+	for _, n := range dd.unique.entries {
 		refs[n] = n.Ref
 	}
 	for i := 0; i < 3; i++ {

@@ -45,7 +45,7 @@ func TestBDDCanonicalLogic(t *testing.T) {
 			}
 		}
 	}
-	for _, n := range dd.unique {
+	for _, n := range dd.unique.entries {
 		if Cudd_IsComplement(n.T) || n.T == n.E || dd.level(n.T) <= dd.level(n) || dd.level(n.E) <= dd.level(n) {
 			t.Fatal("ROBDD invariant")
 		}
@@ -128,17 +128,17 @@ func TestBDDManagerSafetyAndReferences(t *testing.T) {
 func TestBDDConstantQueryWitnessAndLimit(t *testing.T) {
 	dd := NewBDDManager(3)
 	x, y, z := dd.Vars[0], dd.Vars[1], dd.Vars[2]
-	before := len(dd.unique)
+	before := dd.unique.count
 	if Cudd_bddIteConstant(dd, x, x, dd.One) != dd.One {
 		t.Fatal("constant true query")
 	}
 	if Cudd_bddIteConstant(dd, x, y, Cudd_Not(y)) != DD_NON_CONSTANT {
 		t.Fatal("nonconstant query")
 	}
-	if len(dd.unique) != before {
+	if dd.unique.count != before {
 		t.Fatal("constant query allocated nodes")
 	}
-	if Cudd_bddAndLimit(dd, x, y, 0) != nil || len(dd.unique) != before {
+	if Cudd_bddAndLimit(dd, x, y, 0) != nil || dd.unique.count != before {
 		t.Fatal("limit did not rollback")
 	}
 	conjunction := Cudd_bddAndLimit(dd, x, y, 1)
@@ -242,8 +242,8 @@ func TestBDDAllocationLimitPartialRollback(t *testing.T) {
 	dd := NewBDDManager(4)
 	f := Cudd_bddXor(dd, dd.Vars[0], dd.Vars[2])
 	g := Cudd_bddXor(dd, dd.Vars[1], dd.Vars[3])
-	before, id := len(dd.unique), dd.nextID
-	if Cudd_bddAndLimit(dd, f, g, 1) != nil || len(dd.unique) != before || dd.nextID != id {
+	before, id := dd.unique.count, dd.nextID
+	if Cudd_bddAndLimit(dd, f, g, 1) != nil || dd.unique.count != before || dd.nextID != id {
 		t.Fatal("partial allocation rollback")
 	}
 	n := Cudd_bddAnd(dd, f, g)
@@ -268,11 +268,11 @@ func TestBDDBooleanDifferenceDependencyAndCubeValidation(t *testing.T) {
 		t.Fatal("absent variable difference")
 	}
 	independent := Cudd_bddOr(dd, x, y)
-	before := len(dd.unique)
+	before := dd.unique.count
 	if !Cudd_bddVarIsDependent(dd, f, x) || Cudd_bddVarIsDependent(dd, independent, x) {
 		t.Fatal("variable dependency")
 	}
-	if len(dd.unique) != before {
+	if dd.unique.count != before {
 		t.Fatal("dependency query allocated")
 	}
 	if Cudd_bddExistAbstract(dd, f, Cudd_Not(x)) != nil || Cudd_bddExistAbstract(dd, f, Cudd_bddOr(dd, x, y)) != nil {

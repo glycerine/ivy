@@ -28,8 +28,8 @@ func Cudd_bddLinearTransformInPlace(dd *DdManager, x, y int) bool {
 	if xi < 0 || yi < 0 || xi >= len(dd.Vars) || yi >= len(dd.Vars) || dd.Perm[xi] != x || dd.Perm[yi] != y {
 		return false
 	}
-	oldNodes := make([]*DdNode, 0, len(dd.unique))
-	for _, n := range dd.unique {
+	oldNodes := make([]*DdNode, 0, dd.unique.count)
+	for _, n := range dd.unique.entries {
 		oldNodes = append(oldNodes, n)
 	}
 	// Build the transformed graph in a scratch manager first. No live state is
@@ -65,11 +65,11 @@ func Cudd_bddLinearTransformInPlace(dd *DdManager, x, y int) bool {
 	}
 	// Allocate handles for scratch nodes that are needed as children but are
 	// not themselves the image of an old canonical node.
-	remap := make(map[*DdNode]*DdNode, len(scratch.unique))
+	remap := make(map[*DdNode]*DdNode, scratch.unique.count)
 	for fresh, old := range byImage {
 		remap[fresh] = old
 	}
-	for key, fresh := range scratch.unique {
+	for key, fresh := range scratch.unique.entries {
 		if remap[fresh] == nil {
 			remap[fresh] = dd.newNodePair(key.index)
 		}
@@ -89,16 +89,16 @@ func Cudd_bddLinearTransformInPlace(dd *DdManager, x, y int) bool {
 			node.inverse.Index = node.Index
 		}
 	}
-	nextUnique := make(map[bddUniqueKey]*DdNode, len(remap))
+	nextUnique := uniqueTable{}
 	for _, node := range remap {
 		if Cudd_IsConstant(node) {
 			continue
 		}
 		key := bddUniqueKey{node.Index, node.T, node.E}
-		if prior := nextUnique[key]; prior != nil && prior != node {
+		if prior := nextUnique.get(key); prior != nil && prior != node {
 			return false
 		}
-		nextUnique[key] = node
+		nextUnique.set(key, node)
 		node.inBDDTable = true
 	}
 	dd.unique = nextUnique
@@ -162,7 +162,7 @@ func bddLinearLiveNodes(dd *DdManager) map[*DdNode]bool {
 		visit(node.T)
 		visit(node.E)
 	}
-	for _, node := range dd.unique {
+	for _, node := range dd.unique.entries {
 		if node.Ref != 0 {
 			visit(node)
 		}

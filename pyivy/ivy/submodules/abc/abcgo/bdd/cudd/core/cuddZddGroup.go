@@ -157,7 +157,7 @@ func zddReduceHeapRange(dd *DdManager, lower, upper int, state *zddGroupState) b
 	for level := lower; level <= upper; level++ {
 		idx := dd.InvPermZ[level]
 		keys := 0
-		for _, node := range dd.zddUnique {
+		for _, node := range dd.zddUnique.entries {
 			if int(node.Index) == idx {
 				keys++
 			}
@@ -241,7 +241,7 @@ func zddGroupSifting(dd *DdManager, lower, upper int, s *zddGroupState) bool {
 		level := dd.PermZ[variable]
 		if level >= s.next[level] {
 			keys := 0
-			for _, n := range dd.zddUnique {
+			for _, n := range dd.zddUnique.entries {
 				if int(n.Index) == variable {
 					keys++
 				}

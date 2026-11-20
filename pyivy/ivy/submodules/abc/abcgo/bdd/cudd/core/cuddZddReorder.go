@@ -151,9 +151,9 @@ func reorderZdd(dd *DdManager, size int, permutation, inverse []int) bool {
 		reorderMemo[key] = result
 		return result
 	}
-	oldNodes := make([]*DdNode, 0, len(dd.zddUnique)+len(dd.Univ))
+	oldNodes := make([]*DdNode, 0, dd.zddUnique.count+len(dd.Univ))
 	seen := map[*DdNode]bool{}
-	for _, node := range dd.zddUnique {
+	for _, node := range dd.zddUnique.entries {
 		if !seen[node] {
 			seen[node] = true
 			oldNodes = append(oldNodes, node)
@@ -185,8 +185,8 @@ func reorderZdd(dd *DdManager, size int, permutation, inverse []int) bool {
 		}
 		Cudd_FixTableLimits(dd)
 	}
-	newNodes := make([]*DdNode, 0, len(scratch.zddUnique))
-	for _, node := range scratch.zddUnique {
+	newNodes := make([]*DdNode, 0, scratch.zddUnique.count)
+	for _, node := range scratch.zddUnique.entries {
 		newNodes = append(newNodes, node)
 	}
 	mapped := map[*DdNode]*DdNode{scratch.One: dd.One, scratch.Zero: dd.Zero}
@@ -206,14 +206,14 @@ func reorderZdd(dd *DdManager, size int, permutation, inverse []int) bool {
 		node.manager = dd
 		node.family = 1
 	}
-	nextTable := make(map[bddUniqueKey]*DdNode, len(newNodes))
+	nextTable := uniqueTable{}
 	for _, fresh := range newNodes {
 		node := mapped[fresh]
 		key := bddUniqueKey{index: node.Index, t: node.T, e: node.E}
-		if other := nextTable[key]; other != nil && other != node {
+		if other := nextTable.get(key); other != nil && other != node {
 			return false
 		}
-		nextTable[key] = node
+		nextTable.set(key, node)
 	}
 	newUniverse := make([]*DdNode, len(dd.Univ))
 	for i, node := range dd.Univ {
@@ -368,7 +368,7 @@ func zddFixTree(dd *DdManager, node *mtr.MtrNode) {
 }
 
 // zddHeapSize is the number of live canonical nonterminal ZDD nodes.
-func zddHeapSize(dd *DdManager) int { return len(dd.zddUnique) }
+func zddHeapSize(dd *DdManager) int { return dd.zddUnique.count }
 
 // zddSymmCheck ports cuddZddSymmCheck for adjacent levels. DdNode.Ref already
 // includes both root references and incoming arcs, as in CUDD's node refcount.
@@ -379,7 +379,7 @@ func zddSymmCheck(dd *DdManager, x, y int) bool {
 	xIndex, yIndex := dd.InvPermZ[x], dd.InvPermZ[y]
 	xSym, xSymPrime := true, true
 	arcCount, totalRefCount := 0, 0
-	for _, f := range dd.zddUnique {
+	for _, f := range dd.zddUnique.entries {
 		if int(f.Index) != xIndex {
 			continue
 		}
@@ -406,7 +406,7 @@ func zddSymmCheck(dd *DdManager, x, y int) bool {
 			return false
 		}
 	}
-	for _, f := range dd.zddUnique {
+	for _, f := range dd.zddUnique.entries {
 		if int(f.Index) != yIndex || f.E == dd.Zero {
 			continue
 		}
@@ -527,7 +527,7 @@ func zddRandomSwapping(dd *DdManager, lower, upper, maxVar, maxSwap int, pivot b
 			for level := lower; level <= upper; level++ {
 				keys := 0
 				index := dd.InvPermZ[level]
-				for _, node := range dd.zddUnique {
+				for _, node := range dd.zddUnique.entries {
 					if int(node.Index) == index {
 						keys++
 					}
@@ -657,7 +657,7 @@ func Cudd_zddReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) 
 		return finish(1)
 	}
 	levels := make([]int, n)
-	for _, node := range dd.zddUnique {
+	for _, node := range dd.zddUnique.entries {
 		if node != nil && int(node.Index) < n {
 			levels[dd.PermZ[node.Index]]++
 		}

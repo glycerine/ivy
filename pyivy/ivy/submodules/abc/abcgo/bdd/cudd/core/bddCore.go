@@ -51,12 +51,12 @@ type DdManager struct {
 	PermZ, InvPermZ                   []int
 	Univ                              []*DdNode
 	Tree, TreeZ                       *mtr.MtrNode
-	zddUnique                         map[bddUniqueKey]*DdNode
-	addUnique                         map[bddUniqueKey]*DdNode
+	zddUnique                         uniqueTable
+	addUnique                         uniqueTable
 	constants                         map[uint64]*DdNode
 	Vars                              []*DdNode
 	Perm, InvPerm                     []int
-	unique                            map[bddUniqueKey]*DdNode
+	unique                            uniqueTable
 	computed                          computedTable
 	interact                          []uint64
 	nextID                            uint64
@@ -280,7 +280,7 @@ func Cudd_ComputeInteractions(dd *DdManager) {
 		return
 	}
 	dd.interact = nil
-	for _, root := range dd.unique {
+	for _, root := range dd.unique.entries {
 		seen := make(map[*DdNode]bool)
 		support := make(map[int]bool)
 		var visit func(*DdNode)
@@ -318,7 +318,6 @@ func NewBDDManager(variables int) *DdManager {
 
 func newEmptyManager() *DdManager {
 	dd := &DdManager{
-		unique:     make(map[bddUniqueKey]*DdNode),
 		epsilon:    1e-12,
 		cacheSlots: CUDD_CACHE_SLOTS, maxCacheHard: defaultDataLimit / (nativeCacheBytes * DD_MAX_CACHE_FRACTION),
 		maxLive: ^uint32(0), maxMemory: uint64(^uint(0)), reorderMethod: CUDD_REORDER_SIFT,
@@ -334,7 +333,6 @@ func newEmptyManager() *DdManager {
 	dd.One.inBDDTable = true
 	dd.LogicZero = dd.One.inverse
 	dd.constants = map[uint64]*DdNode{math.Float64bits(1): dd.One}
-	dd.zddUnique = map[bddUniqueKey]*DdNode{}
 	dd.Zero = dd.constant(0)
 	dd.Background = dd.Zero
 	dd.PlusInfinity = dd.constant(math.Inf(1))
@@ -426,8 +424,8 @@ func Cudd_ExternalRefCount(dd *DdManager, node *DdNode) uint32 {
 		return node.Ref
 	}
 	var incoming uint64
-	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique} {
-		for _, parent := range table {
+	for _, table := range []*uniqueTable{&dd.unique, &dd.addUnique, &dd.zddUnique} {
+		for _, parent := range table.entries {
 			if parent.childrenReleased {
 				continue
 			}
@@ -453,17 +451,15 @@ func externalRefCount(node *DdNode, incoming uint64) uint32 {
 }
 
 // Count the arcs that still hold references across all three diagram families.
-func (dd *DdManager) incomingReferences() map[*DdNode]uint64 {
-	incoming := make(map[*DdNode]uint64)
-	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique} {
-		for _, n := range table {
+func (dd *DdManager) countIncomingReferences(incoming map[*DdNode]uint64) {
+	for _, table := range []*uniqueTable{&dd.unique, &dd.addUnique, &dd.zddUnique} {
+		for _, n := range table.entries {
 			if !n.childrenReleased {
 				incoming[Cudd_Regular(n.T)]++
 				incoming[Cudd_Regular(n.E)]++
 			}
 		}
 	}
-	return incoming
 }
 
 // Cudd_CheckZeroRef reports canonical nodes that still have references from
@@ -473,15 +469,16 @@ func Cudd_CheckZeroRef(dd *DdManager) int32 {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	incoming := dd.incomingReferences()
+	incoming := make(map[*DdNode]uint64)
+	dd.countIncomingReferences(incoming)
 	var count int32
 	check := func(n *DdNode) {
 		if n.Ref != 0 && n.Ref != ^uint32(0) && uint64(n.Ref) > incoming[n] {
 			count++
 		}
 	}
-	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique} {
-		for _, n := range table {
+	for _, table := range []*uniqueTable{&dd.unique, &dd.addUnique, &dd.zddUnique} {
+		for _, n := range table.entries {
 			check(n)
 		}
 	}
@@ -491,9 +488,8 @@ func Cudd_CheckZeroRef(dd *DdManager) int32 {
 	return count
 }
 
-// Cudd_InitTable creates unique-table state before variables are added. Go
-// maps replace the C subtables and slabs; capacities and slot thresholds are
-// retained because they affect public statistics and later growth policy.
+// Cudd_InitTable creates unique-table state before variables are added. The
+// native slot thresholds govern statistics and computed-cache growth.
 func Cudd_InitTable(numVars, numVarsZ, numSlots, looseUpTo uint32) *DdManager {
 	if numVars >= CUDD_MAXINDEX || numVarsZ >= CUDD_MAXINDEX {
 		return nil
@@ -579,9 +575,10 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 		e = Cudd_Not(e)
 	}
 	key := bddUniqueKey{index, t, e}
-	n := dd.unique[key]
-	if n == nil {
-		if dd.allocationLimited && len(dd.unique) >= dd.allocationCeiling {
+	entry := dd.unique.find(key)
+	var n *DdNode
+	if entry == nil || entry.node == nil {
+		if dd.allocationLimited && dd.unique.count >= dd.allocationCeiling {
 			panic(bddAllocationLimit{})
 		}
 		n = dd.newNodePair(index)
@@ -589,8 +586,9 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 		n.inBDDTable = true
 		Cudd_Ref(t)
 		Cudd_Ref(e)
-		dd.unique[key] = n
+		dd.unique.insert(key, n, entry)
 	} else {
+		n = entry.node
 		reclaimNode(n)
 	}
 	return Cudd_NotCond(n, complemented)
@@ -746,14 +744,19 @@ func (dd *DdManager) recursiveDeref(n *DdNode) {
 		return
 	}
 	n.Ref--
-	if n.Ref == 0 && !n.childrenReleased && !dd.managerPins(n) {
-		n.childrenReleased = true
-		if n.inBDDTable {
-			dd.dead++
-		}
-		dd.recursiveDeref(n.T)
-		dd.recursiveDeref(n.E)
+	dd.releaseUnownedChildren(n)
+}
+
+func (dd *DdManager) releaseUnownedChildren(n *DdNode) {
+	if n.Ref != 0 || n.childrenReleased || dd.managerPins(n) {
+		return
 	}
+	n.childrenReleased = true
+	if n.inBDDTable {
+		dd.dead++
+	}
+	dd.recursiveDeref(n.T)
+	dd.recursiveDeref(n.E)
 }
 
 // Evaluate follows complemented branches without creating nodes.
@@ -976,7 +979,7 @@ func Cudd_bddAndAbstractLimit(dd *DdManager, f, g, cube *DdNode, limit uint32) (
 	}
 	oldLimited, oldCeiling := dd.allocationLimited, dd.allocationCeiling
 	dd.allocationLimited = true
-	dd.allocationCeiling = len(dd.unique) + int(limit)
+	dd.allocationCeiling = dd.unique.count + int(limit)
 	defer func() {
 		dd.allocationLimited, dd.allocationCeiling = oldLimited, oldCeiling
 		if recover() != nil {
@@ -1109,7 +1112,9 @@ func (dd *DdManager) zddNode(index uint32, t, e *DdNode) *DdNode {
 		return e
 	}
 	key := bddUniqueKey{index, t, e}
-	if n := dd.zddUnique[key]; n != nil {
+	entry := dd.zddUnique.find(key)
+	if entry != nil && entry.node != nil {
+		n := entry.node
 		reclaimNode(n)
 		return n
 	}
@@ -1117,6 +1122,6 @@ func (dd *DdManager) zddNode(index uint32, t, e *DdNode) *DdNode {
 	n.T, n.E, n.family = t, e, 1
 	Cudd_Ref(t)
 	Cudd_Ref(e)
-	dd.zddUnique[key] = n
+	dd.zddUnique.insert(key, n, entry)
 	return n
 }

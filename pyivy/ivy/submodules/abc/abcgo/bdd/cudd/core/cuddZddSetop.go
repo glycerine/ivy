@@ -114,6 +114,9 @@ func (dd *DdManager) ensureZddVar(index int) bool {
 		return false
 	}
 	if index < dd.ZddSize {
+		if len(dd.Univ) != dd.ZddSize {
+			return cuddZddInitUniv(dd) != 0
+		}
 		return true
 	}
 	if !dd.ensureTableSlots(true, index+1) {
@@ -147,6 +150,9 @@ func Cudd_ReadZddOne(dd *DdManager, level int) *DdNode {
 	}
 	if level >= dd.ZddSize {
 		return dd.One
+	}
+	if level >= len(dd.Univ) {
+		return nil
 	}
 	return dd.Univ[level]
 }

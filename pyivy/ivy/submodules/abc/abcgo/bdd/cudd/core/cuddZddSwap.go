@@ -15,22 +15,22 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	// Save the original x layer before changing any keys. The C implementation
 	// removes y-dependent x nodes from its x bucket and processes that FIFO.
 	xnodes := make([]*DdNode, 0)
-	for _, n := range dd.zddUnique {
+	for _, n := range dd.zddUnique.entries {
 		if n.Index == uint32(xi) {
 			xnodes = append(xnodes, n)
 		}
 	}
 	// A temporary canonical table for newly created x nodes. Existing x nodes
 	// that stay at x are also candidates, matching the source's collision scan.
-	work := make(map[bddUniqueKey]*DdNode, len(dd.zddUnique))
-	for k, n := range dd.zddUnique {
+	work := uniqueTable{}
+	for k, n := range dd.zddUnique.entries {
 		if n.Index != uint32(xi) {
-			work[k] = n
+			work.set(k, n)
 		}
 	}
 	for _, n := range xnodes {
 		if n.T.Index != uint32(yi) && n.E.Index != uint32(yi) {
-			work[bddUniqueKey{n.Index, n.T, n.E}] = n
+			work.set(bddUniqueKey{n.Index, n.T, n.E}, n)
 		}
 	}
 	internX := func(t, e *DdNode) *DdNode {
@@ -38,12 +38,12 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 			return e
 		}
 		k := bddUniqueKey{uint32(xi), t, e}
-		if n := work[k]; n != nil {
+		if n := work.get(k); n != nil {
 			return n
 		}
 		n := dd.newNodePair(uint32(xi))
 		n.T, n.E, n.family = t, e, 1
-		work[k] = n
+		work.set(k, n)
 		return n
 	}
 	for _, f := range xnodes {
@@ -78,8 +78,8 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	// counts, so zero-ref collection is deliberately not performed here.
 	for _, n := range xnodes {
 		if n.Index == uint32(yi) {
-			delete(work, bddUniqueKey{uint32(xi), n.T, n.E})
-			work[bddUniqueKey{n.Index, n.T, n.E}] = n
+			work.remove(bddUniqueKey{uint32(xi), n.T, n.E})
+			work.set(bddUniqueKey{n.Index, n.T, n.E}, n)
 		}
 	}
 	dd.zddUnique = work

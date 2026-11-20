@@ -40,9 +40,9 @@ func Cudd_AverageDistanceLinks(dd *DdManager) [][2]*DdNode {
 	if dd == nil || dd.closed {
 		return nil
 	}
-	links := make([][2]*DdNode, 0, 2*len(dd.unique)+len(dd.constants))
+	links := make([][2]*DdNode, 0, 2*dd.unique.count+len(dd.constants))
 	byLevel := make(map[uint32][]*DdNode)
-	for _, n := range dd.unique {
+	for _, n := range dd.unique.entries {
 		if n != nil && n.manager == dd && n.family == 0 {
 			byLevel[n.Index] = append(byLevel[n.Index], n)
 		}

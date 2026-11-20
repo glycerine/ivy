@@ -177,7 +177,7 @@ func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
 	for index := first; index < len(dd.Vars); index++ {
 		removed[Cudd_Regular(dd.Vars[index])] = true
 	}
-	for _, node := range dd.unique {
+	for _, node := range dd.unique.entries {
 		if int(node.Index) >= first {
 			if !removed[node] {
 				return false
@@ -202,7 +202,7 @@ func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
 			Cudd_RecursiveDeref(dd, node.T)
 			Cudd_RecursiveDeref(dd, node.E)
 		}
-		delete(dd.unique, bddUniqueKey{node.Index, node.T, node.E})
+		dd.unique.remove(bddUniqueKey{node.Index, node.T, node.E})
 		node.inBDDTable = false
 		node.manager = nil
 		if node.inverse != nil {
@@ -262,8 +262,7 @@ func Cudd_ResizeBDDTable(dd *DdManager, index int) bool {
 	return Cudd_bddIthVar(dd, index) != nil
 }
 
-// Cudd_SlowTableGrowth raises density thresholds after memory pressure so the
-// Go map-backed manager performs fewer resize/rebuild cycles.
+// Cudd_SlowTableGrowth raises density thresholds after memory pressure.
 func Cudd_SlowTableGrowth(dd *DdManager) {
 	if dd == nil || dd.closed {
 		return
@@ -289,7 +288,7 @@ func Cudd_FindParent(dd *DdManager, node *DdNode) bool {
 		return false
 	}
 	level := dd.level(node)
-	for key, parent := range dd.unique {
+	for key, parent := range dd.unique.entries {
 		if int(key.index) >= len(dd.Perm) || dd.Perm[key.index] >= level {
 			continue
 		}

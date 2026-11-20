@@ -123,8 +123,8 @@ func TestISOPInvalidDomainsAndBDDOnlyIsolation(t *testing.T) {
 	dd := NewBDDManager(3)
 	lower := dd.Vars[0]
 	upper := Cudd_bddOr(dd, lower, dd.Vars[1])
-	before := len(dd.zddUnique)
-	if Cudd_bddIsop(dd, lower, upper) == nil || dd.ZddSize != 0 || len(dd.zddUnique) != before {
+	before := dd.zddUnique.count
+	if Cudd_bddIsop(dd, lower, upper) == nil || dd.ZddSize != 0 || dd.zddUnique.count != before {
 		t.Fatal("BDD-only ISOP created ZDDs")
 	}
 	sentinel := dd.One

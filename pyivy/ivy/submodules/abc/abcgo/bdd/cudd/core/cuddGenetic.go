@@ -44,7 +44,7 @@ func Cudd_GeneticReorder(dd *DdManager, lower, upper int) bool {
 			return
 		}
 		seen[key] = true
-		population = append(population, geneticOrder{append([]int(nil), order...), len(dd.unique)})
+		population = append(population, geneticOrder{append([]int(nil), order...), dd.unique.count})
 	}
 	add(base)
 	for len(population) < targetSize {

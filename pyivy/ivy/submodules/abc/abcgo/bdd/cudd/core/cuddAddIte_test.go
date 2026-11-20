@@ -46,7 +46,7 @@ func TestADDITEPermutationAndInverse(t *testing.T) {
 	if Cudd_addIte(dd, x, a, a) != a || Cudd_addConst(dd, 2.5) != a {
 		t.Fatal("ADD reduction/constant canonicity")
 	}
-	for _, n := range dd.addUnique {
+	for _, n := range dd.addUnique.entries {
 		if n.family != 2 || n.T == n.E || Cudd_IsComplement(n.T) || Cudd_IsComplement(n.E) || dd.level(n.T) <= dd.level(n) || dd.level(n.E) <= dd.level(n) {
 			t.Fatal("ADD ordering invariant")
 		}
@@ -77,7 +77,7 @@ func TestADDBoundariesAndManagerIsolation(t *testing.T) {
 		t.Fatal("ADD zero not distinguished from BDD complement")
 	}
 	Cudd_Quit(dd)
-	if len(dd.addUnique) != 0 || Cudd_CacheSize(dd) != 0 || Cudd_addConst(dd, 2) != nil {
+	if dd.addUnique.count != 0 || Cudd_CacheSize(dd) != 0 || Cudd_addConst(dd, 2) != nil {
 		t.Fatal("ADD lifecycle cleanup")
 	}
 }

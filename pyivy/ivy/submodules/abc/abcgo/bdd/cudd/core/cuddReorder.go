@@ -30,15 +30,16 @@ type reorderHeap struct {
 
 func (dd *DdManager) liveReorderRoots() reorderRoots {
 	roots := reorderRoots{pins: append([]*DdNode(nil), dd.Vars...), external: make(map[*DdNode]uint32)}
-	incoming := dd.incomingReferences()
+	incoming := make(map[*DdNode]uint64)
+	dd.countIncomingReferences(incoming)
 	collect := func(node *DdNode) {
 		if count := externalRefCount(node, incoming[node]); count != 0 {
 			roots.active = append(roots.active, node)
 			roots.external[node] = count
 		}
 	}
-	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique} {
-		for _, node := range table {
+	for _, table := range []*uniqueTable{&dd.unique, &dd.addUnique} {
+		for _, node := range table.entries {
 			collect(node)
 		}
 	}
@@ -202,7 +203,7 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 	}
 	// Save the old tables for dead-handle invalidation before replacing them.
 	oldBDD, oldADD, oldConstants := dd.unique, dd.addUnique, dd.constants
-	nextBDD, nextADD := map[bddUniqueKey]*DdNode{}, map[bddUniqueKey]*DdNode{}
+	nextBDD, nextADD := uniqueTable{}, uniqueTable{}
 	nextConstants := map[uint64]*DdNode{}
 	for fresh, node := range mapped {
 		if Cudd_IsConstant(fresh) {
@@ -220,9 +221,9 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 		}
 		key := bddUniqueKey{node.Index, node.T, node.E}
 		if node.family == 2 {
-			nextADD[key] = node
+			nextADD.set(key, node)
 		} else {
-			nextBDD[key] = node
+			nextBDD.set(key, node)
 		}
 	}
 	// Scratch rebuilding changes child edges and may reuse an old handle for a
@@ -230,7 +231,7 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 	// and the new incoming edges instead of keeping counts from the old DAG.
 	// ZDD edges are outside this reorder and still own their constant children.
 	zddIncoming := map[*DdNode]uint64{}
-	for _, parent := range dd.zddUnique {
+	for _, parent := range dd.zddUnique.entries {
 		if !parent.childrenReleased {
 			zddIncoming[Cudd_Regular(parent.T)]++
 			zddIncoming[Cudd_Regular(parent.E)]++
@@ -242,8 +243,8 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 		node.childrenReleased = false
 		node.inBDDTable = true
 	}
-	for _, table := range []map[bddUniqueKey]*DdNode{oldBDD, oldADD} {
-		for _, old := range table {
+	for _, table := range []*uniqueTable{&oldBDD, &oldADD} {
+		for _, old := range table.entries {
 			if !usedOld[old] {
 				old.inBDDTable = false
 				old.manager = nil

@@ -45,7 +45,7 @@ func Cudd_zddPrintSubtable(dd *DdManager) {
 		index := dd.InvPermZ[level]
 		fmt.Fprintf(dd.stdout, "subtable[%d]:\n", level)
 		var nodes []*DdNode
-		for _, node := range dd.zddUnique {
+		for _, node := range dd.zddUnique.entries {
 			if int(node.Index) == index {
 				nodes = append(nodes, node)
 			}

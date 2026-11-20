@@ -20,7 +20,7 @@ func Cudd_ExactReorder(dd *DdManager, lower, upper int) bool {
 			if Cudd_ShuffleHeap(dd, order) == 0 {
 				return
 			}
-			cost := len(dd.unique)
+			cost := dd.unique.count
 			if cost < bestCost {
 				bestCost = cost
 				copy(best, order)

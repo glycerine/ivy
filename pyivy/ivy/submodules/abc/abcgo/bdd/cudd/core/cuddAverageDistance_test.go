@@ -16,9 +16,9 @@ func TestAverageDistanceLinksCoverAllBDDTableNodesAndChains(t *testing.T) {
 		t.Fatal("failed to create nodes in subtable 0")
 	}
 	links := Cudd_AverageDistanceLinks(dd)
-	wantLinks := 2*len(dd.unique) + len(dd.constants) - 1
+	wantLinks := 2*dd.unique.count + len(dd.constants) - 1
 	perLevel := make(map[uint32]int)
-	for _, node := range dd.unique {
+	for _, node := range dd.unique.entries {
 		perLevel[node.Index]++
 	}
 	for _, count := range perLevel {
@@ -38,7 +38,7 @@ func TestAverageDistanceLinksCoverAllBDDTableNodesAndChains(t *testing.T) {
 		if pair[0] == nil || pair[1] == nil {
 			t.Fatal("nil endpoint in link list")
 		}
-		if _, ok := dd.unique[bddUniqueKey{pair[0].Index, pair[0].T, pair[0].E}]; ok {
+		if dd.unique.get(bddUniqueKey{pair[0].Index, pair[0].T, pair[0].E}) != nil {
 			nodeEntries[pair[0]]++
 			if pair[0].Index == 0 && pair[1] != Cudd_T(pair[0]) && pair[1] != Cudd_Regular(Cudd_E(pair[0])) {
 				chainPairs++
@@ -48,7 +48,7 @@ func TestAverageDistanceLinksCoverAllBDDTableNodesAndChains(t *testing.T) {
 			constantChainPairs++
 		}
 	}
-	for _, node := range dd.unique {
+	for _, node := range dd.unique.entries {
 		if nodeEntries[node] < 2 {
 			t.Fatalf("live BDD node %d contributes fewer than its T/E links", node.ID)
 		}

@@ -96,10 +96,10 @@ func Cudd_Quit(dd *DdManager) {
 		return
 	}
 	dd.closed = true
-	dd.unique = nil
+	dd.unique = uniqueTable{}
 	dd.computed = computedTable{}
-	dd.zddUnique = nil
-	dd.addUnique = nil
+	dd.zddUnique = uniqueTable{}
+	dd.addUnique = uniqueTable{}
 	dd.constants = nil
 	dd.Vars = nil
 	dd.Perm = nil
@@ -120,17 +120,28 @@ func cuddZddInitUniv(dd *DdManager) int {
 			return 0
 		}
 	}
-	dd.Univ = make([]*DdNode, dd.ZddSize)
+	universe := make([]*DdNode, dd.ZddSize)
 	result := dd.One
 	for i := dd.ZddSize - 1; i >= 0; i-- {
 		result = dd.zddNode(uint32(dd.InvPermZ[i]), result, result)
-		dd.Univ[i] = result
+		universe[i] = result
 	}
+	dd.replaceZddUniverse(universe)
 	return 1
 }
 func cuddZddFreeUniv(dd *DdManager) {
-	if dd != nil {
-		dd.Univ = nil
+	if dd != nil && !dd.closed {
+		dd.replaceZddUniverse(nil)
+	}
+}
+
+// The universe has one implicit manager pin on its root. Its children are
+// already accounted for by the two arcs at each level.
+func (dd *DdManager) replaceZddUniverse(universe []*DdNode) {
+	old := dd.Univ
+	dd.Univ = universe
+	if len(old) > 0 && old[0] != nil {
+		dd.releaseUnownedChildren(old[0])
 	}
 }
 

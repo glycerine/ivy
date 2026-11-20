@@ -267,7 +267,7 @@ func TestBDDHeapReorderLeavesZDDStateUntouched(t *testing.T) {
 	z := Cudd_zddUnion(dd, Cudd_zddChange(dd, dd.One, 0), Cudd_zddChange(dd, dd.One, 2))
 	Cudd_Ref(z)
 	original, one, zero := z, dd.One, dd.Zero
-	count, keys := Cudd_zddCount(dd, z), len(dd.zddUnique)
+	count, keys := Cudd_zddCount(dd, z), dd.zddUnique.count
 	perm, inv := append([]int(nil), dd.PermZ...), append([]int(nil), dd.InvPermZ...)
 	univ := append([]*DdNode(nil), dd.Univ...)
 	root := Cudd_bddIte(dd, dd.Vars[2], dd.Vars[1], dd.Vars[0])
@@ -276,7 +276,7 @@ func TestBDDHeapReorderLeavesZDDStateUntouched(t *testing.T) {
 		if Cudd_ReduceHeap(dd, method, 1) == 0 {
 			t.Fatal("reorder failed")
 		}
-		if z != original || Cudd_zddCount(dd, z) != count || len(dd.zddUnique) != keys || dd.One != one || dd.Zero != zero {
+		if z != original || Cudd_zddCount(dd, z) != count || dd.zddUnique.count != keys || dd.One != one || dd.Zero != zero {
 			t.Fatal("BDD reordering changed ZDD state")
 		}
 		if !reflect.DeepEqual(dd.PermZ, perm) || !reflect.DeepEqual(dd.InvPermZ, inv) || !reflect.DeepEqual(dd.Univ, univ) {

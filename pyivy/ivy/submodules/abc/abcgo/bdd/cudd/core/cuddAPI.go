@@ -218,15 +218,15 @@ func Cudd_ReadKeys(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	return uint32(len(dd.unique) + len(dd.addUnique) + len(dd.constants))
+	return uint32(dd.unique.count + dd.addUnique.count + len(dd.constants))
 }
 
 func (dd *DdManager) liveBDDKeys() int {
-	return len(dd.unique) + len(dd.addUnique) + len(dd.constants) - dd.dead
+	return dd.unique.count + dd.addUnique.count + len(dd.constants) - dd.dead
 }
 
 func (dd *DdManager) storedNodes() int {
-	return len(dd.unique) + len(dd.addUnique) + len(dd.constants) + len(dd.zddUnique)
+	return dd.unique.count + dd.addUnique.count + len(dd.constants) + dd.zddUnique.count
 }
 
 func Cudd_ReadUsedSlots(dd *DdManager) float64 {
@@ -297,7 +297,7 @@ func Cudd_zddReadNodeCount(dd *DdManager) int {
 
 func (dd *DdManager) liveZDDKeys() int {
 	live := 0
-	for _, n := range dd.zddUnique {
+	for _, n := range dd.zddUnique.entries {
 		if !n.childrenReleased {
 			live++
 		}

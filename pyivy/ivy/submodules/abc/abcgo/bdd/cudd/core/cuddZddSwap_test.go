@@ -29,7 +29,7 @@ func TestSwapZddAdjacentInPlacePreservesTruthTablesAndHandles(t *testing.T) {
 		}
 		// Also retain an explicit nonterminal handle found in the graph.
 		var retained *DdNode
-		for _, n := range dd.zddUnique {
+		for _, n := range dd.zddUnique.entries {
 			retained = n
 			break
 		}
@@ -61,7 +61,7 @@ func TestSwapZddAdjacentInPlacePreservesTruthTablesAndHandles(t *testing.T) {
 				t.Fatalf("table %02x assignment %d", table, a)
 			}
 		}
-		if err := checkUniqueTable(dd, dd.zddUnique, dd.PermZ, "ZDD"); err != nil {
+		if err := checkUniqueTable(dd, &dd.zddUnique, dd.PermZ, "ZDD"); err != nil {
 			t.Fatalf("table %02x: %v", table, err)
 		}
 	}

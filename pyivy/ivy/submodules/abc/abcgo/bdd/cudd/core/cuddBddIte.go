@@ -275,7 +275,7 @@ func (dd *DdManager) beginAllocationAttempt(limit uint64) *bddAllocationAttempt 
 		dd: dd, parent: dd.allocationAttempt, firstID: dd.nextID,
 		oldLimited: dd.allocationLimited, oldCeiling: dd.allocationCeiling,
 	}
-	used := len(dd.unique)
+	used := dd.unique.count
 	ceiling := used + int(min(limit, uint64(int(^uint(0)>>1)-used)))
 	if dd.allocationLimited {
 		ceiling = min(ceiling, dd.allocationCeiling)
@@ -299,7 +299,7 @@ func (a *bddAllocationAttempt) finish(result **DdNode) {
 		}
 		return
 	}
-	for key, n := range dd.unique {
+	for key, n := range dd.unique.entries {
 		if n.ID >= a.firstID {
 			if n.childrenReleased {
 				dd.dead--
@@ -307,7 +307,7 @@ func (a *bddAllocationAttempt) finish(result **DdNode) {
 			n.inBDDTable = false
 			Cudd_Deref(n.T)
 			Cudd_Deref(n.E)
-			delete(dd.unique, key)
+			dd.unique.remove(key)
 		}
 	}
 	for _, n := range a.revived {

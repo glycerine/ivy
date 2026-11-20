@@ -21,14 +21,14 @@ func TestCuddTableGCReleasesUnreachableParentsAndPreservesRootedClosure(t *testi
 	if Cudd_ReadGarbageCollections(dd) != 0 {
 		t.Fatal("GC count advanced when there was no garbage")
 	}
-	if dd.unique[rootKey] == nil || dd.unique[leafKey] == nil {
+	if dd.unique.get(rootKey) == nil || dd.unique.get(leafKey) == nil {
 		t.Fatal("referenced graph was not retained")
 	}
 	Cudd_Deref(root)
 	if deleted := Cudd_GarbageCollect(dd, true); deleted != 2 {
 		t.Fatalf("GC removed %d nodes, want the unreachable root and child", deleted)
 	}
-	if dd.unique[rootKey] != nil || dd.unique[leafKey] != nil {
+	if dd.unique.get(rootKey) != nil || dd.unique.get(leafKey) != nil {
 		t.Fatal("unreachable nodes remain in the unique table")
 	}
 	if got := Cudd_ReadGarbageCollections(dd); got != 1 {
@@ -61,7 +61,7 @@ func TestCuddTableGCRecursiveDerefAndDeadCacheFiltering(t *testing.T) {
 	if Cudd_CacheSize(dd) != 1 {
 		t.Fatalf("dead-cache filtering retained %d entries, want one live entry", Cudd_CacheSize(dd))
 	}
-	if dd.unique[bddUniqueKey{root.Index, root.T, root.E}] != nil || dd.unique[bddUniqueKey{leaf.Index, leaf.T, leaf.E}] != nil {
+	if dd.unique.get(bddUniqueKey{root.Index, root.T, root.E}) != nil || dd.unique.get(bddUniqueKey{leaf.Index, leaf.T, leaf.E}) != nil {
 		t.Fatal("recursive dereference graph remains in unique table")
 	}
 }

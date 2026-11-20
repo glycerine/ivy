@@ -97,7 +97,7 @@ func TestZddSymmetricSiftingPreservesThreeVariableFamilies(t *testing.T) {
 					t.Fatalf("table %02x assignment %d changed", table, assignment)
 				}
 			}
-			if err := checkUniqueTable(dd, dd.zddUnique, dd.PermZ, "ZDD"); err != nil {
+			if err := checkUniqueTable(dd, &dd.zddUnique, dd.PermZ, "ZDD"); err != nil {
 				t.Fatalf("table %02x: %v", table, err)
 			}
 		}

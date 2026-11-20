@@ -22,16 +22,16 @@ func linearZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	}
 	xi, yi := dd.InvPermZ[x], dd.InvPermZ[y]
 	var xnodes []*DdNode
-	for _, n := range dd.zddUnique {
+	for _, n := range dd.zddUnique.entries {
 		if int(n.Index) == xi {
 			xnodes = append(xnodes, n)
 		}
 	}
 	// Drop old x keys before creating y nodes. This mirrors the C routine's
 	// removal of the x subtable into its temporary chains.
-	for key := range dd.zddUnique {
+	for key := range dd.zddUnique.entries {
 		if int(key.index) == xi {
-			delete(dd.zddUnique, key)
+			dd.zddUnique.remove(key)
 		}
 	}
 	for _, f := range xnodes {
@@ -61,8 +61,8 @@ func linearZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	// matches the source's duplicate-node handling.
 	for _, f := range xnodes {
 		key := bddUniqueKey{f.Index, f.T, f.E}
-		if dd.zddUnique[key] == nil {
-			dd.zddUnique[key] = f
+		if dd.zddUnique.get(key) == nil {
+			dd.zddUnique.set(key, f)
 		}
 	}
 	dd.Univ[y] = dd.Univ[x].T
@@ -241,7 +241,7 @@ func Cudd_zddLinearSifting(dd *DdManager, lower, upper int) int {
 	for index := range items {
 		items[index].index = index
 	}
-	for _, n := range dd.zddUnique {
+	for _, n := range dd.zddUnique.entries {
 		if int(n.Index) < dd.ZddSize {
 			items[dd.PermZ[n.Index]].keys++
 		}

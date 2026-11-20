@@ -23,20 +23,20 @@ func Cudd_CheckConsistency(dd *DdManager) error {
 			return fmt.Errorf("BDD permutation is inconsistent at variable %d", i)
 		}
 	}
-	if err := checkUniqueTable(dd, dd.unique, dd.Perm, "BDD"); err != nil {
+	if err := checkUniqueTable(dd, &dd.unique, dd.Perm, "BDD"); err != nil {
 		return err
 	}
-	if err := checkUniqueTable(dd, dd.addUnique, dd.Perm, "ADD"); err != nil {
+	if err := checkUniqueTable(dd, &dd.addUnique, dd.Perm, "ADD"); err != nil {
 		return err
 	}
-	if err := checkUniqueTable(dd, dd.zddUnique, dd.PermZ, "ZDD"); err != nil {
+	if err := checkUniqueTable(dd, &dd.zddUnique, dd.PermZ, "ZDD"); err != nil {
 		return err
 	}
 	return nil
 }
 
-func checkUniqueTable(dd *DdManager, table map[bddUniqueKey]*DdNode, permutation []int, family string) error {
-	for key, node := range table {
+func checkUniqueTable(dd *DdManager, table *uniqueTable, permutation []int, family string) error {
+	for key, node := range table.entries {
 		if node == nil || node.manager != dd {
 			return fmt.Errorf("%s unique table contains a foreign or nil node", family)
 		}

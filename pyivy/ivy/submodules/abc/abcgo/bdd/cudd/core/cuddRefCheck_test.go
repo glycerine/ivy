@@ -82,3 +82,16 @@ func TestCanonicalBDDHandlePairAllocations(t *testing.T) {
 		t.Fatalf("constructing %d canonical pairs used %.0f allocations", variables, allocs)
 	}
 }
+
+func TestCheckZeroRefOnReleasedDiagramUsesNoHeap(t *testing.T) {
+	dd, root := buildQueensBDD(5)
+	defer Cudd_Quit(dd)
+	Cudd_RecursiveDeref(dd, root)
+	if n := testing.AllocsPerRun(5, func() {
+		if got := Cudd_CheckZeroRef(dd); got != 0 {
+			t.Fatalf("released five-queen graph has %d external references", got)
+		}
+	}); n != 0 {
+		t.Fatalf("checking a released diagram allocated %g objects", n)
+	}
+}

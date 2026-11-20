@@ -55,14 +55,14 @@ func TestZDDSetOperationsCanonicalExhaustive(t *testing.T) {
 			if Cudd_zddDiff(dd, f, g) != families[a&^b] {
 				t.Fatal("difference", a, b)
 			}
-			before := len(dd.zddUnique)
+			before := dd.zddUnique.count
 			query := Cudd_zddDiffConst(dd, f, g)
-			if (query == dd.Zero) != (a&^b == 0) || len(dd.zddUnique) != before {
+			if (query == dd.Zero) != (a&^b == 0) || dd.zddUnique.count != before {
 				t.Fatal("nonallocating inclusion", a, b)
 			}
 		}
 	}
-	for _, n := range dd.zddUnique {
+	for _, n := range dd.zddUnique.entries {
 		if n.T == dd.Zero || n.family != 1 || Cudd_IsComplement(n.T) || Cudd_IsComplement(n.E) || dd.zddLevel(n.T) <= dd.zddLevel(n) || dd.zddLevel(n.E) <= dd.zddLevel(n) {
 			t.Fatal("ZDD invariant")
 		}
