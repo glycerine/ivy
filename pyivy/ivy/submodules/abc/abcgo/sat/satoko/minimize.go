@@ -53,19 +53,10 @@ func (s *Solver) minimizeLearnt(lits []int) []int {
 	}
 	redundant := map[int]bool{}
 	asserting := out[0]
-	for _, id := range s.watches[asserting^1] {
-		c := s.clauses[id]
-		if c.deleted || len(c.lits) != 2 {
-			continue
-		}
-		other := -1
-		if c.lits[0] == asserting {
-			other = c.lits[1]
-		} else if c.lits[1] == asserting {
-			other = c.lits[0]
-		}
-		if other >= 0 && s.literalValue(other) == 1 {
-			redundant[other^1] = true
+	list := s.watches[asserting^1]
+	for _, w := range list.entries[:list.binaries] {
+		if s.literalValue(w.blocker) == 1 {
+			redundant[w.blocker^1] = true
 		}
 	}
 	end := len(out)

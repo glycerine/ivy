@@ -12,8 +12,7 @@ type Solver struct {
 	opts                      Options
 	stats                     Stats
 	clauses                   []*clause
-	watches                   [][]int
-	watchBlockers             map[[2]int]int
+	watches                   []watchList
 	simplifyAssigned          int
 	simplifyProps             int64
 	values                    []int8

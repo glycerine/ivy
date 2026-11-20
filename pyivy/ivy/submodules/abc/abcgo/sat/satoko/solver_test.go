@@ -183,10 +183,9 @@ func TestDIMACSRoundTrip(t *testing.T) {
 		}
 	}
 }
-func TestLearningPigeonhole(t *testing.T) {
+func pigeonholeSolver(holes int) *Solver {
 	s := New()
-	const pigeons = 5
-	const holes = 4
+	pigeons := holes + 1
 	s.SetVariables(pigeons * holes)
 	for p := 0; p < pigeons; p++ {
 		var c []int
@@ -202,6 +201,11 @@ func TestLearningPigeonhole(t *testing.T) {
 			}
 		}
 	}
+	return s
+}
+
+func TestLearningPigeonhole(t *testing.T) {
+	s := pigeonholeSolver(4)
 	if s.Solve() != SATOKO_UNSAT || s.LearntCount() == 0 {
 		t.Fatal("CDCL learning failed", s.stats)
 	}
@@ -263,4 +267,20 @@ func TestReductionProtectsBinaryLockedAndFrozen(t *testing.T) {
 	if s.clauses[frozen].protected {
 		t.Fatal("freeze flag should last one reduction")
 	}
+}
+
+func BenchmarkPigeonhole7Into6(b *testing.B) {
+	b.ReportAllocs()
+	var conflicts, decisions int64
+	for b.Loop() {
+		s := pigeonholeSolver(6)
+		if s.Solve() != SATOKO_UNSAT {
+			b.Fatal("expected pigeonhole contradiction")
+		}
+		conflicts += s.stats.AllConflicts
+		decisions += s.stats.Decisions
+		s.Destroy()
+	}
+	b.ReportMetric(float64(conflicts)/float64(b.N), "conflicts/op")
+	b.ReportMetric(float64(decisions)/float64(b.N), "decisions/op")
 }

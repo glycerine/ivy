@@ -21,7 +21,7 @@ func (s *Solver) AddVariable(negative bool) int {
 	s.phases = append(s.phases, phase)
 	s.decision = append(s.decision, true)
 	s.marks = append(s.marks, false)
-	s.watches = append(s.watches, nil, nil)
+	s.watches = append(s.watches, watchList{}, watchList{})
 	s.activity.Push(0)
 	s.order.Insert(uint32(v))
 	return v

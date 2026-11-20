@@ -14,39 +14,24 @@ func (s *Solver) propagate() int {
 		lit := s.trail[s.qhead]
 		s.qhead++
 		propagated++
-		list := s.watches[lit]
-		// Binary implications run before long clauses and do not reorder literals.
-		for _, id := range list {
-			c := s.clauses[id]
-			if c.deleted || len(c.lits) != 2 {
+		list := &s.watches[lit]
+		for _, w := range list.entries[:list.binaries] {
+			if s.coneActive && !s.marks[w.blocker>>1] {
 				continue
 			}
-			other := c.lits[0]
-			if other == lit^1 {
-				other = c.lits[1]
+			if !s.enqueue(w.blocker, w.clause) {
+				return w.clause
 			}
-			if s.coneActive && !s.marks[other>>1] {
-				continue
-			}
-			if s.literalValue(other) == 0 {
-				return id
-			}
-			s.enqueue(other, id)
 		}
-		kept := list[:0]
-		for pos, id := range list {
-			c := s.clauses[id]
+		kept := list.entries[:list.binaries]
+		long := list.entries[list.binaries:]
+		for pos, w := range long {
+			c := s.clauses[w.clause]
 			if c.deleted {
 				continue
 			}
-			if len(c.lits) == 2 {
-				kept = append(kept, id)
-				continue
-			}
-			s.stats.Inspections++
-			blocker := s.watchBlockers[[2]int{lit, id}]
-			if s.literalValue(blocker) == 1 {
-				kept = append(kept, id)
+			if s.coneActive && !s.marks[w.blocker>>1] || s.literalValue(w.blocker) == 1 {
+				kept = append(kept, w)
 				continue
 			}
 			falseLit := lit ^ 1
@@ -54,13 +39,9 @@ func (s *Solver) propagate() int {
 				c.lits[0], c.lits[1] = c.lits[1], c.lits[0]
 			}
 			first := c.lits[0]
-			s.watchBlockers[[2]int{lit, id}] = first
-			if s.coneActive && !s.marks[first>>1] {
-				kept = append(kept, id)
-				continue
-			}
+			w.blocker = first
 			if s.literalValue(first) == 1 {
-				kept = append(kept, id)
+				kept = append(kept, w)
 				continue
 			}
 			replacement := -1
@@ -73,20 +54,21 @@ func (s *Solver) propagate() int {
 			if replacement >= 0 {
 				c.lits[1], c.lits[replacement] = c.lits[replacement], falseLit
 				other := c.lits[1] ^ 1
-				s.watches[other] = append(s.watches[other], id)
-				s.watchBlockers[[2]int{other, id}] = first
+				s.watches[other].entries = append(s.watches[other].entries, w)
 				continue
 			}
-			kept = append(kept, id)
-			if s.literalValue(first) == 0 || !s.enqueue(first, id) {
-				kept = append(kept, list[pos+1:]...)
-				s.watches[lit] = kept
+			kept = append(kept, w)
+			if !s.enqueue(first, w.clause) {
+				kept = append(kept, long[pos+1:]...)
+				list.entries = kept
+				s.stats.Inspections += int64(len(kept))
 				s.qhead = len(s.trail)
 				finish()
-				return id
+				return w.clause
 			}
 		}
-		s.watches[lit] = kept
+		list.entries = kept
+		s.stats.Inspections += int64(len(kept))
 	}
 	finish()
 	return -1
