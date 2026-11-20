@@ -1388,6 +1388,16 @@ func (c *Compiler) CompileWithSortInference(node Node) (Node, error) {
 // CompileConst compiles a constant declaration, adding it to the signature.
 func (c *Compiler) CompileConst(v Node, sig *Sig) (*Const, error) {
 	xtracer.Trace("compiler.CompileConst ENTER")
+	// Python: compile_const runs inside ASTContext(v), so an error without
+	// a location gets v's.
+	res, err := c.compileConstImpl(v, sig)
+	if err != nil {
+		return res, astContextError(v, err)
+	}
+	return res, nil
+}
+
+func (c *Compiler) compileConstImpl(v Node, sig *Sig) (*Const, error) {
 	// Python KeyArg is an App subclass (same rep, args, sort, lineno).
 	if k, ok := v.(*KeyArg); ok {
 		v = k.App

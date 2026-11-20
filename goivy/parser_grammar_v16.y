@@ -758,14 +758,18 @@ proofstep:
     {
         xtracer.Trace("parser.p_proofstep_symbol ENTER (proofstep)")
         a := parser16Acfg(parser16lex).NewAtom($1.Val)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: a.lineno = get_lineno(p,1)
         si := parser16Acfg(parser16lex).NewSchemaInstantiation(a, parser16Acfg(parser16lex).NewRenaming(nil))
+        si.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: p[0].lineno = get_lineno(p,1)
         $$ = si
     }
     | SYMBOLx PARSER16_TOK_WITH matches
     {
         xtracer.Trace("parser.p_proofstep_symbol_with_defns ENTER (proofstep)")
         a := parser16Acfg(parser16lex).NewAtom($1.Val)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: a.lineno = get_lineno(p,1)
         si := parser16Acfg(parser16lex).NewSchemaInstantiationWithMatches(a, parser16Acfg(parser16lex).NewRenaming(nil), $3)
+        si.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: p[0].lineno = get_lineno(p,1)
         $$ = si
     }
     | proofgroup
@@ -1588,12 +1592,15 @@ places:
     {
         xtracer.Trace("parser.p_places_symbol ENTER (places)")
         a := parser16Acfg(parser16lex).NewAtom($1.Val)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: get_lineno(p,1)
         $$ = []Node{a}
     }
     | places PARSER16_TOK_COMMA SYMBOLx
     {
         xtracer.Trace("parser.p_places_places_comma_symbol ENTER (places)")
-        $$ = append($1, parser16Acfg(parser16lex).NewAtom($3.Val))
+        a := parser16Acfg(parser16lex).NewAtom($3.Val)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $3)) // Python: get_lineno(p,3)
+        $$ = append($1, a)
     }
     ;
 
@@ -2400,7 +2407,9 @@ callatom:
     | PARSER16_TOK_THIS
     {
         xtracer.Trace("parser.p_callatom_this ENTER (callatom)")
-        $$ = parser16Acfg(parser16lex).NewAtom("this")
+        a := parser16Acfg(parser16lex).NewAtom("this")
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: get_lineno(p,1)
+        $$ = a
     }
     | PARSER16_TOK_METHOD
     {
@@ -2519,6 +2528,7 @@ tapp:
     {
         xtracer.Trace("parser.p_tapp_symbol ENTER (tapp)")
         a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol($1.Val, nil))
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: get_lineno(p,1)
         $$ = a
     }
     | SYMBOLx targs
@@ -2527,6 +2537,7 @@ tapp:
         args := make([]Node, len($2))
         copy(args, $2)
         a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol($1.Val, nil), args...)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: get_lineno(p,1)
         $$ = a
     }
     | PARSER16_TOK_LPAREN var infix var PARSER16_TOK_RPAREN

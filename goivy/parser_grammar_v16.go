@@ -267,7 +267,7 @@ const parser16EofCode = 1
 const parser16ErrCode = 2
 const parser16InitialStackSize = 16
 
-//line parser_grammar_v16.y:3071
+//line parser_grammar_v16.y:3082
 
 //line yacctab:1
 var parser16Exca = [...]int16{
@@ -2012,35 +2012,39 @@ parser16default:
 		{
 			xtracer.Trace("parser.p_proofstep_symbol ENTER (proofstep)")
 			a := parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
+			a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok)) // Python: a.lineno = get_lineno(p,1)
 			si := parser16Acfg(parser16lex).NewSchemaInstantiation(a, parser16Acfg(parser16lex).NewRenaming(nil))
+			si.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok)) // Python: p[0].lineno = get_lineno(p,1)
 			parser16VAL.node = si
 		}
 	case 66:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:765
+//line parser_grammar_v16.y:767
 		{
 			xtracer.Trace("parser.p_proofstep_symbol_with_defns ENTER (proofstep)")
 			a := parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
+			a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok)) // Python: a.lineno = get_lineno(p,1)
 			si := parser16Acfg(parser16lex).NewSchemaInstantiationWithMatches(a, parser16Acfg(parser16lex).NewRenaming(nil), parser16Dollar[3].nodes)
+			si.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok)) // Python: p[0].lineno = get_lineno(p,1)
 			parser16VAL.node = si
 		}
 	case 67:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:772
+//line parser_grammar_v16.y:776
 		{
 			xtracer.Trace("parser.p_proofstep_proofgroup ENTER (proofstep)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 68:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:780
+//line parser_grammar_v16.y:784
 		{
 			xtracer.Trace("parser.p_match_defn ENTER (match)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 69:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:785
+//line parser_grammar_v16.y:789
 		{
 			xtracer.Trace("parser.p_match_var_eq_fmla ENTER (match)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewDefinition(parser16Dollar[1].node, checkNonTemporal(parser16Dollar[3].node))
@@ -2048,28 +2052,28 @@ parser16default:
 		}
 	case 70:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:794
+//line parser_grammar_v16.y:798
 		{
 			xtracer.Trace("parser.p_matches ENTER (matches)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 71:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:799
+//line parser_grammar_v16.y:803
 		{
 			xtracer.Trace("parser.p_matches_matches_comma_match ENTER (matches)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 72:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:807
+//line parser_grammar_v16.y:811
 		{
 			xtracer.Trace("parser.p_optskolem ENTER (optskolem)")
 			parser16VAL.node = nil
 		}
 	case 73:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:812
+//line parser_grammar_v16.y:816
 		{
 			xtracer.Trace("parser.p_optskolem_symbol ENTER (optskolem)")
 			parser16VAL.node = parser16Dollar[2].node
@@ -2077,77 +2081,77 @@ parser16default:
 		}
 	case 74:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:821
+//line parser_grammar_v16.y:825
 		{
 			xtracer.Trace("parser.p_opttemporal ENTER (opttemporal)")
 			parser16VAL.node = nil
 		}
 	case 75:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:826
+//line parser_grammar_v16.y:830
 		{
 			xtracer.Trace("parser.p_opttemporal_symbol ENTER (opttemporal)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("temporal")
 		}
 	case 76:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:834
+//line parser_grammar_v16.y:838
 		{
 			xtracer.Trace("parser.p_optexplicit ENTER (optexplicit)")
 			parser16VAL.node = nil
 		}
 	case 77:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:839
+//line parser_grammar_v16.y:843
 		{
 			xtracer.Trace("parser.p_optexplicit_explicit ENTER (optexplicit)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAnd()
 		}
 	case 78:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:847
+//line parser_grammar_v16.y:851
 		{
 			xtracer.Trace("parser.p_optimpex ENTER (optimpex)")
 			parser16VAL.node = nil
 		}
 	case 79:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:852
+//line parser_grammar_v16.y:856
 		{
 			xtracer.Trace("parser.p_optimpex_export ENTER (optimpex)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewExportDecl()
 		}
 	case 80:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:857
+//line parser_grammar_v16.y:861
 		{
 			xtracer.Trace("parser.p_optimpex_import ENTER (optimpex)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewImportDecl()
 		}
 	case 81:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:865
+//line parser_grammar_v16.y:869
 		{
 			xtracer.Trace("parser.p_actmeth_action ENTER (actmeth)")
 			parser16VAL.tok = TokenInfo{Val: "action", Line: parser16Dollar[1].tok.Line}
 		}
 	case 82:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:870
+//line parser_grammar_v16.y:874
 		{
 			xtracer.Trace("parser.p_actmeth_method ENTER (actmeth)")
 			parser16VAL.tok = TokenInfo{Val: "method", Line: parser16Dollar[1].tok.Line}
 		}
 	case 83:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:878
+//line parser_grammar_v16.y:882
 		{
 			xtracer.Trace("parser.p_topseq_sequence ENTER (topseq)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 84:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:883
+//line parser_grammar_v16.y:887
 		{
 			xtracer.Trace("parser.p_topseq_lcb_nativequote_rcb ENTER (topseq)")
 			text, bqs := parseNativequote(parser16Acfg(parser16lex), parser16Dollar[2].tok.Val)
@@ -2158,49 +2162,49 @@ parser16default:
 		}
 	case 85:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:895
+//line parser_grammar_v16.y:899
 		{
 			xtracer.Trace("parser.p_opttrusted ENTER (opttrusted)")
 			parser16VAL.bval = false
 		}
 	case 86:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:900
+//line parser_grammar_v16.y:904
 		{
 			xtracer.Trace("parser.p_opttrusted_trusted ENTER (opttrusted)")
 			parser16VAL.bval = true
 		}
 	case 87:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:908
+//line parser_grammar_v16.y:912
 		{
 			xtracer.Trace("parser.p_optdelegee ENTER (optdelegee)")
 			parser16VAL.node = nil
 		}
 	case 88:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:913
+//line parser_grammar_v16.y:917
 		{
 			xtracer.Trace("parser.p_optdelegee_callatom ENTER (optdelegee)")
 			parser16VAL.node = parser16Dollar[2].node
 		}
 	case 89:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:921
+//line parser_grammar_v16.y:925
 		{
 			xtracer.Trace("parser.p_insts_inst ENTER (insts)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 90:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:926
+//line parser_grammar_v16.y:930
 		{
 			xtracer.Trace("parser.p_insts_insts_comma_inst ENTER (insts)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 91:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:934
+//line parser_grammar_v16.y:938
 		{
 			xtracer.Trace("parser.p_inst_modinst ENTER (inst)")
 			n := parser16Acfg(parser16lex).NewInstantiation(nil, AppToAtom(parser16Dollar[1].node))
@@ -2209,7 +2213,7 @@ parser16default:
 		}
 	case 92:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:941
+//line parser_grammar_v16.y:945
 		{
 			xtracer.Trace("parser.p_inst_atom_colon_modinst ENTER (inst)")
 			inst := parser16Acfg(parser16lex).NewInstantiation(AppToAtom(parser16Dollar[1].node), AppToAtom(parser16Dollar[3].node))
@@ -2218,7 +2222,7 @@ parser16default:
 		}
 	case 93:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:951
+//line parser_grammar_v16.y:955
 		{
 			xtracer.Trace("parser.p_modinst_symbol ENTER (modinst)")
 			a := parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
@@ -2227,7 +2231,7 @@ parser16default:
 		}
 	case 94:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:958
+//line parser_grammar_v16.y:962
 		{
 			xtracer.Trace("parser.p_modinst_symbol_lp_pnames_rp ENTER (modinst)")
 			a := parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
@@ -2237,7 +2241,7 @@ parser16default:
 		}
 	case 95:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:969
+//line parser_grammar_v16.y:973
 		{
 			xtracer.Trace("parser.p_pname_symbol ENTER (pname)")
 			var rep string
@@ -2255,28 +2259,28 @@ parser16default:
 		}
 	case 96:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:985
+//line parser_grammar_v16.y:989
 		{
 			xtracer.Trace("parser.p_pname_var ENTER (pname)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 97:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:990
+//line parser_grammar_v16.y:994
 		{
 			xtracer.Trace("parser.p_pname_infix ENTER (pname)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[1].str, nil))
 		}
 	case 98:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:995
+//line parser_grammar_v16.y:999
 		{
 			xtracer.Trace("parser.p_pname_relop ENTER (pname)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[1].tok.Val, nil)), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 99:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1000
+//line parser_grammar_v16.y:1004
 		{
 			xtracer.Trace("parser.p_pname_true ENTER (pname)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("true")
@@ -2284,7 +2288,7 @@ parser16default:
 		}
 	case 100:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1006
+//line parser_grammar_v16.y:1010
 		{
 			xtracer.Trace("parser.p_pname_false ENTER (pname)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("false")
@@ -2292,49 +2296,49 @@ parser16default:
 		}
 	case 101:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1015
+//line parser_grammar_v16.y:1019
 		{
 			xtracer.Trace("parser.p_pnames ENTER (pnames)")
 			parser16VAL.nodes = nil
 		}
 	case 102:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1020
+//line parser_grammar_v16.y:1024
 		{
 			xtracer.Trace("parser.p_pnames_pname ENTER (pnames)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 103:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1025
+//line parser_grammar_v16.y:1029
 		{
 			xtracer.Trace("parser.p_pnames_pnames_pname ENTER (pnames)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 104:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1033
+//line parser_grammar_v16.y:1037
 		{
 			xtracer.Trace("parser.p_oper_symbol ENTER (oper)")
 			parser16VAL.node = atypeToAtom(parser16Acfg(parser16lex), parser16Dollar[1].node)
 		}
 	case 105:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1038
+//line parser_grammar_v16.y:1042
 		{
 			xtracer.Trace("parser.p_oper_relop ENTER (oper)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 106:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1043
+//line parser_grammar_v16.y:1047
 		{
 			xtracer.Trace("parser.p_oper_infix ENTER (oper)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].str)
 		}
 	case 107:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1048
+//line parser_grammar_v16.y:1052
 		{
 			xtracer.Trace("parser.p_oper_nativequote ENTER (oper)")
 			text, bqs := parseNativequote(parser16Acfg(parser16lex), parser16Dollar[1].tok.Val)
@@ -2345,14 +2349,14 @@ parser16default:
 		}
 	case 108:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1060
+//line parser_grammar_v16.y:1064
 		{
 			xtracer.Trace("parser.p_top_attributeval_callatom ENTER (attributeval)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 109:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1065
+//line parser_grammar_v16.y:1069
 		{
 			xtracer.Trace("parser.p_top_attributeval_true ENTER (attributeval)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("true")
@@ -2360,7 +2364,7 @@ parser16default:
 		}
 	case 110:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1071
+//line parser_grammar_v16.y:1075
 		{
 			xtracer.Trace("parser.p_top_attributeval_false ENTER (attributeval)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("false")
@@ -2368,21 +2372,21 @@ parser16default:
 		}
 	case 111:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1080
+//line parser_grammar_v16.y:1084
 		{
 			xtracer.Trace("parser.p_moresymbols ENTER (moresymbols)")
 			parser16VAL.nodes = nil
 		}
 	case 112:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1085
+//line parser_grammar_v16.y:1089
 		{
 			xtracer.Trace("parser.p_moresymbols_more_symbols_comma_symbol ENTER (moresymbols)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Acfg(parser16lex).NewAtom(parser16Dollar[3].tok.Val))
 		}
 	case 113:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1093
+//line parser_grammar_v16.y:1097
 		{
 			xtracer.Trace("parser.p_objectend ENTER (objectend)")
 			parser16lex.(*parser16LexAdapter).accum.isObject = false
@@ -2390,7 +2394,7 @@ parser16default:
 		}
 	case 114:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1102
+//line parser_grammar_v16.y:1106
 		{
 			xtracer.Trace("parser.p_modulestart ENTER (modulestart)")
 			parser16lex.(*parser16LexAdapter).accum.isModule = true
@@ -2398,49 +2402,49 @@ parser16default:
 		}
 	case 115:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1111
+//line parser_grammar_v16.y:1115
 		{
 			xtracer.Trace("parser.p_moduleend ENTER (moduleend)")
 			parser16VAL.node = nil
 		}
 	case 116:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1119
+//line parser_grammar_v16.y:1123
 		{
 			xtracer.Trace("parser.p_modcat ENTER (modcat)")
 			parser16VAL.node = nil
 		}
 	case 117:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1124
+//line parser_grammar_v16.y:1128
 		{
 			xtracer.Trace("parser.p_modcat_object ENTER (modcat)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("object")
 		}
 	case 118:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1129
+//line parser_grammar_v16.y:1133
 		{
 			xtracer.Trace("parser.p_modcat_isolate ENTER (modcat)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("isolate")
 		}
 	case 119:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1137
+//line parser_grammar_v16.y:1141
 		{
 			xtracer.Trace("parser.p_optwith ENTER (optwith)")
 			parser16VAL.nodes = nil
 		}
 	case 120:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1142
+//line parser_grammar_v16.y:1146
 		{
 			xtracer.Trace("parser.p_optwith_with_callatoms ENTER (optwith)")
 			parser16VAL.nodes = parser16Dollar[2].nodes
 		}
 	case 121:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1150
+//line parser_grammar_v16.y:1154
 		{
 			xtracer.Trace("parser.p_optdotdotdot ENTER (optdotdotdot)")
 			parser16lex.(*parser16LexAdapter).parentObjName = ""
@@ -2448,14 +2452,14 @@ parser16default:
 		}
 	case 122:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1156
+//line parser_grammar_v16.y:1160
 		{
 			xtracer.Trace("parser.p_optdotdotdot_dotdotdot ENTER (optdotdotdot)")
 			parser16VAL.bval = true
 		}
 	case 123:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1164
+//line parser_grammar_v16.y:1168
 		{
 			xtracer.Trace("parser.p_objectargs_optargs ENTER (objectargs)")
 			parser16VAL.nodes = parser16Dollar[1].nodes
@@ -2463,7 +2467,7 @@ parser16default:
 		}
 	case 124:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1173
+//line parser_grammar_v16.y:1177
 		{
 			xtracer.Trace("parser.p_objsym ENTER (objsym)")
 			lex := parser16lex.(*parser16LexAdapter)
@@ -2472,21 +2476,21 @@ parser16default:
 		}
 	case 125:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1183
+//line parser_grammar_v16.y:1187
 		{
 			xtracer.Trace("parser.p_optactiondef ENTER (optactiondef)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewSequence()
 		}
 	case 126:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1188
+//line parser_grammar_v16.y:1192
 		{
 			xtracer.Trace("parser.p_optactiondef_eq_topseq ENTER (optactiondef)")
 			parser16VAL.node = parser16Dollar[2].node
 		}
 	case 127:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1193
+//line parser_grammar_v16.y:1197
 		{
 			xtracer.Trace("parser.p_optactiondef_eq_symbol ENTER (optactiondef)")
 			ca := parser16Acfg(parser16lex).NewCrashAction()
@@ -2495,7 +2499,7 @@ parser16default:
 		}
 	case 128:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1203
+//line parser_grammar_v16.y:1207
 		{
 			xtracer.Trace("parser.p_sequence_lcb_rcb ENTER (sequence)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewSequence()
@@ -2503,7 +2507,7 @@ parser16default:
 		}
 	case 129:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1209
+//line parser_grammar_v16.y:1213
 		{
 			xtracer.Trace("parser.p_sequence_lcb_actseq_rcb ENTER (sequence)")
 			stmts := lowerVarStmts(parser16Dollar[2].nodes)
@@ -2515,7 +2519,7 @@ parser16default:
 		}
 	case 130:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:1219
+//line parser_grammar_v16.y:1223
 		{
 			xtracer.Trace("parser.p_sequence_lcb_actseq_semi_rcb ENTER (sequence)")
 			stmts := lowerVarStmts(parser16Dollar[2].nodes)
@@ -2525,7 +2529,7 @@ parser16default:
 		}
 	case 131:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1230
+//line parser_grammar_v16.y:1234
 		{
 			xtracer.Trace("parser.p_actseq_actseqrev ENTER (actseq)")
 			for i, j := 0, len(parser16Dollar[1].nodes)-1; i < j; i, j = i+1, j-1 {
@@ -2535,70 +2539,70 @@ parser16default:
 		}
 	case 132:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1241
+//line parser_grammar_v16.y:1245
 		{
 			xtracer.Trace("parser.p_actseqrev_simpleact ENTER (actseqrev)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 133:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1246
+//line parser_grammar_v16.y:1250
 		{
 			xtracer.Trace("parser.p_actseqrev_complexact ENTER (actseqrev)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 134:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1251
+//line parser_grammar_v16.y:1255
 		{
 			xtracer.Trace("parser.p_actseqrev_simpact_semi_actseqrev ENTER (actseqrev)")
 			parser16VAL.nodes = append(parser16Dollar[3].nodes, parser16Dollar[1].node)
 		}
 	case 135:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1256
+//line parser_grammar_v16.y:1260
 		{
 			xtracer.Trace("parser.p_actseqrev_simpact_semi ENTER (actseqrev)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 136:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1261
+//line parser_grammar_v16.y:1265
 		{
 			xtracer.Trace("parser.p_actseqrev_complexact_actseqrev ENTER (actseqrev)")
 			parser16VAL.nodes = append(parser16Dollar[2].nodes, parser16Dollar[1].node)
 		}
 	case 137:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1266
+//line parser_grammar_v16.y:1270
 		{
 			xtracer.Trace("parser.p_actseqrev_complexact_semi_actseqrev ENTER (actseqrev)")
 			parser16VAL.nodes = append(parser16Dollar[3].nodes, parser16Dollar[1].node)
 		}
 	case 138:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1271
+//line parser_grammar_v16.y:1275
 		{
 			xtracer.Trace("parser.p_actseqrev_complexact_semi ENTER (actseqrev)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 139:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1279
+//line parser_grammar_v16.y:1283
 		{
 			xtracer.Trace("parser.p_action_simpleact ENTER (action)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 140:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1284
+//line parser_grammar_v16.y:1288
 		{
 			xtracer.Trace("parser.p_action_complexact ENTER (action)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 141:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1292
+//line parser_grammar_v16.y:1296
 		{
 			xtracer.Trace("parser.p_action_assume ENTER (simpleact)")
 			cfg := parser16Acfg(parser16lex)
@@ -2608,7 +2612,7 @@ parser16default:
 		}
 	case 142:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1300
+//line parser_grammar_v16.y:1304
 		{
 			xtracer.Trace("parser.p_action_assert ENTER (simpleact)")
 			cfg := parser16Acfg(parser16lex)
@@ -2618,7 +2622,7 @@ parser16default:
 		}
 	case 143:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1308
+//line parser_grammar_v16.y:1312
 		{
 			xtracer.Trace("parser.p_action_ensures ENTER (simpleact)")
 			cfg := parser16Acfg(parser16lex)
@@ -2628,7 +2632,7 @@ parser16default:
 		}
 	case 144:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1316
+//line parser_grammar_v16.y:1320
 		{
 			xtracer.Trace("parser.p_action_call_optreturns_callatom ENTER (simpleact)")
 			callArgs := append([]Node{parser16Dollar[3].node}, parser16Dollar[2].nodes...)
@@ -2637,7 +2641,7 @@ parser16default:
 		}
 	case 145:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1323
+//line parser_grammar_v16.y:1327
 		{
 			xtracer.Trace("parser.p_action_call_callatom ENTER (simpleact)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewCallAction(parser16Dollar[2].node)
@@ -2645,7 +2649,7 @@ parser16default:
 		}
 	case 146:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1329
+//line parser_grammar_v16.y:1333
 		{
 			xtracer.Trace("parser.p_action_set_lit ENTER (simpleact)")
 			a := parser16Acfg(parser16lex).NewSetAction(parser16Dollar[2].node)
@@ -2654,7 +2658,7 @@ parser16default:
 		}
 	case 147:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1336
+//line parser_grammar_v16.y:1340
 		{
 			xtracer.Trace("parser.p_action_instantiate_atom ENTER (simpleact)")
 			a := parser16Acfg(parser16lex).NewInstantiateAction(parser16Dollar[2].node)
@@ -2663,7 +2667,7 @@ parser16default:
 		}
 	case 148:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1343
+//line parser_grammar_v16.y:1347
 		{
 			xtracer.Trace("parser.p_action_var_opttypedsym_assign_fmla ENTER (simpleact)")
 			if parser16Dollar[3].node != nil {
@@ -2675,7 +2679,7 @@ parser16default:
 		}
 	case 149:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1353
+//line parser_grammar_v16.y:1357
 		{
 			xtracer.Trace("parser.p_action_term_assign_fmla ENTER (simpleact)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAssignAction(parser16Dollar[1].node, checkNonTemporal(parser16Dollar[3].node))
@@ -2683,7 +2687,7 @@ parser16default:
 		}
 	case 150:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1359
+//line parser_grammar_v16.y:1363
 		{
 			xtracer.Trace("parser.p_action_termtuple_assign_fmla ENTER (simpleact)")
 			callArgs := append([]Node{parser16Dollar[3].node}, parser16Dollar[1].node.Args()...)
@@ -2692,7 +2696,7 @@ parser16default:
 		}
 	case 151:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1366
+//line parser_grammar_v16.y:1370
 		{
 			xtracer.Trace("parser.p_action_term_assign_times ENTER (simpleact)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewHavocAction(parser16Dollar[1].node)
@@ -2700,7 +2704,7 @@ parser16default:
 		}
 	case 152:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1372
+//line parser_grammar_v16.y:1376
 		{
 			xtracer.Trace("parser.p_action_term ENTER (simpleact)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewCallAction(parser16Dollar[1].node)
@@ -2708,14 +2712,14 @@ parser16default:
 		}
 	case 153:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1381
+//line parser_grammar_v16.y:1385
 		{
 			xtracer.Trace("parser.p_action_sequence ENTER (complexact)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 154:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1386
+//line parser_grammar_v16.y:1390
 		{
 			xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb ENTER (complexact)")
 			cond := checkNonTemporal(parser16Dollar[2].node)
@@ -2726,7 +2730,7 @@ parser16default:
 		}
 	case 155:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1395
+//line parser_grammar_v16.y:1399
 		{
 			xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
 			cond := checkNonTemporal(parser16Dollar[2].node)
@@ -2737,7 +2741,7 @@ parser16default:
 		}
 	case 156:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1404
+//line parser_grammar_v16.y:1408
 		{
 			xtracer.Trace("parser.p_action_if_times_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
 			choice := parser16Acfg(parser16lex).NewChoiceAction(parser16Dollar[3].node, parser16Dollar[5].node)
@@ -2746,7 +2750,7 @@ parser16default:
 		}
 	case 157:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1411
+//line parser_grammar_v16.y:1415
 		{
 			xtracer.Trace("parser.p_action_while_somefmla_invariants_decreases_lcb_action_rcb ENTER (complexact)")
 			cond := checkNonTemporal(parser16Dollar[2].node)
@@ -2760,7 +2764,7 @@ parser16default:
 		}
 	case 158:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1423
+//line parser_grammar_v16.y:1427
 		{
 			xtracer.Trace("parser.p_action_local_params_lcb_action_rcb ENTER (complexact)")
 			bounds := parser16Dollar[2].nodes
@@ -2778,7 +2782,7 @@ parser16default:
 		}
 	case 159:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1439
+//line parser_grammar_v16.y:1443
 		{
 			xtracer.Trace("parser.p_action_let_eqns_lcb_action_rcb ENTER (complexact)")
 			args := append(parser16Dollar[2].nodes, parser16Dollar[3].node)
@@ -2788,14 +2792,14 @@ parser16default:
 		}
 	case 160:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1450
+//line parser_grammar_v16.y:1454
 		{
 			xtracer.Trace("parser.p_somefmla_fmla ENTER (somefmla)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 161:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1455
+//line parser_grammar_v16.y:1459
 		{
 			xtracer.Trace("parser.p_somefmla_fmla_assign_fmla ENTER (somefmla)")
 			lhs := parser16Dollar[1].node
@@ -2815,7 +2819,7 @@ parser16default:
 		}
 	case 162:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1473
+//line parser_grammar_v16.y:1477
 		{
 			xtracer.Trace("parser.p_somefmla_some_bounds_fmla ENTER (somefmla)")
 			bounds := parser16Dollar[2].nodes
@@ -2832,7 +2836,7 @@ parser16default:
 		}
 	case 163:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1488
+//line parser_grammar_v16.y:1492
 		{
 			xtracer.Trace("parser.p_somefmla_some_bounds_fmla_minimizing_term ENTER (somefmla)")
 			bounds := parser16Dollar[2].nodes
@@ -2850,7 +2854,7 @@ parser16default:
 		}
 	case 164:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1504
+//line parser_grammar_v16.y:1508
 		{
 			xtracer.Trace("parser.p_somefmla_some_bounds_fmla_maximizing_term ENTER (somefmla)")
 			bounds := parser16Dollar[2].nodes
@@ -2868,28 +2872,28 @@ parser16default:
 		}
 	case 165:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1523
+//line parser_grammar_v16.y:1527
 		{
 			xtracer.Trace("parser.p_bounds_params_dot ENTER (bounds)")
 			parser16VAL.nodes = parser16Dollar[1].nodes
 		}
 	case 166:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1528
+//line parser_grammar_v16.y:1532
 		{
 			xtracer.Trace("parser.p_bounds_lparen_lparams_rparen ENTER (bounds)")
 			parser16VAL.nodes = parser16Dollar[2].nodes
 		}
 	case 167:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1536
+//line parser_grammar_v16.y:1540
 		{
 			xtracer.Trace("parser.p_invariants ENTER (invariants)")
 			parser16VAL.nodes = nil
 		}
 	case 168:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1541
+//line parser_grammar_v16.y:1545
 		{
 			xtracer.Trace("parser.p_invariant_invariant_fmla ENTER (invariants)")
 			cfg := parser16Acfg(parser16lex)
@@ -2900,7 +2904,7 @@ parser16default:
 		}
 	case 169:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1550
+//line parser_grammar_v16.y:1554
 		{
 			xtracer.Trace("parser.p_invariant_invariant_fmla_proof ENTER (invariants)")
 			cfg := parser16Acfg(parser16lex)
@@ -2911,14 +2915,14 @@ parser16default:
 		}
 	case 170:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1562
+//line parser_grammar_v16.y:1566
 		{
 			xtracer.Trace("parser.p_decreases ENTER (decreases)")
 			parser16VAL.nodes = nil
 		}
 	case 171:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1567
+//line parser_grammar_v16.y:1571
 		{
 			xtracer.Trace("parser.p_decreases_decreases_fmla ENTER (decreases)")
 			fmla := checkNonTemporal(parser16Dollar[2].node)
@@ -2928,7 +2932,7 @@ parser16default:
 		}
 	case 172:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1578
+//line parser_grammar_v16.y:1582
 		{
 			xtracer.Trace("parser.p_sceninit_arrow_places ENTER (sceninit)")
 			pl := parser16Acfg(parser16lex).NewPlaceList(parser16Dollar[2].nodes)
@@ -2937,29 +2941,32 @@ parser16default:
 		}
 	case 173:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1588
+//line parser_grammar_v16.y:1592
 		{
 			xtracer.Trace("parser.p_places_symbol ENTER (places)")
 			a := parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
+			a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok)) // Python: get_lineno(p,1)
 			parser16VAL.nodes = []Node{a}
 		}
 	case 174:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1594
+//line parser_grammar_v16.y:1599
 		{
 			xtracer.Trace("parser.p_places_places_comma_symbol ENTER (places)")
-			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Acfg(parser16lex).NewAtom(parser16Dollar[3].tok.Val))
+			a := parser16Acfg(parser16lex).NewAtom(parser16Dollar[3].tok.Val)
+			a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[3].tok)) // Python: get_lineno(p,3)
+			parser16VAL.nodes = append(parser16Dollar[1].nodes, a)
 		}
 	case 175:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1602
+//line parser_grammar_v16.y:1609
 		{
 			xtracer.Trace("parser.p_scentranss ENTER (scentranss)")
 			parser16VAL.nodes = nil
 		}
 	case 176:
 		parser16Dollar = parser16S[parser16pt-6 : parser16pt+1]
-//line parser_grammar_v16.y:1607
+//line parser_grammar_v16.y:1614
 		{
 			xtracer.Trace("parser.p_scentranss_scentranss_places_arrow_places_colon_scenariomixin ENTER (scentranss)")
 			from := parser16Acfg(parser16lex).NewPlaceList(parser16Dollar[2].nodes)
@@ -2970,7 +2977,7 @@ parser16default:
 		}
 	case 177:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:1616
+//line parser_grammar_v16.y:1623
 		{
 			xtracer.Trace("parser.p_scentranss_scentranss_places_colon_scenariomixin ENTER (scentranss)")
 			tr := parser16Acfg(parser16lex).NewScenarioTransition(parser16Acfg(parser16lex).NewPlaceList(parser16Dollar[2].nodes), parser16Acfg(parser16lex).NewPlaceList(nil), parser16Dollar[4].node)
@@ -2979,7 +2986,7 @@ parser16default:
 		}
 	case 178:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1626
+//line parser_grammar_v16.y:1633
 		{
 			xtracer.Trace("parser.p_scenariomixin_before_callatom_lcb_action_rcb ENTER (scenariomixin)")
 			atom := atypeToAtom(parser16Acfg(parser16lex), parser16Dollar[2].node)
@@ -2993,7 +3000,7 @@ parser16default:
 		}
 	case 179:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1638
+//line parser_grammar_v16.y:1645
 		{
 			xtracer.Trace("parser.p_scenariomixin_after_callatom_lcb_action_rcb ENTER (scenariomixin)")
 			atom := atypeToAtom(parser16Acfg(parser16lex), parser16Dollar[2].node)
@@ -3008,28 +3015,28 @@ parser16default:
 		}
 	case 180:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1654
+//line parser_grammar_v16.y:1661
 		{
 			xtracer.Trace("parser.p_eqn_SYMBOL_EQ_SYMBOL ENTER (eqn)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("=", parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[1].tok.Val, nil)), parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[3].tok.Val, nil)))
 		}
 	case 181:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1662
+//line parser_grammar_v16.y:1669
 		{
 			xtracer.Trace("parser.p_eqns_eqn ENTER (eqns)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 182:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1667
+//line parser_grammar_v16.y:1674
 		{
 			xtracer.Trace("parser.p_eqns_eqns_comma_eqn ENTER (eqns)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 183:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1675
+//line parser_grammar_v16.y:1682
 		{
 			xtracer.Trace("parser.p_lit_atom ENTER (lit)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewLiteral(1, parser16Dollar[1].node)
@@ -3037,7 +3044,7 @@ parser16default:
 		}
 	case 184:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1681
+//line parser_grammar_v16.y:1688
 		{
 			xtracer.Trace("parser.p_lit_term_eq_term ENTER (lit)")
 			a := parser16Acfg(parser16lex).NewAtom("=", parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val), parser16Acfg(parser16lex).NewAtom(parser16Dollar[3].tok.Val))
@@ -3046,7 +3053,7 @@ parser16default:
 		}
 	case 185:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1688
+//line parser_grammar_v16.y:1695
 		{
 			xtracer.Trace("parser.p_lit_term_tildaeq_term ENTER (lit)")
 			a := parser16Acfg(parser16lex).NewAtom("=", parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val), parser16Acfg(parser16lex).NewAtom(parser16Dollar[3].tok.Val))
@@ -3055,7 +3062,7 @@ parser16default:
 		}
 	case 186:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1695
+//line parser_grammar_v16.y:1702
 		{
 			xtracer.Trace("parser.p_lit_tilda_atom ENTER (lit)")
 			if lit, ok := parser16Dollar[2].node.(*Literal); ok {
@@ -3067,49 +3074,49 @@ parser16default:
 		}
 	case 187:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1708
+//line parser_grammar_v16.y:1715
 		{
 			xtracer.Trace("parser.p_optargs ENTER (optargs)")
 			parser16VAL.nodes = nil
 		}
 	case 188:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1713
+//line parser_grammar_v16.y:1720
 		{
 			xtracer.Trace("parser.p_optargs_params ENTER (optargs)")
 			parser16VAL.nodes = parser16Dollar[2].nodes
 		}
 	case 189:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1721
+//line parser_grammar_v16.y:1728
 		{
 			xtracer.Trace("parser.p_optreturns ENTER (optreturns)")
 			parser16VAL.nodes = nil
 		}
 	case 190:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:1726
+//line parser_grammar_v16.y:1733
 		{
 			xtracer.Trace("parser.p_optreturns_tsyms ENTER (optreturns)")
 			parser16VAL.nodes = parser16Dollar[3].nodes
 		}
 	case 191:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1734
+//line parser_grammar_v16.y:1741
 		{
 			xtracer.Trace("parser.p_optactualreturns ENTER (optactualreturns)")
 			parser16VAL.nodes = nil
 		}
 	case 192:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1739
+//line parser_grammar_v16.y:1746
 		{
 			xtracer.Trace("parser.p_optactualreturns_callatoms_assign ENTER (optactualreturns)")
 			parser16VAL.nodes = parser16Dollar[1].nodes
 		}
 	case 193:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1747
+//line parser_grammar_v16.y:1754
 		{
 			xtracer.Trace("parser.p_lparam_variable_colon_symbol ENTER (lparam)")
 			a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[1].tok.Val, nil))
@@ -3119,21 +3126,21 @@ parser16default:
 		}
 	case 194:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1758
+//line parser_grammar_v16.y:1765
 		{
 			xtracer.Trace("parser.p_lparams_lparam ENTER (lparams)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 195:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1763
+//line parser_grammar_v16.y:1770
 		{
 			xtracer.Trace("parser.p_lparams_lparams_comma_lparam ENTER (lparams)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 196:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1771
+//line parser_grammar_v16.y:1778
 		{
 			xtracer.Trace("parser.p_param_term_colon_symbol ENTER (param)")
 			a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[1].tok.Val, nil))
@@ -3143,35 +3150,35 @@ parser16default:
 		}
 	case 197:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1782
+//line parser_grammar_v16.y:1789
 		{
 			xtracer.Trace("parser.p_params_param ENTER (params)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 198:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1787
+//line parser_grammar_v16.y:1794
 		{
 			xtracer.Trace("parser.p_params_params_comma_param ENTER (params)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 199:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:1795
+//line parser_grammar_v16.y:1802
 		{
 			xtracer.Trace("parser.p_optinit ENTER (optinit)")
 			parser16VAL.node = nil
 		}
 	case 200:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1800
+//line parser_grammar_v16.y:1807
 		{
 			xtracer.Trace("parser.p_optinit_assign_fmla ENTER (optinit)")
 			parser16VAL.node = checkNonTemporal(parser16Dollar[2].node)
 		}
 	case 201:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:1808
+//line parser_grammar_v16.y:1815
 		{
 			xtracer.Trace("parser.p_termtuple_lp_term_comma_terms_rp ENTER (termtuple)")
 			args := append([]Node{parser16Dollar[2].node}, parser16Dollar[4].nodes...)
@@ -3181,7 +3188,7 @@ parser16default:
 		}
 	case 202:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1819
+//line parser_grammar_v16.y:1826
 		{
 			xtracer.Trace("parser.p_labeledfmla_fmla ENTER (labeledfmla)")
 			lf := parser16Acfg(parser16lex).NewLabeledFormula(nil, parser16Dollar[1].node)
@@ -3192,7 +3199,7 @@ parser16default:
 		}
 	case 203:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1828
+//line parser_grammar_v16.y:1835
 		{
 			xtracer.Trace("parser.p_labeledfmla_label_fmla ENTER (labeledfmla)")
 			lf := parser16Acfg(parser16lex).NewLabeledFormula(parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val), parser16Dollar[2].node)
@@ -3201,21 +3208,21 @@ parser16default:
 		}
 	case 204:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1838
+//line parser_grammar_v16.y:1845
 		{
 			xtracer.Trace("parser.p_LABEL_LB_SYMBOL_RB ENTER (LABEL)")
 			parser16VAL.tok = TokenInfo{Val: parser16Dollar[2].tok.Val, Line: parser16Dollar[1].tok.Line}
 		}
 	case 205:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1846
+//line parser_grammar_v16.y:1853
 		{
 			xtracer.Trace("parser.p_symdecl_constantdecl ENTER (symdecl)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 206:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1851
+//line parser_grammar_v16.y:1858
 		{
 			xtracer.Trace("parser.p_symdecl_destructor_tterms ENTER (symdecl)")
 			d := parser16Acfg(parser16lex).NewDestructorDecl(parser16Dollar[2].nodes...)
@@ -3224,7 +3231,7 @@ parser16default:
 		}
 	case 207:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1861
+//line parser_grammar_v16.y:1868
 		{
 			xtracer.Trace("parser.p_constantdecl_constant_tterms ENTER (constantdecl)")
 			d := parser16Acfg(parser16lex).NewConstantDecl(parser16Dollar[2].nodes...)
@@ -3233,7 +3240,7 @@ parser16default:
 		}
 	case 208:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:1868
+//line parser_grammar_v16.y:1875
 		{
 			xtracer.Trace("parser.p_constantdecl_var_tterms ENTER (constantdecl)")
 			d := parser16Acfg(parser16lex).NewConstantDecl(parser16Dollar[2].nodes...)
@@ -3242,7 +3249,7 @@ parser16default:
 		}
 	case 209:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1878
+//line parser_grammar_v16.y:1885
 		{
 			xtracer.Trace("parser.p_rel_defnlhs ENTER (rel)")
 			if a, ok := parser16Dollar[1].node.(*Atom); ok {
@@ -3254,7 +3261,7 @@ parser16default:
 		}
 	case 210:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1888
+//line parser_grammar_v16.y:1895
 		{
 			xtracer.Trace("parser.p_rel_defn ENTER (rel)")
 			lf := parser16AddLabel(parser17MkLF(parser16Acfg(parser16lex), parser16Dollar[1].node), "def")
@@ -3263,21 +3270,21 @@ parser16default:
 		}
 	case 211:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1898
+//line parser_grammar_v16.y:1905
 		{
 			xtracer.Trace("parser.p_rels_rel ENTER (rels)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 212:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1903
+//line parser_grammar_v16.y:1910
 		{
 			xtracer.Trace("parser.p_rels_rels_comma_rel ENTER (rels)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 213:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1911
+//line parser_grammar_v16.y:1918
 		{
 			xtracer.Trace("parser.p_fun_defnlhs_colon_atype ENTER (fun)")
 			d := parser16Acfg(parser16lex).NewConstantDecl(parser16Dollar[1].node)
@@ -3285,7 +3292,7 @@ parser16default:
 		}
 	case 214:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1917
+//line parser_grammar_v16.y:1924
 		{
 			xtracer.Trace("parser.p_fun_defn ENTER (fun)")
 			df := parser16Acfg(parser16lex).NewDefinition(AppToAtom(parser16Dollar[1].node), parser16Dollar[3].node)
@@ -3296,35 +3303,35 @@ parser16default:
 		}
 	case 215:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1929
+//line parser_grammar_v16.y:1936
 		{
 			xtracer.Trace("parser.p_funs_fun ENTER (funs)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 216:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1934
+//line parser_grammar_v16.y:1941
 		{
 			xtracer.Trace("parser.p_funs_funs_comma_fun ENTER (funs)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 217:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1942
+//line parser_grammar_v16.y:1949
 		{
 			xtracer.Trace("parser.p_defnrhs_fmla ENTER (defnrhs)")
 			parser16VAL.node = checkNonTemporal(parser16Dollar[1].node)
 		}
 	case 218:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1947
+//line parser_grammar_v16.y:1954
 		{
 			xtracer.Trace("parser.p_defnrhs_somevarfmla ENTER (defnrhs)")
 			parser16VAL.node = checkNonTemporal(parser16Dollar[1].node)
 		}
 	case 219:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1952
+//line parser_grammar_v16.y:1959
 		{
 			xtracer.Trace("parser.p_defnrhs_nativequote ENTER (defnrhs)")
 			text, bqs := parseNativequote(parser16Acfg(parser16lex), parser16Dollar[1].tok.Val)
@@ -3335,7 +3342,7 @@ parser16default:
 		}
 	case 220:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1964
+//line parser_grammar_v16.y:1971
 		{
 			xtracer.Trace("parser.p_defn_atom_fmla ENTER (defn)")
 			d := parser16Acfg(parser16lex).NewDefinition(AppToAtom(parser16Dollar[1].node), parser16Dollar[3].node)
@@ -3344,21 +3351,21 @@ parser16default:
 		}
 	case 221:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1974
+//line parser_grammar_v16.y:1981
 		{
 			xtracer.Trace("parser.p_defns_defn ENTER (defns)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 222:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:1979
+//line parser_grammar_v16.y:1986
 		{
 			xtracer.Trace("parser.p_defns_defns_comma_defn ENTER (defns)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 223:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:1987
+//line parser_grammar_v16.y:1994
 		{
 			xtracer.Trace("parser.p_defnlhs_symbol ENTER (defnlhs)")
 			a := parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
@@ -3367,7 +3374,7 @@ parser16default:
 		}
 	case 224:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:1994
+//line parser_grammar_v16.y:2001
 		{
 			xtracer.Trace("parser.p_defnlhs_symbol_lparen_defargs_rparen ENTER (defnlhs)")
 			a := parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
@@ -3377,56 +3384,56 @@ parser16default:
 		}
 	case 225:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:2002
+//line parser_grammar_v16.y:2009
 		{
 			xtracer.Trace("parser.p_defnlhs_lp_term_relop_term_rp ENTER (defnlhs)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewAtom(parser16Dollar[3].tok.Val, parser16Dollar[2].node, parser16Dollar[4].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[3].tok))
 		}
 	case 226:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:2007
+//line parser_grammar_v16.y:2014
 		{
 			xtracer.Trace("parser.p_defnlhs_lp_term_infix_term_rp ENTER (defnlhs)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[3].str, nil), parser16Dollar[2].node, parser16Dollar[4].node)
 		}
 	case 227:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2015
+//line parser_grammar_v16.y:2022
 		{
 			xtracer.Trace("parser.p_defarg_lparam ENTER (defarg)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 228:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2020
+//line parser_grammar_v16.y:2027
 		{
 			xtracer.Trace("parser.p_defarg_var ENTER (defarg)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 229:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2028
+//line parser_grammar_v16.y:2035
 		{
 			xtracer.Trace("parser.p_defargs_defarg ENTER (defargs)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 230:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2033
+//line parser_grammar_v16.y:2040
 		{
 			xtracer.Trace("parser.p_defargs_defargs_comma_defarg ENTER (defargs)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 231:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2041
+//line parser_grammar_v16.y:2048
 		{
 			xtracer.Trace("parser.p_typeddefn_defnlhs ENTER (typeddefn)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 232:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2046
+//line parser_grammar_v16.y:2053
 		{
 			xtracer.Trace("parser.p_typeddefn_defnlhs_colon_atype ENTER (typeddefn)")
 			if a, ok := parser16Dollar[1].node.(*Atom); ok {
@@ -3438,7 +3445,7 @@ parser16default:
 		}
 	case 233:
 		parser16Dollar = parser16S[parser16pt-6 : parser16pt+1]
-//line parser_grammar_v16.y:2059
+//line parser_grammar_v16.y:2066
 		{
 			xtracer.Trace("parser.p_somevarfmla_some_simplevar_dot_fmla ENTER (somevarfmla)")
 			se := parser16Acfg(parser16lex).NewSomeExpr(parser16Dollar[2].node, parser16Dollar[4].node)
@@ -3453,42 +3460,42 @@ parser16default:
 		}
 	case 234:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2071
+//line parser_grammar_v16.y:2078
 		{
 			xtracer.Trace("parser.p_optin ENTER (optin)")
 			parser16VAL.node = nil
 		}
 	case 235:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2076
+//line parser_grammar_v16.y:2083
 		{
 			xtracer.Trace("parser.p_optin_in_fmla ENTER (optin)")
 			parser16VAL.node = parser16Dollar[2].node
 		}
 	case 236:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2084
+//line parser_grammar_v16.y:2091
 		{
 			xtracer.Trace("parser.p_optelse ENTER (optelse)")
 			parser16VAL.node = nil
 		}
 	case 237:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2089
+//line parser_grammar_v16.y:2096
 		{
 			xtracer.Trace("parser.p_optelse_else_fmla ENTER (optelse)")
 			parser16VAL.node = parser16Dollar[2].node
 		}
 	case 238:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2097
+//line parser_grammar_v16.y:2104
 		{
 			xtracer.Trace("parser.p_schdefnrhs_fmla ENTER (schdefnrhs)")
 			parser16VAL.node = checkNonTemporal(parser16Dollar[1].node)
 		}
 	case 239:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2102
+//line parser_grammar_v16.y:2109
 		{
 			xtracer.Trace("parser.p_schdefnrhs_lcb_schdecls_rcb ENTER (schdefnrhs)")
 			args := append(parser16Dollar[2].nodes, parser16Dollar[3].node)
@@ -3497,7 +3504,7 @@ parser16default:
 		}
 	case 240:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2112
+//line parser_grammar_v16.y:2119
 		{
 			xtracer.Trace("parser.p_schdecl_funcdecl ENTER (schdecl)")
 			parser16VAL.nodes = make([]Node, len(parser16Dollar[2].nodes))
@@ -3505,14 +3512,14 @@ parser16default:
 		}
 	case 241:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2118
+//line parser_grammar_v16.y:2125
 		{
 			xtracer.Trace("parser.p_schdecl_fresh_funcdecl ENTER (schdecl)")
 			parser16VAL.nodes = parserFreshDecls(parser16Acfg(parser16lex), parser16Dollar[3].nodes)
 		}
 	case 242:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2123
+//line parser_grammar_v16.y:2130
 		{
 			xtracer.Trace("parser.p_schdecl_indivdecl ENTER (schdecl)")
 			parser16VAL.nodes = make([]Node, len(parser16Dollar[2].nodes))
@@ -3520,14 +3527,14 @@ parser16default:
 		}
 	case 243:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2129
+//line parser_grammar_v16.y:2136
 		{
 			xtracer.Trace("parser.p_schdecl_fresh_indivdecl ENTER (schdecl)")
 			parser16VAL.nodes = parserFreshDecls(parser16Acfg(parser16lex), parser16Dollar[3].nodes)
 		}
 	case 244:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2134
+//line parser_grammar_v16.y:2141
 		{
 			xtracer.Trace("parser.p_schdecl_relation_rel ENTER (schdecl)")
 			parser16VAL.nodes = make([]Node, len(parser16Dollar[2].nodes))
@@ -3535,14 +3542,14 @@ parser16default:
 		}
 	case 245:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2140
+//line parser_grammar_v16.y:2147
 		{
 			xtracer.Trace("parser.p_schdecl_fresh_relation_rel ENTER (schdecl)")
 			parser16VAL.nodes = parserFreshDecls(parser16Acfg(parser16lex), parser16Dollar[3].nodes)
 		}
 	case 246:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2145
+//line parser_grammar_v16.y:2152
 		{
 			xtracer.Trace("parser.p_schdecl_typedecl ENTER (schdecl)")
 			scnst := parser16Acfg(parser16lex).NewAtom(parser16Dollar[2].tok.Val)
@@ -3552,14 +3559,14 @@ parser16default:
 		}
 	case 247:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2153
+//line parser_grammar_v16.y:2160
 		{
 			xtracer.Trace("parser.p_schdecl_propdecl ENTER (schdecl)")
 			parser16VAL.nodes = []Node{checkNonTemporal(parser16AddLabel(parser16Dollar[2].node.(*LabeledFormula), "prop"))}
 		}
 	case 248:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2158
+//line parser_grammar_v16.y:2165
 		{
 			xtracer.Trace("parser.p_schdecl_theorem ENTER (schdecl)")
 			lf := parser16Acfg(parser16lex).NewLabeledFormula(nil, parser16Dollar[1].node)
@@ -3570,35 +3577,35 @@ parser16default:
 		}
 	case 249:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2170
+//line parser_grammar_v16.y:2177
 		{
 			xtracer.Trace("parser.p_schdecls ENTER (schdecls)")
 			parser16VAL.nodes = nil
 		}
 	case 250:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2175
+//line parser_grammar_v16.y:2182
 		{
 			xtracer.Trace("parser.p_schdecls_schdecls_schdecl ENTER (schdecls)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[2].nodes...)
 		}
 	case 251:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2183
+//line parser_grammar_v16.y:2190
 		{
 			xtracer.Trace("parser.p_schconc_defdecl ENTER (schconc)")
 			parser16VAL.node = parser16Dollar[2].node
 		}
 	case 252:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2188
+//line parser_grammar_v16.y:2195
 		{
 			xtracer.Trace("parser.p_schconc_propdecl ENTER (schconc)")
 			parser16VAL.node = checkNonTemporal(parser16Dollar[2].node)
 		}
 	case 253:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2196
+//line parser_grammar_v16.y:2203
 		{
 			xtracer.Trace("parser.p_schdefn_atom_eq_fmla ENTER (schdefn)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewDefinition(AppToAtom(parser16Dollar[1].node), parser16Dollar[3].node)
@@ -3606,42 +3613,42 @@ parser16default:
 		}
 	case 254:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2205
+//line parser_grammar_v16.y:2212
 		{
 			xtracer.Trace("parser.p_optfinite ENTER (optfinite)")
 			parser16VAL.bval = false
 		}
 	case 255:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2210
+//line parser_grammar_v16.y:2217
 		{
 			xtracer.Trace("parser.p_optfinite_finite ENTER (optfinite)")
 			parser16VAL.bval = true
 		}
 	case 256:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2218
+//line parser_grammar_v16.y:2225
 		{
 			xtracer.Trace("parser.p_optghost ENTER (optghost)")
 			parser16VAL.bval = false
 		}
 	case 257:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2223
+//line parser_grammar_v16.y:2230
 		{
 			xtracer.Trace("parser.p_optghost_ghost ENTER (optghost)")
 			parser16VAL.bval = true
 		}
 	case 258:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2231
+//line parser_grammar_v16.y:2238
 		{
 			xtracer.Trace("parser.p_sort_lcb_symbol_rcb ENTER (sort)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewEnumeratedSort(parser16Acfg(parser16lex).NewAtom(parser16Dollar[2].tok.Val))
 		}
 	case 259:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:2236
+//line parser_grammar_v16.y:2243
 		{
 			xtracer.Trace("parser.p_sort_lcb_names_rcb ENTER (sort)")
 			elems := append([]Node{parser16Acfg(parser16lex).NewAtom(parser16Dollar[2].tok.Val)}, parser16Dollar[4].nodes...)
@@ -3649,7 +3656,7 @@ parser16default:
 		}
 	case 260:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:2242
+//line parser_grammar_v16.y:2249
 		{
 			xtracer.Trace("parser.p_sort_lcb_symbol_dots_symbol_rcb ENTER (sort)")
 			r := parser16Acfg(parser16lex).NewRange(parser16Acfg(parser16lex).NewAtom(parser16Dollar[2].tok.Val), parser16Acfg(parser16lex).NewAtom(parser16Dollar[4].tok.Val))
@@ -3658,42 +3665,42 @@ parser16default:
 		}
 	case 261:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2249
+//line parser_grammar_v16.y:2256
 		{
 			xtracer.Trace("parser.p_sort_struct_lcb_names_rcb ENTER (sort)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewStructSort(parser16Dollar[3].nodes...)
 		}
 	case 262:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2254
+//line parser_grammar_v16.y:2261
 		{
 			xtracer.Trace("parser.p_sort_struct_lcb_rcb ENTER (sort)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewStructSort()
 		}
 	case 263:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2262
+//line parser_grammar_v16.y:2269
 		{
 			xtracer.Trace("parser.p_names_symbol ENTER (names)")
 			parser16VAL.nodes = []Node{parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)}
 		}
 	case 264:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2267
+//line parser_grammar_v16.y:2274
 		{
 			xtracer.Trace("parser.p_names_names_comma_symbol ENTER (names)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Acfg(parser16lex).NewAtom(parser16Dollar[3].tok.Val))
 		}
 	case 265:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2275
+//line parser_grammar_v16.y:2282
 		{
 			xtracer.Trace("parser.p_typesymbol_symbol ENTER (typesymbol)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
 		}
 	case 266:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2280
+//line parser_grammar_v16.y:2287
 		{
 			xtracer.Trace("parser.p_typesymbol_this ENTER (typesymbol)")
 			a := parser16Acfg(parser16lex).NewAtom("this")
@@ -3702,42 +3709,42 @@ parser16default:
 		}
 	case 267:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2290
+//line parser_grammar_v16.y:2297
 		{
 			xtracer.Trace("parser.p_SYMBOL_PRESYMBOL ENTER (SYMBOL) val=%s", parser16Dollar[1].tok.Val)
 			parser16VAL.tok = parser16Dollar[1].tok
 		}
 	case 268:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2295
+//line parser_grammar_v16.y:2302
 		{
 			xtracer.Trace("parser.p_SYMBOL_SYMBOL_LB_SYMsubscr_RB ENTER (SYMBOL)")
 			parser16VAL.tok = TokenInfo{Val: parser16Dollar[1].tok.Val + "[" + parser16Dollar[3].str + "]", Line: parser16Dollar[1].tok.Line}
 		}
 	case 269:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2303
+//line parser_grammar_v16.y:2310
 		{
 			xtracer.Trace("parser.p_SYMsubscr_SYMBOL ENTER (SYMsubscr)")
 			parser16VAL.str = parser16Dollar[1].tok.Val
 		}
 	case 270:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2308
+//line parser_grammar_v16.y:2315
 		{
 			xtracer.Trace("parser.p_SYMsubscr_THIS ENTER (SYMsubscr)")
 			parser16VAL.str = "this"
 		}
 	case 271:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2313
+//line parser_grammar_v16.y:2320
 		{
 			xtracer.Trace("parser.p_SYMsubscr_SYMsubscr_dot_symbol ENTER (SYMsubscr)")
 			parser16VAL.str = parser16Dollar[1].str + "." + parser16Dollar[3].tok.Val
 		}
 	case 272:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2321
+//line parser_grammar_v16.y:2328
 		{
 			xtracer.Trace("parser.p_dotsym_symbol ENTER (dotsym) val=%s", parser16Dollar[1].tok.Val)
 			// Python: Atom(p[1]) with lineno = get_lineno(p,1)
@@ -3745,21 +3752,21 @@ parser16default:
 		}
 	case 273:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2327
+//line parser_grammar_v16.y:2334
 		{
 			xtracer.Trace("parser.p_dotsym_dotsym_dot_symbol ENTER (dotsym)")
 			parser16VAL.tok = TokenInfo{Val: parser16Dollar[1].tok.Val + "." + parser16Dollar[3].tok.Val, Line: parser16Dollar[1].tok.Line} // Python: p[0].lineno = p[1].lineno
 		}
 	case 274:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2335
+//line parser_grammar_v16.y:2342
 		{
 			xtracer.Trace("parser.p_atype_symbol ENTER (atype) val=%s", parser16Dollar[1].tok.Val)
 			parser16VAL.node = parser16Acfg(parser16lex).NewSymbol(parser16Dollar[1].tok.Val, nil)
 		}
 	case 275:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2340
+//line parser_grammar_v16.y:2347
 		{
 			xtracer.Trace("parser.p_atype_atype_dot_symbol ENTER (atype)")
 			if _, ok := parser16Dollar[1].node.(*This); ok {
@@ -3772,7 +3779,7 @@ parser16default:
 		}
 	case 276:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2351
+//line parser_grammar_v16.y:2358
 		{
 			xtracer.Trace("parser.p_atype_this ENTER (atype)")
 			t := parser16Acfg(parser16lex).NewThis()
@@ -3781,7 +3788,7 @@ parser16default:
 		}
 	case 277:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2361
+//line parser_grammar_v16.y:2368
 		{
 			xtracer.Trace("parser.p_aterm_symbol ENTER (aterm)")
 			// Python: p[0].lineno = get_lineno(p,1)
@@ -3789,7 +3796,7 @@ parser16default:
 		}
 	case 278:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2367
+//line parser_grammar_v16.y:2374
 		{
 			xtracer.Trace("parser.p_aterm_aterm_terms ENTER (aterm)")
 			switch a := parser16Dollar[1].node.(type) {
@@ -3810,7 +3817,7 @@ parser16default:
 		}
 	case 279:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2386
+//line parser_grammar_v16.y:2393
 		{
 			xtracer.Trace("parser.p_term_term_dot_term ENTER (aterm)")
 			rhs := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[3].tok.Val, nil))
@@ -3819,21 +3826,23 @@ parser16default:
 		}
 	case 280:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2396
+//line parser_grammar_v16.y:2403
 		{
 			xtracer.Trace("parser.p_callatom_atom ENTER (callatom)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 281:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2401
+//line parser_grammar_v16.y:2408
 		{
 			xtracer.Trace("parser.p_callatom_this ENTER (callatom)")
-			parser16VAL.node = parser16Acfg(parser16lex).NewAtom("this")
+			a := parser16Acfg(parser16lex).NewAtom("this")
+			a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok)) // Python: get_lineno(p,1)
+			parser16VAL.node = a
 		}
 	case 282:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2406
+//line parser_grammar_v16.y:2415
 		{
 			xtracer.Trace("parser.p_callatom_method ENTER (callatom)")
 			a := parser16Acfg(parser16lex).NewAtom("method")
@@ -3842,28 +3851,28 @@ parser16default:
 		}
 	case 283:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2413
+//line parser_grammar_v16.y:2422
 		{
 			xtracer.Trace("parser.p_callatom_callatom_dot_callatom ENTER (callatom)")
 			parser16VAL.node = ComposeAtoms(parser16Dollar[1].node.(*Atom), parser16Dollar[3].node.(*Atom))
 		}
 	case 284:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2421
+//line parser_grammar_v16.y:2430
 		{
 			xtracer.Trace("parser.p_callatoms_callatom ENTER (callatoms)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 285:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2426
+//line parser_grammar_v16.y:2435
 		{
 			xtracer.Trace("parser.p_callatoms_callatoms_callatom ENTER (callatoms)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 286:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2434
+//line parser_grammar_v16.y:2443
 		{
 			xtracer.Trace("parser.p_atom_symbol ENTER (atom)")
 			// Python: p[0].lineno = get_lineno(p,1)
@@ -3871,7 +3880,7 @@ parser16default:
 		}
 	case 287:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2440
+//line parser_grammar_v16.y:2449
 		{
 			xtracer.Trace("parser.p_atom_symbol_lp_terms_rp ENTER (atom)")
 			// Python: p[0].lineno = get_lineno(p,1)
@@ -3879,102 +3888,104 @@ parser16default:
 		}
 	case 288:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2449
+//line parser_grammar_v16.y:2458
 		{
 			xtracer.Trace("parser.p_var_variable ENTER (var)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewVariable(parser16Dollar[1].tok.Val, "S"), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 289:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2454
+//line parser_grammar_v16.y:2463
 		{
 			xtracer.Trace("parser.p_var_variable_colon_symbol ENTER (var)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewVariable(parser16Dollar[1].tok.Val, parser17AtypeToString(parser16Dollar[3].node)), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 290:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2462
+//line parser_grammar_v16.y:2471
 		{
 			xtracer.Trace("parser.p_simplevar_variable ENTER (simplevar)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewVariable(parser16Dollar[1].tok.Val, "S"), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 291:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2467
+//line parser_grammar_v16.y:2476
 		{
 			xtracer.Trace("parser.p_simplevar_variable_colon_symbol ENTER (simplevar)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewVariable(parser16Dollar[1].tok.Val, parser16Dollar[3].tok.Val), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 292:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2475
+//line parser_grammar_v16.y:2484
 		{
 			xtracer.Trace("parser.p_vars_var ENTER (vars)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 293:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2480
+//line parser_grammar_v16.y:2489
 		{
 			xtracer.Trace("parser.p_vars_vars_comma_var ENTER (vars)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 294:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2488
+//line parser_grammar_v16.y:2497
 		{
 			xtracer.Trace("parser.p_simplevars_simplevar ENTER (simplevars)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 295:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2493
+//line parser_grammar_v16.y:2502
 		{
 			xtracer.Trace("parser.p_simplevars_simplevars_comma_simplevar ENTER (simplevars)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 296:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2501
+//line parser_grammar_v16.y:2510
 		{
 			xtracer.Trace("parser.p_terms ENTER (terms)")
 			parser16VAL.nodes = nil
 		}
 	case 297:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2506
+//line parser_grammar_v16.y:2515
 		{
 			xtracer.Trace("parser.p_terms_term ENTER (terms)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 298:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2511
+//line parser_grammar_v16.y:2520
 		{
 			xtracer.Trace("parser.p_terms_terms_term ENTER (terms)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 299:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2519
+//line parser_grammar_v16.y:2528
 		{
 			xtracer.Trace("parser.p_tapp_symbol ENTER (tapp)")
 			a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[1].tok.Val, nil))
+			a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok)) // Python: get_lineno(p,1)
 			parser16VAL.node = a
 		}
 	case 300:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2525
+//line parser_grammar_v16.y:2535
 		{
 			xtracer.Trace("parser.p_tapp_symbol_targs ENTER (tapp)")
 			args := make([]Node, len(parser16Dollar[2].nodes))
 			copy(args, parser16Dollar[2].nodes)
 			a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[1].tok.Val, nil), args...)
+			a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok)) // Python: get_lineno(p,1)
 			parser16VAL.node = a
 		}
 	case 301:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:2533
+//line parser_grammar_v16.y:2544
 		{
 			xtracer.Trace("parser.p_tapp_lp_symbol_infix_symbol_rp ENTER (tapp)")
 			a := parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[3].str, nil), parser16Dollar[2].node, parser16Dollar[4].node)
@@ -3983,14 +3994,14 @@ parser16default:
 		}
 	case 302:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2543
+//line parser_grammar_v16.y:2554
 		{
 			xtracer.Trace("parser.p_tterm_term ENTER (tterm)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 303:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2548
+//line parser_grammar_v16.y:2559
 		{
 			xtracer.Trace("parser.p_tterm_term_colon_symbol ENTER (tterm)")
 			if app, ok := parser16Dollar[1].node.(*App); ok {
@@ -4000,70 +4011,70 @@ parser16default:
 		}
 	case 304:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2559
+//line parser_grammar_v16.y:2570
 		{
 			xtracer.Trace("parser.p_tterms_tterm ENTER (tterms)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 305:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2564
+//line parser_grammar_v16.y:2575
 		{
 			xtracer.Trace("parser.p_tterms_tterms_comma_tterm ENTER (tterms)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 306:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2572
+//line parser_grammar_v16.y:2583
 		{
 			xtracer.Trace("parser.p_targs_lparen_rparen ENTER (targs)")
 			parser16VAL.nodes = nil
 		}
 	case 307:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2577
+//line parser_grammar_v16.y:2588
 		{
 			xtracer.Trace("parser.p_targs_lparen_tsyms_rparen ENTER (targs)")
 			parser16VAL.nodes = parser16Dollar[2].nodes
 		}
 	case 308:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2585
+//line parser_grammar_v16.y:2596
 		{
 			xtracer.Trace("parser.p_tsyms_tsym ENTER (tsyms)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 309:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2590
+//line parser_grammar_v16.y:2601
 		{
 			xtracer.Trace("parser.p_tsyms_tsyms_comma_tsym ENTER (tsyms)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 310:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2598
+//line parser_grammar_v16.y:2609
 		{
 			xtracer.Trace("parser.p_term_aterm ENTER (term)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 311:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2603
+//line parser_grammar_v16.y:2614
 		{
 			xtracer.Trace("parser.p_term_var ENTER (term)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 312:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2608
+//line parser_grammar_v16.y:2619
 		{
 			xtracer.Trace("parser.p_aterm_old_symbol ENTER (term)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewOld(parser16Dollar[2].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 313:
 		parser16Dollar = parser16S[parser16pt-10 : parser16pt+1]
-//line parser_grammar_v16.y:2613
+//line parser_grammar_v16.y:2624
 		{
 			xtracer.Trace("parser.p_term_namedbinder_vars_dot_term ENTER (term)")
 			binder := parser16Acfg(parser16lex).NewNamedBinder(parser16Dollar[3].tok.Val, parser16Dollar[4].nodes, parser16Dollar[6].node)
@@ -4073,7 +4084,7 @@ parser16default:
 		}
 	case 314:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2621
+//line parser_grammar_v16.y:2632
 		{
 			xtracer.Trace("parser.p_term_namedbinder_dot_fmla ENTER (term)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewNamedBinder(parser16Dollar[2].tok.Val, nil, parser16Dollar[4].node)
@@ -4081,7 +4092,7 @@ parser16default:
 		}
 	case 315:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2627
+//line parser_grammar_v16.y:2638
 		{
 			xtracer.Trace("parser.p_term_namedbinder_dollar_fmla ENTER (term)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewNamedBinder(parser16Dollar[2].tok.Val, nil, parser16Dollar[4].node)
@@ -4089,161 +4100,161 @@ parser16default:
 		}
 	case 316:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2633
+//line parser_grammar_v16.y:2644
 		{
 			xtracer.Trace("parser.p_term_lp_term_lp ENTER (term)")
 			parser16VAL.node = parser16Dollar[2].node
 		}
 	case 317:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2638
+//line parser_grammar_v16.y:2649
 		{
 			xtracer.Trace("parser.p_term_term_PLUS_term ENTER (term)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol("+", nil), parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 318:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2643
+//line parser_grammar_v16.y:2654
 		{
 			xtracer.Trace("parser.p_term_term_MINUS_term ENTER (term)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol("-", nil), parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 319:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2648
+//line parser_grammar_v16.y:2659
 		{
 			xtracer.Trace("parser.p_term_term_TIMES_term ENTER (term)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol("*", nil), parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 320:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2653
+//line parser_grammar_v16.y:2664
 		{
 			xtracer.Trace("parser.p_term_term_DIV_term ENTER (term)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol("/", nil), parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 321:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:2658
+//line parser_grammar_v16.y:2669
 		{
 			xtracer.Trace("parser.p_term_if_fmla_else_term ENTER (term)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewIte(parser16Dollar[3].node, parser16Dollar[1].node, parser16Dollar[5].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 322:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2666
+//line parser_grammar_v16.y:2677
 		{
 			xtracer.Trace("parser.p_relop_eq ENTER (relop)")
 			parser16VAL.tok = TokenInfo{Val: "=", Line: parser16Dollar[1].tok.Line}
 		}
 	case 323:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2671
+//line parser_grammar_v16.y:2682
 		{
 			xtracer.Trace("parser.p_relop_le ENTER (relop)")
 			parser16VAL.tok = TokenInfo{Val: "<=", Line: parser16Dollar[1].tok.Line}
 		}
 	case 324:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2676
+//line parser_grammar_v16.y:2687
 		{
 			xtracer.Trace("parser.p_relop_lt ENTER (relop)")
 			parser16VAL.tok = TokenInfo{Val: "<", Line: parser16Dollar[1].tok.Line}
 		}
 	case 325:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2681
+//line parser_grammar_v16.y:2692
 		{
 			xtracer.Trace("parser.p_relop_ge ENTER (relop)")
 			parser16VAL.tok = TokenInfo{Val: ">=", Line: parser16Dollar[1].tok.Line}
 		}
 	case 326:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2686
+//line parser_grammar_v16.y:2697
 		{
 			xtracer.Trace("parser.p_relop_gt ENTER (relop)")
 			parser16VAL.tok = TokenInfo{Val: ">", Line: parser16Dollar[1].tok.Line}
 		}
 	case 327:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2691
+//line parser_grammar_v16.y:2702
 		{
 			xtracer.Trace("parser.p_relop_pto ENTER (relop)")
 			parser16VAL.tok = TokenInfo{Val: "*>", Line: parser16Dollar[1].tok.Line}
 		}
 	case 328:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2698
+//line parser_grammar_v16.y:2709
 		{
 			xtracer.Trace("parser.p_infix_plus ENTER (infix)")
 			parser16VAL.str = "+"
 		}
 	case 329:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2699
+//line parser_grammar_v16.y:2710
 		{
 			xtracer.Trace("parser.p_infix_minus ENTER (infix)")
 			parser16VAL.str = "-"
 		}
 	case 330:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2700
+//line parser_grammar_v16.y:2711
 		{
 			xtracer.Trace("parser.p_infix_times ENTER (infix)")
 			parser16VAL.str = "*"
 		}
 	case 331:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2701
+//line parser_grammar_v16.y:2712
 		{
 			xtracer.Trace("parser.p_infix_div ENTER (infix)")
 			parser16VAL.str = "/"
 		}
 	case 332:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:2706
+//line parser_grammar_v16.y:2717
 		{
 			xtracer.Trace("parser.p_assert_rhs_lcb_requires_modifies_ensures_rcb ENTER (assert_rhs)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewRME(parser16Dollar[2].node, parser16Dollar[3].nodes, parser16Dollar[4].node)
 		}
 	case 333:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2712
+//line parser_grammar_v16.y:2723
 		{
 			xtracer.Trace("parser.p_assert_rhs_fmla ENTER (assert_rhs)")
 			parser16VAL.node = checkNonTemporal(parser16Dollar[1].node)
 		}
 	case 334:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2720
+//line parser_grammar_v16.y:2731
 		{
 			xtracer.Trace("parser.p_state_expr_true ENTER (state_expr)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAnd()
 		}
 	case 335:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2725
+//line parser_grammar_v16.y:2736
 		{
 			xtracer.Trace("parser.p_state_expr_false ENTER (state_expr)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewOr()
 		}
 	case 336:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2730
+//line parser_grammar_v16.y:2741
 		{
 			xtracer.Trace("parser.p_state_expr_symbol ENTER (state_expr)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val)
 		}
 	case 337:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2735
+//line parser_grammar_v16.y:2746
 		{
 			xtracer.Trace("parser.p_state_expr_symbol_lparen_state_expr_rparen ENTER (state_expr)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAtom(parser16Dollar[1].tok.Val, parser16Dollar[3].node)
 		}
 	case 338:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2740
+//line parser_grammar_v16.y:2751
 		{
 			xtracer.Trace("parser.p_state_expr_state_expr_or_state_expr ENTER (state_expr)")
 			if orNode, ok := parser16Dollar[1].node.(*Or); ok {
@@ -4255,35 +4266,35 @@ parser16default:
 		}
 	case 339:
 		parser16Dollar = parser16S[parser16pt-5 : parser16pt+1]
-//line parser_grammar_v16.y:2750
+//line parser_grammar_v16.y:2761
 		{
 			xtracer.Trace("parser.p_state_expr_lcb_requires_modifies_ensures_rcb ENTER (state_expr)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewRME(parser16Dollar[2].node, parser16Dollar[3].nodes, parser16Dollar[4].node)
 		}
 	case 340:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2755
+//line parser_grammar_v16.y:2766
 		{
 			xtracer.Trace("parser.p_state_expr_entry ENTER (state_expr)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewRME(parser16Acfg(parser16lex).NewAnd(), nil, parser16Acfg(parser16lex).NewAnd())
 		}
 	case 341:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2763
+//line parser_grammar_v16.y:2774
 		{
 			xtracer.Trace("parser.p_upaxes ENTER (upaxes)")
 			parser16VAL.nodes = nil
 		}
 	case 342:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2768
+//line parser_grammar_v16.y:2779
 		{
 			xtracer.Trace("parser.p_upaxes_upaxes_upax ENTER (upaxes)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[2].node)
 		}
 	case 343:
 		parser16Dollar = parser16S[parser16pt-7 : parser16pt+1]
-//line parser_grammar_v16.y:2776
+//line parser_grammar_v16.y:2787
 		{
 			xtracer.Trace("parser.p_upax_params_apps_in_action_arrow_ensures_fmla ENTER (upax)")
 			cfg := parser16Acfg(parser16lex)
@@ -4292,70 +4303,70 @@ parser16default:
 		}
 	case 344:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2786
+//line parser_grammar_v16.y:2797
 		{
 			xtracer.Trace("parser.p_requires ENTER (requires)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewAnd()
 		}
 	case 345:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2791
+//line parser_grammar_v16.y:2802
 		{
 			xtracer.Trace("parser.p_requires_requires_fmla ENTER (requires)")
 			parser16VAL.node = checkNonTemporal(parser16Dollar[2].node)
 		}
 	case 346:
 		parser16Dollar = parser16S[parser16pt-0 : parser16pt+1]
-//line parser_grammar_v16.y:2799
+//line parser_grammar_v16.y:2810
 		{
 			xtracer.Trace("parser.p_modifies ENTER (modifies)")
 			parser16VAL.nodes = nil
 		}
 	case 347:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2804
+//line parser_grammar_v16.y:2815
 		{
 			xtracer.Trace("parser.p_modifies_modifies_lcb_rcb ENTER (modifies)")
 			parser16VAL.nodes = []Node{}
 		}
 	case 348:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2809
+//line parser_grammar_v16.y:2820
 		{
 			xtracer.Trace("parser.p_modifies_modifies_times ENTER (modifies)")
 			parser16VAL.nodes = nil
 		}
 	case 349:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2814
+//line parser_grammar_v16.y:2825
 		{
 			xtracer.Trace("parser.p_modifies_modifies_atoms ENTER (modifies)")
 			parser16VAL.nodes = parser16Dollar[2].nodes
 		}
 	case 350:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2822
+//line parser_grammar_v16.y:2833
 		{
 			xtracer.Trace("parser.p_ensures_ensures_fmla ENTER (ensures)")
 			parser16VAL.node = checkNonTemporal(parser16Dollar[2].node)
 		}
 	case 351:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2830
+//line parser_grammar_v16.y:2841
 		{
 			xtracer.Trace("parser.p_atoms_atom ENTER (atoms)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 352:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2835
+//line parser_grammar_v16.y:2846
 		{
 			xtracer.Trace("parser.p_atoms_atoms_atom ENTER (atoms)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 353:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2843
+//line parser_grammar_v16.y:2854
 		{
 			xtracer.Trace("parser.p_app_symbol ENTER (app)")
 			// Python: p[0].lineno = get_lineno(p,1)
@@ -4363,7 +4374,7 @@ parser16default:
 		}
 	case 354:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2849
+//line parser_grammar_v16.y:2860
 		{
 			xtracer.Trace("parser.p_app_symbol_lp_terms_rp ENTER (app)")
 			// Python: p[0].lineno = get_lineno(p,1)
@@ -4371,42 +4382,42 @@ parser16default:
 		}
 	case 355:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2855
+//line parser_grammar_v16.y:2866
 		{
 			xtracer.Trace("parser.p_app_term_infix_term ENTER (app)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewApp(parser16Acfg(parser16lex).NewSymbol(parser16Dollar[2].str, nil), parser16Dollar[1].node, parser16Dollar[3].node)
 		}
 	case 356:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2863
+//line parser_grammar_v16.y:2874
 		{
 			xtracer.Trace("parser.p_apps_app ENTER (apps)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 357:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2868
+//line parser_grammar_v16.y:2879
 		{
 			xtracer.Trace("parser.p_apps_apps_app ENTER (apps)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 358:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2876
+//line parser_grammar_v16.y:2887
 		{
 			xtracer.Trace("parser.p_fmla_term ENTER (fmla)")
 			parser16VAL.node = AppToAtom(parser16Dollar[1].node)
 		}
 	case 359:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2881
+//line parser_grammar_v16.y:2892
 		{
 			xtracer.Trace("parser.p_fmla_term_relop_term ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewAtom(parser16Dollar[2].tok.Val, parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 360:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2886
+//line parser_grammar_v16.y:2897
 		{
 			xtracer.Trace("parser.p_fmla_term_tildaeq_term ENTER (fmla)")
 			eq := parser16NodeAt(parser16Acfg(parser16lex).NewAtom("=", parser16Dollar[1].node, parser16Dollar[3].node), nodeLineno(parser16Dollar[1].node))
@@ -4414,91 +4425,91 @@ parser16default:
 		}
 	case 361:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2892
+//line parser_grammar_v16.y:2903
 		{
 			xtracer.Trace("parser.p_fmla_lparen_fmla_rparen ENTER (fmla)")
 			parser16VAL.node = parser16Dollar[2].node
 		}
 	case 362:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2897
+//line parser_grammar_v16.y:2908
 		{
 			xtracer.Trace("parser.p_fmla_true ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewAnd(), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 363:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2902
+//line parser_grammar_v16.y:2913
 		{
 			xtracer.Trace("parser.p_fmla_false ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewOr(), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 364:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2907
+//line parser_grammar_v16.y:2918
 		{
 			xtracer.Trace("parser.p_fmla_not_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewNot(parser16Dollar[2].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 365:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2912
+//line parser_grammar_v16.y:2923
 		{
 			xtracer.Trace("parser.p_fmla_fmla_and_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewAnd(parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 366:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2917
+//line parser_grammar_v16.y:2928
 		{
 			xtracer.Trace("parser.p_fmla_fmla_or_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewOr(parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 367:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2922
+//line parser_grammar_v16.y:2933
 		{
 			xtracer.Trace("parser.p_fmla_fmla_arrow_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewImplies(parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 368:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2927
+//line parser_grammar_v16.y:2938
 		{
 			xtracer.Trace("parser.p_fmla_fmla_iff_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewIff(parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
 		}
 	case 369:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2932
+//line parser_grammar_v16.y:2943
 		{
 			xtracer.Trace("parser.p_fmla_forall_vars_dot_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewForall(parser16Dollar[2].nodes, parser16Dollar[4].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 370:
 		parser16Dollar = parser16S[parser16pt-4 : parser16pt+1]
-//line parser_grammar_v16.y:2937
+//line parser_grammar_v16.y:2948
 		{
 			xtracer.Trace("parser.p_fmla_exists_vars_dot_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewExists(parser16Dollar[2].nodes, parser16Dollar[4].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 371:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2942
+//line parser_grammar_v16.y:2953
 		{
 			xtracer.Trace("parser.p_fmla_globally_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewGlobally(parser16Dollar[2].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 372:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:2947
+//line parser_grammar_v16.y:2958
 		{
 			xtracer.Trace("parser.p_fmla_eventually_fmla ENTER (fmla)")
 			parser16VAL.node = parser16NodeAt(parser16Acfg(parser16lex).NewEventually(parser16Dollar[2].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[1].tok))
 		}
 	case 373:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2955
+//line parser_grammar_v16.y:2966
 		{
 			xtracer.Trace("parser.p_cdefn_atom_expr ENTER (cdefn)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewDefinition(AppToAtom(parser16Dollar[1].node), parser16Dollar[3].node)
@@ -4506,21 +4517,21 @@ parser16default:
 		}
 	case 374:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2964
+//line parser_grammar_v16.y:2975
 		{
 			xtracer.Trace("parser.p_cdefns_cdefn ENTER (cdefns)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node}
 		}
 	case 375:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2969
+//line parser_grammar_v16.y:2980
 		{
 			xtracer.Trace("parser.p_cdefns_cdefns_comma_cdefn ENTER (cdefns)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 376:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2977
+//line parser_grammar_v16.y:2988
 		{
 			xtracer.Trace("parser.p_expr_fmla ENTER (expr)")
 			lit := parser16Acfg(parser16lex).NewLiteral(1, checkNonTemporal(parser16Dollar[2].node))
@@ -4528,7 +4539,7 @@ parser16default:
 		}
 	case 377:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:2983
+//line parser_grammar_v16.y:2994
 		{
 			xtracer.Trace("parser.p_expr_exprterm ENTER (expr)")
 			lit := parser16Acfg(parser16lex).NewLiteral(1, AppToAtom(parser16Dollar[1].node))
@@ -4536,7 +4547,7 @@ parser16default:
 		}
 	case 378:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2989
+//line parser_grammar_v16.y:3000
 		{
 			xtracer.Trace("parser.p_expr_exprterm_relop_exprterm ENTER (expr)")
 			atom := parser16NodeAt(parser16Acfg(parser16lex).NewAtom(parser16Dollar[2].tok.Val, parser16Dollar[1].node, parser16Dollar[3].node), tok16Lineno(parser16lex.(*parser16LexAdapter), parser16Dollar[2].tok))
@@ -4545,7 +4556,7 @@ parser16default:
 		}
 	case 379:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:2996
+//line parser_grammar_v16.y:3007
 		{
 			xtracer.Trace("parser.p_expr_exprterm_tildaeq_exprterm ENTER (expr)")
 			atom := parser16Acfg(parser16lex).NewAtom("=", parser16Dollar[1].node, parser16Dollar[3].node)
@@ -4554,7 +4565,7 @@ parser16default:
 		}
 	case 380:
 		parser16Dollar = parser16S[parser16pt-2 : parser16pt+1]
-//line parser_grammar_v16.y:3003
+//line parser_grammar_v16.y:3014
 		{
 			xtracer.Trace("parser.p_expr_tilda_atom ENTER (expr)")
 			if ns, ok := parser16Dollar[2].node.(*NamedSpace); ok {
@@ -4569,63 +4580,63 @@ parser16default:
 		}
 	case 381:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:3016
+//line parser_grammar_v16.y:3027
 		{
 			xtracer.Trace("parser.p_expr_lparen_expr_rparen ENTER (expr)")
 			parser16VAL.node = parser16Dollar[2].node
 		}
 	case 382:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:3021
+//line parser_grammar_v16.y:3032
 		{
 			xtracer.Trace("parser.p_expr_prod ENTER (expr)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewProductSpace(parser16Dollar[1].nodes...)
 		}
 	case 383:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:3026
+//line parser_grammar_v16.y:3037
 		{
 			xtracer.Trace("parser.p_expr_sum ENTER (expr)")
 			parser16VAL.node = parser16Acfg(parser16lex).NewSumSpace(parser16Dollar[1].nodes...)
 		}
 	case 384:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:3034
+//line parser_grammar_v16.y:3045
 		{
 			xtracer.Trace("parser.p_exprterm_aterm ENTER (exprterm)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 385:
 		parser16Dollar = parser16S[parser16pt-1 : parser16pt+1]
-//line parser_grammar_v16.y:3039
+//line parser_grammar_v16.y:3050
 		{
 			xtracer.Trace("parser.p_exprterm_var ENTER (exprterm)")
 			parser16VAL.node = parser16Dollar[1].node
 		}
 	case 386:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:3047
+//line parser_grammar_v16.y:3058
 		{
 			xtracer.Trace("parser.p_prod_expr_expr ENTER (prod)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node, parser16Dollar[3].node}
 		}
 	case 387:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:3052
+//line parser_grammar_v16.y:3063
 		{
 			xtracer.Trace("parser.p_prod_prod_expr ENTER (prod)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)
 		}
 	case 388:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:3060
+//line parser_grammar_v16.y:3071
 		{
 			xtracer.Trace("parser.p_sum_expr_expr ENTER (sum)")
 			parser16VAL.nodes = []Node{parser16Dollar[1].node, parser16Dollar[3].node}
 		}
 	case 389:
 		parser16Dollar = parser16S[parser16pt-3 : parser16pt+1]
-//line parser_grammar_v16.y:3065
+//line parser_grammar_v16.y:3076
 		{
 			xtracer.Trace("parser.p_sum_sum_expr ENTER (sum)")
 			parser16VAL.nodes = append(parser16Dollar[1].nodes, parser16Dollar[3].node)

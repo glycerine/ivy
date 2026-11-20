@@ -2621,12 +2621,16 @@ app:
     SYMBOLx
     {
         xtracer.Trace("parser.p_app_symbol ENTER (app)")
-        $$ = parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol($1.Val, nil))
+        a := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol($1.Val, nil))
+        a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1)) // Python: get_lineno(p,1)
+        $$ = a
     }
     | SYMBOLx PARSER_TOK_LPAREN terms PARSER_TOK_RPAREN
     {
         xtracer.Trace("parser.p_app_symbol_lp_terms_rp ENTER (app)")
-        $$ = parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol($1.Val, nil), $3...)
+        a := parser17Acfg(parser17lex).NewApp(parser17Acfg(parser17lex).NewSymbol($1.Val, nil), $3...)
+        a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1)) // Python: get_lineno(p,1)
+        $$ = a
     }
     | term infix term
     {
@@ -2705,7 +2709,9 @@ callatom:
     | PARSER_TOK_METHOD
     {
         xtracer.Trace("parser.p_callatom_method ENTER (callatom)")
-        $$ = parser17Acfg(parser17lex).NewAtom("method")
+        a := parser17Acfg(parser17lex).NewAtom("method")
+        a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1)) // Python: get_lineno(p,1)
+        $$ = a
     }
     | callatom PARSER_TOK_DOT callatom
     {
