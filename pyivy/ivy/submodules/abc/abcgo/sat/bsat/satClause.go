@@ -38,11 +38,25 @@ type clause struct {
 	allocWords                  int32
 	lits                        []lit
 }
+
+// Short clauses keep their literals and optional ID next to the header.
+// Blocks are never overwritten while a caller may retain a clause pointer.
+type shortClause struct {
+	clause
+	data [4]lit
+}
+
+type shortClauseBlock struct {
+	records []shortClause
+	used    int
+}
+
 type Sat_Mem_t struct {
 	nEntries, BookMarkH, BookMarkE, iPage [2]int32
 	nPageSize                             int32
 	uPageMask, uLearnedMask               int32
 	pPages                                []clausePage
+	short                                 [2]shortClauseBlock
 }
 
 // Clause headers start on even word offsets. Allocate just the portion of
@@ -116,7 +130,7 @@ func Sat_MemMemoryAll(p *Sat_Mem_t) float64 {
 }
 func clause_from_lit(l lit) int32 { return l + l + 1 }
 func clause_is_lit(h cla) int32   { return h & 1 }
-func clause_read_lit(h cla) lit   { return h >> 1 }
+func clause_read_lit(h cla) lit   { return lit(uint32(h) >> 1) }
 func clause_learnt_h(p *Sat_Mem_t, h cla) int32 {
 	if h&p.uLearnedMask != 0 {
 		return 1
@@ -158,6 +172,7 @@ func Sat_MemAlloc_(p *Sat_Mem_t, n int32) {
 }
 func Sat_MemAlloc(n int32) *Sat_Mem_t { p := new(Sat_Mem_t); Sat_MemAlloc_(p, n); return p }
 func Sat_MemRestart(p *Sat_Mem_t) {
+	p.short = [2]shortClauseBlock{}
 	p.nEntries = [2]int32{}
 	p.iPage = [2]int32{0, 1}
 	for i := range p.pPages {
@@ -201,7 +216,23 @@ func Sat_MemAppend(p *Sat_Mem_t, data []int32, size, lrn, plus int32) int32 {
 		p.iPage[lrn] = page
 		offset = 2
 	}
-	c := &clause{size: size, lrn: lrn, allocWords: words, lits: make([]lit, size+1)}
+	var c *clause
+	if size <= 3 {
+		block := &p.short[lrn]
+		if block.used == len(block.records) {
+			// Empty solvers need only the binary scratch record. Grow based
+			// on the number of short clauses, independently of longer ones.
+			block.records = make([]shortClause, min(128, max(1, 2*len(block.records))))
+			block.used = 0
+		}
+		entry := &block.records[block.used]
+		block.used++
+		c = &entry.clause
+		c.lits = entry.data[: size+1 : size+1]
+	} else {
+		c = &clause{lits: make([]lit, size+1)}
+	}
+	c.size, c.lrn, c.allocWords = size, lrn, words
 	copy(c.lits[:size], data)
 	if lrn|plus != 0 {
 		c.lits[size] = p.nEntries[lrn]

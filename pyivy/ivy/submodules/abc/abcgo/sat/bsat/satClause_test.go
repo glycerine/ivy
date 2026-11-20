@@ -211,3 +211,48 @@ func TestRejectedCompactionPreservesLearnedClauses(t *testing.T) {
 		t.Fatal("retry failed to restore packed clause IDs")
 	}
 }
+
+func TestBulkShortClauseStorage(t *testing.T) {
+	const count = 512
+	data := []lit{0, 2, 4}
+	allocs := testing.AllocsPerRun(10, func() {
+		m := Sat_MemAlloc(12)
+		for i := 0; i < count; i++ {
+			h := Sat_MemAppend(m, data, 3, int32(i&1), 1)
+			if clause_id(Sat_MemClauseHand(m, h)) != int32(i/2) {
+				t.Fatal("short clause lost its stream ID")
+			}
+		}
+	})
+	if allocs > 100 {
+		t.Errorf("storing %d short clauses allocated %.0f objects", count, allocs)
+	}
+
+	m := Sat_MemAlloc(9)
+	first := Sat_MemClauseHand(m, Sat_MemAppend(m, data, 3, 0, 1))
+	second := Sat_MemClauseHand(m, Sat_MemAppend(m, []lit{1, 3, 5}, 3, 0, 1))
+	changed := append(first.lits, 123)
+	changed[0] = 101
+	if second.lits[0] != 1 || first.lits[0] != 0 || data[0] != 0 {
+		t.Fatal("clause ID or literal storage aliases its neighbor or input")
+	}
+	for i := 0; i < 400; i++ {
+		Sat_MemAppend(m, data, 3, 1, 0)
+	}
+	Sat_MemRestart(m)
+	Sat_MemAppend(m, nil, 3, 0, 0)
+	if first.lits[2] != 4 || second.lits[2] != 5 {
+		t.Fatal("reusing a page overwrote a retained clause")
+	}
+}
+
+func TestWatchTagPreservesHighestEncodableVariables(t *testing.T) {
+	for _, v := range []int32{1 << 28, 1<<29 - 1, 1 << 29, 1<<30 - 1} {
+		for _, l := range []Literal{Positive(v), Negative(v)} {
+			h := clause_from_lit(l)
+			if got := clause_read_lit(h); clause_is_lit(h) == 0 || got != l {
+				t.Errorf("literal %d encoded as %#x and decoded as %d", l, uint32(h), got)
+			}
+		}
+	}
+}

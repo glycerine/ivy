@@ -37,3 +37,27 @@ func TestSolverProofStoreRecording(t *testing.T) {
 	}
 	Sto_ManFree(p)
 }
+
+func TestClauseNormalizationReusesPrivateStorage(t *testing.T) {
+	s := NewSolver()
+	s.SetNumVars(65)
+	input := make([]Literal, 0, 66)
+	for i := int32(63); i >= 0; i-- {
+		input = append(input, Negative(i))
+	}
+	input = append(input, Positive(1), Negative(0))
+	want := append([]Literal(nil), input...)
+	allocs := testing.AllocsPerRun(100, func() {
+		if !s.AddClause(input...) {
+			t.Fatal("rejected tautological input")
+		}
+	})
+	if allocs != 0 {
+		t.Errorf("normalizing a repeated 66-literal clause allocated %.0f objects", allocs)
+	}
+	for i, l := range input {
+		if l != want[i] {
+			t.Fatal("normalizing changed caller literals")
+		}
+	}
+}

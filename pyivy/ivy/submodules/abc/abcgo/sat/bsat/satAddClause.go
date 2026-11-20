@@ -16,7 +16,11 @@ func sat_solver_addclause(s *sat_solver, input []lit) int32 {
 		}
 		fmt.Println()
 	}
-	data := append([]lit(nil), input...)
+	// The native solver normalizes a private copy in temp_clause.
+	scratch := &s.temp_clause
+	data := append(scratch.ptr[:0], input...)
+	scratch.ptr = data[:cap(data)]
+	scratch.size, scratch.cap = int32(len(data)), int32(cap(data))
 	slices.Sort(data)
 	if len(data) > 0 {
 		if data[0] < 0 {
