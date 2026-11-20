@@ -1174,22 +1174,9 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 
 	// Collect relevant destructors
 	// Python: for sym in list(all_syms): collect_relevant_destructors(sym, all_syms, set())
-	// CollectSortDestructors works with name-based sets; we collect into a name set then
-	// add any new destructor names back as Const entries in allSyms.
+	// (OrderedSymSet.add, untraced, appends each new destructor symbol).
 	if isoCfg.KeepDestructors {
-		namesBefore := allSymsNameSet(allSyms)
-		namesAfter := isolateCopyStringSet(namesBefore)
-		for _, sym := range allSyms.All() {
-			collectRelevantDestructorsForSym(mod, sym, namesAfter, make(map[string]bool))
-		}
-		// Add newly discovered destructor names to allSyms
-		// Python: collect_relevant_destructors calls res.add(dstr) via OrderedSymSet.add — no trace
-		for name := range namesAfter {
-			if !namesBefore[name] {
-				c := NewConst(name, TopS)
-				allSyms.Set(ConstSymKey(c), c)
-			}
-		}
+		addRelevantDestructors(mod, allSyms)
 	}
 
 	// Erase assignments to unreferenced variables
@@ -1518,24 +1505,9 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	}
 
 	// Collect relevant destructors
+	// Python: for sym in list(all_syms): collect_relevant_destructors(sym,all_syms,set())
 	if isoCfg.KeepDestructors {
-		namesBefore2 := allSymsNameSet(allSyms2)
-		namesAfter2 := isolateCopyStringSet(namesBefore2)
-		for _, sym := range allSyms2.All() {
-			collectRelevantDestructorsForSym(mod, sym, namesAfter2, make(map[string]bool))
-		}
-		for name := range namesAfter2 {
-			if !namesBefore2[name] {
-				c := NewConst(name, TopS)
-				key := ConstSymKey(c)
-				if xtracer.Enabled {
-					if _, exists := allSyms2.Get2(key); !exists {
-						xtracer.Trace("%s.add %s", as2, PrettyFmla(c))
-					}
-				}
-				allSyms2.Set(key, c)
-			}
-		}
+		addRelevantDestructors(mod, allSyms2)
 	}
 
 	if xtracer.Enabled {

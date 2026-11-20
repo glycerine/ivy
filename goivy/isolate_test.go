@@ -665,10 +665,10 @@ func TestCollectSortDestructors(t *testing.T) {
 	destr := NewConst("get_field", destrSort)
 	m.SortDestructors.Set("MySort", []*Const{destr})
 
-	result := make(map[string]bool)
+	result := NewInsMap[NodeKey, Expr]()
 	CollectSortDestructors(m, "MySort", result, make(map[string]bool))
 
-	if !result["get_field"] {
+	if _, ok := result.Get2(ConstSymKey(destr)); !ok {
 		t.Error("get_field should be in destructors")
 	}
 }
@@ -681,10 +681,10 @@ func TestCollectSortDestructorsWithVariants(t *testing.T) {
 	destr := NewConst("v1_field", destrSort)
 	m.SortDestructors.Set("Variant1", []*Const{destr})
 
-	result := make(map[string]bool)
+	result := NewInsMap[NodeKey, Expr]()
 	CollectSortDestructors(m, "Base", result, make(map[string]bool))
 
-	if !result["v1_field"] {
+	if _, ok := result.Get2(ConstSymKey(destr)); !ok {
 		t.Error("v1_field should be collected from variant")
 	}
 }

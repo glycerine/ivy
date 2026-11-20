@@ -755,51 +755,60 @@ func isolateSortToName(s Sort) string {
 	}
 }
 
-// collectRelevantDestructorsForSym mirrors Python collect_relevant_destructors.
-// It extracts the range sort from the symbol's sort and collects destructors for it.
-func collectRelevantDestructorsForSym(mod *Module, sym Expr, result map[string]bool, memo map[string]bool) {
+// collectRelevantDestructorsForSym is Python collect_relevant_destructors:
+//
+//	if not hasattr(sym.sort,'rng'): return
+//	collect_sort_destructors(sym.sort.rng,res,memo)
+//
+// res is an insertion-ordered symbol set (Python OrderedSymSet); each
+// destructor symbol itself is added, in discovery order.
+func collectRelevantDestructorsForSym(mod *Module, sym Expr, res *InsMap[NodeKey, Expr], memo map[string]bool) {
 	c, ok := sym.(*Const)
 	if !ok || c.CSort == nil {
 		return
 	}
-	fs, ok := c.CSort.(*LogicFunctionSort)
-	if !ok {
-		return // sym.sort has no .rng — matches Python's hasattr(sym.sort, 'rng') check
+	// ivy_logic gives .rng to ConstantSort, EnumeratedSort and BooleanSort
+	// (the sort itself) and FunctionSort (its range); RangeSort and TopSort
+	// have none.
+	var rng Sort
+	switch srt := c.CSort.(type) {
+	case *LogicFunctionSort:
+		rng = srt.Range()
+	case *UninterpretedSort, *LogicEnumeratedSort, *BooleanSort:
+		rng = srt
+	default:
+		return
 	}
-	rng := fs.Range()
-	if us, ok := rng.(*UninterpretedSort); ok {
-		CollectSortDestructors(mod, us.Name, result, memo)
-	}
+	CollectSortDestructors(mod, isolateSortToName(rng), res, memo)
 }
 
-// CollectSortDestructors collects all destructor symbols for a sort
-// and its variants, recursively.
-func CollectSortDestructors(mod *Module, sortName string, result map[string]bool, memo map[string]bool) {
+// CollectSortDestructors is Python collect_sort_destructors:
+//
+//	if sort.name in memo: return
+//	memo.add(sort.name)
+//	if sort.name in im.module.sort_destructors:
+//	    for dstr in im.module.sort_destructors[sort.name]:
+//	        res.add(dstr)
+//	        collect_relevant_destructors(dstr,res,memo)
+//	elif sort.name in im.module.variants:
+//	    for sort2 in im.module.variants[sort.name]:
+//	        collect_sort_destructors(sort2,res,memo)
+func CollectSortDestructors(mod *Module, sortName string, res *InsMap[NodeKey, Expr], memo map[string]bool) {
 	if memo[sortName] {
 		return
 	}
 	memo[sortName] = true
-
-	// Add destructors for this sort.
 	if destrs, ok := mod.SortDestructors.Get2(sortName); ok {
 		for _, d := range destrs {
-			result[d.Name] = true
-			// Recursively collect destructors of the range sort.
-			if fs, ok := d.CSort.(*LogicFunctionSort); ok {
-				rng := fs.Range()
-				if us, ok := rng.(*UninterpretedSort); ok {
-					CollectSortDestructors(mod, us.Name, result, memo)
-				}
+			key := ConstSymKey(d)
+			if _, in := res.Get2(key); !in {
+				res.Set(key, d)
 			}
+			collectRelevantDestructorsForSym(mod, d, res, memo)
 		}
-	}
-
-	// If this sort has variants, collect destructors for each variant.
-	if variants, ok := mod.Variants[sortName]; ok {
+	} else if variants, ok := mod.Variants[sortName]; ok {
 		for _, v := range variants {
-			if us, ok := v.(*UninterpretedSort); ok {
-				CollectSortDestructors(mod, us.Name, result, memo)
-			}
+			CollectSortDestructors(mod, isolateSortToName(v), res, memo)
 		}
 	}
 }
@@ -891,4 +900,20 @@ func insSortedKeys(m *InsMap[string, bool]) []string {
 	}
 	sort.Strings(keys)
 	return keys
+}
+
+// addRelevantDestructors is Python's
+//
+//	for sym in list(all_syms):
+//	    collect_relevant_destructors(sym,all_syms,set())
+//
+// iterating a snapshot and adding new destructors to all_syms in order.
+func addRelevantDestructors(mod *Module, allSyms *InsMap[NodeKey, Expr]) {
+	snapshot := make([]Expr, 0, allSyms.Len())
+	for _, sym := range allSyms.All() {
+		snapshot = append(snapshot, sym)
+	}
+	for _, sym := range snapshot {
+		collectRelevantDestructorsForSym(mod, sym, allSyms, make(map[string]bool))
+	}
 }

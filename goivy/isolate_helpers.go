@@ -487,26 +487,6 @@ func normalizeSymbolKeys(label string, syms *InsMap[NodeKey, Expr], usePolymorph
 	return result
 }
 
-func isolateCopyStringSet(s map[string]bool) map[string]bool {
-	c := make(map[string]bool, len(s))
-	for k, v := range s {
-		c[k] = v
-	}
-	return c
-}
-
-// allSymsNameSet extracts a name-only set from a NodeKey→Expr symbol InsMap.
-// Used where downstream code needs name-based lookup (e.g., CollectSortDestructors).
-func allSymsNameSet(syms *InsMap[NodeKey, Expr]) map[string]bool {
-	names := make(map[string]bool, syms.Len())
-	for _, v := range syms.All() {
-		if c, ok := v.(*Const); ok {
-			names[c.Name] = true
-		}
-	}
-	return names
-}
-
 // symSetContainsName checks if any entry in a symbol set has the given name.
 func symSetContainsName(syms *InsMap[NodeKey, Expr], name string) bool {
 	for _, v := range syms.All() {
