@@ -232,8 +232,11 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 	p.aigerLatchInits = make([]int32, latches)
 	p.aigerSymbols = map[byte][]string{}
 	p.aigerExtensions = map[byte][]byte{}
-	variables := map[uint32]int32{0: 0}
-	defined := map[uint32]bool{0: true}
+	// Binary records create one GIA object per implicit variable in wire order.
+	var variables map[uint32]int32
+	if ascii {
+		variables = map[uint32]int32{0: 0}
+	}
 	for i := uint32(0); i < inputs+latches; i++ {
 		id := i + 1
 		if ascii && i < inputs {
@@ -250,11 +253,13 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 		if ascii && i >= inputs {
 			continue
 		}
-		if defined[id] {
+		if _, exists := variables[id]; exists {
 			return nil, fmt.Errorf("gia: duplicate input variable")
 		}
-		variables[id] = Gia_ManAppendCi(p)
-		defined[id] = true
+		lit := Gia_ManAppendCi(p)
+		if ascii {
+			variables[id] = lit
+		}
 	}
 	drivers := make([]uint32, int(uint64(latches)+outputs))
 	if compact {
@@ -285,11 +290,10 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 			driver := nums[0]
 			if ascii {
 				current, driver = nums[0], nums[1]
-				if current == 0 || current&1 != 0 || current>>1 > m || defined[current>>1] {
+				if _, exists := variables[current>>1]; current == 0 || current&1 != 0 || current>>1 > m || exists {
 					return nil, fmt.Errorf("gia: invalid AAG latch variable")
 				}
 				variables[current>>1] = Gia_ManAppendCi(p)
-				defined[current>>1] = true
 			}
 			drivers[i] = driver
 			init := uint32(0)
@@ -319,6 +323,9 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 		}
 	}
 	remap := func(lit uint32) (int32, error) {
+		if !ascii && lit>>1 <= m {
+			return int32(lit), nil
+		}
 		value, ok := variables[lit>>1]
 		if !ok || lit>>1 > m {
 			return 0, fmt.Errorf("gia: undefined AIGER literal %d", lit)
@@ -350,7 +357,7 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 			}
 			a = b - d0
 		}
-		if defined[lhs>>1] || a >= lhs || b >= lhs {
+		if _, exists := variables[lhs>>1]; exists || a >= lhs || b >= lhs {
 			return nil, fmt.Errorf("gia: non-topological AIGER AND")
 		}
 		fa, err := remap(a)
@@ -361,8 +368,10 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 		if err != nil {
 			return nil, err
 		}
-		variables[lhs>>1] = Gia_ManAppendAnd(p, fa, fb)
-		defined[lhs>>1] = true
+		lit := Gia_ManAppendAnd(p, fa, fb)
+		if ascii {
+			variables[lhs>>1] = lit
+		}
 	}
 	for i := 0; i < int(outputs); i++ {
 		lit, err := remap(drivers[int(latches)+i])
