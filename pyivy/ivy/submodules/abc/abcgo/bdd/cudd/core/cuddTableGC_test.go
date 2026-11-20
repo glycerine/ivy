@@ -196,3 +196,82 @@ func TestCuddResizeTablesCreatesProjectionAndUniverseState(t *testing.T) {
 		t.Fatalf("ZDD resize state: size=%d universe=%d slots=%d", zdd.ZddSize, len(zdd.Univ), Cudd_ReadSlots(zdd))
 	}
 }
+
+func TestCuddLiveCountsAcrossReleaseAndReclaim(t *testing.T) {
+	dd := Cudd_Init(3, 2, 16, 64, 0)
+	defer Cudd_Quit(dd)
+	check := func(label string, keys, dead uint32, live, zlive, peak int) {
+		t.Helper()
+		got := [...]int{int(Cudd_ReadKeys(dd)), int(Cudd_ReadDead(dd)), int(Cudd_ReadMinDead(dd)), Cudd_ReadNodeCount(dd), Cudd_zddReadNodeCount(dd), Cudd_ReadPeakLiveNodeCount(dd)}
+		want := [...]int{int(keys), int(dead), 384, live, zlive, peak}
+		if got != want {
+			t.Errorf("%s [keys dead threshold BDD/ADD ZDD peak] = %v, want %v", label, got, want)
+		}
+	}
+	check("initial", 7, 0, 1, 4, 7)
+	root := Cudd_bddAnd(dd, dd.Vars[0], dd.Vars[1])
+	Cudd_Ref(root)
+	check("live conjunction", 8, 0, 3, 4, 8)
+	Cudd_RecursiveDeref(dd, root)
+	check("released conjunction", 8, 1, 1, 4, 8)
+	if got := Cudd_bddAnd(dd, dd.Vars[1], dd.Vars[0]); got != root {
+		t.Fatal("reclaimed conjunction changed identity")
+	}
+	Cudd_Ref(root)
+	check("reclaimed conjunction", 8, 0, 3, 4, 8)
+	Cudd_RecursiveDeref(dd, root)
+	Cudd_GarbageCollect(dd, true)
+	check("after collection", 7, 0, 1, 4, 8)
+	z := Cudd_zddChange(dd, dd.One, 0)
+	Cudd_Ref(z)
+	check("ZDD singleton uses ADD zero", 7, 0, 2, 5, 8)
+	Cudd_RecursiveDeref(dd, z)
+	check("released ZDD singleton", 7, 0, 1, 4, 8)
+	if got := Cudd_zddChange(dd, dd.One, 0); got != z {
+		t.Fatal("reclaimed ZDD singleton changed identity")
+	}
+	Cudd_Ref(z)
+	check("reclaimed ZDD singleton", 7, 0, 2, 5, 8)
+	Cudd_RecursiveDeref(dd, z)
+	Cudd_GarbageCollect(dd, true)
+	check("after ZDD collection", 7, 0, 1, 4, 8)
+}
+
+func TestRecursiveDerefPreservesManagerPins(t *testing.T) {
+	dd := Cudd_Init(3, 2, 16, 64, 0)
+	defer Cudd_Quit(dd)
+	for _, pin := range []*DdNode{dd.Vars[1], dd.Zero, dd.PlusInfinity, dd.MinusInfinity, dd.Univ[0]} {
+		childRefs := dd.One.Ref
+		Cudd_Ref(pin)
+		Cudd_RecursiveDeref(dd, pin)
+		if pin.childrenReleased || dd.One.Ref != childRefs {
+			t.Errorf("releasing pin %d left released=%v one refs=%d, want false and %d", pin.ID, pin.childrenReleased, dd.One.Ref, childRefs)
+		}
+	}
+}
+
+func TestExactConstantLookupReclaimsDeadEntry(t *testing.T) {
+	dd := NewBDDManager(0)
+	defer Cudd_Quit(dd)
+	n := Cudd_addConst(dd, 12.5)
+	Cudd_Ref(n)
+	Cudd_RecursiveDeref(dd, n)
+	if !n.childrenReleased {
+		t.Fatal("released constant stayed live")
+	}
+	if got := Cudd_addConst(dd, 12.5); got != n || n.childrenReleased || n.Ref != 0 {
+		t.Errorf("exact constant lookup got %p, want %p with released=false and ref=0, got %v and %d", got, n, n.childrenReleased, n.Ref)
+	}
+}
+
+func TestPeakLiveCountSurvivesUnobservedRelease(t *testing.T) {
+	dd := NewBDDManager(2)
+	defer Cudd_Quit(dd)
+	root := Cudd_bddAnd(dd, dd.Vars[0], dd.Vars[1])
+	Cudd_Ref(root)
+	Cudd_RecursiveDeref(dd, root)
+	Cudd_GarbageCollect(dd, true)
+	if got := Cudd_ReadPeakLiveNodeCount(dd); got != 7 {
+		t.Errorf("peak after releasing the seventh key = %d, want 7", got)
+	}
+}

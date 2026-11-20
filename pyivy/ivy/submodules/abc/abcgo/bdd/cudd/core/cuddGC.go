@@ -13,6 +13,7 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	if !dd.runHooks(CUDD_PRE_GC_HOOK, "DD", nil) {
 		return 0
 	}
+	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
 	marked := make(map[*DdNode]bool)
 	incoming := dd.incomingReferences()
 	stack := make([]*DdNode, 0, len(dd.unique)+len(dd.addUnique)+len(dd.zddUnique))
@@ -60,11 +61,7 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	for _, table := range tables {
 		for key, n := range table {
 			if !marked[n] {
-				if !n.childrenReleased {
-					n.childrenReleased = true
-					Cudd_RecursiveDeref(dd, n.T)
-					Cudd_RecursiveDeref(dd, n.E)
-				}
+				dd.sweepNode(n)
 				delete(table, key)
 				deleted++
 			}
@@ -72,11 +69,7 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	}
 	for key, n := range dd.constants {
 		if !marked[n] {
-			if !n.childrenReleased {
-				n.childrenReleased = true
-				Cudd_RecursiveDeref(dd, n.T)
-				Cudd_RecursiveDeref(dd, n.E)
-			}
+			dd.sweepNode(n)
 			delete(dd.constants, key)
 			deleted++
 		}
@@ -103,4 +96,16 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 		return 0
 	}
 	return int32(deleted)
+}
+
+func (dd *DdManager) sweepNode(n *DdNode) {
+	if n.inBDDTable && n.childrenReleased {
+		dd.dead--
+	}
+	n.inBDDTable = false
+	if !n.childrenReleased {
+		n.childrenReleased = true
+		dd.recursiveDeref(n.T)
+		dd.recursiveDeref(n.E)
+	}
 }

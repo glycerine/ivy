@@ -99,6 +99,7 @@ func Cudd_bddLinearTransformInPlace(dd *DdManager, x, y int) bool {
 			return false
 		}
 		nextUnique[key] = node
+		node.inBDDTable = true
 	}
 	dd.unique = nextUnique
 	Cudd_CacheFlush(dd)

@@ -158,6 +158,7 @@ func reorderValidOrder(order []int, n int) bool {
 // handle. Constants, referenced nodes and BDD projection variables retain their
 // canonical pointers. Old zero-reference nodes outside the live heap are dead.
 func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []int) {
+	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
 	mapped := map[*DdNode]*DdNode{}
 	usedOld := map[*DdNode]bool{}
 	for node := range h.nodes {
@@ -239,10 +240,12 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 		refs := uint64(h.external[fresh]) + uint64(h.incoming[fresh]) + zddIncoming[node]
 		node.Ref = uint32(min(refs, uint64(math.MaxUint32)))
 		node.childrenReleased = false
+		node.inBDDTable = true
 	}
 	for _, table := range []map[bddUniqueKey]*DdNode{oldBDD, oldADD} {
 		for _, old := range table {
 			if !usedOld[old] {
+				old.inBDDTable = false
 				old.manager = nil
 				if old.inverse != nil {
 					old.inverse.manager = nil
@@ -252,6 +255,7 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 	}
 	for _, old := range oldConstants {
 		if nextConstants[math.Float64bits(old.Value)] != old {
+			old.inBDDTable = false
 			old.manager = nil
 			if old.inverse != nil {
 				old.inverse.manager = nil
@@ -259,6 +263,7 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 		}
 	}
 	dd.constants = nextConstants
+	dd.dead = 0
 	dd.unique = nextBDD
 	dd.addUnique = nextADD
 	Cudd_CacheFlush(dd)

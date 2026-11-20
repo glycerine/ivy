@@ -100,7 +100,7 @@ func TestReviewADDGenericSupportAndCounting(t *testing.T) {
 	if apaInteger(digits, n).Int64() != 2 {
 		t.Fatal("APA ADD count")
 	}
-	if Cudd_ReadNodeCount(dd) != len(dd.unique)+len(dd.zddUnique)+len(dd.addUnique)+len(dd.constants) {
-		t.Fatal("ADD missing from statistics")
+	if got := Cudd_ReadNodeCount(dd); got != 5 {
+		t.Fatalf("two ADD nodes and three used constants count as %d live nodes, want 5", got)
 	}
 }

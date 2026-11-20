@@ -218,24 +218,38 @@ func Cudd_ReadKeys(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	return uint32(len(dd.unique) + len(dd.addUnique) + len(dd.zddUnique) + len(dd.constants))
+	return uint32(len(dd.unique) + len(dd.addUnique) + len(dd.constants))
 }
+
+func (dd *DdManager) liveBDDKeys() int {
+	return len(dd.unique) + len(dd.addUnique) + len(dd.constants) - dd.dead
+}
+
+func (dd *DdManager) storedNodes() int {
+	return len(dd.unique) + len(dd.addUnique) + len(dd.constants) + len(dd.zddUnique)
+}
+
 func Cudd_ReadUsedSlots(dd *DdManager) float64 {
 	slots := Cudd_ReadSlots(dd)
 	if slots == 0 {
 		return 0
 	}
-	return float64(Cudd_ReadKeys(dd)) / float64(slots)
+	return float64(dd.storedNodes()) / float64(slots)
 }
 func Cudd_ExpectedUsedSlots(dd *DdManager) float64 {
 	return Cudd_ReadUsedSlots(dd)
 }
-func Cudd_ReadDead(dd *DdManager) uint32 { return 0 }
+func Cudd_ReadDead(dd *DdManager) uint32 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return uint32(dd.dead)
+}
 func Cudd_ReadMinDead(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	return uint32(len(dd.unique) / 2)
+	return dd.minDead
 }
 func Cudd_ReadGarbageCollections(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
@@ -258,15 +272,37 @@ func Cudd_ReadMemoryInUse(dd *DdManager) uint64 {
 		return 0
 	}
 	// Go cannot report per-manager allocations; estimate this graph inventory.
-	return uint64(Cudd_ReadNodeCount(dd))*96 + uint64(len(dd.computed.slots))*48 + dd.linearMemory
+	return uint64(dd.storedNodes())*96 + uint64(len(dd.computed.slots))*48 + dd.linearMemory
 }
-func Cudd_ReadPeakNodeCount(dd *DdManager) uint64  { return uint64(Cudd_ReadNodeCount(dd)) }
-func Cudd_ReadPeakLiveNodeCount(dd *DdManager) int { return Cudd_ReadNodeCount(dd) }
+func Cudd_ReadPeakNodeCount(dd *DdManager) uint64 {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	return uint64(dd.storedNodes())
+}
+func Cudd_ReadPeakLiveNodeCount(dd *DdManager) int {
+	if dd == nil || dd.closed {
+		return 0
+	}
+	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
+	return dd.peakLive
+}
 func Cudd_zddReadNodeCount(dd *DdManager) int {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	return len(dd.zddUnique)
+	// CUDD includes both terminals even in an empty ZDD manager.
+	return 2 + dd.liveZDDKeys()
+}
+
+func (dd *DdManager) liveZDDKeys() int {
+	live := 0
+	for _, n := range dd.zddUnique {
+		if !n.childrenReleased {
+			live++
+		}
+	}
+	return live
 }
 func Cudd_ReadNextReordering(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {

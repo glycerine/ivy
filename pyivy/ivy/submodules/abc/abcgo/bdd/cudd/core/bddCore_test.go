@@ -301,8 +301,8 @@ func TestReviewPermutationValidationAndConstantReferences(t *testing.T) {
 	if dd.constant(math.Copysign(0, -1)) != dd.Zero {
 		t.Fatal("negative zero not canonical")
 	}
-	if Cudd_ReadNodeCount(dd) != len(dd.unique)+len(dd.zddUnique)+len(dd.constants) {
-		t.Fatal("node statistics exclude constants")
+	if got := Cudd_ReadNodeCount(dd); got != 3 {
+		t.Fatalf("conjunction, used projection and one count as %d live nodes, want 3", got)
 	}
 }
 

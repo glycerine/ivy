@@ -203,6 +203,7 @@ func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
 			Cudd_RecursiveDeref(dd, node.E)
 		}
 		delete(dd.unique, bddUniqueKey{node.Index, node.T, node.E})
+		node.inBDDTable = false
 		node.manager = nil
 		if node.inverse != nil {
 			node.inverse.manager = nil

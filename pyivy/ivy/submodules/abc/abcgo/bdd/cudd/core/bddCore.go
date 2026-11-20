@@ -25,6 +25,7 @@ type DdNode struct {
 	regular, inverse *DdNode
 	family           uint8
 	childrenReleased bool
+	inBDDTable       bool // BDD/ADD unique table or constant table
 }
 type bddUniqueKey struct {
 	index uint32
@@ -44,6 +45,7 @@ type DdManager struct {
 	bddTableSlots, zddTableSlots      []uint32
 	tableGrowthFactor                 uint32
 	minDead                           uint32
+	dead, peakLive                    int
 	gcFraction                        float64
 	cacheSlack                        int32
 	PermZ, InvPermZ                   []int
@@ -329,6 +331,7 @@ func newEmptyManager() *DdManager {
 	dd.countDead = ^uint32(0)
 	dd.One = dd.newNodePair(bddConstantIndex)
 	dd.One.Value = 1
+	dd.One.inBDDTable = true
 	dd.LogicZero = dd.One.inverse
 	dd.constants = map[uint64]*DdNode{math.Float64bits(1): dd.One}
 	dd.zddUnique = map[bddUniqueKey]*DdNode{}
@@ -382,7 +385,21 @@ func Cudd_ReadInvPerm(dd *DdManager, level int) int {
 	return dd.InvPerm[level]
 }
 func Cudd_ReadNodeCount(dd *DdManager) int {
-	return len(dd.unique) + len(dd.zddUnique) + len(dd.addUnique) + len(dd.constants)
+	if dd == nil || dd.closed {
+		return 0
+	}
+	count := dd.liveBDDKeys()
+	for _, v := range dd.Vars {
+		if v.Ref == 0 {
+			count--
+		}
+	}
+	for _, n := range [...]*DdNode{dd.Zero, dd.PlusInfinity, dd.MinusInfinity} {
+		if n.Ref == 0 {
+			count--
+		}
+	}
+	return count
 }
 
 func Cudd_ReadEpsilon(dd *DdManager) float64 {
@@ -521,7 +538,7 @@ func Cudd_AllocNode(dd *DdManager) *DdNode {
 	if dd == nil || dd.closed {
 		return nil
 	}
-	liveKeys := len(dd.unique) + len(dd.addUnique) + len(dd.zddUnique)
+	liveKeys := dd.liveBDDKeys() + dd.liveZDDKeys()
 	if uint64(liveKeys) > uint64(dd.maxLive) {
 		dd.errorCode = CUDD_TOO_MANY_NODES
 		return nil
@@ -569,6 +586,7 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 		}
 		n = dd.newNodePair(index)
 		n.T, n.E = t, e
+		n.inBDDTable = true
 		Cudd_Ref(t)
 		Cudd_Ref(e)
 		dd.unique[key] = n
@@ -692,6 +710,9 @@ func reclaimNode(n *DdNode) {
 		a.revived = append(a.revived, n)
 	}
 	n.childrenReleased = false
+	if n.inBDDTable {
+		n.manager.dead--
+	}
 	Cudd_Ref(n.T)
 	Cudd_Ref(n.E)
 }
@@ -705,15 +726,33 @@ func Cudd_RecursiveDeref(dd *DdManager, n *DdNode) {
 	if dd == nil || dd.closed || n == nil || n.manager != dd {
 		return
 	}
+	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
+	dd.recursiveDeref(n)
+}
+
+func (dd *DdManager) managerPins(n *DdNode) bool {
+	if n.Index == bddConstantIndex {
+		return n == dd.One || n == dd.Zero || n == dd.PlusInfinity || n == dd.MinusInfinity
+	}
+	if n.family == 1 {
+		return len(dd.Univ) > 0 && n == dd.Univ[0]
+	}
+	return n.Index < uint32(len(dd.Vars)) && dd.Vars[n.Index] == n
+}
+
+func (dd *DdManager) recursiveDeref(n *DdNode) {
 	n = Cudd_Regular(n)
-	if n.Ref == 0 || n.Ref == math.MaxUint32 {
+	if n == nil || n.Ref == 0 || n.Ref == math.MaxUint32 {
 		return
 	}
 	n.Ref--
-	if n.Ref == 0 && !n.childrenReleased {
+	if n.Ref == 0 && !n.childrenReleased && !dd.managerPins(n) {
 		n.childrenReleased = true
-		Cudd_RecursiveDeref(dd, n.T)
-		Cudd_RecursiveDeref(dd, n.E)
+		if n.inBDDTable {
+			dd.dead++
+		}
+		dd.recursiveDeref(n.T)
+		dd.recursiveDeref(n.E)
 	}
 }
 
@@ -1050,6 +1089,7 @@ func (dd *DdManager) constant(value float64) *DdNode {
 	} // Canonicalize IEEE negative zero.
 	key := math.Float64bits(value)
 	if n := dd.constants[key]; n != nil {
+		reclaimNode(n)
 		return n
 	}
 	for _, n := range dd.constants {
@@ -1060,6 +1100,7 @@ func (dd *DdManager) constant(value float64) *DdNode {
 	}
 	n := dd.newNodePair(bddConstantIndex)
 	n.Value = value
+	n.inBDDTable = true
 	dd.constants[key] = n
 	return n
 }

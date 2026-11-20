@@ -301,13 +301,23 @@ func (a *bddAllocationAttempt) finish(result **DdNode) {
 	}
 	for key, n := range dd.unique {
 		if n.ID >= a.firstID {
+			if n.childrenReleased {
+				dd.dead--
+			}
+			n.inBDDTable = false
 			Cudd_Deref(n.T)
 			Cudd_Deref(n.E)
 			delete(dd.unique, key)
 		}
 	}
 	for _, n := range a.revived {
+		if n.childrenReleased {
+			continue
+		}
 		n.childrenReleased = true
+		if n.inBDDTable {
+			dd.dead++
+		}
 		Cudd_Deref(n.T)
 		Cudd_Deref(n.E)
 	}

@@ -43,3 +43,24 @@ func TestCuddInitTableSizesSlotsAndPermutations(t *testing.T) {
 		t.Fatal("Cudd_InitTable accepted an unrepresentable slot table")
 	}
 }
+
+func TestCuddAllocNodeLimitIncludesConstantsAndExcludesDead(t *testing.T) {
+	dd := Cudd_Init(6, 0, 16, 64, 0)
+	defer Cudd_Quit(dd)
+	// Six isolated projections and four constants occupy live keys.
+	Cudd_SetMaxLive(dd, 9)
+	if got := Cudd_AllocNode(dd); got != nil || Cudd_ReadErrorCode(dd) != CUDD_TOO_MANY_NODES {
+		t.Errorf("raw allocation exceeded nine live keys with result %p and status %d", got, Cudd_ReadErrorCode(dd))
+	}
+	for i, a := range dd.Vars {
+		for _, b := range dd.Vars[i+1:] {
+			n := Cudd_bddAnd(dd, a, b)
+			Cudd_Ref(n)
+			Cudd_RecursiveDeref(dd, n)
+		}
+	}
+	Cudd_SetMaxLive(dd, 10)
+	if got := Cudd_AllocNode(dd); got == nil {
+		t.Fatal("fifteen dead conjunctions were charged against a ten-live-key limit")
+	}
+}
