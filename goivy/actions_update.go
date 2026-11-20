@@ -861,14 +861,18 @@ func (a *LogicHavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 
 	if IsBoolean(sym) || IsRelationalSort(sym.CSort) {
 		// Relation: at non-havocked indices, old and new agree
-		// For each eq in eqs: (new_n(Vs) <-> n(Vs)) | eq
+		// Python: And(*([Or(Not(Atom(new_n,vs)),Atom(n,vs),eq) for eq in eqs] +
+		//              [Or(Atom(new_n,vs),Not(Atom(n,vs)),eq) for eq in eqs]))
 		var terms []Expr
 		newApp := applyToNodes(newN, vsNodes)
 		oldApp := applyToNodes(sym, vsNodes)
 		for _, eq := range eqs {
 			impl1, _ := NewOr(&LogicNot{Body: newApp}, oldApp, eq)
+			terms = append(terms, impl1)
+		}
+		for _, eq := range eqs {
 			impl2, _ := NewOr(newApp, &LogicNot{Body: oldApp}, eq)
-			terms = append(terms, impl1, impl2)
+			terms = append(terms, impl2)
 		}
 		if len(terms) == 0 {
 			tr = True // no constraints at all: fully nondeterministic
