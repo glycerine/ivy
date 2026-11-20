@@ -77,9 +77,9 @@ type UIModule struct {
 func NewIvyUtilsConfig() *IvyUtilsConfig {
 	cfg := &IvyUtilsConfig{
 		ComposeCharacter:      ".",
-		LanguageVersion:       "1.8",
+		LanguageVersion:       "1.7", // Python: ivy_language_version = ivy_latest_language_version
 		HavePolymorphism:      true,
-		LatestLanguageVersion: "1.8",
+		LatestLanguageVersion: "1.7", // Python: ivy_latest_language_version = '1.7'
 		SymbolCharsParser:     regexp.MustCompile(`[^\[\]\.]*`),
 		RuntimeCaller:         runtime.Caller,
 		UIModules:             make(map[string]*UIModule),
