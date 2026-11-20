@@ -456,8 +456,9 @@ func (t *Translator) Formula_to_z3_int(n Expr, caller string) (smt.Z3Expr, error
 	}
 
 	// Python line 645: if ivy_logic.is_atom(fmla): return atom_to_z3(fmla)
-	// is_atom: (Apply or Symbol) with Boolean sort, or Eq.
-	if app, ok := n.(*Apply); ok && len(app.Terms) > 0 {
+	// is_atom: (Apply or Symbol) with Boolean sort, or Eq -- an Apply
+	// with no terms (a stripped nullary relation) included.
+	if app, ok := n.(*Apply); ok {
 		if _, isBool := n.NodeSort().(*BooleanSort); isBool {
 			return t.atomToZ3(app)
 		}
