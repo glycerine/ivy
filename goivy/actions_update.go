@@ -896,8 +896,18 @@ func (a *LogicHavocAction) ActionUpdate(ctx *UpdateContext) *Update {
 	return makeUpdate([]*Const{sym}, tr, False, EmptyAnnotation{})
 }
 
+// applyToNodes is Python's fn(*args) on a logic symbol. ivy_logic
+// overrides the call: Symbol.__call__ gives App(self,*args) if there are
+// args or the sort is a FunctionSort (else self); Variable.__call__ gives
+// App(self,*args) only when the sort is a FunctionSort.
 func applyToNodes(fn Expr, args []Expr) Expr {
+	_, isFunc := fn.NodeSort().(*LogicFunctionSort)
 	if len(args) == 0 {
+		if isFunc {
+			if app, err := NewApply(fn); err == nil {
+				return app
+			}
+		}
 		return fn
 	}
 	return MustApply(fn, args...)
