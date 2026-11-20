@@ -380,9 +380,11 @@ def install():
     ast.UnfoldSpec.canon = _unfoldspec_canon
 
     def _unfoldtactic_canon(self):
-        tlabel = self.args[0] if len(self.args) > 0 else None
-        premise = self.args[1] if len(self.args) > 1 else None
-        unfspecs = list(self.args[2:])
+        # UnfoldTactic.args = [premise-or-NoneAST, *unfspecs]; the label
+        # is the separate .label attribute (see p_proofstep_unfold_*).
+        tlabel = getattr(self, 'label', None)
+        premise = self.args[0] if len(self.args) > 0 else None
+        unfspecs = list(self.args[1:])
         return '(unfoldTactic{} tLabel:{} premise:{} unfSpecs:{})'.format(
             lineno_fields(self), node_canon(tlabel), node_canon(premise),
             slice_canon(unfspecs))
