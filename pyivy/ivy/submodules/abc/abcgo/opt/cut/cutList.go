@@ -1,8 +1,9 @@
 package cut
 
 type Cut_List_t struct {
-	head [CUT_SIZE_MAX + 1]*Cut_Cut_t
-	tail [CUT_SIZE_MAX + 1]**Cut_Cut_t
+	count int32
+	head  [CUT_SIZE_MAX + 1]*Cut_Cut_t
+	tail  [CUT_SIZE_MAX + 1]**Cut_Cut_t
 }
 
 func Cut_ListStart(p *Cut_List_t) {
@@ -16,6 +17,7 @@ func Cut_ListAdd(p *Cut_List_t, c *Cut_Cut_t) {
 	if n < 1 || n > int(CUT_SIZE_MAX) {
 		panic("cut: invalid list size")
 	}
+	p.count++
 	c.Next = nil
 	*p.tail[n] = c
 	p.tail[n] = &c.Next
@@ -25,6 +27,7 @@ func Cut_ListAdd2(p *Cut_List_t, c *Cut_Cut_t) {
 	if n < 1 || n > int(CUT_SIZE_MAX) {
 		panic("cut: invalid list size")
 	}
+	p.count++
 	spot := &p.head[n]
 	for *spot != nil && Cut_CutCompare(c, *spot) >= 0 {
 		spot = &(*spot).Next
@@ -44,6 +47,7 @@ func Cut_ListDerive(p *Cut_List_t, list *Cut_Cut_t) {
 	}
 }
 func Cut_ListAddList(dst, src *Cut_List_t) {
+	dst.count += src.count
 	for i := int32(1); i <= CUT_SIZE_MAX; i++ {
 		if src.head[i] != nil {
 			*dst.tail[i] = src.head[i]

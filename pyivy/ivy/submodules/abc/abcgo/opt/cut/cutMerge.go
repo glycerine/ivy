@@ -1,9 +1,22 @@
 package cut
 
 func mergeLeaves(a, b []int32, limit int32) []int32 {
-	out := make([]int32, 0, min(int(limit), len(a)+len(b)))
+	if len(a) < len(b) {
+		a, b = b, a
+	}
+	if len(a) == int(limit) {
+		if !cutContains(a, b) {
+			return nil
+		}
+		return append([]int32(nil), a...)
+	}
+	var scratch [CUT_SIZE_MAX]int32
+	out := scratch[:0]
 	i, j := 0, 0
 	for i < len(a) || j < len(b) {
+		if len(out) == int(limit) {
+			return nil
+		}
 		var v int32
 		if j == len(b) || i < len(a) && a[i] < b[j] {
 			v = a[i]
@@ -17,11 +30,8 @@ func mergeLeaves(a, b []int32, limit int32) []int32 {
 			j++
 		}
 		out = append(out, v)
-		if len(out) > int(limit) {
-			return nil
-		}
 	}
-	return out
+	return append([]int32{}, out...)
 }
 func Cut_CutMergeTwo(p *Cut_Man_t, a, b *Cut_Cut_t) *Cut_Cut_t {
 	leaves := mergeLeaves(a.leaves, b.leaves, p.params.NVarsMax)

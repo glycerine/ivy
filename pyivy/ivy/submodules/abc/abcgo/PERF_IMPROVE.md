@@ -149,3 +149,9 @@ On a structural hash miss the network now checks the shorter of the two input fa
 Native ABC keeps separate live-object counts and an upper bound for object IDs. Go now reads its existing per-kind and terminal indexes directly for counts and indexed primary-port access. A sparse-ID simulation regression failed before the fix: the AND after a deleted ID produced zero on two true inputs. Verification now walks the ID range and advances the traversal epoch as in C. The new simulation and sparse-count tests passed under the race detector.
 
 Three one-thread i10 read/balance/rewrite trials took 148–150 ms/op and 49.3 MB/op, down from 166–171 ms and 69.1 MB. All trials preserved the 2,004 ANDs at depth 36.
+
+### Match cut enumeration order under a budget
+
+With two cut slots, the Go enumerator returned [1,2,3] twice. A new regression reproduced the second cut coming from parents (0,1). The C loop enumerates each small right cut against all full left cuts first, which retains [1,2,4] from (1,0). The regression passed after restoring this loop order.
+
+Walk the size-ordered fanin lists directly, use their signatures to rule out incompatible full cuts and track retained cut counts during dominance filtering. Bounded scratch lets oversize merges fail without allocating a leaf slice. Tests check the sorted union and independent ownership across all cut limits from 3 through 12, including modulo-31 signature collisions. Three i10 stage runs took 124.6–126.9 ms/op, 42.9 MB and 599,077 allocations, versus 148–150 ms, 49.3 MB and 859,246 allocations previously. The result still had 2,004 ANDs at depth 36. The earlier full module run covering the live-rewrite repairs passed all 130 tested packages, with three reporting no tests.

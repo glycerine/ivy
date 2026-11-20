@@ -2,6 +2,7 @@ package cut
 
 import (
 	"math/rand"
+	"slices"
 	"testing"
 )
 
@@ -319,5 +320,97 @@ func TestSequentialNetworkXorAndUnary(t *testing.T) {
 		if !found {
 			t.Fatalf("missing sequential cut for %d", check.id)
 		}
+	}
+}
+
+func TestCutBudgetVisitsSmallRightCutsFirst(t *testing.T) {
+	p := Cut_ManStart(&Cut_Params_t{NVarsMax: 3, NKeepMax: 2, FRecord: 1})
+	defer Cut_ManStop(p)
+	left := testCut(p, 1, 2, 3)
+	left.Next = testCut(p, 1, 2, 4)
+	right := testCut(p, 1)
+	right.Next = testCut(p, 2, 3)
+	p.newCuts[5], p.newCuts[6] = left, right
+	cuts := Cut_NodeComputeCuts(p, 7, 5, 6, 0, 0, 0, 0)
+	if Cut_CutCountList(cuts) != 2 {
+		t.Fatal("expected both slots of the cut budget to be filled")
+	}
+	// C tries the first small right cut against both full left cuts.
+	second := cuts.Next
+	if second.Num0 != 1 || second.Num1 != 0 || second.leaves[2] != 4 {
+		t.Fatalf("second cut %v from parents (%d,%d), want [1 2 4] from (1,0)", second.leaves, second.Num0, second.Num1)
+	}
+}
+
+func TestBoundedCutMergeAgainstSetUnion(t *testing.T) {
+	rng := rand.New(rand.NewSource(132))
+	for limit := CUT_SIZE_MIN; limit <= CUT_SIZE_MAX; limit++ {
+		p := Cut_ManStart(DefaultParams(limit))
+		for trial := 0; trial < 200; trial++ {
+			var left, right, want []int32
+			for i := int32(0); i < 2*limit; i++ {
+				// IDs from successive groups collide in the modulo-31 signature.
+				id := 31*(i/4) + i%4
+				includeLeft := rng.Intn(3) == 0 && len(left) < int(limit)
+				includeRight := rng.Intn(3) == 0 && len(right) < int(limit)
+				if includeLeft {
+					left = append(left, id)
+				}
+				if includeRight {
+					right = append(right, id)
+				}
+				if includeLeft || includeRight {
+					want = append(want, id)
+				}
+			}
+			a, b := testCut(p, left...), testCut(p, right...)
+			c := Cut_CutMergeTwo(p, a, b)
+			if len(want) > int(limit) {
+				if c != nil {
+					t.Fatalf("limit %d accepted %v", limit, want)
+				}
+				continue
+			}
+			if c == nil || !slices.Equal(c.leaves, want) || c.USign != a.USign|b.USign {
+				t.Fatalf("limit %d merging %v and %v, want %v, got %+v", limit, left, right, want, c)
+			}
+			if len(c.leaves) > 0 {
+				c.leaves[0] = -1
+				if !slices.Equal(a.leaves, left) || !slices.Equal(b.leaves, right) {
+					t.Fatal("merged cut aliases parent storage")
+				}
+			}
+		}
+		Cut_ManStop(p)
+	}
+}
+
+func TestCutListBudgetAfterDominanceAndSplice(t *testing.T) {
+	p := Cut_ManStart(DefaultParams(4))
+	defer Cut_ManStop(p)
+	var left, right Cut_List_t
+	Cut_ListStart(&left)
+	Cut_ListStart(&right)
+	Cut_ListAdd2(&left, testCut(p, 1, 2, 3, 4))
+	Cut_ListAdd(&right, testCut(p, 1, 2, 3))
+	// Same signature as [1,2,3], different leaves.
+	survivor := testCut(p, 32, 33, 34)
+	Cut_ListAdd2(&right, survivor)
+	Cut_ListAddList(&left, &right)
+	candidate := testCut(p, 1, 2)
+	if Cut_CutFilterOne(p, &left, candidate) != 0 {
+		t.Fatal("smaller candidate rejected")
+	}
+	Cut_ListAdd(&left, candidate)
+	if left.count != 2 {
+		t.Fatalf("after filtering and adding, count %d, want 2", left.count)
+	}
+	first := Cut_ListFinish(&left)
+	if first != candidate || first.Next != survivor || survivor.Next != nil {
+		t.Fatal("signature collision removed a distinct cut")
+	}
+	Cut_ListDerive(&right, first)
+	if right.count != Cut_CutCountList(Cut_ListFinish(&right)) {
+		t.Fatal("derived list count disagrees with its chain")
 	}
 }

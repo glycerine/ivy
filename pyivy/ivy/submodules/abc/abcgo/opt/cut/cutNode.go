@@ -14,7 +14,7 @@ func Cut_CutCheckDominance(dom, cut *Cut_Cut_t) int32 {
 func Cut_CutFilterOne(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) int32 {
 	for size := 1; size <= len(c.leaves); size++ {
 		for old := list.head[size]; old != nil; old = old.Next {
-			if cutContains(c.leaves, old.leaves) {
+			if old.USign&^c.USign == 0 && cutContains(c.leaves, old.leaves) {
 				p.stats.Filtered++
 				Cut_CutRecycle(p, c)
 				return 1
@@ -25,8 +25,9 @@ func Cut_CutFilterOne(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) int32 {
 		slot := &list.head[size]
 		for *slot != nil {
 			old := *slot
-			if cutContains(old.leaves, c.leaves) {
+			if c.USign&^old.USign == 0 && cutContains(old.leaves, c.leaves) {
 				*slot = old.Next
+				list.count--
 				p.stats.Filtered++
 				Cut_CutRecycle(p, old)
 			} else {
@@ -49,7 +50,7 @@ func Cut_CutFilterOneEqual(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) int32 {
 }
 func Cut_CutFilterOld(p *Cut_Man_t, list, c *Cut_Cut_t) int32 {
 	for old := list; old != nil; old = old.Next {
-		if cutContains(c.leaves, old.leaves) {
+		if old.USign&^c.USign == 0 && cutContains(c.leaves, old.leaves) {
 			p.stats.Filtered++
 			Cut_CutRecycle(p, c)
 			return 1
@@ -74,29 +75,28 @@ func Cut_CutFilterGlobal(p *Cut_Man_t, c *Cut_Cut_t) int32 {
 	Cut_CutRecycle(p, c)
 	return 1
 }
-func cutListCount(list *Cut_List_t) int32 {
-	var count int32
-	for _, head := range list.head {
-		count += Cut_CutCountList(head)
-	}
-	return count
-}
-func cutListParts(list *Cut_Cut_t, max int32) (small, large []*Cut_Cut_t) {
-	for c := list; c != nil; c = c.Next {
-		if int32(len(c.leaves)) == max {
-			large = append(large, c)
-		} else {
-			small = append(small, c)
+
+// Cut lists are ordered by size. The stop pointer also lets a tree
+// boundary expose just its trivial cut without changing the fanin list.
+func cutListBounds(head *Cut_Cut_t, limit int32, tree bool) (full, stop *Cut_Cut_t) {
+	if tree {
+		if len(head.leaves) != 1 {
+			panic("cut: tree boundary lacks trivial cut")
 		}
+		return head.Next, head.Next
 	}
-	return
+	for head != nil && int32(len(head.leaves)) < limit {
+		head = head.Next
+	}
+	return head, nil
 }
+
 func Cut_NodeDoComputeCuts(p *Cut_Man_t, super *Cut_List_t, node, compl0, compl1 int32, a, b *Cut_Cut_t, trivial, treeCode int32) {
 	limit := p.params.NKeepMax
 	if p.budget >= 0 {
 		limit = p.budget
 	}
-	if cutListCount(super) >= limit {
+	if super.count >= limit {
 		return
 	}
 	if a != nil && b != nil {
@@ -109,50 +109,54 @@ func Cut_NodeDoComputeCuts(p *Cut_Man_t, super *Cut_List_t, node, compl0, compl1
 	if trivial != 0 {
 		Cut_ListAdd(super, Cut_CutCreateTriv(p, node))
 	}
-	if a == nil || b == nil || p.params.FLocal != 0 && treeCode != 0 {
+	if a == nil || b == nil || super.count >= limit || p.params.FLocal != 0 && treeCode != 0 {
 		return
 	}
-	small0, large0 := cutListParts(a, p.params.NVarsMax)
-	small1, large1 := cutListParts(b, p.params.NVarsMax)
-	if treeCode&1 != 0 {
-		if len(a.leaves) != 1 {
-			panic("cut: tree boundary lacks trivial cut")
+	process := func(left, right *Cut_Cut_t) bool {
+		c := Cut_CutMergeTwo(p, left, right)
+		if c == nil {
+			return false
 		}
-		small0 = []*Cut_Cut_t{a}
-		large0 = nil
-	}
-	if treeCode&2 != 0 {
-		if len(b.leaves) != 1 {
-			panic("cut: tree boundary lacks trivial cut")
+		c.Num0, c.Num1 = left.Num0&2047, right.Num0&2047
+		if p.params.FGlobal != 0 && Cut_CutFilterGlobal(p, c) != 0 {
+			return false
 		}
-		small1 = []*Cut_Cut_t{b}
-		large1 = nil
+		if p.params.FFilter != 0 && Cut_CutFilterOne(p, super, c) != 0 {
+			return false
+		}
+		if p.params.FTruth != 0 {
+			Cut_TruthCompute(p, c, left, right, compl0, compl1)
+		}
+		Cut_ListAdd(super, c)
+		return super.count >= limit
 	}
-	for _, pair := range []struct{ a, b []*Cut_Cut_t }{{small0, small1}, {small0, large1}, {large0, small1}, {large0, large1}} {
-		for _, left := range pair.a {
-			for _, right := range pair.b {
-				limit := p.params.NKeepMax
-				if p.budget >= 0 {
-					limit = p.budget
-				}
-				if cutListCount(super) >= limit {
-					return
-				}
-				c := Cut_CutMergeTwo(p, left, right)
-				if c == nil {
-					continue
-				}
-				c.Num0, c.Num1 = left.Num0&2047, right.Num0&2047
-				if p.params.FGlobal != 0 && Cut_CutFilterGlobal(p, c) != 0 {
-					continue
-				}
-				if p.params.FFilter != 0 && Cut_CutFilterOne(p, super, c) != 0 {
-					continue
-				}
-				if p.params.FTruth != 0 {
-					Cut_TruthCompute(p, c, left, right, compl0, compl1)
-				}
-				Cut_ListAdd(super, c)
+	full0, stop0 := cutListBounds(a, p.params.NVarsMax, treeCode&1 != 0)
+	full1, stop1 := cutListBounds(b, p.params.NVarsMax, treeCode&2 != 0)
+	for left := a; left != full0; left = left.Next {
+		for right := b; right != full1; right = right.Next {
+			if process(left, right) {
+				return
+			}
+		}
+	}
+	for left := a; left != full0; left = left.Next {
+		for right := full1; right != stop1; right = right.Next {
+			if left.USign&^right.USign == 0 && process(left, right) {
+				return
+			}
+		}
+	}
+	for right := b; right != full1; right = right.Next {
+		for left := full0; left != stop0; left = left.Next {
+			if right.USign&^left.USign == 0 && process(left, right) {
+				return
+			}
+		}
+	}
+	for left := full0; left != stop0; left = left.Next {
+		for right := full1; right != stop1; right = right.Next {
+			if left.USign == right.USign && process(left, right) {
+				return
 			}
 		}
 	}
@@ -329,7 +333,7 @@ func cutUnionLists(p *Cut_Man_t, lists []*Cut_Cut_t, keepTrivial bool, old, new 
 	}
 	sort.SliceStable(candidates, func(i, j int) bool { return len(candidates[i].leaves) < len(candidates[j].leaves) })
 	for _, c := range candidates {
-		if cutListCount(&super) >= p.params.NKeepMax {
+		if super.count >= p.params.NKeepMax {
 			Cut_CutRecycle(p, c)
 			continue
 		}
@@ -410,7 +414,7 @@ func Cut_NodeComputeBuffer(p *Cut_Man_t, node, fanin, compl int32) *Cut_Cut_t {
 	Cut_ListAdd(&super, Cut_CutCreateTriv(p, node))
 	source := cutSlice(p.newCuts[fanin])
 	for i, c := range source {
-		if cutListCount(&super) >= p.params.NKeepMax {
+		if super.count >= p.params.NKeepMax {
 			break
 		}
 		copy := Cut_CutDupList(p, &Cut_Cut_t{NVarsMax: c.NVarsMax, leaves: c.leaves, truth: c.truth, FSimul: c.FSimul, FCompl: c.FCompl, USign: c.USign})
