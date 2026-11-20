@@ -1,7 +1,10 @@
 package goivy
 
 import (
+	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // TestMakeFmlaPairsPrecondsOnlyTrue checks that when precondsOnly=true,
@@ -72,5 +75,41 @@ func TestMakeFmlaPairsFormulaIdentity(t *testing.T) {
 	trPrec := fpsPrec[0].fmla.String()
 	if trFull != trPrec {
 		t.Errorf("TR formulas differ:\n  full: %s\n  prec: %s", trFull, trPrec)
+	}
+}
+
+// A free variable in a nested action is an Ivy diagnostic from fragment
+// checking. Its source location belongs to the offending conditional.
+func TestCheckFragmentReturnsInvalidActionCondition(t *testing.T) {
+	m := New()
+	v, err := NewVariable("I", Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cond := NewIfAction(v, NewSequence(), nil)
+	loc := Location{Filename: "condition.ivy", Line: 17}
+	cond.SetLineno(loc)
+	m.Actions.Set("step", NewSequence(NewBindOldsAction(cond)))
+	m.PublicActions.Set("step", true)
+
+	out := captureStdout(t, func() { err = CheckIsolate(m, nil) })
+	ivyErr, ok := err.(*IvyError)
+	if !ok || !ivyErr.HasLoc || ivyErr.Loc != loc || ivyErr.Msg != `variables in "if" conditions must be explicitly quantified; unquantified variable(s): I` {
+		t.Fatalf("unexpected fragment diagnostic %v", err)
+	}
+	if xtracer.Enabled {
+		_, after, found := strings.Cut(out, "XTRACE: actions.IfAction.int_update ENTER\n")
+		if !found {
+			t.Fatal("conditional was never reached")
+		}
+		var events []string
+		for _, line := range strings.Split(after, "\n") {
+			if strings.HasPrefix(line, "XTRACE:") {
+				events = append(events, line)
+			}
+		}
+		if len(events) != 1 || events[0] != "XTRACE: check/isolate_check.go: CheckIsolate back from fragment.CheckFragment() with error" {
+			t.Fatalf("unexpected trace after the invalid condition: %v", events)
+		}
 	}
 }

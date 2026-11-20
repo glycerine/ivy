@@ -968,10 +968,6 @@ func (c *checker) findCycle() []arc {
 func GetAssumesAndAsserts(m *Module, precondsOnly bool) (assumes, asserts, macros []fmlaPair) {
 	xtracer.Trace("fragment: GetAssumesAndAsserts ENTER precondsOnly = %v", BoolPythonStr(precondsOnly))
 	m.CanonSnapshot("fragment: GetAssumesAndAsserts ENTER canon_snapshot")
-	defer func() {
-		xtracer.Trace("fragment: GetAssumesAndAsserts EXIT")
-		m.CanonSnapshot("fragment: GetAssumesAndAsserts EXIT canon_snapshot")
-	}()
 
 	if precondsOnly {
 		for name, action := range m.BeforeExport.All() {
@@ -1066,12 +1062,26 @@ func GetAssumesAndAsserts(m *Module, precondsOnly bool) (assumes, asserts, macro
 		}
 	}
 
+	xtracer.Trace("fragment: GetAssumesAndAsserts EXIT")
+	m.CanonSnapshot("fragment: GetAssumesAndAsserts EXIT canon_snapshot")
 	return
 }
 
 // CheckFragment checks that the current module's VCs are in the decidable fragment.
 // Corresponds to Python's check_fragment.
-func CheckFragment(m *Module, precondsOnly bool) error {
+func CheckFragment(m *Module, precondsOnly bool) (err error) {
+	// Action updates raise located Ivy errors. Return those through the same
+	// fragment-check error path as FEU diagnostics.
+	defer func() {
+		if r := recover(); r != nil {
+			if ivyErr, ok := r.(*IvyError); ok {
+				err = ivyErr
+				return
+			}
+			panic(r)
+		}
+	}()
+
 	m.CanonSnapshot("fragment/fragment.go:1001 CheckFragment()")
 
 	logics := m.GetLogics()

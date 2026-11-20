@@ -1332,7 +1332,6 @@ func applyUpdateAxioms(update *Update, action ActionsAction, ctx *UpdateContext)
 // annotation after each composition.
 func (s *LogicSequence) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.Sequence.int_update ENTER")
-	defer xtracer.Trace("actions.Sequence.int_update EXIT")
 	// Python (ivy_actions.py:841):
 	//   update = ([], true_clauses(EmptyAnnotation()), false_clauses(EmptyAnnotation()))
 	result := &Update{
@@ -1379,6 +1378,7 @@ func (s *LogicSequence) IntUpdate(ctx *UpdateContext) *Update {
 			}
 		}
 	}
+	xtracer.Trace("actions.Sequence.int_update EXIT")
 	return result
 }
 
@@ -1490,7 +1490,6 @@ func (a *LogicEnvAction) IntUpdateEnv(ctx *UpdateContext) *Update {
 // Python: IfAction.int_update uses ite_action for simple conditions.
 func (a *LogicIfAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.IfAction.int_update ENTER")
-	defer xtracer.Trace("actions.IfAction.int_update EXIT")
 	cond := a.Cond
 
 	// Python: if used_variables_ast(self.args[0]): raise IvyError(...)
@@ -1505,7 +1504,9 @@ func (a *LogicIfAction) IntUpdate(ctx *UpdateContext) *Update {
 
 	// Python: if not isinstance(self.args[0], ivy_ast.Some): ... else: subactions path
 	if _, isSome := cond.(*SomeCondition); isSome {
-		return a.intUpdateWithSubactions(ctx)
+		result := a.intUpdateWithSubactions(ctx)
+		xtracer.Trace("actions.IfAction.int_update EXIT")
+		return result
 	}
 
 	// Python (ivy_actions.py:990): if not is_boolean(self.args[0]): raise IvyError("condition must be boolean")
@@ -1540,7 +1541,9 @@ func (a *LogicIfAction) IntUpdate(ctx *UpdateContext) *Update {
 	}
 
 	axioms := ctx.BackgroundTheory()
-	return IteAction(cond, thenUpdate, elseUpdate, axioms)
+	result := IteAction(cond, thenUpdate, elseUpdate, axioms)
+	xtracer.Trace("actions.IfAction.int_update EXIT")
+	return result
 }
 
 func logicVariableNames(vars []*LogicVariable) string {
@@ -1904,7 +1907,6 @@ func (a *LogicLetAction) IntUpdate(ctx *UpdateContext) *Update {
 // Python: BindOldsAction.int_update returns bind_olds_action(inner.int_update(...)).
 func (a *LogicBindOldsAction) IntUpdate(ctx *UpdateContext) *Update {
 	xtracer.Trace("actions.BindOldsAction.int_update ENTER")
-	defer xtracer.Trace("actions.BindOldsAction.int_update EXIT")
 	innerAct := unwrapToAction(a.Inner)
 	if innerAct == nil {
 		// Python (ivy_actions.py:1296) iterates blindly; calling int_update
@@ -1912,7 +1914,9 @@ func (a *LogicBindOldsAction) IntUpdate(ctx *UpdateContext) *Update {
 		panic(fmt.Sprintf("BindOldsAction.IntUpdate: inner is not an Action: %T", a.Inner))
 	}
 	update := IntUpdate(innerAct, ctx)
-	return BindOldsUpdate(update)
+	result := BindOldsUpdate(update)
+	xtracer.Trace("actions.BindOldsAction.int_update EXIT")
+	return result
 }
 
 // --- CallAction ---
