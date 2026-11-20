@@ -105,3 +105,21 @@ func TestDynamicFanoutStorageGrowth(t *testing.T) {
 		checkDynamicFanoutRing(t, p, a>>1, edges)
 	}
 }
+
+func TestFanoutDriverMarksIncludeMuxControl(t *testing.T) {
+	p := Gia_ManStart(16)
+	a, b, c := Gia_ManAppendCi(p), Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	unused := Gia_ManAppendCi(p)
+	p.EnableMuxes()
+	mux := Gia_ManAppendMuxReal(p, c, a, b)
+	buf := Gia_ManAppendBuf(p, mux)
+	Gia_ManAppendCo(p, buf)
+	Gia_ManSetMark0(p)
+	Gia_ManMarkFanoutDrivers(p)
+	for _, obj := range p.pObjs {
+		want := obj.id > 0 && obj.id != unused>>1 && Gia_ObjIsCo(obj) == 0
+		if (obj.fMark0 != 0) != want {
+			t.Fatalf("node %d driver mark = %d, want %t", obj.id, obj.fMark0, want)
+		}
+	}
+}

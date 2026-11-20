@@ -84,10 +84,18 @@ func Gia_ManUpdateCopy(copies *Vec_Int_t, p *Gia_Man_t) {
 	}
 }
 func Gia_ManMarkFanoutDrivers(p *Gia_Man_t) {
-	Gia_ManCleanMark0(p)
 	for _, obj := range p.pObjs {
-		for _, id := range giaObjectFanins(p, obj) {
-			p.pObjs[id].fMark0 = 1
+		// Fanins precede their users, so each old mark is cleared before
+		// any fanout can set it during this traversal.
+		obj.fMark0 = 0
+		if Gia_ObjIsAnd(obj) != 0 {
+			p.pObjs[Gia_ObjFaninId0(obj, obj.id)].fMark0 = 1
+			p.pObjs[Gia_ObjFaninId1(obj, obj.id)].fMark0 = 1
+			if Gia_ObjIsMuxId(p, obj.id) != 0 {
+				p.pObjs[p.PMuxes[obj.id]>>1].fMark0 = 1
+			}
+		} else if Gia_ObjIsCo(obj) != 0 {
+			p.pObjs[Gia_ObjFaninId0(obj, obj.id)].fMark0 = 1
 		}
 	}
 }

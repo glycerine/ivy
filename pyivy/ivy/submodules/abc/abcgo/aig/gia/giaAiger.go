@@ -226,13 +226,12 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 		return nil, io.ErrUnexpectedEOF
 	}
 	p := Gia_ManStart(int32(objects))
-	p.fGiaSimple = 1
+	hash := !opts.Simple && !opts.SkipStrash
+	p.fGiaSimple = giaBool(!hash)
 	p.nConstrs = int32(constraints)
 	p.aigerBadOutputs = int32(bad)
 	p.aigerLatchInits = make([]int32, latches)
-	p.aigerSymbols = map[byte][]string{}
-	p.aigerExtensions = map[byte][]byte{}
-	// Binary records create one GIA object per implicit variable in wire order.
+	// ASCII records may use sparse, explicitly numbered variables.
 	var variables map[uint32]int32
 	if ascii {
 		variables = map[uint32]int32{0: 0}
@@ -322,8 +321,17 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 			drivers[int(latches)+i] = nums[0]
 		}
 	}
+	if hash {
+		Gia_ManHashAlloc(p)
+	}
+	// Binary literals are their own mapping up to the first simplified gate.
+	firstRemapped := m + 1
+	var binaryMap []int32
 	remap := func(lit uint32) (int32, error) {
 		if !ascii && lit>>1 <= m {
+			if lit>>1 >= firstRemapped {
+				return binaryMap[(lit>>1)-firstRemapped] ^ int32(lit&1), nil
+			}
 			return int32(lit), nil
 		}
 		value, ok := variables[lit>>1]
@@ -368,10 +376,24 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 		if err != nil {
 			return nil, err
 		}
-		lit := Gia_ManAppendAnd(p, fa, fb)
+		var lit int32
+		if hash || opts.Simple {
+			lit = Gia_ManHashAnd(p, fa, fb)
+		} else {
+			lit = Gia_ManAppendAnd(p, fa, fb)
+		}
 		if ascii {
 			variables[lhs>>1] = lit
+		} else if uint32(lit) != lhs {
+			if binaryMap == nil {
+				firstRemapped = lhs >> 1
+				binaryMap = make([]int32, m-firstRemapped+1)
+			}
+			binaryMap[lhs>>1-firstRemapped] = lit
 		}
+	}
+	if hash {
+		Gia_ManHashStop(p)
 	}
 	for i := 0; i < int(outputs); i++ {
 		lit, err := remap(drivers[int(latches)+i])
@@ -391,18 +413,23 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 		Gia_ManAppendCo(p, lit)
 	}
 	p.nRegs = int32(latches)
-	if err := aigerReadFooter(p, contents[cursor.pos:], int(ordinary), int(bad), int(constraints), opts, depth); err != nil {
-		return nil, err
+	if hash && Gia_ManHasDangling(p) != 0 {
+		p = Gia_ManCleanup(p)
 	}
-	if !opts.Simple && !opts.SkipStrash {
-		return aigerHashRead(p)
-	}
-	p.fGiaSimple = giaBool(opts.Simple)
-	for _, obj := range p.pObjs {
-		if Gia_ObjIsBuf(obj) != 0 {
-			p.nBufs++
-			p.fGiaSimple = 1
+	if !hash {
+		p.fGiaSimple = giaBool(opts.Simple)
+		for _, obj := range p.pObjs {
+			if Gia_ObjIsBuf(obj) != 0 {
+				p.nBufs++
+				p.fGiaSimple = 1
+			}
 		}
+	}
+	p.aigerSymbols = map[byte][]string{}
+	p.aigerExtensions = map[byte][]byte{}
+	renumbered := uint64(p.nObjs) != objects
+	if err := aigerReadFooter(p, contents[cursor.pos:], int(ordinary), int(bad), int(constraints), opts, depth, renumbered); err != nil {
+		return nil, err
 	}
 	return p, nil
 }
@@ -571,7 +598,7 @@ func Gia_AigerRead(name string, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error
 	return p, nil
 }
 
-func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, opts AigerReadOptions, depth int) error {
+func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, opts AigerReadOptions, depth int, renumbered bool) error {
 	lengths := map[byte]int{'i': int(Gia_ManPiNum(p)), 'l': int(p.nRegs), 'o': ordinary, 'b': bad, 'c': constraints}
 	for len(data) > 0 {
 		if data[0] == 'c' && (len(data) == 1 || data[1] == '\n' || data[1] == '\r' || data[1] < '0' || data[1] > '9') {
@@ -636,7 +663,10 @@ func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, 
 			}
 			break
 		}
-		payload := append([]byte(nil), data[5:5+int(size)]...)
+		if renumbered && aigerTagUsesObjectIDs(tag) {
+			return fmt.Errorf("gia: structural hashing would invalidate object-indexed AIGER metadata; use SkipStrash")
+		}
+		payload := data[5 : 5+int(size)]
 		if err := aigerDecodeExtension(p, tag, payload, opts, depth); err != nil {
 			return fmt.Errorf("gia: extension %q: %w", tag, err)
 		}
@@ -713,102 +743,12 @@ func aigerInstallNames(p *Gia_Man_t, ordinary, bad, constraints int) {
 	}
 }
 
-func aigerIndexedMetadata(p *Gia_Man_t) bool {
-	if p.PReprs != nil || p.pSibls != nil || p.VMapping != nil || p.VPacking != nil || p.VGateClasses != nil || p.VObjClasses != nil || p.pSwitching != nil || p.pPlacement != nil || p.VEdge1 != nil {
+func aigerTagUsesObjectIDs(tag byte) bool {
+	switch tag {
+	case 'e', 'q', 'm', 'k', 'g', 'v', 'u', 'p', 'w':
 		return true
 	}
-	for tag := range p.aigerExtensions {
-		if !aigerKnownTag(tag) {
-			return true
-		}
-	}
-	return false
-}
-func aigerCopyCommonMetadata(dst, src *Gia_Man_t) {
-	dst.pName = src.pName
-	dst.PSpec = src.PSpec
-	dst.nConstrs = src.nConstrs
-	dst.nAnd2Delay = src.nAnd2Delay
-	dst.aigerBadOutputs = src.aigerBadOutputs
-	dst.aigerLatchInits = src.aigerLatchInits
-	dst.aigerSymbols = src.aigerSymbols
-	dst.aigerExtensions = src.aigerExtensions
-	dst.aigerComment = src.aigerComment
-	dst.VNamesIn = src.VNamesIn
-	dst.VNamesOut = src.VNamesOut
-	dst.vUserPiIds = src.vUserPiIds
-	dst.vUserPoIds = src.vUserPoIds
-	dst.vUserFfIds = src.vUserFfIds
-	dst.VFlopClasses = src.VFlopClasses
-	dst.vRegClasses = src.vRegClasses
-	dst.vRegInits = src.vRegInits
-	dst.PCellStr = src.PCellStr
-	dst.VConfigs = src.VConfigs
-	dst.VInArrs = src.VInArrs
-	dst.VOutReqs = src.VOutReqs
-	dst.PManTime = src.PManTime
-	dst.PAigExtra = src.PAigExtra
-}
-func aigerHashRead(p *Gia_Man_t) (*Gia_Man_t, error) {
-	q := Gia_ManStart(p.nObjs)
-	mapping := make([]int32, p.nObjs)
-	for i := range mapping {
-		mapping[i] = -1
-	}
-	mapping[0] = 0
-	for _, id := range vec.Vec_IntArray(p.vCis) {
-		mapping[id] = Gia_ManAppendCi(q)
-	}
-	needed := make([]bool, p.nObjs)
-	var mark func(int32)
-	mark = func(id int32) {
-		if needed[id] {
-			return
-		}
-		needed[id] = true
-		o := p.pObjs[id]
-		if Gia_ObjIsCo(o) != 0 {
-			mark(Gia_ObjFaninId0(o, id))
-		} else if Gia_ObjIsAnd(o) != 0 {
-			mark(Gia_ObjFaninId0(o, id))
-			mark(Gia_ObjFaninId1(o, id))
-		}
-	}
-	for _, id := range vec.Vec_IntArray(p.vCos) {
-		mark(id)
-	}
-	identity := true
-	remap := func(lit int32) int32 { return mapping[lit>>1] ^ (lit & 1) }
-	for id, o := range p.pObjs {
-		if Gia_ObjIsAnd(o) == 0 {
-			continue
-		}
-		if !needed[id] {
-			identity = false
-			continue
-		}
-		mapping[id] = q.AndLiteral(remap(Gia_ObjFaninLit0(o, int32(id))), remap(Gia_ObjFaninLit1(o, int32(id))), true)
-		if mapping[id] != int32(id)<<1 {
-			identity = false
-		}
-	}
-	for _, id := range vec.Vec_IntArray(p.vCos) {
-		o := p.pObjs[id]
-		mapped := Gia_ManAppendCo(q, remap(Gia_ObjFaninLit0(o, id)))
-		if mapped>>1 != id {
-			identity = false
-		}
-	}
-	if aigerIndexedMetadata(p) {
-		if !identity {
-			return nil, fmt.Errorf("gia: structural hashing would invalidate object-indexed AIGER metadata; use SkipStrash")
-		}
-		p.fGiaSimple = 0
-		return p, nil
-	}
-	q.nRegs = p.nRegs
-	aigerCopyCommonMetadata(q, p)
-	return q, nil
+	return !aigerKnownTag(tag)
 }
 
 type aigerWireModel struct {
