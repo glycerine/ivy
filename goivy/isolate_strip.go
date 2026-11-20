@@ -332,8 +332,10 @@ func stripNodeFull(node Expr, stripMap StripMap, mod *Module, binding map[NodeKe
 			if len(stripParams) > 0 && len(newTerms) >= len(stripParams) {
 				strippedTerms := newTerms[len(stripParams):]
 				newSym := NewConst(c.Name, StripSort(c.CSort, len(stripParams)))
+				// Python: new_symbol(*new_args) -- ivy_logic's Symbol.__call__
+				// makes an App even with no args when the sort is a FunctionSort.
 				if len(strippedTerms) == 0 {
-					return newSym
+					return pySymbolCall(newSym)
 				}
 				result, err := NewApply(newSym, strippedTerms...)
 				if err != nil {
@@ -457,8 +459,10 @@ func stripNode(node Expr, stripMap StripMap, mod *Module) Expr {
 				strippedTerms := newTerms[len(stripParams):]
 				newSort := StripSort(c.CSort, len(stripParams))
 				newSym := NewConst(c.Name, newSort)
+				// Python: new_symbol(*new_args) -- ivy_logic's Symbol.__call__
+				// makes an App even with no args when the sort is a FunctionSort.
 				if len(strippedTerms) == 0 {
-					return newSym
+					return pySymbolCall(newSym)
 				}
 				result, err := NewApply(newSym, strippedTerms...)
 				if err != nil {
@@ -1215,4 +1219,15 @@ func pyASTRepr(n Node) string {
 		res += ":" + pyStr(fmt.Sprint(sort))
 	}
 	return res
+}
+
+// pySymbolCall is ivy_logic's Symbol.__call__ with no args:
+// App(self) if isinstance(self.sort, FunctionSort) else self.
+func pySymbolCall(sym *Const) Expr {
+	if _, ok := sym.CSort.(*LogicFunctionSort); ok {
+		if app, err := NewApply(sym); err == nil {
+			return app
+		}
+	}
+	return sym
 }
