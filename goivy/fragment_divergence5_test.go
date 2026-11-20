@@ -159,8 +159,8 @@ func TestCreateMacroMapsLowercaseFormalUsesActualVariableSourceOrderLikePython(t
 		[]fmlaPair{{fmla: macroDef, source: lfMacro, loc: Location{Line: 2}}},
 	)
 
-	zNode := c.stratMap[varKey(Z)]
-	aNode := c.stratMap[varKey(A)]
+	zNode := c.stratMap.Get(varKey(Z))
+	aNode := c.stratMap.Get(varKey(A))
 	if zNode == nil || aNode == nil {
 		t.Fatalf("expected strat nodes for Z and A, got Z=%v A=%v", zNode, aNode)
 	}

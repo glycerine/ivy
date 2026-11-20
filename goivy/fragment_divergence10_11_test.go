@@ -44,7 +44,7 @@ func TestDivergence10UndoInReportInterpOverVar(t *testing.T) {
 	// Create a strat map entry for X_a.
 	node := NewUFNode()
 	vk := varKey(xA)
-	c.stratMap[vk] = node
+	c.stratMap.Set(vk, node)
 	c.stratInfo[vk] = stratEntry{v: xA}
 
 	// Build a formula containing the uniquified variable.
@@ -133,7 +133,7 @@ func TestDivergence11SkolemMapInReportArc(t *testing.T) {
 	// Set up a from-node with a sort in stratMap so getNodeSort works.
 	fromNode := NewUFNode()
 	fromKey := varKey(eVar)
-	c.stratMap[fromKey] = fromNode
+	c.stratMap.Set(fromKey, fromNode)
 	c.stratInfo[fromKey] = stratEntry{v: eVar}
 
 	a := arc{
@@ -181,7 +181,7 @@ func TestDivergence11NoSkolemEntry(t *testing.T) {
 
 	fromNode := NewUFNode()
 	fromKey := varKey(xVar)
-	c.stratMap[fromKey] = fromNode
+	c.stratMap.Set(fromKey, fromNode)
 	c.stratInfo[fromKey] = stratEntry{v: xVar}
 
 	a := arc{

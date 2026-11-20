@@ -64,8 +64,8 @@ func TestMapFmlaEqualityPerExpressionKeys(t *testing.T) {
 	c.mapFmla(Location{}, eq2, 0)
 
 	// Both expression-keyed entries should exist in the strat map.
-	nodeForX := c.stratMap[eqExprKey(x)]
-	nodeForZ := c.stratMap[eqExprKey(z)]
+	nodeForX := c.stratMap.Get(eqExprKey(x))
+	nodeForZ := c.stratMap.Get(eqExprKey(z))
 	if nodeForX == nil {
 		t.Fatal("stratMap should have an entry for eqExprKey(x)")
 	}

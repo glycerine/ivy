@@ -95,8 +95,8 @@ type checker struct {
 	universallyQuantifiedVars map[varID]*LogicVariable // var → source origin info
 	universalVarLoc           map[varID]Location       // var → source location
 
-	stratMap  map[NodeKey]*UFNode    // maps node key to UFNode
-	stratInfo map[NodeKey]stratEntry // metadata for error reporting
+	stratMap  *InsMap[NodeKey, *UFNode] // maps node key to UFNode
+	stratInfo map[NodeKey]stratEntry    // metadata for error reporting
 	arcs      []arc
 
 	// Macro maps
@@ -173,7 +173,7 @@ func newChecker(sig *Sig, interp map[string]interface{}) *checker {
 		interp:                    interp,
 		universallyQuantifiedVars: make(map[varID]*LogicVariable),
 		universalVarLoc:           make(map[varID]Location),
-		stratMap:                  make(map[NodeKey]*UFNode),
+		stratMap:                  NewInsMap[NodeKey, *UFNode](),
 		stratInfo:                 make(map[NodeKey]stratEntry),
 		arcs:                      nil,
 		macroMap:                  make(map[NodeKey]macroDef),
@@ -186,11 +186,11 @@ func newChecker(sig *Sig, interp map[string]interface{}) *checker {
 
 // getStratNode gets or creates a UFNode for the given key.
 func (c *checker) getStratNode(key NodeKey) *UFNode {
-	if n, ok := c.stratMap[key]; ok {
+	if n, ok := c.stratMap.Get2(key); ok {
 		return n
 	}
 	n := NewUFNode()
-	c.stratMap[key] = n
+	c.stratMap.Set(key, n)
 	return n
 }
 
@@ -216,7 +216,7 @@ func (c *checker) getUnivNode(v *LogicVariable) *UFNode {
 
 func (c *checker) getUnivNodeFor(v *LogicVariable, reason string) *UFNode {
 	key := varKey(v)
-	_, existed := c.stratMap[key]
+	_, existed := c.stratMap.Get2(key)
 	n := c.getStratNodeWith(key, stratEntry{v: v})
 	n.Var = v
 	if !existed {
@@ -659,7 +659,7 @@ func (c *checker) reportFEUError(text string) error {
 }
 
 func (c *checker) getNodeSort(n *UFNode) Sort {
-	for key, node := range c.stratMap {
+	for key, node := range c.stratMap.All() {
 		if node == n {
 			if info, ok := c.stratInfo[key]; ok {
 				if info.sym != nil && info.idx >= 0 && !info.isSort {
@@ -721,7 +721,7 @@ func (c *checker) reportCycle(cycle []arc) error {
 
 func (c *checker) reportInterpOverVar(fmla Expr, loc Location, node *UFNode) {
 	varMsg := ""
-	for key, n := range c.stratMap {
+	for key, n := range c.stratMap.All() {
 		if n == node {
 			if info, ok := c.stratInfo[key]; ok && info.v != nil {
 				vid := makeVarID(info.v)
@@ -840,12 +840,12 @@ func CheckFEU(
 		xtracer.Trace("fragment HASH canon= univQuantVars (%d): [%v]", len(c.universallyQuantifiedVars), strings.Join(uqvNames, ", "))
 
 		// Dump strat_map size and keys
-		smKeys := make([]string, 0, len(c.stratMap))
-		for k := range c.stratMap {
+		smKeys := make([]string, 0, c.stratMap.Len())
+		for k := range c.stratMap.All() {
 			smKeys = append(smKeys, string(k))
 		}
 		sort.Strings(smKeys)
-		xtracer.Trace("fragment HASH canon= stratMap (%d): %v", len(c.stratMap), smKeys)
+		xtracer.Trace("fragment HASH canon= stratMap (%d): %v", c.stratMap.Len(), smKeys)
 
 		// Dump arcs count and simplified form
 		xtracer.Trace("fragment HASH canon= arcs (%d):", len(c.arcs))

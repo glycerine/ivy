@@ -374,7 +374,7 @@ func (c *checker) Sexp() NodeKey {
 
 	// stratMap
 	b.WriteString(" stratMap:")
-	b.WriteString(nodeKeyUFMapSexp(c.stratMap))
+	b.WriteString(nodeKeyUFMapSexp(c.stratMap.AsMap()))
 
 	// stratInfo
 	b.WriteString(" stratInfo:")
