@@ -213,3 +213,16 @@ func TestConeSizeCountsSharedNodesOnce(t *testing.T) {
 		t.Fatalf("overlapping cones contain %d ANDs, want 33", got)
 	}
 }
+
+func TestObjectPointersAcrossAllocationBlocks(t *testing.T) {
+	p := Gia_ManStart(270)
+	defer Gia_ManStop(p)
+	first := Gia_ManAppendCi(p)
+	obj := Gia_ManObj(p, first>>1)
+	for i := 0; i < 600; i++ {
+		Gia_ManAppendCi(p)
+	}
+	if Gia_ObjId(p, obj) != first>>1 || Gia_ManObj(p, first>>1) != obj {
+		t.Fatal("CI handle changed after manager growth")
+	}
+}

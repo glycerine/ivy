@@ -45,7 +45,15 @@ func Gia_ManAppendObj(p *Gia_Man_t) *Gia_Obj_t {
 	if p.nObjs >= int32(objectNoFanin) {
 		panic("gia: object index exceeds backward-edge representation")
 	}
-	obj := &Gia_Obj_t{id: p.nObjs, store: p.store}
+	// Allocate stable object addresses in blocks. Bound each block so a
+	// large capacity hint alone does not allocate a full graph of objects.
+	if len(p.unusedObjects) == 0 {
+		size := min(256, max(1, cap(p.pObjs)-len(p.pObjs)))
+		p.unusedObjects = make([]Gia_Obj_t, size)
+	}
+	obj := &p.unusedObjects[0]
+	p.unusedObjects = p.unusedObjects[1:]
+	obj.id, obj.store = p.nObjs, p.store
 	p.pObjs = append(p.pObjs, obj)
 	p.nObjs++
 	p.nObjsAlloc = int32(cap(p.pObjs))

@@ -17,6 +17,7 @@ type Gia_Man_t struct {
 	nObjs           int32        // number of objects
 	nObjsAlloc      int32        // number of allocated objects
 	pObjs           []*Gia_Obj_t // the array of objects
+	unusedObjects   []Gia_Obj_t  // unused slots in the current allocation block
 	PMuxes          []uint32     // control signals of MUXes
 	nXors           int32        // the number of XORs
 	nMuxes          int32        // the number of MUXes
