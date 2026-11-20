@@ -761,7 +761,8 @@ func StripIsolateParams(mod *Module, isolate IsolateDefIface,
 					for _, p := range a.Terms {
 						name, _, ok4 := isoParamNameSort(p)
 						if !ok4 || !ips[name] {
-							return fmt.Errorf("unbound isolate parameter: %s", name)
+							// Python: raise iu.IvyError(p,'unbound isolate parameter: {}'.format(p))
+							return NewIvyError(p, "unbound isolate parameter: "+pyASTRepr(p))
 						}
 					}
 				}
@@ -1180,3 +1181,38 @@ func sortReferencesName(s Sort, sortName string) bool {
 var (
 	_ = Boolean
 )
+
+// pyASTRepr is Python's str() of an ivy_ast App/Atom (it has only
+// __repr__): repr(rep), its args in parentheses, and ':' + repr(sort) when
+// a sort is set. A Variable prints its name and sort the same way.
+func pyASTRepr(n Node) string {
+	pyStr := func(s string) string {
+		if strings.Contains(s, "'") && !strings.Contains(s, `"`) {
+			return `"` + s + `"`
+		}
+		return "'" + strings.ReplaceAll(s, "'", `\'`) + "'"
+	}
+	var rep string
+	var args []Node
+	var sort Node
+	switch x := n.(type) {
+	case *Atom:
+		rep, args, sort = x.Rep, x.Terms, x.ASort
+	case *App:
+		rep, args, sort = NodeRep(x.Rep), x.Terms, x.ASort
+	default:
+		return fmt.Sprint(n)
+	}
+	res := pyStr(rep)
+	if len(args) > 0 {
+		parts := make([]string, len(args))
+		for i, a := range args {
+			parts[i] = pyASTRepr(a)
+		}
+		res += "(" + strings.Join(parts, ", ") + ")"
+	}
+	if sort != nil {
+		res += ":" + pyStr(fmt.Sprint(sort))
+	}
+	return res
+}

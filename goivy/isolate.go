@@ -13,7 +13,6 @@ package goivy
 
 import (
 	"fmt"
-	"os"
 	"reflect"
 	"sort"
 	"strings"
@@ -1715,7 +1714,10 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	}
 
 	// --- Strip isolate parameters ---
-	stripIsolateWrapper(mod, iso, implMixins, allAfterInits, extraStrip)
+	// Python: strip_isolate raises (e.g. an unbound isolate parameter).
+	if err := stripIsolateWrapper(mod, iso, implMixins, allAfterInits, extraStrip); err != nil {
+		return err
+	}
 
 	// --- Compute init_cond ---
 	// Python line 1388: init_cond = ivy_logic.And(*(lf.formula for lf in mod.labeled_inits))
@@ -1816,15 +1818,13 @@ func formulaToClauses(fmla Expr) *Clauses {
 
 // stripIsolateWrapper calls strip.go's StripIsolateParams with appropriate types.
 func stripIsolateWrapper(mod *Module, iso interface{}, implMixins *InsMap[string, []IsolateMixinIface],
-	allAfterInits map[string]bool, extraStrip StripMap) {
+	allAfterInits map[string]bool, extraStrip StripMap) error {
 	_, isIDI := iso.(IsolateDefIface)
 	xtracer.Trace("strip.stripIsolateWrapper isIsolateDefInterface=%v", isIDI)
 	if idef, ok := iso.(IsolateDefIface); ok {
-		err := StripIsolateParams(mod, idef, implMixins, allAfterInits, extraStrip)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "isolate.stripIsolateWrapper ERROR err=%v\n", err)
-		}
+		return StripIsolateParams(mod, idef, implMixins, allAfterInits, extraStrip)
 	}
+	return nil
 }
 
 // extractIsolateNames extracts verified and present names from an isolate
