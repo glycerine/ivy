@@ -43,6 +43,8 @@ func Abc_NtkRewrite(pNtk *Abc_Ntk_t, fUpdateLevel, fUseZeros, fVerbose, fVeryVer
 	}
 	clk := time.Now()
 	pManCut := Abc_NtkStartCutManForRewrite(pNtk)
+	aig.FreeNodeCuts = func(id int32) { cut.Cut_NodeFreeCuts(pManCut, id) }
+	defer func() { aig.FreeNodeCuts = nil }()
 	rwr.Rwr_ManAddTimeCuts(pManRwr, int64(time.Since(clk)))
 	if fVeryVerbose != 0 {
 		rwr.Rwr_ScoresClean(pManRwr)
@@ -120,7 +122,14 @@ func Abc_NtkStartCutManForRewrite(pNtk *Abc_Ntk_t) *Cut_Man_t {
 	params := cut.DefaultParams(4)
 	params.NKeepMax, params.FTruth, params.FFilter = 250, 1, 1
 	params.NIdsMax = abc.Abc_NtkObjNumMax(pNtk)
-	return cut.Abc_NtkCuts(abcRewriteCutNetwork{network: pNtk}, params)
+	manager := cut.Cut_ManStart(params)
+	for i := int32(0); i < abc.Abc_NtkCiNum(pNtk); i++ {
+		input := abc.Abc_NtkCi(pNtk, i)
+		if abc.Abc_ObjFanoutNum(input) > 0 {
+			cut.Cut_NodeSetTriv(manager, int32(input.ID))
+		}
+	}
+	return manager
 }
 
 // Abc_NodePrintCuts prints a node's stored cut list.

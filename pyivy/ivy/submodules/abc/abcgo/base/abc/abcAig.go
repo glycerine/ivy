@@ -5,7 +5,9 @@ import "fmt"
 // Abc_Aig_t owns structural hashing for an ABC object network. It deliberately
 // keeps ABC Object identities rather than moving nodes into a second graph.
 type Abc_Aig_t struct {
-	Network        *Network
+	Network *Network
+	// FreeNodeCuts releases cached cuts before an AND is removed or rewired.
+	FreeNodeCuts   func(id int32)
 	bins           int
 	tracking       bool
 	added, updated []*Object
@@ -209,6 +211,9 @@ func Abc_AigMuxLookup(m *Abc_Aig_t, c, t, e any, typ *int32) Edge {
 	return Edge{}
 }
 func Abc_AigAndDelete(m *Abc_Aig_t, o *Object) {
+	if m.FreeNodeCuts != nil {
+		m.FreeNodeCuts(int32(o.ID))
+	}
 	m.excluded[o] = true
 	for key, e := range m.Network.hashed {
 		if e.Object == o {

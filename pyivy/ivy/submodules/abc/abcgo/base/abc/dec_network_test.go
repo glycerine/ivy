@@ -2,6 +2,26 @@ package abc
 
 import "testing"
 
+func TestDecNetworkCountsAndSharesMarkedAnd(t *testing.T) {
+	n := NewNetwork("reuse")
+	a, b := n.NewObject(ObjectPI).Signal(), n.NewObject(ObjectPI).Signal()
+	gate := n.AndEdges(a, b)
+	d := DecNetwork{n}
+	Abc_NtkIncrementTravId(n)
+	Abc_NodeSetTravIdCurrent(gate.Object)
+	if !d.InDeletionCone(gate.Not()) {
+		t.Error("marked AND omitted from candidate cost")
+	}
+	if got := d.And(a, b); got != gate {
+		t.Error("decomposition duplicated a structurally identical AND")
+	}
+	Abc_NtkIncrementTravId(n)
+	gate.Object.MarkA = true
+	if d.InDeletionCone(gate) {
+		t.Error("old traversal mark counted in a new candidate")
+	}
+}
+
 func TestDecNetworkReplacementUsesAigUpdatePath(t *testing.T) {
 	n := NewNetwork("dec replacement")
 	aig := Abc_AigAlloc(n)

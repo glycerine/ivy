@@ -375,7 +375,7 @@ func restructEvalDsdRec(graph *dec.Dec_Graph_t, m *Abc_ManRst_t, node *dsd.Dsd_N
 			}
 			dec.Dec_GraphNode(graph, int32(result.Node)).Level = level
 			if found.Object != nil {
-				restructSetNodeSignal(graph, result, abc.Abc_ObjNotCond(found, boolToDec(dec.Dec_EdgeIsComplement(result))))
+				restructSetNodeSignal(graph, result, found)
 				if required != 1<<31-1 && level != uint32(found.Object.Level) {
 					panic("abc restructure: operator lookup level differs from required level")
 				}
@@ -405,7 +405,7 @@ func restructEvalDsdRec(graph *dec.Dec_Graph_t, m *Abc_ManRst_t, node *dsd.Dsd_N
 					return quit
 				}
 			}
-			vec.Vec_IntPush(edges, int32(dec.Dec_EdgeToInt(result)))
+			restructPushOrdered(graph, edges, dec.Dec_EdgeToInt(result))
 		}
 		result := dec.Dec_IntToEdge(uint32(vec.Vec_IntPop(edges)))
 		if compl {
@@ -491,7 +491,7 @@ func restructEvalPrime(graph *dec.Dec_Graph_t, m *Abc_ManRst_t, node *dsd.Dsd_No
 	level = max(level, dec.Dec_GraphNode(graph, int32(e3.Node)).Level) + 2
 	dec.Dec_GraphNode(graph, int32(result.Node)).Level = level
 	if found.Object != nil {
-		restructSetNodeSignal(graph, result, abc.Abc_ObjNotCond(found, boolToDec(dec.Dec_EdgeIsComplement(result))))
+		restructSetNodeSignal(graph, result, found)
 		if required != 1<<31-1 && level != uint32(found.Object.Level) {
 			panic("abc restructure: mux lookup level differs from required level")
 		}

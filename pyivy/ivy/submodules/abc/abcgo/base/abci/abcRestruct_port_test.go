@@ -110,6 +110,9 @@ func TestNtkRestructureZeroGainCanReplaceBalancedAig(t *testing.T) {
 	if status := Abc_NtkRestructure(n, 4, 1, 1, 0); status != 1 {
 		t.Fatalf("restructure status = %d", status)
 	}
+	if depth := abc.Abc_AigLevel(n); depth != 2 {
+		t.Fatalf("four-input OR has depth %d after restructuring, want 2", depth)
+	}
 	if abc.Abc_NtkCheck(n) == 0 {
 		t.Fatal("restructured network failed its integrity check")
 	}

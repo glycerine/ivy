@@ -52,19 +52,38 @@ func Rwr_NodeRewrite(p *Rwr_Man_t, pManCut *cut.Cut_Man_t, pNode *abc.Object, fU
 	}
 	network := &abcRewriteNetwork{network: pNode.Network()}
 	var cuts []Rwr_Cut
-	for c := cut.Cut_NodeReadCutsNew(pManCut, int32(pNode.ID)); c != nil; c = c.Next {
+	for c := rewriteNodeCuts(pManCut, pNode); c != nil; c = c.Next {
+		if cut.Cut_CutReadLeaveNum(c) != 4 {
+			continue
+		}
 		leaves := cut.Cut_CutReadLeaves(c)
 		truth := cut.Cut_CutReadTruth(c)
 		if len(truth) == 0 {
 			continue
 		}
-		cuts = append(cuts, Rwr_Cut{Truth: uint16(truth[0]), Leaves: append([]int32(nil), leaves...)})
+		cuts = append(cuts, Rwr_Cut{Truth: uint16(truth[0]), Leaves: leaves})
 	}
 	required := int32(1<<30 - 1)
 	if fUpdateLevel != 0 {
 		required = abc.Abc_ObjRequiredLevel(pNode)
 	}
 	return Rwr_RewriteCuts(p, network, pNode.Signal(), cuts, required, fUseZeros, fPlaceEnable)
+}
+
+// Read live fanins because earlier replacements in the pass can rewire
+// existing nodes or insert new ones beyond the original object count.
+func rewriteNodeCuts(p *cut.Cut_Man_t, node *abc.Object) *cut.Cut_Cut_t {
+	id := int32(node.ID)
+	if cuts := cut.Cut_NodeReadCutsNew(p, id); cuts != nil {
+		return cuts
+	}
+	a, b := abc.Abc_ObjChild0(node), abc.Abc_ObjChild1(node)
+	rewriteNodeCuts(p, a.Object)
+	rewriteNodeCuts(p, b.Object)
+	if abc.Abc_ObjFanoutNum(node) > 1 && abc.Abc_NodeIsMuxControlType(node) == 0 {
+		cut.Cut_ManIncrementDagNodes(p)
+	}
+	return cut.Cut_NodeComputeCuts(p, id, int32(a.Object.ID), int32(b.Object.ID), abc.Abc_ObjFaninC0(node), abc.Abc_ObjFaninC1(node), 1, 0)
 }
 
 type abcRewriteNetwork struct {
