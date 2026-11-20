@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/glycerine/abcgo/base/abc"
+	abcio "github.com/glycerine/abcgo/base/io"
+	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/proof/fraig"
 )
@@ -127,4 +129,37 @@ func TestVerifyCleanModelClearsStaleZeroInputModel(t *testing.T) {
 	if got := Abc_NtkVerifyGetCleanModel(n, 1); got != nil || n.Model != nil {
 		t.Fatalf("stale model retained: %v, %v", got, n.Model)
 	}
+}
+
+func BenchmarkI10NativeResynthesisCEC(b *testing.B) {
+	extra.Extra_ProgressBarSetMode(false, true)
+	defer extra.Extra_ProgressBarSetMode(true, false)
+	left, err := abcio.ReadAiger("../../../i10.aig", true)
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer abc.Abc_NtkDelete(left)
+	right, err := abcio.ReadAiger("test_vectors/i10_native_demo.aig", true)
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer abc.Abc_NtkDelete(right)
+	b.ReportAllocs()
+	var nodes int32
+	for b.Loop() {
+		miter := Abc_NtkMiter(left, right, 1, 0, 0, 0)
+		if miter == nil || Abc_NtkMiterIsConstant(miter) != -1 {
+			b.Fatal("expected a structurally nontrivial miter")
+		}
+		nodes = abc.Abc_NtkNodeNum(miter)
+		var params Prove_Params_t
+		Prove_ParamsSetDefault(&params)
+		params.nItersMax = 5
+		result := Abc_NtkIvyProve(&miter, &params)
+		abc.Abc_NtkDelete(miter)
+		if result != 1 {
+			b.Fatalf("expected equivalence, prover returned %d", result)
+		}
+	}
+	b.ReportMetric(float64(nodes), "miter-ANDs/op")
 }

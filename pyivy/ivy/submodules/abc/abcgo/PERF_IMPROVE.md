@@ -181,3 +181,9 @@ The rewrite path previously rebuilt its canonicalization tables, decoded a secon
 The evaluator now uses the manager's own class lists, graphs, permutation table and per-node scores. Score reporting and clearing follow rwrEva.c. The native class-order fixture checks all 222 classes against the actual manager, and an independent test decoder checks the candidate graph functions. Complete rewrite package race tests passed.
 
 The i10 read/balance/rewrite stage reached 103.8–107.7 ms/op, 36.2 MB and 571,640 allocations, down from 120.9–123.4 ms and 42.9 MB. The complete Go demo finished in 1.37 s in one run, including 0.41 s rewriting and 0.89 s verification. Native CEC independently proved the exported BLIF equivalent to i10.
+
+### Prove the same nontrivial equivalence problem in both ports
+
+Added BenchmarkI10NativeResynthesisCEC and the matching base/abci/test_vectors/perf_cec.c. The inputs are the original i10 and the named AIGER produced by the native demo's synthesis commands. Generate the second file from the checkout root with `./abc -c 'read_aiger i10.aig; balance; balance; rewrite -l; rewrite -lz; balance; rewrite -lz; balance; write_aiger -s abcgo/base/abci/test_vectors/i10_native_demo.aig'`. Both drivers load the input pair outside the timer and build a fresh miter, check that structural hashing alone does not solve it, prove it under default CEC parameters and delete it each iteration.
+
+Both programs built miters with 5,051 ANDs and proved equivalence. Native took 210.4 ms/op across 18 calls. Go took 596.8–603.5 ms/op, 165–166 MB/op and roughly four million allocations/op. In the native gprof run, SAT propagation accounted for 40% of samples and solver search for another 12%. In Go, propagation took 18% cumulatively, rewriting 33%, mapped CNF derivation 12% and refactoring 12%. Go sampled allocations included boxing ABC edges, cut enumeration and comparing generic vector entries.
