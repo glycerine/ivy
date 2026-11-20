@@ -327,55 +327,45 @@ func Ivy_FraigCreateClasses(p *Ivy_FraigMan_t) {
 	}
 }
 func Ivy_FraigRefineClass_rec(p *Ivy_FraigMan_t, class *Ivy_Obj_t) int32 {
-	var groups [][]*Ivy_Obj_t
-	seen := map[*Ivy_Obj_t]bool{}
-	for n := class; n != nil; {
-		if seen[n] {
-			panic("ivy: cyclic fraig class")
+	var splits int32
+	for {
+		oldTail := class
+		nextClass := Ivy_ObjClassNodeNext(oldTail)
+		for nextClass != nil && Ivy_NodeCompareSims(p, class, nextClass) != 0 {
+			oldTail = nextClass
+			nextClass = Ivy_ObjClassNodeNext(oldTail)
 		}
-		seen[n] = true
-		next := Ivy_ObjClassNodeNext(n)
-		index := -1
-		for i, group := range groups {
-			if Ivy_NodeCompareSims(p, group[0], n) != 0 {
-				index = i
-				break
+		if nextClass == nil {
+			return splits
+		}
+		if p.pParams.fPatScores != 0 {
+			Ivy_FraigAddToPatScores(p, class, nextClass)
+		}
+		Ivy_ObjSetClassNodeRepr(nextClass, nil)
+		newTail := nextClass
+		for n := Ivy_ObjClassNodeNext(nextClass); n != nil; n = Ivy_ObjClassNodeNext(n) {
+			if Ivy_NodeCompareSims(p, class, n) != 0 {
+				Ivy_ObjSetClassNodeNext(oldTail, n)
+				oldTail = n
+			} else {
+				Ivy_ObjSetClassNodeNext(newTail, n)
+				Ivy_ObjSetClassNodeRepr(n, nextClass)
+				newTail = n
 			}
 		}
-		if index < 0 {
-			groups = append(groups, []*Ivy_Obj_t{n})
-		} else {
-			groups[index] = append(groups[index], n)
+		Ivy_ObjSetClassNodeNext(newTail, nil)
+		Ivy_ObjSetClassNodeNext(oldTail, nil)
+		Ivy_FraigInsertClass(&p.lClasses, class, nextClass)
+		if class == oldTail {
+			Ivy_FraigRemoveClass(&p.lClasses, class)
 		}
-		n = next
-	}
-	if len(groups) < 2 {
-		return 0
-	}
-	if p.pParams.fPatScores != 0 {
-		for _, group := range groups[1:] {
-			Ivy_FraigAddToPatScores(p, class, group[0])
+		splits++
+		if nextClass == newTail {
+			Ivy_FraigRemoveClass(&p.lClasses, nextClass)
+			return splits
 		}
+		class = nextClass
 	}
-	previous := class
-	for i, group := range groups {
-		head := group[0]
-		Ivy_ObjSetClassNodeRepr(head, nil)
-		Ivy_ObjSetClassNodeNext(head, nil)
-		for _, n := range group[1:] {
-			Ivy_NodeAddToClass(head, n)
-		}
-		if i > 0 {
-			Ivy_FraigInsertClass(&p.lClasses, previous, head)
-		}
-		previous = head
-	}
-	for _, group := range groups {
-		if len(group) == 1 {
-			Ivy_FraigRemoveClass(&p.lClasses, group[0])
-		}
-	}
-	return int32(len(groups) - 1)
 }
 func Ivy_FraigCountClassNodes(class *Ivy_Obj_t) int32 {
 	var count int32

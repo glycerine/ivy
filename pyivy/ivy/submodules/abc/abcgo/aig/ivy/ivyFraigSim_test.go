@@ -79,10 +79,16 @@ func TestFraigClassesRefineAndPatternScores(t *testing.T) {
 	if changed != 2 || sim.lClasses.nItems != 3 || Ivy_FraigCountPairsClasses(sim) != 3 {
 		t.Fatal("refined class partition incorrect")
 	}
+	if sim.pPatScores[0] != 2 || sim.pPatScores[1] != 1 {
+		t.Errorf("scores from successive class splits: got %v, want [2 1]", sim.pPatScores[:2])
+	}
 	previous := (*Ivy_Obj_t)(nil)
 	for class := sim.lClasses.pHead; class != nil; class = Ivy_ObjEquivListNext(class) {
 		if Ivy_ObjEquivListPrev(class) != previous || Ivy_FraigCountClassNodes(class) != 2 {
 			t.Fatal("broken class links")
+		}
+		if Ivy_ObjClassNodeRepr(class) != nil || Ivy_ObjClassNodeRepr(Ivy_ObjClassNodeNext(class)) != class {
+			t.Fatal("class head must represent itself and its next member")
 		}
 		previous = class
 	}

@@ -125,3 +125,7 @@ Native CEC independently checked a BLIF after each Go i10 stage. Reading and bot
 ### Check nontrivial miters through the CEC command path
 
 A regression test compares the two associations of a three-input AND. Before the fix, its nonconstant structural miter panicked in Ivy proving when CEC passed a proof/fraig parameter record to the base/abci prover. CEC, sensitivity analysis and redundancy removal now use the command-facing parameter type and their original limits. Both proving entry points accept the concrete type, so the compiler checks every caller. The regression now reports equivalence. The exhaustive two-input prover tests passed alongside it.
+
+### Preserve Ivy FRAIG representatives during refinement
+
+The Go i10 prover reached an unmapped simulation representative. A six-input unit test exposed the underlying class-list error without running a SAT solver. After splitting a class into three pairs, its heads pointed to later members. The pattern scores were [1, 2] where successive source-order splits give [2, 1]. Both assertions failed before the fix. The Go refinement now partitions the linked list in place like ivyFraig.c, and iterates over the remaining nonmatching group. This also eliminates the map and grouped slices formerly created for every refinement. The complete Ivy package passed under the race detector.
