@@ -170,6 +170,7 @@ func Cudd_addIte(dd *DdManager, f, g, h *DdNode) *DdNode {
 		dd.cacheLookups++
 		if n := dd.addCache[key]; n != nil {
 			dd.cacheHits++
+			reclaimNode(n)
 			return n
 		}
 		level := min(dd.level(f), min(dd.level(g), dd.level(h)))

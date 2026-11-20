@@ -9,33 +9,7 @@ func CountISOPBounded(dd *DdManager, lower, upper *DdNode, cubeLimit, nodeLimit 
 	if !dd.valid(lower, upper) || cubeLimit < 0 || nodeLimit < 0 || !Cudd_bddLeq(dd, lower, upper) {
 		return
 	}
-	oldLimited, oldCeiling := dd.allocationLimited, dd.allocationCeiling
-	firstID := dd.nextID
-	maxInt := int(^uint(0) >> 1)
-	ceiling := len(dd.unique) + min(nodeLimit, maxInt-len(dd.unique))
-	if oldLimited {
-		ceiling = min(ceiling, oldCeiling)
-	}
-	dd.allocationLimited, dd.allocationCeiling = true, ceiling
-	defer func() {
-		dd.allocationLimited, dd.allocationCeiling = oldLimited, oldCeiling
-		if failure := recover(); failure != nil {
-			if _, limited := failure.(bddAllocationLimit); !limited {
-				panic(failure)
-			}
-			function = nil
-			count = -1
-		}
-		if function == nil {
-			for key, n := range dd.unique {
-				if n.ID >= firstID {
-					delete(dd.unique, key)
-				}
-			}
-			clear(dd.cache)
-			dd.nextID = firstID
-		}
-	}()
+	defer dd.beginAllocationAttempt(uint64(nodeLimit)).finish(&function)
 	result := dd.isopBounded(lower, upper, false, cubeLimit)
 	if result.function != nil {
 		function, count = result.function, result.cubes

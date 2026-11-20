@@ -79,6 +79,7 @@ type DdManager struct {
 	stdout, stderr                    io.Writer
 	allocationLimited                 bool
 	allocationCeiling                 int
+	allocationAttempt                 *bddAllocationAttempt
 	reorderMethod                     Cudd_ReorderingType
 	autoDyn, autoDynZdd               bool
 	autoMethod, autoMethodZdd         Cudd_ReorderingType
@@ -349,6 +350,9 @@ func Cudd_CacheLookup(dd *DdManager, operation uintptr, f, g, h *DdNode, family 
 	result := dd.computed[key]
 	if result != nil {
 		dd.cacheHits++
+		if family != 2 { // Constant-only queries do not acquire child references.
+			reclaimNode(Cudd_Regular(result))
+		}
 	}
 	return result
 }
@@ -671,6 +675,7 @@ func (dd *DdManager) iteChecked(f, g, h *DdNode, check func() bool) *DdNode {
 	dd.cacheLookups++
 	if n := dd.cache[key]; n != nil {
 		dd.cacheHits++
+		reclaimNode(Cudd_Regular(n))
 		return Cudd_NotCond(n, invert)
 	}
 	level := min(dd.level(f), min(dd.level(g), dd.level(h)))
@@ -703,6 +708,10 @@ func Cudd_Ref(n *DdNode) {
 func reclaimNode(n *DdNode) {
 	if n == nil || !n.childrenReleased {
 		return
+	}
+	if dd := n.manager; dd != nil && dd.allocationAttempt != nil {
+		a := dd.allocationAttempt
+		a.revived = append(a.revived, n)
 	}
 	n.childrenReleased = false
 	Cudd_Ref(n.T)

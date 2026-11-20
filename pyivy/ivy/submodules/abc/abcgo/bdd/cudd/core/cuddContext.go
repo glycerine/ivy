@@ -2,14 +2,14 @@ package core
 
 import "context"
 
-// BDDAndContext checks cancellation during the authoritative ITE recursion.
+// BDDAndContext checks cancellation during the conjunction recursion.
 // A cancelled operation returns nil; already completed canonical nodes remain
 // usable and a subsequent operation may reuse them. Managers are not concurrent.
 func BDDAndContext(ctx context.Context, dd *DdManager, f, g *DdNode) *DdNode {
 	if ctx == nil || dd == nil || !dd.valid(f, g) {
 		return nil
 	}
-	return dd.iteChecked(f, g, dd.LogicZero, func() bool { return ctx.Err() == nil })
+	return dd.andChecked(f, g, func() bool { return ctx.Err() == nil })
 }
 
 // BDDAndAbstractContext fuses conjunction and existential abstraction, avoiding
@@ -39,7 +39,7 @@ func (dd *DdManager) andAbstractChecked(f, g, cube *DdNode, check func() bool) *
 			return dd.One
 		}
 		if cube == dd.One {
-			return dd.iteChecked(f, g, dd.LogicZero, check)
+			return dd.andChecked(f, g, check)
 		}
 		if f.ID > g.ID {
 			f, g = g, f
@@ -49,7 +49,7 @@ func (dd *DdManager) andAbstractChecked(f, g, cube *DdNode, check func() bool) *
 			cube = cube.T
 		}
 		if cube == dd.One {
-			return dd.iteChecked(f, g, dd.LogicZero, check)
+			return dd.andChecked(f, g, check)
 		}
 		key := bddITEKey{f, g, cube}
 		if r := memo[key]; r != nil {
@@ -76,7 +76,7 @@ func (dd *DdManager) andAbstractChecked(f, g, cube *DdNode, check func() bool) *
 		}
 		var r *DdNode
 		if quantify {
-			r = dd.iteChecked(t, dd.One, e, check)
+			r = Cudd_Not(dd.andChecked(Cudd_Not(t), Cudd_Not(e), check))
 		} else {
 			r = dd.node(uint32(dd.InvPerm[top]), t, e)
 		}
