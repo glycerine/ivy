@@ -4,6 +4,8 @@ import (
 	"math"
 	"reflect"
 	"testing"
+
+	"github.com/glycerine/abcgo/bdd/epd"
 )
 
 func bddTruth(t *testing.T, dd *DdManager, n *DdNode, bits int) bool {
@@ -333,5 +335,24 @@ func TestExtendedMintermCountKeepsRareWideCube(t *testing.T) {
 	}
 	if count := Cudd_CountMinterm(dd, cube, width); count != 1 {
 		t.Fatalf("wide single assignment counted as %g", count)
+	}
+}
+
+func TestExtendedCountComplementsTheConfiguredBackground(t *testing.T) {
+	dd := NewBDDManager(1)
+	defer Cudd_Quit(dd)
+	Cudd_SetBackground(dd, dd.One)
+	for _, tc := range []struct {
+		n    *DdNode
+		want float64
+	}{{dd.One, 0}, {dd.LogicZero, 16}, {dd.Vars[0], 8}, {Cudd_Not(dd.Vars[0]), 8}} {
+		var value epd.EpDouble
+		status := Cudd_EpdCountMinterm(dd, tc.n, 4, &value)
+		if count := math.Ldexp(value.Value, value.Exponent); status != 0 || count != tc.want {
+			t.Errorf("edge %d extended count %g status %d, want %g", tc.n.ID, count, status, tc.want)
+		}
+		if ordinary := Cudd_CountMinterm(dd, tc.n, 4); ordinary != 0 {
+			t.Errorf("edge %d ordinary count %g, want zero with one as background", tc.n.ID, ordinary)
+		}
 	}
 }

@@ -3,6 +3,7 @@ package core
 import (
 	"errors"
 	"math/big"
+	"math/bits"
 	"strings"
 	"testing"
 )
@@ -98,5 +99,49 @@ func TestAPAExactMintermsBeyondFloatPrecision(t *testing.T) {
 	dd.Background = dd.One
 	if apaInteger(digits, Cudd_ApaCountMinterm(dd, dd.One, 200, &digits)).Sign() != 0 {
 		t.Fatal("background not honored")
+	}
+}
+
+func TestAPACountUsesConfiguredADDBackground(t *testing.T) {
+	dd := NewBDDManager(2)
+	defer Cudd_Quit(dd)
+	Cudd_SetBackground(dd, dd.PlusInfinity)
+	f := Cudd_addIte(dd, Cudd_addIthVar(dd, 1), dd.Zero, dd.PlusInfinity)
+	for _, tc := range []struct {
+		node *DdNode
+		want uint32
+	}{{dd.Zero, 16}, {dd.PlusInfinity, 0}, {f, 8}} {
+		var digits int
+		got := Cudd_ApaCountMinterm(dd, tc.node, 4, &digits)
+		if digits != 1 || len(got) != 1 || got[0] != tc.want {
+			t.Errorf("node %d count %v, want %d", tc.node.ID, got, tc.want)
+		}
+	}
+}
+
+func TestAPACompareIgnoresLeadingDigitsWithoutAllocating(t *testing.T) {
+	a := DdApaNumber{0, 0, 1, 7}
+	b := DdApaNumber{1, 7, 99}
+	if Cudd_ApaCompare(4, a, 2, b) != 0 || Cudd_ApaCompare(3, a, 2, b) >= 0 || Cudd_ApaCompare(2, b, 3, a) <= 0 || Cudd_ApaCompare(0, nil, 2, a) != 0 {
+		t.Fatal("comparison with unequal widths or leading zeros")
+	}
+	if n := testing.AllocsPerRun(20, func() { Cudd_ApaCompare(4, a, 2, b) }); n != 0 {
+		t.Fatalf("comparing digit slices allocated %g objects", n)
+	}
+}
+
+func TestAPAScaledCountsAcrossDigitBoundaries(t *testing.T) {
+	dd := NewBDDManager(3)
+	defer Cudd_Quit(dd)
+	for table := 0; table < 256; table++ {
+		root := bddFromTruth(dd, uint8(table), 3)
+		for _, width := range []int{3, 31, 32, 33, 63, 64, 65, 97, 511, 512, 513} {
+			var digits int
+			got := Cudd_ApaCountMinterm(dd, root, width, &digits)
+			want := new(big.Int).Lsh(big.NewInt(int64(bits.OnesCount8(uint8(table)))), uint(width-3))
+			if digits != (width+32)/32 || apaInteger(digits, got).Cmp(want) != 0 {
+				t.Fatalf("table %02x at width %d got %v, want %x", table, width, got, want)
+			}
+		}
 	}
 }

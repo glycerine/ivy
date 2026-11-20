@@ -1,6 +1,9 @@
 package core
 
-import "testing"
+import (
+	"slices"
+	"testing"
+)
 
 // Construct the row-major queens BDD in the same operation order as the C driver.
 func buildQueensBDD(side int) (*DdManager, *DdNode) {
@@ -79,5 +82,35 @@ func BenchmarkQueensCheckZeroRef(b *testing.B) {
 		if leaks := Cudd_CheckZeroRef(dd); leaks != 0 {
 			b.Fatalf("%d remaining external roots", leaks)
 		}
+	}
+}
+
+func BenchmarkQueensAPACount(b *testing.B) {
+	for _, tc := range []struct {
+		name                   string
+		side, width, solutions int
+	}{
+		{"FiveQueens", 5, 4121, 10},
+		{"SixQueensCrossDigit", 6, 4096, 4},
+	} {
+		b.Run(tc.name, func(b *testing.B) {
+			dd, root := buildQueensBDD(tc.side)
+			defer Cudd_Quit(dd)
+			defer Cudd_RecursiveDeref(dd, root)
+			want := make(DdApaNumber, Cudd_ApaNumberOfDigits(tc.width+1))
+			for n, power := tc.solutions, tc.width-tc.side*tc.side; n > 0; n, power = n>>1, power+1 {
+				if n&1 != 0 {
+					want[len(want)-1-power/32] |= 1 << (power % 32)
+				}
+			}
+			b.ReportAllocs()
+			for b.Loop() {
+				var digits int
+				got := Cudd_ApaCountMinterm(dd, root, tc.width, &digits)
+				if digits != len(want) || !slices.Equal(got, want) {
+					b.Fatal("incorrect exact count")
+				}
+			}
+		})
 	}
 }

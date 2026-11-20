@@ -971,10 +971,10 @@ func Cudd_CountMinterm(dd *DdManager, f *DdNode, nvars int) float64 {
 		return math.NaN()
 	}
 	if nvars > 1023 {
-		count := extendedMintermCount(dd, f, nvars)
+		count := extendedMintermCount(dd, f, nvars, dd.LogicZero)
 		return math.Ldexp(count.Value, count.Exponent)
 	}
-	return mintermCount(dd, f, math.Ldexp(1, nvars), func(a, b float64) float64 {
+	return mintermCount(dd, f, dd.LogicZero, math.Ldexp(1, nvars), func(a, b float64) float64 {
 		return 0.5*a + 0.5*b
 	})
 }
@@ -989,13 +989,19 @@ func Cudd_EpdCountMinterm(dd *DdManager, f *DdNode, nvars int, out *epd.EpDouble
 		*out = epd.EpDouble{}
 		return CUDD_OUT_OF_MEM
 	}
-	*out = extendedMintermCount(dd, f, nvars)
+	// The extended counter complements the regular terminal's weight. If
+	// One is the ADD background, its complemented edge carries full weight.
+	empty := dd.LogicZero
+	if dd.Background == dd.One {
+		empty = dd.One
+	}
+	*out = extendedMintermCount(dd, f, nvars, empty)
 	return 0
 }
 
-func extendedMintermCount(dd *DdManager, f *DdNode, nvars int) epd.EpDouble {
+func extendedMintermCount(dd *DdManager, f *DdNode, nvars int, empty *DdNode) epd.EpDouble {
 	unit := epd.EpDouble{Value: 1, Exponent: nvars}
-	value := mintermCount(dd, f, unit, func(a, b epd.EpDouble) epd.EpDouble {
+	value := mintermCount(dd, f, empty, unit, func(a, b epd.EpDouble) epd.EpDouble {
 		var sum epd.EpDouble
 		epd.EpdAdd3(&a, &b, &sum)
 		if sum.Value != 0 {
@@ -1012,14 +1018,14 @@ func extendedMintermCount(dd *DdManager, f *DdNode, nvars int) epd.EpDouble {
 
 // Each decision divides the weight between its cofactors. Propagating edge
 // polarity down both branches preserves sparse complemented cubes.
-func mintermCount[T any](dd *DdManager, f *DdNode, maximum T, mean func(T, T) T) T {
+func mintermCount[T any](dd *DdManager, f, empty *DdNode, maximum T, mean func(T, T) T) T {
 	memo := make(map[*DdNode]T)
 	var zero T
 	var visit func(*DdNode) T
 	visit = func(n *DdNode) T {
 		r := Cudd_Regular(n)
 		if r.Index == bddConstantIndex {
-			if n == dd.LogicZero || n == dd.Background {
+			if n == empty || n == dd.Background {
 				return zero
 			}
 			return maximum

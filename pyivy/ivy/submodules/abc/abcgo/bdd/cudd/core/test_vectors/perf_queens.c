@@ -57,7 +57,8 @@ static int queens(int side, int *nodes)
 int main(int argc, char **argv)
 {
     int check_refs = argc == 4 && strcmp(argv[3], "refs") == 0;
-    if (argc != 3 && !check_refs)
+    int count_apa = argc == 4 && strcmp(argv[3], "apa") == 0;
+    if (argc != 3 && !check_refs && !count_apa)
         return 1;
     int side = atoi(argv[1]), repeat = atoi(argv[2]);
     if (side < 1 || side > 8 || repeat < 1)
@@ -65,16 +66,42 @@ int main(int argc, char **argv)
     struct timespec start, end;
     int solutions = 0, nodes = 0;
     DdManager *dd = NULL;
-    if (check_refs) {
+    DdNode *root = NULL;
+    const int width = 4096 + side*side;
+    int digits = Cudd_ApaNumberOfDigits(width+1);
+    DdApaNumber expected = NULL;
+    if (check_refs || count_apa) {
         dd = Cudd_Init(side * side, 0, 256, 16384, 0);
-        DdNode *f = build_queens(dd, side);
-        Cudd_RecursiveDeref(dd, f);
+        root = build_queens(dd, side);
+        if (check_refs) {
+            Cudd_RecursiveDeref(dd, root);
+        } else {
+            solutions = (int) Cudd_CountMinterm(dd, root, side*side);
+            expected = Cudd_NewApaNumber(digits);
+            Cudd_ApaSetToLiteral(digits, expected, 0);
+            DdApaNumber power = Cudd_NewApaNumber(digits);
+            for (unsigned n = solutions, i = width-side*side; n; n >>= 1, i++) {
+                if (n & 1) {
+                    Cudd_ApaPowerOfTwo(digits, power, i);
+                    Cudd_ApaAdd(digits, expected, power, expected);
+                }
+            }
+            ABC_FREE(power);
+        }
     }
     clock_gettime(CLOCK_MONOTONIC, &start);
     for (int i = 0; i < repeat; i++) {
         if (check_refs) {
             if (Cudd_CheckZeroRef(dd) != 0)
                 return 2;
+        } else if (count_apa) {
+            int n;
+            DdApaNumber got = Cudd_ApaCountMinterm(dd, root, width, &n);
+            if (!got || Cudd_ApaCompare(n, got, digits, expected)) {
+                fprintf(stderr, "Native APA result disagrees with the %d-queen solution count at width %d\n", side, width);
+                return 2;
+            }
+            ABC_FREE(got);
         } else {
             solutions = queens(side, &nodes);
         }
@@ -83,6 +110,11 @@ int main(int argc, char **argv)
     double ms = 1e3*(end.tv_sec - start.tv_sec) + 1e-6*(end.tv_nsec-start.tv_nsec);
     if (check_refs) {
         printf("%d queens, zero leaked references, %.4f ms/check\n", side, ms/repeat);
+        Cudd_Quit(dd);
+    } else if (count_apa) {
+        printf("%d queens, %d solutions scaled to %d variables, %.4f ms/count\n", side, solutions, width, ms/repeat);
+        ABC_FREE(expected);
+        Cudd_RecursiveDeref(dd, root);
         Cudd_Quit(dd);
     } else {
         printf("%d queens, %d solutions, %d DAG nodes, %.4f ms/op\n", side, solutions, nodes, ms/repeat);

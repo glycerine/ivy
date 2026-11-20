@@ -73,10 +73,12 @@
 package core
 
 import (
+	"cmp"
 	"fmt"
 	"io"
 	"math/big"
 	"math/bits"
+	"slices"
 )
 
 // APA numbers retain CUDD's big-endian base-2^32 digit representation.
@@ -149,17 +151,18 @@ func apaInteger(digits int, number DdApaNumber) *big.Int {
 	}
 	return v
 }
-func apaDigits(v *big.Int, digits int) DdApaNumber {
-	out := make(DdApaNumber, digits)
-	work := new(big.Int).Set(v)
-	for i := digits - 1; i >= 0; i-- {
-		out[i] = uint32(work.Uint64())
-		work.Rsh(work, 32)
-	}
-	return out
-}
 func Cudd_ApaCompare(da int, a DdApaNumber, db int, b DdApaNumber) int {
-	return apaInteger(da, a).Cmp(apaInteger(db, b))
+	a, b = a[:da], b[:db]
+	for len(a) > 0 && a[0] == 0 {
+		a = a[1:]
+	}
+	for len(b) > 0 && b[0] == 0 {
+		b = b[1:]
+	}
+	if length := cmp.Compare(len(a), len(b)); length != 0 {
+		return length
+	}
+	return slices.Compare(a, b)
 }
 func Cudd_ApaCompareRatios(da int, a DdApaNumber, denA uint32, db int, b DdApaNumber, denB uint32) int {
 	if denA == 0 || denB == 0 {
@@ -200,36 +203,54 @@ func Cudd_ApaPrintExponential(w io.Writer, digits int, n DdApaNumber, precision 
 	return 1
 }
 func Cudd_ApaCountMinterm(dd *DdManager, node *DdNode, nvars int, digits *int) DdApaNumber {
-	if dd == nil || dd.closed || node == nil || node.manager != dd || Cudd_Regular(node).family == 1 || nvars < 0 || digits == nil {
+	if !(dd.valid(node) || dd.validAdd(node)) || nvars < 0 || digits == nil {
 		return nil
 	}
 	*digits = Cudd_ApaNumberOfDigits(nvars + 1)
-	maximum := new(big.Int).Lsh(big.NewInt(1), uint(nvars))
-	memo := map[*DdNode]*big.Int{}
-	var visit func(*DdNode) *big.Int
-	visit = func(n *DdNode) *big.Int {
-		if value := memo[n]; value != nil {
-			return new(big.Int).Set(value)
-		}
-		r := Cudd_Regular(n)
-		var value *big.Int
-		if Cudd_IsConstant(r) {
-			if r == dd.Zero || r == dd.Background {
-				value = new(big.Int)
-			} else {
-				value = new(big.Int).Set(maximum)
+	// Each decision along a path halves the terminal count at most once.
+	// Whole low digits that remain zero even on the longest path can be
+	// restored when returning the result.
+	skipped := max(0, nvars-len(dd.Vars)) / 32
+	width := *digits - skipped
+	maximum := Cudd_NewApaNumber(width)
+	Cudd_ApaPowerOfTwo(width, maximum, nvars-32*skipped)
+	zero := Cudd_NewApaNumber(width)
+	memo := make(map[*DdNode]DdApaNumber)
+	// Memoized values belong to regular nodes. Apply the complement to the
+	// else cofactor before averaging, and once more at a complemented root.
+	var visit func(*DdNode) DdApaNumber
+	visit = func(n *DdNode) DdApaNumber {
+		if Cudd_IsConstant(n) {
+			if n == dd.Background {
+				return zero
 			}
-		} else {
-			value = new(big.Int).Add(visit(r.T), visit(r.E))
-			value.Rsh(value, 1)
+			return maximum
 		}
-		if Cudd_IsComplement(n) {
-			value.Sub(maximum, value)
+		if value := memo[n]; value != nil {
+			return value
 		}
-		memo[n] = new(big.Int).Set(value)
+		t := visit(n.T)
+		e := visit(Cudd_Regular(n.E))
+		value := Cudd_NewApaNumber(width)
+		if Cudd_IsComplement(n.E) {
+			Cudd_ApaSubtract(width, maximum, e, value)
+			e = value
+		}
+		carry := Cudd_ApaAdd(width, t, e, value)
+		Cudd_ApaShiftRight(width, carry, value, value)
+		memo[n] = value
 		return value
 	}
-	return apaDigits(visit(node), *digits)
+	value := visit(Cudd_Regular(node))
+	if Cudd_IsComplement(node) {
+		Cudd_ApaSubtract(width, maximum, value, value)
+	}
+	if skipped > 0 {
+		scaled := Cudd_NewApaNumber(*digits)
+		copy(scaled, value)
+		return scaled
+	}
+	return value
 }
 func Cudd_ApaPrintMinterm(w io.Writer, dd *DdManager, node *DdNode, nvars int) int {
 	var digits int
