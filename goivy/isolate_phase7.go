@@ -178,34 +178,6 @@ func FollowDefinitionsRec(sym string, defs map[string]Expr, allSyms map[string]b
 	}
 }
 
-// CollectRelevantDestructors adds destructor symbols that are relevant to
-// the given symbol set. For each symbol whose sort has a range sort,
-// it collects the sort's destructors.
-// Corresponds to Python's collect_relevant_destructors (ivy_isolate.py lines 870-873).
-func CollectRelevantDestructors(mod *Module, syms map[string]bool) map[string]bool {
-	result := isolateCopyStringSet(syms)
-	memo := make(map[string]bool)
-	for sym := range syms {
-		// Look up the symbol in the signature to get its sort.
-		if mod.Sig == nil {
-			continue
-		}
-		entry, ok := mod.Sig.Symbols.Get2(sym)
-		if !ok {
-			continue
-		}
-		// If the sort has a range (i.e., is a FunctionSort), collect
-		// destructors for the range sort.
-		if fs, ok := entry.Sort.(*LogicFunctionSort); ok {
-			rngName := isolateSortToName(fs.Range())
-			if rngName != "" {
-				CollectSortDestructors(mod, rngName, result, memo)
-			}
-		}
-	}
-	return result
-}
-
 // SortOrder holds a sort ordering used by the cone-of-influence computation.
 // Corresponds to Python's sort_order concept in ivy_isolate.py.
 type SortOrder struct {
