@@ -83,3 +83,22 @@ func TestInternalRestartRetainsActivityCone(t *testing.T) {
 		}
 	}
 }
+
+func TestSmallSolverCapacityTracksVariables(t *testing.T) {
+	s := NewSolver()
+	defer s.Close()
+	s.SetNumVars(42)
+	if s.cap > 2*s.size || cap(s.wlists) > 4*int(s.size) {
+		t.Fatalf("%d variables allocated space for %d variables and %d watch lists", s.size, s.cap, cap(s.wlists))
+	}
+	s.AddClause(Positive(0))
+	s.AddClause(Negative(0), Positive(41))
+	for i := int32(42); i < 1000; i++ {
+		if s.NewVariable() != i {
+			t.Fatalf("variable ID changed during growth at %d", i)
+		}
+	}
+	if s.Solve(Negative(41)) != Unsatisfiable || s.Solve(Positive(999)) != Satisfiable {
+		t.Fatal("growing variable arrays lost earlier clauses or the upper-bound variable")
+	}
+}

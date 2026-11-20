@@ -49,16 +49,8 @@ func sat_solver_setnvars(s *sat_solver, n int32) {
 		return
 	}
 	if s.cap < n {
-		for s.cap < n {
-			next := int64(s.cap)*2 + 1
-			if next > 0x40000000 {
-				next = 0x40000000
-			}
-			s.cap = int32(next)
-		}
-		if s.cap < 50000 {
-			s.cap = 50000
-		}
+		next := max(8, 2*int64(s.cap)+1)
+		s.cap = max(n, int32(min(next, 1<<30)))
 	}
 	length, capacity := int(n), int(s.cap)
 	s.wlists = satResize(s.wlists, 2*length, 2*capacity)
