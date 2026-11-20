@@ -131,3 +131,83 @@ func TestBDDAndSharesCommutativeCacheEntry(t *testing.T) {
 		t.Fatalf("swapped AND and De Morgan OR needed %d lookups and %d hits, want two each", dd.cacheLookups-lookups, dd.cacheHits-hits)
 	}
 }
+
+func TestAndCacheGatingCountsProjectionPins(t *testing.T) {
+	for _, external := range []bool{false, true} {
+		dd := NewBDDManager(2)
+		x, y := dd.Vars[0], dd.Vars[1]
+		if external {
+			Cudd_Ref(x)
+			Cudd_Ref(y)
+		}
+		for i := range 3 {
+			lookups, hits := dd.cacheLookups, dd.cacheHits
+			root := Cudd_bddAnd(dd, x, y)
+			Cudd_Ref(root)
+			var wantLookups, wantHits uint64
+			if external {
+				wantLookups = 1
+				if i != 0 {
+					wantHits = 1
+				}
+			}
+			if dd.cacheLookups-lookups != wantLookups || dd.cacheHits-hits != wantHits {
+				t.Errorf("external=%v call %d got lookups/hits %d/%d, want %d/%d", external, i, dd.cacheLookups-lookups, dd.cacheHits-hits, wantLookups, wantHits)
+			}
+			Cudd_RecursiveDeref(dd, root)
+			x, y = y, x
+		}
+		Cudd_Quit(dd)
+	}
+}
+
+func TestComputedRecordsAcrossIndexGrowthFlushAndResize(t *testing.T) {
+	dd := Cudd_Init(0, 0, 8, 1024, 0)
+	defer Cudd_Quit(dd)
+	Cudd_SetMaxCache(dd, 1)
+	operations := make([]uintptr, 0, 160)
+	distinct := map[uint32]bool{}
+	for op := uintptr(1); len(operations) < cap(operations); op++ {
+		k := computedKey{f: dd.One, g: dd.Zero, op: op}
+		slot := k.hash() >> dd.computed.shift
+		if distinct[slot] {
+			continue
+		}
+		distinct[slot] = true
+		operations = append(operations, op)
+		Cudd_CacheInsert(dd, op, dd.One, dd.Zero, nil, dd.PlusInfinity, 0)
+		if len(operations) == 4 && dd.computed.index != nil {
+			t.Fatal("four records allocated a full index")
+		}
+	}
+	if dd.computed.index == nil || dd.computed.sparse != nil || Cudd_CacheSize(dd) != len(operations) {
+		t.Fatal("index growth lost occupied slots")
+	}
+	for _, op := range operations {
+		if Cudd_CacheLookup(dd, op, dd.One, dd.Zero, nil, 0) != dd.PlusInfinity {
+			t.Fatalf("lookup failed after index growth for operation %d", op)
+		}
+	}
+	Cudd_CacheFlush(dd)
+	if Cudd_ReadCacheUsedSlots(dd) != float64(len(operations))/1024 || Cudd_CacheSize(dd) != 0 {
+		t.Fatal("flush lost occupied slot counts")
+	}
+	for e := range dd.computed.records {
+		if *e != (computedEntry{}) {
+			t.Fatal("flush retained a diagram reference")
+		}
+	}
+	for _, op := range operations[:35] {
+		Cudd_CacheInsert(dd, op, dd.One, dd.Zero, nil, dd.MinusInfinity, 0)
+	}
+	Cudd_ResizeCache(dd)
+	if Cudd_ReadCacheSlots(dd) != 2048 || Cudd_ReadCacheUsedSlots(dd) != 35.0/2048 || Cudd_CacheSize(dd) != 35 {
+		t.Fatal("resize retained invalidated records or lost surviving records")
+	}
+	for i, op := range operations {
+		got := Cudd_CacheLookup(dd, op, dd.One, dd.Zero, nil, 0)
+		if i < 35 && got != dd.MinusInfinity || i >= 35 && got != nil {
+			t.Fatalf("wrong result for operation %d after resizing", op)
+		}
+	}
+}

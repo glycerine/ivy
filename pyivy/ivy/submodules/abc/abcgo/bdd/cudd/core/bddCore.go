@@ -22,8 +22,9 @@ type DdNode struct {
 	Value            float64
 	ID               uint64
 	manager          *DdManager
-	regular, inverse *DdNode
+	inverse          *DdNode
 	family           uint8
+	complemented     bool
 	childrenReleased bool
 	inBDDTable       bool // BDD/ADD unique table or constant table
 }
@@ -345,12 +346,12 @@ func Cudd_Regular(n *DdNode) *DdNode {
 	if n == nil {
 		return nil
 	}
-	if n.regular != nil {
-		return n.regular
+	if n.complemented {
+		return n.inverse
 	}
 	return n
 }
-func Cudd_IsComplement(n *DdNode) bool { return n != nil && n.regular != nil }
+func Cudd_IsComplement(n *DdNode) bool { return n != nil && n.complemented }
 func Cudd_Not(n *DdNode) *DdNode {
 	if n == nil {
 		return nil
@@ -560,7 +561,7 @@ func (dd *DdManager) newNodePair(index uint32) *DdNode {
 	pair := new([2]DdNode)
 	n, inverse := &pair[0], &pair[1]
 	*n = DdNode{Index: index, ID: dd.nextID, manager: dd, inverse: inverse}
-	*inverse = DdNode{Index: index, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
+	*inverse = DdNode{Index: index, ID: dd.nextID + 1, manager: dd, complemented: true, inverse: n}
 	dd.nextID += 2
 	return n
 }

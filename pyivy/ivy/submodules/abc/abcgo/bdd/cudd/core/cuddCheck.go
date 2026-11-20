@@ -32,7 +32,23 @@ func Cudd_CheckConsistency(dd *DdManager) error {
 	if err := checkUniqueTable(dd, &dd.zddUnique, dd.PermZ, "ZDD"); err != nil {
 		return err
 	}
+	for _, n := range dd.constants {
+		if n == nil || n.manager != dd || !Cudd_IsConstant(n) || !validCanonicalPair(n) {
+			return fmt.Errorf("constant table contains an invalid terminal or complemented handle")
+		}
+	}
 	return nil
+}
+
+func validCanonicalPair(n *DdNode) bool {
+	if n.complemented {
+		return false
+	}
+	p := n.inverse
+	if p == nil {
+		return n.family != 0
+	}
+	return p.complemented && p.inverse == n && p.manager == n.manager
 }
 
 func checkUniqueTable(dd *DdManager, table *uniqueTable, permutation []int, family string) error {
@@ -46,10 +62,8 @@ func checkUniqueTable(dd *DdManager, table *uniqueTable, permutation []int, fami
 		if node.T == nil || node.E == nil || node.T.manager != dd || node.E.manager != dd {
 			return fmt.Errorf("%s node %d has invalid children", family, node.ID)
 		}
-		if node.regular != nil {
-			if node.regular.inverse != node || node.inverse != node.regular || node.regular.regular != nil {
-				return fmt.Errorf("node %d has inconsistent complemented-edge pair", node.ID)
-			}
+		if !validCanonicalPair(node) {
+			return fmt.Errorf("node %d has inconsistent complemented-edge pair", node.ID)
 		}
 		if int(node.Index) < len(permutation) {
 			parentLevel := permutation[node.Index]

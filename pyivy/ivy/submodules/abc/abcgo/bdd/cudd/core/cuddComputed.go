@@ -23,11 +23,110 @@ type computedEntry struct {
 }
 
 type computedTable struct {
-	slots                 map[uint32]computedEntry
+	computedSlots
 	shift                 uint
 	valid                 int
 	baseHits, baseLookups uint64
 	missOffset            float64
+}
+
+const cacheBlockSize = 64
+
+type computedBlock [cacheBlockSize]computedEntry
+
+// Entries stay packed as the number of occupied slots grows. Small caches
+// use a sparse slot index; fuller caches can address the same entries directly.
+type computedSlots struct {
+	sparse map[uint32]uint32
+	index  []uint32
+	first  [4]computedEntry
+	blocks []*computedBlock
+	used   int
+}
+
+func (s *computedSlots) position(slot uint32) uint32 {
+	if s.index != nil {
+		return s.index[slot]
+	}
+	return s.sparse[slot]
+}
+
+func (s *computedSlots) record(pos uint32) *computedEntry {
+	i := pos - 1
+	if i < uint32(len(s.first)) {
+		return &s.first[i]
+	}
+	i -= uint32(len(s.first))
+	return &s.blocks[i/cacheBlockSize][i%cacheBlockSize]
+}
+
+func (s *computedSlots) read(slot uint32) computedEntry {
+	if p := s.position(slot); p != 0 {
+		return *s.record(p)
+	}
+	return computedEntry{}
+}
+
+func (s *computedSlots) prepare(size uint32, expected int) {
+	if s.index != nil {
+		return
+	}
+	if expected >= 64 && uint64(expected)*16 >= uint64(size) {
+		s.index = make([]uint32, size)
+		for slot, pos := range s.sparse {
+			s.index[slot] = pos
+		}
+		s.sparse = nil
+	} else if s.sparse == nil {
+		s.sparse = make(map[uint32]uint32, expected)
+	}
+}
+
+// write returns true if the slot already held a valid result.
+func (s *computedSlots) write(slot uint32, e computedEntry) bool {
+	pos := s.position(slot)
+	if pos == 0 {
+		pos = uint32(s.used + 1)
+		if s.index != nil {
+			s.index[slot] = pos
+		} else {
+			s.sparse[slot] = pos
+		}
+		if i := s.used - len(s.first); i >= 0 && i%cacheBlockSize == 0 {
+			s.blocks = append(s.blocks, new(computedBlock))
+		}
+		s.used++
+	}
+	r := s.record(pos)
+	valid := r.result != nil
+	*r = e
+	return valid
+}
+
+func (s *computedSlots) records(yield func(*computedEntry) bool) {
+	for i := 0; i < min(s.used, len(s.first)); i++ {
+		if !yield(&s.first[i]) {
+			return
+		}
+	}
+	for _, block := range s.blocks {
+		for i := range block {
+			if !yield(&block[i]) {
+				return
+			}
+		}
+	}
+}
+
+func (s *computedSlots) invalidate(drop func(computedEntry) bool) int {
+	removed := 0
+	for e := range s.records {
+		if e.result != nil && (drop == nil || drop(*e)) {
+			*e = computedEntry{}
+			removed++
+		}
+	}
+	return removed
 }
 
 func (k computedKey) hash() uint32 {
@@ -80,13 +179,13 @@ func Cudd_ResizeCache(dd *DdManager) {
 	dd.cacheSlack -= int32(dd.cacheSlots)
 	dd.resetCacheWindow()
 	t := &dd.computed
-	old := t.slots
-	t.slots = nil
+	old := t.computedSlots
+	t.computedSlots = computedSlots{}
 	if t.valid != 0 {
-		t.slots = make(map[uint32]computedEntry, t.valid)
-		for _, e := range old {
+		t.prepare(dd.cacheSlots, t.valid)
+		for e := range old.records {
 			if e.result != nil {
-				t.slots[e.key.hash()>>t.shift] = e
+				t.write(e.key.hash()>>t.shift, *e)
 			}
 		}
 	}
@@ -95,7 +194,7 @@ func Cudd_ResizeCache(dd *DdManager) {
 func (dd *DdManager) cacheLookup(key computedKey, hash uint32, reclaim bool) *DdNode {
 	t := &dd.computed
 	dd.cacheLookups++
-	entry := t.slots[hash>>t.shift]
+	entry := t.read(hash >> t.shift)
 	if entry.result != nil && entry.key == key {
 		dd.cacheHits++
 		if reclaim {
@@ -115,14 +214,10 @@ func (dd *DdManager) cacheLookup(key computedKey, hash uint32, reclaim bool) *Dd
 
 func (dd *DdManager) cacheInsert(key computedKey, result *DdNode, hash uint32) {
 	t := &dd.computed
-	if t.slots == nil {
-		t.slots = make(map[uint32]computedEntry)
-	}
-	slot := hash >> t.shift
-	if t.slots[slot].result == nil {
+	t.prepare(dd.cacheSlots, t.used+1)
+	if !t.write(hash>>t.shift, computedEntry{key, result}) {
 		t.valid++
 	}
-	t.slots[slot] = computedEntry{key, result}
 }
 
 // The lookup family selects whether to revive children. All callers use the
@@ -147,9 +242,7 @@ func Cudd_CacheInsert(dd *DdManager, operation uintptr, f, g, h, result *DdNode,
 // Sparse slot indices retain this statistic without retaining node handles.
 func Cudd_CacheFlush(dd *DdManager) {
 	if dd != nil && dd.computed.valid != 0 {
-		for slot := range dd.computed.slots {
-			dd.computed.slots[slot] = computedEntry{}
-		}
+		dd.computed.invalidate(nil)
 		dd.computed.valid = 0
 	}
 }

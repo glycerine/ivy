@@ -84,13 +84,10 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	dd.garbageCollections++
 	if clearCache {
 		live := func(n *DdNode) bool { return n == nil || marked[Cudd_Regular(n)] }
-		for slot, entry := range dd.computed.slots {
+		dd.computed.valid -= dd.computed.invalidate(func(entry computedEntry) bool {
 			key := entry.key
-			if entry.result != nil && (!live(key.f) || !live(key.g) || !live(key.h) || !live(entry.result)) {
-				dd.computed.slots[slot] = computedEntry{}
-				dd.computed.valid--
-			}
-		}
+			return !live(key.f) || !live(key.g) || !live(key.h) || !live(entry.result)
+		})
 	}
 	dd.gcTime += uint64(time.Since(started).Nanoseconds())
 	if !dd.runHooks(CUDD_POST_GC_HOOK, "DD", nil) {

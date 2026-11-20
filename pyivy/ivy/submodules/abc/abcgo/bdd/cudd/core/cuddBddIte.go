@@ -196,6 +196,18 @@ func Cudd_bddIntersect(dd *DdManager, f, g *DdNode) *DdNode {
 func cuddBddIteRecur(dd *DdManager, f, g, h *DdNode) *DdNode { return Cudd_bddIte(dd, f, g, h) }
 func cuddBddAndRecur(dd *DdManager, f, g *DdNode) *DdNode    { return dd.andChecked(f, g, nil) }
 
+// The projection's implicit manager pin contributes one native reference.
+// AND calls this only for regular BDD decisions.
+func (dd *DdManager) singleBDDRef(n *DdNode) bool {
+	if n.Ref > 1 {
+		return false
+	}
+	if n == dd.Vars[n.Index] {
+		return n.Ref == 0
+	}
+	return n.Ref == 1
+}
+
 // Use the CUDD two-operand recursion for conjunction and its De Morgan dual.
 // A nil third operand distinguishes its computed entries from general ITEs.
 func (dd *DdManager) andChecked(f, g *DdNode, check func() bool) *DdNode {
@@ -217,7 +229,7 @@ func (dd *DdManager) andChecked(f, g *DdNode, check func() bool) *DdNode {
 	}
 	key := computedKey{f: f, g: g, kind: cacheBDDAnd}
 	hash := key.hash()
-	if fr.Ref != 1 || gr.Ref != 1 {
+	if !dd.singleBDDRef(fr) || !dd.singleBDDRef(gr) {
 		if r := dd.cacheLookup(key, hash, true); r != nil {
 			return r
 		}
@@ -248,7 +260,7 @@ func (dd *DdManager) andChecked(f, g *DdNode, check func() bool) *DdNode {
 		return nil
 	}
 	r := dd.node(index, t, e)
-	if fr.Ref != 1 || gr.Ref != 1 {
+	if !dd.singleBDDRef(fr) || !dd.singleBDDRef(gr) {
 		dd.cacheInsert(key, r, hash)
 	}
 	return r

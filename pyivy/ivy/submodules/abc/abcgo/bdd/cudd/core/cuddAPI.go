@@ -126,7 +126,7 @@ func Cudd_ReadCacheUsedSlots(dd *DdManager) float64 {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	return float64(len(dd.computed.slots)) / float64(dd.cacheSlots)
+	return float64(dd.computed.used) / float64(dd.cacheSlots)
 }
 func Cudd_ReadCacheLookUps(dd *DdManager) float64 {
 	if dd == nil || dd.closed {
@@ -272,7 +272,7 @@ func Cudd_ReadMemoryInUse(dd *DdManager) uint64 {
 		return 0
 	}
 	// Go cannot report per-manager allocations; estimate this graph inventory.
-	return uint64(dd.storedNodes())*96 + uint64(len(dd.computed.slots))*48 + dd.linearMemory
+	return uint64(dd.storedNodes())*96 + uint64(dd.computed.used)*48 + dd.linearMemory
 }
 func Cudd_ReadPeakNodeCount(dd *DdManager) uint64 {
 	if dd == nil || dd.closed {
