@@ -146,7 +146,8 @@ func makeMixinName(cfg *AstConfig, atom *Atom, suffix string) *Atom {
 	xtracer.Trace("parser.make_mixin_name ENTER")
 	cfg.LabelCounter++
 	rep := strings.ReplaceAll(atom.Rep, ".", "_")
-	return cfg.NewAtom(fmt.Sprintf("%s[%s%d]", rep, suffix, cfg.LabelCounter))
+	// Python: atom.rename(...) -- keeps the atom's args and lineno.
+	return atom.Rename(fmt.Sprintf("%s[%s%d]", rep, suffix, cfg.LabelCounter))
 }
 
 // makeMixinNameV16 matches Python's Ivy <=1.6 deterministic scenario mixin names.
@@ -173,7 +174,11 @@ func handleMixin(cfg *AstConfig, kind string, mixer *Atom, mixee *Atom, ivy *ivy
 	default:
 		m = cfg.NewMixinBeforeDef(mixer, mixee)
 	}
-	ivy.declare(cfg.NewMixinDecl(m))
+	// Python: m.lineno = mixer.lineno; d.lineno = mixer.lineno
+	m.SetLineno(mixer.GetLineno())
+	d := cfg.NewMixinDecl(m)
+	d.SetLineno(mixer.GetLineno())
+	ivy.declare(d)
 }
 
 // stackActionLookup searches the accumulator stack for an action definition.
