@@ -264,6 +264,7 @@ func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
 		dd.bddTableSlots = append(dd.bddTableSlots[:level], dd.bddTableSlots[level+1:]...)
 	}
 	dd.Vars = dd.Vars[:first]
+	dd.discardInteractionsAfterSize(first)
 	order := make([]int, 0, first)
 	for _, index := range dd.InvPerm {
 		if index < first {

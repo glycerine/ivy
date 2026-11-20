@@ -166,3 +166,19 @@ func (table *uniqueTable) entries(yield func(bddUniqueKey, *DdNode) bool) {
 		}
 	}
 }
+
+// forLevel visits the resident keys of one variable in its Go probe table.
+func (table *uniqueTable) forLevel(index int, visit func(uniqueEntry)) {
+	if index >= len(table.levels) {
+		return
+	}
+	l := &table.levels[index]
+	if l.first.node != nil {
+		visit(l.first)
+	}
+	for _, r := range l.slots {
+		if r.node != nil {
+			visit(r)
+		}
+	}
+}

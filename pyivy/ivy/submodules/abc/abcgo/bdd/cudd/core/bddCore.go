@@ -27,6 +27,7 @@ type DdNode struct {
 	complemented     bool
 	childrenReleased bool
 	inBDDTable       bool // BDD/ADD unique table or constant table
+	interactionMark  uint8
 }
 type bddUniqueKey struct {
 	index uint32
@@ -238,74 +239,6 @@ func Cudd_ReadErrorCode(dd *DdManager) Cudd_ErrorType {
 func Cudd_ClearErrorCode(dd *DdManager) {
 	if dd != nil {
 		dd.errorCode = CUDD_NO_ERROR
-	}
-}
-
-// Cudd_SetInteraction and Cudd_TestInteraction maintain the symmetric
-// variable interaction relation used by adjacent-swap reordering.
-func Cudd_SetInteraction(dd *DdManager, x, y int) {
-	if dd == nil || x == y || x < 0 || y < 0 || x >= len(dd.Vars) || y >= len(dd.Vars) {
-		return
-	}
-	if x > y {
-		x, y = y, x
-	}
-	index := ((2*len(dd.Vars)-x-3)*x)/2 + y - 1
-	if index < 0 {
-		return
-	}
-	word, bit := index/64, uint(index%64)
-	if word >= len(dd.interact) {
-		dd.interact = append(dd.interact, make([]uint64, word+1-len(dd.interact))...)
-	}
-	dd.interact[word] |= uint64(1) << bit
-}
-
-func Cudd_TestInteraction(dd *DdManager, x, y int) bool {
-	if dd == nil || x == y || x < 0 || y < 0 || x >= len(dd.Vars) || y >= len(dd.Vars) {
-		return false
-	}
-	if x > y {
-		x, y = y, x
-	}
-	index := ((2*len(dd.Vars)-x-3)*x)/2 + y - 1
-	word, bit := index/64, uint(index%64)
-	return word >= 0 && word < len(dd.interact) && dd.interact[word]&(uint64(1)<<bit) != 0
-}
-
-// Cudd_ComputeInteractions rebuilds the interaction relation from the
-// support of every canonical BDD node. Including unreferenced canonical
-// nodes can add harmless extra interactions, but cannot omit a dependency;
-// the reorderer only uses this relation to skip independent swaps.
-func Cudd_ComputeInteractions(dd *DdManager) {
-	if dd == nil {
-		return
-	}
-	dd.interact = nil
-	for _, root := range dd.unique.entries {
-		seen := make(map[*DdNode]bool)
-		support := make(map[int]bool)
-		var visit func(*DdNode)
-		visit = func(n *DdNode) {
-			n = Cudd_Regular(n)
-			if n == nil || Cudd_IsConstant(n) || seen[n] {
-				return
-			}
-			seen[n] = true
-			support[int(n.Index)] = true
-			visit(n.T)
-			visit(n.E)
-		}
-		visit(root)
-		indices := make([]int, 0, len(support))
-		for i := range support {
-			indices = append(indices, i)
-		}
-		for i := 0; i < len(indices); i++ {
-			for j := i + 1; j < len(indices); j++ {
-				Cudd_SetInteraction(dd, indices[i], indices[j])
-			}
-		}
 	}
 }
 
