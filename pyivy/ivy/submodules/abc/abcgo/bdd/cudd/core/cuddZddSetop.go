@@ -116,6 +116,10 @@ func (dd *DdManager) ensureZddVar(index int) bool {
 	if index < dd.ZddSize {
 		return true
 	}
+	if !dd.ensureTableSlots(true, index+1) {
+		return false
+	}
+	Cudd_FixTableLimits(dd)
 	for i := dd.ZddSize; i <= index; i++ {
 		dd.PermZ = append(dd.PermZ, i)
 		dd.InvPermZ = append(dd.InvPermZ, i)

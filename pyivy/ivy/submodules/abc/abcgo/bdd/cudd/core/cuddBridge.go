@@ -112,22 +112,10 @@ func Cudd_addBddPattern(dd *DdManager, f *DdNode) *DdNode {
 // Cudd_bddNewVarAtLevel inserts a fresh projection without changing the
 // relative order of existing variables or rebuilding any existing diagrams.
 func Cudd_bddNewVarAtLevel(dd *DdManager, level int) *DdNode {
-	if dd == nil || level < 0 || level > len(dd.Vars) {
+	if !Cudd_InsertBDDSubtables(dd, 1, level) {
 		return nil
 	}
-	v := Cudd_bddNewVar(dd)
-	if v == nil {
-		return nil
-	}
-	order := append([]int(nil), dd.InvPerm...)
-	copy(order[level+1:], order[level:len(order)-1])
-	order[level] = int(v.Index)
-	copy(dd.InvPerm, order)
-	for level, index := range order {
-		dd.Perm[index] = level
-	}
-	dd.symmetryGroups = nil
-	return v
+	return dd.Vars[len(dd.Vars)-1]
 }
 
 // addToBoolean maps numeric leaves while preserving the ADD's shared graph.

@@ -124,23 +124,11 @@ func Cudd_addNewVar(dd *DdManager) *DdNode {
 // Existing ADD/BDD/ZDD functions remain valid because their node order follows
 // the manager permutation, which is updated by inserting only the new index.
 func Cudd_addNewVarAtLevel(dd *DdManager, level int) *DdNode {
-	if dd == nil || dd.closed || level < 0 || level > len(dd.Vars) {
+	v := Cudd_bddNewVarAtLevel(dd, level)
+	if v == nil {
 		return nil
 	}
-	v := Cudd_addNewVar(dd)
-	if v == nil || level == len(dd.Vars)-1 {
-		return v
-	}
-	order := append([]int(nil), dd.InvPerm...)
-	index := int(v.Index)
-	copy(order[level+1:], order[level:len(order)-1])
-	order[level] = index
-	for newLevel, variable := range order {
-		dd.InvPerm[newLevel] = variable
-		dd.Perm[variable] = newLevel
-	}
-	dd.symmetryGroups = nil
-	return v
+	return dd.addNode(v.Index, dd.One, dd.Zero)
 }
 func (dd *DdManager) addCofactors(n *DdNode, level int) (*DdNode, *DdNode) {
 	if dd.level(n) == level {

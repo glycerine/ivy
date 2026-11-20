@@ -164,7 +164,7 @@ func Cudd_ReadLooseUpTo(dd *DdManager) uint32 {
 func Cudd_SetLooseUpTo(dd *DdManager, looseUpTo uint32) {
 	if dd != nil && !dd.closed {
 		if looseUpTo == 0 {
-			looseUpTo = Cudd_ReadSlots(dd) * DD_MAX_LOOSE_FRACTION
+			looseUpTo = defaultDataLimit / (nativeNodeBytes * DD_MAX_LOOSE_FRACTION)
 		}
 		dd.looseUpTo = looseUpTo
 	}
@@ -173,7 +173,7 @@ func Cudd_ReadMaxCache(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	return dd.maxCache
+	return 2*dd.cacheSlots + uint32(dd.cacheSlack)
 }
 func Cudd_ReadMaxCacheHard(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
@@ -184,14 +184,14 @@ func Cudd_ReadMaxCacheHard(dd *DdManager) uint32 {
 func Cudd_SetMaxCacheHard(dd *DdManager, size uint32) {
 	if dd != nil && !dd.closed {
 		if size == 0 {
-			size = Cudd_ReadSlots(dd) * DD_MAX_CACHE_FRACTION
+			size = defaultDataLimit / (nativeCacheBytes * DD_MAX_CACHE_FRACTION)
 		}
 		dd.maxCacheHard = size
 	}
 }
 func Cudd_SetMaxCache(dd *DdManager, size uint32) {
 	if dd != nil && !dd.closed {
-		dd.maxCache = size
+		dd.cacheSlack = int32(size - 2*dd.cacheSlots)
 	}
 }
 func Cudd_ReadMaxGrowthAlternate(dd *DdManager) float64 {

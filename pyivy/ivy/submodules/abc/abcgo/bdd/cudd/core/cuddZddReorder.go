@@ -179,6 +179,12 @@ func reorderZdd(dd *DdManager, size int, permutation, inverse []int) bool {
 			}
 		}
 	}
+	if size > len(dd.zddTableSlots) {
+		if !dd.ensureTableSlots(true, size) {
+			return false
+		}
+		Cudd_FixTableLimits(dd)
+	}
 	newNodes := make([]*DdNode, 0, len(scratch.zddUnique))
 	for _, node := range scratch.zddUnique {
 		newNodes = append(newNodes, node)

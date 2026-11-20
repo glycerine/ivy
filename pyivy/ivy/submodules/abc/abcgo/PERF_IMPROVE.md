@@ -293,3 +293,9 @@ Checking external ownership after releasing the six-queen root scanned every can
 Three checks averaged 1.084 s each before the change. Afterward, 3,000 checks averaged 223 µs with zero allocated bytes on the released graph. Native averaged 49.6 µs in 6,000 checks. Both returned zero outstanding roots. The native queens driver accepts a final refs argument to time the check on a single constructed and released graph.
 
 A regular handle and its complement now share one Go allocation. The allocation regression originally measured 1,085 allocations to create 512 projection pairs. The full queens build now uses 10,159 allocations and 3.10 MB, down from 20,158 and 3.26 MB. Its 6.08 ms runtime was close to the previous 5.95 ms measurement. All 13 BDD packages passed under the race detector.
+
+### Honor CUDD table sizes and memory hints
+
+Four native initialization cases exposed fixed defaults in the Go constructor. With three BDD and two ZDD variables, a unique-table request of nine and a cache request of 70, C reports 96 unique slots and 64 cache slots. Go reported 1,536 and 262,144. The constructors now round the unique subtable size up and the computed cache size down using the native minimums. A 1 MiB memory hint yields a hard cache threshold of 8,738 entries and a loose unique-table threshold of 5,242 on the 64-bit build. Resetting either threshold uses ABC's default 64 MiB data limit.
+
+Tests also reproduced wrong slot counts when growing variables through the public APIs. Inserting a BDD or ADD variable at the top now moves the previous levels' capacities along with their variables. Aligning six ZDD variables updates the inventory to 160 slots. Growing an empty eight-slot unique table to ten variables doubles the cache once, to eight slots. Both growth cases were compared with native CUDD. All 13 BDD packages and misc/extra passed their race suites in the sizing run.

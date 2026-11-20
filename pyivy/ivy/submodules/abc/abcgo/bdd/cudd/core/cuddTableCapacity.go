@@ -130,36 +130,23 @@ func Cudd_InsertBDDSubtables(dd *DdManager, count, level int) bool {
 		return false
 	}
 	oldSize := len(dd.Vars)
-	if !dd.ensureTableSlots(false, oldSize) || uint64(oldSize)+uint64(count) >= uint64(CUDD_MAXINDEX) {
+	if uint64(oldSize)+uint64(count) >= uint64(CUDD_MAXINDEX) || !dd.ensureTableSlots(false, oldSize+count) {
 		return false
 	}
-	oldOrder := append([]int(nil), dd.InvPerm...)
-	newIndices := make([]int, count)
-	for i := 0; i < count; i++ {
-		newIndex := len(dd.Vars)
-		if Cudd_bddNewVar(dd) == nil {
-			return false
-		}
-		newIndices[i] = newIndex
+	if Cudd_bddIthVar(dd, oldSize+count-1) == nil {
+		return false
 	}
-	order := make([]int, 0, oldSize+count)
-	order = append(order, oldOrder[:level]...)
-	order = append(order, newIndices...)
-	order = append(order, oldOrder[level:]...)
-	dd.InvPerm = order
-	dd.Perm = make([]int, len(order))
-	for newLevel, index := range order {
-		dd.Perm[index] = newLevel
+	// Move the old suffix down as a unit, preserving its per-level capacities.
+	copy(dd.InvPerm[level+count:], dd.InvPerm[level:oldSize])
+	copy(dd.bddTableSlots[level+count:], dd.bddTableSlots[level:oldSize])
+	for i := range count {
+		dd.InvPerm[level+i] = oldSize + i
+		dd.bddTableSlots[level+i] = dd.initSlots
 	}
-	newSlots := make([]uint32, 0, len(dd.bddTableSlots)+count)
-	newSlots = append(newSlots, dd.bddTableSlots[:level]...)
-	for i := 0; i < count; i++ {
-		newSlots = append(newSlots, dd.initSlots)
+	for l := level; l < len(dd.InvPerm); l++ {
+		dd.Perm[dd.InvPerm[l]] = l
 	}
-	newSlots = append(newSlots, dd.bddTableSlots[level:]...)
-	dd.bddTableSlots = newSlots
-	dd.tableBDDSize = uint32(len(newSlots))
-	dd.slotCount += uint32(count) * dd.initSlots
+	dd.symmetryGroups = nil
 	if dd.Tree != nil {
 		dd.Tree.Size += uint32(count)
 		if len(dd.InvPerm) != 0 {
@@ -264,11 +251,7 @@ func Cudd_ResizeZddTable(dd *DdManager, index int) bool {
 	if dd == nil || dd.closed || index < 0 || index >= int(CUDD_MAXINDEX) {
 		return false
 	}
-	if !dd.ensureZddVar(index) || !dd.ensureTableSlots(true, index+1) {
-		return false
-	}
-	Cudd_FixTableLimits(dd)
-	return true
+	return dd.ensureZddVar(index)
 }
 
 // Cudd_ResizeBDDTable grows capacity up to index while retaining active size.
@@ -276,11 +259,7 @@ func Cudd_ResizeBDDTable(dd *DdManager, index int) bool {
 	if dd == nil || dd.closed || index < 0 || index >= int(CUDD_MAXINDEX) {
 		return false
 	}
-	if Cudd_bddIthVar(dd, index) == nil || !dd.ensureTableSlots(false, index+1) {
-		return false
-	}
-	Cudd_FixTableLimits(dd)
-	return true
+	return Cudd_bddIthVar(dd, index) != nil
 }
 
 // Cudd_SlowTableGrowth raises density thresholds after memory pressure so the
@@ -331,12 +310,14 @@ func Cudd_FixTableLimits(dd *DdManager) {
 		dd.gcFraction = DD_GC_FRAC_HI
 	}
 	dd.minDead = uint32(dd.gcFraction * float64(dd.slotCount))
-	cacheLimit := uint64(DD_MAX_CACHE_TO_SLOTS_RATIO) * uint64(dd.slotCount)
-	if cacheLimit > uint64(dd.maxCacheHard) {
-		cacheLimit = uint64(dd.maxCacheHard)
-	}
-	dd.cacheSlack = int32(cacheLimit) - 2*int32(dd.cacheSlots)
+	dd.updateCacheSlack()
 	if dd.cacheSlots < dd.slotCount/2 && dd.cacheSlack >= 0 {
-		dd.cacheSlots = uint32(cacheLimit)
+		dd.cacheSlots *= 2
+		dd.cacheSlack -= int32(dd.cacheSlots)
 	}
+}
+
+func (dd *DdManager) updateCacheSlack() {
+	limit := min(uint64(DD_MAX_CACHE_TO_SLOTS_RATIO)*uint64(dd.slotCount), uint64(dd.maxCacheHard))
+	dd.cacheSlack = int32(uint32(limit) - 2*dd.cacheSlots)
 }

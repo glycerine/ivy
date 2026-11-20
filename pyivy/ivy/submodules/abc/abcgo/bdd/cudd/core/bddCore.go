@@ -85,7 +85,7 @@ type DdManager struct {
 	autoMethod, autoMethodZdd         Cudd_ReorderingType
 	realignBdd, realignZdd            bool
 	minHit, maxGrowthAlt              float64
-	looseUpTo, maxCache, maxCacheHard uint32
+	looseUpTo, maxCacheHard           uint32
 	nextDyn, maxLive                  uint32
 	maxMemory                         uint64
 	boundVars                         map[int]bool
@@ -313,7 +313,18 @@ func NewBDDManager(variables int) *DdManager {
 	if variables < 0 || uint64(variables) >= uint64(bddConstantIndex) {
 		return nil
 	}
-	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, computed: map[computedKey]*DdNode{}, epsilon: 1e-12, cacheSlots: CUDD_CACHE_SLOTS, maxLive: ^uint32(0), reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
+	return Cudd_Init(uint32(variables), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0)
+}
+
+func newEmptyManager() *DdManager {
+	dd := &DdManager{
+		unique: make(map[bddUniqueKey]*DdNode), cache: make(map[bddITEKey]*DdNode),
+		computed: make(map[computedKey]*DdNode), epsilon: 1e-12,
+		cacheSlots: CUDD_CACHE_SLOTS, maxCacheHard: defaultDataLimit / (nativeCacheBytes * DD_MAX_CACHE_FRACTION),
+		maxLive: ^uint32(0), maxMemory: uint64(^uint(0)), reorderMethod: CUDD_REORDER_SIFT,
+		maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, siftMaxVar: 1000, siftMaxSwap: 2000000,
+		stdout: os.Stdout, stderr: os.Stderr,
+	}
 	dd.tableGrowthFactor = 1
 	dd.groupcheck = CUDD_GROUP_CHECK7
 	dd.gcEnabled = 1
@@ -327,9 +338,6 @@ func NewBDDManager(variables int) *DdManager {
 	dd.Background = dd.Zero
 	dd.PlusInfinity = dd.constant(math.Inf(1))
 	dd.MinusInfinity = dd.constant(math.Inf(-1))
-	for i := 0; i < variables; i++ {
-		Cudd_bddIthVar(dd, i)
-	}
 	return dd
 }
 
@@ -534,10 +542,7 @@ func Cudd_InitTable(numVars, numVarsZ, numSlots, looseUpTo uint32) *DdManager {
 	if totalSlots > uint64(^uint32(0)) {
 		return nil
 	}
-	dd := NewBDDManager(0)
-	if dd == nil {
-		return nil
-	}
+	dd := newEmptyManager()
 	dd.ZddSize = int(numVarsZ)
 	dd.PermZ, dd.InvPermZ = make([]int, numVarsZ), make([]int, numVarsZ)
 	for i := range dd.PermZ {
@@ -634,6 +639,12 @@ func Cudd_BddNode(dd *DdManager, index int, t, e *DdNode) *DdNode {
 func Cudd_bddIthVar(dd *DdManager, index int) *DdNode {
 	if !dd.valid() || index < 0 || uint64(index) >= uint64(bddConstantIndex) {
 		return nil
+	}
+	if index >= len(dd.bddTableSlots) {
+		if !dd.ensureTableSlots(false, index+1) {
+			return nil
+		}
+		Cudd_FixTableLimits(dd)
 	}
 	for len(dd.Vars) <= index {
 		i := len(dd.Vars)

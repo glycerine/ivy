@@ -58,24 +58,38 @@
 
 package core
 
-import "github.com/glycerine/abcgo/bdd/mtr"
+import (
+	"math/bits"
 
-// Cudd_Init creates BDD variables and the ZDD universe. Go maps replace the
-// original raw-memory pools; sizing arguments remain allocation hints.
+	"github.com/glycerine/abcgo/bdd/mtr"
+)
+
+// The original ABC utility supplies a 64 MiB soft data limit. CUDD derives
+// its public thresholds from the target C ABI's node and cache entry sizes.
+const (
+	defaultDataLimit = 64 << 20
+	nativeNodeBytes  = 24 + 16*(bits.UintSize/64)
+	nativeCacheBytes = 5 * (bits.UintSize / 8)
+)
+
 func Cudd_Init(numVars, numVarsZ, numSlots, cacheSize uint32, maxMemory uint64) *DdManager {
-	if numVars >= CUDD_MAXINDEX || numVarsZ >= CUDD_MAXINDEX {
-		return nil
+	if maxMemory == 0 {
+		maxMemory = defaultDataLimit
 	}
-	dd := NewBDDManager(int(numVars))
+	loose := uint32(maxMemory / (nativeNodeBytes * DD_MAX_LOOSE_FRACTION))
+	dd := Cudd_InitTable(numVars, numVarsZ, numSlots, loose)
 	if dd == nil {
 		return nil
 	}
-	dd.ZddSize = int(numVarsZ)
-	dd.PermZ = make([]int, dd.ZddSize)
-	dd.InvPermZ = make([]int, dd.ZddSize)
-	for i := 0; i < dd.ZddSize; i++ {
-		dd.PermZ[i] = i
-		dd.InvPermZ[i] = i
+	requested := max(cacheSize, dd.slotCount/2)
+	dd.cacheSlots = 1 << (bits.Len32(requested) - 1)
+	dd.maxCacheHard = uint32(maxMemory / (nativeCacheBytes * DD_MAX_CACHE_FRACTION))
+	dd.updateCacheSlack()
+	if numVars != 0 {
+		dd.Vars = make([]*DdNode, 0, numVars)
+		dd.Perm = make([]int, 0, numVars)
+		dd.InvPerm = make([]int, 0, numVars)
+		Cudd_bddIthVar(dd, int(numVars)-1)
 	}
 	cuddZddInitUniv(dd)
 	return dd
