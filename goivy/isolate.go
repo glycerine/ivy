@@ -1339,10 +1339,10 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 				yName = ReprNode(y.Label)
 			}
 			if exactPresent[defName] || exactPresent[yName] {
+				// Python: y = y.clone([y.label,ivy_logic.Definition(*sch.args)])
+				// -- a clone, keeping y's id and attributes.
 				newDef := &LogicDefinition{Lhs: sch.Lhs, Rhs: sch.Rhs}
-				newLf := mod.Cfg.AstCfg.NewLabeledFormula(y.Label, newDef)
-				newLf.Loc = y.Loc
-				mod.Definitions[i] = newLf
+				mod.Definitions[i] = y.Clone([]Node{y.Label, newDef}).(*LabeledFormula)
 			}
 		}
 	}
