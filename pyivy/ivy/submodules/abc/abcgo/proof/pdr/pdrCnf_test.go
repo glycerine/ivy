@@ -10,6 +10,33 @@ import (
 	"github.com/glycerine/abcgo/sat/cnf"
 )
 
+func TestFrameSolverBulkVariableAllocation(t *testing.T) {
+	g := aig.NewGraph()
+	g.AddOutput(g.NewInput())
+	aig.Aig_ManSetRegNum(g, 0)
+	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{}, pCnfMan: cnf.Cnf_ManStart()}
+	var problem *bsat.Solver
+	allocs := testing.AllocsPerRun(10, func() {
+		problem = bsat.NewSolver()
+		Pdr_ManNewSolver2(problem, p, 1, 0)
+	})
+	if problem.NumVars() != 500 {
+		t.Fatalf("new frame has %d variables, want 500", problem.NumVars())
+	}
+	if allocs > 75 {
+		t.Errorf("initializing an empty frame allocated %.0f objects", allocs)
+	}
+	problem.SetNumVars(503)
+	problem.AddClause(bsat.Positive(502))
+	if problem.Solve() != bsat.Satisfiable {
+		t.Fatal("missing model before reuse")
+	}
+	Pdr_ManNewSolver2(problem, p, 1, 0)
+	if value, ok := problem.Value(502); !ok || !value || problem.NumVars() != 503 {
+		t.Fatal("reinitializing frame storage lost the supplied solver's model")
+	}
+}
+
 func TestPrepareModelAcrossAbsorbedGate(t *testing.T) {
 	g := aig.NewGraph()
 	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()

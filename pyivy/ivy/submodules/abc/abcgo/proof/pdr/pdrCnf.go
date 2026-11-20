@@ -47,8 +47,8 @@ func Pdr_ObjSatVar2FindOrAdd(p *Pdr_Man_t, k int32, object aig.Edge, isNew *bool
 	vec.Vec_IntPush(reverse, int32(id))
 	vec.Vec_IntWriteEntry(forward, int(k), variable)
 	solver := p.vSolvers[k]
-	for solver.NumVars() <= variable {
-		solver.NewVariable()
+	if solver.NumVars() <= variable {
+		solver.SetNumVars(variable + 1)
 	}
 	if k == 0 && saig.Saig_ObjIsLo(p.pAig, object) {
 		if !solver.AddClause(bsat.Negative(variable)) || !solver.Compress() {
@@ -261,8 +261,8 @@ func Pdr_ManNewSolver2(solver *bsat.Solver, p *Pdr_Man_t, k, initialize int32) *
 	}
 	vec.Vec_IntClear(reverse)
 	vec.Vec_IntPush(reverse, -1)
-	for solver.NumVars() < 500 {
-		solver.NewVariable()
+	if solver.NumVars() < 500 {
+		solver.SetNumVars(500)
 	}
 	pdrConfigureSolver(solver, p)
 	return solver
