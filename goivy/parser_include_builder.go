@@ -92,4 +92,3 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 	}
 	xtracer.Trace("parser.using EXIT name=%s decls=%d", name, modDeclCount)
 }
-

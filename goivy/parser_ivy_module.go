@@ -31,7 +31,7 @@ type ParseResult struct {
 // Python: self.defined = defaultdict(list) mapping name → [(lineno, cls, ...), ...]
 type definedEntry struct {
 	Lineno        Location
-	DeclType      string                    // e.g. "ObjectDecl", "TypeDecl", "DestructorDecl", or ""
+	DeclType      string                          // e.g. "ObjectDecl", "TypeDecl", "DestructorDecl", or ""
 	ObjectDefined *InsMap[string, []definedEntry] // third element: stored module.defined (may be nil)
 }
 
@@ -63,11 +63,11 @@ type ivyAccum struct {
 	attributes          []string // Python: ivy.attributes — tuple of attribute strings
 	static              map[string]bool
 	defined             *InsMap[string, []definedEntry] // Python: defaultdict(list), insertion-ordered
-	objects             map[string]interface{}    // Python: ivy.objects
-	merkle              MerkleState               // rolling Merkle hash of declared AST nodes
-	astCfg              *AstConfig                // per-parse AST config (replaces globals)
-	filename            string                    // Python: iu.filename used by ParseError.__repr__
-	errors              []*ParseError             // Python: module-level error_list
+	objects             map[string]interface{}          // Python: ivy.objects
+	merkle              MerkleState                     // rolling Merkle hash of declared AST nodes
+	astCfg              *AstConfig                      // per-parse AST config (replaces globals)
+	filename            string                          // Python: iu.filename used by ParseError.__repr__
+	errors              []*ParseError                   // Python: module-level error_list
 }
 
 // --- ast.Node interface for ivyAccum ---
