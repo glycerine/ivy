@@ -1276,7 +1276,9 @@ func (s *Solver) GetSmallModelWithCond(
 			//       s.add(clauses_to_z3(clauses))
 			//       for fmla in assumes: s.add(clauses_to_z3(fmla))
 			if !s.opts.Incremental {
+				previous := z3solver
 				z3solver = s.newZ3Solver()
+				previous.Reset()
 				zc, err = s.ClausesToZ3(clauses)
 				if err != nil {
 					return nil, err
@@ -1365,6 +1367,9 @@ func (s *Solver) GetSmallModelWithCond(
 	}
 
 	if overallResult == smt.Unsat {
+		// No model retains this solver. Release its assertions and search
+		// state now, as Python does when the local solver goes out of scope.
+		z3solver.Reset()
 		return nil, nil
 	}
 
