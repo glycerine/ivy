@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/bool/dec"
 )
 
@@ -107,5 +108,27 @@ func TestCleanAndReportCandidateScores(t *testing.T) {
 	Rwr_ScoresClean(p)
 	if node.nScore != 0 || node.nAdded != 0 || node.nGain != 0 || p.nScores[class] != 2 {
 		t.Errorf("after cleanup candidate %d/%d/%d, class rewrites %d", node.nScore, node.nAdded, node.nGain, p.nScores[class])
+	}
+}
+
+func TestRewriteBoundaryPinsFanoutsAndLabelsReleasedInputs(t *testing.T) {
+	n := abc.NewNetwork("boundary")
+	a, b := n.NewObject(abc.ObjectPI), n.NewObject(abc.ObjectPI)
+	root := n.CreateAndEdges(a.Signal(), b.Signal())
+	net := &abcRewriteNetwork{network: n}
+	leaves := []any{a.Signal().Not()}
+	net.MarkBoundary(leaves, 1)
+	if refs := net.FanoutCount(a.Signal()); refs != 2 {
+		t.Errorf("pinned leaf has %d references, want 2", refs)
+	}
+	if saved := net.LabelMFFC(root); saved != 1 {
+		t.Fatalf("saved %d ANDs, want 1", saved)
+	}
+	if abc.Abc_NodeIsTravIdCurrent(a) != 0 || abc.Abc_NodeIsTravIdCurrent(b) == 0 {
+		t.Errorf("pinned input marked %d, released input marked %d", abc.Abc_NodeIsTravIdCurrent(a), abc.Abc_NodeIsTravIdCurrent(b))
+	}
+	net.MarkBoundary(leaves, -1)
+	if net.FanoutCount(a.Signal()) != 1 || net.FanoutCount(b.Signal()) != 1 {
+		t.Fatal("cut evaluation changed live fanout counts")
 	}
 }

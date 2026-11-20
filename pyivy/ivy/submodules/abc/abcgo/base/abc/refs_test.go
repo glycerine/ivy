@@ -6,6 +6,15 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
+func hasFanoutAdjustment(n *Network) bool {
+	for _, obj := range n.objects {
+		if obj != nil && int(Abc_ObjFanoutNum(obj)) != len(obj.fanouts) {
+			return true
+		}
+	}
+	return false
+}
+
 func TestFanoutAdjustmentsFollowLiveGraph(t *testing.T) {
 	n := NewNetwork("live-fanouts")
 	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
@@ -46,7 +55,7 @@ func TestTemporaryFanoutAdjustmentPreservesGraph(t *testing.T) {
 	}
 	Abc_ObjAdjustFanoutCount(a, 1)
 	Abc_NtkFinishFanoutCountAdjustments(n)
-	if n.refs != nil || Abc_ObjFanoutNum(a) != 1 {
+	if hasFanoutAdjustment(n) || Abc_ObjFanoutNum(a) != 1 {
 		t.Fatal("temporary counts were not restored")
 	}
 }
@@ -61,7 +70,7 @@ func TestMffcReferenceAccounting(t *testing.T) {
 	if got := Abc_NodeMffcSize(root.Object); got != 4 {
 		t.Fatal(got)
 	}
-	if n.refs != nil {
+	if hasFanoutAdjustment(n) {
 		t.Fatal("references not restored")
 	}
 	before := len(shared.Object.fanouts)
@@ -82,7 +91,7 @@ func TestMffcReferenceAccounting(t *testing.T) {
 	if got := Abc_NodeRef_rec(root.Object); got != 4 {
 		t.Fatal(got)
 	}
-	if n.refs != nil {
+	if hasFanoutAdjustment(n) {
 		t.Fatal("scratch refs retained")
 	}
 	if err := n.Check(); err != nil {
@@ -106,7 +115,7 @@ func TestMffcExternalFanoutAndCut(t *testing.T) {
 	if count := Abc_NodeMffcSize(root.Object); count != 1 {
 		t.Fatal(count)
 	}
-	if n.refs != nil {
+	if hasFanoutAdjustment(n) {
 		t.Fatal("cut refs not restored")
 	}
 	if err := n.Check(); err != nil {
@@ -144,7 +153,7 @@ func TestMffcDuplicateInputsAndConstants(t *testing.T) {
 	if got := Abc_NodeMffcSize(root.Object); got != 2 {
 		t.Fatal(got)
 	}
-	if n.refs != nil {
+	if hasFanoutAdjustment(n) {
 		t.Fatal("duplicate refs unbalanced")
 	}
 	root2 := n.CreateAndEdges(n.One(), a.Signal())
@@ -166,7 +175,7 @@ func TestMffcForeignLeafDoesNotChangeReferences(t *testing.T) {
 		if recover() == nil {
 			t.Error("accepted foreign cut leaf")
 		}
-		if n.refs != nil {
+		if hasFanoutAdjustment(n) {
 			t.Error("invalid cut changed reference state")
 		}
 	}()
@@ -209,5 +218,23 @@ func TestPreviousTraversalEpochAPI(t *testing.T) {
 	Abc_NodeSetTravIdCurrent(o)
 	if Abc_NodeIsTravIdCurrent(o) != 1 || Abc_NodeIsTravIdPrevious(o) != 0 {
 		t.Fatal("current/previous distinction failed")
+	}
+}
+
+func TestMffcLabelsWithoutHeapScratch(t *testing.T) {
+	n := NewNetwork("reference-scratch")
+	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	c, d := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	shared := n.CreateAndEdges(a.Signal(), b.Signal())
+	left, right := n.CreateAndEdges(shared, c.Signal()), n.CreateAndEdges(shared, d.Signal())
+	root := n.CreateAndEdges(left, right)
+	allocs := testing.AllocsPerRun(100, func() {
+		Abc_NtkIncrementTravId(n)
+		if Abc_NodeMffcLabelAig(root.Object) != 4 {
+			t.Fatal("lost a node in the reconvergent cone")
+		}
+	})
+	if allocs != 0 {
+		t.Fatalf("labelling a four-AND cone took %.0f heap allocations", allocs)
 	}
 }

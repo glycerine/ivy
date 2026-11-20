@@ -2,34 +2,22 @@ package abc
 
 import "fmt"
 
-// ABC temporarily adjusts fanout counts during cone traversal. Store only
-// nonzero differences from live adjacency so unrelated nodes need no setup.
-func (n *Network) finishReferences() {
-	if len(n.refs) == 0 {
-		n.refs = nil
-	}
-}
-
+// Abc_ObjAdjustFanoutCount applies the temporary count used by cone
+// traversal. Keep it on the node so changing edges still affects the count.
 func Abc_ObjAdjustFanoutCount(o *Object, delta int32) {
 	if o == nil {
 		panic("cannot adjust fanouts of a nil object")
 	}
-	n := o.network
-	offset := n.refs[o] + int(delta)
+	offset := o.fanoutAdjustment + int(delta)
 	if len(o.fanouts)+offset < 0 {
 		panic("fanout adjustment made a count negative")
 	}
-	if offset == 0 {
-		delete(n.refs, o)
-		return
-	}
-	if n.refs == nil {
-		n.refs = make(map[*Object]int)
-	}
-	n.refs[o] = offset
+	o.fanoutAdjustment = offset
 }
 
-func Abc_NtkFinishFanoutCountAdjustments(n *Network) { n.finishReferences() }
+// Abc_NtkFinishFanoutCountAdjustments is retained for callers that delimit
+// temporary MFFC adjustments. Each balanced pair now restores its node directly.
+func Abc_NtkFinishFanoutCountAdjustments(n *Network) {}
 func Abc_NtkIncrementTravId(n *Network) {
 	n.travID++
 	if n.travID == 0 {
@@ -70,18 +58,10 @@ func refDeref(o *Object, reference, label, stop bool) int32 {
 	return count
 }
 func Abc_NodeRefDeref(o *Object, reference, label int32) int32 {
-	count := refDeref(o, reference != 0, label != 0, false)
-	if reference != 0 {
-		o.network.finishReferences()
-	}
-	return count
+	return refDeref(o, reference != 0, label != 0, false)
 }
 func Abc_NodeRefDerefStop(o *Object, reference int32) int32 {
-	count := refDeref(o, reference != 0, false, true)
-	if reference != 0 {
-		o.network.finishReferences()
-	}
-	return count
+	return refDeref(o, reference != 0, false, true)
 }
 func Abc_NodeDeref_rec(o *Object) int32 { return Abc_NodeRefDeref(o, 0, 0) }
 func Abc_NodeRef_rec(o *Object) int32   { return Abc_NodeRefDeref(o, 1, 0) }
@@ -94,7 +74,6 @@ func mffcSize(o *Object, stop, label bool) int32 {
 	}
 	before := refDeref(o, false, label, stop)
 	after := refDeref(o, true, false, stop)
-	o.network.finishReferences()
 	if before != after {
 		panic("unbalanced MFFC references")
 	}
@@ -172,7 +151,6 @@ func Abc_NodeMffcInside(o *Object, leaves []*Object, inside *[]*Object) int32 {
 	for _, leaf := range leaves {
 		Abc_ObjAdjustFanoutCount(leaf, -1)
 	}
-	n.finishReferences()
 	if before != after {
 		panic("unbalanced MFFC references")
 	}
@@ -213,7 +191,6 @@ func Abc_NodeMffcLabelWithLeaves(o *Object, leaves []*Object, nodes *[]*Object) 
 	for _, leaf := range leaves {
 		Abc_ObjAdjustFanoutCount(leaf, -1)
 	}
-	n.finishReferences()
 	return result
 }
 

@@ -84,7 +84,6 @@ func rewriteNodeCuts(p *cut.Cut_Man_t, node *abc.Object) *cut.Cut_Cut_t {
 
 type abcRewriteNetwork struct {
 	network *abc.Network
-	leaves  []*abc.Object
 }
 
 func (n *abcRewriteNetwork) Lookup(id int32) (any, bool) {
@@ -96,20 +95,16 @@ func (n *abcRewriteNetwork) Lookup(id int32) (any, bool) {
 }
 func (n *abcRewriteNetwork) Complement(value any) any { return value.(abc.Edge).Not() }
 func (n *abcRewriteNetwork) FanoutCount(value any) int {
-	return len(value.(abc.Edge).Object.Fanouts())
+	return int(abc.Abc_ObjFanoutNum(value.(abc.Edge).Object))
 }
 func (n *abcRewriteNetwork) MarkBoundary(values []any, delta int) {
-	if delta > 0 {
-		n.leaves = make([]*abc.Object, len(values))
-		for i, value := range values {
-			n.leaves[i] = value.(abc.Edge).Object
-		}
-	} else {
-		n.leaves = nil
+	for _, value := range values {
+		abc.Abc_ObjAdjustFanoutCount(value.(abc.Edge).Object, int32(delta))
 	}
 }
 func (n *abcRewriteNetwork) LabelMFFC(root any) int32 {
-	return abc.Abc_NodeMffcLabelWithLeaves(root.(abc.Edge).Object, n.leaves, nil)
+	abc.Abc_NtkIncrementTravId(n.network)
+	return abc.Abc_NodeMffcLabelAig(root.(abc.Edge).Object)
 }
 func (n *abcRewriteNetwork) CountGraph(root any, graph *dec.Dec_Graph_t, saved, levelMax int32) int32 {
 	return dec.Dec_GraphToNetworkCount(abc.DecNetwork{Network: n.network}, root, graph, saved, levelMax)

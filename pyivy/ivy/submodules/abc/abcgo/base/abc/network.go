@@ -42,7 +42,7 @@ type Object struct {
 	BoxInputPolarity    []uint32
 	CopyEdge            Edge
 	CopyData            any // temporary non-object copy payload (e.g. a mapped gate)
-	Barrier             bool
+	fanoutAdjustment    int
 	Choice              *Object
 	Next                *Object
 	Phase               bool
@@ -58,6 +58,7 @@ type Object struct {
 	TerminalIndex       int
 	Data                any
 	Copy                *Object
+	Barrier             bool
 	MarkA, MarkB, MarkC bool
 	network             *Network
 	fanins              []Edge
@@ -122,7 +123,6 @@ type Network struct {
 	travID              uint64
 	levelMax            int
 	reverseLevelsActive bool
-	refs                map[*Object]int
 	Name, Spec          string
 	objects             []*Object
 	names               *nm.Manager
