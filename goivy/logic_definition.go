@@ -51,3 +51,16 @@ type LogicDefinitionSchema struct {
 func NewDefinitionSchema(lhs, rhs Expr) *LogicDefinitionSchema {
 	return &LogicDefinitionSchema{LogicDefinition{Lhs: lhs, Rhs: rhs}}
 }
+
+// asDefinition is Python's isinstance(x, il.Definition): it accepts a
+// Definition or a DefinitionSchema (a Definition subclass in Python) and
+// returns the underlying definition.
+func asDefinition(x interface{}) (*LogicDefinition, bool) {
+	switch d := x.(type) {
+	case *LogicDefinition:
+		return d, true
+	case *LogicDefinitionSchema:
+		return &d.LogicDefinition, true
+	}
+	return nil, false
+}

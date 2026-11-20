@@ -635,10 +635,33 @@ func CheckConcsMatch(g1, g2 *LabeledFormula) error {
 	if c1 == nil || c2 == nil {
 		return &ProofError{Msg: "nil conclusion in goal"}
 	}
-	if !EqualModAlpha(c1, c2) {
-		return &ProofError{Msg: "conclusions do not match: " + c1.String() + " vs " + c2.String()}
+	// Python: if not il.equal_mod_alpha(c1,c2):
+	//     raise ProofError(None,'conclusions do not match:\n    {}\n     {}'.format(c1,c2))
+	if !IlEqualModAlpha(c1, c2) {
+		return &ProofError{Msg: "conclusions do not match:\n    " + c1.String() + "\n     " + c2.String()}
 	}
 	return nil
+}
+
+// IlEqualModAlpha is Python ivy_logic.equal_mod_alpha:
+//
+//	if isinstance(t,Definition):
+//	    return isinstance(t,Definition) and all(equal_mod_alpha(x,y) for (x,y) in zip(t.args,u.args))
+//	return lu.equal_mod_alpha(t,u)
+//
+// (Python checks t twice, never u's type; zip stops at the shorter args.)
+func IlEqualModAlpha(t, u Expr) bool {
+	if d, ok := asDefinition(t); ok {
+		targs := []Expr{d.Lhs, d.Rhs}
+		uargs := NodeArgs(u)
+		for i := 0; i < len(targs) && i < len(uargs); i++ {
+			if !IlEqualModAlpha(targs[i], uargs[i]) {
+				return false
+			}
+		}
+		return true
+	}
+	return EqualModAlpha(t, u)
 }
 
 // --- helpers ---

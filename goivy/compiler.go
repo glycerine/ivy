@@ -1513,7 +1513,7 @@ func (c *Compiler) CompileDefn(df *Definition) (Expr, error) {
 
 // CompileDefnSchema compiles a definition schema (DefinitionSchema variant).
 func (c *Compiler) CompileDefnSchema(df *DefinitionSchema) (Expr, error) {
-	xtracer.Trace("compiler.CompileDefnSchema ENTER")
+	xtracer.Trace("compiler.CompileDefn ENTER") // Python: one compile_defn for both
 	//pp("(CompileDefnSchema -> compileDefnImpl isSchema=true) [go side]")
 	return c.compileDefnImpl(&df.Definition, true)
 }

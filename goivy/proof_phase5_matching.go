@@ -313,8 +313,10 @@ func defLhsArgs(def *IvyDefinition) []Expr {
 // of matching the right-hand sides. Requires prob.Inst is a definition.
 // Corresponds to Python's transform_defn_match.
 func TransformDefnMatch(cfg *AstConfig, prob *MatchProblem) *MatchProblem {
-	conc, concIsDef := prob.Pat.(*LogicDefinition)
-	decl, declIsDef := prob.Inst.(*LogicDefinition)
+	// Python: isinstance(decl,il.Definition) and isinstance(conc,il.Definition)
+	// -- DefinitionSchema included.
+	conc, concIsDef := asDefinition(prob.Pat)
+	decl, declIsDef := asDefinition(prob.Inst)
 	if !concIsDef || !declIsDef {
 		return prob
 	}

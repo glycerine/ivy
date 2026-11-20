@@ -2479,7 +2479,7 @@ func CheckProperties(mod *Module) error {
 			}
 			xtracer.Trace("compiler.CheckProperties.classify label=%s subgoals=%d", propLabel, len(subgoals))
 
-			if _, isDef := prop.Formula.(*LogicDefinition); !isDef {
+			if _, isDef := asDefinition(prop.Formula); !isDef {
 				prop = namedTrans(prop)
 				// Update prover's last axiom and schemata with named-transformed prop
 				if prover != nil {
@@ -2493,7 +2493,7 @@ func CheckProperties(mod *Module) error {
 
 			if len(subgoals) == 0 {
 				if !isSchemaBody(prop.Formula) {
-					if _, isDef := prop.Formula.(*LogicDefinition); isDef {
+					if _, isDef := asDefinition(prop.Formula); isDef {
 						xtracer.Trace("compiler.CheckProperties.classify label=%s -> definitions (proved, 0 subgoals, def)", propLabel)
 						mod.Definitions = append(mod.Definitions, prop)
 					} else {
@@ -2531,7 +2531,7 @@ func CheckProperties(mod *Module) error {
 					mod.LabeledProps = append(mod.LabeledProps, g.Clone([]Node{label, g.Formula}).(*LabeledFormula))
 				}
 				if !isSchemaBody(prop.Formula) {
-					if _, isDef := prop.Formula.(*LogicDefinition); isDef {
+					if _, isDef := asDefinition(prop.Formula); isDef {
 						mod.Definitions = append(mod.Definitions, prop)
 					} else {
 						mod.LabeledProps = append(mod.LabeledProps, prop)
@@ -2552,7 +2552,7 @@ func CheckProperties(mod *Module) error {
 		} else {
 			// No proof
 			xtracer.Trace("compiler.CheckProperties.classify label=%s -> props (no proof)", propLabel)
-			if _, isDef := prop.Formula.(*LogicDefinition); isDef {
+			if _, isDef := asDefinition(prop.Formula); isDef {
 				mod.Definitions = append(mod.Definitions, prop)
 			} else {
 				mod.LabeledProps = append(mod.LabeledProps, prop)

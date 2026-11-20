@@ -64,7 +64,7 @@ func NewProofChecker(cfg *ProofConfig, mod *Module, axioms, definitions []*Label
 	for _, d := range definitions {
 		norm := NormalizeGoal(pc.AstCfg, d)
 		name := ""
-		if def, ok := d.Formula.(*LogicDefinition); ok {
+		if def, ok := asDefinition(d.Formula); ok { // Python: any Definition
 			if sym, ok := def.Defines().(*Const); ok {
 				name = sym.Name
 			}
@@ -180,8 +180,8 @@ func (pc *ProofChecker) LookupSchema(name string, goal *LabeledFormula, errNode 
 	if d, ok := pc.Definitions[name]; ok {
 		// Convert definition to constraint — Python: goal_conc(schema).to_constraint()
 		conc := GoalConc(d)
-		if def, ok := conc.(*LogicDefinition); ok {
-			fmla := DefinitionToConstraint(def)
+		if def, ok := asDefinition(conc); ok { // Python: any Definition
+			fmla := moduleDefToConstraint(def) // Python to_constraint traces defToConstraint
 			if close {
 				fmla = CloseFormula(fmla)
 			}
@@ -506,7 +506,9 @@ func (pc *ProofChecker) AdmitDefinition(defn *LabeledFormula, proof Node) ([]*La
 	xtracer.Trace("proof.AdmitDefinition ENTER defnLabel=%s hasProof=%v", defn.LabelName(), proof != nil)
 	defn = NormalizeGoal(pc.astCfg(), defn)
 	// Extract the defined symbol
-	def, ok := defn.Formula.(*LogicDefinition)
+	// Python: sym = defn.formula.defines() -- any Definition, including
+	// a DefinitionSchema.
+	def, ok := asDefinition(defn.Formula)
 	if !ok {
 		return nil, &ProofError{Msg: "admit_definition: formula is not a Definition"}
 	}
@@ -559,7 +561,9 @@ func (pc *ProofChecker) AdmitDefinition(defn *LabeledFormula, proof Node) ([]*La
 func (pc *ProofChecker) AdmitProposition(prop *LabeledFormula, proof Node, existingSubgoals ...*LabeledFormula) ([]*LabeledFormula, error) {
 	xtracer.Trace("proof.AdmitProposition ENTER propLabel=%s hasProof=%v nExistingSubgoals=%d", prop.LabelName(), proof != nil, len(existingSubgoals))
 	prop = NormalizeGoal(pc.astCfg(), prop)
-	if _, isDef := prop.Formula.(*LogicDefinition); isDef {
+	// Python: isinstance(prop.formula, il.Definition) -- includes the
+	// DefinitionSchema subclass.
+	if _, isDef := asDefinition(prop.Formula); isDef {
 		xtracer.Trace("proof.AdmitProposition delegateToDefinition")
 		return pc.AdmitDefinition(prop, proof)
 	}

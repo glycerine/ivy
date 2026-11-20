@@ -806,8 +806,17 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 		return err
 	}
 
-	// Add the defined symbol if not already in the signature
-	if def, ok := compiled.(*IvyDefinition); ok {
+	// Add the defined symbol if not already in the signature. A
+	// DefinitionSchema is a Definition in Python, so it gets the same
+	// DerivedUpdate and symbol bookkeeping.
+	var def *IvyDefinition
+	switch cd := compiled.(type) {
+	case *IvyDefinition:
+		def = cd
+	case *IvyDefinitionSchema:
+		def = &cd.LogicDefinition
+	}
+	if def != nil {
 		definesNode := def.Defines()
 		if cnst, ok := definesNode.(*Const); ok {
 			if !d.Compiler.Sig.ContainsSymbol(cnst.Name, cnst.CSort) {
