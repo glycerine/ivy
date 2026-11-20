@@ -1,9 +1,10 @@
 package abci
 
 import (
+	"cmp"
 	"fmt"
 	"os"
-	"sort"
+	"slices"
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/extra"
@@ -22,9 +23,7 @@ func Abc_NtkBalance(n *Abc_Ntk_t, duplicate, selective, updateLevel int32) *Abc_
 	balanced := abc.Abc_NtkStartFrom(n, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
 	Abc_NtkBalancePerform(n, balanced, duplicate, selective, updateLevel)
 	abc.Abc_NtkFinalize(n, balanced)
-	manager := abc.Abc_AigAlloc(balanced)
-	abc.Abc_AigCleanup(manager)
-	abc.Abc_AigFree(manager)
+	abc.Abc_AigCleanup(balanceAigManager(balanced))
 	if selective != 0 {
 		abc.Abc_NtkStopReverseLevels(n)
 		abc.Abc_NtkCleanMarkA(n)
@@ -95,6 +94,13 @@ func Abc_NodeBalanceFindLeft(super *Vec_Ptr_t) int32 {
 	return int32(current)
 }
 
+func balanceAigManager(n *Abc_Ntk_t) *abc.Abc_Aig_t {
+	if manager, ok := n.FunctionManager.(*abc.Abc_Aig_t); ok {
+		return manager
+	}
+	return abc.Abc_AigAlloc(n)
+}
+
 // Abc_NodeBalancePermute moves a pair that hashes to an existing AND toward
 // the end of the sorted supergate, preserving the original sharing heuristic.
 func Abc_NodeBalancePermute(n *Abc_Ntk_t, super *Vec_Ptr_t, leftBound int32) {
@@ -104,15 +110,15 @@ func Abc_NodeBalancePermute(n *Abc_Ntk_t, super *Vec_Ptr_t, leftBound int32) {
 	}
 	first := edgeFromAny(vec.Vec_PtrEntry(super, int(right+1)))
 	second := edgeFromAny(vec.Vec_PtrEntry(super, int(right)))
-	manager := abc.Abc_AigAlloc(n)
+	manager := balanceAigManager(n)
 	for i := right; i >= leftBound; i-- {
 		candidate := edgeFromAny(vec.Vec_PtrEntry(super, int(i)))
-		if abc.Abc_AigAndLookup(manager, first, candidate).Object != nil {
+		if manager.LookupAndEdges(first, candidate).Object != nil {
 			if candidate == second {
 				return
 			}
-			vec.Vec_PtrWriteEntry(super, int(i), second)
-			vec.Vec_PtrWriteEntry(super, int(right), candidate)
+			entries := vec.Vec_PtrArray(super)
+			entries[i], entries[right] = entries[right], entries[i]
 			return
 		}
 	}
@@ -152,7 +158,7 @@ func balanceNode(n *Abc_Ntk_t, oldEdge abc.Edge, storage *Vec_Vec_t, level, dupl
 		fmt.Fprintln(os.Stdout, "BUG!")
 	}
 	sortBalanceEdges(super)
-	manager := abc.Abc_AigAlloc(n)
+	manager := balanceAigManager(n)
 	for vec.Vec_PtrSize(super) > 1 {
 		left := int32(0)
 		if updateLevel != 0 {
@@ -223,7 +229,7 @@ func balanceConeRec(edge abc.Edge, super *Vec_Ptr_t, first, duplicate, selective
 	if edge.Complement || abc.Abc_ObjIsNode(node) == 0 {
 		panic("invalid node in balance cone")
 	}
-	a, b := node.Fanins()[0], node.Fanins()[1]
+	a, b := abc.Abc_ObjChild0(node), abc.Abc_ObjChild1(node)
 	r1 := balanceConeRec(a, super, 0, duplicate, selective)
 	r2 := balanceConeRec(b, super, 0, duplicate, selective)
 	if r1 == -1 || r2 == -1 {
@@ -395,12 +401,12 @@ func edgeFromAny(value any) abc.Edge {
 }
 
 func sortBalanceEdges(super *Vec_Ptr_t) {
-	sort.SliceStable(vec.Vec_PtrArray(super), func(i, j int) bool {
-		a, b := edgeFromAny(vec.Vec_PtrEntry(super, i)), edgeFromAny(vec.Vec_PtrEntry(super, j))
+	slices.SortStableFunc(vec.Vec_PtrArray(super), func(left, right any) int {
+		a, b := edgeFromAny(left), edgeFromAny(right)
 		if a.Object.Level != b.Object.Level {
-			return a.Object.Level > b.Object.Level
+			return cmp.Compare(b.Object.Level, a.Object.Level)
 		}
-		return a.Object.ID > b.Object.ID
+		return cmp.Compare(b.Object.ID, a.Object.ID)
 	})
 }
 
@@ -412,13 +418,15 @@ func pushUniqueBalanceEdgeByLevel(super *Vec_Ptr_t, edge abc.Edge) {
 	}
 	index := vec.Vec_PtrSize(super)
 	vec.Vec_PtrPush(super, edge)
+	entries := vec.Vec_PtrArray(super)
+	inserted := entries[index]
 	for index > 0 {
-		previous := edgeFromAny(vec.Vec_PtrEntry(super, index-1))
+		previous := edgeFromAny(entries[index-1])
 		if edge.Object.Level <= previous.Object.Level {
 			break
 		}
-		vec.Vec_PtrWriteEntry(super, index, previous)
+		entries[index] = entries[index-1]
 		index--
 	}
-	vec.Vec_PtrWriteEntry(super, index, edge)
+	entries[index] = inserted
 }

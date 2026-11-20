@@ -264,7 +264,10 @@ func (n ivyDecNetwork) Replace(old, replacement any, update bool) {
 	Ivy_ObjReplace(n.manager, ivyNetworkNode(old), ivyNetworkNode(replacement), 1, 0, levelUpdate)
 }
 func (n ivyDecNetwork) LookupAnd(a, b any) any {
-	return ivyLookupAnd(n.manager, ivyNetworkNode(a), ivyNetworkNode(b))
+	if found := ivyLookupAnd(n.manager, ivyNetworkNode(a), ivyNetworkNode(b)); found != nil {
+		return found
+	}
+	return nil
 }
 func (n ivyDecNetwork) SameRegular(a, b any) bool {
 	return Ivy_Regular(ivyNetworkNode(a)) == Ivy_Regular(ivyNetworkNode(b))

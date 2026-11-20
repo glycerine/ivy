@@ -351,3 +351,11 @@ A red SAT test found that compact two-input truth 1 rejected its true row, input
 Native area-flow measurements also exposed two scoring errors. A two-input AND with an internal leaf of area 83 and two fanouts scored 71 in C and 44 in Go. Empty and two-input supergates scored 100 and 341 in C versus 0 and 41 in Go. The Go helpers now return the native scores. The main DAR mapping path already used the SOP score and 11-bit fanout tie break.
 
 All nine affected packages in the final CNF race run passed, including both writers, PDR, BMC, abstraction, DAR and the ABC integration package.
+
+### Count rewrite candidates through the owning AIG hash
+
+A fresh i10 proof profile attributed 23% of Go's allocated objects to boxing complemented decomposition operands. A miss on an AND of two inverted inputs allocated two objects. Passing phases into a typed lookup eliminates both. A generic adapter still runs the original counting path. Tests compare both paths on hits, misses, both input phases, root reuse, constant and operand reductions, deletion-cone membership and both budgets.
+
+Regressions reproduced a deleted hash entry reappearing in decomposition lookup, construction and balancing. These operations now consult the owning AIG manager. A second test showed that a nontrivial pair still returned an AND after either operand's effective fanout count reached zero. The count now follows the native check after trivial reductions. An Ivy rewrite with two missing intermediate ANDs panicked when a typed nil passed as an interface value reached the next lookup. It now counts two new nodes and rejects a one-node budget. Both the balance search and the complemented decomposition miss have zero-allocation regressions.
+
+Both languages proved the same 5,051-AND miter equivalent. C took 221.6 ms per proof over 14 iterations, with 37.5% of flat samples in SAT propagation and 9.4% in solver search. Go initially took 438–452 ms, 120 MB and 1.95–1.97 million allocations. The phased lookup trial took 396–402 ms, 109 MB and 1.27–1.30 million allocations. After updating effective fanout checks, stable sorting and scratch handling in balancing, two seven-iteration runs took 408–411 ms, 107–108 MB and 1.22–1.24 million allocations. Race tests passed for the six affected decomposition, ABC, rewrite and Ivy packages.

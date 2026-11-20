@@ -100,3 +100,23 @@ func TestBalanceAttachLevelAndDetach(t *testing.T) {
 		t.Fatal("detach left root cone data attached")
 	}
 }
+
+func TestBalancePermuteUsesOwningAIGHash(t *testing.T) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
+	defer abc.Abc_NtkDelete(n)
+	m := n.FunctionManager.(*abc.Abc_Aig_t)
+	a, b, c := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
+	shared := abc.Abc_AigAnd(m, a, c)
+	abc.Abc_AigAndDelete(m, shared.Object)
+	v := vec.Vec_PtrAlloc(3)
+	vec.Vec_PtrPush(v, c.Signal())
+	vec.Vec_PtrPush(v, b.Signal())
+	vec.Vec_PtrPush(v, a.Signal())
+	Abc_NodeBalancePermute(n, v, 0)
+	if got := vec.Vec_PtrEntry(v, 1); got != b.Signal() {
+		t.Errorf("selected an excluded AND's input %v, want %v", got, b.Signal())
+	}
+	if got := testing.AllocsPerRun(50, func() { Abc_NodeBalancePermute(n, v, 0) }); got != 0 {
+		t.Errorf("balance pair search allocated %.0f objects, want 0", got)
+	}
+}

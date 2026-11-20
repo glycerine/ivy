@@ -27,6 +27,9 @@ func (n *Network) lookupAnd(a, b Edge) (Edge, bool) {
 	case a == b.Not():
 		return zero, true
 	}
+	if Abc_ObjFanoutNum(a.Object) == 0 || Abc_ObjFanoutNum(b.Object) == 0 {
+		return Edge{}, false
+	}
 	pair := edgePair(a, b)
 	if e, ok := n.hashed[pair]; ok {
 		o := e.Object
@@ -136,15 +139,46 @@ type DecNetwork struct{ *Network }
 func (d DecNetwork) ConstantOne() any     { return d.One() }
 func (d DecNetwork) Complement(a any) any { return a.(Edge).Not() }
 func (d DecNetwork) And(a, b any) any {
+	if manager, ok := d.FunctionManager.(*Abc_Aig_t); ok {
+		return Abc_AigAnd(manager, a, b)
+	}
 	return d.AndEdges(a.(Edge), b.(Edge))
 }
 func (d DecNetwork) CreateAnd(a, b any) any { return d.CreateAndEdges(a.(Edge), b.(Edge)) }
 func (d DecNetwork) Variable(i int) any     { pis := d.ObjectsOfKind(ObjectPI); return pis[i].Signal() }
+func (d DecNetwork) lookupEdge(a, b Edge) Edge {
+	if manager, ok := d.FunctionManager.(*Abc_Aig_t); ok {
+		return manager.LookupAndEdges(a, b)
+	}
+	e, _ := d.lookupAnd(a, b)
+	return e
+}
 func (d DecNetwork) LookupAnd(a, b any) any {
-	if e, ok := d.lookupAnd(a.(Edge), b.(Edge)); ok {
+	if e := d.lookupEdge(a.(Edge), b.(Edge)); e.Object != nil {
 		return e
 	}
 	return nil
+}
+
+// LookupAndLevel applies decomposition edge phases to the value operands.
+// A trivial result supplies its intrinsic level. An ordinary AND returns -1
+// so the caller can compute its level from the two candidate subgraphs.
+func (d DecNetwork) LookupAndLevel(a, b any, invertA, invertB bool) (any, int) {
+	x, y := a.(Edge), b.(Edge)
+	x.Complement = x.Complement != invertA
+	y.Complement = y.Complement != invertB
+	e := d.lookupEdge(x, y)
+	if e.Object == nil {
+		return nil, -1
+	}
+	level := -1
+	switch e.Object {
+	case d.constant:
+		level = 0
+	case x.Object, y.Object:
+		level = e.Object.Level
+	}
+	return e, level
 }
 func (d DecNetwork) SameRegular(a, b any) bool { return a.(Edge).Object == b.(Edge).Object }
 func (d DecNetwork) Level(a any) int           { return a.(Edge).Object.Level }

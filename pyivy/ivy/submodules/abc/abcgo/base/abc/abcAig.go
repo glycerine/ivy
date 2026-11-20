@@ -131,7 +131,11 @@ func Abc_AigAndCreateFrom(m *Abc_Aig_t, a, b any, o *Object) Edge {
 	return o.Signal()
 }
 func Abc_AigAndLookup(m *Abc_Aig_t, a, b any) Edge {
-	x, y := objectEdge(a), objectEdge(b)
+	return m.LookupAndEdges(objectEdge(a), objectEdge(b))
+}
+
+// LookupAndEdges resolves a phased pair in this manager's active hash table.
+func (m *Abc_Aig_t) LookupAndEdges(x, y Edge) Edge {
 	if e, ok := m.Network.lookupAnd(x, y); ok {
 		if m.excluded[e.Object] && e.Object != x.Object && e.Object != y.Object {
 			key := edgePair(x, y)

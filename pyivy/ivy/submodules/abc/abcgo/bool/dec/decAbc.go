@@ -78,6 +78,12 @@ func Dec_GraphUpdateNetwork(n ReplacementNetwork, root any, g *Dec_Graph_t, upda
 	n.Replace(root, Dec_GraphToNetwork(n, g), updateLevels != 0)
 }
 
+// A concrete network may combine phase adjustment, lookup and trivial-result
+// level detection to keep both operand values out of temporary interfaces.
+type phasedAndLookup interface {
+	LookupAndLevel(a, b any, invertA, invertB bool) (signal any, simplifiedLevel int)
+}
+
 // Count prospective added nodes without modifying the target network.
 func Dec_GraphToNetworkCount(n CountingNetwork, root any, g *Dec_Graph_t, nodeMax, levelMax int32) int32 {
 	if g.fConst != 0 || Dec_GraphIsVar(g) != 0 {
@@ -86,16 +92,22 @@ func Dec_GraphToNetworkCount(n CountingNetwork, root any, g *Dec_Graph_t, nodeMa
 	for i := int32(0); i < g.nLeaves; i++ {
 		g.pNodes[i].Level = uint32(n.Level(g.pNodes[i].pFunc))
 	}
+	phased, _ := n.(phasedAndLookup)
 	count := int32(0)
 	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
 		p := g.pNodes[i]
 		a, b := g.pNodes[p.eEdge0.Node], g.pNodes[p.eEdge1.Node]
 		var signal any
 		av, bv := a.pFunc, b.pFunc
+		simplifiedLevel := -1
 		if av != nil && bv != nil {
-			av = decNetworkEdge(n, av, p.eEdge0.fCompl)
-			bv = decNetworkEdge(n, bv, p.eEdge1.fCompl)
-			signal = n.LookupAnd(av, bv)
+			if phased != nil {
+				signal, simplifiedLevel = phased.LookupAndLevel(av, bv, p.eEdge0.fCompl != 0, p.eEdge1.fCompl != 0)
+			} else {
+				av = decNetworkEdge(n, av, p.eEdge0.fCompl)
+				bv = decNetworkEdge(n, bv, p.eEdge1.fCompl)
+				signal = n.LookupAnd(av, bv)
+			}
 			if signal != nil && n.SameRegular(signal, root) {
 				return -1
 			}
@@ -106,12 +118,10 @@ func Dec_GraphToNetworkCount(n CountingNetwork, root any, g *Dec_Graph_t, nodeMa
 				return -1
 			}
 		}
-		level := int(a.Level)
-		if int(b.Level) > level {
-			level = int(b.Level)
-		}
-		level++
-		if signal != nil {
+		level := 1 + int(max(a.Level, b.Level))
+		if simplifiedLevel >= 0 {
+			level = simplifiedLevel
+		} else if signal != nil && phased == nil {
 			if n.SameRegular(signal, n.ConstantOne()) {
 				level = 0
 			} else if n.SameRegular(signal, av) {
