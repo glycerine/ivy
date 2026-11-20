@@ -123,3 +123,14 @@ func TestMovedWatchRetainsOppositeBlocker(t *testing.T) {
 		}
 	}
 }
+
+func TestPigeonholeRestartSearchMatchesC(t *testing.T) {
+	s := pigeonholeSolver(6)
+	if s.Solve() != SATOKO_UNSAT {
+		t.Fatal("expected pigeonhole contradiction")
+	}
+	// The matching C construction is test_vectors/perf_pigeonhole.c.
+	if s.stats.Conflicts != 710 || s.stats.Decisions != 875 || s.stats.Starts != 3 {
+		t.Fatalf("search used %d conflicts, %d decisions, %d starts", s.stats.Conflicts, s.stats.Decisions, s.stats.Starts)
+	}
+}

@@ -172,19 +172,17 @@ func (s *Solver) Solve() int {
 	if !s.opts.NoSimplify {
 		s.simplifyOrder()
 	}
-	restart := uint32(0)
 	window := s.opts.RestartWindow
 	if window == 0 {
 		window = 50
 	}
-	recent := make([]uint32, 0, window)
+	recent := utils.NewBoundedQueue(window)
 	trailWindow := s.opts.TrailWindow
 	if trailWindow == 0 {
 		trailWindow = 5000
 	}
 	trailQueue := utils.NewBoundedQueue(trailWindow)
-	var sum uint64
-	var totalLBD uint64
+	var totalLBD float32
 	reduceAt := s.opts.FirstReduce
 	if reduceAt == 0 {
 		reduceAt = 2000
@@ -204,15 +202,13 @@ func (s *Solver) Solve() int {
 		if conflict >= 0 {
 			s.stats.Conflicts++
 			s.stats.AllConflicts++
-			restart++
 			if s.decisionLevel() == 0 {
 				s.ok = false
 				return SATOKO_UNSAT
 			}
 			trailQueue.Push(uint32(len(s.trail)))
-			if uint32(s.stats.Conflicts) > s.opts.FirstBlockRestart && uint32(len(recent)) == window && float64(len(s.trail)) > s.opts.BlockFactor*float64(trailQueue.Average()) {
-				recent = recent[:0]
-				sum = 0
+			if uint32(s.stats.Conflicts) > s.opts.FirstBlockRestart && recent.Full() && float64(len(s.trail)) > s.opts.BlockFactor*float64(trailQueue.Average()) {
+				recent.Clear()
 			}
 			learnt, back, lbd := s.analyze(conflict)
 			s.cancel(back)
@@ -222,30 +218,25 @@ func (s *Solver) Solve() int {
 			}
 			s.decayVariables()
 			s.decayClauses()
-			if uint32(len(recent)) == window {
-				sum -= uint64(recent[0])
-				copy(recent, recent[1:])
-				recent = recent[:len(recent)-1]
-			}
-			recent = append(recent, lbd)
-			sum += uint64(lbd)
-			totalLBD += uint64(lbd)
-			if s.opts.LearntRatio > 0 && s.LearntCount() > 100 && uint32(s.stats.Conflicts) >= reduceAt {
-				rc1 := uint32(s.stats.Conflicts)/rc2 + 1
-				rc2 += s.reduce() + s.opts.ReduceIncrement
-				reduceAt = rc1 * rc2
-			}
-			if uint32(len(recent)) == window && restart >= window && float64(sum)/float64(window)*s.opts.RestartFactor > float64(totalLBD)/float64(s.stats.Conflicts) {
-				s.cancel(0)
-				recent = recent[:0]
-				sum = 0
-				restart = 0
-				s.stats.Starts++
-			}
+			recent.Push(lbd)
+			totalLBD += float32(lbd)
+			continue
+		}
+		// Satoko considers a restart only after propagation reaches a fixed
+		// point. The moving queue average is an integer in the C solver.
+		if recent.Full() && float64(recent.Average())*s.opts.RestartFactor > float64(totalLBD/float32(s.stats.Conflicts)) {
+			s.cancel(0)
+			recent.Clear()
+			s.stats.Starts++
 			continue
 		}
 		if !s.opts.NoSimplify && s.decisionLevel() == 0 {
 			s.simplifyOrder()
+		}
+		if uint32(s.stats.Conflicts) >= reduceAt && s.opts.LearntRatio > 0 && s.LearntCount() > 100 {
+			rc1 := uint32(s.stats.Conflicts)/rc2 + 1
+			rc2 += s.reduce() + s.opts.ReduceIncrement
+			reduceAt = rc1 * rc2
 		}
 		decision := -1
 		for s.decisionLevel() < len(s.assumptions) {
