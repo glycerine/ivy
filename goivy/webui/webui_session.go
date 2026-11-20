@@ -189,7 +189,7 @@ func (s *Session) compileAbstractInductionWrapperSource(filename string, content
 	if stripped == 0 {
 		return nil, nil, 0, nil
 	}
-	if err := goivy.IvyCompile(decls, mod, true); err != nil {
+	if err := goivy.IvyCompileWithDefined(decls, result.DefinedNames(), mod, true); err != nil {
 		return nil, nil, 0, err
 	}
 	return mod, sig, stripped, nil

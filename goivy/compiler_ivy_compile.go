@@ -51,6 +51,12 @@ var OptMutax = NewBooleanParameter("mutax", false)
 // When called from ivy_check, pass false because check_module
 // calls create_isolate separately for each isolate.
 func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
+	return IvyCompileWithDefined(decls, nil, mod, createIsolate)
+}
+
+// IvyCompileWithDefined is ivy_compile given the parser's decls.defined
+// names (insertion order); nil falls back to each decl's defines.
+func IvyCompileWithDefined(decls []Node, defined []string, mod *Module, createIsolate bool) error {
 	if mod == nil {
 		mod = New()
 	}
@@ -62,9 +68,15 @@ func IvyCompile(decls []Node, mod *Module, createIsolate bool) error {
 	}
 
 	// Python line 2194-2195: for name in decls.defined: mod.add_to_hierarchy(name)
-	for _, decl := range decls {
-		for _, name := range declDefines(decl) {
+	if defined != nil {
+		for _, name := range defined {
 			mod.AddToHierarchy(name)
+		}
+	} else {
+		for _, decl := range decls {
+			for _, name := range declDefines(decl) {
+				mod.AddToHierarchy(name)
+			}
 		}
 	}
 

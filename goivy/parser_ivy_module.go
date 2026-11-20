@@ -20,7 +20,7 @@ type ParseResult struct {
 	Included map[string]bool
 	// defined is the parsed module's Ivy.defined (Python module.defined),
 	// used as to_pref when the module is imported with "using".
-	defined map[string][]definedEntry
+	defined *InsMap[string, []definedEntry]
 }
 
 // definedEntry matches Python's tuple elements stored in Ivy.defined[name]:
@@ -32,7 +32,7 @@ type ParseResult struct {
 type definedEntry struct {
 	Lineno        Location
 	DeclType      string                    // e.g. "ObjectDecl", "TypeDecl", "DestructorDecl", or ""
-	ObjectDefined map[string][]definedEntry // third element: stored module.defined (may be nil)
+	ObjectDefined *InsMap[string, []definedEntry] // third element: stored module.defined (may be nil)
 }
 
 // ivyAccum is the internal accumulator used during LALR parsing.
@@ -62,7 +62,7 @@ type ivyAccum struct {
 	params              []Node
 	attributes          []string // Python: ivy.attributes — tuple of attribute strings
 	static              map[string]bool
-	defined             map[string][]definedEntry // Python: defaultdict(list)
+	defined             *InsMap[string, []definedEntry] // Python: defaultdict(list), insertion-ordered
 	objects             map[string]interface{}    // Python: ivy.objects
 	merkle              MerkleState               // rolling Merkle hash of declared AST nodes
 	astCfg              *AstConfig                // per-parse AST config (replaces globals)
@@ -132,7 +132,7 @@ func newIvyAccum(parent *ivyAccum, parentObjName string) *ivyAccum {
 		macros:   make(map[string]Node),
 		actions:  make(map[string]Node),
 		included: make(map[string]bool),
-		defined:  make(map[string][]definedEntry),
+		defined:  NewInsMap[string, []definedEntry](),
 	}
 	// Propagate astCfg from parent if available
 	if parent != nil && parent.astCfg != nil {
@@ -176,14 +176,14 @@ func newIvyAccum(parent *ivyAccum, parentObjName string) *ivyAccum {
 func (m *ivyAccum) define(name string, lineno Location, cls string, allowRedef bool) {
 	xtracer.Trace("parser.define ENTER")
 	if m.defined == nil {
-		m.defined = make(map[string][]definedEntry)
+		m.defined = NewInsMap[string, []definedEntry]()
 	}
 	// Match Python defaultdict auto-vivification: self.defined[name]
-	if _, ok := m.defined[name]; !ok {
-		m.defined[name] = nil
+	if _, ok := m.defined.Get2(name); !ok {
+		m.defined.Set(name, nil)
 	}
 	// Check for redefinition conflicts
-	for _, x := range m.defined[name] {
+	for _, x := range m.defined.Get(name) {
 		conflict := true
 		if cls == "TypeDecl" {
 			conflict = (x.DeclType != "ObjectDecl")
@@ -197,7 +197,7 @@ func (m *ivyAccum) define(name string, lineno Location, cls string, allowRedef b
 			m.reportError(newRedefiningParseError(m.filename, name, lineno, x.Lineno))
 		}
 	}
-	m.defined[name] = append(m.defined[name], definedEntry{Lineno: lineno, DeclType: cls})
+	m.defined.Set(name, append(m.defined.Get(name), definedEntry{Lineno: lineno, DeclType: cls}))
 }
 
 // declare adds a declaration, matching Python Ivy.declare().
@@ -472,4 +472,16 @@ func astIterInternalDefines(n Node) []astInternalDefine {
 		res = append(res, astIterInternalDefines(a)...)
 	}
 	return res
+}
+
+// DefinedNames lists Python's decls.defined keys in insertion order.
+func (r *ParseResult) DefinedNames() []string {
+	if r == nil || r.defined == nil {
+		return nil
+	}
+	var names []string
+	for k := range r.defined.All() {
+		names = append(names, k)
+	}
+	return names
 }

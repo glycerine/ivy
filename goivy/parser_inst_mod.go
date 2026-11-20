@@ -171,8 +171,8 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 	// to_pref is module.defined itself, which includes names a continuation
 	// object inherited via get_object_defined. An empty dict is still a
 	// to_pref (nothing prefixed), so keep the set non-nil.
-	defined := make(map[string]bool, len(module.defined))
-	for name := range module.defined {
+	defined := make(map[string]bool, module.defined.Len())
+	for name := range module.defined.All() {
 		defined[name] = true
 	}
 
@@ -425,7 +425,7 @@ func composeAttributeDecl(cfg *AstConfig, decl *AttributeDecl, pref *Atom) Node 
 //	        if len(x) >= 3:
 //	            return x[2]
 //	    return None
-func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
+func getObjectDefined(ivy *ivyAccum, name string) *InsMap[string, []definedEntry] {
 	xtracer.Trace("parser.get_object_defined ENTER")
 	if ivy == nil {
 		return nil
@@ -434,7 +434,7 @@ func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
 	if ivy.defined == nil {
 		return nil
 	}
-	entries, ok := ivy.defined[name]
+	entries, ok := ivy.defined.Get2(name)
 	if !ok || len(entries) == 0 {
 		xtracer.Trace("parser.get_object_defined EXIT name=%s n=None", name)
 		return nil
@@ -444,7 +444,7 @@ func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
 	if entries[0].ObjectDefined == nil {
 		xtracer.Trace("parser.get_object_defined EXIT name=%s n=None", name)
 	} else {
-		xtracer.Trace("parser.get_object_defined EXIT name=%s n=%d", name, len(entries[0].ObjectDefined))
+		xtracer.Trace("parser.get_object_defined EXIT name=%s n=%d", name, entries[0].ObjectDefined.Len())
 	}
 	return entries[0].ObjectDefined
 }
@@ -456,22 +456,22 @@ func getObjectDefined(ivy *ivyAccum, name string) map[string][]definedEntry {
 //	        defined = defaultdict(list, ((k, v.copy()) for k, v in defined.items()))
 //	    if name in self.defined:
 //	        self.defined[name] = [(x[0], x[1], defined) for x in self.defined[name]]
-func setObjectDefined(ivy *ivyAccum, name string, moduleDefined map[string][]definedEntry) {
+func setObjectDefined(ivy *ivyAccum, name string, moduleDefined *InsMap[string, []definedEntry]) {
 	if xtracer.Enabled {
 		n := "None"
 		if moduleDefined != nil {
-			n = fmt.Sprint(len(moduleDefined))
+			n = fmt.Sprint(moduleDefined.Len())
 		}
-		_, in := ivy.defined[name]
+		_, in := ivy.defined.Get2(name)
 		xtracer.Trace("parser.set_object_defined ENTER name=%s n=%s inDefined=%s", name, n, BoolPythonStr(in))
 	}
 	if moduleDefined != nil {
 		// Deep copy: Python's defaultdict(list, ((k, v.copy()) ...))
-		copied := make(map[string][]definedEntry, len(moduleDefined))
-		for k, v := range moduleDefined {
+		copied := NewInsMap[string, []definedEntry]()
+		for k, v := range moduleDefined.All() {
 			entryCopy := make([]definedEntry, len(v))
 			copy(entryCopy, v)
-			copied[k] = entryCopy
+			copied.Set(k, entryCopy)
 		}
 		moduleDefined = copied
 	}
@@ -479,14 +479,14 @@ func setObjectDefined(ivy *ivyAccum, name string, moduleDefined map[string][]def
 	if ivy.defined == nil {
 		return
 	}
-	entries, ok := ivy.defined[name]
+	entries, ok := ivy.defined.Get2(name)
 	if !ok || len(entries) == 0 {
 		return
 	}
 	for i := range entries {
 		entries[i].ObjectDefined = moduleDefined
 	}
-	ivy.defined[name] = entries
+	ivy.defined.Set(name, entries)
 }
 
 // stackLookup searches the accumulator's modules map for a module definition.

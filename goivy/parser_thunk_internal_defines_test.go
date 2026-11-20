@@ -21,17 +21,17 @@ func TestActionDeclDefinesThunkInternals(t *testing.T) {
 	if res.defined == nil {
 		t.Fatal("no defined map")
 	}
-	if _, ok := res.defined["bar"]; !ok {
+	if _, ok := res.defined.Get2("bar"); !ok {
 		t.Errorf("thunk label bar not defined: %v", keysOfDefined(res.defined))
 	}
-	if _, ok := res.defined["bar.run"]; !ok {
+	if _, ok := res.defined.Get2("bar.run"); !ok {
 		t.Errorf("bar.run not defined: %v", keysOfDefined(res.defined))
 	}
 }
 
-func keysOfDefined(d map[string][]definedEntry) []string {
+func keysOfDefined(d *InsMap[string, []definedEntry]) []string {
 	var ks []string
-	for k := range d {
+	for k := range d.All() {
 		ks = append(ks, k)
 	}
 	return ks

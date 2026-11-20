@@ -324,7 +324,7 @@ func SourceFile(filename string, mod *Module, sig *Sig, kwargs map[string]interf
 				createIsolate = b
 			}
 		}
-		if err := IvyCompile(result.Decls, mod, createIsolate); err != nil {
+		if err := IvyCompileWithDefined(result.Decls, result.DefinedNames(), mod, createIsolate); err != nil {
 			outerErr = err
 			return
 		}
@@ -366,7 +366,7 @@ func SourceString(filename, source string, mod *Module, sig *Sig, kwargs map[str
 				createIsolate = b
 			}
 		}
-		if err := IvyCompile(result.Decls, mod, createIsolate); err != nil {
+		if err := IvyCompileWithDefined(result.Decls, result.DefinedNames(), mod, createIsolate); err != nil {
 			outerErr = err
 			return
 		}

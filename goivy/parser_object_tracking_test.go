@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"sort"
 	"testing"
 )
 
@@ -42,29 +43,29 @@ module m = {
 // as the third element of the defined entry.
 func TestSetObjectDefined(t *testing.T) {
 	ivy := newIvyAccum(nil, "")
-	ivy.defined = make(map[string][]definedEntry)
+	ivy.defined = NewInsMap[string, []definedEntry]()
 	// Add a basic entry for "foo"
-	ivy.defined["foo"] = []definedEntry{
+	ivy.defined.Set("foo", []definedEntry{
 		{Lineno: Location{Line: 1}, DeclType: "ObjectDecl"},
-	}
+	})
 
 	// Create module defined to store
-	modDefined := map[string][]definedEntry{
+	modDefined := definedMapOf(map[string][]definedEntry{
 		"bar": {
 			{Lineno: Location{Line: 5}, DeclType: "TypeDecl"},
 		},
-	}
+	})
 
 	setObjectDefined(ivy, "foo", modDefined)
 
-	entries := ivy.defined["foo"]
+	entries := ivy.defined.Get("foo")
 	if len(entries) != 1 {
 		t.Fatalf("expected 1 entry, got %d", len(entries))
 	}
 	if entries[0].ObjectDefined == nil {
 		t.Fatal("expected ObjectDefined to be set")
 	}
-	if _, ok := entries[0].ObjectDefined["bar"]; !ok {
+	if _, ok := entries[0].ObjectDefined.Get2("bar"); !ok {
 		t.Error("expected ObjectDefined to contain 'bar'")
 	}
 }
@@ -73,23 +74,23 @@ func TestSetObjectDefined(t *testing.T) {
 // module.defined from the third element.
 func TestGetObjectDefined(t *testing.T) {
 	ivy := newIvyAccum(nil, "")
-	ivy.defined = make(map[string][]definedEntry)
+	ivy.defined = NewInsMap[string, []definedEntry]()
 
 	// Store with object defined
-	modDefined := map[string][]definedEntry{
+	modDefined := definedMapOf(map[string][]definedEntry{
 		"baz": {
 			{Lineno: Location{Line: 10}, DeclType: "TypeDecl"},
 		},
-	}
-	ivy.defined["foo"] = []definedEntry{
+	})
+	ivy.defined.Set("foo", []definedEntry{
 		{Lineno: Location{Line: 1}, DeclType: "ObjectDecl", ObjectDefined: modDefined},
-	}
+	})
 
 	got := getObjectDefined(ivy, "foo")
 	if got == nil {
 		t.Fatal("expected non-nil result")
 	}
-	if _, ok := got["baz"]; !ok {
+	if _, ok := got.Get2("baz"); !ok {
 		t.Error("expected result to contain 'baz'")
 	}
 
@@ -112,23 +113,23 @@ func TestGetObjectDefinedNilIvy(t *testing.T) {
 // the module defined map.
 func TestSetObjectDefinedDeepCopy(t *testing.T) {
 	ivy := newIvyAccum(nil, "")
-	ivy.defined = make(map[string][]definedEntry)
-	ivy.defined["obj"] = []definedEntry{
+	ivy.defined = NewInsMap[string, []definedEntry]()
+	ivy.defined.Set("obj", []definedEntry{
 		{Lineno: Location{Line: 1}, DeclType: "ObjectDecl"},
-	}
+	})
 
-	modDefined := map[string][]definedEntry{
+	modDefined := definedMapOf(map[string][]definedEntry{
 		"x": {{Lineno: Location{Line: 5}}},
-	}
+	})
 
 	setObjectDefined(ivy, "obj", modDefined)
 
 	// Mutate original — should NOT affect stored copy
-	modDefined["x"] = append(modDefined["x"], definedEntry{Lineno: Location{Line: 99}})
+	modDefined.Set("x", append(modDefined.Get("x"), definedEntry{Lineno: Location{Line: 99}}))
 
 	stored := getObjectDefined(ivy, "obj")
-	if len(stored["x"]) != 1 {
-		t.Errorf("expected deep copy, but stored has %d entries for 'x'", len(stored["x"]))
+	if len(stored.Get("x")) != 1 {
+		t.Errorf("expected deep copy, but stored has %d entries for 'x'", len(stored.Get("x")))
 	}
 }
 
@@ -136,23 +137,23 @@ func TestSetObjectDefinedDeepCopy(t *testing.T) {
 // a parentObjName inherits defined from parent via get_object_defined.
 func TestNewIvyAccumInheritsFromParentObject(t *testing.T) {
 	parent := newIvyAccum(nil, "")
-	parent.defined = map[string][]definedEntry{
+	parent.defined = definedMapOf(map[string][]definedEntry{
 		"myobj": {
 			{
 				Lineno:   Location{Line: 1},
 				DeclType: "ObjectDecl",
-				ObjectDefined: map[string][]definedEntry{
+				ObjectDefined: definedMapOf(map[string][]definedEntry{
 					"inner_type": {{Lineno: Location{Line: 5}, DeclType: "TypeDecl"}},
-				},
+				}),
 			},
 		},
-	}
+	})
 
 	child := newIvyAccum(parent, "myobj")
 	if child.defined == nil {
 		t.Fatal("expected child to inherit defined from parent object")
 	}
-	if _, ok := child.defined["inner_type"]; !ok {
+	if _, ok := child.defined.Get2("inner_type"); !ok {
 		t.Error("expected inherited defined to contain 'inner_type'")
 	}
 }
@@ -161,15 +162,30 @@ func TestNewIvyAccumInheritsFromParentObject(t *testing.T) {
 // inherits the parent's entire defined map.
 func TestNewIvyAccumInheritsThis(t *testing.T) {
 	parent := newIvyAccum(nil, "")
-	parent.defined = map[string][]definedEntry{
+	parent.defined = definedMapOf(map[string][]definedEntry{
 		"toplevel": {{Lineno: Location{Line: 1}, DeclType: "TypeDecl"}},
-	}
+	})
 
 	child := newIvyAccum(parent, "this")
 	if child.defined == nil {
 		t.Fatal("expected child to inherit parent.defined when parentObjName is 'this'")
 	}
-	if _, ok := child.defined["toplevel"]; !ok {
+	if _, ok := child.defined.Get2("toplevel"); !ok {
 		t.Error("expected inherited defined to contain 'toplevel'")
 	}
+}
+
+// definedMapOf builds a defined map from a literal (sorted keys, so the
+// order is deterministic for multi-key literals).
+func definedMapOf(m map[string][]definedEntry) *InsMap[string, []definedEntry] {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	res := NewInsMap[string, []definedEntry]()
+	for _, k := range keys {
+		res.Set(k, m[k])
+	}
+	return res
 }

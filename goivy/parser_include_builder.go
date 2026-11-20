@@ -71,7 +71,7 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 				defined:  mod.defined, // Python: module.defined as to_pref
 			}
 			if module.defined == nil {
-				module.defined = make(map[string][]definedEntry)
+				module.defined = NewInsMap[string, []definedEntry]()
 			}
 			if module.modules == nil {
 				module.modules = make(map[string]*ModuleDecl)

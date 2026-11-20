@@ -2836,7 +2836,7 @@ func IvyLoadFile(filename string) (*Module, error) {
 		return nil, err
 	}
 	mod.Name = filename
-	if err := IvyCompile(result.Decls, mod, true); err != nil {
+	if err := IvyCompileWithDefined(result.Decls, result.DefinedNames(), mod, true); err != nil {
 		return nil, err
 	}
 	return mod, nil
@@ -2871,7 +2871,7 @@ func IvyFromString(source string) (*Module, error) {
 	mod := New()
 	setConfigLanguageVersion(mod.Cfg, versionString(version))
 	mod.Name = "string_input"
-	if err := IvyCompile(result.Decls, mod, true); err != nil {
+	if err := IvyCompileWithDefined(result.Decls, result.DefinedNames(), mod, true); err != nil {
 		return nil, err
 	}
 	return mod, nil
