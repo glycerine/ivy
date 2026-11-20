@@ -85,6 +85,12 @@ func scanMapping(manager *Cnf_Man_t, edge aig.Edge, mapped *Vec_Ptr_t, preorder,
 		for _, leaf := range leaves {
 			cost += scanMapping(manager, leaf, mapped, preorder, darCosts)
 		}
+	case darCosts && id < len(manager.darBest) && manager.darBest[id].fBest:
+		best := &manager.darBest[id]
+		cost = Cnf_CutSopCost(manager, best)
+		for _, leaf := range best.pLeaves[:best.nLeaves] {
+			cost += scanMapping(manager, aig.Edge(uint32(leaf)<<1), mapped, preorder, true)
+		}
 	case cut != nil:
 		cost = int32(cut.Cost)
 		if darCosts && len(cut.truth) != 0 {

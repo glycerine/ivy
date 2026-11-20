@@ -4,14 +4,22 @@ import "github.com/glycerine/abcgo/aig/aig"
 
 func Cnf_ManPostprocess_old(*Cnf_Man_t) {}
 
-// Cnf_ManTransferCuts is retained as a compatibility name. Cut transfer is now
-// an owned-slice copy performed while Cnf_DeriveMapping selects each cut.
+// Cnf_ManTransferCuts restores the selected DAR cuts on referenced
+// nodes. Explicitly supplied CNF cuts have no DAR representation.
 func Cnf_ManTransferCuts(manager *Cnf_Man_t) {
-	if manager == nil {
+	if manager == nil || manager.pManAig == nil {
 		return
 	}
 	if len(manager.selectedCuts) == 0 {
 		Cnf_DeriveMapping(manager)
+	}
+	for id := range manager.darBest {
+		edge := aig.Edge(id) << 1
+		if !manager.pManAig.ValidEdge(edge) || aig.Aig_ObjRefs(manager.pManAig, edge) == 0 {
+			manager.selectedCuts[id] = nil
+		} else if manager.darBest[id].fBest {
+			manager.selectedCuts[id] = Cnf_CutCreate(manager, &edge)
+		}
 	}
 }
 func Cnf_ManFreeCuts(manager *Cnf_Man_t) {
@@ -22,6 +30,7 @@ func Cnf_ManFreeCuts(manager *Cnf_Man_t) {
 		Cnf_CutFree(cut)
 	}
 	manager.selectedCuts = nil
+	manager.darBest = nil
 	if manager.pCuts != nil {
 		aig.Aig_ManCutStop(manager.pCuts)
 		manager.pCuts = nil

@@ -275,3 +275,27 @@ func TestCandidatesOwnLeavesAndRespectEdgePhase(t *testing.T) {
 		t.Fatal("early exit or owned leaves")
 	}
 }
+
+func TestCacheStoresOnlyPopulatedPhysicalPrefix(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	gate := g.AND(a, b)
+	m := NewCutEnumerator(g, 64)
+	for _, tc := range []struct {
+		edge aig.Edge
+		want int
+	}{{g.Const1(), 1}, {a, 1}, {gate, 2}} {
+		slots := m.Slots(tc.edge)
+		if len(slots) != 64 {
+			t.Fatalf("public slot count %d", len(slots))
+		}
+		if got := len(m.sets[tc.edge.NodeID()]); got != tc.want {
+			t.Errorf("cached %d slots for object %d, want %d", got, tc.edge.NodeID(), tc.want)
+		}
+		for _, slot := range slots[tc.want:] {
+			if slot.Used || slot.Value != 0 || slot.Cut.Truth != 0 || len(slot.Cut.Leaves) != 0 {
+				t.Fatal("nonempty trailing slot")
+			}
+		}
+	}
+}

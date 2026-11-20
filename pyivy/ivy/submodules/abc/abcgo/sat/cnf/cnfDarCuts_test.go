@@ -154,3 +154,139 @@ func TestCNFAreaFlowUsesSOPCostAndFanoutDivision(t *testing.T) {
 		t.Errorf("area for two-input supergate with complemented leaf = %d, want 300+83/2", got)
 	}
 }
+
+func TestPreparedManagerReturnsDarBestCut(t *testing.T) {
+	Cnf_ManPrepare()
+	defer Cnf_ManFree()
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	gate := g.AND(a, b.Not())
+	g.AddOutput(gate)
+	m := Cnf_ManRead()
+	m.pManAig = g
+	Cnf_DeriveMapping(m)
+	cut := Dar_ObjBestCut(&gate)
+	if cut == nil {
+		t.Fatal("selected DAR cut missing")
+	}
+	if cut.nLeaves != 2 || cut.uTruth != 0x2222 || cut.pLeaves[0] != int32(a.NodeID()) || cut.pLeaves[1] != int32(b.NodeID()) {
+		t.Fatalf("selected DAR cut %+v", cut)
+	}
+	if Dar_ObjBestCut(&a) != nil || Dar_ObjBestCut(nil) != nil {
+		t.Fatal("unexpected terminal or nil cut")
+	}
+}
+
+func BenchmarkDeriveMappedAndChain(b *testing.B) {
+	g := aig.NewGraph()
+	last := g.NewInput()
+	for range 1024 {
+		last = g.AND(last, g.NewInput())
+	}
+	g.AddOutput(last.Not())
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	want := Cnf_DeriveWithMan(m, g, 0)
+	if want.nClauses != 1710 || want.nLiterals != 4442 {
+		b.Fatalf("native chain has 1710 clauses and 4442 literals, got %d and %d", want.nClauses, want.nLiterals)
+	}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for range b.N {
+		result := Cnf_DeriveWithMan(m, g, 0)
+		if result.nClauses != want.nClauses || result.nVars != want.nVars || result.nLiterals != want.nLiterals {
+			b.Fatal("mapping changed")
+		}
+		Cnf_DataFree(result)
+	}
+	b.ReportMetric(float64(want.nClauses), "clauses/op")
+	b.ReportMetric(float64(want.nLiterals), "literals/op")
+}
+
+func TestDarSelectionSurvivesCnfCutReplacement(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	inner := g.AND(a, b)
+	root := g.AND(inner, c)
+	g.AddOutput(root)
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	m.pManAig = g
+	Cnf_DeriveMapping(m)
+	replacement := Cnf_CutFromTruth([]int32{int32(inner.NodeID())}, []uint32{0xaaaaaaaa})
+	replacement.Cost = 2
+	Cnf_ObjSetBestCut(m, &root, replacement)
+	got := Cnf_CutCreate(m, &root)
+	if got == nil || got.nFanins != 3 || got.truth[0] != 0x80808080 || got.Cost != 4 {
+		t.Errorf("created cut %+v, want original three-input AND", got)
+	}
+	Aig_ManScanMapping(m, 0)
+	if m.aArea != 4 || g.Node(inner).Refs != 0 {
+		t.Errorf("DAR scan area %d and absorbed gate refs %d, want 4 and 0", m.aArea, g.Node(inner).Refs)
+	}
+	Cnf_ManTransferCuts(m)
+	got = Cnf_ObjBestCut(m, &root)
+	if got == nil || got.nFanins != 3 || got.Cost != 4 || Cnf_ObjBestCut(m, &inner) != nil {
+		t.Errorf("transferred root %+v, absorbed %+v", got, Cnf_ObjBestCut(m, &inner))
+	}
+}
+
+func TestDarBestCutOwnedByMappingManager(t *testing.T) {
+	type mapped struct {
+		m    *Cnf_Man_t
+		gate aig.Edge
+	}
+	makeMapped := func(xor bool) mapped {
+		g := aig.NewGraph()
+		a, b := g.NewInput(), g.NewInput()
+		var gate aig.Edge
+		if xor {
+			gate = g.NewXor(a, b)
+		} else {
+			gate = g.AND(a, b)
+		}
+		g.AddOutput(gate)
+		m := Cnf_ManStart()
+		m.pManAig = g
+		Cnf_DeriveMapping(m)
+		return mapped{m, gate}
+	}
+	l, r := makeMapped(false), makeMapped(true)
+	defer Cnf_ManStop(l.m)
+	defer Cnf_ManStop(r.m)
+	if l.gate != r.gate {
+		t.Fatal("fixture requires overlapping IDs")
+	}
+	left, right := l.m.Dar_ObjBestCut(&l.gate), r.m.Dar_ObjBestCut(&r.gate)
+	if left == nil || right == nil || left.uTruth != 0x8888 || right.uTruth != 0x6666 || left.uSign != 30 || right.uSign != 40 || left.Value != 2 || right.Value != 2 {
+		t.Fatalf("AND %+v XOR %+v", left, right)
+	}
+	edge := l.gate.Not()
+	if l.m.Dar_ObjBestCut(&edge) != left {
+		t.Error("complemented literal lost its regular object's cut")
+	}
+	cnf := Cnf_ObjBestCut(l.m, &l.gate)
+	cnf.pFanins[0] = -1
+	cnf.truth[0] = 0
+	if left.pLeaves[0] != 1 || left.uTruth != 0x8888 {
+		t.Error("DAR cut aliased mutable CNF storage")
+	}
+	Cnf_ManFreeCuts(l.m)
+	if l.m.Dar_ObjBestCut(&l.gate) != nil || r.m.Dar_ObjBestCut(&r.gate) != right {
+		t.Error("free affected wrong mapping")
+	}
+}
+func TestDarBestCutWithNoLeaves(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	gate := g.AND(g.AND(a, b), a.Not())
+	g.AddOutput(gate)
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	m.pManAig = g
+	Cnf_DeriveMapping(m)
+	cut := m.Dar_ObjBestCut(&gate)
+	if cut == nil || cut.nLeaves != 0 || cut.uTruth != 0 {
+		t.Fatalf("contradiction cut %+v", cut)
+	}
+}

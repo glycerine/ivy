@@ -25,15 +25,14 @@ func (s *cachedCut) cut() Cut { return Cut{s.Leaves[:s.NumLeaves], s.Truth} }
 
 func cutSign(edge aig.Edge) uint32 { return 1 << (edge.NodeID() & 31) }
 
-func (m *CutEnumerator) allocSet() []cachedCut {
-	if len(m.pool) < m.limit {
-		// Bound speculative storage when a rewrite inspects only one cone.
-		count := min(len(m.nodes), max(1, 1024/m.limit))
-		m.pool = make([]cachedCut, count*m.limit)
+// Reserve enough room for the search. build commits the populated prefix
+// after both children have returned, so the unused tail serves the next node.
+func (m *CutEnumerator) reserveSlots(n int) []cachedCut {
+	if len(m.pool) < n {
+		count := min(len(m.nodes), max(1, 1024/n))
+		m.pool = make([]cachedCut, count*n)
 	}
-	set := m.pool[:m.limit:m.limit]
-	m.pool = m.pool[m.limit:]
-	return set
+	return m.pool[:n:n]
 }
 
 func (m *CutEnumerator) build(id int) []cachedCut {
@@ -43,8 +42,22 @@ func (m *CutEnumerator) build(id int) []cachedCut {
 		}
 		return set
 	}
-	set := m.allocSet()
-	m.sets[id] = set[:0]
+	m.sets[id] = []cachedCut{} // active recursion
+	node := &m.nodes[id]
+	var left, right []cachedCut
+	var a, b aig.Edge
+	capacity := 1
+	switch node.Kind {
+	case aig.And, aig.ExclusiveOr:
+		a = aig.Aig_ObjReal_rec(m.graph, node.Fanins[0])
+		b = aig.Aig_ObjReal_rec(m.graph, node.Fanins[1])
+		left, right = m.build(a.NodeID()), m.build(b.NodeID())
+		capacity = m.limit
+	case aig.Constant, aig.Input:
+	default:
+		panic(fmt.Sprintf("dar: unsupported node kind %d", node.Kind))
+	}
+	set := m.reserveSlots(capacity)
 	unit := &set[0]
 	unit.used, unit.Value = true, 1001
 	if id == 0 {
@@ -54,22 +67,18 @@ func (m *CutEnumerator) build(id int) []cachedCut {
 		unit.Leaves[0] = aig.Edge(id) << 1
 		unit.sign = cutSign(unit.Leaves[0])
 	}
-	node := &m.nodes[id]
-	switch node.Kind {
-	case aig.And, aig.ExclusiveOr:
-		a := aig.Aig_ObjReal_rec(m.graph, node.Fanins[0])
-		b := aig.Aig_ObjReal_rec(m.graph, node.Fanins[1])
-		left, right := m.build(a.NodeID()), m.build(b.NodeID())
-		m.combine(set, left, right, a.Complemented(), b.Complemented(), node.Kind == aig.ExclusiveOr)
-	case aig.Constant, aig.Input:
-	default:
-		panic(fmt.Sprintf("dar: unsupported node kind %d", node.Kind))
+	length := 1
+	if left != nil {
+		length = m.combine(set, left, right, a.Complemented(), b.Complemented(), node.Kind == aig.ExclusiveOr)
 	}
+	set = set[:length:length]
+	m.pool = m.pool[length:]
 	m.sets[id] = set
 	return set
 }
 
-func (m *CutEnumerator) combine(set, left, right []cachedCut, invertLeft, invertRight, xor bool) {
+func (m *CutEnumerator) combine(set, left, right []cachedCut, invertLeft, invertRight, xor bool) int {
+	extent := 1
 	for i := range left {
 		a := &left[i]
 		if !a.used {
@@ -81,14 +90,15 @@ func (m *CutEnumerator) combine(set, left, right []cachedCut, invertLeft, invert
 				continue
 			}
 			// ABC evicts before the exact union test, even when the merge fails.
-			pos := freeCutSlot(set)
+			pos := freeCutSlot(set[:min(extent+1, len(set))])
+			extent = max(extent, pos+1)
 			set[pos].used = false
 			merged, leftPhase, rightPhase, ok := mergeCutSlots(a, b)
 			if !ok {
 				continue
 			}
 			set[pos] = merged
-			if filterCutSlot(set, pos) {
+			if filterCutSlot(set[:extent], pos) {
 				continue
 			}
 			s := &set[pos]
@@ -112,7 +122,7 @@ func (m *CutEnumerator) combine(set, left, right []cachedCut, invertLeft, invert
 					for _, leaf := range c.Leaves {
 						s.sign |= cutSign(leaf)
 					}
-					if filterCutSlot(set, pos) {
+					if filterCutSlot(set[:extent], pos) {
 						panic("dar: invalid minimized cut")
 					}
 				}
@@ -121,10 +131,11 @@ func (m *CutEnumerator) combine(set, left, right []cachedCut, invertLeft, invert
 			if s.Value == 0 {
 				s.used = false
 			} else if s.NumLeaves < 2 {
-				return
+				return extent
 			}
 		}
 	}
+	return extent
 }
 
 // Merge two sorted boundaries and record the positions of each input in their

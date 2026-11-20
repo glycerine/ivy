@@ -12,10 +12,12 @@ type Vec_Int_t = vec.Vec_Int_t
 type Vec_Ptr_t = vec.Vec_Ptr_t
 type Vec_Str_t = vec.Vec_Str_t
 type Dar_Cut_t struct {
-	nLeaves int32
-	pLeaves []int32
+	pLeaves [4]int32
+	uSign   uint32 // area-flow score after CNF mapping
 	uTruth  uint16
-	nCuts   int32
+	Value   uint16 // 11-bit fanout tie break
+	nLeaves uint8
+	fBest   bool
 }
 type Aig_MmFlex_t = struct{}
 type abctime = time.Duration
@@ -139,6 +141,7 @@ type Cnf_Man_t_ struct {
 	pManAig      *Aig_Man_t // the underlying AIG manager
 	pCuts        *aig.Aig_ManCut_t
 	selectedCuts []*Cnf_Cut_t
+	darBest      []Dar_Cut_t
 	pSopSizes    []byte
 	pSops        []string
 	aArea        int32         // the area of the mapping
@@ -151,8 +154,26 @@ type Cnf_Man_t_ struct {
 	timeSave     abctime
 }
 
-// inlining of macro Dar_ObjForEachCut
-func Dar_ObjBestCut(pObj *Aig_Obj_t) *Dar_Cut_t { return nil }
+// Dar_ObjBestCut uses the explicitly prepared CNF manager. Edges contain
+// graph-local IDs. Use the manager method for independently mapped graphs.
+func Dar_ObjBestCut(obj *Aig_Obj_t) *Dar_Cut_t {
+	s_manCnfMu.Lock()
+	defer s_manCnfMu.Unlock()
+	return s_pManCnf.Dar_ObjBestCut(obj)
+}
+
+// Dar_ObjBestCut returns the original area-flow choice for a regular node.
+// A transferred CNF cut can be replaced independently during postprocessing.
+func (p *Cnf_Man_t_) Dar_ObjBestCut(obj *Aig_Obj_t) *Dar_Cut_t {
+	if p == nil || obj == nil {
+		return nil
+	}
+	id := obj.NodeID()
+	if id >= len(p.darBest) || !p.darBest[id].fBest {
+		return nil
+	}
+	return &p.darBest[id]
+}
 
 func Cnf_CutSopCost(p *Cnf_Man_t, pCut *Dar_Cut_t) int32 {
 	if p == nil || pCut == nil {

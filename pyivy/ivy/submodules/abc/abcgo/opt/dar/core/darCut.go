@@ -222,7 +222,7 @@ func (m *CutEnumerator) Slots(edge aig.Edge) []CutSlot {
 		leaves += int(set[i].NumLeaves)
 	}
 	storage := make([]aig.Edge, leaves)
-	result := make([]CutSlot, len(set))
+	result := make([]CutSlot, m.limit)
 	for i := range set {
 		c := set[i].candidate(invert && set[i].used)
 		result[i] = CutSlot{Cut: c.copyCut(&storage), Used: set[i].used, Value: int(c.Value)}

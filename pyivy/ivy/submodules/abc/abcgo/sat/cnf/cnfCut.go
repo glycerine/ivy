@@ -67,6 +67,11 @@ func Cnf_CutCreate(manager *Cnf_Man_t, object *Aig_Obj_t) *Cnf_Cut_t {
 	if len(manager.selectedCuts) == 0 {
 		Cnf_DeriveMapping(manager)
 	}
+	if best := manager.Dar_ObjBestCut(object); best != nil {
+		cut := Cnf_CutFromTruth(best.pLeaves[:best.nLeaves], []uint32{uint32(best.uTruth) * 0x10001})
+		cut.Cost = byte(Cnf_CutSopCost(manager, best))
+		return cut
+	}
 	selected := Cnf_ObjBestCut(manager, object)
 	if selected == nil {
 		return nil
