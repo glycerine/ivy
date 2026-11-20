@@ -419,6 +419,10 @@ func goalVocabRaw(goal *LabeledFormula) *Vocab {
 		if lf, ok := p.(*LabeledFormula); ok {
 			if f, ok := lf.Formula.(Expr); ok {
 				fmlas = append(fmlas, f)
+			} else if sb, ok := lf.Formula.(*SchemaBody); ok {
+				// Python's used_variables_asts walks a schema premise
+				// generically, so its variables count too.
+				fmlas = append(fmlas, schemaBodyExprs(sb)...)
 			}
 		}
 	}
@@ -898,6 +902,13 @@ func compileExprVocabLF(lf *LabeledFormula, vocab *Vocab, mod *Module) (*Labeled
 			// from seeing unsorted vars). Clone with original formula.
 			compiled = compiled.Clone(compiled.Args()).(*LabeledFormula)
 		}
+	} else if sb, ok := compiled.Formula.(*SchemaBody); ok {
+		// Python's infer_sorts reaches the SchemaBody through the generic
+		// hasattr(t,'clone') fallback and rebuilds it bottom-up, cloning
+		// every nested LabeledFormula before the enclosing one.
+		cloneArgs := compiled.Args()
+		cloneArgs[1] = cloneSchemaBodyBottomUp(sb)
+		compiled = compiled.Clone(cloneArgs).(*LabeledFormula)
 	}
 
 	// Python compile_expr_vocab emits EXIT HASH canon=... right before return.
@@ -923,4 +934,46 @@ func isInVocabOrFree(sym *Const, vocab *Vocab, free *InsMap[NodeKey, Expr]) bool
 		return true
 	}
 	return false
+}
+
+// cloneSchemaBodyBottomUp mirrors infer_sorts' generic clone of a
+// SchemaBody: each premise is rebuilt first (a LabeledFormula premise is
+// cloned after its own nested schema, if any), then the body itself.
+func cloneSchemaBodyBottomUp(sb *SchemaBody) *SchemaBody {
+	args := sb.Args()
+	newArgs := make([]Node, len(args))
+	for i, a := range args {
+		if lf, ok := a.(*LabeledFormula); ok {
+			lfArgs := lf.Args()
+			if inner, ok := lf.Formula.(*SchemaBody); ok {
+				lfArgs[1] = cloneSchemaBodyBottomUp(inner)
+			}
+			newArgs[i] = lf.Clone(lfArgs)
+			continue
+		}
+		newArgs[i] = a
+	}
+	return sb.Clone(newArgs).(*SchemaBody)
+}
+
+// schemaBodyExprs lists the logic formulas inside a SchemaBody in the order
+// a generic AST walk (Python used_variables_asts) visits them: each
+// element in turn, a LabeledFormula premise by its formula (recursing into
+// a nested schema), and the conclusion.
+func schemaBodyExprs(sb *SchemaBody) []Expr {
+	var res []Expr
+	for _, a := range sb.Args() {
+		a = unwrapCompiledNode(a)
+		switch x := a.(type) {
+		case *LabeledFormula:
+			if f, ok := x.Formula.(Expr); ok {
+				res = append(res, f)
+			} else if inner, ok := x.Formula.(*SchemaBody); ok {
+				res = append(res, schemaBodyExprs(inner)...)
+			}
+		case Expr:
+			res = append(res, x)
+		}
+	}
+	return res
 }
