@@ -93,13 +93,3 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 	xtracer.Trace("parser.using EXIT name=%s decls=%d", name, modDeclCount)
 }
 
-func parserReportImportError(top *ivyAccum, loc Location, err error) {
-	if top == nil || err == nil {
-		return
-	}
-	top.reportError(&ParseError{
-		Filename: top.filename,
-		Lineno:   loc.Line,
-		Message:  err.Error(),
-	})
-}

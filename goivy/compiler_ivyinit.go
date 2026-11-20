@@ -297,25 +297,6 @@ func importModuleWithParent(name string, cfg *Config, parent *ivyAccum) (res *Pa
 	return result, resultErr
 }
 
-func importFilenameRelativeToCurrentSource(fname string, cfg *Config) (string, bool) {
-	if cfg == nil || cfg.IuCfg == nil {
-		return "", false
-	}
-	current := strings.TrimSpace(cfg.IuCfg.Filename)
-	if current == "" {
-		return "", false
-	}
-	dir := filepath.Dir(current)
-	if dir == "" || dir == "." {
-		return "", false
-	}
-	candidate := filepath.Join(dir, fname)
-	if ivyReadableFileExists(candidate) {
-		return candidate, true
-	}
-	return "", false
-}
-
 // SourceFile compiles an Ivy source file.
 // Corresponds to Python's source_file (lines 69-78).
 func SourceFile(filename string, mod *Module, sig *Sig, kwargs map[string]interface{}) error {
