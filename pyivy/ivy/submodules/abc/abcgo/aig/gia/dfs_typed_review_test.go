@@ -197,3 +197,19 @@ func BenchmarkDfsSupportWalks(b *testing.B) {
 		})
 	}
 }
+
+func TestConeSizeCountsSharedNodesOnce(t *testing.T) {
+	p := Gia_ManStart(64)
+	defer Gia_ManStop(p)
+	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
+	root := Gia_ManAppendAnd(p, a, b)
+	shared := root
+	for i := 0; i < 32; i++ {
+		root = Gia_ManAppendAnd(p, root, a)
+	}
+	Gia_ManAppendCo(p, root)
+	roots := []int32{shared >> 1, p.nObjs - 1, root >> 1, 0}
+	if got := Gia_ManConeSize(p, roots, int32(len(roots))); got != 33 {
+		t.Fatalf("overlapping cones contain %d ANDs, want 33", got)
+	}
+}

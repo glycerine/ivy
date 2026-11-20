@@ -30,7 +30,9 @@ func giaDfsPushFanins(stack []giaDfsFrame, p *Gia_Man_t, obj *Gia_Obj_t) []giaDf
 
 // Return the number of requested CIs/nodes, optionally collecting their IDs.
 func giaDfsCollect(p *Gia_Man_t, root int32, result *Vec_Int_t, inputs, nodes bool) int32 {
-	stack := []giaDfsFrame{{id: root}}
+	var initial [8]giaDfsFrame
+	stack := initial[:1]
+	stack[0].id = root
 	var count int32
 	for len(stack) > 0 {
 		frame := stack[len(stack)-1]
@@ -69,7 +71,11 @@ func giaDfsCollect(p *Gia_Man_t, root int32, result *Vec_Int_t, inputs, nodes bo
 			panic("gia: unsupported DFS object")
 		}
 		if nodes {
-			stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
+			if result == nil {
+				count++
+			} else {
+				stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
+			}
 		}
 		stack = giaDfsPushFanins(stack, p, obj)
 	}
