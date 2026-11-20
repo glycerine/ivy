@@ -5,16 +5,16 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
-// Cnf_CutAssignAreaFlow scores a cut by its leaves' current reference pressure.
+// Cnf_CutAssignAreaFlow returns the native uSign score. Leaf reference counts
+// also break ties between equal scores in cnfApplyDarMapping.
 func Cnf_CutAssignAreaFlow(manager *Cnf_Man_t, cut *aig.Aig_Cut_t, area []int32) int32 {
 	if manager == nil || manager.pManAig == nil || cut == nil {
 		return 0
 	}
-	var score int32
+	score := int32(10 * cutCNFCost(cut))
 	for _, id := range aig.Aig_CutLeaves(cut) {
 		edge := aig.Edge(uint32(id) << 1)
 		node := manager.pManAig.Node(edge)
-		score += int32(node.Refs)
 		if node.Kind == aig.And || node.Kind == aig.ExclusiveOr {
 			refs := int32(node.Refs)
 			if refs < 1 {
@@ -32,7 +32,7 @@ func Cnf_CutSuperAreaFlow(super *Vec_Ptr_t, area []int32, graph *aig.Graph) int3
 	if super == nil || graph == nil {
 		return 0
 	}
-	var score int32
+	score := int32(100 * (vec.Vec_PtrSize(super) + 1))
 	for _, item := range vec.Vec_PtrArray(super) {
 		edge, ok := item.(aig.Edge)
 		if !ok {
@@ -57,6 +57,11 @@ func Cnf_CutSuperAreaFlow(super *Vec_Ptr_t, area []int32, graph *aig.Graph) int3
 func cutCNFCost(cut *aig.Aig_Cut_t) int {
 	leaves := int(aig.Aig_CutLeaveNum(cut))
 	truth := aig.Aig_CutTruth(cut)
+	if len(truth) > 0 && leaves <= 4 {
+		sizes, _ := cnfReadMsops()
+		word := smallCutTruth(truth[0], leaves)
+		return int(sizes[word]) + int(sizes[^word])
+	}
 	if len(truth) > 0 {
 		return cutSopCost(truth, leaves)
 	}

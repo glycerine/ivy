@@ -43,6 +43,23 @@ func Cnf_CutFromTruth(leaves []int32, truth []uint32) *Cnf_Cut_t {
 	return cut
 }
 
+// The low 2^n bits specify a small cut. ABC's four-input SOP table
+// requires those bits repeated over every unused variable.
+func smallCutTruth(word uint32, leaves int) uint16 {
+	switch leaves {
+	case 0:
+		return 0 - uint16(word&1)
+	case 1:
+		return uint16(word&3) * 0x5555
+	case 2:
+		return uint16(word&15) * 0x1111
+	case 3:
+		return uint16(word&255) * 0x0101
+	default:
+		return uint16(word)
+	}
+}
+
 func Cnf_CutCreate(manager *Cnf_Man_t, object *Aig_Obj_t) *Cnf_Cut_t {
 	if manager == nil || manager.pManAig == nil || object == nil {
 		return nil

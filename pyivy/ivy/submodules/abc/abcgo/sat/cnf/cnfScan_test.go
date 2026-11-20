@@ -93,26 +93,47 @@ func TestCNFDerivationRestoresStructuralReferences(t *testing.T) {
 	}
 }
 
-func BenchmarkScanBinaryAndChain(b *testing.B) {
-	const gates = 1024
+func mappedAndChain(gates int) *Cnf_Man_t {
 	g := aig.NewGraph()
 	m := Cnf_ManStart()
-	defer Cnf_ManStop(m)
 	m.pManAig = g
 	m.selectedCuts = make([]*Cnf_Cut_t, 2*gates+3)
 	last := g.NewInput()
 	for range gates {
 		input := g.NewInput()
 		gate := g.AND(last, input)
-		m.selectedCuts[gate.NodeID()] = &Cnf_Cut_t{Cost: 3, pFanins: []int32{int32(last.NodeID()), int32(input.NodeID())}}
+		m.selectedCuts[gate.NodeID()] = Cnf_CutFromTruth([]int32{int32(last.NodeID()), int32(input.NodeID())}, []uint32{0x88888888})
+		m.selectedCuts[gate.NodeID()].Cost = 3
 		last = gate
 	}
 	g.AddOutput(last.Not())
+	return m
+}
+
+func BenchmarkScanBinaryAndChain(b *testing.B) {
+	const gates = 1024
+	m := mappedAndChain(gates)
+	defer Cnf_ManStop(m)
 	b.ReportAllocs()
 	for b.Loop() {
 		mapped := Cnf_ManScanMapping(m, 1, 1)
 		if vec.Vec_PtrSize(mapped) != gates {
 			b.Fatalf("visited %d gates", vec.Vec_PtrSize(mapped))
 		}
+	}
+}
+
+func BenchmarkWriteMappedBinaryAndChain(b *testing.B) {
+	const gates = 1024
+	m := mappedAndChain(gates)
+	defer Cnf_ManStop(m)
+	mapped := Cnf_ManScanMapping(m, 1, 1)
+	b.ReportAllocs()
+	for b.Loop() {
+		d := Cnf_ManWriteCnf(m, mapped, 0)
+		if d.nVars != 2*gates+3 || d.nClauses != 3*gates+2 || d.nLiterals != 7*gates+2 {
+			b.Fatalf("wrote %d variables, %d clauses and %d literals", d.nVars, d.nClauses, d.nLiterals)
+		}
+		Cnf_DataFree(d)
 	}
 }

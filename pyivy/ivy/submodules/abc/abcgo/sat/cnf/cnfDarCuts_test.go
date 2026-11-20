@@ -2,6 +2,7 @@ package cnf
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/vec"
 	dar "github.com/glycerine/abcgo/opt/dar/core"
 	"testing"
 )
@@ -113,5 +114,43 @@ func TestAreaFlowTieWithHighFanoutInput(t *testing.T) {
 	// cut a tie value of 4 and the three-input cut (2050 mod 2048) 2.
 	if len(chosen.pFanins) != 2 || chosen.pFanins[0] != int32(c.NodeID()) || chosen.pFanins[1] != int32(inner.NodeID()) {
 		t.Fatalf("selected leaves %v, want the two-input cut", chosen.pFanins)
+	}
+}
+
+func TestCNFAreaFlowUsesSOPCostAndFanoutDivision(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	inner := g.AND(a, b)
+	root := g.AND(inner, c)
+	g.AddOutput(root)
+	g.AddOutput(inner)
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	m.pManAig = g
+	area := make([]int32, aig.Aig_ManObjNumMax(g))
+	area[inner.NodeID()] = 83
+	cuts := aig.Aig_ComputeCuts(g, 10, 4, 1, 0)
+	defer aig.Aig_ManCutStop(cuts)
+	found := false
+	for _, cut := range cuts.Cuts(root) {
+		leaves := aig.Aig_CutLeaves(cut)
+		if len(leaves) == 2 && (leaves[0] == int32(inner.NodeID()) || leaves[1] == int32(inner.NodeID())) {
+			found = true
+			if got := Cnf_CutAssignAreaFlow(m, cut, area); got != 71 {
+				t.Errorf("area for two-input AND plus shared internal leaf = %d, want 30+83/2", got)
+			}
+		}
+	}
+	if !found {
+		t.Fatal("missing two-leaf AIG cut")
+	}
+	super := vec.Vec_PtrAlloc(2)
+	if got := Cnf_CutSuperAreaFlow(super, area, g); got != 100 {
+		t.Errorf("empty supergate area %d, want 100", got)
+	}
+	vec.Vec_PtrPush(super, c)
+	vec.Vec_PtrPush(super, inner.Not())
+	if got := Cnf_CutSuperAreaFlow(super, area, g); got != 341 {
+		t.Errorf("area for two-input supergate with complemented leaf = %d, want 300+83/2", got)
 	}
 }

@@ -30,32 +30,35 @@ func writeOtherMapped(manager *Cnf_Man_t, mapped *vec.Vec_Ptr_t) (*Cnf_Dat_t, er
 		return nil, fmt.Errorf("cnf: missing mapped graph")
 	}
 	graph := manager.pManAig
-	nodes := graph.Nodes()
-	result := &Cnf_Dat_t{pMan: graph, Variables: len(nodes), nVars: int32(len(nodes)), VarNums: make([]int32, len(nodes)), Obj2Clause: make([]int32, len(nodes)), Obj2Count: make([]int32, len(nodes))}
-	for i := range nodes {
+	objects := aigObjectCount(graph)
+	result := &Cnf_Dat_t{pMan: graph, Variables: objects, nVars: int32(objects), VarNums: make([]int32, objects), Obj2Clause: make([]int32, objects), Obj2Count: make([]int32, objects)}
+	for i := range objects {
 		result.VarNums[i] = int32(i)
 		result.Obj2Clause[i] = -1
 		result.Obj2Count[i] = -1
 	}
-	for _, edge := range graph.Inputs() {
+	for i := range graph.InputCount() {
+		edge := aig.Aig_ManCi(graph, int32(i))
 		result.Obj2Count[edge.NodeID()] = 0
 	}
-	if err := writeMappedCutClauses(manager, mapped, result); err != nil {
+	outputs := graph.Outputs()
+	writer, err := writeMappedCutClauses(manager, mapped, result, 2*len(outputs)+1, 4*len(outputs)+1)
+	if err != nil {
 		return nil, err
 	}
-	for _, edge := range graph.Outputs() {
+	for _, edge := range outputs {
 		id := edge.NodeID()
-		fan := nodes[id].Fanins[0]
+		fan := graph.Node(edge).Fanins[0]
 		fid := fan.NodeID()
 		compl := int32(0)
 		if fan.Complemented() {
 			compl = 1
 		}
-		result.appendMappedClause(id, []int32{int32(2 * id), int32(2*fid) + 1 - compl})
-		result.appendMappedClause(id, []int32{int32(2*id + 1), int32(2*fid) + compl})
+		writer.write(id, int32(2*id), int32(2*fid)+1-compl)
+		writer.write(id, int32(2*id+1), int32(2*fid)+compl)
 	}
-	result.appendMappedClause(0, []int32{0})
-	result.finishMappedClauses()
+	writer.write(0, 0)
+	writer.finish()
 	return result, nil
 }
 

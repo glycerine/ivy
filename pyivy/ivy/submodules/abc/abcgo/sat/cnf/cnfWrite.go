@@ -1,6 +1,8 @@
 package cnf
 
 import (
+	"math/bits"
+
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -8,7 +10,7 @@ func Cnf_ManWriteCnfMapping(manager *Cnf_Man_t, mapped *Vec_Ptr_t) *Vec_Int_t {
 	if manager == nil || manager.pManAig == nil {
 		return vec.Vec_IntAllocExact(0)
 	}
-	result := vec.Vec_IntStart(len(manager.pManAig.Nodes()))
+	result := vec.Vec_IntStart(aigObjectCount(manager.pManAig))
 	for _, item := range vec.Vec_PtrArray(mapped) {
 		edge, ok := item.(Aig_Obj_t)
 		if !ok || edge.NodeID() >= len(manager.selectedCuts) {
@@ -19,7 +21,8 @@ func Cnf_ManWriteCnfMapping(manager *Cnf_Man_t, mapped *Vec_Ptr_t) *Vec_Int_t {
 			continue
 		}
 		vec.Vec_IntWriteEntry(result, edge.NodeID(), int32(vec.Vec_IntSize(result)))
-		vec.Vec_IntPush(result, int32(cut.truth[0]))
+		truth := uint32(smallCutTruth(cut.truth[0], len(cut.pFanins)))
+		vec.Vec_IntPush(result, int32(truth|truth<<16))
 		vec.Vec_IntPushArray(result, cut.pFanins, len(cut.pFanins))
 		for i := len(cut.pFanins); i < 4; i++ {
 			vec.Vec_IntPush(result, -1)
@@ -28,52 +31,60 @@ func Cnf_ManWriteCnfMapping(manager *Cnf_Man_t, mapped *Vec_Ptr_t) *Vec_Int_t {
 	return result
 }
 
+// ABC stores four ternary digits per SOP byte, with the first variable in
+// the most significant digit. ISOP instead places that variable in bits 0–1.
+type sopCube struct {
+	packed   byte
+	literals [5]byte
+}
+
+var sopCubes = func() [256]sopCube {
+	var table [256]sopCube
+	for code := range table {
+		cube := code
+		var packed byte
+		for range 4 {
+			packed = packed<<2 | byte((cube%3+1)%3)
+			cube /= 3
+		}
+		entry := &table[code]
+		entry.packed = packed
+		for i := range 4 {
+			entry.literals[i+1] = entry.literals[i]
+			if packed>>(2*i)&3 != 0 {
+				entry.literals[i+1]++
+			}
+		}
+	}
+	return table
+}()
+
 func Cnf_SopConvertToVector(sop string, cubes int32, cover *Vec_Int_t) {
 	if cover == nil {
 		return
 	}
 	vec.Vec_IntClear(cover)
 	for i := int32(0); i < cubes; i++ {
-		cube := int(sop[i])
-		var packed int32
-		for b := 0; b < 4; b++ {
-			var state int32
-			if cube%3 == 0 {
-				state = 1
-			} else if cube%3 == 1 {
-				state = 2
-			}
-			packed = packed<<2 | state
-			cube /= 3
-		}
-		vec.Vec_IntPush(cover, packed)
+		vec.Vec_IntPush(cover, int32(sopCubes[sop[i]].packed))
 	}
 }
 func Cnf_SopCountLiterals(sop string, cubes int32) int32 {
 	var count int32
 	for i := int32(0); i < cubes; i++ {
-		cube := int(sop[i])
-		for b := 0; b < 4; b++ {
-			if cube%3 != 2 {
-				count++
-			}
-			cube /= 3
-		}
+		count += int32(sopCubes[sop[i]].literals[4])
 	}
 	return count
 }
 func Cnf_IsopCountLiterals(isop *Vec_Int_t, variables int32) int32 {
-	if isop == nil {
+	if isop == nil || variables <= 0 {
 		return 0
 	}
 	var count int32
+	mask := uint32(0x55555555) & (uint32(1)<<uint(2*min(variables, 16)) - 1)
 	for _, cube := range vec.Vec_IntArray(isop) {
-		for i := int32(0); i < variables; i++ {
-			if cube&3 == 1 || cube&3 == 2 {
-				count++
-			}
-			cube >>= 2
-		}
+		// The pair encodes a literal exactly when its two bits differ.
+		u := uint32(cube)
+		count += int32(bits.OnesCount32((u ^ u>>1) & mask))
 	}
 	return count
 }

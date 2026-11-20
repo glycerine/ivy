@@ -151,3 +151,97 @@ func TestMappedWriterSourceFreeOutputRestrictions(t *testing.T) {
 		t.Fatal("PDR all-output request rejected")
 	}
 }
+
+func TestMappedWriterSharesStorageWithoutAliasingClauses(t *testing.T) {
+	const gates = 128
+	m := mappedAndChain(gates)
+	defer Cnf_ManStop(m)
+	mapped := Cnf_ManScanMapping(m, 1, 1)
+	for _, write := range []func() *Cnf_Dat_t{
+		func() *Cnf_Dat_t { return Cnf_ManWriteCnf(m, mapped, 0) },
+		func() *Cnf_Dat_t { return Cnf_ManWriteCnfOther(m, mapped) },
+	} {
+		if allocs := testing.AllocsPerRun(3, func() { Cnf_DataFree(write()) }); allocs > 40 {
+			t.Errorf("writing %d gates allocated %.0f objects, want at most 40", gates, allocs)
+		}
+		data := write()
+		for i := 0; i < len(data.Clauses)-1; i++ {
+			next := data.Clauses[i+1][0]
+			private := data.pClauses[i][0]
+			data.Clauses[i][0]++
+			grown := append(data.Clauses[i], -1)
+			if grown[len(grown)-1] != -1 || data.Clauses[i+1][0] != next || data.pClauses[i][0] != private {
+				t.Fatalf("clause %d shares mutable storage with another clause or its private copy", i)
+			}
+		}
+	}
+}
+
+func TestMappedWriterReadsCompactTruthAcrossAllTwoInputFunctions(t *testing.T) {
+	g := aig.NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	root := g.AND(a, b)
+	out := g.AddOutput(root)
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	m.pManAig = g
+	m.selectedCuts = make([]*Cnf_Cut_t, aigObjectCount(g))
+	mapped := vec.Vec_PtrAlloc(1)
+	vec.Vec_PtrPush(mapped, root)
+	leaves := []int32{int32(a.NodeID()), int32(b.NodeID())}
+	for truth := uint32(0); truth < 16; truth++ {
+		Cnf_ObjSetBestCut(m, &root, Cnf_CutFromTruth(leaves, []uint32{truth}))
+		for _, write := range []func() *Cnf_Dat_t{
+			func() *Cnf_Dat_t { return Cnf_ManWriteCnf(m, mapped, 1) },
+			func() *Cnf_Dat_t { return Cnf_ManWriteCnfOther(m, mapped) },
+		} {
+			cnf := write()
+			solver := Cnf_DataWriteIntoSolver(cnf, 1, 0)
+			if solver == nil {
+				t.Fatalf("truth %x made free output unsatisfiable", truth)
+			}
+			for row := range 4 {
+				av := bsat.Positive(cnf.VarNums[a.NodeID()])
+				bv := bsat.Positive(cnf.VarNums[b.NodeID()])
+				y := bsat.Positive(cnf.VarNums[out.NodeID()])
+				if row&1 == 0 {
+					av ^= 1
+				}
+				if row&2 == 0 {
+					bv ^= 1
+				}
+				if truth&(1<<row) == 0 {
+					y ^= 1
+				}
+				if solver.Solve(av, bv, y) != bsat.Satisfiable || solver.Solve(av, bv, y^1) != bsat.Unsatisfiable {
+					t.Fatalf("compact truth %x, row %d, clauses %v", truth, row, cnf.Clauses)
+				}
+			}
+		}
+		mapping := Cnf_ManWriteCnfMapping(m, mapped)
+		offset := vec.Vec_IntEntry(mapping, root.NodeID())
+		if got := uint32(vec.Vec_IntEntry(mapping, int(offset))); got != truth*0x11111111 {
+			t.Errorf("packed mapping truth %08x, want %08x", got, truth*0x11111111)
+		}
+	}
+}
+
+func TestSetBestCutOnFreshManagerAndGrowingGraph(t *testing.T) {
+	g := aig.NewGraph()
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	m.pManAig = g
+	a, b := g.NewInput(), g.NewInput()
+	first := g.AND(a, b)
+	cut := Cnf_CutFromTruth([]int32{int32(a.NodeID()), int32(b.NodeID())}, []uint32{0x88888888})
+	Cnf_ObjSetBestCut(m, &first, cut)
+	if got := Cnf_ObjBestCut(m, &first); got != cut {
+		t.Error("lost cut installed on fresh manager")
+	}
+	second := g.AND(a, first)
+	next := Cnf_CutFromTruth([]int32{int32(a.NodeID()), int32(first.NodeID())}, []uint32{0x88888888})
+	Cnf_ObjSetBestCut(m, &second, next)
+	if Cnf_ObjBestCut(m, &first) != cut || Cnf_ObjBestCut(m, &second) != next {
+		t.Error("lost cuts after graph grew")
+	}
+}

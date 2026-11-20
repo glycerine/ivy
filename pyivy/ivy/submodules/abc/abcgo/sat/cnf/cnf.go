@@ -181,8 +181,11 @@ func Cnf_ObjSetBestCut(p *Cnf_Man_t, pObj *Aig_Obj_t, cut *Cnf_Cut_t) {
 		return
 	}
 	id := (*pObj).NodeID()
-	if id < 0 || id >= len(p.selectedCuts) {
-		return
+	if id >= len(p.selectedCuts) {
+		if p.pManAig == nil || !p.pManAig.ValidEdge(*pObj) || cut == nil {
+			return
+		}
+		p.selectedCuts = append(p.selectedCuts, make([]*Cnf_Cut_t, aigObjectCount(p.pManAig)-len(p.selectedCuts))...)
 	}
 	p.selectedCuts[id] = cut
 }

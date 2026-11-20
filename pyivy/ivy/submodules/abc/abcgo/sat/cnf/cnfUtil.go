@@ -88,7 +88,7 @@ func scanMapping(manager *Cnf_Man_t, edge aig.Edge, mapped *Vec_Ptr_t, preorder,
 	case cut != nil:
 		cost = int32(cut.Cost)
 		if darCosts && len(cut.truth) != 0 {
-			truth := uint16(cut.truth[0])
+			truth := smallCutTruth(cut.truth[0], len(cut.pFanins))
 			cost = int32(manager.pSopSizes[truth]) + int32(manager.pSopSizes[^truth])
 		}
 		for _, leaf := range cut.pFanins {
