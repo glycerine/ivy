@@ -1,9 +1,11 @@
 package cut
 
 import (
-	"github.com/glycerine/abcgo/bool/kit"
 	"math/bits"
 	"time"
+
+	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/extra"
 )
 
 func cutTruthValue(c *Cut_Cut_t, merged []int32, assignment int) bool {
@@ -81,10 +83,19 @@ func Cut_TruthPhase(merged, child *Cut_Cut_t) uint32 {
 	return phase
 }
 
-// N-canonicalization chooses the lexicographically smallest table among input
-// phases and output phases. It is only used for optional small-cut statistics.
+// Cut_TruthNCanonicize records the two output polarities and their input
+// phases for single-word cuts, as in cutTruth.c.
 func Cut_TruthNCanonicize(c *Cut_Cut_t) {
 	n := len(c.leaves)
+	if c.NVarsMax < 6 && len(c.truth) == 1 {
+		direct, phases := extra.Extra_TruthCanonFastN(c.NVarsMax, int32(n), c.truth)
+		c.UCanon0, c.Num0 = direct[0], uint16(phases[0])
+		inverse, phases := extra.Extra_TruthCanonFastN(c.NVarsMax, int32(n), []uint32{^c.truth[0]})
+		c.UCanon1, c.Num1 = inverse[0], uint16(phases[0])
+		return
+	}
+	// The Go extension for wider tables stores one canonical function across
+	// the two words. The C cut routine only supports single-word tables.
 	if n > 6 {
 		panic("cut: N-canonicalization limited to six variables")
 	}

@@ -414,3 +414,15 @@ func TestCutListBudgetAfterDominanceAndSplice(t *testing.T) {
 		t.Fatal("derived list count disagrees with its chain")
 	}
 }
+
+func TestCutNCanonSeparatesPolaritiesAndSavesPhases(t *testing.T) {
+	// AND(a,b,c) has one on-set minterm and seven off-set minterms.
+	c := &Cut_Cut_t{NVarsMax: 4, leaves: []int32{2, 5, 9}, truth: []uint32{0x80808080}}
+	Cut_TruthNCanonicize(c)
+	if c.UCanon0 != 0x01010101 || c.Num0 != 7 || c.UCanon1 != 0x7f7f7f7f || c.Num1 != 0 {
+		t.Fatalf("direct %08x phase %d, complemented %08x phase %d", c.UCanon0, c.Num0, c.UCanon1, c.Num1)
+	}
+	if c.truth[0] != 0x80808080 {
+		t.Fatal("canonicalization changed the cut truth")
+	}
+}
