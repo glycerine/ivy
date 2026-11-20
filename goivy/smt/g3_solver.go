@@ -58,11 +58,23 @@ func (s *Z3Solver) Check() Z3CheckResult { return s.CheckAssumptions(nil) }
 // assertions. On every inconclusive result it checks the original solver so a
 // failing Ivy obligation has its concrete counterexample ready for Model.
 func (s *Z3Solver) CheckVerificationCondition() Z3CheckResult {
+	return s.checkVerificationCondition(s.c.ProveUnsatByOrderAbstraction)
+}
+
+// BeginVerificationChecks uses one private proof kernel for the current set
+// of Ivy final conditions. Release it when the checker leaves that set.
+func (s *Z3Solver) BeginVerificationChecks() (check func() Z3CheckResult, release func()) {
+	batch := s.c.BeginOrderProofBatch()
+	return func() Z3CheckResult { return s.checkVerificationCondition(batch.Prove) },
+		func() { fail(batch.Close()) }
+}
+
+func (s *Z3Solver) checkVerificationCondition(prove func() (bool, error)) Z3CheckResult {
 	var result Z3CheckResult
 	s.ctx.do(func() {
 		// The optional solver can exhaust its own setup resources even when
 		// the concrete solver already has everything it needs to decide.
-		if proved, err := s.c.ProveUnsatByOrderAbstraction(); err == nil && proved {
+		if proved, err := prove(); err == nil && proved {
 			result = Unsat
 			return
 		}

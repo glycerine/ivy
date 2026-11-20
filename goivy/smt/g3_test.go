@@ -87,62 +87,82 @@ func TestG3SMTBindingsPreserveDeclarationIdentity(t *testing.T) {
 }
 
 func TestG3VerificationConditionFallsBackToConcreteModel(t *testing.T) {
-	ctx := NewZ3Context()
-	defer ctx.Close()
-	s := ctx.NewZ3Solver()
-	domain := ctx.BvSort(2)
-	x := ctx.Const("x", domain)
-	a := ctx.Const("a", domain)
-	p := ctx.Function("p", []Z3Sort{domain}, ctx.BoolSort())
-	s.Assert(ctx.ForAll([]Z3Expr{x}, p.Apply(x)))
+	for _, mode := range []string{"Single", "Batch"} {
+		t.Run(mode, func(t *testing.T) {
+			ctx := NewZ3Context()
+			defer ctx.Close()
+			s := ctx.NewZ3Solver()
+			check := s.CheckVerificationCondition
+			if mode == "Batch" {
+				var release func()
+				check, release = s.BeginVerificationChecks()
+				defer release()
+			}
+			domain := ctx.BvSort(2)
+			x := ctx.Const("x", domain)
+			a := ctx.Const("a", domain)
+			p := ctx.Function("p", []Z3Sort{domain}, ctx.BoolSort())
+			s.Assert(ctx.ForAll([]Z3Expr{x}, p.Apply(x)))
 
-	s.Push()
-	s.Assert(ctx.Not(p.Apply(a)))
-	if got := s.CheckVerificationCondition(); got != Unsat {
-		t.Fatal("expected refutation", got)
-	}
-	s.Pop()
-	three := ctx.BvVal(3, 2)
-	s.Assert(ctx.Eq(a, three))
-	if got := s.CheckVerificationCondition(); got != Sat {
-		t.Fatal("expected counterexample", got)
-	}
-	m := s.Model()
-	if m == nil {
-		t.Fatal("missing concrete counterexample")
-	}
-	defer m.Release()
-	got, ok := m.Eval(a, true)
-	if !ok || !got.Equal(three) {
-		t.Fatal("counterexample lost the two-bit value 3", got, ok)
+			s.Push()
+			s.Assert(ctx.Not(p.Apply(a)))
+			if got := check(); got != Unsat {
+				t.Fatal("expected refutation", got)
+			}
+			s.Pop()
+			three := ctx.BvVal(3, 2)
+			s.Assert(ctx.Eq(a, three))
+			if got := check(); got != Sat {
+				t.Fatal("expected counterexample", got)
+			}
+			m := s.Model()
+			if m == nil {
+				t.Fatal("missing concrete counterexample")
+			}
+			defer m.Release()
+			got, ok := m.Eval(a, true)
+			if !ok || !got.Equal(three) {
+				t.Fatal("counterexample lost the two-bit value 3", got, ok)
+			}
+		})
 	}
 }
 
 func TestG3VerificationConditionFallsBackUnderMemoryPressure(t *testing.T) {
-	ctx := NewZ3Context()
-	defer ctx.Close()
-	s := ctx.NewZ3Solver()
-	domain := ctx.BvSort(2)
-	x := ctx.Const("x", domain)
-	a := ctx.Const("a", domain)
-	p := ctx.Function("p", []Z3Sort{domain}, ctx.BoolSort())
-	s.Assert(ctx.ForAll([]Z3Expr{x}, p.Apply(x)))
-	s.Push()
-	s.Assert(ctx.Not(p.Apply(a)))
-	if got := s.Check(); got != Unsat {
-		t.Fatal("concrete control", got)
-	}
-	m, err := ctx.c.Manager()
-	if err != nil {
-		t.Fatal(err)
-	}
-	budget := m.Budget()
-	held := budget.Limit() - budget.Used() - 32*1024
-	if err = budget.Reserve(held); err != nil {
-		t.Fatal(err)
-	}
-	defer budget.Release(held)
-	if got := s.CheckVerificationCondition(); got != Unsat {
-		t.Fatal("cached concrete result", got)
+	for _, mode := range []string{"Single", "Batch"} {
+		t.Run(mode, func(t *testing.T) {
+			ctx := NewZ3Context()
+			defer ctx.Close()
+			s := ctx.NewZ3Solver()
+			check := s.CheckVerificationCondition
+			if mode == "Batch" {
+				var release func()
+				check, release = s.BeginVerificationChecks()
+				defer release()
+			}
+			domain := ctx.BvSort(2)
+			x := ctx.Const("x", domain)
+			a := ctx.Const("a", domain)
+			p := ctx.Function("p", []Z3Sort{domain}, ctx.BoolSort())
+			s.Assert(ctx.ForAll([]Z3Expr{x}, p.Apply(x)))
+			s.Push()
+			s.Assert(ctx.Not(p.Apply(a)))
+			if got := s.Check(); got != Unsat {
+				t.Fatal("concrete control", got)
+			}
+			m, err := ctx.c.Manager()
+			if err != nil {
+				t.Fatal(err)
+			}
+			budget := m.Budget()
+			held := budget.Limit() - budget.Used() - 32*1024
+			if err = budget.Reserve(held); err != nil {
+				t.Fatal(err)
+			}
+			defer budget.Release(held)
+			if got := check(); got != Unsat {
+				t.Fatal("cached concrete result", got)
+			}
+		})
 	}
 }

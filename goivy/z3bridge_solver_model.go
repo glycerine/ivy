@@ -1271,6 +1271,12 @@ func (s *Solver) GetSmallModelWithCond(
 	// after filtering - there is nothing to check, so we return nil
 	// without calling decide(), exactly like Python.
 	if finalCond != nil {
+		check := z3solver.CheckVerificationCondition
+		if s.opts.Incremental && len(finalCond) > 1 {
+			var release func()
+			check, release = z3solver.BeginVerificationChecks()
+			defer release()
+		}
 		for _, fc := range finalCond {
 			// NON-INCREMENTAL: create a fresh solver before each final
 			// condition, replaying prior assumptions.
@@ -1282,6 +1288,7 @@ func (s *Solver) GetSmallModelWithCond(
 			if !s.opts.Incremental {
 				previous := z3solver
 				z3solver = s.newZ3Solver()
+				check = z3solver.CheckVerificationCondition
 				previous.Reset()
 				zc, err = s.ClausesToZ3(clauses)
 				if err != nil {
@@ -1331,7 +1338,7 @@ func (s *Solver) GetSmallModelWithCond(
 				// Python ivy_solver.py:1437 calls decide(s) which emits the
 				// decide() ENTER trace before invoking solver.check.
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				res, err := s.decideZ3With(z3solver, z3solver.CheckVerificationCondition)
+				res, err := s.decideZ3With(z3solver, check)
 				if err != nil {
 					return nil, err
 				}
