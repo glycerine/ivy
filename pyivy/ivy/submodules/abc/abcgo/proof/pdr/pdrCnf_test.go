@@ -10,6 +10,80 @@ import (
 	"github.com/glycerine/abcgo/sat/cnf"
 )
 
+func TestPrepareModelAcrossAbsorbedGate(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	inner := g.AND(a, b)
+	out := g.AddOutput(g.AND(inner, c.Not()))
+	aig.Aig_ManSetRegNum(g, 0)
+	s := bsat.NewSolver()
+	p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{}, pCnfMan: cnf.Cnf_ManStart(), vSolvers: []*bsat.Solver{s}}
+	if Pdr_ManNewSolver(s, p, 0, 0) == nil {
+		t.Fatal("missing frame solver")
+	}
+	pdrPrepareModel(p, 0, nil)
+	if p.pCnf2.Obj2Count[inner.NodeID()] != -1 {
+		t.Fatal("inner AND should be absorbed into the mapped cut")
+	}
+	y := Pdr_ObjSatVar(p, 0, 3, out)
+	if s.Solve(bsat.Positive(y)) != bsat.Satisfiable {
+		t.Fatal("missing model for a & b & !c")
+	}
+	if value, ok := s.Value(Pdr_ObjSatVar(p, 0, 3, inner)); !ok || !value {
+		t.Fatal("could not read the absorbed AND's value from the solved model")
+	}
+	ids, values := vec.Vec_IntAlloc(3), vec.Vec_IntAlloc(3)
+	for _, e := range []aig.Edge{a, b, c} {
+		vec.Vec_IntPush(ids, int32(e.NodeID()))
+	}
+	Pdr_ManCollectValues(p, 0, ids, values)
+	if vals := vec.Vec_IntArray(values); vals[0] != 1 || vals[1] != 1 || vals[2] != 0 {
+		t.Fatalf("incorrect input model %v", vals)
+	}
+}
+
+func TestPdrValuesOfAbsorbedInvertingGates(t *testing.T) {
+	for _, kind := range []aig.NodeKind{aig.Buffer, aig.And, aig.ExclusiveOr} {
+		g := aig.NewGraph()
+		a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+		var inner aig.Edge
+		switch kind {
+		case aig.Buffer:
+			inner = aig.Aig_ObjCreate(g, &aig.Node{Kind: kind, Fanins: [2]aig.Edge{a.Not(), aig.InvalidEdge}})
+		case aig.And:
+			inner = g.AND(a.Not(), b)
+		case aig.ExclusiveOr:
+			inner = g.NewXor(a.Not(), b)
+		}
+		g.AddOutput(g.AND(inner, c))
+		aig.Aig_ManSetRegNum(g, 0)
+		s := bsat.NewSolver()
+		p := &Pdr_Man_t{pAig: g, pPars: &Pdr_Par_t{}, pCnfMan: cnf.Cnf_ManStart(), vSolvers: []*bsat.Solver{s}}
+		if Pdr_ManNewSolver(s, p, 0, 0) == nil || p.pCnf2.Obj2Count[inner.NodeID()] != -1 {
+			t.Fatalf("gate %d was not absorbed", kind)
+		}
+		x, y := bsat.Positive(Pdr_ObjSatVar(p, 0, 3, a)), bsat.Positive(Pdr_ObjSatVar(p, 0, 3, b))
+		v := bsat.Positive(Pdr_ObjSatVar(p, 0, 3, inner)) ^ int32(inner&1)
+		for mask := int32(0); mask < 4; mask++ {
+			av, bv := mask&1 != 0, mask&2 != 0
+			want := !av
+			if kind == aig.And {
+				want = !av && bv
+			} else if kind == aig.ExclusiveOr {
+				want = !av != bv
+			}
+			assumptions := []bsat.Literal{x ^ pdrBool(!av), y ^ pdrBool(!bv), v ^ pdrBool(!want)}
+			if s.Solve(assumptions...) != bsat.Satisfiable {
+				t.Fatalf("kind %d mask %d rejected gate value %t", kind, mask, want)
+			}
+			assumptions[2] ^= 1
+			if s.Solve(assumptions...) != bsat.Unsatisfiable {
+				t.Fatalf("kind %d mask %d admitted opposite gate value", kind, mask)
+			}
+		}
+	}
+}
+
 func TestPdrDynamicCNFAgainstGraphEvaluation(t *testing.T) {
 	rng := rand.New(rand.NewSource(59121))
 	for trial := 0; trial < 50; trial++ {

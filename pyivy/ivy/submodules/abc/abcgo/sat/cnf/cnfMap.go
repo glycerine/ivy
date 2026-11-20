@@ -72,7 +72,7 @@ func Cnf_DeriveMapping(manager *Cnf_Man_t) {
 		aig.Aig_ManCutStop(manager.pCuts)
 		manager.pCuts = nil
 	}
-	if err := cnfApplyDarMapping(manager); err != nil {
+	if err := cnfApplyDarMapping(manager, false); err != nil {
 		panic(err)
 	}
 }

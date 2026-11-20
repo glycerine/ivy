@@ -122,9 +122,8 @@ func pdrLiterals(v *vec.Vec_Int_t) []bsat.Literal {
 	return vec.Vec_IntArray(v)
 }
 
-// Materialize the structural cone before solving. Ternary simulation reads
-// values for cone objects, including nodes omitted by CNF cuts; adding their
-// SAT variables after Solve would invalidate the model in the Go solver.
+// Prepare values for the structural cone, including gates absorbed into
+// mapped cuts. Allocating new SAT variables after Solve invalidates the model.
 func pdrPrepareModel(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) {
 	if p.pPars.FMonoCnf != 0 {
 		return
@@ -147,10 +146,11 @@ func pdrPrepareModel(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) {
 			continue
 		}
 		seen[obj.NodeID()] = true
+		kind := p.pAig.Node(obj).Kind
 		Pdr_ObjSatVar(p, k, 3, obj)
-		if aig.Aig_ObjIsCo(p.pAig, obj) {
+		if kind == aig.Output || kind == aig.Buffer {
 			stack = append(stack, aig.Aig_ObjFanin0(p.pAig, obj))
-		} else if aig.Aig_ObjIsNode(p.pAig, obj) {
+		} else if kind == aig.And || kind == aig.ExclusiveOr {
 			stack = append(stack, aig.Aig_ObjFanin0(p.pAig, obj), aig.Aig_ObjFanin1(p.pAig, obj))
 		}
 	}

@@ -86,11 +86,10 @@ type Pdr_Man_t struct {
 	pCnf1    *Cnf_Dat_t // CNF for this AIG
 	vVar2Reg *Vec_Int_t // mapping of SAT var into registers
 	// dynamic CNF representation
-	pCnf2       *Cnf_Dat_t   // CNF for this AIG
-	cnfVarToObj []int32      // dynamic CNF variable-to-object map
-	pvId2Vars   []*Vec_Int_t // for each used ObjId, maps frame into SAT var
-	vVar2Ids    []*Vec_Int_t // for each used frame, maps SAT var into ObjId
-	vVLits      *Vec_Wec_t   // CNF literals
+	pCnf2     *Cnf_Dat_t   // CNF for this AIG
+	pvId2Vars []*Vec_Int_t // for each used ObjId, maps frame into SAT var
+	vVar2Ids  []*Vec_Int_t // for each used frame, maps SAT var into ObjId
+	vVLits    *Vec_Wec_t   // CNF literals
 	// data representation
 	iOutCur     int32         // current output
 	nPrioShift  int32         // priority shift

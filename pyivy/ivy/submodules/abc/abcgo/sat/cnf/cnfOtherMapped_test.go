@@ -1,11 +1,67 @@
 package cnf
 
 import (
+	"reflect"
+	"slices"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
+
+func TestMappedOutputDrivenByInvertingBuffer(t *testing.T) {
+	g := aig.NewGraph()
+	input := g.NewInput()
+	buf := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{input.Not(), aig.InvalidEdge}})
+	output := g.AddOutput(buf)
+	for _, d := range []*Cnf_Dat_t{Cnf_DeriveOther(g, 0), Cnf_Derive(g, 1)} {
+		if d == nil {
+			t.Error("missing CNF for buffered output")
+			continue
+		}
+		s := Cnf_DataWriteIntoSolver(d, 1, 0)
+		x, y := bsat.Positive(d.VarNums[input.NodeID()]), bsat.Positive(d.VarNums[output.NodeID()])
+		for _, value := range []bsat.Literal{0, 1} {
+			if s.Solve(x^value, y^value^1) != bsat.Satisfiable || s.Solve(x^value, y^value) != bsat.Unsatisfiable {
+				t.Fatalf("buffer lost polarity at literal sign %d", value)
+			}
+		}
+	}
+}
+
+// The original C Cnf_DeriveOther produced these arrays for !(a & !b & c)
+// with both values of fSkipTtMin. Gate 4 is absorbed into the cut of gate 5.
+func TestAlternateEntryPointsMatchNativeCuts(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	root := g.AND(g.AND(a, b.Not()), c)
+	g.AddOutput(root.Not())
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	wantClauses := [][]int32{{10, 3, 4, 7}, {11, 2}, {11, 5}, {11, 6}, {12, 10}, {13, 11}, {0}}
+	wantMapping := []int32{0, 0, 0, 0, 0, 7, 0, 538976288, 1, 2, 3, -1}
+	for _, skip := range []int32{0, 1} {
+		for _, got := range []*Cnf_Dat_t{Cnf_DeriveOther(g, skip), Cnf_DeriveOtherWithMan(m, g, skip)} {
+			if got == nil {
+				t.Fatal("missing alternate CNF")
+			}
+			if got.Variables != 7 || !reflect.DeepEqual(got.Clauses, wantClauses) || !slices.Equal(got.Mapping, wantMapping) {
+				t.Errorf("skip %d: %d variables, clauses %v, mapping %v", skip, got.Variables, got.Clauses, got.Mapping)
+			}
+			if !slices.Equal(got.Obj2Clause, []int32{6, -1, -1, -1, -1, 0, 4}) || !slices.Equal(got.Obj2Count, []int32{1, 0, 0, 0, -1, 4, 2}) {
+				t.Errorf("skip %d: object clause starts %v, counts %v", skip, got.Obj2Clause, got.Obj2Count)
+			}
+		}
+	}
+	m.pManAig = g
+	Cnf_DeriveMapping(m)
+	mapped := Cnf_ManScanMapping(m, 1, 1)
+	data := Cnf_ManWriteCnfOther(m, mapped)
+	if data == nil || !reflect.DeepEqual(data.Clauses, wantClauses) {
+		t.Fatal("alternate writer omitted the supplied cuts or constrained the output")
+	}
+}
 
 func TestOtherMappedCNFExhaustive(t *testing.T) {
 	g := aig.NewGraph()

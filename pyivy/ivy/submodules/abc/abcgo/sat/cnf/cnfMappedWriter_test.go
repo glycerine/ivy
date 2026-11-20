@@ -89,6 +89,16 @@ func TestMappedWriterFiveInputISOP(t *testing.T) {
 	if data == nil {
 		t.Fatal("five-input mapped writer failed")
 	}
+	alternate := Cnf_ManWriteCnfOther(m, mapped)
+	if alternate == nil || alternate.Obj2Count[root.NodeID()] != 6 || alternate.VarNums[root.NodeID()] != int32(root.NodeID()) {
+		t.Fatal("alternate writer lost the five-input ISOP")
+	}
+	checkMappedAndOutput(t, alternate, inputs, out)
+	checkMappedAndOutput(t, data, inputs, out)
+}
+
+func checkMappedAndOutput(t *testing.T, data *Cnf_Dat_t, inputs []aig.Edge, out aig.Edge) {
+	t.Helper()
 	solver := Cnf_DataWriteIntoSolver(data, 1, 0)
 	if solver == nil {
 		t.Fatal("failed to load CNF")

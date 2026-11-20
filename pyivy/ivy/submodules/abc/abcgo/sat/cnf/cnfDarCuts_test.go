@@ -58,7 +58,7 @@ func TestDarAreaMappingChoosesSourceCost(t *testing.T) {
 	m := Cnf_ManStart()
 	defer Cnf_ManStop(m)
 	m.pManAig = g
-	if err := cnfApplyDarMapping(m); err != nil {
+	if err := cnfApplyDarMapping(m, false); err != nil {
 		t.Fatal(err)
 	}
 	cut := m.selectedCuts[root.NodeID()]

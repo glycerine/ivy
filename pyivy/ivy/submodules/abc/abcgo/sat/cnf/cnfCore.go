@@ -58,14 +58,19 @@ func Cnf_DeriveWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, nOutputs int32) *Cn
 func Cnf_Derive(graph *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {
 	return Cnf_DeriveWithMan(nil, graph, nOutputs)
 }
-func Cnf_DeriveOtherWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, _ int32) *Cnf_Dat_t {
+func Cnf_DeriveOtherWithMan(manager *Cnf_Man_t, graph *Aig_Man_t, skipTTMin int32) *Cnf_Dat_t {
 	if graph == nil {
 		return nil
 	}
-	if manager != nil {
-		manager.pManAig = graph
+	if manager == nil {
+		manager = Cnf_ManStart()
+		defer Cnf_ManStop(manager)
 	}
-	return deriveLegacyAIG(graph, int32(graph.OutputCount()))
+	result, err := deriveOtherMapped(manager, graph, skipTTMin != 0)
+	if err != nil {
+		return nil
+	}
+	return result
 }
 func Cnf_DeriveOther(graph *Aig_Man_t, skipTTMin int32) *Cnf_Dat_t {
 	return Cnf_DeriveOtherWithMan(nil, graph, skipTTMin)

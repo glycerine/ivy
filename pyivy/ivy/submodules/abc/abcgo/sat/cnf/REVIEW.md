@@ -10,6 +10,9 @@ The readability pass consolidated serialization and leaf traversal and uses
 the shared ISOP implementation for cut costs. `EncodeAIG` uses a direct
 Tseitin representation; `Cnf_Derive` uses ABC's mapped cut-based encoding.
 Direct comparisons against C cover hundreds of mapped AND/inverter graphs.
+The alternate derivation uses AIG object IDs as variables and records the
+clause range for each mapped object. Both mapped writers share the small
+SOP and larger ISOP encoders.
 
 The source BSAT solver can report SAT for an inconsistent formula when pending
 root units and assumptions interact. As in C, the CNF solver loader simplifies

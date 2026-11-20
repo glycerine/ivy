@@ -108,11 +108,11 @@ func Cnf_ManWriteCnf(manager *Cnf_Man_t, mapped *Vec_Ptr_t, outputs int32) *Cnf_
 	}
 	return result
 }
-func Cnf_ManWriteCnfOther(manager *Cnf_Man_t, _ *Vec_Ptr_t) *Cnf_Dat_t {
+func Cnf_ManWriteCnfOther(manager *Cnf_Man_t, mapped *Vec_Ptr_t) *Cnf_Dat_t {
 	if manager == nil {
 		return nil
 	}
-	result, err := EncodeAIG(manager.pManAig, 0)
+	result, err := writeOtherMapped(manager, mapped)
 	if err != nil {
 		return nil
 	}

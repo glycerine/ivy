@@ -59,16 +59,13 @@ func Pdr_ObjSatVar2FindOrAdd(p *Pdr_Man_t, k int32, object aig.Edge, isNew *bool
 	return variable
 }
 
-// Pdr_ObjSatVar2 lazily installs a node's CNF and recursively installs its
-// fanin cones. The Go CNF representation maps object IDs to SAT variables, so
-// an inverse map is required when translating its clause literals back to AIG
-// object IDs (the original C representation used object IDs directly).
+// Pdr_ObjSatVar2 installs the object's mapped clauses and their fanins in the
+// frame solver. Alternate CNF literals are numbered directly by AIG object ID.
 func Pdr_ObjSatVar2(p *Pdr_Man_t, k int32, object aig.Edge, level, polarity int32) int32 {
 	_, _ = level, polarity // The source's default non-PG path emits both phases.
 	if p.pCnf2 == nil {
 		panic("pdr: dynamic CNF not initialized")
 	}
-	inverse := p.cnfVarToObj
 	var install func(aig.Edge) int32
 	install = func(edge aig.Edge) int32 {
 		edge = aig.Aig_Regular(edge)
@@ -89,21 +86,24 @@ func Pdr_ObjSatVar2(p *Pdr_Man_t, k int32, object aig.Edge, level, polarity int3
 			panic("pdr: missing dynamic CNF object metadata")
 		}
 		start, count := p.pCnf2.Obj2Clause[id], p.pCnf2.Obj2Count[id]
+		if start == -1 && count == -1 {
+			// The model API can also request a physical gate absorbed into a
+			// cut. Only materialize its defining clauses on such a request.
+			pdrInstallStructuralGate(solver, p.pAig.Node(edge), variable, install)
+			return variable
+		}
 		if start < 0 || count <= 0 || int(start+count) > len(p.pCnf2.Clauses) {
 			panic("pdr: invalid dynamic CNF object clause range")
 		}
 		for _, clause := range p.pCnf2.Clauses[start : start+count] {
-			if len(clause) == 0 || clause[0]>>1 != p.pCnf2.VarNums[id] {
+			if len(clause) == 0 || clause[0]>>1 != int32(id) {
 				panic("pdr: dynamic CNF output literal is missing")
 			}
 			literals := make([]bsat.Literal, len(clause))
 			literals[0] = variable<<1 | clause[0]&1
 			for i, literal := range clause[1:] {
 				cnfVariable := literal >> 1
-				if cnfVariable < 0 || int(cnfVariable) >= len(inverse) || inverse[cnfVariable] < 0 {
-					panic("pdr: dynamic CNF literal has no AIG object")
-				}
-				fanin := aig.Aig_ManObj(p.pAig, inverse[cnfVariable])
+				fanin := aig.Aig_ManObj(p.pAig, cnfVariable)
 				literals[i+1] = install(fanin)<<1 | literal&1
 			}
 			if !solver.AddClause(literals...) {
@@ -113,6 +113,30 @@ func Pdr_ObjSatVar2(p *Pdr_Man_t, k int32, object aig.Edge, level, polarity int3
 		return variable
 	}
 	return install(object)
+}
+
+func pdrInstallStructuralGate(s *bsat.Solver, node aig.Node, variable int32, install func(aig.Edge) int32) {
+	literal := func(edge aig.Edge) bsat.Literal {
+		return install(edge)<<1 | int32(edge&1)
+	}
+	out := bsat.Positive(variable)
+	left := literal(node.Fanins[0])
+	var ok bool
+	switch node.Kind {
+	case aig.Buffer:
+		ok = s.AddClause(out^1, left) && s.AddClause(out, left^1)
+	case aig.And:
+		right := literal(node.Fanins[1])
+		ok = s.AddClause(out^1, left) && s.AddClause(out^1, right) && s.AddClause(out, left^1, right^1)
+	case aig.ExclusiveOr:
+		right := literal(node.Fanins[1])
+		ok = s.AddXor(variable, left>>1, right>>1, (left^right)&1 != 0)
+	default:
+		panic("pdr: missing CNF for a mapped object")
+	}
+	if !ok {
+		panic("pdr: inconsistent structural gate")
+	}
 }
 
 func Pdr_ObjSatVar(p *Pdr_Man_t, k, polarity int32, object aig.Edge) int32 {
@@ -215,16 +239,7 @@ func Pdr_ManNewSolver2(solver *bsat.Solver, p *Pdr_Man_t, k, initialize int32) *
 		if p.pCnf2 == nil {
 			return nil
 		}
-		p.pvId2Vars = make([]*vec.Vec_Int_t, len(p.pAig.Nodes()))
-		p.cnfVarToObj = make([]int32, p.pCnf2.Variables)
-		for i := range p.cnfVarToObj {
-			p.cnfVarToObj[i] = -1
-		}
-		for id, variable := range p.pCnf2.VarNums {
-			if variable >= 0 {
-				p.cnfVarToObj[variable] = int32(id)
-			}
-		}
+		p.pvId2Vars = make([]*vec.Vec_Int_t, p.pCnf2.Variables)
 	}
 	for len(p.vVar2Ids) <= int(k) {
 		p.vVar2Ids = append(p.vVar2Ids, nil)

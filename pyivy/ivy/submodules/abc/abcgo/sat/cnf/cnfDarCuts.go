@@ -8,13 +8,13 @@ import (
 
 // cnfApplyDarMapping implements Cnf_DeriveMapping's area-flow score and
 // reference-count tie break over the source-order DAR cut slots.
-func cnfApplyDarMapping(manager *Cnf_Man_t) error {
+func cnfApplyDarMapping(manager *Cnf_Man_t, skipTruthMin bool) error {
 	if manager == nil || manager.pManAig == nil {
 		return fmt.Errorf("cnf: missing mapping graph")
 	}
 	g := manager.pManAig
 	aig.Aig_ManCleanup(g)
-	cuts, err := dar.Dar_ManComputeCutSlots(g, 10, false)
+	cuts, err := dar.Dar_ManComputeCutSlots(g, 10, skipTruthMin)
 	if err != nil {
 		return err
 	}
@@ -25,6 +25,16 @@ func cnfApplyDarMapping(manager *Cnf_Man_t) error {
 	for _, edge := range g.LiveEdges() {
 		id := edge.NodeID()
 		node := nodes[id]
+		if node.Kind == aig.Buffer {
+			driver := node.Fanins[0]
+			truth := uint32(0xaaaaaaaa)
+			if driver.Complemented() {
+				truth = ^truth
+			}
+			manager.selectedCuts[id] = Cnf_CutFromTruth([]int32{int32(driver.NodeID())}, []uint32{truth})
+			manager.selectedCuts[id].Cost = 2
+			continue
+		}
 		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
 			continue
 		}
