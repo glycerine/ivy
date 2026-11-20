@@ -10,6 +10,7 @@ package goivy
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -79,6 +80,10 @@ func configLanguageVersionOrDefault(cfg *Config) Version {
 }
 
 func readModuleWithParent(filename string, nested bool, cfg *Config, parent *ivyAccum) (*ParseResult, error) {
+	// Python: if not nested: target_dir = dirname(abspath(f.name))
+	if !nested && cfg != nil && filename != "" {
+		cfg.TargetDir = filepath.Dir(pyAbsPath(filename))
+	}
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 	data, err := fileops.ReadFile(filename)
 	if err != nil {
@@ -172,6 +177,10 @@ func ReadModuleFromNamedString(filename, source string, nested bool, cfg *Config
 }
 
 func readModuleFromNamedStringWithParent(filename, source string, nested bool, cfg *Config, parent *ivyAccum) (*ParseResult, error) {
+	// Python: if not nested: target_dir = dirname(abspath(f.name))
+	if !nested && cfg != nil && filename != "" {
+		cfg.TargetDir = filepath.Dir(pyAbsPath(filename))
+	}
 	xtracer.Trace("init.ReadModule ENTER file=%s nested=%v", filename, nested)
 
 	header, rest, hasRest := strings.Cut(source, "\n")
@@ -235,30 +244,47 @@ func ImportModule(name string, cfg *Config) (res *ParseResult, err error) {
 
 func importModuleWithParent(name string, cfg *Config, parent *ivyAccum) (res *ParseResult, err error) {
 	xtracer.Trace("init.ImportModule ENTER name=%s", name)
-	defer func() { xtracer.Trace("init.ImportModule EXIT name=%s", name) }()
+	// Python traces EXIT only when the module was read (an exception skips it).
+	defer func() {
+		if err == nil {
+			xtracer.Trace("init.ImportModule EXIT name=%s", name)
+		}
+	}()
 
+	// Python import_module tries module_paths(name, target_dir) in order:
+	// name.ivy in the current directory, the standard include directory,
+	// then the input file's directory (target_dir).
 	fname := name + ".ivy"
 	if !ivyReadableFileExists(fname) {
-		if sourceRelative, ok := importFilenameRelativeToCurrentSource(fname, cfg); ok {
-			fname = sourceRelative
-		} else {
-			if cfg != nil && cfg.StandardLibrary != nil && cfg.IuCfg != nil {
-				if cachedName, source, ok := cfg.StandardLibrary.includeSource(cfg.IuCfg.GetStringVersion(), name); ok {
-					var result *ParseResult
-					var resultErr error
-					cfg.IuCfg.WithSourceFile(cachedName, func() {
-						result, resultErr = readModuleFromNamedStringWithParent(cachedName, source, true, cfg, parent)
-					})
-					return result, resultErr
+		found := false
+		if cfg != nil && cfg.StandardLibrary != nil && cfg.IuCfg != nil {
+			if cachedName, source, ok := cfg.StandardLibrary.includeSource(cfg.IuCfg.GetStringVersion(), name); ok {
+				var result *ParseResult
+				var resultErr error
+				cfg.IuCfg.WithSourceFile(cachedName, func() {
+					result, resultErr = readModuleFromNamedStringWithParent(cachedName, source, true, cfg, parent)
+				})
+				return result, resultErr
+			}
+		}
+		if cfg != nil && cfg.IuCfg != nil {
+			if stdDir := cfg.IuCfg.GetStdIncludeDir(); stdDir != "" {
+				if cand := filepath.Join(stdDir, name+".ivy"); ivyReadableFileExists(cand) {
+					fname, found = cand, true
 				}
 			}
-
-			// Try standard include directory
-			stdDir := cfg.IuCfg.GetStdIncludeDir()
-			fname = filepath.Join(stdDir, fname)
-			if !ivyReadableFileExists(fname) {
-				return nil, fmt.Errorf("module %s not found in current directory or module path", name)
+		}
+		if !found && cfg != nil && cfg.TargetDir != "" {
+			if cand := filepath.Join(cfg.TargetDir, name+".ivy"); ivyReadableFileExists(cand) {
+				fname, found = cand, true
 			}
+		}
+		if !found {
+			locations := "current directory or module path"
+			if cfg != nil && cfg.TargetDir != "" {
+				locations = fmt.Sprintf("current directory, module path, or input file directory (%s)", cfg.TargetDir)
+			}
+			return nil, &IvyError{Msg: fmt.Sprintf("module %s not found in %s", name, locations)}
 		}
 	}
 	// Python: with iu.SourceFile(fname): mod = read_module(f, nested=True)
@@ -408,8 +434,26 @@ func IvyInit(cfg *Config, args []string, reg *ParameterRegistry) (*AnalysisGraph
 }
 
 // langHeaderError is Python read_module's
-//   err = IvyError(None,'file must begin with "#lang ivyN.N"')
-//   err.lineno = Location(iu.filename,1)
+//
+//	err = IvyError(None,'file must begin with "#lang ivyN.N"')
+//	err.lineno = Location(iu.filename,1)
 func langHeaderError(filename string) error {
 	return &IvyError{Msg: `file must begin with "#lang ivyN.N"`, Loc: Location{Filename: filename, Line: 1}, HasLoc: true}
+}
+
+// pyAbsPath is Python os.path.abspath: a relative path is joined to
+// os.getcwd(), the kernel's physical working directory (no symlinks), not
+// Go's $PWD-preferring os.Getwd; the file name itself is not resolved.
+func pyAbsPath(p string) string {
+	if filepath.IsAbs(p) {
+		return filepath.Clean(p)
+	}
+	cwd, err := os.Getwd()
+	if err != nil {
+		return filepath.Clean(p)
+	}
+	if phys, err := filepath.EvalSymlinks(cwd); err == nil {
+		cwd = phys
+	}
+	return filepath.Join(cwd, p)
 }

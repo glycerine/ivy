@@ -23,6 +23,10 @@ type GuiArtHook func(mod *Module, target interface{}, isCti *Clauses) error
 // from Python: Go threads explicit config instead of mutable process globals.
 type Config struct {
 
+	// TargetDir is Python read_module's target_dir: the directory of the
+	// top-level input file, searched last by import_module.
+	TargetDir string
+
 	// "" means use embeded stdlib files, otherwise
 	// look for the include/ directory here:
 	IncludePathStdlib string

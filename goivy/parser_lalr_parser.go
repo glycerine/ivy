@@ -7,9 +7,26 @@ import (
 // Parse parses a complete Ivy file and returns the declarations.
 // It dispatches to the appropriate version-specific LALR parser.
 // The optional importer callback resolves `include` directives.
-func Parse(input string, version Version, opts ...ParseOption) (*ParseResult, error) {
+func Parse(input string, version Version, opts ...ParseOption) (res *ParseResult, err error) {
+	// An exception raised inside a parser action (Python: an include's
+	// import error) aborts the whole parse.
+	defer func() {
+		if r := recover(); r != nil {
+			if pa, ok := r.(*parseAbort); ok {
+				res, err = nil, pa.err
+				return
+			}
+			panic(r)
+		}
+	}()
 	parser := fullFileParserForVersion(version)
 	return parser(input, version, opts...)
+}
+
+// parseAbort carries an error raised inside a parser action out of the
+// parse, like a Python exception propagating out of a PLY action.
+type parseAbort struct {
+	err error
 }
 
 type fullFileParser func(input string, version Version, opts ...ParseOption) (*ParseResult, error)

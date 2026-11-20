@@ -30,8 +30,10 @@ func parserDeclareInclude(cfg *AstConfig, top *ivyAccum, current *ivyAccum, impo
 		mod, err := importer(name, top)
 		top.pendingParentObject = ""
 		if err != nil {
-			xtracer.Trace("parser.include ERROR name=%s err=%v", name, err)
-			parserReportImportError(top, loc, err)
+			// Python: with ASTContext(pref): module = importer(p[3]) -- the
+			// error aborts the parse, located at the include if it has no
+			// location of its own.
+			panic(&parseAbort{err: astContextError(pref, err)})
 		} else if mod != nil {
 			modDeclCount = len(mod.Decls)
 			for _, d := range mod.Decls {
@@ -54,8 +56,9 @@ func parserDeclareUsing(cfg *AstConfig, top *ivyAccum, importer ImporterFunc, na
 	if importer != nil {
 		mod, err := importer(name, top)
 		if err != nil {
-			xtracer.Trace("parser.using ERROR name=%s err=%v", name, err)
-			parserReportImportError(top, loc, err)
+			// Python: module = importer(p[3]) -- no ASTContext; the error
+			// aborts the parse as raised.
+			panic(&parseAbort{err: err})
 		} else if mod != nil {
 			modDeclCount = len(mod.Decls)
 			module := &ivyAccum{
