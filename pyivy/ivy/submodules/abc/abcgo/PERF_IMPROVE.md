@@ -105,3 +105,11 @@ BenchmarkI10MappedSAT loads i10, coarsens GIA, maps cuts with an eight-input LUT
 MF now uses the same truth expansion and minimum-base utilities as giaMf.c. The shared Go utilities swap low variables with word masks, swap high variables in blocks of words, and test dependence by comparing cofactors a word at a time. A random-table test checks swapped assignments through ten variables. The MF differential suite now compares the entire i10 CNF against native ABC, including clause and literal order. MF and utility package tests passed.
 
 Three Go pipeline measurements took 56.5–57.1 ms/op, about 22.8 MB/op and 406,782–406,783 allocations/op. The updated allocation profile points to temporary truth tables and leaf arrays during candidate evaluation.
+
+### Reduce candidate allocation in MF
+
+The eight-input LUT limit bounds truth tables at four words. The mapper now expands the two or three input truths in local arrays, computes the result in the first array, and copies a truth into permanent storage only when interning a new function. A four-word map key replaces serialization to a byte string. Tests check that reusing a candidate buffer preserves older functions, including ones that differ only in the last word.
+
+With truth scratch and reused exact-area traversal scratch, i10 took 48.5–48.8 ms and about 159,200 allocations. Moving leaf-array scratch into each candidate evaluation regressed allocations to about 328,735. The profile showed those arrays escaped. Reusing them across candidate pairs of the same node, preparing fanins once and retaining owned copies of candidate leaves reduced the final run to 43.8–44.2 ms, 11.7 MB and about 100,620 allocations. Utility and MF race tests passed, including full i10 native CNF parity.
+
+The module-wide run started at the Satoko watcher checkpoint passed 130 packages, with three packages reporting no tests.

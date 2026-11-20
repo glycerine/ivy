@@ -39,11 +39,10 @@ func contains(base, sub []int32) bool {
 	}
 	return true
 }
-func mergeLeaves(a, b []int32, limit int) ([]int32, bool) {
+func mergeLeaves(merged, a, b []int32, limit int) ([]int32, bool) {
 	if len(a)+len(b) > limit && bits.OnesCount64(signature(a)|signature(b)) > limit {
 		return nil, false
 	}
-	merged := make([]int32, 0, min(len(a)+len(b), limit))
 	for i, j := 0, 0; i < len(a) || j < len(b); {
 		var leaf int32
 		switch {
@@ -116,8 +115,7 @@ func isContained(cuts []Cut, leaves []int32) bool {
 
 // expandTruth aligns a source cut's variables with a merged cut. MF stores all
 // truth words at the configured LUT width; smaller supports repeat their table.
-func expandTruth(table []uint64, old, merged []int32, width int, complement bool) []uint64 {
-	result := make([]uint64, 1<<max(0, width-6))
+func expandTruth(result, table []uint64, old, merged []int32, width int, complement bool) {
 	copy(result, table)
 	if complement {
 		for i := range result {
@@ -125,7 +123,6 @@ func expandTruth(table []uint64, old, merged []int32, width int, complement bool
 		}
 	}
 	util.Abc_TtExpand(result, int32(width), old, int32(len(old)), merged, int32(len(merged)))
-	return result
 }
 
 // The candidate owns both arrays. Compact its leaves and truth table in place.

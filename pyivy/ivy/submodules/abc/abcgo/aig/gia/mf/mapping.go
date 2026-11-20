@@ -1,7 +1,6 @@
 package mf
 
 import (
-	"encoding/binary"
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
 )
@@ -37,25 +36,21 @@ type Mapping struct {
 	ClauseSizes []int
 	Refs        []int32
 	nodes       []node
-	truthIDs    map[string]int32
+	truthIDs    map[[4]uint64]int32
 	phases      []bool
 }
 
-func truthKey(table []uint64) string {
-	data := make([]byte, 8*len(table))
-	for i, word := range table {
-		binary.LittleEndian.PutUint64(data[8*i:], word)
-	}
-	return string(data)
-}
 func (m *Mapping) intern(table []uint64, nLeaves int) int32 {
-	key := truthKey(table)
+	// The mapper accepts at most eight LUT inputs (four truth words).
+	// Every candidate in a mapping uses the same width.
+	var key [4]uint64
+	copy(key[:], table)
 	if id, ok := m.truthIDs[key]; ok {
 		return id
 	}
 	id := int32(len(m.Truths))
 	m.truthIDs[key] = id
-	m.Truths = append(m.Truths, table)
+	m.Truths = append(m.Truths, append([]uint64(nil), table...))
 	var cost int32
 	if m.Options.LUTSize <= 6 {
 		cost = util.Abc_Tt6CnfSize(table[0], int32(nLeaves))
@@ -75,10 +70,10 @@ func (m *Mapping) area(cut Cut) int {
 	}
 	return m.ClauseSizes[cut.Function>>1]
 }
-func (m *Mapping) prepare(id int32, unit bool) []Cut {
-	cuts := append([]Cut(nil), m.Cuts[id]...)
+func (m *Mapping) prepare(id int32, unit bool, scratch []Cut) []Cut {
+	cuts := m.Cuts[id]
 	if len(cuts) == 0 || unit && len(cuts[0].Leaves) > 1 {
-		cuts = append(cuts, Cut{Leaves: []int32{id}, Function: 2})
+		cuts = append(append(scratch, cuts...), Cut{Leaves: []int32{id}, Function: 2})
 	}
 	return cuts
 }
@@ -96,11 +91,12 @@ func (m *Mapping) parameters(cut *Cut, refs float32) {
 	cut.Flow = (flow + float32(m.area(*cut))) / refs
 }
 func (m *Mapping) computeTruth(cuts []Cut, complements []int32, kind int, leaves []int32) Cut {
-	tables := make([][]uint64, len(cuts))
+	var tables [3][4]uint64
+	words := 1 << max(0, m.Options.LUTSize-6)
 	for i, cut := range cuts {
-		tables[i] = expandTruth(m.Truths[cut.Function>>1], cut.Leaves, leaves, m.Options.LUTSize, (cut.Function&1)^complements[i] != 0)
+		expandTruth(tables[i][:words], m.Truths[cut.Function>>1], cut.Leaves, leaves, m.Options.LUTSize, (cut.Function&1)^complements[i] != 0)
 	}
-	truth := make([]uint64, len(tables[0]))
+	truth := tables[0][:words]
 	for i := range truth {
 		switch kind {
 		case 3:
@@ -129,17 +125,19 @@ func (m *Mapping) merge(id int32) error {
 		b = a
 		kind = 2
 	}
-	first, second := m.prepare(a>>1, true), m.prepare(b>>1, true)
+	// The cut limit is at most 16, including the optional unit cut.
+	var buffers [3][16]Cut
 	var control []Cut
-	if kind == 4 { // normalize neutral interface control,then,else to source order.
-		first, second = m.prepare(c>>1, true), m.prepare(b>>1, true)
-		control = m.prepare(a>>1, true)
+	if kind == 4 { // normalize control,then,else to source order.
 		a, c = c, a
+		control = m.prepare(c>>1, true, buffers[2][:0])
 	}
-	var result []Cut
+	first := m.prepare(a>>1, true, buffers[0][:0])
+	second := m.prepare(b>>1, true, buffers[1][:0])
+	result := make([]Cut, 0, m.Options.CutLimit)
 	if choices, ok := m.Network.(interface{ Sibling(int32) int32 }); ok {
 		if sibling := choices.Sibling(id); sibling != 0 {
-			for _, candidate := range m.prepare(sibling, false) {
+			for _, candidate := range m.prepare(sibling, false, nil) {
 				if m.phases[id] != m.phases[sibling] {
 					candidate.Function ^= 1
 				}
@@ -148,15 +146,17 @@ func (m *Mapping) merge(id int32) error {
 			}
 		}
 	}
+	var pair, triple [maxLeaves]int32
 	offer := func(parts []Cut, complements []int32) {
-		leaves, ok := mergeLeaves(parts[0].Leaves, parts[1].Leaves, m.Options.LUTSize)
+		leaves, ok := mergeLeaves(pair[:0], parts[0].Leaves, parts[1].Leaves, m.Options.LUTSize)
 		if ok && len(parts) == 3 {
-			leaves, ok = mergeLeaves(leaves, parts[2].Leaves, m.Options.LUTSize)
+			leaves, ok = mergeLeaves(triple[:0], leaves, parts[2].Leaves, m.Options.LUTSize)
 		}
 		if !ok || isContained(result, leaves) {
 			return
 		}
 		cut := m.computeTruth(parts, complements, kind, leaves)
+		cut.Leaves = append([]int32(nil), cut.Leaves...)
 		m.parameters(&cut, m.nodes[id].flowRefs)
 		result = addCut(result, cut, m.Options.CutLimit)
 	}
@@ -238,11 +238,13 @@ func (m *Mapping) bestCut(id int32, exact bool) {
 	selected := -1
 	var bestFlow float32
 	var bestTime int32
+	var local [32]int32
+	touched := local[:0]
 	for i, cut := range m.Cuts[id] {
 		var flow float32
 		var delay int32
 		if exact {
-			var touched []int32
+			touched = touched[:0]
 			flow = float32(m.changeRefs(cut, 1, 8, &touched))
 			for _, leaf := range touched {
 				m.nodes[leaf].refs--
@@ -286,7 +288,7 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 	if count < 1 {
 		return nil, fmt.Errorf("mf: empty network")
 	}
-	m := &Mapping{Network: network, Options: options, Cuts: make([][]Cut, count), nodes: make([]node, count), truthIDs: make(map[string]int32)}
+	m := &Mapping{Network: network, Options: options, Cuts: make([][]Cut, count), nodes: make([]node, count), truthIDs: make(map[[4]uint64]int32)}
 	words := 1 << max(0, options.LUTSize-6)
 	m.intern(make([]uint64, words), 0)
 	variable := make([]uint64, words)
