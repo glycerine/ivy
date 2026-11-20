@@ -2,6 +2,7 @@ package cnf
 
 import (
 	"fmt"
+	"math/bits"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/bool/kit"
@@ -139,17 +140,20 @@ func Cnf_CutMergeLeaves(a, b *Cnf_Cut_t) []int32 {
 	return result
 }
 
-func Cnf_TruthPhase(cut, merged *Cnf_Cut_t) uint32 {
-	var phase uint32
-	for _, leaf := range cut.pFanins {
-		for j, mergedLeaf := range merged.pFanins {
-			if leaf == mergedLeaf {
-				phase |= 1 << j
-				break
-			}
+// Cnf_TruthPhase marks the positions of subset's leaves in the merged support.
+func Cnf_TruthPhase(merged, subset *Cnf_Cut_t) uint32 {
+	var mask uint32
+	j := 0
+	for i, id := range merged.pFanins {
+		if j == len(subset.pFanins) {
+			break
+		}
+		if id == subset.pFanins[j] {
+			mask |= 1 << i
+			j++
 		}
 	}
-	return phase
+	return mask
 }
 func Cnf_CutRemoveIthVar(cut *Cnf_Cut_t, index int32, leaf int32) {
 	if index < 0 || int(index) >= len(cut.pFanins) || cut.pFanins[index] != leaf {
@@ -168,19 +172,6 @@ func Cnf_CutInsertIthVar(cut *Cnf_Cut_t, index int32, leaf int32) {
 	cut.nFanins = byte(len(cut.pFanins))
 }
 
-func truthBit(words []uint32, assignment int) bool {
-	return words[assignment>>5]&(uint32(1)<<uint(assignment&31)) != 0
-}
-func setTruthBit(words []uint32, assignment int, value bool) {
-	mask := uint32(1) << uint(assignment&31)
-	if value {
-		words[assignment>>5] |= mask
-	} else {
-		words[assignment>>5] &^= mask
-	}
-}
-func cutValue(cut *Cnf_Cut_t, assignment int) bool { return truthBit(cut.truth, assignment) }
-
 // Cnf_CutCompose substitutes fan's function for leaf in cut and returns the
 // exact truth table over the union of the remaining leaves.
 func Cnf_CutCompose(manager *Cnf_Man_t, cut, fan *Cnf_Cut_t, leaf int32) *Cnf_Cut_t {
@@ -194,66 +185,63 @@ func Cnf_CutCompose(manager *Cnf_Man_t, cut, fan *Cnf_Cut_t, leaf int32) *Cnf_Cu
 	if position < 0 {
 		return nil
 	}
-	remaining := make([]int32, 0, len(cut.pFanins)-1)
-	remaining = append(remaining, cut.pFanins[:position]...)
+	var scratch [16]int32
+	remaining := append(scratch[:0], cut.pFanins[:position]...)
 	remaining = append(remaining, cut.pFanins[position+1:]...)
 	leaves := Cnf_CutMergeLeaves(&Cnf_Cut_t{pFanins: remaining}, fan)
-	if len(leaves) > 16 || manager != nil && int32(len(leaves)+1) > manager.nMergeLimit {
+	n := len(leaves)
+	if n > 16 || manager != nil && int32(n+1) > manager.nMergeLimit {
 		return nil
 	}
-	resultLeaves := leaves
-	result := Cnf_CutAlloc(nil, int32(len(resultLeaves)))
-	copy(result.pFanins, resultLeaves)
-	for assignment := 0; assignment < 1<<len(resultLeaves); assignment++ {
-		fanAssignment := 0
-		for i, id := range fan.pFanins {
-			for j, resultID := range resultLeaves {
-				if id == resultID && assignment&(1<<j) != 0 {
-					fanAssignment |= 1 << i
-					break
-				}
+	rows := 1 << n
+	words := max(1, rows/32)
+	result := &Cnf_Cut_t{nFanins: byte(n), nWords: int16(words), pFanins: leaves, truth: make([]uint32, words)}
+
+	// On incrementing a binary row, the carry toggles all lower variables
+	// through its first zero. Compile those toggles once in each input's order.
+	var topToggle, fanToggle [17]int
+	topMask, fanMask := 0, 0
+	for j, id := range leaves {
+		for i, x := range cut.pFanins {
+			if i != position && x == id {
+				topMask |= 1 << i
 			}
 		}
-		fanResult := cutValue(fan, fanAssignment)
-		cutAssignment := 0
-		for i, id := range cut.pFanins {
-			bit := fanResult
-			if i != position {
-				for j, resultID := range resultLeaves {
-					if id == resultID {
-						bit = assignment&(1<<j) != 0
-						break
-					}
-				}
-			}
-			if bit {
-				cutAssignment |= 1 << i
+		for i, x := range fan.pFanins {
+			if x == id {
+				fanMask |= 1 << i
 			}
 		}
-		setTruthBit(result.truth, assignment, cutValue(cut, cutAssignment))
+		topToggle[j], fanToggle[j] = topMask, fanMask
 	}
-	cost, covers := cutSopCovers(result.truth, len(resultLeaves))
+	topRow, fanRow := 0, 0
+	for row := range rows {
+		value := int(fan.truth[fanRow>>5] >> uint(fanRow&31) & 1)
+		index := topRow | value<<position
+		bit := cut.truth[index>>5] >> uint(index&31) & 1
+		result.truth[row>>5] |= bit << uint(row&31)
+		carry := bits.TrailingZeros(uint(row + 1))
+		topRow ^= topToggle[carry]
+		fanRow ^= fanToggle[carry]
+	}
+	if n < 5 {
+		sizes, _ := cnfReadMsops()
+		truth := smallCutTruth(result.truth[0], n)
+		result.Cost = sizes[truth] + sizes[^truth]
+		return result
+	}
+	cost, covers := cutSopCovers(result.truth, n)
 	result.Cost = uint8(cost)
-	if len(resultLeaves) >= 5 {
-		for polarity, cover := range covers {
-			if cover == nil {
-				continue
-			}
-			result.vIsop[polarity] = vec.Vec_IntAlloc(len(cover))
-			for _, cube := range cover {
-				vec.Vec_IntPush(result.vIsop[polarity], int32(cube))
-			}
+	for polarity, cover := range covers {
+		if cover == nil {
+			continue
+		}
+		result.vIsop[polarity] = vec.Vec_IntAlloc(len(cover))
+		for _, cube := range cover {
+			vec.Vec_IntPush(result.vIsop[polarity], int32(cube))
 		}
 	}
 	return result
-}
-func containsLeaf(leaves []int32, id int32) bool {
-	for _, leaf := range leaves {
-		if leaf == id {
-			return true
-		}
-	}
-	return false
 }
 func cutSopCost(truth []uint32, variables int) int {
 	cost, _ := cutSopCovers(truth, variables)

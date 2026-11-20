@@ -37,38 +37,58 @@ func Cnf_ManFreeCuts(manager *Cnf_Man_t) {
 	}
 }
 
-// Cnf_ManPostprocess tries one-level cut substitutions and keeps a result only
-// when its estimated clause cost decreases.
+// Cnf_ManPostprocess folds at most one singly referenced leaf per mapped
+// gate. As in cnfPost.c, supplied cuts use the current mapped reference counts.
 func Cnf_ManPostprocess(manager *Cnf_Man_t) {
 	if manager == nil || manager.pManAig == nil {
 		return
 	}
 	if len(manager.selectedCuts) == 0 {
 		Cnf_DeriveMapping(manager)
+		Cnf_ManScanMapping(manager, 0, 0)
 	}
+	g := manager.pManAig
 	for id, current := range manager.selectedCuts {
-		if current == nil {
+		edge := aig.Edge(id) << 1
+		if current == nil || !g.ValidEdge(edge) || !aig.Aig_ObjIsNode(g, edge) || aig.Aig_ObjRefs(g, edge) == 0 {
 			continue
 		}
-		for _, leaf := range append([]int32(nil), current.pFanins...) {
-			if int(leaf) >= len(manager.selectedCuts) {
+		// Stable insertion by increasing fanin cost retains leaf order on ties.
+		var order [16]int32
+		count := 0
+		for _, leaf := range current.pFanins {
+			e := aig.Edge(leaf) << 1
+			if leaf < 0 || int(leaf) >= len(manager.selectedCuts) || !g.ValidEdge(e) || !aig.Aig_ObjIsNode(g, e) || aig.Aig_ObjRefs(g, e) != 1 {
 				continue
 			}
-			candidate := manager.selectedCuts[leaf]
-			if candidate == nil {
+			fan := manager.selectedCuts[leaf]
+			if fan == nil {
 				continue
 			}
-			merged := Cnf_CutCompose(manager, current, candidate, leaf)
+			i := count
+			for i > 0 && manager.selectedCuts[order[i-1]].Cost > fan.Cost {
+				order[i] = order[i-1]
+				i--
+			}
+			order[i] = leaf
+			count++
+		}
+		for _, leaf := range order[:count] {
+			fan := manager.selectedCuts[leaf]
+			merged := Cnf_CutCompose(manager, current, fan, leaf)
 			if merged == nil {
 				continue
 			}
-			if merged.Cost < current.Cost {
-				Cnf_CutFree(current)
-				manager.selectedCuts[id] = merged
-				current = merged
-			} else {
+			if merged.Cost == 127 || int(merged.Cost) > int(current.Cost)+int(fan.Cost) {
 				Cnf_CutFree(merged)
+				continue
 			}
+			Cnf_CutUpdateRefs(manager, current, fan, merged)
+			manager.selectedCuts[id] = merged
+			manager.selectedCuts[leaf] = nil
+			Cnf_CutFree(current)
+			Cnf_CutFree(fan)
+			break
 		}
 	}
 }
