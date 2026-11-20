@@ -280,12 +280,35 @@ func (g *Graph) Check() error {
 	if g.nConstrs < 0 || int(g.nConstrs) > len(g.outputs)-int(g.nRegs) {
 		return fmt.Errorf("aig: invalid constraint terminal count")
 	}
-	if len(g.nodes) == 0 || g.nodes[0].Kind != Constant {
+	if len(g.nodes) == 0 || g.deleted[0] || g.nodes[0].Kind != Constant {
 		return fmt.Errorf("aig: missing constant node")
 	}
 	refs := make([]int, len(g.nodes))
-	andSeen := map[edgePair]Edge{}
-	xorSeen := map[edgePair]Edge{}
+	state := make([]uint8, len(g.nodes))
+	for _, e := range g.inputs {
+		id := e.NodeID()
+		if !g.valid(e) || e.Complemented() || g.nodes[id].Kind != Input || state[id] != 0 {
+			return fmt.Errorf("aig: invalid or duplicate input %d", id)
+		}
+		state[id] = 1
+	}
+	for _, e := range g.outputs {
+		if !g.valid(e) {
+			return fmt.Errorf("aig: invalid output")
+		}
+		id := e.NodeID()
+		if g.nodes[id].Kind != Output {
+			// Legacy raw output edges represent individual implicit CO consumers.
+			refs[id]++
+		} else {
+			if state[id] != 0 {
+				return fmt.Errorf("aig: duplicate output %d", id)
+			}
+			state[id] = 1
+		}
+	}
+	andCount, xorCount := 0, 0
+	ordered := true
 	for id, n := range g.nodes {
 		if g.deleted[id] {
 			continue
@@ -296,20 +319,32 @@ func (g *Graph) Check() error {
 		if id > 0 && n.Kind == Constant {
 			return fmt.Errorf("aig: extra constant at %d", id)
 		}
+		if (n.Kind == Input || n.Kind == Output) && state[id] == 0 {
+			return fmt.Errorf("aig: unlisted terminal at %d", id)
+		}
 		if n.Kind == Constant || n.Kind == Input {
+			if n.Fanins != [2]Edge{InvalidEdge, InvalidEdge} {
+				return fmt.Errorf("aig: unexpected terminal fanin at %d", id)
+			}
 			continue
 		}
 		count := 1
 		if n.Kind == And || n.Kind == ExclusiveOr {
 			count = 2
+		} else if n.Fanins[1] != InvalidEdge {
+			return fmt.Errorf("aig: unexpected second fanin at %d", id)
 		}
 		level := 0
 		for _, e := range n.Fanins[:count] {
 			if !g.valid(e) {
 				return fmt.Errorf("aig: invalid fanin at %d", id)
 			}
-			refs[e.NodeID()]++
-			if l := g.node(e).Level; l > level {
+			fanin := e.NodeID()
+			refs[fanin]++
+			if fanin >= id {
+				ordered = false
+			}
+			if l := g.nodes[fanin].Level; l > level {
 				level = l
 			}
 		}
@@ -343,30 +378,22 @@ func (g *Graph) Check() error {
 		}
 		if count == 2 {
 			a, b := n.Fanins[0], n.Fanins[1]
-			if a >= b {
+			if a.NodeID() >= b.NodeID() {
 				return fmt.Errorf("aig: unordered fanins at %d", id)
 			}
 			key := edgePair{a, b}
-			seen, table := andSeen, g.hash
+			table := g.hash
 			if n.Kind == ExclusiveOr {
-				seen, table = xorSeen, g.xorHash
+				xorCount++
+				table = g.xorHash
+			} else {
+				andCount++
 			}
-			if _, ok := seen[key]; ok {
-				return fmt.Errorf("aig: duplicate node at %d", id)
-			}
-			seen[key] = Edge(id) << 1
+			// A table entry can identify only one node with this key. Checking
+			// its identity for every gate also detects duplicate gates.
 			if table[key] != Edge(id)<<1 {
 				return fmt.Errorf("aig: missing hash entry at %d", id)
 			}
-		}
-	}
-	for _, e := range g.outputs {
-		if !g.valid(e) {
-			return fmt.Errorf("aig: invalid output")
-		}
-		if g.node(e).Kind != Output {
-			// Legacy raw output edges represent an implicit CO consumer.
-			refs[e.NodeID()]++
 		}
 	}
 	for id, n := range g.nodes {
@@ -374,11 +401,15 @@ func (g *Graph) Check() error {
 			return fmt.Errorf("aig: reference count at %d: %d != %d", id, n.Refs, refs[id])
 		}
 	}
-	if len(andSeen) != len(g.hash) || len(xorSeen) != len(g.xorHash) {
+	if andCount != len(g.hash) || xorCount != len(g.xorHash) {
 		return fmt.Errorf("aig: stale hash entries")
 	}
-	// Validate cycles in unreachable nodes too; levels alone do not prove DAGness.
-	state := make([]uint8, len(g.nodes))
+	// Strictly increasing IDs along every fanout prove acyclicity.
+	if ordered {
+		return nil
+	}
+	// Rewritten graphs may use later IDs as fanins. Visit dangling logic too.
+	clear(state)
 	var visit func(int) error
 	visit = func(id int) error {
 		if state[id] == 2 {

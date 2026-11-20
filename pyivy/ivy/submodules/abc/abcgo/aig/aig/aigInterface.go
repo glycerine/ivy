@@ -74,17 +74,17 @@ func sameEdgePermutation(original, reordered []Edge) bool {
 	if len(original) != len(reordered) {
 		return false
 	}
-	seen := make(map[Edge]bool, len(original))
+	counts := make(map[Edge]int, len(original))
 	for _, edge := range original {
-		seen[edge] = true
+		counts[edge]++
 	}
 	for _, edge := range reordered {
-		if !seen[edge] {
+		if counts[edge] == 0 {
 			return false
 		}
-		delete(seen, edge)
+		counts[edge]--
 	}
-	return len(seen) == 0
+	return true
 }
 
 func edgeIndex(edges []Edge, target Edge) int {

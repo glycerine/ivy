@@ -111,3 +111,79 @@ func TestTopologicalObjectsBeforeAndAfterReplacingLogic(t *testing.T) {
 	Aig_ObjReplace(g, root, g.AND(a, newFanin), 0)
 	check()
 }
+
+func TestGraphCheckAuditsTerminalPinsAndIndices(t *testing.T) {
+	for _, tc := range []struct {
+		name    string
+		corrupt func(*Graph, Edge, Edge)
+	}{
+		{"PI fanin", func(g *Graph, a, out Edge) { g.nodes[a.NodeID()].Fanins[0] = g.Const1() }},
+		{"second PO fanin", func(g *Graph, a, out Edge) { g.nodes[out.NodeID()].Fanins[1] = a }},
+		{"missing PI", func(g *Graph, a, out Edge) { g.inputs = g.inputs[:1] }},
+		{"duplicate PI", func(g *Graph, a, out Edge) { g.inputs[1] = a }},
+		{"noninput CI", func(g *Graph, a, out Edge) { g.inputs[1] = g.Const1() }},
+		{"missing PO", func(g *Graph, a, out Edge) { g.outputs = nil }},
+		{"duplicate explicit PO", func(g *Graph, a, out Edge) { g.outputs = append(g.outputs, out) }},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			g := NewGraph()
+			a, b := g.NewInput(), g.NewInput()
+			out := g.AddOutput(g.AND(a, b))
+			tc.corrupt(g, a, out)
+			if g.Check() == nil {
+				t.Fatal("accepted malformed terminal")
+			}
+		})
+	}
+}
+func TestReorderRepeatedRawOutputs(t *testing.T) {
+	g := NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	g.outputs = []Edge{a.Not(), a.Not(), b}
+	g.recountReferences()
+	if err := g.Check(); err != nil {
+		t.Fatal(err)
+	}
+	if err := Aig_ManReorderCisCos(g, g.Inputs(), []Edge{a.Not(), b, a.Not()}, 0); err != nil {
+		t.Fatalf("permutation of repeated raw outputs: %v", err)
+	}
+	if err := Aig_ManReorderCisCos(g, g.Inputs(), []Edge{a.Not(), b, b}, 0); err == nil {
+		t.Fatal("accepted changed multiplicities")
+	}
+	if err := g.Check(); err != nil {
+		t.Fatal(err)
+	}
+}
+func BenchmarkCheckMappedAndChain(b *testing.B) {
+	g := NewGraph()
+	last := g.NewInput()
+	for range 1024 {
+		last = g.AND(last, g.NewInput())
+	}
+	g.AddOutput(last.Not())
+	b.ReportAllocs()
+	for b.Loop() {
+		if err := g.Check(); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func TestGraphCheckRejectsRepeatedRegularFanin(t *testing.T) {
+	g := NewGraph()
+	a := g.NewInput()
+	e := Edge(len(g.nodes)) << 1
+	g.nodes = append(g.nodes, Node{Kind: And, Fanins: [2]Edge{a, a.Not()}, Level: 1})
+	g.hash[edgePair{a, a.Not()}] = e
+	g.nodes[a.NodeID()].Refs = 2
+	if err := g.Check(); err == nil {
+		t.Fatal("accepted opposite phases of same regular fanin in a stored AND")
+	}
+}
+func TestGraphCheckRequiresLiveConstant(t *testing.T) {
+	g := NewGraph()
+	g.deleted[0] = true
+	if err := g.Check(); err == nil {
+		t.Fatal("accepted deleted constant one")
+	}
+}

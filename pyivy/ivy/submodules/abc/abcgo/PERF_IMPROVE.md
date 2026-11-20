@@ -387,3 +387,11 @@ A red lookup test found that the prepared manager always returned a nil DAR choi
 Packing initial CNF cuts into per-gate records brought allocation down to 387 objects. DAR now reserves slots after visiting both children and keeps only the prefix touched by the merge. Holes inside it retain their original physical positions and values. The public physical-slot API still returns the requested number. A 64-slot test originally cached 64 records for both an input and a two-input AND. It now caches one and two respectively. Both native 768-gate slot digests still match.
 
 Complete chain derivation now takes 934–938 µs, 847,120 bytes and 372 allocations. On the layered graph, node-owned enumeration took 255–330 µs with support minimization and 647–661 µs with full support. The preceding node-owned Go measurements were 343 and 869 µs, and native took 144 and 605 µs. Eight affected packages passed their race tests on the combined changes.
+
+### Validate compact AIGs through their existing hash tables
+
+After compacting the DAR slots, 16% of the full chain derivation profile was in compact AIG validation. On the same 1,024-AND chain, the Go checker took 150–151 µs, 75,304 bytes and 22 allocations. Native Aig_ManCheck took 14.5 µs across 180,000 checks, with 39% of flat samples in table lookup and 27% in hashing. The Go check also audits fanout counts, cached levels and acyclicity.
+
+The Go checker now verifies the identity of each gate in its owning table and compares the gate counts with the table sizes. This detects duplicate and stale entries without building another pair of hash tables. Strictly increasing IDs across all structural edges prove acyclicity on the ordinary path. Graphs containing backward edges still receive a full cycle check. Three 8,000-pass measurements took 48.6–49.9 µs, 20,736 bytes and two allocations. Whole chain CNF derivation took 806–846 µs with 352 allocations.
+
+Red tests reproduced malformed PI pins, an extra PO pin, missing and duplicate interfaces, a deleted constant, and an AND stored with both phases of one regular fanin. All now fail validation. A separate test showed that reordering legal repeated raw outputs rejected an exact permutation. The reorder check now verifies multiplicities, preserving complemented and repeated raw drivers. All eleven affected packages in the race run passed.
