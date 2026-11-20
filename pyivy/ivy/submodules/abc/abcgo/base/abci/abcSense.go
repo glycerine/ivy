@@ -7,7 +7,6 @@ import (
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/proof/fraig"
 )
 
 // sensitivityCopyEdge maps an AIG child through the copy edge created for its
@@ -139,10 +138,10 @@ func Abc_NtkSensitivity(n *Abc_Ntk_t, conflictLimit, verbose int32) *Vec_Int_t {
 	if abc.Abc_NtkIsStrash(n) == 0 || abc.Abc_NtkLatchNum(n) != 0 {
 		panic("Abc_NtkSensitivity requires a combinational strashed network")
 	}
-	params := fraig.Prove_Params_t{}
-	fraig.Prove_ParamsSetDefault(&params)
-	fraig.Prove_ParamsSetItersMax(&params, 3)
-	fraig.Prove_ParamsSetMiteringLimitLast(&params, conflictLimit)
+	params := Prove_Params_t{}
+	Prove_ParamsSetDefault(&params)
+	params.nItersMax = 3
+	params.nMiteringLimitLast = conflictLimit
 	result := vec.Vec_IntAlloc(100)
 	progress := extra.Extra_ProgressBarStart(os.Stdout, abc.Abc_NtkCiNum(n))
 	defer extra.Extra_ProgressBarStop(progress)

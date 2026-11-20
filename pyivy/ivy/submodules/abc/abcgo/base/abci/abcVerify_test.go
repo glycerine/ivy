@@ -1,12 +1,41 @@
 package abci
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/proof/fraig"
 )
+
+func TestCecFraigProvesAssociativeAnd(t *testing.T) {
+	makeNetwork := func(left bool) *abc.Network {
+		n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
+		var inputs [3]abc.Edge
+		for i, name := range []string{"a", "b", "c"} {
+			pi := abc.Abc_NtkCreatePi(n)
+			pi.SetName(name)
+			inputs[i] = pi.Signal()
+		}
+		a, b, c := inputs[0], inputs[1], inputs[2]
+		if !left {
+			a, c = c, a
+		}
+		root := n.AndEdges(n.AndEdges(a, b), c)
+		po := abc.Abc_NtkCreatePo(n)
+		po.SetName("out")
+		abc.Abc_ObjAddFanin(po, root)
+		return n
+	}
+	left, right := makeNetwork(true), makeNetwork(false)
+	defer abc.Abc_NtkDelete(left)
+	defer abc.Abc_NtkDelete(right)
+	got := capturePrintStdout(t, func() { Abc_NtkCecFraig(left, right, 20, 0) })
+	if !strings.Contains(got, "Networks are equivalent.") {
+		t.Fatal(got)
+	}
+}
 
 func TestVerifyCleanModelReturnsZeroedCIsAcrossFrames(t *testing.T) {
 	n := abc.Abc_NtkAlloc(abc.ABC_NTK_LOGIC, abc.ABC_FUNC_SOP, 0)

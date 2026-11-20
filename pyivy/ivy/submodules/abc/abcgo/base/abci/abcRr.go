@@ -10,7 +10,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/sim"
-	"github.com/glycerine/abcgo/proof/fraig"
 )
 
 // Abc_RRMan_t owns the temporary cones, window, and proof miter used by abcRr.c.
@@ -21,7 +20,7 @@ type Abc_RRMan_t struct {
 	vFaninLeaves, vFanoutRoots                              *Vec_Ptr_t
 	vLeaves, vCone, vRoots                                  *Vec_Ptr_t
 	pWnd, pMiter                                            *Abc_Ntk_t
-	pParams                                                 *fraig.Prove_Params_t
+	pParams                                                 *Prove_Params_t
 	nNodesOld, nLevelsOld, nEdgesTried, nEdgesRemoved       int32
 	timeWindow, timeMiter, timeProve, timeUpdate, timeTotal int64
 }
@@ -123,9 +122,9 @@ func Abc_RRManStart() *Abc_RRMan_t {
 	p := &Abc_RRMan_t{
 		vFaninLeaves: vec.Vec_PtrAlloc(100), vFanoutRoots: vec.Vec_PtrAlloc(100),
 		vLeaves: vec.Vec_PtrAlloc(100), vCone: vec.Vec_PtrAlloc(100), vRoots: vec.Vec_PtrAlloc(100),
-		pParams: &fraig.Prove_Params_t{},
+		pParams: &Prove_Params_t{},
 	}
-	fraig.Prove_ParamsSetDefault(p.pParams)
+	Prove_ParamsSetDefault(p.pParams)
 	return p
 }
 func Abc_RRManStop(p *Abc_RRMan_t) {

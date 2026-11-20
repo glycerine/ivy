@@ -128,7 +128,7 @@ func Abc_NtkCecSat(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nConfLimit int32, nInsLim
 */
 func Abc_NtkCecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, fVerbose int32) {
 	clk := Abc_Clock()
-	var params fraig.Prove_Params_t
+	var params Prove_Params_t
 	pExdc := (*Abc_Ntk_t)(nil)
 	if pNtk1.Exdc != nil || pNtk2.Exdc != nil {
 		if pNtk1.Exdc != nil && pNtk2.Exdc != nil {
@@ -172,8 +172,8 @@ func Abc_NtkCecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, fVerbos
 		Abc_PrintTime(1, "Time", Abc_Clock()-clk)
 		return
 	}
-	fraig.Prove_ParamsSetDefault(&params)
-	fraig.Prove_ParamsSetItersMax(&params, 5)
+	Prove_ParamsSetDefault(&params)
+	params.nItersMax = 5
 	retValue = Abc_NtkIvyProve(&pMiter, &params)
 	if retValue == -1 {
 		fmt.Printf("Networks are undecided (resource limits is reached).  ")
@@ -208,9 +208,9 @@ func Abc_NtkCecFraig(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, fVerbos
 **********************************************************************
 */
 func Abc_NtkCecFraigPart(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nPartSize int32, fVerbose int32) {
-	var params fraig.Prove_Params_t
-	fraig.Prove_ParamsSetDefault(&params)
-	fraig.Prove_ParamsSetItersMax(&params, 5)
+	var params Prove_Params_t
+	Prove_ParamsSetDefault(&params)
+	params.nItersMax = 5
 	assert(nPartSize > 0, "nPartSize > 0")
 	pMiter := Abc_NtkMiter(pNtk1, pNtk2, 1, nPartSize, 0, 0)
 	if pMiter == nil {
@@ -297,9 +297,9 @@ func Abc_NtkCecFraigPart(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, nPa
 **********************************************************************
 */
 func Abc_NtkCecFraigPartAuto(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nSeconds int32, fVerbose int32) {
-	var params fraig.Prove_Params_t
-	fraig.Prove_ParamsSetDefault(&params)
-	fraig.Prove_ParamsSetItersMax(&params, 5)
+	var params Prove_Params_t
+	Prove_ParamsSetDefault(&params)
+	params.nItersMax = 5
 	pMiter := Abc_NtkMiter(pNtk1, pNtk2, 1, 1, 0, 0)
 	if pMiter == nil {
 		fmt.Printf("Miter computation has failed.\n")

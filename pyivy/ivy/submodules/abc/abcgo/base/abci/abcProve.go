@@ -40,8 +40,7 @@ func Prove_ParamsSetDefault(p *Prove_Params_t) {
 
 // Abc_NtkMiterProve attempts to prove a one-output strashed miter. It returns
 // -1 when resource limits prevent a result, 0 for SAT, and 1 for UNSAT.
-func Abc_NtkMiterProve(ppNtk **Abc_Ntk_t, pPars any) int32 {
-	p := pPars.(*Prove_Params_t)
+func Abc_NtkMiterProve(ppNtk **Abc_Ntk_t, p *Prove_Params_t) int32 {
 	n := *ppNtk
 	assert(Abc_NtkIsStrash(n) != 0, "Abc_NtkIsStrash(pNtk)")
 	assert(Abc_NtkPoNum(n) == 1, "Abc_NtkPoNum(pNtk) == 1")
