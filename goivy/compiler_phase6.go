@@ -2807,18 +2807,6 @@ func AddActionLabel(action ActionsAction, label string) {
 	}
 }
 
-// ShowCallGraph returns a string representation of the module's
-// action call graph.
-// Corresponds to displaying the call graph in Python.
-func ShowCallGraph(mod *Module) string {
-	cg := mod.CallGraph()
-	var sb strings.Builder
-	for callee, callers := range cg {
-		fmt.Fprintf(&sb, "%s <- %s\n", callee, strings.Join(callers, ", "))
-	}
-	return sb.String()
-}
-
 // ClearRules removes rules associated with a name from the module.
 // Corresponds to clearing rules in Python's ivy_compiler.py.
 func ClearRules(mod *Module, name string) {
