@@ -624,11 +624,12 @@ func Abc_NtkVerifySimulatePattern(pNtk *Abc_Ntk_t, pModel *int32) *int32 {
 	}
 	ciCount := int(abc.Abc_NtkCiNum(pNtk))
 	model := unsafe.Slice(pModel, ciCount)
+	abc.Abc_NtkIncrementTravId(pNtk)
 	abc.Abc_AigConst1(pNtk).Object.CopyData = true
 	for i := 0; i < ciCount; i++ {
 		abc.Abc_NtkCi(pNtk, int32(i)).CopyData = model[i] != 0
 	}
-	for i := int32(0); i < abc.Abc_NtkObjNum(pNtk); i++ {
+	for i := int32(0); i < abc.Abc_NtkObjNumMax(pNtk); i++ {
 		node := abc.Abc_NtkObj(pNtk, i)
 		if node == nil || abc.Abc_ObjIsNode(node) == 0 {
 			continue

@@ -24,18 +24,18 @@ func Abc_NtkIsSopLogic(n *Network) int32      { return Abc_NtkIsLogic(n) & Abc_N
 func Abc_NtkIsBddLogic(n *Network) int32      { return Abc_NtkIsLogic(n) & Abc_NtkHasBdd(n) }
 func Abc_NtkIsAigLogic(n *Network) int32      { return Abc_NtkIsLogic(n) & Abc_NtkHasAig(n) }
 func Abc_NtkIsMappedLogic(n *Network) int32   { return Abc_NtkIsLogic(n) & Abc_NtkHasMapping(n) }
-func Abc_NtkBiNum(n *Network) int32           { return int32(len(n.ObjectsOfKind(ObjectBI))) }
-func Abc_NtkBoNum(n *Network) int32           { return int32(len(n.ObjectsOfKind(ObjectBO))) }
-func Abc_NtkNetNum(n *Network) int32          { return int32(len(n.ObjectsOfKind(ObjectNet))) }
-func Abc_NtkLatchNum(n *Network) int32        { return int32(len(n.ObjectsOfKind(ObjectLatch))) }
+func Abc_NtkBiNum(n *Network) int32           { return int32(len(n.kindOrder[ObjectBI])) }
+func Abc_NtkBoNum(n *Network) int32           { return int32(len(n.kindOrder[ObjectBO])) }
+func Abc_NtkNetNum(n *Network) int32          { return int32(len(n.kindOrder[ObjectNet])) }
+func Abc_NtkLatchNum(n *Network) int32        { return int32(len(n.kindOrder[ObjectLatch])) }
 
 // Abc_NtkIncrementBarBufs2 records the secondary barrier-buffer count used by
 // the cell-mapped GIA conversion path.
 func Abc_NtkIncrementBarBufs2(n *Network) { n.barBufs2++ }
 
 func Abc_NtkBarBufs2(n *Network) int32    { return n.barBufs2 }
-func Abc_NtkWhiteboxNum(n *Network) int32 { return int32(len(n.ObjectsOfKind(ObjectWhitebox))) }
-func Abc_NtkBlackboxNum(n *Network) int32 { return int32(len(n.ObjectsOfKind(ObjectBlackbox))) }
+func Abc_NtkWhiteboxNum(n *Network) int32 { return int32(len(n.kindOrder[ObjectWhitebox])) }
+func Abc_NtkBlackboxNum(n *Network) int32 { return int32(len(n.kindOrder[ObjectBlackbox])) }
 
 // Abc_ObjBlackboxToWhitebox mirrors ABC's type conversion and keeps Go's
 // per-kind indexes synchronized with the object's new type.

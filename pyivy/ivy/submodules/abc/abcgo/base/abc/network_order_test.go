@@ -56,6 +56,9 @@ func TestReassignIDsPreservesNamesAttributesAndHash(t *testing.T) {
 	out.SetName("out")
 	Abc_ObjAddFanin(out, gate)
 	oldID := gate.ID
+	if Abc_NtkObjNum(n) != 5 || Abc_NtkObjNumMax(n) != 7 || Abc_NtkCiNum(n) != 2 || Abc_NtkCoNum(n) != 1 || Abc_NtkNodeNum(n) != 1 {
+		t.Fatal("live object counts include deleted IDs")
+	}
 	n.NameIDs = make([]int32, len(n.objects))
 	n.NameIDs[oldID] = 42
 	attribute := vec.Vec_AttAlloc(len(n.objects), nil, nil, nil, nil)

@@ -69,6 +69,22 @@ func TestVerifyValidCexReturnsCStyleBoolean(t *testing.T) {
 	}
 }
 
+func TestVerifyPatternSimulatesGatesAfterDeletedIDs(t *testing.T) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
+	defer abc.Abc_NtkDelete(n)
+	a, b := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
+	out := abc.Abc_NtkCreatePo(n)
+	unused := n.AndEdges(a.Signal().Not(), b.Signal())
+	abc.Abc_AigDeleteNode(n.FunctionManager.(*abc.Abc_Aig_t), unused.Object)
+	abc.Abc_ObjAddFanin(out, n.AndEdges(a.Signal(), b.Signal()))
+	for _, pattern := range [][]int32{{1, 1}, {1, 0}} {
+		got := Abc_NtkVerifySimulatePatternSlice(n, pattern)
+		if len(got) != 1 || got[0] != pattern[0]&pattern[1] {
+			t.Fatalf("AND at last ID on %v returned %v", pattern, got)
+		}
+	}
+}
+
 func TestVerifyFraigAdapterPreservesComplementedConstantOutput(t *testing.T) {
 	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
 	defer abc.Abc_NtkDelete(n)

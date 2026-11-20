@@ -143,3 +143,9 @@ BenchmarkI10ReadBalanceRewrite reads the input network, balances twice, runs the
 Temporary MFFC reference counts now keep signed adjustments only for touched objects. The old implementation repeatedly copied every object's fanout count into a new map. A red regression also showed that the snapshot hid edges attached while an adjustment was active. It now returns the live count plus the adjustment. In the same read/balance/rewrite stage this change alone cut allocation from 930 MB to 69.1 MB and runtime from 2.99 s to 1.76 s.
 
 On a structural hash miss the network now checks the shorter of the two input fanout lists. Every matching AND must appear in both. The test covers duplicate unhashed ANDs, opposite edge polarity, rewiring that changes list order, and a manager excluding the first match. Three final one-thread trials took 166–171 ms/op, with 2,004 ANDs at depth 36 throughout. This stage was 42.52 ms/op in C. Its native flat profile favored Rwr_NodeRewrite (18%), Abc_AigAndLookup (16%) and Dec_GraphToNetworkCount (11%). The complete Go demo reached 1.83 s in one run, with 0.64 s rewriting and 1.10 s verification, and proved equivalence. Focused race tests passed; the preceding live-cut snapshot also passed complete base/abc, base/abci and opt/rwr race tests.
+
+### Avoid copying network tables to count live objects
+
+Native ABC keeps separate live-object counts and an upper bound for object IDs. Go now reads its existing per-kind and terminal indexes directly for counts and indexed primary-port access. A sparse-ID simulation regression failed before the fix: the AND after a deleted ID produced zero on two true inputs. Verification now walks the ID range and advances the traversal epoch as in C. The new simulation and sparse-count tests passed under the race detector.
+
+Three one-thread i10 read/balance/rewrite trials took 148–150 ms/op and 49.3 MB/op, down from 166–171 ms and 69.1 MB. All trials preserved the 2,004 ANDs at depth 36.

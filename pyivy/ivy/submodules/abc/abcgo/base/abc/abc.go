@@ -118,13 +118,19 @@ func Abc_ObjCopyData(o *Object) any           { return o.CopyData }
 func Abc_ObjSetCopyData(o *Object, data any)  { o.CopyData = data }
 func Abc_ObjCopyEdge(o *Object) Edge          { return getCopy(o) }
 func Abc_NtkObj(n *Network, id int32) *Object { return n.Object(int(id)) }
-func Abc_NtkObjNum(n *Network) int32          { return int32(len(n.Objects())) }
-func Abc_NtkObjNumMax(n *Network) int32       { return int32(len(n.objects)) }
-func Abc_NtkPiNum(n *Network) int32           { return int32(len(n.ObjectsOfKind(ObjectPI))) }
-func Abc_NtkPoNum(n *Network) int32           { return int32(len(n.ObjectsOfKind(ObjectPO))) }
-func Abc_NtkNodeNum(n *Network) int32         { return int32(len(n.ObjectsOfKind(ObjectNode))) }
-func Abc_NtkName(n *Network) string           { return n.Name }
-func Abc_NtkSpec(n *Network) string           { return n.Spec }
+func Abc_NtkObjNum(n *Network) int32 {
+	var count int
+	for _, objects := range n.kindOrder {
+		count += len(objects)
+	}
+	return int32(count)
+}
+func Abc_NtkObjNumMax(n *Network) int32 { return int32(len(n.objects)) }
+func Abc_NtkPiNum(n *Network) int32     { return int32(len(n.kindOrder[ObjectPI])) }
+func Abc_NtkPoNum(n *Network) int32     { return int32(len(n.kindOrder[ObjectPO])) }
+func Abc_NtkNodeNum(n *Network) int32   { return int32(len(n.kindOrder[ObjectNode])) }
+func Abc_NtkName(n *Network) string     { return n.Name }
+func Abc_NtkSpec(n *Network) string     { return n.Spec }
 
 func Abc_NtkCreatePi(n *Network) *Object       { return n.NewObject(ObjectPI) }
 func Abc_NtkCreatePo(n *Network) *Object       { return n.NewObject(ObjectPO) }
@@ -135,37 +141,13 @@ func Abc_NtkCreateNode(n *Network) *Object     { return n.NewObject(ObjectNode) 
 func Abc_NtkCreateLatch(n *Network) *Object    { return n.NewObject(ObjectLatch) }
 func Abc_NtkCreateBlackbox(n *Network) *Object { return n.NewObject(ObjectBlackbox) }
 func Abc_NtkCreateWhitebox(n *Network) *Object { return n.NewObject(ObjectWhitebox) }
-func Abc_NtkCiNum(n *Network) int32 {
-	count := int32(0)
-	for _, o := range n.Objects() {
-		if o.IsCI() {
-			count++
-		}
-	}
-	return count
-}
-func Abc_NtkCoNum(n *Network) int32 {
-	count := int32(0)
-	for _, o := range n.Objects() {
-		if o.IsCO() {
-			count++
-		}
-	}
-	return count
-}
-func Abc_NtkBoxNum(n *Network) int32 {
-	count := int32(0)
-	for _, o := range n.Objects() {
-		if Abc_ObjIsBox(o) != 0 {
-			count++
-		}
-	}
-	return count
-}
-func Abc_NtkPi(n *Network, i int32) *Object { return n.ObjectsOfKind(ObjectPI)[i] }
-func Abc_NtkPo(n *Network, i int32) *Object { return n.ObjectsOfKind(ObjectPO)[i] }
-func Abc_NtkBarBufNum(n *Network) int32     { return int32(n.Barriers) }
-func Abc_NtkNodes(n *Network) []*Object     { return n.ObjectsOfKind(ObjectNode) }
+func Abc_NtkCiNum(n *Network) int32            { return int32(len(n.cis)) }
+func Abc_NtkCoNum(n *Network) int32            { return int32(len(n.cos)) }
+func Abc_NtkBoxNum(n *Network) int32           { return int32(len(n.boxes)) }
+func Abc_NtkPi(n *Network, i int32) *Object    { return n.kindOrder[ObjectPI][i] }
+func Abc_NtkPo(n *Network, i int32) *Object    { return n.kindOrder[ObjectPO][i] }
+func Abc_NtkBarBufNum(n *Network) int32        { return int32(n.Barriers) }
+func Abc_NtkNodes(n *Network) []*Object        { return n.ObjectsOfKind(ObjectNode) }
 func Abc_NtkBoxes(n *Network) []*Object {
 	boxes := n.ObjectsOfKind(ObjectWhitebox)
 	boxes = append(boxes, n.ObjectsOfKind(ObjectBlackbox)...)
