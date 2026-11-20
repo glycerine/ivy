@@ -24,47 +24,6 @@ func makePofX(t *testing.T) (pOfX Expr, x *LogicVariable) {
 	return pOfX, x
 }
 
-// TestPolarityFlipThroughNot_SymbolsOverUniversals tests that Not
-// correctly flips polarity in symbolsOverUniversalsRec.
-//
-// In Python ivy_logic.py lines 503-505:
-//
-//	if isinstance(fmla, Not):
-//	    pos = not pos       # mutates pos before recursive call
-//	argres = all([symbols_over_universals_rec(a, syms, pos, univs) ...])
-//
-// The formula: Not(IvyForAll(X, p(X)))
-//
-// Starting at pos=true:
-//   - We hit Not, so pos flips to false.
-//   - We recurse into IvyForAll(X, p(X)) with pos=false.
-//   - Since pos(false) != isinstance(ForAll)(true), the quantifier
-//     is NOT treated as universal (it's existential after skolemization).
-//   - So X should NOT be added to univs.
-//   - Therefore p should NOT appear in symbols_over_universals.
-//
-// BUG: Without the fix, pos stays true through Not, ForAll is treated
-// as universal, X is added to univs, and p is incorrectly reported as
-// a symbol over universals.
-func TestPolarityFlipThroughNot_SymbolsOverUniversals(t *testing.T) {
-	pOfX, x := makePofX(t)
-
-	forallXpX, err := NewForAll([]*LogicVariable{x}, pOfX)
-	if err != nil {
-		t.Fatal(err)
-	}
-	notForallXpX := &LogicNot{Body: forallXpX}
-
-	syms := SymbolsOverUniversals([]Expr{notForallXpX})
-	// p should NOT be in the result — X is existential (Not flips ForAll → Exists)
-	for _, s := range syms {
-		if s.Name == "p" {
-			t.Errorf("SymbolsOverUniversals incorrectly reports 'p' as over universals in Not(IvyForAll(X, p(X))). "+
-				"Not should flip polarity, making ForAll existential. Got symbols: %v", syms)
-		}
-	}
-}
-
 // TestPolarityFlipThroughNot_UniversalVariables tests that Not
 // correctly flips polarity in universalVariablesRec.
 //

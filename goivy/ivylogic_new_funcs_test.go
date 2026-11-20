@@ -352,25 +352,6 @@ func TestIsInLogic(t *testing.T) {
 	}
 }
 
-func TestSymbolsOverUniversals(t *testing.T) {
-	// forall X. p(X) -- p occurs over universal X
-	s := &UninterpretedSort{Name: "node"}
-	v, _ := NewVariable("X", s)
-	pSort, _ := NewFunctionSort(s, Boolean)
-	p := NewConst("p", pSort)
-	pApp := MustApply(p, v)
-	fa := &ForAll{Variables: []*LogicVariable{v}, Body: pApp}
-
-	syms := SymbolsOverUniversals([]Expr{fa})
-	// p should not be in syms because the variable IS the universal var
-	// (it appears as direct arg, not under a function)
-	// Actually, p(X) with X universal: symbolsOverUniversalsRec returns false for X (it's in univs),
-	// so argres is false, and p gets added.
-	if len(syms) == 0 {
-		t.Log("no symbols over universals found (expected p)")
-	}
-}
-
 func TestUniversalVariables(t *testing.T) {
 	s := &UninterpretedSort{Name: "node"}
 	v, _ := NewVariable("X", s)

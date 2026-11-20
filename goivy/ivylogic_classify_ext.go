@@ -200,63 +200,6 @@ func IsInLogic(sig *Sig, term Expr, logic string) bool {
 	return false
 }
 
-// symbolsOverUniversalsRec is the recursive helper for SymbolsOverUniversals.
-func symbolsOverUniversalsRec(fmla Expr, syms map[string]*Const, pos bool, univs map[NodeKey]Expr) bool {
-	if IsVariable(fmla) {
-		_, inUnivs := univs[Key(fmla)]
-		return !inUnivs
-	}
-	if IsQuantifier(fmla) {
-		isFA := IsForall(fmla)
-		if pos == isFA || len(univs) > 0 {
-			vars := BinderVars(fmla)
-			for _, v := range vars {
-				univs[Key(v)] = v
-			}
-			body := BinderBody(fmla)
-			res := symbolsOverUniversalsRec(body, syms, pos, univs)
-			for _, v := range vars {
-				delete(univs, Key(v))
-			}
-			return res
-		}
-	}
-	if _, ok := fmla.(*LogicNot); ok {
-		pos = !pos
-	}
-	argres := true
-	for _, a := range NodeArgs(fmla) {
-		if !symbolsOverUniversalsRec(a, syms, pos, univs) {
-			argres = false
-		}
-	}
-	if IsApp(fmla) && !IsEq(fmla) && !argres {
-		if app, ok := fmla.(*Apply); ok {
-			if c, ok := app.Func.(*Const); ok {
-				syms[c.Name] = c
-			}
-		} else if c, ok := fmla.(*Const); ok {
-			syms[c.Name] = c
-		}
-	}
-	return argres
-}
-
-// SymbolsOverUniversals returns the set of function symbols that occur
-// over universally quantified variables after skolemization.
-// Corresponds to Python's symbols_over_universals.
-func SymbolsOverUniversals(fmlas []Expr) []*Const {
-	syms := make(map[string]*Const)
-	for _, fmla := range fmlas {
-		symbolsOverUniversalsRec(fmla, syms, true, make(map[NodeKey]Expr))
-	}
-	result := make([]*Const, 0, len(syms))
-	for _, c := range syms {
-		result = append(result, c)
-	}
-	return result
-}
-
 // universalVariablesRec is the recursive helper for UniversalVariables.
 func universalVariablesRec(fmla Expr, pos bool, univs *InsMap[NodeKey, Expr]) {
 	if IsQuantifier(fmla) {
