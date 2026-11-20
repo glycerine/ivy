@@ -299,7 +299,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 			if len(n.Terms) >= 2 {
 				bodyNode := n.Terms[len(n.Terms)-1]
 				varNodes := n.Terms[:len(n.Terms)-1]
-				return c.CompileLocal(varNodes, bodyNode)
+				return c.CompileLocalAt(n, varNodes, bodyNode)
 			}
 			return nil, fmt.Errorf("local needs variables and body")
 
@@ -397,7 +397,7 @@ func (c *Compiler) CompileActionBody(node Node) (ActionsAction, error) {
 		if len(n.Elems) >= 2 {
 			bodyNode := n.Elems[len(n.Elems)-1]
 			varNodes := n.Elems[:len(n.Elems)-1]
-			return c.CompileLocal(varNodes, bodyNode)
+			return c.CompileLocalAt(n, varNodes, bodyNode)
 		}
 		return nil, fmt.Errorf("LocalAction needs variables and body")
 
@@ -929,6 +929,12 @@ func ensureSortAnnotation(n Node, cfg *AstConfig) {
 // CompileLocal compiles a local variable declaration from AST nodes.
 // Python: compile_local (ivy_compiler.py:471-518)
 func (c *Compiler) CompileLocal(localDecls []Node, body Node) (ActionsAction, error) {
+	return c.CompileLocalAt(nil, localDecls, body)
+}
+
+// CompileLocalAt is compile_local on the local action self: the results
+// take self.lineno. A nil self (tests) falls back to the body/assignment.
+func (c *Compiler) CompileLocalAt(self Node, localDecls []Node, body Node) (ActionsAction, error) {
 	xtracer.Trace("compiler.compile_local ENTER")
 	sigCopy := c.Sig.Copy()
 
@@ -1066,10 +1072,14 @@ func (c *Compiler) CompileLocal(localDecls []Node, body Node) (ActionsAction, er
 			exprCtx.Code = append(exprCtx.Code,
 				NewLocalActionOn(c.ActCfg, "compiler.compile_local_special", localVar, bodyWithAsgn))
 
-			// Set lineno on all code items
+			// Python: for c in code: c.lineno = self.lineno
+			selfLoc := assignAction.GetLineno()
+			if self != nil {
+				selfLoc = self.GetLineno()
+			}
 			for _, codeItem := range exprCtx.Code {
 				if act, ok := codeItem.(ActionsAction); ok {
-					act.SetLineno(assignAction.GetLineno())
+					act.SetLineno(selfLoc)
 				}
 			}
 
@@ -1087,7 +1097,7 @@ func (c *Compiler) CompileLocal(localDecls []Node, body Node) (ActionsAction, er
 			innerSeq.SetLineno(assignAction.GetLineno())
 			args = append(args, innerSeq)
 			result := NewLocalActionOn(c.ActCfg, "compiler.compile_local_seq", args...)
-			result.SetLineno(assignAction.GetLineno())
+			result.SetLineno(selfLoc)
 			return result, nil
 		}
 	}
@@ -1147,7 +1157,10 @@ func (c *Compiler) CompileLocal(localDecls []Node, body Node) (ActionsAction, er
 	}
 	args = append(args, compiledBody)
 	res := NewLocalActionOn(c.ActCfg, "compiler.compile_local_action", args...)
-	if body != nil {
+	// Python: res.lineno = self.lineno
+	if self != nil {
+		res.SetLineno(self.GetLineno())
+	} else if body != nil {
 		res.SetLineno(body.GetLineno())
 	}
 	return res, nil
