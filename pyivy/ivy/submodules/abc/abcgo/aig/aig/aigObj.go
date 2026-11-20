@@ -13,6 +13,9 @@ func Aig_ObjCreate(p *Graph, ghost *Node) Edge {
 		panic("aig: invalid ghost kind")
 	}
 	n := *ghost
+	if n.Kind == Buffer {
+		n.Fanins[1] = InvalidEdge
+	}
 	if !p.valid(n.Fanins[0]) || (n.Kind == ExclusiveOr && !p.valid(n.Fanins[1])) {
 		panic("aig: invalid ghost fanins")
 	}
@@ -47,6 +50,9 @@ func Aig_ObjConnect(p *Graph, e, a, b Edge) {
 		if a > b {
 			a, b = b, a
 		}
+	}
+	if n.Kind == Buffer {
+		b = InvalidEdge
 	}
 	n.Fanins = [2]Edge{a, b}
 	p.recountReferences()

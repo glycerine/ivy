@@ -331,7 +331,7 @@ func (g *Graph) Check() error {
 		count := 1
 		if n.Kind == And || n.Kind == ExclusiveOr {
 			count = 2
-		} else if n.Fanins[1] != InvalidEdge {
+		} else if n.Fanins[1] != InvalidEdge && !(n.Kind == Buffer && n.Fanins[1] == 0) {
 			return fmt.Errorf("aig: unexpected second fanin at %d", id)
 		}
 		level := 0

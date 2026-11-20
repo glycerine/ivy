@@ -304,20 +304,27 @@ func Aig_ObjFaninId0(p *Graph, e Edge) int32 {
 	return int32(x.NodeID())
 }
 func Aig_ObjFaninId1(p *Graph, e Edge) int32 {
-	x := p.node(e).Fanins[1]
+	x := Aig_ObjChild1(p, e)
 	if x == InvalidEdge {
 		return -1
 	}
 	return int32(x.NodeID())
 }
-func Aig_ObjFaninC0(p *Graph, e Edge) int32   { return Aig_IsComplement(p.node(e).Fanins[0]) }
-func Aig_ObjFaninC1(p *Graph, e Edge) int32   { return Aig_IsComplement(p.node(e).Fanins[1]) }
-func Aig_ObjFanin0(p *Graph, e Edge) Edge     { return Aig_Regular(p.node(e).Fanins[0]) }
-func Aig_ObjFanin1(p *Graph, e Edge) Edge     { return Aig_Regular(p.node(e).Fanins[1]) }
-func Aig_ObjChild0(p *Graph, e Edge) Edge     { return p.node(e).Fanins[0] }
-func Aig_ObjChild1(p *Graph, e Edge) Edge     { return p.node(e).Fanins[1] }
+func Aig_ObjFaninC0(p *Graph, e Edge) int32 { return Aig_IsComplement(p.node(e).Fanins[0]) }
+func Aig_ObjFaninC1(p *Graph, e Edge) int32 { return Aig_IsComplement(Aig_ObjChild1(p, e)) }
+func Aig_ObjFanin0(p *Graph, e Edge) Edge   { return Aig_Regular(p.node(e).Fanins[0]) }
+func Aig_ObjFanin1(p *Graph, e Edge) Edge   { return Aig_Regular(Aig_ObjChild1(p, e)) }
+func Aig_ObjChild0(p *Graph, e Edge) Edge   { return p.node(e).Fanins[0] }
+func Aig_ObjChild1(p *Graph, e Edge) Edge {
+	n := p.node(e)
+	// Older buffers may carry Go's zero value in the unused slot.
+	if n.Kind == Buffer {
+		return InvalidEdge
+	}
+	return n.Fanins[1]
+}
 func Aig_ObjChild0Copy(p *Graph, e Edge) Edge { return Aig_ObjRealCopy(p, p.node(e).Fanins[0]) }
-func Aig_ObjChild1Copy(p *Graph, e Edge) Edge { return Aig_ObjRealCopy(p, p.node(e).Fanins[1]) }
+func Aig_ObjChild1Copy(p *Graph, e Edge) Edge { return Aig_ObjRealCopy(p, Aig_ObjChild1(p, e)) }
 func Aig_ObjChild0Next(p *Graph, e Edge) Edge {
 	x := p.node(e).Fanins[0]
 	n, ok := p.next[x.NodeID()]
@@ -330,7 +337,7 @@ func Aig_ObjChild0Next(p *Graph, e Edge) Edge {
 	return n
 }
 func Aig_ObjChild1Next(p *Graph, e Edge) Edge {
-	x := p.node(e).Fanins[1]
+	x := Aig_ObjChild1(p, e)
 	n, ok := p.next[x.NodeID()]
 	if !ok {
 		return InvalidEdge

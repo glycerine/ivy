@@ -187,3 +187,28 @@ func TestGraphCheckRequiresLiveConstant(t *testing.T) {
 		t.Fatal("accepted deleted constant one")
 	}
 }
+
+func TestZeroValueBufferPinIsAbsent(t *testing.T) {
+	g := NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	buffer := Aig_ObjCreate(g, &Node{Kind: Buffer, Fanins: [2]Edge{a.Not()}})
+	g.AddOutput(buffer)
+	check := func(want Edge) {
+		t.Helper()
+		if err := g.Check(); err != nil {
+			t.Errorf("valid unary buffer rejected: %v", err)
+		}
+		if got := Aig_ObjChild0(g, buffer); got != want {
+			t.Errorf("driver %v, want %v", got, want)
+		}
+		if id := Aig_ObjFaninId1(g, buffer); id != -1 || Aig_ObjFanin1(g, buffer) != InvalidEdge || Aig_ObjChild1(g, buffer) != InvalidEdge {
+			t.Errorf("unused pin reported as object %d", id)
+		}
+	}
+	check(a.Not())
+	Aig_ObjConnect(g, buffer, b, 0)
+	check(b)
+	// Previously constructed buffer records can retain a zero in the unused slot.
+	g.nodes[buffer.NodeID()].Fanins[1] = 0
+	check(b)
+}
