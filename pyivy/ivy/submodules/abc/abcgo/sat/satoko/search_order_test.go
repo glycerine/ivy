@@ -134,3 +134,40 @@ func TestPigeonholeRestartSearchMatchesC(t *testing.T) {
 		t.Fatalf("search used %d conflicts, %d decisions, %d starts", s.stats.Conflicts, s.stats.Decisions, s.stats.Starts)
 	}
 }
+
+func TestClauseLBDRepeatedLevelsAndStampWrap(t *testing.T) {
+	s := New()
+	s.SetVariables(4)
+	// Repeated assumptions can create more decision levels than variables.
+	s.limits = make([]int, 80)
+	s.levels = []int{0, 1, 80, 1}
+	s.stamp = ^uint32(0)
+	s.stamps = []uint32{1, 1}
+	if got := s.clauseLBD([]int{0, 2, 5, 6}); got != 3 {
+		t.Fatalf("distinct levels across wrap = %d, want 3", got)
+	}
+	if got := s.clauseLBD([]int{2, 6}); got != 1 {
+		t.Fatalf("stale marks affected next count: %d", got)
+	}
+}
+
+func TestReasonProofRestoresTentativeMarks(t *testing.T) {
+	s := New()
+	s.SetVariables(4)
+	// b follows a; d follows b and c. Mark a as a known antecedent.
+	s.analysis.seen = []bool{true, false, false, false}
+	s.analysis.tagged = []int{0}
+	for v := range s.values {
+		s.values[v] = 1
+		s.levels[v] = 1
+	}
+	s.reasons[1] = s.addStored([]int{2, 1}, false, 0)
+	s.reasons[3] = s.addStored([]int{6, 3, 5}, false, 0)
+	if s.reasonRemovable(3, 2) || s.analysis.seen[1] || !s.analysis.seen[0] || len(s.analysis.tagged) != 1 {
+		t.Fatal("failed proof kept tentative marks or cleared a known antecedent")
+	}
+	s.analysis.seen[2] = true
+	if !s.reasonRemovable(3, 2) || !s.analysis.seen[1] {
+		t.Fatal("successful proof did not retain the shared antecedent")
+	}
+}

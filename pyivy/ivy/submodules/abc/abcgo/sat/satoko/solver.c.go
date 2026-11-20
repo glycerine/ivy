@@ -7,14 +7,21 @@ import "github.com/glycerine/abcgo/sat/satoko/utils"
 // analyze resolves the conflicting implication graph to its first UIP. The
 // resulting asserting clause is added permanently, including across solves.
 func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
-	seen := make([]bool, len(s.values))
-	learnt := []int{0}
+	scratch := &s.analysis
+	if len(scratch.seen) < len(s.values) {
+		scratch.seen = append(scratch.seen, make([]bool, len(s.values)-len(scratch.seen))...)
+	}
+	seen := scratch.seen
+	learnt := append(scratch.learnt[:0], 0)
 	path := 0
-	var lastLevel []int
+	lastLevel := scratch.lastLevel[:0]
 	p := -1
 	index := len(s.trail) - 1
 	for {
 		c := s.clauses[conflict]
+		if p >= 0 && len(c.lits) == 2 && s.literalValue(c.lits[0]) == 0 {
+			c.lits[0], c.lits[1] = c.lits[1], c.lits[0]
+		}
 		s.bumpClause(c)
 		if c.learnt && c.lbd > 2 {
 			fresh := s.clauseLBD(c.lits)
@@ -75,16 +82,14 @@ func (s *Solver) analyze(conflict int) ([]int, int, uint32) {
 		learnt[1], learnt[best] = learnt[best], learnt[1]
 		back = s.levels[learnt[1]>>1]
 	}
-	levels := map[int]bool{}
-	for _, lit := range learnt {
-		levels[s.levels[lit>>1]] = true
-	}
+	lbd := s.clauseLBD(learnt)
 	for _, v := range lastLevel {
-		if s.clauses[s.reasons[v]].lbd < uint32(len(levels)) {
+		if s.clauses[s.reasons[v]].lbd < lbd {
 			s.bumpVariable(v)
 		}
 	}
-	return learnt, back, uint32(len(levels))
+	scratch.learnt, scratch.lastLevel = learnt, lastLevel
+	return learnt, back, lbd
 }
 func (s *Solver) reduce() uint32 {
 	locked := make(map[int]bool)

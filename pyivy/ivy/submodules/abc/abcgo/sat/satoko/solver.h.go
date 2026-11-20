@@ -8,7 +8,15 @@ import (
 	"github.com/glycerine/abcgo/sat/satoko/utils/vec"
 )
 
+// Conflict analysis borrows these buffers until its asserting clause has
+// been copied into the clause database.
+type conflictScratch struct {
+	seen                               []bool
+	learnt, lastLevel, tagged, pending []int
+}
+
 type Solver struct {
+	analysis                  conflictScratch
 	opts                      Options
 	stats                     Stats
 	clauses                   []*clause
@@ -17,6 +25,8 @@ type Solver struct {
 	simplifyProps             int64
 	values                    []int8
 	levels, reasons           []int
+	stamps                    []uint32 // shared by LBD counting and binary resolution
+	stamp                     uint32
 	phases                    []uint8
 	decision                  []bool
 	trail, limits             []int
