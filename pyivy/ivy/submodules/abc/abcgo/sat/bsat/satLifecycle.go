@@ -75,13 +75,8 @@ func sat_solver_setnvars(s *sat_solver, n int32) {
 		clear(s.pGlobalVars[oldLen:])
 	}
 	for v := s.size; v < n; v++ {
-		for _, w := range []*veci{&s.wlists[2*v], &s.wlists[2*v+1]} {
-			if w.size != 0 {
-				panic("new variable has watchers")
-			}
-			if w.ptr == nil {
-				veci_new(w)
-			}
+		if s.wlists[2*v].size != 0 || s.wlists[2*v+1].size != 0 {
+			panic("new variable has watchers")
 		}
 		switch s.VarActType {
 		case 0:

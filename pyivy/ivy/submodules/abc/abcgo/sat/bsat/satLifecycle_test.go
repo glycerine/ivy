@@ -2,6 +2,21 @@ package bsat
 
 import "testing"
 
+func TestWatchStorageFollowsWatchedLiterals(t *testing.T) {
+	s := NewSolver()
+	s.SetNumVars(200)
+	s.AddClause(Positive(0), Negative(199))
+	for i, w := range s.wlists {
+		watched := i == int(Negative(0)) || i == int(Positive(199))
+		if (len(w.ptr) != 0) != watched || (w.size != 0) != watched {
+			t.Fatalf("literal %d has %d watches and %d allocated entries, watched %t", i, w.size, len(w.ptr), watched)
+		}
+	}
+	if s.Solve(Negative(0), Positive(199)) != Unsatisfiable {
+		t.Fatal("lazy watch list lost the binary implication")
+	}
+}
+
 func TestSolverAllocationGrowthRestart(t *testing.T) {
 	s := sat_solver_new()
 	if s.random_seed != 91648253 || s.Mem.nPageSize != 17 || s.binary.size != 2 {

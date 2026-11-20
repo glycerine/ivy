@@ -24,10 +24,10 @@ func (a *satAssignments) clearTags(start int32) {
 }
 func satLiteralRemovable(a *satAssignments, m *Sat_Mem_t, x int32, minLevels uint32) bool {
 	top := a.tagged.size
-	stack := []int32{x}
-	for len(stack) > 0 {
-		v := stack[len(stack)-1]
-		stack = stack[:len(stack)-1]
+	veci_resize(&a.stack, 0)
+	veci_push(&a.stack, x)
+	for a.stack.size > 0 {
+		v := veci_pop(&a.stack)
 		reason := a.reasons[v]
 		if reason == 0 {
 			panic("minimization without reason")
@@ -47,17 +47,18 @@ func satLiteralRemovable(a *satAssignments, m *Sat_Mem_t, x int32, minLevels uin
 				a.clearTags(top)
 				return false
 			}
-			stack = append(stack, u)
+			veci_push(&a.stack, u)
 			a.tagVariable(u, 1)
 		}
 	}
 	return true
 }
-func satAnalyze(a *satAssignments, m *Sat_Mem_t, h cla, hooks satActivityBumper, stats *stats_t) []lit {
+func satAnalyze(a *satAssignments, m *Sat_Mem_t, h cla, hooks satActivityBumper, stats *stats_t, out *veci) {
 	if a.tagged.size != 0 {
 		panic("analysis with stale tags")
 	}
-	learnt := []lit{lit_Undef}
+	veci_resize(out, 0)
+	veci_push(out, lit_Undef)
 	pending := int32(0)
 	p := lit_Undef
 	index := a.qtail - 1
@@ -90,7 +91,7 @@ func satAnalyze(a *satAssignments, m *Sat_Mem_t, h cla, hooks satActivityBumper,
 			if a.levels[v] == a.trail_lim.size {
 				pending++
 			} else {
-				learnt = append(learnt, l)
+				veci_push(out, l)
 			}
 		}
 		for index >= 0 && a.tags[lit_var(a.trail[index])] == 0 {
@@ -107,6 +108,7 @@ func satAnalyze(a *satAssignments, m *Sat_Mem_t, h cla, hooks satActivityBumper,
 			break
 		}
 	}
+	learnt := veci_begin(out)
 	learnt[0] = lit_neg(p)
 	var levels uint32
 	for _, l := range learnt[1:] {
@@ -121,6 +123,7 @@ func satAnalyze(a *satAssignments, m *Sat_Mem_t, h cla, hooks satActivityBumper,
 		}
 	}
 	learnt = learnt[:write]
+	veci_resize(out, int32(write))
 	stats.tot_literals += int64(write)
 	a.clearTags(0)
 	if len(learnt) > 1 {
@@ -132,5 +135,4 @@ func satAnalyze(a *satAssignments, m *Sat_Mem_t, h cla, hooks satActivityBumper,
 		}
 		learnt[1], learnt[best] = learnt[best], learnt[1]
 	}
-	return learnt
 }

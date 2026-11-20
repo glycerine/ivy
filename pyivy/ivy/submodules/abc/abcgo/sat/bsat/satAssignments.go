@@ -8,7 +8,7 @@ type satAssignments struct {
 	qhead, qtail                             int32
 	levels, assigns, polarity, tags, reasons []int32
 	trail                                    []lit
-	trail_lim, tagged                        veci
+	trail_lim, tagged, stack                 veci
 }
 
 func newSatAssignments(size int32) satAssignments {
@@ -51,9 +51,9 @@ func (a *satAssignments) decision(l lit) bool {
 	return a.enqueue(l, 0)
 }
 
-// cancelUntil returns the propagated variables that must reenter the decision
-// heap. Unpropagated assignments have never been removed from that heap.
-func (a *satAssignments) cancelUntil(level int32) []int32 {
+// cancelUntil returns the former trail of propagated literals. The solver
+// consumes it in reverse before the next enqueue can overwrite it.
+func (a *satAssignments) cancelUntil(level int32) []lit {
 	if level < 0 {
 		panic("negative decision level")
 	}
@@ -70,28 +70,22 @@ func (a *satAssignments) cancelUntil(level int32) []int32 {
 			a.polarity[v] = 1 - lit_sign(a.trail[i])
 		}
 	}
-	var restore []int32
-	for i := a.qhead - 1; i >= bound; i-- {
-		restore = append(restore, lit_var(a.trail[i]))
-	}
+	// A failed assumption can have a trail boundary beyond pending root units.
+	restore := a.trail[bound:max(bound, a.qhead)]
 	a.qhead = bound
 	a.qtail = bound
 	veci_resize(&a.trail_lim, level)
 	return restore
 }
-func (a *satAssignments) rollback(bound int32) []int32 {
+func (a *satAssignments) rollback(bound int32) []lit {
 	if a.trail_lim.size != 0 || bound < 0 || bound > a.qhead || a.qhead > a.qtail {
 		panic("invalid top-level rollback")
 	}
-	var restore []int32
+	restore := a.trail[bound:a.qhead]
 	for i := a.qtail - 1; i >= bound; i-- {
 		v := lit_var(a.trail[i])
 		a.assigns[v] = satUnassigned
 		a.reasons[v] = 0
-		// Only propagated assignments have been removed from the heap.
-		if i < a.qhead {
-			restore = append(restore, v)
-		}
 	}
 	a.qhead = bound
 	a.qtail = bound

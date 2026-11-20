@@ -205,3 +205,11 @@ A capacity regression failed because the 42-variable instance reserved space for
 The solver now resolves a handle through its page and aligned offset. Learned-clause compaction validates every relocation before installing the surviving pointers. Two regressions failed on the previous revision. A handle with its high bit set decoded to a negative page, and a rejected relocation overwrote the first survivor's ID before reporting the second survivor's invalid ID. Both tests pass after the fixes. Further coverage checks stale handles after rollback and restart. The complete bsat and proof package race tests passed.
 
 In consecutive 300-solve trials on CPU 12, Go fell from 5.23 to 3.26 ms per pigeonhole proof. Native took 2.17 ms with identical search counters. The direct index increased allocation from 327 KB to 438 KB per solve, with 6,050 allocations in both versions. The 5,051-AND i10 proof averaged 551 ms and 142 MB over four iterations.
+
+### Reuse conflict and backtracking storage in bsat
+
+The allocation profile attributed 55% of sampled objects to conflict analysis and 13% to backtracking. Conflict analysis now writes directly into the search's reusable learned clause and uses the solver's stack to minimize it. Backtracking restores the heap in reverse order from the propagated segment of the existing trail. Watch vectors acquire backing storage on their first insertion.
+
+New allocation tests first measured four allocations per repeated conflict, one per backtrack and four reserved entries per unwatched literal. All pass after the changes. The initial trail implementation also panicked when an assumption contradicted a pending root unit. A one-variable regression reproduced the failure before the correction and verifies a subsequent unrestricted solve. Complete race tests passed for bsat, proof, fra, fracomb and Ivy.
+
+The seven-pigeon solve now allocates 301,256 bytes in 1,967 objects, down from 438,112 bytes in 6,050 objects, with identical search counters. Under concurrent system load, alternating 500-solve wall times ranged from 8.52–9.79 ms before and 8.10–9.30 ms after. The timing ranges overlap. The fixed i10 proof averaged 132.5 MB and 3.74 million objects over five calls.

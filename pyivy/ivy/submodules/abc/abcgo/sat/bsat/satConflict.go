@@ -16,9 +16,5 @@ func sat_solver_analyze_final(s *sat_solver, h int32, skip int32) {
 }
 
 func sat_solver_analyze(s *sat_solver, h int32, learnt *veci) {
-	result := satAnalyze(&s.satAssignments, &s.Mem, h, s, &s.stats)
-	veci_resize(learnt, 0)
-	for _, l := range result {
-		veci_push(learnt, l)
-	}
+	satAnalyze(&s.satAssignments, &s.Mem, h, s, &s.stats, learnt)
 }

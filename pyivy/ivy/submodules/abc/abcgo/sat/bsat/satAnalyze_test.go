@@ -13,6 +13,29 @@ type activityRecorder struct {
 
 func (r *activityRecorder) bumpVariable(v int32) { r.vars = append(r.vars, v) }
 func (r *activityRecorder) bumpClause(c *clause) { r.clauses++ }
+
+func TestAnalyzeReusesLearnedClauseStorage(t *testing.T) {
+	s := sat_solver_new()
+	sat_solver_setnvars(s, 6)
+	var conflict []lit
+	for v := int32(0); v < 6; v++ {
+		sat_solver_decision(s, toLit(v))
+		s.qhead = s.qtail
+		conflict = append(conflict, lit_neg(toLit(v)))
+	}
+	h := Sat_MemAppend(&s.Mem, conflict, 6, 0, 0)
+	var learnt veci
+	allocs := testing.AllocsPerRun(10, func() {
+		sat_solver_analyze(s, h, &learnt)
+	})
+	if got := veci_begin(&learnt); len(got) != 6 || got[0] != conflict[5] || got[1] != conflict[4] {
+		t.Fatalf("wrong asserting or backtrack literal in %v", got)
+	}
+	if allocs != 0 {
+		t.Fatalf("analyzing the same conflict allocated %.0f objects per call", allocs)
+	}
+}
+
 func TestCDCLFirstUIPLearning(t *testing.T) {
 	a := newSatAssignments(3)
 	m := Sat_MemAlloc(9)
@@ -23,7 +46,9 @@ func TestCDCLFirstUIPLearning(t *testing.T) {
 	a.qhead = a.qtail
 	var stats stats_t
 	hooks := new(activityRecorder)
-	learnt := satAnalyze(&a, m, conflict, hooks, &stats)
+	var out veci
+	satAnalyze(&a, m, conflict, hooks, &stats, &out)
+	learnt := veci_begin(&out)
 	if !reflect.DeepEqual(learnt, []lit{lit_neg(toLit(0))}) || a.tagged.size != 0 || stats.tot_literals != 1 || hooks.clauses != 1 {
 		t.Fatal(learnt, a.tags, stats, hooks)
 	}
@@ -37,7 +62,9 @@ func TestCDCLLearnedBacktrackLiteral(t *testing.T) {
 	a.qhead = a.qtail
 	conflict := Sat_MemAppend(m, []int32{lit_neg(toLit(0)), lit_neg(toLit(1))}, 2, 0, 0)
 	var stats stats_t
-	learnt := satAnalyze(&a, m, conflict, nil, &stats)
+	var out veci
+	satAnalyze(&a, m, conflict, nil, &stats, &out)
+	learnt := veci_begin(&out)
 	if !reflect.DeepEqual(learnt, []lit{lit_neg(toLit(1)), lit_neg(toLit(0))}) {
 		t.Fatal(learnt)
 	}
@@ -105,7 +132,9 @@ func TestCDCLLearnedClausesEntailedByFormula(t *testing.T) {
 				continue
 			}
 			conflicts++
-			learnt := satAnalyze(&a, m, h, nil, &stats)
+			var out veci
+			satAnalyze(&a, m, h, nil, &stats, &out)
+			learnt := veci_begin(&out)
 			for model := 0; model < 32; model++ {
 				satisfies := true
 				for _, c := range formula {

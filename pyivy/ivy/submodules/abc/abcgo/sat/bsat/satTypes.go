@@ -59,7 +59,6 @@ type sat_solver_t struct {
 	loads []int32 //
 
 	orderpos []int32 // Index in variable order.
-	stack    veci    // (contains: var)
 
 	order veci // Variable order. (heap) (contains: var)
 	//    veci        model;         // If problem is solved, this vector contains the model (contains: lbool).

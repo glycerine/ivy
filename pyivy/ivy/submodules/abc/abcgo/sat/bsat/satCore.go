@@ -1,5 +1,7 @@
 package bsat
 
+import "slices"
+
 func sat_solver_enqueue(s *sat_solver, l lit, from int32) int32 {
 	s.pFreqs[lit_var(l)] = 1
 	if s.satAssignments.enqueue(l, from) {
@@ -15,13 +17,13 @@ func sat_solver_decision(s *sat_solver, l lit) int32 {
 	return sat_solver_enqueue(s, l, 0)
 }
 func sat_solver_canceluntil(s *sat_solver, level int32) {
-	for _, v := range s.satAssignments.cancelUntil(level) {
-		order_unassigned(s, v)
+	for _, l := range slices.Backward(s.satAssignments.cancelUntil(level)) {
+		order_unassigned(s, lit_var(l))
 	}
 }
 func sat_solver_canceluntil_rollback(s *sat_solver, bound int32) {
-	for _, v := range s.satAssignments.rollback(bound) {
-		order_unassigned(s, v)
+	for _, l := range slices.Backward(s.satAssignments.rollback(bound)) {
+		order_unassigned(s, lit_var(l))
 	}
 }
 
