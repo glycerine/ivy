@@ -462,7 +462,15 @@ func (g *Graph) LiveEdges() []Edge {
 // source Aig_ManDfsAll it includes unreachable gates and supports buffers.
 // It does not change traversal IDs, object marks or the graph.
 func (g *Graph) TopologicalObjects() []Edge {
-	return g.dfs(g.LiveEdges(), false, false, false)
+	edges := g.LiveEdges()
+	for _, edge := range edges {
+		for _, fanin := range nodeFanins(g.nodes[edge.NodeID()]) {
+			if fanin.NodeID() >= edge.NodeID() || g.deleted[fanin.NodeID()] {
+				return g.dfs(edges, false, false, false)
+			}
+		}
+	}
+	return edges
 }
 
 func (g *Graph) ValidEdge(e Edge) bool { return g.valid(e) }

@@ -66,3 +66,52 @@ func TestDarAreaMappingChoosesSourceCost(t *testing.T) {
 		t.Fatalf("wrong selected cut: %+v", cut)
 	}
 }
+
+func TestAreaFlowAfterInPlaceAIGReplacement(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	root := g.AND(a.Not(), b)
+	g.AddOutput(root)
+	later := g.AND(a, b)
+	replacement := g.AND(later, c)
+	aig.Aig_ObjReplace(g, root, replacement, 0)
+	if err := g.Check(); err != nil {
+		t.Fatal(err)
+	}
+	if root.NodeID() >= later.NodeID() || g.Node(root).Kind != aig.And {
+		t.Fatal("fixture must have an AND whose fanin was allocated later")
+	}
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	m.pManAig = g
+	Cnf_DeriveMapping(m)
+	chosen := m.selectedCuts[root.NodeID()]
+	// The three-input cut costs four clauses. Keeping the intermediate
+	// gate costs three clauses at the root plus three at its sole fanin gate.
+	if len(chosen.pFanins) != 3 || chosen.Cost != 4 {
+		t.Fatalf("selected leaves %v at cost %d, want all three inputs at cost 4", chosen.pFanins, chosen.Cost)
+	}
+}
+
+func TestAreaFlowTieWithHighFanoutInput(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	inner := g.AND(a, b)
+	root := g.AND(inner, c)
+	g.AddOutput(root)
+	g.AddOutput(inner)
+	g.AddOutput(inner)
+	for i := 0; i < 2047; i++ {
+		g.AddOutput(a)
+	}
+	m := Cnf_ManStart()
+	defer Cnf_ManStop(m)
+	m.pManAig = g
+	Cnf_DeriveMapping(m)
+	chosen := m.selectedCuts[root.NodeID()]
+	// Both cuts score 40. DAR's 11-bit Value field gives the two-input
+	// cut a tie value of 4 and the three-input cut (2050 mod 2048) 2.
+	if len(chosen.pFanins) != 2 || chosen.pFanins[0] != int32(c.NodeID()) || chosen.pFanins[1] != int32(inner.NodeID()) {
+		t.Fatalf("selected leaves %v, want the two-input cut", chosen.pFanins)
+	}
+}

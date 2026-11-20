@@ -202,3 +202,76 @@ func TestCutStretchAllFourInputPlacements(t *testing.T) {
 		}
 	}
 }
+
+func TestCachedCutsHaveIndependentBoundaries(t *testing.T) {
+	g := layeredCutGraph()
+	edge := g.Outputs()[0]
+	m := NewCutEnumerator(g, 10)
+	m.skipTruthMin = true
+	want := m.Slots(edge)
+	for _, physical := range []bool{true, false} {
+		allocs := testing.AllocsPerRun(100, func() {
+			if physical {
+				m.Slots(edge)
+			} else {
+				m.Cuts(edge)
+			}
+		})
+		if allocs > 2 {
+			t.Errorf("physical %v: copying cached cuts allocated %.0f objects", physical, allocs)
+		}
+	}
+	slots := m.Slots(edge)
+	for i := range slots {
+		// Exercise writes through the slice and append into a retained result.
+		x := &slots[i].Cut
+		for j := range x.Leaves {
+			x.Leaves[j] = aig.InvalidEdge
+		}
+		x.Leaves = append(x.Leaves, 0)
+		if i+1 < len(slots) && !reflect.DeepEqual(slots[i+1], want[i+1]) {
+			t.Fatalf("appending to slot %d changed its neighbor", i)
+		}
+	}
+	if !reflect.DeepEqual(m.Slots(edge), want) {
+		t.Fatal("editing the caller's slots damaged the cache")
+	}
+}
+
+func TestCandidatesOwnLeavesAndRespectEdgePhase(t *testing.T) {
+	g := aig.NewGraph()
+	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
+	gate := g.NewXor(g.AND(a, b.Not()), c)
+	buf := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{gate.Not(), aig.InvalidEdge}})
+	output := g.AddOutput(buf)
+	m := NewCutEnumerator(g, 10)
+	want := m.Slots(gate)
+	for _, edge := range []aig.Edge{gate, gate.Not(), buf, buf.Not(), output, output.Not()} {
+		invert := edge == gate.Not() || edge == buf || edge == output
+		seen := 0
+		for i, cut := range m.Candidates(edge) {
+			slot := want[i]
+			truth := slot.Cut.Truth
+			if invert {
+				truth = ^truth
+			}
+			if !slot.Used || truth != cut.Truth || slot.Value != int(cut.Value) ||
+				!reflect.DeepEqual(slot.Cut.Leaves, cut.Leaves[:cut.NumLeaves]) {
+				t.Fatalf("edge %v, slot %d: %+v, want %+v (inverted %v)", edge, i, cut, slot, invert)
+			}
+			cut.Leaves[0] = aig.InvalidEdge
+			seen++
+		}
+		if seen != len(m.Cuts(gate)) {
+			t.Fatal("missed a used slot")
+		}
+	}
+	count := 0
+	for range m.Candidates(gate) {
+		count++
+		break
+	}
+	if count != 1 || !reflect.DeepEqual(m.Slots(gate), want) {
+		t.Fatal("early exit or owned leaves")
+	}
+}

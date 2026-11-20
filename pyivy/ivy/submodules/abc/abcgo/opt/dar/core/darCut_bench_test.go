@@ -85,3 +85,27 @@ func BenchmarkLayeredCutSlots(b *testing.B) {
 		})
 	}
 }
+
+// Compare node-owned enumeration with Dar_ManComputeCuts in perf_cuts.c.
+func BenchmarkLayeredCutEnumeration(b *testing.B) {
+	for _, tc := range []struct {
+		name string
+		skip bool
+	}{{"Minimize", false}, {"KeepSupport", true}} {
+		b.Run(tc.name, func(b *testing.B) {
+			g := layeredCutGraph()
+			b.ReportAllocs()
+			for b.Loop() {
+				m, err := NewWholeGraphCutEnumerator(g, 10, tc.skip)
+				if err != nil {
+					b.Fatal(err)
+				}
+				for _, edge := range g.LiveEdges() {
+					if g.Node(edge).Kind != aig.Output {
+						m.slots(edge)
+					}
+				}
+			}
+		})
+	}
+}

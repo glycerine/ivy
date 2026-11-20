@@ -80,3 +80,34 @@ func TestNodeSnapshotAndMissingEdges(t *testing.T) {
 		t.Fatal("constant one copy lost")
 	}
 }
+
+func TestTopologicalObjectsBeforeAndAfterReplacingLogic(t *testing.T) {
+	g := NewGraph()
+	a, b := g.NewInput(), g.NewInput()
+	root := g.AND(a, b)
+	last := root
+	for i := 0; i < 128; i++ {
+		last = g.AND(last.Not(), g.NewInput())
+	}
+	g.AddOutput(last)
+	check := func() {
+		want := g.dfs(g.LiveEdges(), false, false, false)
+		got := g.TopologicalObjects()
+		if len(got) != len(want) {
+			t.Fatalf("got %d objects, want %d", len(got), len(want))
+		}
+		for i := range want {
+			if got[i] != want[i] {
+				t.Fatalf("object %d got %v, want %v", i, got[i], want[i])
+			}
+		}
+	}
+	check()
+	if allocs := testing.AllocsPerRun(25, func() { g.TopologicalObjects() }); allocs > 1 {
+		t.Errorf("topologically numbered graph allocated %.0f objects for one returned slice", allocs)
+	}
+	newInput := g.NewInput()
+	newFanin := g.AND(b.Not(), newInput)
+	Aig_ObjReplace(g, root, g.AND(a, newFanin), 0)
+	check()
+}

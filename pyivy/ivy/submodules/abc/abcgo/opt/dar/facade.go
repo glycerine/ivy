@@ -16,6 +16,7 @@ type ChoiceEngine = core.ChoiceEngine
 type ChoiceOptions = core.ChoiceOptions
 type CompressOptions = core.CompressOptions
 type Cut = core.Cut
+type CutCandidate = core.CutCandidate
 type CutEnumerator = core.CutEnumerator
 type CutNode = core.CutNode
 type CutRoot = core.CutRoot
@@ -148,11 +149,14 @@ func Dar_TruthPermute_int(minterms []int, count int, permutation []int, variable
 func Dar_TruthPolarize(truth uint32, polarity, variables int) uint32 {
 	return core.Dar_TruthPolarize(truth, polarity, variables)
 }
-func Dar_WordCountOnes(word uint32) int32                     { return core.Dar_WordCountOnes(word) }
-func DefaultActivityOptions() ActivityOptions                 { return core.DefaultActivityOptions() }
-func DefaultChoiceOptions() ChoiceOptions                     { return core.DefaultChoiceOptions() }
-func DefaultRefactorParams() RefactorParams                   { return core.DefaultRefactorParams() }
-func DefaultRewriteParams() RewriteParams                     { return core.DefaultRewriteParams() }
+func Dar_WordCountOnes(word uint32) int32     { return core.Dar_WordCountOnes(word) }
+func DefaultActivityOptions() ActivityOptions { return core.DefaultActivityOptions() }
+func DefaultChoiceOptions() ChoiceOptions     { return core.DefaultChoiceOptions() }
+func DefaultRefactorParams() RefactorParams   { return core.DefaultRefactorParams() }
+func DefaultRewriteParams() RewriteParams     { return core.DefaultRewriteParams() }
+func NewWholeGraphCutEnumerator(g *aig.Graph, limit int, skipTruthMin bool) (*CutEnumerator, error) {
+	return core.NewWholeGraphCutEnumerator(g, limit, skipTruthMin)
+}
 func NewCutEnumerator(g *aig.Graph, limit int) *CutEnumerator { return core.NewCutEnumerator(g, limit) }
 func RewriteForSAT(ctx context.Context, g *aig.Graph, balance bool, progress io.Writer) (*aig.Graph, error) {
 	return core.RewriteForSAT(ctx, g, balance, progress)

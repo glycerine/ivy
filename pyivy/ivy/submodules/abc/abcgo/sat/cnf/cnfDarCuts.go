@@ -13,7 +13,7 @@ func cnfApplyDarMapping(manager *Cnf_Man_t, skipTruthMin bool) error {
 		return fmt.Errorf("cnf: missing mapping graph")
 	}
 	g := manager.pManAig
-	cuts, err := dar.Dar_ManComputeCutSlots(g, 10, skipTruthMin)
+	cuts, err := dar.NewWholeGraphCutEnumerator(g, 10, skipTruthMin)
 	if err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func cnfApplyDarMapping(manager *Cnf_Man_t, skipTruthMin bool) error {
 	manager.selectedCuts = make([]*Cnf_Cut_t, len(nodes))
 	area := make([]int, len(nodes))
 	sizes, _ := cnfReadMsops()
-	for _, edge := range g.LiveEdges() {
+	for _, edge := range g.TopologicalObjects() {
 		id := edge.NodeID()
 		node := nodes[id]
 		if node.Kind == aig.Buffer {
@@ -37,16 +37,16 @@ func cnfApplyDarMapping(manager *Cnf_Man_t, skipTruthMin bool) error {
 		if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
 			continue
 		}
-		bestIndex := -1
+		var chosen dar.CutCandidate
+		found := false
 		bestScore, bestRefs := 0, 0
-		for index, slot := range cuts[edge] {
-			if index == 0 || !slot.Used {
+		for index, c := range cuts.Candidates(edge) {
+			if index == 0 {
 				continue
 			}
-			c := slot.Cut
 			score := 10 * (int(sizes[c.Truth]) + int(sizes[^c.Truth]))
 			refs := 0
-			for _, leaf := range c.Leaves {
+			for _, leaf := range c.Leaves[:c.NumLeaves] {
 				n := nodes[leaf.NodeID()]
 				refs += n.Refs
 				if n.Kind == aig.And || n.Kind == aig.ExclusiveOr {
@@ -56,21 +56,24 @@ func cnfApplyDarMapping(manager *Cnf_Man_t, skipTruthMin bool) error {
 					score += area[leaf.NodeID()] / n.Refs
 				}
 			}
-			if bestIndex < 0 || score < bestScore || score == bestScore && refs > bestRefs {
-				bestIndex, bestScore, bestRefs = index, score, refs
+			// Dar_Cut_t.Value stores the tie break in an 11-bit field.
+			refs &= 0x7ff
+			if !found || score < bestScore || score == bestScore && refs > bestRefs {
+				chosen, bestScore, bestRefs = c, score, refs
+				found = true
 			}
 		}
-		if bestIndex < 0 {
+		if !found {
 			return fmt.Errorf("cnf: node %d has no nontrivial DAR cut", id)
 		}
-		chosen := cuts[edge][bestIndex].Cut
 		area[id] = bestScore
-		leaves := make([]int32, len(chosen.Leaves))
-		for i, e := range chosen.Leaves {
-			leaves[i] = int32(e.NodeID())
+		cut := Cnf_CutAlloc(manager, int32(chosen.NumLeaves))
+		for i, e := range chosen.Leaves[:chosen.NumLeaves] {
+			cut.pFanins[i] = int32(e.NodeID())
 		}
-		manager.selectedCuts[id] = Cnf_CutFromTruth(leaves, []uint32{uint32(chosen.Truth) | uint32(chosen.Truth)<<16})
-		manager.selectedCuts[id].Cost = byte(int(sizes[chosen.Truth]) + int(sizes[^chosen.Truth]))
+		cut.truth[0] = uint32(chosen.Truth) | uint32(chosen.Truth)<<16
+		cut.Cost = byte(int(sizes[chosen.Truth]) + int(sizes[^chosen.Truth]))
+		manager.selectedCuts[id] = cut
 	}
 	return nil
 }
