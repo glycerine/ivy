@@ -9,7 +9,6 @@ package goivy
 import (
 	"fmt"
 	"reflect"
-	"strings"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -34,7 +33,7 @@ func (tn *TypeNames) add(tname string) {
 	if tn.nameset[tname] {
 		return
 	}
-	_, refparms := extractParametersName(tname)
+	_, refparms := ExtractParametersName(tname)
 	for _, rp := range refparms {
 		tn.add(rp)
 	}
@@ -76,7 +75,7 @@ func expandAutoInstances(ivy *ivyAccum) {
 					if a, ok := inst.Name.(*Atom); ok {
 						nameStr = a.Rep
 					}
-					pref, parms := extractParametersName(nameStr)
+					pref, parms := ExtractParametersName(nameStr)
 					key := autoKey{pref, len(parms)}
 					autos[key] = append(autos[key], inst)
 				}
@@ -92,7 +91,7 @@ func expandAutoInstances(ivy *ivyAccum) {
 					continue
 				}
 				trefs[tname] = true
-				pref, refparms := extractParametersName(tname)
+				pref, refparms := ExtractParametersName(tname)
 				key := autoKey{pref, len(refparms)}
 				// Match Python defaultdict auto-vivification
 				if _, ok := autos[key]; !ok {
@@ -103,7 +102,7 @@ func expandAutoInstances(ivy *ivyAccum) {
 					if a, ok := inst.Name.(*Atom); ok {
 						instNameStr = a.Rep
 					}
-					_, parms := extractParametersName(instNameStr)
+					_, parms := ExtractParametersName(instNameStr)
 
 					// Python: subst = dict(list(zip(parms, refparms)))
 					subst := make(map[string]string)
@@ -153,22 +152,6 @@ func parserTraceNodeType(n Node) string {
 		typ = typ.Elem()
 	}
 	return typ.Name()
-}
-
-// extractParametersName splits "foo(X,Y)" into ("foo", ["X","Y"]).
-// Matches Python iu.extract_parameters_name.
-func extractParametersName(name string) (string, []string) {
-	idx := strings.Index(name, "(")
-	if idx < 0 {
-		return name, nil
-	}
-	pref := name[:idx]
-	rest := name[idx+1:]
-	rest = strings.TrimSuffix(rest, ")")
-	if rest == "" {
-		return pref, nil
-	}
-	return pref, strings.Split(rest, ",")
 }
 
 // nodeSort extracts the sort string from an AST node, matching Python's
