@@ -806,17 +806,22 @@ func UnfoldFmla(fmla Node, defns [][]*LabeledFormula) Node {
 func GoalApplyToPrem(cfg *AstConfig, goal *LabeledFormula, premName string, fn func(*LabeledFormula) *LabeledFormula) *LabeledFormula {
 	xtracer.Trace("proof.GoalApplyToPrem ENTER goalLabel=%s premName=%s", goal.LabelForTrace(), premName)
 	prems := GoalPrems(goal)
+	// Python: premmap = dict((x.name,idx) for idx,x in enumerate(prems))
+	// -- for a repeated name the last premise wins.
+	idx := -1
 	for i, p := range prems {
-		if lf, ok := p.(*LabeledFormula); ok {
-			if lf.LabelName() == premName {
-				newPrems := make([]Node, len(prems))
-				copy(newPrems, prems)
-				newPrems[i] = fn(lf)
-				result := CloneGoal(cfg, goal, newPrems, GoalConc(goal))
-				xtracer.Trace("proof.GoalApplyToPrem EXIT HASH canon=%v", result.Canon())
-				return result
-			}
+		if lf, ok := p.(*LabeledFormula); ok && lf.LabelName() == premName {
+			idx = i
 		}
+	}
+	if idx >= 0 {
+		lf := prems[idx].(*LabeledFormula)
+		newPrems := make([]Node, len(prems))
+		copy(newPrems, prems)
+		newPrems[idx] = fn(lf)
+		result := CloneGoal(cfg, goal, newPrems, GoalConc(goal))
+		xtracer.Trace("proof.GoalApplyToPrem EXIT HASH canon=%v", result.Canon())
+		return result
 	}
 	xtracer.Trace("proof.GoalApplyToPrem EXIT notFound premName=%s", premName)
 	return nil

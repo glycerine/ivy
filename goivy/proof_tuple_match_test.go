@@ -31,3 +31,23 @@ func TestApplyMatchTupleClonesPremisesLikePython(t *testing.T) {
 		t.Fatalf("premise became %T", res[0])
 	}
 }
+
+// Python goal_apply_to_prem looks the premise up in
+// dict((x.name,idx) for idx,x in enumerate(prems)), so with a repeated
+// premise name the last one is used (test/gcd2.ivy).
+func TestGoalApplyToPremUsesLastDuplicate(t *testing.T) {
+	cfg := NewAstConfig()
+	p := NewConst("p", Boolean)
+	q := NewConst("q", Boolean)
+	first := cfg.NewLabeledFormula(cfg.NewAtom("prem"), p)
+	last := cfg.NewLabeledFormula(cfg.NewAtom("prem"), q)
+	goal := cfg.NewLabeledFormula(cfg.NewAtom("g"), cfg.NewSchemaBody(first, last, True))
+	var got Node
+	GoalApplyToPrem(cfg, goal, "prem", func(lf *LabeledFormula) *LabeledFormula {
+		got = lf.Formula
+		return lf
+	})
+	if got != q {
+		t.Fatalf("applied to %v, want the last prem (q)", got)
+	}
+}
