@@ -159,3 +159,17 @@ Walk the size-ordered fanin lists directly, use their signatures to rule out inc
 ### Record the canonical form of each output polarity
 
 The three-input AND regression for Cut_TruthNCanonicize initially returned 0x01010101 for both polarities and left the direct phase at zero. Native cutTruth.c canonizes the direct and complemented truth independently and stores the first minimizing input phase for each. Reusing the Go port of Extra_TruthCanonFastN gives direct 0x01010101 at phase seven and complement 0x7f7f7f7f at phase zero. The cut and extra package race tests passed. The preceding enumeration changes passed complete cut, rwr and abci race tests.
+
+### Expand cut truth tables a word at a time
+
+Cut truth computation now places each child's support using adjacent wordwise swaps, combines the two expanded functions, then replicates across unused variables. Tests check each assignment of randomly generated cuts through twelve variables, including compact inputs, all input/output phase flags and both AND and XOR. The shared adjacent-swap, stretch and shrink routines work directly in the caller's output storage. An in-place eight-variable round-trip regression initially measured 34 heap allocations, and now measures zero. Partially overlapping input/output slices and disjoint buffers also pass.
+
+The native driver in opt/cut/test_vectors/perf_truth.c uses the same leaf placements, functions and complemented first edge as BenchmarkCutTruthMerge. A Go regression compares whole-table hashes against the native results for all three widths. Times are elapsed nanoseconds per merge.
+
+| Variables | Previous Go | Wordwise Go | Native C |
+| ---: | ---: | ---: | ---: |
+| 4 | 480–498 | 60.9–61.0 | 41.8 |
+| 7 | 3,771–3,989 | 152.2–152.4 | 120.9 |
+| 12 | 294,756–299,156 | 2,662–2,834 | 2,796 |
+
+The one-thread i10 read/balance/rewrite stage took 120.9–123.4 ms over three trials, with 2,004 ANDs and depth 36. Cut and extra package race tests passed, including the native small-function truth and phase fixtures.

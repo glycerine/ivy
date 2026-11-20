@@ -63,29 +63,32 @@ func Extra_TruthSwapAdjacentVars(out, in []uint32, n, v int32) {
 	if v+1 >= n {
 		panic("adjacent truth variable outside domain")
 	}
-	in = slices.Clone(truthTable(in, n))
 	out = truthTable(out, n)
+	copy(out, truthTable(in, n))
+	truthSwapAdjacent(out, v)
+}
+
+func truthSwapAdjacent(table []uint32, v int32) {
 	switch {
 	case v < 4:
 		masks := [4][3]uint32{{0x99999999, 0x22222222, 0x44444444}, {0xc3c3c3c3, 0x0c0c0c0c, 0x30303030}, {0xf00ff00f, 0x00f000f0, 0x0f000f00}, {0xff0000ff, 0x0000ff00, 0x00ff0000}}
 		mask := masks[v]
 		shift := uint(1) << uint(v)
-		for w, value := range in {
-			out[w] = value&mask[0] | (value&mask[1])<<shift | (value&mask[2])>>shift
+		for w, value := range table {
+			table[w] = value&mask[0] | (value&mask[1])<<shift | (value&mask[2])>>shift
 		}
 	case v == 4:
-		for w := 0; w < len(in); w += 2 {
-			a, b := in[w], in[w+1]
-			out[w] = a&0xffff | b<<16
-			out[w+1] = b&0xffff0000 | a>>16
+		for w := 0; w < len(table); w += 2 {
+			a, b := table[w], table[w+1]
+			table[w] = a&0xffff | b<<16
+			table[w+1] = b&0xffff0000 | a>>16
 		}
 	default:
 		step := 1 << uint(v-5)
-		for base := 0; base < len(in); base += 4 * step {
-			copy(out[base:base+step], in[base:base+step])
-			copy(out[base+step:base+2*step], in[base+2*step:base+3*step])
-			copy(out[base+2*step:base+3*step], in[base+step:base+2*step])
-			copy(out[base+3*step:base+4*step], in[base+3*step:base+4*step])
+		for base := 0; base < len(table); base += 4 * step {
+			for w := base + step; w < base+2*step; w++ {
+				table[w], table[w+step] = table[w+step], table[w]
+			}
 		}
 	}
 }
@@ -100,31 +103,31 @@ func truthPlacement(n, all int32, phase uint32) {
 }
 func Extra_TruthStretch(out, in []uint32, n, all int32, phase uint32) {
 	truthPlacement(n, all, phase)
-	work := slices.Clone(truthTable(in, all))
+	out = truthTable(out, all)
+	copy(out, truthTable(in, all))
 	v := n - 1
 	for i := all - 1; i >= 0; i-- {
 		if phase&(1<<uint(i)) != 0 {
 			for k := v; k < i; k++ {
-				Extra_TruthSwapAdjacentVars(work, work, all, k)
+				truthSwapAdjacent(out, k)
 			}
 			v--
 		}
 	}
-	copy(truthTable(out, all), work)
 }
 func Extra_TruthShrink(out, in []uint32, n, all int32, phase uint32) {
 	truthPlacement(n, all, phase)
-	work := slices.Clone(truthTable(in, all))
+	out = truthTable(out, all)
+	copy(out, truthTable(in, all))
 	v := int32(0)
 	for i := int32(0); i < all; i++ {
 		if phase&(1<<uint(i)) != 0 {
 			for k := i - 1; k >= v; k-- {
-				Extra_TruthSwapAdjacentVars(work, work, all, k)
+				truthSwapAdjacent(out, k)
 			}
 			v++
 		}
 	}
-	copy(truthTable(out, all), work)
 }
 func Extra_TruthVarInSupport(table []uint32, n, v int32) int32 {
 	truthVariable(n, v)

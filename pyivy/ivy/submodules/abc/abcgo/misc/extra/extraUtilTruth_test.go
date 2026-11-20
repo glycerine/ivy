@@ -235,3 +235,39 @@ func TestTruthPartialAliasAndValidation(t *testing.T) {
 		}()
 	}
 }
+
+func TestAdjacentTruthSwapsWithPartialOverlap(t *testing.T) {
+	const n = 9
+	rng := rand.New(rand.NewSource(919))
+	input := make([]uint32, truthWords(n))
+	for i := range input {
+		input[i] = rng.Uint32()
+	}
+	for v := int32(0); v < n-1; v++ {
+		want := truthOracle(input, func(i int) int {
+			diff := ((i >> v) ^ (i >> (v + 1))) & 1
+			return i ^ (diff << v) ^ (diff << (v + 1))
+		})
+		for offset := 0; offset < 2; offset++ {
+			words := make([]uint32, len(input)+1)
+			in, out := words[offset:offset+len(input)], words[1-offset:1-offset+len(input)]
+			copy(in, input)
+			Extra_TruthSwapAdjacentVars(out, in, n, v)
+			if !slices.Equal(out, want) {
+				t.Fatalf("variable %d offset %d partial overlap", v, offset)
+			}
+		}
+	}
+}
+
+func TestTruthStretchShrinkUsesCallerStorage(t *testing.T) {
+	words := [8]uint32{0x96696996, 0x96696996, 0x96696996, 0x96696996, 0x96696996, 0x96696996, 0x96696996, 0x96696996}
+	original := words
+	allocs := testing.AllocsPerRun(100, func() {
+		Extra_TruthStretch(words[:], words[:], 4, 8, 0xf0)
+		Extra_TruthShrink(words[:], words[:], 4, 8, 0xf0)
+	})
+	if allocs != 0 || words != original {
+		t.Fatalf("in-place roundtrip took %.0f heap allocations, output %08x", allocs, words)
+	}
+}

@@ -25,26 +25,56 @@ func cutTruthValue(c *Cut_Cut_t, merged []int32, assignment int) bool {
 	}
 	return (c.truth[index>>5]&(1<<uint(index&31)) != 0) != c.FCompl
 }
+
+// Project the significant part of a child's truth onto the merged support.
+// Public cut tables can also contain compact, unreplicated input words.
+func cutStretchTruth(out []uint32, merged, child *Cut_Cut_t) {
+	n := int32(len(child.leaves))
+	words := int(Cut_TruthWords(n))
+	copy(out[:words], child.truth[:words])
+	if n < 5 {
+		masks := [...]uint32{1, 3, 15, 255, 65535}
+		repeats := [...]uint32{0xffffffff, 0x55555555, 0x11111111, 0x01010101, 0x00010001}
+		out[0] = (out[0] & masks[n]) * repeats[n]
+	}
+	for filled := words; filled < len(out); filled *= 2 {
+		copy(out[filled:], out[:filled])
+	}
+	phase := Cut_TruthPhase(merged, child)
+	if phase != (1<<uint(n))-1 {
+		extra.Extra_TruthStretch(out, out, n, int32(len(merged.leaves)), phase)
+	}
+}
+
 func cutTruthComputeOp(c, a, b *Cut_Cut_t, compl0, compl1 int32, xor bool) {
-	clear(c.truth)
-	for assignment := 0; assignment < len(c.truth)*32; assignment++ {
-		x, y := cutTruthValue(a, c.leaves, assignment), cutTruthValue(b, c.leaves, assignment)
-		if compl0 != 0 {
-			x = !x
-		}
-		if compl1 != 0 {
-			y = !y
-		}
-		value := x && y
+	if len(c.truth) == 0 {
+		return
+	}
+	var scratch [1 << (CUT_SIZE_MAX - 5)]uint32
+	words := int(Cut_TruthWords(int32(len(c.leaves))))
+	left, right := c.truth[:words], scratch[:words]
+	cutStretchTruth(left, c, a)
+	cutStretchTruth(right, c, b)
+	var mask0, mask1, maskOut uint32
+	if a.FCompl != (compl0 != 0) {
+		mask0 = ^uint32(0)
+	}
+	if b.FCompl != (compl1 != 0) {
+		mask1 = ^uint32(0)
+	}
+	if c.FCompl {
+		maskOut = ^uint32(0)
+	}
+	for i, value := range left {
+		x, y := value^mask0, right[i]^mask1
+		result := x & y
 		if xor {
-			value = x != y
+			result = x ^ y
 		}
-		if c.FCompl {
-			value = !value
-		}
-		if value {
-			c.truth[assignment>>5] |= 1 << uint(assignment&31)
-		}
+		left[i] = result ^ maskOut
+	}
+	for filled := words; filled < len(c.truth); filled *= 2 {
+		copy(c.truth[filled:], c.truth[:filled])
 	}
 }
 func Cut_TruthCompute(p *Cut_Man_t, c, a, b *Cut_Cut_t, compl0, compl1 int32) {
@@ -67,18 +97,18 @@ func Cut_TruthCompute(p *Cut_Man_t, c, a, b *Cut_Cut_t, compl0, compl1 int32) {
 }
 func Cut_TruthPhase(merged, child *Cut_Cut_t) uint32 {
 	var phase uint32
-	for _, leaf := range child.leaves {
-		found := false
-		for pos, target := range merged.leaves {
-			if leaf == target {
-				phase |= 1 << uint(pos)
-				found = true
-				break
-			}
+	i := 0
+	for pos, leaf := range merged.leaves {
+		if i == len(child.leaves) {
+			break
 		}
-		if !found {
-			panic("cut: input support not contained")
+		if leaf == child.leaves[i] {
+			phase |= 1 << uint(pos)
+			i++
 		}
+	}
+	if i != len(child.leaves) {
+		panic("cut: input support not contained")
 	}
 	return phase
 }

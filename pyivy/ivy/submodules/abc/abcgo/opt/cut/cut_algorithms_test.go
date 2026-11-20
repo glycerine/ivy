@@ -426,3 +426,47 @@ func TestCutNCanonSeparatesPolaritiesAndSavesPhases(t *testing.T) {
 		t.Fatal("canonicalization changed the cut truth")
 	}
 }
+
+func TestCutTruthAgainstProjectedAssignments(t *testing.T) {
+	rng := rand.New(rand.NewSource(7851))
+	for limit := CUT_SIZE_MIN; limit <= CUT_SIZE_MAX; limit++ {
+		for trial := 0; trial < 32; trial++ {
+			c, a, b := benchmarkTruthCuts(limit)
+			c.leaves, a.leaves, b.leaves = nil, nil, nil
+			for w := range a.truth {
+				a.truth[w], b.truth[w] = rng.Uint32(), rng.Uint32()
+			}
+			for i := int32(0); i < limit; i++ {
+				pair := rng.Intn(4)
+				if pair == 0 {
+					continue
+				}
+				leaf := 3*i + 1
+				c.leaves = append(c.leaves, leaf)
+				if pair&1 != 0 {
+					a.leaves = append(a.leaves, leaf)
+				}
+				if pair&2 != 0 {
+					b.leaves = append(b.leaves, leaf)
+				}
+			}
+			a.FCompl, b.FCompl, c.FCompl = trial&1 != 0, trial&2 != 0, trial&4 != 0
+			compl0, compl1 := int32(trial>>3&1), int32(trial>>4&1)
+			for _, xor := range []bool{false, true} {
+				cutTruthComputeOp(c, a, b, compl0, compl1, xor)
+				for assignment := 0; assignment < 32*len(c.truth); assignment++ {
+					x := cutTruthValue(a, c.leaves, assignment) != (compl0 != 0)
+					y := cutTruthValue(b, c.leaves, assignment) != (compl1 != 0)
+					want := x && y
+					if xor {
+						want = x != y
+					}
+					got := (c.truth[assignment>>5]>>uint(assignment&31))&1 != 0
+					if got != (want != c.FCompl) {
+						t.Fatalf("limit %d trial %d xor %v assignment %d", limit, trial, xor, assignment)
+					}
+				}
+			}
+		}
+	}
+}
