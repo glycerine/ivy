@@ -1388,18 +1388,32 @@ complexact:
     }
     | PARSER16_TOK_IF somefmla sequence
     {
-        xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb ENTER (complexact)")
-        cond := checkNonTemporal($2)
-        body := fixIfPart(cond, $3)
+        var cond, body Node
+        if parser16Pre15(parser16lex) {
+            xtracer.Trace("parser.p_action_if_fmla_lcb_action_rcb ENTER (complexact)")
+            cond = checkNonTemporal($2)
+            body = $3
+        } else {
+            xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb ENTER (complexact)")
+            cond = checkNonTemporal($2)
+            body = fixIfPart(cond, $3)
+        }
         a := parser16Acfg(parser16lex).NewIfAction(cond, body, nil)
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = a
     }
     | PARSER16_TOK_IF somefmla sequence PARSER16_TOK_ELSE action
     {
-        xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
-        cond := checkNonTemporal($2)
-        body := fixIfPart(cond, $3)
+        var cond, body Node
+        if parser16Pre15(parser16lex) {
+            xtracer.Trace("parser.p_action_if_fmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
+            cond = checkNonTemporal($2)
+            body = $3
+        } else {
+            xtracer.Trace("parser.p_action_if_somefmla_lcb_action_rcb_else_LCB_action_RCB ENTER (complexact)")
+            cond = checkNonTemporal($2)
+            body = fixIfPart(cond, $3)
+        }
         a := parser16Acfg(parser16lex).NewIfAction(cond, body, $5)
         a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1))
         $$ = a
@@ -1452,7 +1466,9 @@ complexact:
 somefmla:
     fmla
     {
-        xtracer.Trace("parser.p_somefmla_fmla ENTER (somefmla)")
+        if !parser16Pre15(parser16lex) {
+            xtracer.Trace("parser.p_somefmla_fmla ENTER (somefmla)")
+        }
         $$ = $1
     }
     | fmla PARSER16_TOK_ASSIGN fmla

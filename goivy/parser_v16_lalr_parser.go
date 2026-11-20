@@ -46,12 +46,14 @@ type parser16LexAdapter struct {
 	filename      string
 	parentObjName string
 	astCfg        *AstConfig
+	version       Version
 }
 
 func newParser16LexAdapter(input string, version Version) *parser16LexAdapter {
 	return &parser16LexAdapter{
 		lex:      NewLexer(input, version),
 		included: make(map[string]bool),
+		version:  version,
 	}
 }
 

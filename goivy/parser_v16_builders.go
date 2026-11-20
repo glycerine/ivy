@@ -80,3 +80,11 @@ func parser16DeclareInit(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, loc 
 	d.SetLineno(loc)
 	top.declare(d)
 }
+
+// parser16Pre15 reports Python's iu.get_numeric_version() <= [1,4]: that
+// grammar has 'complexact : IF fmla sequence [ELSE action]' and no
+// somefmla rules (ivy_parser.py), so no somefmla trace and no fix_if_part.
+func parser16Pre15(lex parser16Lexer) bool {
+	v := lex.(*parser16LexAdapter).version
+	return v[0] < 1 || (v[0] == 1 && v[1] <= 4)
+}
