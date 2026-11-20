@@ -1228,9 +1228,12 @@ func CheckModule(mod *Module) error {
 //
 // If method is nil, this is a no-op (the caller should have provided one).
 func MCIsolate(isolate string, mod *Module, method func(*Module) error) error {
+	// Python: if any(not x.temporal for x in im.module.labeled_props):
+	//     raise iu.IvyError(im.module.labeled_props[0],'model checking not supported for property yet')
+	// (located at the first property, not the non-temporal one).
 	for _, p := range mod.LabeledProps {
 		if !p.IsTemporal() {
-			return fmt.Errorf("model checking not supported for non-temporal property yet")
+			return NewIvyError(mod.LabeledProps[0], "model checking not supported for property yet")
 		}
 	}
 
