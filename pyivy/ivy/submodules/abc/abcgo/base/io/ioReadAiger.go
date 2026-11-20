@@ -12,12 +12,14 @@ import (
 	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/bzlib"
+	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/zlib"
 )
 
 // aigerNetworkMetadata retains AIGER-only properties that ABC's generic
 // network shape cannot represent directly.
 type aigerNetworkMetadata struct {
+	comment                   string
 	badCount, constraintCount int
 	outputCount               int
 	fairness                  []uint32
@@ -38,6 +40,13 @@ func ReadAiger(filename string, _ bool) (*abc.Network, error) {
 	network, err := NetworkFromAigerModel(model)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", filename, err)
+	}
+	if network.Name == "" {
+		network.Name = extra.Extra_FileNameGeneric(filename)
+	}
+	network.Spec = filename
+	if len(model.Symbols) == 0 {
+		abc.Abc_NtkShortNames(network)
 	}
 	return network, nil
 }
@@ -202,6 +211,7 @@ func NetworkFromAigerModel(model *ioa.Model) (*abc.Network, error) {
 	network.Type, network.Function = uint8(abc.ABC_NTK_STRASH), uint8(abc.ABC_FUNC_AIG)
 	network.Spec = string(model.Comment)
 	network.Data = &aigerNetworkMetadata{
+		comment:  string(model.Comment),
 		badCount: len(model.Bad), constraintCount: len(model.Constraints),
 		outputCount: len(model.Outputs) + len(model.Bad) + len(model.Constraints),
 		fairness:    append([]uint32(nil), model.Fairness...), justice: cloneAigerLists(model.Justice),

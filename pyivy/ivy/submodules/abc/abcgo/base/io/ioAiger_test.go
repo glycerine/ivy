@@ -10,6 +10,46 @@ import (
 	"github.com/glycerine/abcgo/base/abc"
 )
 
+func TestAigerFileNameAndUnnamedPorts(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "nand.aag")
+	if err := os.WriteFile(path, []byte("aag 3 2 0 1 1\n2\n4\n7\n6 4 2\nc\nsource\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	n, err := ReadAiger(path, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer abc.Abc_NtkDelete(n)
+	if n.Name != path[:len(path)-4] || n.Spec != path || abc.Abc_NtkPi(n, 1).Name() != "pi1" || abc.Abc_NtkPo(n, 0).Name() != "po0" {
+		t.Fatalf("name %q spec %q PI %q PO %q", n.Name, n.Spec, abc.Abc_NtkPi(n, 1).Name(), abc.Abc_NtkPo(n, 0).Name())
+	}
+	model, err := aigerModelFromNetwork(n)
+	if err != nil || string(model.Comment) != "source\n" {
+		t.Fatalf("lost AIGER comment: %+v, %v", model, err)
+	}
+}
+
+func TestWriteBLIFStrashedNetwork(t *testing.T) {
+	n, err := ReadAigerFromMemory([]byte("aag 3 2 0 2 1\n2\n4\n6\n7\n6 4 2\ni0 a\ni1 b\no0 p\no1 q\n"), true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer abc.Abc_NtkDelete(n)
+	n.Name = "pair"
+	path := filepath.Join(t.TempDir(), "pair.blif")
+	if err := WriteNetwork(n, path, IO_FILE_BLIF); err != nil {
+		t.Fatal(err)
+	}
+	logic, err := ReadLogic(path, IO_FILE_BLIF, true, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer abc.Abc_NtkDelete(logic)
+	if abc.Abc_NtkPiNum(logic) != 2 || abc.Abc_NtkPoNum(logic) != 2 || abc.Abc_NtkPo(logic, 1).Name() != "q" {
+		t.Fatal("lost BLIF port")
+	}
+}
+
 func TestAigerReadWriteReferenceFixtures(t *testing.T) {
 	for _, filename := range []string{"aiger_ascii_extended.aag", "aiger_binary_extended.aig"} {
 		t.Run(filename, func(t *testing.T) {

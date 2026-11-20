@@ -208,6 +208,20 @@ func WriteBLIFFile(n *abc.Network, filename string, multiValued, writeLatches bo
 func Io_WriteBlif(n *abc.Network, filename string, writeLatches, bb2wb, seq int32) error {
 	return WriteBLIFFile(n, filename, false, writeLatches != 0)
 }
+
+func writeNetworkBLIF(n *abc.Network, filename string) error {
+	if abc.Abc_NtkIsNetlist(n) == 0 {
+		n = abc.Abc_NtkToNetlist(n)
+		if n == nil {
+			return fmt.Errorf("io: cannot convert network to BLIF netlist")
+		}
+		defer abc.Abc_NtkDelete(n)
+		if abc.Abc_NtkHasSop(n) == 0 && abc.Abc_NtkHasMapping(n) == 0 && abc.Abc_NtkToSop(n, -1, 1_000_000_000) == 0 {
+			return fmt.Errorf("io: cannot convert network to SOP")
+		}
+	}
+	return Io_WriteBlif(n, filename, 1, 0, 0)
+}
 func Io_WriteBlifLogic(n *abc.Network, filename string, writeLatches int32) error {
 	return WriteBLIFFile(n, filename, false, writeLatches != 0)
 }

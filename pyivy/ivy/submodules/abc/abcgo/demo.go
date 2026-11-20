@@ -8,9 +8,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/glycerine/abcgo/base/abci"
 	"github.com/glycerine/abcgo/base/cmd"
+	abcio "github.com/glycerine/abcgo/base/io"
 	abcmain "github.com/glycerine/abcgo/base/main"
 )
+
+func init() {
+	abcmain.Abc_FrameAddInitializer(&abcmain.Abc_FrameInitializer_t{Init: abcio.Io_Init, Destroy: abcio.Io_End})
+	abcmain.Abc_FrameAddInitializer(&abcmain.Abc_FrameInitializer_t{Init: abci.Abc_Init, Destroy: abci.Abc_End})
+}
 
 // DemoOptions selects the same optional stages as src/demo.c.
 type DemoOptions struct{ UseResyn2, PrintStats, Verify bool }

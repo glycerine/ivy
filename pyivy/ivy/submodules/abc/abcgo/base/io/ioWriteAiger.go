@@ -172,6 +172,7 @@ func aigerModelFromNetwork(network *abc.Network) (*ioa.Model, error) {
 	model := &ioa.Model{Name: network.Name, Comment: []byte(network.Spec), Symbols: make(map[ioa.Symbol]string)}
 	metadata, _ := network.Data.(*aigerNetworkMetadata)
 	if metadata != nil {
+		model.Comment = []byte(metadata.comment)
 		model.Justice = cloneAigerLists(metadata.justice)
 		model.Fairness = append([]uint32(nil), metadata.fairness...)
 	}

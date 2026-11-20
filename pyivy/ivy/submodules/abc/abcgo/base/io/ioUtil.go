@@ -322,7 +322,7 @@ func Io_FileOpen(filename, pathVariable, mode string, verbose int32) *os.File {
 	return nil
 }
 func init() {
-	RegisterFormat(IO_FILE_BLIF, func(f string, c bool) (*abc.Network, error) { return ReadBLIF(f, false, c) }, func(n *abc.Network, f string) error { return WriteBLIFFile(n, f, false, true) })
+	RegisterFormat(IO_FILE_BLIF, func(f string, c bool) (*abc.Network, error) { return ReadBLIF(f, false, c) }, writeNetworkBLIF)
 	RegisterFormat(IO_FILE_BLIFMV, func(f string, c bool) (*abc.Network, error) { return ReadBLIF(f, true, c) }, func(n *abc.Network, f string) error { return WriteBLIFFile(n, f, true, true) })
 	RegisterFormat(IO_FILE_BENCH, ReadBench, nil)
 }

@@ -2,6 +2,7 @@ package abcgo
 
 import (
 	"bytes"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -9,6 +10,24 @@ import (
 	"github.com/glycerine/abcgo/base/cmd"
 	abcmain "github.com/glycerine/abcgo/base/main"
 )
+
+func TestDemoMainSynthesizesAFile(t *testing.T) {
+	t.Chdir(t.TempDir())
+	if err := os.WriteFile("nand.aag", []byte("aag 3 2 0 1 1\n2\n4\n7\n6 4 2\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	var out bytes.Buffer
+	if code := DemoMain([]string{"nand.aag"}, &out, &out); code != 0 {
+		t.Fatalf("demo returned %d: %s", code, out.String())
+	}
+	data, err := os.ReadFile("result.blif")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), ".names pi0 pi1 po0\n11 0\n") {
+		t.Fatalf("missing NAND output in %s", data)
+	}
+}
 
 func demoFrame(t *testing.T, failAt int) (*abcmain.Frame, *[][]string, *bytes.Buffer) {
 	t.Helper()
