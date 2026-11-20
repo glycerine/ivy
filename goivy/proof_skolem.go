@@ -299,20 +299,23 @@ func outerVarsInFormula(fmla Expr, outer []*LogicVariable) []*LogicVariable {
 	if len(outer) == 0 {
 		return nil
 	}
-	used := UsedVariables(fmla)
-	outerSet := make(map[NodeKey]Expr, len(outer))
+	// Python: list(x for x in iu.unique(lu.variables_ast(fmla)) if x in outer)
+	// -- traversal order, first occurrence. (Iterating a Go map here made
+	// the skolem function's argument order random.)
+	outerSet := make(map[NodeKey]bool, len(outer))
 	for _, v := range outer {
-		outerSet[Key(v)] = v
+		outerSet[Key(v)] = true
 	}
 	var result []*LogicVariable
-	// preserve order
-	seen := make(map[NodeKey]Expr)
-	for vKey, vNode := range used {
-		if outerSet[vKey] != nil && seen[vKey] == nil {
-			if vv, ok := vNode.(*LogicVariable); ok {
-				result = append(result, vv)
-			}
-			seen[vKey] = vNode
+	seen := make(map[NodeKey]bool)
+	for _, v := range VariablesAstList(fmla) {
+		k := Key(v)
+		if seen[k] {
+			continue
+		}
+		seen[k] = true
+		if outerSet[k] {
+			result = append(result, v)
 		}
 	}
 	return result

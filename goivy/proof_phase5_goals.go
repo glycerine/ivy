@@ -738,15 +738,32 @@ func applyUnfoldGoal(cfg *AstConfig, key NodeKey, union *ExprListOrLambdaUnion, 
 // UnfoldGoal unfolds definitions in a goal.
 // Corresponds to Python's unfold_goal (ivy_proof.py:1549-1553).
 func UnfoldGoal(cfg *AstConfig, goal *LabeledFormula, defns [][]*LabeledFormula) *LabeledFormula {
+	// Python:
+	//   for rdefs in defns:
+	//       match = match_from_defns(rdefs)        # {lhs: [lambdas]}
+	//       goal = apply_match_goal(match,goal,apply_match_alt)
 	for _, rdefs := range defns {
 		key, union, err := MatchFromDefns(rdefs)
 		if err != nil {
 			continue
 		}
-		freeVars := unfoldRhsVars(union)
-		goal = applyUnfoldGoal(cfg, key, union, freeVars, goal)
+		goal = applyMatchGoalNodeFn(cfg, map[NodeKey]Expr{}, 1, goal, true, func(e Expr, env map[NodeKey]bool) Expr {
+			return unfoldApplyMatchAlt(key, union, e)
+		})
 	}
 	return goal
+}
+
+// unfoldApplyMatchAlt is Python apply_match_alt with match_from_defns'
+// one-key, list-valued match: alpha-avoid the match's free variables,
+// then unfold (match_get pops the lambdas in order).
+func unfoldApplyMatchAlt(key NodeKey, union *ExprListOrLambdaUnion, expr Expr) Expr {
+	xtracer.Trace("proof.ApplyMatchAlt ENTER nmatch=%d fmlaType=%s", 1, TypeName(expr))
+	freeVars := unfoldRhsVars(union)
+	expr = AlphaAvoidMap(expr, freeVars)
+	expr = applyUnfoldRec(key, union, expr)
+	xtracer.Trace("proof.ApplyMatchAlt EXIT HASH canon=%v", expr.Canon())
+	return expr
 }
 
 // UnfoldFmla unfolds definitions in a formula.
@@ -778,16 +795,8 @@ func UnfoldFmla(fmla Node, defns [][]*LabeledFormula) Node {
 		if err != nil {
 			continue
 		}
-		// Python: fmla = apply_match_alt(match, fmla); match_from_defns
-		// returns {lhs: [...]}, a one-key match.
-		xtracer.Trace("proof.ApplyMatchAlt ENTER nmatch=%d fmlaType=%s", 1, TypeName(expr))
-		// Alpha-avoid: rename bound vars that clash with free vars in ALL lambdas.
-		// Python: apply_match_alt calls match_rhs_vars then alpha_avoid.
-		freeVars := unfoldRhsVars(union)
-		expr = AlphaAvoidMap(expr, freeVars)
-		// Single-pass unfold with destructive pop
-		expr = applyUnfoldRec(key, union, expr)
-		xtracer.Trace("proof.ApplyMatchAlt EXIT HASH canon=%v", expr.Canon())
+		// Python: fmla = apply_match_alt(match, fmla)
+		expr = unfoldApplyMatchAlt(key, union, expr)
 	}
 	return expr
 }

@@ -1439,8 +1439,19 @@ func ApplyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 }
 
 func applyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFormula, traceTop bool) *LabeledFormula {
+	return applyMatchGoalNodeFn(cfg, match, len(match), goal, traceTop, func(e Expr, env map[NodeKey]bool) Expr {
+		return ApplyMatchAlt(match, e, env)
+	})
+}
+
+// applyMatchGoalNodeFn is Python apply_match_goal(match, x, apply_match)
+// with the formula-level apply function passed in (apply_match_alt for
+// matching, unfold's list-valued apply_match_alt for unfold_goal); match
+// still drives the sort, declaration and bound-symbol handling, and
+// nmatch is the len(match) Python traces.
+func applyMatchGoalNodeFn(cfg *AstConfig, match map[NodeKey]Expr, nmatch int, goal *LabeledFormula, traceTop bool, apply func(Expr, map[NodeKey]bool) Expr) *LabeledFormula {
 	if traceTop {
-		xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelForTrace(), len(match))
+		xtracer.Trace("proof.ApplyMatchGoalNode ENTER label=%s nmatch=%d", goal.LabelForTrace(), nmatch)
 	}
 	// Python's apply_match_goal has no early return for empty match — it always
 	// processes and clones the goal, producing a PRESERVE trace. We must do the same.
@@ -1449,7 +1460,7 @@ func applyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 	for _, p := range prems {
 		pu := unwrapCompiledNode(p)
 		if lf, ok := pu.(*LabeledFormula); ok {
-			newPrems = append(newPrems, applyMatchGoalNode(cfg, match, lf, false))
+			newPrems = append(newPrems, applyMatchGoalNodeFn(cfg, match, nmatch, lf, false, apply))
 		} else if s, ok := pu.(Sort); ok {
 			// Apply sort renaming: match[sort] → newSort
 			key := Key(s)
@@ -1512,13 +1523,13 @@ func applyMatchGoalNode(cfg *AstConfig, match map[NodeKey]Expr, goal *LabeledFor
 	rawConc := GoalConc(goal)
 	var newConc Node
 	if concExpr, ok := rawConc.(Expr); ok {
-		newConc = ApplyMatchAlt(match, concExpr, env)
+		newConc = apply(concExpr, env)
 	} else if tm, ok := rawConc.(*TemporalModels); ok {
 		// Python walks TemporalModels as a generic node via apply_match_alt_rec's
 		// fmla.clone(args) branch. Emulate that here by recursing into the inner
 		// formula (no apply_to_conc trace).
 		if innerExpr, ok := tm.Fmla.(Expr); ok {
-			newConc = tm.Clone([]Node{ApplyMatchAlt(match, innerExpr, env)})
+			newConc = tm.Clone([]Node{apply(innerExpr, env)})
 		} else {
 			newConc = tm
 		}
