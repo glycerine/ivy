@@ -1,0 +1,27 @@
+#lang ivy1.7
+
+type t
+individual a : t
+individual b : t
+individual c : t
+individual d : t
+relation r(X:t)
+
+action swap(x:t, y:t) returns (u:t, v:t) = {
+    u := y;
+    v := x
+}
+
+action step(p:t, q:t) = {
+    var m : t;
+    var n : t;
+    (m, n) := swap(p, q);
+    a := m;
+    b := n;
+    c := p;
+    d := q;
+    r(m) := true;
+    assert a = c
+}
+
+export step
