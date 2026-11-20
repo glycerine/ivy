@@ -1459,7 +1459,8 @@ func CheckDefinitions(mod *Module) (err error) {
 	mod.LabeledProps = nil
 
 	for _, prop := range props {
-		if logicDef, ok := prop.Formula.(*LogicDefinition); ok {
+		// Python: isinstance(prop.formula, ivy_logic.Definition)
+		if logicDef, ok := asDefinition(prop.Formula); ok {
 			defKey := compilerDefinesKey(logicDef)
 			if !withProofs[prop.ID] {
 				// Check if any used symbols are stale
@@ -1505,7 +1506,7 @@ func CheckDefinitions(mod *Module) (err error) {
 		return nil
 	}
 	for _, ldf := range mod.Definitions {
-		if logicDef, ok := ldf.Formula.(*LogicDefinition); ok {
+		if logicDef, ok := asDefinition(ldf.Formula); ok {
 			defExpr := logicDef.Defines()
 			key := Key(defExpr)
 			name := defExprName(defExpr)
