@@ -1,15 +1,14 @@
 #include "misc/util/abc_global.h"
 #include "bdd/cudd/cuddInt.h"
-#include <math.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 /* Row-major variable order and pair insertion order match the Go benchmark. */
-static int queens(int side, int *nodes)
+static DdNode *build_queens(DdManager *dd, int side)
 {
     int vars = side*side;
-    DdManager *dd = Cudd_Init(vars, 0, 256, 16384, 0);
     DdNode *f = Cudd_ReadOne(dd);
     Cudd_Ref(f);
     for (int r = 0; r < side; r++) {
@@ -41,7 +40,14 @@ static int queens(int side, int *nodes)
             f = x;
         }
     }
-    int solutions = (int)Cudd_CountMinterm(dd, f, vars);
+    return f;
+}
+
+static int queens(int side, int *nodes)
+{
+    DdManager *dd = Cudd_Init(side * side, 0, 256, 16384, 0);
+    DdNode *f = build_queens(dd, side);
+    int solutions = (int)Cudd_CountMinterm(dd, f, side * side);
     *nodes = Cudd_DagSize(f);
     Cudd_RecursiveDeref(dd, f);
     Cudd_Quit(dd);
@@ -50,17 +56,36 @@ static int queens(int side, int *nodes)
 
 int main(int argc, char **argv)
 {
-    int side = argc == 3 ? atoi(argv[1]) : 0;
-    int repeat = argc == 3 ? atoi(argv[2]) : 0;
+    int check_refs = argc == 4 && strcmp(argv[3], "refs") == 0;
+    if (argc != 3 && !check_refs)
+        return 1;
+    int side = atoi(argv[1]), repeat = atoi(argv[2]);
     if (side < 1 || side > 8 || repeat < 1)
         return 1;
     struct timespec start, end;
     int solutions = 0, nodes = 0;
+    DdManager *dd = NULL;
+    if (check_refs) {
+        dd = Cudd_Init(side * side, 0, 256, 16384, 0);
+        DdNode *f = build_queens(dd, side);
+        Cudd_RecursiveDeref(dd, f);
+    }
     clock_gettime(CLOCK_MONOTONIC, &start);
-    for (int i = 0; i < repeat; i++)
-        solutions = queens(side, &nodes);
+    for (int i = 0; i < repeat; i++) {
+        if (check_refs) {
+            if (Cudd_CheckZeroRef(dd) != 0)
+                return 2;
+        } else {
+            solutions = queens(side, &nodes);
+        }
+    }
     clock_gettime(CLOCK_MONOTONIC, &end);
     double ms = 1e3*(end.tv_sec - start.tv_sec) + 1e-6*(end.tv_nsec-start.tv_nsec);
-    printf("%d queens, %d solutions, %d DAG nodes, %.4f ms/op\n", side, solutions, nodes, ms/repeat);
+    if (check_refs) {
+        printf("%d queens, zero leaked references, %.4f ms/check\n", side, ms/repeat);
+        Cudd_Quit(dd);
+    } else {
+        printf("%d queens, %d solutions, %d DAG nodes, %.4f ms/op\n", side, solutions, nodes, ms/repeat);
+    }
     return 0;
 }

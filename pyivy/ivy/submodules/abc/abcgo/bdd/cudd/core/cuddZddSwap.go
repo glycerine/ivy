@@ -41,9 +41,8 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 		if n := work[k]; n != nil {
 			return n
 		}
-		n := &DdNode{Index: uint32(xi), T: t, E: e, ID: dd.nextID, manager: dd, family: 1}
-		n.inverse = &DdNode{Index: uint32(xi), ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
-		dd.nextID += 2
+		n := dd.newNodePair(uint32(xi))
+		n.T, n.E, n.family = t, e, 1
 		work[k] = n
 		return n
 	}

@@ -14,31 +14,9 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 		return 0
 	}
 	marked := make(map[*DdNode]bool)
-	incoming := make(map[*DdNode]uint64)
+	incoming := dd.incomingReferences()
 	stack := make([]*DdNode, 0, len(dd.unique)+len(dd.addUnique)+len(dd.zddUnique))
 	tables := []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique}
-	for _, table := range tables {
-		for _, n := range table {
-			if !n.childrenReleased {
-				if t := Cudd_Regular(n.T); t != nil {
-					incoming[t]++
-				}
-				if e := Cudd_Regular(n.E); e != nil {
-					incoming[e]++
-				}
-			}
-		}
-	}
-	for _, n := range dd.constants {
-		if !n.childrenReleased {
-			if t := Cudd_Regular(n.T); t != nil {
-				incoming[t]++
-			}
-			if e := Cudd_Regular(n.E); e != nil {
-				incoming[e]++
-			}
-		}
-	}
 	mark := func(n *DdNode) {
 		if n != nil {
 			n = Cudd_Regular(n)

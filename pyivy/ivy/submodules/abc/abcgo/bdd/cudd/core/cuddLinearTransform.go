@@ -71,10 +71,7 @@ func Cudd_bddLinearTransformInPlace(dd *DdManager, x, y int) bool {
 	}
 	for key, fresh := range scratch.unique {
 		if remap[fresh] == nil {
-			n := &DdNode{Index: key.index, ID: dd.nextID, manager: dd}
-			n.inverse = &DdNode{Index: key.index, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
-			dd.nextID += 2
-			remap[fresh] = n
+			remap[fresh] = dd.newNodePair(key.index)
 		}
 	}
 	remapEdge := func(edge *DdNode) *DdNode {

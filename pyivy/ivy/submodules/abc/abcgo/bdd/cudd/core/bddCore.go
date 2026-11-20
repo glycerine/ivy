@@ -313,14 +313,14 @@ func NewBDDManager(variables int) *DdManager {
 	if variables < 0 || uint64(variables) >= uint64(bddConstantIndex) {
 		return nil
 	}
-	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, computed: map[computedKey]*DdNode{}, nextID: 2, epsilon: 1e-12, cacheSlots: CUDD_CACHE_SLOTS, maxLive: ^uint32(0), reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
+	dd := &DdManager{unique: map[bddUniqueKey]*DdNode{}, cache: map[bddITEKey]*DdNode{}, computed: map[computedKey]*DdNode{}, epsilon: 1e-12, cacheSlots: CUDD_CACHE_SLOTS, maxLive: ^uint32(0), reorderMethod: CUDD_REORDER_SIFT, maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, looseUpTo: 5 * CUDD_UNIQUE_SLOTS, maxCache: 2 * CUDD_CACHE_SLOTS, maxCacheHard: 3 * CUDD_CACHE_SLOTS, siftMaxVar: 1000, siftMaxSwap: 2000000, stdout: os.Stdout, stderr: os.Stderr}
 	dd.tableGrowthFactor = 1
 	dd.groupcheck = CUDD_GROUP_CHECK7
 	dd.gcEnabled = 1
 	dd.countDead = ^uint32(0)
-	dd.One = &DdNode{Index: bddConstantIndex, Value: 1, ID: 0, manager: dd}
-	dd.LogicZero = &DdNode{Index: bddConstantIndex, Value: 0, ID: 1, manager: dd, regular: dd.One, inverse: dd.One}
-	dd.One.inverse = dd.LogicZero
+	dd.One = dd.newNodePair(bddConstantIndex)
+	dd.One.Value = 1
+	dd.LogicZero = dd.One.inverse
 	dd.constants = map[uint64]*DdNode{math.Float64bits(1): dd.One}
 	dd.zddUnique = map[bddUniqueKey]*DdNode{}
 	dd.Zero = dd.constant(0)
@@ -447,7 +447,7 @@ func Cudd_ExternalRefCount(dd *DdManager, node *DdNode) uint32 {
 		return 0
 	}
 	node = Cudd_Regular(node)
-	if node.Ref == ^uint32(0) {
+	if node.Ref == 0 || node.Ref == ^uint32(0) {
 		return node.Ref
 	}
 	var incoming uint64
@@ -464,10 +464,31 @@ func Cudd_ExternalRefCount(dd *DdManager, node *DdNode) uint32 {
 			}
 		}
 	}
+	return externalRefCount(node, incoming)
+}
+
+func externalRefCount(node *DdNode, incoming uint64) uint32 {
+	if node.Ref == ^uint32(0) {
+		return node.Ref
+	}
 	if incoming >= uint64(node.Ref) {
 		return 0
 	}
 	return node.Ref - uint32(incoming)
+}
+
+// Count the arcs that still hold references across all three diagram families.
+func (dd *DdManager) incomingReferences() map[*DdNode]uint64 {
+	incoming := make(map[*DdNode]uint64)
+	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique} {
+		for _, n := range table {
+			if !n.childrenReleased {
+				incoming[Cudd_Regular(n.T)]++
+				incoming[Cudd_Regular(n.E)]++
+			}
+		}
+	}
+	return incoming
 }
 
 // Cudd_CheckZeroRef reports canonical nodes that still have references from
@@ -477,32 +498,20 @@ func Cudd_CheckZeroRef(dd *DdManager) int32 {
 	if dd == nil || dd.closed {
 		return 0
 	}
-	seen := make(map[*DdNode]struct{})
-	count := int32(0)
-	check := func(table map[bddUniqueKey]*DdNode) {
-		for _, node := range table {
-			node = Cudd_Regular(node)
-			if _, ok := seen[node]; ok {
-				continue
-			}
-			seen[node] = struct{}{}
-			if Cudd_ExternalRefCount(dd, node) != 0 {
-				count++
-			}
-		}
-	}
-	check(dd.unique)
-	check(dd.addUnique)
-	check(dd.zddUnique)
-	for _, node := range dd.constants {
-		node = Cudd_Regular(node)
-		if _, ok := seen[node]; ok {
-			continue
-		}
-		seen[node] = struct{}{}
-		if Cudd_ExternalRefCount(dd, node) != 0 {
+	incoming := dd.incomingReferences()
+	var count int32
+	check := func(n *DdNode) {
+		if n.Ref != 0 && n.Ref != ^uint32(0) && uint64(n.Ref) > incoming[n] {
 			count++
 		}
+	}
+	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique, dd.zddUnique} {
+		for _, n := range table {
+			check(n)
+		}
+	}
+	for _, n := range dd.constants {
+		check(n)
 	}
 	return count
 }
@@ -577,6 +586,17 @@ func (dd *DdManager) valid(nodes ...*DdNode) bool {
 	}
 	return true
 }
+
+// A regular and complemented handle always share their lifetime.
+func (dd *DdManager) newNodePair(index uint32) *DdNode {
+	pair := new([2]DdNode)
+	n, inverse := &pair[0], &pair[1]
+	*n = DdNode{Index: index, ID: dd.nextID, manager: dd, inverse: inverse}
+	*inverse = DdNode{Index: index, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
+	dd.nextID += 2
+	return n
+}
+
 func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 	if t == e {
 		return t
@@ -592,9 +612,8 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 		if dd.allocationLimited && len(dd.unique) >= dd.allocationCeiling {
 			panic(bddAllocationLimit{})
 		}
-		n = &DdNode{Index: index, T: t, E: e, ID: dd.nextID, manager: dd}
-		n.inverse = &DdNode{Index: index, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
-		dd.nextID += 2
+		n = dd.newNodePair(index)
+		n.T, n.E = t, e
 		Cudd_Ref(t)
 		Cudd_Ref(e)
 		dd.unique[key] = n
@@ -1074,9 +1093,8 @@ func (dd *DdManager) constant(value float64) *DdNode {
 			return n
 		}
 	}
-	n := &DdNode{Index: bddConstantIndex, Value: value, ID: dd.nextID, manager: dd}
-	n.inverse = &DdNode{Index: bddConstantIndex, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
-	dd.nextID += 2
+	n := dd.newNodePair(bddConstantIndex)
+	n.Value = value
 	dd.constants[key] = n
 	return n
 }
@@ -1089,9 +1107,8 @@ func (dd *DdManager) zddNode(index uint32, t, e *DdNode) *DdNode {
 		reclaimNode(n)
 		return n
 	}
-	n := &DdNode{Index: index, T: t, E: e, ID: dd.nextID, manager: dd, family: 1}
-	n.inverse = &DdNode{Index: index, ID: dd.nextID + 1, manager: dd, regular: n, inverse: n}
-	dd.nextID += 2
+	n := dd.newNodePair(index)
+	n.T, n.E, n.family = t, e, 1
 	Cudd_Ref(t)
 	Cudd_Ref(e)
 	dd.zddUnique[key] = n

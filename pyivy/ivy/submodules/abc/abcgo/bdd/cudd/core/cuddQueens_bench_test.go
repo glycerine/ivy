@@ -3,7 +3,7 @@ package core
 import "testing"
 
 // Construct the row-major queens BDD in the same operation order as the C driver.
-func queensBDD(side int) (solutions float64, nodes int) {
+func buildQueensBDD(side int) (*DdManager, *DdNode) {
 	vars := side * side
 	dd := Cudd_Init(uint32(vars), 0, 256, 16384, 0)
 	f := Cudd_ReadOne(dd)
@@ -41,7 +41,12 @@ func queensBDD(side int) (solutions float64, nodes int) {
 			f = x
 		}
 	}
-	solutions, nodes = Cudd_CountMinterm(dd, f, vars), Cudd_DagSize(f)
+	return dd, f
+}
+
+func queensBDD(side int) (solutions float64, nodes int) {
+	dd, f := buildQueensBDD(side)
+	solutions, nodes = Cudd_CountMinterm(dd, f, side*side), Cudd_DagSize(f)
 	Cudd_RecursiveDeref(dd, f)
 	Cudd_Quit(dd)
 	return
@@ -61,6 +66,18 @@ func BenchmarkSixQueensBDD(b *testing.B) {
 	for b.Loop() {
 		if solutions, nodes := queensBDD(6); solutions != 4 || nodes != 130 {
 			b.Fatalf("solutions %g, nodes %d", solutions, nodes)
+		}
+	}
+}
+
+func BenchmarkQueensCheckZeroRef(b *testing.B) {
+	dd, root := buildQueensBDD(6)
+	Cudd_RecursiveDeref(dd, root)
+	defer Cudd_Quit(dd)
+	b.ReportAllocs()
+	for b.Loop() {
+		if leaks := Cudd_CheckZeroRef(dd); leaks != 0 {
+			b.Fatalf("%d remaining external roots", leaks)
 		}
 	}
 }

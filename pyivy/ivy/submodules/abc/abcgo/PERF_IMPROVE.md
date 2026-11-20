@@ -285,3 +285,11 @@ AND now handles terminals and complemented cofactors directly, orders the operan
 Cache hits for BDD ITE, ADD ITE and generic node operations previously returned released nodes with too few child references. Tests now check that each hit restores the children while leaving the returned root's reference count at zero. A constant-only lookup preserves its native read-only behavior. Separate red tests found leaked references after failed bounded AND and ISOP operations. Three retries raised two surviving nodes' reference counts by three each. The two operations now undo the references acquired by new and revived nodes.
 
 The six-queen Go workload took 5.95 ms and 3.26 MB in 180 pinned runs, down from 14.66 ms and 8.18 MB. All 13 BDD packages passed under the race detector, including exhaustive three-variable fused abstraction and reorder tests. The updated profile attributed 68% of CPU time and 89% of allocated bytes to canonical node lookup and construction.
+
+### Count incoming decision-diagram references in one pass
+
+Checking external ownership after releasing the six-queen root scanned every canonical node once for each node being checked. The original Go profile placed 99.7% of samples in the per-node reference query. The whole-manager check now counts incoming arcs once across BDD, ADD and ZDD nodes. Garbage collection uses the same count, and BDD reordering retains each external root's multiplicity across trial permutations. A red test also reported three saturated nodes as leaking. The check now follows CUDD's rule for saturated reference counts.
+
+Three checks averaged 1.084 s each before the change. Afterward, 3,000 checks averaged 223 µs with zero allocated bytes on the released graph. Native averaged 49.6 µs in 6,000 checks. Both returned zero outstanding roots. The native queens driver accepts a final refs argument to time the check on a single constructed and released graph.
+
+A regular handle and its complement now share one Go allocation. The allocation regression originally measured 1,085 allocations to create 512 projection pairs. The full queens build now uses 10,159 allocations and 3.10 MB, down from 20,158 and 3.26 MB. Its 6.08 ms runtime was close to the previous 5.95 ms measurement. All 13 BDD packages passed under the race detector.

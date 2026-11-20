@@ -13,8 +13,9 @@ import (
 // unique-subtable mutation. Referenced roots and projection handles keep identity;
 // unreachable zero-reference nodes are collected during preprocessing, as in C.
 type reorderRoots struct {
-	active []*DdNode
-	pins   []*DdNode
+	active   []*DdNode
+	pins     []*DdNode
+	external map[*DdNode]uint32
 }
 type reorderHeap struct {
 	dd           *DdManager
@@ -28,18 +29,21 @@ type reorderHeap struct {
 }
 
 func (dd *DdManager) liveReorderRoots() reorderRoots {
-	roots := reorderRoots{pins: append([]*DdNode(nil), dd.Vars...)}
+	roots := reorderRoots{pins: append([]*DdNode(nil), dd.Vars...), external: make(map[*DdNode]uint32)}
+	incoming := dd.incomingReferences()
+	collect := func(node *DdNode) {
+		if count := externalRefCount(node, incoming[node]); count != 0 {
+			roots.active = append(roots.active, node)
+			roots.external[node] = count
+		}
+	}
 	for _, table := range []map[bddUniqueKey]*DdNode{dd.unique, dd.addUnique} {
 		for _, node := range table {
-			if Cudd_ExternalRefCount(dd, node) != 0 {
-				roots.active = append(roots.active, node)
-			}
+			collect(node)
 		}
 	}
 	for _, node := range dd.constants {
-		if Cudd_ExternalRefCount(dd, node) != 0 {
-			roots.active = append(roots.active, node)
-		}
+		collect(node)
 	}
 	sort.Slice(roots.active, func(i, j int) bool { return roots.active[i].ID < roots.active[j].ID })
 	return roots
@@ -78,8 +82,7 @@ func reorderBuild(dd *DdManager, roots reorderRoots, order []int) *reorderHeap {
 	for _, root := range roots.active {
 		fresh := transfer(root)
 		h.active = append(h.active, fresh)
-		external := Cudd_ExternalRefCount(dd, root)
-		h.external[fresh] += external
+		h.external[fresh] += roots.external[root]
 	}
 	for _, pin := range roots.pins {
 		h.pins = append(h.pins, transfer(pin))
@@ -186,13 +189,12 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 		if mapped[fresh] != nil {
 			continue
 		}
-		node := &DdNode{manager: dd, ID: dd.nextID, family: fresh.family}
-		dd.nextID++
 		if fresh.family == 0 && !Cudd_IsConstant(fresh) {
-			node.inverse = &DdNode{manager: dd, ID: dd.nextID, regular: node, inverse: node}
+			mapped[fresh] = dd.newNodePair(fresh.Index)
+		} else {
+			mapped[fresh] = &DdNode{manager: dd, ID: dd.nextID, family: fresh.family}
 			dd.nextID++
 		}
-		mapped[fresh] = node
 	}
 	edge := func(fresh *DdNode) *DdNode {
 		return Cudd_NotCond(mapped[Cudd_Regular(fresh)], Cudd_IsComplement(fresh))

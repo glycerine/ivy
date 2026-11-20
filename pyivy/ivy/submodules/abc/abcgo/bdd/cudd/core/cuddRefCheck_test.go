@@ -51,3 +51,34 @@ func TestReorderingPreservesReferenceOwnership(t *testing.T) {
 		Cudd_Quit(dd)
 	}
 }
+
+func TestCheckZeroRefIgnoresSaturatedNodes(t *testing.T) {
+	dd := NewBDDManager(4)
+	defer Cudd_Quit(dd)
+	root := Cudd_bddAnd(dd, dd.Vars[0], dd.Vars[1])
+	Cudd_Regular(root).Ref = ^uint32(0)
+	dd.Vars[1].Ref = ^uint32(0)
+	dd.PlusInfinity.Ref = ^uint32(0)
+	Cudd_Ref(dd.Vars[2])
+	Cudd_Ref(dd.Vars[2])
+	if count := Cudd_CheckZeroRef(dd); count != 1 {
+		t.Fatalf("counted %d leaking roots, want only the unsaturated external variable", count)
+	}
+}
+
+func TestCanonicalBDDHandlePairAllocations(t *testing.T) {
+	const variables = 512
+	allocs := testing.AllocsPerRun(3, func() {
+		dd := NewBDDManager(variables)
+		for i, v := range dd.Vars {
+			inverse := Cudd_Not(v)
+			if inverse == nil || Cudd_Not(inverse) != v || Cudd_Regular(inverse) != v || inverse.Index != uint32(i) {
+				t.Fatal("projection lost its canonical complemented handle")
+			}
+		}
+		Cudd_Quit(dd)
+	})
+	if allocs > variables+100 {
+		t.Fatalf("constructing %d canonical pairs used %.0f allocations", variables, allocs)
+	}
+}
