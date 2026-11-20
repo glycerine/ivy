@@ -135,12 +135,10 @@ func Abc_AigAndLookup(m *Abc_Aig_t, a, b any) Edge {
 	if e, ok := m.Network.lookupAnd(x, y); ok {
 		if m.excluded[e.Object] && e.Object != x.Object && e.Object != y.Object {
 			key := edgePair(x, y)
-			for _, o := range m.Network.ObjectsOfKind(ObjectNode) {
-				if aigNode(o) && !m.excluded[o] && edgePair(o.fanins[0], o.fanins[1]) == key {
-					fresh := o.Signal()
-					m.Network.hashed[key] = fresh
-					return fresh
-				}
+			if o := findAndFanout(key, m.excluded); o != nil {
+				fresh := o.Signal()
+				m.Network.hashed[key] = fresh
+				return fresh
 			}
 			return Edge{}
 		}

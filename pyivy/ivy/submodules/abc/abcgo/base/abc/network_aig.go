@@ -35,14 +35,28 @@ func (n *Network) lookupAnd(a, b Edge) (Edge, bool) {
 		}
 		delete(n.hashed, pair)
 	}
-	for _, o := range n.objects {
-		if o != nil && o.Kind == ObjectNode && o.Data == aigANDMarker && len(o.fanins) == 2 && edgePair(o.fanins[0], o.fanins[1]) == pair {
-			e := o.Signal()
-			n.hashed[pair] = e
-			return e, true
-		}
+	if found := findAndFanout(pair, nil); found != nil {
+		e := found.Signal()
+		n.hashed[pair] = e
+		return e, true
 	}
 	return Edge{}, false
+}
+
+// Either operand's fanouts contain every AND with this key. Duplicate
+// unhashed nodes can exist, so retain the ID order of the object-table scan.
+func findAndFanout(pair [2]Edge, excluded map[*Object]bool) *Object {
+	fanouts := pair[0].Object.fanouts
+	if other := pair[1].Object.fanouts; len(other) < len(fanouts) {
+		fanouts = other
+	}
+	var first *Object
+	for _, o := range fanouts {
+		if aigNode(o) && edgePair(o.fanins[0], o.fanins[1]) == pair && !excluded[o] && (first == nil || first.ID > o.ID) {
+			first = o
+		}
+	}
+	return first
 }
 
 const aigANDMarker = "abcgo:AIG AND"

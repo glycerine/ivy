@@ -198,3 +198,30 @@ func TestStructuralHashRechecksPublicFunctionData(t *testing.T) {
 		t.Fatal("structural hash ignored changed function")
 	}
 }
+
+func TestStructuralLookupWithDuplicateRewiredFanouts(t *testing.T) {
+	n := NewNetwork("duplicate fanouts")
+	a, b, c := n.NewObject(ObjectPI).Signal(), n.NewObject(ObjectPI).Signal(), n.NewObject(ObjectPI).Signal()
+	first := n.CreateAndEdges(a, b.Not())
+	second := n.CreateAndEdges(b.Not(), a)
+	// Reattach the older node after the newer one in both fanout lists.
+	for pin, edge := range []Edge{a, b.Not()} {
+		if err := n.PatchFanin(first.Object, pin, c); err != nil {
+			t.Fatal(err)
+		}
+		if err := n.PatchFanin(first.Object, pin, edge); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if found, ok := n.lookupAnd(b.Not(), a); !ok || found != first {
+		t.Fatalf("uncached lookup did not select first object: %v", found)
+	}
+	manager := Abc_AigAlloc(n)
+	Abc_AigAndDelete(manager, first.Object)
+	if found := Abc_AigAndLookup(manager, b.Not(), a); found != second {
+		t.Fatal("excluded AND hid its live duplicate")
+	}
+	if found := Abc_AigAndLookup(manager, b, a); found.Object != nil {
+		t.Fatal("lookup ignored complemented fanin")
+	}
+}

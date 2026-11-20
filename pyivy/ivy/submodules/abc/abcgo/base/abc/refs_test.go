@@ -6,6 +6,27 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
+func TestFanoutAdjustmentsFollowLiveGraph(t *testing.T) {
+	n := NewNetwork("live-fanouts")
+	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	n.AndEdges(a.Signal(), b.Signal())
+	Abc_ObjAdjustFanoutCount(a, 1)
+	for _, input := range []*Object{a, b} {
+		po := n.NewObject(ObjectPO)
+		if err := n.AddFanin(po, input.Signal()); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if gotA, gotB := Abc_ObjFanoutNum(a), Abc_ObjFanoutNum(b); gotA != 3 || gotB != 2 {
+		t.Errorf("adjusted fanout counts after adding edges: got %d, %d; want 3, 2", gotA, gotB)
+	}
+	Abc_ObjAdjustFanoutCount(a, -1)
+	Abc_NtkFinishFanoutCountAdjustments(n)
+	if got := Abc_ObjFanoutNum(a); got != 2 {
+		t.Fatalf("restored fanout count = %d, want 2", got)
+	}
+}
+
 func TestTemporaryFanoutAdjustmentPreservesGraph(t *testing.T) {
 	n := NewNetwork("fanout-adjustment")
 	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)

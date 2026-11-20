@@ -94,10 +94,7 @@ func Abc_ObjFaninNum(o *Object) int32       { return int32(len(o.fanins)) }
 func Abc_ObjTemp(o *Object) int32           { return int32(o.Temp) }
 func Abc_ObjSetTemp(o *Object, value int32) { o.Temp = int(value) }
 func Abc_ObjFanoutNum(o *Object) int32 {
-	if o.network.refs != nil {
-		return int32(o.network.refs[o])
-	}
-	return int32(len(o.fanouts))
+	return int32(len(o.fanouts) + o.network.refs[o])
 }
 func Abc_ObjFanin(o *Object, i int32) *Object  { return o.fanins[i].Object }
 func Abc_ObjFanin0(o *Object) *Object          { return Abc_ObjFanin(o, 0) }
