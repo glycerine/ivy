@@ -229,16 +229,6 @@ func (dd *DdManager) storedNodes() int {
 	return dd.unique.count + dd.addUnique.count + len(dd.constants) + dd.zddUnique.count
 }
 
-func Cudd_ReadUsedSlots(dd *DdManager) float64 {
-	slots := Cudd_ReadSlots(dd)
-	if slots == 0 {
-		return 0
-	}
-	return float64(dd.storedNodes()) / float64(slots)
-}
-func Cudd_ExpectedUsedSlots(dd *DdManager) float64 {
-	return Cudd_ReadUsedSlots(dd)
-}
 func Cudd_ReadDead(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
 		return 0

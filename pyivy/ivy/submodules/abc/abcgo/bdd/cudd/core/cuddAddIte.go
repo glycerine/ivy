@@ -93,6 +93,7 @@ func (dd *DdManager) addNode(index uint32, t, e *DdNode) *DdNode {
 		reclaimNode(n)
 		return n
 	}
+	dd.checkNodeDensity(index, false)
 	n := &DdNode{Index: index, T: t, E: e, ID: dd.nextID, manager: dd, family: 2, inBDDTable: true}
 	dd.nextID += 2
 	Cudd_Ref(t)

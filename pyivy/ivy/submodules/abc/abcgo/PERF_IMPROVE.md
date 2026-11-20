@@ -417,3 +417,13 @@ The scalar implementation alone took 492–496 µs and 1,662 allocations per bat
 ### Accept existing unary AIG buffer records
 
 The full module suite exposed failures in hierarchy flattening and SBD observability after the AIG checker change. Both callers use a buffer with a single driver and Go's zero value in the unused second pin. A new unit test failed on construction, reconnection and a historical raw buffer record. The checker rejected all three and the second-fanin accessor reported the constant object as a driver. Buffer construction and reconnection now store the absent-edge sentinel, and accessors recognize existing unary records. The new red test and both affected integration tests passed after the fix. All four affected packages passed under the race detector.
+
+The subsequent full module run passed all 130 packages with tests after the buffer fix.
+
+### Report native CUDD occupied buckets and per-level density
+
+A four-stage native fixture grows BDD, ZDD and numeric constant tables independently. The final native manager has 192 buckets, of which 69 are occupied. Go originally reported 214 occupied buckets out of 152 and returned the same value for theoretical occupancy. The regression failed at every stage. Go now counts nonempty native hash buckets using the ABC build's node identity and complement-bit hash. BDD and ADD keys share a logical level, ZDD keys use separate levels and numeric constants use their IEEE-754 words. The expected fraction uses each level's key count and width separately. Explicitly dereferenced keys remain in both diagnostics until collection.
+
+Additional coverage exercises the native pre-insertion density threshold, an existing-key hit, a permuted mixed BDD/ADD level and a sparse table with two billion logical buckets. A red mixed-family test showed the shared subtable staying at eight slots when a new ADD key should have grown it to sixteen. Capacity changes update the computed-cache limits. Go's underlying open-addressed storage still grows according to its own probe density. The native decision to collect under dead-node pressure needs a separate adaptation for Go's unpinned intermediate results.
+
+The C driver took 222 ns per actual/expected query pair. The Go reproduction took 1.81–2.18 µs and three allocations initially. Small stack bitmaps brought this to 1.58–1.85 µs and zero allocations. The Go profile attributed 40% cumulatively to marking occupied buckets, 23% to iteration over the constant map and 13% to exponentiation. Six-queens construction took 3.86–4.16 ms across three samples. All thirteen BDD package race suites passed.

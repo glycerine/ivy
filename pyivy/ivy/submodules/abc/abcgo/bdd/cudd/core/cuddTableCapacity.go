@@ -85,7 +85,11 @@ func (dd *DdManager) rehashTable(zdd bool, level int, grow bool) bool {
 	if level < 0 || level >= len(entries) {
 		return false
 	}
-	old := entries[level]
+	return dd.resizeSubtable(&entries[level], grow)
+}
+
+func (dd *DdManager) resizeSubtable(width *uint32, grow bool) bool {
+	old := *width
 	var next uint32
 	if grow {
 		if old > ^uint32(0)/2 || uint64(dd.slotCount)+uint64(old) > uint64(^uint32(0)) {
@@ -101,13 +105,55 @@ func (dd *DdManager) rehashTable(zdd bool, level int, grow bool) bool {
 		next = old / 2
 		dd.slotCount -= old - next
 	}
-	if zdd {
-		dd.zddTableSlots[level] = next
-	} else {
-		dd.bddTableSlots[level] = next
-	}
+	*width = next
 	Cudd_FixTableLimits(dd)
 	return true
+}
+
+func (dd *DdManager) constantTableWidth() uint32 {
+	if dd.constantSlots != 0 {
+		return dd.constantSlots
+	}
+	return tableInitialSlots(dd)
+}
+
+func exceedsTableDensity(keys int, width, factor uint32) bool {
+	// Rearrange keys > 4*width*factor so even maximum widths cannot overflow.
+	return keys > 0 && uint64(keys-1)/4 >= uint64(width)*uint64(factor)
+}
+
+// The native unique tables check density before inserting a fresh BDD/ADD
+// key, and before looking up a ZDD key or constant. The Go probe arrays grow
+// independently of these logical widths.
+func (dd *DdManager) checkNodeDensity(index uint32, zdd bool) {
+	perm, widths := dd.Perm, dd.bddTableSlots
+	if zdd {
+		perm, widths = dd.PermZ, dd.zddTableSlots
+	}
+	if int(index) >= len(perm) || perm[index] >= len(widths) {
+		return
+	}
+	width := &widths[perm[index]]
+	var keys int
+	if zdd {
+		keys = dd.zddUnique.levelCount(int(index))
+	} else {
+		keys = dd.unique.levelCount(int(index)) + dd.addUnique.levelCount(int(index))
+	}
+	if exceedsTableDensity(keys, *width, dd.tableGrowthFactor) {
+		dd.resizeSubtable(width, true)
+	}
+}
+
+func (dd *DdManager) checkConstantDensity() {
+	if dd.slotCount == 0 {
+		return
+	}
+	width := dd.constantTableWidth()
+	if exceedsTableDensity(len(dd.constants), width, dd.tableGrowthFactor) {
+		dd.constantSlots = width
+		dd.resizeSubtable(&dd.constantSlots, true)
+	}
 }
 
 // Cudd_RehashBDDSubtable doubles the selected BDD subtable's slot threshold.

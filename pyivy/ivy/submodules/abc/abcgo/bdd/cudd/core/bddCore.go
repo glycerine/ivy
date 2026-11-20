@@ -43,6 +43,7 @@ type DdManager struct {
 	ZddSize                           int
 	tableBDDSize, tableZddSize        uint32
 	initSlots, slotCount              uint32
+	constantSlots                     uint32
 	bddTableSlots, zddTableSlots      []uint32
 	tableGrowthFactor                 uint32
 	minDead                           uint32
@@ -582,6 +583,7 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 		if dd.allocationLimited && dd.unique.count >= dd.allocationCeiling {
 			panic(bddAllocationLimit{})
 		}
+		dd.checkNodeDensity(index, false)
 		n = dd.newNodePair(index)
 		n.T, n.E = t, e
 		n.inBDDTable = true
@@ -1085,6 +1087,7 @@ func mintermCount[T any](dd *DdManager, f, empty *DdNode, maximum T, mean func(T
 }
 
 func (dd *DdManager) constant(value float64) *DdNode {
+	dd.checkConstantDensity()
 	if math.Abs(value) < dd.epsilon {
 		value = 0
 	}
@@ -1113,6 +1116,7 @@ func (dd *DdManager) zddNode(index uint32, t, e *DdNode) *DdNode {
 		return e
 	}
 	key := bddUniqueKey{index, t, e}
+	dd.checkNodeDensity(index, true)
 	entry := dd.zddUnique.find(key)
 	if entry != nil && entry.node != nil {
 		n := entry.node
