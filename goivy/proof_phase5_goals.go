@@ -778,12 +778,16 @@ func UnfoldFmla(fmla Node, defns [][]*LabeledFormula) Node {
 		if err != nil {
 			continue
 		}
+		// Python: fmla = apply_match_alt(match, fmla); match_from_defns
+		// returns {lhs: [...]}, a one-key match.
+		xtracer.Trace("proof.ApplyMatchAlt ENTER nmatch=%d fmlaType=%s", 1, TypeName(expr))
 		// Alpha-avoid: rename bound vars that clash with free vars in ALL lambdas.
 		// Python: apply_match_alt calls match_rhs_vars then alpha_avoid.
 		freeVars := unfoldRhsVars(union)
 		expr = AlphaAvoidMap(expr, freeVars)
 		// Single-pass unfold with destructive pop
 		expr = applyUnfoldRec(key, union, expr)
+		xtracer.Trace("proof.ApplyMatchAlt EXIT HASH canon=%v", expr.Canon())
 	}
 	return expr
 }
