@@ -21,32 +21,6 @@ type Abc_ManRef_t struct {
 	nLastGain, nNodesConsidered, nNodesRefactored, nNodesGained                         int32
 	nNodesBeg, nNodesEnd                                                                int32
 	timeCut, timeTru, timeDcs, timeSop, timeFact, timeEval, timeRes, timeNtk, timeTotal int64
-	vMffc                                                                               []*abc.Object
-	vMffcMarks                                                                          map[*abc.Object]bool
-}
-
-func refactorClearMffc(p *Abc_ManRef_t) {
-	for _, node := range p.vMffc {
-		node.MarkA = p.vMffcMarks[node]
-	}
-	p.vMffc = nil
-	p.vMffcMarks = nil
-}
-func refactorLabelMffc(p *Abc_ManRef_t, root *Abc_Obj_t, leaves *Vec_Ptr_t) int32 {
-	refactorClearMffc(p)
-	cutLeaves := make([]*abc.Object, Vec_PtrSize(leaves))
-	for i := range cutLeaves {
-		cutLeaves[i], _ = Vec_PtrEntry(leaves, int32(i)).(*Abc_Obj_t)
-	}
-	var cone []*abc.Object
-	size := abc.Abc_NodeMffcInside(root, cutLeaves, &cone)
-	p.vMffcMarks = make(map[*abc.Object]bool, len(cone))
-	for _, node := range cone {
-		p.vMffcMarks[node] = node.MarkA
-		node.MarkA = true
-	}
-	p.vMffc = cone
-	return size
 }
 
 func refTruthWords(vars int32) int { return int(util.Abc_Truth6WordNum(vars)) }
@@ -75,22 +49,7 @@ func refTruthFromKit(truth []uint64, vars int32) []uint32 {
 	}
 	return result
 }
-func refactorCollectCone(root *Abc_Obj_t, leaves, visited *Vec_Ptr_t) {
-	network := root.Network()
-	marks := make([]bool, int(abc.Abc_NtkObjNumMax(network)))
-	for i := range marks {
-		if node := network.Object(i); node != nil {
-			marks[i] = node.MarkA
-			node.MarkA = false
-		}
-	}
-	Abc_NodeConeCollect([]*Abc_Obj_t{root}, leaves, visited, 0)
-	for i, marked := range marks {
-		if node := network.Object(i); node != nil {
-			node.MarkA = marked
-		}
-	}
-}
+
 func refKitToDec(g *kit.Kit_Graph_t) *dec.Dec_Graph_t {
 	if kit.Kit_GraphIsConst(g) != 0 {
 		if kit.Kit_GraphIsConst0(g) != 0 {
@@ -115,42 +74,53 @@ func refKitToDec(g *kit.Kit_Graph_t) *dec.Dec_Graph_t {
 
 // Abc_NodeConeTruth returns the exact truth table of root relative to leaves.
 func Abc_NodeConeTruth(vVars, vFuncs *Vec_Ptr_t, nWordsMax int32, root *Abc_Obj_t, leaves, visited *Vec_Ptr_t) []uint64 {
-	refactorCollectCone(root, leaves, visited)
-	functions := make(map[*Abc_Obj_t][]uint64, Vec_PtrSize(leaves)+Vec_PtrSize(visited))
-	for i := int32(0); i < Vec_PtrSize(leaves); i++ {
-		leaf, _ := Vec_PtrEntry(leaves, i).(*Abc_Obj_t)
-		variable, _ := Vec_PtrEntry(vVars, i).([]uint64)
+	functions := make(map[*Abc_Obj_t][]uint64, Vec_PtrSize(leaves))
+	for i, item := range vec.Vec_PtrArray(leaves) {
+		leaf := item.(*Abc_Obj_t)
+		variable, _ := vec.Vec_PtrEntry(vVars, i).([]uint64)
 		functions[leaf] = variable
 	}
-	for Vec_PtrSize(vFuncs) < Vec_PtrSize(visited) {
-		Vec_PtrPush(vFuncs, make([]uint64, nWordsMax))
+	vec.Vec_PtrClear(visited)
+	if _, leaf := functions[root]; leaf {
+		return nil
 	}
 	words := refTruthWords(Vec_PtrSize(leaves))
-	var result []uint64
-	for i := int32(0); i < Vec_PtrSize(visited); i++ {
-		node, _ := Vec_PtrEntry(visited, i).(*Abc_Obj_t)
-		if node == nil || Abc_ObjIsNode(node) == 0 {
-			continue
+	// Evaluate in fanin order so shared subgraphs appear in visited once.
+	// Keeping the memo local preserves caller marks and traversal IDs.
+	var evaluate func(*Abc_Obj_t) []uint64
+	evaluate = func(node *Abc_Obj_t) []uint64 {
+		if old, ok := functions[node]; ok {
+			return old
 		}
-		left, right := functions[Abc_ObjFanin0(node)], functions[Abc_ObjFanin1(node)]
-		truth, _ := Vec_PtrEntry(vFuncs, i).([]uint64)
-		if len(left) == 0 || len(right) == 0 || len(truth) < words {
+		var left, right []uint64
+		var leftMask, rightMask uint64
+		if Abc_ObjIsNode(node) != 0 {
+			a, b := abc.Abc_ObjChild0(node), abc.Abc_ObjChild1(node)
+			left, right = evaluate(a.Object), evaluate(b.Object)
+			if a.Complement {
+				leftMask = ^uint64(0)
+			}
+			if b.Complement {
+				rightMask = ^uint64(0)
+			}
+		}
+		i := vec.Vec_PtrSize(visited)
+		vec.Vec_PtrPush(visited, node)
+		if i == vec.Vec_PtrSize(vFuncs) {
+			vec.Vec_PtrPush(vFuncs, make([]uint64, nWordsMax))
+		}
+		truth, _ := vec.Vec_PtrEntry(vFuncs, i).([]uint64)
+		if len(left) < words || len(right) < words || len(truth) < words {
+			functions[node] = nil
 			return nil
 		}
-		for k := 0; k < words; k++ {
-			a, b := left[k], right[k]
-			if abc.Abc_ObjFaninC0(node) != 0 {
-				a = ^a
-			}
-			if abc.Abc_ObjFaninC1(node) != 0 {
-				b = ^b
-			}
-			truth[k] = a & b
+		for k := range words {
+			truth[k] = (left[k] ^ leftMask) & (right[k] ^ rightMask)
 		}
 		functions[node] = truth
-		result = truth
+		return truth
 	}
-	return result
+	return evaluate(root)
 }
 func Abc_NodeConeIsConst0(truth []uint64, vars int32) int32 {
 	for _, word := range truth[:refTruthWords(vars)] {
@@ -183,7 +153,7 @@ func Abc_NodeRefactor(p *Abc_ManRef_t, node *Abc_Obj_t, fanins *Vec_Ptr_t, updat
 	}
 	vars := Vec_PtrSize(fanins)
 	if Abc_NodeConeIsConst0(truth, vars) != 0 || Abc_NodeConeIsConst1(truth, vars) != 0 {
-		p.nLastGain = refactorLabelMffc(p, node, fanins)
+		p.nLastGain = abc.Abc_NodeMffcSize(node)
 		p.nNodesGained += p.nLastGain
 		p.nNodesRefactored++
 		if Abc_NodeConeIsConst0(truth, vars) != 0 {
@@ -199,18 +169,21 @@ func Abc_NodeRefactor(p *Abc_ManRef_t, node *Abc_Obj_t, fanins *Vec_Ptr_t, updat
 	}
 	graph := refKitToDec(kitGraph)
 	kit.Kit_GraphFree(kitGraph)
-	for i := int32(0); i < vars; i++ {
-		fanin, _ := Vec_PtrEntry(fanins, i).(*Abc_Obj_t)
-		dec.Dec_GraphSetLeafFunc(graph, i, fanin.Signal())
+	for _, entry := range vec.Vec_PtrArray(fanins) {
+		abc.Abc_ObjAdjustFanoutCount(entry.(*Abc_Obj_t), 1)
 	}
 	abc.Abc_NtkIncrementTravId(node.Network())
-	saved := refactorLabelMffc(p, node, fanins)
+	saved := abc.Abc_NodeMffcLabelAig(node)
+	for i, entry := range vec.Vec_PtrArray(fanins) {
+		fanin := entry.(*Abc_Obj_t)
+		abc.Abc_ObjAdjustFanoutCount(fanin, -1)
+		dec.Dec_GraphSetLeafFunc(graph, int32(i), fanin.Signal())
+	}
 	started = time.Now()
 	added := dec.Dec_GraphToNetworkCount(abc.DecNetwork{Network: node.Network()}, node.Signal(), graph, saved, required)
 	p.timeEval += int64(time.Since(started))
 	if added == -1 || (added == saved && useZeros == 0) {
 		dec.Dec_GraphFree(graph)
-		refactorClearMffc(p)
 		return nil
 	}
 	p.nLastGain = saved - added
@@ -239,7 +212,6 @@ func Abc_NtkManRefStop(p *Abc_ManRef_t) {
 	if p == nil {
 		return
 	}
-	refactorClearMffc(p)
 	for i := 0; i < int(Vec_PtrSize(p.vFuncs)); i++ {
 		vec.Vec_PtrWriteEntry(p.vFuncs, i, nil)
 	}
@@ -309,7 +281,6 @@ func Abc_NtkRefactor(n *Abc_Ntk_t, nodeSizeMax, coneSizeMax, updateLevel, useZer
 		clk = time.Now()
 		Dec_GraphUpdateNetwork(node, graph, updateLevel, ref.nLastGain)
 		ref.timeNtk += int64(time.Since(clk))
-		refactorClearMffc(ref)
 		dec.Dec_GraphFree(graph)
 	}
 	extra.Extra_ProgressBarStop(progress)

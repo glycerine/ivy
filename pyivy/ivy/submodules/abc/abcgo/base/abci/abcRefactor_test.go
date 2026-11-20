@@ -63,3 +63,136 @@ func TestRefactorManagerStopReleasesScratch(t *testing.T) {
 		t.Fatal("manager stop retained scratch storage")
 	}
 }
+
+func TestRefactorLabelsOnlyDeletableNodes(t *testing.T) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
+	defer abc.Abc_NtkDelete(n)
+	a, b, c := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
+	manager := n.FunctionManager.(*abc.Abc_Aig_t)
+	x := abc.Abc_AigAnd(manager, a, b)
+	y := abc.Abc_AigAnd(manager, x, c)
+	root := abc.Abc_AigAnd(manager, y, x).Object
+	abc.Abc_ObjAddFanin(abc.Abc_NtkCreatePo(n), root)
+	ref := Abc_NtkManRefStart(3, 3, 0, 0)
+	defer Abc_NtkManRefStop(ref)
+	leaves := vec.Vec_PtrAlloc(2)
+	vec.Vec_PtrPush(leaves, x.Object)
+	vec.Vec_PtrPush(leaves, c)
+	abc.Abc_NtkIncrementTravId(n)
+	abc.Abc_NodeSetTravIdCurrent(a)
+	graph := Abc_NodeRefactor(ref, root, leaves, 0, 0, 0, 0)
+	if graph == nil || ref.nLastGain != 1 {
+		t.Fatalf("expected redundant AND to save one node, gain %d, graph %v", ref.nLastGain, graph)
+	}
+	defer dec.Dec_GraphFree(graph)
+	if abc.Abc_NodeIsTravIdCurrent(x.Object) != 0 || abc.Abc_NodeIsTravIdCurrent(c) != 0 {
+		t.Error("marked a pinned cut input as deletable")
+	}
+	if abc.Abc_NodeIsTravIdCurrent(root) == 0 || abc.Abc_NodeIsTravIdCurrent(y.Object) == 0 {
+		t.Error("missing internal deletion-cone labels")
+	}
+	if abc.Abc_NodeIsTravIdPrevious(a) == 0 {
+		t.Error("refactoring advanced more than one traversal epoch")
+	}
+	if root.MarkA || y.Object.MarkA {
+		t.Error("refactoring left temporary marks on surviving nodes")
+	}
+	if abc.Abc_ObjFanoutNum(x.Object) != 2 || abc.Abc_ObjFanoutNum(c) != 1 {
+		t.Error("boundary references changed")
+	}
+}
+
+func TestConstantRefactorCountsFullMFFC(t *testing.T) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
+	defer abc.Abc_NtkDelete(n)
+	a, b, c := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
+	m := n.FunctionManager.(*abc.Abc_Aig_t)
+	x := abc.Abc_AigAnd(m, a, b)
+	y := abc.Abc_AigAnd(m, x, c)
+	root := abc.Abc_AigAnd(m, y, x.Not()).Object
+	abc.Abc_ObjAddFanin(abc.Abc_NtkCreatePo(n), root)
+	leaves := vec.Vec_PtrAlloc(2)
+	vec.Vec_PtrPush(leaves, x.Object)
+	vec.Vec_PtrPush(leaves, c)
+	ref := Abc_NtkManRefStart(2, 2, 0, 0)
+	defer Abc_NtkManRefStop(ref)
+	abc.Abc_NtkIncrementTravId(n)
+	abc.Abc_NodeSetTravIdCurrent(a)
+	graph := Abc_NodeRefactor(ref, root, leaves, 0, 0, 0, 0)
+	if graph == nil || dec.Dec_GraphIsConst0(graph) == 0 {
+		t.Fatal("expected constant zero")
+	}
+	defer dec.Dec_GraphFree(graph)
+	if ref.nLastGain != 3 || ref.nNodesGained != 3 {
+		t.Errorf("constant substitution gained %d nodes, total %d, want all three ANDs", ref.nLastGain, ref.nNodesGained)
+	}
+	if abc.Abc_NodeIsTravIdCurrent(a) == 0 {
+		t.Error("constant substitution changed the traversal epoch")
+	}
+}
+
+func BenchmarkRefactorTruthSmallCone(b *testing.B) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
+	defer abc.Abc_NtkDelete(n)
+	a, c := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
+	for range 4096 {
+		abc.Abc_NtkCreatePi(n)
+	}
+	m := n.FunctionManager.(*abc.Abc_Aig_t)
+	left := abc.Abc_AigAnd(m, a, c)
+	right := abc.Abc_AigAnd(m, a.Signal().Not(), c.Signal().Not())
+	root := abc.Abc_AigAnd(m, left.Not(), right.Not())
+	abc.Abc_ObjAddFanin(abc.Abc_NtkCreatePo(n), root)
+	ref := Abc_NtkManRefStart(2, 2, 0, 0)
+	defer Abc_NtkManRefStop(ref)
+	leaves := vec.Vec_PtrAlloc(2)
+	vec.Vec_PtrPush(leaves, a)
+	vec.Vec_PtrPush(leaves, c)
+	b.ReportAllocs()
+	for b.Loop() {
+		truth := Abc_NodeConeTruth(ref.vVars, ref.vFuncs, 1, root.Object, leaves, ref.vVisited)
+		if len(truth) != 1 || truth[0] != 0x6666666666666666 || vec.Vec_PtrSize(ref.vVisited) != 3 {
+			b.Fatal("invalid cone truth")
+		}
+	}
+}
+
+func TestRefactorTruthMultiwordSharedCone(t *testing.T) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
+	defer abc.Abc_NtkDelete(n)
+	ref := Abc_NtkManRefStart(7, 7, 0, 0)
+	defer Abc_NtkManRefStop(ref)
+	m := n.FunctionManager.(*abc.Abc_Aig_t)
+	leaves := vec.Vec_PtrAlloc(7)
+	var inputs [7]abc.Edge
+	for i := range inputs {
+		inputs[i] = abc.Abc_NtkCreatePi(n).Signal()
+		vec.Vec_PtrPush(leaves, inputs[i].Object)
+	}
+	shared := abc.Abc_AigAnd(m, inputs[0].Not(), inputs[6])
+	left := abc.Abc_AigAnd(m, shared, inputs[2])
+	right := abc.Abc_AigAnd(m, shared, inputs[3].Not())
+	root := abc.Abc_AigAnd(m, left.Not(), right.Not())
+	inputs[6].Object.MarkA = true
+	defer func() { inputs[6].Object.MarkA = false }()
+	vec.Vec_PtrPush(ref.vVisited, inputs[4].Object)
+	truth := Abc_NodeConeTruth(ref.vVars, ref.vFuncs, 2, root.Object, leaves, ref.vVisited)
+	if len(truth) != 2 || vec.Vec_PtrSize(ref.vVisited) != 4 {
+		t.Fatalf("got truth %v and %d nodes", truth, vec.Vec_PtrSize(ref.vVisited))
+	}
+	for i, e := range []abc.Edge{shared, left, right, root} {
+		if got := vec.Vec_PtrEntry(ref.vVisited, i); got != e.Object {
+			t.Errorf("visited node %d got %v, want %v", i, got, e.Object)
+		}
+	}
+	for row := range 128 {
+		v := row&1 == 0 && row&64 != 0
+		want := !(v && row&4 != 0) && !(v && row&8 == 0)
+		if got := truth[row/64]&(uint64(1)<<uint(row%64)) != 0; got != want {
+			t.Fatalf("assignment %d got %t, want %t", row, got, want)
+		}
+	}
+	if !inputs[6].Object.MarkA {
+		t.Error("lost cut input mark")
+	}
+}
