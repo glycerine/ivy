@@ -107,3 +107,41 @@ func (dd *DdManager) sweepNode(n *DdNode) {
 		dd.recursiveDeref(n.E)
 	}
 }
+
+// purgeReleasedKeys collects only nodes whose owned child references were
+// explicitly released. An unreferenced result still in use by a Go caller
+// retains its children and remains canonical.
+func (dd *DdManager) purgeReleasedKeys() int {
+	reclaimNode(Cudd_Regular(dd.Background))
+	deleted := 0
+	for _, table := range []*uniqueTable{&dd.unique, &dd.addUnique, &dd.zddUnique} {
+		if dd.dead == 0 && table != &dd.zddUnique {
+			continue
+		}
+		for key, n := range table.entries {
+			if n.childrenReleased {
+				table.remove(key)
+				dd.retireNode(n)
+				deleted++
+			}
+		}
+	}
+	if dd.dead != 0 {
+		for key, n := range dd.constants {
+			if n.childrenReleased {
+				delete(dd.constants, key)
+				dd.retireNode(n)
+				deleted++
+			}
+		}
+	}
+	return deleted
+}
+
+func (dd *DdManager) retireNode(n *DdNode) {
+	dd.sweepNode(n)
+	n.manager = nil
+	if n.inverse != nil {
+		n.inverse.manager = nil
+	}
+}

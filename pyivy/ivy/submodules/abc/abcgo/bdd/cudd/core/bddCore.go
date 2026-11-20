@@ -492,10 +492,16 @@ func (dd *DdManager) valid(nodes ...*DdNode) bool {
 
 // A regular and complemented handle always share their lifetime.
 func (dd *DdManager) newNodePair(index uint32) *DdNode {
-	pair := new([2]DdNode)
+	return dd.initNodePair(new([2]DdNode), index)
+}
+
+func (dd *DdManager) initNodePair(pair *[2]DdNode, index uint32) *DdNode {
 	n, inverse := &pair[0], &pair[1]
-	*n = DdNode{Index: index, ID: dd.nextID, manager: dd, inverse: inverse}
-	*inverse = DdNode{Index: index, ID: dd.nextID + 1, manager: dd, complemented: true, inverse: n}
+	n.Index, inverse.Index = index, index
+	n.ID, inverse.ID = dd.nextID, dd.nextID+1
+	n.manager, inverse.manager = dd, dd
+	n.inverse, inverse.inverse = inverse, n
+	inverse.complemented = true
 	dd.nextID += 2
 	return n
 }
@@ -513,21 +519,25 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 	entry := dd.unique.find(key)
 	var n *DdNode
 	if entry == nil || entry.node == nil {
-		if dd.allocationLimited && dd.unique.count >= dd.allocationCeiling {
-			panic(bddAllocationLimit{})
-		}
-		dd.checkNodeDensity(index, false)
-		n = dd.newNodePair(index)
-		n.T, n.E = t, e
-		n.inBDDTable = true
-		Cudd_Ref(t)
-		Cudd_Ref(e)
-		dd.unique.insert(key, n, entry)
+		n = dd.insertBDDPair(key, entry, new([2]DdNode))
 	} else {
 		n = entry.node
 		reclaimNode(n)
 	}
 	return Cudd_NotCond(n, complemented)
+}
+
+func (dd *DdManager) insertBDDPair(key bddUniqueKey, entry *uniqueEntry, pair *[2]DdNode) *DdNode {
+	if dd.allocationLimited && dd.unique.count >= dd.allocationCeiling {
+		panic(bddAllocationLimit{})
+	}
+	dd.checkNodeDensity(key.index, false)
+	n := dd.initNodePair(pair, key.index)
+	n.T, n.E, n.inBDDTable = key.t, key.e, true
+	Cudd_Ref(key.t)
+	Cudd_Ref(key.e)
+	dd.unique.insert(key, n, entry)
+	return n
 }
 
 // Cudd_BddNode returns the canonical BDD node for an index and children.
@@ -548,11 +558,25 @@ func Cudd_bddIthVar(dd *DdManager, index int) *DdNode {
 		}
 		Cudd_FixTableLimits(dd)
 	}
+	// Bound the backing allocation retained by a projection handle. Grouped
+	// allocation also leaves ordinary one-variable extensions at one pair.
 	for len(dd.Vars) <= index {
-		i := len(dd.Vars)
-		dd.Perm = append(dd.Perm, i)
-		dd.InvPerm = append(dd.InvPerm, i)
-		dd.Vars = append(dd.Vars, dd.node(uint32(i), dd.One, dd.LogicZero))
+		pairs := make([][2]DdNode, min(128, index+1-len(dd.Vars)))
+		for j := range pairs {
+			i := len(dd.Vars)
+			dd.Perm = append(dd.Perm, i)
+			dd.InvPerm = append(dd.InvPerm, i)
+			key := bddUniqueKey{uint32(i), dd.One, dd.LogicZero}
+			entry := dd.unique.find(key)
+			var node *DdNode
+			if entry != nil && entry.node != nil {
+				node = entry.node
+				reclaimNode(node)
+			} else {
+				node = dd.insertBDDPair(key, entry, &pairs[j])
+			}
+			dd.Vars = append(dd.Vars, node)
+		}
 	}
 	return dd.Vars[index]
 }

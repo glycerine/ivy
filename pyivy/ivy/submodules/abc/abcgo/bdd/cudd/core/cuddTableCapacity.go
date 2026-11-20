@@ -1,7 +1,7 @@
 package core
 
 import (
-	"sort"
+	"time"
 
 	"github.com/glycerine/abcgo/bdd/mtr"
 )
@@ -219,69 +219,86 @@ func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
 		return false
 	}
 	first := len(dd.Vars) - count
-	removed := make(map[*DdNode]bool, count)
+	// Validate all selected levels before releasing their projections. A Go
+	// projection has an implicit manager pin outside its numeric refcount.
 	for index := first; index < len(dd.Vars); index++ {
-		removed[Cudd_Regular(dd.Vars[index])] = true
-	}
-	for _, node := range dd.unique.entries {
-		if int(node.Index) >= first {
-			if !removed[node] {
+		node := dd.Vars[index]
+		if node.Ref != 0 {
+			if node.Ref != ^uint32(0) || dd.hasLiveParent(node) {
 				return false
 			}
-			continue
 		}
-		if removed[Cudd_Regular(node.T)] || removed[Cudd_Regular(node.E)] {
+		if dd.unique.levelCount(index) > 1 && dd.hasLiveNonProjection(&dd.unique, index, node) ||
+			dd.addUnique.levelCount(index) != 0 && dd.hasLiveNonProjection(&dd.addUnique, index, nil) {
 			return false
 		}
 	}
-	for node := range removed {
-		if Cudd_ExternalRefCount(dd, node) != 0 {
-			return false
+	started := time.Now()
+	if !dd.runHooks(CUDD_PRE_GC_HOOK, "DD", nil) {
+		return false
+	}
+	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
+	dd.purgeReleasedKeys()
+	// Every removed level now contains exactly its isolated projection.
+	for _, node := range dd.Vars[first:] {
+		dd.retireNode(node)
+	}
+	clear(dd.unique.levels[first:len(dd.Vars)])
+	dd.unique.count -= count
+	if len(dd.boundVars)+len(dd.variableTypes)+len(dd.pairIndices)+len(dd.lazyGroups) != 0 {
+		for index := first; index < len(dd.Vars); index++ {
+			delete(dd.boundVars, index)
+			delete(dd.variableTypes, index)
+			delete(dd.pairIndices, index)
+			delete(dd.lazyGroups, index)
 		}
 	}
-	removedLevels := make([]int, 0, count)
-	for index := first; index < len(dd.Vars); index++ {
-		node := Cudd_Regular(dd.Vars[index])
-		removedLevels = append(removedLevels, dd.Perm[index])
-		if !node.childrenReleased {
-			node.childrenReleased = true
-			Cudd_RecursiveDeref(dd, node.T)
-			Cudd_RecursiveDeref(dd, node.E)
-		}
-		dd.unique.remove(bddUniqueKey{node.Index, node.T, node.E})
-		node.inBDDTable = false
-		node.manager = nil
-		if node.inverse != nil {
-			node.inverse.manager = nil
-		}
-	}
-	sort.Sort(sort.Reverse(sort.IntSlice(removedLevels)))
-	for _, level := range removedLevels {
-		if level < 0 || level >= len(dd.bddTableSlots) {
+	write := 0
+	for level, index := range dd.InvPerm {
+		if index >= first {
+			dd.slotCount -= dd.bddTableSlots[level]
 			continue
 		}
-		dd.slotCount -= dd.bddTableSlots[level]
-		dd.bddTableSlots = append(dd.bddTableSlots[:level], dd.bddTableSlots[level+1:]...)
+		dd.bddTableSlots[write] = dd.bddTableSlots[level]
+		dd.InvPerm[write], dd.Perm[index] = index, write
+		write++
 	}
-	dd.Vars = dd.Vars[:first]
+	// InitTable may have reserved additional slots beyond materialized vars.
+	reserved := copy(dd.bddTableSlots[write:], dd.bddTableSlots[len(dd.InvPerm):])
+	dd.bddTableSlots = dd.bddTableSlots[:write+reserved]
+	clear(dd.Vars[first:])
+	dd.Vars, dd.Perm, dd.InvPerm = dd.Vars[:first], dd.Perm[:first], dd.InvPerm[:first]
 	dd.discardInteractionsAfterSize(first)
-	order := make([]int, 0, first)
-	for _, index := range dd.InvPerm {
-		if index < first {
-			order = append(order, index)
+	dd.symmetryGroups = nil
+	dd.tableBDDSize = uint32(len(dd.bddTableSlots))
+	Cudd_CacheFlush(dd)
+	Cudd_FixTableLimits(dd)
+	dd.garbageCollections++
+	dd.gcTime += uint64(time.Since(started).Nanoseconds())
+	dd.runHooks(CUDD_POST_GC_HOOK, "DD", nil)
+	return true
+}
+
+func (dd *DdManager) hasLiveNonProjection(table *uniqueTable, index int, projection *DdNode) bool {
+	live := false
+	table.forLevel(index, func(entry uniqueEntry) {
+		if entry.node != projection && (!entry.node.childrenReleased || entry.node == dd.Background) {
+			live = true
+		}
+	})
+	return live
+}
+
+// Saturated reference counts cannot tell whether a projection is isolated.
+func (dd *DdManager) hasLiveParent(node *DdNode) bool {
+	for _, table := range []*uniqueTable{&dd.unique, &dd.addUnique} {
+		for _, p := range table.entries {
+			if !p.childrenReleased && (Cudd_Regular(p.T) == node || Cudd_Regular(p.E) == node) {
+				return true
+			}
 		}
 	}
-	dd.InvPerm = order
-	dd.Perm = make([]int, first)
-	for level, index := range order {
-		dd.Perm[index] = level
-	}
-	Cudd_CacheFlush(dd)
-
-	dd.tableBDDSize = uint32(len(dd.bddTableSlots))
-	Cudd_FixTableLimits(dd)
-	Cudd_GarbageCollect(dd, true)
-	return true
+	return false
 }
 
 func patchManagerTree(dd *DdManager, node *mtr.MtrNode) {

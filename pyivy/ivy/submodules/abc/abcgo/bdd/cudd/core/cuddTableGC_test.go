@@ -275,3 +275,132 @@ func TestPeakLiveCountSurvivesUnobservedRelease(t *testing.T) {
 		t.Errorf("peak after releasing the seventh key = %d, want 7", got)
 	}
 }
+
+func TestDestroySubtablesChecksADDAndReleasesDeadParents(t *testing.T) {
+	t.Run("live ADD", func(t *testing.T) {
+		dd := NewBDDManager(4)
+		defer Cudd_Quit(dd)
+		live := Cudd_addIthVar(dd, 2)
+		Cudd_Ref(live)
+		slots, keys := Cudd_ReadSlots(dd), Cudd_ReadKeys(dd)
+		last := dd.Vars[3]
+		if Cudd_DestroyBDDSubtables(dd, 2) {
+			t.Fatal("removed the subtable of a referenced ADD")
+		}
+		if len(dd.Vars) != 4 || dd.Vars[3] != last || Cudd_ReadSlots(dd) != slots || Cudd_ReadKeys(dd) != keys {
+			t.Fatal("rejecting removal changed the manager")
+		}
+		Cudd_RecursiveDeref(dd, live)
+		if !Cudd_DestroyBDDSubtables(dd, 2) || dd.addUnique.count != 0 {
+			t.Fatal("released ADD prevented removal")
+		}
+	})
+	t.Run("dead parent", func(t *testing.T) {
+		dd := NewBDDManager(5)
+		defer Cudd_Quit(dd)
+		root := Cudd_bddAnd(dd, dd.Vars[0], dd.Vars[4])
+		Cudd_Ref(root)
+		if Cudd_DestroyBDDSubtables(dd, 1) {
+			t.Fatal("removed a projection with a live parent")
+		}
+		Cudd_RecursiveDeref(dd, root)
+		if !Cudd_DestroyBDDSubtables(dd, 1) || len(dd.Vars) != 4 || Cudd_ReadDead(dd) != 0 {
+			t.Fatal("a released parent blocked removal of its former child")
+		}
+		if dd.unique.get(bddUniqueKey{root.Index, root.T, root.E}) != nil {
+			t.Fatal("a dangling canonical key survived removal")
+		}
+	})
+}
+
+func TestDestroyedVariablesLoseReorderingAttributes(t *testing.T) {
+	dd := NewBDDManager(5)
+	defer Cudd_Quit(dd)
+	for _, index := range []int{1, 4} {
+		Cudd_bddBindVar(dd, index)
+		Cudd_bddSetVariableType(dd, index, CUDD_VAR_PRESENT_STATE)
+		Cudd_bddSetPairIndex(dd, index, 0)
+		Cudd_bddSetLazyGroup(dd, index, CUDD_LAZY_HARD_GROUP)
+	}
+	if !Cudd_DestroyBDDSubtables(dd, 1) || Cudd_bddIthVar(dd, 4) == nil {
+		t.Fatal("failed to replace the last variable")
+	}
+	if Cudd_bddVarIsBound(dd, 4) != 0 || Cudd_bddVariableType(dd, 4) != int(CUDD_VAR_PRIMARY_INPUT) ||
+		Cudd_bddReadPairIndex(dd, 4) != -1 || Cudd_bddLazyGroup(dd, 4) != int(CUDD_LAZY_NONE) {
+		t.Error("replacement variable inherited the retired variable's attributes")
+	}
+	if Cudd_bddVarIsBound(dd, 1) != 1 || Cudd_bddVariableType(dd, 1) != int(CUDD_VAR_PRESENT_STATE) ||
+		Cudd_bddReadPairIndex(dd, 1) != 0 || Cudd_bddLazyGroup(dd, 1) != int(CUDD_LAZY_HARD_GROUP) {
+		t.Error("surviving variable lost its attributes")
+	}
+}
+
+func BenchmarkInsertDestroySubtables(b *testing.B) {
+	const keep, add, level = 256, 128, 64
+	dd := Cudd_Init(keep, 0, 8, 4096, 0)
+	defer Cudd_Quit(dd)
+	baseSlots := Cudd_ReadSlots(dd)
+	b.ReportAllocs()
+	for b.Loop() {
+		if !Cudd_InsertBDDSubtables(dd, add, level) || dd.InvPerm[level] != keep ||
+			!Cudd_DestroyBDDSubtables(dd, add) || len(dd.Vars) != keep || dd.InvPerm[level] != level || Cudd_ReadSlots(dd) != baseSlots {
+			b.Fatal("insert/destroy cycle")
+		}
+	}
+}
+
+func TestDestroySubtableCollectsRetiredProjectionsOnce(t *testing.T) {
+	dd := NewBDDManager(4)
+	defer Cudd_Quit(dd)
+	checks := 0
+	Cudd_AddHook(dd, func(*DdManager, string, any) int { checks++; return 1 }, CUDD_POST_GC_HOOK)
+	base := Cudd_ReadGarbageCollections(dd)
+	if !Cudd_DestroyBDDSubtables(dd, 2) || Cudd_ReadGarbageCollections(dd) != base+1 || checks != 1 {
+		t.Errorf("removed projections: collections %d, hooks %d", Cudd_ReadGarbageCollections(dd)-base, checks)
+	}
+	veto := func(*DdManager, string, any) int { return 0 }
+	Cudd_AddHook(dd, veto, CUDD_PRE_GC_HOOK)
+	project := dd.Vars[1]
+	if Cudd_DestroyBDDSubtables(dd, 1) || len(dd.Vars) != 2 || dd.Vars[1] != project || project.manager != dd || checks != 1 {
+		t.Error("collection veto left a partially destroyed subtable")
+	}
+}
+
+func TestDestroySaturatedIsolatedProjection(t *testing.T) {
+	dd := NewBDDManager(3)
+	defer Cudd_Quit(dd)
+	project := dd.Vars[2]
+	project.Ref = math.MaxUint32
+	root := Cudd_bddAnd(dd, dd.Vars[0], project)
+	Cudd_Ref(root)
+	if Cudd_DestroyBDDSubtables(dd, 1) {
+		t.Fatal("accepted saturated projection with a live parent")
+	}
+	Cudd_RecursiveDeref(dd, root)
+	if !Cudd_DestroyBDDSubtables(dd, 1) {
+		t.Fatal("rejected a saturated isolated projection")
+	}
+}
+
+func TestProjectionBatchPreservesExistingCanonicalPairs(t *testing.T) {
+	dd := Cudd_InitTable(260, 0, 8, 4096)
+	defer Cudd_Quit(dd)
+	e := dd.node(128, dd.One, dd.LogicZero)
+	if Cudd_bddIthVar(dd, 257) == nil || dd.Vars[128] != e || dd.unique.count != 258 {
+		t.Fatal("materializing projections replaced or duplicated a canonical pair")
+	}
+	for i, v := range dd.Vars {
+		if int(v.Index) != i || v.manager != dd || v.T != dd.One || v.E != dd.LogicZero ||
+			Cudd_Regular(Cudd_Not(v)) != v || dd.unique.get(bddUniqueKey{uint32(i), dd.One, dd.LogicZero}) != v {
+			t.Fatalf("wrong canonical pair at %d", i)
+		}
+	}
+	old := dd.Vars[129]
+	if !Cudd_DestroyBDDSubtables(dd, 129) || dd.Vars[128] != e || old.manager != nil ||
+		Cudd_bddIthVar(dd, 129) == old || Cudd_Not(e).manager != dd {
+		t.Fatal("removing one part of a batch affected surviving handles")
+	}
+	if len(dd.bddTableSlots) != 131 || Cudd_ReadSlots(dd) != 132*8 {
+		t.Fatalf("reserved subtable capacity after shrink and re-extension: %d slots", Cudd_ReadSlots(dd))
+	}
+}
