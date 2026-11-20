@@ -1076,7 +1076,9 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	for _, nat := range mod.Natives {
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
-			if expr, ok := args[i].(Expr); ok {
+			// Python lu.symbols_asts(tmp.args[2:]) -- the compiled terms,
+			// which goivy may hold wrapped in a CompiledNode.
+			if expr, ok := unwrapCompiledNode(args[i]).(Expr); ok {
 				collectSymbolsInto(as1, expr, allSyms)
 			}
 		}
@@ -1496,7 +1498,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	for _, nat := range mod.Natives {
 		args := nat.Args()
 		for i := 2; i < len(args); i++ {
-			if expr, ok := args[i].(Expr); ok {
+			if expr, ok := unwrapCompiledNode(args[i]).(Expr); ok { // Python: compiled terms
 				collectSymbolsInto(as2, expr, allSyms2)
 			}
 		}
