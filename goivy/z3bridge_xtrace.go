@@ -57,8 +57,12 @@ func NormalizeZ3VarNames(sexpr string) string {
 var fallbackZ3CheckCounter atomic.Int64
 
 func (s *Solver) checkZ3(z3solver *smt.Z3Solver) smt.Z3CheckResult {
+	return s.checkZ3With(z3solver, z3solver.Check)
+}
+
+func (s *Solver) checkZ3With(z3solver *smt.Z3Solver, check func() smt.Z3CheckResult) smt.Z3CheckResult {
 	trace := s.traceZ3CheckEnter(z3solver, 0)
-	result := z3solver.Check()
+	result := check()
 	s.traceZ3Check(z3solver, result, trace)
 	return result
 }

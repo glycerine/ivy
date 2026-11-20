@@ -53,6 +53,25 @@ func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
 }
 func (s *Z3Solver) Assert(e Z3Expr)      { fail(s.c.Assert(e.c)) }
 func (s *Z3Solver) Check() Z3CheckResult { return s.CheckAssumptions(nil) }
+
+// CheckVerificationCondition may use an independent refutation of the active
+// assertions. On every inconclusive result it checks the original solver so a
+// failing Ivy obligation has its concrete counterexample ready for Model.
+func (s *Z3Solver) CheckVerificationCondition() Z3CheckResult {
+	var result Z3CheckResult
+	s.ctx.do(func() {
+		proved, err := s.c.ProveUnsatByOrderAbstraction()
+		fail(err)
+		if proved {
+			result = Unsat
+			return
+		}
+		r, err := s.c.Check()
+		fail(err)
+		result = Z3CheckResult(r)
+	})
+	return result
+}
 func (s *Z3Solver) CheckAssumptions(es []Z3Expr) Z3CheckResult {
 	var result Z3CheckResult
 	s.ctx.do(func() {

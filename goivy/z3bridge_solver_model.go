@@ -13,7 +13,11 @@ import (
 )
 
 func (s *Solver) decideZ3(z3solver *smt.Z3Solver) (smt.Z3CheckResult, error) {
-	result := s.checkZ3(z3solver)
+	return s.decideZ3With(z3solver, z3solver.Check)
+}
+
+func (s *Solver) decideZ3With(z3solver *smt.Z3Solver, check func() smt.Z3CheckResult) (smt.Z3CheckResult, error) {
+	result := s.checkZ3With(z3solver, check)
 	if result == smt.Unknown {
 		fmt.Println(z3solver.ToSMT2())
 		return result, &IvyError{Msg: "Solver produced inconclusive result"}
@@ -1327,7 +1331,7 @@ func (s *Solver) GetSmallModelWithCond(
 				// Python ivy_solver.py:1437 calls decide(s) which emits the
 				// decide() ENTER trace before invoking solver.check.
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				res, err := s.decideZ3(z3solver)
+				res, err := s.decideZ3With(z3solver, z3solver.CheckVerificationCondition)
 				if err != nil {
 					return nil, err
 				}
