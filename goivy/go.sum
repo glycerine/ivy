@@ -30,6 +30,8 @@ github.com/glycerine/g3/pkg v0.1.6-0.20261120141406-df807d94653f h1:iyNuthQxf3R4
 github.com/glycerine/g3/pkg v0.1.6-0.20261120141406-df807d94653f/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
 github.com/glycerine/g3/pkg v0.1.6-0.20261120143311-8191192833af h1:SQI1RBxYMVL8iGKUSmJ9/XNU0J8dqbqbVSqEAWSg6uk=
 github.com/glycerine/g3/pkg v0.1.6-0.20261120143311-8191192833af/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
+github.com/glycerine/g3/pkg v0.1.6-0.20261120150102-8a6ff11631f7 h1:CO1aOtsODbiQDDd34DLRImCYfqJZWZqPYsnUjwZdn2M=
+github.com/glycerine/g3/pkg v0.1.6-0.20261120150102-8a6ff11631f7/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
 github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 h1:gclg6gY70GLy3PbkQ1AERPfmLMMagS60DKF78eWwLn8=
 github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31/go.mod h1:Ogl1Tioa0aV7gstGFO7KhffUsb9M4ydbEbbxpcEDc24=
 github.com/glycerine/greenpack v0.541.0 h1:27vVEEmJTCXfRz7EiHqkAY+uXM54rUKHEAXxqPLC+QE=
