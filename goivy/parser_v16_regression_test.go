@@ -59,9 +59,15 @@ instantiate reflexive(node)
 	if len(mod.LabeledAxioms) == 0 {
 		t.Fatal("compiled module has no labeled axioms")
 	}
+	// Python: the instantiated axiom's lineno is lineno_add_ref(3), a
+	// LocationTuple(instantiation site, line 6, original line 3) whose
+	// str() is the original location.
 	loc := mod.LabeledAxioms[0].GetLineno()
-	if loc.Filename == "" || loc.Line != 3 {
-		t.Fatalf("instantiated axiom location = %#v, want filename and line 3", loc)
+	if loc.Reference == nil || loc.Reference.Line != 3 || loc.Line != 6 {
+		t.Fatalf("instantiated axiom location = %#v, want line 6 referencing line 3", loc)
+	}
+	if got := loc.String(); got != "v16_instantiated_axiom_lines.ivy: line 3: " {
+		t.Fatalf("instantiated axiom prints as %q, want its source line 3", got)
 	}
 	if got := PrettyLF(mod.LabeledAxioms[0], 8); got == "        (internal) (no name)" {
 		t.Fatalf("instantiated axiom pretty-printed as internal: %q", got)

@@ -63,7 +63,8 @@ import "github.com/glycerine/ivy/goivy/xtracer"
 %type <nodes> terms vars simplevars tterms targs tsyms rels funs defns matches optargs optreturns optactualreturns names actseq actseqrev callatoms schdecl schdecls objectargs
 %type <nodes> lparams params bounds invariants decreases eqns moresymbols atoms modifies insts pnames apps upaxes cdefns prod sum places scentranss optwith defargs
 %type <bval>  optdotdotdot opttrusted optfinite optghost
-%type <str>   infix dotsym SYMsubscr
+%type <str>   infix SYMsubscr
+%type <tok>   dotsym
 %type <tok>   SYMBOLx
 %type <tok>   labelname relop actmeth
 
@@ -949,12 +950,15 @@ modinst:
     dotsym
     {
         xtracer.Trace("parser.p_modinst_symbol ENTER (modinst)")
-        $$ = parser16Acfg(parser16lex).NewAtom($1)
+        a := parser16Acfg(parser16lex).NewAtom($1.Val)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: p[0] = p[1] (dotsym's Atom)
+        $$ = a
     }
     | dotsym PARSER16_TOK_LPAREN pnames PARSER16_TOK_RPAREN
     {
         xtracer.Trace("parser.p_modinst_symbol_lp_pnames_rp ENTER (modinst)")
-        a := parser16Acfg(parser16lex).NewAtom($1)
+        a := parser16Acfg(parser16lex).NewAtom($1.Val)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: p[0] = p[1] (dotsym's Atom)
         a.Terms = $3
         $$ = a
     }
@@ -1982,12 +1986,15 @@ defnlhs:
     dotsym
     {
         xtracer.Trace("parser.p_defnlhs_symbol ENTER (defnlhs)")
-        $$ = parser16Acfg(parser16lex).NewAtom($1)
+        a := parser16Acfg(parser16lex).NewAtom($1.Val)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: p[0] = p[1] (dotsym's Atom)
+        $$ = a
     }
     | dotsym PARSER16_TOK_LPAREN defargs PARSER16_TOK_RPAREN
     {
         xtracer.Trace("parser.p_defnlhs_symbol_lparen_defargs_rparen ENTER (defnlhs)")
-        a := parser16Acfg(parser16lex).NewAtom($1)
+        a := parser16Acfg(parser16lex).NewAtom($1.Val)
+        a.SetLineno(tok16Lineno(parser16lex.(*parser16LexAdapter), $1)) // Python: p[0] = p[1] (dotsym's Atom)
         a.Terms = $3
         $$ = a
     }
@@ -2313,12 +2320,13 @@ dotsym:
     SYMBOLx
     {
         xtracer.Trace("parser.p_dotsym_symbol ENTER (dotsym) val=%s", $1.Val)
-        $$ = $1.Val
+        // Python: Atom(p[1]) with lineno = get_lineno(p,1)
+        $$ = $1
     }
     | dotsym PARSER16_TOK_DOT SYMBOLx
     {
         xtracer.Trace("parser.p_dotsym_dotsym_dot_symbol ENTER (dotsym)")
-        $$ = $1 + "." + $3.Val
+        $$ = TokenInfo{Val: $1.Val + "." + $3.Val, Line: $1.Line} // Python: p[0].lineno = p[1].lineno
     }
     ;
 

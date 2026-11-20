@@ -126,7 +126,7 @@ import (
 %type <node>  sort typesymbol
 %type <bval>  optfinite optghost
 %type <nodes> names
-%type <str>   dotsym
+%type <tok>   dotsym
 %type <node>  optin optelse
 
 // Nonterminal types — actions
@@ -1869,14 +1869,13 @@ dotsym:
     SYMBOLx
     {
         xtracer.Trace("parser.p_dotsym_symbol ENTER (dotsym) val=%s", $1.Val)
-        $$ = $1.Val
-        // Python: p[0].lineno = get_lineno(p,1) — emit trace to match
-        _ = tokLineno(parser17lex.(*parser17LexAdapter), $1)
+        // Python: Atom(p[1]) with lineno = get_lineno(p,1)
+        $$ = $1
     }
     | dotsym PARSER_TOK_DOT SYMBOLx
     {
         xtracer.Trace("parser.p_dotsym_dotsym_dot_symbol ENTER (dotsym)")
-        $$ = $1 + "." + $3.Val
+        $$ = TokenInfo{Val: $1.Val + "." + $3.Val, Line: $1.Line} // Python: p[0].lineno = p[1].lineno
     }
     ;
 
@@ -1884,12 +1883,15 @@ defnlhs:
     dotsym
     {
         xtracer.Trace("parser.p_defnlhs_symbol ENTER (defnlhs)")
-        $$ = parser17Acfg(parser17lex).NewAtom($1)
+        a := parser17Acfg(parser17lex).NewAtom($1.Val)
+        a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1)) // Python: p[0] = p[1] (dotsym's Atom)
+        $$ = a
     }
     | dotsym PARSER_TOK_LPAREN defargs PARSER_TOK_RPAREN
     {
         xtracer.Trace("parser.p_defnlhs_symbol_lparen_defargs_rparen ENTER (defnlhs)")
-        a := parser17Acfg(parser17lex).NewAtom($1)
+        a := parser17Acfg(parser17lex).NewAtom($1.Val)
+        a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1)) // Python: p[0] = p[1] (dotsym's Atom)
         a.Terms = $3
         $$ = a
     }
@@ -3107,12 +3109,15 @@ modinst:
     dotsym
     {
         xtracer.Trace("parser.p_modinst_symbol ENTER (modinst)")
-        $$ = parser17Acfg(parser17lex).NewAtom($1)
+        a := parser17Acfg(parser17lex).NewAtom($1.Val)
+        a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1)) // Python: p[0] = p[1] (dotsym's Atom)
+        $$ = a
     }
     | dotsym PARSER_TOK_LPAREN pnames PARSER_TOK_RPAREN
     {
         xtracer.Trace("parser.p_modinst_symbol_lp_pnames_rp ENTER (modinst)")
-        a := parser17Acfg(parser17lex).NewAtom($1)
+        a := parser17Acfg(parser17lex).NewAtom($1.Val)
+        a.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $1)) // Python: p[0] = p[1] (dotsym's Atom)
         a.Terms = $3
         $$ = a
     }

@@ -26,7 +26,8 @@ func ParseFullV16(input string, version Version, opts ...ParseOption) (*ParseRes
 		expandAutoInstances(lex.accum)
 	}
 	if len(lex.accum.errors) > 0 {
-		return nil, lex.accum.errors[0]
+		// Python: if error_list: raise iu.ErrorList(error_list)
+		return nil, parseErrorsResult(lex.accum.errors)
 	}
 	result := lex.accum.toResult()
 	xtracer.Trace("parser.Parse EXIT decls=%d", len(result.Decls))

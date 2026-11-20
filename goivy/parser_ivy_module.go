@@ -6,6 +6,7 @@ package goivy
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -50,23 +51,23 @@ type ivyAccum struct {
 	// include ("this") for the nested parse it starts: that parse's
 	// top-level Ivy consumes it and shares this module's defined dict.
 	pendingParentObject string
-	parent     *ivyAccum // link to enclosing scope; matches Python's global stack
-	decls      []Node
-	modules    map[string]*ModuleDecl
-	macros     map[string]Node
-	actions    map[string]Node
-	included   map[string]bool
-	isModule   bool
-	isObject   bool // Python: stack[-1].is_object — set by objectend
-	params     []Node
-	attributes []string // Python: ivy.attributes — tuple of attribute strings
-	static     map[string]bool
-	defined    map[string][]definedEntry // Python: defaultdict(list)
-	objects    map[string]interface{}    // Python: ivy.objects
-	merkle     MerkleState               // rolling Merkle hash of declared AST nodes
-	astCfg     *AstConfig                // per-parse AST config (replaces globals)
-	filename   string                    // Python: iu.filename used by ParseError.__repr__
-	errors     []*ParseError             // Python: module-level error_list
+	parent              *ivyAccum // link to enclosing scope; matches Python's global stack
+	decls               []Node
+	modules             map[string]*ModuleDecl
+	macros              map[string]Node
+	actions             map[string]Node
+	included            map[string]bool
+	isModule            bool
+	isObject            bool // Python: stack[-1].is_object — set by objectend
+	params              []Node
+	attributes          []string // Python: ivy.attributes — tuple of attribute strings
+	static              map[string]bool
+	defined             map[string][]definedEntry // Python: defaultdict(list)
+	objects             map[string]interface{}    // Python: ivy.objects
+	merkle              MerkleState               // rolling Merkle hash of declared AST nodes
+	astCfg              *AstConfig                // per-parse AST config (replaces globals)
+	filename            string                    // Python: iu.filename used by ParseError.__repr__
+	errors              []*ParseError             // Python: module-level error_list
 }
 
 // --- ast.Node interface for ivyAccum ---
@@ -193,7 +194,7 @@ func (m *ivyAccum) define(name string, lineno Location, cls string, allowRedef b
 			if allowRedef {
 				return
 			}
-			m.reportError(newRedefiningParseError(m.filename, name, lineno))
+			m.reportError(newRedefiningParseError(m.filename, name, lineno, x.Lineno))
 		}
 	}
 	m.defined[name] = append(m.defined[name], definedEntry{Lineno: lineno, DeclType: cls})
@@ -253,8 +254,19 @@ func (m *ivyAccum) declareAllowRedef(decl Node, allowRedef bool) {
 	}
 	declLineno := decl.GetLineno()
 	if definer, ok := decl.(interface{ Defines() []string }); ok {
-		for _, name := range definer.Defines() {
-			m.define(name, declLineno, cls, allowRedef)
+		// Python decl.defines() pairs each name with lineno(c) of the arg
+		// that defines it (None when the arg has no lineno).
+		names := definer.Defines()
+		args := decl.Args()
+		for i, name := range names {
+			loc := declLineno
+			if len(args) == len(names) {
+				loc = Location{}
+				if args[i] != nil {
+					loc = args[i].GetLineno()
+				}
+			}
+			m.define(name, loc, cls, allowRedef)
 		}
 	}
 	// Python ActionDecl.defines():
@@ -310,16 +322,58 @@ func (m *ivyAccum) reportError(err *ParseError) {
 	m.errors = append(m.errors, err)
 }
 
-func newRedefiningParseError(filename, name string, lineno Location) *ParseError {
+// newRedefiningParseError is Python's Redefining(name, lineno, orig_lineno):
+//
+//	msg = 'redefining ' + str(name)
+//	if orig_lineno != None:
+//	    msg += " (from {})".format(str(orig_lineno)[:-2])
+//	line = lineno.line if hasattr(lineno,"line") else lineno
+//
+// (a zero Location stands for Python's None).
+func newRedefiningParseError(filename, name string, lineno, origLineno Location) *ParseError {
 	// Python Redefining.__init__ traces, then calls ParseError.__init__ which
 	// traces again.
 	xtracer.Trace("parser.__init__ ENTER")
 	xtracer.Trace("parser.__init__ ENTER")
+	msg := "redefining " + name
+	if origLineno != (Location{}) {
+		o := origLineno.String()
+		if len(o) >= 2 {
+			o = o[:len(o)-2]
+		}
+		msg += " (from " + o + ")"
+	}
 	return &ParseError{
 		Filename: filename,
 		Lineno:   lineno.Line,
-		Message:  "redefining " + name,
+		Message:  msg,
 	}
+}
+
+// ParseErrorList is Python's iu.ErrorList raised with the parser's
+// error_list: each error's repr on its own line.
+type ParseErrorList struct {
+	Errs []*ParseError
+}
+
+func (l *ParseErrorList) Error() string {
+	parts := make([]string, len(l.Errs))
+	for i, e := range l.Errs {
+		parts[i] = e.Error()
+	}
+	return strings.Join(parts, "\n")
+}
+
+// HasLocation: printed as is, like a located IvyError.
+func (l *ParseErrorList) HasLocation() bool { return true }
+
+// parseErrorsResult returns the accumulated parse errors as Python's
+// ErrorList (a single error is returned as itself).
+func parseErrorsResult(errs []*ParseError) error {
+	if len(errs) == 1 {
+		return errs[0]
+	}
+	return &ParseErrorList{Errs: errs}
 }
 
 // toResult converts the accumulator into a ParseResult.
