@@ -33,8 +33,8 @@ Continued progress: `satClause.go` is now fully converted to typed clauses with
 stable page-encoded handles, separate problem/learned streams, hidden IDs,
 append/growth, restart, shrink, bookmarks/rollback and two-phase compaction.
 Multi-page and remapping tests pass. C pointer/end pairs become slice APIs.
-`pPages` retains only per-page word limits; actual clauses live in a handle map,
-so C byte overlay assumptions must not reappear in solver consumers.
+Each page tracks its word limit and indexes typed clause pointers by even word
+offset. Solver consumers access clauses through their encoded handles.
 
 `drand`/`irand` now live in tested `satRandom.go`. The original solver's decision
 heap update/pop algorithms now live in tested `satOrder.go`; `order_update`,

@@ -39,7 +39,7 @@ func TestSolverAllocationGrowthRestart(t *testing.T) {
 		t.Fatal("restart reuse")
 	}
 	sat_solver_delete(s)
-	if s.Mem.clauses != nil || s.trail != nil || s.wlists != nil {
+	if s.Mem.pPages != nil || s.trail != nil || s.wlists != nil {
 		t.Fatal("owned buffers retained")
 	}
 }

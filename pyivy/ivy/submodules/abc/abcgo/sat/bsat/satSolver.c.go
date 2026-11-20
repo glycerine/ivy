@@ -98,8 +98,14 @@ func sat_solver_memory(s *sat_solver) float64 {
 	for _, v := range []*veci{&s.order, &s.trail_lim, &s.tagged, &s.stack, &s.act_vars, &s.unit_lits, &s.act_clas, &s.temp_clause, &s.conf_final, &s.user_vars, &s.user_values, &s.pivot_vars} {
 		total += uint64(cap(v.ptr)) * 4
 	}
-	for _, c := range s.Mem.clauses {
-		total += uint64(reflect.TypeOf(*c).Size()) + uint64(cap(c.lits))*4
+	total += uint64(cap(s.Mem.pPages)) * uint64(reflect.TypeOf(clausePage{}).Size())
+	for _, page := range s.Mem.pPages {
+		total += uint64(cap(page.slots)) * uint64(reflect.TypeOf((*clause)(nil)).Size())
+		for _, c := range page.slots {
+			if c != nil {
+				total += uint64(reflect.TypeOf(*c).Size()) + uint64(cap(c.lits))*4
+			}
+		}
 	}
 	if p := solverClauseStore(s); p != nil {
 		total += uint64(Sto_ManMemoryReport(p))

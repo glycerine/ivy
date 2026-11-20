@@ -77,7 +77,7 @@ func TestClauseBookmarkRollback(t *testing.T) {
 		t.Fatal("ID after rollback")
 	}
 	Sat_MemRestart(p)
-	if len(p.clauses) != 0 {
+	if len(p.handles(0))+len(p.handles(1)) != 0 {
 		t.Fatal("restart")
 	}
 }
@@ -140,5 +140,74 @@ func TestClauseCompactionAllDeleted(t *testing.T) {
 	h := Sat_MemAppend(p, []int32{8}, 1, 1, 0)
 	if clause_id(Sat_MemClauseHand(p, h)) != 0 {
 		t.Fatal("ID after empty compaction")
+	}
+}
+
+func TestClausePageExtractionAtHighestSize(t *testing.T) {
+	p := Sat_MemAlloc(31)
+	problem := Sat_MemAppend(p, []int32{2, 4}, 2, 0, 0)
+	learned := Sat_MemAppend(p, []int32{3, 5}, 2, 1, 0)
+	if page := Sat_MemHandPage(p, learned); page != 1 {
+		t.Fatalf("learned handle %#x decodes to page %d, want 1", uint32(learned), page)
+	}
+	Sat_MemBookMark(p)
+	Sat_MemAppend(p, []int32{0, 2, 4}, 3, 1, 0)
+	Sat_MemRollBack(p)
+	if Sat_MemClauseHand(p, problem).size != 2 || Sat_MemClauseHand(p, learned).size != 2 || Sat_MemCountL(p) != 1 {
+		t.Fatal("high-bit learned handle did not survive rollback")
+	}
+}
+
+func TestReclaimedClauseHandlesRejectReads(t *testing.T) {
+	p := Sat_MemAlloc(9)
+	first := Sat_MemAppend(p, []int32{2, 4, 6}, 3, 1, 0)
+	other := Sat_MemAppend(p, []int32{1, 3, 5}, 3, 0, 0)
+	Sat_MemBookMark(p)
+	last := first
+	for range 120 {
+		last = Sat_MemAppend(p, []int32{0, 2, 4}, 3, 1, 0)
+	}
+	reject := func(h int32) {
+		t.Helper()
+		defer func() {
+			if recover() == nil {
+				t.Errorf("accepted invalid clause handle %d", h)
+			}
+		}()
+		Sat_MemClauseHand(p, h)
+	}
+	Sat_MemRollBack(p)
+	reject(last)
+	reject(first + 1)
+	reject(first + 2)
+	if Sat_MemClauseHand(p, other).lits[2] != 5 || Sat_MemClauseHand(p, first).lits[2] != 6 {
+		t.Fatal("rollback removed a live clause")
+	}
+	Sat_MemRestart(p)
+	reject(first)
+	reject(other)
+}
+
+func TestRejectedCompactionPreservesLearnedClauses(t *testing.T) {
+	p := Sat_MemAlloc(9)
+	first := Sat_MemAppend(p, []int32{0, 2, 4}, 3, 1, 0)
+	second := Sat_MemAppend(p, []int32{1, 3, 5}, 3, 1, 0)
+	one, two := Sat_MemClauseHand(p, first), Sat_MemClauseHand(p, second)
+	Sat_MemCompactLearned(p, 0)
+	clause_set_id(two, -1) // A stale second relocation must not commit the first.
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Fatal("invalid relocation accepted")
+			}
+		}()
+		Sat_MemCompactLearned(p, 1)
+	}()
+	if clause_id(one) != first || Sat_MemClauseHand(p, first) != one || Sat_MemClauseHand(p, second) != two {
+		t.Fatal("failed compaction changed a live clause or its relocation ID")
+	}
+	Sat_MemCompactLearned(p, 0)
+	if Sat_MemCompactLearned(p, 1) != 2 || clause_id(one) != 0 || clause_id(two) != 1 {
+		t.Fatal("retry failed to restore packed clause IDs")
 	}
 }
