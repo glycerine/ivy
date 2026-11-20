@@ -51,13 +51,11 @@ type DdManager struct {
 	Tree, TreeZ                       *mtr.MtrNode
 	zddUnique                         map[bddUniqueKey]*DdNode
 	addUnique                         map[bddUniqueKey]*DdNode
-	addCache                          map[bddITEKey]*DdNode
 	constants                         map[uint64]*DdNode
 	Vars                              []*DdNode
 	Perm, InvPerm                     []int
 	unique                            map[bddUniqueKey]*DdNode
-	cache                             map[bddITEKey]*DdNode
-	computed                          map[computedKey]*DdNode
+	computed                          computedTable
 	interact                          []uint64
 	nextID                            uint64
 	cacheLookups, cacheHits           uint64
@@ -318,8 +316,8 @@ func NewBDDManager(variables int) *DdManager {
 
 func newEmptyManager() *DdManager {
 	dd := &DdManager{
-		unique: make(map[bddUniqueKey]*DdNode), cache: make(map[bddITEKey]*DdNode),
-		computed: make(map[computedKey]*DdNode), epsilon: 1e-12,
+		unique:     make(map[bddUniqueKey]*DdNode),
+		epsilon:    1e-12,
 		cacheSlots: CUDD_CACHE_SLOTS, maxCacheHard: defaultDataLimit / (nativeCacheBytes * DD_MAX_CACHE_FRACTION),
 		maxLive: ^uint32(0), maxMemory: uint64(^uint(0)), reorderMethod: CUDD_REORDER_SIFT,
 		maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, siftMaxVar: 1000, siftMaxSwap: 2000000,
@@ -338,58 +336,10 @@ func newEmptyManager() *DdManager {
 	dd.Background = dd.Zero
 	dd.PlusInfinity = dd.constant(math.Inf(1))
 	dd.MinusInfinity = dd.constant(math.Inf(-1))
+	dd.resetCacheWindow()
 	return dd
 }
 
-type computedKey struct {
-	operation uintptr
-	f, g, h   *DdNode
-	family    uint8
-}
-
-// Cudd_CacheLookup and Cudd_CacheInsert expose the generic computed table
-// needed by the translated CUDD operator modules.
-func Cudd_CacheLookup(dd *DdManager, operation uintptr, f, g, h *DdNode, family uint8) *DdNode {
-	if dd == nil {
-		return nil
-	}
-	key := computedKey{operation: operation, f: f, g: g, h: h, family: family}
-	dd.cacheLookups++
-	result := dd.computed[key]
-	if result != nil {
-		dd.cacheHits++
-		if family != 2 { // Constant-only queries do not acquire child references.
-			reclaimNode(Cudd_Regular(result))
-		}
-	}
-	return result
-}
-
-func Cudd_CacheInsert(dd *DdManager, operation uintptr, f, g, h, result *DdNode, family uint8) {
-	if dd == nil || result == nil {
-		return
-	}
-	if dd.computed == nil {
-		dd.computed = make(map[computedKey]*DdNode)
-	}
-	if dd.maxCacheHard > 0 && uint32(len(dd.computed)) >= dd.maxCacheHard {
-		clear(dd.computed)
-	}
-	dd.computed[computedKey{operation: operation, f: f, g: g, h: h, family: family}] = result
-}
-
-func Cudd_CacheFlush(dd *DdManager) {
-	if dd != nil {
-		clear(dd.computed)
-	}
-}
-
-func Cudd_CacheSize(dd *DdManager) int {
-	if dd == nil {
-		return 0
-	}
-	return len(dd.computed)
-}
 func Cudd_Regular(n *DdNode) *DdNode {
 	if n == nil {
 		return nil
@@ -701,11 +651,9 @@ func (dd *DdManager) iteChecked(f, g, h *DdNode, check func() bool) *DdNode {
 		g = Cudd_Not(g)
 		h = Cudd_Not(h)
 	}
-	key := bddITEKey{f, g, h}
-	dd.cacheLookups++
-	if n := dd.cache[key]; n != nil {
-		dd.cacheHits++
-		reclaimNode(Cudd_Regular(n))
+	key := computedKey{f: f, g: g, h: h, kind: cacheBDDIte}
+	hash := key.hash()
+	if n := dd.cacheLookup(key, hash, true); n != nil {
 		return Cudd_NotCond(n, invert)
 	}
 	level := min(dd.level(f), min(dd.level(g), dd.level(h)))
@@ -721,7 +669,7 @@ func (dd *DdManager) iteChecked(f, g, h *DdNode, check func() bool) *DdNode {
 		return nil
 	}
 	n := dd.node(uint32(dd.InvPerm[level]), t, e)
-	dd.cache[key] = n
+	dd.cacheInsert(key, n, hash)
 	return Cudd_NotCond(n, invert)
 }
 

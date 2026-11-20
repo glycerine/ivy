@@ -101,8 +101,8 @@ func Cudd_bddLinearTransformInPlace(dd *DdManager, x, y int) bool {
 		nextUnique[key] = node
 	}
 	dd.unique = nextUnique
-	dd.cache = map[bddITEKey]*DdNode{}
-	dd.computed = map[computedKey]*DdNode{}
+	Cudd_CacheFlush(dd)
+
 	return true
 }
 

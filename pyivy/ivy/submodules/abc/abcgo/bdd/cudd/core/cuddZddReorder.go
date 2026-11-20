@@ -225,6 +225,7 @@ func reorderZdd(dd *DdManager, size int, permutation, inverse []int) bool {
 			newUniverse[i] = mapped[Cudd_Regular(fresh)]
 		}
 	}
+	Cudd_CacheFlush(dd)
 	dd.zddUnique = nextTable
 	dd.ZddSize = size
 	dd.PermZ = append(dd.PermZ[:0], permutation...)
@@ -596,8 +597,8 @@ func Cudd_zddReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) 
 	if !dd.runHooks(CUDD_PRE_REORDERING_HOOK, "ZDD", method) {
 		return 0
 	}
-	clear(dd.cache)
-	clear(dd.computed)
+	Cudd_CacheFlush(dd)
+
 	finish := func(result int) int {
 		if result == 0 {
 			return 0

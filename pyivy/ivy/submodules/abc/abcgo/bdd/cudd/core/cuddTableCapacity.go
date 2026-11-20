@@ -228,9 +228,8 @@ func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
 	for level, index := range order {
 		dd.Perm[index] = level
 	}
-	dd.cache = make(map[bddITEKey]*DdNode)
-	clear(dd.computed)
-	clear(dd.addCache)
+	Cudd_CacheFlush(dd)
+
 	dd.tableBDDSize = uint32(len(dd.bddTableSlots))
 	Cudd_FixTableLimits(dd)
 	Cudd_GarbageCollect(dd, true)
@@ -312,8 +311,7 @@ func Cudd_FixTableLimits(dd *DdManager) {
 	dd.minDead = uint32(dd.gcFraction * float64(dd.slotCount))
 	dd.updateCacheSlack()
 	if dd.cacheSlots < dd.slotCount/2 && dd.cacheSlack >= 0 {
-		dd.cacheSlots *= 2
-		dd.cacheSlack -= int32(dd.cacheSlots)
+		Cudd_ResizeCache(dd)
 	}
 }
 

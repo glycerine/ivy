@@ -215,12 +215,10 @@ func (dd *DdManager) andChecked(f, g *DdNode, check func() bool) *DdNode {
 		f, g = g, f
 		fr, gr = gr, fr
 	}
-	key := bddITEKey{f: f, g: g}
+	key := computedKey{f: f, g: g, kind: cacheBDDAnd}
+	hash := key.hash()
 	if fr.Ref != 1 || gr.Ref != 1 {
-		dd.cacheLookups++
-		if r := dd.cache[key]; r != nil {
-			dd.cacheHits++
-			reclaimNode(Cudd_Regular(r))
+		if r := dd.cacheLookup(key, hash, true); r != nil {
 			return r
 		}
 	}
@@ -251,7 +249,7 @@ func (dd *DdManager) andChecked(f, g *DdNode, check func() bool) *DdNode {
 	}
 	r := dd.node(index, t, e)
 	if fr.Ref != 1 || gr.Ref != 1 {
-		dd.cache[key] = r
+		dd.cacheInsert(key, r, hash)
 	}
 	return r
 }
@@ -313,7 +311,7 @@ func (a *bddAllocationAttempt) finish(result **DdNode) {
 		Cudd_Deref(n.T)
 		Cudd_Deref(n.E)
 	}
-	clear(dd.cache)
+	Cudd_CacheFlush(dd)
 	dd.nextID = a.firstID
 }
 

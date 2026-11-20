@@ -77,7 +77,7 @@ func TestADDBoundariesAndManagerIsolation(t *testing.T) {
 		t.Fatal("ADD zero not distinguished from BDD complement")
 	}
 	Cudd_Quit(dd)
-	if len(dd.addUnique) != 0 || len(dd.addCache) != 0 || Cudd_addConst(dd, 2) != nil {
+	if len(dd.addUnique) != 0 || Cudd_CacheSize(dd) != 0 || Cudd_addConst(dd, 2) != nil {
 		t.Fatal("ADD lifecycle cleanup")
 	}
 }

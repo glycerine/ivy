@@ -49,7 +49,7 @@ func TestShuffleHeapPreservesLiveHandlesAndCanonicality(t *testing.T) {
 	if Cudd_ShuffleHeap(dd, order) != 1 {
 		t.Fatal("shuffle failed")
 	}
-	if len(dd.cache) != 0 || len(dd.addCache) != 0 {
+	if Cudd_CacheSize(dd) != 0 {
 		t.Fatal("reordering retained computed tables")
 	}
 	if !reflect.DeepEqual(dd.InvPerm, order) {

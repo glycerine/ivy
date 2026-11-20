@@ -140,9 +140,6 @@ func Cudd_addIte(dd *DdManager, f, g, h *DdNode) *DdNode {
 	if !dd.validAdd(f, g, h) {
 		return nil
 	}
-	if dd.addCache == nil {
-		dd.addCache = map[bddITEKey]*DdNode{}
-	}
 	var visit func(*DdNode, *DdNode, *DdNode) *DdNode
 	visit = func(f, g, h *DdNode) *DdNode {
 		if Cudd_IsConstant(f) {
@@ -154,11 +151,9 @@ func Cudd_addIte(dd *DdManager, f, g, h *DdNode) *DdNode {
 		if g == h {
 			return g
 		}
-		key := bddITEKey{f, g, h}
-		dd.cacheLookups++
-		if n := dd.addCache[key]; n != nil {
-			dd.cacheHits++
-			reclaimNode(n)
+		key := computedKey{f: f, g: g, h: h, kind: cacheADDIte}
+		hash := key.hash()
+		if n := dd.cacheLookup(key, hash, true); n != nil {
 			return n
 		}
 		level := min(dd.level(f), min(dd.level(g), dd.level(h)))
@@ -166,7 +161,7 @@ func Cudd_addIte(dd *DdManager, f, g, h *DdNode) *DdNode {
 		gt, ge := dd.addCofactors(g, level)
 		ht, he := dd.addCofactors(h, level)
 		n := dd.addNode(uint32(dd.InvPerm[level]), visit(ft, gt, ht), visit(fe, ge, he))
-		dd.addCache[key] = n
+		dd.cacheInsert(key, n, hash)
 		return n
 	}
 	return visit(f, g, h)

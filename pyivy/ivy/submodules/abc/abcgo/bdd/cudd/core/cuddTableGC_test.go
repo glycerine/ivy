@@ -58,8 +58,8 @@ func TestCuddTableGCRecursiveDerefAndDeadCacheFiltering(t *testing.T) {
 	if deleted := Cudd_GarbageCollect(dd, true); deleted != 3 {
 		t.Fatalf("GC removed %d nodes, want 3", deleted)
 	}
-	if len(dd.computed) != 1 {
-		t.Fatalf("dead-cache filtering retained %d entries, want one live entry", len(dd.computed))
+	if Cudd_CacheSize(dd) != 1 {
+		t.Fatalf("dead-cache filtering retained %d entries, want one live entry", Cudd_CacheSize(dd))
 	}
 	if dd.unique[bddUniqueKey{root.Index, root.T, root.E}] != nil || dd.unique[bddUniqueKey{leaf.Index, leaf.T, leaf.E}] != nil {
 		t.Fatal("recursive dereference graph remains in unique table")

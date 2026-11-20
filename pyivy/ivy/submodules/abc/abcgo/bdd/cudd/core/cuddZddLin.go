@@ -66,8 +66,8 @@ func linearZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 		}
 	}
 	dd.Univ[y] = dd.Univ[x].T
-	clear(dd.cache)
-	clear(dd.computed)
+	Cudd_CacheFlush(dd)
+
 	return true
 }
 

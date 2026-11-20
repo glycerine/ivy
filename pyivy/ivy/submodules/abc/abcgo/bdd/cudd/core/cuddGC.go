@@ -90,19 +90,11 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	dd.garbageCollections++
 	if clearCache {
 		live := func(n *DdNode) bool { return n == nil || marked[Cudd_Regular(n)] }
-		for key, value := range dd.cache {
-			if !live(key.f) || !live(key.g) || !live(key.h) || !live(value) {
-				delete(dd.cache, key)
-			}
-		}
-		for key, value := range dd.addCache {
-			if !live(key.f) || !live(key.g) || !live(key.h) || !live(value) {
-				delete(dd.addCache, key)
-			}
-		}
-		for key, value := range dd.computed {
-			if !live(key.f) || !live(key.g) || !live(key.h) || !live(value) {
-				delete(dd.computed, key)
+		for slot, entry := range dd.computed.slots {
+			key := entry.key
+			if entry.result != nil && (!live(key.f) || !live(key.g) || !live(key.h) || !live(entry.result)) {
+				dd.computed.slots[slot] = computedEntry{}
+				dd.computed.valid--
 			}
 		}
 	}

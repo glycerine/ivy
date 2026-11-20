@@ -10,11 +10,7 @@ import (
 )
 
 func cuddInitCache(dd *DdManager, cacheSize, maxCacheSize uint32) int32 {
-	if dd == nil || cacheSize == 0 || maxCacheSize < cacheSize {
-		return 0
-	}
-	core.Cudd_CacheFlush(dd)
-	return 1
+	return core.Cudd_InitCache(dd, cacheSize, maxCacheSize)
 }
 
 func cuddCacheInsert(dd *DdManager, op ptruint, f, g, h, data *DdNode) {
@@ -76,14 +72,7 @@ func cuddCacheProfile(dd *DdManager, fp *os.File) int32 {
 }
 
 func cuddCacheResize(dd *DdManager) {
-	if dd == nil {
-		return
-	}
-	// The Go map grows dynamically; enforce the configured hard limit by
-	// evicting the table as a whole, matching CUDD's cache-flush fallback.
-	if uint32(core.Cudd_CacheSize(dd)) >= Cudd_ReadMaxCacheHard(dd) {
-		core.Cudd_CacheFlush(dd)
-	}
+	core.Cudd_ResizeCache(dd)
 }
 
 func cuddCacheFlush(dd *DdManager) { core.Cudd_CacheFlush(dd) }

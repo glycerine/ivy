@@ -261,8 +261,8 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 	dd.constants = nextConstants
 	dd.unique = nextBDD
 	dd.addUnique = nextADD
-	clear(dd.cache)
-	clear(dd.addCache)
+	Cudd_CacheFlush(dd)
+
 	copy(dd.InvPerm, order)
 	for level, index := range order {
 		dd.Perm[index] = level
@@ -409,9 +409,8 @@ func Cudd_ReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) int
 		if !proceed {
 			return 0
 		}
-		clear(dd.cache)
-		clear(dd.addCache)
-		clear(dd.computed)
+		Cudd_CacheFlush(dd)
+
 		return boolToInt(Cudd_EndBDDReordering(dd, started, Cudd_WindowReorder(dd, 0, len(dd.Vars)-1, method) != 0))
 	}
 	symmetric := method == CUDD_REORDER_SYMM_SIFT || method == CUDD_REORDER_SYMM_SIFT_CONV

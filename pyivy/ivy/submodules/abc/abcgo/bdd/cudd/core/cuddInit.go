@@ -81,10 +81,7 @@ func Cudd_Init(numVars, numVarsZ, numSlots, cacheSize uint32, maxMemory uint64) 
 	if dd == nil {
 		return nil
 	}
-	requested := max(cacheSize, dd.slotCount/2)
-	dd.cacheSlots = 1 << (bits.Len32(requested) - 1)
-	dd.maxCacheHard = uint32(maxMemory / (nativeCacheBytes * DD_MAX_CACHE_FRACTION))
-	dd.updateCacheSlack()
+	Cudd_InitCache(dd, cacheSize, uint32(maxMemory/(nativeCacheBytes*DD_MAX_CACHE_FRACTION)))
 	if numVars != 0 {
 		dd.Vars = make([]*DdNode, 0, numVars)
 		dd.Perm = make([]int, 0, numVars)
@@ -99,12 +96,11 @@ func Cudd_Quit(dd *DdManager) {
 		return
 	}
 	dd.closed = true
-	clear(dd.unique)
-	clear(dd.cache)
-	clear(dd.zddUnique)
-	clear(dd.addUnique)
-	clear(dd.addCache)
-	clear(dd.constants)
+	dd.unique = nil
+	dd.computed = computedTable{}
+	dd.zddUnique = nil
+	dd.addUnique = nil
+	dd.constants = nil
 	dd.Vars = nil
 	dd.Perm = nil
 	dd.InvPerm = nil

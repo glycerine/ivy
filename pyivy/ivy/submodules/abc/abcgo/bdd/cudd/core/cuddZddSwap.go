@@ -88,7 +88,7 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	if len(dd.Univ) > y && dd.Univ[x] != nil {
 		dd.Univ[y] = dd.Univ[x].T
 	}
-	clear(dd.cache)
-	clear(dd.computed)
+	Cudd_CacheFlush(dd)
+
 	return true
 }
