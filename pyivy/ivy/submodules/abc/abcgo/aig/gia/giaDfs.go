@@ -28,23 +28,59 @@ func giaDfsPushFanins(stack []giaDfsFrame, p *Gia_Man_t, obj *Gia_Obj_t) []giaDf
 	return append(stack, giaDfsFrame{id: Gia_ObjFaninId0(obj, obj.id)})
 }
 
-// Return the number of requested CIs/nodes, optionally collecting their IDs.
-func giaDfsCollect(p *Gia_Man_t, root int32, result *Vec_Int_t, inputs, nodes bool) int32 {
+// Count without constructing a postorder. Marking on insertion keeps shared
+// nodes from taking multiple slots on the stack.
+func giaDfsCount(p *Gia_Man_t, obj *Gia_Obj_t, countInputs bool) int32 {
+	id := Gia_ObjId(p, obj)
+	if Gia_ObjIsCo(obj) != 0 {
+		id = Gia_ObjFaninId0(obj, id)
+	}
+	var local [32]int32
+	stack := local[:0]
+	marks, epoch := p.pTravIds, p.nTravIds
+	push := func(id int32) {
+		if marks[id] != epoch {
+			marks[id] = epoch
+			stack = append(stack, id)
+		}
+	}
+	push(id)
+	var count int32
+	for len(stack) > 0 {
+		id = stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		obj = p.pObjs[id]
+		if obj.fTerm != 0 {
+			if countInputs {
+				count++
+			}
+			continue
+		}
+		if id == 0 {
+			continue
+		}
+		if !countInputs {
+			count++
+		}
+		push(Gia_ObjFaninId1(obj, id))
+		push(Gia_ObjFaninId0(obj, id))
+		if Gia_ObjIsMuxId(p, id) != 0 {
+			push(int32(p.PMuxes[id] >> 1))
+		}
+	}
+	return count
+}
+
+func giaDfsCollect(p *Gia_Man_t, root int32, result *Vec_Int_t, inputs, nodes bool) {
 	var initial [8]giaDfsFrame
 	stack := initial[:1]
 	stack[0].id = root
-	var count int32
 	for len(stack) > 0 {
 		frame := stack[len(stack)-1]
 		stack = stack[:len(stack)-1]
 		obj := Gia_ManObj(p, frame.id)
 		if frame.expanded {
-			if nodes {
-				if result != nil {
-					Vec_IntPush(result, frame.id)
-				}
-				count++
-			}
+			Vec_IntPush(result, frame.id)
 			continue
 		}
 		if Gia_ObjIsCo(obj) != 0 {
@@ -59,27 +95,19 @@ func giaDfsCollect(p *Gia_Man_t, root int32, result *Vec_Int_t, inputs, nodes bo
 			continue
 		}
 		if Gia_ObjIsCi(obj) != 0 {
-			if inputs {
-				if result != nil {
-					Vec_IntPush(result, frame.id)
-				}
-				count++
+			if inputs && result != nil {
+				Vec_IntPush(result, frame.id)
 			}
 			continue
 		}
 		if Gia_ObjIsAnd(obj) == 0 {
 			panic("gia: unsupported DFS object")
 		}
-		if nodes {
-			if result == nil {
-				count++
-			} else {
-				stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
-			}
+		if nodes && result != nil {
+			stack = append(stack, giaDfsFrame{id: frame.id, expanded: true})
 		}
 		stack = giaDfsPushFanins(stack, p, obj)
 	}
-	return count
 }
 func Gia_ManCollectCis_rec(p *Gia_Man_t, obj *Gia_Obj_t, support *Vec_Int_t) {
 	giaDfsCollect(p, Gia_ObjId(p, obj), support, true, false)
@@ -144,7 +172,7 @@ func Gia_ManCollectTest(p *Gia_Man_t) {
 	fmt.Printf("DFS from each output =%9.2f sec\n", time.Since(start).Seconds())
 }
 func Gia_ManConeSize_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
-	return giaDfsCollect(p, Gia_ObjId(p, obj), nil, false, true)
+	return giaDfsCount(p, obj, false)
 }
 func Gia_ManConeSize(p *Gia_Man_t, roots []int32, count int32) int32 {
 	Gia_ManIncrementTravId(p)

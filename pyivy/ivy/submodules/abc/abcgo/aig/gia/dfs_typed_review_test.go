@@ -226,3 +226,45 @@ func TestObjectPointersAcrossAllocationBlocks(t *testing.T) {
 		t.Fatal("CI handle changed after manager growth")
 	}
 }
+
+func BenchmarkI10OutputCones(b *testing.B) {
+	p, err := Gia_AigerRead("../../../i10.aig", 0, 0, 0)
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer Gia_ManStop(p)
+	outputs := Vec_IntArray(p.vCos)
+	b.ReportAllocs()
+	for b.Loop() {
+		var total int32
+		for i := range outputs {
+			total += Gia_ManConeSize(p, outputs[i:i+1], 1)
+		}
+		if total != 23773 {
+			b.Fatalf("i10 output cones contain %d nodes in total, want 23773", total)
+		}
+	}
+}
+
+func TestConeCountAcrossStackGrowth(t *testing.T) {
+	p := Gia_ManStart(256)
+	defer Gia_ManStop(p)
+	left := Gia_ManAppendCi(p)
+	// Later inputs occupy the pending stack while fanin zero of each
+	// gate descends the chain. Include an overlapping root.
+	var middle int32
+	for i := 0; i < 96; i++ {
+		right := Gia_ManAppendCi(p)
+		left = Gia_ManAppendAnd(p, left, right)
+		if i == 48 {
+			middle = left
+		}
+	}
+	roots := []int32{left >> 1, middle >> 1}
+	if got := Gia_ManConeSize(p, roots, 2); got != 96 {
+		t.Fatalf("cone size %d, want 96", got)
+	}
+	if got := Gia_ManSuppSize(p, roots, 2); got != 97 {
+		t.Fatalf("support size %d, want 97", got)
+	}
+}

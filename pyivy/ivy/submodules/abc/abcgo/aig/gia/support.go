@@ -39,7 +39,7 @@ func Gia_ObjIsTravIdPrevious(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 }
 
 func Gia_ManSuppSize_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
-	return giaDfsCollect(p, Gia_ObjId(p, obj), nil, true, false)
+	return giaDfsCount(p, obj, true)
 }
 func Gia_ManSuppSizeOne(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 	Gia_ManIncrementTravId(p)

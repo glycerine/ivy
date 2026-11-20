@@ -43,7 +43,7 @@ static int hash_chain(void)
 int main(int argc, char **argv)
 {
     if (argc != 2 && argc != 3) {
-        fprintf(stderr, "usage: %s cone | hash | load i10.aig\n", argv[0]);
+        fprintf(stderr, "usage: %s cone | hash | (load|cones) i10.aig\n", argv[0]);
         return 2;
     }
     int runs;
@@ -62,6 +62,23 @@ int main(int argc, char **argv)
             if (Gia_ManConeSize(p, &root, 1) != 1024)
                 return 1;
         printf("cone %.0f ns/op\n", (now() - start) * 1e9 / runs);
+        Gia_ManStop(p);
+        return 0;
+    }
+    if (argc == 3 && !strcmp(argv[1], "cones")) {
+        Gia_Man_t *p = Gia_AigerRead(argv[2], 0, 0, 0);
+        if (!p)
+            return 1;
+        runs = 4000;
+        long long total = 0;
+        start = now();
+        for (int i = 0; i < runs; ++i) {
+            for (int j = 0; j < Gia_ManCoNum(p); ++j) {
+                int root = Gia_ObjId(p, Gia_ManCo(p, j));
+                total += Gia_ManConeSize(p, &root, 1);
+            }
+        }
+        printf("cones %.0f ns/op, %lld nodes/sweep\n", (now() - start) * 1e9 / runs, total / runs);
         Gia_ManStop(p);
         return 0;
     }
