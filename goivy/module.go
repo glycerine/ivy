@@ -25,8 +25,8 @@ type Module struct {
 	LabeledInits  []*LabeledFormula
 	LabeledConjs  []*LabeledFormula // conjectures
 	Assertions    []*LabeledFormula
-	Postconds     map[string][]*LabeledFormula // action name → postconditions
-	AssumedInvs   []*LabeledFormula            // assumed invariants
+	Postconds     *InsMap[string, []*LabeledFormula] // action name → postconditions (Python defaultdict(list))
+	AssumedInvs   []*LabeledFormula                  // assumed invariants
 
 	// Relations and functions
 	Relations *InsMap[NodeKey, Sort]
@@ -269,7 +269,7 @@ func (m *Module) Clear() {
 	m.ConceptSpaces = nil
 	m.AbstractionPredicates = nil
 	m.LabeledConjs = nil
-	m.Postconds = make(map[string][]*LabeledFormula)
+	m.Postconds = NewInsMap[string, []*LabeledFormula]()
 	m.Hierarchy = NewInsMap[string, *InsMap[string, bool]]()
 	m.Actions = NewInsMap[string, Action]()
 	m.Predicates = make(map[string]Node)
@@ -395,7 +395,7 @@ func (m *Module) Copy() *Module {
 	copy(c.SymbolOrder, m.SymbolOrder)
 
 	// Copy maps
-	c.Postconds = copyMapLF(m.Postconds)
+	c.Postconds = copyInsMapLF(m.Postconds)
 	c.Relations = NewInsMap[NodeKey, Sort]()
 	for k, v := range m.Relations.All() {
 		c.Relations.Set(k, v)
@@ -736,10 +736,13 @@ func copyLFSlice(s []*LabeledFormula) []*LabeledFormula {
 	return c
 }
 
-func copyMapLF(m map[string][]*LabeledFormula) map[string][]*LabeledFormula {
-	c := make(map[string][]*LabeledFormula, len(m))
-	for k, v := range m {
-		c[k] = copyLFSlice(v)
+func copyInsMapLF(m *InsMap[string, []*LabeledFormula]) *InsMap[string, []*LabeledFormula] {
+	c := NewInsMap[string, []*LabeledFormula]()
+	if m == nil {
+		return c
+	}
+	for k, v := range m.All() {
+		c.Set(k, copyLFSlice(v))
 	}
 	return c
 }

@@ -99,7 +99,7 @@ func (m *Module) CanonSnapshot(label string) {
 	xtracer.Trace("module.CanonSnapshot %s publicActions=%s", label, canonInsMapBool(m.PublicActions))
 
 	// Group 9: Postconds
-	xtracer.Trace("module.CanonSnapshot %s postconds=%s", label, canonPostcondsMap(m.Postconds))
+	xtracer.Trace("module.CanonSnapshot %s postconds=%s", label, canonPostcondsMap(m.Postconds.AsMap()))
 
 	// Group 10: Initializers
 	xtracer.Trace("module.CanonSnapshot %s initializers=%s", label, canonNamedActionSlice(m.Initializers))

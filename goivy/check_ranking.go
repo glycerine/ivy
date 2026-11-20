@@ -608,9 +608,9 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 	})
 	model.Calls = append(model.Calls, "_idle")
 	if model.Postconds == nil {
-		model.Postconds = make(map[string][]*LabeledFormula)
+		model.Postconds = NewInsMap[string, []*LabeledFormula]()
 	}
-	model.Postconds["_idle"] = postconds
+	model.Postconds.Set("_idle", postconds)
 
 	// ---------------------------------------------------------------
 	// Step 10: Init action (ranking-specific: no monitor state vars)

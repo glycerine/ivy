@@ -222,7 +222,7 @@ type NormalProgram struct {
 	Invars    []*LabeledFormula
 	Asms      []*LabeledFormula
 	Calls     []string
-	Postconds map[string][]*LabeledFormula // optional postconditions
+	Postconds *InsMap[string, []*LabeledFormula] // optional postconditions
 }
 
 // Fmlas returns all component formulas of the program.
@@ -241,7 +241,7 @@ func (np *NormalProgram) Fmlas() []Node {
 	for _, asm := range np.Asms {
 		res = append(res, asm)
 	}
-	for _, pcs := range np.Postconds {
+	for _, pcs := range np.Postconds.All() {
 		for _, pc := range pcs {
 			res = append(res, pc)
 		}
@@ -281,7 +281,7 @@ func (np *NormalProgram) Formulas() []interface{} {
 		res = append(res, asm)
 	}
 	if np.Postconds != nil {
-		for _, pcs := range np.Postconds {
+		for _, pcs := range np.Postconds.All() {
 			for _, pc := range pcs {
 				res = append(res, pc)
 			}
@@ -313,7 +313,7 @@ func (np *NormalProgram) Canon() Canonical {
 	b.WriteString(" calls:")
 	appendTemporalStringSliceCanon(&b, np.Calls)
 	b.WriteString(" postconds:")
-	appendPostcondsHashCanon(&b, np.Postconds)
+	appendPostcondsHashCanon(&b, np.Postconds.AsMap())
 	b.WriteByte(')')
 	return Canonical(b.String())
 }

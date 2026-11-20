@@ -775,7 +775,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *NormalProgram) 
 	}
 
 	if model.Postconds == nil && cfg.Postconds != nil {
-		model.Postconds = make(map[string][]*LabeledFormula)
+		model.Postconds = NewInsMap[string, []*LabeledFormula]()
 	}
 
 	for i, b := range model.Bindings {
@@ -810,7 +810,7 @@ func SharedStep8_PatchExports(cfg *InstrumentationConfig, model *NormalProgram) 
 		model.Bindings[i] = b.CloneAction(b.Action.CloneStmt(newStmt))
 
 		if cfg.Postconds != nil {
-			model.Postconds[b.Name] = cfg.Postconds
+			model.Postconds.Set(b.Name, cfg.Postconds)
 		}
 	}
 }

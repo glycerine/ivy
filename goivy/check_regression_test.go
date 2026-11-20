@@ -575,11 +575,15 @@ func TestRegression_Bug19_NormalProgramIsASTNode(t *testing.T) {
 func TestRegression_Bug19_TemporalModelsHoldsNormalProgram(t *testing.T) {
 	acfg := NewAstConfig()
 	np := &NormalProgram{
-		Invars:    []*LabeledFormula{acfg.NewLabeledFormula(nil, True)},
-		Asms:      []*LabeledFormula{acfg.NewLabeledFormula(nil, True)},
-		Calls:     []string{"action1", "action2"},
-		Init:      NewSequence(),
-		Postconds: map[string][]*LabeledFormula{"action1": {acfg.NewLabeledFormula(nil, True)}},
+		Invars: []*LabeledFormula{acfg.NewLabeledFormula(nil, True)},
+		Asms:   []*LabeledFormula{acfg.NewLabeledFormula(nil, True)},
+		Calls:  []string{"action1", "action2"},
+		Init:   NewSequence(),
+		Postconds: func() *InsMap[string, []*LabeledFormula] {
+			m := NewInsMap[string, []*LabeledFormula]()
+			m.Set("action1", []*LabeledFormula{acfg.NewLabeledFormula(nil, True)})
+			return m
+		}(),
 	}
 
 	// Store in TemporalModels (requires ast.Node)
@@ -596,8 +600,8 @@ func TestRegression_Bug19_TemporalModelsHoldsNormalProgram(t *testing.T) {
 	if len(extracted.Calls) != 2 {
 		t.Errorf("round-trip Calls: expected 2, got %d", len(extracted.Calls))
 	}
-	if len(extracted.Postconds) != 1 {
-		t.Errorf("round-trip Postconds: expected 1, got %d", len(extracted.Postconds))
+	if extracted.Postconds.Len() != 1 {
+		t.Errorf("round-trip Postconds: expected 1, got %d", extracted.Postconds.Len())
 	}
 	if extracted.Init == nil {
 		t.Error("round-trip Init should be non-nil")

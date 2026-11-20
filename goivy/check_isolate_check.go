@@ -374,7 +374,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 					continue
 				}
 				if post != nil {
-					pcs := mod.Postconds[actname]
+					pcs := mod.Postconds.Get(actname)
 					CheckConjsInStateWithAG(mod, ag, post, 12, pcs)
 				}
 			}
