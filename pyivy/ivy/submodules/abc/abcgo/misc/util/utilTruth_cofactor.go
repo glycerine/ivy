@@ -170,9 +170,23 @@ func Abc_TtHasVar(t []word, n, v int32) int32 {
 	if v < 0 || v >= n {
 		panic("truth: variable outside support")
 	}
-	for i := 0; i < int(ttWords(n))*64; i++ {
-		if i&(1<<v) == 0 && ttBit(t, i) != ttBit(t, i|(1<<v)) {
-			return 1
+	words := t[:ttWords(n)]
+	if v < 6 {
+		shift := uint(1 << v)
+		mask := s_Truths6Neg[v]
+		for _, value := range words {
+			if (value^(value>>shift))&mask != 0 {
+				return 1
+			}
+		}
+	} else {
+		step := 1 << (v - 6)
+		for base := 0; base < len(words); base += 2 * step {
+			for j := 0; j < step; j++ {
+				if words[base+j] != words[base+step+j] {
+					return 1
+				}
+			}
 		}
 	}
 	return 0
@@ -266,12 +280,39 @@ func Abc_TtSwapVars(t []word, n, i, j int32) {
 	if i == j {
 		return
 	}
-	ttMap(t, ttWords(n), func(k int) int {
-		if (k>>i)&1 != (k>>j)&1 {
-			k ^= 1<<i | 1<<j
+	if i > j {
+		i, j = j, i
+	}
+	words := t[:ttWords(n)]
+	if j < 6 {
+		masks := s_PPMasks[i][j]
+		shift := uint((1 << j) - (1 << i))
+		for w, x := range words {
+			words[w] = x&masks[0] | (x&masks[1])<<shift | (x&masks[2])>>shift
 		}
-		return k
-	})
+		return
+	}
+	jStep := 1 << (j - 6)
+	if i < 6 {
+		mask := s_Truths6[i]
+		shift := uint(1 << i)
+		for base := 0; base < len(words); base += 2 * jStep {
+			for k := base; k < base+jStep; k++ {
+				lo, hi := words[k], words[k+jStep]
+				words[k] = lo&^mask | (hi<<shift)&mask
+				words[k+jStep] = hi&mask | (lo&mask)>>shift
+			}
+		}
+		return
+	}
+	iStep := 1 << (i - 6)
+	for base := 0; base < len(words); base += 2 * jStep {
+		for group := base; group < base+jStep; group += 2 * iStep {
+			for k := group; k < group+iStep; k++ {
+				words[k+iStep], words[k+jStep] = words[k+jStep], words[k+iStep]
+			}
+		}
+	}
 }
 func Abc_TtSwapAdjacent(t []word, n, v int32) {
 	if v < 5 {

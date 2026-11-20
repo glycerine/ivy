@@ -1,7 +1,11 @@
 // Package mf ports the cut mapper and mapped-CNF generator from giaMf.c.
 package mf
 
-import "math/bits"
+import (
+	"math/bits"
+
+	"github.com/glycerine/abcgo/misc/util"
+)
 
 const epsilon float32 = 0.005
 const maxLeaves = 10
@@ -114,63 +118,18 @@ func isContained(cuts []Cut, leaves []int32) bool {
 // truth words at the configured LUT width; smaller supports repeat their table.
 func expandTruth(table []uint64, old, merged []int32, width int, complement bool) []uint64 {
 	result := make([]uint64, 1<<max(0, width-6))
-	positions := make([]int, len(old))
-	for i, leaf := range old {
-		for positions[i] < len(merged) && merged[positions[i]] != leaf {
-			positions[i]++
-		}
-		if positions[i] == len(merged) {
-			panic("mf: merged cut omitted a leaf")
+	copy(result, table)
+	if complement {
+		for i := range result {
+			result[i] = ^result[i]
 		}
 	}
-	for assignment := 0; assignment < len(result)*64; assignment++ {
-		oldAssignment := 0
-		for i, position := range positions {
-			oldAssignment |= ((assignment >> uint(position)) & 1) << uint(i)
-		}
-		value := table[oldAssignment>>6] >> uint(oldAssignment&63) & 1
-		if complement {
-			value ^= 1
-		}
-		result[assignment>>6] |= value << uint(assignment&63)
-	}
+	util.Abc_TtExpand(result, int32(width), old, int32(len(old)), merged, int32(len(merged)))
 	return result
 }
 
-// minimizeSupport removes truth-independent variables, preserving sorted leaves
-// and the source convention of repeating the reduced table to the LUT width.
+// The candidate owns both arrays. Compact its leaves and truth table in place.
 func minimizeSupport(table []uint64, leaves []int32, width int) ([]uint64, []int32) {
-	supported := make([]int, 0, len(leaves))
-	for variable := range leaves {
-		dependent := false
-		for assignment := 0; assignment < 1<<len(leaves); assignment++ {
-			if assignment&(1<<uint(variable)) != 0 {
-				continue
-			}
-			other := assignment | 1<<uint(variable)
-			if (table[assignment>>6]>>uint(assignment&63)^table[other>>6]>>uint(other&63))&1 != 0 {
-				dependent = true
-				break
-			}
-		}
-		if dependent {
-			supported = append(supported, variable)
-		}
-	}
-	if len(supported) == len(leaves) {
-		return table, leaves
-	}
-	result := make([]uint64, 1<<max(0, width-6))
-	reduced := make([]int32, len(supported))
-	for i, variable := range supported {
-		reduced[i] = leaves[variable]
-	}
-	for assignment := 0; assignment < len(result)*64; assignment++ {
-		original := 0
-		for i, variable := range supported {
-			original |= ((assignment >> uint(i)) & 1) << uint(variable)
-		}
-		result[assignment>>6] |= (table[original>>6] >> uint(original&63) & 1) << uint(assignment&63)
-	}
-	return result, reduced
+	count := util.Abc_TtMinBase(table, leaves, int32(len(leaves)), int32(width))
+	return table, leaves[:count]
 }

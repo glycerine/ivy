@@ -197,3 +197,22 @@ func TestGenerateCNFRandomStressOriginalABC(t *testing.T) {
 		})
 	}
 }
+
+func TestI10MappedCNFMatchesC(t *testing.T) {
+	data, err := os.ReadFile("../../../../i10.aig")
+	if err != nil {
+		t.Fatal(err)
+	}
+	m, err := ioa.Read(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := originalABCCNF(t, m)
+	got, err := GenerateModelCNF(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.Variables != want.Variables || !reflect.DeepEqual(got.Clauses, want.Clauses) {
+		t.Fatalf("i10 variables %d/%d, clauses %d/%d (Go/C)", got.Variables, want.Variables, len(got.Clauses), len(want.Clauses))
+	}
+}

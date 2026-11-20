@@ -77,3 +77,19 @@ func TestSourceMFDriverPublishesTypedData(t *testing.T) {
 		t.Fatal("CNF data ownership")
 	}
 }
+
+func BenchmarkI10MappedSAT(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		p, err := Gia_AigerRead("../../../i10.aig", 0, 0, 0)
+		if err != nil {
+			b.Fatal(err)
+		}
+		solver := Gia_ManSatokoCreate(p, nil)
+		if solver == nil || solver.Solve() != satoko.SATOKO_SAT {
+			b.Fatal("expected satisfiable i10 output disjunction")
+		}
+		solver.Destroy()
+		Gia_ManStop(p)
+	}
+}

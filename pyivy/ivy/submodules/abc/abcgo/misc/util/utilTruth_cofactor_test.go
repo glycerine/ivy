@@ -166,3 +166,28 @@ func TestTruthXorVariableCofactors(t *testing.T) {
 		t.Fatal("xor-variable cofactor predicate")
 	}
 }
+
+func TestTruthSwapsAcrossWordBoundaries(t *testing.T) {
+	r := rand.New(rand.NewSource(741))
+	for n := int32(6); n <= 10; n++ {
+		original := make([]word, ttWords(n))
+		for i := range original {
+			original[i] = r.Uint64()
+		}
+		for hi := int32(0); hi < n; hi++ {
+			for lo := int32(0); lo <= hi; lo++ {
+				swapped := append([]word(nil), original...)
+				Abc_TtSwapVars(swapped, n, hi, lo)
+				for dst := 0; dst < len(original)*64; dst++ {
+					src := dst
+					if (dst>>hi ^ dst>>lo)&1 != 0 {
+						src ^= 1<<hi | 1<<lo
+					}
+					if ttBit(swapped, dst) != ttBit(original, src) {
+						t.Fatalf("width %d swap %d,%d assignment %d", n, hi, lo, dst)
+					}
+				}
+			}
+		}
+	}
+}
