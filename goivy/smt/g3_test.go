@@ -166,3 +166,38 @@ func TestG3VerificationConditionFallsBackUnderMemoryPressure(t *testing.T) {
 		})
 	}
 }
+
+func TestG3EnumSortReleasesUnusedTesters(t *testing.T) {
+	ctx := NewZ3Context()
+	defer ctx.Close()
+	names := []string{"north", "south", "west"}
+	sort, values := ctx.EnumSort("Direction", names)
+	manager, err := ctx.c.Manager()
+	if err != nil {
+		t.Fatal(err)
+	}
+	before := manager.Stats().LiveNodes
+	// Each tester must be recreated on demand. Its constructor is still
+	// owned by the corresponding enumeration value.
+	for i, value := range values {
+		tester, err := ctx.c.DatatypeRecognizer(sort.c, uint32(i))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := ctx.c.IncASTRef(tester); err != nil {
+			t.Fatal(err)
+		}
+		if got := manager.Stats().LiveNodes; got != before+1 {
+			t.Fatalf("tester %d: got %d live nodes, want %d", i, got, before+1)
+		}
+		if err := ctx.c.DecASTRef(tester); err != nil {
+			t.Fatal(err)
+		}
+		if got := manager.Stats().LiveNodes; got != before {
+			t.Fatalf("tester %d left %d live nodes, want %d", i, got, before)
+		}
+		if got := value.String(); got != names[i] {
+			t.Fatalf("enum value %d: %s", i, got)
+		}
+	}
+}

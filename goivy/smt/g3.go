@@ -169,6 +169,19 @@ func (ctx *Z3Context) Ite(c, t, e Z3Expr) Z3Expr {
 func (ctx *Z3Context) EnumSort(name string, elements []string) (Z3Sort, []Z3Expr) {
 	en, err := ctx.c.EnumerationSort(name, elements)
 	fail(err)
+	// The native RC API keeps every tester on its temporary result trail.
+	// A tester holds its constructor, so release the testers in declaration
+	// order after the returned values own all their constructors.
+	held := 0
+	defer func() {
+		for _, tester := range en.Recognizers[:held] {
+			fail(ctx.c.DecASTRef(tester))
+		}
+	}()
+	for _, tester := range en.Recognizers {
+		fail(ctx.c.IncASTRef(tester))
+		held++
+	}
 	s := ctx.newSort(en.Sort)
 	es := make([]Z3Expr, len(en.Constants))
 	for i, d := range en.Constants {
