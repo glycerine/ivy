@@ -86,7 +86,7 @@ func checkAigNodes(m *Abc_Aig_t) int32 {
 		if a.Object == b.Object || a.Object == m.Network.constant || b.Object == m.Network.constant || Abc_ObjFanoutNum(a.Object) == 0 || Abc_ObjFanoutNum(b.Object) == 0 {
 			return 0
 		}
-		if m.Network.hashed[andHashKey(edgePair(a, b))] == o.Signal() {
+		if m.Network.hashed[andHashKey(edgePair(a, b))] == o {
 			continue
 		}
 		e, ok := m.Network.lookupAnd(a, b)
@@ -237,7 +237,7 @@ func Abc_AigResize(m *Abc_Aig_t) {
 	m.bins = int(util.Abc_PrimeCudd(uint32(3 * m.bins)))
 	for key, group := range m.Network.duplicateAnds {
 		slices.Reverse(group)
-		m.Network.hashed[key] = group[len(group)-1].Signal()
+		m.Network.hashed[key] = group[len(group)-1]
 	}
 }
 

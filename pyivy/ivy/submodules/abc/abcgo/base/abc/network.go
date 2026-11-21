@@ -152,14 +152,14 @@ type Network struct {
 	Name, Spec          string
 	objects             []*Object
 	names               *nm.Manager
-	hashed              map[[2]int]Edge
+	hashed              map[[2]int]*Object
 	duplicateAnds       map[[2]int][]*Object
 	extraAnds           int
 	constant            *Object
 }
 
 func NewNetwork(name string) *Network {
-	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]int]Edge)}
+	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]int]*Object)}
 	n.constant = n.NewObject(ObjectConst1)
 	n.constant.Phase = true
 	return n
@@ -169,21 +169,27 @@ func NewNetwork(name string) *Network {
 // the supplied terminal counts and estimated ANDs. Hashing may fold most gates,
 // so limit the speculative reservation until the network actually grows.
 func NewAIGNetworkWithCapacity(name string, inputs, latches, outputs, ands int) *Network {
-	if inputs < 0 || latches < 0 || outputs < 0 || ands < 0 {
-		panic("negative AIG network capacity")
-	}
 	n := NewNetwork(name)
+	n.ReserveAIG(inputs, latches, outputs, ands)
+	return n
+}
+
+// ReserveAIG reserves room for the specified additional terminals and gates.
+// Bound speculative gate storage because structural hashing can fold gates away.
+func (n *Network) ReserveAIG(inputs, latches, outputs, ands int) {
+	if inputs < 0 || latches < 0 || outputs < 0 || ands < 0 {
+		panic("negative AIG capacity")
+	}
 	gates := min(ands, 4096)
+	if gates > cap(n.kindOrder[ObjectNode])-len(n.kindOrder[ObjectNode]) && len(n.hashed) == 0 {
+		n.hashed = make(map[[2]int]*Object, gates)
+	}
 	n.objects = slices.Grow(n.objects, inputs+3*latches+outputs+gates)
 	n.kindOrder[ObjectNode] = slices.Grow(n.kindOrder[ObjectNode], gates)
 	n.kindOrder[ObjectPI] = slices.Grow(n.kindOrder[ObjectPI], inputs)
 	n.kindOrder[ObjectPO] = slices.Grow(n.kindOrder[ObjectPO], outputs)
 	n.cis = slices.Grow(n.cis, inputs+latches)
 	n.cos = slices.Grow(n.cos, outputs+latches)
-	if gates != 0 {
-		n.hashed = make(map[[2]int]Edge, gates)
-	}
-	return n
 }
 
 func (n *Network) NewObject(kind ObjectKind) *Object {

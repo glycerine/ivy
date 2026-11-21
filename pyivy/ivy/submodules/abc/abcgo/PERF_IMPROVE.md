@@ -1078,3 +1078,11 @@ Three final 30-solve batches per implementation gave the following medians, alte
 | 64 | 131.432 | 138.659 | 56.685 | 72.537 |
 
 The remaining eight-input sorter gap was 0.034 ms in this batch. Final i10 medians were 19.84 ms in Go and 19.97 ms in C across four 30-solve processes each. For one solve per fresh process they were 21.23 ms in Go and 20.99 ms in C across eight processes each, excluding startup. The Go CPU profile placed 45.9% of cumulative samples in cut truth computation.
+
+### Reduce structural hash storage during balancing
+
+The hash key already encodes the polarity of both fanins. Its value always identifies a regular AND object, so the hash now stores that object pointer directly. Balancing reserves space for up to 4,096 estimated ANDs in its destination using the same capacity routine as the AIGER reader. The new test grows a partially built network with distinct positive and complemented keys and two duplicate gates. Replacing the populated hash made the test fail because lookup selected the older duplicate.
+
+In two 550-iteration Go trials, reserving the destination alone reduced read plus balance from 3,545,816 to 3,298,296 bytes. Narrowing the hash value alone used 3,384,936 bytes. Together they used 3,188,728 bytes and 11,193 allocations, with the same 2,396 ANDs at depth 37. The combined trial took 3.95–4.01 ms versus 4.28–4.30 ms before. Final production measurements during a module rebuild took 4.26–4.30 ms versus 4.39–4.58 ms before. Release C took 1.41 ms in the earlier matched balance driver.
+
+In three final 22-proof batches on CPU 16 the median i10 equivalence proof took 218.75 ms in Go and 210.35 ms in release C. Go allocated about 42.1 MB and 221,258 objects per proof. Both returned equivalent on a 5,051-AND miter. The base/abc, base/io and base/abci packages passed their normal and race suites.

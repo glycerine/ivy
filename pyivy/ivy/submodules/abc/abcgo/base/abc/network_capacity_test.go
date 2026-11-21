@@ -72,3 +72,23 @@ func TestAndPinStorageReleasesRetiredConnections(t *testing.T) {
 		t.Error("detached AND retained a driver or fanout after network teardown")
 	}
 }
+
+func TestReserveAIGPreservesPhasedHashHeads(t *testing.T) {
+	n := NewNetwork("partial")
+	m := Abc_AigAlloc(n)
+	a, b := n.NewObject(ObjectPI).Signal(), n.NewObject(ObjectPI).Signal()
+	positive := m.createAndEdges(a, b)
+	first := m.createAndEdges(a.Not(), b)
+	head := m.createAndEdges(b, a.Not())
+	count := Abc_NtkObjNum(n)
+	n.ReserveAIG(3, 0, 2, 1<<28)
+	if Abc_NtkObjNum(n) != count || Abc_NtkNodeNum(n) != 3 || n.Object(first.Object.ID) != first.Object {
+		t.Fatal("reservation changed object count or identity")
+	}
+	if m.LookupAndEdges(b, a) != positive || m.LookupAndEdges(a.Not(), b) != head {
+		t.Fatal("reservation displaced a phased pair or changed its duplicate head")
+	}
+	if Abc_AigAnd(m, b, a.Not()) != head || cap(n.kindOrder[ObjectNode]) > 8192 {
+		t.Fatal("unexpected growth or duplicate creation after reserving")
+	}
+}

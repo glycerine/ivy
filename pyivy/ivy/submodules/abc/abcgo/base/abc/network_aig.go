@@ -57,16 +57,14 @@ func (n *Network) lookupAndAllowed(a, b Edge, excluded map[*Object]bool) (Edge, 
 		return o.Signal(), true
 	}
 	if found := findAndFanout(pair, excluded); found != nil {
-		e := found.Signal()
-		n.hashed[key] = e
-		return e, true
+		n.hashed[key] = found
+		return found.Signal(), true
 	}
 	return Edge{}, false
 }
 
 func (n *Network) cachedAnd(pair [2]Edge, key [2]int) *Object {
-	for e := n.hashed[key]; e.Object != nil; e = n.hashed[key] {
-		o := e.Object
+	for o := n.hashed[key]; o != nil; o = n.hashed[key] {
 		if n.contains(o) && aigNode(o) && edgePair(o.fanins[0], o.fanins[1]) == pair {
 			return o
 		}
@@ -108,7 +106,7 @@ func (n *Network) registerAnd(o *Object) {
 		n.duplicateAnds[key] = append(group, o)
 		n.extraAnds++
 	}
-	n.hashed[key] = o.Signal()
+	n.hashed[key] = o
 }
 
 // Remove the object from its old key before editing its fanins or function.
@@ -130,8 +128,8 @@ func (n *Network) removeAndKey(key [2]int, o *Object) {
 				n.duplicateAnds[key] = group
 			}
 		}
-		n.hashed[key] = group[len(group)-1].Signal()
-	} else if n.hashed[key].Object == o {
+		n.hashed[key] = group[len(group)-1]
+	} else if n.hashed[key] == o {
 		delete(n.hashed, key)
 	}
 }
@@ -142,7 +140,7 @@ func (n *Network) changedAnd(o *Object) {
 		return
 	}
 	key := andHashKey(edgePair(o.fanins[0], o.fanins[1]))
-	if head := n.hashed[key].Object; head != nil && head.ID > o.ID && len(n.duplicateAnds[key]) == 0 {
+	if head := n.hashed[key]; head != nil && head.ID > o.ID && len(n.duplicateAnds[key]) == 0 {
 		delete(n.hashed, key)
 	}
 }
@@ -177,7 +175,7 @@ func (n *Network) AndEdges(a, b Edge) Edge {
 		return e
 	}
 	e := n.CreateAndEdges(a, b)
-	n.hashed[andHashKey(edgePair(a, b))] = e
+	n.hashed[andHashKey(edgePair(a, b))] = e.Object
 	return e
 }
 
