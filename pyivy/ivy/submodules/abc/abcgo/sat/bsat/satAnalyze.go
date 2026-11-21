@@ -14,7 +14,7 @@ func (a *satAssignments) tagVariable(v, tag int32) {
 	if a.tags[v] == 0 {
 		veci_push(&a.tagged, v)
 	}
-	a.tags[v] = tag
+	a.tags[v] = uint8(tag)
 }
 func (a *satAssignments) clearTags(start int32) {
 	for _, v := range veci_begin(&a.tagged)[start:] {

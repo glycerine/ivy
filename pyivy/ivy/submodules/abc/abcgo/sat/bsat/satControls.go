@@ -45,7 +45,7 @@ func sat_solver_set_polarity(s *sat_solver, vars []int32, n int32) {
 }
 func sat_solver_set_literal_polarity(s *sat_solver, literals []lit, n int32) {
 	for _, l := range literals[:n] {
-		s.polarity[lit_var(l)] = 1 - lit_sign(l)
+		s.polarity[lit_var(l)] = uint8(1 - lit_sign(l))
 	}
 }
 func sat_solver_final(s *sat_solver, out *[]lit) int32 {

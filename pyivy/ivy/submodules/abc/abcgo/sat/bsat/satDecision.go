@@ -1,34 +1,34 @@
 package bsat
 
 const (
-	var0 int32 = 1
-	var1 int32 = 0
-	varX int32 = satUnassigned
+	var0 = 1
+	var1 = 0
+	varX = satUnassigned
 )
 
 func var_level(s *sat_solver, v int32) int32 { return s.levels[v] }
-func var_value(s *sat_solver, v int32) int32 { return s.assigns[v] }
-func var_polar(s *sat_solver, v int32) int32 { return s.polarity[v] }
+func var_value(s *sat_solver, v int32) int32 { return int32(s.assigns[v]) }
+func var_polar(s *sat_solver, v int32) int32 { return int32(s.polarity[v]) }
 
 func var_set_level(s *sat_solver, v int32, lev int32) { s.levels[v] = lev }
-func var_set_value(s *sat_solver, v int32, val int32) { s.assigns[v] = val }
-func var_set_polar(s *sat_solver, v int32, pol int32) { s.polarity[v] = pol }
+func var_set_value(s *sat_solver, v int32, val int32) { s.assigns[v] = uint8(val) }
+func var_set_polar(s *sat_solver, v int32, pol int32) { s.polarity[v] = uint8(pol) }
 
 // variable tags
-func var_tag(s *sat_solver, v int32) int32 { return s.tags[v] }
+func var_tag(s *sat_solver, v int32) int32 { return int32(s.tags[v]) }
 func var_set_tag(s *sat_solver, v int32, tag int32) {
 	assert(tag > 0 && tag < 16, "tag > 0 && tag < 16")
 	if s.tags[v] == 0 {
 		veci_push(&s.tagged, v)
 	}
-	s.tags[v] = tag
+	s.tags[v] = uint8(tag)
 }
 func var_add_tag(s *sat_solver, v int32, tag int32) {
 	assert(tag > 0 && tag < 16, "tag > 0 && tag < 16")
 	if s.tags[v] == 0 {
 		veci_push(&s.tagged, v)
 	}
-	s.tags[v] |= tag
+	s.tags[v] |= uint8(tag)
 }
 func solver2_clear_tags(s *sat_solver, start int32) {
 	var i int32

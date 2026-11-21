@@ -92,7 +92,7 @@ func TestCDCLPropagationAgainstNaive(t *testing.T) {
 				a.enqueue(toLitCond(v, int32(rng.Intn(2))), 0)
 			}
 		}
-		expected := append([]int32(nil), a.assigns...)
+		expected := append([]uint8(nil), a.assigns...)
 		naiveConflict := false
 		changed := true
 		for changed && !naiveConflict {
@@ -103,7 +103,7 @@ func TestCDCLPropagationAgainstNaive(t *testing.T) {
 				var unit lit
 				for _, l := range c {
 					value := expected[lit_var(l)]
-					if value == lit_sign(l) {
+					if value == uint8(lit_sign(l)) {
 						satisfied = true
 						break
 					}
@@ -120,7 +120,7 @@ func TestCDCLPropagationAgainstNaive(t *testing.T) {
 					break
 				}
 				if remaining == 1 {
-					expected[lit_var(unit)] = lit_sign(unit)
+					expected[lit_var(unit)] = uint8(lit_sign(unit))
 					changed = true
 				}
 			}

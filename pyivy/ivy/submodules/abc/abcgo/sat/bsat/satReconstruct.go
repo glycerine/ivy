@@ -239,7 +239,7 @@ func reconstructResolutionWithClock(cnf *Sto_Man_t, observer proofAnnotation, wr
 		bound := r.assignments.qtail
 		satisfied := false
 		for _, l := range c.pLits {
-			if r.assignments.assigns[lit_var(l)] == lit_sign(l) {
+			if r.assignments.assigns[lit_var(l)] == uint8(lit_sign(l)) {
 				satisfied = true
 				break
 			}

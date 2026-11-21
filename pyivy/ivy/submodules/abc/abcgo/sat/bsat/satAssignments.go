@@ -1,21 +1,29 @@
 package bsat
 
-const satUnassigned int32 = 3
+const satUnassigned = 3
 
 // satAssignments owns the trail and variable metadata shared by CDCL enqueue,
 // decisions and backtracking. A value is a literal sign, or 3 when unassigned.
 type satAssignments struct {
-	qhead, qtail                             int32
-	levels, assigns, polarity, tags, reasons []int32
-	trail                                    []lit
-	trail_lim, tagged, stack                 veci
+	qhead, qtail             int32
+	levels, reasons          []int32
+	assigns, polarity, tags  []uint8
+	trail                    []lit
+	trail_lim, tagged, stack veci
 }
 
 func newSatAssignments(size int32) satAssignments {
 	if size < 0 {
 		panic("negative SAT variable count")
 	}
-	a := satAssignments{levels: make([]int32, size), assigns: make([]int32, size), polarity: make([]int32, size), tags: make([]int32, size), reasons: make([]int32, size), trail: make([]lit, size)}
+	a := satAssignments{
+		levels:   make([]int32, size),
+		reasons:  make([]int32, size),
+		assigns:  make([]uint8, size),
+		polarity: make([]uint8, size),
+		tags:     make([]uint8, size),
+		trail:    make([]lit, size),
+	}
 	for i := range a.assigns {
 		a.assigns[i] = satUnassigned
 	}
@@ -26,7 +34,7 @@ func (a *satAssignments) enqueue(l lit, reason int32) bool {
 		panic("literal outside solver variables")
 	}
 	v := lit_var(l)
-	sign := lit_sign(l)
+	sign := uint8(lit_sign(l))
 	if a.assigns[v] != satUnassigned {
 		return a.assigns[v] == sign
 	}
@@ -67,7 +75,7 @@ func (a *satAssignments) cancelUntil(level int32) []lit {
 		a.assigns[v] = satUnassigned
 		a.reasons[v] = 0
 		if i < lastLevel {
-			a.polarity[v] = 1 - lit_sign(a.trail[i])
+			a.polarity[v] = uint8(1 - lit_sign(a.trail[i]))
 		}
 	}
 	// A failed assumption can have a trail boundary beyond pending root units.

@@ -56,7 +56,7 @@ func (p *Solver2) addClause(id int32, literals []Literal) bool {
 	unassigned := false
 	seen := map[lit]bool{}
 	for _, l := range literals {
-		if seen[lit_neg(l)] || s.assigns[lit_var(l)] == lit_sign(l) {
+		if seen[lit_neg(l)] || s.assigns[lit_var(l)] == uint8(lit_sign(l)) {
 			satisfied = true
 		}
 		seen[l] = true

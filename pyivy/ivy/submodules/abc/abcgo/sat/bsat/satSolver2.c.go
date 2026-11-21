@@ -64,7 +64,7 @@ func sat_solver2_check_watched(s *sat_solver2) int32 {
 			c := clause2_read(s, h)
 			satisfied := false
 			for _, l := range c.lits[:c.size] {
-				if s.assigns[lit_var(l)] == lit_sign(l) {
+				if s.assigns[lit_var(l)] == uint8(lit_sign(l)) {
 					satisfied = true
 					break
 				}

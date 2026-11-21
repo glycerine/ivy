@@ -30,7 +30,7 @@ func sat_solver2_addclause(s *sat_solver2, input []lit, id int32) cla {
 	falseCount := 0
 	for i, l := range literals {
 		value := s.assigns[lit_var(l)]
-		if value == lit_sign(l) {
+		if value == uint8(lit_sign(l)) {
 			satisfied = true
 		}
 		if value == satUnassigned {

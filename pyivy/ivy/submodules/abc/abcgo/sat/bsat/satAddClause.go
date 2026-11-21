@@ -43,7 +43,7 @@ func sat_solver_addclause(s *sat_solver, input []lit) int32 {
 	}
 	write := 0
 	for _, l := range data {
-		if s.assigns[lit_var(l)] == lit_sign(l) {
+		if s.assigns[lit_var(l)] == uint8(lit_sign(l)) {
 			return 1
 		}
 		if s.assigns[lit_var(l)] == satUnassigned {

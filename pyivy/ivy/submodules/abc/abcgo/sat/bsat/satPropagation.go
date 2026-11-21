@@ -32,7 +32,7 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 				implied := clause_read_lit(h)
 				ws.ptr[write] = h
 				write++
-				if a.assigns[lit_var(implied)] == lit_sign(implied) {
+				if a.assigns[lit_var(implied)] == uint8(lit_sign(implied)) {
 					continue
 				}
 				if !a.enqueueTracked(implied, clause_from_lit(p), frequencies) {
@@ -53,7 +53,7 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 				if lits[1] != falseLit {
 					panic("watch does not match clause")
 				}
-				if a.assigns[lit_var(lits[0])] == lit_sign(lits[0]) {
+				if a.assigns[lit_var(lits[0])] == uint8(lit_sign(lits[0])) {
 					ws.ptr[write] = h
 					write++
 					continue
@@ -61,7 +61,7 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 				moved := false
 				for k := 2; k < len(lits); k++ {
 					candidate := lits[k]
-					if a.assigns[lit_var(candidate)] != 1-lit_sign(candidate) {
+					if a.assigns[lit_var(candidate)] != uint8(1-lit_sign(candidate)) {
 						lits[1], lits[k] = candidate, falseLit
 						veci_push(&watches[lit_neg(candidate)], h)
 						moved = true
@@ -95,7 +95,7 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 }
 
 func (a *satAssignments) enqueueTracked(l lit, reason cla, frequencies []uint8) bool {
-	if frequencies != nil {
+	if frequencies != nil && frequencies[lit_var(l)] == 0 {
 		frequencies[lit_var(l)] = 1
 	}
 	return a.enqueue(l, reason)

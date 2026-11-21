@@ -89,7 +89,7 @@ func WriteSolverDIMACS(writer io.Writer, s *sat_solver, assumptions []lit, incre
 	}
 	for v := int32(0); v < s.size; v++ {
 		if s.levels[v] == 0 && s.assigns[v] != satUnassigned {
-			clauses = append(clauses, []lit{toLitCond(v, s.assigns[v])})
+			clauses = append(clauses, []lit{toLitCond(v, int32(s.assigns[v]))})
 		}
 	}
 	for _, l := range assumptions {

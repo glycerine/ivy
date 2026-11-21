@@ -115,6 +115,6 @@ func solver2_search(s *sat_solver2, budget int64) lbool {
 			solver2_canceluntil(s, s.root_level)
 			return l_True
 		}
-		solver2_assume(s, toLitCond(next, 1-s.polarity[next]))
+		solver2_assume(s, toLitCond(next, 1-int32(s.polarity[next])))
 	}
 }

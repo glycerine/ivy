@@ -3,8 +3,7 @@ package bsat
 import "slices"
 
 func sat_solver_enqueue(s *sat_solver, l lit, from int32) int32 {
-	s.pFreqs[lit_var(l)] = 1
-	if s.satAssignments.enqueue(l, from) {
+	if s.enqueueTracked(l, from, s.pFreqs) {
 		return 1
 	}
 	return 0

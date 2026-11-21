@@ -4,7 +4,7 @@ func solver2_tag(s *sat_solver2, v, tag int32) {
 	if s.tags[v] == 0 {
 		veci_push(&s.tagged, v)
 	}
-	s.tags[v] |= tag
+	s.tags[v] |= uint8(tag)
 }
 func solver2_lit_removable_rec(s *sat_solver2, v int32) bool {
 	if s.tags[v]&2 != 0 {

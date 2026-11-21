@@ -21,7 +21,7 @@ func solver2_propagate(s *sat_solver2) *clause {
 			if c.lits[1] != falseLiteral {
 				panic("solver2 watch invariant")
 			}
-			if s.assigns[lit_var(c.lits[0])] == lit_sign(c.lits[0]) {
+			if s.assigns[lit_var(c.lits[0])] == uint8(lit_sign(c.lits[0])) {
 				old[kept] = handle
 				kept++
 				continue
@@ -29,7 +29,7 @@ func solver2_propagate(s *sat_solver2) *clause {
 			moved := false
 			for k := int32(2); k < c.size; k++ {
 				l := c.lits[k]
-				if s.assigns[lit_var(l)] != 1-lit_sign(l) {
+				if s.assigns[lit_var(l)] != uint8(1-lit_sign(l)) {
 					c.lits[1], c.lits[k] = l, falseLiteral
 					veci_push(&s.wlists[lit_neg(l)], handle)
 					moved = true
@@ -51,7 +51,7 @@ func solver2_propagate(s *sat_solver2) *clause {
 				if s.units[variable] == 0 {
 					s.units[variable] = unit
 				} else {
-					if s.assigns[variable] != 1-lit_sign(implied) {
+					if s.assigns[variable] != uint8(1-lit_sign(implied)) {
 						panic("duplicate same-polarity solver2 unit proof")
 					}
 					proof_chain_start(s, clause2_read(s, unit))

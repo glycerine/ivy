@@ -88,10 +88,12 @@ func sat_clause_compute_lbd(s *sat_solver, c *clause) int32 {
 // Memory is an owned-payload estimate, excluding runtime/map bookkeeping.
 func sat_solver_memory(s *sat_solver) float64 {
 	total := uint64(reflect.TypeOf(*s).Size())
-	for _, a := range [][]int32{s.levels, s.assigns, s.polarity, s.tags, s.loads, s.orderpos, s.reasons, s.trail, s.model} {
+	for _, a := range [][]int32{s.levels, s.loads, s.orderpos, s.reasons, s.trail, s.model} {
 		total += uint64(cap(a)) * 4
 	}
-	total += uint64(cap(s.activity)+cap(s.activity2)+cap(s.factors))*8 + uint64(cap(s.pFreqs)) + uint64(cap(s.wlists))*uint64(reflect.TypeOf(veci{}).Size())
+	total += uint64(cap(s.activity)+cap(s.activity2)+cap(s.factors)) * 8
+	total += uint64(cap(s.pFreqs) + cap(s.assigns) + cap(s.polarity) + cap(s.tags))
+	total += uint64(cap(s.wlists)) * uint64(reflect.TypeOf(veci{}).Size())
 	for _, w := range s.wlists {
 		total += uint64(cap(w.ptr)) * 4
 	}
