@@ -10,6 +10,8 @@ const (
 	cacheBDDIte
 	cacheADDIte
 	cacheBDDVarMap
+	cacheADDTimes
+	cacheADDPlus
 )
 
 type computedKey struct {

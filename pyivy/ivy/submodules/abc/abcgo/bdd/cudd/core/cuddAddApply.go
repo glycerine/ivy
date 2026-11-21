@@ -112,6 +112,50 @@ func Cudd_addApply(dd *DdManager, op DD_AOP, f, g *DdNode) *DdNode {
 	}
 	return visit(f, g)
 }
+
+// addArithmetic applies one of the two commutative operations needed for
+// weighted composition. Its operands have already passed manager validation.
+func (dd *DdManager) addArithmetic(kind cacheOperation, f, g *DdNode) *DdNode {
+	if f.ID > g.ID {
+		f, g = g, f
+	}
+	if kind == cacheADDTimes {
+		if f == dd.Zero || g == dd.Zero {
+			return dd.Zero
+		}
+		if f == dd.One {
+			return g
+		}
+		if g == dd.One {
+			return f
+		}
+	} else {
+		if f == dd.Zero {
+			return g
+		}
+		if g == dd.Zero {
+			return f
+		}
+	}
+	if Cudd_IsConstant(f) && Cudd_IsConstant(g) {
+		if kind == cacheADDTimes {
+			return dd.constant(f.Value * g.Value)
+		}
+		return dd.constant(f.Value + g.Value)
+	}
+	key := computedKey{f: f, g: g, kind: kind}
+	hash := key.hash()
+	if found := dd.cacheLookup(key, hash, true); found != nil {
+		return found
+	}
+	level := min(dd.level(f), dd.level(g))
+	ft, fe := dd.addCofactors(f, level)
+	gt, ge := dd.addCofactors(g, level)
+	r := dd.addNode(uint32(dd.InvPerm[level]), dd.addArithmetic(kind, ft, gt), dd.addArithmetic(kind, fe, ge))
+	dd.cacheInsert(key, r, hash)
+	return r
+}
+
 func Cudd_addMonadicApply(dd *DdManager, op DD_MAOP, f *DdNode) *DdNode {
 	if !dd.validAdd(f) || op == nil {
 		return nil

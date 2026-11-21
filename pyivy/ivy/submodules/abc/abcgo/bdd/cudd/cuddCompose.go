@@ -12,10 +12,7 @@ func Cudd_bddCompose(dd *DdManager, f, g *DdNode, variable int) *DdNode {
 }
 
 func Cudd_addCompose(dd *DdManager, f, g *DdNode, variable int) *DdNode {
-	if dd == nil || f == nil || g == nil || variable < 0 || variable >= len(dd.Vars) {
-		return nil
-	}
-	return addComposeAt(dd, f, g, uint32(variable), make(map[*DdNode]*DdNode))
+	return core.Cudd_addCompose(dd, f, g, variable)
 }
 
 func Cudd_addPermute(dd *DdManager, f *DdNode, permutation []int) *DdNode {
@@ -47,7 +44,7 @@ func Cudd_bddAdjPermuteX(dd *DdManager, f *DdNode, variables []*DdNode) *DdNode 
 		return nil
 	}
 	permutation := identityPermutation(len(dd.Vars))
-	for i := 0; i+1 < len(variables); i += 3 {
+	for i := 0; i+2 < len(variables); i += 3 {
 		if variables[i] == nil || variables[i+1] == nil {
 			return nil
 		}
@@ -55,45 +52,21 @@ func Cudd_bddAdjPermuteX(dd *DdManager, f *DdNode, variables []*DdNode) *DdNode 
 		if a >= len(permutation) || b >= len(permutation) {
 			return nil
 		}
-		permutation[a], permutation[b] = permutation[b], permutation[a]
+		permutation[a], permutation[b] = b, a
 	}
 	return core.Cudd_bddPermute(dd, f, permutation)
 }
 
 func Cudd_addVectorCompose(dd *DdManager, f *DdNode, vector []*DdNode) *DdNode {
-	return addVectorCompose(dd, f, vector)
+	return core.Cudd_addVectorCompose(dd, f, vector)
 }
 
 func Cudd_addGeneralVectorCompose(dd *DdManager, f *DdNode, on, off []*DdNode) *DdNode {
-	if dd == nil || len(on) < len(dd.Vars) || len(off) < len(dd.Vars) {
-		return nil
-	}
-	vector := make([]*DdNode, len(dd.Vars))
-	for i := range vector {
-		if on[i] == nil || off[i] == nil {
-			return nil
-		}
-		original := core.Cudd_addIthVar(dd, i)
-		vector[i] = core.Cudd_addIte(dd, on[i], core.Cudd_addConst(dd, 1), core.Cudd_addIte(dd, off[i], core.Cudd_addConst(dd, 0), original))
-	}
-	return addVectorCompose(dd, f, vector)
+	return core.Cudd_addGeneralVectorCompose(dd, f, on, off)
 }
 
 func Cudd_addNonSimCompose(dd *DdManager, f *DdNode, vector []*DdNode) *DdNode {
-	if dd == nil || len(vector) < len(dd.Vars) {
-		return nil
-	}
-	result := f
-	for i, replacement := range vector[:len(dd.Vars)] {
-		if replacement == nil {
-			return nil
-		}
-		result = Cudd_addCompose(dd, result, replacement, i)
-		if result == nil {
-			return nil
-		}
-	}
-	return result
+	return core.Cudd_addNonSimCompose(dd, f, vector)
 }
 
 func Cudd_bddVectorCompose(dd *DdManager, f *DdNode, vector []*DdNode) *DdNode {
@@ -115,59 +88,21 @@ func cuddAddComposeRecur(dd *DdManager, f, g, projection *DdNode) *DdNode {
 }
 
 func cuddAddNonSimComposeRecur(dd *DdManager, f *DdNode, vector []*DdNode, key, cube *DdNode, lastSub int32) *DdNode {
-	if dd == nil || f == nil || key == nil {
+	if dd == nil || key == nil || cube == nil || lastSub < 0 || int(lastSub) > len(vector) {
 		return nil
 	}
-	index := int(Cudd_NodeReadIndex(key))
-	if index < 0 || index >= len(vector) || vector[index] == nil {
-		return nil
+	active := make([]*DdNode, len(dd.Vars))
+	for i := range active {
+		active[i] = core.Cudd_addIthVar(dd, i)
 	}
-	return Cudd_addCompose(dd, f, vector[index], index)
-}
-
-func addComposeAt(dd *DdManager, f, replacement *DdNode, index uint32, memo map[*DdNode]*DdNode) *DdNode {
-	if Cudd_IsConstant(f) {
-		return f
-	}
-	if result := memo[f]; result != nil {
-		return result
-	}
-	r := Cudd_Regular(f)
-	t := addComposeAt(dd, Cudd_T(r), replacement, index, memo)
-	e := addComposeAt(dd, Cudd_E(r), replacement, index, memo)
-	var result *DdNode
-	if r.Index == index {
-		result = core.Cudd_addIte(dd, replacement, t, e)
-	} else {
-		result = core.Cudd_addIte(dd, core.Cudd_addIthVar(dd, int(r.Index)), t, e)
-	}
-	memo[f] = result
-	return result
-}
-
-func addVectorCompose(dd *DdManager, f *DdNode, vector []*DdNode) *DdNode {
-	if dd == nil || f == nil || len(vector) < len(dd.Vars) {
-		return nil
-	}
-	memo := make(map[*DdNode]*DdNode)
-	var visit func(*DdNode) *DdNode
-	visit = func(node *DdNode) *DdNode {
-		if Cudd_IsConstant(node) {
-			return node
-		}
-		if result := memo[node]; result != nil {
-			return result
-		}
-		r := Cudd_Regular(node)
-		t, e := visit(Cudd_T(r)), visit(Cudd_E(r))
-		if int(r.Index) >= len(vector) || vector[r.Index] == nil {
+	for cube != dd.One {
+		if !core.Cudd_IsAdd(cube) || Cudd_IsConstant(cube) || cube.E != dd.Zero || cube.Index >= uint32(lastSub) || int(cube.Index) >= len(active) {
 			return nil
 		}
-		result := core.Cudd_addIte(dd, vector[r.Index], t, e)
-		memo[node] = result
-		return result
+		active[cube.Index] = vector[cube.Index]
+		cube = cube.T
 	}
-	return visit(f)
+	return core.Cudd_addNonSimCompose(dd, f, active)
 }
 
 func identityPermutation(n int) []int {
@@ -191,7 +126,7 @@ func swapPermutation(dd *DdManager, x, y []*DdNode) ([]int, bool) {
 		if a >= len(permutation) || b >= len(permutation) {
 			return nil, false
 		}
-		permutation[a], permutation[b] = permutation[b], permutation[a]
+		permutation[a], permutation[b] = b, a
 	}
 	return permutation, true
 }
