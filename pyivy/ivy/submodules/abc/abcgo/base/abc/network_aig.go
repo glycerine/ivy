@@ -221,16 +221,16 @@ func (n *Network) Evaluate(root Edge, inputs map[*Object]bool) (bool, error) {
 // DecNetwork adapts explicit edges to bool/dec's dependency-free interfaces.
 type DecNetwork struct{ *Network }
 
-func (d DecNetwork) ConstantOne() any     { return d.One() }
-func (d DecNetwork) Complement(a any) any { return a.(Edge).Not() }
+func (d DecNetwork) ConstantOne() any     { return d.One().DecValue() }
+func (d DecNetwork) Complement(a any) any { return a.(Edge).Not().DecValue() }
 func (d DecNetwork) And(a, b any) any {
 	if manager, ok := d.FunctionManager.(*Abc_Aig_t); ok {
-		return Abc_AigAnd(manager, a, b)
+		return Abc_AigAnd(manager, a, b).DecValue()
 	}
-	return d.AndEdges(a.(Edge), b.(Edge))
+	return d.AndEdges(a.(Edge), b.(Edge)).DecValue()
 }
-func (d DecNetwork) CreateAnd(a, b any) any { return d.CreateAndEdges(a.(Edge), b.(Edge)) }
-func (d DecNetwork) Variable(i int) any     { pis := d.ObjectsOfKind(ObjectPI); return pis[i].Signal() }
+func (d DecNetwork) CreateAnd(a, b any) any { return d.CreateAndEdges(a.(Edge), b.(Edge)).DecValue() }
+func (d DecNetwork) Variable(i int) any     { return d.kindOrder[ObjectPI][i].Signal().DecValue() }
 func (d DecNetwork) lookupEdge(a, b Edge) Edge {
 	if manager, ok := d.FunctionManager.(*Abc_Aig_t); ok {
 		return manager.LookupAndEdges(a, b)
@@ -240,7 +240,7 @@ func (d DecNetwork) lookupEdge(a, b Edge) Edge {
 }
 func (d DecNetwork) LookupAnd(a, b any) any {
 	if e := d.lookupEdge(a.(Edge), b.(Edge)); e.Object != nil {
-		return e
+		return e.DecValue()
 	}
 	return nil
 }
@@ -263,7 +263,7 @@ func (d DecNetwork) LookupAndLevel(a, b any, invertA, invertB bool) (any, int) {
 	case x.Object, y.Object:
 		level = e.Object.Level
 	}
-	return e, level
+	return e.DecValue(), level
 }
 func (d DecNetwork) SameRegular(a, b any) bool { return a.(Edge).Object == b.(Edge).Object }
 func (d DecNetwork) Level(a any) int           { return a.(Edge).Object.Level }

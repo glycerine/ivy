@@ -2,6 +2,8 @@ package abc
 
 import (
 	"fmt"
+	"sync/atomic"
+
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/misc/nm"
 	"github.com/glycerine/abcgo/misc/util"
@@ -34,6 +36,26 @@ type Edge struct {
 
 func (e Edge) Not() Edge { e.Complement = !e.Complement; return e }
 
+// DecValue returns this Edge as the value used by decomposition and rewriting.
+// Repeated queries share immutable boxed edges in both phases.
+func (e Edge) DecValue() any {
+	if e.Object == nil {
+		return e
+	}
+	values := e.Object.decValues.Load()
+	if values == nil {
+		signal := e.Object.Signal()
+		values = &[2]any{signal, signal.Not()}
+		if !e.Object.decValues.CompareAndSwap(nil, values) {
+			values = e.Object.decValues.Load()
+		}
+	}
+	if e.Complement {
+		return values[1]
+	}
+	return values[0]
+}
+
 // Object is a network object. Fanin order and fanout multiplicity are retained.
 type Object struct {
 	MVEncoding []Edge
@@ -60,6 +82,7 @@ type Object struct {
 	Copy                *Object
 	Barrier             bool
 	MarkA, MarkB, MarkC bool
+	decValues           atomic.Pointer[[2]any]
 	network             *Network
 	fanins              []Edge
 	fanouts             []*Object

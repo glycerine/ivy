@@ -63,7 +63,7 @@ func Rwr_NodeRewrite(p *Rwr_Man_t, pManCut *cut.Cut_Man_t, pNode *abc.Object, fU
 	if fUpdateLevel != 0 {
 		required = abc.Abc_ObjRequiredLevel(pNode)
 	}
-	return Rwr_RewriteCuts(p, network, pNode.Signal(), cuts, required, fUseZeros, fPlaceEnable)
+	return Rwr_RewriteCuts(p, network, pNode.Signal().DecValue(), cuts, required, fUseZeros, fPlaceEnable)
 }
 
 // Read live fanins because earlier replacements in the pass can rewire
@@ -91,9 +91,9 @@ func (n *abcRewriteNetwork) Lookup(id int32) (any, bool) {
 	if o == nil {
 		return nil, false
 	}
-	return o.Signal(), true
+	return o.Signal().DecValue(), true
 }
-func (n *abcRewriteNetwork) Complement(value any) any { return value.(abc.Edge).Not() }
+func (n *abcRewriteNetwork) Complement(value any) any { return value.(abc.Edge).Not().DecValue() }
 func (n *abcRewriteNetwork) FanoutCount(value any) int {
 	return int(abc.Abc_ObjFanoutNum(value.(abc.Edge).Object))
 }
