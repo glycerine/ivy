@@ -121,7 +121,9 @@ func aigSetNode(o *Object, a, b Edge) {
 	o.Copy = nil
 }
 func Abc_AigAndCreate(m *Abc_Aig_t, a, b any) Edge {
-	x, y := objectEdge(a), objectEdge(b)
+	return m.createAndEdges(objectEdge(a), objectEdge(b))
+}
+func (m *Abc_Aig_t) createAndEdges(x, y Edge) Edge {
 	n := m.Network
 	n.checkAndInputs(x, y)
 	if len(n.hashed)+n.extraAnds > 2*m.bins {
@@ -157,10 +159,15 @@ func (m *Abc_Aig_t) LookupAndEdges(x, y Edge) Edge {
 	return e
 }
 func Abc_AigAnd(m *Abc_Aig_t, a, b any) Edge {
-	if e := Abc_AigAndLookup(m, a, b); e.Object != nil {
+	return m.AndEdges(objectEdge(a), objectEdge(b))
+}
+
+// AndEdges simplifies or creates the phased pair in this manager's active hash.
+func (m *Abc_Aig_t) AndEdges(a, b Edge) Edge {
+	if e := m.LookupAndEdges(a, b); e.Object != nil {
 		return e
 	}
-	return Abc_AigAndCreate(m, a, b)
+	return m.createAndEdges(a, b)
 }
 func Abc_AigOr(m *Abc_Aig_t, a, b any) Edge {
 	return Abc_AigAnd(m, objectEdge(a).Not(), objectEdge(b).Not()).Not()

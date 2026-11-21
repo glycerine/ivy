@@ -51,7 +51,6 @@ func Abc_NtkBalancePerform(old, balanced *Abc_Ntk_t, duplicate, selective, updat
 			oldCI.CopyEdge.Object.Level = oldCI.Level
 		}
 	}
-	storage := vec.Vec_VecStart(10)
 	progress := extra.Extra_ProgressBarStart(os.Stdout, abc.Abc_NtkCoNum(old))
 	cos := old.Outputs()
 	if old.Barriers != 0 {
@@ -65,7 +64,7 @@ func Abc_NtkBalancePerform(old, balanced *Abc_Ntk_t, duplicate, selective, updat
 	}
 	for i, co := range cos {
 		extra.Extra_ProgressBarUpdate(progress, int32(i), "")
-		Abc_NodeBalance_rec(balanced, abc.Abc_ObjFanin0(co), storage, 0, duplicate, selective, updateLevel)
+		balanceNode(balanced, abc.Abc_ObjFanin0(co).Signal(), nil, 0, duplicate, selective, updateLevel)
 		if old.Barriers != 0 && i < old.Barriers {
 			firstFanout := abc.Abc_ObjFanout0(co)
 			if firstFanout != nil && abc.Abc_ObjFanoutNum(firstFanout) > 0 {
@@ -74,7 +73,6 @@ func Abc_NtkBalancePerform(old, balanced *Abc_Ntk_t, duplicate, selective, updat
 		}
 	}
 	extra.Extra_ProgressBarStop(progress)
-	vec.Vec_VecFree(storage)
 }
 
 // Abc_NodeBalanceFindLeft finds the earliest same-level candidate for pairing.
@@ -142,23 +140,29 @@ func balanceNode(n *Abc_Ntk_t, oldEdge abc.Edge, storage *Vec_Vec_t, level, dupl
 	if abc.Abc_ObjIsNode(old) == 0 {
 		panic("balance root is not an AND node")
 	}
-	super := balanceCone(old.Signal(), storage, level, duplicate, selective)
-	if vec.Vec_PtrSize(super) == 0 {
+	var local [8]abc.Edge
+	edges := local[:0]
+	var super *Vec_Ptr_t
+	if storage == nil {
+		collected, result := collectBalanceEdges(old.Signal(), balanceLeaves{edges: edges}, 1, duplicate, selective)
+		edges = collected.edges
+		for _, e := range edges {
+			e.Object.MarkB = false
+		}
+		if result < 0 {
+			edges = edges[:0]
+		}
+	} else {
+		super = balanceCone(old.Signal(), storage, level, duplicate, selective)
+		for _, item := range vec.Vec_PtrArray(super) {
+			edges = append(edges, edgeFromAny(item))
+		}
+	}
+	if len(edges) == 0 {
 		old.CopyEdge = abc.Abc_ObjNot(abc.Abc_AigConst1(n))
 		return old.CopyEdge
 	}
-	items := vec.Vec_PtrArray(super)
-	// Only the source cone uses the public pointer vector. Keep translated
-	// edges in this recursion frame while sorting and combining them.
-	var local [8]abc.Edge
-	var edges []abc.Edge
-	if len(items) <= len(local) {
-		edges = local[:len(items)]
-	} else {
-		edges = make([]abc.Edge, len(items))
-	}
-	for i, item := range items {
-		edge := edgeFromAny(item)
+	for i, edge := range edges {
 		newEdge := balanceNode(n, edge.Object.Signal(), storage, level+1, duplicate, selective, updateLevel)
 		if edge.Complement {
 			newEdge = newEdge.Not()
@@ -177,12 +181,14 @@ func balanceNode(n *Abc_Ntk_t, oldEdge abc.Edge, storage *Vec_Vec_t, level, dupl
 		}
 		balancePermute(n, edges, left, identityBalanceEdge)
 		end := len(edges) - 2
-		combined := abc.Abc_AigAnd(manager, edges[end+1], edges[end])
+		combined := manager.AndEdges(edges[end+1], edges[end])
 		combined.Object.Level = int(abc.Abc_ObjLevelNew(combined.Object))
 		edges = insertBalanceEdge(edges[:end], combined)
 	}
 	old.CopyEdge = edges[0]
-	vec.Vec_PtrClear(super)
+	if super != nil {
+		vec.Vec_PtrClear(super)
+	}
 	return old.CopyEdge
 }
 
@@ -196,7 +202,7 @@ func balanceCone(root abc.Edge, storage *Vec_Vec_t, level, duplicate, selective 
 		panic("Abc_NodeBalanceCone expects a regular node")
 	}
 	for vec.Vec_VecSize(storage) <= int(level) {
-		vec.Vec_VecPush(storage, int(level), vec.Vec_PtrAlloc(0))
+		vec.Vec_VecPush(storage, int(level), nil)
 	}
 	nodes := vec.Vec_VecEntry(storage, int(level))
 	vec.Vec_PtrClear(nodes)
@@ -217,38 +223,69 @@ func Abc_NodeBalanceCone_rec(node *Abc_Obj_t, super *Vec_Ptr_t, first, duplicate
 }
 
 func balanceConeRec(edge abc.Edge, super *Vec_Ptr_t, first, duplicate, selective int32) int32 {
+	if super == nil {
+		panic("nil balance leaf vector")
+	}
+	_, result := collectBalanceEdges(edge, balanceLeaves{vector: super}, first, duplicate, selective)
+	return result
+}
+
+// Public cone calls append to their supplied ABC vector. The whole-network
+// balancer uses typed edges so a recursion frame can translate them in place.
+type balanceLeaves struct {
+	edges  []abc.Edge
+	vector *Vec_Ptr_t
+}
+
+func repeatBalanceLeaf[T any](entries []T, edge abc.Edge, asEdge func(T) abc.Edge) int32 {
+	opposite := false
+	for _, entry := range entries {
+		e := asEdge(entry)
+		if e == edge {
+			return 1
+		}
+		if e == edge.Not() {
+			opposite = true
+		}
+	}
+	if opposite {
+		return -1
+	}
+	panic("marked balance node missing from supergate")
+}
+func collectBalanceEdges(edge abc.Edge, leaves balanceLeaves, first, duplicate, selective int32) (balanceLeaves, int32) {
 	node := edge.Object
 	if node.MarkB {
-		for _, item := range vec.Vec_PtrArray(super) {
-			if edgeFromAny(item) == edge {
-				return 1
-			}
+		if leaves.vector != nil {
+			return leaves, repeatBalanceLeaf(vec.Vec_PtrArray(leaves.vector), edge, edgeFromAny)
 		}
-		for _, item := range vec.Vec_PtrArray(super) {
-			if edgeFromAny(item) == edge.Not() {
-				return -1
-			}
-		}
-		panic("marked balance node missing from supergate")
+		return leaves, repeatBalanceLeaf(leaves.edges, edge, identityBalanceEdge)
 	}
-	if first == 0 && (edge.Complement || abc.Abc_ObjIsNode(node) == 0 || (duplicate == 0 && selective == 0 && abc.Abc_ObjFanoutNum(node) > 1) || vec.Vec_PtrSize(super) > 10000) {
-		vec.Vec_PtrPush(super, edge)
+	count := len(leaves.edges)
+	if leaves.vector != nil {
+		count = vec.Vec_PtrSize(leaves.vector)
+	}
+	if first == 0 && (edge.Complement || abc.Abc_ObjIsNode(node) == 0 || (duplicate == 0 && selective == 0 && abc.Abc_ObjFanoutNum(node) > 1) || count > 10000) {
+		if leaves.vector != nil {
+			vec.Vec_PtrPush(leaves.vector, edge)
+		} else {
+			leaves.edges = append(leaves.edges, edge)
+		}
 		node.MarkB = true
-		return 0
+		return leaves, 0
 	}
 	if edge.Complement || abc.Abc_ObjIsNode(node) == 0 {
 		panic("invalid node in balance cone")
 	}
-	a, b := abc.Abc_ObjChild0(node), abc.Abc_ObjChild1(node)
-	r1 := balanceConeRec(a, super, 0, duplicate, selective)
-	r2 := balanceConeRec(b, super, 0, duplicate, selective)
+	leaves, r1 := collectBalanceEdges(abc.Abc_ObjChild0(node), leaves, 0, duplicate, selective)
+	leaves, r2 := collectBalanceEdges(abc.Abc_ObjChild1(node), leaves, 0, duplicate, selective)
 	if r1 == -1 || r2 == -1 {
-		return -1
+		return leaves, -1
 	}
 	if r1 != 0 || r2 != 0 {
-		return 1
+		return leaves, 1
 	}
-	return 0
+	return leaves, 0
 }
 
 // Abc_NodeBalanceConeExor_rec collects leaves of an XOR-marked cone.

@@ -168,3 +168,49 @@ func TestBalancePermuteUsesOwningAIGHash(t *testing.T) {
 		t.Errorf("balance pair search allocated %.0f objects, want 0", got)
 	}
 }
+
+func TestBalanceLeafStorageKeepsSharedConeOrder(t *testing.T) {
+	for _, mode := range []struct{ duplicate, selective int32 }{{0, 0}, {1, 0}, {0, 1}, {1, 1}} {
+		n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
+		a, b, c := n.NewObject(abc.ObjectPI).Signal(), n.NewObject(abc.ObjectPI).Signal(), n.NewObject(abc.ObjectPI).Signal()
+		shared := n.CreateAndEdges(a, b.Not())
+		branch := n.CreateAndEdges(shared, c)
+		root := n.CreateAndEdges(branch, shared)
+		want := []abc.Edge{a, b.Not(), c}
+		if mode.duplicate == 0 && mode.selective == 0 {
+			want = []abc.Edge{shared, c}
+		}
+		for _, vector := range []bool{false, true} {
+			var leaves balanceLeaves
+			if vector {
+				leaves.vector = vec.Vec_PtrAlloc(0)
+			}
+			out, ret := collectBalanceEdges(root, leaves, 1, mode.duplicate, mode.selective)
+			if ret != 1 {
+				t.Fatalf("mode %+v repeated cone status %d", mode, ret)
+			}
+			got := out.edges
+			if vector {
+				for _, item := range vec.Vec_PtrArray(out.vector) {
+					got = append(got, edgeFromAny(item))
+				}
+				vec.Vec_PtrFree(out.vector)
+			}
+			if len(got) != len(want) {
+				t.Fatalf("mode %+v size %d, want %d", mode, len(got), len(want))
+			}
+			for i, e := range got {
+				if e != want[i] || !e.Object.MarkB {
+					t.Fatalf("mode %+v leaf %d changed phase, order or mark", mode, i)
+				}
+				e.Object.MarkB = false
+			}
+		}
+		m := balanceAigManager(n)
+		g := m.AndEdges(a.Not(), b)
+		if g != abc.Abc_AigAnd(m, b, a.Not()) || m.AndEdges(c, c.Not()) != n.One().Not() {
+			t.Fatal("typed manager lost a phase or hash hit")
+		}
+		abc.Abc_NtkDelete(n)
+	}
+}
