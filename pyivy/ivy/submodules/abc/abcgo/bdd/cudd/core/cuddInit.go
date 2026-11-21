@@ -104,6 +104,7 @@ func Cudd_Quit(dd *DdManager) {
 	dd.Vars = nil
 	dd.Perm = nil
 	dd.InvPerm = nil
+	dd.varMap = nil
 	dd.PermZ = nil
 	dd.InvPermZ = nil
 	dd.Univ = nil

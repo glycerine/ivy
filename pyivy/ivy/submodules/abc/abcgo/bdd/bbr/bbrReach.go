@@ -35,21 +35,10 @@ func Aig_ManInitStateVarMap(dd *DdManager, p *Aig_Man_t, verbose bool) *DdNode {
 	for _, v := range dd.Vars[pis : pis+regs] {
 		f = cudd.Cudd_bddAnd(dd, f, cudd.Cudd_Not(v))
 	}
-	return f
-}
-func bbrVarMap(dd *DdManager, p *Aig_Man_t, f *DdNode) *DdNode {
-	pis, regs, _, ok := dimensions(p)
-	if !ok {
+	if cudd.Cudd_SetVarMap(dd, dd.Vars[pis:pis+regs], dd.Vars[pis+regs:pis+2*regs]) == 0 {
 		return nil
 	}
-	perm := make([]int, len(dd.Vars))
-	for i := range perm {
-		perm[i] = i
-	}
-	for i := 0; i < regs; i++ {
-		perm[pis+i], perm[pis+regs+i] = pis+regs+i, pis+i
-	}
-	return cudd.Cudd_bddPermute(dd, f, perm)
+	return f
 }
 func Aig_ManCreateOutputs(dd *DdManager, p *Aig_Man_t) []*DdNode {
 	_, _, pos, ok := dimensions(p)
@@ -103,6 +92,11 @@ func Aig_ManComputeReachable(dd *DdManager, p *Aig_Man_t, parts []*DdNode, initi
 	if !ok || dd == nil || params == nil || len(parts) != regs || len(outputs) != pos || len(dd.Vars) < pis+2*regs || params.NIterMax < 0 || params.NBddMax < 0 || !cudd.Cudd_bddLeq(dd, initial, initial) {
 		return -1
 	}
+	// Direct callers may supply an initial cube without using the initializer.
+	if cudd.Cudd_bddVarMap(dd, dd.One) == nil &&
+		cudd.Cudd_SetVarMap(dd, dd.Vars[pis:pis+regs], dd.Vars[pis+regs:pis+2*regs]) == 0 {
+		return -1
+	}
 	start := time.Now()
 	care := Bbr_bddComputeRangeCube(dd, pis, pis+regs)
 	var tree *Bbr_ImageTree_t
@@ -147,7 +141,7 @@ func Aig_ManComputeReachable(dd *DdManager, p *Aig_Man_t, parts []*DdNode, initi
 			params.IFrame = int32(iter - 1)
 			return -1
 		}
-		next = bbrVarMap(dd, p, next)
+		next = cudd.Cudd_bddVarMap(dd, next)
 		if next == nil {
 			return -1
 		}

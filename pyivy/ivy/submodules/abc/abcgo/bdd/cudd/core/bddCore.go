@@ -60,6 +60,7 @@ type DdManager struct {
 	constants                         map[uint64]*DdNode
 	Vars                              []*DdNode
 	Perm, InvPerm                     []int
+	varMap                            []int
 	unique                            uniqueTable
 	computed                          computedTable
 	interact                          []uint64
@@ -483,11 +484,19 @@ func (dd *DdManager) valid(nodes ...*DdNode) bool {
 		return false
 	}
 	for _, n := range nodes {
-		if n == nil || n.manager != dd || Cudd_Regular(n).family != 0 || (Cudd_IsConstant(n) && Cudd_Regular(n) != dd.One) {
+		if !dd.ownsBDD(n) {
 			return false
 		}
 	}
 	return true
+}
+
+func (dd *DdManager) ownsBDD(n *DdNode) bool {
+	if n == nil || n.manager != dd {
+		return false
+	}
+	r := Cudd_Regular(n)
+	return r.family == 0 && (r.Index != bddConstantIndex || r == dd.One)
 }
 
 // A regular and complemented handle always share their lifetime.

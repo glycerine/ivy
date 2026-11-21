@@ -2,6 +2,11 @@ package cudd
 
 import "github.com/glycerine/abcgo/bdd/cudd/core"
 
+var (
+	Cudd_SetVarMap = core.Cudd_SetVarMap
+	Cudd_bddVarMap = core.Cudd_bddVarMap
+)
+
 func Cudd_bddCompose(dd *DdManager, f, g *DdNode, variable int) *DdNode {
 	return core.Cudd_bddCompose(dd, f, g, variable)
 }

@@ -219,3 +219,15 @@ func TestComputeReachablePartitionedAndMonolithic(t *testing.T) {
 		})
 	}
 }
+
+func TestNetworkInitialStateRegistersLatchMap(t *testing.T) {
+	n := makeSelfLoopReachabilityNetwork(t)
+	dd := core.NewBDDManager(0)
+	defer core.Cudd_Quit(dd)
+	if Abc_NtkInitStateVarMap(dd, n, 0) == nil || len(dd.Vars) != 3 ||
+		core.Cudd_bddVarMap(dd, dd.Vars[0]) != dd.Vars[0] ||
+		core.Cudd_bddVarMap(dd, dd.Vars[1]) != dd.Vars[2] ||
+		core.Cudd_bddVarMap(dd, dd.Vars[2]) != dd.Vars[1] {
+		t.Fatal("network initializer failed to register present and next latch variables")
+	}
+}

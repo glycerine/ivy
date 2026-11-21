@@ -343,6 +343,7 @@ func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
 	clear(dd.Vars[first:])
 	dd.Vars, dd.Perm, dd.InvPerm = dd.Vars[:first], dd.Perm[:first], dd.InvPerm[:first]
 	dd.discardInteractionsAfterSize(first)
+	dd.varMap = nil
 	dd.symmetryGroups = nil
 	dd.tableBDDSize = uint32(len(dd.bddTableSlots))
 	Cudd_CacheFlush(dd)

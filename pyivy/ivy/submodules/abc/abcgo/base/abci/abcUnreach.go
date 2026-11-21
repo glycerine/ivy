@@ -87,6 +87,9 @@ func Abc_NtkComputeUnreachable(dd *core.DdManager, network *abc.Network, transit
 	}
 	piNum, ciNum := len(network.ObjectsOfKind(abc.ObjectPI)), len(network.Inputs())
 	latchNum := len(network.ObjectsOfKind(abc.ObjectLatch))
+	if core.Cudd_bddVarMap(dd, dd.One) == nil && !abcRegisterLatchMap(dd, piNum, ciNum, latchNum) {
+		return nil
+	}
 	current, reached, relation := initial, initial, transition
 	core.Cudd_Ref(current)
 	core.Cudd_Ref(reached)
@@ -113,7 +116,7 @@ func Abc_NtkComputeUnreachable(dd *core.DdManager, network *abc.Network, transit
 		}
 		core.Cudd_Ref(next)
 		core.Cudd_RecursiveDeref(dd, current)
-		mapped := abcReachVarMap(dd, piNum, ciNum, latchNum, next)
+		mapped := core.Cudd_bddVarMap(dd, next)
 		if mapped == nil {
 			core.Cudd_RecursiveDeref(dd, next)
 			core.Cudd_RecursiveDeref(dd, reached)

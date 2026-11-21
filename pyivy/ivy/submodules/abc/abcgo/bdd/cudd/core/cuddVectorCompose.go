@@ -115,3 +115,76 @@ func Cudd_bddVectorCompose(dd *DdManager, f *DdNode, vector []*DdNode) *DdNode {
 	}
 	return visit(f)
 }
+
+// Cudd_SetVarMap registers paired variable indices for repeated simultaneous
+// substitution. Each new pair overwrites both entries, in argument order.
+func Cudd_SetVarMap(dd *DdManager, x, y []*DdNode) int {
+	if dd == nil || dd.closed || len(x) != len(y) {
+		return 0
+	}
+	for i, n := range x {
+		m := y[i]
+		if n == nil || m == nil || n.manager != dd || m.manager != dd ||
+			n.Index >= uint32(len(dd.Vars)) || m.Index >= uint32(len(dd.Vars)) {
+			return 0
+		}
+	}
+	if dd.varMap != nil {
+		Cudd_CacheFlush(dd)
+	}
+	if dd.varMap == nil || cap(dd.varMap) < len(dd.Vars) {
+		dd.varMap = make([]int, len(dd.Vars))
+	} else {
+		dd.varMap = dd.varMap[:len(dd.Vars)]
+	}
+	for i := range dd.varMap {
+		dd.varMap[i] = i
+	}
+	for i, n := range x {
+		m := y[i]
+		dd.varMap[n.Index], dd.varMap[m.Index] = int(m.Index), int(n.Index)
+	}
+	return 1
+}
+
+// Cudd_bddVarMap applies the manager's registered map and shares computed
+// results across requests. Variables added after registration map to themselves.
+func Cudd_bddVarMap(dd *DdManager, f *DdNode) *DdNode {
+	if dd == nil || dd.closed || dd.varMap == nil || !dd.ownsBDD(f) {
+		return nil
+	}
+	return dd.applyVarMap(f)
+}
+
+func (dd *DdManager) applyVarMap(f *DdNode) *DdNode {
+	r := Cudd_Regular(f)
+	if r == dd.One {
+		return f
+	}
+	index := r.Index
+	if index < uint32(len(dd.varMap)) {
+		index = uint32(dd.varMap[index])
+	}
+	if r == dd.Vars[r.Index] {
+		return Cudd_NotCond(dd.Vars[index], f != r)
+	}
+	key := computedKey{f: r, kind: cacheBDDVarMap}
+	hash := key.hash()
+	shared := r.Ref != 1
+	if shared {
+		if n := dd.cacheLookup(key, hash, true); n != nil {
+			return Cudd_NotCond(n, f != r)
+		}
+	}
+	t, e := dd.applyVarMap(r.T), dd.applyVarMap(r.E)
+	var n *DdNode
+	if level := dd.Perm[index]; level < dd.level(t) && level < dd.level(e) {
+		n = dd.node(index, t, e)
+	} else {
+		n = dd.ite(dd.Vars[index], t, e)
+	}
+	if shared {
+		dd.cacheInsert(key, n, hash)
+	}
+	return Cudd_NotCond(n, f != r)
+}

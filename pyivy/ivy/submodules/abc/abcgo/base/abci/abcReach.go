@@ -10,19 +10,11 @@ import (
 	"github.com/glycerine/abcgo/bdd/extrab"
 )
 
-func abcReachVarMap(dd *core.DdManager, piNum, ciNum, latchNum int, function *core.DdNode) *core.DdNode {
-	mapping := make([]int, len(dd.Vars))
-	for i := range mapping {
-		mapping[i] = i
+func abcRegisterLatchMap(dd *core.DdManager, piNum, ciNum, latchNum int) bool {
+	if piNum+latchNum > len(dd.Vars) || ciNum+latchNum > len(dd.Vars) {
+		return false
 	}
-	for i := 0; i < latchNum; i++ {
-		x, y := piNum+i, ciNum+i
-		if x >= len(mapping) || y >= len(mapping) {
-			return nil
-		}
-		mapping[x], mapping[y] = y, x
-	}
-	return core.Cudd_bddPermute(dd, function, mapping)
+	return core.Cudd_SetVarMap(dd, dd.Vars[piNum:piNum+latchNum], dd.Vars[ciNum:ciNum+latchNum]) != 0
 }
 
 // Abc_NtkInitStateVarMap returns the source-defined initial-state cube and
@@ -32,8 +24,11 @@ func Abc_NtkInitStateVarMap(dd *core.DdManager, network *abc.Network, verbose in
 		return nil
 	}
 	piNum, ciNum, latches := len(network.ObjectsOfKind(abc.ObjectPI)), len(network.Inputs()), network.ObjectsOfKind(abc.ObjectLatch)
-	for i := 0; i < ciNum+len(latches); i++ {
-		core.Cudd_bddIthVar(dd, i)
+	if size := ciNum + len(latches); size > 0 && core.Cudd_bddIthVar(dd, size-1) == nil {
+		return nil
+	}
+	if !abcRegisterLatchMap(dd, piNum, ciNum, len(latches)) {
+		return nil
 	}
 	initial := core.Cudd_ReadOne(dd)
 	core.Cudd_Ref(initial)
@@ -60,8 +55,8 @@ func Abc_NtkCreatePartitions(dd *core.DdManager, network *abc.Network, reorder, 
 	}
 	ciNum := len(network.Inputs())
 	latches := network.ObjectsOfKind(abc.ObjectLatch)
-	for i := 0; i < ciNum+len(latches); i++ {
-		core.Cudd_bddIthVar(dd, i)
+	if size := ciNum + len(latches); size > 0 && core.Cudd_bddIthVar(dd, size-1) == nil {
+		return nil
 	}
 	if reorder != 0 {
 		core.Cudd_AutodynEnable(dd, core.CUDD_REORDER_SYMM_SIFT)
@@ -131,6 +126,10 @@ func Abc_NtkComputeReachable(dd *core.DdManager, network *abc.Network, parts []*
 	for i := range vars {
 		vars[i] = core.Cudd_bddIthVar(dd, ciNum+i)
 	}
+	if core.Cudd_bddVarMap(dd, dd.One) == nil && !abcRegisterLatchMap(dd, piNum, ciNum, len(latches)) {
+		core.Cudd_RecursiveDeref(dd, care)
+		return nil
+	}
 	var tree *extrab.Extra_ImageTree_t
 	var mono *extrab.Extra_ImageTree2_t
 	if partitioned != 0 {
@@ -171,7 +170,7 @@ func Abc_NtkComputeReachable(dd *core.DdManager, network *abc.Network, parts []*
 		core.Cudd_Ref(next)
 		core.Cudd_RecursiveDeref(dd, current)
 		hasCurrent = false
-		mapped := abcReachVarMap(dd, piNum, ciNum, len(latches), next)
+		mapped := core.Cudd_bddVarMap(dd, next)
 		if mapped == nil {
 			core.Cudd_RecursiveDeref(dd, next)
 			core.Cudd_RecursiveDeref(dd, reached)

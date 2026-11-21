@@ -9,6 +9,7 @@ const (
 	cacheBDDAnd
 	cacheBDDIte
 	cacheADDIte
+	cacheBDDVarMap
 )
 
 type computedKey struct {
