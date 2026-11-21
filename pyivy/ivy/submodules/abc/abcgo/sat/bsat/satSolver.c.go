@@ -102,10 +102,13 @@ func sat_solver_memory(s *sat_solver) float64 {
 	}
 	total += uint64(cap(s.Mem.pPages)) * uint64(reflect.TypeOf(clausePage{}).Size())
 	for _, page := range s.Mem.pPages {
-		total += uint64(cap(page.slots)) * uint64(reflect.TypeOf((*clause)(nil)).Size())
-		for _, c := range page.slots {
-			if c != nil {
-				total += uint64(reflect.TypeOf(*c).Size()) + uint64(cap(c.lits))*4
+		total += uint64(cap(page.blocks)) * uint64(reflect.TypeOf([]*clause{}).Size())
+		for _, block := range page.blocks {
+			total += uint64(cap(block)) * uint64(reflect.TypeOf((*clause)(nil)).Size())
+			for _, c := range block {
+				if c != nil {
+					total += uint64(reflect.TypeOf(*c).Size()) + uint64(cap(c.lits))*4
+				}
 			}
 		}
 	}

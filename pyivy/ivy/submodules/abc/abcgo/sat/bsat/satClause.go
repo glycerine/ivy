@@ -51,34 +51,82 @@ type shortClauseBlock struct {
 	used    int
 }
 
+// Clauses in the middle of the size distribution share header and literal
+// allocations. The exact slice capacity protects neighboring clauses.
+type clauseBlock struct {
+	headers     []clause
+	nextHeader  int
+	literals    []lit
+	nextLiteral int
+}
+
+func (b *clauseBlock) take(size int) *clause {
+	if b.nextHeader == len(b.headers) {
+		b.headers = make([]clause, min(64, max(1, 2*len(b.headers))))
+		b.nextHeader = 0
+	}
+	if size > len(b.literals)-b.nextLiteral {
+		b.literals = make([]lit, min(1024, max(size, 2*len(b.literals))))
+		b.nextLiteral = 0
+	}
+	c := &b.headers[b.nextHeader]
+	b.nextHeader++
+	end := b.nextLiteral + size
+	c.lits = b.literals[b.nextLiteral:end:end]
+	b.nextLiteral = end
+	return c
+}
+
 type Sat_Mem_t struct {
 	nEntries, BookMarkH, BookMarkE, iPage [2]int32
 	nPageSize                             int32
 	uPageMask, uLearnedMask               int32
 	pPages                                []clausePage
 	short                                 [2]shortClauseBlock
+	medium                                [2]clauseBlock
 }
 
-// Clause headers start on even word offsets. Allocate just the portion of
-// each page needed for the current stream, keeping pointers stable on growth.
+// The native page offset counts literal words. Only blocks containing a clause
+// header need an index. Most solvers use just a few entries in the first block.
+const clauseIndexBlockSize = 256
+
 type clausePage struct {
-	limit int32
-	slots []*clause
+	limit  int32
+	blocks [][]*clause
 }
 
 func (p *clausePage) put(offset int32, c *clause) {
-	i := int(offset >> 1)
-	if i >= len(p.slots) {
-		p.slots = slices.Grow(p.slots, i+1-len(p.slots))[:i+1]
+	index := int(offset >> 1)
+	blockID, slot := index/clauseIndexBlockSize, index%clauseIndexBlockSize
+	if blockID >= len(p.blocks) {
+		p.blocks = slices.Grow(p.blocks, blockID+1-len(p.blocks))[:blockID+1]
 	}
-	p.slots[i] = c
+	block := p.blocks[blockID]
+	if slot >= len(block) {
+		entries := clauseIndexBlockSize
+		if blockID == 0 {
+			entries = min(entries, max(slot+1, 2*len(block)))
+		}
+		grown := make([]*clause, entries)
+		copy(grown, block)
+		p.blocks[blockID] = grown
+		block = grown
+	}
+	block[slot] = c
 }
 
 func (p *clausePage) truncate(limit int32) {
 	end := int(limit >> 1)
-	if end < len(p.slots) {
-		clear(p.slots[end:])
-		p.slots = p.slots[:end]
+	blockID, slot := end/clauseIndexBlockSize, end%clauseIndexBlockSize
+	if blockID < len(p.blocks) {
+		if slot != 0 {
+			if block := p.blocks[blockID]; slot < len(block) {
+				clear(block[slot:])
+			}
+			blockID++
+		}
+		clear(p.blocks[blockID:])
+		p.blocks = p.blocks[:blockID]
 	}
 	p.limit = limit
 }
@@ -104,7 +152,8 @@ func Sat_MemClauseHand(p *Sat_Mem_t, h cla) *clause {
 	if h == 0 {
 		return nil
 	}
-	c := p.pPages[Sat_MemHandPage(p, h)].slots[Sat_MemHandShift(p, h)>>1]
+	index := Sat_MemHandShift(p, h) >> 1
+	c := p.pPages[Sat_MemHandPage(p, h)].blocks[index/clauseIndexBlockSize][index%clauseIndexBlockSize]
 	if h&1 != 0 || c == nil {
 		panic("invalid clause handle")
 	}
@@ -179,6 +228,7 @@ func Sat_MemAlloc_(p *Sat_Mem_t, n int32) {
 func Sat_MemAlloc(n int32) *Sat_Mem_t { p := new(Sat_Mem_t); Sat_MemAlloc_(p, n); return p }
 func Sat_MemRestart(p *Sat_Mem_t) {
 	p.short = [2]shortClauseBlock{}
+	p.medium = [2]clauseBlock{}
 	p.nEntries = [2]int32{}
 	p.iPage = [2]int32{0, 1}
 	for i := range p.pPages {
@@ -192,8 +242,11 @@ func Sat_MemBookMark(p *Sat_Mem_t) {
 	}
 }
 func Sat_MemRollBack(p *Sat_Mem_t) {
-	for l := int32(0); l < 2; l++ {
-		Sat_MemShrink(p, p.BookMarkH[l], l)
+	for stream, bookmark := range p.BookMarkH {
+		p.checkShrink(bookmark, int32(stream))
+	}
+	for stream, bookmark := range p.BookMarkH {
+		p.shrink(bookmark, int32(stream))
 	}
 	p.nEntries = p.BookMarkE
 }
@@ -238,6 +291,8 @@ func Sat_MemAppend(p *Sat_Mem_t, data []int32, size, lrn, plus int32) int32 {
 		block.used++
 		c = &entry.clause
 		c.lits = entry.data[:size:size]
+	} else if size <= 128 {
+		c = p.medium[lrn].take(int(size))
 	} else {
 		c = &clause{lits: make([]lit, size)}
 	}
@@ -253,9 +308,27 @@ func Sat_MemAppend(p *Sat_Mem_t, data []int32, size, lrn, plus int32) int32 {
 	return h
 }
 func Sat_MemShrink(p *Sat_Mem_t, h, lrn int32) {
-	if h == 0 || clause_learnt_h(p, h) != lrn || uint32(h) > uint32(Sat_MemHandCurrent(p, lrn)) {
+	p.checkShrink(h, lrn)
+	p.shrink(h, lrn)
+}
+
+func (p *Sat_Mem_t) checkShrink(h cla, stream int32) {
+	if h == 0 || h&1 != 0 || clause_learnt_h(p, h) != stream || uint32(h) > uint32(Sat_MemHandCurrent(p, stream)) {
 		panic("invalid clause shrink")
 	}
+	page := &p.pPages[Sat_MemHandPage(p, h)]
+	offset := Sat_MemHandShift(p, h)
+	if offset == page.limit {
+		return
+	}
+	index := int(offset >> 1)
+	blockID, slot := index/clauseIndexBlockSize, index%clauseIndexBlockSize
+	if offset < 2 || blockID >= len(page.blocks) || slot >= len(page.blocks[blockID]) || page.blocks[blockID][slot] == nil {
+		panic("clause shrink is not at a header boundary")
+	}
+}
+
+func (p *Sat_Mem_t) shrink(h cla, lrn int32) {
 	page := Sat_MemHandPage(p, h)
 	for i := page + 2; i <= p.iPage[lrn]; i += 2 {
 		p.pPages[i].truncate(2)

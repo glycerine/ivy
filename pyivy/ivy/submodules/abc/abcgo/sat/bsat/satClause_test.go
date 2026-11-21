@@ -340,3 +340,96 @@ func TestLastClausePageCannotWrapOntoLiveHandle(t *testing.T) {
 		}
 	}
 }
+
+func TestSparseClauseOffsetsOnlyIndexLiveHeaders(t *testing.T) {
+	s := newSatSolver(19, 91648253)
+	defer sat_solver_delete(s)
+	m := &s.Mem
+	huge := Sat_MemAppend(m, nil, 1<<16, 0, 0)
+	large := Sat_MemClauseHand(m, huge)
+	before := sat_solver_memory(s)
+	tail := Sat_MemAppend(m, []lit{2, 4, 6}, 3, 0, 1)
+	if extra := sat_solver_memory(s) - before; extra > 8192 {
+		t.Fatalf("indexing one clause beyond 65536 literals uses %.0f more bytes", extra)
+	}
+	if c := Sat_MemClauseHand(m, tail); clause_size(c) != 3 || c.lits[2] != 6 || Sat_MemClauseHand(m, huge) != large {
+		t.Fatal("sparse header lookup lost a live clause")
+	}
+}
+
+func TestMixedClauseBatchUsesBlocks(t *testing.T) {
+	allocs := testing.AllocsPerRun(10, func() {
+		m := Sat_MemAlloc(12)
+		for i := range 1024 {
+			Sat_MemAppend(m, nil, int32(2+i%7), int32(i%2), 1)
+		}
+		Sat_MemFree(m)
+	})
+	if allocs > 200 {
+		t.Fatalf("1024 mixed clauses used %.0f allocations", allocs)
+	}
+}
+
+func TestRetainedMediumClausesSurviveRollbackAndRestart(t *testing.T) {
+	m := Sat_MemAlloc(12)
+	Sat_MemBookMark(m)
+	var saved []*clause
+	for i := range 300 {
+		size := int32(5 + i%40)
+		c := Sat_MemClauseHand(m, Sat_MemAppend(m, nil, size, int32(i%2), 1))
+		c.lits[len(c.lits)-1] = int32(2 * i)
+		saved = append(saved, c)
+	}
+	Sat_MemRollBack(m)
+	for i := range 600 {
+		Sat_MemAppend(m, nil, int32(5+i%40), int32(i%2), 1)
+	}
+	Sat_MemRestart(m)
+	for i, c := range saved {
+		grew := append(c.lits, 123)
+		grew[0] = 456
+		if c.lits[0] != 0 || c.lits[len(c.lits)-1] != int32(2*i) || clause_id(c) != int32(i/2) {
+			t.Fatalf("retained clause %d changed", i)
+		}
+	}
+}
+
+func TestClauseShrinkRejectsOffsetsInsideALiveClause(t *testing.T) {
+	for _, offset := range []int32{1, 2, 256, 512, 768} {
+		m := Sat_MemAlloc(12)
+		h := Sat_MemAppend(m, nil, 1024, 0, 0)
+		end := Sat_MemHandCurrent(m, 0)
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("accepted interior offset %d", offset)
+				}
+			}()
+			Sat_MemShrink(m, h+offset, 0)
+		}()
+		if Sat_MemHandCurrent(m, 0) != end {
+			t.Errorf("bad offset %d moved the allocation cursor", offset)
+		}
+	}
+}
+
+func TestStaleLearnedBookmarkPreservesProblemStream(t *testing.T) {
+	m := Sat_MemAlloc(12)
+	Sat_MemAppend(m, nil, 3, 0, 0)
+	learned := Sat_MemAppend(m, nil, 3, 1, 0)
+	Sat_MemBookMark(m)
+	later := Sat_MemAppend(m, nil, 3, 0, 0)
+	end := Sat_MemHandCurrent(m, 0)
+	Sat_MemShrink(m, learned, 1)
+	func() {
+		defer func() {
+			if recover() == nil {
+				t.Error("stale learned bookmark was accepted")
+			}
+		}()
+		Sat_MemRollBack(m)
+	}()
+	if Sat_MemHandCurrent(m, 0) != end || Sat_MemClauseHand(m, later) == nil {
+		t.Fatal("failed rollback removed a problem clause")
+	}
+}
