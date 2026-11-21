@@ -21,7 +21,7 @@ func TestObjectDeleteNameRemovesMapping(t *testing.T) {
 func TestObjectWriteDataDoesNotClearStructuralHash(t *testing.T) {
 	network := NewNetwork("hash")
 	object := network.NewObject(ObjectNode)
-	key := [2]Edge{{Object: object}, {Object: network.constant}}
+	key := andHashKey([2]Edge{{Object: object}, {Object: network.constant}})
 	value := Edge{Object: object, Complement: true}
 	network.hashed[key] = value
 	data := &struct{ value int }{value: 11}

@@ -232,3 +232,56 @@ func TestAigHashMissDoesNotRegisterExcludedNodes(t *testing.T) {
 		t.Fatalf("empty table grew to %d after probing excluded nodes", m.bins)
 	}
 }
+
+func TestAndHashKeysKeepAllIDAndPhaseBits(t *testing.T) {
+	high := int(^uint(0) >> 1)
+	ids := []int{0, 1, high / 2, high - 1, high}
+	seen := make(map[[2]int]bool)
+	for i, x := range ids {
+		for _, y := range ids[i+1:] {
+			for phase := range 4 {
+				a := Edge{Object: &Object{ID: x}, Complement: phase&1 != 0}
+				b := Edge{Object: &Object{ID: y}, Complement: phase&2 != 0}
+				key := andHashKey(edgePair(a, b))
+				if seen[key] || key != andHashKey(edgePair(b, a)) {
+					t.Fatalf("ambiguous key for IDs %d and %d, phases %d", x, y, phase)
+				}
+				seen[key] = true
+			}
+		}
+	}
+}
+
+func TestReassignIDsRekeysDuplicateAndsAndAllPhases(t *testing.T) {
+	n := Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 1)
+	m := n.FunctionManager.(*Abc_Aig_t)
+	hole := n.NewObject(ObjectNode)
+	if err := n.DeleteObject(hole); err != nil {
+		t.Fatal(err)
+	}
+	a, b := n.NewObject(ObjectPI).Signal(), n.NewObject(ObjectPI).Signal()
+	original := a.Object.ID
+	var first, last [4]Edge
+	for phase := range first {
+		x, y := a, b
+		x.Complement, y.Complement = phase&1 != 0, phase&2 != 0
+		first[phase] = Abc_AigAndCreate(m, x, y)
+		last[phase] = Abc_AigAndCreate(m, x, y)
+		Abc_ObjAddFanin(n.NewObject(ObjectPO), last[phase])
+	}
+	Abc_NtkReassignIds(n)
+	if original == a.Object.ID || len(n.hashed) != 4 || n.extraAnds != 4 {
+		t.Fatal("reassignment did not move inputs or rebuild all entries")
+	}
+	for phase := range first {
+		x, y := a, b
+		x.Complement, y.Complement = phase&1 != 0, phase&2 != 0
+		if got := m.LookupAndEdges(y, x); got != first[phase] {
+			t.Fatalf("rehash head for phases %d", phase)
+		}
+		Abc_AigAndDelete(m, first[phase].Object)
+		if got := m.LookupAndEdges(x, y); got != last[phase] {
+			t.Fatalf("rehash predecessor for phases %d", phase)
+		}
+	}
+}

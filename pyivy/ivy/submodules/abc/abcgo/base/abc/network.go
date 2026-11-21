@@ -126,14 +126,14 @@ type Network struct {
 	Name, Spec          string
 	objects             []*Object
 	names               *nm.Manager
-	hashed              map[[2]Edge]Edge
-	duplicateAnds       map[[2]Edge][]*Object
+	hashed              map[[2]int]Edge
+	duplicateAnds       map[[2]int][]*Object
 	extraAnds           int
 	constant            *Object
 }
 
 func NewNetwork(name string) *Network {
-	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, kindOrder: make(map[ObjectKind][]*Object), Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]Edge]Edge)}
+	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, kindOrder: make(map[ObjectKind][]*Object), Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]int]Edge)}
 	n.constant = n.NewObject(ObjectConst1)
 	n.constant.Phase = true
 	return n

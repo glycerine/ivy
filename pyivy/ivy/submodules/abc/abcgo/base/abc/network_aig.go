@@ -11,6 +11,19 @@ func edgePair(a, b Edge) [2]Edge {
 	}
 	return [2]Edge{a, b}
 }
+
+// Object IDs are nonnegative. Complementing all ID bits encodes an inverted
+// edge without reducing the range of supported IDs.
+func andHashKey(pair [2]Edge) [2]int {
+	a, b := pair[0].Object.ID, pair[1].Object.ID
+	if pair[0].Complement {
+		a = ^a
+	}
+	if pair[1].Complement {
+		b = ^b
+	}
+	return [2]int{a, b}
+}
 func (n *Network) One() Edge { return n.constant.Signal() }
 func (n *Network) lookupAnd(a, b Edge) (Edge, bool) {
 	return n.lookupAndAllowed(a, b, nil)
@@ -39,24 +52,25 @@ func (n *Network) lookupAndAllowed(a, b Edge, excluded map[*Object]bool) (Edge, 
 		return Edge{}, false
 	}
 	pair := edgePair(a, b)
-	if o := n.cachedAnd(pair); o != nil && !excluded[o] {
+	key := andHashKey(pair)
+	if o := n.cachedAnd(pair, key); o != nil && !excluded[o] {
 		return o.Signal(), true
 	}
 	if found := findAndFanout(pair, excluded); found != nil {
 		e := found.Signal()
-		n.hashed[pair] = e
+		n.hashed[key] = e
 		return e, true
 	}
 	return Edge{}, false
 }
 
-func (n *Network) cachedAnd(pair [2]Edge) *Object {
-	for e := n.hashed[pair]; e.Object != nil; e = n.hashed[pair] {
+func (n *Network) cachedAnd(pair [2]Edge, key [2]int) *Object {
+	for e := n.hashed[key]; e.Object != nil; e = n.hashed[key] {
 		o := e.Object
 		if n.contains(o) && aigNode(o) && edgePair(o.fanins[0], o.fanins[1]) == pair {
 			return o
 		}
-		n.removeAndKey(pair, o)
+		n.removeAndKey(key, o)
 	}
 	return nil
 }
@@ -80,11 +94,12 @@ func findAndFanout(pair [2]Edge, excluded map[*Object]bool) *Object {
 // A native hash bucket returns the last inserted AND with this fanin pair.
 // Only duplicate pairs need additional storage beyond the regular hash entry.
 func (n *Network) registerAnd(o *Object) {
-	key := edgePair(o.fanins[0], o.fanins[1])
-	previous := n.cachedAnd(key)
+	pair := edgePair(o.fanins[0], o.fanins[1])
+	key := andHashKey(pair)
+	previous := n.cachedAnd(pair, key)
 	if previous != nil && previous != o {
 		if n.duplicateAnds == nil {
-			n.duplicateAnds = make(map[[2]Edge][]*Object)
+			n.duplicateAnds = make(map[[2]int][]*Object)
 		}
 		group := n.duplicateAnds[key]
 		if len(group) == 0 {
@@ -101,10 +116,10 @@ func (n *Network) detachAnd(o *Object) {
 	if len(n.hashed) == 0 || o.Kind != ObjectNode || len(o.fanins) != 2 {
 		return
 	}
-	n.removeAndKey(edgePair(o.fanins[0], o.fanins[1]), o)
+	n.removeAndKey(andHashKey(edgePair(o.fanins[0], o.fanins[1])), o)
 }
 
-func (n *Network) removeAndKey(key [2]Edge, o *Object) {
+func (n *Network) removeAndKey(key [2]int, o *Object) {
 	if group := n.duplicateAnds[key]; len(group) > 0 {
 		if i := slices.Index(group, o); i >= 0 {
 			group = slices.Delete(group, i, i+1)
@@ -126,7 +141,7 @@ func (n *Network) changedAnd(o *Object) {
 	if len(n.hashed) == 0 || o.ID == len(n.objects)-1 || !aigNode(o) {
 		return
 	}
-	key := edgePair(o.fanins[0], o.fanins[1])
+	key := andHashKey(edgePair(o.fanins[0], o.fanins[1]))
 	if head := n.hashed[key].Object; head != nil && head.ID > o.ID && len(n.duplicateAnds[key]) == 0 {
 		delete(n.hashed, key)
 	}
@@ -155,7 +170,7 @@ func (n *Network) AndEdges(a, b Edge) Edge {
 		return e
 	}
 	e := n.CreateAndEdges(a, b)
-	n.hashed[edgePair(a, b)] = e
+	n.hashed[andHashKey(edgePair(a, b))] = e
 	return e
 }
 
