@@ -419,9 +419,12 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 	if !hash {
 		p.fGiaSimple = giaBool(opts.Simple)
 		for _, obj := range p.pObjs {
-			if Gia_ObjIsBuf(obj) != 0 {
-				p.nBufs++
+			if Gia_ObjIsAnd(obj) != 0 && obj.iDiff0 == obj.iDiff1 {
+				// Raw opposite-phase pins also need simple mode to copy both edges.
 				p.fGiaSimple = 1
+				if Gia_ObjIsBuf(obj) != 0 {
+					p.nBufs++
+				}
 			}
 		}
 	}
@@ -435,128 +438,70 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 }
 
 // aigerNamedProperties retains ABC's legacy name-based property convention.
-func aigerNamedProperties(p *Gia_Man_t) *Gia_Man_t {
+func aigerNamedProperties(p *Gia_Man_t, cleanup bool) *Gia_Man_t {
 	names := p.aigerSymbols['o']
-	changed := false
-	for _, name := range names {
-		changed = changed || strings.HasPrefix(name, "constraint:") || strings.HasPrefix(name, "invariant:")
+	var types *Vec_Int_t
+	for i, name := range names {
+		var kind int32
+		switch {
+		case strings.HasPrefix(name, "constraint:"):
+			kind = 1
+		case strings.HasPrefix(name, "invariant:"):
+			kind = 2
+		default:
+			continue
+		}
+		if types == nil {
+			types = vec.Vec_IntStart(int(Gia_ManPoNum(p)))
+		}
+		vec.Vec_IntWriteEntry(types, i, kind)
 	}
-	if !changed {
+	if types == nil {
 		return p
 	}
-	q := Gia_ManStart(p.nObjs)
-	q.pName, q.PSpec, q.fGiaSimple = p.pName, p.PSpec, p.fGiaSimple
-	mapping := make([]int32, p.nObjs)
-	for _, id := range vec.Vec_IntArray(p.vCis) {
-		mapping[id] = Gia_ManAppendCi(q)
+	for i := Gia_ManPoNum(p) - p.nConstrs; i < Gia_ManPoNum(p); i++ {
+		vec.Vec_IntWriteEntry(types, int(i), 1)
 	}
-	literal := func(lit int32) int32 { return mapping[lit>>1] ^ (lit & 1) }
-	for id, obj := range p.pObjs {
-		if Gia_ObjIsAnd(obj) != 0 {
-			mapping[id] = q.AndLiteral(literal(Gia_ObjFaninLit0(obj, int32(id))), literal(Gia_ObjFaninLit1(obj, int32(id))), p.fGiaSimple == 0)
-		}
+	q := Gia_ManDupWithConstraints(p, types)
+	// Header constraints were inverted during parsing. The duplication routine
+	// inverts every marked constraint, so restore these outputs' existing phase.
+	for i := Gia_ManPoNum(q) - p.nConstrs; i < Gia_ManPoNum(q); i++ {
+		Gia_ObjFlipFaninC0(Gia_ManPo(q, i))
 	}
-	cos := vec.Vec_IntArray(p.vCos)
-	poCount := len(cos) - int(p.nRegs)
-	for category := 0; category < 2; category++ {
-		for i, id := range cos[:poCount] {
-			name := ""
-			if i < len(names) {
-				name = names[i]
-			}
-			if strings.HasPrefix(name, "invariant:") {
-				continue
-			}
-			constraint := strings.HasPrefix(name, "constraint:") || i >= poCount-int(p.nConstrs)
-			if constraint != (category == 1) {
-				continue
-			}
-			lit := literal(Gia_ObjFaninLit0(p.pObjs[id], id))
-			if constraint {
-				q.nConstrs++
-				if i < poCount-int(p.nConstrs) {
-					lit ^= 1
-				}
-			}
-			Gia_ManAppendCo(q, lit)
-		}
+	q.aigerBadOutputs = p.aigerBadOutputs
+	q.aigerLatchInits = p.aigerLatchInits
+	if cleanup && Gia_ManHasDangling(q) != 0 {
+		q = Gia_ManCleanup(q)
 	}
-	for _, id := range cos[poCount:] {
-		Gia_ManAppendCo(q, literal(Gia_ObjFaninLit0(p.pObjs[id], id)))
-	}
-	q.nRegs = p.nRegs
-	q.aigerLatchInits = append([]int32(nil), p.aigerLatchInits...)
 	return q
 }
 
-// aigerZeroInitialize implements the legacy reader's zero/undc state encoding.
-// ParseAiger itself preserves the explicit standard-AIGER reset values.
+// ParseAiger preserves explicit reset values. The legacy reader changes
+// register coordinates and models unknown resets with first-frame inputs.
 func aigerZeroInitialize(p *Gia_Man_t) *Gia_Man_t {
-	changed, unknown := false, 0
-	for _, reset := range p.aigerLatchInits {
-		changed = changed || reset != 0
-		if reset < 0 {
-			unknown++
+	var init []byte
+	for i, reset := range p.aigerLatchInits {
+		if reset == 0 {
+			continue
+		}
+		if init == nil {
+			init = bytes.Repeat([]byte{'0'}, len(p.aigerLatchInits))
+		}
+		if reset == 1 {
+			init[i] = '1'
+		} else {
+			init[i] = 'X'
 		}
 	}
-	if !changed {
+	if init == nil {
 		return p
 	}
-	q := Gia_ManStart(p.nObjs + int32(8*unknown))
-	q.pName, q.PSpec, q.fGiaSimple = p.pName, p.PSpec, p.fGiaSimple
+	q := Gia_ManDupZeroUndc(p, string(init), 0, p.fGiaSimple, 0)
 	q.nConstrs, q.aigerBadOutputs = p.nConstrs, p.aigerBadOutputs
-	mapping := make([]int32, p.nObjs)
-	cis := vec.Vec_IntArray(p.vCis)
-	piCount := len(cis) - int(p.nRegs)
-	for _, id := range cis[:piCount] {
-		mapping[id] = Gia_ManAppendCi(q)
-	}
-	choices := make([]int32, p.nRegs)
-	for i, reset := range p.aigerLatchInits {
-		if reset < 0 {
-			choices[i] = Gia_ManAppendCi(q)
-		}
-	}
-	for _, id := range cis[piCount:] {
-		mapping[id] = Gia_ManAppendCi(q)
-	}
-	var control int32
-	if unknown > 0 {
-		control = Gia_ManAppendCi(q)
-	}
-	for i, id := range cis[piCount:] {
-		switch p.aigerLatchInits[i] {
-		case 1:
-			mapping[id] ^= 1
-		case -1:
-			mapping[id] = Gia_ManAppendMux(q, control, mapping[id], choices[i])
-		}
-	}
-	literal := func(lit int32) int32 { return mapping[lit>>1] ^ (lit & 1) }
-	for id, obj := range p.pObjs {
-		if Gia_ObjIsAnd(obj) != 0 {
-			mapping[id] = q.AndLiteral(literal(Gia_ObjFaninLit0(obj, int32(id))), literal(Gia_ObjFaninLit1(obj, int32(id))), p.fGiaSimple == 0)
-		}
-	}
-	cos := vec.Vec_IntArray(p.vCos)
-	poCount := len(cos) - int(p.nRegs)
-	for i, id := range cos {
-		lit := literal(Gia_ObjFaninLit0(p.pObjs[id], id))
-		if i >= poCount && p.aigerLatchInits[i-poCount] == 1 {
-			lit ^= 1
-		}
-		Gia_ManAppendCo(q, lit)
-	}
-	if unknown > 0 {
-		Gia_ManAppendCo(q, 1)
-	}
-	q.nRegs = p.nRegs
-	if unknown > 0 {
-		q.nRegs++
-	}
 	q.aigerLatchInits = make([]int32, q.nRegs)
 	return q
 }
+
 func Gia_AigerReadFromMemory(contents []byte, size, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error) {
 	if size < 0 || int(size) > len(contents) {
 		return nil, fmt.Errorf("gia: invalid AIGER memory size")
@@ -565,7 +510,7 @@ func Gia_AigerReadFromMemory(contents []byte, size, fSimple, fSkip, fCheck int32
 	if err != nil {
 		return nil, err
 	}
-	return aigerZeroInitialize(aigerNamedProperties(p)), nil
+	return aigerZeroInitialize(aigerNamedProperties(p, fSimple == 0 && fSkip == 0)), nil
 }
 func Gia_AigerRead(name string, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error) {
 	name = Gia_FileFixName(name)

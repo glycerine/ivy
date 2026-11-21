@@ -42,20 +42,16 @@ func Gia_ManDupZeroUndc(src *Gia_Man_t, initial string, newPIs, simple, verbose 
 	if count > Gia_ManPiNum(src) {
 		reset = Gia_ManAppendCi(out)
 	}
-	refs := make([]int32, src.nObjs)
-	for _, obj := range src.pObjs {
-		for _, id := range giaObjectFanins(src, obj) {
-			refs[id]++
-		}
-	}
+	Gia_ManMarkFanoutDrivers(src)
 	for i, ch := range []byte(initial) {
 		obj := Gia_ManRo(src, int32(i))
 		if ch == '1' {
 			obj.Value ^= 1
-		} else if unknown[i] >= 0 && refs[obj.id] > 0 {
+		} else if unknown[i] >= 0 && obj.fMark0 != 0 {
 			obj.Value = uint32(Gia_ManAppendMux(out, reset, int32(obj.Value), Gia_ObjToLit(out, Gia_ManCi(out, unknown[i]))))
 		}
 	}
+	Gia_ManCleanMark0(src)
 	giaDupMappedNodes(out, src)
 	for i := int32(0); i < Gia_ManPoNum(src); i++ {
 		giaDupMappedOutput(out, src, Gia_ManPo(src, i))

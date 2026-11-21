@@ -211,9 +211,7 @@ func Gia_ManDupWithConstraints(src *Gia_Man_t, types *Vec_Int_t) *Gia_Man_t {
 	for phase := int32(0); phase <= 1; phase++ {
 		for i := int32(0); i < Gia_ManPoNum(src); i++ {
 			kind := vec.Vec_IntEntry(types, int(i))
-			if kind != 0 && kind != 1 {
-				panic("gia: invalid PO type")
-			}
+			// Type 2 marks an invariant omitted by the native reader.
 			if kind != phase {
 				continue
 			}
