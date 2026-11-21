@@ -82,3 +82,52 @@ func TestSizedGraphRejectsInvalidDimensions(t *testing.T) {
 		}()
 	}
 }
+
+func TestDecEdgeConstructorUsesNativeBitWidths(t *testing.T) {
+	for _, tc := range []struct {
+		node, phase int32
+		word        uint32
+	}{{1<<30 - 1, 1, 0x7fffffff}, {1<<30 + 7, 2, 14}, {-1, -1, 0x7fffffff}} {
+		if got := dec.Dec_EdgeToInt(dec.Dec_EdgeCreate(tc.node, tc.phase)); got != tc.word {
+			t.Errorf("edge(%d,%d) encoded %#x, want %#x", tc.node, tc.phase, got, tc.word)
+		}
+	}
+	for _, word := range []uint32{0x80000000, 0x8000000f, 0xffffffff} {
+		for _, edge := range []dec.Dec_Edge_t{dec.Dec_IntToEdge(word), dec.Dec_IntToEdge_(word)} {
+			if got := dec.Dec_EdgeToInt(edge); got != word&0x7fffffff {
+				t.Errorf("decoding %#x produced fields encoding %#x", word, got)
+			}
+		}
+	}
+}
+
+func TestRawEdgesAreNormalizedOnGraphInsertion(t *testing.T) {
+	d := dec.Dec_GraphCreate(2)
+	defer dec.Dec_GraphFree(d)
+	left, right := dec.Dec_Edge_t{Node: 1 << 30}, dec.Dec_Edge_t{Node: 1<<30 + 1}
+	root := dec.Dec_GraphAddNodeAnd(d, left, right)
+	a, b := dec.Dec_GraphNodeLast(d).Edges()
+	if a.Node != 0 || b.Node != 1 || dec.Dec_EdgeToInt(right) != 2 {
+		t.Error("DEC retained excess node bits on AND inputs or serialized edges")
+	}
+	dec.Dec_GraphNodeLast(d).SetEdges(right, left)
+	a, b = dec.Dec_GraphNodeLast(d).Edges()
+	if a.Node != 1 || b.Node != 0 {
+		t.Error("DEC retained excess node bits when setting node edges")
+	}
+	root.Node |= 1 << 30
+	dec.Dec_GraphSetRoot(d, root)
+	if dec.Dec_GraphRootEdge(d).Node != 2 {
+		t.Error("DEC retained excess node bits at the root")
+	}
+	k := kit.Kit_GraphCreate(2)
+	defer kit.Kit_GraphFree(k)
+	kl, kr := kit.Kit_Edge_t{Node: 1 << 30}, kit.Kit_Edge_t{Node: 1<<30 + 1}
+	kg := kit.Kit_GraphAddNodeAnd(k, kl, kr)
+	ka, kb := kit.Kit_NodeEdges(kit.Kit_GraphNodeLast(k))
+	kg.Node |= 1 << 30
+	kit.Kit_GraphSetRoot(k, kg)
+	if ka.Node != 0 || kb.Node != 1 || kit.Kit_EdgeToInt(kr) != 2 || kit.Kit_GraphRootEdge(k).Node != 2 {
+		t.Error("KIT retained excess node bits at a graph boundary")
+	}
+}

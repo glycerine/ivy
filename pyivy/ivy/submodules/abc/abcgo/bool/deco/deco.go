@@ -22,14 +22,14 @@ type Dec_Man_t struct {
 
 // C bitfield assignment keeps exactly 30 index bits and one phase bit.
 func Dec_EdgeCreate(node, compl int32) Dec_Edge_t {
-	return dec.Dec_EdgeCreate(int32(uint32(node)&0x3fffffff), compl&1)
+	return dec.Dec_EdgeCreate(node, compl)
 }
-func Dec_EdgeToInt(e Dec_Edge_t) uint32                      { return (e.Node&0x3fffffff)<<1 | dec.Dec_EdgeToInt(e)&1 }
-func Dec_IntToEdge(e uint32) Dec_Edge_t                      { return Dec_EdgeCreate(int32(e>>1), int32(e&1)) }
+func Dec_EdgeToInt(e Dec_Edge_t) uint32                      { return dec.Dec_EdgeToInt(e) }
+func Dec_IntToEdge(e uint32) Dec_Edge_t                      { return dec.Dec_IntToEdge(e) }
 func Dec_EdgeToInt_(e Dec_Edge_t) uint32                     { return Dec_EdgeToInt(e) }
 func Dec_IntToEdge_(e uint32) Dec_Edge_t                     { return Dec_IntToEdge(e) }
 func Dec_GraphCreate(leaves int32) *Dec_Graph_t              { return dec.Dec_GraphCreate(leaves) }
-func Dec_Factor(sop string) *Dec_Graph_t                    { return dec.Dec_Factor(sop) }
+func Dec_Factor(sop string) *Dec_Graph_t                     { return dec.Dec_Factor(sop) }
 func Dec_GraphCreateConst0() *Dec_Graph_t                    { return dec.Dec_GraphCreateConst0() }
 func Dec_GraphCreateConst1() *Dec_Graph_t                    { return dec.Dec_GraphCreateConst1() }
 func Dec_GraphCreateLeaf(i, n, c int32) *Dec_Graph_t         { return dec.Dec_GraphCreateLeaf(i, n, c) }
@@ -58,19 +58,19 @@ func Dec_GraphVarInt(g *Dec_Graph_t) int32 {
 	}
 	return dec.Dec_GraphVarInt(g)
 }
-func Dec_GraphSetRoot(g *Dec_Graph_t, e Dec_Edge_t)  { dec.Dec_GraphSetRoot(g, normalizeEdge(e)) }
+func Dec_GraphSetRoot(g *Dec_Graph_t, e Dec_Edge_t)  { dec.Dec_GraphSetRoot(g, e) }
 func Dec_GraphAppendNode(g *Dec_Graph_t) *Dec_Node_t { return dec.Dec_GraphAppendNode(g) }
 func Dec_GraphAddNodeAnd(g *Dec_Graph_t, a, b Dec_Edge_t) Dec_Edge_t {
-	return dec.Dec_GraphAddNodeAnd(g, normalizeEdge(a), normalizeEdge(b))
+	return dec.Dec_GraphAddNodeAnd(g, a, b)
 }
 func Dec_GraphAddNodeOr(g *Dec_Graph_t, a, b Dec_Edge_t) Dec_Edge_t {
-	return dec.Dec_GraphAddNodeOr(g, normalizeEdge(a), normalizeEdge(b))
+	return dec.Dec_GraphAddNodeOr(g, a, b)
 }
 func Dec_GraphAddNodeXor(g *Dec_Graph_t, a, b Dec_Edge_t, kind int32) Dec_Edge_t {
-	return dec.Dec_GraphAddNodeXor(g, normalizeEdge(a), normalizeEdge(b), kind)
+	return dec.Dec_GraphAddNodeXor(g, a, b, kind)
 }
 func Dec_GraphAddNodeMux(g *Dec_Graph_t, c, t, e Dec_Edge_t, kind int32) Dec_Edge_t {
-	return dec.Dec_GraphAddNodeMux(g, normalizeEdge(c), normalizeEdge(t), normalizeEdge(e), kind)
+	return dec.Dec_GraphAddNodeMux(g, c, t, e, kind)
 }
 
 // Header iterator macros become range-compatible sequences, preserving indices
@@ -95,5 +95,3 @@ func Dec_GraphForEachNode(g *Dec_Graph_t) iter.Seq2[int32, *Dec_Node_t] {
 }
 func Dec_NodeSetLevel(n *Dec_Node_t, level uint32) { n.SetLevel(level) }
 func Dec_NodeLevel(n *Dec_Node_t) uint32           { return n.Level & 0x3fff }
-
-func normalizeEdge(e Dec_Edge_t) Dec_Edge_t { return Dec_IntToEdge(Dec_EdgeToInt(e)) }

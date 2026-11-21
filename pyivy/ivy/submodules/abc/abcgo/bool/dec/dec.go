@@ -33,15 +33,16 @@ func decBool(b bool) int32 {
 	return 0
 }
 func Dec_EdgeCreate(node, compl int32) Dec_Edge_t {
-	if node < 0 || node >= 1<<30 {
-		panic("dec: edge index")
-	}
-	return Dec_Edge_t{uint32(compl) & 1, uint32(node)}
+	return Dec_Edge_t{uint32(compl) & 1, uint32(node)}.normalized()
 }
-func Dec_EdgeToInt(e Dec_Edge_t) uint32      { return e.Node<<1 | e.fCompl }
+func (e Dec_Edge_t) normalized() Dec_Edge_t {
+	e.Node &= 1<<30 - 1
+	return e
+}
+func Dec_EdgeToInt(e Dec_Edge_t) uint32      { return e.normalized().Node<<1 | e.fCompl }
 func Dec_IntToEdge(e uint32) Dec_Edge_t      { return Dec_EdgeCreate(int32(e>>1), int32(e&1)) }
 func Dec_EdgeIsComplement(e Dec_Edge_t) bool { return e.fCompl != 0 }
-func Dec_EdgeNot(e Dec_Edge_t) Dec_Edge_t    { e.fCompl ^= 1; return e }
+func Dec_EdgeNot(e Dec_Edge_t) Dec_Edge_t    { e.fCompl ^= 1; return e.normalized() }
 
 // The historical union variant uses native bitfield layout: complement first.
 func Dec_EdgeToInt_(e Dec_Edge_t) uint32 { return Dec_EdgeToInt(e) }
@@ -157,7 +158,7 @@ func Dec_GraphVarInt(g *Dec_Graph_t) int32 {
 	}
 	return int32(g.eRoot.Node)
 }
-func Dec_GraphSetRoot(g *Dec_Graph_t, e Dec_Edge_t) { g.eRoot = e }
+func Dec_GraphSetRoot(g *Dec_Graph_t, e Dec_Edge_t) { g.eRoot = e.normalized() }
 func Dec_GraphAppendNode(g *Dec_Graph_t) *Dec_Node_t {
 	n := &Dec_Node_t{index: int32(len(g.pNodes))}
 	g.pNodes = append(g.pNodes, n)
@@ -165,8 +166,7 @@ func Dec_GraphAppendNode(g *Dec_Graph_t) *Dec_Node_t {
 }
 func Dec_GraphAddNodeAnd(g *Dec_Graph_t, a, b Dec_Edge_t) Dec_Edge_t {
 	n := Dec_GraphAppendNode(g)
-	n.eEdge0 = a
-	n.eEdge1 = b
+	n.SetEdges(a, b)
 	n.fCompl0 = a.fCompl
 	n.fCompl1 = b.fCompl
 	return Dec_EdgeCreate(int32(len(g.pNodes))-1, 0)
@@ -246,7 +246,7 @@ func (n *Dec_Node_t) SetEdges(a, b Dec_Edge_t) {
 	if n == nil {
 		panic("dec: nil node")
 	}
-	n.eEdge0, n.eEdge1 = a, b
+	n.eEdge0, n.eEdge1 = a.normalized(), b.normalized()
 }
 
 // RootEdge returns the graph's output edge.
@@ -261,4 +261,4 @@ func Dec_GraphRootEdge(g *Dec_Graph_t) Dec_Edge_t {
 func (e Dec_Edge_t) Complemented() bool { return e.fCompl != 0 }
 
 // Complement toggles the complemented-edge bit.
-func (e *Dec_Edge_t) Complement() { e.fCompl ^= 1 }
+func (e *Dec_Edge_t) Complement() { *e = Dec_EdgeNot(*e) }

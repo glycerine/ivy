@@ -96,3 +96,23 @@ func TestKitEdgeFieldsMatchNativeWidths(t *testing.T) {
 		}
 	}
 }
+
+func TestKitConstantGraphsHaveNoNodeStorage(t *testing.T) {
+	for _, g := range []*Kit_Graph_t{Kit_GraphCreateConst0(), Kit_GraphCreateConst1()} {
+		if g.pNodes != nil || Kit_GraphNodeNum(g) != 0 || Kit_GraphLeaveNum(g) != 0 {
+			t.Fatal("constant allocated a node directory")
+		}
+	}
+}
+
+var benchmarkKitConstants [2]*Kit_Graph_t
+
+func BenchmarkKitConstantGraph(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		benchmarkKitConstants = [2]*Kit_Graph_t{Kit_GraphCreateConst0(), Kit_GraphCreateConst1()}
+	}
+	if Kit_GraphIsConst0(benchmarkKitConstants[0]) != 1 || Kit_GraphIsConst1(benchmarkKitConstants[1]) != 1 {
+		b.Fatal("wrong constant")
+	}
+}

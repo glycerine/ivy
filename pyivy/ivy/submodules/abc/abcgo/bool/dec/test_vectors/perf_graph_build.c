@@ -43,6 +43,15 @@ int main(int argc, char **argv)
         Kit_EdgeToInt(Kit_EdgeCreate(-1, -1)) != 0x7fffffffU ||
         Kit_EdgeToInt(Kit_IntToEdge(0x8000000fU)) != 15)
         return 4;
+    if (Dec_EdgeToInt(Dec_EdgeCreate((1<<30)+7, 2)) != 14 ||
+        Dec_EdgeToInt(Dec_EdgeCreate(-1, -1)) != 0x7fffffffU ||
+        Dec_EdgeToInt(Dec_IntToEdge(0x8000000fU)) != 15)
+        return 5;
+    Kit_Graph_t *zero = Kit_GraphCreateConst0(), *one = Kit_GraphCreateConst1();
+    if (zero->pNodes || one->pNodes || !Kit_GraphIsConst0(zero) || !Kit_GraphIsConst1(one))
+        return 6;
+    Kit_GraphFree(zero);
+    Kit_GraphFree(one);
     for (int kit = 0; kit < 2; kit++) {
         struct timespec start, stop;
         unsigned long checksum = 0;

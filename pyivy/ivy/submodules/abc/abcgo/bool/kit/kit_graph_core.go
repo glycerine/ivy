@@ -18,9 +18,13 @@ type Kit_Graph_t struct {
 }
 
 func Kit_EdgeCreate(node, compl int32) Kit_Edge_t {
-	return Kit_Edge_t{uint32(compl) & 1, uint32(node) & (1<<30 - 1)}
+	return Kit_Edge_t{uint32(compl) & 1, uint32(node)}.normalized()
 }
-func Kit_EdgeToInt(e Kit_Edge_t) uint32  { return e.Node<<1 | e.fCompl }
+func (e Kit_Edge_t) normalized() Kit_Edge_t {
+	e.Node &= 1<<30 - 1
+	return e
+}
+func Kit_EdgeToInt(e Kit_Edge_t) uint32  { return e.normalized().Node<<1 | e.fCompl }
 func Kit_IntToEdge(e uint32) Kit_Edge_t  { return Kit_EdgeCreate(int32(e>>1), int32(e&1)) }
 func Kit_EdgeToInt_(e Kit_Edge_t) uint32 { return Kit_EdgeToInt(e) }
 func Kit_IntToEdge_(e uint32) Kit_Edge_t { return Kit_IntToEdge(e) }
@@ -36,7 +40,7 @@ func Kit_GraphIsConst1(g *Kit_Graph_t) int32            { return kitFlag(g.fCons
 func Kit_GraphIsComplement(g *Kit_Graph_t) int32        { return int32(g.eRoot.fCompl) }
 func Kit_GraphIsVar(g *Kit_Graph_t) int32               { return kitFlag(g.eRoot.Node < uint32(g.nLeaves)) }
 func Kit_GraphComplement(g *Kit_Graph_t)                { g.eRoot.fCompl ^= 1 }
-func Kit_GraphSetRoot(g *Kit_Graph_t, e Kit_Edge_t)     { g.eRoot = e }
+func Kit_GraphSetRoot(g *Kit_Graph_t, e Kit_Edge_t)     { g.eRoot = e.normalized() }
 func Kit_GraphLeaveNum(g *Kit_Graph_t) int32            { return g.nLeaves }
 func Kit_GraphNodeNum(g *Kit_Graph_t) int32             { return int32(len(g.pNodes)) - g.nLeaves }
 func Kit_GraphNode(g *Kit_Graph_t, i int32) *Kit_Node_t { return g.pNodes[i] }
@@ -87,8 +91,10 @@ func Kit_GraphCreate(n int32) *Kit_Graph_t {
 	}
 	return g
 }
-func Kit_GraphCreateConst0() *Kit_Graph_t { g := Kit_GraphCreateConst1(); g.eRoot.fCompl = 1; return g }
-func Kit_GraphCreateConst1() *Kit_Graph_t { g := Kit_GraphCreate(0); g.fConst = 1; return g }
+func Kit_GraphCreateConst0() *Kit_Graph_t {
+	return &Kit_Graph_t{fConst: 1, eRoot: Kit_Edge_t{fCompl: 1}}
+}
+func Kit_GraphCreateConst1() *Kit_Graph_t { return &Kit_Graph_t{fConst: 1} }
 func Kit_GraphCreateLeaf(i, n, c int32) *Kit_Graph_t {
 	if i < 0 || i >= n {
 		panic("invalid graph leaf")
@@ -109,6 +115,7 @@ func Kit_GraphAppendNode(g *Kit_Graph_t) *Kit_Node_t {
 	return n
 }
 func Kit_GraphAddNodeAnd(g *Kit_Graph_t, a, b Kit_Edge_t) Kit_Edge_t {
+	a, b = a.normalized(), b.normalized()
 	if int(a.Node) >= len(g.pNodes) || int(b.Node) >= len(g.pNodes) {
 		panic("fanin outside graph")
 	}
