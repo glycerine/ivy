@@ -19,6 +19,19 @@ The C source has ten subsystem families. The Go module mirrors each family.
 
 The Go commands are abc-demo (read, balance, rewrite, write, verify) and abc-starter (parallel shell command runner). The integration package connects MiniAIG and SAT. The checkout contains 54 Go benchmark functions, including focused graph traversal, mapping, simulation and truth-table workloads. Historical build results in PORTING.md are dated.
 
+## Ten-hour checkpoint
+
+The i10 mapped-SAT pipeline started at 171.7 ms, 25.8 MB and 460,878 allocations per solve. At commit `44c6c22f6` it took 21.74–22.04 ms in the same-core native comparison, against 21.12–21.38 ms in C. The complete Go solve now uses 5.22 MB and 6,399 allocations. Both solve the same output disjunction, and the Go differential compares the native CNF's variable count and exact clause order. The following component measurements use their own benchmark batches.
+
+| Workload | Go | C | Checked result |
+| --- | ---: | ---: | --- |
+| Derive CNF from the already mapped i10 | 314 µs | — | 1,057 variables, 3,717 clauses and 11,944 literals |
+| Initialize Satoko from the i10 CNF | 499–500 µs | 369–376 µs | 11,943 stored original literals |
+| Count four-input ISOP pairs across all exact functions and sampled intervals | 13.5–13.9 ns/pair | 124.8–125.4 ns/pair | Same returned truths and cube counts |
+| Prove i10 equivalent to the native resynthesized circuit | 219.8 ms | 208.5 ms | Both proved equivalence on a 5,051-AND miter |
+
+Fresh mapped-SAT profiles put 47.8% of Go samples in cut truth computation including callees. In C, ISOP accounted for 33.0% and cut merging for 30.9% of flat samples. The independent proof refresh used the most recent dedicated Go CEC benchmark binary and the native CEC harness on one core. BSAT propagation accounted for 33.9% of cumulative Go samples and 41.3% of flat C samples. These measurements put the remaining gaps in two different subsystems.
+
 ## Baseline workloads
 
 The bundled C executable reads i10.aig with 257 inputs, 224 outputs, 2,675 AND nodes and depth 50 using the command `&r i10.aig; &ps`. This circuit supplies a shared input for an AIGER load benchmark. BenchmarkDfsSupportWalks exercises support, input collection, cone size and sequential collection on a 1,024-AND chain. Measure both allocation volume and runtime. Candidate experiments include graph construction allocation locality, traversal scratch storage and integer decoding. Select changes using profiles.
