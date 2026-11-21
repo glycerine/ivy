@@ -827,3 +827,9 @@ The Go mapper now uses the existing Vec_Mem implementation of the native truth s
 Three interleaved experiments distinguished the storage costs. Using pages alone reduced allocated bytes from 11.59 to 8.86 MB per i10 solve. Reserving initial slice capacity reduced that to 8.72 MB. Building public views only at completion brought it to 7.45 MB and 84,225 allocations, down about 15,236 allocations per solve. The production binary took 43.8–45.9 ms against 46.9–52.6 ms before the change in 160-solve batches. The new profile attributes 16.4% of allocated bytes to truth interning and its callees, down from 49.8%. Native C took 25.85 ms in the preceding comparison.
 
 Tests hold a truth across page and hash growth, distinguish the last word, verify public slice bounds at all six LUT widths, and check that generation releases the index. MF and vector normal and race tests passed, including comparison of every i10 CNF clause and literal in native order. Targeted GIA mapper and Satoko tests also passed.
+
+### Reuse exact-area reference scratch across MF nodes
+
+The post-interning heap profile attributed 7.5% of allocated bytes to a 32-element array in best-cut selection. Go put this array on the heap at every gate, including area-flow rounds. An exact-area trial on a five-level binary tree reproduced two allocations per visit. Mapping now passes a reusable slice between serial gate visits and rounds. The test checks zero allocations after warmup, restoration of all 62 fanin reference counts and that the area-flow path needs no scratch.
+
+The i10 solve fell from 7.45 to 6.91 MB and from 84,225 to 80,048 allocations. Two 120-solve batches took 40.3–41.0 ms versus 41.3–42.2 ms with per-node scratch. The mapped-CNF native differential and MF package tests passed normally and under the race detector.

@@ -228,7 +228,7 @@ func (m *Mapping) cutFlow(cut Cut) (float32, int32) {
 	}
 	return flow + float32(m.area(cut)), delay + 1
 }
-func (m *Mapping) bestCut(id int32, exact bool) {
+func (m *Mapping) bestCut(id int32, exact bool, touched []int32) []int32 {
 	best := &m.nodes[id]
 	if exact && best.refs != 0 {
 		m.changeRefs(m.Cuts[id][0], -1, 1<<30, nil)
@@ -236,8 +236,6 @@ func (m *Mapping) bestCut(id int32, exact bool) {
 	selected := -1
 	var bestFlow float32
 	var bestTime int32
-	var local [32]int32
-	touched := local[:0]
 	for i, cut := range m.Cuts[id] {
 		var flow float32
 		var delay int32
@@ -270,6 +268,7 @@ func (m *Mapping) bestCut(id int32, exact bool) {
 	chosen := m.Cuts[id][selected]
 	copy(m.Cuts[id][1:selected+1], m.Cuts[id][:selected])
 	m.Cuts[id][0] = chosen
+	return touched[:0]
 }
 
 // GenerateMapping performs the source CNF-cost cut enumeration, area-flow round
@@ -424,12 +423,13 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 		}
 	}
 	m.setMapRefs(0, false)
+	var touched []int32
 	for iter := 1; iter < options.Rounds+options.ExactRounds; iter++ {
 		exact := iter >= options.Rounds
 		for i := 0; i < count; i++ {
 			_, _, _, kind := network.Gate(int32(i))
 			if gateNode(kind) {
-				m.bestCut(int32(i), exact)
+				touched = m.bestCut(int32(i), exact, touched)
 			}
 		}
 		m.setMapRefs(iter, exact)

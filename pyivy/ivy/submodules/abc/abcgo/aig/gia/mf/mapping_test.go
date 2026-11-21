@@ -102,3 +102,29 @@ func TestMappedNetworkOwnershipAndPhase(t *testing.T) {
 		t.Fatal("CI exposed as selected LUT")
 	}
 }
+
+func TestExactCutTrialsReuseScratchAndRestoreReferences(t *testing.T) {
+	// The trial visits 62 fanins in this five-level binary tree.
+	const root = 62
+	m := &Mapping{nodes: make([]node, root+1), Cuts: make([][]Cut, root+1), ClauseSizes: []int{2}}
+	for id := 32; id <= root; id++ {
+		left := int32(2 * (id - 32))
+		m.Cuts[id] = []Cut{{Leaves: []int32{left, left + 1}}}
+		m.nodes[id].flowRefs = 1
+	}
+	if scratch := m.bestCut(root, false, nil); scratch != nil {
+		t.Fatal("area-flow selection reserved exact-area scratch")
+	}
+	var scratch []int32
+	if allocs := testing.AllocsPerRun(20, func() { scratch = m.bestCut(root, true, scratch) }); allocs != 0 {
+		t.Fatalf("repeated exact cut trial allocated %.0f times", allocs)
+	}
+	if len(scratch) != 0 || cap(scratch) < 62 {
+		t.Fatalf("returned scratch has length %d and capacity %d", len(scratch), cap(scratch))
+	}
+	for id, n := range m.nodes {
+		if n.refs != 0 {
+			t.Fatalf("trial left %d references at node %d", n.refs, id)
+		}
+	}
+}
