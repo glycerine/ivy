@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func proofClause(id, learned int32) *clause { return &clause{lrn: learned, lits: []lit{id}} }
+func proofClause(id, learned int32) *clause { return &clause{lrn: uint8(learned), id: id} }
 func TestProofDependencyChainsGrowCompact(t *testing.T) {
 	p := Prf_ManAlloc()
 	Prf_ManRestart(p, nil, 10, 130)

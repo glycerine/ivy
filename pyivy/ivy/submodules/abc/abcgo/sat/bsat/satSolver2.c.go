@@ -40,7 +40,7 @@ func sat_solver2_memory(s *sat_solver2, all int32) float64 {
 		}
 	}
 	memory += float64(reflect.TypeOf(*s).Size() - reflect.TypeOf(s.sat_solver_t).Size())
-	memory += float64(4*(cap(s.units)+cap(s.variableA))) + float64(cap(s.markedLevels))
+	memory += float64(4*cap(s.units)+cap(s.variableA)) + float64(cap(s.markedLevels))
 	for _, v := range []*veci{&s.claProofs, &s.temp_proof, &s.mark_levels, &s.min_lit_order, &s.min_step_order, &s.learnt_live} {
 		memory += float64(cap(v.ptr)) * 4
 	}
@@ -63,7 +63,7 @@ func sat_solver2_check_watched(s *sat_solver2) int32 {
 		for _, h := range veci_begin(w) {
 			c := clause2_read(s, h)
 			satisfied := false
-			for _, l := range c.lits[:c.size] {
+			for _, l := range c.lits {
 				if s.assigns[lit_var(l)] == uint8(lit_sign(l)) {
 					satisfied = true
 					break

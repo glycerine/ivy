@@ -167,7 +167,7 @@ func TestSolver2ReductionRemapsUnitAndProofHandles(t *testing.T) {
 		t.Fatal(s.stats.learnts, s.act_clas.size, s.claProofs.size)
 	}
 	c := clause2_read(s, s.units[0])
-	if c.size != 1 || c.lits[0] != 0 {
+	if clause_size(c) != 1 || c.lits[0] != 0 {
 		t.Fatal("unit handle lost")
 	}
 	for _, h := range veci_begin(&s.claProofs) {

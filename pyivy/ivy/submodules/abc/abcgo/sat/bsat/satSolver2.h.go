@@ -26,7 +26,7 @@ type sat_solver2 = sat_solver2_t
 type sat_solver2_t struct {
 	sat_solver_t
 	units                                                                          []cla
-	variableA                                                                      []int32
+	variableA                                                                      []uint8
 	markedLevels                                                                   []bool
 	nUnits, nof_learnts, fProofLogging                                             int32
 	claProofs, temp_proof, mark_levels, min_lit_order, min_step_order, learnt_live veci
@@ -53,8 +53,8 @@ func clause2_proofid(s *sat_solver2, c *clause, varA int32) int32 {
 	}
 	return clause_id(c)<<2 | varA<<1 | 1
 }
-func clause2_is_partA(s *sat_solver2, h cla) int32     { return clause2_read(s, h).partA }
-func clause2_set_partA(s *sat_solver2, h cla, a int32) { clause2_read(s, h).partA = a }
+func clause2_is_partA(s *sat_solver2, h cla) int32     { return int32(clause2_read(s, h).partA) }
+func clause2_set_partA(s *sat_solver2, h cla, a int32) { clause2_read(s, h).partA = uint8(a & 1) }
 func clause2_id(s *sat_solver2, h cla) int32           { return clause_id(clause2_read(s, h)) }
 func clause2_set_id(s *sat_solver2, h cla, id int32)   { clause_set_id(clause2_read(s, h), id) }
 func solver2Bool(value bool) int32 {
@@ -66,8 +66,8 @@ func solver2Bool(value bool) int32 {
 func var_is_assigned(s *sat_solver2, v int32) int32 {
 	return solver2Bool(s.assigns[v] != satUnassigned)
 }
-func var_is_partA(s *sat_solver2, v int32) int32          { return s.variableA[v] }
-func var_set_partA(s *sat_solver2, v, a int32)            { s.variableA[v] = a }
+func var_is_partA(s *sat_solver2, v int32) int32          { return int32(s.variableA[v]) }
+func var_set_partA(s *sat_solver2, v, a int32)            { s.variableA[v] = uint8(a & 1) }
 func sat_solver2_nvars(s *sat_solver2) int32              { return s.size }
 func sat_solver2_nclauses(s *sat_solver2) int32           { return int32(s.stats.clauses) }
 func sat_solver2_nlearnts(s *sat_solver2) int32           { return int32(s.stats.learnts) }

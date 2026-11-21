@@ -153,7 +153,7 @@ func TestClausePageExtractionAtHighestSize(t *testing.T) {
 	Sat_MemBookMark(p)
 	Sat_MemAppend(p, []int32{0, 2, 4}, 3, 1, 0)
 	Sat_MemRollBack(p)
-	if Sat_MemClauseHand(p, problem).size != 2 || Sat_MemClauseHand(p, learned).size != 2 || Sat_MemCountL(p) != 1 {
+	if clause_size(Sat_MemClauseHand(p, problem)) != 2 || clause_size(Sat_MemClauseHand(p, learned)) != 2 || Sat_MemCountL(p) != 1 {
 		t.Fatal("high-bit learned handle did not survive rollback")
 	}
 }
@@ -253,6 +253,90 @@ func TestWatchTagPreservesHighestEncodableVariables(t *testing.T) {
 			if got := clause_read_lit(h); clause_is_lit(h) == 0 || got != l {
 				t.Errorf("literal %d encoded as %#x and decoded as %d", l, uint32(h), got)
 			}
+		}
+	}
+}
+
+func TestLiteralSliceAppendPreservesClauseID(t *testing.T) {
+	m := Sat_MemAlloc(9)
+	for _, size := range []int32{0, 1, 2, 3, 4, 17} {
+		c := Sat_MemClauseHand(m, Sat_MemAppend(m, nil, size, 1, 0))
+		want := clause_id(c)
+		for _, view := range [][]lit{clause_begin(c), clause_end(c)} {
+			grown := append(view, 99)
+			if grown[len(grown)-1] != 99 || clause_id(c) != want {
+				t.Errorf("appending to %d-literal clause view overwrote ID %d with %d", size, want, clause_id(c))
+				clause_set_id(c, want)
+			}
+		}
+	}
+}
+
+func TestProofPartitionSettersKeepOneBit(t *testing.T) {
+	s := sat_solver2_new()
+	defer sat_solver2_delete(s)
+	sat_solver2_setnvars(s, 2)
+	h := Sat_MemAppend(&s.Mem, []lit{0, 2}, 2, 0, 1)
+	for _, value := range []int32{1, 2, 3, 256, -1, -2, 0} {
+		clause2_set_partA(s, h, value)
+		var_set_partA(s, 1, value)
+		if c, v := clause2_is_partA(s, h), var_is_partA(s, 1); c != value&1 || v != value&1 {
+			t.Errorf("partition %d: clause %d and variable %d, want %d", value, c, v, value&1)
+		}
+	}
+}
+
+func BenchmarkStoreMixedSATClauses(b *testing.B) {
+	data := []lit{0, 2, 4, 6, 8, 10, 12, 14}
+	b.ReportAllocs()
+	for b.Loop() {
+		m := Sat_MemAlloc(12)
+		var last cla
+		for i := range 1024 {
+			size := int32(2 + i%7)
+			last = Sat_MemAppend(m, data, size, int32(i%2), 1)
+		}
+		if clause_id(Sat_MemClauseHand(m, last)) != 511 {
+			b.Fatal("wrong clause ID")
+		}
+		Sat_MemFree(m)
+	}
+}
+
+func TestClauseWordCountRejectsOverflow(t *testing.T) {
+	if got := Sat_MemIntSize(1<<31-5, 1); got != 1<<31-2 {
+		t.Fatalf("largest even word count %d", got)
+	}
+	for _, learned := range []int32{0, 1} {
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Errorf("word count wrapped for maximum clause size, learned=%d", learned)
+				}
+			}()
+			Sat_MemIntSize(1<<31-1, learned)
+		}()
+	}
+}
+
+func TestLastClausePageCannotWrapOntoLiveHandle(t *testing.T) {
+	for stream := range int32(2) {
+		m := Sat_MemAlloc(31)
+		h := Sat_MemAppend(m, []lit{0, 2}, 2, stream, 1)
+		original := Sat_MemClauseHand(m, h)
+		// Exercise the page transition without allocating a two-billion-word page.
+		m.pPages[stream].limit = 1<<31 - 4
+		before := m.nEntries
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Error("new page reused a live clause handle")
+				}
+			}()
+			Sat_MemAppend(m, []lit{4, 6}, 2, stream, 1)
+		}()
+		if m.iPage[stream] != stream || m.nEntries != before || len(m.pPages) != 2 || Sat_MemClauseHand(m, h) != original {
+			t.Fatal("page exhaustion changed the live clause store")
 		}
 	}
 }

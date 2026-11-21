@@ -17,7 +17,7 @@ func sat_solver2_reducedb(s *sat_solver2) {
 	for _, h := range handles {
 		c := clause2_read(s, h)
 		id := clause_id(c)
-		scores[id] = (7-min(c.lbd, 7))<<28 | int32(uint32(s.act_clas.ptr[id])>>4)
+		scores[id] = (7-int32(min(c.lbd, 7)))<<28 | int32(uint32(s.act_clas.ptr[id])>>4)
 	}
 	sorted := append([]int32(nil), scores...)
 	slices.Sort(sorted)
@@ -31,7 +31,7 @@ func sat_solver2_reducedb(s *sat_solver2) {
 	removed := int32(0)
 	for i, h := range handles {
 		c := clause2_read(s, h)
-		keep[i] = int32(i) > recent || c.size < 2 || scores[clause_id(c)] >= cutoff || s.reasons[lit_var(c.lits[0])] == h
+		keep[i] = int32(i) > recent || clause_size(c) < 2 || scores[clause_id(c)] >= cutoff || s.reasons[lit_var(c.lits[0])] == h
 		if !keep[i] {
 			removed++
 		}
@@ -46,7 +46,7 @@ func sat_solver2_reducedb(s *sat_solver2) {
 		if !keep[i] {
 			c.mark = 1
 			s.stats.learnts--
-			s.stats.learnts_literals -= int64(c.size)
+			s.stats.learnts_literals -= int64(clause_size(c))
 			continue
 		}
 		s.act_clas.ptr[write] = s.act_clas.ptr[id]

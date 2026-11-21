@@ -30,13 +30,13 @@ func proof_chain_resolve(s *sat_solver2, c *clause, variable int32) {
 		panic("missing unit proof reason")
 	}
 	if s.pInt2 != nil {
-		s.tempInter = s.pInt2.chainResolve(c, s.tempInter, s.variableA[variable])
+		s.tempInter = s.pInt2.chainResolve(c, s.tempInter, var_is_partA(s, variable))
 	}
 	if s.pPrf2 != nil {
 		Prf_ManChainResolve(s.pPrf2, c)
 	}
 	if s.pPrf1 != nil {
-		id := clause2_proofid(s, c, s.variableA[variable])
+		id := clause2_proofid(s, c, var_is_partA(s, variable))
 		if id>>2 <= 0 {
 			panic("invalid proof antecedent")
 		}

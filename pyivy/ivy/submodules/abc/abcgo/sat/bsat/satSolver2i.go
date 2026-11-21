@@ -79,7 +79,7 @@ func (p *Int2_Man_t_) chainStart(c *clause) int32 {
 		return cached
 	}
 	value := p.pAig.Const0()
-	for _, l := range c.lits[:c.size] {
+	for _, l := range c.lits {
 		if position, shared := p.vVar2Glo[lit_var(l)]; shared {
 			variable := aig.Aig_IthVar(p.pAig, position)
 			if lit_sign(l) != 0 {

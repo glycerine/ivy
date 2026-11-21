@@ -39,7 +39,7 @@ func (p *Solver2) ProofInterpolant(globals []int32) *aig.Graph {
 		value := result.Const1()
 		if c.partA != 0 {
 			value = result.Const0()
-			for _, literal := range c.lits[:c.size] {
+			for _, literal := range c.lits {
 				if position, ok := positions[lit_var(literal)]; ok {
 					variable := inputs[position]
 					if lit_sign(literal) != 0 {

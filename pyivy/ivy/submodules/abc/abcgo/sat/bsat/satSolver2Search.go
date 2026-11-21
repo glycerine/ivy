@@ -9,7 +9,7 @@ func solver2_analyze_final(s *sat_solver2, conflict *clause, skip int32) int32 {
 		panic("stale final-analysis tags")
 	}
 	proof_chain_start(s, conflict)
-	for _, l := range conflict.lits[skip:conflict.size] {
+	for _, l := range conflict.lits[skip:] {
 		v := lit_var(l)
 		if s.levels[v] != 0 {
 			solver2_tag(s, v, 1)
@@ -28,7 +28,7 @@ func solver2_analyze_final(s *sat_solver2, conflict *clause, skip int32) int32 {
 			continue
 		}
 		proof_chain_resolve(s, reason, v)
-		for _, l := range reason.lits[1:reason.size] {
+		for _, l := range reason.lits[1:] {
 			x := lit_var(l)
 			if s.levels[x] != 0 {
 				solver2_tag(s, x, 1)

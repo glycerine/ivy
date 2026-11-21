@@ -27,7 +27,7 @@ func solver2_propagate(s *sat_solver2) *clause {
 				continue
 			}
 			moved := false
-			for k := int32(2); k < c.size; k++ {
+			for k := int32(2); k < clause_size(c); k++ {
 				l := c.lits[k]
 				if s.assigns[lit_var(l)] != uint8(1-lit_sign(l)) {
 					c.lits[1], c.lits[k] = l, falseLiteral
@@ -43,7 +43,7 @@ func solver2_propagate(s *sat_solver2) *clause {
 			if s.fProofLogging != 0 && solver2_dlevel(s) == 0 {
 				variable := lit_var(implied)
 				proof_chain_start(s, c)
-				for _, l := range c.lits[1:c.size] {
+				for _, l := range c.lits[1:] {
 					proof_chain_resolve(s, nil, lit_var(l))
 				}
 				proof := proof_chain_stop(s)

@@ -1,9 +1,9 @@
 package bsat
 
 // satClauseLBD preserves ABC's 32-bit decision-level signature estimate.
-func satClauseLBD(a *satAssignments, c *clause) int32 {
+func satClauseLBD(a *satAssignments, c *clause) uint8 {
 	var mask uint32
-	var count int32
+	var count uint8
 	for _, l := range clause_begin(c) {
 		bit := uint32(1) << uint(a.levels[lit_var(l)]&31)
 		if mask&bit == 0 {

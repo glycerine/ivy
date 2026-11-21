@@ -46,7 +46,7 @@ func writeDimacsClause(writer io.Writer, literals []lit, increment int32) error 
 	return err
 }
 func Sat_SolverClauseWriteDimacs(file *os.File, c *clause, increment int32) error {
-	return writeDimacsClause(file, c.lits[:c.size], solver2Bool(increment != 0))
+	return writeDimacsClause(file, c.lits, solver2Bool(increment != 0))
 }
 
 // WriteSolverDIMACS includes compact binary watches as well as memory clauses.
@@ -60,7 +60,7 @@ func WriteSolverDIMACS(writer io.Writer, s *sat_solver, assumptions []lit, incre
 				continue
 			}
 			c := Sat_MemClauseHand(&s.Mem, h)
-			literals := append([]lit(nil), c.lits[:c.size]...)
+			literals := append([]lit(nil), c.lits...)
 			clauses = append(clauses, literals)
 			if len(literals) == 2 {
 				a, b := literals[0], literals[1]

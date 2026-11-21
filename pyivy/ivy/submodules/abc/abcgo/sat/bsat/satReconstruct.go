@@ -65,7 +65,7 @@ func (r *resolutionTrace) add(c *Sto_Cls_t) cla {
 	h := int32(len(r.stored)+1) * 2
 	page := Sat_MemHandPage(r.memory, h)
 	r.memory.ensurePage(page)
-	r.memory.pPages[page].put(Sat_MemHandShift(r.memory, h), &clause{size: c.nLits, lits: append([]lit(nil), c.pLits...)})
+	r.memory.pPages[page].put(Sat_MemHandShift(r.memory, h), &clause{lits: append([]lit(nil), c.pLits[:c.nLits]...)})
 	r.stored[h] = c
 	if c.nLits >= 2 {
 		veci_push(&r.watches[lit_neg(c.pLits[0])], h)

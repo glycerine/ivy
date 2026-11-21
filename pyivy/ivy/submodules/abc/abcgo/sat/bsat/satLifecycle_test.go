@@ -19,7 +19,7 @@ func TestWatchStorageFollowsWatchedLiterals(t *testing.T) {
 
 func TestSolverAllocationGrowthRestart(t *testing.T) {
 	s := sat_solver_new()
-	if s.random_seed != 91648253 || s.Mem.nPageSize != 17 || s.binary.size != 2 {
+	if s.random_seed != 91648253 || s.Mem.nPageSize != 17 || clause_size(s.binary) != 2 {
 		t.Fatal("defaults")
 	}
 	sat_solver_setnvars(s, 4)

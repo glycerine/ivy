@@ -34,12 +34,12 @@ const (
 )
 
 type clause struct {
-	lrn, mark, partA, lbd, size int32
-	allocWords                  int32
-	lits                        []lit
+	lits                  []lit
+	allocWords, id        int32
+	lrn, mark, partA, lbd uint8
 }
 
-// Short clauses keep their literals and optional ID next to the header.
+// Short clauses keep their literals next to the header.
 // Blocks are never overwritten while a caller may retain a clause pointer.
 type shortClause struct {
 	clause
@@ -88,9 +88,15 @@ func Sat_MemIncLimit(p []int32, n int32) int32   { p[0] += n; return p[0] }
 func Sat_MemWriteLimit(p []int32, n int32)       { p[0] = n }
 func Sat_MemHandPage(p *Sat_Mem_t, h cla) int32  { return int32(uint32(h) >> p.nPageSize) }
 func Sat_MemHandShift(p *Sat_Mem_t, h cla) int32 { return h & p.uPageMask }
-func Sat_MemIntSize(size, lrn int32) int32       { return 2 * ((size + 2 + lrn) / 2) }
-func Sat_MemClauseSize(c *clause) int32          { return Sat_MemIntSize(c.size, c.lrn) }
-func Sat_MemClauseSize2(c *clause) int32         { return Sat_MemIntSize(c.size, 1) }
+func Sat_MemIntSize(size, lrn int32) int32 {
+	words := (int64(size) + 2 + int64(lrn)) &^ 1
+	if words > 1<<31-1 {
+		panic("clause word count exceeds handle range")
+	}
+	return int32(words)
+}
+func Sat_MemClauseSize(c *clause) int32  { return Sat_MemIntSize(clause_size(c), int32(c.lrn)) }
+func Sat_MemClauseSize2(c *clause) int32 { return Sat_MemIntSize(clause_size(c), 1) }
 func Sat_MemClause(p *Sat_Mem_t, i, k int32) *clause {
 	return Sat_MemClauseHand(p, Sat_MemHand(p, i, k))
 }
@@ -137,12 +143,12 @@ func clause_learnt_h(p *Sat_Mem_t, h cla) int32 {
 	}
 	return 0
 }
-func clause_learnt(c *clause) int32     { return c.lrn }
-func clause_id(c *clause) int32         { return c.lits[c.size] }
-func clause_set_id(c *clause, id int32) { c.lits[c.size] = id }
-func clause_size(c *clause) int32       { return c.size }
-func clause_begin(c *clause) []lit      { return c.lits[:c.size] }
-func clause_end(c *clause) []lit        { return c.lits[c.size:c.size] }
+func clause_learnt(c *clause) int32     { return int32(c.lrn) }
+func clause_id(c *clause) int32         { return c.id }
+func clause_set_id(c *clause, id int32) { c.id = id }
+func clause_size(c *clause) int32       { return int32(len(c.lits)) }
+func clause_begin(c *clause) []lit      { return c.lits }
+func clause_end(c *clause) []lit        { return c.lits[len(c.lits):] }
 func clause_print_(c *clause) {
 	fmt.Print("{ ")
 	for _, l := range clause_begin(c) {
@@ -194,6 +200,9 @@ func Sat_MemRollBack(p *Sat_Mem_t) {
 func Sat_MemFree_(p *Sat_Mem_t) { *p = Sat_Mem_t{} }
 func Sat_MemFree(p *Sat_Mem_t)  { Sat_MemFree_(p) }
 func (p *Sat_Mem_t) ensurePage(page int32) {
+	if uint32(page) > ^uint32(0)>>uint(p.nPageSize) {
+		panic("SAT clause page exceeds handle range")
+	}
 	if int(page) >= len(p.pPages) {
 		p.pPages = slices.Grow(p.pPages, int(page)+1-len(p.pPages))[:page+1]
 	}
@@ -217,7 +226,7 @@ func Sat_MemAppend(p *Sat_Mem_t, data []int32, size, lrn, plus int32) int32 {
 		offset = 2
 	}
 	var c *clause
-	if size <= 3 {
+	if size <= 4 {
 		block := &p.short[lrn]
 		if block.used == len(block.records) {
 			// Empty solvers need only the binary scratch record. Grow based
@@ -228,14 +237,14 @@ func Sat_MemAppend(p *Sat_Mem_t, data []int32, size, lrn, plus int32) int32 {
 		entry := &block.records[block.used]
 		block.used++
 		c = &entry.clause
-		c.lits = entry.data[: size+1 : size+1]
+		c.lits = entry.data[:size:size]
 	} else {
-		c = &clause{lits: make([]lit, size+1)}
+		c = &clause{lits: make([]lit, size)}
 	}
-	c.size, c.lrn, c.allocWords = size, lrn, words
-	copy(c.lits[:size], data)
+	c.lrn, c.allocWords = uint8(lrn), words
+	copy(c.lits, data)
 	if lrn|plus != 0 {
-		c.lits[size] = p.nEntries[lrn]
+		c.id = p.nEntries[lrn]
 	}
 	h := Sat_MemHand(p, page, offset)
 	p.pPages[page].put(offset, c)

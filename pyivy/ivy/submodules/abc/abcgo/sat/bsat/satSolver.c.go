@@ -82,7 +82,7 @@ func sortrnd(array []any, size int32, compare func(any, any) int32, seed *float6
 	sortrnd(array[i:], size-i, compare, seed)
 }
 func sat_clause_compute_lbd(s *sat_solver, c *clause) int32 {
-	return satClauseLBD(&s.satAssignments, c)
+	return int32(satClauseLBD(&s.satAssignments, c))
 }
 
 // Memory is an owned-payload estimate, excluding runtime/map bookkeeping.

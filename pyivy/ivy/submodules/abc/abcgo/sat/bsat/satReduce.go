@@ -38,7 +38,7 @@ func sat_solver_reducedb(s *sat_solver) {
 	for _, h := range handles {
 		c := Sat_MemClauseHand(m, h)
 		id := clause_id(c)
-		score := (7 - min(c.lbd, 7)) << 28
+		score := (7 - int32(min(c.lbd, 7))) << 28
 		if s.ClaActType == 0 {
 			score |= s.act_clas.ptr[id] >> 4
 		}
@@ -60,13 +60,13 @@ func sat_solver_reducedb(s *sat_solver) {
 		if c.mark != 0 {
 			panic("premarked learned clause")
 		}
-		if int32(index) > recentStart || c.size < 3 || scores[id] > cutoff || s.reasons[lit_var(c.lits[0])] == h {
+		if int32(index) > recentStart || clause_size(c) < 3 || scores[id] > cutoff || s.reasons[lit_var(c.lits[0])] == h {
 			s.act_clas.ptr[write] = s.act_clas.ptr[id]
 			write++
 		} else {
 			c.mark = 1
 			s.stats.learnts--
-			s.stats.learnts_literals -= int64(c.size)
+			s.stats.learnts_literals -= int64(clause_size(c))
 		}
 	}
 	veci_resize(&s.act_clas, write)

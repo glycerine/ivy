@@ -15,7 +15,7 @@ func solver2_lit_removable_rec(s *sat_solver2, v int32) bool {
 		solver2_tag(s, v, 2)
 		return false
 	}
-	for _, l := range c.lits[1:c.size] {
+	for _, l := range c.lits[1:] {
 		x := lit_var(l)
 		if s.tags[x]&1 != 0 {
 			solver2_lit_removable_rec(s, x)
@@ -43,7 +43,7 @@ func solver2_logging_order_rec(s *sat_solver2, v int32) {
 	if c == nil {
 		panic("missing minimization proof reason")
 	}
-	for _, l := range c.lits[1:c.size] {
+	for _, l := range c.lits[1:] {
 		x := lit_var(l)
 		if s.levels[x] != 0 && s.tags[x]&1 == 0 {
 			solver2_logging_order_rec(s, x)
@@ -69,7 +69,7 @@ func solver2_analyze(s *sat_solver2, c *clause, learnt *veci) int32 {
 		if c.lrn != 0 {
 			act_clause2_bump(s, c)
 		}
-		for _, l := range c.lits[skip:c.size] {
+		for _, l := range c.lits[skip:] {
 			v := lit_var(l)
 			if s.tags[v] != 0 {
 				continue
@@ -131,7 +131,7 @@ func solver2_analyze(s *sat_solver2, c *clause, learnt *veci) int32 {
 			v := s.min_step_order.ptr[i]
 			reason := clause2_read(s, s.reasons[v])
 			proof_chain_resolve(s, reason, v)
-			for _, l := range reason.lits[1:reason.size] {
+			for _, l := range reason.lits[1:] {
 				if s.levels[lit_var(l)] == 0 {
 					proof_chain_resolve(s, nil, lit_var(l))
 				}
