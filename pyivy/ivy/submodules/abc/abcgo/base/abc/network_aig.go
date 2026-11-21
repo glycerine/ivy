@@ -149,20 +149,27 @@ func (n *Network) changedAnd(o *Object) {
 
 const aigANDMarker = "abcgo:AIG AND"
 
-func (n *Network) CreateAndEdges(a, b Edge) Edge {
-	if !n.contains(a.Object) || !n.contains(b.Object) {
-		panic("foreign AIG input")
+func (n *Network) checkAndInputs(a, b Edge) {
+	if !n.contains(a.Object) || !n.contains(b.Object) || a.Object.Kind == ObjectPO || b.Object.Kind == ObjectPO {
+		panic("invalid AIG input")
 	}
-	o := n.NewObject(ObjectNode)
+}
+
+// Both pins have been validated and the destination is an empty AND node.
+// Attach the two fanout occurrences even when both pins use the same driver.
+func setAndPins(o *Object, a, b Edge) {
 	o.Data = aigANDMarker
-	if err := n.AddFanin(o, a); err != nil {
-		panic(err)
-	}
-	if err := n.AddFanin(o, b); err != nil {
-		panic(err)
-	}
+	o.fanins = append(o.fanins, a, b)
+	a.Object.fanouts = append(a.Object.fanouts, o)
+	b.Object.fanouts = append(b.Object.fanouts, o)
 	o.Level = 1 + max(a.Object.Level, b.Object.Level)
 	o.Phase = (a.Object.Phase != a.Complement) && (b.Object.Phase != b.Complement)
+}
+
+func (n *Network) CreateAndEdges(a, b Edge) Edge {
+	n.checkAndInputs(a, b)
+	o := n.NewObject(ObjectNode)
+	setAndPins(o, a, b)
 	return o.Signal()
 }
 func (n *Network) AndEdges(a, b Edge) Edge {

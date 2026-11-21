@@ -112,19 +112,16 @@ func appendUnique(objects *[]*Object, o *Object) {
 	*objects = append(*objects, o)
 }
 func aigSetNode(o *Object, a, b Edge) {
-	pair := edgePair(a, b)
-	o.Data = aigANDMarker
-	Abc_ObjAddFanin(o, pair[0])
-	Abc_ObjAddFanin(o, pair[1])
-	o.Phase = (pair[0].Object.Phase != pair[0].Complement) && (pair[1].Object.Phase != pair[1].Complement)
+	if a.Object.ID > b.Object.ID {
+		a, b = b, a
+	}
+	setAndPins(o, a, b)
 	o.Copy = nil
 }
 func Abc_AigAndCreate(m *Abc_Aig_t, a, b any) Edge {
 	x, y := objectEdge(a), objectEdge(b)
 	n := m.Network
-	if !n.contains(x.Object) || !n.contains(y.Object) {
-		panic("foreign AIG operand")
-	}
+	n.checkAndInputs(x, y)
 	if len(n.hashed)+n.extraAnds > 2*m.bins {
 		Abc_AigResize(m)
 	}
@@ -138,19 +135,13 @@ func Abc_AigAndCreate(m *Abc_Aig_t, a, b any) Edge {
 	return e
 }
 func Abc_AigAndCreateFrom(m *Abc_Aig_t, a, b any, o *Object) Edge {
-	if !m.Network.contains(o) || !m.Network.contains(objectEdge(a).Object) || !m.Network.contains(objectEdge(b).Object) || len(o.fanins) != 0 {
+	x, y := objectEdge(a), objectEdge(b)
+	m.Network.checkAndInputs(x, y)
+	if !m.Network.contains(o) || o.Kind != ObjectNode || len(o.fanins) != 0 {
 		panic("recreation requires live empty node")
 	}
 	delete(m.excluded, o)
-	// Pin edits on a reused object normally invalidate an older raw lookup.
-	// This is an explicit hash insertion, so retain the preceding bucket head.
-	x, y := objectEdge(a), objectEdge(b)
-	key := andHashKey(edgePair(x, y))
-	previous := m.Network.hashed[key]
 	aigSetNode(o, x, y)
-	if previous.Object != nil {
-		m.Network.hashed[key] = previous
-	}
 	m.Network.registerAnd(o)
 	return o.Signal()
 }
