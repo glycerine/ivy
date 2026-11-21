@@ -899,52 +899,19 @@ func Cudd_Cofactor(dd *DdManager, f, cube *DdNode) *DdNode {
 	return visit(f)
 }
 func (dd *DdManager) abstract(f, cube *DdNode, universal bool) *DdNode {
-	if !dd.valid(f, cube) {
+	if !dd.valid(f, cube) || !dd.validAbstractionCube(cube) {
 		return nil
 	}
-	if !dd.positiveCube(cube) {
-		return nil
-	}
-	quantified := map[uint32]bool{}
-	for _, i := range dd.Support(cube) {
-		quantified[uint32(i)] = true
-	}
-	memo := map[*DdNode]*DdNode{}
-	var visit func(*DdNode) *DdNode
-	visit = func(n *DdNode) *DdNode {
-		if Cudd_IsConstant(n) {
-			return n
-		}
-		if v := memo[n]; v != nil {
-			return v
-		}
-		r := Cudd_Regular(n)
-		t, e := dd.cofactors(n, dd.level(n))
-		t, e = visit(t), visit(e)
-		var v *DdNode
-		if quantified[r.Index] {
-			if universal {
-				v = Cudd_bddAnd(dd, t, e)
-			} else {
-				v = Cudd_bddOr(dd, t, e)
-			}
-		} else {
-			v = dd.node(r.Index, t, e)
-		}
-		memo[n] = v
-		return v
-	}
-	return visit(f)
+	result := dd.existChecked(Cudd_NotCond(f, universal), cube, nil)
+	return Cudd_NotCond(result, universal)
 }
 
 func Cudd_bddAndAbstract(dd *DdManager, f, g, cube *DdNode) *DdNode {
 	if dd == nil || !dd.valid(f, g, cube) {
 		return nil
 	}
-	for c := cube; c != dd.One; c = c.T {
-		if Cudd_IsConstant(c) || Cudd_IsComplement(c) || c.E != dd.LogicZero {
-			return nil
-		}
+	if !dd.positiveCube(cube) {
+		return nil
 	}
 	return dd.andAbstractChecked(f, g, cube, nil)
 }
@@ -952,15 +919,7 @@ func Cudd_bddAndAbstractLimit(dd *DdManager, f, g, cube *DdNode, limit uint32) (
 	if !dd.valid(f, g, cube) {
 		return nil
 	}
-	oldLimited, oldCeiling := dd.allocationLimited, dd.allocationCeiling
-	dd.allocationLimited = true
-	dd.allocationCeiling = dd.unique.count + int(limit)
-	defer func() {
-		dd.allocationLimited, dd.allocationCeiling = oldLimited, oldCeiling
-		if recover() != nil {
-			result = nil
-		}
-	}()
+	defer dd.beginAllocationAttempt(uint64(limit)).finish(&result)
 	return Cudd_bddAndAbstract(dd, f, g, cube)
 }
 func Cudd_DagSize(f *DdNode) int {

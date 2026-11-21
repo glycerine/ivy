@@ -18,74 +18,99 @@ func BDDAndAbstractContext(ctx context.Context, dd *DdManager, f, g, cube *DdNod
 	if ctx == nil || dd == nil || !dd.valid(f, g, cube) {
 		return nil
 	}
-	for c := cube; c != dd.One; c = c.T {
-		if Cudd_IsConstant(c) || Cudd_IsComplement(c) || c.E != dd.LogicZero {
-			return nil
-		}
+	if !dd.positiveCube(cube) {
+		return nil
 	}
 	return dd.andAbstractChecked(f, g, cube, func() bool { return ctx.Err() == nil })
 }
 func (dd *DdManager) andAbstractChecked(f, g, cube *DdNode, check func() bool) *DdNode {
-	memo := map[bddITEKey]*DdNode{}
-	var visit func(*DdNode, *DdNode, *DdNode) *DdNode
-	visit = func(f, g, cube *DdNode) *DdNode {
-		if check != nil && !check() {
-			return nil
-		}
-		if f == dd.LogicZero || g == dd.LogicZero || f == Cudd_Not(g) {
-			return dd.LogicZero
-		}
-		if f == dd.One && g == dd.One {
-			return dd.One
-		}
+	if check != nil && !check() {
+		return nil
+	}
+	if f == dd.LogicZero || g == dd.LogicZero || f == Cudd_Not(g) {
+		return dd.LogicZero
+	}
+	if cube == dd.One {
+		return dd.andChecked(f, g, check)
+	}
+	if f == dd.One || f == g {
+		return dd.existChecked(g, cube, check)
+	}
+	if g == dd.One {
+		return dd.existChecked(f, cube, check)
+	}
+
+	if f.ID > g.ID {
+		f, g = g, f
+	}
+	fr, gr := Cudd_Regular(f), Cudd_Regular(g)
+	lf, lg := dd.Perm[fr.Index], dd.Perm[gr.Index]
+	top := min(lf, lg)
+	for dd.Perm[cube.Index] < top {
+		cube = cube.T
 		if cube == dd.One {
 			return dd.andChecked(f, g, check)
 		}
-		if f.ID > g.ID {
-			f, g = g, f
+	}
+	key := computedKey{f: f, g: g, h: cube, kind: cacheBDDAndAbstract}
+	hash := key.hash()
+	if !dd.singleBDDRef(fr) || !dd.singleBDDRef(gr) {
+		if found := dd.cacheLookup(key, hash, true); found != nil {
+			return found
 		}
-		top := min(dd.level(f), dd.level(g))
-		for dd.level(cube) < top {
-			cube = cube.T
+	}
+
+	ft, fe, gt, ge := f, f, g, g
+	if lf == top {
+		ft, fe = fr.T, fr.E
+		if fr != f {
+			ft, fe = Cudd_Not(ft), Cudd_Not(fe)
 		}
-		if cube == dd.One {
-			return dd.andChecked(f, g, check)
+	}
+	if lg == top {
+		gt, ge = gr.T, gr.E
+		if gr != g {
+			gt, ge = Cudd_Not(gt), Cudd_Not(ge)
 		}
-		key := bddITEKey{f, g, cube}
-		if r := memo[key]; r != nil {
-			return r
-		}
-		ft, fe := dd.cofactors(f, top)
-		gt, ge := dd.cofactors(g, top)
-		next := cube
-		quantify := dd.level(cube) == top
-		if quantify {
-			next = cube.T
-		}
-		t := visit(ft, gt, next)
-		if t == nil {
-			return nil
-		}
-		if quantify && t == dd.One {
-			memo[key] = t
-			return t
-		}
-		e := visit(fe, ge, next)
+	}
+
+	quantify := dd.Perm[cube.Index] == top
+	next := cube
+	if quantify {
+		next = cube.T
+	}
+	t := dd.andAbstractChecked(ft, gt, next, check)
+	if t == nil {
+		return nil
+	}
+	result := t
+	if !quantify {
+		e := dd.andAbstractChecked(fe, ge, next, check)
 		if e == nil {
 			return nil
 		}
-		var r *DdNode
-		if quantify {
-			r = Cudd_Not(dd.andChecked(Cudd_Not(t), Cudd_Not(e), check))
-		} else {
-			r = dd.node(uint32(dd.InvPerm[top]), t, e)
+		result = dd.node(uint32(dd.InvPerm[top]), t, e)
+	} else if t != dd.One && t != fe && t != ge {
+		var e *DdNode
+		switch t {
+		case Cudd_Not(fe):
+			e = dd.existChecked(ge, next, check)
+		case Cudd_Not(ge):
+			e = dd.existChecked(fe, next, check)
+		default:
+			e = dd.andAbstractChecked(fe, ge, next, check)
 		}
-		if r != nil {
-			memo[key] = r
+		if e == nil {
+			return nil
 		}
-		return r
+		if t != e {
+			result = Cudd_Not(dd.andChecked(Cudd_Not(t), Cudd_Not(e), check))
+		}
 	}
-	return visit(f, g, cube)
+	if result != nil && (!dd.singleBDDRef(fr) || !dd.singleBDDRef(gr)) {
+		dd.cacheInsert(key, result, hash)
+	}
+	return result
 }
 
 // BDDTransferContext performs a simultaneous index mapping between managers.

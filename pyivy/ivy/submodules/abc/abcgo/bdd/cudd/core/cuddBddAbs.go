@@ -79,8 +79,73 @@ func (dd *DdManager) positiveCube(cube *DdNode) bool {
 	}
 	return true
 }
+
+// The three public abstraction routines report malformed positive cubes.
+func (dd *DdManager) validAbstractionCube(cube *DdNode) bool {
+	if !dd.positiveCube(cube) {
+		dd.errorCode = CUDD_INVALID_ARG
+		return false
+	}
+	return true
+}
+
+func (dd *DdManager) existChecked(f, cube *DdNode, check func() bool) *DdNode {
+	if check != nil && !check() {
+		return nil
+	}
+	fr := Cudd_Regular(f)
+	if fr == dd.One || cube == dd.One {
+		return f
+	}
+	for dd.Perm[cube.Index] < dd.Perm[fr.Index] {
+		cube = cube.T
+		if cube == dd.One {
+			return f
+		}
+	}
+	key := computedKey{f: f, g: cube, kind: cacheBDDExist}
+	hash := key.hash()
+	if !dd.singleBDDRef(fr) {
+		if found := dd.cacheLookup(key, hash, true); found != nil {
+			return found
+		}
+	}
+	ft, fe := fr.T, fr.E
+	if f != fr {
+		ft, fe = Cudd_Not(ft), Cudd_Not(fe)
+	}
+	quantify := cube.Index == fr.Index
+	next := cube
+	if quantify {
+		if ft == dd.One || fe == dd.One || ft == Cudd_Not(fe) {
+			return dd.One
+		}
+		next = cube.T
+	}
+	t := dd.existChecked(ft, next, check)
+	if t == nil {
+		return nil
+	}
+	result := t
+	if !quantify || t != dd.One {
+		e := dd.existChecked(fe, next, check)
+		if e == nil {
+			return nil
+		}
+		if quantify {
+			result = Cudd_Not(dd.andChecked(Cudd_Not(t), Cudd_Not(e), check))
+		} else {
+			result = dd.node(fr.Index, t, e)
+		}
+	}
+	if result != nil && !dd.singleBDDRef(fr) {
+		dd.cacheInsert(key, result, hash)
+	}
+	return result
+}
+
 func Cudd_bddXorExistAbstract(dd *DdManager, f, g, cube *DdNode) *DdNode {
-	if !dd.valid(f, g, cube) || !dd.positiveCube(cube) {
+	if !dd.valid(f, g, cube) || !dd.validAbstractionCube(cube) {
 		return nil
 	}
 	return dd.abstract(Cudd_bddXor(dd, f, g), cube, false)
