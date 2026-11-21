@@ -131,3 +131,27 @@ func TestRawEdgesAreNormalizedOnGraphInsertion(t *testing.T) {
 		t.Error("KIT retained excess node bits at a graph boundary")
 	}
 }
+
+func TestDecompositionNodesKeepOriginalInputPhases(t *testing.T) {
+	for left := range int32(2) {
+		for right := range int32(2) {
+			d, k := dec.Dec_GraphCreate(2), kit.Kit_GraphCreate(2)
+			da, db := dec.Dec_EdgeCreate(0, left), dec.Dec_EdgeCreate(1, right)
+			ka, kb := kit.Kit_EdgeCreate(0, left), kit.Kit_EdgeCreate(1, right)
+			dec.Dec_GraphAddNodeAnd(d, da, db)
+			kit.Kit_GraphAddNodeAnd(k, ka, kb)
+			want := [3]uint32{0, uint32(left), uint32(right)}
+			if dec.Dec_GraphNodeLast(d).PrintingFlags() != want || kit.Kit_GraphNodeLast(k).PrintingFlags() != want {
+				t.Fatalf("AND lost original phases %v", want)
+			}
+			dec.Dec_GraphAddNodeOr(d, da, db)
+			kit.Kit_GraphAddNodeOr(k, ka, kb)
+			want[0] = 1
+			if dec.Dec_GraphNodeLast(d).PrintingFlags() != want || kit.Kit_GraphNodeLast(k).PrintingFlags() != want {
+				t.Fatalf("OR lost original phases %v", want)
+			}
+			dec.Dec_GraphFree(d)
+			kit.Kit_GraphFree(k)
+		}
+	}
+}

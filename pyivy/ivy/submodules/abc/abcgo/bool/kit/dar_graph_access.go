@@ -8,5 +8,6 @@ func Kit_NodeEdges(n *Kit_Node_t) (Kit_Edge_t, Kit_Edge_t) { return n.eEdge0, n.
 // PrintingFlags returns the original operation and the two input phases
 // preceding the De Morgan transformation used to store an OR as an AND.
 func (n *Kit_Node_t) PrintingFlags() [3]uint32 {
-	return [3]uint32{uint32(n.fNodeOr), uint32(n.fCompl0), uint32(n.fCompl1)}
+	flags := uint32(n.printing)
+	return [3]uint32{flags & 1, flags >> 1 & 1, flags >> 2 & 1}
 }

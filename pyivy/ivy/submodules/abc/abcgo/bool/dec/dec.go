@@ -7,13 +7,12 @@ type Dec_Edge_t struct {
 	Node   uint32
 }
 type Dec_Node_t struct {
-	index                     int32
-	eEdge0, eEdge1            Dec_Edge_t
-	iFunc                     int32
-	pFunc                     any
-	Level                     uint32
-	fNodeOr, fCompl0, fCompl1 uint32
-	nLat0, nLat1, nLat2       uint32
+	pFunc          any
+	eEdge0, eEdge1 Dec_Edge_t
+	index, iFunc   int32
+	Level          uint32
+	printing       uint8 // Original OR and input complement bits, in that order.
+	latches        [3]uint8
 }
 type Dec_Graph_t struct {
 	fConst  int32
@@ -167,14 +166,13 @@ func Dec_GraphAppendNode(g *Dec_Graph_t) *Dec_Node_t {
 func Dec_GraphAddNodeAnd(g *Dec_Graph_t, a, b Dec_Edge_t) Dec_Edge_t {
 	n := Dec_GraphAppendNode(g)
 	n.SetEdges(a, b)
-	n.fCompl0 = a.fCompl
-	n.fCompl1 = b.fCompl
+	n.printing = uint8(a.fCompl<<1 | b.fCompl<<2)
 	return Dec_EdgeCreate(int32(len(g.pNodes))-1, 0)
 }
 func Dec_GraphAddNodeOr(g *Dec_Graph_t, a, b Dec_Edge_t) Dec_Edge_t {
 	e := Dec_GraphAddNodeAnd(g, a, b)
 	n := Dec_GraphNodeLast(g)
-	n.fNodeOr = 1
+	n.printing |= 1
 	n.eEdge0.fCompl ^= 1
 	n.eEdge1.fCompl ^= 1
 	e.fCompl = 1
@@ -219,15 +217,20 @@ func (g *Dec_Graph_t) SetLeafSignal(index int, signal any) {
 func (g *Dec_Graph_t) LeafCount() int { return int(g.nLeaves) }
 
 // Latches returns the two input-edge counts followed by the output-edge count.
-func (n *Dec_Node_t) Latches() [3]uint32 { return [3]uint32{n.nLat0, n.nLat1, n.nLat2} }
+func (n *Dec_Node_t) Latches() [3]uint32 {
+	return [3]uint32{uint32(n.latches[0]), uint32(n.latches[1]), uint32(n.latches[2])}
+}
 func (n *Dec_Node_t) SetLatches(counts [3]uint32) {
-	n.nLat0, n.nLat1, n.nLat2 = counts[0]&31, counts[1]&31, counts[2]&31
+	n.latches = [3]uint8{uint8(counts[0] & 31), uint8(counts[1] & 31), uint8(counts[2] & 31)}
 }
 
 // PrintingFlags returns original OR, input-zero complement, input-one complement.
-func (n *Dec_Node_t) PrintingFlags() [3]uint32 { return [3]uint32{n.fNodeOr, n.fCompl0, n.fCompl1} }
+func (n *Dec_Node_t) PrintingFlags() [3]uint32 {
+	flags := uint32(n.printing)
+	return [3]uint32{flags & 1, flags >> 1 & 1, flags >> 2 & 1}
+}
 func (n *Dec_Node_t) SetPrintingFlags(flags [3]uint32) {
-	n.fNodeOr, n.fCompl0, n.fCompl1 = flags[0]&1, flags[1]&1, flags[2]&1
+	n.printing = uint8((flags[0] & 1) | (flags[1]&1)<<1 | (flags[2]&1)<<2)
 }
 
 // SetLevel preserves the original node's unsigned fourteen-bit field semantics.

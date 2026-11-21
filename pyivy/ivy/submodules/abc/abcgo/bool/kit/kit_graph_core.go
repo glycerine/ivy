@@ -4,12 +4,12 @@ package kit
 // Go nodes are individually allocated so their addresses stay stable on append.
 type Kit_Edge_t struct{ fCompl, Node uint32 }
 type Kit_Node_t struct {
-	eEdge0, eEdge1            Kit_Edge_t
-	iFunc                     int32
-	pFunc                     any
-	Level                     uint32
-	fNodeOr, fCompl0, fCompl1 uint32
-	nLat0, nLat1, nLat2       uint32
+	pFunc          any
+	eEdge0, eEdge1 Kit_Edge_t
+	index, iFunc   int32
+	Level          uint32
+	printing       uint8 // Original OR and input complement bits, in that order.
+	latches        [3]uint8
 }
 type Kit_Graph_t struct {
 	fConst, nLeaves int32
@@ -46,6 +46,10 @@ func Kit_GraphNodeNum(g *Kit_Graph_t) int32             { return int32(len(g.pNo
 func Kit_GraphNode(g *Kit_Graph_t, i int32) *Kit_Node_t { return g.pNodes[i] }
 func Kit_GraphNodeLast(g *Kit_Graph_t) *Kit_Node_t      { return g.pNodes[int32(len(g.pNodes))-1] }
 func Kit_GraphNodeInt(g *Kit_Graph_t, n *Kit_Node_t) int32 {
+	if n != nil && n.index >= 0 && int(n.index) < len(g.pNodes) && g.pNodes[n.index] == n {
+		return n.index
+	}
+	// A caller may overwrite an exported node by value, including its index.
 	for i, p := range g.pNodes {
 		if p == n {
 			return int32(i)
@@ -87,7 +91,7 @@ func Kit_GraphCreate(n int32) *Kit_Graph_t {
 	}
 	g := &Kit_Graph_t{nLeaves: n, pNodes: make([]*Kit_Node_t, n, 2*n+50)}
 	for i := range g.pNodes {
-		g.pNodes[i] = &Kit_Node_t{}
+		g.pNodes[i] = &Kit_Node_t{index: int32(i)}
 	}
 	return g
 }
@@ -110,7 +114,7 @@ func Kit_GraphFree(g *Kit_Graph_t) {
 	}
 }
 func Kit_GraphAppendNode(g *Kit_Graph_t) *Kit_Node_t {
-	n := &Kit_Node_t{}
+	n := &Kit_Node_t{index: int32(len(g.pNodes))}
 	g.pNodes = append(g.pNodes, n)
 	return n
 }
@@ -123,8 +127,7 @@ func Kit_GraphAddNodeAnd(g *Kit_Graph_t, a, b Kit_Edge_t) Kit_Edge_t {
 	n := Kit_GraphAppendNode(g)
 	n.eEdge0 = a
 	n.eEdge1 = b
-	n.fCompl0 = a.fCompl
-	n.fCompl1 = b.fCompl
+	n.printing = uint8(a.fCompl<<1 | b.fCompl<<2)
 	n.Level = level
 	return Kit_EdgeCreate(int32(len(g.pNodes))-1, 0)
 }
@@ -134,9 +137,7 @@ func Kit_GraphAddNodeOr(g *Kit_Graph_t, a, b Kit_Edge_t) Kit_Edge_t {
 	b.fCompl ^= 1
 	e := Kit_GraphAddNodeAnd(g, a, b)
 	n := g.pNodes[e.Node]
-	n.fNodeOr = 1
-	n.fCompl0 = originalA
-	n.fCompl1 = originalB
+	n.printing = uint8(1 | originalA<<1 | originalB<<2)
 	e.fCompl = 1
 	return e
 }
@@ -219,7 +220,7 @@ func Kit_GraphLeafDepth_rec(g *Kit_Graph_t, n, leaf *Kit_Node_t) int32 {
 	if Kit_GraphNodeIsVar(g, n) != 0 {
 		return -100
 	}
-	d := max(Kit_GraphLeafDepth_rec(g, Kit_GraphNodeFanin0(g, n), leaf), Kit_GraphLeafDepth_rec(g, Kit_GraphNodeFanin1(g, n), leaf))
+	d := max(Kit_GraphLeafDepth_rec(g, g.pNodes[n.eEdge0.Node], leaf), Kit_GraphLeafDepth_rec(g, g.pNodes[n.eEdge1.Node], leaf))
 	if d == -100 {
 		return d
 	}
@@ -229,5 +230,5 @@ func Kit_GraphLevelNum_rec(g *Kit_Graph_t, n *Kit_Node_t) int32 {
 	if Kit_GraphNodeIsVar(g, n) != 0 {
 		return 0
 	}
-	return 1 + max(Kit_GraphLevelNum_rec(g, Kit_GraphNodeFanin0(g, n)), Kit_GraphLevelNum_rec(g, Kit_GraphNodeFanin1(g, n)))
+	return 1 + max(Kit_GraphLevelNum_rec(g, g.pNodes[n.eEdge0.Node]), Kit_GraphLevelNum_rec(g, g.pNodes[n.eEdge1.Node]))
 }

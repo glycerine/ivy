@@ -103,8 +103,9 @@ func Dec_GraphPrint2_rec(file *os.File, g *Dec_Graph_t, n *Dec_Node_t, compl int
 			*pos++
 		}
 	}
-	printChild(a, n.fCompl0, n.fNodeOr == 0 && a.fNodeOr != 0)
-	if n.fNodeOr != 0 {
+	flags := n.PrintingFlags()
+	printChild(a, flags[1], flags[0] == 0 && a.printing&1 != 0)
+	if flags[0] != 0 {
 		fmt.Fprint(file, " + ")
 		*pos += 3
 	} else {
@@ -112,5 +113,5 @@ func Dec_GraphPrint2_rec(file *os.File, g *Dec_Graph_t, n *Dec_Node_t, compl int
 		*pos++
 	}
 	Dec_GraphPrintUpdatePos(file, pos, width)
-	printChild(b, n.fCompl1, n.fNodeOr == 0 && b.fNodeOr != 0)
+	printChild(b, flags[2], flags[0] == 0 && b.printing&1 != 0)
 }
