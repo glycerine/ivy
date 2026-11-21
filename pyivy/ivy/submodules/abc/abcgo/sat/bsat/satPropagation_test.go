@@ -136,3 +136,46 @@ func TestCDCLPropagationAgainstNaive(t *testing.T) {
 		}
 	}
 }
+
+func TestLearnedClauseLevelSignatureCollisions(t *testing.T) {
+	a := newSatAssignments(96)
+	c := clause{}
+	for i := range a.levels {
+		a.levels[i] = int32(i)
+		c.lits = append(c.lits, toLitCond(int32(i), int32(i%2)))
+		want := min(32, i+1)
+		if got := satClauseLBD(&a, &c); int(got) != want {
+			t.Fatalf("after level %d: got %d, want %d", i, got, want)
+		}
+	}
+	for i := range a.levels {
+		a.levels[i] = int32(i*32 + 31)
+	}
+	if got := satClauseLBD(&a, &c); got != 1 {
+		t.Fatalf("levels colliding at bit 31 give %d", got)
+	}
+	if got := satClauseLBD(&a, &clause{}); got != 0 {
+		t.Fatalf("empty clause signature %d", got)
+	}
+}
+
+func TestWatchMoveBeforeConflictPreservesLiteralOrder(t *testing.T) {
+	a, mem, w, binaryHandle, binary := propagationFixture(6)
+	f := lit_neg(toLit(0))
+	moved := Sat_MemAppend(mem, []lit{f, toLit(1), toLit(2)}, 3, 0, 0)
+	conflict := Sat_MemAppend(mem, []lit{f, toLit(3), toLit(4)}, 3, 1, 0)
+	last := clause_from_lit(toLit(5))
+	for _, h := range []cla{moved, conflict, last} {
+		veci_push(&w[toLit(0)], h)
+	}
+	a.enqueue(toLit(0), 0)
+	a.enqueue(lit_neg(toLit(3)), 0)
+	a.enqueue(lit_neg(toLit(4)), 0)
+	var stats stats_t
+	if got := satPropagate(&a, mem, w, binaryHandle, binary, nil, &stats); got != conflict {
+		t.Fatalf("conflict handle %d, want %d", got, conflict)
+	}
+	if !reflect.DeepEqual(veci_begin(&w[toLit(0)]), []cla{conflict, last}) || !reflect.DeepEqual(veci_begin(&w[lit_neg(toLit(2))]), []cla{moved}) || stats.inspects != 2 || a.qhead != 1 || a.assigns[5] != satUnassigned {
+		t.Fatal("watch move or conflict consumed the remaining implication")
+	}
+}

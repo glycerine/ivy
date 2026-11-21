@@ -148,12 +148,16 @@ func Sat_MemClauseSize2(c *clause) int32 { return Sat_MemIntSize(clause_size(c),
 func Sat_MemClause(p *Sat_Mem_t, i, k int32) *clause {
 	return Sat_MemClauseHand(p, Sat_MemHand(p, i, k))
 }
+func (p *Sat_Mem_t) clauseAt(h cla) *clause {
+	index := Sat_MemHandShift(p, h) >> 1
+	return p.pPages[Sat_MemHandPage(p, h)].blocks[index/clauseIndexBlockSize][index%clauseIndexBlockSize]
+}
+
 func Sat_MemClauseHand(p *Sat_Mem_t, h cla) *clause {
 	if h == 0 {
 		return nil
 	}
-	index := Sat_MemHandShift(p, h) >> 1
-	c := p.pPages[Sat_MemHandPage(p, h)].blocks[index/clauseIndexBlockSize][index%clauseIndexBlockSize]
+	c := p.clauseAt(h)
 	if h&1 != 0 || c == nil {
 		panic("invalid clause handle")
 	}
