@@ -34,32 +34,43 @@ func (s *Solver) SetVariables(n int) {
 		s.AddVariable(false)
 	}
 }
-func (s *Solver) AddClause(lits []int) bool {
+func (s *Solver) AddClause(lits []int) bool { return addClause(s, lits) }
+
+// AddClause32 accepts ABC's signed 32-bit storage for encoded literals.
+func (s *Solver) AddClause32(lits []int32) bool { return addClause(s, lits) }
+
+func addClause[T int | int32](s *Solver, lits []T) bool {
 	if !s.ok {
 		return false
 	}
+	var short [16]int
+	var copyLits []int
+	if len(lits) <= len(short) {
+		copyLits = short[:len(lits)]
+	} else {
+		copyLits = make([]int, len(lits))
+	}
 	maxVariable := -1
-	for _, lit := range lits {
+	for i, raw := range lits {
+		lit := int(raw)
 		if lit < 0 {
 			panic("negative encoded literal")
 		}
-		if lit>>1 > maxVariable {
-			maxVariable = lit >> 1
-		}
+		maxVariable = max(maxVariable, lit>>1)
+		copyLits[i] = lit
 	}
 	s.cancel(0)
 	for maxVariable >= len(s.values) {
 		s.AddVariable(true)
 	}
-	copyLits := append([]int(nil), lits...)
 	sort.Ints(copyLits)
 	out := copyLits[:0]
 	last := -2
 	for _, lit := range copyLits {
-		if s.literalValue(lit) == 1 {
+		switch s.literalValue(lit) {
+		case 1:
 			return true
-		}
-		if s.literalValue(lit) == 0 {
+		case 0:
 			continue
 		}
 		if lit == last {

@@ -136,3 +136,54 @@ func TestRollbackReleasesClausesAndPreservesUnitStatistics(t *testing.T) {
 		}
 	}
 }
+
+func TestClauseInputWidthsAndOwnership(t *testing.T) {
+	for _, size := range []int{2, 5, 6, 16, 17, 129} {
+		for _, compactInput := range []bool{false, true} {
+			input := make([]int, size+1)
+			input32 := make([]int32, len(input))
+			want := make([]int, size)
+			for i := range size {
+				want[i] = 2 * i
+				input[i] = 2 * (size - 1 - i)
+				input32[i] = int32(input[i])
+			}
+			input[size], input32[size] = input[0], input32[0]
+			s := New()
+			if compactInput {
+				if !s.AddClause32(input32) {
+					t.Fatal("rejected clause")
+				}
+			} else if !s.AddClause(input) {
+				t.Fatal("rejected clause")
+			}
+			for i := range input {
+				if int(input32[i]) != input[i] {
+					t.Fatal("insertion changed caller's literal order")
+				}
+				input[i], input32[i] = 1, 1
+			}
+			if s.VariableCount() != size || s.Stats().OriginalLiterals != int64(size) || !reflect.DeepEqual(s.clauses[0].lits, want) {
+				t.Fatalf("size %d compact input %t: stored %v, want %v", size, compactInput, s.clauses[0].lits, want)
+			}
+			for _, lit := range want[:len(want)-1] {
+				if !s.AddClause([]int{lit ^ 1}) {
+					t.Fatal("unexpected unit conflict")
+				}
+			}
+			if s.Solve() != SATOKO_SAT || s.ModelValue(size-1) != 1 {
+				t.Fatal("stored clause did not force its last variable")
+			}
+		}
+	}
+}
+
+func TestAddClause32ValidatesBeforeAddingVariables(t *testing.T) {
+	s := New()
+	defer func() {
+		if recover() == nil || s.VariableCount() != 0 || len(s.clauses) != 0 {
+			t.Fatal("invalid literal partially changed the solver")
+		}
+	}()
+	s.AddClause32([]int32{120, 2, -1})
+}

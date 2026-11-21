@@ -5,12 +5,9 @@ import "fmt"
 import "io"
 
 type clause struct {
-	simplified      bool
-	lits            []int
-	learnt, deleted bool
-	protected       bool
-	lbd             uint32
-	activity        uint32
+	lits                                   []int
+	lbd, activity                          uint32
+	simplified, learnt, deleted, protected bool
 }
 
 func clause_compare(a, b *clause) bool {

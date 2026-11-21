@@ -62,11 +62,7 @@ func RunCNF(cnf *mf.CNF, options satoko.Options) (Result, error) {
 	}
 	solver := satoko.New()
 	for _, clause := range cnf.Clauses {
-		literals := make([]int, len(clause))
-		for i, lit := range clause {
-			literals[i] = int(lit)
-		}
-		if !solver.AddClause(literals) {
+		if !solver.AddClause32(clause) {
 			result.Elapsed = time.Since(start)
 			return result, nil
 		}

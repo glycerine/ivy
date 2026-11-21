@@ -93,3 +93,23 @@ func BenchmarkI10MappedSAT(b *testing.B) {
 		Gia_ManStop(p)
 	}
 }
+
+func BenchmarkI10SatokoInit(b *testing.B) {
+	p, err := Gia_AigerRead("../../../i10.aig", 0, 0, 0)
+	if err != nil {
+		b.Fatal(err)
+	}
+	defer Gia_ManStop(p)
+	cnf, err := Mf_ManGenerateCnfResult(p, 8, false, true, false)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ReportAllocs()
+	for b.Loop() {
+		s := Gia_ManSatokoInit(cnf, nil)
+		if s == nil || s.Stats().OriginalLiterals != 11943 {
+			b.Fatal("invalid i10 clause import")
+		}
+		s.Destroy()
+	}
+}

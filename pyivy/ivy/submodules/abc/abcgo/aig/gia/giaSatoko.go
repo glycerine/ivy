@@ -87,11 +87,7 @@ func Gia_ManSatokoInit(cnf *Cnf_Dat_t, options *satoko_opts_t) *satoko_t {
 	}
 	solver := satoko.New()
 	for _, clause := range cnf.Clauses {
-		literals := make([]int, len(clause))
-		for i, lit := range clause {
-			literals[i] = int(lit)
-		}
-		if !solver.AddClause(literals) {
+		if !solver.AddClause32(clause) {
 			return nil
 		}
 	}

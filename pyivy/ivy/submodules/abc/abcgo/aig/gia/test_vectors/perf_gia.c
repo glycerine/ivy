@@ -1,9 +1,12 @@
 // Reference workloads for the Go GIA benchmarks. See PERF_IMPROVE.md.
 #include "aig/gia/gia.h"
 #include "sat/satoko/satoko.h"
+#include "sat/cnf/cnf.h"
 #include <time.h>
 
 extern satoko_t *Gia_ManSatokoCreate(Gia_Man_t *, satoko_opts_t *);
+
+extern satoko_t *Gia_ManSatokoInit(Cnf_Dat_t *, satoko_opts_t *);
 
 static double now(void)
 {
@@ -46,7 +49,7 @@ static int hash_chain(void)
 int main(int argc, char **argv)
 {
     if (argc != 2 && argc != 3) {
-        fprintf(stderr, "usage: %s cone | hash | (load|cones|sat) i10.aig\n", argv[0]);
+        fprintf(stderr, "usage: %s cone | hash | (load|cones|sat|sat-init) i10.aig\n", argv[0]);
         return 2;
     }
     int runs;
@@ -84,6 +87,36 @@ int main(int argc, char **argv)
         printf("cones %.0f ns/op, %lld nodes/sweep\n", (now() - start) * 1e9 / runs, total / runs);
         Gia_ManStop(p);
         return 0;
+    }
+    if (argc == 3 && !strcmp(argv[1], "sat-init")) {
+        Gia_Man_t *p = Gia_AigerRead(argv[2], 0, 0, 0);
+        if (!p)
+            return 1;
+        Cnf_Dat_t *cnf = Mf_ManGenerateCnf(p, 8, 0, 1, 0, 0);
+        int *original = ABC_ALLOC(int, cnf->nLiterals);
+        size_t bytes = sizeof(int) * (size_t)cnf->nLiterals;
+        memcpy(original, cnf->pClauses[0], bytes);
+        satoko_opts_t opts;
+        satoko_default_opts(&opts);
+        long literals = 0;
+        double elapsed = 0;
+        runs = 1000;
+        for (int i = 0; i < runs; ++i) {
+            // Satoko sorts the CNF records in place during import.
+            memcpy(cnf->pClauses[0], original, bytes);
+            start = now();
+            satoko_t *s = Gia_ManSatokoInit(cnf, &opts);
+            if (!s)
+                return 1;
+            literals += satoko_stats(s)->n_original_lits;
+            satoko_destroy(s);
+            elapsed += now() - start;
+        }
+        printf("sat-init %.0f ns/op, %ld original literals/op\n", elapsed * 1e9 / runs, literals / runs);
+        ABC_FREE(original);
+        Cnf_DataFree(cnf);
+        Gia_ManStop(p);
+        return literals != 11943L * runs;
     }
     if (argc == 3 && !strcmp(argv[1], "sat")) {
         satoko_opts_t opts;

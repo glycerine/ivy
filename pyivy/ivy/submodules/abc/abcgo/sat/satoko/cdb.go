@@ -4,7 +4,20 @@ package satoko
 // Clause IDs remain stable while Go's garbage collector owns the storage.
 func (s *Solver) addStored(lits []int, learnt bool, lbd uint32) int {
 	id := len(s.clauses)
-	c := &clause{lits: append([]int(nil), lits...), learnt: learnt, lbd: lbd}
+	var c *clause
+	if !learnt && len(lits) > 0 && len(lits) <= 5 {
+		// The common short original clauses own their literals in the same allocation.
+		record := new(struct {
+			clause
+			data [5]int
+		})
+		c = &record.clause
+		c.lbd = lbd
+		c.lits = record.data[:len(lits):len(lits)]
+		copy(c.lits, lits)
+	} else {
+		c = &clause{lits: append([]int(nil), lits...), learnt: learnt, lbd: lbd}
+	}
 	s.clauses = append(s.clauses, c)
 	if len(lits) > 1 {
 		s.addWatch(lits[0]^1, id)
