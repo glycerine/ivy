@@ -43,7 +43,7 @@ func Rwr_ManStart(precompute int32) *Rwr_Man_t {
 		Rwr_ManWriteToArray(p)
 	} else {
 		Rwr_ManLoadFromArray(p, 0)
-		Rwr_ManPreprocess(p)
+		preprocessStandardLibrary(p)
 	}
 	p.timeStart = int64(time.Since(started))
 	return p
