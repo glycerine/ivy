@@ -60,6 +60,36 @@ func kitTruthMove(out, in []uint32, nVars, total int32, phase uint32, shrink boo
 		Kit_TruthCopy(in, out, total)
 	}
 }
+
+// A proper subset has at most three inputs and 256 distinct functions.
+// Each row expands a compact function onto the selected four-variable positions.
+var stretchedTruth4 = func() (table [15][256]uint16) {
+	for phase := range table {
+		for assignment := 0; assignment < 16; assignment++ {
+			src, bit := 0, 0
+			for i := 0; i < 4; i++ {
+				if phase&(1<<i) != 0 {
+					src |= ((assignment >> i) & 1) << bit
+					bit++
+				}
+			}
+			for value := range table[phase] {
+				table[phase][value] |= uint16((value>>src)&1) << assignment
+			}
+		}
+	}
+	return table
+}()
+
+// TruthStretch4 expands the compact low truth bits onto the set input
+// positions of a four-variable function. The positions must fit in four bits.
+func TruthStretch4(truth uint16, positions uint32) uint16 {
+	if positions == 15 {
+		return truth
+	}
+	return stretchedTruth4[positions][byte(truth)]
+}
+
 func Kit_TruthStretch(out, in []uint32, nVars, total int32, phase uint32, returnIn int32) {
 	kitTruthMove(out, in, nVars, total, phase, false, returnIn)
 }

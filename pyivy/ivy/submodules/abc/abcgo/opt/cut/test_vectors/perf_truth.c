@@ -55,6 +55,13 @@ int main(int argc, char **argv)
         hash = (hash ^ Cut_CutReadTruth(out)[i]) * 16777619u;
     double ns = 1e9 * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
     printf("%d vars, %.2f ns/op, truth hash %08x\n", n, ns / count, hash);
+    Cut_Cut_t *single = Cut_CutCreateTriv(manager, 0);
+    for (int i = 0; i < Cut_TruthWords(n); i++)
+        Cut_CutReadTruth(out)[i] = 0xccccccccU ^ (0x2468acfU * i);
+    Cut_TruthCompute(manager, out, single, out, 0, 0);
+    for (int i = 0; i < Cut_TruthWords(n); i++)
+        if (Cut_CutReadTruth(out)[i] != (0xaaaaaaaaU & (0xccccccccU ^ (0x2468acfU * i))))
+            return 2;
     Cut_ManStop(manager);
     return 0;
 }

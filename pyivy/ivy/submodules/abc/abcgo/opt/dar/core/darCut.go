@@ -2,9 +2,11 @@ package core
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/aig/aig"
 	"iter"
 	"math/bits"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/bool/kit"
 )
 
 // Cut describes a function over up to four sorted, regular graph edges.
@@ -56,26 +58,6 @@ func Dar_CutCheckDominance(a, b Cut) bool {
 	return true
 }
 
-// A proper subset has at most three inputs and 256 distinct functions.
-// Each row expands a compact function onto the selected four-variable positions.
-var stretchedCutTruth = func() (table [15][256]uint16) {
-	for phase := range table {
-		for assignment := 0; assignment < 16; assignment++ {
-			src, bit := 0, 0
-			for i := 0; i < 4; i++ {
-				if phase&(1<<i) != 0 {
-					src |= ((assignment >> i) & 1) << bit
-					bit++
-				}
-			}
-			for value := range table[phase] {
-				table[phase][value] |= uint16((value>>src)&1) << assignment
-			}
-		}
-	}
-	return table
-}()
-
 func cutStretch(c Cut, leaves []aig.Edge) uint16 {
 	phase, used := 0, 0
 	for i, leaf := range leaves {
@@ -85,17 +67,10 @@ func cutStretch(c Cut, leaves []aig.Edge) uint16 {
 		}
 	}
 	if used == len(c.Leaves) {
-		return expandCutTruth(c.Truth, phase)
+		return kit.TruthStretch4(c.Truth, uint32(phase))
 	}
 	// The public truth operation also accepts a reordered boundary.
 	return stretchUnorderedCut(c, leaves)
-}
-
-func expandCutTruth(truth uint16, phase int) uint16 {
-	if phase == 15 {
-		return truth
-	}
-	return stretchedCutTruth[phase][byte(truth)]
 }
 
 func stretchUnorderedCut(c Cut, leaves []aig.Edge) uint16 {

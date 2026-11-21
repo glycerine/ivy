@@ -50,11 +50,6 @@ func cutTruthComputeOp(c, a, b *Cut_Cut_t, compl0, compl1 int32, xor bool) {
 	if len(c.truth) == 0 {
 		return
 	}
-	var scratch [1 << (CUT_SIZE_MAX - 5)]uint32
-	words := int(Cut_TruthWords(int32(len(c.leaves))))
-	left, right := c.truth[:words], scratch[:words]
-	cutStretchTruth(left, c, a)
-	cutStretchTruth(right, c, b)
 	var mask0, mask1, maskOut uint32
 	if a.FCompl != (compl0 != 0) {
 		mask0 = ^uint32(0)
@@ -65,6 +60,25 @@ func cutTruthComputeOp(c, a, b *Cut_Cut_t, compl0, compl1 int32, xor bool) {
 	if c.FCompl {
 		maskOut = ^uint32(0)
 	}
+	if len(c.leaves) <= 4 {
+		x := uint32(kit.TruthStretch4(uint16(a.truth[0]), Cut_TruthPhase(c, a))) ^ mask0
+		y := uint32(kit.TruthStretch4(uint16(b.truth[0]), Cut_TruthPhase(c, b))) ^ mask1
+		result := x & y
+		if xor {
+			result = x ^ y
+		}
+		word := uint32(uint16(result^maskOut)) * 0x10001
+		for i := range c.truth {
+			c.truth[i] = word
+		}
+		return
+	}
+	var scratch [1 << (CUT_SIZE_MAX - 5)]uint32
+	words := int(Cut_TruthWords(int32(len(c.leaves))))
+	left, right := c.truth[:words], scratch[:words]
+	// Read the right input before writing to the output, which may alias it.
+	cutStretchTruth(right, c, b)
+	cutStretchTruth(left, c, a)
 	for i, value := range left {
 		x, y := value^mask0, right[i]^mask1
 		result := x & y

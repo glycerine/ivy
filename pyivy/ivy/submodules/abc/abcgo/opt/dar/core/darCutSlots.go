@@ -5,6 +5,7 @@ import (
 	"math/bits"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/bool/kit"
 )
 
 type cachedCut struct {
@@ -102,8 +103,8 @@ func (m *CutEnumerator) combine(set, left, right []cachedCut, invertLeft, invert
 				continue
 			}
 			s := &set[pos]
-			x := expandCutTruth(a.Truth, leftPhase)
-			y := expandCutTruth(b.Truth, rightPhase)
+			x := kit.TruthStretch4(a.Truth, uint32(leftPhase))
+			y := kit.TruthStretch4(b.Truth, uint32(rightPhase))
 			if invertLeft {
 				x = ^x
 			}

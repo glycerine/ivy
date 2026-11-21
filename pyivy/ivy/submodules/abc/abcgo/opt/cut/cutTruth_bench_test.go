@@ -63,3 +63,41 @@ func TestCutTruthNativeBenchmarks(t *testing.T) {
 		}
 	}
 }
+
+func TestCutTruthOutputMayBeRightInput(t *testing.T) {
+	for _, width := range []int32{4, 7, 12} {
+		params := DefaultParams(width)
+		params.FTruth = 1
+		p := Cut_ManStart(params)
+		a := Cut_CutCreateTriv(p, 0)
+		right := Cut_CutAlloc(p)
+		for i := range width {
+			right.leaves = append(right.leaves, i)
+		}
+		want := make([]uint32, len(right.truth))
+		for i := range right.truth {
+			right.truth[i] = uint32(0xcccccccc) ^ 0x2468acf*uint32(i)
+			want[i] = 0xaaaaaaaa & right.truth[i]
+		}
+		Cut_TruthCompute(p, right, a, right, 0, 0)
+		for i, word := range right.truth {
+			if word != want[i] {
+				t.Errorf("width %d word %d: in-place right input produced %08x, want %08x", width, i, word, want[i])
+				break
+			}
+		}
+		Cut_ManStop(p)
+	}
+}
+
+func BenchmarkCutTruthPublic4(b *testing.B) {
+	params := DefaultParams(4)
+	params.FTruth = 1
+	manager := Cut_ManStart(params)
+	defer Cut_ManStop(manager)
+	c, a, right := benchmarkTruthCuts(4)
+	b.ReportAllocs()
+	for b.Loop() {
+		Cut_TruthCompute(manager, c, a, right, 1, 0)
+	}
+}
