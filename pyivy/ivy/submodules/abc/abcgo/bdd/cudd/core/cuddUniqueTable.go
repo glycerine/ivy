@@ -1,6 +1,9 @@
 package core
 
-import "slices"
+import (
+	"math/bits"
+	"slices"
+)
 
 // Partition by variable index so a permutation can change without invalidating
 // other levels. Keep keys separate from the nodes that reordering rewires.
@@ -181,4 +184,49 @@ func (table *uniqueTable) forLevel(index int, visit func(uniqueEntry)) {
 			visit(r)
 		}
 	}
+}
+
+// sweep discards retired keys directly in probe order. Retain one live key
+// inline and release large probe arrays after a collection empties them out.
+func (table *uniqueTable) sweep(drop func(*DdNode) bool) int {
+	total := 0
+	for i := range table.levels {
+		l := &table.levels[i]
+		if len(l.slots) == 0 {
+			if l.first.node != nil && drop(l.first.node) {
+				*l = uniqueLevel{}
+				total++
+			}
+			continue
+		}
+		var survivor uniqueEntry
+		removed := 0
+		for j := range l.slots {
+			r := &l.slots[j]
+			if r.node == nil {
+				continue
+			}
+			if drop(r.node) {
+				*r = removedUniqueEntry
+				removed++
+			} else {
+				survivor = *r
+			}
+		}
+		if removed == 0 {
+			continue
+		}
+		total += removed
+		l.count -= removed
+		switch {
+		case l.count == 0:
+			*l = uniqueLevel{}
+		case l.count == 1:
+			*l = uniqueLevel{first: survivor, count: 1}
+		case l.count < len(l.slots)/8:
+			l.resize(1 << bits.Len(uint(2*l.count-1)))
+		}
+	}
+	table.count -= total
+	return total
 }

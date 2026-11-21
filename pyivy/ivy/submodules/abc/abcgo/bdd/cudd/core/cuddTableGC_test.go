@@ -159,7 +159,7 @@ func TestCuddTableCapacityGrowthAndLimits(t *testing.T) {
 		t.Fatal("table limit repair did not apply the current GC fraction")
 	}
 	Cudd_SlowTableGrowth(dd)
-	if dd.tableGrowthFactor != 4 || dd.maxCacheHard != dd.cacheSlots-1 || dd.gcFraction != DD_GC_FRAC_MIN ||
+	if dd.bddDensityFactor(0) != 4 || dd.maxCacheHard != dd.cacheSlots-1 || dd.gcFraction != DD_GC_FRAC_MIN ||
 		dd.minDead != uint32(DD_GC_FRAC_MIN*float64(dd.slotCount)) || dd.cacheSlack != -int32(dd.cacheSlots+1) {
 		t.Fatal("slow-table-growth thresholds do not match cuddSlowTableGrowth")
 	}

@@ -60,13 +60,13 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	}
 	deleted := 0
 	for _, table := range tables {
-		for key, n := range table.entries {
-			if !marked[n] {
-				dd.sweepNode(n)
-				table.remove(key)
-				deleted++
+		deleted += table.sweep(func(n *DdNode) bool {
+			if marked[n] {
+				return false
 			}
-		}
+			dd.sweepNode(n)
+			return true
+		})
 	}
 	for key, n := range dd.constants {
 		if !marked[n] {
@@ -118,13 +118,13 @@ func (dd *DdManager) purgeReleasedKeys() int {
 		if dd.dead == 0 && table != &dd.zddUnique {
 			continue
 		}
-		for key, n := range table.entries {
-			if n.childrenReleased {
-				table.remove(key)
-				dd.retireNode(n)
-				deleted++
+		deleted += table.sweep(func(n *DdNode) bool {
+			if !n.childrenReleased {
+				return false
 			}
-		}
+			dd.retireNode(n)
+			return true
+		})
 	}
 	if dd.dead != 0 {
 		for key, n := range dd.constants {
@@ -144,4 +144,27 @@ func (dd *DdManager) retireNode(n *DdNode) {
 	if n.inverse != nil {
 		n.inverse.manager = nil
 	}
+}
+
+func (dd *DdManager) collectUnderPressure(t, e *DdNode) {
+	dd.pressureGC = true
+	defer func() { dd.pressureGC = false }()
+	started := time.Now()
+	if !dd.runHooks(CUDD_PRE_GC_HOOK, "DD", nil) {
+		return
+	}
+	reclaimNode(Cudd_Regular(t))
+	reclaimNode(Cudd_Regular(e))
+	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
+	if dd.purgeReleasedKeys() != 0 {
+		retired := func(n *DdNode) bool {
+			return n != nil && n != DD_NON_CONSTANT && n.manager == nil
+		}
+		dd.computed.valid -= dd.computed.invalidate(func(e computedEntry) bool {
+			return retired(e.key.f) || retired(e.key.g) || retired(e.key.h) || retired(e.result)
+		})
+		dd.garbageCollections++
+		dd.gcTime += uint64(time.Since(started).Nanoseconds())
+	}
+	dd.runHooks(CUDD_POST_GC_HOOK, "DD", nil)
 }

@@ -46,7 +46,8 @@ type DdManager struct {
 	initSlots, slotCount              uint32
 	constantSlots                     uint32
 	bddTableSlots, zddTableSlots      []uint32
-	tableGrowthFactor                 uint32
+	bddGrowthFactors                  map[uint32]uint32
+	pressureGC                        bool
 	minDead                           uint32
 	dead, peakLive                    int
 	gcFraction                        float64
@@ -259,7 +260,6 @@ func newEmptyManager() *DdManager {
 		maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, siftMaxVar: 1000, siftMaxSwap: 2000000,
 		stdout: os.Stdout, stderr: os.Stderr,
 	}
-	dd.tableGrowthFactor = 1
 	dd.groupcheck = CUDD_GROUP_CHECK7
 	dd.gcEnabled = 1
 	dd.countDead = ^uint32(0)
@@ -531,7 +531,13 @@ func (dd *DdManager) insertBDDPair(key bddUniqueKey, entry *uniqueEntry, pair *[
 	if dd.allocationLimited && dd.unique.count >= dd.allocationCeiling {
 		panic(bddAllocationLimit{})
 	}
-	dd.checkNodeDensity(key.index, false)
+	if dd.checkNodeDensity(key, false) {
+		entry = dd.unique.find(key)
+		if entry != nil && entry.node != nil {
+			reclaimNode(entry.node)
+			return entry.node
+		}
+	}
 	n := dd.initNodePair(pair, key.index)
 	n.T, n.E, n.inBDDTable = key.t, key.e, true
 	Cudd_Ref(key.t)
@@ -1073,7 +1079,7 @@ func (dd *DdManager) zddNode(index uint32, t, e *DdNode) *DdNode {
 		return e
 	}
 	key := bddUniqueKey{index, t, e}
-	dd.checkNodeDensity(index, true)
+	dd.checkNodeDensity(key, true)
 	entry := dd.zddUnique.find(key)
 	if entry != nil && entry.node != nil {
 		n := entry.node

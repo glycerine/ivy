@@ -85,27 +85,39 @@ func (dd *DdManager) rehashTable(zdd bool, level int, grow bool) bool {
 	if level < 0 || level >= len(entries) {
 		return false
 	}
-	return dd.resizeSubtable(&entries[level], grow)
+	width := &entries[level]
+	next := uint64(*width) / 2
+	if grow {
+		dd.adjustGrowthFraction(zdd)
+		next = 2 * uint64(*width)
+		if zdd && level < len(dd.InvPermZ) {
+			keys := dd.zddUnique.levelCount(dd.InvPermZ[level])
+			for 4*next < uint64(keys) {
+				next *= 2
+			}
+		}
+	} else if *width <= 8 {
+		return false
+	}
+	ok := dd.setSubtableWidth(width, next)
+	if ok && !zdd && dd.bddGrowthFactors != nil {
+		index := level
+		if level < len(dd.InvPerm) {
+			index = dd.InvPerm[level]
+		}
+		delete(dd.bddGrowthFactors, uint32(index))
+	}
+	return ok
 }
 
-func (dd *DdManager) resizeSubtable(width *uint32, grow bool) bool {
-	old := *width
-	var next uint32
-	if grow {
-		if old > ^uint32(0)/2 || uint64(dd.slotCount)+uint64(old) > uint64(^uint32(0)) {
-			dd.errorCode = CUDD_MEMORY_OUT
-			return false
-		}
-		next = old * 2
-		dd.slotCount += old
-	} else {
-		if old <= 8 {
-			return false
-		}
-		next = old / 2
-		dd.slotCount -= old - next
+func (dd *DdManager) setSubtableWidth(width *uint32, next uint64) bool {
+	total := uint64(dd.slotCount) - uint64(*width) + next
+	if total > uint64(^uint32(0)) {
+		dd.errorCode = CUDD_MEMORY_OUT
+		return false
 	}
-	*width = next
+	*width = uint32(next)
+	dd.slotCount = uint32(total)
 	Cudd_FixTableLimits(dd)
 	return true
 }
@@ -125,35 +137,96 @@ func exceedsTableDensity(keys int, width, factor uint32) bool {
 // The native unique tables check density before inserting a fresh BDD/ADD
 // key, and before looking up a ZDD key or constant. The Go probe arrays grow
 // independently of these logical widths.
-func (dd *DdManager) checkNodeDensity(index uint32, zdd bool) {
+func (dd *DdManager) checkNodeDensity(key bddUniqueKey, zdd bool) bool {
+	index := int(key.index)
 	perm, widths := dd.Perm, dd.bddTableSlots
 	if zdd {
 		perm, widths = dd.PermZ, dd.zddTableSlots
 	}
-	if int(index) >= len(perm) || perm[index] >= len(widths) {
-		return
+	if index >= len(perm) || perm[index] >= len(widths) {
+		return false
 	}
 	width := &widths[perm[index]]
 	var keys int
 	if zdd {
-		keys = dd.zddUnique.levelCount(int(index))
+		keys = dd.zddUnique.levelCount(index)
 	} else {
-		keys = dd.unique.levelCount(int(index)) + dd.addUnique.levelCount(int(index))
+		keys = dd.unique.levelCount(index) + dd.addUnique.levelCount(index)
 	}
-	if exceedsTableDensity(keys, *width, dd.tableGrowthFactor) {
-		dd.resizeSubtable(width, true)
+	if uint64(keys) <= 4*uint64(*width) {
+		return false
+	}
+	if !zdd && !exceedsTableDensity(keys, *width, dd.bddDensityFactor(key.index)) {
+		return false
+	}
+	if dd.allocationAttempt != nil || dd.pressureGC {
+		// A bounded operation may still roll back to its starting set of keys.
+		return false
+	}
+	if dd.gcEnabled != 0 && dd.shouldCollectLevel(index, keys, zdd) {
+		dd.collectUnderPressure(key.t, key.e)
+		// Collection and its hooks can invalidate a saved probe position.
+		return true
+	}
+	dd.rehashTable(zdd, perm[index], true)
+	return false
+}
+
+func (dd *DdManager) bddDensityFactor(index uint32) uint32 {
+	return max(1, dd.bddGrowthFactors[index])
+}
+
+func (dd *DdManager) adjustGrowthFraction(zdd bool) {
+	if dd.slotCount > dd.looseUpTo && (dd.gcFraction == DD_GC_FRAC_HI || zdd) {
+		dd.gcFraction = DD_GC_FRAC_LO
 	}
 }
 
+func (dd *DdManager) shouldCollectLevel(index, keys int, zdd bool) bool {
+	released := 0
+	count := func(r uniqueEntry) {
+		if r.node.childrenReleased {
+			released++
+		}
+	}
+	if zdd {
+		dd.zddUnique.forLevel(index, count)
+		return 10*uint64(released) > 9*uint64(keys) ||
+			dd.zddUnique.count-dd.liveZDDKeys() > int(dd.minDead)
+	}
+	if dd.dead > int(dd.minDead) {
+		return true
+	}
+	if dd.dead <= int(dd.minDead)/2 {
+		return false
+	}
+	dd.unique.forLevel(index, count)
+	dd.addUnique.forLevel(index, count)
+	return float64(released) > 0.95*float64(keys)
+}
+
 func (dd *DdManager) checkConstantDensity() {
-	if dd.slotCount == 0 {
+	width := dd.constantTableWidth()
+	if dd.slotCount == 0 || uint64(len(dd.constants)) <= 4*uint64(width) || dd.pressureGC || dd.allocationAttempt != nil {
 		return
 	}
-	width := dd.constantTableWidth()
-	if exceedsTableDensity(len(dd.constants), width, dd.tableGrowthFactor) {
-		dd.constantSlots = width
-		dd.resizeSubtable(&dd.constantSlots, true)
+	if dd.gcEnabled != 0 && dd.dead != 0 {
+		dead := 0
+		if dd.dead <= int(dd.minDead) {
+			for _, n := range dd.constants {
+				if n.childrenReleased {
+					dead++
+				}
+			}
+		}
+		if dd.dead > int(dd.minDead) || 10*uint64(dead) > 9*uint64(len(dd.constants)) {
+			dd.collectUnderPressure(nil, nil)
+			return
+		}
 	}
+	dd.adjustGrowthFraction(false)
+	dd.constantSlots = width
+	dd.setSubtableWidth(&dd.constantSlots, 2*uint64(width))
 }
 
 // Cudd_RehashBDDSubtable doubles the selected BDD subtable's slot threshold.
@@ -245,12 +318,13 @@ func Cudd_DestroyBDDSubtables(dd *DdManager, count int) bool {
 	}
 	clear(dd.unique.levels[first:len(dd.Vars)])
 	dd.unique.count -= count
-	if len(dd.boundVars)+len(dd.variableTypes)+len(dd.pairIndices)+len(dd.lazyGroups) != 0 {
+	if len(dd.boundVars)+len(dd.variableTypes)+len(dd.pairIndices)+len(dd.lazyGroups)+len(dd.bddGrowthFactors) != 0 {
 		for index := first; index < len(dd.Vars); index++ {
 			delete(dd.boundVars, index)
 			delete(dd.variableTypes, index)
 			delete(dd.pairIndices, index)
 			delete(dd.lazyGroups, index)
+			delete(dd.bddGrowthFactors, uint32(index))
 		}
 	}
 	write := 0
@@ -331,11 +405,15 @@ func Cudd_SlowTableGrowth(dd *DdManager) {
 	if dd == nil || dd.closed {
 		return
 	}
-	if dd.tableGrowthFactor == 0 {
-		dd.tableGrowthFactor = 1
+	if dd.bddGrowthFactors == nil {
+		dd.bddGrowthFactors = make(map[uint32]uint32, len(dd.bddTableSlots))
 	}
-	if dd.tableGrowthFactor <= ^uint32(0)/4 {
-		dd.tableGrowthFactor *= 4
+	for i := range dd.bddTableSlots {
+		index := uint32(i)
+		factor := dd.bddDensityFactor(index)
+		if factor <= ^uint32(0)/4 {
+			dd.bddGrowthFactors[index] = 4 * factor
+		}
 	}
 	if dd.cacheSlots > 0 {
 		dd.maxCacheHard = dd.cacheSlots - 1
