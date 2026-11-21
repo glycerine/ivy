@@ -11,11 +11,12 @@ import (
 func addTestCut(s *cutSet, c Cut) { s.add(c, signature(c.Leaves)) }
 
 func TestCutMergeAndSourceTieOrder(t *testing.T) {
-	leaves, ok := mergeLeaves(nil, []int32{1, 3, 65}, []int32{2, 3}, 4)
+	var buffer [maxLeaves]int32
+	leaves, ok := mergeLeaves(&buffer, []int32{1, 3, 65}, []int32{2, 3}, 4)
 	if !ok || len(leaves) != 4 || leaves[2] != 3 || leaves[3] != 65 {
 		t.Fatal("ordered merge", leaves)
 	}
-	if _, ok := mergeLeaves(nil, []int32{1, 65}, []int32{129}, 2); ok {
+	if _, ok := mergeLeaves(&buffer, []int32{1, 65}, []int32{129}, 2); ok {
 		t.Fatal("signature collisions must not permit oversized cuts")
 	}
 	s := newCutSet(8)
@@ -236,6 +237,30 @@ func TestTruthOperationReusesOnlyRelativeSupport(t *testing.T) {
 							t.Fatalf("width %d object IDs %t gate %d with %v at %d: got %d", width, objectIDs, tc.kind, ids, assignment, value)
 						}
 					}
+				}
+			}
+		}
+	}
+}
+
+func TestBoundedCutUnion(t *testing.T) {
+	ids := []int32{1, 2, 64, 65, 128, 4111, 8000000}
+	sets := make([][]int32, 1<<len(ids))
+	for mask := range sets {
+		for i, id := range ids {
+			if mask>>i&1 != 0 {
+				sets[mask] = append(sets[mask], id)
+			}
+		}
+	}
+	var buffer [maxLeaves]int32
+	for left, a := range sets {
+		for right, b := range sets {
+			want := sets[left|right]
+			for limit := 0; limit <= 8; limit++ {
+				got, ok := mergeLeaves(&buffer, a, b, limit)
+				if ok != (len(want) <= limit) || ok && !slices.Equal(got, want) {
+					t.Fatalf("merge %v and %v at %d: got %v, %t; union %v", a, b, limit, got, ok, want)
 				}
 			}
 		}

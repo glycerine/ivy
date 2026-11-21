@@ -40,27 +40,37 @@ func contains(base, sub []int32) bool {
 	}
 	return true
 }
-func mergeLeaves(merged, a, b []int32, limit int) ([]int32, bool) {
-	for i, j := 0, 0; i < len(a) || j < len(b); {
-		var leaf int32
-		switch {
-		case j == len(b) || i < len(a) && a[i] < b[j]:
-			leaf = a[i]
-			i++
-		case i == len(a) || b[j] < a[i]:
-			leaf = b[j]
-			j++
-		default:
-			leaf = a[i]
-			i++
-			j++
-		}
-		if len(merged) == limit {
+
+// The candidate borrows the caller's array until its selected cut is saved.
+func mergeLeaves(buffer *[maxLeaves]int32, a, b []int32, limit int) ([]int32, bool) {
+	merged := buffer[:limit]
+	n := 0
+	for len(a) != 0 && len(b) != 0 {
+		if n == limit {
 			return nil, false
 		}
-		merged = append(merged, leaf)
+		left, right := a[0], b[0]
+		switch {
+		case left < right:
+			merged[n] = left
+			a = a[1:]
+		case right < left:
+			merged[n] = right
+			b = b[1:]
+		default:
+			merged[n] = left
+			a, b = a[1:], b[1:]
+		}
+		n++
 	}
-	return merged, true
+	if len(b) > 0 {
+		a = b
+	}
+	if n+len(a) > limit {
+		return nil, false
+	}
+	n += copy(merged[n:], a)
+	return merged[:n:n], true
 }
 func compareArea(a, b Cut) int {
 	switch {
@@ -89,6 +99,7 @@ type cutSlot struct {
 // Each node reuses these candidate records. Sorting moves slot indices, and
 // the first unused index names the record available for the next insertion.
 type cutSet struct {
+	unitLeaves   [4][1]int32
 	slots        [maxCuts]cutSlot
 	order        [maxCuts]uint8
 	count, limit int

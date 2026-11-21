@@ -69,10 +69,11 @@ func (m *Mapping) area(cut Cut) int {
 	}
 	return m.ClauseSizes[cut.Function>>1]
 }
-func (m *Mapping) prepare(id int32, unit bool, scratch []Cut) []Cut {
+func (m *Mapping) prepare(id int32, unit bool, scratch []Cut, unitLeaf *[1]int32) []Cut {
 	cuts := m.Cuts[id]
 	if len(cuts) == 0 || unit && len(cuts[0].Leaves) > 1 {
-		cuts = append(append(scratch, cuts...), Cut{Leaves: []int32{id}, Function: 2})
+		unitLeaf[0] = id
+		cuts = append(append(scratch, cuts...), Cut{Leaves: unitLeaf[:], Function: 2})
 	}
 	return cuts
 }
@@ -176,14 +177,14 @@ func (m *Mapping) merge(id int32, result *cutSet) error {
 	var control []Cut
 	if kind == 4 { // normalize control,then,else to source order.
 		a, c = c, a
-		control = m.prepare(c>>1, true, buffers[2][:0])
+		control = m.prepare(c>>1, true, buffers[2][:0], &result.unitLeaves[2])
 	}
-	first := m.prepare(a>>1, true, buffers[0][:0])
-	second := m.prepare(b>>1, true, buffers[1][:0])
+	first := m.prepare(a>>1, true, buffers[0][:0], &result.unitLeaves[0])
+	second := m.prepare(b>>1, true, buffers[1][:0], &result.unitLeaves[1])
 	result.count = 0
 	if choices, ok := m.Network.(interface{ Sibling(int32) int32 }); ok {
 		if sibling := choices.Sibling(id); sibling != 0 {
-			for _, candidate := range m.prepare(sibling, false, nil) {
+			for _, candidate := range m.prepare(sibling, false, nil, &result.unitLeaves[3]) {
 				if m.phases[id] != m.phases[sibling] {
 					candidate.Function ^= 1
 				}
@@ -216,7 +217,7 @@ func (m *Mapping) merge(id int32, result *cutSet) error {
 			if bits.OnesCount64(sign) > m.Options.LUTSize {
 				continue
 			}
-			data, ok := mergeLeaves(pair[:0], left.Leaves, right.Leaves, m.Options.LUTSize)
+			data, ok := mergeLeaves(&pair, left.Leaves, right.Leaves, m.Options.LUTSize)
 			if !ok {
 				continue
 			}
@@ -231,7 +232,7 @@ func (m *Mapping) merge(id int32, result *cutSet) error {
 				}
 				// Truth minimization may edit this candidate's leaves. Keep the
 				// shared data pair in its own buffer across control candidates.
-				leaves, ok := mergeLeaves(triple[:0], data, ctrl.Leaves, m.Options.LUTSize)
+				leaves, ok := mergeLeaves(&triple, data, ctrl.Leaves, m.Options.LUTSize)
 				if ok {
 					offer([]Cut{left, right, ctrl}, []int32{a & 1, b & 1, c & 1}, leaves, all)
 				}
