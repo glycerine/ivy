@@ -87,7 +87,8 @@ func Vec_MemReadEntry(p *Vec_Mem_t, i int) []uint64 {
 		panic("memory vector index")
 	}
 	start := p.nEntrySize * (i & ((1 << p.LogPageSze) - 1))
-	return p.ppPages[i>>p.LogPageSze][start : start+p.nEntrySize]
+	end := start + p.nEntrySize
+	return p.ppPages[i>>p.LogPageSze][start:end:end]
 }
 func Vec_MemReadEntryLast(p *Vec_Mem_t) []uint64 { return Vec_MemReadEntry(p, p.nEntries-1) }
 func Vec_MemWriteEntry(p *Vec_Mem_t, i int, data []uint64) {

@@ -209,3 +209,23 @@ func TestPagedWordMemoryHash(t *testing.T) {
 		t.Fatal("truth records")
 	}
 }
+
+func TestMemAppendKeepsAdjacentRecordAndHash(t *testing.T) {
+	p := Vec_MemAlloc(2, 2)
+	Vec_MemHashAlloc(p, 3)
+	Vec_MemHashInsert(p, []uint64{1, 2})
+	Vec_MemHashInsert(p, []uint64{3, 4})
+	first := Vec_MemReadEntry(p, 0)
+	extended := append(first, 99)
+	if extended[2] != 99 || Vec_MemReadEntry(p, 1)[0] != 3 {
+		t.Fatal("appending to the first record overwrote its neighbor")
+	}
+	if id := Vec_MemHashInsert(p, []uint64{3, 4}); id != 1 {
+		t.Fatalf("neighbor was stored at a second ID %d", id)
+	}
+	first[0] = 7
+	Vec_MemHashResize(p)
+	if id := Vec_MemHashInsert(p, []uint64{7, 2}); id != 0 {
+		t.Fatal("editing a borrowed record did not update its storage")
+	}
+}
