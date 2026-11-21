@@ -13,6 +13,7 @@ package goivy
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -42,11 +43,62 @@ func actionsExprSexp(e Expr) string {
 }
 
 func sliceSexp(s []Expr) string {
-	parts := make([]string, len(s))
-	for i, c := range s {
-		parts[i] = actionsExprSexp(c)
+	var b strings.Builder
+	writeActionList(&b, s)
+	return b.String()
+}
+
+// A nested action writes into its parent's builder so each child string is
+// copied into the canonical key only once.
+func nestedActionKey(a Expr) NodeKey {
+	var b strings.Builder
+	writeActionExpr(&b, a)
+	return NodeKey(b.String())
+}
+
+func writeActionList(b *strings.Builder, items []Expr) {
+	b.WriteByte('[')
+	for i, child := range items {
+		if i != 0 {
+			b.WriteByte(' ')
+		}
+		writeActionExpr(b, child)
 	}
-	return "[" + strings.Join(parts, " ") + "]"
+	b.WriteByte(']')
+}
+
+func writeActionExpr(b *strings.Builder, e Expr) {
+	switch a := e.(type) {
+	case *LogicSequence:
+		b.WriteString("(sequence" + a.CanonFields() + " stmts:")
+		writeActionList(b, a.Elems)
+	case *LogicIfAction:
+		b.WriteString("(ifAction" + a.CanonFields() + " cond:")
+		writeActionExpr(b, a.Cond)
+		b.WriteString(" then:")
+		writeActionExpr(b, a.ThenBody)
+		b.WriteString(" else:")
+		writeActionExpr(b, a.ElseBody)
+	case *LogicLetAction:
+		b.WriteString("(letAction" + a.CanonFields() + " elems:")
+		writeActionList(b, a.ActionArgs())
+	case *LogicLocalAction:
+		b.WriteString("(localAction" + a.CanonFields() + " elems:")
+		writeActionList(b, a.ActionArgs())
+		b.WriteString(" uniqueID:" + strconv.FormatInt(a.UniqueID, 10))
+	case *LogicChoiceAction:
+		b.WriteString("(choiceAction" + a.CanonFields() + " elems:")
+		writeActionList(b, a.ActionArgs())
+		b.WriteString(" uniqueID:" + strconv.FormatInt(a.UniqueID, 10))
+	case *LogicEnvAction:
+		b.WriteString("(envAction" + a.CanonFields() + " elems:")
+		writeActionList(b, a.ActionArgs())
+		b.WriteString(" uniqueID:" + strconv.FormatInt(a.UniqueID, 10))
+	default:
+		b.WriteString(actionsExprSexp(e))
+		return
+	}
+	b.WriteByte(')')
 }
 
 func crashTargetSexp(target Expr) string {
@@ -97,7 +149,7 @@ func (a *LogicSequence) NodeSort() Sort           { return ActionS }
 func (a *LogicSequence) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicSequence) GetAstConfig() *AstConfig { return nil }
 func (a *LogicSequence) Sexp() NodeKey {
-	return NodeKey(fmt.Sprintf("(sequence%v stmts:%v)", a.CanonFields(), sliceSexp(a.Elems)))
+	return nestedActionKey(a)
 }
 func (a *LogicSequence) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -403,7 +455,7 @@ func (a *LogicIfAction) NodeSort() Sort           { return ActionS }
 func (a *LogicIfAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicIfAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicIfAction) Sexp() NodeKey {
-	return NodeKey(fmt.Sprintf("(ifAction%v cond:%v then:%v else:%v)", a.CanonFields(), actionsExprSexp(a.Cond), actionsExprSexp(a.ThenBody), actionsExprSexp(a.ElseBody)))
+	return nestedActionKey(a)
 }
 func (a *LogicIfAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -470,7 +522,7 @@ func (a *LogicChoiceAction) NodeSort() Sort           { return ActionS }
 func (a *LogicChoiceAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicChoiceAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicChoiceAction) Sexp() NodeKey {
-	return NodeKey(fmt.Sprintf("(choiceAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
+	return nestedActionKey(a)
 }
 func (a *LogicChoiceAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -575,7 +627,7 @@ func (a *LogicLocalAction) NodeSort() Sort           { return ActionS }
 func (a *LogicLocalAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicLocalAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicLocalAction) Sexp() NodeKey {
-	return NodeKey(fmt.Sprintf("(localAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
+	return nestedActionKey(a)
 }
 func (a *LogicLocalAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -592,7 +644,7 @@ func (a *LogicLetAction) NodeSort() Sort           { return ActionS }
 func (a *LogicLetAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicLetAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicLetAction) Sexp() NodeKey {
-	return NodeKey(fmt.Sprintf("(letAction%v elems:%v)", a.CanonFields(), sliceSexp(a.ActionArgs())))
+	return nestedActionKey(a)
 }
 func (a *LogicLetAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
@@ -682,7 +734,7 @@ func (a *LogicEnvAction) NodeSort() Sort           { return ActionS }
 func (a *LogicEnvAction) Equal(other Expr) bool    { return a.Sexp() == other.Sexp() }
 func (a *LogicEnvAction) GetAstConfig() *AstConfig { return nil }
 func (a *LogicEnvAction) Sexp() NodeKey {
-	return NodeKey(fmt.Sprintf("(envAction%v elems:%v uniqueID:%d)", a.CanonFields(), sliceSexp(a.ActionArgs()), a.UniqueID))
+	return nestedActionKey(a)
 }
 func (a *LogicEnvAction) Canon() Canonical { return Canonical(a.Sexp()) }
 
