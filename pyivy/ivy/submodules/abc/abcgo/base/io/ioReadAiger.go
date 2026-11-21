@@ -212,13 +212,14 @@ func NetworkFromAigerModel(model *ioa.Model) (*abc.Network, error) {
 
 // ioa.Read and the public model converter validate before reaching this point.
 func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
-	network := abc.NewNetwork(model.Name)
+	outputCount := len(model.Outputs) + len(model.Bad) + len(model.Constraints)
+	network := abc.NewAIGNetworkWithCapacity(model.Name, len(model.Inputs), len(model.Latches), outputCount, len(model.ANDs))
 	network.Type, network.Function = uint8(abc.ABC_NTK_STRASH), uint8(abc.ABC_FUNC_AIG)
 	network.Spec = string(model.Comment)
 	network.Data = &aigerNetworkMetadata{
 		comment:  string(model.Comment),
 		badCount: len(model.Bad), constraintCount: len(model.Constraints),
-		outputCount: len(model.Outputs) + len(model.Bad) + len(model.Constraints),
+		outputCount: outputCount,
 		fairness:    append([]uint32(nil), model.Fairness...), justice: cloneAigerLists(model.Justice),
 		symbols: cloneAigerSymbols(model.Symbols),
 	}

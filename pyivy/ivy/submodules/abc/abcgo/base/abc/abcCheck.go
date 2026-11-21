@@ -74,8 +74,11 @@ func Abc_NtkDoCheck(n *Network) int32 {
 // the live ID table. A combined-list entry must already have a per-kind entry.
 func checkObjectInventories(n *Network) bool {
 	seen := make([]byte, len(n.objects))
-	for kind := range n.kindOrder {
-		if kind <= ObjectNone || kind > ObjectBlackbox || !checkKindEntries(n, kind, seen) {
+	if len(n.kindOrder[ObjectNone]) != 0 {
+		return false
+	}
+	for kind := ObjectConst1; kind <= ObjectBlackbox; kind++ {
+		if !checkKindEntries(n, kind, seen) {
 			return false
 		}
 	}

@@ -143,7 +143,7 @@ type Network struct {
 	barBufs2        int32
 	// CILevel supplies timing-derived initial levels when a timing manager is attached.
 	CILevel             func(*Object) int
-	kindOrder           map[ObjectKind][]*Object
+	kindOrder           [ObjectBlackbox + 1][]*Object
 	nodeHoles           int
 	cis, cos, boxes     []*Object
 	travID              uint64
@@ -159,20 +159,39 @@ type Network struct {
 }
 
 func NewNetwork(name string) *Network {
-	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, kindOrder: make(map[ObjectKind][]*Object), Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]int]Edge)}
+	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]int]Edge)}
 	n.constant = n.NewObject(ObjectConst1)
 	n.constant.Phase = true
 	return n
 }
+
+// NewAIGNetworkWithCapacity creates an empty strashed network with room for
+// the supplied terminal counts and estimated ANDs. Hashing may fold most gates,
+// so limit the speculative reservation until the network actually grows.
+func NewAIGNetworkWithCapacity(name string, inputs, latches, outputs, ands int) *Network {
+	if inputs < 0 || latches < 0 || outputs < 0 || ands < 0 {
+		panic("negative AIG network capacity")
+	}
+	n := NewNetwork(name)
+	gates := min(ands, 4096)
+	n.objects = slices.Grow(n.objects, inputs+3*latches+outputs+gates)
+	n.kindOrder[ObjectNode] = slices.Grow(n.kindOrder[ObjectNode], gates)
+	n.kindOrder[ObjectPI] = slices.Grow(n.kindOrder[ObjectPI], inputs)
+	n.kindOrder[ObjectPO] = slices.Grow(n.kindOrder[ObjectPO], outputs)
+	n.cis = slices.Grow(n.cis, inputs+latches)
+	n.cos = slices.Grow(n.cos, outputs+latches)
+	if gates != 0 {
+		n.hashed = make(map[[2]int]Edge, gates)
+	}
+	return n
+}
+
 func (n *Network) NewObject(kind ObjectKind) *Object {
 	if kind <= ObjectNone || kind > ObjectBlackbox {
 		panic("invalid ABC object kind")
 	}
 	o := &Object{ID: len(n.objects), Kind: kind, network: n}
 	n.objects = append(n.objects, o)
-	if n.kindOrder == nil {
-		n.kindOrder = make(map[ObjectKind][]*Object)
-	}
 	order := n.kindOrder[kind]
 	if kind == ObjectNode {
 		o.nodeSlot = len(order)
@@ -205,6 +224,9 @@ func (n *Network) Objects() []*Object {
 	return out
 }
 func (n *Network) ObjectsOfKind(kind ObjectKind) []*Object {
+	if kind > ObjectBlackbox {
+		return nil
+	}
 	if kind == ObjectNode && n.nodeHoles != 0 {
 		nodes := make([]*Object, 0, len(n.kindOrder[kind])-n.nodeHoles)
 		for o := range n.logicNodes {
@@ -260,6 +282,9 @@ func (n *Network) ChangeObjectKind(o *Object, kind ObjectKind) error {
 	}
 	if old < ObjectLatch || kind < ObjectLatch {
 		return fmt.Errorf("object kind change must stay within box kinds")
+	}
+	if old > ObjectBlackbox {
+		return fmt.Errorf("object kind index is inconsistent")
 	}
 	oldOrder := n.kindOrder[old]
 	found := false
@@ -332,7 +357,7 @@ func (n *Network) PatchFanin(o *Object, index int, e Edge) error {
 	return nil
 }
 func (n *Network) DeleteObject(o *Object) error {
-	if !n.contains(o) || o == n.constant {
+	if !n.contains(o) || o == n.constant || o.Kind <= ObjectNone || o.Kind > ObjectBlackbox {
 		return fmt.Errorf("invalid object deletion")
 	}
 	if len(o.fanouts) > 0 {

@@ -227,7 +227,7 @@ func TestNetworkCheckAuditsAllObjectInventories(t *testing.T) {
 		corrupt func(*Network)
 	}{
 		{"extra box", func(n *Network) { n.boxes = append(n.boxes, n.cis[0]) }},
-		{"missing logic node", func(n *Network) { delete(n.kindOrder, ObjectNode) }},
+		{"missing logic node", func(n *Network) { n.kindOrder[ObjectNode] = nil }},
 		{"wrong logic node", func(n *Network) { n.kindOrder[ObjectNode] = []*Object{n.cis[0]} }},
 		{"nil box", func(n *Network) { n.boxes = append(n.boxes, nil) }},
 		{"foreign box", func(n *Network) { n.boxes = append(n.boxes, NewNetwork("other").NewObject(ObjectWhitebox)) }},

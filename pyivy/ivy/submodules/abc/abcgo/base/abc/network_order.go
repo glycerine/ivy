@@ -78,7 +78,7 @@ func Abc_NtkReassignIds(n *Network) {
 	var ordered []*Object
 	seen := make(map[*Object]bool)
 	add := func(o *Object) {
-		if o == nil || !n.contains(o) || seen[o] {
+		if o == nil || !n.contains(o) || seen[o] || o.Kind <= ObjectNone || o.Kind > ObjectBlackbox {
 			panic("abc: invalid or repeated object during ID reassignment")
 		}
 		seen[o] = true
@@ -148,7 +148,7 @@ func Abc_NtkReassignIds(n *Network) {
 			clear(vec.Vec_AttArray(attr))
 		}
 	}
-	kindOrder := make(map[ObjectKind][]*Object)
+	var kindOrder [ObjectBlackbox + 1][]*Object
 	for id, o := range ordered {
 		oldID := o.ID
 		if name, ok := n.names.Lookup(int32(oldID)); ok {
