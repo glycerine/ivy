@@ -154,11 +154,6 @@ const STAB_DIV = 1 + (MODULUS1-1)/STAB_SIZE
 
 var background, zero *DdNode
 
-var cuddRand int64
-var cuddRand2 int64
-var shuffleSelect int64
-var shuffleTable [STAB_SIZE]int64
-
 /*---------------------------------------------------------------------------*/
 /* Macro declarations                                                        */
 /*---------------------------------------------------------------------------*/
@@ -1673,55 +1668,8 @@ func Cudd_AverageDistance(dd *DdManager) float64 {
 *****************************************************************************
 */
 func Cudd_Random() int64 {
-	var i int
-	var w int64
-
-	/* cuddRand == 0 if the geneartor has not been initialized yet. */
-	if cuddRand == 0 {
-		Cudd_Srandom(1)
-	}
-
-	/* Compute cuddRand = (cuddRand * LEQA1) % MODULUS1 avoiding
-	 ** overflows by Schrage's method.
-	 */
-	w = cuddRand / LEQQ1
-	cuddRand = LEQA1*(cuddRand-w*LEQQ1) - w*LEQR1
-	if cuddRand < 0 {
-		cuddRand += MODULUS1
-	}
-
-	/* Compute cuddRand2 = (cuddRand2 * LEQA2) % MODULUS2 avoiding
-	 ** overflows by Schrage's method.
-	 */
-	w = cuddRand2 / LEQQ2
-	cuddRand2 = LEQA2*(cuddRand2-w*LEQQ2) - w*LEQR2
-	if cuddRand2 < 0 {
-		cuddRand2 += MODULUS2
-	}
-
-	/* cuddRand is shuffled with the Bays-Durham algorithm.
-	 ** shuffleSelect and cuddRand2 are combined to generate the output.
-	 */
-
-	/* Pick one element from the shuffle table; "i" will be in the range
-	 ** from 0 to STAB_SIZE-1.
-	 */
-	i = int(shuffleSelect / STAB_DIV)
-	/* Mix the element of the shuffle table with the current iterate of
-	 ** the second sub-generator, and replace the chosen element of the
-	 ** shuffle table with the current iterate of the first sub-generator.
-	 */
-	shuffleSelect = shuffleTable[i] - cuddRand2
-	shuffleTable[i] = cuddRand
-	if shuffleSelect < 1 {
-		shuffleSelect += MODULUS1 - 1
-	}
-	/* Since shuffleSelect != 0, and we want to be able to return 0,
-	 ** here we subtract 1 before returning.
-	 */
-	return (shuffleSelect - 1)
-
-} /* end of Cudd_Random */
+	return core.Cudd_Random()
+}
 
 /*
 *Function********************************************************************
@@ -1742,29 +1690,8 @@ func Cudd_Random() int64 {
 *****************************************************************************
 */
 func Cudd_Srandom(seed int64) {
-	var i int
-
-	if seed < 0 {
-		cuddRand = -seed
-	} else if seed == 0 {
-		cuddRand = 1
-	} else {
-		cuddRand = seed
-	}
-	cuddRand2 = cuddRand
-	/* Load the shuffle table (after 11 warm-ups). */
-	for i = 0; i < STAB_SIZE+11; i++ {
-		var w int64
-		w = cuddRand / LEQQ1
-		cuddRand = LEQA1*(cuddRand-w*LEQQ1) - w*LEQR1
-		if cuddRand < 0 {
-			cuddRand += MODULUS1
-		}
-		shuffleTable[i%STAB_SIZE] = cuddRand
-	}
-	shuffleSelect = shuffleTable[1%STAB_SIZE]
-
-} /* end of Cudd_Srandom */
+	core.Cudd_Srandom(seed)
+}
 
 // Cudd_Density returns the minterm count divided by the DAG node count.
 // A zero nvars argument uses the manager's current variable count.

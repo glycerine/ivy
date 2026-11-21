@@ -7,53 +7,6 @@ import (
 	"github.com/glycerine/abcgo/bdd/mtr"
 )
 
-var cuddZddRand, cuddZddRand2, cuddZddShuffleSelect int64
-var cuddZddShuffleTable [64]int64
-
-// Cudd_Srandom and Cudd_Random port the shared portable generator used by
-// CUDD's random reorder heuristics.
-func Cudd_Srandom(seed int64) {
-	if seed < 0 {
-		seed = -seed
-	}
-	if seed == 0 {
-		seed = 1
-	}
-	cuddZddRand, cuddZddRand2 = seed, seed
-	for i := 0; i < 64+11; i++ {
-		w := cuddZddRand / 53668
-		cuddZddRand = 40014*(cuddZddRand-w*53668) - w*12211
-		if cuddZddRand < 0 {
-			cuddZddRand += 2147483563
-		}
-		cuddZddShuffleTable[i%64] = cuddZddRand
-	}
-	cuddZddShuffleSelect = cuddZddShuffleTable[1]
-}
-
-func Cudd_Random() int64 {
-	if cuddZddRand == 0 {
-		Cudd_Srandom(1)
-	}
-	w := cuddZddRand / 53668
-	cuddZddRand = 40014*(cuddZddRand-w*53668) - w*12211
-	if cuddZddRand < 0 {
-		cuddZddRand += 2147483563
-	}
-	w = cuddZddRand2 / 52774
-	cuddZddRand2 = 40692*(cuddZddRand2-w*52774) - w*3791
-	if cuddZddRand2 < 0 {
-		cuddZddRand2 += 2147483399
-	}
-	i := int(cuddZddShuffleSelect / 33554431)
-	cuddZddShuffleSelect = cuddZddShuffleTable[i] - cuddZddRand2
-	cuddZddShuffleTable[i] = cuddZddRand
-	if cuddZddShuffleSelect < 1 {
-		cuddZddShuffleSelect += 2147483562
-	}
-	return cuddZddShuffleSelect - 1
-}
-
 func validZddOrder(dd *DdManager) bool {
 	if dd == nil || dd.ZddSize < 0 || len(dd.PermZ) != dd.ZddSize || len(dd.InvPermZ) != dd.ZddSize {
 		return false

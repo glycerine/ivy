@@ -4,12 +4,56 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"slices"
 	"strings"
+	"sync"
 	"testing"
 	"unsafe"
 
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 )
+
+func TestCuddRandomSharesCoreSequence(t *testing.T) {
+	core.Cudd_Srandom(7)
+	Cudd_Srandom(1)
+	for i, want := range []int64{1902191391, 688417274, 489581952, 888303591, 991623880} {
+		draw := Cudd_Random
+		if i%2 == 0 {
+			draw = core.Cudd_Random
+		}
+		if got := draw(); got != want {
+			t.Fatalf("draw %d = %d, want %d", i, got, want)
+		}
+	}
+}
+
+func TestCuddConcurrentRandomDrawsConsumeOneStream(t *testing.T) {
+	const workers, draws = 8, 400
+	want := make([]int64, workers*draws)
+	core.Cudd_Srandom(13)
+	for i := range want {
+		want[i] = core.Cudd_Random()
+	}
+	got := make([]int64, len(want))
+	core.Cudd_Srandom(13)
+	start := make(chan struct{})
+	var wg sync.WaitGroup
+	for worker := range workers {
+		wg.Go(func() {
+			<-start
+			for i := range draws {
+				got[worker*draws+i] = core.Cudd_Random()
+			}
+		})
+	}
+	close(start)
+	wg.Wait()
+	slices.Sort(want)
+	slices.Sort(got)
+	if !slices.Equal(got, want) {
+		t.Fatal("concurrent draws lost or duplicated portable generator outputs")
+	}
+}
 
 func TestCuddCountLeavesCountsDistinctTerminals(t *testing.T) {
 	dd := NewBDDManager(2)
