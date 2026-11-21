@@ -52,6 +52,7 @@ type Ivy_Obj_t_ struct {
 	pEquiv                                              *Ivy_Obj_t
 	regular, neg                                        *Ivy_Obj_t
 	owner                                               *Ivy_Man_t
+	poolSlot                                            uint32
 	recycled                                            bool
 }
 type Ivy_Man_t_ struct {
@@ -67,7 +68,8 @@ type Ivy_Man_t_ struct {
 	pData, pCopy                    any
 	pHaig                           *Ivy_Man_t
 	nClassesSkip                    int32
-	pages                           [][]Ivy_Obj_t
+	pages                           []ivyMemoryPage
+	nextSlot                        uint64
 	freeNodes                       []*Ivy_Obj_t
 	memoryStopped                   bool
 	time1, time2                    int64
@@ -348,17 +350,17 @@ func Ivy_ObjFaninPhase(o *Ivy_Obj_t) int32 {
 }
 func Ivy_ObjClean(o *Ivy_Obj_t) {
 	o = Ivy_Regular(o)
-	id, owner, neg, recycled := o.Id, o.owner, o.neg, o.recycled
-	*o = Ivy_Obj_t{Id: id, owner: owner, neg: neg, recycled: recycled}
+	id, owner, neg, slot, recycled := o.Id, o.owner, o.neg, o.poolSlot, o.recycled
+	*o = Ivy_Obj_t{Id: id, owner: owner, neg: neg, poolSlot: slot, recycled: recycled}
 }
 func Ivy_ObjOverwrite(base, data *Ivy_Obj_t) {
 	base, data = Ivy_Regular(base), Ivy_Regular(data)
 	if base.recycled {
 		panic("cannot overwrite recycled node")
 	}
-	id, owner, neg := base.Id, base.owner, base.neg
+	id, owner, neg, slot := base.Id, base.owner, base.neg, base.poolSlot
 	*base = *data
-	base.Id, base.owner, base.neg, base.regular = id, owner, neg, nil
+	base.Id, base.owner, base.neg, base.regular, base.poolSlot = id, owner, neg, nil, slot
 	base.recycled = false
 }
 func Ivy_ObjWhatFanin(o, f *Ivy_Obj_t) int32 {

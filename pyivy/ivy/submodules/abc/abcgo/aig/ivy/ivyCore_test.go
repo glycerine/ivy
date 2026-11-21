@@ -167,7 +167,7 @@ func TestIvyManagerLifecycle(t *testing.T) {
 		t.Fatal("constant polarity")
 	}
 	q := Ivy_ManStart()
-	if q.pConst1 == p.pConst1 || q.pages[0][0].owner != q {
+	if q.pConst1 == p.pConst1 || q.pages[0][0][0].owner != q {
 		t.Fatal("manager ownership mixed")
 	}
 	Ivy_ManStop(q)
