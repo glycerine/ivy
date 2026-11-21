@@ -26,7 +26,7 @@ func Rwr_ManAddVar(p *Rwr_Man_t, truth uint32, precompute int32) *Rwr_Node_t {
 	node := &Rwr_Node_t{Id: int32(len(p.vForest)), uTruth: uint16(truth), fUsed: true}
 	p.vForest = append(p.vForest, node)
 	if precompute != 0 {
-		rwrAddTail(&p.pTable[node.uTruth], node)
+		rwrAddTail(p.pTable.slot(node.uTruth), node)
 	}
 	return node
 }
@@ -38,10 +38,11 @@ func Rwr_ManAddNode(p *Rwr_Man_t, a, b Rwr_NodeRef, fExor, level, volume int32) 
 		return node
 	}
 	p.nAdded++
-	if p.pTable[node.uTruth] == nil {
+	head := p.pTable.slot(node.uTruth)
+	if *head == nil {
 		p.nClasses++
 	}
-	rwrAddTail(&p.pTable[node.uTruth], node)
+	rwrAddTail(head, node)
 	return node
 }
 func Rwr_ManTryNode(p *Rwr_Man_t, a, b Rwr_NodeRef, fExor, level, volume int32) *Rwr_Node_t {
@@ -50,7 +51,8 @@ func Rwr_ManTryNode(p *Rwr_Man_t, a, b Rwr_NodeRef, fExor, level, volume int32) 
 	if level > 2 && !p.pPractical[p.puCanons[truth]] {
 		return nil
 	}
-	place := &p.pTable[truth]
+	head := p.pTable.slot(truth)
+	place := head
 	for *place != nil {
 		old := *place
 		if old.Level <= uint32(level) && old.Volume < uint32(volume) {
@@ -58,7 +60,7 @@ func Rwr_ManTryNode(p *Rwr_Man_t, a, b Rwr_NodeRef, fExor, level, volume int32) 
 		}
 		place = &old.pNext
 	}
-	if p.pTable[truth] == nil && p.puCanons[truth] == truth {
+	if *head == nil && p.puCanons[truth] == truth {
 		p.nClasses++
 	}
 	node := &Rwr_Node_t{Id: int32(len(p.vForest)), uTruth: truth, Level: uint32(level) & 63, Volume: uint32(volume) & 255, fExor: fExor != 0, p0: a, p1: b}

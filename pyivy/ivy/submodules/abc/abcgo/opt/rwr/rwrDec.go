@@ -7,7 +7,7 @@ func Rwr_ManPreprocess(p *Rwr_Man_t) {
 	p.pMapInv = make([]uint16, 222)
 	p.vClasses = make([][]*Rwr_Node_t, 222)
 	for i := int32(0); i < p.nFuncs; i++ {
-		head := p.pTable[i]
+		head := p.pTable.head(i)
 		for node := head; node != nil; node = node.pNext {
 			assert(node.uTruth == head.uTruth, "class truth matches table")
 			class := int(p.pMap[node.uTruth])

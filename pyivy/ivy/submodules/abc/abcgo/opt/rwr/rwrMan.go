@@ -26,7 +26,7 @@ func Rwr_ManStart(precompute int32) *Rwr_Man_t {
 	})
 	p := &Rwr_Man_t{
 		nFuncs: 1 << 16, puCanons: tables.canons, pPhases: tables.phases,
-		pPerms: tables.perms, pMap: tables.classes, pTable: make([]*Rwr_Node_t, 1<<16),
+		pPerms: tables.perms, pMap: tables.classes, pTable: new(rwrTruthTable),
 	}
 	p.pPractical = Rwr_ManGetPractical(p)
 	for _, truth := range []uint32{0, 0xaaaa, 0xcccc, 0xf0f0, 0xff00} {

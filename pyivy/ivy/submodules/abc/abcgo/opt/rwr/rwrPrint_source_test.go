@@ -6,7 +6,7 @@ import (
 )
 
 func TestSourceNodePrintingAndSharedBushVolume(t *testing.T) {
-	p := &Rwr_Man_t{pTable: make([]*Rwr_Node_t, 1<<16), puCanons: make([]uint16, 1<<16)}
+	p := &Rwr_Man_t{pTable: new(rwrTruthTable), puCanons: make([]uint16, 1<<16)}
 	for i := range p.puCanons {
 		p.puCanons[i] = uint16(i)
 	}

@@ -19,7 +19,7 @@ func Rwr_Trav2_rec(p *Rwr_Man_t, node *Rwr_Node_t, volume *int32) {
 func Rwr_GetBushVolume(p *Rwr_Man_t, entry int32, volume, functions *int32) {
 	var v, n int32
 	Rwr_ManIncTravId(p)
-	for node := p.pTable[entry]; node != nil; node = node.pNext {
+	for node := p.pTable.head(entry); node != nil; node = node.pNext {
 		if node.uTruth != p.puCanons[node.uTruth] {
 			continue
 		}
@@ -30,7 +30,7 @@ func Rwr_GetBushVolume(p *Rwr_Man_t, entry int32, volume, functions *int32) {
 }
 func Rwr_GetBushSumOfVolumes(p *Rwr_Man_t, entry int32) int32 {
 	var total int32
-	for node := p.pTable[entry]; node != nil; node = node.pNext {
+	for node := p.pTable.head(entry); node != nil; node = node.pNext {
 		if node.uTruth != p.puCanons[node.uTruth] {
 			continue
 		}
@@ -80,7 +80,8 @@ func Rwr_ManPrint(p *Rwr_Man_t) {
 	}
 	counter := 0
 	for i := 0; i < 1<<16; i++ {
-		if p.pTable[i] == nil || int(p.puCanons[i]) != i {
+		head := p.pTable.head(int32(i))
+		if head == nil || int(p.puCanons[i]) != i {
 			continue
 		}
 		fmt.Fprintf(f, "\nClass %3d. Func %6d.  ", p.pMap[i], counter)
@@ -88,7 +89,7 @@ func Rwr_ManPrint(p *Rwr_Man_t) {
 		var volume, functions int32
 		Rwr_GetBushVolume(p, int32(i), &volume, &functions)
 		fmt.Fprintf(f, "Roots = %3d. Vol = %3d. Sum = %3d.  %016b\n", functions, volume, Rwr_GetBushSumOfVolumes(p, int32(i)), i)
-		for node := p.pTable[i]; node != nil; node = node.pNext {
+		for node := head; node != nil; node = node.pNext {
 			if node.uTruth == p.puCanons[node.uTruth] {
 				Rwr_NodePrint(f, p, node)
 			}

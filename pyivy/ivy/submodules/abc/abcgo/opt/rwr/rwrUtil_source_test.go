@@ -9,7 +9,7 @@ import (
 
 func rwrFixtureManager() *Rwr_Man_t {
 	canon, phases, perms, classes := npn.Extra_Truth4VarNPN()
-	p := &Rwr_Man_t{nFuncs: 1 << 16, puCanons: canon, pPhases: phases, pPerms: perms, pMap: classes, pTable: make([]*Rwr_Node_t, 1<<16), nTravIds: 1}
+	p := &Rwr_Man_t{pTable: new(rwrTruthTable), nFuncs: 1 << 16, puCanons: canon, pPhases: phases, pPerms: perms, pMap: classes, nTravIds: 1}
 	p.pPractical = Rwr_ManGetPractical(p)
 	for _, truth := range []uint32{0, 0xaaaa, 0xcccc, 0xf0f0, 0xff00} {
 		Rwr_ManAddVar(p, truth, 0)

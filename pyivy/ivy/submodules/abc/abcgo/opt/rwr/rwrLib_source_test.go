@@ -7,7 +7,7 @@ import (
 )
 
 func TestLibrarySourceInsertionDominanceAndVolume(t *testing.T) {
-	p := &Rwr_Man_t{pTable: make([]*Rwr_Node_t, 1<<16), puCanons: make([]uint16, 1<<16), pPractical: make([]bool, 1<<16)}
+	p := &Rwr_Man_t{pTable: new(rwrTruthTable), puCanons: make([]uint16, 1<<16), pPractical: make([]bool, 1<<16)}
 	for i := range p.puCanons {
 		p.puCanons[i] = uint16(i)
 		p.pPractical[i] = true
@@ -16,7 +16,7 @@ func TestLibrarySourceInsertionDominanceAndVolume(t *testing.T) {
 	b := Rwr_ManAddVar(p, 0xcccc, 0)
 	x, y := Rwr_NodeRef{node: a}, Rwr_NodeRef{node: b}
 	first := Rwr_ManTryNode(p, x, Rwr_Not(y), 0, 1, 1)
-	if first == nil || first.uTruth != 0x2222 || p.pTable[0x2222] != first {
+	if first == nil || first.uTruth != 0x2222 || p.pTable.head(0x2222) != first {
 		t.Fatal("failed to insert complemented AND")
 	}
 	if Rwr_ManTryNode(p, x, Rwr_Not(y), 0, 2, 2) != nil {

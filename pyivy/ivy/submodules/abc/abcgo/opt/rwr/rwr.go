@@ -15,7 +15,7 @@ type Rwr_Man_t struct {
 	pPractical                                                             []bool
 	pPerms4                                                                [24][4]byte
 	vForest                                                                []*Rwr_Node_t
-	pTable                                                                 []*Rwr_Node_t
+	pTable                                                                 *rwrTruthTable
 	vClasses                                                               [][]*Rwr_Node_t
 	nTravIds, nConsidered, nAdded, nClasses                                int32
 	fCompl                                                                 int32
