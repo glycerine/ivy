@@ -14,14 +14,19 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	}
 	// Only x nodes with a y child change function decomposition. Remove all
 	// their old keys before interning new x nodes against the retained layer.
-	var moved []*DdNode
+	var local [32]*DdNode
+	moved := local[:0]
 	dd.zddUnique.forLevel(xi, func(entry uniqueEntry) {
 		if entry.t.Index == uint32(yi) || entry.e.Index == uint32(yi) {
 			moved = append(moved, entry.node)
 		}
 	})
-	for _, n := range moved {
-		dd.zddUnique.remove(bddUniqueKey{uint32(xi), n.T, n.E})
+	if len(moved) == dd.zddUnique.levelCount(xi) {
+		dd.zddUnique.clearLevel(xi)
+	} else {
+		for _, n := range moved {
+			dd.zddUnique.remove(bddUniqueKey{uint32(xi), n.T, n.E})
+		}
 	}
 
 	for _, f := range moved {

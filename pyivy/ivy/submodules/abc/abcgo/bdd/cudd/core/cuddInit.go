@@ -97,6 +97,7 @@ func Cudd_Quit(dd *DdManager) {
 	}
 	dd.closed = true
 	dd.pairBatch = nil
+	dd.zddLinearWork = nil
 	dd.unique = uniqueTable{}
 	dd.computed = computedTable{}
 	dd.zddUnique = uniqueTable{}

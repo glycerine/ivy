@@ -1,15 +1,22 @@
 package core
 
-import "sort"
-
-var zddLinearSwapCount int
+import (
+	"cmp"
+	"slices"
+)
 
 func zddLinearSwap(dd *DdManager, x, y int) bool {
 	if !swapZddAdjacentInPlace(dd, x, y) {
 		return false
 	}
-	zddLinearSwapCount++
+	dd.zddLinearSwaps++
 	return true
+}
+
+type zddLinearRewrite struct {
+	node, oldT, oldE, newT, newE *DdNode
+	index                        uint32
+	owned                        bool
 }
 
 // linearZddAdjacentInPlace applies CUDD's adjacent ZDD linear transform at
@@ -23,19 +30,18 @@ func linearZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	xi, yi := dd.InvPermZ[x], dd.InvPermZ[y]
 	// Preserve all handles, including a y function reached from above x.
 	// Keep the original edges readable until every new cofactor is known.
-	type rewrite struct {
-		node, oldT, oldE, newT, newE *DdNode
-		index                        uint32
-		owned                        bool
-	}
-	var local [32]rewrite
+	var local [32]zddLinearRewrite
 	plan := local[:0]
-	if size := dd.zddUnique.levelCount(xi) + dd.zddUnique.levelCount(yi); size > len(local) {
-		plan = make([]rewrite, 0, size)
+	size := dd.zddUnique.levelCount(xi) + dd.zddUnique.levelCount(yi)
+	if size > len(local) {
+		if cap(dd.zddLinearWork) < size {
+			dd.zddLinearWork = make([]zddLinearRewrite, 0, size)
+		}
+		plan = dd.zddLinearWork[:0]
 	}
 	collect := func(entry uniqueEntry) {
 		n := entry.node
-		plan = append(plan, rewrite{node: n, oldT: entry.t, oldE: entry.e, owned: !n.childrenReleased})
+		plan = append(plan, zddLinearRewrite{node: n, oldT: entry.t, oldE: entry.e, owned: !n.childrenReleased})
 	}
 	dd.zddUnique.forLevel(xi, collect)
 	nx := len(plan)
@@ -93,6 +99,9 @@ func linearZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 			dd.recursiveDeref(r.oldE)
 		}
 	}
+	if size > len(local) {
+		clear(plan)
+	}
 	if len(dd.Univ) > y && dd.Univ[x] != nil {
 		dd.Univ[y] = dd.Univ[x].T
 	}
@@ -132,7 +141,7 @@ func zddLinearStepUp(dd *DdManager, y, low int, moves *[]zddLinearMove) bool {
 			newSize = swappedSize
 			kind = zddLinearSwapMove
 		}
-		*moves = append([]zddLinearMove{{x, y, newSize, kind}}, *moves...)
+		*moves = append(*moves, zddLinearMove{x, y, newSize, kind})
 		if float64(newSize) > float64(limit)*dd.maxGrowth {
 			break
 		}
@@ -164,7 +173,7 @@ func zddLinearStepDown(dd *DdManager, x, high int, moves *[]zddLinearMove) bool 
 			newSize = swappedSize
 			kind = zddLinearSwapMove
 		}
-		*moves = append([]zddLinearMove{{x, y, newSize, kind}}, *moves...)
+		*moves = append(*moves, zddLinearMove{x, y, newSize, kind})
 		if float64(newSize) > float64(limit)*dd.maxGrowth {
 			break
 		}
@@ -177,8 +186,8 @@ func zddLinearStepDown(dd *DdManager, x, high int, moves *[]zddLinearMove) bool 
 }
 
 func zddLinearUndo(dd *DdManager, moves []zddLinearMove) ([]zddLinearMove, bool) {
-	var inverse []zddLinearMove
-	for _, m := range moves {
+	for i := len(moves) - 1; i >= 0; i-- {
+		m := moves[i]
 		kind := m.kind
 		switch m.kind {
 		case zddLinearTransformMove:
@@ -196,9 +205,10 @@ func zddLinearUndo(dd *DdManager, moves []zddLinearMove) ([]zddLinearMove, bool)
 				return nil, false
 			}
 		}
-		inverse = append([]zddLinearMove{{m.x, m.y, zddHeapSize(dd), kind}}, inverse...)
+		moves[i] = zddLinearMove{m.x, m.y, zddHeapSize(dd), kind}
 	}
-	return inverse, true
+	slices.Reverse(moves)
+	return moves, true
 }
 
 func zddLinearBackward(dd *DdManager, initial int, moves []zddLinearMove) bool {
@@ -208,7 +218,8 @@ func zddLinearBackward(dd *DdManager, initial int, moves []zddLinearMove) bool {
 			best = m.size
 		}
 	}
-	for _, m := range moves {
+	for i := len(moves) - 1; i >= 0; i-- {
+		m := moves[i]
 		if m.size == best {
 			return true
 		}
@@ -233,7 +244,8 @@ func zddLinearBackward(dd *DdManager, initial int, moves []zddLinearMove) bool {
 func zddLinearAux(dd *DdManager, variable, low, high int) bool {
 	initial := zddHeapSize(dd)
 	pos := dd.PermZ[variable]
-	var moves []zddLinearMove
+	var local [12]zddLinearMove
+	moves := local[:0]
 	// CUDD traverses the shorter side first, records the inverse path, then
 	// completes the opposite side before selecting the closest minimum.
 	if pos-low > high-pos {
@@ -265,24 +277,19 @@ func Cudd_zddLinearSifting(dd *DdManager, lower, upper int) int {
 	if dd == nil || dd.closed || !validZddOrder(dd) || lower < 0 || upper >= dd.ZddSize || lower > upper {
 		return 0
 	}
-	zddLinearSwapCount = 0
+	dd.zddLinearSwaps = 0
 	type item struct{ index, keys int }
 	items := make([]item, dd.ZddSize)
 	for index := range items {
-		items[index].index = index
+		items[index] = item{index, dd.zddUnique.levelCount(index)}
 	}
-	for _, n := range dd.zddUnique.entries {
-		if int(n.Index) < dd.ZddSize {
-			items[dd.PermZ[n.Index]].keys++
-		}
-	}
-	sort.SliceStable(items, func(i, j int) bool { return items[i].keys > items[j].keys })
+	slices.SortStableFunc(items, func(a, b item) int { return cmp.Compare(b.keys, a.keys) })
 	limit := min(dd.ZddSize, dd.siftMaxVar)
 	for i := 0; i < limit; i++ {
-		if zddLinearSwapCount >= dd.siftMaxSwap {
+		if dd.zddLinearSwaps >= dd.siftMaxSwap {
 			break
 		}
-		variable := dd.InvPermZ[items[i].index]
+		variable := items[i].index
 		if dd.PermZ[variable] < lower || dd.PermZ[variable] > upper {
 			continue
 		}

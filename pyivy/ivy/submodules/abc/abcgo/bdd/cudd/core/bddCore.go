@@ -102,6 +102,8 @@ type DdManager struct {
 	reorderings                       uint
 	maxGrowth                         float64
 	siftMaxVar, siftMaxSwap           int
+	zddLinearSwaps                    int
+	zddLinearWork                     []zddLinearRewrite
 	symmetryGroups                    [][]int
 	reorderingTime                    time.Duration
 	hooks                             map[Cudd_HookType][]DD_HFP
