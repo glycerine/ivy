@@ -15,20 +15,57 @@ var isop3MaskIndex = func() (index [256]uint16) {
 
 var isop3Counts [6561]atomic.Uint32
 
-func isop3Count(on, dc word, count *int32) word {
-	slot := &isop3Counts[isop3MaskIndex[byte(on)]+isop3MaskIndex[byte(dc)]]
+func isop3Count(on, dc byte, count *int32) byte {
+	if on == 0 {
+		return 0
+	}
+	if dc == 0xff {
+		(*count)++
+		return 0xff
+	}
+	slot := &isop3Counts[isop3MaskIndex[on]+isop3MaskIndex[dc]]
 	entry := slot.Load()
 	if entry == 0 {
-		// Each cube covers a private assignment, so eight slots suffice.
-		// The cover-producing recursion supplies both the truth and cube count.
-		var cover [8]int32
-		var cubes int32
-		truth := ttIsop6(on, dc, 3, cover[:], &cubes)
-		entry = uint32(byte(truth)) | uint32(cubes)<<8
+		entry = isop3Fill(on, dc)
 		slot.Store(entry)
 	}
 	*count += int32(entry >> 8)
-	return word(byte(entry)) * isopByteRepeat
+	return byte(entry)
+}
+
+func isop3Fill(on, dc byte) uint32 {
+	// Each cube covers a private assignment, so eight slots suffice.
+	var cover [8]int32
+	var cubes int32
+	truth := ttIsop6(word(on)*isopByteRepeat, word(dc)*isopByteRepeat, 3, cover[:], &cubes)
+	return uint32(byte(truth)) | uint32(cubes)<<8
+}
+
+const isopHalfRepeat word = 0x0001000100010001
+
+// Exact four-input functions always return their input truth. Each count fits
+// in a byte, and four independent functions share one atomic word.
+var isop4ExactCounts [1 << 14]atomic.Uint32
+
+func isop4Exact(on uint16, count *int32) uint16 {
+	slot := &isop4ExactCounts[on>>2]
+	shift := (on & 3) * 8
+	cubes := int32(byte(slot.Load() >> shift))
+	if cubes == 0 {
+		isop4Split(on, on, &cubes)
+		slot.Or(uint32(cubes) << shift)
+	}
+	*count += cubes
+	return on
+}
+
+func isop4Split(on, dc uint16, count *int32) uint16 {
+	a, b := byte(on), byte(on>>8)
+	da, db := byte(dc), byte(dc>>8)
+	r0 := isop3Count(a&^db, da, count)
+	r1 := isop3Count(b&^da, db, count)
+	r2 := isop3Count((a&^r0)|(b&^r1), da&db, count)
+	return uint16(r2|r0) | uint16(r2|r1)<<8
 }
 
 // ISOP follows the original three-way recursive split: cubes forced into each
@@ -49,7 +86,13 @@ func ttIsop6(on, dc word, n int32, cover []int32, count *int32) word {
 		return ^word(0)
 	}
 	if n == 3 && cover == nil && word(byte(on))*isopByteRepeat == on && word(byte(dc))*isopByteRepeat == dc {
-		return isop3Count(on, dc, count)
+		return word(isop3Count(byte(on), byte(dc), count)) * isopByteRepeat
+	}
+	if n == 4 && cover == nil && word(uint16(on))*isopHalfRepeat == on && word(uint16(dc))*isopHalfRepeat == dc {
+		if on == dc {
+			return word(isop4Exact(uint16(on), count)) * isopHalfRepeat
+		}
+		return word(isop4Split(uint16(on), uint16(dc), count)) * isopHalfRepeat
 	}
 	v := n - 1
 	for ; v >= 0; v-- {
