@@ -17,11 +17,13 @@ type Kit_Graph_t struct {
 	eRoot           Kit_Edge_t
 }
 
-func Kit_EdgeCreate(node, compl int32) Kit_Edge_t { return Kit_Edge_t{uint32(compl) & 1, uint32(node)} }
-func Kit_EdgeToInt(e Kit_Edge_t) uint32           { return e.Node<<1 | e.fCompl }
-func Kit_IntToEdge(e uint32) Kit_Edge_t           { return Kit_EdgeCreate(int32(e>>1), int32(e&1)) }
-func Kit_EdgeToInt_(e Kit_Edge_t) uint32          { return Kit_EdgeToInt(e) }
-func Kit_IntToEdge_(e uint32) Kit_Edge_t          { return Kit_IntToEdge(e) }
+func Kit_EdgeCreate(node, compl int32) Kit_Edge_t {
+	return Kit_Edge_t{uint32(compl) & 1, uint32(node) & (1<<30 - 1)}
+}
+func Kit_EdgeToInt(e Kit_Edge_t) uint32  { return e.Node<<1 | e.fCompl }
+func Kit_IntToEdge(e uint32) Kit_Edge_t  { return Kit_EdgeCreate(int32(e>>1), int32(e&1)) }
+func Kit_EdgeToInt_(e Kit_Edge_t) uint32 { return Kit_EdgeToInt(e) }
+func Kit_IntToEdge_(e uint32) Kit_Edge_t { return Kit_IntToEdge(e) }
 func kitFlag(b bool) int32 {
 	if b {
 		return 1

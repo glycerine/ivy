@@ -104,3 +104,33 @@ func TestMalformedSOPRejected(t *testing.T) {
 		})
 	}
 }
+
+type countAtLevel struct{ missingNetwork }
+
+func (countAtLevel) Level(v any) int { return int(v.(uint32)) }
+
+func TestNetworkCountUsesNativeStoredLevels(t *testing.T) {
+	for _, tc := range []struct {
+		name                          string
+		input                         uint32
+		limit, count                  int32
+		wantLeaf, wantFirst, wantRoot uint32
+	}{
+		{"leaf wraps before use", 1 << 14, 2, 2, 0, 1, 2},
+		{"accepted gate wraps before next gate", 1<<14 - 1, 1 << 14, 2, 1<<14 - 1, 0, 1},
+		{"gate limit checked before wrap", 1<<14 - 1, 1<<14 - 1, -1, 1<<14 - 1, 0, 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			g := Dec_GraphCreate(2)
+			a, b := Dec_EdgeCreate(0, 0), Dec_EdgeCreate(1, 0)
+			first := Dec_GraphAddNodeAnd(g, a, b)
+			g.eRoot = Dec_GraphAddNodeAnd(g, first, b)
+			g.SetLeafSignal(0, tc.input)
+			g.SetLeafSignal(1, uint32(0))
+			got := Dec_GraphToNetworkCount(countAtLevel{}, nil, g, 2, tc.limit)
+			if got != tc.count || g.pNodes[0].Level != tc.wantLeaf || g.pNodes[first.Node].Level != tc.wantFirst || g.pNodes[g.eRoot.Node].Level != tc.wantRoot {
+				t.Fatalf("count %d, stored levels %d/%d/%d; want %d, %d/%d/%d", got, g.pNodes[0].Level, g.pNodes[first.Node].Level, g.pNodes[g.eRoot.Node].Level, tc.count, tc.wantLeaf, tc.wantFirst, tc.wantRoot)
+			}
+		})
+	}
+}

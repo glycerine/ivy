@@ -90,7 +90,7 @@ func Dec_GraphToNetworkCount(n CountingNetwork, root any, g *Dec_Graph_t, nodeMa
 		return 0
 	}
 	for i := int32(0); i < g.nLeaves; i++ {
-		g.pNodes[i].Level = uint32(n.Level(g.pNodes[i].pFunc))
+		g.pNodes[i].SetLevel(uint32(n.Level(g.pNodes[i].pFunc)))
 	}
 	phased, _ := n.(phasedAndLookup)
 	count := int32(0)
@@ -133,7 +133,7 @@ func Dec_GraphToNetworkCount(n CountingNetwork, root any, g *Dec_Graph_t, nodeMa
 		if level > int(levelMax) {
 			return -1
 		}
-		p.Level = uint32(level)
+		p.SetLevel(uint32(level))
 		p.pFunc = signal
 	}
 	return count

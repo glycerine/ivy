@@ -74,3 +74,25 @@ func TestGraphConstantsAndStableNodes(t *testing.T) {
 		}
 	}
 }
+
+func TestKitEdgeFieldsMatchNativeWidths(t *testing.T) {
+	for _, tc := range []struct {
+		node, phase int32
+		want        uint32
+	}{
+		{1<<30 - 1, 1, 0x7fffffff},
+		{1<<30 + 7, 2, 14},
+		{-1, -1, 0x7fffffff},
+	} {
+		if got := Kit_EdgeToInt(Kit_EdgeCreate(tc.node, tc.phase)); got != tc.want {
+			t.Errorf("edge(%d,%d) encoded %#x, want %#x", tc.node, tc.phase, got, tc.want)
+		}
+	}
+	for _, encoded := range []uint32{0x80000000, 0x8000000f, 0xffffffff} {
+		for _, edge := range []Kit_Edge_t{Kit_IntToEdge(encoded), Kit_IntToEdge_(encoded)} {
+			if got := Kit_EdgeToInt(edge); got != encoded&0x7fffffff {
+				t.Errorf("word %#x decoded to edge %#x", encoded, got)
+			}
+		}
+	}
+}
