@@ -53,6 +53,95 @@ func TestFraigNormalizedSimulationAndFanouts(t *testing.T) {
 		t.Fatal("FRAIG metadata overwrote real fanouts")
 	}
 }
+
+func TestFraigNodeSimulationReadsCurrentInputsAndPhase(t *testing.T) {
+	net := Ivy_ManStart()
+	defer Ivy_ManStop(net)
+	a, b := Ivy_ObjCreatePi(net), Ivy_ObjCreatePi(net)
+	root := Ivy_And(net, a, b)
+	Ivy_ObjCreatePo(net, root)
+	p := ivyFraigStartSimulation(net, &Ivy_FraigParams_t{nSimWords: 1})
+	defer ivyFraigStopSimulation(p)
+	Ivy_ObjSim(a).pData[0], Ivy_ObjSim(b).pData[0] = 0xaaaaaaaa, 0xcccccccc
+	Ivy_ObjSetSim(a, &Ivy_FraigSim_t{pData: []uint32{0x55555555}})
+	Ivy_NodeSimulate(p, root)
+	if got := Ivy_ObjSim(root).pData[0]; got != 0x44444444 {
+		t.Errorf("rebound input produced %08x", got)
+	}
+	root.fPhase ^= 1
+	Ivy_NodeSimulate(p, root)
+	if got := Ivy_ObjSim(root).pData[0]; got != 0xbbbbbbbb {
+		t.Errorf("changed root phase produced %08x", got)
+	}
+	root.fPhase ^= 1
+	Ivy_FraigSimulateOneSim(p)
+	if got := Ivy_ObjSim(root).pData[0]; got != 0x88888888 {
+		t.Errorf("linked simulation snapshot produced %08x", got)
+	}
+}
+
+func TestFraigOperationsRespectManagerWordCount(t *testing.T) {
+	net := Ivy_ManStart()
+	defer Ivy_ManStop(net)
+	a, b := Ivy_ObjCreatePi(net), Ivy_ObjCreatePi(net)
+	root := Ivy_And(net, a, b)
+	Ivy_ObjCreatePo(net, root)
+	p := ivyFraigStartSimulation(net, &Ivy_FraigParams_t{nSimWords: 1})
+	defer ivyFraigStopSimulation(p)
+	for i, n := range []*Ivy_Obj_t{a, b, root} {
+		Ivy_ObjSim(n).pData = []uint32{0, uint32(11 + i)}
+	}
+	if Ivy_NodeHasZeroSim(p, a) == 0 || Ivy_NodeCompareSims(p, a, b) == 0 || Ivy_NodeHash(p, a) != 0 {
+		t.Error("classification used the extra simulation word")
+	}
+	if Ivy_FraigCheckOutputSims(p) != 0 {
+		t.Error("extra output word produced a counterexample")
+	}
+	Ivy_NodeAssignRandom(p, a)
+	Ivy_NodeAssignConst(p, b, 1)
+	Ivy_NodeComplementSim(p, b)
+	Ivy_NodeSimulateSim(p, Ivy_ObjSim(root))
+	if Ivy_ObjSim(a).pData[1] != 11 || Ivy_ObjSim(b).pData[1] != 12 || Ivy_ObjSim(root).pData[1] != 13 {
+		t.Error("assignment or simulation overwrote the extra words")
+	}
+	Ivy_NodeAssignConst(p, a, 0)
+	Ivy_FraigCreateClasses(p)
+	if Ivy_FraigCountClassNodes(p.pManAig.pConst1) != 4 {
+		t.Error("identical single-word signatures did not share the constant class")
+	}
+}
+
+func BenchmarkFraigSimulationRound(b *testing.B) {
+	for _, mode := range []string{"graph", "linked"} {
+		b.Run(mode, func(b *testing.B) {
+			net := Ivy_ManStart()
+			defer Ivy_ManStop(net)
+			a, c := Ivy_ObjCreatePi(net), Ivy_ObjCreatePi(net)
+			root := c
+			for range 1024 {
+				root = Ivy_And(net, a, root)
+			}
+			Ivy_ObjCreatePo(net, root)
+			p := ivyFraigStartSimulation(net, &Ivy_FraigParams_t{nSimWords: 32})
+			defer ivyFraigStopSimulation(p)
+			for i := range 32 {
+				Ivy_ObjSim(a).pData[i] = 0xaaaaaaaa ^ uint32(i)
+				Ivy_ObjSim(c).pData[i] = 0xcccccccc
+			}
+			run := Ivy_FraigSimulateOne
+			if mode == "linked" {
+				run = Ivy_FraigSimulateOneSim
+			}
+			b.ReportAllocs()
+			for b.Loop() {
+				run(p)
+				if Ivy_ObjSim(root).pData[31] != (0xaaaaaaaa^31)&0xcccccccc {
+					b.Fatal("unexpected normalized output word")
+				}
+			}
+		})
+	}
+}
 func TestFraigClassesRefineAndPatternScores(t *testing.T) {
 	p := Ivy_ManStart()
 	inputs := make([]*Ivy_Obj_t, 6)

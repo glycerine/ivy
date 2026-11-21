@@ -118,10 +118,7 @@ func ivyFraigStartSimulation(source *Ivy_Man_t, params *Ivy_FraigParams_t) *Ivy_
 		sim := Ivy_ObjSim(n)
 		sim.pFanin0 = Ivy_ObjSim(Ivy_ObjFanin0(n))
 		sim.pFanin1 = Ivy_ObjSim(Ivy_ObjFanin1(n))
-		sim.Type = Ivy_ObjFaninPhase(n.pFanin0)<<2 | Ivy_ObjFaninPhase(n.pFanin1)<<1 | n.fPhase
-		if n.Type == IVY_EXOR {
-			sim.Type |= 8
-		}
+		sim.Type = ivySimulationType(n)
 		if p.pSimStart == nil {
 			p.pSimStart = sim
 		} else {
@@ -149,8 +146,9 @@ func Ivy_NodeAssignRandom(p *Ivy_FraigMan_t, n *Ivy_Obj_t) {
 	if Ivy_ObjIsPi(n) == 0 {
 		panic("ivy: simulation input expected")
 	}
-	for i := range Ivy_ObjSim(n).pData {
-		Ivy_ObjSim(n).pData[i] = p.rng.Uint32()
+	words := p.simWords(n)
+	for i := range words {
+		words[i] = p.rng.Uint32()
 	}
 }
 func Ivy_NodeAssignConst(p *Ivy_FraigMan_t, n *Ivy_Obj_t, value int32) {
@@ -161,8 +159,9 @@ func Ivy_NodeAssignConst(p *Ivy_FraigMan_t, n *Ivy_Obj_t, value int32) {
 	if value != 0 {
 		word = ^word
 	}
-	for i := range Ivy_ObjSim(n).pData {
-		Ivy_ObjSim(n).pData[i] = word
+	words := p.simWords(n)
+	for i := range words {
+		words[i] = word
 	}
 }
 func Ivy_FraigAssignRandom(p *Ivy_FraigMan_t) {
@@ -183,7 +182,7 @@ func Ivy_FraigAssignDist1(p *Ivy_FraigMan_t, pattern []uint32) {
 	}
 }
 func Ivy_NodeHasZeroSim(p *Ivy_FraigMan_t, n *Ivy_Obj_t) int32 {
-	for _, word := range Ivy_ObjSim(n).pData {
+	for _, word := range p.simWords(n) {
 		if word != 0 {
 			return 0
 		}
@@ -191,36 +190,54 @@ func Ivy_NodeHasZeroSim(p *Ivy_FraigMan_t, n *Ivy_Obj_t) int32 {
 	return 1
 }
 func Ivy_NodeComplementSim(p *Ivy_FraigMan_t, n *Ivy_Obj_t) {
-	for i := range Ivy_ObjSim(n).pData {
-		Ivy_ObjSim(n).pData[i] = ^Ivy_ObjSim(n).pData[i]
+	words := p.simWords(n)
+	for i := range words {
+		words[i] = ^words[i]
 	}
 }
 func Ivy_NodeCompareSims(p *Ivy_FraigMan_t, a, b *Ivy_Obj_t) int32 {
-	return ivyBool(slices.Equal(Ivy_ObjSim(a).pData, Ivy_ObjSim(b).pData))
+	return ivyBool(slices.Equal(p.simWords(a), p.simWords(b)))
 }
+
+func (p *Ivy_FraigMan_t) simWords(n *Ivy_Obj_t) []uint32 {
+	return Ivy_ObjSim(n).pData[:p.nSimWords]
+}
+
+func ivySimulationType(n *Ivy_Obj_t) int32 {
+	op := Ivy_ObjFaninPhase(n.pFanin0)<<2 | Ivy_ObjFaninPhase(n.pFanin1)<<1 | n.fPhase
+	if n.Type == IVY_EXOR {
+		op |= 8
+	}
+	return op
+}
+
+func ivySimulateWords(out, left, right []uint32, op int32) {
+	left, right = left[:len(out)], right[:len(out)]
+	inv0 := -uint32(op >> 2 & 1)
+	inv1 := -uint32(op >> 1 & 1)
+	invOut := -uint32(op & 1)
+	if op&8 != 0 {
+		invert := inv0 ^ inv1 ^ invOut
+		for i := range out {
+			out[i] = left[i] ^ right[i] ^ invert
+		}
+		return
+	}
+	for i := range out {
+		out[i] = ((left[i] ^ inv0) & (right[i] ^ inv1)) ^ invOut
+	}
+}
+
 func Ivy_NodeSimulateSim(p *Ivy_FraigMan_t, sim *Ivy_FraigSim_t) {
 	if sim == nil || sim.pFanin0 == nil || sim.pFanin1 == nil || sim.Type < 0 || sim.Type > 15 {
 		panic("ivy: invalid simulation record")
 	}
-	for i := range sim.pData {
-		a, b := sim.pFanin0.pData[i], sim.pFanin1.pData[i]
-		if sim.Type&4 != 0 {
-			a = ^a
-		}
-		if sim.Type&2 != 0 {
-			b = ^b
-		}
-		result := a & b
-		if sim.Type&8 != 0 {
-			result = a ^ b
-		}
-		if sim.Type&1 != 0 {
-			result = ^result
-		}
-		sim.pData[i] = result
-	}
+	ivySimulateWords(sim.pData[:p.nSimWords], sim.pFanin0.pData, sim.pFanin1.pData, sim.Type)
 }
-func Ivy_NodeSimulate(p *Ivy_FraigMan_t, n *Ivy_Obj_t) { Ivy_NodeSimulateSim(p, Ivy_ObjSim(n)) }
+func Ivy_NodeSimulate(p *Ivy_FraigMan_t, n *Ivy_Obj_t) {
+	n = Ivy_Regular(n)
+	ivySimulateWords(p.simWords(n), p.simWords(Ivy_ObjFanin0(n)), p.simWords(Ivy_ObjFanin1(n)), ivySimulationType(n))
+}
 
 func Ivy_FraigSimulateOne(p *Ivy_FraigMan_t) {
 	start := time.Now()
@@ -306,9 +323,9 @@ func Ivy_FraigCreateClasses(p *Ivy_FraigMan_t) {
 		if n == nil || (n != p.pManAig.pConst1 && Ivy_ObjIsPi(n) == 0 && Ivy_ObjIsNode(n) == 0) {
 			continue
 		}
-		sim := Ivy_ObjSim(n)
-		encoded := make([]byte, 4*len(sim.pData))
-		for i, word := range sim.pData {
+		words := p.simWords(n)
+		encoded := make([]byte, 4*len(words))
+		for i, word := range words {
 			binary.LittleEndian.PutUint32(encoded[4*i:], word)
 		}
 		key := string(encoded)
@@ -393,8 +410,9 @@ func Ivy_FraigPrintSimClasses(p *Ivy_FraigMan_t) {
 }
 func Ivy_FraigCleanPatScores(p *Ivy_FraigMan_t) { clear(p.pPatScores) }
 func Ivy_FraigAddToPatScores(p *Ivy_FraigMan_t, a, b *Ivy_Obj_t) {
-	for w, word := range Ivy_ObjSim(a).pData {
-		difference := word ^ Ivy_ObjSim(b).pData[w]
+	right := p.simWords(b)
+	for w, word := range p.simWords(a) {
+		difference := word ^ right[w]
 		for difference != 0 {
 			bit := bits.TrailingZeros32(difference)
 			p.pPatScores[w*32+bit]++
@@ -439,7 +457,7 @@ var ivyFraigPrimes = [128]uint32{
 
 func Ivy_NodeHash(p *Ivy_FraigMan_t, n *Ivy_Obj_t) uint32 {
 	var hash uint32
-	for i, word := range Ivy_ObjSim(n).pData {
+	for i, word := range p.simWords(n) {
 		hash ^= word * ivyFraigPrimes[i]
 	}
 	return hash
@@ -452,7 +470,7 @@ func Ivy_FraigSavePattern1(p *Ivy_FraigMan_t) {
 	}
 }
 func Ivy_FraigCheckOutputSimsSavePattern(p *Ivy_FraigMan_t, edge *Ivy_Obj_t) {
-	signature := Ivy_ObjSim(edge).pData
+	signature := p.simWords(edge)
 	phase := Ivy_ObjFaninPhase(edge)
 	pattern := -1
 	for word, value := range signature {
@@ -482,7 +500,7 @@ func Ivy_FraigCheckOutputSims(p *Ivy_FraigMan_t) int32 {
 	}
 	for _, output := range p.pManAig.vPos {
 		edge := Ivy_ObjChild0(output)
-		for _, word := range Ivy_ObjSim(edge).pData {
+		for _, word := range p.simWords(edge) {
 			if Ivy_ObjFaninPhase(edge) != 0 {
 				word = ^word
 			}
