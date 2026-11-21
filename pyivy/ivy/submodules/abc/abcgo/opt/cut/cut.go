@@ -15,6 +15,7 @@ type Cut_Params_t struct {
 type Cut_Cut_t struct {
 	Num0, Num1              uint16
 	FSimul, FCompl          bool
+	temporary               bool
 	NVarsMax                int32
 	USign, UCanon0, UCanon1 uint32
 	Next                    *Cut_Cut_t

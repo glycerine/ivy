@@ -63,7 +63,7 @@ func Cut_OracleComputeCuts(p *Cut_Oracle_t, node, node0, node1, compl0, compl1 i
 			}
 			left := a[step.Indices[0]]
 			if step.Proof.Kind == 3 {
-				c = Cut_CutDupList(p.manager, &Cut_Cut_t{NVarsMax: left.NVarsMax, leaves: left.leaves, truth: left.truth, FSimul: left.FSimul, FCompl: left.FCompl, USign: left.USign})
+				c = p.manager.copyBufferCut(left)
 				if phases[0] {
 					for i := range c.truth {
 						c.truth[i] = ^c.truth[i]

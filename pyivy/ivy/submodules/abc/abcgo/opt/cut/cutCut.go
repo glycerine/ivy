@@ -30,6 +30,9 @@ func Cut_CutRecycle(p *Cut_Man_t, c *Cut_Cut_t) {
 		panic("cut: foreign or recycled cut")
 	}
 	c.owner = nil
+	if c.temporary {
+		return
+	}
 	p.stats.Recycled++
 	p.stats.Current--
 	if len(c.leaves) == 1 {
@@ -53,24 +56,54 @@ func Cut_CutCompare(a, b *Cut_Cut_t) int32 {
 	}
 	return 0
 }
+
+// copyPayload gives the destination its own mutable boundary and truth words.
+func (c *Cut_Cut_t) copyPayload(source *Cut_Cut_t) {
+	c.FSimul, c.FCompl, c.USign = source.FSimul, source.FCompl, source.USign
+	if source.leaves != nil {
+		c.setLeaves(source.leaves)
+	}
+	if len(source.truth) == 1 {
+		c.shortTruth[0] = source.truth[0]
+		c.truth = c.shortTruth[:]
+	} else {
+		c.truth = append(c.truth[:0], source.truth...)
+	}
+}
+
+// Buffer and oracle outputs are regular cuts. A sequential input snapshot is
+// temporary and ABC excludes it from the manager's cut statistics.
+func (p *Cut_Man_t) copyBufferCut(source *Cut_Cut_t) *Cut_Cut_t {
+	c := Cut_CutAlloc(p)
+	c.copyPayload(source)
+	if len(c.leaves) == 1 {
+		p.stats.Trivial++
+	}
+	return c
+}
+
 func Cut_CutDupList(p *Cut_Man_t, list *Cut_Cut_t) *Cut_Cut_t {
+	if list == nil {
+		return nil
+	}
+	p.check()
 	var head *Cut_Cut_t
 	tail := &head
-	for c := list; c != nil; c = c.Next {
-		copy := Cut_CutAlloc(p)
-		copy.Num0, copy.Num1 = c.Num0, c.Num1
-		copy.proof = c.proof
-		copy.FSimul, copy.FCompl = c.FSimul, c.FCompl
-		copy.USign, copy.UCanon0, copy.UCanon1 = c.USign, c.UCanon0, c.UCanon1
-		if c.leaves != nil {
-			copy.setLeaves(c.leaves)
+	for list != nil {
+		count := 0
+		for next := list; next != nil && count < 32; next = next.Next {
+			count++
 		}
-		copy.truth = append(copy.truth[:0], c.truth...)
-		if len(copy.leaves) == 1 {
-			p.stats.Trivial++
+		block := make([]Cut_Cut_t, count)
+		for i := range block {
+			c := &block[i]
+			c.owner, c.temporary, c.NVarsMax = p.lifetime, true, list.NVarsMax
+			c.Num0, c.Num1, c.proof = list.Num0, list.Num1, list.proof
+			c.UCanon0, c.UCanon1 = list.UCanon0, list.UCanon1
+			c.copyPayload(list)
+			*tail, tail = c, &c.Next
+			list = list.Next
 		}
-		*tail = copy
-		tail = &copy.Next
 	}
 	return head
 }

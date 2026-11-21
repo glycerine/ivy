@@ -532,7 +532,7 @@ func Cut_NodeComputeBuffer(p *Cut_Man_t, node, fanin, compl int32) *Cut_Cut_t {
 		if super.count >= p.params.NKeepMax {
 			break
 		}
-		copy := Cut_CutDupList(p, &Cut_Cut_t{NVarsMax: c.NVarsMax, leaves: c.leaves, truth: c.truth, FSimul: c.FSimul, FCompl: c.FCompl, USign: c.USign})
+		copy := p.copyBufferCut(c)
 		if compl != 0 {
 			for j := range copy.truth {
 				copy.truth[j] = ^copy.truth[j]
