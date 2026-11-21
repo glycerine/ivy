@@ -60,12 +60,10 @@ func RunCNF(cnf *mf.CNF, options satoko.Options) (Result, error) {
 			}
 		}
 	}
-	solver := satoko.New()
-	for _, clause := range cnf.Clauses {
-		if !solver.AddClause32(clause) {
-			result.Elapsed = time.Since(start)
-			return result, nil
-		}
+	solver := satoko.NewFromClauses32(cnf.Variables, cnf.Clauses)
+	if solver == nil {
+		result.Elapsed = time.Since(start)
+		return result, nil
 	}
 	*solver.Options() = options
 	if !solver.Simplify() {

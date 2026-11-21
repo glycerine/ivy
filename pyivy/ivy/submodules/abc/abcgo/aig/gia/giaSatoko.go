@@ -85,11 +85,9 @@ func Gia_ManSatokoInit(cnf *Cnf_Dat_t, options *satoko_opts_t) *satoko_t {
 	if cnf == nil {
 		return nil
 	}
-	solver := satoko.New()
-	for _, clause := range cnf.Clauses {
-		if !solver.AddClause32(clause) {
-			return nil
-		}
+	solver := satoko.NewFromClauses32(cnf.Variables, cnf.Clauses)
+	if solver == nil {
+		return nil
 	}
 	*solver.Options() = giaSatokoOptions(options)
 	return solver

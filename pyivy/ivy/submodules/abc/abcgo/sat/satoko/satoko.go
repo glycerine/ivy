@@ -47,6 +47,43 @@ func New() *Solver {
 	s.initOrder()
 	return s
 }
+
+// NewFromClauses32 loads a CNF in insertion order and returns nil on a root
+// contradiction. The variable hint reserves space. Only inserted literals
+// create solver variables.
+func NewFromClauses32(variableHint int, clauses [][]int32) *Solver {
+	s := New()
+	if len(clauses) == 0 {
+		return s
+	}
+	// Bound the reservation for sparse CNFs with large declared dimensions.
+	records := min(len(clauses), 8192)
+	variables := min(max(variableHint, 0), 2*records, 8192)
+	s.clauses = make([]*clause, 0, records)
+	s.values = make([]int8, 0, variables)
+	s.phases = make([]uint8, 0, variables)
+	s.levels = make([]int, 0, variables)
+	s.reasons = make([]int, 0, variables)
+	s.decision = make([]bool, 0, variables)
+	s.marks = make([]bool, 0, variables)
+	s.watches = make([]watchList, 0, 2*variables)
+	// Sparse formulas commonly have a single watcher for each used literal.
+	batch := clauseImport{watchCapacity: 8}
+	if records < variables {
+		batch.watchCapacity = 1
+	} else if records < 2*variables {
+		batch.watchCapacity = 4
+	}
+	s.importing = &batch
+	for i, clause := range clauses {
+		batch.remaining = len(clauses) - i
+		if !s.AddClause32(clause) {
+			return nil
+		}
+	}
+	s.importing = nil
+	return s
+}
 func satoko_create() *Solver                 { return New() }
 func satoko_destroy(s *Solver)               { *s = Solver{} }
 func (s *Solver) Destroy()                   { satoko_destroy(s) }

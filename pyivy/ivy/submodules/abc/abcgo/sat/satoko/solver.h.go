@@ -16,6 +16,7 @@ type conflictScratch struct {
 }
 
 type Solver struct {
+	importing                 *clauseImport
 	analysis                  conflictScratch
 	opts                      Options
 	stats                     Stats
