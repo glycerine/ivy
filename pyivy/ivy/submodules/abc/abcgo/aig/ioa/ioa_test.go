@@ -12,6 +12,61 @@ import (
 	"testing"
 )
 
+func TestDenseAigerValidationCoversPropertiesAndFallbacks(t *testing.T) {
+	model := func() *Model {
+		return &Model{
+			MaxVar: 3, Inputs: []uint32{2}, Latches: []Latch{{Literal: 4, Next: 6, Init: 4}},
+			ANDs: []And{{Literal: 6, Left: 2, Right: 5}}, Outputs: []uint32{7},
+			Bad: []uint32{6}, Constraints: []uint32{4}, Fairness: []uint32{3}, Justice: [][]uint32{{2, 5}},
+			Symbols: map[Symbol]string{{Kind: 'i', Index: 0}: "in"},
+		}
+	}
+	for _, tc := range []struct {
+		name  string
+		edit  func(*Model)
+		dense bool
+		valid bool
+	}{
+		{"ordered", func(*Model) {}, true, true},
+		{"huge sparse range", func(m *Model) { m.MaxVar = 0x7fffffff }, false, true},
+		{"duplicate definition", func(m *Model) { m.Latches[0].Literal = 2 }, false, false},
+		{"self dependency", func(m *Model) { m.ANDs[0].Right = 7 }, false, false},
+		{"latch next", func(m *Model) { m.Latches[0].Next = 8 }, true, false},
+		{"latch reset", func(m *Model) { m.Latches[0].Init = 2 }, true, false},
+		{"output", func(m *Model) { m.Outputs[0] = 8 }, true, false},
+		{"bad", func(m *Model) { m.Bad[0] = 9 }, true, false},
+		{"constraint", func(m *Model) { m.Constraints[0] = 8 }, true, false},
+		{"justice", func(m *Model) { m.Justice[0][1] = 9 }, true, false},
+		{"fairness", func(m *Model) { m.Fairness[0] = 8 }, true, false},
+		{"symbol", func(m *Model) { m.Symbols[Symbol{Kind: 'i', Index: 1}] = "missing" }, true, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			m := model()
+			tc.edit(m)
+			if m.HasDenseTopologicalOrder() != tc.dense || (m.Check() == nil) != tc.valid {
+				t.Fatalf("dense %t, validation %v", m.HasDenseTopologicalOrder(), m.Check())
+			}
+		})
+	}
+}
+
+func BenchmarkI10ModelCheck(b *testing.B) {
+	data, err := os.ReadFile("../../../i10.aig")
+	if err != nil {
+		b.Fatal(err)
+	}
+	m, err := Read(data)
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ReportAllocs()
+	for b.Loop() {
+		if err := m.Check(); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
 func TestAigerIntegerCodec(t *testing.T) {
 	for _, v := range []uint32{0, 1, 127, 128, 16383, 16384, 0x7fffffff, 0xffffffff} {
 		var encoded []byte

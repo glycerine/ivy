@@ -48,6 +48,110 @@ func (m *Model) Check() error {
 	if m.MaxVar > 0x7fffffff {
 		return fmt.Errorf("AIGER variable index exceeds literal range")
 	}
+	if m.HasDenseTopologicalOrder() {
+		for _, l := range m.Latches {
+			if l.Init != 0 && l.Init != 1 && l.Init != l.Literal {
+				return fmt.Errorf("invalid reset literal %d", l.Init)
+			}
+		}
+		if err := m.checkRootLiterals(func(lit uint32) error {
+			if lit>>1 > m.MaxVar {
+				return fmt.Errorf("undefined literal %d", lit)
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+	} else if err := m.checkUnorderedStructure(); err != nil {
+		return err
+	}
+	for symbol, name := range m.Symbols {
+		if len(name) == 0 {
+			return fmt.Errorf("empty symbol name")
+		}
+		var n int
+		switch symbol.Kind {
+		case 'i':
+			n = len(m.Inputs)
+		case 'l':
+			n = len(m.Latches)
+		case 'o':
+			n = len(m.Outputs)
+		case 'b':
+			n = len(m.Bad)
+		case 'c':
+			n = len(m.Constraints)
+		case 'j':
+			n = len(m.Justice)
+		case 'f':
+			n = len(m.Fairness)
+		default:
+			return fmt.Errorf("invalid symbol kind %q", symbol.Kind)
+		}
+		if uint64(symbol.Index) >= uint64(n) {
+			return fmt.Errorf("symbol index out of range")
+		}
+		for _, c := range name {
+			if c == '\n' || c == '\r' || c == 0 {
+				return fmt.Errorf("invalid symbol name")
+			}
+		}
+	}
+	return nil
+}
+
+// HasDenseTopologicalOrder reports whether inputs, latches and ANDs define
+// consecutive variables and every AND follows both of its fanins.
+func (m *Model) HasDenseTopologicalOrder() bool {
+	if m == nil || m.MaxVar > 0x7fffffff || uint64(m.MaxVar) != uint64(len(m.Inputs))+uint64(len(m.Latches))+uint64(len(m.ANDs)) {
+		return false
+	}
+	next := uint32(2)
+	for _, lit := range m.Inputs {
+		if lit != next {
+			return false
+		}
+		next += 2
+	}
+	for _, latch := range m.Latches {
+		if latch.Literal != next {
+			return false
+		}
+		next += 2
+	}
+	for _, gate := range m.ANDs {
+		if gate.Literal != next || gate.Left >= next || gate.Right >= next {
+			return false
+		}
+		next += 2
+	}
+	return true
+}
+
+func (m *Model) checkRootLiterals(check func(uint32) error) error {
+	for _, l := range m.Latches {
+		if err := check(l.Next); err != nil {
+			return err
+		}
+	}
+	for _, list := range [][]uint32{m.Outputs, m.Bad, m.Constraints, m.Fairness} {
+		for _, lit := range list {
+			if err := check(lit); err != nil {
+				return err
+			}
+		}
+	}
+	for _, list := range m.Justice {
+		for _, lit := range list {
+			if err := check(lit); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (m *Model) checkUnorderedStructure() error {
 	defined := map[uint32]bool{0: true}
 	gates := map[uint32]And{}
 	add := func(lit uint32) error {
@@ -85,24 +189,8 @@ func (m *Model) Check() error {
 		}
 		return nil
 	}
-	for _, l := range m.Latches {
-		if err := check(l.Next); err != nil {
-			return err
-		}
-	}
-	for _, list := range [][]uint32{m.Outputs, m.Bad, m.Constraints, m.Fairness} {
-		for _, lit := range list {
-			if err := check(lit); err != nil {
-				return err
-			}
-		}
-	}
-	for _, list := range m.Justice {
-		for _, lit := range list {
-			if err := check(lit); err != nil {
-				return err
-			}
-		}
+	if err := m.checkRootLiterals(check); err != nil {
+		return err
 	}
 	for _, a := range m.ANDs {
 		if err := check(a.Left); err != nil {
@@ -138,38 +226,6 @@ func (m *Model) Check() error {
 	for v := range gates {
 		if err := visit(v); err != nil {
 			return err
-		}
-	}
-	for symbol, name := range m.Symbols {
-		if len(name) == 0 {
-			return fmt.Errorf("empty symbol name")
-		}
-		var n int
-		switch symbol.Kind {
-		case 'i':
-			n = len(m.Inputs)
-		case 'l':
-			n = len(m.Latches)
-		case 'o':
-			n = len(m.Outputs)
-		case 'b':
-			n = len(m.Bad)
-		case 'c':
-			n = len(m.Constraints)
-		case 'j':
-			n = len(m.Justice)
-		case 'f':
-			n = len(m.Fairness)
-		default:
-			return fmt.Errorf("invalid symbol kind %q", symbol.Kind)
-		}
-		if uint64(symbol.Index) >= uint64(n) {
-			return fmt.Errorf("symbol index out of range")
-		}
-		for _, c := range name {
-			if c == '\n' || c == '\r' || c == 0 {
-				return fmt.Errorf("invalid symbol name")
-			}
 		}
 	}
 	return nil

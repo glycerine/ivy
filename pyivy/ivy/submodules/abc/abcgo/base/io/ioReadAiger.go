@@ -37,7 +37,7 @@ func ReadAiger(filename string, _ bool) (*abc.Network, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", filename, err)
 	}
-	network, err := NetworkFromAigerModel(model)
+	network, err := networkFromCheckedAigerModel(model)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", filename, err)
 	}
@@ -57,7 +57,7 @@ func ReadAigerFromMemory(data []byte, _ bool) (*abc.Network, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NetworkFromAigerModel(model)
+	return networkFromCheckedAigerModel(model)
 }
 
 // Io_ReadAiger preserves ABC's nil-on-error entry point. New callers should use
@@ -207,6 +207,11 @@ func NetworkFromAigerModel(model *ioa.Model) (*abc.Network, error) {
 	if err := model.Check(); err != nil {
 		return nil, err
 	}
+	return networkFromCheckedAigerModel(model)
+}
+
+// ioa.Read and the public model converter validate before reaching this point.
+func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
 	network := abc.NewNetwork(model.Name)
 	network.Type, network.Function = uint8(abc.ABC_NTK_STRASH), uint8(abc.ABC_FUNC_AIG)
 	network.Spec = string(model.Comment)
@@ -217,12 +222,10 @@ func NetworkFromAigerModel(model *ioa.Model) (*abc.Network, error) {
 		fairness:    append([]uint32(nil), model.Fairness...), justice: cloneAigerLists(model.Justice),
 		symbols: cloneAigerSymbols(model.Symbols),
 	}
-	literalEdges := map[uint32]abc.Edge{0: network.One().Not()}
 	inputObjects := make([]*abc.Object, len(model.Inputs))
-	for i, literal := range model.Inputs {
+	for i := range model.Inputs {
 		pi := network.NewObject(abc.ObjectPI)
 		inputObjects[i] = pi
-		literalEdges[literal>>1] = pi.Signal()
 	}
 	latchBoxes := make([]*abc.Object, len(model.Latches))
 	latchInputs := make([]*abc.Object, len(model.Latches))
@@ -244,47 +247,10 @@ func NetworkFromAigerModel(model *ioa.Model) (*abc.Network, error) {
 		default:
 			latch.Data = abc.ABC_INIT_DC
 		}
-		literalEdges[latchModel.Literal>>1] = bo.Signal()
 	}
-	gates := make(map[uint32]ioa.And, len(model.ANDs))
-	for _, gate := range model.ANDs {
-		gates[gate.Literal>>1] = gate
-	}
-	active := make(map[uint32]bool)
-	var edgeForLiteral func(uint32) (abc.Edge, error)
-	edgeForLiteral = func(literal uint32) (abc.Edge, error) {
-		variable := literal >> 1
-		edge, ok := literalEdges[variable]
-		if !ok {
-			gate, found := gates[variable]
-			if !found {
-				return abc.Edge{}, fmt.Errorf("undefined AIGER variable %d", variable)
-			}
-			if active[variable] {
-				return abc.Edge{}, fmt.Errorf("AIGER combinational cycle at variable %d", variable)
-			}
-			active[variable] = true
-			left, err := edgeForLiteral(gate.Left)
-			if err != nil {
-				return abc.Edge{}, err
-			}
-			right, err := edgeForLiteral(gate.Right)
-			if err != nil {
-				return abc.Edge{}, err
-			}
-			edge = network.AndEdges(left, right)
-			delete(active, variable)
-			literalEdges[variable] = edge
-		}
-		if literal&1 != 0 {
-			edge = edge.Not()
-		}
-		return edge, nil
-	}
-	for _, gate := range model.ANDs {
-		if _, err := edgeForLiteral(gate.Literal); err != nil {
-			return nil, err
-		}
+	edgeForLiteral, err := aigerGateEdges(network, model, inputObjects, latchOutputs)
+	if err != nil {
+		return nil, err
 	}
 	for i, latchModel := range model.Latches {
 		next, err := edgeForLiteral(latchModel.Next)
@@ -352,4 +318,76 @@ func cloneAigerSymbols(in map[ioa.Symbol]string) map[ioa.Symbol]string {
 		out[symbol] = name
 	}
 	return out
+}
+
+func aigerGateEdges(network *abc.Network, model *ioa.Model, inputs, latches []*abc.Object) (func(uint32) (abc.Edge, error), error) {
+	if model.HasDenseTopologicalOrder() {
+		edges := make([]abc.Edge, int(model.MaxVar)+1)
+		edges[0] = network.One().Not()
+		for i, pi := range inputs {
+			edges[1+i] = pi.Signal()
+		}
+		for i, bo := range latches {
+			edges[1+len(inputs)+i] = bo.Signal()
+		}
+		edgeAt := func(lit uint32) abc.Edge {
+			edge := edges[lit>>1]
+			if lit&1 != 0 {
+				return edge.Not()
+			}
+			return edge
+		}
+		for _, gate := range model.ANDs {
+			edges[gate.Literal>>1] = network.AndEdges(edgeAt(gate.Left), edgeAt(gate.Right))
+		}
+		return func(lit uint32) (abc.Edge, error) { return edgeAt(lit), nil }, nil
+	}
+	literalEdges := map[uint32]abc.Edge{0: network.One().Not()}
+	for i, lit := range model.Inputs {
+		literalEdges[lit>>1] = inputs[i].Signal()
+	}
+	for i, latch := range model.Latches {
+		literalEdges[latch.Literal>>1] = latches[i].Signal()
+	}
+	gates := make(map[uint32]ioa.And, len(model.ANDs))
+	for _, gate := range model.ANDs {
+		gates[gate.Literal>>1] = gate
+	}
+	active := make(map[uint32]bool)
+	var edgeForLiteral func(uint32) (abc.Edge, error)
+	edgeForLiteral = func(literal uint32) (abc.Edge, error) {
+		variable := literal >> 1
+		edge, ok := literalEdges[variable]
+		if !ok {
+			gate, found := gates[variable]
+			if !found {
+				return abc.Edge{}, fmt.Errorf("undefined AIGER variable %d", variable)
+			}
+			if active[variable] {
+				return abc.Edge{}, fmt.Errorf("AIGER combinational cycle at variable %d", variable)
+			}
+			active[variable] = true
+			left, err := edgeForLiteral(gate.Left)
+			if err != nil {
+				return abc.Edge{}, err
+			}
+			right, err := edgeForLiteral(gate.Right)
+			if err != nil {
+				return abc.Edge{}, err
+			}
+			edge = network.AndEdges(left, right)
+			delete(active, variable)
+			literalEdges[variable] = edge
+		}
+		if literal&1 != 0 {
+			edge = edge.Not()
+		}
+		return edge, nil
+	}
+	for _, gate := range model.ANDs {
+		if _, err := edgeForLiteral(gate.Literal); err != nil {
+			return nil, err
+		}
+	}
+	return edgeForLiteral, nil
 }

@@ -10,6 +10,43 @@ import (
 	"github.com/glycerine/abcgo/base/abc"
 )
 
+func TestAigerGateEdgesPreserveFoldedPhasesInBothOrders(t *testing.T) {
+	for _, sparse := range []bool{false, true} {
+		m := &ioa.Model{
+			MaxVar: 5, Inputs: []uint32{2, 4}, Outputs: []uint32{8, 9, 10, 11},
+			ANDs: []ioa.And{{Literal: 6, Left: 2, Right: 1}, {Literal: 8, Left: 7, Right: 4}, {Literal: 10, Left: 0, Right: 8}},
+		}
+		if sparse {
+			m.MaxVar = 0x7fffffff
+			m.Inputs[0], m.ANDs[0].Left = 0xfffffffe, 0xfffffffe
+			m.ANDs[0], m.ANDs[2] = m.ANDs[2], m.ANDs[0]
+		}
+		n, err := NetworkFromAigerModel(m)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if abc.Abc_NtkNodeNum(n) != 1 {
+			t.Fatalf("sparse %t has %d ANDs after constant folding", sparse, abc.Abc_NtkNodeNum(n))
+		}
+		inputs, outputs := n.Inputs(), n.Outputs()
+		for a := range 4 {
+			values := map[*abc.Object]bool{inputs[0]: a&1 != 0, inputs[1]: a&2 != 0}
+			want := []bool{a == 2, a != 2, false, true}
+			for i, output := range outputs {
+				got, err := n.Evaluate(abc.Abc_ObjChild0(output), values)
+				if err != nil || got != want[i] {
+					t.Fatalf("sparse %t assignment %d output %d = %t, err %v", sparse, a, i, got, err)
+				}
+			}
+		}
+		abc.Abc_NtkDelete(n)
+		m.Outputs[0] = 12
+		if _, err := NetworkFromAigerModel(m); err == nil {
+			t.Fatal("public conversion accepted an undefined output after a successful conversion")
+		}
+	}
+}
+
 func TestAigerFileNameAndUnnamedPorts(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "nand.aag")
 	if err := os.WriteFile(path, []byte("aag 3 2 0 1 1\n2\n4\n7\n6 4 2\nc\nsource\n"), 0600); err != nil {
