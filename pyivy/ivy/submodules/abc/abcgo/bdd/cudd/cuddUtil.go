@@ -2,8 +2,10 @@ package cudd
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"os"
+	"strconv"
 	"unsafe"
 
 	"github.com/glycerine/abcgo/bdd/cudd/core"
@@ -152,8 +154,6 @@ const STAB_DIV = 1 + (MODULUS1-1)/STAB_SIZE
 /* Variable declarations                                                     */
 /*---------------------------------------------------------------------------*/
 
-var background, zero *DdNode
-
 /*---------------------------------------------------------------------------*/
 /* Macro declarations                                                        */
 /*---------------------------------------------------------------------------*/
@@ -228,43 +228,12 @@ func Cudd_PrintMinterm(manager *DdManager, node *DdNode) int32 {
 	if manager == nil || node == nil {
 		return 0
 	}
-	out := core.Cudd_Output(manager)
-	background = manager.Background
-	zero = Cudd_Not(manager.One)
-	path := make([]int, len(manager.Vars))
+	// Keep space after the path for one formatted terminal and newline.
+	path := make([]byte, len(manager.Vars), len(manager.Vars)+32)
 	for i := range path {
-		path[i] = 2 // Unvisited variables are don't-cares in each path cube.
+		path[i] = '-'
 	}
-	var printPaths func(*DdNode)
-	printPaths = func(edge *DdNode) {
-		regular := Cudd_Regular(edge)
-		if Cudd_IsConstant(regular) {
-			if edge == background || edge == zero {
-				return
-			}
-			for _, value := range path {
-				if value == 0 {
-					_, _ = fmt.Fprint(out, "0")
-				} else if value == 1 {
-					_, _ = fmt.Fprint(out, "1")
-				} else {
-					_, _ = fmt.Fprint(out, "-")
-				}
-			}
-			_, _ = fmt.Fprintf(out, " % g\n", regular.Value)
-			return
-		}
-		index := int(regular.Index)
-		if index < 0 || index >= len(path) {
-			return
-		}
-		path[index] = 0
-		printPaths(Cudd_NotCond(Cudd_E(regular), Cudd_IsComplement(edge)))
-		path[index] = 1
-		printPaths(Cudd_NotCond(Cudd_T(regular), Cudd_IsComplement(edge)))
-		path[index] = 2
-	}
-	printPaths(node)
+	ddPrintMintermAux(core.Cudd_Output(manager), node, manager.Background, manager.LogicZero, path)
 	return 1
 
 } /* end of Cudd_PrintMinterm */
@@ -1845,37 +1814,48 @@ func cuddBang(edge *DdNode) byte {
 	return ' '
 }
 
-func ddPrintMintermAux(dd *DdManager, node *DdNode, list []int32) {
-	if dd == nil || node == nil {
-		return
-	}
-	out := core.Cudd_Output(dd)
-	if Cudd_IsConstant(Cudd_Regular(node)) {
-		if node == dd.LogicZero || node == dd.Background {
+func ddPrintMintermAux(out io.Writer, node, background, zero *DdNode, path []byte) {
+	regular := Cudd_Regular(node)
+	if Cudd_IsConstant(regular) {
+		if node == background || node == zero {
 			return
 		}
-		for _, value := range list {
-			if value == 0 {
-				_, _ = fmt.Fprint(out, "0")
-			} else if value == 1 {
-				_, _ = fmt.Fprint(out, "1")
-			} else {
-				_, _ = fmt.Fprint(out, "-")
-			}
+		value := regular.Value
+		if value == 1 {
+			_, _ = out.Write(append(path, "  1\n"...))
+			return
 		}
-		_, _ = fmt.Fprintf(out, " % g\n", Cudd_Regular(node).Value)
+		row := append(path, ' ')
+		if !math.Signbit(value) {
+			row = append(row, ' ')
+		}
+		// Native printf uses six significant digits for %g.
+		switch {
+		case math.IsInf(value, 1):
+			row = append(row, "inf"...)
+		case math.IsInf(value, -1):
+			row = append(row, "-inf"...)
+		case math.IsNaN(value):
+			if math.Signbit(value) {
+				row = append(row, '-')
+			}
+			row = append(row, "nan"...)
+		default:
+			row = strconv.AppendFloat(row, value, 'g', 6, 64)
+		}
+		_, _ = out.Write(append(row, '\n'))
 		return
 	}
-	regular := Cudd_Regular(node)
 	index := int(regular.Index)
-	if index < 0 || index >= len(list) {
+	if index < 0 || index >= len(path) {
 		return
 	}
-	list[index] = 0
-	ddPrintMintermAux(dd, Cudd_NotCond(Cudd_E(regular), Cudd_IsComplement(node)), list)
-	list[index] = 1
-	ddPrintMintermAux(dd, Cudd_NotCond(Cudd_T(regular), Cudd_IsComplement(node)), list)
-	list[index] = 2
+	phase := Cudd_IsComplement(node)
+	path[index] = '0'
+	ddPrintMintermAux(out, Cudd_NotCond(Cudd_E(regular), phase), background, zero, path)
+	path[index] = '1'
+	ddPrintMintermAux(out, Cudd_NotCond(Cudd_T(regular), phase), background, zero, path)
+	path[index] = '-'
 }
 
 func ddDagInt(n *DdNode) int32 {
