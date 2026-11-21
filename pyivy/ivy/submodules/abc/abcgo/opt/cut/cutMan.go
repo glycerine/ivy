@@ -16,7 +16,7 @@ func Cut_ManStart(params *Cut_Params_t) *Cut_Man_t {
 			params.FTruth = 0
 		}
 	}
-	return &Cut_Man_t{params: params, budget: -1, newCuts: map[int32]*Cut_Cut_t{}, oldCuts: map[int32]*Cut_Cut_t{}, tempCuts: map[int32]*Cut_Cut_t{}, lifetime: &cutLifetime{}, records: map[int32]Cut_Record{}, delays: map[int32]int32{}, best: map[int32]*Cut_Cut_t{}}
+	return &Cut_Man_t{params: params, newCuts: map[int32]*Cut_Cut_t{}, oldCuts: map[int32]*Cut_Cut_t{}, tempCuts: map[int32]*Cut_Cut_t{}, lifetime: &cutLifetime{}, records: map[int32]Cut_Record{}, delays: map[int32]int32{}, best: map[int32]*Cut_Cut_t{}}
 }
 func Cut_ManStop(p *Cut_Man_t) {
 	if p == nil || p.lifetime == nil || p.lifetime.stopped {

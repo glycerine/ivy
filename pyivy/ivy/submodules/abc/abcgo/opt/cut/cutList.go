@@ -3,14 +3,11 @@ package cut
 type Cut_List_t struct {
 	count int32
 	head  [CUT_SIZE_MAX + 1]*Cut_Cut_t
-	tail  [CUT_SIZE_MAX + 1]**Cut_Cut_t
+	tail  [CUT_SIZE_MAX + 1]*Cut_Cut_t
 }
 
 func Cut_ListStart(p *Cut_List_t) {
 	*p = Cut_List_t{}
-	for i := int32(1); i <= CUT_SIZE_MAX; i++ {
-		p.tail[i] = &p.head[i]
-	}
 }
 func Cut_ListAdd(p *Cut_List_t, c *Cut_Cut_t) {
 	n := len(c.leaves)
@@ -19,8 +16,12 @@ func Cut_ListAdd(p *Cut_List_t, c *Cut_Cut_t) {
 	}
 	p.count++
 	c.Next = nil
-	*p.tail[n] = c
-	p.tail[n] = &c.Next
+	if last := p.tail[n]; last != nil {
+		last.Next = c
+	} else {
+		p.head[n] = c
+	}
+	p.tail[n] = c
 }
 func Cut_ListAdd2(p *Cut_List_t, c *Cut_Cut_t) {
 	n := len(c.leaves)
@@ -35,7 +36,7 @@ func Cut_ListAdd2(p *Cut_List_t, c *Cut_Cut_t) {
 	c.Next = *spot
 	*spot = c
 	if c.Next == nil {
-		p.tail[n] = &c.Next
+		p.tail[n] = c
 	}
 }
 func Cut_ListDerive(p *Cut_List_t, list *Cut_Cut_t) {
@@ -50,7 +51,11 @@ func Cut_ListAddList(dst, src *Cut_List_t) {
 	dst.count += src.count
 	for i := int32(1); i <= CUT_SIZE_MAX; i++ {
 		if src.head[i] != nil {
-			*dst.tail[i] = src.head[i]
+			if last := dst.tail[i]; last != nil {
+				last.Next = src.head[i]
+			} else {
+				dst.head[i] = src.head[i]
+			}
 			dst.tail[i] = src.tail[i]
 		}
 	}
@@ -61,7 +66,7 @@ func Cut_ListFinish(p *Cut_List_t) *Cut_Cut_t {
 	for i := int32(1); i <= CUT_SIZE_MAX; i++ {
 		if p.head[i] != nil {
 			*tail = p.head[i]
-			tail = p.tail[i]
+			tail = &p.tail[i].Next
 		}
 	}
 	*tail = nil

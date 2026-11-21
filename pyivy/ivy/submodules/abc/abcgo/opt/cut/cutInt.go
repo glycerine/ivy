@@ -35,7 +35,6 @@ type Cut_Man_t struct {
 	records                    map[int32]Cut_Record
 	delays                     map[int32]int32
 	best                       map[int32]*Cut_Cut_t
-	budget                     int32
 	xor                        bool
 	recorded                   []Cut_TruthRecord
 	simulation                 bool

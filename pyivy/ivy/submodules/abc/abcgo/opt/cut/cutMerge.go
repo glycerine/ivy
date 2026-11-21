@@ -37,12 +37,17 @@ func Cut_CutMergeTwo(p *Cut_Man_t, a, b *Cut_Cut_t) *Cut_Cut_t {
 	if leaves == nil {
 		return nil
 	}
-	c := Cut_CutAlloc(p)
+	p.countAllocation()
+	return newMergedCut(p, leaves, a.USign|b.USign)
+}
+
+func newMergedCut(p *Cut_Man_t, leaves []int32, sign uint32) *Cut_Cut_t {
+	c := p.newCut()
 	c.setLeaves(leaves)
 	if len(leaves) == 1 {
 		p.stats.Trivial++
 	}
-	c.USign = a.USign | b.USign
+	c.USign = sign
 	return c
 }
 func cutContains(a, b []int32) bool {

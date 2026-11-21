@@ -2,8 +2,19 @@ package cut
 
 import "fmt"
 
-func Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {
+func (p *Cut_Man_t) countAllocation() {
 	p.check()
+	p.stats.Allocated++
+	p.stats.Current++
+	p.stats.Peak = max(p.stats.Peak, p.stats.Current)
+}
+
+func Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {
+	p.countAllocation()
+	return p.newCut()
+}
+
+func (p *Cut_Man_t) newCut() *Cut_Cut_t {
 	c := &Cut_Cut_t{NVarsMax: p.params.NVarsMax, FSimul: p.simulation, owner: p.lifetime}
 	if p.params.FTruth != 0 {
 		if words := Cut_TruthWords(c.NVarsMax); words == 1 {
@@ -12,9 +23,6 @@ func Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {
 			c.truth = make([]uint32, words)
 		}
 	}
-	p.stats.Allocated++
-	p.stats.Current++
-	p.stats.Peak = max(p.stats.Peak, p.stats.Current)
 	return c
 }
 func Cut_CutRecycle(p *Cut_Man_t, c *Cut_Cut_t) {

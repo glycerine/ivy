@@ -1,7 +1,6 @@
 package cut
 
 import (
-	"sort"
 	"time"
 )
 
@@ -11,18 +10,31 @@ func Cut_CutCheckDominance(dom, cut *Cut_Cut_t) int32 {
 	}
 	return 0
 }
-func Cut_CutFilterOne(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) int32 {
-	for size := 1; size <= len(c.leaves); size++ {
+func cutListDominates(list *Cut_List_t, leaves []int32, sign uint32) bool {
+	for size := 1; size <= len(leaves); size++ {
 		for old := list.head[size]; old != nil; old = old.Next {
-			if old.USign&^c.USign == 0 && cutContains(c.leaves, old.leaves) {
-				p.stats.Filtered++
-				Cut_CutRecycle(p, c)
-				return 1
+			if old.USign&^sign == 0 && cutContains(leaves, old.leaves) {
+				return true
 			}
 		}
 	}
+	return false
+}
+
+func Cut_CutFilterOne(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) int32 {
+	if cutListDominates(list, c.leaves, c.USign) {
+		p.stats.Filtered++
+		Cut_CutRecycle(p, c)
+		return 1
+	}
+	cutRemoveSupersets(p, list, c)
+	return 0
+}
+
+func cutRemoveSupersets(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) {
 	for size := len(c.leaves) + 1; size <= int(p.params.NVarsMax); size++ {
 		slot := &list.head[size]
+		var last *Cut_Cut_t
 		for *slot != nil {
 			old := *slot
 			if c.USign&^old.USign == 0 && cutContains(old.leaves, c.leaves) {
@@ -31,12 +43,12 @@ func Cut_CutFilterOne(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) int32 {
 				p.stats.Filtered++
 				Cut_CutRecycle(p, old)
 			} else {
+				last = old
 				slot = &old.Next
 			}
 		}
-		list.tail[size] = slot
+		list.tail[size] = last
 	}
-	return 0
 }
 func Cut_CutFilterOneEqual(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) int32 {
 	for old := list.head[len(c.leaves)]; old != nil; old = old.Next {
@@ -48,28 +60,80 @@ func Cut_CutFilterOneEqual(p *Cut_Man_t, list *Cut_List_t, c *Cut_Cut_t) int32 {
 	}
 	return 0
 }
-func Cut_CutFilterOld(p *Cut_Man_t, list, c *Cut_Cut_t) int32 {
+func cutFrontierDominates(list, c *Cut_Cut_t) bool {
 	for old := list; old != nil; old = old.Next {
 		if old.USign&^c.USign == 0 && cutContains(c.leaves, old.leaves) {
-			p.stats.Filtered++
-			Cut_CutRecycle(p, c)
-			return 1
+			return true
 		}
+	}
+	return false
+}
+
+// Remove strict supersets and update the caller's head when the first cut goes.
+func cutPruneFrontier(p *Cut_Man_t, slot **Cut_Cut_t, c *Cut_Cut_t) int32 {
+	var removed int32
+	for *slot != nil {
+		old := *slot
+		if len(c.leaves) < len(old.leaves) && c.USign&^old.USign == 0 && cutContains(old.leaves, c.leaves) {
+			*slot = old.Next
+			p.stats.Filtered++
+			Cut_CutRecycle(p, old)
+			removed++
+		} else {
+			slot = &old.Next
+		}
+	}
+	return removed
+}
+
+func Cut_CutFilterOld(p *Cut_Man_t, list, c *Cut_Cut_t) int32 {
+	if cutFrontierDominates(list, c) {
+		p.stats.Filtered++
+		Cut_CutRecycle(p, c)
+		return 1
+	}
+	// This entry point, like the C routine, receives the trivial head by
+	// value. The internal frontier API can replace a nontrivial head as well.
+	if list != nil {
+		cutPruneFrontier(p, &list.Next, c)
 	}
 	return 0
 }
-func Cut_CutFilterGlobal(p *Cut_Man_t, c *Cut_Cut_t) int32 {
-	if len(c.leaves) == 1 {
-		return 0
+
+type cutSeqFrontiers struct {
+	old, current *Cut_Cut_t
+	limit        int32
+}
+
+func (f *cutSeqFrontiers) filter(p *Cut_Man_t, c *Cut_Cut_t) bool {
+	for _, list := range [2]**Cut_Cut_t{&f.old, &f.current} {
+		if cutFrontierDominates(*list, c) {
+			return true
+		}
+		f.limit += cutPruneFrontier(p, list, c)
 	}
-	for _, leaf := range c.leaves {
+	return false
+}
+
+func (p *Cut_Man_t) globalCutEligible(leaves []int32) bool {
+	if len(leaves) == 1 {
+		return true
+	}
+	for _, leaf := range leaves {
 		node := leaf
 		if p.params.FSeq != 0 {
 			node >>= CUT_SHIFT
 		}
 		if int(node) < len(p.attrs) && p.attrs[node] != 0 {
-			return 0
+			return true
 		}
+	}
+	return false
+}
+
+func Cut_CutFilterGlobal(p *Cut_Man_t, c *Cut_Cut_t) int32 {
+	if p.globalCutEligible(c.leaves) {
+		return 0
 	}
 	p.stats.Filtered++
 	Cut_CutRecycle(p, c)
@@ -92,9 +156,13 @@ func cutListBounds(head *Cut_Cut_t, limit int32, tree bool) (full, stop *Cut_Cut
 }
 
 func Cut_NodeDoComputeCuts(p *Cut_Man_t, super *Cut_List_t, node, compl0, compl1 int32, a, b *Cut_Cut_t, trivial, treeCode int32) {
+	cutNodeDoComputeCuts(p, super, node, compl0, compl1, a, b, trivial, treeCode, nil)
+}
+
+func cutNodeDoComputeCuts(p *Cut_Man_t, super *Cut_List_t, node, compl0, compl1 int32, a, b *Cut_Cut_t, trivial, treeCode int32, frontiers *cutSeqFrontiers) {
 	limit := p.params.NKeepMax
-	if p.budget >= 0 {
-		limit = p.budget
+	if frontiers != nil {
+		limit = frontiers.limit
 	}
 	if super.count >= limit {
 		return
@@ -112,18 +180,36 @@ func Cut_NodeDoComputeCuts(p *Cut_Man_t, super *Cut_List_t, node, compl0, compl1
 	if a == nil || b == nil || super.count >= limit || p.params.FLocal != 0 && treeCode != 0 {
 		return
 	}
+	var scratch [CUT_SIZE_MAX]int32
 	process := func(left, right *Cut_Cut_t) bool {
-		c := Cut_CutMergeTwo(p, left, right)
-		if c == nil {
+		leaves := mergeLeaves(left.leaves, right.leaves, p.params.NVarsMax, scratch[:0])
+		if leaves == nil {
 			return false
 		}
+		sign := left.USign | right.USign
+		// Count the candidate before pruning to preserve ABC's peak count.
+		// Allocate its owned leaf and truth storage only when it survives.
+		p.countAllocation()
+		rejected := p.params.FGlobal != 0 && !p.globalCutEligible(leaves)
+		if !rejected && p.params.FFilter != 0 {
+			rejected = cutListDominates(super, leaves, sign)
+			if !rejected {
+				candidate := Cut_Cut_t{leaves: leaves, USign: sign}
+				cutRemoveSupersets(p, super, &candidate)
+				if frontiers != nil {
+					rejected = frontiers.filter(p, &candidate)
+					limit = frontiers.limit
+				}
+			}
+		}
+		if rejected {
+			p.stats.Filtered++
+			p.stats.Recycled++
+			p.stats.Current--
+			return false
+		}
+		c := newMergedCut(p, leaves, sign)
 		c.Num0, c.Num1 = left.Num0&2047, right.Num0&2047
-		if p.params.FGlobal != 0 && Cut_CutFilterGlobal(p, c) != 0 {
-			return false
-		}
-		if p.params.FFilter != 0 && Cut_CutFilterOne(p, super, c) != 0 {
-			return false
-		}
 		if p.params.FTruth != 0 {
 			Cut_TruthCompute(p, c, left, right, compl0, compl1)
 		}
@@ -304,54 +390,67 @@ func Cut_ManMappingArea_rec(p *Cut_Man_t, node int32) int32 {
 	}
 	return count
 }
-func cutUnionLists(p *Cut_Man_t, lists []*Cut_Cut_t, keepTrivial bool, old, new *Cut_Cut_t) *Cut_Cut_t {
+func cutUnionLists(p *Cut_Man_t, lists []*Cut_Cut_t, keepTrivial bool, top *Cut_Cut_t, frontiers *cutSeqFrontiers) *Cut_Cut_t {
 	var super Cut_List_t
 	Cut_ListStart(&super)
-	var candidates []*Cut_Cut_t
-	var top *Cut_Cut_t
-	for i, list := range lists {
-		if list == nil {
-			continue
-		}
-		start := list
-		if keepTrivial {
-			start = list.Next
-			list.Next = nil
-			if i == 0 {
-				top = list
-				Cut_ListAdd(&super, list)
-			} else {
-				Cut_CutRecycle(p, list)
-			}
-		}
-		for c := start; c != nil; {
-			next := c.Next
-			c.Next = nil
-			candidates = append(candidates, c)
-			c = next
-		}
+	limit := p.params.NKeepMax
+	if frontiers != nil {
+		limit = frontiers.limit
 	}
-	sort.SliceStable(candidates, func(i, j int) bool { return len(candidates[i].leaves) < len(candidates[j].leaves) })
-	for _, c := range candidates {
-		if super.count >= p.params.NKeepMax {
+	consider := func(c *Cut_Cut_t) {
+		if super.count >= limit {
 			Cut_CutRecycle(p, c)
-			continue
+			return
 		}
 		if p.params.FFilter != 0 {
 			if Cut_CutFilterOne(p, &super, c) != 0 {
-				continue
+				return
 			}
-			if Cut_CutFilterOld(p, old, c) != 0 {
-				continue
-			}
-			if Cut_CutFilterOld(p, new, c) != 0 {
-				continue
+			if frontiers != nil {
+				rejected := frontiers.filter(p, c)
+				limit = frontiers.limit
+				if rejected {
+					p.stats.Filtered++
+					Cut_CutRecycle(p, c)
+					return
+				}
 			}
 		}
 		if top != nil {
 			c.FCompl = top.FSimul != c.FSimul
 		}
 		Cut_ListAdd(&super, c)
+	}
+	// Native choice union considers all sublimit cuts in source-list order
+	// before it visits any full-width cuts. Reuse the list of input heads
+	// to remember where each full-width suffix starts.
+	for i, list := range lists {
+		if list != nil && keepTrivial {
+			trivial := list
+			list = list.Next
+			trivial.Next = nil
+			if i == 0 {
+				if top == nil {
+					top = trivial
+				}
+				Cut_ListAdd(&super, trivial)
+			} else {
+				Cut_CutRecycle(p, trivial)
+			}
+		}
+		for list != nil && int32(len(list.leaves)) < p.params.NVarsMax {
+			next := list.Next
+			consider(list)
+			list = next
+		}
+		lists[i] = list
+	}
+	for _, list := range lists {
+		for list != nil {
+			next := list.Next
+			consider(list)
+			list = next
+		}
 	}
 	return Cut_ListFinish(&super)
 }
@@ -376,6 +475,18 @@ func Cut_NodeUnionCutsSeq(p *Cut_Man_t, nodes []int32, set, first int32) *Cut_Cu
 	if len(nodes) == 0 {
 		return nil
 	}
+	root := nodes[0]
+	frontiers := cutSeqFrontiers{old: p.oldCuts[root], limit: p.params.NKeepMax}
+	top := frontiers.old
+	if top == nil {
+		top = p.newCuts[root]
+	}
+	if set >= 0 {
+		frontiers.current = p.newCuts[root]
+	}
+	if first == 0 {
+		frontiers.limit--
+	} // ABC reserves the representative's cut.
 	lists := make([]*Cut_Cut_t, len(nodes))
 	for i, node := range nodes {
 		if i == 0 && set >= 0 {
@@ -386,7 +497,11 @@ func Cut_NodeUnionCutsSeq(p *Cut_Man_t, nodes []int32, set, first int32) *Cut_Cu
 			delete(p.newCuts, node)
 		}
 	}
-	result := cutUnionLists(p, lists, first != 0, p.oldCuts[nodes[0]], nil)
+	result := cutUnionLists(p, lists, first != 0, top, &frontiers)
+	p.oldCuts[root] = frontiers.old
+	if set >= 0 {
+		p.newCuts[root] = frontiers.current
+	}
 	if set >= 0 {
 		p.tempCuts[set] = result
 	} else {

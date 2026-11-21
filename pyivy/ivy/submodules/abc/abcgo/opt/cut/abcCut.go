@@ -317,34 +317,26 @@ func Abc_NtkSeqCuts(network Network, params *Cut_Params_t) *Cut_Man_t {
 			if node.Buffer {
 				fanin1, latch1, phase1 = node.Fanins[0], node.Latches[0], node.Compl[0]
 			}
-			a, b := Cut_CutDupList(p, p.oldCuts[node.Fanins[0]]), Cut_CutDupList(p, p.oldCuts[fanin1])
-			Cut_NodeShiftCutLeaves(a, node.Latches[0])
-			Cut_NodeShiftCutLeaves(b, latch1)
+			frontiers := cutSeqFrontiers{old: p.oldCuts[node.ID], limit: params.NKeepMax - oldCount}
 			var list Cut_List_t
 			Cut_ListStart(&list)
-			p.budget = params.NKeepMax - oldCount
-			p.xor = node.XOR && !node.Buffer
-			Cut_NodeDoComputeCuts(p, &list, node.ID, cutBool(node.Compl[0]), cutBool(phase1), a, b, 0, 0)
-			p.xor = false
-			Cut_CutRecycleList(p, a)
-			Cut_CutRecycleList(p, b)
-			var head *Cut_Cut_t
-			tail := &head
-			for c := Cut_ListFinish(&list); c != nil; {
-				after := c.Next
-				c.Next = nil
-				if Cut_CutFilterOld(p, p.oldCuts[node.ID], c) == 0 {
-					*tail = c
-					tail = &c.Next
-				}
-				c = after
-			}
+			func() {
+				aliases := node.ID == node.Fanins[0] || node.ID == fanin1 || node.Fanins[0] == fanin1
+				a := prepareSeqInputs(p, p.oldCuts[node.Fanins[0]], nil, node.Latches[0], aliases)
+				defer a.restore(p)
+				b := prepareSeqInputs(p, p.oldCuts[fanin1], nil, latch1, aliases)
+				defer b.restore(p)
+				p.xor = node.XOR && !node.Buffer
+				cutNodeDoComputeCuts(p, &list, node.ID, cutBool(node.Compl[0]), cutBool(phase1), a.old, b.old, 0, 0, &frontiers)
+				p.xor = false
+			}()
+			p.oldCuts[node.ID] = frontiers.old
+			head := Cut_ListFinish(&list)
 			if head != nil {
 				next[node.ID] = head
 				changed = true
 			}
 		}
-		p.budget = -1
 		for node, cuts := range next {
 			p.oldCuts[node] = Cut_CutMergeLists(p.oldCuts[node], cuts)
 		}
