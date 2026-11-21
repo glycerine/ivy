@@ -202,6 +202,11 @@ func Gia_ManDupWithConstraints(src *Gia_Man_t, types *Vec_Int_t) *Gia_Man_t {
 	if vec.Vec_IntSize(types) != int(Gia_ManPoNum(src)) {
 		panic("gia: invalid PO type count")
 	}
+	for _, kind := range vec.Vec_IntArray(types) {
+		if kind < 0 || kind > 2 {
+			panic("gia: invalid PO type")
+		}
+	}
 	out := giaDupMappedStart(src)
 	for i := int32(0); i < Gia_ManCiNum(src); i++ {
 		Gia_ManCi(src, i).Value = uint32(Gia_ManAppendCi(out))

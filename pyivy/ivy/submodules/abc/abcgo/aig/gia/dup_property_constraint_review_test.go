@@ -175,7 +175,7 @@ func TestPropertyAndConstraintInterfaceRejection(t *testing.T) {
 			Gia_ManDupWithConstraints(blockReviewGraph(0, 3), permutation(0, 1, 0, 1))
 		}},
 		{"invalid_type", func() {
-			Gia_ManDupWithConstraints(blockReviewGraph(0, 3), permutation(0, 2, 1))
+			Gia_ManDupWithConstraints(blockReviewGraph(0, 3), permutation(0, 3, 1))
 		}},
 		{"negative_type", func() {
 			Gia_ManDupWithConstraints(blockReviewGraph(0, 3), permutation(0, -1, 1))
