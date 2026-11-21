@@ -176,24 +176,28 @@ func Kit_GraphToTruth(g *Kit_Graph_t) uint32 {
 		return ^uint32(0)
 	}
 	vars := [5]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}
-	values := make([]uint32, int32(len(g.pNodes)))
+	if Kit_GraphIsVar(g) != 0 {
+		word := vars[g.eRoot.Node]
+		if g.eRoot.fCompl != 0 {
+			return ^word
+		}
+		return word
+	}
 	for i := int32(0); i < g.nLeaves; i++ {
-		values[i] = vars[i]
 		g.pNodes[i].iFunc = int32(vars[i])
 	}
 	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
 		n := g.pNodes[i]
-		a, b := values[n.eEdge0.Node], values[n.eEdge1.Node]
+		a, b := uint32(g.pNodes[n.eEdge0.Node].iFunc), uint32(g.pNodes[n.eEdge1.Node].iFunc)
 		if n.eEdge0.fCompl != 0 {
 			a = ^a
 		}
 		if n.eEdge1.fCompl != 0 {
 			b = ^b
 		}
-		values[i] = a & b
-		n.iFunc = int32(values[i])
+		n.iFunc = int32(a & b)
 	}
-	result := values[g.eRoot.Node]
+	result := uint32(g.pNodes[g.eRoot.Node].iFunc)
 	if g.eRoot.fCompl != 0 {
 		result = ^result
 	}

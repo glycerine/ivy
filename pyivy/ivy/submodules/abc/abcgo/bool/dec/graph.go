@@ -88,18 +88,50 @@ func (g *Graph) Evaluate(inputs []bool) bool {
 // Truth32 reproduces Dec_GraphDeriveTruth's 32-bit truth convention. Small
 // functions repeat across the word, with variable zero alternating each bit.
 func (g *Graph) Truth32() uint32 {
-	if g.LeafCount > 5 {
-		panic("dec: Truth32 requires at most five leaves")
+	return graphTruth32(g.Nodes, g.LeafCount, g.Root, g.Constant)
+}
+
+func graphTruth32[N Node | *Dec_Node_t](nodes []N, leaves int, root Edge, constant bool) uint32 {
+	size := len(nodes)
+	if leaves < 0 || leaves > 5 {
+		panic("dec: Truth32 requires zero to five leaves")
 	}
-	inputs := make([]bool, g.LeafCount)
-	var result uint32
-	for assignment := 0; assignment < 32; assignment++ {
-		for i := range inputs {
-			inputs[i] = assignment&(1<<i) != 0
+	if constant {
+		if root.Complement {
+			return 0
 		}
-		if g.Evaluate(inputs) {
-			result |= 1 << assignment
+		return ^uint32(0)
+	}
+	if leaves > size || uint(root.Node) >= uint(size) {
+		panic("dec: invalid evaluation")
+	}
+	// Keep the small graphs in the rewrite library on the stack.
+	var local [64]uint32
+	words := local[:]
+	if size > len(words) {
+		words = make([]uint32, size)
+	}
+	variables := [...]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}
+	copy(words, variables[:leaves])
+	for i := leaves; i < size; i++ {
+		// Only earlier nodes are valid fanins in either representation.
+		inputs := words[:i]
+		switch n := any(nodes[i]).(type) {
+		case Node:
+			words[i] = edgeTruth(inputs, n.Left) & edgeTruth(inputs, n.Right)
+		case *Dec_Node_t:
+			// A one-bit complement becomes an all-ones mask when negated.
+			a, b := n.eEdge0, n.eEdge1
+			words[i] = (inputs[a.Node] ^ -a.fCompl) & (inputs[b.Node] ^ -b.fCompl)
 		}
 	}
-	return result
+	return edgeTruth(words, root)
+}
+
+func edgeTruth(words []uint32, e Edge) uint32 {
+	value := words[e.Node]
+	if e.Complement {
+		return ^value
+	}
+	return value
 }

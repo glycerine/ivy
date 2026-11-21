@@ -1,9 +1,10 @@
 package dec
 
-// Dec_GraphDeriveTruth evaluates a C-style graph through the native Go graph
-// evaluator. Temporary truth values no longer masquerade as pointer addresses.
+// Dec_GraphDeriveTruth evaluates all 32 assignments together and preserves
+// caller-owned node payloads.
 func Dec_GraphDeriveTruth(g *Dec_Graph_t) uint32 {
-	return g.Native().Truth32()
+	root := Edge{int(g.eRoot.Node), g.eRoot.fCompl != 0}
+	return graphTruth32(g.pNodes, int(g.nLeaves), root, g.fConst != 0)
 }
 
 func (g *Dec_Graph_t) Native() *Graph {
