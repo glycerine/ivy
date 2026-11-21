@@ -131,11 +131,12 @@ func (m *Mapping) computeTruth(cuts []Cut, complements []int32, kind int, leaves
 	var original [maxLeaves]int32
 	count := copy(original[:], leaves)
 	var tables [3][4]uint64
-	words := 1 << max(0, m.Options.LUTSize-6)
+	// Higher variables repeat the same word until a leaf occupies them.
+	words := 1 << max(0, count-6)
 	for i, cut := range cuts {
 		literal := operation.operands[i]
 		source := vec.Vec_MemReadEntry(m.truthStore, int(literal>>1))
-		expandTruth(tables[i][:words], source, len(cut.Leaves), operation.positions[i], m.Options.LUTSize, literal&1 != 0)
+		expandTruth(tables[i][:words], source, len(cut.Leaves), operation.positions[i], count, literal&1 != 0)
 	}
 	truth := tables[0][:words]
 	for i := range truth {
@@ -156,9 +157,19 @@ func (m *Mapping) computeTruth(cuts []Cut, complements []int32, kind int, leaves
 	}
 	// The >6-variable source path minimizes support even in object-ID mode.
 	if m.Options.LUTSize > 6 || !m.Options.ObjectIDs {
-		truth, leaves = minimizeSupport(truth, leaves, m.Options.LUTSize)
+		// AND and XOR retain both nonconstant, disjoint input supports.
+		// Each input cut in this mode already contains only essential leaves.
+		independent := len(cuts) == 2 && len(cuts[0].Leaves) > 0 && len(cuts[1].Leaves) > 0 &&
+			len(cuts[0].Leaves)+len(cuts[1].Leaves) == count
+		if !independent {
+			truth, leaves = minimizeSupport(truth, leaves, count)
+		}
 	}
-	function := m.intern(truth, len(leaves))<<1 | complement
+	storeWords := 1 << max(0, m.Options.LUTSize-6)
+	for i := words; i < storeWords; i++ {
+		tables[0][i] = tables[0][i-words]
+	}
+	function := m.intern(tables[0][:storeWords], len(leaves))<<1 | complement
 	retained := uint8(0xff)
 	if len(leaves) != count {
 		retained = leafPositions(leaves, original[:count])

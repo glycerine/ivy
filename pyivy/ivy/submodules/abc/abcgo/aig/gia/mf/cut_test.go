@@ -1,6 +1,7 @@
 package mf
 
 import (
+	"math/bits"
 	"slices"
 	"testing"
 
@@ -9,6 +10,57 @@ import (
 )
 
 func addTestCut(s *cutSet, c Cut) { s.add(c, signature(c.Leaves)) }
+
+func TestDisjointCutTruthAtEveryStoredWord(t *testing.T) {
+	for width := 3; width <= 8; width++ {
+		words := 1 << max(0, width-6)
+		m := Mapping{
+			Options:      Options{LUTSize: width},
+			truthStore:   vec.Vec_MemAlloc(words, 2),
+			truthResults: make([]truthResult, 8),
+		}
+		vec.Vec_MemHashAlloc(m.truthStore, 4)
+		m.intern(make([]uint64, words), 0)
+		for count := 2; count <= width; count++ {
+			var inputs [2]Cut
+			leaves := make([]int32, count)
+			for i := range leaves {
+				leaves[i] = int32(7 + 64*i)
+				inputs[i%2].Leaves = append(inputs[i%2].Leaves, leaves[i])
+			}
+			for i := range inputs {
+				n := len(inputs[i].Leaves)
+				table := make([]uint64, words)
+				for a := 0; a < 64*words; a++ {
+					if bits.OnesCount(uint(a&((1<<n)-1)))%2 != 0 {
+						table[a/64] |= 1 << (a % 64)
+					}
+				}
+				inputs[i].Function = m.intern(table, n) << 1
+			}
+			for _, kind := range []int{2, 3} {
+				cut := m.computeTruth(inputs[:], []int32{1, 0}, kind, slices.Clone(leaves))
+				if !slices.Equal(cut.Leaves, leaves) {
+					t.Fatalf("width %d gate %d retained %v, want %v", width, kind, cut.Leaves, leaves)
+				}
+				table := vec.Vec_MemReadEntry(m.truthStore, int(cut.Function>>1))
+				for a := 0; a < words*64; a++ {
+					active := a & ((1 << count) - 1)
+					left := bits.OnesCount(uint(active&0x55))%2 == 0
+					right := bits.OnesCount(uint(active&0xaa))%2 != 0
+					want := left && right
+					if kind == 3 {
+						want = left != right
+					}
+					got := (table[a/64]>>(a%64)&1)^uint64(cut.Function&1) != 0
+					if got != want {
+						t.Fatalf("width %d count %d gate %d assignment %d: got %t, want %t", width, count, kind, a, got, want)
+					}
+				}
+			}
+		}
+	}
+}
 
 func TestCutMergeAndSourceTieOrder(t *testing.T) {
 	var buffer [maxLeaves]int32
