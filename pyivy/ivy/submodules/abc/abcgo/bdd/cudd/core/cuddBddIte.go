@@ -316,9 +316,11 @@ func (a *bddAllocationAttempt) finish(result **DdNode) {
 			if n.childrenReleased {
 				dd.dead--
 			}
-			n.inBDDTable = false
-			Cudd_Deref(n.T)
-			Cudd_Deref(n.E)
+			if !n.childrenReleased {
+				Cudd_Deref(n.T)
+				Cudd_Deref(n.E)
+			}
+			n.detachHandle()
 			dd.unique.remove(key)
 		}
 	}

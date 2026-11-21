@@ -4,7 +4,8 @@ import "time"
 
 // Cudd_GarbageCollect performs mark-and-sweep over the unique tables. Nodes
 // with references and manager-owned variable/terminal roots are retained,
-// along with every node reachable through their children.
+// along with every node reachable through their children. Pass clearCache=false
+// only when the computed cache has already been flushed.
 func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	if dd == nil || dd.closed {
 		return 0
@@ -64,13 +65,13 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 			if marked[n] {
 				return false
 			}
-			dd.sweepNode(n)
+			dd.retireNode(n)
 			return true
 		})
 	}
 	for key, n := range dd.constants {
 		if !marked[n] {
-			dd.sweepNode(n)
+			dd.retireNode(n)
 			delete(dd.constants, key)
 			deleted++
 		}
@@ -96,7 +97,7 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	return int32(deleted)
 }
 
-func (dd *DdManager) sweepNode(n *DdNode) {
+func (dd *DdManager) retireNode(n *DdNode) {
 	if n.inBDDTable && n.childrenReleased {
 		dd.dead--
 	}
@@ -106,6 +107,7 @@ func (dd *DdManager) sweepNode(n *DdNode) {
 		dd.recursiveDeref(n.T)
 		dd.recursiveDeref(n.E)
 	}
+	n.detachHandle()
 }
 
 // purgeReleasedKeys collects only nodes whose owned child references were
@@ -138,9 +140,12 @@ func (dd *DdManager) purgeReleasedKeys() int {
 	return deleted
 }
 
-func (dd *DdManager) retireNode(n *DdNode) {
-	dd.sweepNode(n)
-	n.manager = nil
+// Detach a retired handle after accounting for its former child references.
+// Keep its ID and complementary handle available for identity comparisons.
+func (n *DdNode) detachHandle() {
+	n.manager, n.T, n.E = nil, nil, nil
+	n.inBDDTable = false
+	n.childrenReleased = true
 	if n.inverse != nil {
 		n.inverse.manager = nil
 	}

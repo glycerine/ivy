@@ -246,21 +246,13 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 	for _, table := range []*uniqueTable{&oldBDD, &oldADD} {
 		for _, old := range table.entries {
 			if !usedOld[old] {
-				old.inBDDTable = false
-				old.manager = nil
-				if old.inverse != nil {
-					old.inverse.manager = nil
-				}
+				old.detachHandle()
 			}
 		}
 	}
 	for _, old := range oldConstants {
 		if nextConstants[math.Float64bits(old.Value)] != old {
-			old.inBDDTable = false
-			old.manager = nil
-			if old.inverse != nil {
-				old.inverse.manager = nil
-			}
+			old.detachHandle()
 		}
 	}
 	dd.constants = nextConstants

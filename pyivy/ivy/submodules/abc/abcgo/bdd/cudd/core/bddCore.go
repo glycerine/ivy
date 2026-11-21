@@ -62,6 +62,7 @@ type DdManager struct {
 	Perm, InvPerm                     []int
 	varMap                            []int
 	unique                            uniqueTable
+	pairBatch                         [][2]DdNode
 	computed                          computedTable
 	interact                          []uint64
 	nextID                            uint64
@@ -528,7 +529,7 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 	entry := dd.unique.find(key)
 	var n *DdNode
 	if entry == nil || entry.node == nil {
-		n = dd.insertBDDPair(key, entry, new([2]DdNode))
+		n = dd.insertBDDPair(key, entry, nil)
 	} else {
 		n = entry.node
 		reclaimNode(n)
@@ -546,6 +547,18 @@ func (dd *DdManager) insertBDDPair(key bddUniqueKey, entry *uniqueEntry, pair *[
 			reclaimNode(entry.node)
 			return entry.node
 		}
+	}
+	// Group transient keys only after the latest regular node has released
+	// its children. Sparse long-lived functions then retain single pairs.
+	if pair == nil {
+		if len(dd.pairBatch) > 1 {
+			dd.pairBatch = dd.pairBatch[1:]
+		} else if len(dd.pairBatch) == 1 && dd.pairBatch[0][0].childrenReleased {
+			dd.pairBatch = make([][2]DdNode, 4)
+		} else {
+			dd.pairBatch = make([][2]DdNode, 1)
+		}
+		pair = &dd.pairBatch[0]
 	}
 	n := dd.initNodePair(pair, key.index)
 	n.T, n.E, n.inBDDTable = key.t, key.e, true

@@ -47,6 +47,8 @@ func TestCuddTableGCRecursiveDerefAndDeadCacheFiltering(t *testing.T) {
 	if leaf == nil || root == nil || dead == nil {
 		t.Fatal("failed to build test graph")
 	}
+	rootKey := bddUniqueKey{root.Index, root.T, root.E}
+	leafKey := bddUniqueKey{leaf.Index, leaf.T, leaf.E}
 	Cudd_Ref(root)
 	Cudd_CacheInsert(dd, 1, root, dd.Vars[1], nil, root, 0)
 	Cudd_CacheInsert(dd, 2, dead, dd.Vars[1], nil, root, 0)
@@ -61,7 +63,7 @@ func TestCuddTableGCRecursiveDerefAndDeadCacheFiltering(t *testing.T) {
 	if Cudd_CacheSize(dd) != 1 {
 		t.Fatalf("dead-cache filtering retained %d entries, want one live entry", Cudd_CacheSize(dd))
 	}
-	if dd.unique.get(bddUniqueKey{root.Index, root.T, root.E}) != nil || dd.unique.get(bddUniqueKey{leaf.Index, leaf.T, leaf.E}) != nil {
+	if dd.unique.get(rootKey) != nil || dd.unique.get(leafKey) != nil {
 		t.Fatal("recursive dereference graph remains in unique table")
 	}
 }
