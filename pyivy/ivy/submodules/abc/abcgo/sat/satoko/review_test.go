@@ -114,3 +114,25 @@ func TestResetPreservesCancellationSettings(t *testing.T) {
 		t.Fatal("reset lost cancellation settings")
 	}
 }
+
+func TestRollbackReleasesClausesAndPreservesUnitStatistics(t *testing.T) {
+	s := New()
+	s.SetVariables(6)
+	s.AddClause([]int{0})
+	s.AddClause([]int{2, 4})
+	s.addStored([]int{6}, true, 1)
+	s.addStored([]int{8, 10}, true, 2)
+	before := *s.Stats()
+	s.Bookmark()
+	firstRemoved := len(s.clauses)
+	s.AddClause([]int{3, 5, 7})
+	s.Rollback()
+	if got := s.Stats(); got.OriginalLiterals != before.OriginalLiterals || got.LearntLiterals != before.LearntLiterals {
+		t.Errorf("restored original and learnt literals = %d, %d; want %d, %d", got.OriginalLiterals, got.LearntLiterals, before.OriginalLiterals, before.LearntLiterals)
+	}
+	for _, c := range s.clauses[:cap(s.clauses)][firstRemoved:] {
+		if c != nil {
+			t.Fatal("clause array retains a rolled-back clause")
+		}
+	}
+}

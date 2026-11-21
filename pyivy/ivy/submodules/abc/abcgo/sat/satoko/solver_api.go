@@ -232,6 +232,7 @@ func (s *Solver) Rollback() {
 		panic("rollback without bookmark")
 	}
 	b := s.bookmark
+	clear(s.clauses[b.clauses:])
 	s.clauses = s.clauses[:b.clauses]
 	s.values = s.values[:b.variables]
 	s.phases = s.phases[:b.variables]
@@ -248,7 +249,7 @@ func (s *Solver) Rollback() {
 	s.stats.OriginalLiterals = 0
 	s.stats.LearntLiterals = 0
 	for _, c := range s.clauses {
-		if c.deleted {
+		if c.deleted || len(c.lits) < 2 {
 			continue
 		}
 		if c.learnt {
