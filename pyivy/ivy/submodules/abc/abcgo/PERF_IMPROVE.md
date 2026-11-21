@@ -1164,3 +1164,22 @@ Three additional workloads exercise different shapes from the multipliers and so
 On one-hot conditions, a Go profile put 16.0% of cumulative samples in coarsening and 30.1% in Satoko initialization. Native sampling put 17.0% of flat samples in clause addition. Coarsening now checks the ordered input list in a single pass and reserves the known terminal counts and up to 4,096 speculative internal gates. Cleanup walks backwards through the topological order from outputs and buffers, marking both fanins and choice siblings. If all gates survive it returns the owned graph. Otherwise it knows the exact destination size. Dropping the choice mark in a fault-injection run made the new regression fail on both graph size and output literal.
 
 In alternating Go trials, the one-hot circuit fell from 1.021–1.040 to 0.844–0.854 ms, from 1,542,274 to 1,343,224 bytes and from 1,983 to 1,889 allocations. The adder went from 0.478–0.481 to 0.444–0.446 ms, and the mesh from 1.618–1.624 to 1.529–1.540 ms. The 32-bit multiplier fell from 30.48–30.88 to 29.24–29.27 ms and saved about 1.08 MB. The nine checked-in native comparisons passed, as did the mapper's normal and race suites.
+
+## conclusions after 12 hour optimization run, 2026 November 21
+
+The 12-hour optimization run is complete. Go’s repeated i10 mapped solve 
+fell from 171.7 ms to 19.10 ms, versus 20.06 ms for release C\
+
+Allocations fell from 460,878 to 6,282 per solve. First solves 
+were nearly tied at 21.18 ms in Go and 21.08 ms in C.
+   
+Go was faster on six of nine additional circuits. All nine matched C
+clause for clause. C still led on the default equivalence proof,
+209.88 ms versus Go’s 217.23 ms. In a separate comparison, 
+GOGC=200 brought Go to 201.46 ms versus C’s 204.67 ms, using 72.8 MiB peak
+memory versus 20.6 MiB.
+		 
+All 130 packages with tests passed, along with targeted race checks. 
+The final commit is dfe31a23d, and the abcgo worktree is clean.
+
+Performance report, profiles, and reproduction commands (abcgo/PERF_IMPROVE.md:24)
