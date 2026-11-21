@@ -23,6 +23,7 @@ type Cut_Cut_t struct {
 	truth                   []uint32
 	proof                   *Cut_Proof
 	owner                   *cutLifetime
+	self                    *Cut_Cut_t // Allocation address for recycling a live handle.
 	shortLeaves             [4]int32
 	shortTruth              [1]uint32
 }

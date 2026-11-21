@@ -16,6 +16,7 @@ func Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {
 
 func (p *Cut_Man_t) newCut() *Cut_Cut_t {
 	c := &Cut_Cut_t{NVarsMax: p.params.NVarsMax, FSimul: p.simulation, owner: p.lifetime}
+	c.self = c
 	if p.params.FTruth != 0 {
 		if words := Cut_TruthWords(c.NVarsMax); words == 1 {
 			c.truth = c.shortTruth[:]
@@ -26,10 +27,11 @@ func (p *Cut_Man_t) newCut() *Cut_Cut_t {
 	return c
 }
 func Cut_CutRecycle(p *Cut_Man_t, c *Cut_Cut_t) {
-	if p == nil || c == nil || c.owner == nil || c.owner != p.lifetime || c.owner.stopped {
+	if p == nil || c == nil || c.self != c || c.owner == nil || c.owner != p.lifetime || c.owner.stopped {
 		panic("cut: foreign or recycled cut")
 	}
 	c.owner = nil
+	c.self = nil
 	if c.temporary {
 		return
 	}
@@ -97,6 +99,7 @@ func Cut_CutDupList(p *Cut_Man_t, list *Cut_Cut_t) *Cut_Cut_t {
 		block := make([]Cut_Cut_t, count)
 		for i := range block {
 			c := &block[i]
+			c.self = c
 			c.owner, c.temporary, c.NVarsMax = p.lifetime, true, list.NVarsMax
 			c.Num0, c.Num1, c.proof = list.Num0, list.Num1, list.proof
 			c.UCanon0, c.UCanon1 = list.UCanon0, list.UCanon1

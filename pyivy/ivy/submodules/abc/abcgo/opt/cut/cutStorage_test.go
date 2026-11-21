@@ -40,6 +40,33 @@ func TestCutHandleRejectsForeignAndRepeatedRecycle(t *testing.T) {
 	Cut_ManStop(p)
 }
 
+func TestCutManagerRejectsRecycleOfValueCopy(t *testing.T) {
+	p := Cut_ManStart(DefaultParams(4))
+	defer Cut_ManStop(p)
+	plain := Cut_CutAlloc(p)
+	trivial := Cut_CutCreateTriv(p, 7)
+	snapshot := Cut_CutDupList(p, trivial)
+	for _, original := range []*Cut_Cut_t{plain, trivial, snapshot} {
+		copied := *original
+		before := p.Stats()
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Error("manager accepted the value copy of a live cut")
+				}
+			}()
+			Cut_CutRecycle(p, &copied)
+		}()
+		if got := p.Stats(); got != before {
+			t.Errorf("recycling a copy changed counters from %+v to %+v", before, got)
+		}
+		Cut_CutRecycle(p, original)
+	}
+	if stats := p.Stats(); stats.Current != 0 || stats.Recycled != 2 || stats.Trivial != 0 {
+		t.Errorf("original handles left incorrect counts: %+v", stats)
+	}
+}
+
 func TestFourLeafCutOwnsOneAllocation(t *testing.T) {
 	params := DefaultParams(4)
 	params.FTruth = 1
