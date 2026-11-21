@@ -53,20 +53,28 @@ type aigerCursor struct {
 	pos  int
 }
 
-func (c *aigerCursor) line() (string, error) {
+func (c *aigerCursor) line() ([]byte, error) {
 	if c.pos >= len(c.data) {
-		return "", io.ErrUnexpectedEOF
+		return nil, io.ErrUnexpectedEOF
 	}
 	end := bytes.IndexByte(c.data[c.pos:], '\n')
 	if end < 0 {
-		return "", fmt.Errorf("gia: unterminated AIGER line")
+		return nil, fmt.Errorf("gia: unterminated AIGER line")
 	}
-	s := string(c.data[c.pos : c.pos+end])
+	line := c.data[c.pos : c.pos+end]
 	c.pos += end + 1
-	return strings.TrimSuffix(s, "\r"), nil
+	return line, nil
 }
 func (c *aigerCursor) unsigned() (uint32, error) {
 	data := c.data[c.pos:]
+	if len(data) > 0 && data[0] < 0x80 {
+		c.pos++
+		return uint32(data[0]), nil
+	}
+	if len(data) > 1 && data[1] < 0x80 {
+		c.pos += 2
+		return uint32(data[0]&0x7f) | uint32(data[1])<<7, nil
+	}
 	v, err := aigerReadUvar(&data)
 	if err != nil {
 		return 0, err
@@ -74,18 +82,25 @@ func (c *aigerCursor) unsigned() (uint32, error) {
 	c.pos = len(c.data) - len(data)
 	return v, nil
 }
-func aigerNumbers(line string) ([]uint32, error) {
-	fields := strings.Fields(line)
-	out := make([]uint32, len(fields))
-	for i, s := range fields {
-		v, err := strconv.ParseUint(s, 10, 31)
-		if err != nil {
-			return nil, fmt.Errorf("gia: invalid AIGER integer %q", s)
+
+// A record contains at most three integers. Reuse the caller's buffer while
+// accepting the same whitespace and unsigned decimal syntax as the header.
+func aigerNumbers(line []byte, dst *[3]uint32) ([]uint32, error) {
+	n := 0
+	for field := range bytes.FieldsSeq(line) {
+		if n == len(dst) {
+			return nil, fmt.Errorf("gia: too many AIGER record fields")
 		}
-		out[i] = uint32(v)
+		v, err := strconv.ParseUint(string(field), 10, 31)
+		if err != nil {
+			return nil, fmt.Errorf("gia: invalid AIGER integer %q", field)
+		}
+		dst[n] = uint32(v)
+		n++
 	}
-	return out, nil
+	return dst[:n], nil
 }
+
 func Gia_FileFixName(name string) string     { return strings.ReplaceAll(name, ">", "\\") }
 func Gia_FileNameGeneric(name string) string { return strings.TrimSuffix(name, filepath.Ext(name)) }
 func Gia_FileSize(name string) (int64, error) {
@@ -186,17 +201,19 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 	if err != nil {
 		return nil, err
 	}
-	fields := strings.Fields(header)
+	fields := strings.Fields(string(header))
 	if len(fields) < 6 || len(fields) > 10 || fields[0] != "aig" && fields[0] != "aig2" && fields[0] != "aag" {
 		return nil, fmt.Errorf("gia: invalid AIGER header")
 	}
-	counts, err := aigerNumbers(strings.Join(fields[1:], " "))
-	if err != nil {
-		return nil, err
+	var counts [9]uint32
+	for i, field := range fields[1:] {
+		n, err := strconv.ParseUint(field, 10, 31)
+		if err != nil {
+			return nil, fmt.Errorf("gia: invalid AIGER integer %q", field)
+		}
+		counts[i] = uint32(n)
 	}
-	for len(counts) < 9 {
-		counts = append(counts, 0)
-	}
+	var record [3]uint32
 	m, inputs, latches, ordinary, ands, bad, constraints := counts[0], counts[1], counts[2], counts[3], counts[4], counts[5], counts[6]
 	if counts[7] != 0 || counts[8] != 0 {
 		return nil, fmt.Errorf("gia: AIGER liveness properties are unsupported")
@@ -243,7 +260,7 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 			if err != nil {
 				return nil, err
 			}
-			nums, err := aigerNumbers(line)
+			nums, err := aigerNumbers(line, &record)
 			if err != nil || len(nums) != 1 || nums[0]&1 != 0 || nums[0] == 0 || nums[0]>>1 > m {
 				return nil, fmt.Errorf("gia: invalid AAG input literal")
 			}
@@ -277,7 +294,7 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 			if err != nil {
 				return nil, err
 			}
-			nums, err := aigerNumbers(line)
+			nums, err := aigerNumbers(line, &record)
 			min, max := 1, 2
 			if ascii {
 				min, max = 2, 3
@@ -314,7 +331,7 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 			if err != nil {
 				return nil, err
 			}
-			nums, err := aigerNumbers(line)
+			nums, err := aigerNumbers(line, &record)
 			if err != nil || len(nums) != 1 {
 				return nil, fmt.Errorf("gia: invalid AIGER output line")
 			}
@@ -348,7 +365,7 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 			if err != nil {
 				return nil, err
 			}
-			nums, err := aigerNumbers(line)
+			nums, err := aigerNumbers(line, &record)
 			if err != nil || len(nums) != 3 || nums[0] == 0 || nums[0]&1 != 0 || nums[0]>>1 > m {
 				return nil, fmt.Errorf("gia: invalid AAG AND line")
 			}
@@ -545,17 +562,32 @@ func Gia_AigerRead(name string, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error
 
 func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, opts AigerReadOptions, depth int, renumbered bool) error {
 	lengths := map[byte]int{'i': int(Gia_ManPiNum(p)), 'l': int(p.nRegs), 'o': ordinary, 'b': bad, 'c': constraints}
-	for len(data) > 0 {
-		if data[0] == 'c' && (len(data) == 1 || data[1] == '\n' || data[1] == '\r' || data[1] < '0' || data[1] > '9') {
-			data = data[1:]
+	// Keep the symbol lines in one owned string. The caller may reuse the
+	// input bytes, and binary extension payloads can be much larger than names.
+	end := 0
+	for end < len(data) {
+		rest := data[end:]
+		if rest[0] == 'c' && (len(rest) == 1 || rest[1] < '0' || rest[1] > '9') {
 			break
 		}
-		end := bytes.IndexByte(data, '\n')
-		if end < 0 {
+		n := bytes.IndexByte(rest, '\n')
+		if n < 0 {
 			return fmt.Errorf("gia: unterminated symbol line")
 		}
-		line := strings.TrimSuffix(string(data[:end]), "\r")
-		data = data[end+1:]
+		end += n + 1
+	}
+	symbols := string(data[:end])
+	data = data[end:]
+	if len(data) > 0 {
+		data = data[1:]
+	} // comment marker
+	type symbolIndex struct {
+		kind  byte
+		index int
+	}
+	var empty map[symbolIndex]bool
+	for record := range strings.Lines(symbols) {
+		line := strings.TrimSuffix(strings.TrimSuffix(record, "\n"), "\r")
 		space := strings.IndexByte(line, ' ')
 		if space < 2 {
 			return fmt.Errorf("gia: invalid AIGER symbol")
@@ -569,10 +601,18 @@ func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, 
 		if p.aigerSymbols[kind] == nil {
 			p.aigerSymbols[kind] = make([]string, count)
 		}
-		if p.aigerSymbols[kind][index] != "" {
+		key := symbolIndex{kind, index}
+		if p.aigerSymbols[kind][index] != "" || empty[key] {
 			return fmt.Errorf("gia: duplicate AIGER symbol")
 		}
-		p.aigerSymbols[kind][index] = line[space+1:]
+		name := line[space+1:]
+		p.aigerSymbols[kind][index] = name
+		if name == "" {
+			if empty == nil {
+				empty = make(map[symbolIndex]bool)
+			}
+			empty[key] = true
+		}
 	}
 	if len(data) > 0 && data[0] == '\r' {
 		data = data[1:]
@@ -622,69 +662,52 @@ func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, 
 	return nil
 }
 func aigerInstallNames(p *Gia_Man_t, ordinary, bad, constraints int) {
+	if len(p.aigerSymbols) == 0 {
+		return
+	}
+	installID := func(ids **Vec_Int_t, count, index int, name string, kind byte) {
+		if len(name) < 3 || name[0] != '@' || name[1] != kind {
+			return
+		}
+		id, err := strconv.ParseInt(name[2:], 10, 32)
+		if err != nil || id < 0 {
+			return
+		}
+		if *ids == nil {
+			*ids = vec.Vec_IntStartFull(count)
+		}
+		vec.Vec_IntWriteEntry(*ids, index, int32(id))
+	}
 	inputs := make([]any, Gia_ManCiNum(p))
-	outputs := make([]any, Gia_ManPoNum(p))
-	anyInput, anyOutput := false, false
+	anyInput := false
 	for i, name := range p.aigerSymbols['i'] {
 		inputs[i] = name
 		anyInput = anyInput || name != ""
+		installID(&p.vUserPiIds, int(Gia_ManPiNum(p)), i, name, 'i')
 	}
 	for i, name := range p.aigerSymbols['l'] {
 		inputs[int(Gia_ManPiNum(p))+i] = name
 		anyInput = anyInput || name != ""
+		installID(&p.vUserFfIds, int(p.nRegs), i, name, 'l')
 	}
+	if anyInput {
+		p.VNamesIn = vec.Vec_PtrAllocArray(inputs, len(inputs))
+	}
+	outputs := make([]any, Gia_ManCoNum(p))
+	anyOutput := false
 	for _, part := range []struct {
 		kind  byte
 		start int
 	}{{'o', 0}, {'b', ordinary}, {'c', ordinary + bad}} {
 		for i, name := range p.aigerSymbols[part.kind] {
-			outputs[part.start+i] = name
+			index := part.start + i
+			outputs[index] = name
 			anyOutput = anyOutput || name != ""
+			installID(&p.vUserPoIds, ordinary+bad+constraints, index, name, 'o')
 		}
-	}
-	if anyInput {
-		p.VNamesIn = vec.Vec_PtrAllocArray(inputs, len(inputs))
 	}
 	if anyOutput {
 		p.VNamesOut = vec.Vec_PtrAllocArray(outputs, len(outputs))
-	}
-	for kind, n := range map[byte]int{'i': int(Gia_ManPiNum(p)), 'l': int(p.nRegs)} {
-		ids := make([]int32, n)
-		for i := range ids {
-			ids[i] = -1
-		}
-		found := false
-		for i, name := range p.aigerSymbols[kind] {
-			if len(name) > 2 && name[0] == '@' && name[1] == kind {
-				if id, err := strconv.ParseInt(name[2:], 10, 32); err == nil && id >= 0 {
-					ids[i] = int32(id)
-					found = true
-				}
-			}
-		}
-		if found {
-			if kind == 'i' {
-				p.vUserPiIds = aigerVecInts(ids)
-			} else {
-				p.vUserFfIds = aigerVecInts(ids)
-			}
-		}
-	}
-	poIds := make([]int32, len(outputs))
-	for i := range poIds {
-		poIds[i] = -1
-	}
-	found := false
-	for i, name := range outputs {
-		if text, ok := name.(string); ok && strings.HasPrefix(text, "@o") {
-			if id, err := strconv.ParseInt(text[2:], 10, 32); err == nil && id >= 0 {
-				poIds[i] = int32(id)
-				found = true
-			}
-		}
-	}
-	if found {
-		p.vUserPoIds = aigerVecInts(poIds)
 	}
 }
 
