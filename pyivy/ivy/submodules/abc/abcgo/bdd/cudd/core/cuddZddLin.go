@@ -270,6 +270,30 @@ func zddLinearAux(dd *DdManager, variable, low, high int) bool {
 	return zddLinearBackward(dd, initial, moves)
 }
 
+// Retain the closure of all entry handles, including released handles a Go
+// caller can still hold. Trial nodes created entirely inside the sift can go
+// away once no retained node uses them. In level order each parent is visited
+// before its children, even after several variable swaps.
+func (dd *DdManager) discardLinearTrials(firstTrial uint64) {
+	if dd.deadZ == 0 {
+		return
+	}
+	dd.zddUnique.sweep(dd.InvPermZ, func(n *DdNode) bool {
+		if n.ID >= firstTrial && n.childrenReleased && !n.gcMarked {
+			dd.retireNode(n)
+			return true
+		}
+		n.gcMarked = false
+		if n.T.ID >= firstTrial && n.T.childrenReleased {
+			n.T.gcMarked = true
+		}
+		if n.E.ID >= firstTrial && n.E.childrenReleased {
+			n.E.gcMarked = true
+		}
+		return false
+	})
+}
+
 // Cudd_zddLinearSifting ports cuddZddLinearSifting. Variables are considered
 // by descending unique-table population and sifted within the inclusive level
 // interval. It returns one on success and zero on failure.
@@ -285,6 +309,7 @@ func Cudd_zddLinearSifting(dd *DdManager, lower, upper int) int {
 	}
 	slices.SortStableFunc(items, func(a, b item) int { return cmp.Compare(b.keys, a.keys) })
 	limit := min(dd.ZddSize, dd.siftMaxVar)
+	firstTrial := dd.nextID
 	for i := 0; i < limit; i++ {
 		if dd.zddLinearSwaps >= dd.siftMaxSwap {
 			break
@@ -294,8 +319,13 @@ func Cudd_zddLinearSifting(dd *DdManager, lower, upper int) int {
 			continue
 		}
 		if !zddLinearAux(dd, variable, lower, upper) {
+			dd.discardLinearTrials(firstTrial)
 			return 0
 		}
+		if dd.deadZ > dd.zddUnique.count/4 {
+			dd.discardLinearTrials(firstTrial)
+		}
 	}
+	dd.discardLinearTrials(firstTrial)
 	return 1
 }

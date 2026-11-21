@@ -17,7 +17,7 @@ var nativeLinearSifts = []struct {
 	{0xa78f2469, 0xeb8127c5, [5]int{4, 1, 3, 0, 2}, 16},
 }
 
-func siftFiveVarCover(input uint32) (*DdManager, *DdNode) {
+func shuffleFiveVarCover(input uint32) (*DdManager, *DdNode) {
 	dd := Cudd_Init(0, 5, 32, 128, 0)
 	var build func(int, int) *DdNode
 	build = func(level, set int) *DdNode {
@@ -31,10 +31,66 @@ func siftFiveVarCover(input uint32) (*DdManager, *DdNode) {
 	}
 	f := build(0, 0)
 	Cudd_Ref(f)
-	if Cudd_zddShuffleHeap(dd, []int{3, 0, 4, 1, 2}) == 0 || Cudd_zddReduceHeap(dd, CUDD_REORDER_LINEAR, 0) == 0 {
+	if Cudd_zddShuffleHeap(dd, []int{3, 0, 4, 1, 2}) == 0 {
+		panic("shuffle")
+	}
+	return dd, f
+}
+
+func siftFiveVarCover(input uint32) (*DdManager, *DdNode) {
+	dd, f := shuffleFiveVarCover(input)
+	if Cudd_zddReduceHeap(dd, CUDD_REORDER_LINEAR, 0) == 0 {
 		panic("sift")
 	}
 	return dd, f
+}
+
+func TestLinearSiftDiscardsUnreachableTrialNodes(t *testing.T) {
+	dd, _ := shuffleFiveVarCover(nativeLinearSifts[0].input)
+	defer Cudd_Quit(dd)
+	// Direct callers can hold any existing handle, including released nodes
+	// in the unique table. Only the sifter can observe new trial handles.
+	var original []*DdNode
+	for _, n := range dd.zddUnique.entries {
+		original = append(original, n)
+	}
+	firstTrial := dd.nextID
+	if Cudd_zddLinearSifting(dd, 0, 4) == 0 {
+		t.Fatal("sift")
+	}
+	reachable := make(map[*DdNode]bool)
+	var visit func(*DdNode)
+	visit = func(n *DdNode) {
+		if n == nil || n.manager != dd {
+			t.Fatal("retired an original handle or a reachable cofactor")
+		}
+		if reachable[n] || Cudd_IsConstant(n) {
+			return
+		}
+		reachable[n] = true
+		visit(n.T)
+		visit(n.E)
+	}
+	for _, n := range original {
+		visit(n)
+	}
+	for _, n := range dd.zddUnique.entries {
+		if !n.childrenReleased {
+			visit(n)
+		}
+	}
+	unused := 0
+	for _, n := range dd.zddUnique.entries {
+		if n.ID >= firstTrial && !reachable[n] {
+			unused++
+		}
+		if reachable[n] && dd.zddUnique.get(bddUniqueKey{n.Index, n.T, n.E}) != n {
+			t.Fatalf("reachable handle %d is no longer canonical", n.ID)
+		}
+	}
+	if unused != 0 {
+		t.Fatalf("retained %d unreachable trial nodes", unused)
+	}
 }
 
 func TestZDDLinearSiftMatchesNativeFiveVarCovers(t *testing.T) {
