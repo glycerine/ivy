@@ -41,16 +41,28 @@ func TestMappedCutsTruthAndWidths(t *testing.T) {
 		if len(cut.Leaves) != 3 || cut.Leaves[0] != 1 || cut.Leaves[1] != 2 || cut.Leaves[2] != 3 {
 			t.Fatal("root cut support", cut.Leaves)
 		}
+		if len(mapping.Cuts[5]) != 2 {
+			t.Fatalf("expected separate cuts for the XOR cone and its control node at width %d", width)
+		}
 		for assignment := 0; assignment < 8; assignment++ {
 			av, bv, cv := assignment&1 != 0, assignment&2 != 0, assignment&4 != 0
 			want := !av
 			if av != bv {
 				want = cv
 			}
-			truth := mapping.Truths[cut.Function>>1]
-			got := (truth[0]>>uint(assignment)&1)^uint64(cut.Function&1) != 0
-			if got != want {
-				t.Fatal("root cut truth", width, assignment)
+			values := [...]bool{false, av, bv, cv, av != bv}
+			for _, candidate := range mapping.Cuts[5] {
+				index := 0
+				for bit, leaf := range candidate.Leaves {
+					if values[leaf] {
+						index |= 1 << bit
+					}
+				}
+				truth := mapping.Truths[candidate.Function>>1]
+				got := (truth[0]>>uint(index)&1)^uint64(candidate.Function&1) != 0
+				if got != want {
+					t.Fatal("root cut truth", width, assignment, candidate.Leaves)
+				}
 			}
 		}
 		if mapping.Refs[5] != 1 || mapping.Refs[4] != 0 {

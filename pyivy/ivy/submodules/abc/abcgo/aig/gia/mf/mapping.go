@@ -145,15 +145,8 @@ func (m *Mapping) merge(id int32) error {
 		}
 	}
 	var pair, triple [maxLeaves]int32
-	offer := func(parts []Cut, complements []int32, sign uint64) {
-		if bits.OnesCount64(sign) > m.Options.LUTSize {
-			return
-		}
-		leaves, ok := mergeLeaves(pair[:0], parts[0].Leaves, parts[1].Leaves, m.Options.LUTSize)
-		if ok && len(parts) == 3 {
-			leaves, ok = mergeLeaves(triple[:0], leaves, parts[2].Leaves, m.Options.LUTSize)
-		}
-		if !ok || result.contains(leaves, sign) {
+	offer := func(parts []Cut, complements []int32, leaves []int32, sign uint64) {
+		if result.contains(leaves, sign) {
 			return
 		}
 		cut := m.computeTruth(parts, complements, kind, leaves)
@@ -172,12 +165,28 @@ func (m *Mapping) merge(id int32) error {
 	for i, left := range first {
 		for j, right := range second {
 			sign := signs[0][i] | signs[1][j]
-			if kind == 4 {
-				for k, ctrl := range control {
-					offer([]Cut{left, right, ctrl}, []int32{a & 1, b & 1, c & 1}, sign|signs[2][k])
+			if bits.OnesCount64(sign) > m.Options.LUTSize {
+				continue
+			}
+			data, ok := mergeLeaves(pair[:0], left.Leaves, right.Leaves, m.Options.LUTSize)
+			if !ok {
+				continue
+			}
+			if kind != 4 {
+				offer([]Cut{left, right}, []int32{a & 1, b & 1}, data, sign)
+				continue
+			}
+			for k, ctrl := range control {
+				all := sign | signs[2][k]
+				if bits.OnesCount64(all) > m.Options.LUTSize {
+					continue
 				}
-			} else {
-				offer([]Cut{left, right}, []int32{a & 1, b & 1}, sign)
+				// Truth minimization may edit this candidate's leaves. Keep the
+				// shared data pair in its own buffer across control candidates.
+				leaves, ok := mergeLeaves(triple[:0], data, ctrl.Leaves, m.Options.LUTSize)
+				if ok {
+					offer([]Cut{left, right, ctrl}, []int32{a & 1, b & 1, c & 1}, leaves, all)
+				}
 			}
 		}
 	}
