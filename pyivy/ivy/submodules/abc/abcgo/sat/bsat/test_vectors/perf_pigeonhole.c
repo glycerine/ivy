@@ -3,29 +3,30 @@
 #include <stdlib.h>
 #include <time.h>
 
-/* Build, prove and release the same 7-into-6 formula as the Go benchmark. */
+/* Build, prove and release the same ordered pigeonhole formula as the Go benchmark. */
 int main(int argc, char **argv)
 {
-    int iterations = argc == 2 ? atoi(argv[1]) : 0;
-    if (iterations <= 0)
+    int iterations = argc == 2 || argc == 3 ? atoi(argv[1]) : 0;
+    int holes = argc == 3 ? atoi(argv[2]) : 6;
+    if (iterations <= 0 || holes < 1 || holes > 7)
         return 1;
     struct timespec start, end;
     long long conflicts = 0, decisions = 0, propagations = 0;
     clock_gettime(CLOCK_MONOTONIC, &start);
     for (int k = 0; k < iterations; k++) {
         sat_solver *s = sat_solver_new();
-        sat_solver_setnvars(s, 42);
-        for (int p = 0; p < 7; p++) {
-            lit clause[6];
-            for (int h = 0; h < 6; h++)
-                clause[h] = 2 * (6 * p + h);
-            if (!sat_solver_addclause(s, clause, clause + 6))
+        sat_solver_setnvars(s, holes*(holes+1));
+        for (int p = 0; p <= holes; p++) {
+            lit clause[7];
+            for (int h = 0; h < holes; h++)
+                clause[h] = 2 * (holes * p + h);
+            if (!sat_solver_addclause(s, clause, clause + holes))
                 return 1;
         }
-        for (int h = 0; h < 6; h++)
-            for (int p = 0; p < 7; p++)
-                for (int q = p + 1; q < 7; q++) {
-                    lit clause[2] = {2 * (6 * p + h) + 1, 2 * (6 * q + h) + 1};
+        for (int h = 0; h < holes; h++)
+            for (int p = 0; p <= holes; p++)
+                for (int q = p + 1; q <= holes; q++) {
+                    lit clause[2] = {2 * (holes * p + h) + 1, 2 * (holes * q + h) + 1};
                     if (!sat_solver_addclause(s, clause, clause + 2))
                         return 1;
                 }

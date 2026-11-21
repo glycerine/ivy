@@ -1056,3 +1056,9 @@ Native ABC generated combinational multipliers and sorters with `gen -m` and `ge
 | Sorter 64 | 8,002 | 54.763 | 71.954 |
 
 The eight-input sorter was the only case here where Go trailed C. A fresh Go profile placed 55.7% of its cumulative samples in cut truth computation and 12.5% in truth expansion. The initial complete solve allocated about 348 KB in 489 allocations.
+
+### BSAT watched literals on two unsatisfiable formulas
+
+The paired C and Go pigeonhole drivers now also accept eight pigeons in seven holes. Both prove UNSAT after exactly 3,378 conflicts, 4,221 decisions and 48,104 propagations. The new unit test checks all three native counters, alongside the seven-pigeon regression. The sampling profiles placed 91.8% of cumulative Go samples and 88.5% of flat C samples in propagation on the larger formula.
+
+The watcher loop retains both clause literals in locals and computes the false literal and binary reason once per trail item. In two orders, seven-pigeon Go solves went from 3.015–3.020 to 2.943–2.944 ms. Eight-pigeon solves went from 59.31–59.42 to 57.93–58.65 ms, with 1,145,736 bytes and 1,458 allocations in both versions. Release C took 31.60 ms. A separate trial maintained a truth byte for each signed literal and reached 56.20–56.56 ms, but added state and gave mixed results on full equivalence proofs. The selected loop keeps the existing solver representation. BSAT and CNF passed their normal and race suites.

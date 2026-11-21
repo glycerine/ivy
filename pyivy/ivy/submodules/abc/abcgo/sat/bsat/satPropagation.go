@@ -19,6 +19,8 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 	for a.qhead < a.qtail {
 		p := a.trail[a.qhead]
 		a.qhead++
+		falseLit := lit_neg(p)
+		binaryReason := clause_from_lit(p)
 		ws := &watches[p]
 		read := veci_begin(ws)
 		write := 0
@@ -35,10 +37,10 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 				if assigns[lit_var(implied)] == uint8(lit_sign(implied)) {
 					continue
 				}
-				if !a.enqueueTracked(implied, clause_from_lit(p), frequencies) {
+				if !a.enqueueTracked(implied, binaryReason, frequencies) {
 					conflict = binaryHandle
 					binary.lits[0] = implied
-					binary.lits[1] = lit_neg(p)
+					binary.lits[1] = falseLit
 				}
 			} else {
 				c := mem.clauseAt(h)
@@ -46,21 +48,23 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 				if len(lits) < 2 {
 					panic("watched unit clause")
 				}
-				falseLit := lit_neg(p)
-				if lits[0] == falseLit {
-					lits[0], lits[1] = lits[1], lits[0]
+				other, watched := lits[0], lits[1]
+				if other == falseLit {
+					other, watched = watched, other
+					lits[0], lits[1] = other, watched
 				}
-				if lits[1] != falseLit {
+				if watched != falseLit {
 					panic("watch does not match clause")
 				}
-				if assigns[lit_var(lits[0])] == uint8(lit_sign(lits[0])) {
+				if assigns[lit_var(other)] == uint8(lit_sign(other)) {
 					read[write] = h
 					write++
 					continue
 				}
 				for k := 2; k < len(lits); k++ {
 					candidate := lits[k]
-					if assigns[lit_var(candidate)] != uint8(1-lit_sign(candidate)) {
+					// XOR is one only for a false literal. An unassigned value keeps its high bit.
+					if assigns[lit_var(candidate)]^uint8(lit_sign(candidate)) != 1 {
 						lits[1], lits[k] = candidate, falseLit
 						veci_push(&watches[lit_neg(candidate)], h)
 						continue nextWatch
@@ -71,7 +75,7 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 				if c.lrn != 0 {
 					c.lbd = satClauseLBD(a, c)
 				}
-				if !a.enqueueTracked(lits[0], h, frequencies) {
+				if !a.enqueueTracked(other, h, frequencies) {
 					conflict = h
 				}
 			}
