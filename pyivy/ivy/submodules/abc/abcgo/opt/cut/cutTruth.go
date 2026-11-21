@@ -2,7 +2,6 @@ package cut
 
 import (
 	"math/bits"
-	"time"
 
 	"github.com/glycerine/abcgo/bool/kit"
 	"github.com/glycerine/abcgo/misc/extra"
@@ -92,9 +91,9 @@ func cutTruthComputeOp(c, a, b *Cut_Cut_t, compl0, compl1 int32, xor bool) {
 	}
 }
 func Cut_TruthCompute(p *Cut_Man_t, c, a, b *Cut_Cut_t, compl0, compl1 int32) {
-	started := time.Now()
+	started := p.elapsed()
 	cutTruthComputeOp(c, a, b, compl0, compl1, p.xor)
-	p.stats.TruthTime += time.Since(started)
+	p.stats.TruthTime += p.elapsed() - started
 	if p.params.FFancy != 0 && len(c.leaves) == 7 {
 		p.stats.FancyCuts++
 		minOverlap := 7

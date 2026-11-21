@@ -1,9 +1,5 @@
 package cut
 
-import (
-	"time"
-)
-
 func Cut_CutCheckDominance(dom, cut *Cut_Cut_t) int32 {
 	if cutContains(cut.leaves, dom.leaves) {
 		return 1
@@ -252,16 +248,17 @@ func Cut_NodeComputeCuts(p *Cut_Man_t, node, node0, node1, compl0, compl1, trivi
 	if p.newCuts[node] != nil {
 		panic("cut: node cuts already computed")
 	}
-	started := time.Now()
 	p.stats.Nodes++
 	if p.params.FRecord != 0 {
 		Cut_CutNumberList(p.newCuts[node0])
 		Cut_CutNumberList(p.newCuts[node1])
 	}
 	var list Cut_List_t
+	started := p.elapsed()
 	Cut_ListStart(&list)
 	Cut_NodeDoComputeCuts(p, &list, node, compl0, compl1, p.newCuts[node0], p.newCuts[node1], trivial, treeCode)
 	cuts := Cut_ListFinish(&list)
+	p.stats.MergeTime += p.elapsed() - started
 	p.newCuts[node] = cuts
 	if p.params.FRecordAig != 0 {
 		for c := cuts; c != nil; c = c.Next {
@@ -270,7 +267,6 @@ func Cut_NodeComputeCuts(p *Cut_Man_t, node, node0, node1, compl0, compl1, trivi
 			}
 		}
 	}
-	p.stats.MergeTime += time.Since(started)
 	if cuts == nil {
 		p.stats.NoCuts++
 	}
@@ -290,7 +286,9 @@ func Cut_NodeComputeCuts(p *Cut_Man_t, node, node0, node1, compl0, compl1, trivi
 		p.records[node] = cutRecord(cuts)
 	}
 	if p.params.FMap != 0 && p.params.FSeq == 0 {
+		started := p.elapsed()
 		Cut_NodeMapping(p, cuts, node, node0, node1)
+		p.stats.MappingTime += p.elapsed() - started
 	}
 	return cuts
 }
@@ -458,6 +456,7 @@ func Cut_NodeUnionCuts(p *Cut_Man_t, nodes []int32) *Cut_Cut_t {
 	if len(nodes) == 0 {
 		return nil
 	}
+	started := p.elapsed()
 	lists := make([]*Cut_Cut_t, len(nodes))
 	for i, node := range nodes {
 		lists[i] = p.newCuts[node]
@@ -465,6 +464,7 @@ func Cut_NodeUnionCuts(p *Cut_Man_t, nodes []int32) *Cut_Cut_t {
 	}
 	result := cutUnionLists(p, lists, true, nil, nil)
 	p.newCuts[nodes[0]] = result
+	p.stats.UnionTime += p.elapsed() - started
 	if p.params.FRecord != 0 {
 		p.records[nodes[0]] = cutRecord(result)
 	}
@@ -475,6 +475,7 @@ func Cut_NodeUnionCutsSeq(p *Cut_Man_t, nodes []int32, set, first int32) *Cut_Cu
 	if len(nodes) == 0 {
 		return nil
 	}
+	started := p.elapsed()
 	root := nodes[0]
 	frontiers := cutSeqFrontiers{old: p.oldCuts[root], limit: p.params.NKeepMax}
 	top := frontiers.old
@@ -507,6 +508,7 @@ func Cut_NodeUnionCutsSeq(p *Cut_Man_t, nodes []int32, set, first int32) *Cut_Cu
 	} else {
 		p.newCuts[nodes[0]] = result
 	}
+	p.stats.UnionTime += p.elapsed() - started
 	return result
 }
 

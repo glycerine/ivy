@@ -7,7 +7,7 @@ type Cut_Stats struct {
 	SeqIterations                                                                                         int32
 	SeqConverged                                                                                          bool
 	Current, Allocated, Recycled, Peak, Trivial, Filtered, Limited, Nodes, DagNodes, NoCuts, MappingDelay int64
-	MergeTime, TruthTime, FilterTime, MappingTime                                                         time.Duration
+	MergeTime, UnionTime, TruthTime, FilterTime, MappingTime                                              time.Duration
 }
 type Cut_Proof struct {
 	Node    int32
@@ -26,6 +26,7 @@ type Cut_Record struct{ Steps []Cut_Step }
 type cutLifetime struct{ stopped bool }
 
 type Cut_Man_t struct {
+	clockOrigin                time.Time
 	network                    map[int32]NetworkNode
 	networkCounts              []int32
 	params                     *Cut_Params_t
@@ -56,7 +57,8 @@ func Cut_TruthWords(vars int32) int32 {
 	}
 	return 1 << uint(vars-5)
 }
-func (p *Cut_Man_t) Stats() Cut_Stats { return p.stats }
+func (p *Cut_Man_t) Stats() Cut_Stats       { return p.stats }
+func (p *Cut_Man_t) elapsed() time.Duration { return time.Since(p.clockOrigin) }
 func (p *Cut_Man_t) check() {
 	if p == nil || p.lifetime == nil || p.lifetime.stopped {
 		panic("cut: manager stopped")

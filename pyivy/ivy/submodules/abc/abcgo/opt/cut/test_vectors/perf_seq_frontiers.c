@@ -65,6 +65,7 @@ int main(void)
         Cut_NodeFreeCuts(p,8);
     }
     clock_gettime(CLOCK_MONOTONIC,&y);
+    if (p->timeMerge <= 0) return 4;
     printf("%.2f ns/sequential frontier with one free slot\n", ((y.tv_sec-x.tv_sec)*1e9+(y.tv_nsec-x.tv_nsec))/count);
     params.nKeepMax = 3;
     Cut_CutRecycleList(p,Cut_NodeReadCutsOld(p,8));

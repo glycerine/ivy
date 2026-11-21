@@ -106,11 +106,13 @@ func Cut_NodeComputeCutsSeq(p *Cut_Man_t, node, node0, node1, compl0, compl1, la
 	defer b.restore(p)
 	frontiers := cutSeqFrontiers{old: p.oldCuts[node], current: p.newCuts[node], limit: p.params.NKeepMax - oldCount}
 	var list Cut_List_t
+	started := p.elapsed()
 	Cut_ListStart(&list)
 	cutNodeDoComputeCuts(p, &list, node, compl0, compl1, a.old, b.current, 0, 0, &frontiers)
 	cutNodeDoComputeCuts(p, &list, node, compl0, compl1, a.current, b.old, 0, 0, &frontiers)
 	cutNodeDoComputeCuts(p, &list, node, compl0, compl1, a.current, b.current, trivial, 0, &frontiers)
 	result := Cut_ListFinish(&list)
+	p.stats.MergeTime += p.elapsed() - started
 	p.oldCuts[node], p.newCuts[node] = frontiers.old, frontiers.current
 	if set >= 0 {
 		p.tempCuts[set] = result

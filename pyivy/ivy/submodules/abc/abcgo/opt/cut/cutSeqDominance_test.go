@@ -240,3 +240,58 @@ func TestShiftedSequentialInputsCanShareASuffix(t *testing.T) {
 	}
 	t.Fatal("shared input suffix received both shifts")
 }
+
+func TestSequentialMergeAccumulatesElapsedTime(t *testing.T) {
+	params := DefaultParams(4)
+	params.FSeq, params.FTruth = 1, 1
+	p := Cut_ManStart(params)
+	defer Cut_ManStop(p)
+	Cut_NodeSetTriv(p, 0)
+	Cut_NodeSetTriv(p, 1)
+	for node := int32(2); node < 130; node++ {
+		Cut_NodeComputeCutsSeq(p, node, 0, 1, 0, 0, 0, 0, 1, -1)
+	}
+	if p.Stats().MergeTime <= 0 {
+		t.Fatal("sequential node merges accumulated zero merge time")
+	}
+	if p.Stats().TruthTime <= 0 || p.Stats().TruthTime > p.Stats().MergeTime {
+		t.Fatalf("truth time %v outside merge interval %v", p.Stats().TruthTime, p.Stats().MergeTime)
+	}
+}
+
+func TestMappingAccumulatesElapsedTime(t *testing.T) {
+	params := DefaultParams(4)
+	params.FMap = 1
+	p := Cut_ManStart(params)
+	defer Cut_ManStop(p)
+	Cut_NodeSetTriv(p, 0)
+	Cut_NodeSetTriv(p, 1)
+	for node := int32(2); node < 130; node++ {
+		Cut_NodeComputeCuts(p, node, 0, 1, 0, 0, 1, 0)
+	}
+	if p.Stats().MappingTime <= 0 {
+		t.Fatal("mapped nodes accumulated zero mapping time")
+	}
+}
+
+func TestChoiceUnionAccumulatesElapsedTime(t *testing.T) {
+	for _, sequential := range []int32{0, 1} {
+		params := DefaultParams(4)
+		params.FSeq = sequential
+		p := Cut_ManStart(params)
+		for root := int32(2); root < 258; root += 2 {
+			nodes := []int32{root, root + 1}
+			Cut_NodeSetTriv(p, root)
+			Cut_NodeSetTriv(p, root+1)
+			if sequential == 0 {
+				Cut_NodeUnionCuts(p, nodes)
+			} else {
+				Cut_NodeUnionCutsSeq(p, nodes, -1, 1)
+			}
+		}
+		if p.Stats().UnionTime <= 0 {
+			t.Errorf("choice unions in sequential mode %d accumulated zero union time", sequential)
+		}
+		Cut_ManStop(p)
+	}
+}
