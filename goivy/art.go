@@ -629,6 +629,17 @@ func sameActionStructure(a, b ActionsAction) (same bool) {
 			same = false
 		}
 	}()
+	// A sequence and an environment action start with distinct S-expression tags.
+	switch a.(type) {
+	case *LogicSequence:
+		if _, ok := b.(*LogicEnvAction); ok {
+			return false
+		}
+	case *LogicEnvAction:
+		if _, ok := b.(*LogicSequence); ok {
+			return false
+		}
+	}
 	return a.Equal(b) || b.Equal(a)
 }
 

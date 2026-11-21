@@ -1305,3 +1305,32 @@ func TestArtGetHistoryBounded(t *testing.T) {
 
 // Verify that unused imports are used.
 var _ = NullUpdate
+
+func TestSequenceAndEnvironmentActionStructure(t *testing.T) {
+	statement := NewAssumeAction(True)
+	sequence := NewSequence(statement)
+	environment := NewEnvActionOn(New().Cfg.ActCfg, statement)
+	if sameActionStructure(sequence, environment) || sameActionStructure(environment, sequence) {
+		t.Fatal("a sequence and an environment action have distinct canonical forms")
+	}
+	if !sameActionStructure(sequence, NewSequence(statement)) ||
+		!sameActionStructure(environment, NewEnvActionOn(New().Cfg.ActCfg, statement)) {
+		t.Fatal("structurally identical action copies should match")
+	}
+}
+
+func BenchmarkSequenceAndEnvironmentActionStructure(b *testing.B) {
+	statement := NewAssumeAction(True)
+	children := make([]Expr, 128)
+	for i := range children {
+		children[i] = statement
+	}
+	sequence := NewSequence(children...)
+	environment := NewEnvActionOn(New().Cfg.ActCfg, sequence)
+	b.ReportAllocs()
+	for b.Loop() {
+		if sameActionStructure(sequence, environment) {
+			b.Fatal("unexpected structural match")
+		}
+	}
+}
