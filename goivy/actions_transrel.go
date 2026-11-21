@@ -489,16 +489,17 @@ func RenameDistinctClauses(c1, c2 *Clauses) *Clauses {
 	// Collect symbols (name+sort) in AST depth-first order (InsMap).
 	// Matches Python: dict.fromkeys(symbols_clauses(clauses1)).
 	used1 := UsedSymbolsClausesOrdered(c1)
-	// Build name-string set for renamer from c2
-	used2 := usedSymbolNamesClauses(c2)
-	used2Slice := nameSetToSlice(used2)
-	rn := NewUniqueRenamer("", used2Slice)
+	// The destination names only matter when the source has a local skolem.
+	var rn *UniqueRenamer
 	// Iterate symbols in insertion order, building structural rename map.
 	// Each unique (name, sort) pair gets its own rn.Rename() call.
 	constMap := make(map[NodeKey]*Const)
 	for key, sym := range used1.All() {
 		if c, ok := sym.(*Const); ok {
 			if IsSkolem(c.Name) && !IsGlobalSkolem(c.Name) {
+				if rn == nil {
+					rn = NewUniqueRenamer("", nameSetToSlice(usedSymbolNamesClauses(c2)))
+				}
 				newName := rn.Rename(c.Name)
 				constMap[key] = NewConst(newName, c.CSort)
 			}

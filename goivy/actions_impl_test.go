@@ -907,3 +907,47 @@ func TestActionsFilterAxiomsBySymsMatch(t *testing.T) {
 		t.Error("filterAxiomsBySyms should include axiom containing x")
 	}
 }
+
+func TestRenameDistinctClausesSkolemSortsAndDefinitions(t *testing.T) {
+	name := "x__k"
+	otherSort := &UninterpretedSort{Name: "item"}
+	booleanSkolem := NewConst(name, Boolean)
+	itemSkolem := NewConst(name, otherSort)
+	equality, err := NewEq(itemSkolem, NewConst("item1", otherSort))
+	if err != nil {
+		t.Fatal(err)
+	}
+	original := NewClauses([]Expr{booleanSkolem, equality, booleanSkolem}, nil, nil)
+	occupied := NewClauses([]Expr{NewConst(name, Boolean)}, []*IvyDefinition{
+		NewIvyDefinition(NewConst(name+"_a", Boolean), True),
+	}, nil)
+	result := RenameDistinctClauses(original, occupied)
+	names := UsedSymbolsClausesOrdered(result)
+	for _, want := range []*Const{NewConst(name+"_b", Boolean), NewConst(name+"_c", otherSort)} {
+		if _, ok := names.Get2(Key(want)); !ok {
+			t.Fatalf("absent renamed skolem %v of sort %v", want, want.CSort)
+		}
+	}
+	if names.Len() != 3 {
+		t.Fatalf("got %d distinct symbols, expected two skolems and item1", names.Len())
+	}
+	ordinary := NewClauses([]Expr{NewConst("__Global", Boolean)}, nil, nil)
+	if RenameDistinctClauses(ordinary, occupied) != ordinary {
+		t.Fatal("global-only source should preserve the clauses")
+	}
+}
+
+func BenchmarkRenameDistinctClausesWithoutLocalSkolems(b *testing.B) {
+	source := NewClauses([]Expr{NewConst("p", Boolean)}, nil, nil)
+	facts := make([]Expr, 128)
+	for i := range facts {
+		facts[i] = NewConst("q"+itoa(i), Boolean)
+	}
+	occupied := NewClauses(facts, nil, nil)
+	b.ReportAllocs()
+	for b.Loop() {
+		if RenameDistinctClauses(source, occupied) != source {
+			b.Fatal("unexpected rename")
+		}
+	}
+}
