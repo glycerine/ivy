@@ -2,7 +2,6 @@
 package ivy
 
 import (
-	"encoding/binary"
 	"fmt"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"math/bits"
@@ -317,29 +316,38 @@ func Ivy_FraigCreateClasses(p *Ivy_FraigMan_t) {
 	if p.lClasses.pHead != nil {
 		panic("ivy: simulation classes already initialized")
 	}
-	groups := map[string]*Ivy_Obj_t{}
-	var heads []*Ivy_Obj_t
-	for _, n := range p.pManAig.vObjs {
-		if n == nil || (n != p.pManAig.pConst1 && Ivy_ObjIsPi(n) == 0 && Ivy_ObjIsNode(n) == 0) {
+	net := p.pManAig
+	buckets := make([]*Ivy_Obj_t, int(Ivy_ManObjNum(net))/2+13)
+	for _, n := range net.vObjs {
+		if n == nil || Ivy_ObjIsPi(n) == 0 && Ivy_ObjIsNode(n) == 0 {
 			continue
 		}
-		words := p.simWords(n)
-		encoded := make([]byte, 4*len(words))
-		for i, word := range words {
-			binary.LittleEndian.PutUint32(encoded[4*i:], word)
+		hash := Ivy_NodeHash(p, n)
+		if hash == 0 && Ivy_NodeHasZeroSim(p, n) != 0 {
+			Ivy_NodeAddToClass(net.pConst1, n)
+			continue
 		}
-		key := string(encoded)
-		if class := groups[key]; class != nil {
-			Ivy_NodeAddToClass(class, n)
+		bin := hash % uint32(len(buckets))
+		class := buckets[bin]
+		for class != nil && Ivy_NodeCompareSims(p, class, n) == 0 {
+			class = Ivy_ObjNodeHashNext(class)
+		}
+		if class == nil {
+			Ivy_ObjSetNodeHashNext(n, buckets[bin])
+			buckets[bin] = n
 		} else {
-			groups[key] = n
-			heads = append(heads, n)
+			Ivy_NodeAddToClass(class, n)
 		}
 	}
-	for _, class := range heads {
-		if Ivy_ObjClassNodeNext(class) != nil {
-			Ivy_ObjSetClassNodeRepr(class, nil)
-			Ivy_FraigAddClass(&p.lClasses, class)
+	for _, n := range net.vObjs {
+		if n == nil || n != net.pConst1 && Ivy_ObjIsPi(n) == 0 && Ivy_ObjIsNode(n) == 0 {
+			continue
+		}
+		Ivy_ObjSetNodeHashNext(n, nil)
+		// A head links to its tail. Every other member links to its head.
+		if link := Ivy_ObjClassNodeRepr(n); link != nil && Ivy_ObjClassNodeNext(link) == nil {
+			Ivy_ObjSetClassNodeRepr(n, nil)
+			Ivy_FraigAddClass(&p.lClasses, n)
 		}
 	}
 }
