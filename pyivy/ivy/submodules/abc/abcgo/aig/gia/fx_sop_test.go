@@ -27,7 +27,7 @@ func TestFxFactorSop(t *testing.T) {
 			}
 			for _, obj := range p.pObjs {
 				if Gia_ObjIsAnd(obj) != 0 {
-					values[obj.id] = (values[Gia_ObjFaninId0(obj, obj.id)] ^ obj.fCompl0) & (values[Gia_ObjFaninId1(obj, obj.id)] ^ obj.fCompl1)
+					values[obj.id] = (values[Gia_ObjFaninId0(obj, obj.id)] ^ uint32(obj.fCompl0)) & (values[Gia_ObjFaninId1(obj, obj.id)] ^ uint32(obj.fCompl1))
 				}
 			}
 			truth |= uint8(values[root>>1]^uint32(root&1)) << assignment

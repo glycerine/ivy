@@ -30,7 +30,7 @@ func TestIsoDormantMuxRecognitionPreservesSourceSalts(t *testing.T) {
 					expected[id] = (0xfffffff0 + uint64(id)*101) & 0xffffffff
 					obj := Gia_ManObj(graph, int32(id))
 					obj.Value = uint32(expected[id])
-					obj.fMark0, obj.fMark1 = uint32(id%2), uint32((id+1)%2)
+					obj.fMark0, obj.fMark1 = uint8(id%2), uint8((id+1)%2)
 					fields[id] = isoSignatureReviewFields(obj)
 				}
 				if xor {

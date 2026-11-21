@@ -169,7 +169,7 @@ func TestAreaBalanceIntermediateNativeOracle(t *testing.T) {
 						if Gia_ObjIsMux(src, obj) == 0 {
 							obj.fMark0 = 1
 						}
-						obj.fMark1 = uint32(obj.id & 1)
+						obj.fMark1 = uint8(obj.id & 1)
 					}
 					fmt.Fprintf(&got, "case %d %d %d %d\n", family, signs, arrival, limit)
 					Dam_ManCreatePairs(p, 0)

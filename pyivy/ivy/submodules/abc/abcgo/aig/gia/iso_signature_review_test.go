@@ -43,10 +43,10 @@ func isoSignatureReviewGraph(t *testing.T, registers int, phases uint32, oneOutp
 			node.level = max(node.level, model.nodes[fanin>>1].level+1)
 		}
 		obj := Gia_ManObj(graph, int32(id))
-		if len(fanins) > 0 && (obj.iDiff0 != uint32(id-int(fanins[0]>>1)) || obj.fCompl0 != uint32(fanins[0]&1)) {
+		if len(fanins) > 0 && (obj.iDiff0 != uint32(id-int(fanins[0]>>1)) || obj.fCompl0 != uint8(fanins[0]&1)) {
 			t.Fatal("fixture fanin0 differs from abstract edge")
 		}
-		if len(fanins) > 1 && (obj.iDiff1 != uint32(id-int(fanins[1]>>1)) || obj.fCompl1 != uint32(fanins[1]&1)) {
+		if len(fanins) > 1 && (obj.iDiff1 != uint32(id-int(fanins[1]>>1)) || obj.fCompl1 != uint8(fanins[1]&1)) {
 			t.Fatal("fixture fanin1 differs from abstract edge")
 		}
 		model.nodes = append(model.nodes, node)
@@ -212,7 +212,7 @@ func (model isoSignatureReviewModel) thirdPass(old []uint64) []uint64 {
 }
 
 func isoSignatureReviewFields(obj *Gia_Obj_t) [8]uint32 {
-	return [8]uint32{obj.iDiff0, obj.fCompl0, obj.fMark0, obj.fTerm, obj.iDiff1, obj.fCompl1, obj.fMark1, obj.fPhase}
+	return [8]uint32{obj.iDiff0, uint32(obj.fCompl0), uint32(obj.fMark0), uint32(obj.fTerm), obj.iDiff1, uint32(obj.fCompl1), uint32(obj.fMark1), uint32(obj.fPhase)}
 }
 
 func checkIsoSignatureReview(t *testing.T, graph *Gia_Man_t, expected []uint64, fields [][8]uint32, stage string) {
@@ -246,7 +246,7 @@ func checkIsoSignaturePasses(t *testing.T, registers int, phases uint32, seed, l
 			labels[id] = int32(id + 1)
 		}
 		obj := Gia_ManObj(graph, int32(id))
-		obj.Value, obj.fMark0, obj.fMark1 = uint32(expected[id]), uint32(id%2), uint32((id+1)%2)
+		obj.Value, obj.fMark0, obj.fMark1 = uint32(expected[id]), uint8(id%2), uint8((id+1)%2)
 		fields[id] = isoSignatureReviewFields(obj)
 	}
 	p := Gia_IsoManStart(graph)

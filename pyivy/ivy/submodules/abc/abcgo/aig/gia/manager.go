@@ -93,9 +93,9 @@ func Gia_ManAppendAnd(p *Gia_Man_t, a, b int32) int32 {
 	}
 	obj := Gia_ManAppendObj(p)
 	obj.iDiff0 = uint32(obj.id - (a >> 1))
-	obj.fCompl0 = uint32(a & 1)
+	obj.fCompl0 = uint8(a & 1)
 	obj.iDiff1 = uint32(obj.id - (b >> 1))
-	obj.fCompl1 = uint32(b & 1)
+	obj.fCompl1 = uint8(b & 1)
 	if p.pFanData != nil {
 		Gia_ObjAddFanout(p, Gia_ObjFanin0(obj), obj)
 		if Gia_ObjIsBuf(obj) == 0 {
@@ -131,7 +131,7 @@ func Gia_ManAppendCo(p *Gia_Man_t, lit int32) int32 {
 	obj := Gia_ManAppendObj(p)
 	obj.fTerm = 1
 	obj.iDiff0 = uint32(obj.id - (lit >> 1))
-	obj.fCompl0 = uint32(lit & 1)
+	obj.fCompl0 = uint8(lit & 1)
 	obj.iDiff1 = uint32(vec.Vec_IntSize(p.vCos))
 	vec.Vec_IntPush(p.vCos, obj.id)
 	if p.pFanData != nil {

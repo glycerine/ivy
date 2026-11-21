@@ -108,8 +108,8 @@ func supportReviewRecords(t *testing.T, typed bool) string {
 				Vec_IntPush(nodes, g.nObjs-1)
 				for _, obj := range g.pObjs {
 					obj.Value = uint32(obj.id + 42)
-					obj.fMark0 = uint32(obj.id & 1)
-					obj.fMark1 = uint32((obj.id >> 1) & 1)
+					obj.fMark0 = uint8(obj.id & 1)
+					obj.fMark1 = uint8((obj.id >> 1) & 1)
 				}
 				result := Gia_ManCreateNodeSupps(g, nodes, 0)
 				cos := Gia_ManCreateCoSupps(g, 0)
@@ -131,7 +131,7 @@ func supportReviewRecords(t *testing.T, typed bool) string {
 							fmt.Fprintf(&records, ",%d", ci)
 						}
 					}
-					if obj.Value != uint32(obj.id+42) || obj.fMark0 != uint32(obj.id&1) || obj.fMark1 != uint32((obj.id>>1)&1) {
+					if obj.Value != uint32(obj.id+42) || obj.fMark0 != uint8(obj.id&1) || obj.fMark1 != uint8((obj.id>>1)&1) {
 						t.Fatal("support query changed source scratch")
 					}
 				}

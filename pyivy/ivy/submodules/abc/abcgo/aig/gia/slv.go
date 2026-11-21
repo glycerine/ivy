@@ -86,7 +86,7 @@ func Slv_ManFromGia(p *Gia_Man_t) *Slv_Man_t {
 	copies := make([]int32, p.nObjs)
 	for id := int32(1); id < p.nObjs; id++ {
 		obj := p.pObjs[id]
-		edge := func(diff, compl uint32) int32 { return copies[id-int32(diff)] ^ int32(compl) }
+		edge := func(diff uint32, compl uint8) int32 { return copies[id-int32(diff)] ^ int32(compl) }
 		switch {
 		case Gia_ObjIsCi(obj) != 0:
 			copies[id] = slvAppend(out, 0, 0, graphInput)

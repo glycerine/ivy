@@ -84,7 +84,7 @@ func Gia_ManSimSimulateOne(p *Gia_Man_t, patterns *Vec_Int_t) *Vec_Int_t {
 			if value != 0 && value != 1 {
 				panic("gia: invalid input bit")
 			}
-			Gia_ManPi(p, i).fMark1 = uint32(value)
+			Gia_ManPi(p, i).fMark1 = uint8(value)
 		}
 		for _, obj := range p.pObjs {
 			if Gia_ObjIsAnd(obj) != 0 {

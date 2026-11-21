@@ -2,8 +2,6 @@ package gia
 
 import "sync/atomic"
 
-// Gia_Obj_t retains the source representation: fanins are backward index
-// differences and complemented-edge flags are separate bits.
 type objectStore struct {
 	objects *[]*Gia_Obj_t
 	// Manager-backed objects retain a view of the live companion table. The
@@ -11,21 +9,17 @@ type objectStore struct {
 	muxes *[]uint32
 }
 
+// Gia_Obj_t keeps stable Go edge handles and the original backward fanin
+// distances. Store the six C one-bit fields together at the end of the node.
 type Gia_Obj_t struct {
-	pair    atomic.Pointer[Gia_Obj_t]
-	store   *objectStore
-	id      int32  // stable nonnegative index; inverse views use inverseObjectID
-	iDiff0  uint32 /* C bitfield: 29 bits; review packing and truncation */ // the diff of the first fanin
-	fCompl0 uint32 /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute
-	fMark0  uint32 /* C bitfield: 1 bits; review packing and truncation */  // first user-controlled mark
-	fTerm   uint32 /* C bitfield: 1 bits; review packing and truncation */  // terminal node (CI/CO)
-
-	iDiff1  uint32 /* C bitfield: 29 bits; review packing and truncation */ // the diff of the second fanin
-	fCompl1 uint32 /* C bitfield: 1 bits; review packing and truncation */  // the complemented attribute
-	fMark1  uint32 /* C bitfield: 1 bits; review packing and truncation */  // second user-controlled mark
-	fPhase  uint32 /* C bitfield: 1 bits; review packing and truncation */  // value under 000 pattern
-
-	Value uint32 // application-specific value
+	pair             atomic.Pointer[Gia_Obj_t]
+	store            *objectStore
+	id               int32  // stable object index, or inverseObjectID for a complemented view
+	iDiff0, iDiff1   uint32 // 29-bit fanin distances, also used for terminal indices
+	Value            uint32 // application-specific scratch value
+	fCompl0, fCompl1 uint8
+	fMark0, fMark1   uint8
+	fTerm, fPhase    uint8
 }
 
 const objectNoFanin uint32 = (1 << 29) - 1

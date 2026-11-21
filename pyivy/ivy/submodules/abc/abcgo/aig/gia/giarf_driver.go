@@ -31,7 +31,7 @@ func Gia_ComputeEquivalencesLevel(p *Hcd_Man_t, reduced *Gia_Man_t, roots *Vec_P
 		if Gia_ObjIsConst(g, id) == 0 {
 			continue
 		}
-		lit := int32(root.Value ^ root.fPhase)
+		lit := int32(root.Value ^ uint32(root.fPhase))
 		status, cex := check(lit, nil)
 		switch status {
 		case -1:
@@ -77,8 +77,8 @@ func Gia_ComputeEquivalencesLevel(p *Hcd_Man_t, reduced *Gia_Man_t, roots *Vec_P
 			prev := Vec_PtrEntry(members, Vec_PtrSize(members)-1).(*Gia_Obj_t)
 			for k := 0; k < Vec_PtrSize(members); k++ {
 				member := Vec_PtrEntry(members, k).(*Gia_Obj_t)
-				a := int32(prev.Value ^ prev.fPhase)
-				b := int32(member.Value ^ (member.fPhase ^ 1))
+				a := int32(prev.Value ^ uint32(prev.fPhase))
+				b := int32(member.Value ^ (uint32(member.fPhase) ^ 1))
 				status, cex := check(a, &b)
 				switch status {
 				case -1:

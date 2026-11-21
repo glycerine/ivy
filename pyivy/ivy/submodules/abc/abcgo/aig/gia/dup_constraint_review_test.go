@@ -171,8 +171,8 @@ func constraintReviewRecords(t *testing.T, typed bool) string {
 				root := Gia_ObjFaninLit0(Gia_ManPo(src, 0), Gia_ManPo(src, 0).id)
 				for _, obj := range src.pObjs {
 					obj.Value = uint32(obj.id + 77)
-					obj.fMark0 = uint32(obj.id & 1)
-					obj.fMark1 = uint32((obj.id >> 1) & 1)
+					obj.fMark0 = uint8(obj.id & 1)
+					obj.fMark1 = uint8((obj.id >> 1) & 1)
 				}
 				leaves := constraintReviewLeaves(src, root, true, nil)
 				super := Vec_IntAlloc(8)
@@ -217,7 +217,7 @@ func constraintReviewRecords(t *testing.T, typed bool) string {
 					}
 				}
 				for _, obj := range src.pObjs {
-					if obj.Value != uint32(obj.id+77) || obj.fMark0 != uint32(obj.id&1) || obj.fMark1 != uint32((obj.id>>1)&1) {
+					if obj.Value != uint32(obj.id+77) || obj.fMark0 != uint8(obj.id&1) || obj.fMark1 != uint8((obj.id>>1)&1) {
 						t.Fatal("collector changed source scratch")
 					}
 				}

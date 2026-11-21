@@ -31,12 +31,12 @@ func TestPerformFxEndToEnd(t *testing.T) {
 			}
 			for _, obj := range q.pObjs {
 				if Gia_ObjIsAnd(obj) != 0 {
-					values[obj.id] = (values[Gia_ObjFaninId0(obj, obj.id)] ^ obj.fCompl0) & (values[Gia_ObjFaninId1(obj, obj.id)] ^ obj.fCompl1)
+					values[obj.id] = (values[Gia_ObjFaninId0(obj, obj.id)] ^ uint32(obj.fCompl0)) & (values[Gia_ObjFaninId1(obj, obj.id)] ^ uint32(obj.fCompl1))
 				}
 			}
 			for i := int32(0); i < 2; i++ {
 				obj := Gia_ManCo(q, i)
-				got := values[Gia_ObjFaninId0(obj, obj.id)] ^ obj.fCompl0
+				got := values[Gia_ObjFaninId0(obj, obj.id)] ^ uint32(obj.fCompl0)
 				want := uint32(giaBool(input&3 == 3 && input&4 != 0))
 				if i == 1 {
 					want = uint32(giaBool(!(input&3 == 3 && input&4 == 0)))

@@ -11,7 +11,7 @@ func giaFrontSimulateWords(g *Gia_Man_t, obj *Gia_Obj_t, data []uint32, words in
 	dst, a, b := slot(obj.Value), slot(obj.iDiff0), slot(obj.iDiff1)
 	// A complemented pin XORs every bit with all ones. Select the operation
 	// once per node, keeping gate-kind and phase branches out of word loops.
-	mask0, mask1 := uint32(0)-obj.fCompl0, uint32(0)-obj.fCompl1
+	mask0, mask1 := uint32(0)-uint32(obj.fCompl0), uint32(0)-uint32(obj.fCompl1)
 	switch {
 	case g.nMuxes != 0 && Gia_ObjIsMux(g, obj) != 0:
 		lit := g.PMuxes[obj.id]

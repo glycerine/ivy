@@ -16,9 +16,9 @@ func (g *Graph) Objects() []*Gia_Obj_t {
 				a, b = b, a
 			}
 			p.iDiff0 = uint32(i) - a.Object()
-			p.fCompl0 = uint32(a & 1)
+			p.fCompl0 = uint8(a & 1)
 			p.iDiff1 = uint32(i) - b.Object()
-			p.fCompl1 = uint32(b & 1)
+			p.fCompl1 = uint8(b & 1)
 		}
 		objects[i] = p
 	}
@@ -26,7 +26,7 @@ func (g *Graph) Objects() []*Gia_Obj_t {
 		objects[l.Object()].iDiff1 = uint32(i)
 	}
 	for i, l := range g.outputs {
-		objects = append(objects, &Gia_Obj_t{fTerm: 1, iDiff0: uint32(len(objects)) - l.Object(), iDiff1: uint32(i), fCompl0: uint32(l & 1)})
+		objects = append(objects, &Gia_Obj_t{fTerm: 1, iDiff0: uint32(len(objects)) - l.Object(), iDiff1: uint32(i), fCompl0: uint8(l & 1)})
 	}
 	store := &objectStore{objects: &objects}
 	for id, p := range objects {
@@ -45,7 +45,7 @@ func GraphFromObjects(objects []*Gia_Obj_t) (*Graph, error) {
 	}
 	g := NewGraph()
 	copies := make([]Literal, len(objects))
-	edge := func(id int, diff, complement uint32) (Literal, error) {
+	edge := func(id int, diff uint32, complement uint8) (Literal, error) {
 		if diff == 0 || diff > uint32(id) {
 			return 0, fmt.Errorf("gia: invalid backward fanin at object %d", id)
 		}

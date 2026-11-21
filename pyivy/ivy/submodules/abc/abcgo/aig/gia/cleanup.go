@@ -34,7 +34,7 @@ func Gia_ManCombMarkUsed_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 }
 func Gia_ManCombMarkUsed(p *Gia_Man_t) int32 {
 	for _, obj := range p.pObjs {
-		obj.fMark0 = uint32(giaBool(Gia_ObjIsAnd(obj) != 0 && Gia_ObjIsBuf(obj) == 0))
+		obj.fMark0 = uint8(giaBool(Gia_ObjIsAnd(obj) != 0 && Gia_ObjIsBuf(obj) == 0))
 	}
 	var count int32
 	for _, obj := range p.pObjs {

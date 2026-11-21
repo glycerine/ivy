@@ -138,8 +138,8 @@ func rehashReviewRecords(t *testing.T, typed, layout bool) string {
 					src.fAddStrash = additional ^ 1
 					for id, obj := range src.pObjs {
 						obj.Value = uint32(id + 999)
-						obj.fMark0 = uint32(id & 1)
-						obj.fMark1 = uint32((id >> 1) & 1)
+						obj.fMark0 = uint8(id & 1)
+						obj.fMark1 = uint8((id >> 1) & 1)
 					}
 					out := Gia_ManRehash(src, additional)
 					if out.nRegs != regs || Gia_ManCiNum(out) != 6 || Gia_ManCoNum(out) != 9 || out.nConstrs != constr || out.aigerBadOutputs != bad {
@@ -152,7 +152,7 @@ func rehashReviewRecords(t *testing.T, typed, layout bool) string {
 						t.Fatal("rehash changed source reference cache or hash mode")
 					}
 					for id, obj := range src.pObjs {
-						if obj.Value == ^uint32(0) || obj.fMark0 != uint32(id&1) || obj.fMark1 != uint32((id>>1)&1) {
+						if obj.Value == ^uint32(0) || obj.fMark0 != uint8(id&1) || obj.fMark1 != uint8((id>>1)&1) {
 							t.Fatal("source mapping or independent marks lost")
 						}
 					}

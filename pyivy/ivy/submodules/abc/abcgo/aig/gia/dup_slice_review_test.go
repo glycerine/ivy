@@ -32,7 +32,7 @@ func sliceReviewRecords(t *testing.T) string {
 			for limit := int32(-1); limit <= 5; limit++ {
 				src := sliceReviewGraph(signs, registers)
 				for _, obj := range src.pObjs {
-					obj.fMark0, obj.fMark1 = uint32((obj.id+1)&1), 1
+					obj.fMark0, obj.fMark1 = uint8((obj.id+1)&1), 1
 				}
 				out := Gia_ManDupSliced(src, limit)
 				copied, outputs := int32(0), int32(0)

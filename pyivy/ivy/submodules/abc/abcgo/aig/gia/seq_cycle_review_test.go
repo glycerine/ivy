@@ -55,10 +55,10 @@ func cycleReviewExpected(t *testing.T, g *Gia_Man_t, cex *Abc_Cex_t, frames int3
 func cycleReviewSetInitial(g *Gia_Man_t, initial int) {
 	Gia_ManCleanMark0(g)
 	for r := int32(0); r < g.nRegs; r++ {
-		Gia_ManRo(g, r).fMark0 = uint32(initial >> r & 1)
+		Gia_ManRo(g, r).fMark0 = uint8(initial >> r & 1)
 	}
 	for _, obj := range g.pObjs {
-		obj.fMark1 = uint32(obj.id & 1)
+		obj.fMark1 = uint8(obj.id & 1)
 	}
 }
 
@@ -84,7 +84,7 @@ func TestCycleAgainstTransitionTable(t *testing.T) {
 									if (obj.fMark0 != 0) != want[i] {
 										t.Fatalf("signs%d typed%v dfs%v regs%d initial%d trace%d frames%d node%d mark%d want%v", signs, typed, layout, regs, initial, trace, frames, i, obj.fMark0, want[i])
 									}
-									if obj.fMark1 != uint32(obj.id&1) {
+									if obj.fMark1 != uint8(obj.id&1) {
 										t.Fatal("Cycle changed mark1")
 									}
 								}
@@ -124,14 +124,14 @@ func TestCycledDuplicationAgainstTransitionTable(t *testing.T) {
 							// were dirty. The CEX register prefix does not replace that zero state.
 							for _, obj := range src.pObjs {
 								obj.fMark0 = 1
-								obj.fMark1 = uint32(obj.id & 1)
+								obj.fMark1 = uint8(obj.id & 1)
 							}
 							out := Gia_ManDupCycled(src, cex, frames)
 							if got := Gia_ManRandom(0); got != next {
 								t.Fatalf("random stream %d, want%d", got, next)
 							}
 							for _, obj := range src.pObjs {
-								if obj.fMark0 != 0 || obj.fMark1 != uint32(obj.id&1) {
+								if obj.fMark0 != 0 || obj.fMark1 != uint8(obj.id&1) {
 									t.Fatal("DupCycled scratch cleanup changed")
 								}
 							}
@@ -216,7 +216,7 @@ func TestCycleCounterexampleWordBoundaries(t *testing.T) {
 						if (obj.fMark0 != 0) != expected[id] {
 							t.Fatalf("regs%d pis%d dfs%v frames%d node%d", regs, piCount, layout, frames, id)
 						}
-						if obj.fMark1 != uint32(id&1) {
+						if obj.fMark1 != uint8(id&1) {
 							t.Fatal("Cycle changed mark1")
 						}
 					}

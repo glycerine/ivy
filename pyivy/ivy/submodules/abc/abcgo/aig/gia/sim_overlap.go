@@ -7,7 +7,7 @@ import "github.com/glycerine/abcgo/misc/vec"
 func Gia_ManObjCheckSat_rec(p *Gia_Man_t, lit int32, visited *Vec_Int_t) int32 {
 	id := lit >> 1
 	obj := Gia_ManObj(p, id)
-	phase := uint32(lit & 1)
+	phase := uint8(lit & 1)
 	if obj.fMark0 != 0 {
 		return giaBool(obj.fMark1 == phase)
 	}

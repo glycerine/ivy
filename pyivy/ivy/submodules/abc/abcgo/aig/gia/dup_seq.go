@@ -37,15 +37,15 @@ func Gia_ManCycle(p *Gia_Man_t, cex *Abc_Cex_t, frames int32) {
 		panic("gia: invalid simulation frame/counterexample dimensions")
 	}
 	p.pObjs[0].fMark0 = 0
-	value := func(lit int32) uint32 { return (p.pObjs[lit>>1].fMark0 ^ uint32(lit&1)) & 1 }
+	value := func(lit int32) uint8 { return (p.pObjs[lit>>1].fMark0 ^ uint8(lit&1)) & 1 }
 	for frame := int32(0); frame < frames; frame++ {
 		for i := int32(0); i < Gia_ManPiNum(p); i++ {
-			var mark uint32
+			var mark uint8
 			if cex != nil {
 				index := p.nRegs + frame*cex.NPis + i
-				mark = cex.PData[index>>5] >> uint(index&31) & 1
+				mark = uint8(cex.PData[index>>5] >> uint(index&31) & 1)
 			} else {
-				mark = Gia_ManRandom(0) & 1
+				mark = uint8(Gia_ManRandom(0) & 1)
 			}
 			Gia_ManPi(p, i).fMark0 = mark
 		}

@@ -51,5 +51,5 @@ func Gia_ManPatchCoDriver(p *Gia_Man_t, index, lit int32) {
 		panic("gia: CO driver must precede output")
 	}
 	obj.iDiff0 = uint32(obj.id - (lit >> 1))
-	obj.fCompl0 = uint32(lit & 1)
+	obj.fCompl0 = uint8(lit & 1)
 }

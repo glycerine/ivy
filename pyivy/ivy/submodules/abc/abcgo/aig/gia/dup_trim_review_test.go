@@ -170,8 +170,8 @@ func trimReviewRecords(t *testing.T, typed, layout bool) string {
 			src.Refs = slices.Clone(sourceRefs)
 			for id, obj := range src.pObjs {
 				obj.Value = uint32(id + 999)
-				obj.fMark0 = uint32(id & 1)
-				obj.fMark1 = uint32((id >> 1) & 1)
+				obj.fMark0 = uint8(id & 1)
+				obj.fMark1 = uint8((id >> 1) & 1)
 			}
 			var out *Gia_Man_t
 			if mode == 12 {
@@ -199,7 +199,7 @@ func trimReviewRecords(t *testing.T, typed, layout bool) string {
 				t.Fatal("trim overwrote source reference cache")
 			}
 			for id, obj := range src.pObjs {
-				if obj.fMark0 != uint32(id&1) || obj.fMark1 != uint32((id>>1)&1) {
+				if obj.fMark0 != uint8(id&1) || obj.fMark1 != uint8((id>>1)&1) {
 					t.Fatal("trim changed source marks")
 				}
 			}

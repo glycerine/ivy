@@ -51,7 +51,7 @@ func Cbs_VarSetValue(obj *Gia_Obj_t, value int32) {
 	if obj.fMark0 == 0 || value < 0 || value > 1 {
 		panic("gia: invalid CBS assignment")
 	}
-	obj.fMark1 = uint32(value)
+	obj.fMark1 = uint8(value)
 }
 func Cbs_VarIsJust(obj *Gia_Obj_t) int32 {
 	return giaBool(Gia_ObjIsAnd(obj) != 0 && Cbs_VarFanin0Value(obj) == 2 && Cbs_VarFanin1Value(obj) == 2)

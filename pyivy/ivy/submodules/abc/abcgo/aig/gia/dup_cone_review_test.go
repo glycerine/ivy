@@ -64,8 +64,8 @@ func coneReviewOutputRecords(t *testing.T, typed, layout, skip bool) string {
 					selected = append(selected, i)
 				}
 				for _, obj := range src.pObjs {
-					obj.fMark0 = uint32(obj.id & 1)
-					obj.fMark1 = uint32((obj.id >> 1) & 1)
+					obj.fMark0 = uint8(obj.id & 1)
+					obj.fMark1 = uint8((obj.id >> 1) & 1)
 				}
 				if skip {
 					for i := int32(0); i < Gia_ManCoNum(src); i++ {
@@ -75,9 +75,9 @@ func coneReviewOutputRecords(t *testing.T, typed, layout, skip bool) string {
 						}
 					}
 				}
-				marks := make([][2]uint32, src.nObjs)
+				marks := make([][2]uint8, src.nObjs)
 				for id, obj := range src.pObjs {
-					marks[id] = [2]uint32{obj.fMark0, obj.fMark1}
+					marks[id] = [2]uint8{obj.fMark0, obj.fMark1}
 				}
 				var out *Gia_Man_t
 				if skip {
@@ -97,7 +97,7 @@ func coneReviewOutputRecords(t *testing.T, typed, layout, skip bool) string {
 					t.Fatal("one-output copy not normalized")
 				}
 				for id, obj := range src.pObjs {
-					if [2]uint32{obj.fMark0, obj.fMark1} != marks[id] {
+					if [2]uint8{obj.fMark0, obj.fMark1} != marks[id] {
 						t.Fatal("cone copy changed source marks")
 					}
 				}

@@ -31,7 +31,7 @@ func checkIsoCanonicalReview(t *testing.T, registers int, phases uint32, single 
 	for id, label := range labels {
 		obj := Gia_ManObj(graph, int32(id))
 		obj.Value = label
-		obj.fMark0, obj.fMark1 = uint32(id%2), uint32((id+1)%2)
+		obj.fMark0, obj.fMark1 = uint8(id%2), uint8((id+1)%2)
 		fields[id] = isoSignatureReviewFields(obj)
 		Gia_ObjSetTravIdCurrent(graph, obj) // Old marks must be superseded.
 	}

@@ -40,7 +40,7 @@ func TestIsoFullCanonicalizationPreservesGraphAndRegisterPairing(t *testing.T) {
 					var pending []int
 					for id, node := range model.nodes {
 						obj := Gia_ManObj(source, int32(id))
-						obj.fMark0, obj.fMark1 = uint32(id%2), uint32((id+1)%2)
+						obj.fMark0, obj.fMark1 = uint8(id%2), uint8((id+1)%2)
 						fields[id] = isoSignatureReviewFields(obj)
 						if node.kind != 'a' {
 							keep[id] = true
@@ -174,7 +174,7 @@ func TestIsoFullRefinementCompletesLabelsIndependentlyOfScratch(t *testing.T) {
 					fields := make([][8]uint32, len(model.nodes))
 					for id := range model.nodes {
 						obj := Gia_ManObj(graph, int32(id))
-						obj.fMark0, obj.fMark1 = uint32(id%2), uint32((id+1)%2)
+						obj.fMark0, obj.fMark1 = uint8(id%2), uint8((id+1)%2)
 						fields[id] = isoSignatureReviewFields(obj)
 					}
 					var first []uint32

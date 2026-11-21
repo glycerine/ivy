@@ -49,7 +49,7 @@ func Cbs0_VarSetValue(o *Gia_Obj_t, value int32) {
 	if o.fMark0 == 0 || value < 0 || value > 1 {
 		panic("gia: CBS0 invalid variable value")
 	}
-	o.fMark1 = uint32(value)
+	o.fMark1 = uint8(value)
 }
 func cbs0FaninValue(o *Gia_Obj_t, index int) int32 {
 	fanin := Gia_ObjFanin0(o)

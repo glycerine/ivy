@@ -211,8 +211,8 @@ func TestBidecResynthesisInterfaceAndTypedLayouts(t *testing.T) {
 				}
 				bidecReviewInstallMapping(src)
 				for _, obj := range src.pObjs {
-					obj.fMark0 = uint32(obj.id & 1)
-					obj.fMark1 = uint32((obj.id + 1) & 1)
+					obj.fMark0 = uint8(obj.id & 1)
+					obj.fMark1 = uint8((obj.id + 1) & 1)
 				}
 				out := Gia_ManPerformBidec(src, 0)
 				if out.nRegs != 1 || out.nConstrs != 1 || out.aigerBadOutputs != 1 || !slices.Equal(out.aigerLatchInits, []int32{1}) || string(out.aigerComment) != "bidec-reset" {
@@ -244,7 +244,7 @@ func TestBidecResynthesisInterfaceAndTypedLayouts(t *testing.T) {
 					t.Fatal("resynthesis result aliases source interface metadata")
 				}
 				for _, obj := range src.pObjs {
-					if obj.fMark0 != uint32(obj.id&1) || obj.fMark1 != uint32((obj.id+1)&1) {
+					if obj.fMark0 != uint8(obj.id&1) || obj.fMark1 != uint8((obj.id+1)&1) {
 						t.Fatal("resynthesis changed caller marks")
 					}
 				}

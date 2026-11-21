@@ -74,7 +74,7 @@ func TestIsoReverseSignaturesAgainstScalarLevelsAndRandom(t *testing.T) {
 						}
 						obj := Gia_ManObj(graph, int32(id))
 						obj.Value = uint32(values[id])
-						obj.fMark0, obj.fMark1 = uint32(id%2), uint32((id+1)%2)
+						obj.fMark0, obj.fMark1 = uint8(id%2), uint8((id+1)%2)
 						fields[id] = isoSignatureReviewFields(obj)
 					}
 					epoch := graph.nTravIds

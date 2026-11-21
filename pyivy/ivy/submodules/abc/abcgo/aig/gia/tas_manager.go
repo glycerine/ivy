@@ -89,7 +89,7 @@ func Tas_VarSetValue(node *Gia_Obj_t, value int32) {
 	if node.fMark0 == 0 || value < 0 || value > 1 {
 		panic("gia: invalid SAT variable value")
 	}
-	node.fMark1 = uint32(value)
+	node.fMark1 = uint8(value)
 }
 func Tas_VarIsJust(node *Gia_Obj_t) int32 {
 	return giaBool(Gia_ObjIsAnd(node) != 0 && Tas_VarFanin0Value(node) == 2 && Tas_VarFanin1Value(node) == 2)

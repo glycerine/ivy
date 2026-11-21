@@ -32,7 +32,7 @@ func Gia_ManMarkAutonomous_rec(p *Gia_Man_t, obj *Gia_Obj_t) int32 {
 			value = Gia_ManMarkAutonomous_rec(p, Gia_ObjFanin1(obj))
 		}
 	}
-	obj.fMark0 = uint32(value)
+	obj.fMark0 = uint8(value)
 	return value
 }
 func Gia_ManMarkAutonomous(p *Gia_Man_t) {
@@ -72,7 +72,7 @@ func Gia_ManRetimeDupForward(p *Gia_Man_t, cut []*Gia_Obj_t) *Gia_Man_t {
 		Gia_ManPi(p, i).Value = uint32(Gia_ManAppendCi(dst))
 	}
 	for _, obj := range cut {
-		obj.Value = uint32(Gia_ManAppendCi(dst)) ^ obj.fPhase
+		obj.Value = uint32(Gia_ManAppendCi(dst)) ^ uint32(obj.fPhase)
 	}
 	for _, id := range vec.Vec_IntArray(p.vCos) {
 		Gia_ManRetimeDup_rec(dst, Gia_ObjFanin0(Gia_ManObj(p, id)))
@@ -94,7 +94,7 @@ func Gia_ManRetimeDupForward(p *Gia_Man_t, cut []*Gia_Obj_t) *Gia_Man_t {
 	}
 	for _, obj := range cut {
 		Gia_ManRetimeDup_rec(dst, obj)
-		Gia_ManAppendCo(dst, int32(obj.Value^obj.fPhase))
+		Gia_ManAppendCo(dst, int32(obj.Value^uint32(obj.fPhase)))
 	}
 	Gia_ManHashStop(dst)
 	Gia_ManSetRegNum(dst, int32(len(cut)))

@@ -7,8 +7,8 @@ import (
 
 func Sat_ObjXValue(obj *Gia_Obj_t) int32 { return int32(obj.fMark1<<1 | obj.fMark0) }
 func Sat_ObjSetXValue(obj *Gia_Obj_t, value int32) {
-	obj.fMark0 = uint32(value) & 1
-	obj.fMark1 = (uint32(value) >> 1) & 1
+	obj.fMark0 = uint8(value) & 1
+	obj.fMark1 = (uint8(value) >> 1) & 1
 }
 
 // Gia_SatCollectCone_rec appends the cone in fanin-first order and marks it

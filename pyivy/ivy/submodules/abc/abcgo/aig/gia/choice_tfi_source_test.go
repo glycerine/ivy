@@ -58,7 +58,7 @@ func TestChoiceTfiMatchesOriginalSource(t *testing.T) {
 					result := check(p, Gia_ManObj(p, old), root)
 					var dirty uint32
 					for _, obj := range p.pObjs {
-						dirty |= obj.fMark0
+						dirty |= uint32(obj.fMark0)
 					}
 					fmt.Fprintf(&got, "%d %d %d %d %d %d\n", mode, api, old, node, result, dirty)
 				}

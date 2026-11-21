@@ -42,7 +42,7 @@ func Gia_GenerateReducedLevel(p *Gia_Man_t, level int32, roots **Vec_Ptr_t) *Gia
 		}
 		if Gia_ObjLevelId(p, id) < level {
 			if repr := Gia_ObjTempRepr(p, id, level); repr != nil {
-				obj.Value = repr.Value ^ repr.fPhase ^ obj.fPhase
+				obj.Value = repr.Value ^ uint32(repr.fPhase) ^ uint32(obj.fPhase)
 				continue
 			}
 		}

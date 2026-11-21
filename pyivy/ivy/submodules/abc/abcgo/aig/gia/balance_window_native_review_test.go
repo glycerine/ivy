@@ -168,7 +168,7 @@ func TestWindowOperationsMatchOriginalABC(t *testing.T) {
 						Gia_ManFillValue(g)
 						for _, obj := range g.pObjs {
 							obj.fMark0 = 1
-							obj.fMark1 = uint32(obj.id & 1)
+							obj.fMark1 = uint8(obj.id & 1)
 						}
 						selected := windowReviewSelection(mask)
 						var inputs, outputs, gates *Vec_Int_t

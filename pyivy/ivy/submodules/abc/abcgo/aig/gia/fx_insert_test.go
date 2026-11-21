@@ -26,11 +26,11 @@ func TestFxInsertExtractedNode(t *testing.T) {
 		}
 		for _, obj := range q.pObjs {
 			if Gia_ObjIsAnd(obj) != 0 {
-				values[obj.id] = (values[Gia_ObjFaninId0(obj, obj.id)] ^ obj.fCompl0) & (values[Gia_ObjFaninId1(obj, obj.id)] ^ obj.fCompl1)
+				values[obj.id] = (values[Gia_ObjFaninId0(obj, obj.id)] ^ uint32(obj.fCompl0)) & (values[Gia_ObjFaninId1(obj, obj.id)] ^ uint32(obj.fCompl1))
 			}
 		}
 		out := Gia_ManCo(q, 0)
-		got := values[Gia_ObjFaninId0(out, out.id)] ^ out.fCompl0
+		got := values[Gia_ObjFaninId0(out, out.id)] ^ uint32(out.fCompl0)
 		if got != uint32(giaBool(assignment != 7)) {
 			t.Fatalf("assignment %d: got %d", assignment, got)
 		}
@@ -51,7 +51,7 @@ func TestFxDsdTruthTables(t *testing.T) {
 			}
 			for _, obj := range p.pObjs {
 				if Gia_ObjIsAnd(obj) != 0 {
-					values[obj.id] = (values[Gia_ObjFaninId0(obj, obj.id)] ^ obj.fCompl0) & (values[Gia_ObjFaninId1(obj, obj.id)] ^ obj.fCompl1)
+					values[obj.id] = (values[Gia_ObjFaninId0(obj, obj.id)] ^ uint32(obj.fCompl0)) & (values[Gia_ObjFaninId1(obj, obj.id)] ^ uint32(obj.fCompl1))
 				}
 			}
 			got := values[root>>1] ^ uint32(root&1)

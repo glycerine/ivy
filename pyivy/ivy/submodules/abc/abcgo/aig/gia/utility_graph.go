@@ -7,7 +7,7 @@ func Gia_ManCollectPoIds(p *Gia_Man_t) *Vec_Int_t {
 	}
 	return result
 }
-func giaMarkSupport(p *Gia_Man_t, root *Gia_Obj_t, value uint32) {
+func giaMarkSupport(p *Gia_Man_t, root *Gia_Obj_t, value uint8) {
 	stack := []int32{Gia_ObjId(p, root)}
 	for len(stack) > 0 {
 		id := stack[len(stack)-1]

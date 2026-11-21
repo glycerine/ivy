@@ -145,12 +145,12 @@ func cutReviewRecords(t *testing.T, typed, layout bool, modes int) string {
 			src, cuts, marked := cutReviewGraph(signs, mode, typed, layout)
 			for _, obj := range src.pObjs {
 				obj.fMark0 = 1
-				obj.fMark1 = uint32(obj.id & 1)
+				obj.fMark1 = uint8(obj.id & 1)
 			}
 			Gia_ManHighLightFlopLogic(src)
 			var markBits uint64
 			for id, obj := range src.pObjs {
-				if obj.fMark0 != marked[int32(id)] {
+				if uint32(obj.fMark0) != marked[int32(id)] {
 					t.Fatalf("typed%v layout%v object%d: wrong structural register dependence", typed, layout, id)
 				}
 				markBits |= uint64(obj.fMark0) << uint(id)
@@ -167,7 +167,7 @@ func cutReviewRecords(t *testing.T, typed, layout bool, modes int) string {
 				t.Fatal("cut replacement changed copied logic, interface or role metadata")
 			}
 			for _, obj := range src.pObjs {
-				if obj.fMark0 != 0 || obj.fMark1 != uint32(obj.id&1) {
+				if obj.fMark0 != 0 || obj.fMark1 != uint8(obj.id&1) {
 					t.Fatal("cut copy did not clean mark0 or changed independent mark1")
 				}
 			}

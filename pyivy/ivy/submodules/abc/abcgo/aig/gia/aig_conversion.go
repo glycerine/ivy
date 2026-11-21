@@ -149,7 +149,7 @@ func giaExportAigNode(out *aig.Graph, copies []aig.Edge, p *Gia_Man_t, obj *Gia_
 		return copied
 	}
 	copies[id] = aigCopyInProgress
-	edge := func(diff, compl uint32) aig.Edge {
+	edge := func(diff uint32, compl uint8) aig.Edge {
 		return giaExportAigNode(out, copies, p, p.pObjs[id-int32(diff)], choices, record) ^ aig.Edge(compl)
 	}
 	var result aig.Edge

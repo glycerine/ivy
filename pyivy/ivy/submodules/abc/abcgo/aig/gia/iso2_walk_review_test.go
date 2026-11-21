@@ -96,7 +96,7 @@ func TestIso2OrderAgainstIndependentSequentialGraph(t *testing.T) {
 							}
 							obj := Gia_ManObj(graph, int32(id))
 							obj.Value = uint32(values[id])
-							obj.fMark0, obj.fMark1 = uint32(id%2), uint32((id+1)%2)
+							obj.fMark0, obj.fMark1 = uint8(id%2), uint8((id+1)%2)
 							fields[id] = isoSignatureReviewFields(obj)
 						}
 						wantRoots, wantOrder, wantMap, seen := model.order(values, outputs)
@@ -199,7 +199,7 @@ func TestIso2BoundedConesAndOrderedUpdatesAgainstScalarModel(t *testing.T) {
 							values[id] = (0xfffffff0 + uint64(id)*101) & 0xffffffff
 							obj := Gia_ManObj(graph, int32(id))
 							obj.Value = uint32(values[id])
-							obj.fMark0, obj.fMark1 = uint32(id%2), uint32((id+1)%2)
+							obj.fMark0, obj.fMark1 = uint8(id%2), uint8((id+1)%2)
 							fields[id] = isoSignatureReviewFields(obj)
 						}
 						for id, node := range model.nodes {

@@ -187,7 +187,7 @@ func giaCofInitialFailure(p *Ccf_Man_t) bsat.Status {
 			if Gia_ObjIsCi(obj) != 0 {
 				obj.fPhase = 0
 				if i := Gia_ObjCioId(obj); int(i) < len(inits) {
-					obj.fPhase = uint32(inits[i])
+					obj.fPhase = uint8(inits[i])
 				}
 			} else {
 				Gia_ObjSetPhase(p.pFrames, obj)

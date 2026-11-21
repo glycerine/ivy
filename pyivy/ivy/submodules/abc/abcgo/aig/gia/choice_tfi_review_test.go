@@ -67,7 +67,7 @@ func TestChoiceTfiMixedGateReachability(t *testing.T) {
 	record(Gia_ManAppendCo(p, root^1), root)
 	record(Gia_ManAppendAnd(p, 0, a), 0, a)
 	for _, obj := range p.pObjs {
-		obj.fMark1 = uint32(obj.id & 1)
+		obj.fMark1 = uint8(obj.id & 1)
 	}
 	for old := range deps {
 		for node := int32(0); node < p.nObjs; node++ {
@@ -91,7 +91,7 @@ func TestChoiceTfiMixedGateReachability(t *testing.T) {
 					t.Fatalf("old %d node %d: reachability %d, want %d", old, node, got, want)
 				}
 				for _, obj := range p.pObjs {
-					if obj.fMark0 != 0 || obj.fMark1 != uint32(obj.id&1) {
+					if obj.fMark0 != 0 || obj.fMark1 != uint8(obj.id&1) {
 						t.Fatal("TFI query retained marks or changed another mark bit")
 					}
 				}

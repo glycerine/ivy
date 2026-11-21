@@ -199,7 +199,7 @@ func markedReviewRecords(t *testing.T, typed, layout bool) string {
 									kept++
 								}
 								obj.Value = uint32(id + 55)
-								obj.fMark1 = uint32(id & 1)
+								obj.fMark1 = uint8(id & 1)
 							}
 							inputNames, outputNames := src.InputNames(), src.OutputNames()
 							out := Gia_ManDupMarked(src)
@@ -212,7 +212,7 @@ func markedReviewRecords(t *testing.T, typed, layout bool) string {
 								if mapped[id] >= 0 {
 									expected = uint32(mapped[id] << 1)
 								}
-								if obj.Value != expected || obj.fMark0 != 0 || obj.fMark1 != uint32(id&1) {
+								if obj.Value != expected || obj.fMark0 != 0 || obj.fMark1 != uint8(id&1) {
 									t.Fatal("removed identity map, consumed mark0 or independent mark1 was lost")
 								}
 							}

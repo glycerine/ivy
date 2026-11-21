@@ -49,7 +49,7 @@ func TestIso2UniqifyAgainstScalarClassification(t *testing.T) {
 							}
 						}
 						obj := Gia_ManCi(graph, int32(i))
-						obj.Value, obj.fMark1 = values[i], uint32(i%2)
+						obj.Value, obj.fMark1 = values[i], uint8(i%2)
 						if marked && i%11 == 0 {
 							obj.fMark0 = 1
 						}
@@ -98,7 +98,7 @@ func TestIso2UniqifyAgainstScalarClassification(t *testing.T) {
 					}
 					for i, want := range wantValues {
 						obj := Gia_ManCi(graph, int32(i))
-						if obj.Value != want || obj.fMark0 != 0 || obj.fMark1 != uint32(i%2) || vec.Vec_IntEntry(p.vUniques, i+1) != labels[i] {
+						if obj.Value != want || obj.fMark0 != 0 || obj.fMark1 != uint8(i%2) || vec.Vec_IntEntry(p.vUniques, i+1) != labels[i] {
 							t.Fatalf("candidate%d value%08x want%08x label%d want%d marks%d/%d", i, obj.Value, want, vec.Vec_IntEntry(p.vUniques, i+1), labels[i], obj.fMark0, obj.fMark1)
 						}
 					}

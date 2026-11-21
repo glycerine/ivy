@@ -2,14 +2,14 @@ package gia
 
 func Gia_ObjMark0(p *Gia_Obj_t) int32                { return int32(p.fMark0 & 1) }
 func Gia_ObjMark1(p *Gia_Obj_t) int32                { return int32(p.fMark1 & 1) }
-func Gia_ObjSetMark0(p *Gia_Obj_t, value int32)      { p.fMark0 = uint32(value) & 1 }
-func Gia_ObjSetMark1(p *Gia_Obj_t, value int32)      { p.fMark1 = uint32(value) & 1 }
-func Gia_ObjSetPhaseValue(p *Gia_Obj_t, value int32) { p.fPhase = uint32(value) & 1 }
+func Gia_ObjSetMark0(p *Gia_Obj_t, value int32)      { p.fMark0 = uint8(value) & 1 }
+func Gia_ObjSetMark1(p *Gia_Obj_t, value int32)      { p.fMark1 = uint8(value) & 1 }
+func Gia_ObjSetPhaseValue(p *Gia_Obj_t, value int32) { p.fPhase = uint8(value) & 1 }
 
 func Gia_ObjSetPhase(p *Gia_Man_t, obj *Gia_Obj_t) {
 	a, b, c, kind := p.Gate(Gia_ObjId(p, obj))
-	phase := func(lit int32) uint32 { return (p.pObjs[lit>>1].fPhase ^ uint32(lit&1)) & 1 }
-	var value uint32
+	phase := func(lit int32) uint8 { return (p.pObjs[lit>>1].fPhase ^ uint8(lit&1)) & 1 }
+	var value uint8
 	switch kind {
 	case 2:
 		value = phase(a) & phase(b)

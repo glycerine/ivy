@@ -110,7 +110,7 @@ func Gia_ManSolveSatResult(p *Gia_Man_t, provided ...ceccore.Options) (ceccore.R
 		return ceccore.Result{}, err
 	}
 	for id, obj := range p.pObjs {
-		obj.fMark0 = uint32(giaBool(values[id]))
+		obj.fMark0 = uint8(giaBool(values[id]))
 	}
 	if len(outputs) > 0 {
 		result.Counterexample.Output = 0
