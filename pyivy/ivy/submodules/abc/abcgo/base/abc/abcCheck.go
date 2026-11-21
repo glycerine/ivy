@@ -56,7 +56,7 @@ func Abc_NtkDoCheck(n *Network) int32 {
 			return 0
 		}
 	} else {
-		for _, o := range n.kindOrder[ObjectNode] {
+		for o := range n.logicNodes {
 			if Abc_NtkCheckNode(n, o) == 0 {
 				return 0
 			}
@@ -74,15 +74,9 @@ func Abc_NtkDoCheck(n *Network) int32 {
 // the live ID table. A combined-list entry must already have a per-kind entry.
 func checkObjectInventories(n *Network) bool {
 	seen := make([]byte, len(n.objects))
-	for kind, objects := range n.kindOrder {
-		if kind <= ObjectNone || kind > ObjectBlackbox {
+	for kind := range n.kindOrder {
+		if kind <= ObjectNone || kind > ObjectBlackbox || !checkKindEntries(n, kind, seen) {
 			return false
-		}
-		for _, o := range objects {
-			if !n.contains(o) || o.Kind != kind || seen[o.ID] != 0 {
-				return false
-			}
-			seen[o.ID] = 1
 		}
 	}
 	for _, list := range []struct {
@@ -111,16 +105,30 @@ func checkObjectInventories(n *Network) bool {
 	return true
 }
 
-func checkKindOrder(n *Network, kind ObjectKind) bool {
-	seen := make([]bool, len(n.objects))
-	for _, o := range n.kindOrder[kind] {
-		if !n.contains(o) || o.Kind != kind || seen[o.ID] {
+// Mark membership across all inventories, allowing only tracked holes in the
+// logic-node order. Every occupied slot must refer to a distinct live object.
+func checkKindEntries(n *Network, kind ObjectKind, seen []byte) bool {
+	holes := 0
+	for i, o := range n.kindOrder[kind] {
+		if kind == ObjectNode && o == nil {
+			holes++
+			continue
+		}
+		if !n.contains(o) || o.Kind != kind || seen[o.ID] != 0 || (kind == ObjectNode && o.nodeSlot != i) {
 			return false
 		}
-		seen[o.ID] = true
+		seen[o.ID] = 1
+	}
+	return kind != ObjectNode || holes == n.nodeHoles
+}
+
+func checkKindOrder(n *Network, kind ObjectKind) bool {
+	seen := make([]byte, len(n.objects))
+	if !checkKindEntries(n, kind, seen) {
+		return false
 	}
 	for id, o := range n.objects {
-		if o != nil && o.Kind == kind && !seen[id] {
+		if o != nil && o.Kind == kind && seen[id] == 0 {
 			return false
 		}
 	}

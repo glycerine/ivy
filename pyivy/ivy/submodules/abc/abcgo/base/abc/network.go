@@ -70,19 +70,20 @@ type Object struct {
 	Next                *Object
 	Phase               bool
 	Persist             bool // ABC's fPersist flag
+	Barrier             bool
+	MarkA, MarkB, MarkC bool
+	Kind                ObjectKind
 	reverseLevel        int
 	travID              uint64
 	crossCutVisits      int
 	ID                  int
-	Kind                ObjectKind
+	nodeSlot            int
 	Level               int
 	Temp                int
 	DTemp               float64
 	TerminalIndex       int
 	Data                any
 	Copy                *Object
-	Barrier             bool
-	MarkA, MarkB, MarkC bool
 	decValues           atomic.Pointer[[2]any]
 	network             *Network
 	fanins              []Edge
@@ -143,6 +144,7 @@ type Network struct {
 	// CILevel supplies timing-derived initial levels when a timing manager is attached.
 	CILevel             func(*Object) int
 	kindOrder           map[ObjectKind][]*Object
+	nodeHoles           int
 	cis, cos, boxes     []*Object
 	travID              uint64
 	levelMax            int
@@ -171,7 +173,11 @@ func (n *Network) NewObject(kind ObjectKind) *Object {
 	if n.kindOrder == nil {
 		n.kindOrder = make(map[ObjectKind][]*Object)
 	}
-	n.kindOrder[kind] = append(n.kindOrder[kind], o)
+	order := n.kindOrder[kind]
+	if kind == ObjectNode {
+		o.nodeSlot = len(order)
+	}
+	n.kindOrder[kind] = append(order, o)
 	if o.IsCI() {
 		n.cis = append(n.cis, o)
 	}
@@ -199,7 +205,44 @@ func (n *Network) Objects() []*Object {
 	return out
 }
 func (n *Network) ObjectsOfKind(kind ObjectKind) []*Object {
+	if kind == ObjectNode && n.nodeHoles != 0 {
+		nodes := make([]*Object, 0, len(n.kindOrder[kind])-n.nodeHoles)
+		for o := range n.logicNodes {
+			nodes = append(nodes, o)
+		}
+		return nodes
+	}
 	return append([]*Object(nil), n.kindOrder[kind]...)
+}
+
+// logicNodes visits live nodes in creation order. Deletions leave empty slots
+// until half the directory is empty, at which point the live prefix is packed.
+func (n *Network) logicNodes(yield func(*Object) bool) {
+	for _, o := range n.kindOrder[ObjectNode] {
+		if o != nil && !yield(o) {
+			return
+		}
+	}
+}
+
+func (n *Network) removeLogicNode(o *Object) {
+	order := n.kindOrder[ObjectNode]
+	order[o.nodeSlot] = nil
+	n.nodeHoles++
+	if n.nodeHoles < len(order)-n.nodeHoles {
+		return
+	}
+	next := 0
+	for _, live := range order {
+		if live != nil {
+			order[next] = live
+			live.nodeSlot = next
+			next++
+		}
+	}
+	clear(order[next:])
+	n.kindOrder[ObjectNode] = order[:next]
+	n.nodeHoles = 0
 }
 
 // ChangeObjectKind updates the per-kind index while preserving the object's
@@ -308,7 +351,11 @@ func (n *Network) DeleteObject(o *Object) error {
 	nm.Nm_ManDeleteIdName(n.names, int32(o.ID))
 	delete(n.mvVars, o)
 	n.objects[o.ID] = nil
-	n.kindOrder[o.Kind] = removeObjectOrder(n.kindOrder[o.Kind], o)
+	if o.Kind == ObjectNode {
+		n.removeLogicNode(o)
+	} else {
+		n.kindOrder[o.Kind] = removeObjectOrder(n.kindOrder[o.Kind], o)
+	}
 	switch {
 	case o.IsCI():
 		n.cis = removeObjectOrder(n.cis, o)

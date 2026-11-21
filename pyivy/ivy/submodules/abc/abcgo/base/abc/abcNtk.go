@@ -306,7 +306,7 @@ func Abc_NtkBottom(src *Network, level int32) *Network {
 	for _, o := range src.kindOrder[ObjectPI] {
 		Abc_NtkDupObj(dst, o, 1)
 	}
-	for _, o := range src.kindOrder[ObjectNode] {
+	for o := range src.logicNodes {
 		if o.Level <= int(level) {
 			Abc_NtkDupObj(dst, o, 0)
 		}
@@ -366,7 +366,7 @@ func Abc_NtkAttachBottom(top, bottom *Network) *Network {
 	return top
 }
 func Abc_NtkFixNonDrivenNets(n *Network) {
-	if len(n.kindOrder[ObjectNode]) == 0 && len(n.boxes) == 0 {
+	if Abc_NtkNodeNum(n) == 0 && len(n.boxes) == 0 {
 		return
 	}
 	if net := Abc_NtkFindNet(n, "[_c1_]"); net != nil && len(net.fanins) == 0 {
@@ -661,7 +661,7 @@ func Abc_NtkNodeDup(src *Network, limit, verbose int32) *Network {
 	dst := Abc_NtkDup(src)
 	for {
 		var nodes []*Object
-		for _, o := range dst.kindOrder[ObjectNode] {
+		for o := range dst.logicNodes {
 			if len(o.fanouts) >= int(limit) {
 				nodes = append(nodes, o)
 			}

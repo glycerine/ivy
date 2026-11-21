@@ -135,12 +135,12 @@ func Abc_NtkObjNum(n *Network) int32 {
 	for _, objects := range n.kindOrder {
 		count += len(objects)
 	}
-	return int32(count)
+	return int32(count - n.nodeHoles)
 }
 func Abc_NtkObjNumMax(n *Network) int32 { return int32(len(n.objects)) }
 func Abc_NtkPiNum(n *Network) int32     { return int32(len(n.kindOrder[ObjectPI])) }
 func Abc_NtkPoNum(n *Network) int32     { return int32(len(n.kindOrder[ObjectPO])) }
-func Abc_NtkNodeNum(n *Network) int32   { return int32(len(n.kindOrder[ObjectNode])) }
+func Abc_NtkNodeNum(n *Network) int32   { return int32(len(n.kindOrder[ObjectNode]) - n.nodeHoles) }
 func Abc_NtkName(n *Network) string     { return n.Name }
 func Abc_NtkSpec(n *Network) string     { return n.Spec }
 

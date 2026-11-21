@@ -450,7 +450,7 @@ func Abc_NtkDelete(n *Network) {
 	case *Abc_Aig_t:
 		Abc_AigFree(manager)
 	case *core.DdManager:
-		for _, o := range n.kindOrder[ObjectNode] {
+		for o := range n.logicNodes {
 			if node, ok := o.Data.(*core.DdNode); ok {
 				core.Cudd_RecursiveDeref(manager, node)
 			}

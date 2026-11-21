@@ -53,13 +53,13 @@ func aigNode(o *Object) bool {
 	return o != nil && o.Kind == ObjectNode && o.Data == aigANDMarker && len(o.fanins) == 2
 }
 func Abc_AigCleanup(m *Abc_Aig_t) int32 {
-	before := len(m.Network.ObjectsOfKind(ObjectNode))
+	before := Abc_NtkNodeNum(m.Network)
 	for _, o := range m.Network.ObjectsOfKind(ObjectNode) {
 		if m.Network.contains(o) && aigNode(o) && !m.excluded[o] && len(o.fanouts) == 0 {
 			Abc_AigDeleteNode(m, o)
 		}
 	}
-	return int32(before - len(m.Network.ObjectsOfKind(ObjectNode)))
+	return before - Abc_NtkNodeNum(m.Network)
 }
 func Abc_AigCheck(m *Abc_Aig_t) int32 {
 	if m.Network.Check() != nil || !checkKindOrder(m.Network, ObjectNode) {
@@ -69,7 +69,7 @@ func Abc_AigCheck(m *Abc_Aig_t) int32 {
 }
 
 func checkAigNodes(m *Abc_Aig_t) int32 {
-	for _, o := range m.Network.kindOrder[ObjectNode] {
+	for o := range m.Network.logicNodes {
 		if !aigNode(o) || m.excluded[o] {
 			return 0
 		}
@@ -249,7 +249,7 @@ func Abc_AigRehash(m *Abc_Aig_t) {
 	n.duplicateAnds = nil
 	n.extraAnds = 0
 	clear(n.hashed)
-	for _, o := range n.kindOrder[ObjectNode] {
+	for o := range n.logicNodes {
 		if aigNode(o) && !m.excluded[o] {
 			pair := edgePair(o.fanins[0], o.fanins[1])
 			o.fanins[0], o.fanins[1] = pair[0], pair[1]

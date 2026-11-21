@@ -169,6 +169,9 @@ func Abc_NtkReassignIds(n *Network) {
 			}
 		}
 		o.ID = id
+		if o.Kind == ObjectNode {
+			o.nodeSlot = len(kindOrder[ObjectNode])
+		}
 		kindOrder[o.Kind] = append(kindOrder[o.Kind], o)
 	}
 	for _, attr := range n.Attributes {
@@ -179,6 +182,7 @@ func Abc_NtkReassignIds(n *Network) {
 			}
 		}
 	}
+	n.nodeHoles = 0
 	n.objects, n.names, n.NameIDs, n.kindOrder = ordered, names, nameIDs, kindOrder
 	n.Topo = nil
 	if mapping != nil {
