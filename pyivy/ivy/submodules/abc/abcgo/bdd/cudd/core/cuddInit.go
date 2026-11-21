@@ -153,7 +153,7 @@ func InitializeZDDUniverse(dd *DdManager) int { return cuddZddInitUniv(dd) }
 func FreeZDDUniverse(dd *DdManager)           { cuddZddFreeUniv(dd) }
 
 // Cudd_zddVarsFromBddVars aligns each BDD variable with multiplicity adjacent
-// ZDD variables and rebuilds live ZDD handles when the resulting order changes.
+// ZDD variables, preserving existing set families when it extends the table.
 func Cudd_zddVarsFromBddVars(dd *DdManager, multiplicity int) int {
 	if dd == nil || dd.closed || multiplicity < 1 || len(dd.Vars) > int(CUDD_MAXINDEX)/multiplicity {
 		return 0
@@ -162,20 +162,39 @@ func Cudd_zddVarsFromBddVars(dd *DdManager, multiplicity int) int {
 	if dd.ZddSize > target {
 		target = dd.ZddSize
 	}
-	order := make([]int, target)
-	for level, index := range dd.InvPerm {
-		for offset := 0; offset < multiplicity; offset++ {
-			order[level*multiplicity+offset] = index*multiplicity + offset
+	order := dd.InvPerm
+	// Existing single-variable groups can use the BDD order directly.
+	// A new universe always owns its permutation storage.
+	if dd.ZddSize == 0 || multiplicity != 1 || target != len(order) {
+		order = make([]int, target)
+		for level, index := range dd.InvPerm {
+			for offset := 0; offset < multiplicity; offset++ {
+				order[level*multiplicity+offset] = index*multiplicity + offset
+			}
+		}
+		for level := len(dd.Vars) * multiplicity; level < target; level++ {
+			order[level] = level
 		}
 	}
-	for level := len(dd.Vars) * multiplicity; level < target; level++ {
-		order[level] = level
-	}
-	permutation := make([]int, target)
-	for level, index := range order {
-		permutation[index] = level
-	}
-	if !reorderZdd(dd, target, permutation, order) {
+	if dd.ZddSize == 0 {
+		// The only new ZDD keys will be the universe. Build it directly in
+		// the requested order; there are no existing families to shuffle.
+		if target > 0 {
+			if !dd.ensureTableSlots(true, target) {
+				return 0
+			}
+			Cudd_FixTableLimits(dd)
+		}
+		dd.ZddSize = target
+		dd.InvPermZ = order
+		dd.PermZ = make([]int, target)
+		for level, index := range order {
+			dd.PermZ[index] = level
+		}
+		if cuddZddInitUniv(dd) == 0 {
+			return 0
+		}
+	} else if !dd.ensureZddVar(target-1) || Cudd_zddShuffleHeap(dd, order) == 0 {
 		return 0
 	}
 	var newTree *mtr.MtrNode
