@@ -2,6 +2,8 @@ package mf
 
 import (
 	"fmt"
+	"math/bits"
+
 	"github.com/glycerine/abcgo/misc/util"
 )
 
@@ -29,6 +31,48 @@ func filledIDs(n int) []int32 {
 		ids[i] = -1
 	}
 	return ids
+}
+
+type cnfCube struct {
+	inputs   uint16
+	negative bool
+	size     uint8
+}
+
+type cnfCover struct {
+	cubes    []cnfCube
+	literals int
+}
+
+// Cube output tags in the native ISOP depend on the declared cut width. Keep
+// the output phase separately so an interned truth can serve wider cuts that
+// retain unused variables in object-ID mode.
+func (m *Mapping) cnfCover(function int32, width int) (cnfCover, error) {
+	var buffer [512]int32
+	var count int32
+	if m.Options.LUTSize <= 6 {
+		count = util.Abc_Tt6Cnf(m.Truths[function][0], int32(width), buffer[:])
+	} else {
+		var table [4]uint64
+		copy(table[:], m.Truths[function])
+		count = util.Abc_Tt8Cnf(table[:], int32(width), buffer[:])
+	}
+	if int(function) < len(m.ClauseSizes) && m.ClauseSizes[function] != int(count) {
+		return cnfCover{}, fmt.Errorf("mf: clause count mismatch for function%d", function)
+	}
+	cover := cnfCover{cubes: make([]cnfCube, count)}
+	mask := uint32(1)<<uint(2*width) - 1
+	for i, raw := range buffer[:count] {
+		output := cubeLiteral(raw, width)
+		if output == 0 {
+			return cnfCover{}, fmt.Errorf("mf: clause template has no output")
+		}
+		inputs := uint16(uint32(raw) & mask)
+		size := 1 + bits.OnesCount16(inputs)
+		cover.cubes[i] = cnfCube{inputs: inputs, negative: output == 2, size: uint8(size)}
+		cover.literals += size
+	}
+	return cover, nil
 }
 
 // DeriveCNF follows MF's CO-first, reverse-mapped-node, constant, CI variable
@@ -104,13 +148,56 @@ func DeriveCNF(m *Mapping, objectIDs, addOr, withMapping bool) (*CNF, error) {
 	if withMapping {
 		result.Mapping = make([]int32, result.Variables)
 	}
-	add := func(lits ...int32) { result.Clauses = append(result.Clauses, lits) }
+	clauses, literals := 1+2*len(cos), 1+4*len(cos)
 	if addOr {
-		clause := make([]int32, len(cos))
+		clauses++
+		literals += len(cos)
+	}
+	covers := make(map[int32]cnfCover)
+	for _, id := range mapped {
+		cut := m.Cuts[id][0]
+		width := len(cut.Leaves)
+		if width > m.Options.LUTSize {
+			return nil, fmt.Errorf("mf: cut exceeds LUT size")
+		}
+		function := cut.Function >> 1
+		if function < 0 || int(function) >= len(m.Truths) {
+			return nil, fmt.Errorf("mf: invalid truth function%d", function)
+		}
+		if function == 0 {
+			clauses++
+			literals++
+			continue
+		}
+		if len(m.Truths[function]) < 1<<max(0, width-6) {
+			return nil, fmt.Errorf("mf: short truth table")
+		}
+		cover, ok := covers[function]
+		if !ok {
+			var err error
+			cover, err = m.cnfCover(function, width)
+			if err != nil {
+				return nil, err
+			}
+			covers[function] = cover
+		}
+		clauses += len(cover.cubes)
+		literals += cover.literals
+	}
+	result.Clauses = make([][]int32, 0, clauses)
+	storage := make([]int32, literals)
+	take := func(size int) []int32 {
+		clause := storage[:size:size]
+		storage = storage[size:]
+		result.Clauses = append(result.Clauses, clause)
+		return clause
+	}
+	add := func(lits ...int32) { copy(take(len(lits)), lits) }
+	if addOr {
+		clause := take(len(cos))
 		for i, id := range cos {
 			clause[i] = encodedLiteral(ids[id], false)
 		}
-		add(clause...)
 	}
 	writeMap := func(id int32, leaves []int32, truth []uint64) {
 		result.Mapping[ids[id]] = int32(len(result.Mapping))
@@ -145,16 +232,9 @@ func DeriveCNF(m *Mapping, objectIDs, addOr, withMapping bool) (*CNF, error) {
 			writeMap(id, []int32{driver >> 1}, []uint64{truth})
 		}
 	}
-	templates := map[int32][]int32{}
 	for _, id := range mapped {
 		cut := m.Cuts[id][0]
-		if len(cut.Leaves) > m.Options.LUTSize {
-			return nil, fmt.Errorf("mf: cut exceeds LUT size")
-		}
 		function, phase := cut.Function>>1, cut.Function&1 != 0
-		if function < 0 || int(function) >= len(m.Truths) {
-			return nil, fmt.Errorf("mf: invalid truth function%d", function)
-		}
 		if function == 0 {
 			add(encodedLiteral(ids[id], !phase))
 			if withMapping {
@@ -162,43 +242,21 @@ func DeriveCNF(m *Mapping, objectIDs, addOr, withMapping bool) (*CNF, error) {
 			}
 			continue
 		}
-		if len(m.Truths[function]) < 1<<max(0, len(cut.Leaves)-6) {
-			return nil, fmt.Errorf("mf: short truth table")
-		}
-		cubes, ok := templates[function]
-		if !ok {
-			buffer := make([]int32, 512)
-			var count int32
-			if m.Options.LUTSize <= 6 {
-				count = util.Abc_Tt6Cnf(m.Truths[function][0], int32(len(cut.Leaves)), buffer)
-			} else {
-				table := make([]uint64, 4)
-				copy(table, m.Truths[function])
-				count = util.Abc_Tt8Cnf(table, int32(len(cut.Leaves)), buffer)
-			}
-			cubes = append([]int32(nil), buffer[:count]...)
-			templates[function] = cubes
-			if int(function) < len(m.ClauseSizes) && m.ClauseSizes[function] != len(cubes) {
-				return nil, fmt.Errorf("mf: clause count mismatch for function%d", function)
-			}
-		}
 		for _, leaf := range cut.Leaves {
 			if leaf < 0 || int(leaf) >= len(ids) || ids[leaf] < 0 {
 				return nil, fmt.Errorf("mf: unmapped cut leaf%d", leaf)
 			}
 		}
-		for _, cube := range cubes {
-			output := cubeLiteral(cube, len(cut.Leaves))
-			if output == 0 {
-				return nil, fmt.Errorf("mf: clause template has no output")
-			}
-			clause := []int32{encodedLiteral(ids[id], (output == 2) != phase)}
+		for _, cube := range covers[function].cubes {
+			clause := take(int(cube.size))
+			clause[0] = encodedLiteral(ids[id], cube.negative != phase)
+			n := 1
 			for k, leaf := range cut.Leaves {
-				if literal := cubeLiteral(cube, k); literal != 0 {
-					clause = append(clause, encodedLiteral(ids[leaf], literal == 2))
+				if literal := cube.inputs >> uint(2*k) & 3; literal != 0 {
+					clause[n] = encodedLiteral(ids[leaf], literal == 2)
+					n++
 				}
 			}
-			add(clause...)
 		}
 		if withMapping {
 			truth := append([]uint64(nil), m.Truths[function]...)

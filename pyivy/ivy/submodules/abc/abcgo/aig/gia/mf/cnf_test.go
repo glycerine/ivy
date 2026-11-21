@@ -284,3 +284,57 @@ int main(void){int n,k,count,cover[512];unsigned long long t[4];while(scanf("%d%
 		}
 	}
 }
+
+func TestCNFRepeatedTruthAtDifferentCutWidths(t *testing.T) {
+	// The buffer and MUX both compute a. Six-input object-ID mapping also
+	// retains the redundant MUX control in its selected cut.
+	for _, reverse := range []bool{false, true} {
+		buffer := cnfGate{a: 2, kind: 5}
+		mux := cnfGate{a: 4, b: 2, c: 2, kind: 4}
+		if reverse {
+			buffer, mux = mux, buffer
+		}
+		net := cnfNetwork{
+			gates:  []cnfGate{{}, {kind: 1}, {kind: 1}, buffer, mux, {a: 6, kind: 6}, {a: 8, kind: 6}},
+			inputs: []int32{2, 4}, outputs: []int32{6, 8},
+		}
+		opts := DefaultOptions()
+		opts.ObjectIDs, opts.LUTSize = true, 6
+		m, err := GenerateMapping(net, opts)
+		if err != nil {
+			t.Fatal(err)
+		}
+		u, v := m.Cuts[3][0], m.Cuts[4][0]
+		if u.Function != v.Function || len(u.Leaves) == len(v.Leaves) {
+			t.Fatalf("test cuts %v, %v", u, v)
+		}
+		cnf, err := DeriveCNF(m, true, false, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for assignment := uint64(0); assignment < 1<<cnf.Variables; assignment++ {
+			a := assignment >> 1 & 1
+			want := assignment&1 == 0
+			for _, id := range []uint{3, 4, 5, 6} {
+				want = want && assignment>>id&1 == a
+			}
+			if cnfSatisfied(cnf.Clauses, assignment) != want {
+				t.Fatalf("reverse %t assignment %07b did not encode both outputs", reverse, assignment)
+			}
+		}
+	}
+}
+
+func TestCNFClauseStorageIsIndependent(t *testing.T) {
+	cnf, err := DeriveCNF(cnfAndMapping(), false, true, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i := 1; i < len(cnf.Clauses); i++ {
+		want := cnf.Clauses[i][0]
+		extended := append(cnf.Clauses[i-1], -1)
+		if extended[len(extended)-1] != -1 || cnf.Clauses[i][0] != want {
+			t.Fatalf("appending to clause %d overwrote clause %d", i-1, i)
+		}
+	}
+}

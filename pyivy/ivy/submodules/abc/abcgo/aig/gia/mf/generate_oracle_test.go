@@ -216,3 +216,33 @@ func TestI10MappedCNFMatchesC(t *testing.T) {
 		t.Fatalf("i10 variables %d/%d, clauses %d/%d (Go/C)", got.Variables, want.Variables, len(got.Clauses), len(want.Clauses))
 	}
 }
+
+func BenchmarkI10DeriveMappedCNF(b *testing.B) {
+	data, err := os.ReadFile("../../../../i10.aig")
+	if err != nil {
+		b.Fatal(err)
+	}
+	model, err := ioa.Read(data)
+	if err != nil {
+		b.Fatal(err)
+	}
+	net, err := NetworkFromModel(model)
+	if err != nil {
+		b.Fatal(err)
+	}
+	coarse, err := Coarsen(net, 3)
+	if err != nil {
+		b.Fatal(err)
+	}
+	mapping, err := GenerateMapping(coarse, DefaultOptions())
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ReportAllocs()
+	for b.Loop() {
+		cnf, err := DeriveCNF(mapping, false, true, false)
+		if err != nil || cnf == nil || cnf.Variables != 1057 || len(cnf.Clauses) != 3717 {
+			b.Fatal("i10 CNF derivation", err)
+		}
+	}
+}
