@@ -10,18 +10,12 @@ func wideIsopDigest(alias bool) uint64 {
 	hash := uint64(14695981039346656037)
 	mix := func(value word) { hash = (hash ^ value) * 1099511628211 }
 	state := word(0xd51d28de17)
-	next := func() word {
-		state ^= state << 13
-		state ^= state >> 7
-		state ^= state << 17
-		return state
-	}
 	for trial := range 96 {
 		n := int32(6 + trial%3)
 		var on, dc, out, covered [4]word
 		for i := range dc {
-			dc[i] = next()
-			on[i] = dc[i] & next()
+			dc[i] = nextIsopWord(&state)
+			on[i] = dc[i] & nextIsopWord(&state)
 		}
 		switch trial % 4 {
 		case 0:
@@ -70,4 +64,64 @@ func BenchmarkWideIsopOrderedCovers(b *testing.B) {
 		}
 	}
 	b.ReportMetric(float64(b.Elapsed().Nanoseconds())/(96*float64(b.N)), "ns/table")
+}
+
+func nextIsopWord(state *word) word {
+	*state ^= *state << 13
+	*state ^= *state >> 7
+	*state ^= *state << 17
+	return *state
+}
+
+func isopWordCountDigest() uint64 {
+	hash := uint64(14695981039346656037)
+	state := word(0x143d5aa9cb)
+	for i := range 8192 {
+		n := int32(5 + i%2)
+		dc := nextIsopWord(&state)
+		on := dc & nextIsopWord(&state)
+		if i%3 == 0 {
+			dc = on
+		}
+		if i%5 == 0 {
+			on = word(uint16(on)) * isopHalfRepeat
+			dc = word(uint16(dc)) * isopHalfRepeat
+		}
+		if n == 5 || i%7 == 0 {
+			on = word(uint32(on)) * 0x0000000100000001
+			dc = word(uint32(dc)) * 0x0000000100000001
+		}
+		count := int32(3)
+		result := Abc_Tt6Isop(on, dc, n, &count)
+		hash = (hash ^ result) * 1099511628211
+		hash = (hash ^ word(count)) * 1099511628211
+	}
+	return hash
+}
+
+func TestIsopWordCountsMatchNative(t *testing.T) {
+	if got := isopWordCountDigest(); got != 0x211d762f71704346 {
+		t.Fatalf("five- and six-input truths and counts = %016x, native 211d762f71704346", got)
+	}
+}
+
+func BenchmarkIsopWordCounts(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		if isopWordCountDigest() != 0x211d762f71704346 {
+			b.Fatal("native digest mismatch")
+		}
+	}
+	b.ReportMetric(float64(b.Elapsed().Nanoseconds())/(8192*float64(b.N)), "ns/table")
+}
+
+func TestIsopFiveRejectsUnstretchedHighVariable(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fatal("accepted a sixth variable in a five-variable truth")
+		}
+	}()
+	var count int32
+	const high word = 0xffffffff00000000
+	Abc_Tt6Isop(high, high, 5, &count)
 }

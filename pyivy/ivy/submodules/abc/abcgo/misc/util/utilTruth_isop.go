@@ -68,6 +68,55 @@ func isop4Split(on, dc uint16, count *int32) uint16 {
 	return uint16(r2|r0) | uint16(r2|r1)<<8
 }
 
+func isop4Count(on, dc uint16, count *int32) uint16 {
+	if on == 0 {
+		return 0
+	}
+	if dc == 0xffff {
+		(*count)++
+		return 0xffff
+	}
+	if on == dc {
+		return isop4Exact(on, count)
+	}
+	return isop4Split(on, dc, count)
+}
+
+const isop32Repeat word = 0x0000000100000001
+
+// Count-only cofactors fit in sixteen bits for a five-variable function.
+// When both sets repeat, the upper variable contributes no literals.
+func isop5Count(on, dc uint32, count *int32) uint32 {
+	if on == 0 {
+		return 0
+	}
+	if dc == 0xffffffff {
+		(*count)++
+		return 0xffffffff
+	}
+	a, b := uint16(on), uint16(on>>16)
+	da, db := uint16(dc), uint16(dc>>16)
+	if a == b && da == db {
+		return uint32(isop4Count(a, da, count)) * 0x00010001
+	}
+	r0 := isop4Count(a&^db, da, count)
+	r1 := isop4Count(b&^da, db, count)
+	r2 := isop4Count((a&^r0)|(b&^r1), da&db, count)
+	return uint32(r2|r0) | uint32(r2|r1)<<16
+}
+
+func isop6Count(on, dc word, count *int32) word {
+	a, b := uint32(on), uint32(on>>32)
+	da, db := uint32(dc), uint32(dc>>32)
+	if a == b && da == db {
+		return word(isop5Count(a, da, count)) * isop32Repeat
+	}
+	r0 := isop5Count(a&^db, da, count)
+	r1 := isop5Count(b&^da, db, count)
+	r2 := isop5Count((a&^r0)|(b&^r1), da&db, count)
+	return word(r2|r0) | word(r2|r1)<<32
+}
+
 // ISOP follows the original three-way recursive split: cubes forced into each
 // cofactor, followed by cubes shared by both cofactors. Literal codes use two
 // bits per variable: 1 for the negative literal, 2 for the positive literal.
@@ -85,14 +134,23 @@ func ttIsop6(on, dc word, n int32, cover []int32, count *int32) word {
 		(*count)++
 		return ^word(0)
 	}
-	if n == 3 && cover == nil && word(byte(on))*isopByteRepeat == on && word(byte(dc))*isopByteRepeat == dc {
-		return word(isop3Count(byte(on), byte(dc), count)) * isopByteRepeat
-	}
-	if n == 4 && cover == nil && word(uint16(on))*isopHalfRepeat == on && word(uint16(dc))*isopHalfRepeat == dc {
-		if on == dc {
-			return word(isop4Exact(uint16(on), count)) * isopHalfRepeat
+	if cover == nil {
+		switch n {
+		case 3:
+			if word(byte(on))*isopByteRepeat == on && word(byte(dc))*isopByteRepeat == dc {
+				return word(isop3Count(byte(on), byte(dc), count)) * isopByteRepeat
+			}
+		case 4:
+			if word(uint16(on))*isopHalfRepeat == on && word(uint16(dc))*isopHalfRepeat == dc {
+				return word(isop4Count(uint16(on), uint16(dc), count)) * isopHalfRepeat
+			}
+		case 5:
+			if word(uint32(on))*isop32Repeat == on && word(uint32(dc))*isop32Repeat == dc {
+				return word(isop5Count(uint32(on), uint32(dc), count)) * isop32Repeat
+			}
+		case 6:
+			return isop6Count(on, dc, count)
 		}
-		return word(isop4Split(uint16(on), uint16(dc), count)) * isopHalfRepeat
 	}
 	v := n - 1
 	for ; v >= 0; v-- {

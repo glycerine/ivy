@@ -51,18 +51,44 @@ static uint64_t wide_digest(void)
     return hash;
 }
 
+static uint64_t word_count_digest(void)
+{
+    uint64_t hash = UINT64_C(14695981039346656037);
+    word state = UINT64_C(0x143d5aa9cb);
+    for (unsigned i = 0; i < 8192; ++i) {
+        int n = 5 + (i & 1);
+        word dc = next_word(&state), on = dc & next_word(&state);
+        if (i % 3 == 0)
+            dc = on;
+        if (i % 5 == 0) {
+            on = (uint16_t)on * UINT64_C(0x0001000100010001);
+            dc = (uint16_t)dc * UINT64_C(0x0001000100010001);
+        }
+        if (n == 5 || i % 7 == 0) {
+            on = (uint32_t)on * UINT64_C(0x0000000100000001);
+            dc = (uint32_t)dc * UINT64_C(0x0000000100000001);
+        }
+        int count = 3;
+        word result = Abc_Tt6Isop(on, dc, n, &count);
+        hash = mix(mix(hash, result), (word)count);
+    }
+    return hash;
+}
+
 int main(int argc, char **argv)
 {
     int runs = argc > 1 ? atoi(argv[1]) : 1;
+    int counts = argc > 2 && strcmp(argv[2], "count") == 0;
     if (runs < 1)
         return 1;
     struct timespec start, stop;
     volatile uint64_t digest = 0;
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
     for (int i = 0; i < runs; ++i)
-        digest = wide_digest();
+        digest = counts ? word_count_digest() : wide_digest();
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &stop);
     double ns = (stop.tv_sec-start.tv_sec)*1e9 + stop.tv_nsec-start.tv_nsec;
-    printf("%016" PRIx64 " %.2f process ns/table\n", digest, ns / (96.0*runs));
+    printf("%016" PRIx64 " %.2f process ns/table\n", digest, ns / ((counts ? 8192.0 : 96.0)*runs));
+    if (counts) return digest != UINT64_C(0x211d762f71704346);
     return digest != UINT64_C(0xc5fa775abb4222c8);
 }
