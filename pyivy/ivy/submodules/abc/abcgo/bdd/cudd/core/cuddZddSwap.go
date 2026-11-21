@@ -12,45 +12,36 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	if xi < 0 || yi < 0 || xi >= dd.ZddSize || yi >= dd.ZddSize || dd.PermZ[xi] != x || dd.PermZ[yi] != y {
 		return false
 	}
-	// Save the original x layer before changing any keys. The C implementation
-	// removes y-dependent x nodes from its x bucket and processes that FIFO.
-	xnodes := make([]*DdNode, 0)
-	for _, n := range dd.zddUnique.entries {
-		if n.Index == uint32(xi) {
-			xnodes = append(xnodes, n)
+	// Only x nodes with a y child change function decomposition. Remove all
+	// their old keys before interning new x nodes against the retained layer.
+	var moved []*DdNode
+	dd.zddUnique.forLevel(xi, func(entry uniqueEntry) {
+		if entry.t.Index == uint32(yi) || entry.e.Index == uint32(yi) {
+			moved = append(moved, entry.node)
 		}
-	}
-	// A temporary canonical table for newly created x nodes. Existing x nodes
-	// that stay at x are also candidates, matching the source's collision scan.
-	work := uniqueTable{}
-	for k, n := range dd.zddUnique.entries {
-		if n.Index != uint32(xi) {
-			work.set(k, n)
-		}
-	}
-	for _, n := range xnodes {
-		if n.T.Index != uint32(yi) && n.E.Index != uint32(yi) {
-			work.set(bddUniqueKey{n.Index, n.T, n.E}, n)
-		}
+	})
+	for _, n := range moved {
+		dd.zddUnique.remove(bddUniqueKey{uint32(xi), n.T, n.E})
 	}
 	internX := func(t, e *DdNode) *DdNode {
 		if t == dd.Zero {
 			return e
 		}
-		k := bddUniqueKey{uint32(xi), t, e}
-		if n := work.get(k); n != nil {
-			return n
+		key := bddUniqueKey{uint32(xi), t, e}
+		entry := dd.zddUnique.find(key)
+		if entry != nil && entry.node != nil {
+			return entry.node
 		}
 		n := dd.newNodePair(uint32(xi))
 		n.T, n.E, n.family = t, e, 1
-		work.set(k, n)
+		// A live rewritten parent acquires the child's arcs through Cudd_Ref.
+		// A released parent carries the key without owning its arcs.
+		n.childrenReleased = true
+		dd.zddUnique.insert(key, n, entry)
 		return n
 	}
-	for _, f := range xnodes {
+	for _, f := range moved {
 		f1, f0 := f.T, f.E
-		if f1.Index != uint32(yi) && f0.Index != uint32(yi) {
-			continue
-		}
 		f11, f10 := dd.Zero, f1
 		if f1.Index == uint32(yi) {
 			f11, f10 = f1.T, f1.E
@@ -59,30 +50,17 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 		if f0.Index == uint32(yi) {
 			f01, f00 = f0.T, f0.E
 		}
-		var nt *DdNode
-		if f11 == dd.Zero {
-			nt = f01
-		} else {
-			nt = internX(f11, f01)
+		nt, ne := internX(f11, f01), internX(f10, f00)
+		if !f.childrenReleased {
+			Cudd_Ref(nt)
+			Cudd_Ref(ne)
+			dd.recursiveDeref(f1)
+			dd.recursiveDeref(f0)
 		}
-		var ne *DdNode
-		if f10 == dd.Zero {
-			ne = f00
-		} else {
-			ne = internX(f10, f00)
-		}
-		f.Index, f.T, f.E = uint32(yi), nt, ne
+		f.Index, f.inverse.Index = uint32(yi), uint32(yi)
+		f.T, f.E = nt, ne
+		dd.zddUnique.set(bddUniqueKey{f.Index, nt, ne}, f)
 	}
-	// Install rewritten nodes and update the level permutation. As in CUDD,
-	// existing node handles are retained; the Go manager has no subtable ref
-	// counts, so zero-ref collection is deliberately not performed here.
-	for _, n := range xnodes {
-		if n.Index == uint32(yi) {
-			work.remove(bddUniqueKey{uint32(xi), n.T, n.E})
-			work.set(bddUniqueKey{n.Index, n.T, n.E}, n)
-		}
-	}
-	dd.zddUnique = work
 	dd.PermZ[xi], dd.PermZ[yi] = y, x
 	dd.InvPermZ[x], dd.InvPermZ[y] = yi, xi
 	if len(dd.Univ) > y && dd.Univ[x] != nil {

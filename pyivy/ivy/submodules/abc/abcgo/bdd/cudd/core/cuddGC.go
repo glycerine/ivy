@@ -136,9 +136,12 @@ func (n *DdNode) detachHandle() {
 	}
 }
 
-func (dd *DdManager) collectUnderPressure(t, e *DdNode) {
+// collectReleasedKeys preserves active Go temporaries. During a table insertion
+// t and e also protect the children of the key being constructed.
+func (dd *DdManager) collectReleasedKeys(t, e *DdNode) {
+	previous := dd.pressureGC
 	dd.pressureGC = true
-	defer func() { dd.pressureGC = false }()
+	defer func() { dd.pressureGC = previous }()
 	started := time.Now()
 	if !dd.runHooks(CUDD_PRE_GC_HOOK, "DD", nil) {
 		return
@@ -147,12 +150,14 @@ func (dd *DdManager) collectUnderPressure(t, e *DdNode) {
 	reclaimNode(Cudd_Regular(e))
 	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
 	if dd.purgeReleasedKeys() != 0 {
-		retired := func(n *DdNode) bool {
-			return n != nil && n != DD_NON_CONSTANT && n.manager == nil
+		if dd.computed.valid != 0 {
+			retired := func(n *DdNode) bool {
+				return n != nil && n != DD_NON_CONSTANT && n.manager == nil
+			}
+			dd.computed.valid -= dd.computed.invalidate(func(e computedEntry) bool {
+				return retired(e.key.f) || retired(e.key.g) || retired(e.key.h) || retired(e.result)
+			})
 		}
-		dd.computed.valid -= dd.computed.invalidate(func(e computedEntry) bool {
-			return retired(e.key.f) || retired(e.key.g) || retired(e.key.h) || retired(e.result)
-		})
 		dd.garbageCollections++
 		dd.gcTime += uint64(time.Since(started).Nanoseconds())
 	}

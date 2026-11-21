@@ -164,7 +164,7 @@ func (dd *DdManager) checkNodeDensity(key bddUniqueKey, zdd bool) bool {
 		return false
 	}
 	if dd.gcEnabled != 0 && dd.shouldCollectLevel(index, keys, zdd) {
-		dd.collectUnderPressure(key.t, key.e)
+		dd.collectReleasedKeys(key.t, key.e)
 		// Collection and its hooks can invalidate a saved probe position.
 		return true
 	}
@@ -220,7 +220,7 @@ func (dd *DdManager) checkConstantDensity() {
 			}
 		}
 		if dd.dead > int(dd.minDead) || 10*uint64(dead) > 9*uint64(len(dd.constants)) {
-			dd.collectUnderPressure(nil, nil)
+			dd.collectReleasedKeys(nil, nil)
 			return
 		}
 	}

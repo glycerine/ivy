@@ -547,3 +547,11 @@ With 4,096 keys, freeing 3,072 and retaining 1,024 took 479–487 µs and 119,68
 ### Keep the GIA output-type validation contract
 
 The full GIA run exposed two failures following the invariant change. The earlier rejection test classified type 2 as invalid, although the native AIGER reader emits it for invariants. Moving that case to type 3 reproduced a real input-validation regression alongside the existing negative case. Constraint duplication now validates the complete vector before copying and accepts the three types produced by the reader. Both invalid-input cases and the independent type-2 output and register test pass under the race detector. The earlier whole-package race run also reached its ten-minute timeout, so the rerun has a longer timeout.
+
+### Move only dependent ZDD keys during adjacent swaps
+
+Reversing ten variables previously rebuilt the entire unique table 45 times. A Go profile attributed 74% of CPU samples to rebuilding tables. The swap now visits the upper subtable, removes the keys whose children depend on the lower variable, and interns the replacement nodes against the surviving keys. It transfers references before releasing old children and updates each handle's complementary index.
+
+Red tests exposed spurious external references after a shuffle, changed explicit pins, and stale complementary indices. A six-variable universe retained 17 decision keys after collection. It now retains exactly six and releases all six after dropping its root and the manager's universe. A native C fixture checks the same ownership transitions. Further red tests showed that an identity shuffle left cached answers behind, reordering retained explicitly released keys from both families, and the minimum-size test counted a released node. Preprocessing now flushes the cache and collects released keys while preserving active Go temporaries. The size threshold counts live ZDD keys.
+
+Building all 120 three-element sets over ten variables and reversing the order took 750–758 µs, 995,256 bytes and 2,263 allocations before this change. The complete replacement took 69–75 µs, 70,520 bytes and 445 allocations. Release C took 38.6 µs for the same build and shuffle. Its process profile put 69% in manager initialization and 20% in adjacent swaps. All thirteen BDD packages, base/abci and misc/extra passed race testing.

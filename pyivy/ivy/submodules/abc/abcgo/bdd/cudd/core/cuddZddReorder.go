@@ -255,7 +255,8 @@ func Cudd_zddShuffleHeap(dd *DdManager, order []int) int {
 		return 0
 	}
 	order = order[:dd.ZddSize]
-	order = order[:dd.ZddSize]
+	Cudd_CacheFlush(dd)
+	dd.collectReleasedKeys(nil, nil)
 	// Match zddShuffle: bring the requested variable at each level upward
 	// through adjacent swaps, preserving the source algorithm's swap sequence.
 	for level, index := range order {
@@ -367,7 +368,7 @@ func zddFixTree(dd *DdManager, node *mtr.MtrNode) {
 	}
 }
 
-// zddHeapSize is the number of live canonical nonterminal ZDD nodes.
+// zddHeapSize counts canonical nonterminal ZDD keys.
 func zddHeapSize(dd *DdManager) int { return dd.zddUnique.count }
 
 // zddSymmCheck ports cuddZddSymmCheck for adjacent levels. DdNode.Ref already
@@ -589,8 +590,22 @@ func Cudd_zddReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) 
 	if method == CUDD_REORDER_NONE {
 		return 1
 	}
-	if zddHeapSize(dd) < minsize {
-		return 1
+	if minsize > 0 {
+		if zddHeapSize(dd) < minsize {
+			return 1
+		}
+		live := 0
+		for _, n := range dd.zddUnique.entries {
+			if !n.childrenReleased {
+				live++
+				if live == minsize {
+					break
+				}
+			}
+		}
+		if live < minsize {
+			return 1
+		}
 	}
 	started := time.Now()
 	dd.reorderings++
@@ -598,6 +613,7 @@ func Cudd_zddReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) 
 		return 0
 	}
 	Cudd_CacheFlush(dd)
+	dd.collectReleasedKeys(nil, nil)
 
 	finish := func(result int) int {
 		if result == 0 {
