@@ -4,20 +4,82 @@
 
 The C source has ten subsystem families. The Go module mirrors each family.
 
-| Family | C subdirectories | Responsibilities |
-| --- | ---: | --- |
-| aig | 7 | Graph representations including MiniAIG, Hop, AIG and GIA, traversal, simulation and graph I/O |
-| base | 14 | Network and word-level models, shell, file formats and command dispatch |
-| bdd | 9 | Decision diagrams, reordering and decomposition |
-| bool | 7 | Boolean functions, truth tables, covers and decomposition |
-| map | 9 | LUT and standard-cell technology mapping, libraries and timing |
-| misc | 16 | Vectors, allocators, hashing, utilities and compression |
-| opt | 20 | Logic optimization including rewriting, factoring and retiming |
-| phys | 1 | Physical design |
-| proof | 12 | Equivalence checking, abstraction and other proof engines |
-| sat | 13 | SAT solvers and solver interfaces |
+| Family | C subdirectories | C/C++ source files | Go source files | Go test files | Responsibilities |
+| --- | ---: | ---: | ---: | ---: | --- |
+| aig | 7 | 213 | 742 | 882 | Graph representations including MiniAIG, Hop, AIG and GIA, traversal, simulation and graph I/O |
+| base | 14 | 246 | 474 | 332 | Network and word-level models, shell, file formats and command dispatch |
+| bdd | 9 | 123 | 205 | 121 | Decision diagrams, reordering and decomposition |
+| bool | 7 | 35 | 61 | 27 | Boolean functions, truth tables, covers and decomposition |
+| map | 9 | 117 | 204 | 126 | LUT and standard-cell technology mapping, libraries and timing |
+| misc | 16 | 126 | 187 | 90 | Vectors, allocators, hashing, utilities and compression |
+| opt | 20 | 172 | 289 | 139 | Logic optimization including rewriting, factoring and retiming |
+| phys | 1 | 11 | 17 | 6 | Physical design |
+| proof | 12 | 162 | 550 | 831 | Equivalence checking, abstraction and other proof engines |
+| sat | 13 | 100 | 361 | 254 | SAT solvers and solver interfaces |
 
-The Go commands are abc-demo (read, balance, rewrite, write, verify) and abc-starter (parallel shell command runner). The integration package connects MiniAIG and SAT. The checkout contains 54 Go benchmark functions, including focused graph traversal, mapping, simulation and truth-table workloads. Historical build results in PORTING.md are dated.
+The final inventory counts tracked C and C++ translation units below each family in `src`, and separates Go files under `abcgo` by the `_test.go` suffix. Every C implementation subdirectory in the table has a corresponding Go subtree. Behavioral checks below cover specific operations and workloads.
+
+The Go commands are abc-demo (read, balance, rewrite, write, verify) and abc-starter (parallel shell command runner). The integration package connects MiniAIG and SAT. At the initial survey the checkout contained 54 Go benchmark functions, including focused graph traversal, mapping, simulation and truth-table workloads. Historical build results in PORTING.md are dated.
+
+## Twelve-hour results
+
+On the i10 mapped-SAT workload the Go port went from 171.7 ms to **19.10 ms**, or about 9× faster than its starting point. Allocations fell from 25.8 MB in 460,878 objects to 4.63 MB in 6,282 objects per solve. The final Go and release C programs both read the file, mapped the graph, initialized Satoko, returned SAT and released their state. The independent CNF comparison checked 1,057 variables, 3,717 clauses and 11,944 literals in source order.
+
+| Complete workload | Starting Go | Final Go median | Release C median | Measurement |
+| --- | ---: | ---: | ---: | --- |
+| i10 mapped SAT, repeated | 171.7 ms | 19.10 ms | 20.06 ms | 8 processes per implementation, 150 solves each, CPU 15 |
+| i10 mapped SAT, first solve | — | 21.18 ms | 21.08 ms | 24 fresh processes each, CPU 15, timed region excludes startup |
+| i10 resynthesis equivalence proof | 596.8–603.5 ms | 217.23 ms | 209.88 ms | 3 processes each, 22 proofs per process on CPU 16, identical 5,051-AND miter |
+| i10 read and balance | 8.64–8.84 ms at first dedicated checkpoint | 4.11 ms | 1.41 ms | 3 processes each, 400 operations on CPU 14, 2,396 ANDs at depth 37 |
+| Eight pigeons into seven holes | 59.31–59.42 ms | 58.29 ms | 31.60 ms | Two final Go batches, native run on the identical UNSAT search |
+
+The measured i10 advantage changes with run length and host load. An additional alternating series during compilation on CPU 13 gave medians of 28.36 ms in Go and 28.19 ms in C over 30 solves per process. The 150-solve comparison above gave individual ranges of 18.49–19.51 ms in Go and 19.45–20.96 ms in C. Results use Go 1.27.3 and the out-of-tree GCC 13.3 CMake Release library built with `-O3 -DNDEBUG` on a Ryzen Threadripper 3960X. Sampling binaries were separate from the release timings.
+
+### Nine additional complete mapped solves
+
+Each entry is the median of four fresh processes running 30 complete solves each, on CPU 13. Circuit order was reversed for the second pass and C and Go runs were interleaved within each circuit. The native oracle test regenerates all nine fixtures and compares variable counts and ordered clause literals. The Go port led on all three multipliers, both larger sorters and the mesh. C led on the eight-input sorter, ripple-carry adder and one-hot conditions.
+
+| Circuit | Go ms | Release C ms |
+| --- | ---: | ---: |
+| 8-bit multiplier | 2.530 | 3.056 |
+| 32-bit multiplier | 29.928 | 34.045 |
+| 64-bit multiplier | 124.277 | 135.738 |
+| 8-input sorter | 1.270 | 1.242 |
+| 32-input sorter | 13.013 | 17.874 |
+| 64-input sorter | 53.852 | 72.522 |
+| 32-bit ripple-carry adder | 0.518 | 0.414 |
+| 8-by-8 mesh | 1.628 | 1.648 |
+| 32-input one-hot conditions | 0.935 | 0.639 |
+
+### Remaining costs and reproduction
+
+Go spent 49.9% of cumulative i10 mapped-SAT samples computing cut truths. Native release sampling put 47.1% of flat samples in `Mf_ObjMergeOrder`. In the i10 equivalence proof Go spent 32.2% cumulatively in BSAT propagation and 27.6% in rewriting. Native sampling put 44.9% of flat samples in propagation. Read and balance still has substantial object-allocation and GC costs. Its final Go allocation was 3.19 MB in 11,193 objects per circuit.
+
+Linux maximum resident set size, measured over complete processes with the default Go collector and three repetitions per port, also favored C. The median for 30 i10 solves was 17.5 MiB in Go and 8.1 MiB in C. For 22 equivalence proofs it was 53.3 MiB and 20.6 MiB. These figures include the benchmark executable, runtime and allocator. Bytes per solve above measure cumulative Go heap allocation.
+
+The full equivalence proof also responds to Go's collection frequency. In a separate comparison on CPU 16, three 26-proof processes per configuration produced the following medians. Resident memory is the peak for the entire process.
+
+| Implementation and setting | ms/proof | Peak RSS MiB |
+| --- | ---: | ---: |
+| Release C | 204.67 | 20.6 |
+| Go, default `GOGC=100` | 213.39 | 55.7 |
+| Go, `GOGC=150` | 203.17 | 64.2 |
+| Go, `GOGC=200` | 201.46 | 72.8 |
+
+For first proofs in three fresh processes each, C took 223.31 ms, default Go 230.63 ms, and Go with `GOGC=200` took 222.78 ms. The repeated-proof timings put the higher Go heap targets slightly ahead of C on this workload. Those settings cost memory. A separate CPU 15 trial with `GOGC=50` took 232.23 ms and 47.3 MiB versus 213.85 ms and 57.3 MiB with the default. At the same two settings read and balance took 4.08 ms and 30.4 MiB versus 3.94 ms and 41.8 MiB. The main comparison tables use the default collector.
+
+From the ABC root, these commands build the release library and the uninstrumented native driver, run a 150-solve batch and check all nine generated circuits. Change both iteration counts to one for the fresh-process comparison.
+
+```sh
+cmake -S . -B /tmp/abc-release -DCMAKE_BUILD_TYPE=Release
+cmake --build /tmp/abc-release --target libabc
+cc -O3 -DNDEBUG -DABC_USE_STDINT_H -Isrc -c abcgo/aig/gia/test_vectors/perf_gia.c -o /tmp/perf_gia.o
+c++ /tmp/perf_gia.o /tmp/abc-release/libabc.a -lpthread -ldl -lm -lreadline -o /tmp/perf_gia
+taskset -c 15 /tmp/perf_gia sat i10.aig 150
+cd abcgo
+GOMAXPROCS=1 taskset -c 15 go test ./aig/gia -run '^$' -bench '^BenchmarkI10MappedSAT$' -benchtime=150x -benchmem
+go test ./aig/gia/mf -run '^TestGeneratedMappedCNFMatchesC$' -v -count=1
+```
 
 ## Ten-hour checkpoint
 

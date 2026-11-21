@@ -2,6 +2,9 @@
 #include "aig/gia/gia.h"
 #include "sat/satoko/satoko.h"
 #include "sat/cnf/cnf.h"
+#include <errno.h>
+#include <limits.h>
+#include <stdlib.h>
 #include <time.h>
 
 extern satoko_t *Gia_ManSatokoCreate(Gia_Man_t *, satoko_opts_t *);
@@ -48,8 +51,8 @@ static int hash_chain(void)
 
 int main(int argc, char **argv)
 {
-    if (argc != 2 && argc != 3) {
-        fprintf(stderr, "usage: %s cone | hash | (load|cones|sat|sat-init) i10.aig\n", argv[0]);
+    if (argc < 2 || argc > 4 || (argc == 4 && strcmp(argv[1], "sat"))) {
+        fprintf(stderr, "usage: %s cone | hash | (load|cones|sat-init) i10.aig | sat input.aig [iterations]\n", argv[0]);
         return 2;
     }
     int runs;
@@ -118,10 +121,20 @@ int main(int argc, char **argv)
         Gia_ManStop(p);
         return literals != 11943L * runs;
     }
-    if (argc == 3 && !strcmp(argv[1], "sat")) {
+    if (argc >= 3 && !strcmp(argv[1], "sat")) {
         satoko_opts_t opts;
         satoko_default_opts(&opts);
         runs = 30;
+        if (argc == 4) {
+            char *end;
+            errno = 0;
+            long count = strtol(argv[3], &end, 10);
+            if (errno || *end || count < 1 || count > INT_MAX) {
+                fprintf(stderr, "invalid SAT iteration count: %s\n", argv[3]);
+                return 2;
+            }
+            runs = (int)count;
+        }
         start = now();
         long conflicts = 0;
         for (int i = 0; i < runs; ++i) {
