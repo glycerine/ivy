@@ -57,18 +57,16 @@ func refKitToDec(g *kit.Kit_Graph_t) *dec.Dec_Graph_t {
 		}
 		return dec.Dec_GraphCreateConst1()
 	}
-	root := kit.Kit_GraphRootEdge(g)
-	rootBits := kit.Kit_EdgeToInt(root)
-	if kit.Kit_GraphIsVar(g) != 0 {
-		return dec.Dec_GraphCreateLeaf(int32(rootBits>>1), kit.Kit_GraphLeaveNum(g), int32(rootBits&1))
+	leaves, gates := kit.Kit_GraphLeaveNum(g), kit.Kit_GraphNodeNum(g)
+	out := dec.Dec_GraphCreateSized(leaves, gates)
+	for i := leaves; i < leaves+gates; i++ {
+		source := kit.Kit_GraphNode(g, i)
+		a, b := kit.Kit_NodeEdges(source)
+		destination := dec.Dec_GraphNode(out, i)
+		destination.SetEdges(dec.Dec_IntToEdge(kit.Kit_EdgeToInt(a)), dec.Dec_IntToEdge(kit.Kit_EdgeToInt(b)))
+		destination.SetPrintingFlags(source.PrintingFlags())
 	}
-	out := dec.Dec_GraphCreate(kit.Kit_GraphLeaveNum(g))
-	for i := kit.Kit_GraphLeaveNum(g); i < kit.Kit_GraphLeaveNum(g)+kit.Kit_GraphNodeNum(g); i++ {
-		a, b := kit.Kit_NodeEdges(kit.Kit_GraphNode(g, i))
-		x, y := kit.Kit_EdgeToInt(a), kit.Kit_EdgeToInt(b)
-		dec.Dec_GraphAddNodeAnd(out, dec.Dec_EdgeCreate(int32(x>>1), int32(x&1)), dec.Dec_EdgeCreate(int32(y>>1), int32(y&1)))
-	}
-	dec.Dec_GraphSetRoot(out, dec.Dec_EdgeCreate(int32(rootBits>>1), int32(rootBits&1)))
+	dec.Dec_GraphSetRoot(out, dec.Dec_IntToEdge(kit.Kit_EdgeToInt(kit.Kit_GraphRootEdge(g))))
 	return out
 }
 

@@ -196,3 +196,47 @@ func TestRefactorTruthMultiwordSharedCone(t *testing.T) {
 		t.Error("lost cut input mark")
 	}
 }
+
+func TestRefactorConversionPreservesORAnnotationsAndSelectedRoot(t *testing.T) {
+	g := kit.Kit_GraphCreate(3)
+	a, b, c := kit.Kit_EdgeCreate(0, 1), kit.Kit_EdgeCreate(1, 0), kit.Kit_EdgeCreate(2, 1)
+	or := kit.Kit_GraphAddNodeOr(g, a, b)
+	last := kit.Kit_GraphAddNodeAnd(g, or, c)
+	for _, root := range []kit.Kit_Edge_t{last, or, c} {
+		kit.Kit_GraphSetRoot(g, root)
+		out := refKitToDec(g)
+		if got := dec.Dec_GraphNodeNum(out); got != 2 {
+			t.Errorf("root %d: converted %d gates, want both original gates", root.Node, got)
+			continue
+		}
+		if got := dec.Dec_GraphNode(out, int32(or.Node)).PrintingFlags(); got != [3]uint32{1, 1, 0} {
+			t.Errorf("OR with complemented first operand has printing flags %v", got)
+		}
+		if got := dec.Dec_GraphNode(out, int32(last.Node)).PrintingFlags(); got != [3]uint32{0, 1, 1} {
+			t.Errorf("AND with two complemented operands has printing flags %v", got)
+		}
+		if got := dec.Dec_EdgeToInt(dec.Dec_GraphRootEdge(out)); got != kit.Kit_EdgeToInt(root) {
+			t.Errorf("selected root word %d became %d", kit.Kit_EdgeToInt(root), got)
+		}
+		if got, want := dec.Dec_GraphDeriveTruth(out), kit.Kit_GraphToTruth(g); got != want {
+			t.Errorf("root %d truth %08x, want %08x", root.Node, got, want)
+		}
+	}
+}
+
+func BenchmarkRefactorGraphConversion(b *testing.B) {
+	g := kit.Kit_GraphCreate(4)
+	root := kit.Kit_EdgeCreate(0, 0)
+	for i := range 7 {
+		root = kit.Kit_GraphAddNodeOr(g, root, kit.Kit_EdgeCreate(int32(1+i%3), int32(i%2)))
+	}
+	kit.Kit_GraphSetRoot(g, root)
+	b.ReportAllocs()
+	for b.Loop() {
+		out := refKitToDec(g)
+		if dec.Dec_GraphNodeNum(out) != 7 {
+			b.Fatal("expected seven gates")
+		}
+		dec.Dec_GraphFree(out)
+	}
+}

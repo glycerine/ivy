@@ -1,7 +1,7 @@
 package dec
 
 // C-compatible entry points for decomposition graphs. Node pointers remain
-// stable when the graph grows: Go owns individually allocated node objects.
+// stable when the graph grows.
 type Dec_Edge_t struct {
 	fCompl uint32
 	Node   uint32
@@ -56,6 +56,26 @@ func Dec_GraphCreate(leaves int32) *Dec_Graph_t {
 	}
 	return g
 }
+
+// Dec_GraphCreateSized creates all leaf and internal nodes of a graph whose
+// final topology is known. Separate blocks keep pointers stable on later
+// appends and bound the number of siblings retained by a saved node.
+func Dec_GraphCreateSized(leaves, internal int32) *Dec_Graph_t {
+	if leaves < 0 || internal < 0 || int64(leaves)+int64(internal) > 1<<30 {
+		panic("dec: graph size outside edge index range")
+	}
+	g := &Dec_Graph_t{nLeaves: leaves, pNodes: make([]*Dec_Node_t, leaves+internal)}
+	for offset := 0; offset < len(g.pNodes); {
+		block := make([]Dec_Node_t, min(32, len(g.pNodes)-offset))
+		for i := range block {
+			block[i].index = int32(offset + i)
+			g.pNodes[offset+i] = &block[i]
+		}
+		offset += len(block)
+	}
+	return g
+}
+
 func Dec_GraphCreateConst0() *Dec_Graph_t {
 	return &Dec_Graph_t{fConst: 1, eRoot: Dec_Edge_t{fCompl: 1}}
 }
