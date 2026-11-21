@@ -149,10 +149,11 @@ func Vec_MemDump(w io.Writer, p *Vec_Mem_t) {
 	}
 }
 func vecMemPrime(n int) int {
-	n = max(n, 2)
+	// Abc_PrimeCudd starts at the next odd value and accepts one.
+	n = max(n, 1) | 1
 	for {
 		prime := true
-		for d := 2; d <= n/d; d++ {
+		for d := 3; d <= n/d; d += 2 {
 			if n%d == 0 {
 				prime = false
 				break
@@ -161,7 +162,7 @@ func vecMemPrime(n int) int {
 		if prime {
 			return n
 		}
-		n++
+		n += 2
 	}
 }
 func Vec_MemHashAlloc(p *Vec_Mem_t, n int) {
@@ -180,11 +181,29 @@ func Vec_MemHashFree(p *Vec_Mem_t) {
 		Vec_IntFreeP(&p.vNexts)
 	}
 }
+func vecMemHashWord(value uint64, lowPrime, highPrime uint32) uint32 {
+	return uint32(value)*lowPrime + uint32(value>>32)*highPrime
+}
+
 func Vec_MemHashKey(p *Vec_Mem_t, data []uint64) uint32 {
-	primes := [8]uint32{1699, 4177, 5147, 5647, 6343, 7103, 7873, 8147}
+	words := data[:p.nEntrySize]
 	var key uint32
-	for i, x := range data[:p.nEntrySize] {
-		key += uint32(x)*primes[(2*i)&7] + uint32(x>>32)*primes[(2*i+1)&7]
+	// The native multipliers repeat after eight half-words.
+	for len(words) > 0 {
+		key += vecMemHashWord(words[0], 1699, 4177)
+		if len(words) == 1 {
+			break
+		}
+		key += vecMemHashWord(words[1], 5147, 5647)
+		if len(words) == 2 {
+			break
+		}
+		key += vecMemHashWord(words[2], 6343, 7103)
+		if len(words) == 3 {
+			break
+		}
+		key += vecMemHashWord(words[3], 7873, 8147)
+		words = words[4:]
 	}
 	return uint32(uint64(key) % uint64(len(p.vTable.data)))
 }
