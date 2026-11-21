@@ -12,32 +12,12 @@ import (
 	"github.com/glycerine/abcgo/opt/cut"
 )
 
-// Rwr_NodeRewrite runs the source algorithm over the caller's cuts in order.
+// Rwr_RewriteCuts runs the source algorithm over the caller's cuts in order.
 // The network adapter keeps this package independent of ABC's concrete graph
 // types. fPlaceEnable is accepted for source API parity; placement scoring is
 // disabled in the reference implementation's active evaluation path.
 func Rwr_RewriteCuts(p *Rwr_Man_t, net Rwr_Network, root any, cuts []Rwr_Cut, required int32, fUseZeros, fPlaceEnable int32) int32 {
-	_ = fPlaceEnable
-	if p == nil {
-		panic("rwr: nil rewrite manager")
-	}
-	if p.vClasses == nil {
-		// The Go API also accepts a zero-value or precompute-only manager.
-		normal := Rwr_ManStart(0)
-		p.vClasses, p.pMapInv = normal.vClasses, normal.pMapInv
-		p.pMap, p.pPerms, p.pPhases, p.pPerms4 = normal.pMap, normal.pPerms, normal.pPhases, normal.pPerms4
-	}
-	choice := p.rwrRewriteCuts(net, root, cuts, required, fUseZeros != 0)
-	if choice.graph == nil {
-		return -1
-	}
-	p.pGraph = choice.graph
-	p.fCompl = 0
-	if choice.complement {
-		p.fCompl = 1
-	}
-	p.vFanins = append(p.vFanins[:0], choice.fanins...)
-	return choice.gain
+	return p.rewriteCuts(net, root, rewriteCutIterator{ordered: cuts}, required, fUseZeros != 0, new([4]any))
 }
 
 // Rwr_NodeRewrite preserves the source entry point while adapting ABC objects
@@ -46,24 +26,20 @@ func Rwr_NodeRewrite(p *Rwr_Man_t, pManCut *cut.Cut_Man_t, pNode *abc.Object, fU
 	if pManCut == nil || pNode == nil {
 		return -1
 	}
-	network := &abcRewriteNetwork{network: pNode.Network()}
-	var cuts []Rwr_Cut
-	for c := rewriteNodeCuts(pManCut, pNode); c != nil; c = c.Next {
-		if cut.Cut_CutReadLeaveNum(c) != 4 {
-			continue
-		}
-		leaves := cut.Cut_CutReadLeaves(c)
-		truth := cut.Cut_CutReadTruth(c)
-		if len(truth) == 0 {
-			continue
-		}
-		cuts = append(cuts, Rwr_Cut{Truth: uint16(truth[0]), Leaves: leaves})
-	}
+	network := abcRewriteNetwork{network: pNode.Network()}
+	cuts := rewriteNodeCuts(pManCut, pNode)
 	required := int32(1<<30 - 1)
 	if fUpdateLevel != 0 {
 		required = abc.Abc_ObjRequiredLevel(pNode)
 	}
-	return Rwr_RewriteCuts(p, network, pNode.Signal().DecValue(), cuts, required, fUseZeros, fPlaceEnable)
+	// Concrete counting only calls ABC routines. Its boundary buffer belongs to
+	// this manager, as in native Rwr_NodeRewrite. Public adapters get a fresh
+	// buffer because a caller can retain it or reenter through a callback.
+	if p == nil {
+		panic("rwr: nil rewrite manager")
+	}
+	defer clear(p.concreteFanins[:])
+	return p.rewriteCuts(network, pNode.Signal().DecValue(), rewriteCutIterator{list: cuts}, required, fUseZeros != 0, &p.concreteFanins)
 }
 
 // Read live fanins because earlier replacements in the pass can rewire
@@ -86,27 +62,27 @@ type abcRewriteNetwork struct {
 	network *abc.Network
 }
 
-func (n *abcRewriteNetwork) Lookup(id int32) (any, bool) {
+func (n abcRewriteNetwork) Lookup(id int32) (any, bool) {
 	o := n.network.Object(int(id))
 	if o == nil {
 		return nil, false
 	}
 	return o.Signal().DecValue(), true
 }
-func (n *abcRewriteNetwork) Complement(value any) any { return value.(abc.Edge).Not().DecValue() }
-func (n *abcRewriteNetwork) FanoutCount(value any) int {
+func (n abcRewriteNetwork) Complement(value any) any { return value.(abc.Edge).Not().DecValue() }
+func (n abcRewriteNetwork) FanoutCount(value any) int {
 	return int(abc.Abc_ObjFanoutNum(value.(abc.Edge).Object))
 }
-func (n *abcRewriteNetwork) MarkBoundary(values []any, delta int) {
+func (n abcRewriteNetwork) MarkBoundary(values []any, delta int) {
 	for _, value := range values {
 		abc.Abc_ObjAdjustFanoutCount(value.(abc.Edge).Object, int32(delta))
 	}
 }
-func (n *abcRewriteNetwork) LabelMFFC(root any) int32 {
+func (n abcRewriteNetwork) LabelMFFC(root any) int32 {
 	abc.Abc_NtkIncrementTravId(n.network)
 	return abc.Abc_NodeMffcLabelAig(root.(abc.Edge).Object)
 }
-func (n *abcRewriteNetwork) CountGraph(root any, graph *dec.Dec_Graph_t, saved, levelMax int32) int32 {
+func (n abcRewriteNetwork) CountGraph(root any, graph *dec.Dec_Graph_t, saved, levelMax int32) int32 {
 	return dec.Dec_GraphToNetworkCount(abc.DecNetwork{Network: n.network}, root, graph, saved, levelMax)
 }
 

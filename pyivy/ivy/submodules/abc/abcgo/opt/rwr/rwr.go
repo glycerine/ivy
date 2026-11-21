@@ -20,7 +20,8 @@ type Rwr_Man_t struct {
 	nTravIds, nConsidered, nAdded, nClasses                                int32
 	fCompl                                                                 int32
 	pGraph                                                                 *dec.Dec_Graph_t
-	vFanins, vFaninsCur                                                    []any
+	concreteFanins                                                         [4]any
+	vFanins                                                                []any
 	vLevNums                                                               []int32
 	vNodesTemp                                                             []any
 	nNodesConsidered, nNodesRewritten, nNodesGained, nNodesBeg, nNodesEnd  int32

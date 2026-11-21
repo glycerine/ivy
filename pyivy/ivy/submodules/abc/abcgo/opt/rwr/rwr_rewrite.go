@@ -2,6 +2,7 @@ package rwr
 
 import (
 	"github.com/glycerine/abcgo/bool/dec"
+	"github.com/glycerine/abcgo/opt/cut"
 )
 
 // rwrNetwork is the portion of the ABC network used by Rwr_NodeRewrite.
@@ -25,24 +26,48 @@ type Rwr_Cut struct {
 	Leaves []int32
 }
 
-type rwrNetwork = Rwr_Network
-type rwrCut = Rwr_Cut
-
-type rwrChoice struct {
-	graph      *dec.Dec_Graph_t
-	fanins     []any
-	complement bool
-	gain       int32
+// The concrete network owns a linked cut list. The public adapter supplies
+// the same traversal order in a slice. Both are borrowed for this call.
+type rewriteCutIterator struct {
+	ordered []Rwr_Cut
+	list    *cut.Cut_Cut_t
 }
 
-// rwrRewriteCuts ports the cut loop of Rwr_NodeRewrite. The caller supplies
-// cuts following the trivial self cut, matching C's pCut = pCut->pNext.
-func (p *Rwr_Man_t) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, required int32, useZeros bool) rwrChoice {
+func (cuts *rewriteCutIterator) next() (Rwr_Cut, bool) {
+	if len(cuts.ordered) != 0 {
+		c := cuts.ordered[0]
+		cuts.ordered = cuts.ordered[1:]
+		return c, true
+	}
+	for cuts.list != nil {
+		c := cuts.list
+		cuts.list = c.Next
+		if cut.Cut_CutReadLeaveNum(c) == 4 {
+			if truth := cut.Cut_CutReadTruth(c); len(truth) != 0 {
+				return Rwr_Cut{uint16(truth[0]), cut.Cut_CutReadLeaves(c)}, true
+			}
+		}
+	}
+	return Rwr_Cut{}, false
+}
+
+func (p *Rwr_Man_t) rewriteCuts(net Rwr_Network, root any, cuts rewriteCutIterator, required int32, useZeros bool, fanins *[4]any) int32 {
+	if p == nil {
+		panic("rwr: nil rewrite manager")
+	}
+	if p.vClasses == nil {
+		// The Go API also accepts a zero-value or precompute-only manager.
+		normal := Rwr_ManStart(0)
+		p.vClasses, p.pMapInv = normal.vClasses, normal.pMapInv
+		p.pMap, p.pPerms, p.pPhases, p.pPerms4 = normal.pMap, normal.pPerms, normal.pPhases, normal.pPerms4
+	}
 	p.nNodesConsidered++
-	result := rwrChoice{gain: -1}
+	var bestGraph *dec.Dec_Graph_t
+	bestGain := int32(-1)
+	var bestFanins [4]any
 	var bestTruth uint16
-	var fanins [4]any
-	for _, cut := range cuts {
+	var regular [4]any
+	for cut, ok := cuts.next(); ok; cut, ok = cuts.next() {
 		if len(cut.Leaves) < 4 {
 			continue
 		}
@@ -51,16 +76,14 @@ func (p *Rwr_Man_t) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, requ
 		}
 		phase := p.pPhases[cut.Truth]
 		perm := p.pPerms4[p.pPerms[cut.Truth]]
-		valid, single := true, 0
+		valid := true
 		for i := range fanins {
 			fanin, ok := net.Lookup(cut.Leaves[perm[i]])
 			if !ok {
 				valid = false
 				break
 			}
-			if net.FanoutCount(fanin) == 1 {
-				single++
-			}
+			regular[i] = fanin
 			if phase&(1<<i) != 0 {
 				fanin = net.Complement(fanin)
 			}
@@ -71,6 +94,12 @@ func (p *Rwr_Man_t) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, requ
 			continue
 		}
 		p.nCutsGood++
+		single := 0
+		for _, fanin := range regular {
+			if net.FanoutCount(fanin) == 1 {
+				single++
+			}
+		}
 		if single > 2 {
 			continue
 		}
@@ -80,20 +109,24 @@ func (p *Rwr_Man_t) rwrRewriteCuts(net rwrNetwork, root any, cuts []rwrCut, requ
 		graph, gain := p.rwrEvaluateCut(cut.Truth, fanins[:], saved, func(graph *dec.Dec_Graph_t) int32 {
 			return net.CountGraph(root, graph, saved, required)
 		})
-		if graph != nil && gain > result.gain {
-			result = rwrChoice{graph, append(result.fanins[:0], fanins[:]...), phase&16 != 0, gain}
+		if graph != nil && gain > bestGain {
+			bestGraph, bestGain, bestFanins = graph, gain, *fanins
 			bestTruth = cut.Truth
 		}
 	}
-	if result.graph != nil {
-		for i, fanin := range result.fanins {
-			dec.Dec_GraphSetLeafFunc(result.graph, int32(i), fanin)
-		}
-		p.nScores[p.pMap[bestTruth]]++
-		p.nNodesGained += result.gain
-		if useZeros || result.gain > 0 {
-			p.nNodesRewritten++
-		}
+	if bestGraph == nil {
+		return -1
 	}
-	return result
+	for i, fanin := range bestFanins {
+		dec.Dec_GraphSetLeafFunc(bestGraph, int32(i), fanin)
+	}
+	p.vFanins = append(p.vFanins[:0], bestFanins[:]...)
+	p.pGraph = bestGraph
+	p.fCompl = int32(p.pPhases[bestTruth] >> 4 & 1)
+	p.nScores[p.pMap[bestTruth]]++
+	p.nNodesGained += bestGain
+	if useZeros || bestGain > 0 {
+		p.nNodesRewritten++
+	}
+	return bestGain
 }

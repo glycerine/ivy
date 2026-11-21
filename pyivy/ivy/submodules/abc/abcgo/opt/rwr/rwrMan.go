@@ -23,7 +23,6 @@ func Rwr_ManStart(precompute int32) *Rwr_Man_t {
 	p.pPerms4 = npn.Permutations()
 	p.vLevNums = make([]int32, 0, 50)
 	p.vFanins = make([]any, 0, 50)
-	p.vFaninsCur = make([]any, 0, 50)
 	p.vNodesTemp = make([]any, 0, 50)
 	if precompute != 0 {
 		Rwr_ManPrecompute(p)
