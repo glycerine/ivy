@@ -49,14 +49,15 @@ func (m *Mapping) intern(table []uint64, nLeaves int) int32 {
 		return id
 	}
 	var cost int32
-	if m.Options.LUTSize <= 6 {
+	switch {
+	case nLeaves <= 6:
 		cost = util.Abc_Tt6CnfSize(table[0], int32(nLeaves))
-	} else {
-		padded := make([]uint64, 4)
-		for i := range padded {
-			padded[i] = table[i%len(table)]
-		}
-		cost = util.Abc_Tt8CnfSize(padded, int32(nLeaves))
+	case len(table) == 2:
+		// The seven-input store uses two words. The wide CNF entry point takes four.
+		padded := [4]uint64{table[0], table[1], table[0], table[1]}
+		cost = util.Abc_Tt8CnfSize(padded[:], int32(nLeaves))
+	default:
+		cost = util.Abc_Tt8CnfSize(table, int32(nLeaves))
 	}
 	m.ClauseSizes = append(m.ClauseSizes, int(cost))
 	return id

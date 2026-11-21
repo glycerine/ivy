@@ -3,6 +3,7 @@ package mf
 import (
 	"testing"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -118,5 +119,31 @@ func TestInternOwnsCandidateTruth(t *testing.T) {
 	table[1] = 0
 	if again := m.intern(table, 0); again != zero || saved[3] != 1<<63 {
 		t.Fatal("reusing scratch changed a previously interned truth")
+	}
+}
+
+func TestInternClauseCostAtEachTableWidth(t *testing.T) {
+	const parity6 uint64 = 0x6996966996696996
+	for width := 6; width <= 8; width++ {
+		options := DefaultOptions()
+		options.LUTSize = width
+		words := 1 << (width - 6)
+		m := &Mapping{Options: options, truthStore: vec.Vec_MemAlloc(words, 2)}
+		vec.Vec_MemHashAlloc(m.truthStore, 4)
+		for support := 6; support <= width; support++ {
+			table := [4]uint64{parity6, parity6, parity6, parity6}
+			if support > 6 {
+				table[1], table[3] = ^parity6, ^parity6
+			}
+			if support == 8 {
+				table[2], table[3] = ^table[2], ^table[3]
+			}
+			id := m.intern(table[:words], support)
+			var cover [512]int32
+			want := util.Abc_Tt8Cnf(table[:], int32(support), cover[:])
+			if m.ClauseSizes[id] != int(want) {
+				t.Fatalf("LUT width %d support %d got cost %d, cover has %d cubes", width, support, m.ClauseSizes[id], want)
+			}
+		}
 	}
 }

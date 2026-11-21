@@ -68,14 +68,7 @@ func ttIsop6(on, dc word, n int32, cover []int32, count *int32) word {
 	r1 := ttIsop6(b&^da, db, v, cover, count)
 	end1 := *count
 	r2 := ttIsop6((a&^r0)|(b&^r1), da&db, v, cover, count)
-	if cover != nil {
-		for c := begin; c < end0; c++ {
-			cover[c] |= 1 << uint(2*v)
-		}
-		for c := end0; c < end1; c++ {
-			cover[c] |= 1 << uint(2*v+1)
-		}
-	}
+	markIsopCofactors(cover, begin, end0, end1, v)
 	return r2 | (r0 &^ s_Truths6[v]) | (r1 & s_Truths6[v])
 }
 func Abc_Tt6Isop(on, dc word, n int32, count *int32) word { return ttIsop6(on, dc, n, nil, count) }
@@ -83,64 +76,66 @@ func Abc_Tt6IsopCover(on, dc word, n int32, cover []int32, count *int32) word {
 	return ttIsop6(on, dc, n, cover, count)
 }
 
+func markIsopCofactors(cover []int32, begin, end0, end1, variable int32) {
+	if cover == nil {
+		return
+	}
+	for i := begin; i < end0; i++ {
+		cover[i] |= 1 << uint(2*variable)
+	}
+	for i := end0; i < end1; i++ {
+		cover[i] |= 1 << uint(2*variable+1)
+	}
+}
+
+// The two halves of a seven-input function each fit in one word.
+func ttIsop7(on, dc [2]word, cover []int32, count *int32) [2]word {
+	if on[0] == on[1] && dc[0] == dc[1] {
+		result := ttIsop6(on[0], dc[0], 6, cover, count)
+		return [2]word{result, result}
+	}
+	begin := *count
+	lo := ttIsop6(on[0]&^dc[1], dc[0], 6, cover, count)
+	end0 := *count
+	hi := ttIsop6(on[1]&^dc[0], dc[1], 6, cover, count)
+	end1 := *count
+	both := ttIsop6((on[0]&^lo)|(on[1]&^hi), dc[0]&dc[1], 6, cover, count)
+	markIsopCofactors(cover, begin, end0, end1, 6)
+	return [2]word{lo | both, hi | both}
+}
+
 func ttIsopWide(on, dc []word, n int32, out []word, cover []int32, count *int32) {
 	if n < 0 || n > 8 {
 		panic("truth: ISOP supports at most eight variables")
 	}
 	if n <= 6 {
-		r := ttIsop6(on[0], dc[0], n, cover, count)
+		result := ttIsop6(on[0], dc[0], n, cover, count)
 		for i := range out {
-			out[i] = r
+			out[i] = result
 		}
 		return
 	}
-	half := 1 << uint(n-7)
-	equal := true
-	for i := 0; i < half; i++ {
-		if on[i] != on[i+half] || dc[i] != dc[i+half] {
-			equal = false
-		}
-	}
-	if equal {
-		r := make([]word, half)
-		ttIsopWide(on[:half], dc[:half], n-1, r, cover, count)
-		for i := range out {
-			out[i] = r[i%half]
+	lo, dcLo := [2]word(on), [2]word(dc)
+	if n == 7 || (lo == [2]word(on[2:]) && dcLo == [2]word(dc[2:])) {
+		result := ttIsop7(lo, dcLo, cover, count)
+		out[0], out[1] = result[0], result[1]
+		if len(out) == 4 {
+			out[2], out[3] = result[0], result[1]
 		}
 		return
 	}
-	a, b, shared, dshared := make([]word, half), make([]word, half), make([]word, half), make([]word, half)
-	r0, r1, r2 := make([]word, half), make([]word, half), make([]word, half)
-	for i := 0; i < half; i++ {
-		a[i] = on[i] &^ dc[i+half]
-		b[i] = on[i+half] &^ dc[i]
-		dshared[i] = dc[i] & dc[i+half]
-	}
+	hi, dcHi := [2]word(on[2:]), [2]word(dc[2:])
 	begin := *count
-	ttIsopWide(a, dc[:half], n-1, r0, cover, count)
+	r0 := ttIsop7([2]word{lo[0] &^ dcHi[0], lo[1] &^ dcHi[1]}, dcLo, cover, count)
 	end0 := *count
-	ttIsopWide(b, dc[half:2*half], n-1, r1, cover, count)
+	r1 := ttIsop7([2]word{hi[0] &^ dcLo[0], hi[1] &^ dcLo[1]}, dcHi, cover, count)
 	end1 := *count
-	for i := 0; i < half; i++ {
-		shared[i] = (on[i] &^ r0[i]) | (on[i+half] &^ r1[i])
-	}
-	ttIsopWide(shared, dshared, n-1, r2, cover, count)
-	for i := range out {
-		j := i % (2 * half)
-		if j < half {
-			out[i] = r2[j] | r0[j]
-		} else {
-			out[i] = r2[j-half] | r1[j-half]
-		}
-	}
-	if cover != nil {
-		for c := begin; c < end0; c++ {
-			cover[c] |= 1 << uint(2*(n-1))
-		}
-		for c := end0; c < end1; c++ {
-			cover[c] |= 1 << uint(2*(n-1)+1)
-		}
-	}
+	shared := [2]word{(lo[0] &^ r0[0]) | (hi[0] &^ r1[0]), (lo[1] &^ r0[1]) | (hi[1] &^ r1[1])}
+	dcShared := [2]word{dcLo[0] & dcHi[0], dcLo[1] & dcHi[1]}
+	both := ttIsop7(shared, dcShared, cover, count)
+	out[0], out[1] = r0[0]|both[0], r0[1]|both[1]
+	out[2], out[3] = r1[0]|both[0], r1[1]|both[1]
+	markIsopCofactors(cover, begin, end0, end1, 7)
 }
 func Abc_Tt7Isop(on, dc []word, n int32, out []word) int32 {
 	if n > 7 {
