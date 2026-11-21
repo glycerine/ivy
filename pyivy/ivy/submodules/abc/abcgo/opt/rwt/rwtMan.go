@@ -11,11 +11,17 @@ import (
 )
 
 func Rwt_ManGlobalStart() {
+	rwtCanonicalTables()
+}
+
+// Take a complete snapshot while a concurrent frame stop is excluded.
+func rwtCanonicalTables() ([]uint16, []byte, []byte, []byte) {
 	rwtGlobal.Lock()
 	defer rwtGlobal.Unlock()
 	if rwtGlobal.canons == nil {
 		rwtGlobal.canons, rwtGlobal.phases, rwtGlobal.perms, rwtGlobal.mapping = extra.Extra_Truth4VarNPN()
 	}
+	return rwtGlobal.canons, rwtGlobal.phases, rwtGlobal.perms, rwtGlobal.mapping
 }
 
 func Rwt_ManGlobalStop() {
@@ -29,13 +35,7 @@ func Rwt_ManGlobalStop() {
 
 func Rwt_ManStart(precompute int32) *Rwt_Man_t {
 	start := time.Now()
-	Rwt_ManGlobalStart()
-	rwtGlobal.Lock()
-	canons := rwtGlobal.canons
-	phases := rwtGlobal.phases
-	perms := rwtGlobal.perms
-	mapping := rwtGlobal.mapping
-	rwtGlobal.Unlock()
+	canons, phases, perms, mapping := rwtCanonicalTables()
 	p := &Rwt_Man_t{
 		nFuncs:     1 << 16,
 		puCanons:   canons,
@@ -82,6 +82,10 @@ func Rwt_ManStop(p *Rwt_Man_t) {
 	p.vFaninsCur = nil
 	p.pTable = nil
 	p.pMapInv = nil
+	p.puCanons = nil
+	p.pPhases = nil
+	p.pPerms = nil
+	p.pMap = nil
 	p.pPractical = nil
 	p.pPerms4 = nil
 	p.pGraph = nil

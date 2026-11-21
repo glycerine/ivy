@@ -801,3 +801,9 @@ Exact-size reconstruction took 0.96–1.11 ms per manager in two 1,500-start bat
 The native library fixture has 134 occupied keys in a domain of 65,536 four-input functions. Go previously allocated a 512 KiB pointer directory per manager. Experiments with pages of 16, 64, 128, 256 and 1,024 pointers found the lowest startup allocation at 64. Its 27 occupied pages and outer index use 22,016 bytes before allocator rounding. Startup allocated 1.145 MB versus 1.646 MB and took 0.84–0.91 ms versus 1.49–1.72 ms of process CPU during the same interleaved experiment. The paged index adds 27 allocations per manager.
 
 Boundary tests check both sides of a page, the last key, chain order, empty reads and stopped managers. Two initially failing checks caught an invalid negative key returning an empty chain and a stopped manager still accepting a query. The i10 proof saved about 1.0 MB per run. Two pinned experiments had wide timing ranges on the shared host, from 277–373 ms for the new version and 299–397 ms for the previous version. RWR and base/abci passed normal and race tests.
+
+### Keep RWT canonical tables live for exactly the manager lifetime
+
+A concurrent regression reproduced a live residual-rewriting manager with four empty canonical tables. A frame stop could run between initialization and the separate lock acquisition that copied its slices. The manager now acquires all four references under the initialization lock. Another red test found a stopped manager still holding 320 KiB of table storage after frame shutdown. Teardown now releases its references. Other live managers retain their original tables, and a later frame start creates a new generation with identical truth functions.
+
+The concurrent stop/start and release regressions passed 20 repetitions with the race detector, followed by ten more after adding a frame-generation check. RWT and base/abci passed their normal and race suites.
