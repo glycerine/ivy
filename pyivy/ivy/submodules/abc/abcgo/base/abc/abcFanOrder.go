@@ -79,10 +79,11 @@ func fanPermutation(count int, less func(int, int) bool) []int {
 func permuteFanSOP(o *Object, rows []fanSOPRow, order []int) {
 	o.network.detachAnd(o)
 	old := o.fanins
-	o.fanins = make([]Edge, len(old))
+	ordered := make([]Edge, len(old))
 	for i, index := range order {
-		o.fanins[i] = old[index]
+		ordered[i] = old[index]
 	}
+	o.replaceFanins(ordered)
 	for i, row := range rows {
 		pattern := make([]byte, len(order))
 		for j, index := range order {

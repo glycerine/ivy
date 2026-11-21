@@ -130,7 +130,7 @@ func Abc_NtkSopToBdd(n *Network) int32 {
 		o.Data = root
 		core.Cudd_Ref(root)
 		if fanins, ok := reordered[o]; ok {
-			o.fanins = fanins
+			o.replaceFanins(fanins)
 		}
 	}
 	n.FunctionManager = main
@@ -476,7 +476,7 @@ func Abc_NtkAigToBdd(n *Network) int32 {
 	for o, root := range converted {
 		o.Data = root
 		core.Cudd_Ref(root)
-		o.fanins = reordered[o]
+		o.replaceFanins(reordered[o])
 	}
 	n.FunctionManager = main
 	n.Function = uint8(ABC_FUNC_BDD)

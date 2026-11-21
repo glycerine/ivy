@@ -466,6 +466,8 @@ func Abc_NtkDelete(n *Network) {
 			continue
 		}
 		o.network = nil
+		clearInitialPair(o.fanins)
+		clearInitialPair(o.fanouts)
 		o.fanins = nil
 		o.fanouts = nil
 	}

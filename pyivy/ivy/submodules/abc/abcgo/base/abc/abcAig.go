@@ -127,7 +127,7 @@ func Abc_AigAndCreate(m *Abc_Aig_t, a, b any) Edge {
 	if len(n.hashed)+n.extraAnds > 2*m.bins {
 		Abc_AigResize(m)
 	}
-	o := n.NewObject(ObjectNode)
+	o := n.newAndObject()
 	aigSetNode(o, x, y)
 	e := o.Signal()
 	n.registerAnd(o)

@@ -160,15 +160,15 @@ func (n *Network) checkAndInputs(a, b Edge) {
 func setAndPins(o *Object, a, b Edge) {
 	o.Data = aigANDMarker
 	o.fanins = append(o.fanins, a, b)
-	a.Object.fanouts = append(a.Object.fanouts, o)
-	b.Object.fanouts = append(b.Object.fanouts, o)
+	a.Object.addFanout(o)
+	b.Object.addFanout(o)
 	o.Level = 1 + max(a.Object.Level, b.Object.Level)
 	o.Phase = (a.Object.Phase != a.Complement) && (b.Object.Phase != b.Complement)
 }
 
 func (n *Network) CreateAndEdges(a, b Edge) Edge {
 	n.checkAndInputs(a, b)
-	o := n.NewObject(ObjectNode)
+	o := n.newAndObject()
 	setAndPins(o, a, b)
 	return o.Signal()
 }

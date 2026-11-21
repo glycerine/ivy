@@ -187,10 +187,26 @@ func NewAIGNetworkWithCapacity(name string, inputs, latches, outputs, ands int) 
 }
 
 func (n *Network) NewObject(kind ObjectKind) *Object {
+	return n.addObject(new(Object), kind)
+}
+
+// An AIG gate has two fanins and usually only one or two fanouts. Keep the
+// initial backing arrays in the same allocation as its stable Object handle.
+func (n *Network) newAndObject() *Object {
+	cell := new(struct {
+		Object
+		inputs [2]Edge
+		uses   [2]*Object
+	})
+	cell.fanins, cell.fanouts = cell.inputs[:0], cell.uses[:0]
+	return n.addObject(&cell.Object, ObjectNode)
+}
+
+func (n *Network) addObject(o *Object, kind ObjectKind) *Object {
 	if kind <= ObjectNone || kind > ObjectBlackbox {
 		panic("invalid ABC object kind")
 	}
-	o := &Object{ID: len(n.objects), Kind: kind, network: n}
+	o.ID, o.Kind, o.network = len(n.objects), kind, n
 	n.objects = append(n.objects, o)
 	order := n.kindOrder[kind]
 	if kind == ObjectNode {
@@ -309,6 +325,27 @@ func (n *Network) ChangeObjectKind(o *Object, kind ObjectKind) error {
 	return nil
 }
 func (n *Network) contains(o *Object) bool { return o != nil && o.network == n && n.Object(o.ID) == o }
+
+// Once a two-slot array is replaced, an AND's allocation still contains it.
+func (o *Object) addFanout(use *Object) {
+	old := o.fanouts
+	o.fanouts = append(old, use)
+	if len(old) == 2 && cap(old) == 2 {
+		clear(old)
+	}
+}
+
+func clearInitialPair[T any](items []T) {
+	if cap(items) == 2 {
+		clear(items[:2])
+	}
+}
+
+func (o *Object) replaceFanins(inputs []Edge) {
+	clearInitialPair(o.fanins)
+	o.fanins = inputs
+}
+
 func (n *Network) AddFanin(o *Object, e Edge) error {
 	if !n.contains(o) || !n.contains(e.Object) {
 		return fmt.Errorf("fanin objects must belong to network")
@@ -320,9 +357,13 @@ func (n *Network) AddFanin(o *Object, e Edge) error {
 		return fmt.Errorf("object %d permits one fanin", o.ID)
 	}
 	n.detachAnd(o)
-	o.fanins = append(o.fanins, e)
+	old := o.fanins
+	o.fanins = append(old, e)
+	if len(old) == 2 && cap(old) == 2 {
+		clear(old)
+	}
 	n.changedAnd(o)
-	e.Object.fanouts = append(e.Object.fanouts, o)
+	e.Object.addFanout(o)
 	if !o.IsCI() && e.Object.Level+1 > o.Level {
 		o.Level = e.Object.Level + 1
 	}
@@ -350,7 +391,7 @@ func (n *Network) PatchFanin(o *Object, index int, e Edge) error {
 	old := o.fanins[index].Object
 	old.fanouts = removeObjectOrder(old.fanouts, o)
 	o.fanins[index] = e
-	e.Object.fanouts = append(e.Object.fanouts, o)
+	e.Object.addFanout(o)
 	if changed {
 		n.changedAnd(o)
 	}

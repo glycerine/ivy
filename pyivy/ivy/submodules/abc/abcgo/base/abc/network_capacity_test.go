@@ -41,3 +41,34 @@ func TestReservedAIGInventoryAndInvalidQueries(t *testing.T) {
 		t.Fatal("box kind ordering")
 	}
 }
+
+func TestAndPinStorageReleasesRetiredConnections(t *testing.T) {
+	n := NewNetwork("pin-ownership")
+	a, b, c := n.NewObject(ObjectPI), n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	g := n.CreateAndEdges(a.Signal().Not(), b.Signal()).Object
+	initialInputs, initialUses := g.fanins[:2], g.fanouts[:2]
+	if err := n.AddFanin(g, c.Signal()); err != nil {
+		t.Fatal(err)
+	}
+	for range 3 {
+		o := n.NewObject(ObjectPO)
+		if err := n.AddFanin(o, g.Signal()); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if g.fanins[0] != a.Signal().Not() || g.fanins[2] != c.Signal() || len(g.fanouts) != 3 {
+		t.Fatal("growing pin storage changed connectivity")
+	}
+	if initialInputs[0].Object != nil || initialInputs[1].Object != nil || initialUses[0] != nil || initialUses[1] != nil {
+		t.Error("growing an AND retained references in its retired backing arrays")
+	}
+	other := n.CreateAndEdges(a.Signal(), c.Signal().Not()).Object
+	if err := n.AddFanin(n.NewObject(ObjectPO), other.Signal()); err != nil {
+		t.Fatal(err)
+	}
+	pins, uses := other.fanins[:2], other.fanouts[:2]
+	Abc_NtkDelete(n)
+	if other.Network() != nil || pins[0].Object != nil || pins[1].Object != nil || uses[0] != nil || uses[1] != nil {
+		t.Error("detached AND retained a driver or fanout after network teardown")
+	}
+}
