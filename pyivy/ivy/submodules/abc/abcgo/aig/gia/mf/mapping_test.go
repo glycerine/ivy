@@ -128,3 +128,25 @@ func TestExactCutTrialsReuseScratchAndRestoreReferences(t *testing.T) {
 		}
 	}
 }
+
+func TestChoiceCutOwnsItsSavedLeaves(t *testing.T) {
+	n := &siblingTestNetwork{
+		testNetwork: testNetwork{
+			gates:  []testGate{{kind: 0}, {kind: 1}, {kind: 1}, {a: 2, b: 4, kind: 2}, {a: 2, b: 4, kind: 2}},
+			inputs: []int32{2, 4}, outputs: []int32{8},
+		},
+		sibs: map[int32]int32{4: 3},
+	}
+	m, err := GenerateMapping(n, DefaultOptions())
+	if err != nil {
+		t.Fatal(err)
+	}
+	first, second := m.Cuts[3][0], m.Cuts[4][0]
+	if len(first.Leaves) != 2 || len(second.Leaves) != 2 || first.Function != second.Function {
+		t.Fatal("expected identical two-input choice cuts")
+	}
+	first.Leaves[0] = 0
+	if second.Leaves[0] != 1 {
+		t.Fatal("editing the sibling's saved leaves changed the choice cut")
+	}
+}

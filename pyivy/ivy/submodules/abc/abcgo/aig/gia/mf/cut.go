@@ -85,23 +85,32 @@ func compareArea(a, b Cut) int {
 // addCut reproduces the MF insertion order: equal-ranked new cuts precede old
 // cuts, strict supersets are removed, and one cut slot is reserved for the unit.
 func addCut(cuts []Cut, cut Cut, limit int) []Cut {
-	kept := cuts[:0]
-	for _, old := range cuts {
+	kept := 0
+	for i, old := range cuts {
 		if len(cut.Leaves) < len(old.Leaves) && contains(old.Leaves, cut.Leaves) {
 			continue
 		}
-		kept = append(kept, old)
-	}
-	cuts = append(kept, cut)
-	for i := len(cuts) - 1; i > 0; i-- {
-		if compareArea(cuts[i-1], cuts[i]) < 0 {
-			break
+		if kept != i {
+			cuts[kept] = old
 		}
-		cuts[i-1], cuts[i] = cuts[i], cuts[i-1]
+		kept++
 	}
-	if len(cuts) > limit-1 {
-		cuts = cuts[:limit-1]
+	pos := kept
+	for pos > 0 && compareArea(cuts[pos-1], cut) >= 0 {
+		pos--
 	}
+	if pos >= limit-1 {
+		return cuts[:limit-1]
+	}
+	if kept < limit-1 {
+		cuts = append(cuts[:kept], Cut{})
+	} else {
+		cuts = cuts[:kept]
+	}
+	copy(cuts[pos+1:], cuts[pos:])
+	// A retained cut owns its leaves, including cuts seeded from a sibling.
+	cut.Leaves = append([]int32(nil), cut.Leaves...)
+	cuts[pos] = cut
 	return cuts
 }
 func isContained(cuts []Cut, leaves []int32) bool {

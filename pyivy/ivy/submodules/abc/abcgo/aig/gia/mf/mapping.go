@@ -132,7 +132,7 @@ func (m *Mapping) merge(id int32) error {
 	}
 	first := m.prepare(a>>1, true, buffers[0][:0])
 	second := m.prepare(b>>1, true, buffers[1][:0])
-	result := make([]Cut, 0, m.Options.CutLimit)
+	result := make([]Cut, 0, m.Options.CutLimit-1)
 	if choices, ok := m.Network.(interface{ Sibling(int32) int32 }); ok {
 		if sibling := choices.Sibling(id); sibling != 0 {
 			for _, candidate := range m.prepare(sibling, false, nil) {
@@ -154,7 +154,6 @@ func (m *Mapping) merge(id int32) error {
 			return
 		}
 		cut := m.computeTruth(parts, complements, kind, leaves)
-		cut.Leaves = append([]int32(nil), cut.Leaves...)
 		m.parameters(&cut, m.nodes[id].flowRefs)
 		result = addCut(result, cut, m.Options.CutLimit)
 	}
@@ -172,6 +171,7 @@ func (m *Mapping) merge(id int32) error {
 	if len(result) == 0 {
 		return fmt.Errorf("mf: no cuts for object %d", id)
 	}
+	clear(result[len(result):cap(result)])
 	m.Cuts[id] = result
 	m.nodes[id].flow = result[0].Flow
 	m.nodes[id].delay = result[0].Delay

@@ -833,3 +833,9 @@ Tests hold a truth across page and hash growth, distinguish the last word, verif
 The post-interning heap profile attributed 7.5% of allocated bytes to a 32-element array in best-cut selection. Go put this array on the heap at every gate, including area-flow rounds. An exact-area trial on a five-level binary tree reproduced two allocations per visit. Mapping now passes a reusable slice between serial gate visits and rounds. The test checks zero allocations after warmup, restoration of all 62 fanin reference counts and that the area-flow path needs no scratch.
 
 The i10 solve fell from 7.45 to 6.91 MB and from 84,225 to 80,048 allocations. Two 120-solve batches took 40.3–41.0 ms versus 41.3–42.2 ms with per-node scratch. The mapped-CNF native differential and MF package tests passed normally and under the race detector.
+
+### Copy retained MF cuts after ranking
+
+A failing choice-network test showed that editing a saved sibling's leaves also changed the selected cut of a different node. Native Mf_ManSaveCuts copies the leaf IDs of each retained cut. Go now ranks a candidate before copying its leaves, which also avoids copying candidates displaced immediately. Insertion preserves tie order and moves the retained suffix once. The published cut set clears unused slots.
+
+A trial that reused displaced leaf arrays reached 50,069 allocations but had no consistent speed benefit over copying just the retained leaves. The chosen version ran i10 in 38.1–38.3 ms versus 40.3 ms, in matched 150-solve batches. Allocation fell from 6.91 MB and 80,048 allocations to 6.26 MB and 59,008. The choice ownership test, a full-set rejection and tie-order test, and the complete MF suite passed normally and under the race detector. The full-module truth-storage checkpoint passed all 130 tested packages.

@@ -24,6 +24,23 @@ func TestCutMergeAndSourceTieOrder(t *testing.T) {
 		t.Fatal("strict supersets survived")
 	}
 }
+
+func TestFullCutSetOnlyCopiesRetainedCandidates(t *testing.T) {
+	cuts := []Cut{
+		{Leaves: []int32{1, 2}, Flow: 1},
+		{Leaves: []int32{3, 4}, Flow: 2},
+	}
+	candidate := Cut{Leaves: []int32{5, 6}, Flow: 3}
+	if allocs := testing.AllocsPerRun(20, func() { cuts = addCut(cuts, candidate, 3) }); allocs != 0 {
+		t.Fatalf("discarding a lower-ranked cut allocated %.0f times", allocs)
+	}
+	candidate.Flow = 1
+	cuts = addCut(cuts, candidate, 3)
+	candidate.Leaves[0] = 0
+	if len(cuts) != 2 || cuts[0].Leaves[0] != 5 || cuts[1].Leaves[0] != 1 {
+		t.Fatal("equal-ranked candidate lost its order or ownership", cuts)
+	}
+}
 func TestTruthAlignmentAndSupportMinimization(t *testing.T) {
 	// x0 XOR x1 expanded onto leaves 1 and 3 of a three-variable merged cut.
 	table := []uint64{0x6666666666666666, 0x6666666666666666, 0x6666666666666666, 0x6666666666666666}
