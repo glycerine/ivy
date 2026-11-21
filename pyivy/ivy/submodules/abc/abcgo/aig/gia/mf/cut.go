@@ -1,14 +1,11 @@
 // Package mf ports the cut mapper and mapped-CNF generator from giaMf.c.
 package mf
 
-import (
-	"math/bits"
-
-	"github.com/glycerine/abcgo/misc/util"
-)
+import "github.com/glycerine/abcgo/misc/util"
 
 const epsilon float32 = 0.005
 const maxLeaves = 10
+const maxCuts = 16
 
 // Cut stores a source MF cut without the packed header or paged arena.
 // Function is an interned truth-table literal, including its complement bit.
@@ -40,9 +37,6 @@ func contains(base, sub []int32) bool {
 	return true
 }
 func mergeLeaves(merged, a, b []int32, limit int) ([]int32, bool) {
-	if len(a)+len(b) > limit && bits.OnesCount64(signature(a)|signature(b)) > limit {
-		return nil, false
-	}
 	for i, j := 0, 0; i < len(a) || j < len(b); {
 		var leaf int32
 		switch {
@@ -82,16 +76,24 @@ func compareArea(a, b Cut) int {
 	return 0
 }
 
-// addCut reproduces the MF insertion order: equal-ranked new cuts precede old
-// cuts, strict supersets are removed, and one cut slot is reserved for the unit.
-func addCut(cuts []Cut, cut Cut, limit int) []Cut {
+// Capacity excludes the slot reserved for a unit cut. Signatures accompany
+// the ranked cuts only while a single node is being enumerated.
+type cutSet struct {
+	cuts  []Cut
+	signs [maxCuts]uint64
+}
+
+// Equal-ranked new cuts precede old cuts, and strict supersets are removed.
+func (s *cutSet) add(cut Cut, sign uint64) {
+	cuts := s.cuts
 	kept := 0
 	for i, old := range cuts {
-		if len(cut.Leaves) < len(old.Leaves) && contains(old.Leaves, cut.Leaves) {
+		if len(cut.Leaves) < len(old.Leaves) && sign&^s.signs[i] == 0 && contains(old.Leaves, cut.Leaves) {
 			continue
 		}
 		if kept != i {
 			cuts[kept] = old
+			s.signs[kept] = s.signs[i]
 		}
 		kept++
 	}
@@ -99,23 +101,22 @@ func addCut(cuts []Cut, cut Cut, limit int) []Cut {
 	for pos > 0 && compareArea(cuts[pos-1], cut) >= 0 {
 		pos--
 	}
-	if pos >= limit-1 {
-		return cuts[:limit-1]
+	if pos >= cap(cuts) {
+		return
 	}
-	if kept < limit-1 {
-		cuts = append(cuts[:kept], Cut{})
-	} else {
-		cuts = cuts[:kept]
-	}
+	cuts = cuts[:min(kept+1, cap(cuts))]
 	copy(cuts[pos+1:], cuts[pos:])
+	copy(s.signs[pos+1:len(cuts)], s.signs[pos:])
 	// A retained cut owns its leaves, including cuts seeded from a sibling.
 	cut.Leaves = append([]int32(nil), cut.Leaves...)
 	cuts[pos] = cut
-	return cuts
+	s.signs[pos] = sign
+	s.cuts = cuts
 }
-func isContained(cuts []Cut, leaves []int32) bool {
-	for _, old := range cuts {
-		if len(old.Leaves) <= len(leaves) && contains(leaves, old.Leaves) {
+
+func (s *cutSet) contains(leaves []int32, sign uint64) bool {
+	for i, old := range s.cuts {
+		if len(old.Leaves) <= len(leaves) && s.signs[i]&^sign == 0 && contains(leaves, old.Leaves) {
 			return true
 		}
 	}

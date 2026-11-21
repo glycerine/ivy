@@ -6,6 +6,8 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
+func addTestCut(s *cutSet, c Cut) { s.add(c, signature(c.Leaves)) }
+
 func TestCutMergeAndSourceTieOrder(t *testing.T) {
 	leaves, ok := mergeLeaves(nil, []int32{1, 3, 65}, []int32{2, 3}, 4)
 	if !ok || len(leaves) != 4 || leaves[2] != 3 || leaves[3] != 65 {
@@ -14,31 +16,59 @@ func TestCutMergeAndSourceTieOrder(t *testing.T) {
 	if _, ok := mergeLeaves(nil, []int32{1, 65}, []int32{129}, 2); ok {
 		t.Fatal("signature collisions must not permit oversized cuts")
 	}
-	cuts := []Cut{{Leaves: []int32{1, 3}, Function: 4, Flow: 1, Delay: 1}}
-	cuts = addCut(cuts, Cut{Leaves: []int32{2, 3}, Function: 6, Flow: 1, Delay: 1}, 8)
-	if cuts[0].Function != 6 {
+	s := cutSet{cuts: make([]Cut, 0, 7)}
+	addTestCut(&s, Cut{Leaves: []int32{1, 3}, Function: 4, Flow: 1, Delay: 1})
+	addTestCut(&s, Cut{Leaves: []int32{2, 3}, Function: 6, Flow: 1, Delay: 1})
+	if s.cuts[0].Function != 6 {
 		t.Fatal("source stable tie rule")
 	}
-	cuts = addCut(cuts, Cut{Leaves: []int32{3}, Function: 2, Flow: 0}, 8)
-	if len(cuts) != 1 || cuts[0].Function != 2 {
+	addTestCut(&s, Cut{Leaves: []int32{3}, Function: 2, Flow: 0})
+	if len(s.cuts) != 1 || s.cuts[0].Function != 2 || s.signs[0] != 1<<3 {
 		t.Fatal("strict supersets survived")
 	}
 }
 
 func TestFullCutSetOnlyCopiesRetainedCandidates(t *testing.T) {
-	cuts := []Cut{
-		{Leaves: []int32{1, 2}, Flow: 1},
-		{Leaves: []int32{3, 4}, Flow: 2},
-	}
+	s := cutSet{cuts: make([]Cut, 0, 2)}
+	addTestCut(&s, Cut{Leaves: []int32{1, 2}, Flow: 1})
+	addTestCut(&s, Cut{Leaves: []int32{3, 4}, Flow: 2})
 	candidate := Cut{Leaves: []int32{5, 6}, Flow: 3}
-	if allocs := testing.AllocsPerRun(20, func() { cuts = addCut(cuts, candidate, 3) }); allocs != 0 {
+	if allocs := testing.AllocsPerRun(20, func() { addTestCut(&s, candidate) }); allocs != 0 {
 		t.Fatalf("discarding a lower-ranked cut allocated %.0f times", allocs)
 	}
 	candidate.Flow = 1
-	cuts = addCut(cuts, candidate, 3)
+	addTestCut(&s, candidate)
 	candidate.Leaves[0] = 0
+	cuts := s.cuts
 	if len(cuts) != 2 || cuts[0].Leaves[0] != 5 || cuts[1].Leaves[0] != 1 {
 		t.Fatal("equal-ranked candidate lost its order or ownership", cuts)
+	}
+}
+
+func TestCutSignaturesRejectOnlyImpossibleSubsets(t *testing.T) {
+	s := cutSet{cuts: make([]Cut, 0, 4)}
+	addTestCut(&s, Cut{Leaves: []int32{1, 2}})
+	for _, trial := range []struct {
+		leaves []int32
+		want   bool
+	}{
+		{[]int32{65, 66}, false},
+		{[]int32{1, 66, 70}, false},
+		{[]int32{1, 2, 66}, true},
+		{[]int32{0, 1}, false},
+	} {
+		if got := s.contains(trial.leaves, signature(trial.leaves)); got != trial.want {
+			t.Fatalf("subset check for %v got %t", trial.leaves, got)
+		}
+	}
+	addTestCut(&s, Cut{Leaves: []int32{65}})
+	if len(s.cuts) != 2 {
+		t.Fatal("a signature collision removed distinct leaves")
+	}
+	for i, c := range s.cuts {
+		if s.signs[i] != signature(c.Leaves) {
+			t.Fatalf("signature lost its cut at position %d", i)
+		}
 	}
 }
 func TestTruthAlignmentAndSupportMinimization(t *testing.T) {

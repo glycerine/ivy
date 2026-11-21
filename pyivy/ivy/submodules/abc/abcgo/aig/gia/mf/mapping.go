@@ -124,7 +124,7 @@ func (m *Mapping) merge(id int32) error {
 		kind = 2
 	}
 	// The cut limit is at most 16, including the optional unit cut.
-	var buffers [3][16]Cut
+	var buffers [3][maxCuts]Cut
 	var control []Cut
 	if kind == 4 { // normalize control,then,else to source order.
 		a, c = c, a
@@ -132,7 +132,7 @@ func (m *Mapping) merge(id int32) error {
 	}
 	first := m.prepare(a>>1, true, buffers[0][:0])
 	second := m.prepare(b>>1, true, buffers[1][:0])
-	result := make([]Cut, 0, m.Options.CutLimit-1)
+	result := cutSet{cuts: make([]Cut, 0, m.Options.CutLimit-1)}
 	if choices, ok := m.Network.(interface{ Sibling(int32) int32 }); ok {
 		if sibling := choices.Sibling(id); sibling != 0 {
 			for _, candidate := range m.prepare(sibling, false, nil) {
@@ -140,41 +140,54 @@ func (m *Mapping) merge(id int32) error {
 					candidate.Function ^= 1
 				}
 				m.parameters(&candidate, m.nodes[id].flowRefs)
-				result = addCut(result, candidate, m.Options.CutLimit)
+				result.add(candidate, signature(candidate.Leaves))
 			}
 		}
 	}
 	var pair, triple [maxLeaves]int32
-	offer := func(parts []Cut, complements []int32) {
+	offer := func(parts []Cut, complements []int32, sign uint64) {
+		if bits.OnesCount64(sign) > m.Options.LUTSize {
+			return
+		}
 		leaves, ok := mergeLeaves(pair[:0], parts[0].Leaves, parts[1].Leaves, m.Options.LUTSize)
 		if ok && len(parts) == 3 {
 			leaves, ok = mergeLeaves(triple[:0], leaves, parts[2].Leaves, m.Options.LUTSize)
 		}
-		if !ok || isContained(result, leaves) {
+		if !ok || result.contains(leaves, sign) {
 			return
 		}
 		cut := m.computeTruth(parts, complements, kind, leaves)
+		if len(cut.Leaves) < len(leaves) {
+			sign = signature(cut.Leaves)
+		}
 		m.parameters(&cut, m.nodes[id].flowRefs)
-		result = addCut(result, cut, m.Options.CutLimit)
+		result.add(cut, sign)
 	}
-	for _, left := range first {
-		for _, right := range second {
+	var signs [3][maxCuts]uint64
+	for part, fanin := range [3][]Cut{first, second, control} {
+		for i, cut := range fanin {
+			signs[part][i] = signature(cut.Leaves)
+		}
+	}
+	for i, left := range first {
+		for j, right := range second {
+			sign := signs[0][i] | signs[1][j]
 			if kind == 4 {
-				for _, ctrl := range control {
-					offer([]Cut{left, right, ctrl}, []int32{a & 1, b & 1, c & 1})
+				for k, ctrl := range control {
+					offer([]Cut{left, right, ctrl}, []int32{a & 1, b & 1, c & 1}, sign|signs[2][k])
 				}
 			} else {
-				offer([]Cut{left, right}, []int32{a & 1, b & 1})
+				offer([]Cut{left, right}, []int32{a & 1, b & 1}, sign)
 			}
 		}
 	}
-	if len(result) == 0 {
+	if len(result.cuts) == 0 {
 		return fmt.Errorf("mf: no cuts for object %d", id)
 	}
-	clear(result[len(result):cap(result)])
-	m.Cuts[id] = result
-	m.nodes[id].flow = result[0].Flow
-	m.nodes[id].delay = result[0].Delay
+	clear(result.cuts[len(result.cuts):cap(result.cuts)])
+	m.Cuts[id] = result.cuts
+	m.nodes[id].flow = result.cuts[0].Flow
+	m.nodes[id].delay = result.cuts[0].Delay
 	return nil
 }
 
@@ -278,7 +291,7 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 	if network == nil {
 		return nil, fmt.Errorf("mf: nil network")
 	}
-	if options.LUTSize < 3 || options.LUTSize > 8 || options.CutLimit < 2 || options.CutLimit > 16 || options.Rounds < 1 || options.ExactRounds < 0 {
+	if options.LUTSize < 3 || options.LUTSize > 8 || options.CutLimit < 2 || options.CutLimit > maxCuts || options.Rounds < 1 || options.ExactRounds < 0 {
 		return nil, fmt.Errorf("mf: invalid mapping options")
 	}
 	count := network.ObjectCount()

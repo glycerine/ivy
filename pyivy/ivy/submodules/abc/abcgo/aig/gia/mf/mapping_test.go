@@ -150,3 +150,20 @@ func TestChoiceCutOwnsItsSavedLeaves(t *testing.T) {
 		t.Fatal("editing the sibling's saved leaves changed the choice cut")
 	}
 }
+
+func TestMinimizedCutPrunesLaterSupersets(t *testing.T) {
+	// a AND (a OR b) reduces to a. Its signature must lose b before it
+	// is compared with the later candidate whose leaves are a and gate 3.
+	n := &testNetwork{
+		gates:  []testGate{{kind: 0}, {kind: 1}, {kind: 1}, {a: 3, b: 5, kind: 2}, {a: 2, b: 7, kind: 2}},
+		inputs: []int32{2, 4}, outputs: []int32{8},
+	}
+	m, err := GenerateMapping(n, DefaultOptions())
+	if err != nil {
+		t.Fatal(err)
+	}
+	cuts := m.Cuts[4]
+	if len(cuts) != 1 || len(cuts[0].Leaves) != 1 || cuts[0].Leaves[0] != 1 {
+		t.Fatal("expected only the minimal one-leaf cut", cuts)
+	}
+}
