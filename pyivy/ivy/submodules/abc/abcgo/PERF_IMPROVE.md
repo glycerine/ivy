@@ -495,3 +495,13 @@ A red allocation test found two heap allocations when inserting four computed re
 The Go map implementation took 39–44 ns for the commuted image hit. The packed index took 28.3–28.4 ns in the final trial, with zero allocations in both cases. The six-queen solve took 3.69–3.76 ms and 10,396 allocations, compared with the earlier 3.75–3.82 ms and 10,410 allocations. A batch of 256 state maps stayed at 10.9–11.0 µs. The C references for these workloads were 9.5 ns, 1.68–2.60 ms and 7.62 µs respectively.
 
 Across paired 650-solve runs on the same core, partitioned reachability went from 1.50–1.67 ms to 1.35–1.37 ms and used 33 fewer allocations. Monolithic reachability went from 1.10 ms to 1.03–1.09 ms and used 22 fewer allocations. Bytes per solve stayed near 768 KB in the partitioned case and fell from 682 KB to 672 KB in the monolithic case. All thirteen BDD package race suites, base/abci and misc/extra passed.
+
+### Preserve the structural AND hash across network edits
+
+Seven red cases showed that an unrelated edit could replace the newest duplicate AND with the oldest. Other failures covered a deletion callback seeing the removed entry, losing the native predecessor after deletion or object reuse, bucket order after rehash, accepting a cached non-node, and unchanged pin or data writes displacing a valid entry. A miss on an excluded node could repopulate the network's hash and spuriously resize an empty manager. The native fixture checks insertion, deletion, output editing, rehash and resize, including growth from three to eleven bins on the eighth insertion.
+
+Network edits now invalidate the affected fanin pair. A raw node rewired into a cached pair still participates in the existing lowest-object-ID fallback. Explicitly registered duplicates retain their insertion order, reverse on rehash, and reveal their predecessor when removed. Unique pairs use the normal hash entry alone. Deletion unlinks the node before calling the cut callback. The tests distinguish edited functions, complemented pins, excluded nodes, and the source ordering of registered duplicates.
+
+Toggling an output and looking up its shared-input AND took 4.71–4.79 µs in Go. Fanout scanning accounted for 98% of the old profile. The updated lookup took 60–65 ns and zero allocations. C took 5.4–5.5 ns and spent 94% of its samples in lookup. A paired i10 CEC run with 5,051 miter ANDs went from 327 ms to 307–310 ms; C previously took 222 ms. Network checking was within the prior range at 324 µs versus 318–325 µs. The base/abc, base/abci, base/io, bool/dec and map/scl race tests passed.
+
+The full-module snapshot containing cached BDD abstraction and reusable trace replay passed all 130 packages with tests, including GIA in 463 seconds.

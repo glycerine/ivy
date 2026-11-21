@@ -308,15 +308,14 @@ func Abc_NodeIsInv(o *Object) int32 {
 	return abcBool(fn([]bool{false}) && !fn([]bool{true}))
 }
 func Abc_NodeComplement(o *Object) {
+	o.network.detachAnd(o)
 	switch function := o.Data.(type) {
 	case *hop.Hop_Obj_t:
 		o.Data = hop.Hop_Not(function)
-		clear(o.network.hashed)
 		return
 	case string:
 		if Abc_NtkHasSop(o.network) != 0 {
 			o.Data = Abc_SopComplement(function)
-			clear(o.network.hashed)
 			return
 		}
 	}
@@ -327,29 +326,26 @@ func Abc_NodeComplement(o *Object) {
 			core.Cudd_Ref(next)
 			core.Cudd_RecursiveDeref(manager, old)
 			o.Data = next
-			clear(o.network.hashed)
 			return
 		}
 	}
 	fn := localFunction(o)
 	o.Data = func(v []bool) bool { return !fn(v) }
-	clear(o.network.hashed)
 }
 func Abc_NodeComplementInput(o, fanin *Object) {
 	index := Abc_ObjFanoutFaninNum(o, fanin)
 	if index < 0 {
 		panic("missing fanin")
 	}
+	o.network.detachAnd(o)
 	if manager, ok := o.network.FunctionManager.(*hop.Hop_Man_t); ok {
 		if function, ok := o.Data.(*hop.Hop_Obj_t); ok {
 			o.Data = hop.Hop_Complement(manager, function, index)
-			clear(o.network.hashed)
 			return
 		}
 	}
 	if function, ok := o.Data.(string); ok && Abc_NtkHasSop(o.network) != 0 {
 		o.Data = Abc_SopComplementVar(function, index)
-		clear(o.network.hashed)
 		return
 	}
 	if manager, ok := o.network.FunctionManager.(*core.DdManager); ok {
@@ -362,7 +358,6 @@ func Abc_NodeComplementInput(o, fanin *Object) {
 			core.Cudd_Ref(next)
 			core.Cudd_RecursiveDeref(manager, old)
 			o.Data = next
-			clear(o.network.hashed)
 			return
 		}
 	}
@@ -372,7 +367,6 @@ func Abc_NodeComplementInput(o, fanin *Object) {
 		copyValues[index] = !copyValues[index]
 		return fn(copyValues)
 	}
-	clear(o.network.hashed)
 }
 
 func sopConstructor(n *Network, node *Object, text string) *Object {

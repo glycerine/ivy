@@ -105,15 +105,27 @@ func Abc_ObjChild(o *Object, i int32) Edge     { return o.fanins[i] }
 func Abc_ObjChild0(o *Object) Edge             { return Abc_ObjChild(o, 0) }
 func Abc_ObjChild1(o *Object) Edge             { return Abc_ObjChild(o, 1) }
 func Abc_ObjFaninC(o *Object, i int32) int32   { return abcBool(o.fanins[i].Complement) }
-func Abc_ObjSetFaninC(o *Object, i int32)      { o.fanins[i].Complement = true; clear(o.network.hashed) }
-func Abc_ObjXorFaninC(o *Object, i int32) {
-	o.fanins[i].Complement = !o.fanins[i].Complement
-	clear(o.network.hashed)
+func Abc_ObjSetFaninC(o *Object, i int32) {
+	if !o.fanins[i].Complement {
+		Abc_ObjXorFaninC(o, i)
+	}
 }
-func Abc_ObjLevel(o *Object) int32            { return int32(o.Level) }
-func Abc_ObjSetLevel(o *Object, level int32)  { o.Level = int(level) }
-func Abc_ObjData(o *Object) any               { return o.Data }
-func Abc_ObjSetData(o *Object, data any)      { o.Data = data; clear(o.network.hashed) }
+func Abc_ObjXorFaninC(o *Object, i int32) {
+	o.network.detachAnd(o)
+	o.fanins[i].Complement = !o.fanins[i].Complement
+	o.network.changedAnd(o)
+}
+func Abc_ObjLevel(o *Object) int32           { return int32(o.Level) }
+func Abc_ObjSetLevel(o *Object, level int32) { o.Level = int(level) }
+func Abc_ObjData(o *Object) any              { return o.Data }
+func Abc_ObjSetData(o *Object, data any) {
+	if o.Data == aigANDMarker && data == aigANDMarker {
+		return
+	}
+	o.network.detachAnd(o)
+	o.Data = data
+	o.network.changedAnd(o)
+}
 func Abc_ObjCopyData(o *Object) any           { return o.CopyData }
 func Abc_ObjSetCopyData(o *Object, data any)  { o.CopyData = data }
 func Abc_ObjCopyEdge(o *Object) Edge          { return getCopy(o) }

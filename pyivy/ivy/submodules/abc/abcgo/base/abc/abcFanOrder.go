@@ -77,6 +77,7 @@ func fanPermutation(count int, less func(int, int) bool) []int {
 	return order
 }
 func permuteFanSOP(o *Object, rows []fanSOPRow, order []int) {
+	o.network.detachAnd(o)
 	old := o.fanins
 	o.fanins = make([]Edge, len(old))
 	for i, index := range order {
@@ -90,7 +91,6 @@ func permuteFanSOP(o *Object, rows []fanSOPRow, order []int) {
 		rows[i].pattern = string(pattern)
 	}
 	o.Data = fanSOPText(rows)
-	clear(o.network.hashed)
 }
 func Abc_NtkOrderFaninsById(n *Network) {
 	for _, o := range n.ObjectsOfKind(ObjectNode) {

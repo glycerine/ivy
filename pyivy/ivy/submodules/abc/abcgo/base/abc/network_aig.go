@@ -1,6 +1,9 @@
 package abc
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 func edgePair(a, b Edge) [2]Edge {
 	if a.Object.ID > b.Object.ID || (a.Object.ID == b.Object.ID && a.Complement && !b.Complement) {
@@ -10,6 +13,11 @@ func edgePair(a, b Edge) [2]Edge {
 }
 func (n *Network) One() Edge { return n.constant.Signal() }
 func (n *Network) lookupAnd(a, b Edge) (Edge, bool) {
+	return n.lookupAndAllowed(a, b, nil)
+}
+
+func (n *Network) lookupAndAllowed(a, b Edge, excluded map[*Object]bool) (Edge, bool) {
+
 	if !n.contains(a.Object) || !n.contains(b.Object) {
 		panic("foreign AIG input")
 	}
@@ -31,19 +39,26 @@ func (n *Network) lookupAnd(a, b Edge) (Edge, bool) {
 		return Edge{}, false
 	}
 	pair := edgePair(a, b)
-	if e, ok := n.hashed[pair]; ok {
-		o := e.Object
-		if n.contains(o) && o.Data == aigANDMarker && len(o.fanins) == 2 && edgePair(o.fanins[0], o.fanins[1]) == pair {
-			return e, true
-		}
-		delete(n.hashed, pair)
+	if o := n.cachedAnd(pair); o != nil && !excluded[o] {
+		return o.Signal(), true
 	}
-	if found := findAndFanout(pair, nil); found != nil {
+	if found := findAndFanout(pair, excluded); found != nil {
 		e := found.Signal()
 		n.hashed[pair] = e
 		return e, true
 	}
 	return Edge{}, false
+}
+
+func (n *Network) cachedAnd(pair [2]Edge) *Object {
+	for e := n.hashed[pair]; e.Object != nil; e = n.hashed[pair] {
+		o := e.Object
+		if n.contains(o) && aigNode(o) && edgePair(o.fanins[0], o.fanins[1]) == pair {
+			return o
+		}
+		n.removeAndKey(pair, o)
+	}
+	return nil
 }
 
 // Either operand's fanouts contain every AND with this key. Duplicate
@@ -60,6 +75,61 @@ func findAndFanout(pair [2]Edge, excluded map[*Object]bool) *Object {
 		}
 	}
 	return first
+}
+
+// A native hash bucket returns the last inserted AND with this fanin pair.
+// Only duplicate pairs need additional storage beyond the regular hash entry.
+func (n *Network) registerAnd(o *Object) {
+	key := edgePair(o.fanins[0], o.fanins[1])
+	previous := n.cachedAnd(key)
+	if previous != nil && previous != o {
+		if n.duplicateAnds == nil {
+			n.duplicateAnds = make(map[[2]Edge][]*Object)
+		}
+		group := n.duplicateAnds[key]
+		if len(group) == 0 {
+			group = append(group, previous)
+		}
+		n.duplicateAnds[key] = append(group, o)
+		n.extraAnds++
+	}
+	n.hashed[key] = o.Signal()
+}
+
+// Remove the object from its old key before editing its fanins or function.
+func (n *Network) detachAnd(o *Object) {
+	if len(n.hashed) == 0 || o.Kind != ObjectNode || len(o.fanins) != 2 {
+		return
+	}
+	n.removeAndKey(edgePair(o.fanins[0], o.fanins[1]), o)
+}
+
+func (n *Network) removeAndKey(key [2]Edge, o *Object) {
+	if group := n.duplicateAnds[key]; len(group) > 0 {
+		if i := slices.Index(group, o); i >= 0 {
+			group = slices.Delete(group, i, i+1)
+			n.extraAnds--
+			if len(group) == 1 {
+				delete(n.duplicateAnds, key)
+			} else {
+				n.duplicateAnds[key] = group
+			}
+		}
+		n.hashed[key] = group[len(group)-1].Signal()
+	} else if n.hashed[key].Object == o {
+		delete(n.hashed, key)
+	}
+}
+
+// An edited raw node can precede an already cached fanout in object-ID order.
+func (n *Network) changedAnd(o *Object) {
+	if len(n.hashed) == 0 || o.ID == len(n.objects)-1 || !aigNode(o) {
+		return
+	}
+	key := edgePair(o.fanins[0], o.fanins[1])
+	if head := n.hashed[key].Object; head != nil && head.ID > o.ID && len(n.duplicateAnds[key]) == 0 {
+		delete(n.hashed, key)
+	}
 }
 
 const aigANDMarker = "abcgo:AIG AND"

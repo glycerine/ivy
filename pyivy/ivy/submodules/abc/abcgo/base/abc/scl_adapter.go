@@ -208,8 +208,7 @@ func (n *Network) SclToggleFaninPhase(id, pin int) error {
 		return fmt.Errorf("invalid SCL phase toggle")
 	}
 	n.phaseTracking = true
-	o.fanins[pin].Complement = !o.fanins[pin].Complement
-	clear(n.hashed)
+	Abc_ObjXorFaninC(o, int32(pin))
 	return nil
 }
 func (n *Network) SclSetPhases(enabled bool) error {

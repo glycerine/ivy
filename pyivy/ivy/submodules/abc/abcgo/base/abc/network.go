@@ -127,6 +127,8 @@ type Network struct {
 	objects             []*Object
 	names               *nm.Manager
 	hashed              map[[2]Edge]Edge
+	duplicateAnds       map[[2]Edge][]*Object
+	extraAnds           int
 	constant            *Object
 }
 
@@ -204,7 +206,9 @@ func (n *Network) ChangeObjectKind(o *Object, kind ObjectKind) error {
 		return fmt.Errorf("object kind index is inconsistent")
 	}
 	n.kindOrder[old] = removeObjectOrder(oldOrder, o)
+	n.detachAnd(o)
 	o.Kind = kind
+	n.changedAnd(o)
 	newOrder := append(n.kindOrder[kind], o)
 	for i := len(newOrder) - 1; i > 0 && newOrder[i].ID < newOrder[i-1].ID; i-- {
 		newOrder[i], newOrder[i-1] = newOrder[i-1], newOrder[i]
@@ -223,8 +227,9 @@ func (n *Network) AddFanin(o *Object, e Edge) error {
 	if (o.IsCO() || o.Kind == ObjectNet) && len(o.fanins) != 0 {
 		return fmt.Errorf("object %d permits one fanin", o.ID)
 	}
-	clear(n.hashed)
+	n.detachAnd(o)
 	o.fanins = append(o.fanins, e)
+	n.changedAnd(o)
 	e.Object.fanouts = append(e.Object.fanouts, o)
 	if !o.IsCI() && e.Object.Level+1 > o.Level {
 		o.Level = e.Object.Level + 1
@@ -235,6 +240,7 @@ func (n *Network) DeleteFanin(o *Object, index int) error {
 	if !n.contains(o) || index < 0 || index >= len(o.fanins) {
 		return fmt.Errorf("invalid fanin index")
 	}
+	n.detachAnd(o)
 	source := o.fanins[index].Object
 	o.fanins = append(o.fanins[:index], o.fanins[index+1:]...)
 	for i, d := range source.fanouts {
@@ -243,12 +249,16 @@ func (n *Network) DeleteFanin(o *Object, index int) error {
 			break
 		}
 	}
-	clear(n.hashed)
+	n.changedAnd(o)
 	return nil
 }
 func (n *Network) PatchFanin(o *Object, index int, e Edge) error {
 	if !n.contains(o) || !n.contains(e.Object) || e.Object.Kind == ObjectPO || index < 0 || index >= len(o.fanins) {
 		return fmt.Errorf("invalid fanin replacement")
+	}
+	changed := o.fanins[index] != e
+	if changed {
+		n.detachAnd(o)
 	}
 	old := o.fanins[index].Object
 	for i, d := range old.fanouts {
@@ -259,7 +269,9 @@ func (n *Network) PatchFanin(o *Object, index int, e Edge) error {
 	}
 	o.fanins[index] = e
 	e.Object.fanouts = append(e.Object.fanouts, o)
-	clear(n.hashed)
+	if changed {
+		n.changedAnd(o)
+	}
 	return nil
 }
 func (n *Network) DeleteObject(o *Object) error {

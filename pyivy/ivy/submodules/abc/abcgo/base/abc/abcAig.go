@@ -1,6 +1,10 @@
 package abc
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
+	"slices"
+)
 
 // Abc_Aig_t owns structural hashing for an ABC object network. It deliberately
 // keeps ABC Object identities rather than moving nodes into a second graph.
@@ -40,6 +44,8 @@ func Abc_AigFree(m *Abc_Aig_t) {
 	m.updated = nil
 	m.tracking = false
 	clear(m.Network.hashed)
+	clear(m.Network.duplicateAnds)
+	m.Network.extraAnds = 0
 }
 func aigNode(o *Object) bool {
 	return o != nil && o.Kind == ObjectNode && o.Data == aigANDMarker && len(o.fanins) == 2
@@ -119,10 +125,13 @@ func Abc_AigAndCreate(m *Abc_Aig_t, a, b any) Edge {
 	if !n.contains(x.Object) || !n.contains(y.Object) {
 		panic("foreign AIG operand")
 	}
+	if len(n.hashed)+n.extraAnds > 2*m.bins {
+		Abc_AigResize(m)
+	}
 	o := n.NewObject(ObjectNode)
 	aigSetNode(o, x, y)
 	e := o.Signal()
-	n.hashed[edgePair(x, y)] = e
+	n.registerAnd(o)
 	if m.tracking {
 		m.added = append(m.added, o)
 	}
@@ -133,8 +142,16 @@ func Abc_AigAndCreateFrom(m *Abc_Aig_t, a, b any, o *Object) Edge {
 		panic("recreation requires live empty node")
 	}
 	delete(m.excluded, o)
-	aigSetNode(o, objectEdge(a), objectEdge(b))
-	m.Network.hashed[edgePair(o.fanins[0], o.fanins[1])] = o.Signal()
+	// Pin edits on a reused object normally invalidate an older raw lookup.
+	// This is an explicit hash insertion, so retain the preceding bucket head.
+	x, y := objectEdge(a), objectEdge(b)
+	key := edgePair(x, y)
+	previous := m.Network.hashed[key]
+	aigSetNode(o, x, y)
+	if previous.Object != nil {
+		m.Network.hashed[key] = previous
+	}
+	m.Network.registerAnd(o)
 	return o.Signal()
 }
 func Abc_AigAndLookup(m *Abc_Aig_t, a, b any) Edge {
@@ -143,19 +160,8 @@ func Abc_AigAndLookup(m *Abc_Aig_t, a, b any) Edge {
 
 // LookupAndEdges resolves a phased pair in this manager's active hash table.
 func (m *Abc_Aig_t) LookupAndEdges(x, y Edge) Edge {
-	if e, ok := m.Network.lookupAnd(x, y); ok {
-		if m.excluded[e.Object] && e.Object != x.Object && e.Object != y.Object {
-			key := edgePair(x, y)
-			if o := findAndFanout(key, m.excluded); o != nil {
-				fresh := o.Signal()
-				m.Network.hashed[key] = fresh
-				return fresh
-			}
-			return Edge{}
-		}
-		return e
-	}
-	return Edge{}
+	e, _ := m.Network.lookupAndAllowed(x, y, m.excluded)
+	return e
 }
 func Abc_AigAnd(m *Abc_Aig_t, a, b any) Edge {
 	if e := Abc_AigAndLookup(m, a, b); e.Object != nil {
@@ -220,27 +226,56 @@ func Abc_AigMuxLookup(m *Abc_Aig_t, c, t, e any, typ *int32) Edge {
 	return Edge{}
 }
 func Abc_AigAndDelete(m *Abc_Aig_t, o *Object) {
+	m.Network.detachAnd(o)
+	m.excluded[o] = true
 	if m.FreeNodeCuts != nil {
 		m.FreeNodeCuts(int32(o.ID))
 	}
-	m.excluded[o] = true
-	for key, e := range m.Network.hashed {
-		if e.Object == o {
-			delete(m.Network.hashed, key)
-		}
+}
+
+func Abc_AigResize(m *Abc_Aig_t) {
+	m.bins = int(util.Abc_PrimeCudd(uint32(3 * m.bins)))
+	for key, group := range m.Network.duplicateAnds {
+		slices.Reverse(group)
+		m.Network.hashed[key] = group[len(group)-1].Signal()
 	}
 }
-func Abc_AigResize(m *Abc_Aig_t) { m.bins = 3*m.bins + 2; Abc_AigRehash(m) }
+
 func Abc_AigRehash(m *Abc_Aig_t) {
-	clear(m.Network.hashed)
-	for _, o := range m.Network.ObjectsOfKind(ObjectNode) {
+	n := m.Network
+	old := n.duplicateAnds
+	var tracked map[*Object]bool
+	if len(old) > 0 {
+		tracked = make(map[*Object]bool)
+		for _, group := range old {
+			for _, o := range group {
+				tracked[o] = true
+			}
+		}
+	}
+	n.duplicateAnds = nil
+	n.extraAnds = 0
+	clear(n.hashed)
+	for _, o := range n.kindOrder[ObjectNode] {
 		if aigNode(o) && !m.excluded[o] {
 			pair := edgePair(o.fanins[0], o.fanins[1])
 			o.fanins[0], o.fanins[1] = pair[0], pair[1]
-			m.Network.hashed[pair] = o.Signal()
+			if !tracked[o] {
+				n.registerAnd(o)
+			}
+		}
+	}
+	// The C rehash prepends each entry while walking the old bucket head first.
+	for _, group := range old {
+		for i := len(group) - 1; i >= 0; i-- {
+			o := group[i]
+			if n.contains(o) && aigNode(o) && !m.excluded[o] {
+				n.registerAnd(o)
+			}
 		}
 	}
 }
+
 func Abc_AigMiter_rec(m *Abc_Aig_t, objects []Edge, count int32) Edge {
 	if count < 0 || int(count) > len(objects) {
 		panic("invalid miter size")

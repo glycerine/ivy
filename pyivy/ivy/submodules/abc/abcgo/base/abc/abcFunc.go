@@ -135,6 +135,8 @@ func Abc_NtkSopToBdd(n *Network) int32 {
 	}
 	n.FunctionManager = main
 	n.Function = uint8(ABC_FUNC_BDD)
+	n.extraAnds = 0
+	clear(n.duplicateAnds)
 	clear(n.hashed)
 	return 1
 }
