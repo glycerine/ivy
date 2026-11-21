@@ -79,15 +79,26 @@ func TestSourceMFDriverPublishesTypedData(t *testing.T) {
 }
 
 func BenchmarkI10MappedSAT(b *testing.B) {
+	benchmarkMappedSAT(b, "../../../i10.aig")
+}
+
+func BenchmarkArithmeticMappedSAT(b *testing.B) {
+	for _, name := range []string{"native_multiplier16", "native_sorter16"} {
+		b.Run(name, func(b *testing.B) { benchmarkMappedSAT(b, "test_vectors/"+name+".aig") })
+	}
+}
+
+func benchmarkMappedSAT(b *testing.B, path string) {
+	b.Helper()
 	b.ReportAllocs()
 	for b.Loop() {
-		p, err := Gia_AigerRead("../../../i10.aig", 0, 0, 0)
+		p, err := Gia_AigerRead(path, 0, 0, 0)
 		if err != nil {
 			b.Fatal(err)
 		}
 		solver := Gia_ManSatokoCreate(p, nil)
 		if solver == nil || solver.Solve() != satoko.SATOKO_SAT {
-			b.Fatal("expected satisfiable i10 output disjunction")
+			b.Fatalf("expected satisfiable output disjunction for %s", path)
 		}
 		solver.Destroy()
 		Gia_ManStop(p)

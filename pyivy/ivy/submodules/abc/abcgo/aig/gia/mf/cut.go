@@ -3,6 +3,7 @@ package mf
 
 import (
 	"math/bits"
+	"slices"
 
 	"github.com/glycerine/abcgo/misc/util"
 )
@@ -99,10 +100,79 @@ type cutSlot struct {
 // Each node reuses these candidate records. Sorting moves slot indices, and
 // the first unused index names the record available for the next insertion.
 type cutSet struct {
+	index        leafIndex
 	unitLeaves   [4][1]int32
 	slots        [maxCuts]cutSlot
 	order        [maxCuts]uint8
 	count, limit int
+}
+
+// A gate's candidate cuts often use at most 64 distinct objects between them.
+// Assign bits in leaf-ID order so that a union can be decoded in sorted order.
+type leafIndex struct {
+	position []uint8 // One-based bit position, zero for objects outside this gate.
+	ids      [64]int32
+	count    int
+	exact    bool
+}
+
+func (x *leafIndex) reset(fanins [4][]Cut) {
+	for _, id := range x.ids[:x.count] {
+		x.position[id] = 0
+	}
+	x.count, x.exact = 0, false
+	for _, cuts := range fanins {
+		for _, cut := range cuts {
+			for _, id := range cut.Leaves {
+				if x.position[id] != 0 {
+					continue
+				}
+				if x.count == len(x.ids) {
+					return
+				}
+				x.position[id] = 1
+				x.ids[x.count] = id
+				x.count++
+			}
+		}
+	}
+	slices.Sort(x.ids[:x.count])
+	for i, id := range x.ids[:x.count] {
+		x.position[id] = uint8(i + 1)
+	}
+	x.exact = true
+}
+
+func (x *leafIndex) mask(leaves []int32) uint64 {
+	if !x.exact {
+		return signature(leaves)
+	}
+	var mask uint64
+	for _, id := range leaves {
+		mask |= uint64(1) << (x.position[id] - 1)
+	}
+	return mask
+}
+
+func (s *cutSet) candidate(buffer *[maxLeaves]int32, a, b []int32, sign uint64, limit int) ([]int32, bool) {
+	if bits.OnesCount64(sign) > limit {
+		return nil, false
+	}
+	if s.index.exact {
+		for _, id := range s.order[:s.count] {
+			if s.slots[id].sign&^sign == 0 {
+				return nil, false
+			}
+		}
+		n := 0
+		for mask := sign; mask != 0; mask &= mask - 1 {
+			buffer[n] = s.index.ids[bits.TrailingZeros64(mask)]
+			n++
+		}
+		return buffer[:n:n], true
+	}
+	leaves, ok := mergeLeaves(buffer, a, b, limit)
+	return leaves, ok && !s.contains(leaves, sign)
 }
 
 func newCutSet(cutLimit int) *cutSet {
@@ -118,7 +188,7 @@ func (s *cutSet) add(cut Cut, sign uint64) {
 	kept := 0
 	for i, id := range s.order[:s.count] {
 		old := &s.slots[id]
-		if len(cut.Leaves) < len(old.cut.Leaves) && sign&^old.sign == 0 && contains(old.cut.Leaves, cut.Leaves) {
+		if len(cut.Leaves) < len(old.cut.Leaves) && sign&^old.sign == 0 && (s.index.exact || contains(old.cut.Leaves, cut.Leaves)) {
 			continue
 		}
 		if kept != i {

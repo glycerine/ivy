@@ -199,7 +199,18 @@ func TestGenerateCNFRandomStressOriginalABC(t *testing.T) {
 }
 
 func TestI10MappedCNFMatchesC(t *testing.T) {
-	data, err := os.ReadFile("../../../../i10.aig")
+	checkFileMappedCNF(t, "../../../../i10.aig")
+}
+
+func TestArithmeticMappedCNFMatchesC(t *testing.T) {
+	for _, name := range []string{"native_multiplier16", "native_sorter16"} {
+		t.Run(name, func(t *testing.T) { checkFileMappedCNF(t, "../test_vectors/"+name+".aig") })
+	}
+}
+
+func checkFileMappedCNF(t *testing.T, path string) {
+	t.Helper()
+	data, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -213,7 +224,7 @@ func TestI10MappedCNFMatchesC(t *testing.T) {
 		t.Fatal(err)
 	}
 	if got.Variables != want.Variables || !reflect.DeepEqual(got.Clauses, want.Clauses) {
-		t.Fatalf("i10 variables %d/%d, clauses %d/%d (Go/C)", got.Variables, want.Variables, len(got.Clauses), len(want.Clauses))
+		t.Fatalf("%s variables %d/%d, clauses %d/%d (Go/C)", path, got.Variables, want.Variables, len(got.Clauses), len(want.Clauses))
 	}
 }
 

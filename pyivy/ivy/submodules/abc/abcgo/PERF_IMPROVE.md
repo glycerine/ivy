@@ -964,3 +964,20 @@ Regular cuts now take fresh addresses from progressively sized blocks capped at 
 Fixed blocks of 4, 16, 32, 64 and 128 reduced allocation counts, but most increased bytes per merge. A 255-record block fits the allocator's 32 KiB size class on this host. In two five-million-merge batches, a four-leaf owned merge and recycle took 58.6–58.8 ns versus 73.3–74.5 ns before, still 128 B/op. Release C took 12.9 ns. In interleaved 18-proof i10 batches the change took 216.8–218.5 ms and about 305,000 allocations, down from 220.4–221.7 ms and about 374,200 allocations. The independent release comparison produced the same equivalent 5,051-AND miter in 206.0–209.2 ms for C and 222.3–228.5 ms for Go.
 
 Four experiments also shortened BSAT clause lookups with a dense prefix inside each native-offset page. The largest prefix improved the seven-pigeon microbenchmark from 2.98–3.01 to 2.86–2.88 ms, but increased allocation from 184 KB to 296 KB. Whole i10 proofs took 221.9–223.8 ms versus 222.2–222.3 ms at baseline. The smaller prefixes slowed the proof. The sparse page index remains in use.
+
+### Represent a gate's candidate leaf sets with exact local masks
+
+MF collects the distinct leaf IDs of each gate's data, control and choice cuts. When there are at most 64, the sorted IDs each receive one bit. Set union, width rejection and dominance checks then work directly on masks. Iterating the set bits materializes a surviving candidate's leaves in native order. Larger local sets continue to use sorted merges with conservative signatures. One byte per network object records its local position during enumeration. The regression crosses 64, 65, three and zero objects, includes choice leaves, and exercises numeric IDs that all share the same low six bits. Deliberately treating an overflowing set as exact failed at 65.
+
+Using exact masks solely to filter candidates gave little change. Decoding the masks directly cut the first i10 trial from 20.10–20.22 to 18.75–18.80 ms. Extracting operand positions from the mask too was slower. Testing the production representation favored filtering before constructing operand cut slices. Compared with the preceding production code, two 220-solve batches fell from 19.93–20.09 to 19.07–19.13 ms. Allocation increased by 2,944 bytes and one object, to 5.23 MB and 6,400 allocations. MF passed its normal and race suites.
+
+Two more checked-in workloads exercise the same file-read, map, CNF, solver and destruction path. Native `gen -m -N 16` produced a 1,872-AND multiplier of depth 117 and `gen -s -N 16` a 466-AND sorter of depth 31. Each generated BLIF was read, strashed and written as binary AIGER. The fixtures omit the writer's dated comment. The new differentials compare every CNF clause and literal in native order. The multiplier has 1,009 variables, 4,079 clauses and 11,822 literals. The sorter has 479 variables, 1,420 clauses and 3,391 literals.
+
+| Complete mapped solve, CPU 13 | Prior Go | Current Go | Release C |
+| --- | ---: | ---: | ---: |
+| i10, 30 solves per process | — | 18.91–19.13 ms | 19.31–19.75 ms |
+| 16-bit multiplier, 30 solves per process | 8.18–8.23 ms | 7.62–7.78 ms | 9.16–9.39 ms |
+| 16-input sorter, 30 solves per process | 4.55–4.57 ms | 4.22–4.24 ms | 4.42–4.44 ms |
+| i10, one solve per fresh process, median of eight | — | 21.01 ms | 20.64 ms |
+
+An independent i10 batch on CPU 12 ran substantially slower for both programs and reversed the ordering, at 29.34–29.80 ms in Go versus 28.03–28.17 ms in release C. CPU 13's fresh-process Go range was 20.40–21.19 ms versus 20.54–20.77 ms in C. The release C sampling profile assigned 47.1% of flat samples to Mf_ObjMergeOrder and 22.5% to Mf_ManPrepareCuts, including compiler-inlined work. The Go profile assigned 6.2% flat to candidate filtering and decoding.

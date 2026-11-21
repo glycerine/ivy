@@ -11,6 +11,47 @@ import (
 
 func addTestCut(s *cutSet, c Cut) { s.add(c, signature(c.Leaves)) }
 
+func TestGateLeafIndexAtCapacityAndAfterOverflow(t *testing.T) {
+	s := newCutSet(4)
+	s.index.position = make([]uint8, 66*64)
+	var buffer [maxLeaves]int32
+	for _, size := range []int{64, 65, 3, 0, 64} {
+		var fanins [4][]Cut
+		for i := size - 1; i >= 0; i-- {
+			part := i % len(fanins)
+			fanins[part] = append(fanins[part], Cut{Leaves: []int32{int32(i * 64)}})
+		}
+		s.count = 0
+		s.index.reset(fanins)
+		if s.index.exact != (size <= 64) {
+			t.Fatalf("unexpected index mode for %d leaves", size)
+		}
+		if size < 3 {
+			continue
+		}
+		last := int32((size - 1) * 64)
+		if s.index.exact && s.index.mask([]int32{0, last}) != (uint64(1)|uint64(1)<<(size-1)) {
+			t.Fatalf("wrong end positions at size %d", size)
+		}
+		first, end := []int32{0, 64}, []int32{64, last}
+		sign := s.index.mask(first) | s.index.mask(end)
+		if _, ok := s.candidate(&buffer, first, end, sign, 2); ok {
+			t.Fatalf("accepted three distinct leaves at limit two, size %d", size)
+		}
+		got, ok := s.candidate(&buffer, first, end, sign, 3)
+		if !ok || !slices.Equal(got, []int32{0, 64, last}) {
+			t.Fatalf("size %d produced %v, accepted %t", size, got, ok)
+		}
+		s.add(Cut{Leaves: end}, s.index.mask(end))
+		if _, ok := s.candidate(&buffer, first, end, sign, 3); ok {
+			t.Fatalf("accepted a dominated union at size %d", size)
+		}
+		if _, ok := s.candidate(&buffer, first, nil, s.index.mask(first), 3); !ok {
+			t.Fatalf("rejected distinct colliding IDs at size %d", size)
+		}
+	}
+}
+
 func TestDisjointCutTruthAtEveryStoredWord(t *testing.T) {
 	for width := 3; width <= 8; width++ {
 		words := 1 << max(0, width-6)

@@ -193,25 +193,27 @@ func (m *Mapping) merge(id int32, result *cutSet) error {
 	first := m.prepare(a>>1, true, buffers[0][:0], &result.unitLeaves[0])
 	second := m.prepare(b>>1, true, buffers[1][:0], &result.unitLeaves[1])
 	result.count = 0
+	var siblings []Cut
+	var flipSibling bool
 	if choices, ok := m.Network.(interface{ Sibling(int32) int32 }); ok {
 		if sibling := choices.Sibling(id); sibling != 0 {
-			for _, candidate := range m.prepare(sibling, false, nil, &result.unitLeaves[3]) {
-				if m.phases[id] != m.phases[sibling] {
-					candidate.Function ^= 1
-				}
-				m.parameters(&candidate, m.nodes[id].flowRefs)
-				result.add(candidate, signature(candidate.Leaves))
-			}
+			siblings = m.prepare(sibling, false, nil, &result.unitLeaves[3])
+			flipSibling = m.phases[id] != m.phases[sibling]
 		}
+	}
+	result.index.reset([4][]Cut{first, second, control, siblings})
+	for _, candidate := range siblings {
+		if flipSibling {
+			candidate.Function ^= 1
+		}
+		m.parameters(&candidate, m.nodes[id].flowRefs)
+		result.add(candidate, result.index.mask(candidate.Leaves))
 	}
 	var pair, triple [maxLeaves]int32
 	offer := func(parts []Cut, complements []int32, leaves []int32, sign uint64) {
-		if result.contains(leaves, sign) {
-			return
-		}
 		cut := m.computeTruth(parts, complements, kind, leaves)
 		if len(cut.Leaves) < len(leaves) {
-			sign = signature(cut.Leaves)
+			sign = result.index.mask(cut.Leaves)
 		}
 		m.parameters(&cut, m.nodes[id].flowRefs)
 		result.add(cut, sign)
@@ -219,31 +221,33 @@ func (m *Mapping) merge(id int32, result *cutSet) error {
 	var signs [3][maxCuts]uint64
 	for part, fanin := range [3][]Cut{first, second, control} {
 		for i, cut := range fanin {
-			signs[part][i] = signature(cut.Leaves)
+			signs[part][i] = result.index.mask(cut.Leaves)
 		}
 	}
 	for i, left := range first {
 		for j, right := range second {
 			sign := signs[0][i] | signs[1][j]
+			if kind != 4 {
+				leaves, ok := result.candidate(&pair, left.Leaves, right.Leaves, sign, m.Options.LUTSize)
+				if ok {
+					offer([]Cut{left, right}, []int32{a & 1, b & 1}, leaves, sign)
+				}
+				continue
+			}
 			if bits.OnesCount64(sign) > m.Options.LUTSize {
 				continue
 			}
-			data, ok := mergeLeaves(&pair, left.Leaves, right.Leaves, m.Options.LUTSize)
-			if !ok {
-				continue
-			}
-			if kind != 4 {
-				offer([]Cut{left, right}, []int32{a & 1, b & 1}, data, sign)
-				continue
+			var data []int32
+			if !result.index.exact {
+				var ok bool
+				data, ok = mergeLeaves(&pair, left.Leaves, right.Leaves, m.Options.LUTSize)
+				if !ok {
+					continue
+				}
 			}
 			for k, ctrl := range control {
 				all := sign | signs[2][k]
-				if bits.OnesCount64(all) > m.Options.LUTSize {
-					continue
-				}
-				// Truth minimization may edit this candidate's leaves. Keep the
-				// shared data pair in its own buffer across control candidates.
-				leaves, ok := mergeLeaves(&triple, data, ctrl.Leaves, m.Options.LUTSize)
+				leaves, ok := result.candidate(&triple, data, ctrl.Leaves, all, m.Options.LUTSize)
 				if ok {
 					offer([]Cut{left, right, ctrl}, []int32{a & 1, b & 1, c & 1}, leaves, all)
 				}
@@ -498,6 +502,7 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 		m.nodes[i].flowRefs = float32(max(1, refs[i]))
 	}
 	candidates := newCutSet(options.CutLimit)
+	candidates.index.position = make([]uint8, count)
 	for i := 0; i < count; i++ {
 		_, _, _, kind := network.Gate(int32(i))
 		if gateNode(kind) {
