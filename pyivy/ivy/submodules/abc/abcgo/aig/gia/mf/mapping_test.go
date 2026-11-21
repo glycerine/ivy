@@ -28,6 +28,15 @@ func TestMappedCutsTruthAndWidths(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		if mapping.truthStore != nil || len(mapping.Truths) != len(mapping.ClauseSizes) {
+			t.Fatal("finished mapping retained its hash index or lost a function")
+		}
+		for id, truth := range mapping.Truths {
+			words := 1 << max(0, width-6)
+			if len(truth) != words || cap(truth) != words {
+				t.Fatalf("function %d at LUT width %d has length %d, capacity %d", id, width, len(truth), cap(truth))
+			}
+		}
 		cut := mapping.Cuts[5][0]
 		if len(cut.Leaves) != 3 || cut.Leaves[0] != 1 || cut.Leaves[1] != 2 || cut.Leaves[2] != 3 {
 			t.Fatal("root cut support", cut.Leaves)

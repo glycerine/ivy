@@ -1,6 +1,10 @@
 package mf
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/glycerine/abcgo/misc/vec"
+)
 
 func TestCutMergeAndSourceTieOrder(t *testing.T) {
 	leaves, ok := mergeLeaves(nil, []int32{1, 3, 65}, []int32{2, 3}, 4)
@@ -47,16 +51,25 @@ func TestTruthAlignmentAndSupportMinimization(t *testing.T) {
 }
 
 func TestInternOwnsCandidateTruth(t *testing.T) {
-	m := &Mapping{Options: DefaultOptions(), truthIDs: make(map[[4]uint64]int32)}
+	m := &Mapping{Options: DefaultOptions(), truthStore: vec.Vec_MemAlloc(4, 1)}
+	vec.Vec_MemHashAlloc(m.truthStore, 2)
 	table := []uint64{0, 0, 0, 0}
 	zero := m.intern(table, 0)
 	table[3] = 1 << 63
 	nonzero := m.intern(table, 8)
-	if zero == nonzero || m.Truths[zero][3] != 0 || m.Truths[nonzero][3] != table[3] {
+	saved := vec.Vec_MemReadEntry(m.truthStore, int(nonzero))
+	if zero == nonzero || vec.Vec_MemReadEntry(m.truthStore, int(zero))[3] != 0 || saved[3] != table[3] {
 		t.Fatal("interned truths lost ownership or differ only in ignored high bits")
 	}
 	table[3] = 0
-	if again := m.intern(table, 0); again != zero || m.Truths[nonzero][3] == 0 {
+	for i := uint(0); i < 32; i++ {
+		table[1] = uint64(1) << i
+		if id := m.intern(table, 8); id != int32(i+2) {
+			t.Fatalf("insertion after page growth got ID %d at %d", id, i)
+		}
+	}
+	table[1] = 0
+	if again := m.intern(table, 0); again != zero || saved[3] != 1<<63 {
 		t.Fatal("reusing scratch changed a previously interned truth")
 	}
 }

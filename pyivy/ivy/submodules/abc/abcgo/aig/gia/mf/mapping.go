@@ -2,7 +2,10 @@ package mf
 
 import (
 	"fmt"
+	"math/bits"
+
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 // Network follows GIA literals (id<<1|complement, zero=false). Gate kinds are
@@ -36,21 +39,15 @@ type Mapping struct {
 	ClauseSizes []int
 	Refs        []int32
 	nodes       []node
-	truthIDs    map[[4]uint64]int32
+	truthStore  *vec.Vec_Mem_t
 	phases      []bool
 }
 
 func (m *Mapping) intern(table []uint64, nLeaves int) int32 {
-	// The mapper accepts at most eight LUT inputs (four truth words).
-	// Every candidate in a mapping uses the same width.
-	var key [4]uint64
-	copy(key[:], table)
-	if id, ok := m.truthIDs[key]; ok {
+	id := int32(vec.Vec_MemHashInsert(m.truthStore, table))
+	if int(id) < len(m.ClauseSizes) {
 		return id
 	}
-	id := int32(len(m.Truths))
-	m.truthIDs[key] = id
-	m.Truths = append(m.Truths, append([]uint64(nil), table...))
 	var cost int32
 	if m.Options.LUTSize <= 6 {
 		cost = util.Abc_Tt6CnfSize(table[0], int32(nLeaves))
@@ -94,7 +91,8 @@ func (m *Mapping) computeTruth(cuts []Cut, complements []int32, kind int, leaves
 	var tables [3][4]uint64
 	words := 1 << max(0, m.Options.LUTSize-6)
 	for i, cut := range cuts {
-		expandTruth(tables[i][:words], m.Truths[cut.Function>>1], cut.Leaves, leaves, m.Options.LUTSize, (cut.Function&1)^complements[i] != 0)
+		source := vec.Vec_MemReadEntry(m.truthStore, int(cut.Function>>1))
+		expandTruth(tables[i][:words], source, cut.Leaves, leaves, m.Options.LUTSize, (cut.Function&1)^complements[i] != 0)
 	}
 	truth := tables[0][:words]
 	for i := range truth {
@@ -288,8 +286,16 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 	if count < 1 {
 		return nil, fmt.Errorf("mf: empty network")
 	}
-	m := &Mapping{Network: network, Options: options, Cuts: make([][]Cut, count), nodes: make([]node, count), truthIDs: make(map[[4]uint64]int32)}
 	words := 1 << max(0, options.LUTSize-6)
+	// Bound the initial reservation. Large networks can still have very few
+	// distinct functions, and each eight-input truth occupies four words.
+	hint := max(2, min(count, 8192))
+	m := &Mapping{
+		Network: network, Options: options, Cuts: make([][]Cut, count), nodes: make([]node, count),
+		ClauseSizes: make([]int, 0, hint),
+		truthStore:  vec.Vec_MemAlloc(words, min(7, bits.Len(uint(hint))-1)),
+	}
+	vec.Vec_MemHashAlloc(m.truthStore, hint)
 	m.intern(make([]uint64, words), 0)
 	variable := make([]uint64, words)
 	for i := range variable {
@@ -433,7 +439,12 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 		m.Refs[i] = m.nodes[i].refs
 	}
 	m.nodes = nil
-	m.truthIDs = nil
+	// The exported views keep the pages live after the hash index is discarded.
+	m.Truths = make([][]uint64, len(m.ClauseSizes))
+	for i := range m.Truths {
+		m.Truths[i] = vec.Vec_MemReadEntry(m.truthStore, i)
+	}
+	m.truthStore = nil
 	m.phases = nil
 	return m, nil
 }
