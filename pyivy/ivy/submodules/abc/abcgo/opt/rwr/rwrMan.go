@@ -4,16 +4,30 @@ package rwr
 import (
 	"fmt"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/glycerine/abcgo/bool/dec"
 	"github.com/glycerine/abcgo/misc/extra/npn"
 )
 
+// ABC's frame owns these read-only tables across rewrite managers.
+var rwrFrameTables struct {
+	once                   sync.Once
+	canons                 []uint16
+	phases, perms, classes []byte
+}
+
 func Rwr_ManStart(precompute int32) *Rwr_Man_t {
 	started := time.Now()
-	canons, phases, perms, classes := npn.Extra_Truth4VarNPN()
-	p := &Rwr_Man_t{nFuncs: 1 << 16, puCanons: canons, pPhases: phases, pPerms: perms, pMap: classes, pTable: make([]*Rwr_Node_t, 1<<16)}
+	tables := &rwrFrameTables
+	tables.once.Do(func() {
+		tables.canons, tables.phases, tables.perms, tables.classes = npn.Extra_Truth4VarNPN()
+	})
+	p := &Rwr_Man_t{
+		nFuncs: 1 << 16, puCanons: tables.canons, pPhases: tables.phases,
+		pPerms: tables.perms, pMap: tables.classes, pTable: make([]*Rwr_Node_t, 1<<16),
+	}
 	p.pPractical = Rwr_ManGetPractical(p)
 	for _, truth := range []uint32{0, 0xaaaa, 0xcccc, 0xf0f0, 0xff00} {
 		Rwr_ManAddVar(p, truth, precompute)
