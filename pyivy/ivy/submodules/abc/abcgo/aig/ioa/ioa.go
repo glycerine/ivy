@@ -39,6 +39,10 @@ func (m *Model) AigerModel() (*Model, error) {
 	return m, nil
 }
 func (m *Model) Check() error {
+	return m.check(m.HasDenseTopologicalOrder())
+}
+
+func (m *Model) check(dense bool) error {
 	if m == nil {
 		return fmt.Errorf("nil AIGER model")
 	}
@@ -48,7 +52,7 @@ func (m *Model) Check() error {
 	if m.MaxVar > 0x7fffffff {
 		return fmt.Errorf("AIGER variable index exceeds literal range")
 	}
-	if m.HasDenseTopologicalOrder() {
+	if dense {
 		for _, l := range m.Latches {
 			if l.Init != 0 && l.Init != 1 && l.Init != l.Literal {
 				return fmt.Errorf("invalid reset literal %d", l.Init)

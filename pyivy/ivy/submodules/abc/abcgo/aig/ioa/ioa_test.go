@@ -2,6 +2,7 @@ package ioa
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"errors"
 	"fmt"
 	"io"
@@ -330,6 +331,111 @@ func TestAigerCommentPayloadRoundTrip(t *testing.T) {
 			}
 			if decoded.Name != name || !bytes.Equal(decoded.Comment, comment) {
 				t.Fatalf("name=%q payload=%q -> %q", name, comment, decoded.Comment)
+			}
+		}
+	}
+}
+
+// The native fixture appends a single comment marker after this graph body.
+func i10WriterModel(t testing.TB) *Model {
+	t.Helper()
+	data, err := os.ReadFile("../../../i10.aig")
+	if err != nil {
+		t.Fatal(err)
+	}
+	m, err := Read(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return m
+}
+
+func TestI10BinaryBodyMatchesNativeMemoryWriter(t *testing.T) {
+	m := i10WriterModel(t)
+	m.Name, m.Comment = "", nil
+	data, err := Ioa_WriteAigerIntoMemoryStr(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	const native = "c0fe91cbd03dba79ffaa2aa442264965cbe47e9d94d996ec5db0009231e3c441"
+	if got := fmt.Sprintf("%x", sha256.Sum256(data)); len(data) != 8720 || got != native {
+		t.Fatalf("binary body has %d bytes and SHA-256 %s", len(data), got)
+	}
+}
+
+func BenchmarkI10BinaryMarshal(b *testing.B) {
+	m := i10WriterModel(b)
+	b.ReportAllocs()
+	for b.Loop() {
+		encoded, err := Marshal(m, WriteOptions{Symbols: true})
+		if err != nil || len(encoded) == 0 {
+			b.Fatal("invalid encoding", err)
+		}
+	}
+}
+
+func BenchmarkI10MemoryWriter(b *testing.B) {
+	m := i10WriterModel(b)
+	m.Name, m.Comment = "", nil
+	b.ReportAllocs()
+	for b.Loop() {
+		encoded, err := Ioa_WriteAigerIntoMemoryStr(m)
+		if err != nil || len(encoded) != 8720 {
+			b.Fatal("invalid binary graph body", len(encoded), err)
+		}
+	}
+}
+
+func TestDenseNormalizeOwnsAllFieldsAndOrdersFaninPairs(t *testing.T) {
+	m := &Model{
+		MaxVar: 3, Inputs: []uint32{2}, Latches: []Latch{{4, 7, 4}}, ANDs: []And{{6, 2, 5}},
+		Outputs: []uint32{7}, Bad: []uint32{6}, Constraints: []uint32{5}, Justice: [][]uint32{{}, {0, 1, 2}},
+		Fairness: []uint32{3}, Symbols: map[Symbol]string{{'i', 0}: "enable"}, Comment: []byte("payload"),
+	}
+	copy, err := m.Normalize()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if copy.ANDs[0] != (And{6, 5, 2}) || copy.Justice[0] != nil {
+		t.Fatal("normalized representation", copy.ANDs, copy.Justice)
+	}
+	encoded, err := Marshal(m, WriteOptions{Symbols: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	canonical, err := Marshal(copy, WriteOptions{Symbols: true})
+	if err != nil || !bytes.Equal(encoded, canonical) {
+		t.Fatal("binary encoding differs with reversed fanins", err)
+	}
+	copy.Inputs[0], copy.Latches[0].Init, copy.ANDs[0].Left = 0, 0, 0
+	copy.Outputs[0], copy.Bad[0], copy.Constraints[0], copy.Fairness[0] = 0, 0, 0, 0
+	copy.Justice[1][2], copy.Justice[0], copy.Comment[0] = 0, []uint32{1}, 'x'
+	delete(copy.Symbols, Symbol{'i', 0})
+	if m.Inputs[0] != 2 || m.Latches[0].Init != 4 || m.ANDs[0] != (And{6, 2, 5}) ||
+		m.Outputs[0] != 7 || m.Bad[0] != 6 || m.Constraints[0] != 5 || m.Fairness[0] != 3 ||
+		m.Justice[1][2] != 2 || len(m.Justice[0]) != 0 || string(m.Comment) != "payload" || m.Symbols[Symbol{'i', 0}] != "enable" {
+		t.Fatal("normalized copy aliases its source")
+	}
+}
+
+func TestDenseAndSparseSymbolTablesKeepAigerOrder(t *testing.T) {
+	for _, slots := range []int{1, 32} {
+		m := &Model{
+			MaxVar: uint32(slots + 1), Latches: []Latch{{Literal: uint32(2*slots + 2)}},
+			Outputs: []uint32{0}, Bad: []uint32{0}, Constraints: []uint32{0},
+			Justice: [][]uint32{{1}}, Fairness: []uint32{1}, Symbols: make(map[Symbol]string),
+		}
+		for i := range slots {
+			m.Inputs = append(m.Inputs, uint32(2*i+2))
+		}
+		for _, k := range []byte("fjcboli") {
+			m.Symbols[Symbol{k, 0}] = string(k)
+		}
+		want := "i0 i\nl0 l\no0 o\nb0 b\nc0 c\nj0 j\nf0 f\n"
+		for _, ascii := range []bool{false, true} {
+			got, err := Marshal(m, WriteOptions{ASCII: ascii, Symbols: true})
+			if err != nil || !bytes.HasSuffix(got, []byte(want)) {
+				t.Fatalf("slots %d ASCII %v: data %q, error %v", slots, ascii, got, err)
 			}
 		}
 	}
