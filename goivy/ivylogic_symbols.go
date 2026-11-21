@@ -42,6 +42,29 @@ func SymbolsIluAst(node Expr) iter.Seq[Expr] {
 
 func symbolsIluAstRec(node Expr, yield func(Expr) bool) bool {
 	switch t := node.(type) {
+	case *Const:
+		return yield(t)
+	case *LogicVariable:
+		return true
+	case *Apply:
+		if IsBinder(t.Func) {
+			if !symbolsIluAstRec(BinderBody(t.Func), yield) {
+				return false
+			}
+		} else if !yield(t.Func) {
+			return false
+		}
+		return symbolsIluAstArgs(t.Terms, yield)
+	case *Eq:
+		return symbolsIluAstArgs(t.Children(), yield)
+	case *LogicNot:
+		return symbolsIluAstArgs(t.Children(), yield)
+	case *LogicImplies:
+		return symbolsIluAstArgs(t.Children(), yield)
+	case *ForAll:
+		return symbolsIluAstArgs(t.Children(), yield)
+	case *LogicExists:
+		return symbolsIluAstArgs(t.Children(), yield)
 	case *LogicAssumeAction:
 		return symbolsIluAstNodeArgsRec(t.Args(), yield)
 	case *LogicAssertAction:
@@ -65,7 +88,12 @@ func symbolsIluAstRec(node Expr, yield func(Expr) bool) bool {
 			}
 		}
 	}
-	for _, arg := range NodeArgs(node) {
+	return symbolsIluAstArgs(NodeArgs(node), yield)
+}
+
+// The argument list is captured before invoking yield on its first child.
+func symbolsIluAstArgs(args []Expr, yield func(Expr) bool) bool {
+	for _, arg := range args {
 		if !symbolsIluAstRec(arg, yield) {
 			return false
 		}
