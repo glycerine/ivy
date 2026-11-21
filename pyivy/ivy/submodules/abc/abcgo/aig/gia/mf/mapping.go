@@ -118,7 +118,7 @@ func (m *Mapping) computeTruth(cuts []Cut, complements []int32, kind int, leaves
 	}
 	return Cut{Leaves: leaves, Function: m.intern(truth, len(leaves))<<1 | complement}
 }
-func (m *Mapping) merge(id int32) error {
+func (m *Mapping) merge(id int32, result *cutSet) error {
 	a, b, c, kind := m.Network.Gate(id)
 	if kind == 5 {
 		b = a
@@ -133,7 +133,7 @@ func (m *Mapping) merge(id int32) error {
 	}
 	first := m.prepare(a>>1, true, buffers[0][:0])
 	second := m.prepare(b>>1, true, buffers[1][:0])
-	result := cutSet{cuts: make([]Cut, 0, m.Options.CutLimit-1)}
+	result.count = 0
 	if choices, ok := m.Network.(interface{ Sibling(int32) int32 }); ok {
 		if sibling := choices.Sibling(id); sibling != 0 {
 			for _, candidate := range m.prepare(sibling, false, nil) {
@@ -191,13 +191,13 @@ func (m *Mapping) merge(id int32) error {
 			}
 		}
 	}
-	if len(result.cuts) == 0 {
+	if result.count == 0 {
 		return fmt.Errorf("mf: no cuts for object %d", id)
 	}
-	clear(result.cuts[len(result.cuts):cap(result.cuts)])
-	m.Cuts[id] = result.cuts
-	m.nodes[id].flow = result.cuts[0].Flow
-	m.nodes[id].delay = result.cuts[0].Delay
+	cuts := result.save()
+	m.Cuts[id] = cuts
+	m.nodes[id].flow = cuts[0].Flow
+	m.nodes[id].delay = cuts[0].Delay
 	return nil
 }
 
@@ -437,10 +437,11 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 	for i := range m.nodes {
 		m.nodes[i].flowRefs = float32(max(1, refs[i]))
 	}
+	candidates := newCutSet(options.CutLimit)
 	for i := 0; i < count; i++ {
 		_, _, _, kind := network.Gate(int32(i))
 		if gateNode(kind) {
-			if err := m.merge(int32(i)); err != nil {
+			if err := m.merge(int32(i), candidates); err != nil {
 				return nil, err
 			}
 		}

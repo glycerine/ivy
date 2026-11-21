@@ -76,51 +76,89 @@ func compareArea(a, b Cut) int {
 	return 0
 }
 
-// Capacity excludes the slot reserved for a unit cut. Signatures accompany
-// the ranked cuts only while a single node is being enumerated.
+type cutSlot struct {
+	cut    Cut
+	sign   uint64
+	leaves [maxLeaves]int32
+}
+
+// Each node reuses these candidate records. Sorting moves slot indices, and
+// the first unused index names the record available for the next insertion.
 type cutSet struct {
-	cuts  []Cut
-	signs [maxCuts]uint64
+	slots        [maxCuts]cutSlot
+	order        [maxCuts]uint8
+	count, limit int
+}
+
+func newCutSet(cutLimit int) *cutSet {
+	s := &cutSet{limit: cutLimit - 1} // Reserve one entry for the unit cut.
+	for i := range s.order {
+		s.order[i] = uint8(i)
+	}
+	return s
 }
 
 // Equal-ranked new cuts precede old cuts, and strict supersets are removed.
 func (s *cutSet) add(cut Cut, sign uint64) {
-	cuts := s.cuts
 	kept := 0
-	for i, old := range cuts {
-		if len(cut.Leaves) < len(old.Leaves) && sign&^s.signs[i] == 0 && contains(old.Leaves, cut.Leaves) {
+	for i, id := range s.order[:s.count] {
+		old := &s.slots[id]
+		if len(cut.Leaves) < len(old.cut.Leaves) && sign&^old.sign == 0 && contains(old.cut.Leaves, cut.Leaves) {
 			continue
 		}
 		if kept != i {
-			cuts[kept] = old
-			s.signs[kept] = s.signs[i]
+			s.order[kept], s.order[i] = id, s.order[kept]
 		}
 		kept++
 	}
 	pos := kept
-	for pos > 0 && compareArea(cuts[pos-1], cut) >= 0 {
+	for pos > 0 && compareArea(s.slots[s.order[pos-1]].cut, cut) >= 0 {
 		pos--
 	}
-	if pos >= cap(cuts) {
+	if pos == s.limit {
 		return
 	}
-	cuts = cuts[:min(kept+1, cap(cuts))]
-	copy(cuts[pos+1:], cuts[pos:])
-	copy(s.signs[pos+1:len(cuts)], s.signs[pos:])
-	// A retained cut owns its leaves, including cuts seeded from a sibling.
-	cut.Leaves = append([]int32(nil), cut.Leaves...)
-	cuts[pos] = cut
-	s.signs[pos] = sign
-	s.cuts = cuts
+	id := s.order[kept]
+	slot := &s.slots[id]
+	leaves := slot.leaves[:len(cut.Leaves)]
+	copy(leaves, cut.Leaves)
+	slot.cut = Cut{Leaves: leaves, Function: cut.Function, Delay: cut.Delay, Flow: cut.Flow}
+	slot.sign = sign
+	copy(s.order[pos+1:kept+1], s.order[pos:kept])
+	s.order[pos] = id
+	s.count = min(kept+1, s.limit)
 }
 
 func (s *cutSet) contains(leaves []int32, sign uint64) bool {
-	for i, old := range s.cuts {
-		if len(old.Leaves) <= len(leaves) && s.signs[i]&^sign == 0 && contains(leaves, old.Leaves) {
+	for _, id := range s.order[:s.count] {
+		old := &s.slots[id]
+		if len(old.cut.Leaves) <= len(leaves) && old.sign&^sign == 0 && contains(leaves, old.cut.Leaves) {
 			return true
 		}
 	}
 	return false
+}
+
+func (s *cutSet) save() []Cut {
+	order := s.order[:s.count]
+	total := 0
+	for _, id := range order {
+		total += len(s.slots[id].cut.Leaves)
+	}
+	leaves := make([]int32, total)
+	cuts := make([]Cut, len(order))
+	for i, id := range order {
+		cut := s.slots[id].cut
+		n := copy(leaves, cut.Leaves)
+		if n == 0 {
+			cut.Leaves = nil
+		} else {
+			cut.Leaves = leaves[:n:n]
+			leaves = leaves[n:]
+		}
+		cuts[i] = cut
+	}
+	return cuts
 }
 
 // expandTruth aligns a source cut's variables with a merged cut. MF stores all
