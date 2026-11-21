@@ -2,6 +2,7 @@ package abc
 
 import (
 	"fmt"
+	"slices"
 	"sync/atomic"
 
 	"github.com/glycerine/abcgo/bdd/cudd/core"
@@ -265,13 +266,8 @@ func (n *Network) DeleteFanin(o *Object, index int) error {
 	}
 	n.detachAnd(o)
 	source := o.fanins[index].Object
-	o.fanins = append(o.fanins[:index], o.fanins[index+1:]...)
-	for i, d := range source.fanouts {
-		if d == o {
-			source.fanouts = append(source.fanouts[:i], source.fanouts[i+1:]...)
-			break
-		}
-	}
+	o.fanins = slices.Delete(o.fanins, index, index+1)
+	source.fanouts = removeObjectOrder(source.fanouts, o)
 	n.changedAnd(o)
 	return nil
 }
@@ -284,12 +280,7 @@ func (n *Network) PatchFanin(o *Object, index int, e Edge) error {
 		n.detachAnd(o)
 	}
 	old := o.fanins[index].Object
-	for i, d := range old.fanouts {
-		if d == o {
-			old.fanouts = append(old.fanouts[:i], old.fanouts[i+1:]...)
-			break
-		}
-	}
+	old.fanouts = removeObjectOrder(old.fanouts, o)
 	o.fanins[index] = e
 	e.Object.fanouts = append(e.Object.fanouts, o)
 	if changed {
@@ -318,43 +309,100 @@ func (n *Network) DeleteObject(o *Object) error {
 	delete(n.mvVars, o)
 	n.objects[o.ID] = nil
 	n.kindOrder[o.Kind] = removeObjectOrder(n.kindOrder[o.Kind], o)
-	n.cis = removeObjectOrder(n.cis, o)
-	n.cos = removeObjectOrder(n.cos, o)
-	n.boxes = removeObjectOrder(n.boxes, o)
+	switch {
+	case o.IsCI():
+		n.cis = removeObjectOrder(n.cis, o)
+	case o.IsCO():
+		n.cos = removeObjectOrder(n.cos, o)
+	case Abc_ObjIsBox(o) != 0:
+		n.boxes = removeObjectOrder(n.boxes, o)
+	}
 	o.network = nil
+	return nil
+}
+
+// A separate generation for each traversal avoids mutating objects' shared
+// traversal IDs. A serialized AIG editor reuses these marks across replacements.
+type faninMarks struct {
+	dense  []uint8
+	sparse map[int]*[256]uint8
+	active uint8
+}
+
+func (s *faninMarks) begin(size int) {
+	if size > len(s.dense) {
+		s.dense = slices.Grow(s.dense, size-len(s.dense))[:size]
+	}
+	s.active += 2
+	if s.active == 0 {
+		clear(s.dense)
+		s.active = 2
+	}
+}
+
+func (s *faninMarks) cell(id int) *uint8 {
+	if s.sparse == nil {
+		return &s.dense[id]
+	}
+	page := s.sparse[id/256]
+	if page == nil {
+		page = new([256]uint8)
+		s.sparse[id/256] = page
+	}
+	return &page[id%256]
+}
+
+func (n *Network) visitFanin(o *Object, marks *faninMarks, order *[]*Object) error {
+	if !n.contains(o) {
+		return fmt.Errorf("foreign object in traversal")
+	}
+	color := marks.cell(o.ID)
+	if *color == marks.active {
+		return fmt.Errorf("cycle at object %d", o.ID)
+	}
+	if *color == marks.active+1 {
+		return nil
+	}
+	*color = marks.active
+	if !o.IsCI() {
+		for _, e := range o.fanins {
+			if err := n.visitFanin(e.Object, marks, order); err != nil {
+				return err
+			}
+		}
+	}
+	*color = marks.active + 1
+	if order != nil {
+		*order = append(*order, o)
+	}
 	return nil
 }
 
 // Topological returns the transitive fanin cone of roots, detecting cycles.
 func (n *Network) Topological(roots []*Object) ([]*Object, error) {
-	state := make(map[*Object]uint8)
-	var order []*Object
-	var visit func(*Object) error
-	visit = func(o *Object) error {
-		if !n.contains(o) {
-			return fmt.Errorf("foreign object in traversal")
-		}
-		if state[o] == 1 {
-			return fmt.Errorf("cycle at object %d", o.ID)
-		}
-		if state[o] == 2 {
-			return nil
-		}
-		state[o] = 1
-		for _, e := range o.fanins {
-			if o.IsCI() {
-				break
-			}
-			if err := visit(e.Object); err != nil {
-				return err
-			}
-		}
-		state[o] = 2
-		order = append(order, o)
-		return nil
+	if len(roots) == 0 {
+		return nil, nil
 	}
+	if n == nil {
+		return nil, fmt.Errorf("foreign object in traversal")
+	}
+	marks := faninMarks{active: 1}
+	// A small cone can occupy a handful of widely separated IDs.
+	if len(n.objects) > 65536 && len(roots) < len(n.objects)/256 {
+		marks.sparse = make(map[int]*[256]uint8)
+	} else {
+		marks.dense = make([]uint8, len(n.objects))
+	}
+	capacity := min(len(roots), len(n.objects))
+	if len(roots) == 1 && marks.sparse == nil && n.contains(roots[0]) {
+		// A deep root implies a long output even when it is the only root.
+		// Double the depth estimate to accommodate branching fanins.
+		depth := max(0, min(roots[0].Level, (len(n.objects)-1)/2))
+		capacity = max(capacity, depth*2+1)
+	}
+	order := make([]*Object, 0, capacity)
 	for _, o := range roots {
-		if err := visit(o); err != nil {
+		if err := n.visitFanin(o, &marks, &order); err != nil {
 			return nil, err
 		}
 	}

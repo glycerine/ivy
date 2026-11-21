@@ -3,6 +3,7 @@ package abc
 import (
 	"fmt"
 	"reflect"
+	"slices"
 
 	"github.com/glycerine/abcgo/aig/hop"
 )
@@ -272,7 +273,7 @@ func (n *Network) SetTerminalOrder(kind ObjectKind, ids []int) error {
 func removeObjectOrder(objects []*Object, target *Object) []*Object {
 	for i, o := range objects {
 		if o == target {
-			return append(objects[:i], objects[i+1:]...)
+			return slices.Delete(objects, i, i+1)
 		}
 	}
 	return objects

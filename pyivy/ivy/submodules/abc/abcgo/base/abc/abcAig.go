@@ -11,12 +11,13 @@ import (
 type Abc_Aig_t struct {
 	Network *Network
 	// FreeNodeCuts releases cached cuts before an AND is removed or rewired.
-	FreeNodeCuts   func(id int32)
-	bins           int
-	tracking       bool
-	added, updated []*Object
-	pending        map[*Object]int
-	excluded       map[*Object]bool
+	FreeNodeCuts     func(id int32)
+	bins             int
+	tracking         bool
+	added, updated   []*Object
+	replacementMarks faninMarks
+	pending          map[*Object]int
+	excluded         map[*Object]bool
 }
 
 func Abc_HashKey2(a, b any, size int32) uint32 {
@@ -42,6 +43,7 @@ func Abc_AigFree(m *Abc_Aig_t) {
 	}
 	m.added = nil
 	m.updated = nil
+	m.replacementMarks = faninMarks{}
 	m.tracking = false
 	clear(m.Network.hashed)
 	clear(m.Network.duplicateAnds)
@@ -318,14 +320,13 @@ func Abc_AigReplace(m *Abc_Aig_t, old *Object, replacement any, update int32) {
 	if !n.contains(old) || !n.contains(target.Object) || old == n.constant || old == target.Object {
 		panic("invalid AIG replacement")
 	}
-	cone, err := n.Topological([]*Object{target.Object})
-	if err != nil {
+	marks := &m.replacementMarks
+	marks.begin(len(n.objects))
+	if err := n.visitFanin(target.Object, marks, nil); err != nil {
 		panic(err)
 	}
-	for _, o := range cone {
-		if o == old {
-			panic("cyclic AIG replacement")
-		}
+	if marks.dense[old.ID] == marks.active+1 {
+		panic("cyclic AIG replacement")
 	}
 	queue := []aigReplacement{{old, target}}
 	m.pending[target.Object]++
