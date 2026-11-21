@@ -33,7 +33,7 @@ On the i10 mapped-SAT workload the Go port went from 171.7 ms to **19.10 ms**, o
 | i10 read and balance | 8.64–8.84 ms at first dedicated checkpoint | 4.11 ms | 1.41 ms | 3 processes each, 400 operations on CPU 14, 2,396 ANDs at depth 37 |
 | Eight pigeons into seven holes | 59.31–59.42 ms | 58.29 ms | 31.60 ms | Two final Go batches, native run on the identical UNSAT search |
 
-The measured i10 advantage changes with run length and host load. An additional alternating series during compilation on CPU 13 gave medians of 28.36 ms in Go and 28.19 ms in C over 30 solves per process. The 150-solve comparison above gave individual ranges of 18.49–19.51 ms in Go and 19.45–20.96 ms in C. Results use Go 1.27.3 and the out-of-tree GCC 13.3 CMake Release library built with `-O3 -DNDEBUG` on a Ryzen Threadripper 3960X. Sampling binaries were separate from the release timings.
+The measured i10 advantage changes with run length and host load. An additional alternating series during compilation on CPU 13 gave medians of 28.36 ms in Go and 28.19 ms in C over 30 solves per process. The 150-solve comparison above gave individual ranges of 18.49–19.51 ms in Go and 19.45–20.96 ms in C. After the final test run, four more 150-solve batches per implementation on CPU 13 measured 18.21 ms in Go and 19.27 ms in C. Results use Go 1.27.3 and the out-of-tree GCC 13.3 CMake Release library built with `-O3 -DNDEBUG` on a Ryzen Threadripper 3960X. Sampling binaries were separate from the release timings.
 
 ### Nine additional complete mapped solves
 
@@ -50,6 +50,8 @@ Each entry is the median of four fresh processes running 30 complete solves each
 | 32-bit ripple-carry adder | 0.518 | 0.414 |
 | 8-by-8 mesh | 1.628 | 1.648 |
 | 32-input one-hot conditions | 0.935 | 0.639 |
+
+The changes span eight subsystem families. The original benchmark passed through GIA, MF mapping, CNF construction and Satoko. The independent equivalence proof also exercised the ABC network, logic rewriting, cut enumeration, decomposition and BSAT. Regression tests check native solver counters, choice-cone reachability and independence of mutable storage.
 
 ### Remaining costs and reproduction
 
@@ -80,6 +82,12 @@ cd abcgo
 GOMAXPROCS=1 taskset -c 15 go test ./aig/gia -run '^$' -bench '^BenchmarkI10MappedSAT$' -benchtime=150x -benchmem
 go test ./aig/gia/mf -run '^TestGeneratedMappedCNFMatchesC$' -v -count=1
 ```
+
+### Final verification and disk cleanup
+
+The full Go module run on the committed sources passed all 130 packages with tests. Three packages had no tests. The uncached GIA package run took 456.4 seconds. The nine generated native CNF comparisons also passed in a separate run. Race-enabled checks passed for MF, the ABC network, ABCI, I/O, BSAT, CNF, Satoko and its utilities, RWR, and both CEC packages.
+
+All 23 identified agent-owned Go build caches were cleaned with `go clean -cache`. After the last test completed, cleaning the only repopulated cache reclaimed 7,090,597,888 bytes (6.60 GiB). Verification found zero populated build caches among the 23. Separately, 617 temporary benchmark executables were compressed into three archives and checked against the originals by SHA-256 and mode before releasing the loose copies. That reclaimed a further 8,821,891,023 bytes (8.22 GiB). The archives and manifests are in `/mnt/oldrog/tmp/abc-perf`.
 
 ## Ten-hour checkpoint
 
