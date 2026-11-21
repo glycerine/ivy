@@ -741,26 +741,34 @@ func aigUtilOrder(p *Graph) []Edge {
 	return p.dfs(roots, false, false, false)
 }
 func aigSimulate(p *Graph, order []Edge, inputs []bool) []bool {
-	if len(inputs) != len(p.inputs) {
-		panic("aig: simulation input count")
-	}
 	values := make([]bool, len(p.nodes))
+	p.SimulateFrame(order, inputs, values)
+	return values
+}
+
+// SimulateFrame fills values by object ID, including dangling logic. Obtain
+// order from TopologicalObjects after the last graph edit. The buffers for
+// inputs and values must be distinct and can be reused on the next frame.
+func (p *Graph) SimulateFrame(order []Edge, inputs, values []bool) {
+	if len(inputs) != len(p.inputs) || len(values) != len(p.nodes) {
+		panic("aig: simulation buffer dimensions")
+	}
 	values[0] = true
 	for i, e := range p.inputs {
 		values[e.NodeID()] = inputs[i]
 	}
 	for _, e := range order {
-		n := p.node(e)
+		id := e.NodeID()
+		n := &p.nodes[id]
 		switch n.Kind {
 		case And:
-			values[e.NodeID()] = aigUtilEdgeValue(n.Fanins[0], values) && aigUtilEdgeValue(n.Fanins[1], values)
+			values[id] = aigUtilEdgeValue(n.Fanins[0], values) && aigUtilEdgeValue(n.Fanins[1], values)
 		case ExclusiveOr:
-			values[e.NodeID()] = aigUtilEdgeValue(n.Fanins[0], values) != aigUtilEdgeValue(n.Fanins[1], values)
+			values[id] = aigUtilEdgeValue(n.Fanins[0], values) != aigUtilEdgeValue(n.Fanins[1], values)
 		case Buffer, Output:
-			values[e.NodeID()] = aigUtilEdgeValue(n.Fanins[0], values)
+			values[id] = aigUtilEdgeValue(n.Fanins[0], values)
 		}
 	}
-	return values
 }
 func Aig_ManCounterExampleValueStart(p *Graph, cex *util.Abc_Cex_t) {
 	if p.nRegs <= 0 || p.cexValues != nil {
@@ -874,7 +882,7 @@ func Aig_ManInvertConstraints(p *Graph) {
 	p.refreshFanouts()
 }
 
-func aigUtilEdgeValue(e Edge, values []bool) bool { return values[e.NodeID()] != e.Complemented() }
+func aigUtilEdgeValue(e Edge, values []bool) bool { return values[e.NodeID()] != (e&1 != 0) }
 
 func aigWriteText(w io.Writer, text string) error {
 	n, err := io.WriteString(w, text)

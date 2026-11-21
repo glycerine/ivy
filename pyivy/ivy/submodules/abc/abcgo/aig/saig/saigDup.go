@@ -252,58 +252,37 @@ func replayCex(p *aig.Graph, c *util.Abc_Cex_t) ([]bool, []bool, []bool) {
 	return replayCexFrames(p, c, nil)
 }
 func replayCexFrames(p *aig.Graph, c *util.Abc_Cex_t, onFrame func(int32, []bool)) ([]bool, []bool, []bool) {
-	if c == nil || c.IFrame < 0 || c.NRegs != p.RegisterCount() || c.NPis != Saig_ManPiNum(p) || c.NBits != c.NRegs+(c.IFrame+1)*c.NPis || int64(len(c.PData))*32 < int64(c.NBits) {
+	if c == nil || c.IFrame < 0 || c.NRegs != p.RegisterCount() || c.NPis != Saig_ManPiNum(p) {
+		panic("saig: incompatible counterexample")
+	}
+	bits := int64(c.NRegs) + (int64(c.IFrame)+1)*int64(c.NPis)
+	if bits != int64(c.NBits) || int64(len(c.PData))*32 < bits {
 		panic("saig: incompatible counterexample")
 	}
 	bit := func(i int32) bool { return c.PData[i/32]&(1<<uint(i%32)) != 0 }
-	state := make([]bool, c.NRegs)
+	order := p.TopologicalObjects()
+	inputs := make([]bool, p.InputCount())
+	state := inputs[c.NPis : c.NPis+c.NRegs]
 	for i := range state {
 		state[i] = bit(int32(i))
 	}
-	var values, outs []bool
-	for frame := int32(0); frame <= c.IFrame; frame++ {
-		inputs := make([]bool, len(p.Inputs()))
+	values := make([]bool, aig.Aig_ManObjNumMax(p))
+	outputs := p.Outputs()
+	outs := make([]bool, len(outputs))
+	position := c.NRegs
+	for frame := int64(0); frame <= int64(c.IFrame); frame++ {
 		for i := int32(0); i < c.NPis; i++ {
-			inputs[i] = bit(c.NRegs + frame*c.NPis + i)
+			inputs[i] = bit(position)
+			position++
 		}
-		copy(inputs[c.NPis:], state)
 		if onFrame != nil {
-			onFrame(frame, inputs)
+			onFrame(int32(frame), inputs)
 		}
-		values = make([]bool, len(p.Nodes()))
-		values[0] = true
-		for i, e := range p.Inputs() {
-			values[e.NodeID()] = inputs[i]
+		p.SimulateFrame(order, inputs, values)
+		for i, e := range outputs {
+			outs[i] = values[e.NodeID()] != e.Complemented()
 		}
-		var evaluate func(aig.Edge) bool
-		done := make([]bool, len(values))
-		done[0] = true
-		for _, e := range p.Inputs() {
-			done[e.NodeID()] = true
-		}
-		evaluate = func(e aig.Edge) bool {
-			if !done[e.NodeID()] {
-				n := p.Node(e)
-				switch n.Kind {
-				case aig.And:
-					values[e.NodeID()] = evaluate(n.Fanins[0]) && evaluate(n.Fanins[1])
-				case aig.ExclusiveOr:
-					values[e.NodeID()] = evaluate(n.Fanins[0]) != evaluate(n.Fanins[1])
-				case aig.Buffer, aig.Output:
-					values[e.NodeID()] = evaluate(n.Fanins[0])
-				}
-				done[e.NodeID()] = true
-			}
-			return values[e.NodeID()] != e.Complemented()
-		}
-		outs = make([]bool, len(p.Outputs()))
-		for i, e := range p.Outputs() {
-			outs[i] = evaluate(e)
-		}
-		for _, e := range p.TopologicalObjects() {
-			evaluate(e)
-		}
-		if frame < c.IFrame {
+		if frame < int64(c.IFrame) {
 			copy(state, outs[Saig_ManPoNum(p):])
 		}
 	}
@@ -337,7 +316,7 @@ func Saig_ManReturnFailingState(p *aig.Graph, c *util.Abc_Cex_t, next int32) *ve
 		return nil
 	}
 	if next != 0 {
-		state = o[Saig_ManPoNum(p):]
+		state = o[Saig_ManPoNum(p) : Saig_ManPoNum(p)+p.RegisterCount()]
 	}
 	v := vec.Vec_IntAlloc(len(state))
 	for _, b := range state {
@@ -363,7 +342,7 @@ func Saig_ManExtendCex(p *aig.Graph, c *util.Abc_Cex_t) *util.Abc_Cex_t {
 	if c == nil {
 		panic("saig: missing counterexample")
 	}
-	q := util.Abc_CexAlloc(0, int32(len(p.Inputs())), c.IFrame+1)
+	q := util.Abc_CexAlloc(0, int32(p.InputCount()), c.IFrame+1)
 	q.IPo = c.IPo
 	q.IFrame = c.IFrame
 	replayCexFrames(p, c, func(frame int32, inputs []bool) {
