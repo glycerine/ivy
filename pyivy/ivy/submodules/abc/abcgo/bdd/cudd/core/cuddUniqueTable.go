@@ -186,11 +186,22 @@ func (table *uniqueTable) forLevel(index int, visit func(uniqueEntry)) {
 	}
 }
 
-// sweep discards retired keys directly in probe order. Retain one live key
-// inline and release large probe arrays after a collection empties them out.
-func (table *uniqueTable) sweep(drop func(*DdNode) bool) int {
+// sweep visits levels in the given variable order, or by index with nil.
+// Within each level, discard keys in probe order and compact sparse storage.
+func (table *uniqueTable) sweep(order []int, drop func(*DdNode) bool) int {
 	total := 0
-	for i := range table.levels {
+	levels := len(table.levels)
+	if order != nil {
+		levels = len(order)
+	}
+	for level := range levels {
+		i := level
+		if order != nil {
+			i = order[level]
+			if i >= len(table.levels) {
+				continue
+			}
+		}
 		l := &table.levels[i]
 		if len(l.slots) == 0 {
 			if l.first.node != nil && drop(l.first.node) {

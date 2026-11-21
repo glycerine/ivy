@@ -28,6 +28,7 @@ type DdNode struct {
 	childrenReleased bool
 	inBDDTable       bool // BDD/ADD unique table or constant table
 	interactionMark  uint8
+	gcMarked         bool
 }
 type bddUniqueKey struct {
 	index uint32

@@ -15,18 +15,13 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 		return 0
 	}
 	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
-	marked := make(map[*DdNode]bool)
-	incoming := make(map[*DdNode]uint64)
-	dd.countIncomingReferences(incoming)
-	stack := make([]*DdNode, 0, dd.unique.count+dd.addUnique.count+dd.zddUnique.count)
-	tables := []*uniqueTable{&dd.unique, &dd.addUnique, &dd.zddUnique}
+	// All parents precede their children in the current variable order. Once
+	// unowned parents have released their edges, a remaining reference comes
+	// from a survivor or an external owner. Explicitly mark survivor children
+	// as well, including children of roots whose own reference count is zero.
 	mark := func(n *DdNode) {
 		if n != nil {
-			n = Cudd_Regular(n)
-			if !marked[n] {
-				marked[n] = true
-				stack = append(stack, n)
-			}
+			Cudd_Regular(n).gcMarked = true
 		}
 	}
 	mark(dd.One)
@@ -41,37 +36,21 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	for _, n := range dd.Univ {
 		mark(n)
 	}
-	for _, table := range tables {
-		for _, n := range table.entries {
-			if n.Ref == ^uint32(0) || uint64(n.Ref) > incoming[n] {
-				mark(n)
-			}
+	drop := func(n *DdNode) bool {
+		if n.Ref != 0 || n.gcMarked {
+			n.gcMarked = false
+			mark(n.T)
+			mark(n.E)
+			return false
 		}
+		dd.retireNode(n)
+		return true
 	}
-	for _, n := range dd.constants {
-		if n.Ref == ^uint32(0) || uint64(n.Ref) > incoming[n] {
-			mark(n)
-		}
-	}
-	for len(stack) != 0 {
-		n := stack[len(stack)-1]
-		stack = stack[:len(stack)-1]
-		mark(n.T)
-		mark(n.E)
-	}
-	deleted := 0
-	for _, table := range tables {
-		deleted += table.sweep(func(n *DdNode) bool {
-			if marked[n] {
-				return false
-			}
-			dd.retireNode(n)
-			return true
-		})
-	}
+	deleted := dd.unique.sweep(dd.InvPerm, drop)
+	deleted += dd.addUnique.sweep(dd.InvPerm, drop)
+	deleted += dd.zddUnique.sweep(dd.InvPermZ, drop)
 	for key, n := range dd.constants {
-		if !marked[n] {
-			dd.retireNode(n)
+		if drop(n) {
 			delete(dd.constants, key)
 			deleted++
 		}
@@ -84,10 +63,16 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 	}
 	dd.garbageCollections++
 	if clearCache {
-		live := func(n *DdNode) bool { return n == nil || marked[Cudd_Regular(n)] }
+		live := func(n *DdNode) bool {
+			if n == nil {
+				return true
+			}
+			r := Cudd_Regular(n)
+			return r.manager == dd && (r.inBDDTable || r.family == 1)
+		}
 		dd.computed.valid -= dd.computed.invalidate(func(entry computedEntry) bool {
 			key := entry.key
-			return !live(key.f) || !live(key.g) || !live(key.h) || !live(entry.result)
+			return !live(key.f) || !live(key.g) || !live(key.h) || (entry.result != DD_NON_CONSTANT && !live(entry.result))
 		})
 	}
 	dd.gcTime += uint64(time.Since(started).Nanoseconds())
@@ -120,7 +105,7 @@ func (dd *DdManager) purgeReleasedKeys() int {
 		if dd.dead == 0 && table != &dd.zddUnique {
 			continue
 		}
-		deleted += table.sweep(func(n *DdNode) bool {
+		deleted += table.sweep(nil, func(n *DdNode) bool {
 			if !n.childrenReleased {
 				return false
 			}
