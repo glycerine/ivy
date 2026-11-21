@@ -83,6 +83,46 @@ func TestSizedGraphRejectsInvalidDimensions(t *testing.T) {
 	}
 }
 
+func TestGrowingGraphPublishesStableNodesAcrossBlocks(t *testing.T) {
+	for _, leaves := range []int32{0, 1, 2, 4, 8, 31, 32, 33, 96, 129} {
+		g := dec.Dec_GraphCreate(leaves)
+		checkEnd := func(size int32) {
+			t.Helper()
+			defer func() {
+				if recover() == nil {
+					t.Fatalf("%d-leaf graph exposed an unused slot at %d", leaves, size)
+				}
+			}()
+			dec.Dec_GraphNode(g, size)
+		}
+		checkEnd(leaves)
+		saved := make([]*dec.Dec_Node_t, 160)
+		for i := range int32(len(saved)) {
+			if i < leaves {
+				saved[i] = dec.Dec_GraphNode(g, i)
+			} else {
+				saved[i] = dec.Dec_GraphAppendNode(g)
+			}
+			saved[i].SetLevel(uint32(i))
+		}
+		checkEnd(int32(len(saved)))
+		if got := dec.Dec_GraphNodeNum(g); got != int32(len(saved))-leaves {
+			t.Fatalf("%d leaves: published %d gates", leaves, got)
+		}
+		for i, n := range saved {
+			if dec.Dec_GraphNodeInt(g, n) != int32(i) || dec.Dec_GraphNode(g, int32(i)) != n {
+				t.Fatalf("%d leaves: node %d moved", leaves, i)
+			}
+		}
+		dec.Dec_GraphFree(g)
+		for i, n := range saved {
+			if n.Level != uint32(i) {
+				t.Fatalf("%d leaves: retained node %d lost its level", leaves, i)
+			}
+		}
+	}
+}
+
 func TestDecEdgeConstructorUsesNativeBitWidths(t *testing.T) {
 	for _, tc := range []struct {
 		node, phase int32

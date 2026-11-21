@@ -38,15 +38,15 @@ func graphToNetwork(n Network, g *Dec_Graph_t, and func(any, any) any) any {
 		return decNetworkEdge(n, n.ConstantOne(), g.eRoot.fCompl)
 	}
 	if Dec_GraphIsVar(g) != 0 {
-		return decNetworkEdge(n, g.pNodes[g.eRoot.Node].pFunc, g.eRoot.fCompl)
+		return decNetworkEdge(n, g.node(g.eRoot.Node).pFunc, g.eRoot.fCompl)
 	}
-	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
-		p := g.pNodes[i]
-		a := decNetworkEdge(n, g.pNodes[p.eEdge0.Node].pFunc, p.eEdge0.fCompl)
-		b := decNetworkEdge(n, g.pNodes[p.eEdge1.Node].pFunc, p.eEdge1.fCompl)
+	for i := g.nLeaves; i < g.size; i++ {
+		p := g.node(uint32(i))
+		a := decNetworkEdge(n, g.node(p.eEdge0.Node).pFunc, p.eEdge0.fCompl)
+		b := decNetworkEdge(n, g.node(p.eEdge1.Node).pFunc, p.eEdge1.fCompl)
 		p.pFunc = and(a, b)
 	}
-	return decNetworkEdge(n, g.pNodes[g.eRoot.Node].pFunc, g.eRoot.fCompl)
+	return decNetworkEdge(n, g.node(g.eRoot.Node).pFunc, g.eRoot.fCompl)
 }
 func Dec_GraphToNetwork(n Network, g *Dec_Graph_t) any { return graphToNetwork(n, g, n.And) }
 func Dec_GraphToNetworkNoStrash(n UnhashedNetwork, g *Dec_Graph_t) any {
@@ -59,7 +59,7 @@ func Dec_GraphToAig(n Network, g *Dec_Graph_t, fanins []any) any {
 		panic("dec: fanin count")
 	}
 	for i, v := range fanins {
-		g.pNodes[i].pFunc = v
+		g.node(uint32(i)).pFunc = v
 	}
 	return Dec_GraphToNetwork(n, g)
 }
@@ -70,7 +70,7 @@ func Dec_SopToAig(n Network, sop string, fanins []any) any {
 func Dec_GraphFactorSop(n VariableNetwork, sop string) any {
 	g := Dec_Factor(sop)
 	for i := int32(0); i < g.nLeaves; i++ {
-		g.pNodes[i].pFunc = n.Variable(int(i))
+		g.node(uint32(i)).pFunc = n.Variable(int(i))
 	}
 	return Dec_GraphToNetwork(n, g)
 }
@@ -90,13 +90,14 @@ func Dec_GraphToNetworkCount(n CountingNetwork, root any, g *Dec_Graph_t, nodeMa
 		return 0
 	}
 	for i := int32(0); i < g.nLeaves; i++ {
-		g.pNodes[i].SetLevel(uint32(n.Level(g.pNodes[i].pFunc)))
+		leaf := g.node(uint32(i))
+		leaf.SetLevel(uint32(n.Level(leaf.pFunc)))
 	}
 	phased, _ := n.(phasedAndLookup)
 	count := int32(0)
-	for i := g.nLeaves; i < int32(len(g.pNodes)); i++ {
-		p := g.pNodes[i]
-		a, b := g.pNodes[p.eEdge0.Node], g.pNodes[p.eEdge1.Node]
+	for i := g.nLeaves; i < g.size; i++ {
+		p := g.node(uint32(i))
+		a, b := g.node(p.eEdge0.Node), g.node(p.eEdge1.Node)
 		var signal any
 		av, bv := a.pFunc, b.pFunc
 		simplifiedLevel := -1

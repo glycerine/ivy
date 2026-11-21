@@ -88,11 +88,10 @@ func (g *Graph) Evaluate(inputs []bool) bool {
 // Truth32 reproduces Dec_GraphDeriveTruth's 32-bit truth convention. Small
 // functions repeat across the word, with variable zero alternating each bit.
 func (g *Graph) Truth32() uint32 {
-	return graphTruth32(g.Nodes, g.LeafCount, g.Root, g.Constant)
+	return graphTruth32(g, len(g.Nodes), g.LeafCount, g.Root, g.Constant)
 }
 
-func graphTruth32[N Node | *Dec_Node_t](nodes []N, leaves int, root Edge, constant bool) uint32 {
-	size := len(nodes)
+func graphTruth32[G *Graph | *Dec_Graph_t](g G, size, leaves int, root Edge, constant bool) uint32 {
 	if leaves < 0 || leaves > 5 {
 		panic("dec: Truth32 requires zero to five leaves")
 	}
@@ -113,19 +112,28 @@ func graphTruth32[N Node | *Dec_Node_t](nodes []N, leaves int, root Edge, consta
 	}
 	variables := [...]uint32{0xaaaaaaaa, 0xcccccccc, 0xf0f0f0f0, 0xff00ff00, 0xffff0000}
 	copy(words, variables[:leaves])
-	for i := leaves; i < size; i++ {
-		// Only earlier nodes are valid fanins in either representation.
-		inputs := words[:i]
-		switch n := any(nodes[i]).(type) {
-		case Node:
-			words[i] = edgeTruth(inputs, n.Left) & edgeTruth(inputs, n.Right)
-		case *Dec_Node_t:
-			// A one-bit complement becomes an all-ones mask when negated.
-			a, b := n.eEdge0, n.eEdge1
-			words[i] = (inputs[a.Node] ^ -a.fCompl) & (inputs[b.Node] ^ -b.fCompl)
+	switch graph := any(g).(type) {
+	case *Graph:
+		for i := leaves; i < size; i++ {
+			inputs := words[:i]
+			node := graph.Nodes[i]
+			words[i] = edgeTruth(inputs, node.Left) & edgeTruth(inputs, node.Right)
+		}
+	case *Dec_Graph_t:
+		i := leaves
+		for ; i < len(graph.first); i++ {
+			words[i] = andTruthWord(&graph.first[i], words[:i])
+		}
+		for ; i < size; i++ {
+			words[i] = andTruthWord(graph.node(uint32(i)), words[:i])
 		}
 	}
 	return edgeTruth(words, root)
+}
+
+func andTruthWord(n *Dec_Node_t, inputs []uint32) uint32 {
+	a, b := n.eEdge0, n.eEdge1
+	return (inputs[a.Node] ^ -a.fCompl) & (inputs[b.Node] ^ -b.fCompl)
 }
 
 func edgeTruth(words []uint32, e Edge) uint32 {

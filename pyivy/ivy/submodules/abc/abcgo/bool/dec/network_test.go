@@ -128,8 +128,8 @@ func TestNetworkCountUsesNativeStoredLevels(t *testing.T) {
 			g.SetLeafSignal(0, tc.input)
 			g.SetLeafSignal(1, uint32(0))
 			got := Dec_GraphToNetworkCount(countAtLevel{}, nil, g, 2, tc.limit)
-			if got != tc.count || g.pNodes[0].Level != tc.wantLeaf || g.pNodes[first.Node].Level != tc.wantFirst || g.pNodes[g.eRoot.Node].Level != tc.wantRoot {
-				t.Fatalf("count %d, stored levels %d/%d/%d; want %d, %d/%d/%d", got, g.pNodes[0].Level, g.pNodes[first.Node].Level, g.pNodes[g.eRoot.Node].Level, tc.count, tc.wantLeaf, tc.wantFirst, tc.wantRoot)
+			if got != tc.count || g.node(uint32(0)).Level != tc.wantLeaf || g.node(first.Node).Level != tc.wantFirst || g.node(g.eRoot.Node).Level != tc.wantRoot {
+				t.Fatalf("count %d, stored levels %d/%d/%d; want %d, %d/%d/%d", got, g.node(uint32(0)).Level, g.node(first.Node).Level, g.node(g.eRoot.Node).Level, tc.count, tc.wantLeaf, tc.wantFirst, tc.wantRoot)
 			}
 		})
 	}

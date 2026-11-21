@@ -16,11 +16,11 @@ func rewriteTruthGraph(rounds int) *Dec_Graph_t {
 func TestWordTruthPreservesPayloadsAndSelectedRoot(t *testing.T) {
 	for _, size := range []int{1, 7, 60, 61, 700} {
 		g := rewriteTruthGraph(size)
-		for i := range g.pNodes {
+		for i := range int(g.size) {
 			Dec_GraphSetNodeFunc(g, int32(i), i)
 		}
 		native := g.Native()
-		for _, root := range []int{0, 4, len(g.pNodes) - 1} {
+		for _, root := range []int{0, 4, int(g.size) - 1} {
 			for phase := range 2 {
 				Dec_GraphSetRoot(g, Dec_EdgeCreate(int32(root), int32(phase)))
 				native.SetRoot(Edge{root, phase != 0})
@@ -35,7 +35,7 @@ func TestWordTruthPreservesPayloadsAndSelectedRoot(t *testing.T) {
 				}
 			}
 		}
-		for i := range g.pNodes {
+		for i := range int(g.size) {
 			if v := Dec_GraphNodeFunc(g, int32(i)); v != i {
 				t.Fatalf("node %d lost payload %v", i, v)
 			}
@@ -61,7 +61,7 @@ func BenchmarkDecompositionTruth32(b *testing.B) {
 func TestWordTruthRejectsMalformedTrailingNode(t *testing.T) {
 	g := rewriteTruthGraph(7)
 	last := Dec_GraphNodeLast(g)
-	last.eEdge1 = Dec_EdgeCreate(int32(len(g.pNodes)), 0)
+	last.eEdge1 = Dec_EdgeCreate(g.size, 0)
 	Dec_GraphSetRoot(g, Dec_EdgeCreate(4, 0))
 	check := func(name string, evaluate func() uint32) {
 		t.Helper()
