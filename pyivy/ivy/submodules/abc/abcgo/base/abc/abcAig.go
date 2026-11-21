@@ -400,18 +400,18 @@ func Abc_AigDeleteNode(m *Abc_Aig_t, o *Object) {
 	if m.pending[o] > 0 {
 		return
 	}
-	fanins := o.Fanins()
+	fanins := [2]*Object{o.fanins[0].Object, o.fanins[1].Object}
 	if m.tracking {
-		for _, e := range fanins {
-			appendUnique(&m.updated, e.Object)
+		for _, input := range fanins {
+			appendUnique(&m.updated, input)
 		}
 	}
 	Abc_AigAndDelete(m, o)
 	Abc_NtkDeleteObj(o)
 	delete(m.excluded, o)
-	for _, e := range fanins {
-		if n.contains(e.Object) && aigNode(e.Object) && len(e.Object.fanouts) == 0 {
-			Abc_AigDeleteNode(m, e.Object)
+	for _, input := range fanins {
+		if n.contains(input) && aigNode(input) && len(input.fanouts) == 0 {
+			Abc_AigDeleteNode(m, input)
 		}
 	}
 }
@@ -576,6 +576,8 @@ func Abc_AigUpdateReset(m *Abc_Aig_t) {
 	if !m.tracking {
 		panic("updates not active")
 	}
+	clear(m.added)
+	clear(m.updated)
 	m.added = m.added[:0]
 	m.updated = m.updated[:0]
 }

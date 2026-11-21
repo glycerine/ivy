@@ -430,8 +430,8 @@ func Abc_NtkDelete(n *Network) {
 		manager.Stop()
 		n.TimingManager = nil
 	}
-	for _, o := range n.Objects() {
-		if o.MarkA || o.MarkB || o.MarkC {
+	for _, o := range n.objects {
+		if o != nil && (o.MarkA || o.MarkB || o.MarkC) {
 			panic(fmt.Sprintf("abc: deleting marked object %d", o.ID))
 		}
 	}
@@ -461,7 +461,10 @@ func Abc_NtkDelete(n *Network) {
 	case *mem.Mem_Flex_t:
 		mem.Mem_FlexStop(manager, 0)
 	}
-	for _, o := range n.Objects() {
+	for _, o := range n.objects {
+		if o == nil {
+			continue
+		}
 		o.network = nil
 		o.fanins = nil
 		o.fanouts = nil

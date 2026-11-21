@@ -92,3 +92,70 @@ func TestNodeDirectoryAfterIDReassignment(t *testing.T) {
 		t.Fatal("mutations overwrote the earlier node snapshot")
 	}
 }
+
+func TestAigDeletionFollowsOriginalInputsAfterCutCallback(t *testing.T) {
+	n := Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 1)
+	defer Abc_NtkDelete(n)
+	m := n.FunctionManager.(*Abc_Aig_t)
+	a, b := n.NewObject(ObjectPI).Signal(), n.NewObject(ObjectPI).Signal()
+	left := Abc_AigAnd(m, a, b)
+	right := Abc_AigAnd(m, a.Not(), b)
+	replacement := Abc_AigAnd(m, a, b.Not())
+	root := Abc_AigAnd(m, left, right)
+	rootID := root.Object.ID
+	m.FreeNodeCuts = func(id int32) {
+		if int(id) == rootID {
+			if err := n.PatchFanin(root.Object, 0, replacement); err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
+	Abc_AigDeleteNode(m, root.Object)
+	if n.contains(root.Object) || n.contains(left.Object) || n.contains(right.Object) {
+		t.Fatal("recursive deletion left part of the original cone")
+	}
+	if !n.contains(replacement.Object) || len(replacement.Object.fanouts) != 0 {
+		t.Fatal("recursive deletion followed the callback's replacement edge")
+	}
+}
+
+func BenchmarkDeleteDanglingAndChain(b *testing.B) {
+	b.ReportAllocs()
+	for b.Loop() {
+		n := Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 1)
+		m := n.FunctionManager.(*Abc_Aig_t)
+		root := n.NewObject(ObjectPI).Signal()
+		for range 1024 {
+			root = Abc_AigAnd(m, root, n.NewObject(ObjectPI).Signal())
+		}
+		Abc_AigDeleteNode(m, root.Object)
+		if Abc_NtkNodeNum(n) != 0 || Abc_NtkObjNum(n) != 1026 {
+			b.Fatal("cascade failed to preserve all 1,025 inputs and the constant")
+		}
+		Abc_NtkDelete(n)
+	}
+}
+
+func TestAigUpdateResetReleasesTrackedObjects(t *testing.T) {
+	n := Abc_NtkAlloc(ABC_NTK_STRASH, ABC_FUNC_AIG, 1)
+	defer Abc_NtkDelete(n)
+	m := n.FunctionManager.(*Abc_Aig_t)
+	var updated *[]*Object
+	added := Abc_AigUpdateStart(m, &updated)
+	defer Abc_AigUpdateStop(m)
+	a, b := n.NewObject(ObjectPI), n.NewObject(ObjectPI)
+	gate := Abc_AigAnd(m, a, b)
+	Abc_AigDeleteNode(m, gate.Object)
+	if len(*added) != 1 || len(*updated) != 2 {
+		t.Fatalf("tracked %d additions and %d updates", len(*added), len(*updated))
+	}
+	oldAdded, oldUpdated := *added, *updated
+	Abc_AigUpdateReset(m)
+	if len(*added) != 0 || len(*updated) != 0 || oldAdded[0] != nil || oldUpdated[0] != nil || oldUpdated[1] != nil {
+		t.Fatal("reset retained old additions or updates in the tracking buffers")
+	}
+	next := Abc_AigAnd(m, a, b)
+	if len(*added) != 1 || (*added)[0] != next.Object {
+		t.Fatal("reset failed to start the next tracking interval")
+	}
+}
