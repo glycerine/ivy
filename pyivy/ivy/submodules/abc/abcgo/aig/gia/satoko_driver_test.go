@@ -1,8 +1,10 @@
 package gia
 
 import (
-	"github.com/glycerine/abcgo/sat/satoko"
+	"flag"
 	"testing"
+
+	"github.com/glycerine/abcgo/sat/satoko"
 )
 
 func TestSourceSatokoDriverUsesOutputOR(t *testing.T) {
@@ -76,6 +78,15 @@ func TestSourceMFDriverPublishesTypedData(t *testing.T) {
 	if p.TakeData() != cnf || p.Data() != nil {
 		t.Fatal("CNF data ownership")
 	}
+}
+
+var benchmarkAiger = flag.String("abc.sat-aiger", "", "satisfiable AIGER fixture for BenchmarkFileMappedSAT")
+
+func BenchmarkFileMappedSAT(b *testing.B) {
+	if *benchmarkAiger == "" {
+		b.Skip("supply a circuit with -abc.sat-aiger")
+	}
+	benchmarkMappedSAT(b, *benchmarkAiger)
 }
 
 func BenchmarkI10MappedSAT(b *testing.B) {

@@ -1035,3 +1035,24 @@ Read plus balance fell from 31,411 to 20,432 allocations and from 3,757,704 to 3
 The complete balancer now collects old-network leaves in a typed slice inside each recursion frame. It translates those leaves in place after clearing the source marks. The same traversal still appends directly to caller-supplied vectors for the public cone helpers. The AIG manager also accepts typed edge pairs so combining the translated leaves avoids boxing both operands. A shared-cone test checks exact phase, order, duplicate status and marks in both storage forms across all combinations of duplicate and selective modes.
 
 The final i10 read-and-balance run measured 4.29–4.33 ms, 3,545,816 bytes and 11,229 allocations. The immediately preceding build measured 4.80–4.85 ms, 3,703,744 bytes and 20,432 allocations. Earlier isolated trials saved about 4,150 allocations for typed source leaves and another 5,050 for typed structural operands. A callback that appended through a slice argument introduced frame escapes. An implementation with separate recursive walkers offered similar timings to the shared traversal. Normal and race tests passed in both base packages.
+
+### Measure untuned arithmetic circuit sizes
+
+BenchmarkFileMappedSAT accepts a satisfiable AIGER file and measures read, map, construct CNF, solve and release through the same Go entry points as i10. For example, run the following from the Go module with an absolute circuit path.
+
+```sh
+GOMAXPROCS=1 go test ./aig/gia -run '^$' -bench '^BenchmarkFileMappedSAT$' -benchtime=30x -benchmem -args -abc.sat-aiger=/path/to/circuit.aig
+```
+
+Native ABC generated combinational multipliers and sorters with `gen -m` and `gen -s` at widths 8, 32 and 64. Each BLIF was read, strashed and written as AIGER. The original ABC differential verified all six generated CNFs against Go, including variable count and every literal in clause order. The table gives median milliseconds per complete solve across three processes per port, alternating on CPU 13 with 30 solves per process. These are the measurements before tuning the small-network truth cache.
+
+| Circuit | ANDs | Go ms | Release C ms |
+| --- | ---: | ---: | ---: |
+| Multiplier 8 | 424 | 2.895 | 3.040 |
+| Sorter 8 | 106 | 1.424 | 1.239 |
+| Multiplier 32 | 7,840 | 30.532 | 33.925 |
+| Sorter 32 | 1,954 | 13.347 | 17.709 |
+| Multiplier 64 | 32,064 | 127.028 | 133.514 |
+| Sorter 64 | 8,002 | 54.763 | 71.954 |
+
+The eight-input sorter was the only case here where Go trailed C. A fresh Go profile placed 55.7% of its cumulative samples in cut truth computation and 12.5% in truth expansion. The initial complete solve allocated about 348 KB in 489 allocations.
