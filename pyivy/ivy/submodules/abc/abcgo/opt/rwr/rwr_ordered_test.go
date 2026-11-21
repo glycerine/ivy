@@ -85,7 +85,7 @@ func TestRewriteNodeMatchesOrderedSlice(t *testing.T) {
 		}
 		p := Rwr_ManStart(0)
 		q := Rwr_ManStart(0)
-		net := &abcRewriteNetwork{network: root.Network()}
+		net := &abcRewriteNetwork{abc.DecNetwork{Network: root.Network()}}
 		want := Rwr_RewriteCuts(q, net, root.Signal().DecValue(), ordered, 1<<30-1, 1, 0)
 		got := Rwr_NodeRewrite(p, cuts, root, 0, 1, 0)
 		if got != want || p.nCutsGood != int32(len(ordered)) || p.nSubgraphs != q.nSubgraphs || p.fCompl != q.fCompl || !slices.Equal(p.vFanins, q.vFanins) || p.nScores != q.nScores {
@@ -128,9 +128,80 @@ func TestWarmConcreteCutTraversalUsesNoTemporaryStorage(t *testing.T) {
 	if allocs := testing.AllocsPerRun(100, func() { Rwr_NodeRewrite(p, cuts, root, 0, 1, 0) }); allocs != 0 {
 		t.Fatalf("warm traversal allocated %.0f times", allocs)
 	}
+	if p.concreteNet.Network != nil {
+		t.Fatal("rewrite lookup retains the network after returning")
+	}
 	for _, leaf := range p.concreteFanins {
 		if leaf != nil {
 			t.Fatal("rejected cut keeps the input network reachable through the saved boundary")
 		}
+	}
+}
+
+func BenchmarkRewritePinnedOrderedCuts(b *testing.B) {
+	root, cuts := balancedRewriteNode(b, true)
+	p := Rwr_ManStart(0)
+	defer Rwr_ManStop(p)
+	b.ReportAllocs()
+	for b.Loop() {
+		if Rwr_NodeRewrite(p, cuts, root, 0, 1, 0) != 0 {
+			b.Fatal("unexpected gain for pinned cut")
+		}
+	}
+}
+
+func TestRewriteLookupMatchesNetworkAcrossPhasesAndCollisions(t *testing.T) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
+	manager := n.FunctionManager.(*abc.Abc_Aig_t)
+	edges := []abc.Edge{n.One()}
+	for range 32 {
+		edges = append(edges, n.NewObject(abc.ObjectPI).Signal())
+	}
+	for i := 1; i < len(edges); i++ {
+		gate := abc.Abc_AigAnd(manager, edges[i-1].Not(), edges[i])
+		edges[i].Object.Level = i
+		if err := n.AddFanin(n.NewObject(abc.ObjectPO), gate); err != nil {
+			t.Fatal(err)
+		}
+	}
+	direct := abc.DecNetwork{Network: n}
+	var cached cachedRewriteNetwork
+	cached.beginNode(n)
+	for i, a := range edges {
+		for j, b := range edges {
+			for phase := range 4 {
+				invertA, invertB := phase&1 != 0, phase&2 != 0
+				want, wantLevel := direct.LookupAndLevel(a, b, invertA, invertB)
+				got, level := cached.LookupAndLevel(a, b, invertA, invertB)
+				swapped, swappedLevel := cached.LookupAndLevel(b.Not(), a.Not(), !invertB, !invertA)
+				if got != want || swapped != want || level != wantLevel || swappedLevel != wantLevel {
+					t.Fatalf("inputs %d, %d phase %d: got %v/%d, swapped %v/%d, want %v/%d", i, j, phase, got, level, swapped, swappedLevel, want, wantLevel)
+				}
+			}
+		}
+	}
+}
+
+func TestRewriteLookupExpiresBetweenRootsAndNetworks(t *testing.T) {
+	create := func() (*abc.Network, abc.Edge, abc.Edge) {
+		n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
+		return n, n.NewObject(abc.ObjectPI).Signal(), n.NewObject(abc.ObjectPI).Signal()
+	}
+	n, a, b := create()
+	var cached cachedRewriteNetwork
+	cached.beginNode(n)
+	if got, _ := cached.LookupAndLevel(a, b, false, false); got != nil {
+		t.Fatal("unexpected AND before insertion")
+	}
+	gate := abc.Abc_AigAnd(n.FunctionManager.(*abc.Abc_Aig_t), a, b)
+	cached.generation = ^uint32(0)
+	cached.beginNode(n)
+	if got, _ := cached.LookupAndLevel(a, b, false, false); got != gate {
+		t.Fatal("stale miss after generation wrap")
+	}
+	other, x, y := create()
+	cached.beginNode(other)
+	if got, _ := cached.LookupAndLevel(x, y, false, false); got != nil {
+		t.Fatal("other network reused the first network's AND")
 	}
 }

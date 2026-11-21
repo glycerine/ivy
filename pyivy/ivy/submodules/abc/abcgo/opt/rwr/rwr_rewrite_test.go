@@ -115,7 +115,7 @@ func TestRewriteBoundaryPinsFanoutsAndLabelsReleasedInputs(t *testing.T) {
 	n := abc.NewNetwork("boundary")
 	a, b := n.NewObject(abc.ObjectPI), n.NewObject(abc.ObjectPI)
 	root := n.CreateAndEdges(a.Signal(), b.Signal())
-	net := &abcRewriteNetwork{network: n}
+	net := &abcRewriteNetwork{abc.DecNetwork{Network: n}}
 	leaves := []any{a.Signal().Not()}
 	net.MarkBoundary(leaves, 1)
 	if refs := net.FanoutCount(a.Signal()); refs != 2 {
