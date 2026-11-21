@@ -15,7 +15,17 @@ func Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {
 }
 
 func (p *Cut_Man_t) newCut() *Cut_Cut_t {
-	c := &Cut_Cut_t{NVarsMax: p.params.NVarsMax, FSimul: p.simulation, owner: p.lifetime}
+	// Start with one slot and bound a block at about 32 KiB on 64-bit hosts.
+	// Slots are consumed once so retaining a recycled handle cannot revive it.
+	if len(p.freshCuts) == 0 {
+		p.freshCuts = make([]Cut_Cut_t, min(p.stats.Allocated, 255))
+	}
+	c := &p.freshCuts[0]
+	p.freshCuts = p.freshCuts[1:]
+	if len(p.freshCuts) == 0 {
+		p.freshCuts = nil
+	}
+	c.NVarsMax, c.FSimul, c.owner = p.params.NVarsMax, p.simulation, p.lifetime
 	c.self = c
 	if p.params.FTruth != 0 {
 		if words := Cut_TruthWords(c.NVarsMax); words == 1 {
@@ -30,16 +40,16 @@ func Cut_CutRecycle(p *Cut_Man_t, c *Cut_Cut_t) {
 	if p == nil || c == nil || c.self != c || c.owner == nil || c.owner != p.lifetime || c.owner.stopped {
 		panic("cut: foreign or recycled cut")
 	}
-	c.owner = nil
-	c.self = nil
-	if c.temporary {
-		return
+	if !c.temporary {
+		p.stats.Recycled++
+		p.stats.Current--
+		if len(c.leaves) == 1 {
+			p.stats.Trivial--
+		}
 	}
-	p.stats.Recycled++
-	p.stats.Current--
-	if len(c.leaves) == 1 {
-		p.stats.Trivial--
-	}
+	c.owner, c.self = nil, nil
+	c.Next, c.proof = nil, nil
+	c.leaves, c.truth = nil, nil
 }
 func Cut_CutCompare(a, b *Cut_Cut_t) int32 {
 	if len(a.leaves) < len(b.leaves) {

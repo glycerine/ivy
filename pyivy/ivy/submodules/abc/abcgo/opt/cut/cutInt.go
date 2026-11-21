@@ -27,6 +27,7 @@ type cutLifetime struct{ stopped bool }
 
 type Cut_Man_t struct {
 	clockOrigin                time.Time
+	freshCuts                  []Cut_Cut_t
 	network                    map[int32]NetworkNode
 	networkCounts              []int32
 	params                     *Cut_Params_t

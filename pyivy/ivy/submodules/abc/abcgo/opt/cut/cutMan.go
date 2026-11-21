@@ -27,6 +27,7 @@ func Cut_ManStop(p *Cut_Man_t) {
 		return
 	}
 	p.lifetime.stopped = true
+	p.freshCuts = nil
 	p.network = nil
 	p.networkCounts = nil
 	p.newCuts = nil

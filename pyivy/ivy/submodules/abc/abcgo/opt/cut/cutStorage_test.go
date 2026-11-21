@@ -14,6 +14,58 @@ func TestStoppedCutManagerReleasesNetworkInventory(t *testing.T) {
 	}
 }
 
+func TestRecycledCutReleasesListAndWideBuffers(t *testing.T) {
+	params := DefaultParams(8)
+	params.FTruth = 1
+	p := Cut_ManStart(params)
+	defer Cut_ManStop(p)
+	a, b := Cut_CutAlloc(p), Cut_CutAlloc(p)
+	a.setLeaves([]int32{1, 2, 3, 4, 5, 6})
+	a.proof, a.Next = &Cut_Proof{Node: 17}, b
+	snapshot := Cut_CutDupList(p, a)
+	for _, head := range []*Cut_Cut_t{a, snapshot} {
+		next := head.Next
+		Cut_CutRecycle(p, head)
+		if head.Next != nil || head.proof != nil || head.leaves != nil || head.truth != nil {
+			t.Errorf("temporary %t: recycled cut still references its list, proof or buffers", head.temporary)
+		}
+		if next == nil || next.owner != p.lifetime || len(next.truth) != 8 {
+			t.Fatal("recycling the head changed its live successor")
+		}
+		Cut_CutRecycle(p, next)
+	}
+	if stats := p.Stats(); stats.Current != 0 || stats.Recycled != 2 {
+		t.Fatalf("recycling regular and snapshot cuts changed statistics: %+v", stats)
+	}
+}
+
+func TestCutBlocksPreserveHandlesAndReleaseUnusedSlots(t *testing.T) {
+	params := DefaultParams(4)
+	params.FTruth = 1
+	p := Cut_ManStart(params)
+	first := Cut_CutCreateTriv(p, 17)
+	expired := Cut_CutCreateTriv(p, 19)
+	Cut_CutRecycle(p, expired)
+	for i := range 700 {
+		c := Cut_CutCreateTriv(p, int32(i))
+		if c == expired || c == first || c.self != c || c.owner != p.lifetime {
+			t.Fatalf("lost cut identity after allocation %d", i)
+		}
+		c.truth[0] = 0
+		Cut_CutRecycle(p, c)
+	}
+	if !slices.Equal(first.leaves, []int32{17}) || first.truth[0] == 0 || expired.self != nil {
+		t.Fatal("an earlier live or recycled handle changed")
+	}
+	if len(p.freshCuts) == 0 {
+		t.Fatal("fixture should stop partway through a block")
+	}
+	Cut_ManStop(p)
+	if p.freshCuts != nil {
+		t.Fatal("stopped manager retained unused cut slots")
+	}
+}
+
 func TestCutHandleRejectsForeignAndRepeatedRecycle(t *testing.T) {
 	params := DefaultParams(4)
 	p, other := Cut_ManStart(params), Cut_ManStart(params)
