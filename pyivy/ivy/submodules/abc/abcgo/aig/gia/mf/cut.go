@@ -1,7 +1,11 @@
 // Package mf ports the cut mapper and mapped-CNF generator from giaMf.c.
 package mf
 
-import "github.com/glycerine/abcgo/misc/util"
+import (
+	"math/bits"
+
+	"github.com/glycerine/abcgo/misc/util"
+)
 
 const epsilon float32 = 0.005
 const maxLeaves = 10
@@ -161,16 +165,42 @@ func (s *cutSet) save() []Cut {
 	return cuts
 }
 
+// leafPositions records a sorted subset in a merged cut of at most eight leaves.
+func leafPositions(subset, merged []int32) uint8 {
+	var positions uint8
+	k := 0
+	for i, leaf := range merged {
+		if k == len(subset) {
+			break
+		}
+		if subset[k] == leaf {
+			positions |= 1 << uint(i)
+			k++
+		}
+	}
+	if k != len(subset) {
+		panic("mf: merged cut is missing a leaf")
+	}
+	return positions
+}
+
 // expandTruth aligns a source cut's variables with a merged cut. MF stores all
 // truth words at the configured LUT width; smaller supports repeat their table.
-func expandTruth(result, table []uint64, old, merged []int32, width int, complement bool) {
+func expandTruth(result, table []uint64, count int, positions uint8, width int, complement bool) {
 	copy(result, table)
 	if complement {
 		for i := range result {
 			result[i] = ^result[i]
 		}
 	}
-	util.Abc_TtExpand(result, int32(width), old, int32(len(old)), merged, int32(len(merged)))
+	for k := count - 1; k >= 0; k-- {
+		last := bits.Len8(positions) - 1
+		if k == last {
+			break // All remaining positions are already aligned.
+		}
+		util.Abc_TtSwapVars(result, int32(width), int32(k), int32(last))
+		positions &^= 1 << uint(last)
+	}
 }
 
 // The candidate owns both arrays. Compact its leaves and truth table in place.

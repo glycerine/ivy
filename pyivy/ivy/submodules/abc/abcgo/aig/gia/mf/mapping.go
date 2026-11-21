@@ -32,15 +32,16 @@ type node struct {
 // Mapping owns its cut/truth arrays. Cuts[id][0] is the selected source MF cut.
 // The network must remain unchanged throughout generation and CNF derivation.
 type Mapping struct {
-	Network     Network
-	Options     Options
-	Cuts        [][]Cut
-	Truths      [][]uint64
-	ClauseSizes []int
-	Refs        []int32
-	nodes       []node
-	truthStore  *vec.Vec_Mem_t
-	phases      []bool
+	Network      Network
+	Options      Options
+	Cuts         [][]Cut
+	Truths       [][]uint64
+	ClauseSizes  []int
+	Refs         []int32
+	nodes        []node
+	truthStore   *vec.Vec_Mem_t
+	truthResults []truthResult
+	phases       []bool
 }
 
 func (m *Mapping) intern(table []uint64, nLeaves int) int32 {
@@ -88,12 +89,52 @@ func (m *Mapping) parameters(cut *Cut, refs float32) {
 	cut.Delay = delay
 	cut.Flow = (flow + float32(m.area(*cut))) / refs
 }
+
+// A truth operation depends on each signed function and on the positions its
+// variables occupy in the merged cut. The numeric leaf IDs can differ on reuse.
+type truthOperation struct {
+	operands  [3]int32
+	positions [3]uint8
+	kind      uint8
+}
+
+type truthResult struct {
+	operation truthOperation
+	function  int32
+	retained  uint8
+}
+
 func (m *Mapping) computeTruth(cuts []Cut, complements []int32, kind int, leaves []int32) Cut {
+	operation := truthOperation{kind: uint8(kind)}
+	hash := uint32(kind)
+	for i, cut := range cuts {
+		literal := cut.Function ^ complements[i]
+		positions := leafPositions(cut.Leaves, leaves)
+		operation.operands[i] = literal
+		operation.positions[i] = positions
+		hash = bits.RotateLeft32(hash, 7) ^ (uint32(literal)*0x9e3779b1 ^ uint32(positions)*0x85ebca6b)
+	}
+	entry := &m.truthResults[hash&uint32(len(m.truthResults)-1)]
+	if entry.operation == operation {
+		if entry.retained != 0xff {
+			n := 0
+			for positions := entry.retained; positions != 0; positions &= positions - 1 {
+				leaves[n] = leaves[bits.TrailingZeros8(positions)]
+				n++
+			}
+			leaves = leaves[:n]
+		}
+		return Cut{Leaves: leaves, Function: entry.function}
+	}
+
+	var original [maxLeaves]int32
+	count := copy(original[:], leaves)
 	var tables [3][4]uint64
 	words := 1 << max(0, m.Options.LUTSize-6)
 	for i, cut := range cuts {
-		source := vec.Vec_MemReadEntry(m.truthStore, int(cut.Function>>1))
-		expandTruth(tables[i][:words], source, cut.Leaves, leaves, m.Options.LUTSize, (cut.Function&1)^complements[i] != 0)
+		literal := operation.operands[i]
+		source := vec.Vec_MemReadEntry(m.truthStore, int(literal>>1))
+		expandTruth(tables[i][:words], source, len(cut.Leaves), operation.positions[i], m.Options.LUTSize, literal&1 != 0)
 	}
 	truth := tables[0][:words]
 	for i := range truth {
@@ -116,7 +157,13 @@ func (m *Mapping) computeTruth(cuts []Cut, complements []int32, kind int, leaves
 	if m.Options.LUTSize > 6 || !m.Options.ObjectIDs {
 		truth, leaves = minimizeSupport(truth, leaves, m.Options.LUTSize)
 	}
-	return Cut{Leaves: leaves, Function: m.intern(truth, len(leaves))<<1 | complement}
+	function := m.intern(truth, len(leaves))<<1 | complement
+	retained := uint8(0xff)
+	if len(leaves) != count {
+		retained = leafPositions(leaves, original[:count])
+	}
+	*entry = truthResult{operation: operation, function: function, retained: retained}
+	return Cut{Leaves: leaves, Function: function}
 }
 func (m *Mapping) merge(id int32, result *cutSet) error {
 	a, b, c, kind := m.Network.Gate(id)
@@ -314,8 +361,9 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 	hint := max(2, min(count, 8192))
 	m := &Mapping{
 		Network: network, Options: options, Cuts: make([][]Cut, count), nodes: make([]node, count),
-		ClauseSizes: make([]int, 0, hint),
-		truthStore:  vec.Vec_MemAlloc(words, min(7, bits.Len(uint(hint))-1)),
+		ClauseSizes:  make([]int, 0, hint),
+		truthResults: make([]truthResult, 1<<min(12, bits.Len(uint(count-1)))),
+		truthStore:   vec.Vec_MemAlloc(words, min(7, bits.Len(uint(hint))-1)),
 	}
 	vec.Vec_MemHashAlloc(m.truthStore, hint)
 	m.intern(make([]uint64, words), 0)
@@ -446,6 +494,7 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 			}
 		}
 	}
+	m.truthResults = nil
 	m.setMapRefs(0, false)
 	var touched []int32
 	for iter := 1; iter < options.Rounds+options.ExactRounds; iter++ {

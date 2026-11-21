@@ -28,7 +28,7 @@ func TestMappedCutsTruthAndWidths(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if mapping.truthStore != nil || len(mapping.Truths) != len(mapping.ClauseSizes) {
+		if mapping.truthResults != nil || mapping.truthStore != nil || len(mapping.Truths) != len(mapping.ClauseSizes) {
 			t.Fatal("finished mapping retained its hash index or lost a function")
 		}
 		for id, truth := range mapping.Truths {

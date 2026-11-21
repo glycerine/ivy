@@ -107,7 +107,7 @@ func TestTruthAlignmentAndSupportMinimization(t *testing.T) {
 	// x0 XOR x1 expanded onto leaves 1 and 3 of a three-variable merged cut.
 	table := []uint64{0x6666666666666666, 0x6666666666666666, 0x6666666666666666, 0x6666666666666666}
 	expanded := make([]uint64, len(table))
-	expandTruth(expanded, table, []int32{1, 3}, []int32{1, 2, 3}, 8, true)
+	expandTruth(expanded, table, 2, leafPositions([]int32{1, 3}, []int32{1, 2, 3}), 8, true)
 	for a := 0; a < 256; a++ {
 		want := uint64(1 ^ ((a & 1) ^ ((a >> 2) & 1)))
 		if expanded[a>>6]>>uint(a&63)&1 != want {
@@ -174,6 +174,69 @@ func TestInternClauseCostAtEachTableWidth(t *testing.T) {
 			want := util.Abc_Tt8Cnf(table[:], int32(support), cover[:])
 			if m.ClauseSizes[id] != int(want) {
 				t.Fatalf("LUT width %d support %d got cost %d, cover has %d cubes", width, support, m.ClauseSizes[id], want)
+			}
+		}
+	}
+}
+
+func TestTruthOperationReusesOnlyRelativeSupport(t *testing.T) {
+	for _, width := range []int{6, 8} {
+		for _, objectIDs := range []bool{false, true} {
+			words := 1 << (width - 6)
+			m := &Mapping{
+				Options:      Options{LUTSize: width, ObjectIDs: objectIDs},
+				truthStore:   vec.Vec_MemAlloc(words, 2),
+				truthResults: make([]truthResult, 1), // Force every distinct operation to collide.
+			}
+			vec.Vec_MemHashAlloc(m.truthStore, 4)
+			m.intern(make([]uint64, words), 0)
+			variable := make([]uint64, words)
+			for i := range variable {
+				variable[i] = 0xaaaaaaaaaaaaaaaa
+			}
+			x := m.intern(variable, 1) << 1
+			for _, tc := range []struct {
+				kind        int
+				args, flips []int32
+				keep        []int
+				truth       uint8 // indexed by the two original inputs
+			}{
+				{4, []int32{1, 1, 0}, []int32{0, 0, 0}, []int{1}, 0b1100},
+				{4, []int32{1, 1, 0}, []int32{1, 0, 1}, []int{0, 1}, 0b0110},
+				{2, []int32{0, 1}, []int32{1, 0}, []int{0, 1}, 0b0100},
+				{3, []int32{0, 1}, []int32{0, 1}, []int{0, 1}, 0b1001},
+				{4, []int32{0, 0, 1}, []int32{1, 1, 0}, []int{0}, 0b0101},
+			} {
+				for _, ids := range [][2]int32{{2, 5}, {13, 47}} {
+					cuts := make([]Cut, len(tc.args))
+					for i, which := range tc.args {
+						cuts[i] = Cut{Function: x, Leaves: []int32{ids[which]}}
+					}
+					merged := ids
+					got := m.computeTruth(cuts, tc.flips, tc.kind, merged[:])
+					keep := tc.keep
+					if width == 6 && objectIDs {
+						keep = []int{0, 1}
+					}
+					want := make([]int32, len(keep))
+					for j, which := range keep {
+						want[j] = ids[which]
+					}
+					if !slices.Equal(got.Leaves, want) {
+						t.Fatalf("width %d object IDs %t gate %d with %v: leaves %v, want %v", width, objectIDs, tc.kind, ids, got.Leaves, want)
+					}
+					table := vec.Vec_MemReadEntry(m.truthStore, int(got.Function>>1))
+					for assignment := 0; assignment < 4; assignment++ {
+						index := 0
+						for j, which := range keep {
+							index |= (assignment >> which & 1) << j
+						}
+						value := uint8(table[0]>>index&1) ^ uint8(got.Function&1)
+						if value != tc.truth>>assignment&1 {
+							t.Fatalf("width %d object IDs %t gate %d with %v at %d: got %d", width, objectIDs, tc.kind, ids, assignment, value)
+						}
+					}
+				}
 			}
 		}
 	}
