@@ -11,6 +11,15 @@ import (
 )
 
 func BenchmarkI10ReadBalanceRewrite(b *testing.B) {
+	benchmarkI10Balance(b, 2, true)
+}
+
+func BenchmarkI10ReadBalance(b *testing.B) {
+	benchmarkI10Balance(b, 1, false)
+}
+
+func benchmarkI10Balance(b *testing.B, passes int, rewrite bool) {
+	b.Helper()
 	extra.Extra_ProgressBarSetMode(false, true)
 	defer extra.Extra_ProgressBarSetMode(true, false)
 	b.ReportAllocs()
@@ -20,12 +29,12 @@ func BenchmarkI10ReadBalanceRewrite(b *testing.B) {
 		if err != nil {
 			b.Fatal(err)
 		}
-		for range 2 {
+		for range passes {
 			balanced := Abc_NtkBalance(n, 0, 0, 1)
 			abc.Abc_NtkDelete(n)
 			n = balanced
 		}
-		if Abc_NtkRewrite(n, 0, 0, 0, 0, 0) == 0 {
+		if rewrite && Abc_NtkRewrite(n, 0, 0, 0, 0, 0) == 0 {
 			b.Fatal("rewrite failed")
 		}
 		nodes, depth = abc.Abc_NtkNodeNum(n), abc.Abc_AigLevel(n)

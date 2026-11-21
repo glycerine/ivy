@@ -981,3 +981,11 @@ Two more checked-in workloads exercise the same file-read, map, CNF, solver and 
 | i10, one solve per fresh process, median of eight | — | 21.01 ms | 20.64 ms |
 
 An independent i10 batch on CPU 12 ran substantially slower for both programs and reversed the ordering, at 29.34–29.80 ms in Go versus 28.03–28.17 ms in release C. CPU 13's fresh-process Go range was 20.40–21.19 ms versus 20.54–20.77 ms in C. The release C sampling profile assigned 47.1% of flat samples to Mf_ObjMergeOrder and 22.5% to Mf_ManPrepareCuts, including compiler-inlined work. The Go profile assigned 6.2% flat to candidate filtering and decoding.
+
+### Keep translated balancing edges in typed storage
+
+A red regression called the pair-permutation helper with its only eligible pair. Go consulted the network and panicked on a nil network argument. The native helper returns as soon as the left and right candidate bounds coincide. The C fixture now checks that case with the same nil argument and verifies the complement and order of both edges.
+
+The balancer keeps translated edges in a typed slice, with eight slots in the recursion frame for small supergates. Sorting, duplicate detection and combination use the same phased edges. The public vector helpers share the candidate-selection logic. Reusing boxed edges increased allocation on this workload, while special-casing the two-edge sort gave inconsistent timings. A unit test checks all 2,048 assignments of an 11-input supergate with alternating phases and verifies ten ANDs at depth four. The normal and race base/abci suites passed.
+
+The read-plus-one-balance benchmark produced 2,396 ANDs at depth 37 in both ports. In two interleaved batches of 280 operations Go went from 8.64–8.84 to 8.02–8.06 ms, from 5.00 MB to 4.90 MB and from 38,264 to 31,702 allocations. Release C took 1.41 ms. In the starting Go heap profile, 21.0% of allocated objects came directly from balanceNode and 7.5% from inserting edges by level. The release C sampling profile attributed 18.4% to step allocation and 17.2% to fixed allocation. The i10 proof trials went from about 305,000 to 283,500 allocations, with overlapping elapsed times of 220.0–226.2 ms before and 219.7–221.6 ms after.

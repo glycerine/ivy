@@ -39,6 +39,54 @@ func TestBalancePermuteMovesShareablePairToTail(t *testing.T) {
 	}
 }
 
+func TestBalancePermuteSinglePairDoesNotConsultNetwork(t *testing.T) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
+	defer abc.Abc_NtkDelete(n)
+	a, b := abc.Abc_NtkCreatePi(n).Signal(), abc.Abc_NtkCreatePi(n).Signal().Not()
+	v := vec.Vec_PtrAlloc(2)
+	vec.Vec_PtrPush(v, a)
+	vec.Vec_PtrPush(v, b)
+	Abc_NodeBalancePermute(nil, v, 0)
+	if vec.Vec_PtrEntry(v, 0) != a || vec.Vec_PtrEntry(v, 1) != b {
+		t.Fatal("a single candidate pair changed order")
+	}
+}
+
+func TestBalanceWideSupergatePreservesEveryInputPhase(t *testing.T) {
+	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
+	defer abc.Abc_NtkDelete(n)
+	const width = 11
+	root := n.One()
+	for i := range width {
+		edge := abc.Abc_NtkCreatePi(n).Signal()
+		if i%2 != 0 {
+			edge = edge.Not()
+		}
+		root = n.AndEdges(root, edge)
+	}
+	abc.Abc_ObjAddFanin(abc.Abc_NtkCreatePo(n), root)
+	balanced := Abc_NtkBalance(n, 0, 0, 1)
+	if balanced == nil {
+		t.Fatal("balancing failed")
+	}
+	defer abc.Abc_NtkDelete(balanced)
+	if got := abc.Abc_AigLevel(balanced); got != 4 || abc.Abc_NtkNodeNum(balanced) != width-1 {
+		t.Fatalf("balanced %d-input AND has %d levels and %d nodes", width, got, abc.Abc_NtkNodeNum(balanced))
+	}
+	inputs := balanced.Inputs()
+	values := make(map[*abc.Object]bool, width)
+	output := abc.Abc_ObjChild0(balanced.Outputs()[0])
+	for a := 0; a < 1<<width; a++ {
+		for i, input := range inputs {
+			values[input] = a>>i&1 != 0
+		}
+		got, err := balanced.Evaluate(output, values)
+		if err != nil || got != (a == 0x555) {
+			t.Fatalf("assignment %#x produced %t, err %v", a, got, err)
+		}
+	}
+}
+
 func TestBalanceConePreservesComplementedLeaves(t *testing.T) {
 	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
 	a, b := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
