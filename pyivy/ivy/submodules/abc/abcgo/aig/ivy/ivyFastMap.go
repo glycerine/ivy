@@ -42,19 +42,40 @@ func Ivy_ObjSuppStart(p *Ivy_Man_t, n *Ivy_Obj_t) *Ivy_Supp_t {
 	return s
 }
 func ivyFastMapOrder(p *Ivy_Man_t) []*Ivy_Obj_t {
-	var nodes []*Ivy_Obj_t
-	seen := map[*Ivy_Obj_t]bool{}
+	if Ivy_ManNodeNum(p) == 0 {
+		return nil
+	}
+	nodes := make([]*Ivy_Obj_t, 0, Ivy_ManNodeNum(p))
+	for i, n := range p.vObjs {
+		if n == nil || Ivy_ObjIsNode(n) == 0 {
+			continue
+		}
+		if Ivy_ObjFaninId0(n) >= n.Id || Ivy_ObjFaninId1(n) >= n.Id {
+			return ivyFinishMapOrder(p, i, nodes)
+		}
+		nodes = append(nodes, n)
+	}
+	return nodes
+}
+
+// Replacement can give an early gate a later fanin. Keep the ordered prefix
+// and visit the remaining gates in fanin-first order, including dangling gates.
+func ivyFinishMapOrder(p *Ivy_Man_t, start int, nodes []*Ivy_Obj_t) []*Ivy_Obj_t {
+	seen := make([]bool, len(p.vObjs))
+	for _, n := range nodes {
+		seen[n.Id] = true
+	}
 	var visit func(*Ivy_Obj_t)
 	visit = func(n *Ivy_Obj_t) {
-		if n == nil || seen[n] || Ivy_ObjIsNode(n) == 0 {
+		if n == nil || seen[n.Id] || Ivy_ObjIsNode(n) == 0 {
 			return
 		}
-		seen[n] = true
+		seen[n.Id] = true
 		visit(Ivy_ObjFanin0(n))
 		visit(Ivy_ObjFanin1(n))
 		nodes = append(nodes, n)
 	}
-	for _, n := range p.vObjs {
+	for _, n := range p.vObjs[start:] {
 		visit(n)
 	}
 	return nodes
@@ -93,7 +114,7 @@ func Ivy_FastMapPerform(p *Ivy_Man_t, limit, recovery, verbose int32) {
 					Ivy_FastMapNodeArea(p, n, limit)
 				}
 			} else {
-				Ivy_FastMapRecover(p, limit)
+				ivyFastMapRecover(p, limit, nodes)
 			}
 			delay, area = Ivy_FastMapDelay(p), Ivy_FastMapArea(p)
 			if verbose != 0 {
@@ -530,9 +551,12 @@ func Ivy_FastMapNodeRecover4(p *Ivy_Man_t, n *Ivy_Obj_t, limit int32, front, old
 	ivyFastMapNodeRecoverAlternative(p, n, limit, front, old, true)
 }
 func Ivy_FastMapRecover(p *Ivy_Man_t, limit int32) {
+	ivyFastMapRecover(p, limit, ivyFastMapOrder(p))
+}
+func ivyFastMapRecover(p *Ivy_Man_t, limit int32, nodes []*Ivy_Obj_t) {
 	var front, old []*Ivy_Obj_t
 	Ivy_ManCleanTravId(p)
-	for _, n := range ivyFastMapOrder(p) {
+	for _, n := range nodes {
 		Ivy_FastMapNodeRecover(p, n, limit, &front, &old)
 	}
 }

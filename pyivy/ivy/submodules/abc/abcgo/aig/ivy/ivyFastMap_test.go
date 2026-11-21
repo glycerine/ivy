@@ -184,6 +184,53 @@ func TestFastMapUsesTopologyAfterObjectReplacement(t *testing.T) {
 	ivyCheckMappedSupports(t, p, 3)
 }
 
+func TestMappingOrderWithHolesAndForwardFanins(t *testing.T) {
+	p := Ivy_ManStart()
+	defer Ivy_ManStop(p)
+	a, b, c, d := Ivy_ObjCreatePi(p), Ivy_ObjCreatePi(p), Ivy_ObjCreatePi(p), Ivy_ObjCreatePi(p)
+	prefix := Ivy_And(p, a, b)
+	hole := Ivy_And(p, a, Ivy_Not(b))
+	root := Ivy_And(p, b, c)
+	consumer := Ivy_And(p, prefix, Ivy_Not(root))
+	Ivy_ObjCreatePo(p, consumer)
+	dangling := Ivy_CanonExor(p, a, c)
+	later := Ivy_And(p, a, d)
+	newRoot := Ivy_And(p, later, c)
+	Ivy_ObjDelete(p, hole, 1)
+	root.fMarkA, dangling.fMarkB = 1, 1
+	if order := ivyFastMapOrder(p); !slices.Equal(order, []*Ivy_Obj_t{prefix, root, consumer, dangling, later, newRoot}) {
+		t.Fatal("creation-order walk lost a live node or visited a hole")
+	}
+	root.fMarkA = 0
+	Ivy_ObjReplace(p, root, newRoot, 1, 0, 0)
+	root.fMarkA = 1
+	if order := ivyFastMapOrder(p); !slices.Equal(order, []*Ivy_Obj_t{prefix, later, root, consumer, dangling}) {
+		t.Fatal("rewritten graph lost its fanin-first order or visited the shared root twice")
+	}
+	if root.fMarkA != 1 || dangling.fMarkB != 1 {
+		t.Fatal("ordering overwrote client marks")
+	}
+	root.fMarkA, dangling.fMarkB = 0, 0
+}
+
+func BenchmarkIvyMappingOrder(b *testing.B) {
+	p := Ivy_ManStart()
+	defer Ivy_ManStop(p)
+	input := Ivy_ObjCreatePi(p)
+	root := Ivy_ObjCreatePi(p)
+	for range 4096 {
+		root = Ivy_And(p, input, root)
+	}
+	Ivy_ObjCreatePo(p, root)
+	b.ReportAllocs()
+	for b.Loop() {
+		nodes := ivyFastMapOrder(p)
+		if len(nodes) != 4096 || nodes[len(nodes)-1] != root {
+			b.Fatal("unexpected mapping order")
+		}
+	}
+}
+
 func TestFastMapSourceCDelayMapping(t *testing.T) {
 	compiler, err := exec.LookPath("cc")
 	if err != nil {
