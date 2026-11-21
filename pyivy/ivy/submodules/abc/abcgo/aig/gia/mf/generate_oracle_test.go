@@ -14,13 +14,19 @@ import (
 	"testing"
 )
 
-func originalABCCNF(t *testing.T, model *ioa.Model) *CNF {
+func originalABCPath(t *testing.T) string {
 	t.Helper()
 	_, file, _, _ := runtime.Caller(0)
 	abc := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../../abc"))
 	if _, err := os.Stat(abc); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
+	return abc
+}
+
+func originalABCCNF(t *testing.T, model *ioa.Model) *CNF {
+	t.Helper()
+	abc := originalABCPath(t)
 	dir := t.TempDir()
 	input, output := filepath.Join(dir, "input.aig"), filepath.Join(dir, "output.cnf")
 	f, err := os.Create(input)
@@ -205,6 +211,33 @@ func TestI10MappedCNFMatchesC(t *testing.T) {
 func TestArithmeticMappedCNFMatchesC(t *testing.T) {
 	for _, name := range []string{"native_multiplier16", "native_sorter16"} {
 		t.Run(name, func(t *testing.T) { checkFileMappedCNF(t, "../test_vectors/"+name+".aig") })
+	}
+}
+
+func TestGeneratedMappedCNFMatchesC(t *testing.T) {
+	abc := originalABCPath(t)
+	for _, tc := range []struct {
+		name, flag string
+		widths     []int
+	}{
+		{"multiplier", "-m", []int{8, 32, 64}},
+		{"sorter", "-s", []int{8, 32, 64}},
+		{"adder", "-a", []int{32}},
+		{"mesh", "-e", []int{8}},
+		{"onehot", "-n", []int{32}},
+	} {
+		for _, width := range tc.widths {
+			t.Run(fmt.Sprintf("%s%d", tc.name, width), func(t *testing.T) {
+				dir := t.TempDir()
+				command := fmt.Sprintf("gen %s -N %d network.blif; read_blif network.blif; strash; write_aiger network.aig", tc.flag, width)
+				cmd := exec.Command(abc, "-c", command)
+				cmd.Dir = dir
+				if text, err := cmd.CombinedOutput(); err != nil {
+					t.Fatalf("generate native circuit: %v\n%s", err, text)
+				}
+				checkFileMappedCNF(t, filepath.Join(dir, "network.aig"))
+			})
+		}
 	}
 }
 

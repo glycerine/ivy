@@ -256,7 +256,7 @@ func TestCoarsenRejectsMisorderedInterfaces(t *testing.T) {
 	}
 }
 func TestCoarsenHashRealExhaustive(t *testing.T) {
-	n := newCoarsened()
+	n := newCoarsened(1, 0, 0)
 	for i := 0; i < 3; i++ {
 		n.append(coarseGate{kind: 1})
 	}
@@ -333,6 +333,36 @@ func TestCoarsenRetainsRegisterPartition(t *testing.T) {
 		n.registers = invalid
 		if _, err := Coarsen(n, 3); err == nil {
 			t.Fatal("invalid register count accepted")
+		}
+	}
+}
+
+func TestCleanupRemapsLiveChoiceAndKeepsUnusedInput(t *testing.T) {
+	n := newCoarsened(8, 3, 1)
+	a := n.append(coarseGate{kind: 1})
+	b := n.append(coarseGate{kind: 1})
+	unused := n.append(coarseGate{kind: 1})
+	n.append(coarseGate{kind: 2, a: unused, b: a}) // dangling
+	alternative := n.append(coarseGate{kind: 3, a: a, b: b})
+	driver := n.append(coarseGate{kind: 2, a: a, b: b})
+	n.siblings[driver>>1] = alternative >> 1
+	n.append(coarseGate{kind: 6, a: driver ^ 1})
+	n.outputs = append(n.outputs, driver^1)
+	out := n.cleanup()
+	if out.ObjectCount() != 7 || out.inputs[2] != unused || out.gates[4].kind != 3 ||
+		out.siblings[5] != 4 || out.outputs[0] != 11 || out.gates[6].a != 11 {
+		t.Fatalf("cleanup returned gates %v, siblings %v, outputs %v", out.gates, out.siblings, out.outputs)
+	}
+	if out.cleanup() != out {
+		t.Fatal("cleanup copied a graph whose internal gates are all live")
+	}
+}
+
+func TestCoarsenRejectsTrailingInputLiterals(t *testing.T) {
+	for _, extra := range []int32{0, 2, 3, 4} {
+		n := &testNetwork{gates: []testGate{{kind: 0}, {kind: 1}}, inputs: []int32{2, extra}, outputs: []int32{2}}
+		if _, err := Coarsen(n, 3); err == nil {
+			t.Fatalf("accepted trailing input literal %d", extra)
 		}
 	}
 }

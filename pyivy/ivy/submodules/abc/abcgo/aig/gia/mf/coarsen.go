@@ -26,8 +26,13 @@ func (n *Coarsened) Gate(id int32) (int32, int32, int32, int) {
 }
 func (n *Coarsened) Sibling(id int32) int32 { return n.siblings[id] }
 func (n *Coarsened) MuxesEnabled() bool     { return true }
-func newCoarsened() *Coarsened {
-	return &Coarsened{gates: []coarseGate{{kind: 0}}, siblings: []int32{0}}
+func newCoarsened(objects, inputs, outputs int) *Coarsened {
+	return &Coarsened{
+		gates:    make([]coarseGate, 1, objects),
+		siblings: make([]int32, 1, objects),
+		inputs:   make([]int32, 0, inputs),
+		outputs:  make([]int32, 0, outputs),
+	}
 }
 func (n *Coarsened) append(g coarseGate) int32 {
 	lit := int32(len(n.gates)) * 2
@@ -231,15 +236,8 @@ func Coarsen(network Network, limit int) (*Coarsened, error) {
 		}
 		gates[i] = g
 	}
-	seen := make(map[int32]bool)
-	for _, lit := range network.InputLiterals() {
-		if lit <= 0 || lit&1 != 0 || int(lit>>1) >= count || gates[lit>>1].kind != 1 || seen[lit] {
-			return nil, fmt.Errorf("mf: invalid coarsening CI %d", lit)
-		}
-		seen[lit] = true
-	}
-	inputIndex := 0
 	inputLits := network.InputLiterals()
+	inputIndex := 0
 	for i, g := range gates {
 		if g.kind == 1 {
 			if inputIndex >= len(inputLits) || inputLits[inputIndex] != int32(i)*2 {
@@ -247,9 +245,9 @@ func Coarsen(network Network, limit int) (*Coarsened, error) {
 			}
 			inputIndex++
 		}
-		if g.kind == 1 && !seen[int32(i)*2] {
-			return nil, fmt.Errorf("mf: unlisted coarsening CI %d", i)
-		}
+	}
+	if inputIndex != len(inputLits) {
+		return nil, fmt.Errorf("mf: CI list size does not match explicit objects")
 	}
 	outputs := append([]int32(nil), network.OutputLiterals()...)
 	for i, lit := range outputs {
@@ -280,11 +278,13 @@ func Coarsen(network Network, limit int) (*Coarsened, error) {
 	registers := 0
 	if provider, ok := network.(interface{ RegisterCount() int }); ok {
 		registers = provider.RegisterCount()
-		if registers < 0 || registers > len(network.InputLiterals()) || registers > len(outputs) {
+		if registers < 0 || registers > len(inputLits) || registers > len(outputs) {
 			return nil, fmt.Errorf("mf: invalid register count %d", registers)
 		}
 	}
-	n := newCoarsened()
+	// Terminals survive coarsening. Hashing can collapse most internal gates.
+	gateHint := min(4096, count-1-len(inputLits)-coCount)
+	n := newCoarsened(1+len(inputLits)+len(outputs)+gateHint, len(inputLits), len(outputs))
 	n.registers = registers
 	if named, ok := network.(interface{ NetworkName() string }); ok {
 		n.name = named.NetworkName()
@@ -292,7 +292,7 @@ func Coarsen(network Network, limit int) (*Coarsened, error) {
 	if specified, ok := network.(interface{ NetworkSpec() string }); ok {
 		n.spec = specified.NetworkSpec()
 	}
-	h := coarseHash{n: n, table: make(map[coarseGate]int32)}
+	h := coarseHash{n: n, table: make(map[coarseGate]int32, gateHint)}
 	copies := make([]int32, count)
 	copyLit := func(lit int32) int32 { return copies[lit>>1] ^ (lit & 1) }
 	for i := 1; i < count; i++ {
@@ -333,29 +333,30 @@ func Coarsen(network Network, limit int) (*Coarsened, error) {
 	return n.cleanup(), nil
 }
 
-// Cleanup marks from every CO and buffer fanin, follows sibling chains, and
-// then copies retained objects in original order (not DFS order).
+// Fanins and siblings precede their users. Walk backwards from outputs and
+// buffers, then copy the live graph in source order only when gates were dropped.
 func (n *Coarsened) cleanup() *Coarsened {
 	used := make([]bool, len(n.gates))
-	var mark func(int32)
-	mark = func(id int32) {
-		if used[id] {
-			return
+	dropped := 0
+	for id := len(n.gates) - 1; id > 0; id-- {
+		g := n.gates[id]
+		if !used[id] && g.kind != 5 && g.kind != 6 {
+			if coarseInternal(g.kind) {
+				dropped++
+			}
+			continue
 		}
-		used[id] = true
-		for _, lit := range coarseFanin(n.gates[id]) {
-			mark(lit >> 1)
+		for _, lit := range coarseFanin(g) {
+			used[lit>>1] = true
 		}
 		if sib := n.siblings[id]; sib != 0 {
-			mark(sib)
+			used[sib] = true
 		}
 	}
-	for id, g := range n.gates {
-		if g.kind == 5 || g.kind == 6 {
-			mark(int32(id))
-		}
+	if dropped == 0 {
+		return n
 	}
-	out := newCoarsened()
+	out := newCoarsened(len(n.gates)-dropped, len(n.inputs), len(n.outputs))
 	out.registers = n.registers
 	out.name, out.spec = n.name, n.spec
 	copies := make([]int32, len(n.gates))
