@@ -83,8 +83,12 @@ func Cudd_GarbageCollect(dd *DdManager, clearCache bool) int32 {
 }
 
 func (dd *DdManager) retireNode(n *DdNode) {
-	if n.inBDDTable && n.childrenReleased {
-		dd.dead--
+	if n.childrenReleased {
+		if n.inBDDTable {
+			dd.dead--
+		} else if n.family == 1 {
+			dd.deadZ--
+		}
 	}
 	n.inBDDTable = false
 	if !n.childrenReleased {
@@ -102,7 +106,7 @@ func (dd *DdManager) purgeReleasedKeys() int {
 	reclaimNode(Cudd_Regular(dd.Background))
 	deleted := 0
 	for _, table := range []*uniqueTable{&dd.unique, &dd.addUnique, &dd.zddUnique} {
-		if dd.dead == 0 && table != &dd.zddUnique {
+		if table == &dd.zddUnique && dd.deadZ == 0 || table != &dd.zddUnique && dd.dead == 0 {
 			continue
 		}
 		deleted += table.sweep(nil, func(n *DdNode) bool {

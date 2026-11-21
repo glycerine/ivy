@@ -23,23 +23,7 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	for _, n := range moved {
 		dd.zddUnique.remove(bddUniqueKey{uint32(xi), n.T, n.E})
 	}
-	internX := func(t, e *DdNode) *DdNode {
-		if t == dd.Zero {
-			return e
-		}
-		key := bddUniqueKey{uint32(xi), t, e}
-		entry := dd.zddUnique.find(key)
-		if entry != nil && entry.node != nil {
-			return entry.node
-		}
-		n := dd.newNodePair(uint32(xi))
-		n.T, n.E, n.family = t, e, 1
-		// A live rewritten parent acquires the child's arcs through Cudd_Ref.
-		// A released parent carries the key without owning its arcs.
-		n.childrenReleased = true
-		dd.zddUnique.insert(key, n, entry)
-		return n
-	}
+
 	for _, f := range moved {
 		f1, f0 := f.T, f.E
 		f11, f10 := dd.Zero, f1
@@ -50,7 +34,7 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 		if f0.Index == uint32(yi) {
 			f01, f00 = f0.T, f0.E
 		}
-		nt, ne := internX(f11, f01), internX(f10, f00)
+		nt, ne := dd.internReorderedZDD(uint32(xi), f11, f01), dd.internReorderedZDD(uint32(xi), f10, f00)
 		if !f.childrenReleased {
 			Cudd_Ref(nt)
 			Cudd_Ref(ne)
@@ -61,6 +45,9 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 		f.T, f.E = nt, ne
 		dd.zddUnique.set(bddUniqueKey{f.Index, nt, ne}, f)
 	}
+	if y < len(dd.zddTableSlots) {
+		dd.zddTableSlots[x], dd.zddTableSlots[y] = dd.zddTableSlots[y], dd.zddTableSlots[x]
+	}
 	dd.PermZ[xi], dd.PermZ[yi] = y, x
 	dd.InvPermZ[x], dd.InvPermZ[y] = yi, xi
 	if len(dd.Univ) > y && dd.Univ[x] != nil {
@@ -69,4 +56,24 @@ func swapZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 	Cudd_CacheFlush(dd)
 
 	return true
+}
+
+// A reordered key acquires child references when a live parent first uses it.
+func (dd *DdManager) internReorderedZDD(index uint32, t, e *DdNode) *DdNode {
+	if t == dd.Zero {
+		return e
+	}
+	key := bddUniqueKey{index, t, e}
+	entry := dd.zddUnique.find(key)
+	if entry != nil && entry.node != nil {
+		return entry.node
+	}
+	n := dd.newNodePair(index)
+	n.T, n.E, n.family = t, e, 1
+	// A live rewritten parent acquires the child's arcs through Cudd_Ref.
+	// A released parent carries the key without owning its arcs.
+	n.childrenReleased = true
+	dd.deadZ++
+	dd.zddUnique.insert(key, n, entry)
+	return n
 }

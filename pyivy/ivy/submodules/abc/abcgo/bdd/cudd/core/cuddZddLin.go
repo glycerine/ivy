@@ -21,51 +21,81 @@ func linearZddAdjacentInPlace(dd *DdManager, x, y int) bool {
 		return false
 	}
 	xi, yi := dd.InvPermZ[x], dd.InvPermZ[y]
-	var xnodes []*DdNode
-	for _, n := range dd.zddUnique.entries {
-		if int(n.Index) == xi {
-			xnodes = append(xnodes, n)
+	// Preserve all handles, including a y function reached from above x.
+	// Keep the original edges readable until every new cofactor is known.
+	type rewrite struct {
+		node, oldT, oldE, newT, newE *DdNode
+		index                        uint32
+		owned                        bool
+	}
+	var local [32]rewrite
+	plan := local[:0]
+	if size := dd.zddUnique.levelCount(xi) + dd.zddUnique.levelCount(yi); size > len(local) {
+		plan = make([]rewrite, 0, size)
+	}
+	collect := func(entry uniqueEntry) {
+		n := entry.node
+		plan = append(plan, rewrite{node: n, oldT: entry.t, oldE: entry.e, owned: !n.childrenReleased})
+	}
+	dd.zddUnique.forLevel(xi, collect)
+	nx := len(plan)
+	dd.zddUnique.forLevel(yi, collect)
+	dd.zddUnique.clearLevel(xi)
+	dd.zddUnique.clearLevel(yi)
+	// Special x nodes become canonical y nodes. Install them before looking
+	// up any other node's new y cofactors.
+	for i := range nx {
+		r := &plan[i]
+		if r.oldT.Index == uint32(yi) && r.oldT.E == dd.Zero && r.oldE.Index != uint32(yi) {
+			r.index, r.newT, r.newE = uint32(yi), r.oldT.T, r.oldE
+			dd.zddUnique.set(bddUniqueKey{r.index, r.newT, r.newE}, r.node)
 		}
 	}
-	// Drop old x keys before creating y nodes. This mirrors the C routine's
-	// removal of the x subtable into its temporary chains.
-	for key := range dd.zddUnique.entries {
-		if int(key.index) == xi {
-			dd.zddUnique.remove(key)
+	cofactors := func(n *DdNode) (*DdNode, *DdNode) {
+		if n.Index == uint32(yi) {
+			return n.T, n.E
 		}
+		return dd.Zero, n
 	}
-	for _, f := range xnodes {
-		f1, f0 := f.T, f.E
-		f11, f10 := dd.Zero, f1
-		if int(f1.Index) == yi {
-			f11, f10 = f1.T, f1.E
+	for i := range plan {
+		r := &plan[i]
+		if r.newT != nil {
+			continue
 		}
-		f01, f00 := dd.Zero, f0
-		if int(f0.Index) == yi {
-			f01, f00 = f0.T, f0.E
-		}
-		// These are precisely the two y nodes constructed by the C source;
-		// zddNode also performs its zero-suppression and unique-table lookup.
-		newT := dd.zddNode(uint32(yi), f01, f10)
-		newE := dd.zddNode(uint32(yi), f11, f00)
-		if newT == dd.Zero {
-			// The C special-node path moves this handle from x to y.
-			f.Index, f.T, f.E = uint32(yi), newE.T, newE.E
+		r.index = uint32(xi)
+		if i < nx {
+			f11, f10 := cofactors(r.oldT)
+			f01, f00 := cofactors(r.oldE)
+			r.newT = dd.internReorderedZDD(uint32(yi), f01, f10)
+			r.newE = dd.internReorderedZDD(uint32(yi), f11, f00)
 		} else {
-			f.T, f.E = newT, newE
+			// Missing x in the old family means new x and y must agree.
+			r.newT = dd.internReorderedZDD(uint32(yi), r.oldT, dd.Zero)
+			r.newE = r.oldE
+		}
+		dd.zddUnique.set(bddUniqueKey{r.index, r.newT, r.newE}, r.node)
+	}
+	for _, r := range plan {
+		r.node.Index, r.node.inverse.Index = r.index, r.index
+		r.node.T, r.node.E = r.newT, r.newE
+	}
+	// A shared y node can move to x and remain an external root. Acquire all
+	// new arcs before dropping any old arcs so revival follows the new graph.
+	for _, r := range plan {
+		if r.owned {
+			Cudd_Ref(r.newT)
+			Cudd_Ref(r.newE)
 		}
 	}
-	// Rebuild keys for the mutated x layer and retain all other canonical
-	// entries. If a transformed handle meets an equivalent y node, either
-	// handle denotes the same family; retaining the existing canonical entry
-	// matches the source's duplicate-node handling.
-	for _, f := range xnodes {
-		key := bddUniqueKey{f.Index, f.T, f.E}
-		if dd.zddUnique.get(key) == nil {
-			dd.zddUnique.set(key, f)
+	for _, r := range plan {
+		if r.owned {
+			dd.recursiveDeref(r.oldT)
+			dd.recursiveDeref(r.oldE)
 		}
 	}
-	dd.Univ[y] = dd.Univ[x].T
+	if len(dd.Univ) > y && dd.Univ[x] != nil {
+		dd.Univ[y] = dd.Univ[x].T
+	}
 	Cudd_CacheFlush(dd)
 
 	return true

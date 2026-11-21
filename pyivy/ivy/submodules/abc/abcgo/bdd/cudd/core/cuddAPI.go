@@ -285,15 +285,8 @@ func Cudd_zddReadNodeCount(dd *DdManager) int {
 	return 2 + dd.liveZDDKeys()
 }
 
-func (dd *DdManager) liveZDDKeys() int {
-	live := 0
-	for _, n := range dd.zddUnique.entries {
-		if !n.childrenReleased {
-			live++
-		}
-	}
-	return live
-}
+func (dd *DdManager) liveZDDKeys() int { return dd.zddUnique.count - dd.deadZ }
+
 func Cudd_ReadNextReordering(dd *DdManager) uint32 {
 	if dd == nil || dd.closed {
 		return 0

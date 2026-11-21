@@ -50,7 +50,7 @@ type DdManager struct {
 	bddGrowthFactors                  map[uint32]uint32
 	pressureGC                        bool
 	minDead                           uint32
-	dead, peakLive                    int
+	dead, deadZ, peakLive             int
 	gcFraction                        float64
 	cacheSlack                        int32
 	PermZ, InvPermZ                   []int
@@ -699,6 +699,8 @@ func reclaimNode(n *DdNode) {
 	n.childrenReleased = false
 	if n.inBDDTable {
 		n.manager.dead--
+	} else if n.family == 1 && n.manager != nil {
+		n.manager.deadZ--
 	}
 	Cudd_Ref(n.T)
 	Cudd_Ref(n.E)
@@ -743,6 +745,8 @@ func (dd *DdManager) releaseUnownedChildren(n *DdNode) {
 	n.childrenReleased = true
 	if n.inBDDTable {
 		dd.dead++
+	} else if n.family == 1 {
+		dd.deadZ++
 	}
 	dd.recursiveDeref(n.T)
 	dd.recursiveDeref(n.E)

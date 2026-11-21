@@ -192,7 +192,7 @@ func (dd *DdManager) shouldCollectLevel(index, keys int, zdd bool) bool {
 	if zdd {
 		dd.zddUnique.forLevel(index, count)
 		return 10*uint64(released) > 9*uint64(keys) ||
-			dd.zddUnique.count-dd.liveZDDKeys() > int(dd.minDead)
+			dd.deadZ > int(dd.minDead)
 	}
 	if dd.dead > int(dd.minDead) {
 		return true

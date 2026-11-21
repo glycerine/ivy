@@ -150,3 +150,105 @@ func TestZDDReduceHeapThresholdCountsOnlyLiveKeys(t *testing.T) {
 		t.Fatal("revived key should reach threshold")
 	}
 }
+
+func TestAdjacentZDDShuffleScoresOnlyLiveUniverseKeys(t *testing.T) {
+	dd := Cudd_Init(0, 6, 32, 64, 0)
+	defer Cudd_Quit(dd)
+	if Cudd_zddShuffleHeap(dd, []int{4, 3, 1, 5, 2, 0}) == 0 {
+		t.Fatal("shuffle failed")
+	}
+	if size := zddHeapSize(dd); size != 6 || dd.liveZDDKeys() != 6 {
+		t.Fatalf("shuffle scored %d keys, %d live; native universe has six", size, dd.liveZDDKeys())
+	}
+}
+
+func TestAdjacentZDDSwapMovesLogicalSubtableWidths(t *testing.T) {
+	dd := Cudd_Init(0, 3, 8, 32, 0)
+	defer Cudd_Quit(dd)
+	Cudd_RehashZddSubtable(dd, 0)
+	Cudd_RehashZddSubtable(dd, 0)
+	Cudd_RehashZddSubtable(dd, 1)
+	total := Cudd_ReadSlots(dd)
+	if !swapZddAdjacentInPlace(dd, 0, 1) || dd.zddTableSlots[0] != 16 || dd.zddTableSlots[1] != 32 || Cudd_ReadSlots(dd) != total {
+		t.Fatalf("swapped subtable capacities %v, total %d", dd.zddTableSlots, Cudd_ReadSlots(dd))
+	}
+}
+
+func TestZDDLiveCountAcrossReclaimSwapAndCollection(t *testing.T) {
+	dd := Cudd_Init(0, 8, 32, 64, 0)
+	defer Cudd_Quit(dd)
+	check := func() {
+		t.Helper()
+		live := 0
+		for _, n := range dd.zddUnique.entries {
+			if !n.childrenReleased {
+				live++
+			}
+		}
+		if got := Cudd_zddReadNodeCount(dd); got != live+2 || zddHeapSize(dd) != live {
+			t.Fatalf("node count %d, heap score %d, walked %d decisions", got, zddHeapSize(dd), live)
+		}
+	}
+	var nodes []*DdNode
+	for i := range 7 {
+		for j := i + 1; j < 8; j++ {
+			n := dd.zddNode(uint32(i), dd.zddNode(uint32(j), dd.One, dd.Zero), dd.Zero)
+			Cudd_Ref(n)
+			nodes = append(nodes, n)
+		}
+	}
+	check()
+	for i, n := range nodes {
+		if i%2 == 0 {
+			Cudd_RecursiveDeref(dd, n)
+		}
+	}
+	check()
+	for i, n := range nodes {
+		if i%4 == 0 {
+			Cudd_Ref(n)
+		}
+	}
+	check()
+	if Cudd_zddShuffleHeap(dd, []int{4, 3, 7, 2, 5, 1, 0, 6}) != 1 {
+		t.Fatal("shuffle")
+	}
+	check()
+	Cudd_GarbageCollect(dd, true)
+	check()
+	for i, n := range nodes {
+		if i%2 != 0 || i%4 == 0 {
+			Cudd_RecursiveDeref(dd, n)
+		}
+	}
+	check()
+	FreeZDDUniverse(dd)
+	check()
+	Cudd_GarbageCollect(dd, true)
+	check()
+}
+
+func BenchmarkZDDReadMixedLiveCount(b *testing.B) {
+	dd := Cudd_Init(0, 32, 64, 256, 0)
+	defer Cudd_Quit(dd)
+	Cudd_DisableGarbageCollection(dd)
+	for i := range 31 {
+		for j := i + 1; j < 32; j++ {
+			n := dd.zddNode(uint32(i), dd.zddNode(uint32(j), dd.One, dd.Zero), dd.Zero)
+			Cudd_Ref(n)
+			if j%2 == 0 {
+				Cudd_RecursiveDeref(dd, n)
+			}
+		}
+	}
+	want := Cudd_zddReadNodeCount(dd)
+	if want != 306 {
+		b.Fatal("fixture", want)
+	}
+	b.ReportAllocs()
+	for b.Loop() {
+		if Cudd_zddReadNodeCount(dd) != want {
+			b.Fatal("count")
+		}
+	}
+}

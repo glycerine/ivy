@@ -331,6 +331,8 @@ func (a *bddAllocationAttempt) finish(result **DdNode) {
 		n.childrenReleased = true
 		if n.inBDDTable {
 			dd.dead++
+		} else if n.family == 1 {
+			dd.deadZ++
 		}
 		Cudd_Deref(n.T)
 		Cudd_Deref(n.E)

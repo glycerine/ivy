@@ -188,8 +188,9 @@ func zddFixTree(dd *DdManager, node *mtr.MtrNode) {
 	}
 }
 
-// zddHeapSize counts canonical nonterminal ZDD keys.
-func zddHeapSize(dd *DdManager) int { return dd.zddUnique.count }
+// C scores the live keys after each swap. Go may retain released keys for
+// handles borrowed by callers until the next collection.
+func zddHeapSize(dd *DdManager) int { return dd.liveZDDKeys() }
 
 // zddSymmCheck ports cuddZddSymmCheck for adjacent levels. DdNode.Ref already
 // includes both root references and incoming arcs, as in CUDD's node refcount.
@@ -410,7 +411,7 @@ func Cudd_zddReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) 
 	if method == CUDD_REORDER_NONE {
 		return 1
 	}
-	if minsize > 0 && (zddHeapSize(dd) < minsize || dd.liveZDDKeys() < minsize) {
+	if zddHeapSize(dd) < minsize {
 		return 1
 	}
 	started := time.Now()

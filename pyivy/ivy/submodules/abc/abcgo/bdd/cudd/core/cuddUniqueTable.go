@@ -186,6 +186,19 @@ func (table *uniqueTable) forLevel(index int, visit func(uniqueEntry)) {
 	}
 }
 
+// clearLevel discards the current keys but keeps the probe array for an
+// immediate rewrite of the same subtable.
+func (table *uniqueTable) clearLevel(index int) {
+	if index >= len(table.levels) {
+		return
+	}
+	l := &table.levels[index]
+	table.count -= l.count
+	l.count, l.used = 0, 0
+	l.first = uniqueEntry{}
+	clear(l.slots)
+}
+
 // sweep visits levels in the given variable order, or by index with nil.
 // Within each level, discard keys in probe order and compact sparse storage.
 func (table *uniqueTable) sweep(order []int, drop func(*DdNode) bool) int {
