@@ -42,18 +42,37 @@ type computedBlock [cacheBlockSize]computedEntry
 // Entries stay packed as the number of occupied slots grows. Small caches
 // use a sparse slot index; fuller caches can address the same entries directly.
 type computedSlots struct {
-	sparse map[uint32]uint32
-	index  []uint32
-	first  [4]computedEntry
-	blocks []*computedBlock
-	used   int
+	sparse    []uint64
+	firstSlot [4]uint32
+	index     []uint32
+	first     [4]computedEntry
+	blocks    []*computedBlock
+	used      int
+}
+
+// Each sparse word stores the logical slot above the one-based record position.
+func probeCacheSlot(table []uint64, slot uint32) int {
+	mask := len(table) - 1
+	i := int((slot * 2654435761) >> uint(bits.LeadingZeros32(uint32(mask))))
+	for table[i] != 0 && uint32(table[i]>>32) != slot {
+		i = (i + 1) & mask
+	}
+	return i
 }
 
 func (s *computedSlots) position(slot uint32) uint32 {
 	if s.index != nil {
 		return s.index[slot]
 	}
-	return s.sparse[slot]
+	if s.sparse != nil {
+		return uint32(s.sparse[probeCacheSlot(s.sparse, slot)])
+	}
+	for i := 0; i < s.used; i++ {
+		if s.firstSlot[i] == slot {
+			return uint32(i + 1)
+		}
+	}
+	return 0
 }
 
 func (s *computedSlots) record(pos uint32) *computedEntry {
@@ -65,26 +84,48 @@ func (s *computedSlots) record(pos uint32) *computedEntry {
 	return &s.blocks[i/cacheBlockSize][i%cacheBlockSize]
 }
 
-func (s *computedSlots) read(slot uint32) computedEntry {
-	if p := s.position(slot); p != 0 {
-		return *s.record(p)
-	}
-	return computedEntry{}
-}
-
 func (s *computedSlots) prepare(size uint32, expected int) {
-	if s.index != nil {
+	if s.index != nil || expected <= len(s.first) {
 		return
 	}
-	if expected >= 64 && uint64(expected)*16 >= uint64(size) {
-		s.index = make([]uint32, size)
-		for slot, pos := range s.sparse {
-			s.index[slot] = pos
-		}
-		s.sparse = nil
-	} else if s.sparse == nil {
-		s.sparse = make(map[uint32]uint32, expected)
+	dense := expected >= 64 && uint64(expected)*16 >= uint64(size)
+	if !dense && expected <= len(s.sparse)*3/4 {
+		return
 	}
+	old := s.sparse
+	if dense {
+		s.index = make([]uint32, size)
+		s.sparse = nil
+	} else {
+		capacity := 16
+		for expected > capacity*3/4 {
+			capacity *= 2
+		}
+		s.sparse = make([]uint64, capacity)
+	}
+	if old == nil {
+		for i := 0; i < s.used; i++ {
+			s.setPosition(s.firstSlot[i], uint32(i+1))
+		}
+	} else {
+		for _, word := range old {
+			if word != 0 {
+				s.setPosition(uint32(word>>32), uint32(word))
+			}
+		}
+	}
+}
+
+func (s *computedSlots) setPosition(slot, pos uint32) {
+	if s.index != nil {
+		s.index[slot] = pos
+		return
+	}
+	if s.sparse != nil {
+		s.sparse[probeCacheSlot(s.sparse, slot)] = uint64(slot)<<32 | uint64(pos)
+		return
+	}
+	s.firstSlot[pos-1] = slot
 }
 
 // write returns true if the slot already held a valid result.
@@ -92,11 +133,7 @@ func (s *computedSlots) write(slot uint32, e computedEntry) bool {
 	pos := s.position(slot)
 	if pos == 0 {
 		pos = uint32(s.used + 1)
-		if s.index != nil {
-			s.index[slot] = pos
-		} else {
-			s.sparse[slot] = pos
-		}
+		s.setPosition(slot, pos)
 		if i := s.used - len(s.first); i >= 0 && i%cacheBlockSize == 0 {
 			s.blocks = append(s.blocks, new(computedBlock))
 		}
@@ -199,13 +236,15 @@ func Cudd_ResizeCache(dd *DdManager) {
 func (dd *DdManager) cacheLookup(key computedKey, hash uint32, reclaim bool) *DdNode {
 	t := &dd.computed
 	dd.cacheLookups++
-	entry := t.read(hash >> t.shift)
-	if entry.result != nil && entry.key == key {
-		dd.cacheHits++
-		if reclaim {
-			reclaimNode(Cudd_Regular(entry.result))
+	if pos := t.position(hash >> t.shift); pos != 0 {
+		entry := t.record(pos)
+		if entry.result != nil && entry.key == key {
+			dd.cacheHits++
+			if reclaim {
+				reclaimNode(Cudd_Regular(entry.result))
+			}
+			return entry.result
 		}
-		return entry.result
 	}
 	if dd.cacheSlack >= 0 {
 		hits := dd.cacheHits - t.baseHits
