@@ -1,9 +1,76 @@
 package bsat
 
 import (
+	"slices"
 	"testing"
 	"unsafe"
 )
+
+func TestSATLoadFlagsKeepNativeWidthAndResetOnRestart(t *testing.T) {
+	s := sat_solver_new()
+	defer sat_solver_delete(s)
+	sat_solver_setnvars(s, 100)
+	if width := unsafe.Sizeof(s.loads[0]); width != 1 {
+		t.Errorf("load flags use %d bytes per variable, want 1", width)
+	}
+	s.loads[90] = 3
+	s.tags[90] = 7
+	s.polarity[90] = 1
+	s.reasons[90] = 199
+	s.model[90] = -1
+	sat_solver_restart(s)
+	sat_solver_setnvars(s, 7)
+	sat_solver_setnvars(s, 94)
+	if s.loads[90] != 0 || s.tags[90] != 0 || s.polarity[90] != 0 || s.reasons[90] != 0 || s.model[90] != 0 || s.assigns[90] != satUnassigned {
+		t.Fatal("regrowth exposed stale variable metadata")
+	}
+}
+
+func TestSATBulkGrowthPreservesDecisionHeapOrder(t *testing.T) {
+	for mode := int32(0); mode <= 2; mode++ {
+		s := sat_solver_new()
+		sat_solver_setnvars(s, 12)
+		s.VarActType = mode
+		// Simulate root assignments and an activity rescale. Some old
+		// variables are absent from the heap and others have small scores.
+		heap := []int32{8, 4, 3, 9, 1}
+		activity := make([]uint64, 79)
+		for i, v := range heap {
+			activity[v] = uint64(6 - i)
+		}
+		copy(s.activity, activity)
+		for i := range s.orderpos {
+			s.orderpos[i] = -1
+		}
+		copy(s.order.ptr, heap)
+		s.order.size = int32(len(heap))
+		for i, v := range heap {
+			s.orderpos[v] = int32(i)
+		}
+		for v := int32(12); v < 79; v++ {
+			if mode == 0 {
+				activity[v] = 1 << 10
+			}
+			heap = append(heap, v)
+			i := len(heap) - 1
+			for i > 0 && activity[heap[(i-1)/2]] < activity[v] {
+				heap[i] = heap[(i-1)/2]
+				i = (i - 1) / 2
+			}
+			heap[i] = v
+		}
+		sat_solver_setnvars(s, 79)
+		if !slices.Equal(veci_begin(&s.order), heap) || !slices.Equal(s.activity, activity) {
+			t.Fatalf("activity mode %d changed heap order", mode)
+		}
+		for i, v := range heap {
+			if s.orderpos[v] != int32(i) {
+				t.Fatalf("mode %d variable %d has position %d, want %d", mode, v, s.orderpos[v], i)
+			}
+		}
+		sat_solver_delete(s)
+	}
+}
 
 func TestSATVariableFlagsUseNativeBytes(t *testing.T) {
 	a := newSatAssignments(1)

@@ -55,8 +55,7 @@ type sat_solver_t struct {
 	pFreqs   []uint8 // how many times this variable was assigned a value
 	nVarUsed int32
 
-	//    varinfo *   vi;            // variable information
-	loads []int32 //
+	loads []uint8 // polarity bits used by load tracking
 
 	orderpos []int32 // Index in variable order.
 

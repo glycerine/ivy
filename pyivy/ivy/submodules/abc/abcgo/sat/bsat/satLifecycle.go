@@ -74,32 +74,45 @@ func sat_solver_setnvars(s *sat_solver, n int32) {
 		s.pGlobalVars = satResize(s.pGlobalVars, length, capacity)
 		clear(s.pGlobalVars[oldLen:])
 	}
+	var initialActivity uint64
+	switch s.VarActType {
+	case 0:
+		initialActivity = 1 << 10
+	case 1, 2:
+	default:
+		panic("invalid activity representation")
+	}
+	clear(s.pFreqs[s.size:n])
+	clear(s.levels[s.size:n])
+	clear(s.polarity[s.size:n])
+	clear(s.tags[s.size:n])
+	clear(s.loads[s.size:n])
+	clear(s.reasons[s.size:n])
+	clear(s.model[s.size:n])
+	if s.factors != nil {
+		clear(s.factors[s.size:n])
+	}
+	oldHeapSize := s.order.size
+	if oldHeapSize+(n-s.size) > s.order.cap {
+		s.order.ptr = satResize(s.order.ptr, capacity, capacity)
+		s.order.cap = int32(capacity)
+	}
 	for v := s.size; v < n; v++ {
 		if s.wlists[2*v].size != 0 || s.wlists[2*v+1].size != 0 {
 			panic("new variable has watchers")
 		}
-		switch s.VarActType {
-		case 0:
-			s.activity[v] = 1 << 10
-		case 1, 2:
-			s.activity[v] = 0
-		default:
-			panic("invalid activity representation")
-		}
-		s.pFreqs[v] = 0
-		if s.factors != nil {
-			s.factors[v] = 0
-		}
-		s.levels[v] = 0
+		s.activity[v] = initialActivity
 		s.assigns[v] = satUnassigned
-		s.polarity[v] = 0
-		s.tags[v] = 0
-		s.loads[v] = 0
 		s.orderpos[v] = s.order.size
-		s.reasons[v] = 0
-		s.model[v] = 0
-		veci_push(&s.order, v)
-		satOrderUpdate(veci_begin(&s.order), s.orderpos, s.activity, v)
+		s.order.ptr[s.order.size] = v
+		s.order.size++
+	}
+	// Equal scores preserve insertion order. Only an older heap with lower
+	// scores can move any of the new variables toward the root.
+	if oldHeapSize != 0 && initialActivity != 0 {
+		for v := s.size; v < n; v++ {
+			satOrderUpdate(veci_begin(&s.order), s.orderpos, s.activity, v)
+		}
 	}
 	s.size = n
 }
