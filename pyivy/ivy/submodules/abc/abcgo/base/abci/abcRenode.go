@@ -106,9 +106,14 @@ func renodeCostAig(p *ifpkg.If_Man_t, cut *ifpkg.If_Cut_t) int32 {
 		return ifpkg.IF_COST_MAX
 	}
 	nodes := kit.Kit_GraphNodeNum(graph)
-	last := kit.Kit_GraphNodeLast(graph)
-	for i := int32(0); i < n; i++ {
-		perm[i] = byte(kit.Kit_GraphLeafDepth_rec(graph, last, kit.Kit_GraphNode(graph, i)))
+	var root *kit.Kit_Node_t
+	if kit.Kit_GraphIsConst(graph) == 0 {
+		root = kit.Kit_GraphNodeLast(graph)
+	}
+	var depths [ifpkg.IF_MAX_LUTSIZE]int32
+	kit.Kit_GraphLeafDepths(graph, root, depths[:n])
+	for i, d := range depths[:n] {
+		perm[i] = byte(d)
 	}
 	kit.Kit_GraphFree(graph)
 	return nodes

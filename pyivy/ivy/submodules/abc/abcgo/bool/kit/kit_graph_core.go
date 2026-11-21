@@ -46,6 +46,12 @@ func Kit_GraphNodeNum(g *Kit_Graph_t) int32             { return int32(len(g.pNo
 func Kit_GraphNode(g *Kit_Graph_t, i int32) *Kit_Node_t { return g.pNodes[i] }
 func Kit_GraphNodeLast(g *Kit_Graph_t) *Kit_Node_t      { return g.pNodes[int32(len(g.pNodes))-1] }
 func Kit_GraphNodeInt(g *Kit_Graph_t, n *Kit_Node_t) int32 {
+	if id := kitNodeIndex(g, n); id >= 0 {
+		return id
+	}
+	panic("node does not belong to graph")
+}
+func kitNodeIndex(g *Kit_Graph_t, n *Kit_Node_t) int32 {
 	if n != nil && n.index >= 0 && int(n.index) < len(g.pNodes) && g.pNodes[n.index] == n {
 		return n.index
 	}
@@ -55,7 +61,7 @@ func Kit_GraphNodeInt(g *Kit_Graph_t, n *Kit_Node_t) int32 {
 			return int32(i)
 		}
 	}
-	panic("node does not belong to graph")
+	return -1
 }
 func Kit_GraphNodeIsVar(g *Kit_Graph_t, n *Kit_Node_t) int32 {
 	return kitFlag(Kit_GraphNodeInt(g, n) < g.nLeaves)
@@ -213,22 +219,171 @@ func Kit_GraphToTruth(g *Kit_Graph_t) uint32 {
 	}
 	return result
 }
+
+// Distances are stored as length plus one, so zero denotes an unreachable node.
+// Every reachable node in a graph built with Kit_GraphAddNodeAnd follows both
+// fanins. Descending order therefore settles the longest path before use.
+func kitPropagateDepths(g *Kit_Graph_t, root int32, distances []int32) bool {
+	distances[root] = 1
+	for i := root; i >= g.nLeaves; i-- {
+		d := distances[i]
+		if d == 0 {
+			continue
+		}
+		n := g.pNodes[i]
+		a, b := n.eEdge0.Node, n.eEdge1.Node
+		if a >= uint32(i) || b >= uint32(i) {
+			return false
+		}
+		distances[a] = max(distances[a], d+1)
+		distances[b] = max(distances[b], d+1)
+	}
+	return true
+}
+
+// Node assignment can introduce acyclic forward references. Memoize the
+// original fanin traversal for that case, visiting only the requested cone.
+func kitDepthByFanins(g *Kit_Graph_t, id uint32, target *Kit_Node_t, level bool, memo []int32) int32 {
+	n := g.pNodes[id]
+	if n == target || (level && id < uint32(g.nLeaves)) {
+		return 0
+	}
+	if id < uint32(g.nLeaves) {
+		return -100
+	}
+	if saved := memo[id]; saved != 0 {
+		return saved - 1
+	}
+	d := max(kitDepthByFanins(g, n.eEdge0.Node, target, level, memo), kitDepthByFanins(g, n.eEdge1.Node, target, level, memo))
+	if d != -100 {
+		d++
+	}
+	memo[id] = d + 1
+	return d
+}
+
+// Try the reachable cone before allocating a table for a high-numbered root.
+// Abandon this walk after 31 entries so reconvergence cannot multiply the work.
+func kitSmallConeDepth(g *Kit_Graph_t, root int32, target *Kit_Node_t, level bool, leaves []int32) (int32, bool) {
+	type entry struct {
+		id    uint32
+		depth int32
+	}
+	var queue [31]entry
+	queue[0].id = uint32(root)
+	end, best := 1, int32(-100)
+	for i := 0; i < end; i++ {
+		id, d := queue[i].id, queue[i].depth
+		node := g.pNodes[id]
+		if node == target {
+			best = max(best, d)
+			continue
+		}
+		if id < uint32(g.nLeaves) {
+			if level {
+				best = max(best, d)
+			}
+			if int(id) < len(leaves) {
+				leaves[id] = max(leaves[id], d)
+			}
+			continue
+		}
+		if end+2 > len(queue) {
+			return 0, false
+		}
+		queue[end] = entry{node.eEdge0.Node, d + 1}
+		queue[end+1] = entry{node.eEdge1.Node, d + 1}
+		end += 2
+	}
+	return best, true
+}
+
+func kitPathDepth(g *Kit_Graph_t, root, target *Kit_Node_t, level bool) int32 {
+	rootID := Kit_GraphNodeInt(g, root)
+	if root == target || (level && rootID < g.nLeaves) {
+		return 0
+	}
+	if rootID < g.nLeaves {
+		return -100
+	}
+	// A shallow cone can follow a large unrelated graph.
+	if root.eEdge0.Node < uint32(g.nLeaves) && root.eEdge1.Node < uint32(g.nLeaves) {
+		if level || g.pNodes[root.eEdge0.Node] == target || g.pNodes[root.eEdge1.Node] == target {
+			return 1
+		}
+		return -100
+	}
+	var local [80]int32
+	distances := local[:]
+	if int(rootID) >= len(distances) {
+		if d, done := kitSmallConeDepth(g, rootID, target, level, nil); done {
+			return d
+		}
+		distances = make([]int32, int(rootID)+1)
+	}
+	if !kitPropagateDepths(g, rootID, distances) {
+		return kitDepthByFanins(g, uint32(rootID), target, level, make([]int32, len(g.pNodes)))
+	}
+	if level {
+		longest := int32(0)
+		for _, d := range distances[:g.nLeaves] {
+			longest = max(d, longest)
+		}
+		return longest - 1
+	}
+	if target != nil {
+		if id := kitNodeIndex(g, target); id >= 0 && id <= rootID && distances[id] != 0 {
+			return distances[id] - 1
+		}
+	}
+	return -100
+}
+
 func Kit_GraphLeafDepth_rec(g *Kit_Graph_t, n, leaf *Kit_Node_t) int32 {
 	if n == leaf {
 		return 0
 	}
-	if Kit_GraphNodeIsVar(g, n) != 0 {
-		return -100
-	}
-	d := max(Kit_GraphLeafDepth_rec(g, g.pNodes[n.eEdge0.Node], leaf), Kit_GraphLeafDepth_rec(g, g.pNodes[n.eEdge1.Node], leaf))
-	if d == -100 {
-		return d
-	}
-	return d + 1
+	return kitPathDepth(g, n, leaf, false)
 }
 func Kit_GraphLevelNum_rec(g *Kit_Graph_t, n *Kit_Node_t) int32 {
-	if Kit_GraphNodeIsVar(g, n) != 0 {
-		return 0
+	return kitPathDepth(g, n, nil, true)
+}
+
+// Kit_GraphLeafDepths fills dst with the longest distance from each leaf to
+// root. An unused leaf has depth -100, matching Kit_GraphLeafDepth_rec.
+// A constant graph has a nil root and all requested leaves are unused.
+func Kit_GraphLeafDepths(g *Kit_Graph_t, root *Kit_Node_t, dst []int32) {
+	if len(dst) == 0 {
+		return
 	}
-	return 1 + max(Kit_GraphLevelNum_rec(g, g.pNodes[n.eEdge0.Node]), Kit_GraphLevelNum_rec(g, g.pNodes[n.eEdge1.Node]))
+	if g.fConst != 0 {
+		for i := range dst {
+			dst[i] = -100
+		}
+		return
+	}
+	id := Kit_GraphNodeInt(g, root)
+	var local [80]int32
+	distances := local[:]
+	if int(id) >= len(distances) {
+		for i := range dst {
+			dst[i] = -100
+		}
+		if _, done := kitSmallConeDepth(g, id, nil, false, dst); done {
+			return
+		}
+		distances = make([]int32, int(id)+1)
+	}
+	ordered := kitPropagateDepths(g, id, distances)
+	for i := range dst {
+		dst[i] = -100
+		if i >= int(g.nLeaves) {
+			continue
+		}
+		if !ordered {
+			dst[i] = kitDepthByFanins(g, uint32(id), g.pNodes[i], false, make([]int32, len(g.pNodes)))
+		} else if i <= int(id) && distances[i] != 0 {
+			dst[i] = distances[i] - 1
+		}
+	}
 }

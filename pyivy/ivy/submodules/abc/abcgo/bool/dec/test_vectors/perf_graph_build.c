@@ -30,12 +30,19 @@ static int check_levels(unsigned input, int limit, int count,
     return ok;
 }
 
-static int bench_leaf_depth(int repeat, int gates)
+static int bench_leaf_depth(int repeat, int gates, int diamonds)
 {
-    Kit_Graph_t *graph = Kit_GraphCreate(2);
+    Kit_Graph_t *graph = Kit_GraphCreate(diamonds ? 3 : 2);
     Kit_Edge_t edge = Kit_EdgeCreate(0, 0);
-    for (int i = 0; i < gates; i++)
-        edge = Kit_GraphAddNodeAnd(graph, edge, Kit_EdgeCreate(1, 0));
+    for (int i = 0; i < gates; i++) {
+        if (diamonds) {
+            Kit_Edge_t left = Kit_GraphAddNodeAnd(graph, edge, Kit_EdgeCreate(1, 0));
+            Kit_Edge_t right = Kit_GraphAddNodeAnd(graph, edge, Kit_EdgeCreate(2, 1));
+            edge = Kit_GraphAddNodeAnd(graph, left, right);
+        } else {
+            edge = Kit_GraphAddNodeAnd(graph, edge, Kit_EdgeCreate(1, 0));
+        }
+    }
     Kit_Node_t *leaf = Kit_GraphNode(graph, 0), *root = Kit_GraphNode(graph, edge.Node);
     struct timespec start, stop;
     long long total = 0;
@@ -44,9 +51,9 @@ static int bench_leaf_depth(int repeat, int gates)
         total += Kit_GraphLeafDepth_rec(graph, root, leaf);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &stop);
     Kit_GraphFree(graph);
-    if (total != (long long)gates * repeat)
+    if (total != (long long)gates * repeat * (diamonds ? 2 : 1))
         return 7;
-    printf("KIT leaf depth %d gates %.2f process ns/traversal\n", gates,
+    printf("KIT leaf depth %d %s %.2f process ns/traversal\n", gates, diamonds ? "diamonds" : "gates",
            ((stop.tv_sec-start.tv_sec)*1e9 + stop.tv_nsec-start.tv_nsec)/repeat);
     return 0;
 }
@@ -57,7 +64,9 @@ int main(int argc, char **argv)
     int gates = argc > 2 ? atoi(argv[2]) : 7;
     if (repeat < 1 || gates < 1) return 1;
     if (argc > 3 && !strcmp(argv[3], "depth"))
-        return bench_leaf_depth(repeat, gates);
+        return bench_leaf_depth(repeat, gates, 0);
+    if (argc > 3 && !strcmp(argv[3], "diamonds"))
+        return bench_leaf_depth(repeat, gates, 1);
     Abc_Start();
     if (!check_levels(16384, 2, 2, 0, 1, 2) ||
         !check_levels(16383, 16384, 2, 16383, 0, 1) ||
