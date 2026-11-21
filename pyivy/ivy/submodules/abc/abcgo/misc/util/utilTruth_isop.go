@@ -62,6 +62,13 @@ func isop4Exact(on uint16, count *int32) uint16 {
 func isop4Split(on, dc uint16, count *int32) uint16 {
 	a, b := byte(on), byte(on>>8)
 	da, db := byte(dc), byte(dc>>8)
+	// If one allowed cofactor is empty, every surviving cube uses this variable.
+	if da == 0 {
+		return uint16(isop3Count(b, db, count)) << 8
+	}
+	if db == 0 {
+		return uint16(isop3Count(a, da, count))
+	}
 	r0 := isop3Count(a&^db, da, count)
 	r1 := isop3Count(b&^da, db, count)
 	r2 := isop3Count((a&^r0)|(b&^r1), da&db, count)
@@ -99,6 +106,12 @@ func isop5Count(on, dc uint32, count *int32) uint32 {
 	if a == b && da == db {
 		return uint32(isop4Count(a, da, count)) * 0x00010001
 	}
+	if da == 0 {
+		return uint32(isop4Count(b, db, count)) << 16
+	}
+	if db == 0 {
+		return uint32(isop4Count(a, da, count))
+	}
 	r0 := isop4Count(a&^db, da, count)
 	r1 := isop4Count(b&^da, db, count)
 	r2 := isop4Count((a&^r0)|(b&^r1), da&db, count)
@@ -110,6 +123,12 @@ func isop6Count(on, dc word, count *int32) word {
 	da, db := uint32(dc), uint32(dc>>32)
 	if a == b && da == db {
 		return word(isop5Count(a, da, count)) * isop32Repeat
+	}
+	if da == 0 {
+		return word(isop5Count(b, db, count)) << 32
+	}
+	if db == 0 {
+		return word(isop5Count(a, da, count))
 	}
 	r0 := isop5Count(a&^db, da, count)
 	r1 := isop5Count(b&^da, db, count)

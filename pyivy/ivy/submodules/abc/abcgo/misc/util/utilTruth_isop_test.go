@@ -381,3 +381,30 @@ func TestIsopWideInputOutputAlias(t *testing.T) {
 		}
 	}
 }
+
+func TestIsopEmptyAllowedCofactorPreservesPhaseAndCubeCount(t *testing.T) {
+	state := uint64(0xa56b4167)
+	for n := int32(4); n <= 6; n++ {
+		half := uint(1) << (n - 1)
+		mask := uint64(1)<<half - 1
+		for range 256 {
+			state = state*6364136223846793005 + 1
+			allowed := state & mask
+			state = state*6364136223846793005 + 1
+			for _, shift := range []uint{0, half} {
+				on, dc := (allowed&state)<<shift, allowed<<shift
+				for width := half * 2; width < 64; width *= 2 {
+					on |= on << width
+					dc |= dc << width
+				}
+				count, listed := int32(3), int32(3)
+				var cubes [68]int32
+				got := Abc_Tt6Isop(on, dc, n, &count)
+				want := Abc_Tt6IsopCover(on, dc, n, cubes[:], &listed)
+				if got != want || count != listed {
+					t.Fatalf("%d variables, shift %d: truth %x, cubes %d, want %x and %d", n, shift, got, count, want, listed)
+				}
+			}
+		}
+	}
+}
