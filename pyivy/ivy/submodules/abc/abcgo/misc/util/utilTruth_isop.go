@@ -1,5 +1,36 @@
 package util
 
+import "sync/atomic"
+
+const isopByteRepeat word = 0x0101010101010101
+
+// Each of the eight assignments is off, unspecified or on. Adding the
+// base-three expansions of its on-set and allowed-set masks gives its key.
+var isop3MaskIndex = func() (index [256]uint16) {
+	for mask := 1; mask < len(index); mask++ {
+		index[mask] = 3*index[mask>>1] + uint16(mask&1)
+	}
+	return index
+}()
+
+var isop3Counts [6561]atomic.Uint32
+
+func isop3Count(on, dc word, count *int32) word {
+	slot := &isop3Counts[isop3MaskIndex[byte(on)]+isop3MaskIndex[byte(dc)]]
+	entry := slot.Load()
+	if entry == 0 {
+		// Each cube covers a private assignment, so eight slots suffice.
+		// The cover-producing recursion supplies both the truth and cube count.
+		var cover [8]int32
+		var cubes int32
+		truth := ttIsop6(on, dc, 3, cover[:], &cubes)
+		entry = uint32(byte(truth)) | uint32(cubes)<<8
+		slot.Store(entry)
+	}
+	*count += int32(entry >> 8)
+	return word(byte(entry)) * isopByteRepeat
+}
+
 // ISOP follows the original three-way recursive split: cubes forced into each
 // cofactor, followed by cubes shared by both cofactors. Literal codes use two
 // bits per variable: 1 for the negative literal, 2 for the positive literal.
@@ -16,6 +47,9 @@ func ttIsop6(on, dc word, n int32, cover []int32, count *int32) word {
 		}
 		(*count)++
 		return ^word(0)
+	}
+	if n == 3 && cover == nil && word(byte(on))*isopByteRepeat == on && word(byte(dc))*isopByteRepeat == dc {
+		return isop3Count(on, dc, count)
 	}
 	v := n - 1
 	for ; v >= 0; v-- {

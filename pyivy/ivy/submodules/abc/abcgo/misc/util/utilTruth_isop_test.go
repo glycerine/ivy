@@ -79,6 +79,54 @@ func TestIsopAllThreeVariableFunctions(t *testing.T) {
 		}
 	}
 }
+
+// The native fixture visits every allowed set and each of its on-subsets.
+// It hashes both the resulting truth and the updated caller's cube count.
+const nativeIsop3Digest = 0xa40a7d1f15a0d833
+
+func isop3Digest() uint64 {
+	hash := uint64(14695981039346656037)
+	for allowed := uint64(0); allowed < 256; allowed++ {
+		for on := allowed; ; on = (on - 1) & allowed {
+			count := int32(5)
+			const repeat uint64 = 0x0101010101010101
+			truth := Abc_Tt6Isop(on*repeat, allowed*repeat, 3, &count)
+			hash = (hash ^ truth) * 1099511628211
+			hash = (hash ^ uint64(count)) * 1099511628211
+			if on == 0 {
+				break
+			}
+		}
+	}
+	return hash
+}
+
+func TestConcurrentIsop3NativeDigest(t *testing.T) {
+	const workers = 8
+	start := make(chan struct{})
+	results := make(chan uint64, workers)
+	for range workers {
+		go func() {
+			<-start
+			results <- isop3Digest()
+		}()
+	}
+	close(start)
+	for range workers {
+		if got := <-results; got != nativeIsop3Digest {
+			t.Fatalf("three-input ISOP digest %016x, native %016x", got, uint64(nativeIsop3Digest))
+		}
+	}
+}
+
+func BenchmarkIsop3Pairs(b *testing.B) {
+	for b.Loop() {
+		if isop3Digest() != nativeIsop3Digest {
+			b.Fatal("three-input ISOP differs from native")
+		}
+	}
+	b.ReportMetric(float64(b.Elapsed().Nanoseconds())/(6561*float64(b.N)), "ns/pair")
+}
 func TestIsopDontCaresAndWideTables(t *testing.T) {
 	r := rand.New(rand.NewSource(191))
 	for n := int32(0); n <= 8; n++ {
