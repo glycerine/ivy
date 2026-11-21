@@ -1062,3 +1062,19 @@ The eight-input sorter was the only case here where Go trailed C. A fresh Go pro
 The paired C and Go pigeonhole drivers now also accept eight pigeons in seven holes. Both prove UNSAT after exactly 3,378 conflicts, 4,221 decisions and 48,104 propagations. The new unit test checks all three native counters, alongside the seven-pigeon regression. The sampling profiles placed 91.8% of cumulative Go samples and 88.5% of flat C samples in propagation on the larger formula.
 
 The watcher loop retains both clause literals in locals and computes the false literal and binary reason once per trail item. In two orders, seven-pigeon Go solves went from 3.015–3.020 to 2.943–2.944 ms. Eight-pigeon solves went from 59.31–59.42 to 57.93–58.65 ms, with 1,145,736 bytes and 1,458 allocations in both versions. Release C took 31.60 ms. A separate trial maintained a truth byte for each signed literal and reached 56.20–56.56 ms, but added state and gave mixed results on full equivalence proofs. The selected loop keeps the existing solver representation. BSAT and CNF passed their normal and race suites.
+
+### Grow the cut truth cache on demonstrated demand
+
+A 106-AND sorter's operation mix can exceed its small direct-mapped cache many times over. The mapper now counts misses until it has incurred one per initial slot. It then discards that table and reserves up to sixteen times as many slots, capped at 4,096. Hits use the same signed functions and relative support as before. Networks starting at the cap take no growth allocations. A new unit test covers hits, growth, writing the triggering operation to the new table and recomputing displaced operations. Injecting a stale write into the discarded table made that test fail. All six native arithmetic CNF comparisons and the mapper's race tests passed.
+
+The eight-input sorter fell from 1.359–1.367 to 1.212 ms in 420-solve batches, at a cost of 49,152 bytes and one allocation. The eight-bit multiplier went from 2.815–2.848 to 2.508–2.521 ms and the sixteen-input sorter from 4.259–4.421 to 3.633–3.815 ms. Reserving the maximum size immediately was slightly faster on these three inputs but also charges networks which do very little cut work. Other trials delayed growth, grew eightfold, and folded the hash. The 140-solve i10 before/after ranges overlapped and allocations stayed at 6,400.
+
+Three final 30-solve batches per implementation gave the following medians, alternating with GCC 13.3 Release C on CPU 13. Every circuit retained its native variable count and ordered literals.
+
+| Width | Multiplier Go ms | Multiplier C ms | Sorter Go ms | Sorter C ms |
+| ---: | ---: | ---: | ---: | ---: |
+| 8 | 2.638 | 3.118 | 1.309 | 1.275 |
+| 32 | 31.359 | 34.385 | 13.906 | 18.244 |
+| 64 | 131.432 | 138.659 | 56.685 | 72.537 |
+
+The remaining eight-input sorter gap was 0.034 ms in this batch. Final i10 medians were 19.84 ms in Go and 19.97 ms in C across four 30-solve processes each. For one solve per fresh process they were 21.23 ms in Go and 20.99 ms in C across eight processes each, excluding startup. The Go CPU profile placed 45.9% of cumulative samples in cut truth computation.

@@ -336,6 +336,35 @@ func TestTruthOperationReusesOnlyRelativeSupport(t *testing.T) {
 	}
 }
 
+func TestTruthCacheGrowsOnMisses(t *testing.T) {
+	m := &Mapping{
+		Options: Options{LUTSize: 6}, truthStore: vec.Vec_MemAlloc(1, 2),
+		truthResults: make([]truthResult, 2), missesBeforeGrowth: 2,
+	}
+	vec.Vec_MemHashAlloc(m.truthStore, 4)
+	m.intern([]uint64{0}, 0)
+	x := m.intern([]uint64{0xaaaaaaaaaaaaaaaa}, 1) << 1
+	cuts := []Cut{{Leaves: []int32{4}, Function: x}, {Leaves: []int32{7}, Function: x}}
+	compute := func(flip int32) int32 {
+		return m.computeTruth(cuts, []int32{flip, 0}, 2, []int32{4, 7}).Function
+	}
+	positive := compute(0)
+	if compute(0) != positive || len(m.truthResults) != 2 || m.missesBeforeGrowth != 1 {
+		t.Fatal("a cache hit consumed the budget for growth")
+	}
+	negative := compute(1)
+	if len(m.truthResults) != 32 || m.missesBeforeGrowth != 0 || positive == negative {
+		t.Fatalf("after the second miss: %d slots, %d misses remaining, functions %d/%d", len(m.truthResults), m.missesBeforeGrowth, positive, negative)
+	}
+	// The operation which caused growth must have been stored in the new table.
+	if !slices.ContainsFunc(m.truthResults, func(entry truthResult) bool { return entry.function == negative }) {
+		t.Fatal("missing result for the operation that grew the table")
+	}
+	if compute(0) != positive || compute(1) != negative || len(m.truthResults) != 32 {
+		t.Fatal("recomputing displaced entries changed the result or grew the cache again")
+	}
+}
+
 func TestBoundedCutUnion(t *testing.T) {
 	ids := []int32{1, 2, 64, 65, 128, 4111, 8000000}
 	sets := make([][]int32, 1<<len(ids))

@@ -32,16 +32,17 @@ type node struct {
 // Mapping owns its cut/truth arrays. Cuts[id][0] is the selected source MF cut.
 // The network must remain unchanged throughout generation and CNF derivation.
 type Mapping struct {
-	Network      Network
-	Options      Options
-	Cuts         [][]Cut
-	Truths       [][]uint64
-	ClauseSizes  []int
-	Refs         []int32
-	nodes        []node
-	truthStore   *vec.Vec_Mem_t
-	truthResults []truthResult
-	phases       []bool
+	Network            Network
+	Options            Options
+	Cuts               [][]Cut
+	Truths             [][]uint64
+	ClauseSizes        []int
+	Refs               []int32
+	nodes              []node
+	truthStore         *vec.Vec_Mem_t
+	truthResults       []truthResult
+	missesBeforeGrowth int
+	phases             []bool
 }
 
 func (m *Mapping) intern(table []uint64, nLeaves int) int32 {
@@ -99,6 +100,8 @@ type truthOperation struct {
 	kind      uint8
 }
 
+const maxTruthCacheBits = 12
+
 type truthResult struct {
 	operation truthOperation
 	function  int32
@@ -128,6 +131,14 @@ func (m *Mapping) computeTruth(cuts []Cut, complements []int32, kind int, leaves
 		return Cut{Leaves: leaves, Function: entry.function}
 	}
 
+	if m.missesBeforeGrowth > 0 {
+		m.missesBeforeGrowth--
+		if m.missesBeforeGrowth == 0 {
+			// Every result can be recomputed from its signed operands and supports.
+			m.truthResults = make([]truthResult, min(1<<maxTruthCacheBits, len(m.truthResults)*16))
+			entry = &m.truthResults[hash&uint32(len(m.truthResults)-1)]
+		}
+	}
 	var original [maxLeaves]int32
 	count := copy(original[:], leaves)
 	var tables [3][4]uint64
@@ -378,8 +389,13 @@ func GenerateMapping(network Network, options Options) (*Mapping, error) {
 	m := &Mapping{
 		Network: network, Options: options, Cuts: make([][]Cut, count), nodes: make([]node, count),
 		ClauseSizes:  make([]int, 0, hint),
-		truthResults: make([]truthResult, 1<<min(12, bits.Len(uint(count-1)))),
+		truthResults: make([]truthResult, 1<<min(maxTruthCacheBits, bits.Len(uint(count-1)))),
 		truthStore:   vec.Vec_MemAlloc(words, min(7, bits.Len(uint(hint))-1)),
+	}
+	// Grow a small table once if mapping actually incurs a full table's worth
+	// of misses. Small networks with few truth operations keep their initial size.
+	if len(m.truthResults) < 1<<maxTruthCacheBits {
+		m.missesBeforeGrowth = len(m.truthResults)
 	}
 	vec.Vec_MemHashAlloc(m.truthStore, hint)
 	m.intern(make([]uint64, words), 0)
