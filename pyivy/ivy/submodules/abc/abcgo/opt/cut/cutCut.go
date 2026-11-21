@@ -4,22 +4,23 @@ import "fmt"
 
 func Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {
 	p.check()
-	c := &Cut_Cut_t{NVarsMax: p.params.NVarsMax, FSimul: p.simulation, owner: p, live: true}
+	c := &Cut_Cut_t{NVarsMax: p.params.NVarsMax, FSimul: p.simulation, owner: p.lifetime}
 	if p.params.FTruth != 0 {
-		c.truth = make([]uint32, Cut_TruthWords(c.NVarsMax))
+		if words := Cut_TruthWords(c.NVarsMax); words == 1 {
+			c.truth = c.shortTruth[:]
+		} else {
+			c.truth = make([]uint32, words)
+		}
 	}
-	p.owned[c] = struct{}{}
 	p.stats.Allocated++
 	p.stats.Current++
 	p.stats.Peak = max(p.stats.Peak, p.stats.Current)
 	return c
 }
 func Cut_CutRecycle(p *Cut_Man_t, c *Cut_Cut_t) {
-	if c == nil || !c.live || c.owner != p {
+	if p == nil || c == nil || c.owner == nil || c.owner != p.lifetime || c.owner.stopped {
 		panic("cut: foreign or recycled cut")
 	}
-	delete(p.owned, c)
-	c.live = false
 	c.owner = nil
 	p.stats.Recycled++
 	p.stats.Current--
@@ -53,7 +54,9 @@ func Cut_CutDupList(p *Cut_Man_t, list *Cut_Cut_t) *Cut_Cut_t {
 		copy.proof = c.proof
 		copy.FSimul, copy.FCompl = c.FSimul, c.FCompl
 		copy.USign, copy.UCanon0, copy.UCanon1 = c.USign, c.UCanon0, c.UCanon1
-		copy.leaves = append([]int32(nil), c.leaves...)
+		if c.leaves != nil {
+			copy.setLeaves(c.leaves)
+		}
 		copy.truth = append(copy.truth[:0], c.truth...)
 		if len(copy.leaves) == 1 {
 			p.stats.Trivial++
@@ -102,7 +105,8 @@ func Cut_CutCreateTriv(p *Cut_Man_t, node int32) *Cut_Cut_t {
 		node <<= CUT_SHIFT
 	}
 	c := Cut_CutAlloc(p)
-	c.leaves = []int32{node}
+	c.shortLeaves[0] = node
+	c.leaves = c.shortLeaves[:1]
 	c.USign = Cut_NodeSign(node)
 	for i := range c.truth {
 		c.truth[i] = 0xaaaaaaaa

@@ -21,8 +21,18 @@ type Cut_Cut_t struct {
 	leaves                  []int32
 	truth                   []uint32
 	proof                   *Cut_Proof
-	owner                   *Cut_Man_t
-	live                    bool
+	owner                   *cutLifetime
+	shortLeaves             [4]int32
+	shortTruth              [1]uint32
+}
+
+// Store the usual four-LUT leaf set in the cut's own allocation.
+func (c *Cut_Cut_t) setLeaves(leaves []int32) {
+	if len(leaves) <= len(c.shortLeaves) {
+		c.leaves = append(c.shortLeaves[:0], leaves...)
+	} else {
+		c.leaves = append([]int32(nil), leaves...)
+	}
 }
 
 func (c *Cut_Cut_t) Leaves() []int32         { return c.leaves }

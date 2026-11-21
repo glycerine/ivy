@@ -284,7 +284,7 @@ func Cut_NodeMapping(p *Cut_Man_t, cuts *Cut_Cut_t, node, node0, node1 int32) in
 	if best == nil {
 		delay++
 		best = Cut_CutAlloc(p)
-		best.leaves = []int32{min(node0, node1), max(node0, node1)}
+		best.setLeaves([]int32{min(node0, node1), max(node0, node1)})
 		best.USign = Cut_NodeSign(node0) | Cut_NodeSign(node1)
 	}
 	p.delays[node] = delay

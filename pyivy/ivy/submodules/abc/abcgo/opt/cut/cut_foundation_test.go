@@ -90,7 +90,7 @@ func TestRecursiveEnumerationAreaAndManagerLifecycle(t *testing.T) {
 	}
 
 	Cut_ManStop(p)
-	if !p.stopped || p.owned != nil || p.newCuts != nil {
+	if !p.lifetime.stopped || p.newCuts != nil {
 		t.Fatal("manager stop did not release manager-owned state")
 	}
 }

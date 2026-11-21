@@ -21,13 +21,17 @@ type Cut_Step struct {
 	Complement, Simulation bool
 }
 type Cut_Record struct{ Steps []Cut_Step }
+
+// A cut can outlive its manager without retaining the network or other cuts.
+type cutLifetime struct{ stopped bool }
+
 type Cut_Man_t struct {
 	network                    map[int32]NetworkNode
 	networkCounts              []int32
 	params                     *Cut_Params_t
 	newCuts, oldCuts, tempCuts map[int32]*Cut_Cut_t
 	fanCounts, attrs           []int32
-	owned                      map[*Cut_Cut_t]struct{}
+	lifetime                   *cutLifetime
 	records                    map[int32]Cut_Record
 	delays                     map[int32]int32
 	best                       map[int32]*Cut_Cut_t
@@ -36,7 +40,6 @@ type Cut_Man_t struct {
 	recorded                   []Cut_TruthRecord
 	simulation                 bool
 	stats                      Cut_Stats
-	stopped                    bool
 }
 
 func Cut_NodeSign(node int32) uint32 {
@@ -56,7 +59,7 @@ func Cut_TruthWords(vars int32) int32 {
 }
 func (p *Cut_Man_t) Stats() Cut_Stats { return p.stats }
 func (p *Cut_Man_t) check() {
-	if p == nil || p.stopped {
+	if p == nil || p.lifetime == nil || p.lifetime.stopped {
 		panic("cut: manager stopped")
 	}
 }

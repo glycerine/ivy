@@ -16,17 +16,15 @@ func Cut_ManStart(params *Cut_Params_t) *Cut_Man_t {
 			params.FTruth = 0
 		}
 	}
-	return &Cut_Man_t{params: params, budget: -1, newCuts: map[int32]*Cut_Cut_t{}, oldCuts: map[int32]*Cut_Cut_t{}, tempCuts: map[int32]*Cut_Cut_t{}, owned: map[*Cut_Cut_t]struct{}{}, records: map[int32]Cut_Record{}, delays: map[int32]int32{}, best: map[int32]*Cut_Cut_t{}}
+	return &Cut_Man_t{params: params, budget: -1, newCuts: map[int32]*Cut_Cut_t{}, oldCuts: map[int32]*Cut_Cut_t{}, tempCuts: map[int32]*Cut_Cut_t{}, lifetime: &cutLifetime{}, records: map[int32]Cut_Record{}, delays: map[int32]int32{}, best: map[int32]*Cut_Cut_t{}}
 }
 func Cut_ManStop(p *Cut_Man_t) {
-	if p == nil {
+	if p == nil || p.lifetime == nil || p.lifetime.stopped {
 		return
 	}
-	for c := range p.owned {
-		c.live = false
-		c.owner = nil
-	}
-	p.owned = nil
+	p.lifetime.stopped = true
+	p.network = nil
+	p.networkCounts = nil
 	p.newCuts = nil
 	p.oldCuts = nil
 	p.tempCuts = nil
@@ -35,7 +33,6 @@ func Cut_ManStop(p *Cut_Man_t) {
 	p.fanCounts = nil
 	p.attrs = nil
 	p.delays = nil
-	p.stopped = true
 }
 func Cut_ManPrintStats(p *Cut_Man_t) {
 	s := p.stats
