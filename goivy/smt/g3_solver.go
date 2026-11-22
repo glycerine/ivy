@@ -37,13 +37,7 @@ type Z3Solver struct {
 
 func (ctx *Z3Context) NewZ3Solver() *Z3Solver { return NewZ3SolverForLogic(ctx, "") }
 func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
-	var c *api.APISimpleSolver
-	var err error
-	if logic == "" {
-		c, err = ctx.c.NewSolver()
-	} else {
-		c, err = ctx.c.NewSolverForLogic(logic)
-	}
+	c, err := newG3Solver(ctx.c, logic)
 	fail(err)
 	p, err := ctx.c.NewParameterSet()
 	fail(err)
@@ -51,6 +45,20 @@ func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
 	ctx.solvers = append(ctx.solvers, s)
 	return s
 }
+// GoIvy also builds against the pinned g3 v0.2.0. Newer g3 contexts defer
+// the unused default tactic portfolio when constructing verification solvers.
+func newG3Solver(ctx *api.SMTContext, logic string) (*api.APISimpleSolver, error) {
+	if logic != "" {
+		return ctx.NewSolverForLogic(logic)
+	}
+	if factory, ok := any(ctx).(interface {
+		NewSolverForIncrementalChecks() (*api.APISimpleSolver, error)
+	}); ok {
+		return factory.NewSolverForIncrementalChecks()
+	}
+	return ctx.NewSolver()
+}
+
 func (s *Z3Solver) Assert(e Z3Expr)      { fail(s.c.Assert(e.c)) }
 func (s *Z3Solver) Check() Z3CheckResult { return s.CheckAssumptions(nil) }
 
@@ -98,11 +106,7 @@ func (s *Z3Solver) Pop()  { fail(s.c.Pop(1)) }
 func (s *Z3Solver) Reset() {
 	fail(s.c.Close())
 	var err error
-	if s.logic == "" {
-		s.c, err = s.ctx.c.NewSolver()
-	} else {
-		s.c, err = s.ctx.c.NewSolverForLogic(s.logic)
-	}
+	s.c, err = newG3Solver(s.ctx.c, s.logic)
 	fail(err)
 	fail(s.c.SetParameters(s.params))
 }
