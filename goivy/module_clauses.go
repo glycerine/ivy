@@ -25,11 +25,23 @@ type Clauses struct {
 // into its conjuncts (collect_and_list).
 // Definitions are indexed by their defining symbol name.
 func NewClauses(fmlas []Expr, defs []*IvyDefinition, annot Annotation) *Clauses {
-	coerced := make([]Expr, len(fmlas))
-	for i, f := range fmlas {
-		coerced[i] = dropUniversals(f)
+	flat := appendClauseFormulas(make([]Expr, 0, len(fmlas)), fmlas)
+	return clausesFromConjuncts(flat, defs, annot)
+}
+
+// Strip the leading quantifiers of each input formula before flattening And.
+// Quantifiers inside a multi-term And keep their original scope.
+func appendClauseFormulas(dst, formulas []Expr) []Expr {
+	for _, f := range formulas {
+		dst = appendConjunct(dst, dropUniversals(f))
 	}
-	flat := collectAndList(coerced)
+	return dst
+}
+
+func clausesFromConjuncts(flat []Expr, defs []*IvyDefinition, annot Annotation) *Clauses {
+	if len(flat) == 0 {
+		flat = nil
+	}
 	idx := make(map[NodeKey]int, len(defs))
 	for i, d := range defs {
 		key := moduleDefinesKey(d)
@@ -269,18 +281,24 @@ func moduleDefToConstraint(d *IvyDefinition) Expr {
 
 // collectAndList flattens a list of formulas: any top-level And is expanded.
 func collectAndList(fmlas []Expr) []Expr {
-	var result []Expr
+	dst := make([]Expr, 0, len(fmlas))
 	for _, f := range fmlas {
-		if a, ok := f.(*LogicAnd); ok {
-			if len(a.Terms) > 0 {
-				result = append(result, collectAndList(a.Terms)...)
-			}
-			// Empty And() = True → skip (adds no conjuncts)
-		} else {
-			result = append(result, f)
-		}
+		dst = appendConjunct(dst, f)
 	}
-	return result
+	if len(dst) == 0 {
+		return nil
+	}
+	return dst
+}
+
+func appendConjunct(dst []Expr, f Expr) []Expr {
+	if a, ok := f.(*LogicAnd); ok {
+		for _, term := range a.Terms {
+			dst = appendConjunct(dst, term)
+		}
+		return dst
+	}
+	return append(dst, f)
 }
 
 // dropUniversals strips leading ForAll quantifiers from a formula.

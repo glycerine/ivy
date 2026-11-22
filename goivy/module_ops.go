@@ -60,14 +60,7 @@ func AndClauses(args ...interface{}) interface{} {
 		}
 	}
 
-	// Concatenate formulas and definitions
-	var fmlas []Expr
-	var defs []*IvyDefinition
-	for _, c := range clauses {
-		fmlas = append(fmlas, c.Fmlas...)
-		defs = append(defs, c.Defs...)
-	}
-	return NewClauses(fmlas, defs, annot)
+	return joinedClauses(clauses, annot)
 }
 
 // AndClausesTyped is a convenience wrapper that always returns *Clauses.
@@ -127,13 +120,27 @@ func andClausesImpl(annotOp AnnotOp, args []*Clauses) *Clauses {
 		}
 	}
 
-	var fmlas []Expr
-	var defs []*IvyDefinition
-	for _, c := range args {
-		fmlas = append(fmlas, c.Fmlas...)
-		defs = append(defs, c.Defs...)
+	return joinedClauses(args, annot)
+}
+
+// joinedClauses writes the normalized formulas and definitions directly into
+// the result. A caller can subsequently mutate either input slice.
+func joinedClauses(groups []*Clauses, annot Annotation) *Clauses {
+	formulaCount, defCount := 0, 0
+	for _, group := range groups {
+		formulaCount += len(group.Fmlas)
+		defCount += len(group.Defs)
 	}
-	return NewClauses(fmlas, defs, annot)
+	flat := make([]Expr, 0, formulaCount)
+	var defs []*IvyDefinition
+	if defCount > 0 {
+		defs = make([]*IvyDefinition, 0, defCount)
+	}
+	for _, group := range groups {
+		flat = appendClauseFormulas(flat, group.Fmlas)
+		defs = append(defs, group.Defs...)
+	}
+	return clausesFromConjuncts(flat, defs, annot)
 }
 
 // OrClauses computes the disjunction of Clauses and/or formulas.
