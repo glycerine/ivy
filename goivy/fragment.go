@@ -109,7 +109,8 @@ type checker struct {
 	skolemMap map[varID]skolemEntry // existential var → (formula, origin)
 
 	// Variable uniquifier (for undo in error messages)
-	varUniq *VariableUniqifier
+	varUniq       *VariableUniqifier
+	variableNames *fragmentVariableNames
 }
 
 type varID struct {
@@ -680,7 +681,7 @@ func (c *checker) getNodeSort(n *UFNode) Sort {
 
 func (c *checker) reportArc(a arc) string {
 	var b strings.Builder
-	fmt.Fprintf(&b, "\n%s%s", a.loc, a.fmla)
+	fmt.Fprintf(&b, "\n%s%s", a.loc, c.diagnosticFormula(a.fmla))
 	if a.hasIdx {
 		args := NodeArgs(a.fmla)
 		if a.argIdx >= 0 && a.argIdx < len(args) {
@@ -693,7 +694,7 @@ func (c *checker) reportArc(a arc) string {
 				vid := makeVarID(v)
 				if se, found := c.skolemMap[vid]; found {
 					fmt.Fprintf(&b, "\n    %sskolem function defined by:\n         %s",
-						se.ast.GetLineno(), se.fmla)
+						se.ast.GetLineno(), c.diagnosticFormula(se.fmla))
 				}
 			}
 		}
@@ -726,13 +727,13 @@ func (c *checker) reportInterpOverVar(fmla Expr, loc Location, node *UFNode) {
 			if info, ok := c.stratInfo[key]; ok && info.v != nil {
 				vid := makeVarID(info.v)
 				if origLoc, exists := c.universalVarLoc[vid]; exists {
-					varMsg = fmt.Sprintf("\n%sThe quantified variable is %s", origLoc, c.varUniq.Undo(info.v))
+					varMsg = fmt.Sprintf("\n%sThe quantified variable is %s", origLoc, c.originalFormula(info.v))
 				}
 			}
 		}
 	}
 	msg := fmt.Sprintf("An interpreted symbol is applied to a universally quantified variable:\n%s%s%s",
-		loc, c.varUniq.Undo(fmla), varMsg)
+		loc, c.originalFormula(fmla), varMsg)
 	// In Python this raises; we panic-wrap it via the caller's error handling
 	panic(&FragmentError{Message: "The verification condition is not in the fragment FAU.\n\n" + msg})
 }
@@ -762,11 +763,20 @@ func CheckFEU(
 	c := newChecker(sig, interp)
 
 	// Alpha convert so all variables have unique names
-	c.varUniq = NewVariableUniqifier(nil)
+	// Macro formal parameters can be represented by either variables or
+	// constants in the stratification graph. Keep their shared source spelling.
+	var uniquify func(Expr) Expr
+	if len(macros) == 0 && (!xtracer.Enabled || xtracer.Suppressed) {
+		c.variableNames = &fragmentVariableNames{assumes: assumes, asserts: asserts}
+		uniquify = c.variableNames.uniquify
+	} else {
+		c.varUniq = NewVariableUniqifier(nil)
+		uniquify = c.varUniq.Uniquify
+	}
 
 	vupair := func(p fmlaPair) fmlaPair {
 		return fmlaPair{
-			fmla:   c.varUniq.Uniquify(p.fmla),
+			fmla:   uniquify(p.fmla),
 			source: p.source,
 			loc:    p.loc,
 		}
