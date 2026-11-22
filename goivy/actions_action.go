@@ -2272,19 +2272,8 @@ func (a *NamedUpdate) GetUpdateAxioms(updated []*Const, action ActionsAction) ([
 		// Python: would AttributeError on self.sym. Faithful port panics.
 		panic("NamedUpdate.GetUpdateAxioms: Sym is nil")
 	}
-	defines := a.Sym
-
-	// Python: self.dependencies = used_symbols_ast(fmla) — computed at __init__.
-	// Go re-computes each call (acceptable for now).
-	// Symbols compare by name and sort (Key), as in Python.
-	deps := UsedSymbolsAst(a.Body)
-	if !symbolKeyIn(defines, updated) {
-		for _, u := range updated {
-			if _, ok := deps.Get2(Key(u)); ok {
-				updated = append(updated, defines)
-				break
-			}
-		}
+	if len(updated) != 0 && !symbolKeyIn(a.Sym, updated) && referencesAnyUpdatedSymbol(a.Body, updated) {
+		updated = append(updated, a.Sym)
 	}
 	return updated, nil, nil
 }

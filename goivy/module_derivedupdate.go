@@ -49,29 +49,53 @@ func (a *DerivedUpdate) GetUpdateAxioms(updated []*Const, action Action) ([]*Con
 		return updated, nil, nil
 	}
 
-	// Python DerivedUpdate uses used_symbols_ast(defn.args[1]), i.e. the RHS
-	// dependencies only. Some local proof definitions pass an applied LHS as
-	// Symbol, so the defined symbol is normalized above through IvyNodeRep.
-	depExpr := a.Defn
+	if len(updated) == 0 || symbolKeyIn(defSym, updated) {
+		return updated, nil, nil
+	}
+
+	// For a definition with a left- and right-hand side, only the right-
+	// hand side contributes dependencies (ivy_actions.py, DerivedUpdate).
+	body := a.Defn
 	if args := a.Defn.Args(); len(args) > 1 {
 		if rhs, ok := args[1].(Expr); ok {
-			depExpr = rhs
+			body = rhs
 		}
 	}
-	// Python compares Symbols (name and sort): `defines not in updated and
-	// any(x in self.dependencies for x in updated)`. UsedSymbolsAst is keyed
-	// by Key, which includes the sort, so a symbol whose sort was stripped
-	// by strip_isolate does not match its unstripped dependency.
-	deps := UsedSymbolsAst(depExpr)
-	if !symbolKeyIn(defSym, updated) {
-		for _, u := range updated {
-			if _, ok := deps.Get2(Key(u)); ok {
-				updated = append(updated, defSym)
-				break
-			}
-		}
+	if referencesAnyUpdatedSymbol(body, updated) {
+		updated = append(updated, defSym)
 	}
 	return updated, nil, nil
+}
+
+// Stop at the first dependency that changed. Symbols include their sort, since
+// isolate stripping can leave distinct declarations with the same spelling.
+func referencesAnyUpdatedSymbol(body Expr, updated []*Const) bool {
+	var small [8]NodeKey
+	if len(updated) <= len(small) {
+		keys := small[:len(updated)]
+		for i, sym := range updated {
+			keys[i] = Key(sym)
+		}
+		for sym := range SymbolsIluAst(body) {
+			key := Key(sym)
+			for _, changed := range keys {
+				if key == changed {
+					return true
+				}
+			}
+		}
+		return false
+	}
+	changed := make(map[NodeKey]bool, len(updated))
+	for _, sym := range updated {
+		changed[Key(sym)] = true
+	}
+	for sym := range SymbolsIluAst(body) {
+		if changed[Key(sym)] {
+			return true
+		}
+	}
+	return false
 }
 
 // collectSymNames collects constant/symbol names from a logic node.
