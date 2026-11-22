@@ -214,7 +214,9 @@ func (pc *ProofChecker) assumeTactic(decls []*LabeledFormula, proof *AssumeTacti
 	newGoal := GoalAddPrem(pc.astCfg(), decl, prem, proof.GetLineno())
 	result := []*LabeledFormula{newGoal}
 	result = append(result, decls[1:]...)
-	xtracer.Trace("proof.assumeTactic EXIT schema=%s HASH canon=%v", schemaName, newGoal.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("proof.assumeTactic EXIT schema=%s HASH canon=%v", schemaName, newGoal.Canon())
+	}
 	return result, nil
 }
 

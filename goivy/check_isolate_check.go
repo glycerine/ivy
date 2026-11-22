@@ -458,14 +458,18 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			xtracer.Trace("check.guarantee_phase actname=%s skip:not-Action", actname)
 			continue
 		}
-		xtracer.Trace("check.guarantee_phase HASH actname=%s canon=%s", actname, act.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("check.guarantee_phase HASH actname=%s canon=%s", actname, act.Canon())
+		}
 		var guarantees []ActionsAction
 		subCount := 0
 		for _, sub := range act.IterSubactions() {
 			subCount++
 			isAssert := IsAssertLike(sub)
 			_, isRanking := sub.(*LogicRanking)
-			xtracer.Trace("check.guarantee_phase sub HASH actname=%s kind=%s isAssert=%v isRanking=%v canon=%s", actname, ActionTypeName(sub), isAssert, isRanking, sub.Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("check.guarantee_phase sub HASH actname=%s kind=%s isAssert=%v isRanking=%v canon=%s", actname, ActionTypeName(sub), isAssert, isRanking, sub.Canon())
+			}
 			if isAssert || isRanking {
 				guarantees = append(guarantees, sub)
 			}

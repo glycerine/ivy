@@ -480,7 +480,9 @@ func dualClauses(clauses *Clauses, skolemizer Skolemizer, instantiator func([]Ex
 // .    return drop_universals(formula)
 func clausesToFormula(c *Clauses) Expr {
 	formula := c.ToFormula()
-	xtracer.Trace("ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = %v", formula.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("ivy_logic_utils.py:1013/clauses_to_formula(): HASH canon= formula = %v", formula.Canon())
+	}
 	return dropUniversals(formula)
 }
 

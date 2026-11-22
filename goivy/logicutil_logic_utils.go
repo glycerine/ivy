@@ -433,7 +433,9 @@ func BooleanConstant(val bool) Expr {
 //
 // Corresponds to Python close_epr in ivy_logic_utils.py.
 func CloseEPR(fmla Expr) Expr {
-	xtracer.Trace("logicutil.CloseEPR HASH canon= fmla=%s", fmla.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("logicutil.CloseEPR HASH canon= fmla=%s", fmla.Canon())
+	}
 	if and, ok := fmla.(*LogicAnd); ok {
 		terms := make([]Expr, len(and.Terms))
 		for i, t := range and.Terms {
@@ -888,7 +890,9 @@ func NormalizeFreeVariablesTuple(asts ...Expr) ([]*LogicVariable, []*LogicVariab
 // If names is nil, all named binders are normalized; otherwise only those
 // whose name is in the names set.
 func NormalizeNamedBinders(n Node, names map[string]bool) Node {
-	xtracer.Trace("ilu.normalizeNamedBinders ENTER type=%s HASH canon=%s", ShortTypeName(n), n.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("ilu.normalizeNamedBinders ENTER type=%s HASH canon=%s", ShortTypeName(n), n.Canon())
+	}
 	if _, ok := n.(*Const); ok {
 		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s const", ShortTypeName(n))
 		return n
@@ -935,7 +939,9 @@ func NormalizeNamedBinders(n Node, names map[string]bool) Node {
 		newChildren[i] = NormalizeNamedBinders(c, names)
 	}
 	result := n.Clone(newChildren)
-	xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s cloned HASH canon=%s", ShortTypeName(result), result.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s cloned HASH canon=%s", ShortTypeName(result), result.Canon())
+	}
 	return result
 }
 
@@ -992,7 +998,9 @@ func ResetRtrDepth() { rtrDepth = 0 }
 func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node {
 	rtrDepth++
 	myDepth := rtrDepth
-	xtracer.Trace("ilu.replaceTemporalsRec ENTER depth=%d type=%s HASH canon=%s", myDepth, ShortTypeName(n), n.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("ilu.replaceTemporalsRec ENTER depth=%d type=%s HASH canon=%s", myDepth, ShortTypeName(n), n.Canon())
+	}
 
 	// Python outer if/elif: Globally, Eventually, WhenOperator (lines 302-319)
 	switch t := n.(type) {
@@ -1033,7 +1041,9 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 	children := n.Args()
 	newChildren := make([]Node, len(children))
 	for i, c := range children {
-		xtracer.Trace("ilu.replaceTemporalsRec CHILD parent=%s childIdx=%d nChildren=%d childType=%s HASH canon=%s", ShortTypeName(n), i, len(children), ShortTypeName(c), c.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceTemporalsRec CHILD parent=%s childIdx=%d nChildren=%d childType=%s HASH canon=%s", ShortTypeName(n), i, len(children), ShortTypeName(c), c.Canon())
+		}
 		newChildren[i] = replaceTemporalsRec(c, g, when)
 	}
 
@@ -1090,7 +1100,9 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 	// Step 2d: Default clone (Python line 346)
 	xtracer.Trace("ilu.replaceTemporalsRec CLONE depth=%d type=%s nChildren=%d", myDepth, ShortTypeName(n), len(newChildren))
 	result := n.Clone(newChildren)
-	xtracer.Trace("ilu.replaceTemporalsRec EXIT depth=%d type=%s cloned HASH canon=%s", myDepth, ShortTypeName(result), result.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("ilu.replaceTemporalsRec EXIT depth=%d type=%s cloned HASH canon=%s", myDepth, ShortTypeName(result), result.Canon())
+	}
 	return result
 }
 
@@ -1166,7 +1178,9 @@ func reduceNamedBindersRec(ast Expr, g GloballyBinderFunc) Expr {
 // `if ast in subs` which is struct-eq via NamedBinder.__hash__/__eq__.
 // Named binders inside other named binders are NOT replaced.
 func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
-	xtracer.Trace("ilu.replaceNamedBindersAst ENTER type=%s HASH canon=%s", ShortTypeName(n), n.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("ilu.replaceNamedBindersAst ENTER type=%s HASH canon=%s", ShortTypeName(n), n.Canon())
+	}
 	if nb, ok := n.(*LogicNamedBinder); ok {
 		key := string(nb.Sexp())
 		if rep, found := subs[key]; found {
@@ -1215,7 +1229,9 @@ func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
 		newChildren[i] = ReplaceNamedBindersAst(c, subs)
 	}
 	result := n.Clone(newChildren)
-	xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s cloned HASH canon=%s", ShortTypeName(result), result.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s cloned HASH canon=%s", ShortTypeName(result), result.Canon())
+	}
 	return result
 }
 

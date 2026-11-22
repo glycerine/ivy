@@ -289,7 +289,7 @@ func (s *Sig) FindSort(name string, allowUnsorted bool) (Sort, error) {
 	}
 	sort, ok := s.Sorts.Get2(name)
 	if ok {
-		if name == "S" {
+		if name == "S" && xtracer.Enabled && !xtracer.Suppressed {
 			xtracer.Trace("compiler.FindSort name=S FOUND HASH canon=%s", s.Canon())
 		}
 		return sort, nil

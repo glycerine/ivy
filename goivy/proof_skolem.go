@@ -17,7 +17,9 @@ func SkolemizeGoal(cfg *AstConfig, goal *LabeledFormula, prenex bool) *LabeledFo
 }
 
 func SkolemizeGoalE(cfg *AstConfig, goal *LabeledFormula, prenex bool) (*LabeledFormula, error) {
-	xtracer.Trace("proof.SkolemizeGoal ENTER prenex=%v label=%s HASH canon=%v", prenex, goal.LabelForTrace(), goal.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("proof.SkolemizeGoal ENTER prenex=%v label=%s HASH canon=%v", prenex, goal.LabelForTrace(), goal.Canon())
+	}
 	vocab := GoalVocab(goal)
 	usedNames := make(map[string]struct{})
 	for _, s := range vocab.Symbols {
@@ -90,7 +92,9 @@ func SkolemizeGoalE(cfg *AstConfig, goal *LabeledFormula, prenex bool) (*Labeled
 	}
 	newPrems = append(newPrems, GoalPrems(goal)...)
 	result := CloneGoal(cfg, goal, newPrems, GoalConc(goal))
-	xtracer.Trace("proof.SkolemizeGoal EXIT nskfuns=%d HASH canon=%v", len(skfuns), result.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("proof.SkolemizeGoal EXIT nskfuns=%d HASH canon=%v", len(skfuns), result.Canon())
+	}
 	return result, nil
 }
 
@@ -372,7 +376,9 @@ func varSubstGoalNode(cfg *AstConfig, goal Node, subs map[NodeKey]Expr) (Node, e
 	if err != nil {
 		return nil, err
 	}
-	xtracer.Trace("proof.varSubstGoal EXIT HASH canon=%v", result.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("proof.varSubstGoal EXIT HASH canon=%v", result.Canon())
+	}
 	return result, nil
 }
 

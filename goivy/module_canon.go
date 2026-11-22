@@ -38,6 +38,9 @@ func (m *Module) Canon() Canonical {
 // via xtracer. The label identifies the compilation pass (e.g. "after-domain-setup").
 // Both Go and Python emit identical snapshots for identical compiled state.
 func (m *Module) CanonSnapshot(label string) {
+	if !xtracer.Enabled || xtracer.Suppressed {
+		return
+	}
 	xtracer.Trace("module.CanonSnapshot ENTER label=%s", label)
 
 	label += " HASH canon= "

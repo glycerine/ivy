@@ -71,7 +71,9 @@ func LowerVarStatements(stmts []Node) []Node {
 			res.SetLineno(body.GetLineno())
 
 			result := append(stmts[:idx], res)
-			xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(result), lvsCanons(result))
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(result), lvsCanons(result))
+			}
 			return result
 		}
 

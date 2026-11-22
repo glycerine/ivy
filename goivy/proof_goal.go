@@ -76,11 +76,15 @@ func ApplyToConc(conc Node, fn func(Expr) Expr) Node {
 		xtracer.Trace("proof.ApplyToConc ENTER concNil=true")
 		return conc
 	}
-	xtracer.Trace("proof.ApplyToConc ENTER type=%s HASH canon=%v", TypeName(conc), conc.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("proof.ApplyToConc ENTER type=%s HASH canon=%v", TypeName(conc), conc.Canon())
+	}
 	if tm, ok := conc.(*TemporalModels); ok {
 		if innerExpr, ok := tm.Fmla.(Expr); ok {
 			result := tm.Clone([]Node{fn(innerExpr)})
-			xtracer.Trace("proof.ApplyToConc EXIT type=TemporalModels HASH canon=%v", result.Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("proof.ApplyToConc EXIT type=TemporalModels HASH canon=%v", result.Canon())
+			}
 			return result
 		}
 		xtracer.Trace("proof.ApplyToConc EXIT type=TemporalModels passthrough")
@@ -276,7 +280,9 @@ func normalizeGoalAny(cfg *AstConfig, x Node) Node {
 	// does not call apply_to_conc.
 	newConc := normalizeOpsConc(GoalConc(g))
 	result := CloneGoal(cfg, g, normPrems, newConc)
-	xtracer.Trace("proof.NormalizeGoal EXIT HASH canon=%v", result.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("proof.NormalizeGoal EXIT HASH canon=%v", result.Canon())
+	}
 	return result
 }
 
@@ -587,7 +593,9 @@ func GoalAddPrem(cfg *AstConfig, goal *LabeledFormula, prem Node, loc Location) 
 	xtracer.Trace("proof.GoalAddPrem ENTER goalLabel=%s premType=%s", goal.LabelForTrace(), TypeName(prem))
 	prems := append(GoalPrems(goal), prem)
 	result := MakeGoal(cfg, loc, goal.Label, prems, GoalConc(goal))
-	xtracer.Trace("proof.GoalAddPrem EXIT HASH canon=%v", result.Canon())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("proof.GoalAddPrem EXIT HASH canon=%v", result.Canon())
+	}
 	return result
 }
 
