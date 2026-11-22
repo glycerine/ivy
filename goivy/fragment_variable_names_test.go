@@ -115,3 +115,34 @@ func TestFragmentCounterPreservesSourceSyntaxAndMacroNames(t *testing.T) {
 		})
 	}
 }
+
+// Compare lookup for bindings introduced together, free variables introduced
+// one at a time, and an inner quantifier that shadows the outer declarations.
+// Each use includes a separately constructed variable with the same name and sort.
+func BenchmarkFragmentBindingsWidth(b *testing.B) {
+	for _, width := range []int{1, 4, 32, 128, 512} {
+		sort := &UninterpretedSort{Name: "node"}
+		vars := make([]*LogicVariable, width)
+		uses := make([]Expr, width)
+		for i := range vars {
+			vars[i] = &LogicVariable{Name: fmt.Sprintf("X%d", i), VSort: sort}
+			use := &LogicVariable{Name: vars[i].Name, VSort: &UninterpretedSort{Name: "node"}}
+			uses[width-1-i] = &Eq{T1: vars[i], T2: use}
+		}
+		body := &LogicAnd{Terms: uses}
+		bound := &ForAll{Variables: vars, Body: body}
+		shadow := &ForAll{Variables: vars, Body: &LogicAnd{Terms: []Expr{&LogicExists{Variables: vars, Body: body}, body}}}
+		for _, c := range []struct {
+			name string
+			f    Expr
+		}{{"Bound", bound}, {"Free", body}, {"Shadowed", shadow}} {
+			b.Run(fmt.Sprintf("%s/%d", c.name, width), func(b *testing.B) {
+				b.ReportAllocs()
+				for b.Loop() {
+					var names fragmentVariableNames
+					_ = names.uniquify(c.f)
+				}
+			})
+		}
+	}
+}
