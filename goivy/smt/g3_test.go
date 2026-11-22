@@ -201,3 +201,48 @@ func TestG3EnumSortReleasesUnusedTesters(t *testing.T) {
 		}
 	}
 }
+
+func TestG3VerificationGoalPreservesCounterexample(t *testing.T) {
+	ctx := NewZ3Context()
+	defer ctx.Close()
+	s := ctx.NewZ3Solver()
+	check, proveGoal, release := s.BeginVerificationGoalChecks()
+	if proveGoal == nil {
+		t.Skip("pinned g3 release has no temporary-goal proof")
+	}
+	defer release()
+	sort := ctx.BvSort(2)
+	x := ctx.Const("x", sort)
+	a := ctx.Const("a", sort)
+	pred := ctx.Function("p", []Z3Sort{sort}, ctx.BoolSort())
+	s.Assert(ctx.ForAll([]Z3Expr{x}, pred.Apply(x)))
+	base := s.CanonZ3Assertions()
+	if !proveGoal(ctx.Not(pred.Apply(a))) {
+		t.Fatal("failed to refute an instance of the universal premise")
+	}
+	if got := s.CanonZ3Assertions(); got != base {
+		t.Fatalf("goal changed source assertions: %s", got)
+	}
+	three := ctx.BvVal(3, 2)
+	counterexample := ctx.Eq(a, three)
+	if proveGoal(counterexample) {
+		t.Fatal("refuted a satisfiable goal")
+	}
+	s.Push()
+	s.Assert(counterexample)
+	if got := check(); got != Sat {
+		t.Fatal("concrete fallback", got)
+	}
+	model := s.Model()
+	if model == nil {
+		t.Fatal("missing diagnostic model")
+	}
+	defer model.Release()
+	if val, ok := model.Eval(a, true); !ok || !val.Equal(three) {
+		t.Fatalf("model value %v, %t", val, ok)
+	}
+	s.Pop()
+	if got := s.CanonZ3Assertions(); got != base {
+		t.Fatalf("fallback pop changed base: %s", got)
+	}
+}

@@ -1272,10 +1272,22 @@ func (s *Solver) GetSmallModelWithCond(
 	// without calling decide(), exactly like Python.
 	if finalCond != nil {
 		check := z3solver.CheckVerificationCondition
-		if s.opts.Incremental && len(finalCond) > 1 {
+		var proveGoal func(smt.Z3Expr) bool
+		if s.opts.Incremental && len(finalCond) > 0 {
 			var release func()
-			check, release = z3solver.BeginVerificationChecks()
-			defer release()
+			if !xtracer.Enabled || xtracer.Suppressed {
+				var batchCheck func() smt.Z3CheckResult
+				batchCheck, proveGoal, release = z3solver.BeginVerificationGoalChecks()
+				if batchCheck != nil {
+					check = batchCheck
+				}
+			}
+			if release == nil && len(finalCond) > 1 {
+				check, release = z3solver.BeginVerificationChecks()
+			}
+			if release != nil {
+				defer release()
+			}
 		}
 		for _, fc := range finalCond {
 			// NON-INCREMENTAL: create a fresh solver before each final
@@ -1331,6 +1343,17 @@ func (s *Solver) GetSmallModelWithCond(
 				if err != nil {
 					continue
 				}
+				finalCheck := check
+				if proveGoal != nil {
+					if proveGoal(zCond) {
+						overallResult = smt.Unsat
+						fc.Unsat()
+						continue
+					}
+					// The first concrete push starts this solver's incremental backend.
+					proveGoal = nil
+					finalCheck = z3solver.Check
+				}
 				if s.opts.Incremental {
 					z3solver.Push()
 				}
@@ -1338,7 +1361,7 @@ func (s *Solver) GetSmallModelWithCond(
 				// Python ivy_solver.py:1437 calls decide(s) which emits the
 				// decide() ENTER trace before invoking solver.check.
 				xtracer.Trace("ivy_solver.py:1302 decide() ENTER")
-				res, err := s.decideZ3With(z3solver, check)
+				res, err := s.decideZ3With(z3solver, finalCheck)
 				if err != nil {
 					return nil, err
 				}

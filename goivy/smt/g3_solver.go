@@ -45,6 +45,7 @@ func NewZ3SolverForLogic(ctx *Z3Context, logic string) *Z3Solver {
 	ctx.solvers = append(ctx.solvers, s)
 	return s
 }
+
 // GoIvy also builds against the pinned g3 v0.2.0. Newer g3 contexts defer
 // the unused default tactic portfolio when constructing verification solvers.
 func newG3Solver(ctx *api.SMTContext, logic string) (*api.APISimpleSolver, error) {
@@ -75,6 +76,32 @@ func (s *Z3Solver) BeginVerificationChecks() (check func() Z3CheckResult, releas
 	batch := s.c.BeginOrderProofBatch()
 	return func() Z3CheckResult { return s.checkVerificationCondition(batch.Prove) },
 		func() { fail(batch.Close()) }
+}
+
+// BeginVerificationGoalChecks can refute the current base plus a temporary
+// goal before the first incremental push. Older g3 releases support only
+// proofs over assertions already in the solver.
+func (s *Z3Solver) BeginVerificationGoalChecks() (check func() Z3CheckResult, proveGoal func(Z3Expr) bool, release func()) {
+	if s.logic != "" {
+		return nil, nil, nil
+	}
+	batch := s.c.BeginOrderProofBatch()
+	withGoal, ok := any(batch).(interface {
+		ProveWithGoal(ast.ASTHandle) (bool, error)
+	})
+	if !ok {
+		fail(batch.Close())
+		return nil, nil, nil
+	}
+	return func() Z3CheckResult { return s.checkVerificationCondition(batch.Prove) },
+		func(goal Z3Expr) bool {
+			var proved bool
+			s.ctx.do(func() {
+				yes, err := withGoal.ProveWithGoal(goal.c)
+				proved = yes && err == nil
+			})
+			return proved
+		}, func() { fail(batch.Close()) }
 }
 
 func (s *Z3Solver) checkVerificationCondition(prove func() (bool, error)) Z3CheckResult {
