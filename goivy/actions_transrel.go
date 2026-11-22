@@ -692,14 +692,18 @@ func ComposeUpdates(u1 *Update, axioms *Clauses, u2 *Update) *Update {
 	//         used.update(symbols_clauses(pre1))
 	//         used.update(symbols_clauses(pre2))
 	combined := AndClausesTyped(clauses1, clauses2)
-	allUsed := UsedSymbolNamesClauses(combined)
-	for k := range UsedSymbolNamesClauses(pre1) {
-		allUsed[k] = true
+	// Only symbols modified by both actions need fresh intermediate names.
+	var rn *UniqueRenamer
+	if len(mid) != 0 {
+		allUsed := UsedSymbolNamesClauses(combined)
+		for k := range UsedSymbolNamesClauses(pre1) {
+			allUsed[k] = true
+		}
+		for k := range UsedSymbolNamesClauses(pre2) {
+			allUsed[k] = true
+		}
+		rn = NewUniqueRenamer("__m_", nameSetToSlice(allUsed))
 	}
-	for k := range UsedSymbolNamesClauses(pre2) {
-		allUsed[k] = true
-	}
-	rn := NewUniqueRenamer("__m_", nameSetToSlice(allUsed))
 
 	// Build renaming maps (Symbol → Symbol, preserving sorts).
 	// Python: map1[new(mv)] = mvf; map2[v] = new(v); map2[mv] = mvf
