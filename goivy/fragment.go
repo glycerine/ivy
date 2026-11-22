@@ -762,38 +762,7 @@ func CheckFEU(
 
 	c := newChecker(sig, interp)
 
-	// Alpha convert so all variables have unique names
-	// Macro formal parameters can be represented by either variables or
-	// constants in the stratification graph. Keep their shared source spelling.
-	var uniquify func(Expr) Expr
-	if len(macros) == 0 && (!xtracer.Enabled || xtracer.Suppressed) {
-		c.variableNames = &fragmentVariableNames{assumes: assumes, asserts: asserts}
-		uniquify = c.variableNames.uniquify
-	} else {
-		c.varUniq = NewVariableUniqifier(nil)
-		uniquify = c.varUniq.Uniquify
-	}
-
-	vupair := func(p fmlaPair) fmlaPair {
-		return fmlaPair{
-			fmla:   uniquify(p.fmla),
-			source: p.source,
-			loc:    p.loc,
-		}
-	}
-
-	newAssumes := make([]fmlaPair, len(assumes))
-	for i, a := range assumes {
-		newAssumes[i] = vupair(a)
-	}
-	newAsserts := make([]fmlaPair, len(asserts))
-	for i, a := range asserts {
-		newAsserts[i] = vupair(a)
-	}
-	newMacros := make([]fmlaPair, len(macros))
-	for i, m := range macros {
-		newMacros[i] = vupair(m)
-	}
+	newAssumes, newAsserts, newMacros := c.renameFragmentInputs(assumes, asserts, macros)
 
 	// Catch panics from reportInterpOverVar
 	defer func() {

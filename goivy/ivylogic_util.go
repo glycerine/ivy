@@ -386,12 +386,15 @@ func (vu *VariableUniqifier) fresh(v *LogicVariable) *LogicVariable {
 }
 
 func (vu *VariableUniqifier) rec(fmla Expr, vmap map[NodeKey]*LogicVariable) Expr {
-	return rewriteVariables(fmla, vmap, vu.fresh)
+	return rewriteVariables(fmla, vmap, vu.fresh, nil)
 }
 
 // rewriteVariables visits each binding and free variable in the same order as
 // VariableUniqifier, restoring the enclosing binding when a name is shadowed.
-func rewriteVariables(fmla Expr, vmap map[NodeKey]*LogicVariable, fresh func(*LogicVariable) *LogicVariable) Expr {
+func rewriteVariables(fmla Expr, vmap map[NodeKey]*LogicVariable, fresh func(*LogicVariable) *LogicVariable, visit func(Expr) bool) Expr {
+	if visit != nil && !visit(fmla) {
+		return fmla
+	}
 	if IsBinder(fmla) {
 		vars := BinderVars(fmla)
 		body := BinderBody(fmla)
@@ -416,7 +419,7 @@ func rewriteVariables(fmla Expr, vmap map[NodeKey]*LogicVariable, fresh func(*Lo
 			vmap[Key(v)] = nv
 		}
 
-		newBody := rewriteVariables(body, vmap, fresh)
+		newBody := rewriteVariables(body, vmap, fresh, visit)
 		result := CloneBinder(fmla, newVars, newBody)
 
 		// Restore old bindings
@@ -446,7 +449,7 @@ func rewriteVariables(fmla Expr, vmap map[NodeKey]*LogicVariable, fresh func(*Lo
 	}
 	newArgs := make([]Expr, len(args))
 	for i, a := range args {
-		newArgs[i] = rewriteVariables(a, vmap, fresh)
+		newArgs[i] = rewriteVariables(a, vmap, fresh, visit)
 	}
 	return CloneNode(fmla, newArgs)
 }

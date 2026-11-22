@@ -3,6 +3,8 @@ package goivy
 import (
 	"fmt"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 func TestFragmentVariableNamesShadowingAndDiagnostic(t *testing.T) {
@@ -64,5 +66,52 @@ func BenchmarkFragmentRepeatedVariableNames(b *testing.B) {
 				}
 			})
 		}
+	}
+}
+
+func TestFragmentCounterPreservesSourceSyntaxAndMacroNames(t *testing.T) {
+	if xtracer.Enabled && !xtracer.Suppressed {
+		t.Skip("active traces require source spellings")
+	}
+	s := &UninterpretedSort{Name: "node"}
+	x, _ := NewVariable("X", s)
+	// The duplicate named variable connects the outer binder and the preserved
+	// body of Some in the ordinary source representation.
+	some := &LogicSome{Params: []Expr{x}, Fmla: &Eq{T1: x, T2: x}}
+	f := &ForAll{Variables: []*LogicVariable{x}, Body: some}
+	complexHead := &Apply{Func: x, Terms: []Expr{x}}
+	for _, test := range []struct {
+		label    string
+		f, macro Expr
+		scalar   bool
+	}{
+		{"plain", x, nil, true}, {"private-looking variable", &LogicVariable{Name: fragmentVariablePrefix + "0", VSort: s}, nil, true},
+		{"some body", f, nil, false}, {"raw binder", &RawForAll{Variables: []*LogicVariable{x}, Body: x}, nil, false},
+		{"variable head", complexHead, nil, false}, {"constant macro", x, &IvyDefinition{Lhs: NewConst("formal", s), Rhs: x}, true},
+		{"uppercase macro alias", x, &IvyDefinition{Lhs: NewConst("X", s), Rhs: x}, false},
+		{"generated-looking constant", NewConst(fragmentVariablePrefix+"0", s), &IvyDefinition{Lhs: NewConst("formal", s), Rhs: x}, false},
+	} {
+		t.Run(test.label, func(t *testing.T) {
+			var macros []fmlaPair
+			if test.macro != nil {
+				macros = []fmlaPair{{fmla: test.macro}}
+			}
+			c := new(checker)
+			a, _, ms := c.renameFragmentInputs([]fmlaPair{{fmla: test.f}}, nil, macros)
+			if (c.variableNames != nil) != test.scalar {
+				t.Fatal("wrong name allocator")
+			}
+			ref := NewVariableUniqifier(nil)
+			want := ref.Uniquify(test.f)
+			if Key(c.diagnosticFormula(a[0].fmla)) != Key(want) {
+				t.Fatalf("assumption differs from source: %s, %s", a[0].fmla, want)
+			}
+			if len(ms) > 0 {
+				want = ref.Uniquify(test.macro)
+				if Key(c.diagnosticFormula(ms[0].fmla)) != Key(want) {
+					t.Fatal("macro differs from source")
+				}
+			}
+		})
 	}
 }
