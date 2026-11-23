@@ -284,3 +284,31 @@ func TestG3VerificationConditionDefinedExistential(t *testing.T) {
 		t.Fatalf("expected SAT after pop, got %v", got)
 	}
 }
+
+func TestG3VerificationConditionGuardedUniversal(t *testing.T) {
+	ctx := NewZ3Context()
+	defer func() {
+		if err := ctx.Close(); err != nil {
+			t.Fatal(err)
+		}
+	}()
+	solver := ctx.NewZ3Solver()
+	sort := ctx.UninterpretedSort("guarded-sort")
+	x, k := ctx.Const("bound", sort), ctx.Const("key", sort)
+	p := ctx.Function("observable", []Z3Sort{sort}, ctx.BoolSort())
+	gate := ctx.Const("guard", ctx.BoolSort())
+	goal := ctx.ForAll([]Z3Expr{x}, ctx.Implies(gate, ctx.Implies(ctx.Eq(k, x), p.Apply(x))))
+	solver.Assert(solver.SimplifyVerificationCondition(goal))
+	solver.Push()
+	solver.Assert(gate)
+	solver.Assert(ctx.Not(p.Apply(k)))
+	if got := solver.Check(); got != Unsat {
+		t.Fatalf("enabled guard and false conclusion returned %v", got)
+	}
+	solver.Pop()
+	solver.Assert(ctx.Not(gate))
+	solver.Assert(ctx.Not(p.Apply(k)))
+	if got := solver.Check(); got != Sat {
+		t.Fatalf("disabled guard excluded a model: %v", got)
+	}
+}

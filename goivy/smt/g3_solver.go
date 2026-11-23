@@ -63,9 +63,14 @@ func newG3Solver(ctx *api.SMTContext, logic string) (*api.APISimpleSolver, error
 func (s *Z3Solver) Assert(e Z3Expr)      { fail(s.c.Assert(e.c)) }
 func (s *Z3Solver) Check() Z3CheckResult { return s.CheckAssumptions(nil) }
 
-// SimplifyVerificationCondition substitutes witnesses defined by equalities
-// inside existential goals. Older g3 releases solve the original expression.
+// SimplifyVerificationCondition eliminates equality-defined quantifier variables
+// before the incremental push. Older g3 versions provide existential reduction.
 func (s *Z3Solver) SimplifyVerificationCondition(e Z3Expr) Z3Expr {
+	if rewriter, ok := any(s.ctx.c).(interface {
+		SimplifyVerificationCondition(ast.ASTHandle) (ast.ASTRef, error)
+	}); ok {
+		return s.ctx.refExpr(rewriter.SimplifyVerificationCondition(e.c))
+	}
 	rewriter, ok := any(s.ctx.c).(interface {
 		EliminateExistentialDefinitions(ast.ASTHandle) (ast.ASTRef, error)
 	})
