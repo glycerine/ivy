@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"slices"
 	"strconv"
 	"testing"
 )
@@ -42,6 +43,36 @@ func BenchmarkComposeUpdatesReadOnlySymbols(b *testing.B) {
 				if result := ComposeUpdates(first, axioms, second); len(result.Modified) == 0 {
 					b.Fatal("empty set of modified symbols")
 				}
+			}
+		})
+	}
+}
+
+func TestComposeIntermediateNamesMatchPublicRenamer(t *testing.T) {
+	for _, tc := range []struct {
+		name          string
+		mid, reserved []string
+	}{
+		{"unused", []string{"x"}, []string{"x", "__m_other"}},
+		{"suffix gap", []string{"x"}, []string{"__m_x", "__m_x_a", "__m_x_c", "__m_x_z", "__m_x_a"}},
+		{"empty spelling", []string{""}, []string{"__m__a", "__m__b"}},
+		{"intersecting bases", []string{"x", "x_a", "x"}, []string{"__m_x", "__m_x_b"}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var groups []*Clauses
+			for _, name := range tc.reserved {
+				groups = append(groups, FormulaToClauses(mkEq(name, "read"), nil))
+			}
+			var symbols []*Const
+			reference := NewUniqueRenamer("__m_", tc.reserved)
+			var expected []string
+			for _, name := range tc.mid {
+				symbols = append(symbols, &Const{Name: name})
+				expected = append(expected, reference.Rename(name))
+			}
+			got := composeIntermediateNames(symbols, groups...)
+			if !slices.Equal(got, expected) {
+				t.Fatalf("intermediate names %v, want %v", got, expected)
 			}
 		})
 	}

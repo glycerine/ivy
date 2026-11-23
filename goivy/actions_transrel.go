@@ -633,6 +633,54 @@ func composeAnnotOp(annots ...Annotation) Annotation {
 	return result
 }
 
+// composeIntermediateNames assigns the same public names as UniqueRenamer.
+func composeIntermediateNames(mid []*Const, groups ...*Clauses) []string {
+	const prefix = "__m_"
+	// Only names beginning with this prefix can collide. With one intermediate
+	// symbol, the base spelling narrows the set of potential collisions further.
+	base := prefix
+	if len(mid) == 1 {
+		base += mid[0].Name
+	}
+	var reserved map[string]struct{}
+	visit := func(e Expr) bool {
+		if c, ok := e.(*Const); ok && strings.HasPrefix(c.Name, base) {
+			if reserved == nil {
+				reserved = make(map[string]struct{})
+			}
+			reserved[c.Name] = struct{}{}
+		}
+		return true
+	}
+	for _, group := range groups {
+		if group == nil {
+			continue
+		}
+		for _, f := range group.Fmlas {
+			symbolsIluAstRec(f, visit)
+		}
+		for _, d := range group.Defs {
+			symbolsIluAstRec(d, visit)
+		}
+	}
+	if len(mid) == 1 {
+		if _, taken := reserved[base]; mid[0].Name != "" && !taken {
+			return []string{base}
+		}
+		// Only the input can occupy a suffix when issuing a single name.
+		return []string{UnusedNameWithBase(base, reserved)}
+	}
+	if reserved == nil {
+		reserved = make(map[string]struct{}, len(mid))
+	}
+	renamer := UniqueRenamer{Prefix: prefix, Used: reserved}
+	names := make([]string, len(mid))
+	for i, symbol := range mid {
+		names[i] = renamer.Rename(symbol.Name)
+	}
+	return names
+}
+
 // ComposeUpdates computes the sequential composition of two updates.
 // The axioms parameter provides background axioms for the composition.
 //
@@ -691,18 +739,14 @@ func ComposeUpdates(u1 *Update, axioms *Clauses, u2 *Update) *Update {
 	// Python: used = used_symbols_clauses(and_clauses(clauses1, clauses2))
 	//         used.update(symbols_clauses(pre1))
 	//         used.update(symbols_clauses(pre2))
-	combined := AndClausesTyped(clauses1, clauses2)
-	// Only symbols modified by both actions need fresh intermediate names.
-	var rn *UniqueRenamer
+	var names []string
 	if len(mid) != 0 {
-		allUsed := UsedSymbolNamesClauses(combined)
-		for k := range UsedSymbolNamesClauses(pre1) {
-			allUsed[k] = true
-		}
-		for k := range UsedSymbolNamesClauses(pre2) {
-			allUsed[k] = true
-		}
-		rn = NewUniqueRenamer("__m_", nameSetToSlice(allUsed))
+		names = composeIntermediateNames(mid, AndClausesTyped(clauses1, clauses2), pre1, pre2)
+	} else if xtracer.Enabled {
+		AndClausesTyped(clauses1, clauses2)
+	} else if clauses1.Annot != nil && clauses2.Annot != nil {
+		// Preserve the annotation callback of the unused conjunction.
+		clauses1.Annot.Conj(clauses2.Annot)
 	}
 
 	// Build renaming maps (Symbol → Symbol, preserving sorts).
@@ -713,9 +757,8 @@ func ComposeUpdates(u1 *Update, axioms *Clauses, u2 *Update) *Update {
 	for _, v := range updated1 {
 		map2[Key(v)] = NewConst(ActionNewName(v.Name), v.CSort)
 	}
-	for _, mv := range mid {
-		mvfName := rn.Rename(mv.Name)
-		mvf := NewConst(mvfName, mv.CSort)
+	for i, mv := range mid {
+		mvf := NewConst(names[i], mv.CSort)
 		map1[Key(NewConst(ActionNewName(mv.Name), mv.CSort))] = mvf
 		map2[Key(mv)] = mvf
 	}
