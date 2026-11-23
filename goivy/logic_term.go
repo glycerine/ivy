@@ -89,13 +89,11 @@ type Const struct {
 
 func NewConst(name string, sort Sort) *Const {
 	c := &Const{Name: name, CSort: sort}
-	var sortSexp NodeKey
-	if sort != nil {
-		sortSexp = sort.Sexp()
+	if sort == nil {
+		c.sexp = NodeKey("(Symbol name:" + name + " sort:nil)")
 	} else {
-		sortSexp = "nil"
+		c.sexp = symbolSortKey("(Symbol name:", name, sort)
 	}
-	c.sexp = NodeKey("(Symbol name:" + name + " sort:" + string(sortSexp) + ")")
 	return c
 }
 

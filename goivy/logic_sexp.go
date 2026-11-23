@@ -58,17 +58,63 @@ func SortKey(s Sort) NodeKey {
 // --- Sexp() methods on Sort types ---
 // Field names are always included to prevent aliasing.
 
+const (
+	uninterpretedSortPrefix = "(UninterpretedSort name:"
+	topSortPrefix           = "(TopSort name:"
+	booleanSortKey          = "(BooleanSort)"
+)
+
 func (s *UninterpretedSort) Sexp() NodeKey {
-	return NodeKey("(UninterpretedSort name:" + s.Name + ")")
+	return NodeKey(uninterpretedSortPrefix + s.Name + ")")
 }
-func (s *BooleanSort) Sexp() NodeKey { return "(BooleanSort)" }
+func (s *BooleanSort) Sexp() NodeKey { return booleanSortKey }
 func (s *LogicFunctionSort) Sexp() NodeKey {
-	parts := make([]string, len(s.Sorts))
-	for i, sub := range s.Sorts {
-		parts[i] = string(sub.Sexp())
-	}
-	return NodeKey("(FunctionSort sorts:[" + strings.Join(parts, " ") + "])")
+	var storage [24]string
+	return NodeKey(strings.Join(appendSortKeyParts(storage[:0], s), ""))
 }
+
+// Joining the pieces once avoids allocating a key for each nested function
+// domain and range. Other sorts supply their own structural spelling.
+func appendSortKeyParts(parts []string, s Sort) []string {
+	switch v := s.(type) {
+	case *UninterpretedSort:
+		return append(parts, uninterpretedSortPrefix, v.Name, ")")
+	case *TopSort:
+		return append(parts, topSortPrefix, v.Name, ")")
+	case *BooleanSort:
+		return append(parts, booleanSortKey)
+	case *LogicFunctionSort:
+		parts = append(parts, "(FunctionSort sorts:[")
+		for i, sub := range v.Sorts {
+			if i > 0 {
+				parts = append(parts, " ")
+			}
+			parts = appendSortKeyParts(parts, sub)
+		}
+		return append(parts, "])")
+	default:
+		return append(parts, string(s.Sexp()))
+	}
+}
+
+func symbolSortKey(prefix, name string, s Sort) NodeKey {
+	switch v := s.(type) {
+	case *UninterpretedSort:
+		return NodeKey(prefix + name + " sort:" + uninterpretedSortPrefix + v.Name + "))")
+	case *TopSort:
+		return NodeKey(prefix + name + " sort:" + topSortPrefix + v.Name + "))")
+	case *BooleanSort:
+		return NodeKey(prefix + name + " sort:" + booleanSortKey + ")")
+	case *LogicFunctionSort:
+		var storage [24]string
+		parts := append(storage[:0], prefix, name, " sort:")
+		parts = appendSortKeyParts(parts, v)
+		return NodeKey(strings.Join(append(parts, ")"), ""))
+	default:
+		return NodeKey(prefix + name + " sort:" + string(s.Sexp()) + ")")
+	}
+}
+
 func (s *LogicEnumeratedSort) Sexp() NodeKey {
 	return NodeKey("(EnumeratedSort name:" + s.Name + " ext:[" + strings.Join(s.Extension, ",") + "])")
 }
@@ -78,12 +124,12 @@ func (s *RangeSort) Sexp() NodeKey {
 	// "0:<sortname>".
 	return NodeKey("(RangeSort name:" + s.Name + " lb:" + prettyBoundString(s.Lb, s.Name) + " ub:" + prettyBoundString(s.Ub, s.Name) + ")")
 }
-func (s *TopSort) Sexp() NodeKey { return NodeKey("(TopSort name:" + s.Name + ")") }
+func (s *TopSort) Sexp() NodeKey { return NodeKey(topSortPrefix + s.Name + ")") }
 
 // --- Sexp() methods on Term types ---
 
 func (v *LogicVariable) Sexp() NodeKey {
-	return NodeKey("(Variable name:" + v.Name + " sort:" + string(v.VSort.Sexp()) + ")")
+	return symbolSortKey("(Variable name:", v.Name, v.VSort)
 }
 
 func (c *Const) Sexp() NodeKey {
