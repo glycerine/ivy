@@ -857,3 +857,70 @@ func abs(x int) int {
 	}
 	return x
 }
+
+func TestRenameASTClonesCompoundTermsAndRetainsApplicationSort(t *testing.T) {
+	sort := &UninterpretedSort{Name: "S"}
+	pred, err := NewFunctionSort(sort, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	a, b := NewConst("a", sort), NewConst("b", sort)
+	p := NewConst("p", pred)
+	v, err := NewVariable("X", sort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	application := TryApply(p, a)
+	neg := &LogicNot{Body: application}
+	forall := &ForAll{Variables: []*LogicVariable{v}, Body: neg}
+	result := RenameAST(&LogicIff{T1: forall, T2: forall}, map[NodeKey]*Const{Key(a): b}).(*LogicIff)
+	left, right := result.T1.(*ForAll), result.T2.(*ForAll)
+	if left == right || left == forall || right == forall || left.Variables[0] != v {
+		t.Fatal("renaming lost the binder or reused a compound node")
+	}
+	l, r := left.Body.(*LogicNot).Body.(*Apply), right.Body.(*LogicNot).Body.(*Apply)
+	if l.aSort != Boolean || l.Terms[0] != b || r.Terms[0] != b {
+		t.Fatal("wrong predicate range or argument")
+	}
+	l.Terms[0] = v
+	if application.Terms[0] != a || r.Terms[0] != b {
+		t.Fatal("renamed applications shared their argument storage")
+	}
+	// Both a new function head of different arity and a nonfunction head
+	// follow TryApply's unchecked fallback.
+	for _, fn := range []*Const{NewConst("q", &LogicFunctionSort{Sorts: []Sort{sort, sort, sort}}), NewConst("point", sort)} {
+		before := TryApply(fn, a)
+		after := RenameAST(application, map[NodeKey]*Const{Key(p): fn}).(*Apply)
+		if after.Func != fn || after.aSort != before.aSort || after.NodeSort() != before.NodeSort() {
+			t.Fatal("renamed application range differs from TryApply")
+		}
+	}
+}
+
+func BenchmarkRenameQuantifiedPredicate(b *testing.B) {
+	sort := &UninterpretedSort{Name: "S"}
+	fs, err := NewFunctionSort(sort, Boolean)
+	if err != nil {
+		b.Fatal(err)
+	}
+	p, q := NewConst("p", fs), NewConst("q", fs)
+	v, err := NewVariable("X", sort)
+	if err != nil {
+		b.Fatal(err)
+	}
+	a := NewConst("a", sort)
+	atom := TryApply(p, v)
+	var body Expr = atom
+	for i := 0; i < 8; i++ {
+		body = &LogicImplies{T1: &Eq{T1: v, T2: a}, T2: &LogicIff{T1: &LogicNot{Body: atom}, T2: body}}
+	}
+	formula := &ForAll{Variables: []*LogicVariable{v}, Body: body}
+	subs := map[NodeKey]*Const{Key(p): q}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if RenameAST(formula, subs) == nil {
+			b.Fatal("empty renamed formula")
+		}
+	}
+}

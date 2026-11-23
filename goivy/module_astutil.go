@@ -171,7 +171,32 @@ func renameASTRec(node Expr, subs map[NodeKey]*Const) Expr {
 		for i, arg := range t.Terms {
 			newTerms[i] = renameASTRec(arg, subs)
 		}
-		return TryApply(newFunc, newTerms...)
+		// TryApply accepts ill-sorted arguments and keeps the function's
+		// range when it has one. The renamed argument slice is already owned.
+		resultSort := TopS
+		if fs, ok := newFunc.NodeSort().(*LogicFunctionSort); ok && fs != nil {
+			resultSort = fs.Range()
+		}
+		return &Apply{Func: newFunc, Terms: newTerms, aSort: resultSort}
+	// Fixed-arity nodes can clone their fields directly. Binder variables
+	// are shared and their bodies are cloned, as in CloneNode.
+	case *Eq:
+		return &Eq{T1: renameASTRec(t.T1, subs), T2: renameASTRec(t.T2, subs)}
+	case *LogicNot:
+		return &LogicNot{Body: renameASTRec(t.Body, subs)}
+	case *LogicImplies:
+		return &LogicImplies{T1: renameASTRec(t.T1, subs), T2: renameASTRec(t.T2, subs)}
+	case *LogicIff:
+		return &LogicIff{T1: renameASTRec(t.T1, subs), T2: renameASTRec(t.T2, subs)}
+	case *ForAll:
+		return &ForAll{Variables: t.Variables, Body: renameASTRec(t.Body, subs)}
+	case *LogicExists:
+		return &LogicExists{Variables: t.Variables, Body: renameASTRec(t.Body, subs)}
+	case *LogicIte:
+		cond := renameASTRec(t.Cond, subs)
+		then := renameASTRec(t.Then, subs)
+		el := renameASTRec(t.Else, subs)
+		return &LogicIte{ISort: then.NodeSort(), Cond: cond, Then: then, Else: el}
 	case *IvyDefinition:
 		lhs := renameASTRec(t.Lhs, subs)
 		rhs := renameASTRec(t.Rhs, subs)
