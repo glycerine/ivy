@@ -95,7 +95,7 @@ func NewConst(name string, sort Sort) *Const {
 	} else {
 		sortSexp = "nil"
 	}
-	c.sexp = NodeKey(fmt.Sprintf("(Symbol name:%v sort:%v)", name, sortSexp))
+	c.sexp = NodeKey("(Symbol name:" + name + " sort:" + string(sortSexp) + ")")
 	return c
 }
 
