@@ -844,45 +844,21 @@ func CheckFEU(
 	return c.reportCycle(cycle)
 }
 
-// arcTupleKey is Python's equality of an arc tuple (v, anode, fmla,
-// lineno[, idx]): UFNodes compare by id, the formula structurally.
-type arcTupleKey = string
-
-func (a arc) tupleKey() arcTupleKey {
-	var fmla NodeKey
-	if a.fmla != nil {
-		fmla = Key(a.fmla)
-	}
-	if a.hasIdx {
-		return fmt.Sprintf("%d|%d|%s|%v|%d", a.from.ID, a.to.ID, fmla, a.loc, a.argIdx)
-	}
-	return fmt.Sprintf("%d|%d|%s|%v", a.from.ID, a.to.ID, fmla, a.loc)
-}
-
 // findCycle looks for a cycle in the stratification graph's arcs. see ivy_utils.py:485
 func (c *checker) findCycle() []arc {
 	if len(c.arcs) == 0 {
 		return nil
 	}
 
-	// Build adjacency map using UFNode IDs (after find). Python:
-	// m = defaultdict(dict); m[first(arc)][arc] = None -- each node's arcs
-	// as an insertion-ordered set of arc tuples (equal tuples once), so
-	// the DFS order does not depend on hashing.
+	// DFS either finds a cycle on its first visit to a target or finishes
+	// exploring the target. Keeping parallel arcs in source order preserves
+	// the formula and location of the first arc that closes a cycle.
 	type nodeID = int64
-	adj := make(map[nodeID]*InsMap[arcTupleKey, arc])
-	for _, a := range c.arcs {
+	adj := make(map[nodeID][]int)
+	for i, a := range c.arcs {
 		fromID := UFFind(a.from).ID
-		m := adj[fromID]
-		if m == nil {
-			m = NewInsMap[arcTupleKey, arc]()
-			adj[fromID] = m
-		}
-		if _, dup := m.Get2(a.tupleKey()); !dup {
-			m.Set(a.tupleKey(), a)
-		}
+		adj[fromID] = append(adj[fromID], i)
 	}
-
 	heap := make(map[nodeID]bool)  // permanently visited
 	stack := make(map[nodeID]bool) // currently on DFS stack
 	var path []arc
@@ -896,13 +872,8 @@ func (c *checker) findCycle() []arc {
 			return true
 		}
 		stack[node] = true
-		var out []arc
-		if m := adj[node]; m != nil {
-			for _, a := range m.All() {
-				out = append(out, a)
-			}
-		}
-		for _, a := range out {
+		for _, i := range adj[node] {
+			a := c.arcs[i]
 			toID := UFFind(a.to).ID
 			if dfs(toID) {
 				path = append(path, a)
