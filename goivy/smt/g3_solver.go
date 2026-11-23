@@ -63,6 +63,18 @@ func newG3Solver(ctx *api.SMTContext, logic string) (*api.APISimpleSolver, error
 func (s *Z3Solver) Assert(e Z3Expr)      { fail(s.c.Assert(e.c)) }
 func (s *Z3Solver) Check() Z3CheckResult { return s.CheckAssumptions(nil) }
 
+// SimplifyVerificationCondition substitutes witnesses defined by equalities
+// inside existential goals. Older g3 releases solve the original expression.
+func (s *Z3Solver) SimplifyVerificationCondition(e Z3Expr) Z3Expr {
+	rewriter, ok := any(s.ctx.c).(interface {
+		EliminateExistentialDefinitions(ast.ASTHandle) (ast.ASTRef, error)
+	})
+	if !ok {
+		return e
+	}
+	return s.ctx.refExpr(rewriter.EliminateExistentialDefinitions(e.c))
+}
+
 // CheckVerificationCondition may use an independent refutation of the active
 // assertions. On every inconclusive result it checks the original solver so a
 // failing Ivy obligation has its concrete counterexample ready for Model.

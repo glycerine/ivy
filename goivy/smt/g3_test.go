@@ -246,3 +246,41 @@ func TestG3VerificationGoalPreservesCounterexample(t *testing.T) {
 		t.Fatalf("fallback pop changed base: %s", got)
 	}
 }
+
+func TestG3VerificationConditionDefinedExistential(t *testing.T) {
+	ctx := NewZ3Context()
+	defer func() {
+		if err := ctx.Close(); err != nil {
+			t.Fatal(err)
+		}
+	}()
+	solver := ctx.NewZ3Solver()
+	sort := ctx.UninterpretedSort("witness-sort")
+	x, y := ctx.Const("bound", sort), ctx.Const("parameter", sort)
+	p := ctx.Function("observable", []Z3Sort{sort}, ctx.BoolSort())
+	original := ctx.Exists([]Z3Expr{x}, ctx.And(ctx.Eq(x, y), p.Apply(x)))
+	goal := solver.SimplifyVerificationCondition(original)
+	// The SAT callback may inspect any free symbol of the original goal.
+	solver.Assert(goal)
+	if got := solver.Check(); got != Sat {
+		t.Fatalf("expected SAT, got %v", got)
+	}
+	mdl := solver.Model()
+	if mdl == nil {
+		t.Fatal("missing model")
+	}
+	val, ok := mdl.Eval(p.Apply(y), false)
+	mdl.Release()
+	if !ok || val.String() != "true" {
+		t.Fatalf("observable(parameter) = %v, %v", val, ok)
+	}
+	solver.Push()
+	solver.Assert(ctx.Not(p.Apply(y)))
+	if got := solver.Check(); got != Unsat {
+		t.Fatalf("expected UNSAT, got %v", got)
+	}
+	solver.Pop()
+	if got := solver.Check(); got != Sat {
+		t.Fatalf("expected SAT after pop, got %v", got)
+	}
+}

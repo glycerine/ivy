@@ -1354,6 +1354,9 @@ func (s *Solver) GetSmallModelWithCond(
 					proveGoal = nil
 					finalCheck = z3solver.Check
 				}
+				if !xtracer.Enabled || xtracer.Suppressed {
+					zCond = z3solver.SimplifyVerificationCondition(zCond)
+				}
 				if s.opts.Incremental {
 					z3solver.Push()
 				}
