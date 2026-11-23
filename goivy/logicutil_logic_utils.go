@@ -916,7 +916,9 @@ func NormalizeNamedBinders(n Node, names map[string]bool) Node {
 			body := NormalizeNamedBinders(nb.Body, names).(Expr)
 			body = SubstituteByName(body, subs)
 			result := &LogicNamedBinder{Name: nb.Name, Variables: nvs, Environ: nb.Environ, Body: body}
-			xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s binder HASH canon=%s", ShortTypeName(result), result.Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s binder HASH canon=%s", ShortTypeName(result), result.Canon())
+			}
 			return result
 		}
 	}
@@ -929,7 +931,9 @@ func NormalizeNamedBinders(n Node, names map[string]bool) Node {
 		}
 		newFunc := NormalizeNamedBinders(app.Func, names).(Expr)
 		result := MustApply(newFunc, newTerms...)
-		xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.normalizeNamedBinders EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		}
 		return result
 	}
 	// General case: recurse into children and always clone (matching Python).
@@ -1005,12 +1009,16 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 	// Python outer if/elif: Globally, Eventually, WhenOperator (lines 302-319)
 	switch t := n.(type) {
 	case *LogicGlobally:
-		xtracer.Trace("ilu.replaceTemporalsRec GLOBALLY_BODY HASH canon=%s", t.Body.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceTemporalsRec GLOBALLY_BODY HASH canon=%s", t.Body.Canon())
+		}
 		body := replaceTemporalsRec(t.Body, g, when).(Expr)
 		vs, nvs, body := LogicUtilNormalizeFreeVariables(body)
 		nb := g(nvs, body, t.Environ)
 		result := applyNamedBinder(nb, logicutilVarsToNodes(vs))
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s globally HASH canon=%s", ShortTypeName(result), result.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s globally HASH canon=%s", ShortTypeName(result), result.Canon())
+		}
 		return result
 
 	case *LogicEventually:
@@ -1018,7 +1026,9 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 		glob := &LogicGlobally{Environ: t.Environ, Body: notBody}
 		xtracer.Trace("ilu.replaceTemporalsRec EVENTUALLY_DESUGAR HASH canon=%s", (&LogicNot{Body: glob}).Canon())
 		result := replaceTemporalsRec(&LogicNot{Body: glob}, g, when)
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s eventually HASH canon=%s", ShortTypeName(result), result.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s eventually HASH canon=%s", ShortTypeName(result), result.Canon())
+		}
 		return result
 
 	case *LogicWhenOperator:
@@ -1070,11 +1080,15 @@ func replaceTemporalsRec(n Node, g GloballyBinderFunc, when WhenBinderFunc) Node
 			return result
 		}
 		// Python line 334: general Apply — recurse func AFTER terms
-		xtracer.Trace("ilu.replaceTemporalsRec APPLY_FUNC funcType=%s HASH canon=%s", ShortTypeName(t.Func), t.Func.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceTemporalsRec APPLY_FUNC funcType=%s HASH canon=%s", ShortTypeName(t.Func), t.Func.Canon())
+		}
 		newFunc := replaceTemporalsRec(t.Func, g, when).(Expr)
 		newArgs := logicutilNodesToExprs(newChildren)
 		result := MustApply(newFunc, newArgs...)
-		xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceTemporalsRec EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		}
 		return result
 	}
 

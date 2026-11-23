@@ -81,7 +81,9 @@ func NewProofChecker(cfg *ProofConfig, mod *Module, axioms, definitions []*Label
 	if schemata != nil {
 		for name, s := range schemata.All() {
 			norm := NormalizeGoal(pc.AstCfg, s)
-			xtracer.Trace("proof.ProofChecker.__init__.fromMod schemata.insert key='%s' value=%s", name, norm.Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("proof.ProofChecker.__init__.fromMod schemata.insert key='%s' value=%s", name, norm.Canon())
+			}
 			pc.Schemata.Set(name, norm)
 		}
 	}
@@ -91,7 +93,9 @@ func NewProofChecker(cfg *ProofConfig, mod *Module, axioms, definitions []*Label
 	//                 self.schemata[ax.name] = ax
 	for _, ax := range axioms {
 		if ax.Label != nil {
-			xtracer.Trace("proof.ProofChecker.__init__.axiom schemata.insert key='%s' value=%s", ax.LabelName(), ax.Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("proof.ProofChecker.__init__.axiom schemata.insert key='%s' value=%s", ax.LabelName(), ax.Canon())
+			}
 			pc.Schemata.Set(ax.LabelName(), ax)
 		}
 	}

@@ -954,7 +954,9 @@ func (t *Translator) ltPred(fs *LogicFunctionSort) smt.FuncDecl {
 	xtracer.Trace("ivy_solver.py:501 lt_pred() ENTER sort=%s", fs)
 	// Python lt_pred (ivy_solver.py:546): sig = sym.sort.to_z3() dispatches
 	// to functionsort, so Python emits the lt_pred callsite trace before.
-	xtracer.Trace("TranslateSort_call callsite=lt_pred HASH canon=(Symbol name:< sort:%s)", fs.Sexp())
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("TranslateSort_call callsite=lt_pred HASH canon=(Symbol name:< sort:%s)", fs.Sexp())
+	}
 	sig, err := t.functionSort(fs)
 	if err != nil {
 		panic(fmt.Sprintf("ltPred: functionSort failed: %v", err))
@@ -1243,7 +1245,9 @@ func (t *Translator) translateVarOrConst(name string, sort Sort) (smt.Z3Expr, er
 	// the divergence at log.red step 247865 that surfaced when Go's
 	// shared session cache started hitting these constants.)
 	if FirstOrderSort(sort) {
-		xtracer.Trace("TranslateSort_call callsite=term_to_z3_const HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("TranslateSort_call callsite=term_to_z3_const HASH canon=(Symbol name:%s sort:%s)", name, sort.Sexp())
+		}
 		zs, err := t.TranslateSort(sort)
 		if err != nil {
 			return smt.Z3Expr{}, err

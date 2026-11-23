@@ -190,7 +190,9 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 
 	// Python lines 146-159: inner function spaa(decl, subst, pref)
 	spaa := func(decl Node, subst map[string]string, substNodes map[string]Node, spPref *Atom) Node {
-		xtracer.Trace("parser.spaa ENTER HASH decl.canon=%v pref=%v", decl.Canon(), spPref.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("parser.spaa ENTER HASH decl.canon=%v pref=%v", decl.Canon(), spPref.Canon())
+		}
 
 		localSubst := subst
 		localSubstNodes := substNodes
@@ -226,7 +228,9 @@ func instMod(ivy *ivyAccum, module *ivyAccum, pref *Atom, subst map[string]strin
 		if refLineno != (Location{}) {
 			cfg.SetReferenceLineno(Location{})
 		}
-		xtracer.Trace("parser.spaa EXIT HASH canon= res=%v", res.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("parser.spaa EXIT HASH canon= res=%v", res.Canon())
+		}
 		return res
 	}
 

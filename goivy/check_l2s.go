@@ -548,15 +548,23 @@ func l2sTacticInt(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, ta
 		}
 		for i, inv := range model.Invars {
 			ResetRtrDepth()
-			xtracer.Trace("l2s.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("l2s.modPass clone invar[%d] ENTER HASH canon=%v", i, inv.Canon())
+			}
 			model.Invars[i] = transform(inv).(*LabeledFormula)
-			xtracer.Trace("l2s.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("l2s.modPass clone invar[%d] EXIT HASH canon=%v", i, model.Invars[i].Canon())
+			}
 		}
 		for i, asm := range model.Asms {
 			ResetRtrDepth()
-			xtracer.Trace("l2s.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("l2s.modPass clone asm[%d] ENTER HASH canon=%v", i, asm.Canon())
+			}
 			model.Asms[i] = transform(asm).(*LabeledFormula)
-			xtracer.Trace("l2s.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("l2s.modPass clone asm[%d] EXIT HASH canon=%v", i, model.Asms[i].Canon())
+			}
 		}
 		for i, b := range model.Bindings {
 			ResetRtrDepth()

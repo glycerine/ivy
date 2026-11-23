@@ -23,7 +23,9 @@ func lvsCanons(stmts []Node) string {
 // ThunkAction is also handled: the thunk name gets "loc:" prefix and
 // a continuation Sequence is appended.
 func LowerVarStatements(stmts []Node) []Node {
-	xtracer.Trace("parser.lower_var_stmts ENTER in=%d HASH canon=[%s]", len(stmts), lvsCanons(stmts))
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("parser.lower_var_stmts ENTER in=%d HASH canon=[%s]", len(stmts), lvsCanons(stmts))
+	}
 	for idx, stmt := range stmts {
 		// VarAction case: matches Python isinstance(stmt, VarAction)
 		if v, ok := stmt.(*VarAction); ok {
@@ -94,11 +96,15 @@ func LowerVarStatements(stmts []Node) []Node {
 			seq.Cfg = t.Cfg
 			newArgs := append(t.Args(), seq)
 			result := append(stmts[:idx:idx], t.Clone(newArgs))
-			xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(result), lvsCanons(result))
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(result), lvsCanons(result))
+			}
 			return result
 		}
 	}
-	xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(stmts), lvsCanons(stmts))
+	if xtracer.Enabled && !xtracer.Suppressed {
+		xtracer.Trace("parser.lower_var_stmts RETURN out=%d HASH canon=[%s]", len(stmts), lvsCanons(stmts))
+	}
 	return stmts
 }
 
