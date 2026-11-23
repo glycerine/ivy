@@ -486,52 +486,43 @@ func RenameDistinctClauses(c1, c2 *Clauses) *Clauses {
 	if c1 == nil {
 		return c1
 	}
-	// Collect symbols (name+sort) in AST depth-first order (InsMap).
-	// Matches Python: dict.fromkeys(symbols_clauses(clauses1)).
-	used1 := UsedSymbolsClausesOrdered(c1)
-	// The destination names only matter when the source has a local skolem.
-	var rn *UniqueRenamer
-	// Iterate symbols in insertion order, building structural rename map.
-	// Each unique (name, sort) pair gets its own rn.Rename() call.
-	constMap := make(map[NodeKey]*Const)
-	for key, sym := range used1.All() {
-		if c, ok := sym.(*Const); ok {
-			if IsSkolem(c.Name) && !IsGlobalSkolem(c.Name) {
-				if rn == nil {
-					rn = NewUniqueRenamer("", nameSetToSlice(usedSymbolNamesClauses(c2)))
-				}
-				newName := rn.Rename(c.Name)
-				constMap[key] = NewConst(newName, c.CSort)
+	// A structural key is needed only for a local skolem. Set retains the
+	// first occurrence order and replaces the value on later occurrences.
+	var locals *InsMap[NodeKey, *Const]
+	c1.visitSymbols(func(sym Expr) bool {
+		if c, ok := sym.(*Const); ok && IsSkolem(c.Name) && !IsGlobalSkolem(c.Name) {
+			if locals == nil {
+				locals = NewInsMap[NodeKey, *Const]()
 			}
+			locals.Set(Key(c), c)
 		}
-	}
-	if len(constMap) == 0 {
+		return true
+	})
+	if locals == nil {
 		return c1
+	}
+	rn := &UniqueRenamer{Used: occupiedSkolemNames(c2)}
+	constMap := make(map[NodeKey]*Const, locals.Len())
+	for key, c := range locals.All() {
+		constMap[key] = NewConst(rn.Rename(c.Name), c.CSort)
 	}
 	return RenameClauses(c1, constMap)
 }
 
-// usedSymbolNamesClauses collects all symbol names from a Clauses.
-func usedSymbolNamesClauses(c *Clauses) map[string]bool {
-	if c == nil {
-		return nil
-	}
-	result := make(map[string]bool)
-	for _, f := range c.Fmlas {
-		for k, v := range actionsUsedSymbolNames(f) {
-			if v {
-				result[k] = true
+// Every name that Rename can issue here contains the original skolem name,
+// including when it appends a suffix to avoid a collision.
+func occupiedSkolemNames(c *Clauses) map[string]struct{} {
+	used := make(map[string]struct{})
+	if c != nil {
+		c.visitSymbols(func(sym Expr) bool {
+			name := ExprName(sym)
+			if IsSkolem(name) {
+				used[name] = struct{}{}
 			}
-		}
+			return true
+		})
 	}
-	for _, d := range c.Defs {
-		for k, v := range actionsUsedSymbolNames(d) {
-			if v {
-				result[k] = true
-			}
-		}
-	}
-	return result
+	return used
 }
 
 // -----------------------------------------------------------------------

@@ -951,3 +951,40 @@ func BenchmarkRenameDistinctClausesWithoutLocalSkolems(b *testing.B) {
 		}
 	}
 }
+
+func TestRenameDistinctClausesKeepsLastSortForEqualSymbols(t *testing.T) {
+	first := &UninterpretedSort{Name: "skolem-element"}
+	last := &UninterpretedSort{Name: "skolem-element"}
+	a := NewConst("a__x", first)
+	b := NewConst("a__x", last)
+	left, e := NewEq(a, b)
+	if e != nil {
+		t.Fatal(e)
+	}
+	occupied := NewClauses([]Expr{NewConst(a.Name, Boolean), NewConst(a.Name+"_a", Boolean)}, nil, nil)
+	renamed := RenameDistinctClauses(NewClauses([]Expr{left}, nil, nil), occupied)
+	eq := renamed.Fmlas[0].(*Eq)
+	x := eq.T1.(*Const)
+	y := eq.T2.(*Const)
+	if x != y || x.Name != a.Name+"_b" || x.CSort != last {
+		t.Fatalf("renamed repeated skolem has name %q and sort %p, want last sort %p", x.Name, x.CSort, last)
+	}
+}
+
+func BenchmarkRenameDistinctClausesWithLocalSkolems(b *testing.B) {
+	ordinary := make([]Expr, 96)
+	for i := range ordinary {
+		ordinary[i] = NewConst("predicate"+itoa(i), Boolean)
+	}
+	local := NewConst("a__x", Boolean)
+	seen := NewConst("a__x_a", Boolean)
+	source := NewClauses(append(ordinary[:len(ordinary):len(ordinary)], local), nil, nil)
+	occupied := NewClauses(append(ordinary[:len(ordinary):len(ordinary)], local), []*IvyDefinition{NewIvyDefinition(seen, True)}, nil)
+	b.ReportAllocs()
+	for b.Loop() {
+		result := RenameDistinctClauses(source, occupied)
+		if result.Fmlas[len(ordinary)].(*Const).Name != "a__x_b" {
+			b.Fatal("unexpected skolem name")
+		}
+	}
+}

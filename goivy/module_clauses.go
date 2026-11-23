@@ -204,17 +204,24 @@ func (c *Clauses) Equal(other *Clauses) bool {
 // Delegates to the faithful port il.UsedSymbolsAst (via symbols_ilu_ast).
 func (c *Clauses) Symbols() *InsMap[NodeKey, Expr] {
 	result := NewInsMap[NodeKey, Expr]()
+	c.visitSymbols(func(sym Expr) bool {
+		result.Set(Key(sym), sym)
+		return true
+	})
+	return result
+}
+
+func (c *Clauses) visitSymbols(visit func(Expr) bool) {
 	for _, f := range c.Fmlas {
-		for sym := range SymbolsIluAst(f) {
-			result.Set(Key(sym), sym)
+		if !symbolsIluAstRec(f, visit) {
+			return
 		}
 	}
 	for _, d := range c.Defs {
-		for sym := range SymbolsIluAst(d) {
-			result.Set(Key(sym), sym)
+		if !symbolsIluAstRec(d, visit) {
+			return
 		}
 	}
-	return result
 }
 
 // Apply applies a function to all subformulas and definitions,
