@@ -1184,10 +1184,14 @@ func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
 	if nb, ok := n.(*LogicNamedBinder); ok {
 		key := string(nb.Sexp())
 		if rep, found := subs[key]; found {
-			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=True HASH canon=%s", ShortTypeName(n), rep.Canon())
+			if xtracer.Enabled && !xtracer.Suppressed {
+				xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=True HASH canon=%s", ShortTypeName(n), rep.Canon())
+			}
 			return rep
 		}
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=False HASH canon=%s", ShortTypeName(n), n.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s found=False HASH canon=%s", ShortTypeName(n), n.Canon())
+		}
 		return n
 	}
 	// python: is_app returns True for *logic.Apply and *logic.Const as
@@ -1206,7 +1210,9 @@ func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
 			}
 		}
 		result := MustApply(newFunc, newTerms...)
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s", ShortTypeName(result), result.Canon())
+		}
 		return result
 	}
 	if cnst, ok := n.(*Const); ok {
@@ -1217,8 +1223,10 @@ func ReplaceNamedBindersAst(n Node, subs map[string]Expr) Node {
 		if _, ok := cnst.CSort.(*LogicFunctionSort); ok {
 			result = MustApply(cnst)
 		}
-		xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s",
-			ShortTypeName(result), result.Canon())
+		if xtracer.Enabled && !xtracer.Suppressed {
+			xtracer.Trace("ilu.replaceNamedBindersAst EXIT type=%s app HASH canon=%s",
+				ShortTypeName(result), result.Canon())
+		}
 		return result
 	}
 	// Python: args = [replace_named_binders_ast(x, subs) for x in ast.args]
