@@ -579,21 +579,7 @@ func UsedSymbolNamesClauses(clauses *Clauses) map[string]bool {
 // object. This matches Python's used_symbols_clauses
 // which returns a set of Symbol objects (with sorts).
 func UsedSymbolsClauses(clauses *Clauses) *InsMap[NodeKey, Expr] {
-	if clauses == nil {
-		return NewInsMap[NodeKey, Expr]()
-	}
-	result := NewInsMap[NodeKey, Expr]()
-	for _, f := range clauses.Fmlas {
-		for k, v := range UsedSymbolsAST(f).All() {
-			result.Set(k, v)
-		}
-	}
-	for _, d := range clauses.Defs {
-		for k, v := range UsedSymbolsAST(d).All() {
-			result.Set(k, v)
-		}
-	}
-	return result
+	return UsedSymbolsClausesOrdered(clauses)
 }
 
 func ClausesUsingSymbols(syms *InsMap[NodeKey, Expr], clauses *Clauses) *Clauses {
@@ -941,21 +927,10 @@ func elimDefinitions(clauses *Clauses, dead []NodeKey) *Clauses {
 // dict.fromkeys(symbols_clauses(c)) insertion order.
 // Uses the faithful port il.SymbolsIluAst for traversal.
 func UsedSymbolsClausesOrdered(c *Clauses) *InsMap[NodeKey, Expr] {
-	result := NewInsMap[NodeKey, Expr]()
 	if c == nil {
-		return result
+		return NewInsMap[NodeKey, Expr]()
 	}
-	for _, f := range c.Fmlas {
-		for sym := range SymbolsIluAst(f) {
-			result.Set(Key(sym), sym)
-		}
-	}
-	for _, d := range c.Defs {
-		for sym := range SymbolsIluAst(d) {
-			result.Set(Key(sym), sym)
-		}
-	}
-	return result
+	return c.Symbols()
 }
 
 // UsedSymbolsExprOrdered collects symbols from an expression in

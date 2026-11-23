@@ -205,13 +205,13 @@ func (c *Clauses) Equal(other *Clauses) bool {
 func (c *Clauses) Symbols() *InsMap[NodeKey, Expr] {
 	result := NewInsMap[NodeKey, Expr]()
 	for _, f := range c.Fmlas {
-		for k, v := range UsedSymbolsAst(f).All() {
-			result.Set(k, v)
+		for sym := range SymbolsIluAst(f) {
+			result.Set(Key(sym), sym)
 		}
 	}
 	for _, d := range c.Defs {
-		for k, v := range UsedSymbolsAst(d).All() {
-			result.Set(k, v)
+		for sym := range SymbolsIluAst(d) {
+			result.Set(Key(sym), sym)
 		}
 	}
 	return result
