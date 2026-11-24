@@ -44,6 +44,8 @@ github.com/glycerine/g3/pkg v0.2.2 h1:K/JL1BlmW9Y8/URo8V2W7agoPww+jpiaZ8nPQSs/Tw
 github.com/glycerine/g3/pkg v0.2.2/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
 github.com/glycerine/g3/pkg v0.2.6 h1:BbD5fdSHc/PJegz19oVrYFM077WbkyI3c1c8uwEaWf8=
 github.com/glycerine/g3/pkg v0.2.6/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
+github.com/glycerine/g3/pkg v0.2.11 h1:/JWmG8jUBdYrB8EQ2i0YiJpL+4qPTmNQD+nzWLCUIuY=
+github.com/glycerine/g3/pkg v0.2.11/go.mod h1:XHZ8onQk90qifubbr11sA/3BnEDqL9hxQP1wrAyxbIQ=
 github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31 h1:gclg6gY70GLy3PbkQ1AERPfmLMMagS60DKF78eWwLn8=
 github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31/go.mod h1:Ogl1Tioa0aV7gstGFO7KhffUsb9M4ydbEbbxpcEDc24=
 github.com/glycerine/greenpack v0.541.0 h1:27vVEEmJTCXfRz7EiHqkAY+uXM54rUKHEAXxqPLC+QE=
