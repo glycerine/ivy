@@ -15,5 +15,10 @@ func (s *Z3Solver) BeginVerificationGoalChecks() (func() Z3CheckResult, func(Z3E
 	return nil, nil, nil
 }
 
+// BeginVerificationGoalBatch checks the same incremental scopes for any batch size.
+func (s *Z3Solver) BeginVerificationGoalBatch(count int) (func() Z3CheckResult, func(Z3Expr) bool, func()) {
+	return s.BeginVerificationGoalChecks()
+}
+
 // The linked backend preprocesses the expression during the solver check.
 func (s *Z3Solver) SimplifyVerificationCondition(e Z3Expr) Z3Expr { return e }

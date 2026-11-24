@@ -1277,7 +1277,7 @@ func (s *Solver) GetSmallModelWithCond(
 			var release func()
 			if !xtracer.Enabled || xtracer.Suppressed {
 				var batchCheck func() smt.Z3CheckResult
-				batchCheck, proveGoal, release = z3solver.BeginVerificationGoalChecks()
+				batchCheck, proveGoal, release = z3solver.BeginVerificationGoalBatch(len(finalCond))
 				if batchCheck != nil {
 					check = batchCheck
 				}
