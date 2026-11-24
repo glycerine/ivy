@@ -616,7 +616,7 @@ func RenameClauses(clauses *Clauses, subs map[NodeKey]*Const) *Clauses {
 		for k, v := range subs {
 			exprSubs[k] = v
 		}
-		result.Annot = result.Annot.Rename(exprSubs)
+		result.Annot = renameWithOwnedMap(result.Annot, exprSubs)
 	}
 
 	return result

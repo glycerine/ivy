@@ -139,6 +139,21 @@ type RenameAnnotation struct {
 	Map map[NodeKey]Expr
 }
 
+// RenameClauses has already copied its substitutions into an independent
+// expression map. The built-in annotations can retain that map directly.
+func renameWithOwnedMap(arg Annotation, m map[NodeKey]Expr) Annotation {
+	if len(m) != 0 {
+		switch a := arg.(type) {
+		case EmptyAnnotation, *ConjAnnotation, *ComposeAnnotation, *RenameAnnotation, *IteAnnotation:
+			return &RenameAnnotation{Arg: arg, Map: m}
+		case *EmptyAnnotation:
+			// EmptyAnnotation.Rename has a value receiver.
+			return &RenameAnnotation{Arg: *a, Map: m}
+		}
+	}
+	return arg.Rename(m)
+}
+
 func newRenameAnnotation(arg Annotation, m map[NodeKey]Expr) *RenameAnnotation {
 	copied := make(map[NodeKey]Expr, len(m))
 	for k, v := range m {
