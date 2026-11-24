@@ -99,10 +99,23 @@ func (s *Z3Solver) BeginVerificationChecks() (check func() Z3CheckResult, releas
 // goal before the first incremental push. Older g3 releases support only
 // proofs over assertions already in the solver.
 func (s *Z3Solver) BeginVerificationGoalChecks() (check func() Z3CheckResult, proveGoal func(Z3Expr) bool, release func()) {
+	return s.BeginVerificationGoalBatch(0)
+}
+
+// BeginVerificationGoalBatch supplies the number of sibling conditions already
+// available to the verifier. Older g3 releases use an unsized proof batch.
+func (s *Z3Solver) BeginVerificationGoalBatch(count int) (check func() Z3CheckResult, proveGoal func(Z3Expr) bool, release func()) {
 	if s.logic != "" {
 		return nil, nil, nil
 	}
-	batch := s.c.BeginOrderProofBatch()
+	var batch *api.OrderProofBatch
+	if sized, ok := any(s.c).(interface {
+		BeginOrderProofBatchForGoals(int) *api.OrderProofBatch
+	}); ok {
+		batch = sized.BeginOrderProofBatchForGoals(count)
+	} else {
+		batch = s.c.BeginOrderProofBatch()
+	}
 	withGoal, ok := any(batch).(interface {
 		ProveWithGoal(ast.ASTHandle) (bool, error)
 	})
