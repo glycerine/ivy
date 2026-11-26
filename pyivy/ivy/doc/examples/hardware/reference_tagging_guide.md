@@ -1,0 +1,1269 @@
+---
+layout: page
+title: Reference tagging for pipeline verification
+---
+
+Guide from upstream Ivy at `257e3da`.
+
+Reference tagging verifies a hardware pipeline against an *executable ISA
+reference* instead of a hand-written monolithic invariant. You keep, as ghost
+state, a **trace**: the sequence of architectural states the ISA passes through,
+one entry per instruction. The hardware has many instructions in flight; you tag
+each microarchitectural element with a **trace index** naming the instruction it
+is working on, then prove, per element, that its contents equal the trace value
+*at its tag*. This decomposes the proof into one simple invariant per pipeline
+latch / register file / memory, and the *same trace model is reused unchanged*
+as the microarchitecture grows.
+
+The [hardware examples](reference_tagging.html) include the worked examples
+used in this guide (the first four below); read the one closest to your target before
+writing code. `dual_issue_cpu_ref.ivy` is a fifth, work-in-progress example
+(under `doc/examples/hardware/`) demonstrating component isolation:
+
+- `pipe_cpu_ref.ivy` — 2-stage pipeline (the tutorial base case).
+- `5stage_cpu_ref.ivy` — standard 5-stage (IF/ID/EX/MEM/WB) with data-hazard
+  stalls and non-speculative branches.
+- `5stage_bp_cpu_ref.ivy` — 5-stage with a speculative branch predictor (shadow
+  bits).
+- `5stage_cache_cpu_ref.ivy` — adds I/D caches, a `FLUSH` instruction, and a
+  multi-cycle memory; the reference is extended with `ddirty`/`error` to model
+  cache incoherence (see "Caches, incoherence, multi-cycle memory" below).
+- `dual_issue_cpu_ref.ivy` (in `doc/examples/hardware/`; **work in progress**
+  toward a full dual-issue superscalar) — widens the I-cache line to two words and
+  factors the whole I-cache (array + fill state machine + its data invariant) into
+  a nested `cpu.ic` sub-isolate proved *locally*, then widens the pipeline to
+  2-wide in-order issue (aligned pairs, split-on-hazard). `cpu.ic` is fully
+  verified; the two-lane machine verifies (`isolate=this`) and the emitted RTL
+  simulates real dual issue. See "Isolating a component's proof", "Widening to
+  superscalar (dual issue)", "Common hardware design issues", and "A safety proof
+  is not a live design" below.
+- `ooo_cpu_ref.ivy` (in `doc/examples/hardware/`; **stage 3c of
+  `doc/projects/ooo_cpu.md`**) — an out-of-order core: Tomasulo's algorithm with
+  a 4-entry re-order buffer, single-wide dispatch, one ALU, the full ISA (ALU ops,
+  BEQZ with a branch predictor and mispredicts resolved at retire, LD/ST/FLUSH
+  through the `idcache` module with a LD/ST queue and store-to-load forwarding:
+  loads perform speculatively ahead of older instructions, forwarding from the
+  youngest older store to their address, stores/FLUSHes at retire). Fully
+  verified (`ivy_check` OK, ~20-40 min); translates to RTL and simulates
+  (`sim_cpu.sh ooo_cpu_ref prog_fwd.hex`). Frozen earlier stages:
+  `ooo_cpu_alu_ref.ivy` (stage 1, ALU only, OK in ~17 s), `ooo_cpu_beqz_ref.ivy`
+  (stage 2, +BEQZ, ~2.5 min), `ooo_cpu_mem_ref.ivy` (stage 3a, memory ops at the
+  head, ~3.5 min) and `ooo_cpu_lsq_ref.ivy` (stage 3b, LD/ST queue without
+  forwarding, ~10 min). Golden models `ooo_alu_golden.sv` (stage 1) and
+  `ooo_beqz_golden.sv` (stage 2) are proven equivalent by `check_ooo_golden.sh
+  [design] [golden]`. See "Out-of-order execution (Tomasulo + ROB)" below.
+- `reference_tagging.md` — the prose writeup of the method.
+
+## The three ingredients
+
+1. **ISA model** (`module isa_model(init_mem, init_imem)`): the architectural
+   state (`pc`, `rf`, `mem`, `imem`) as `var`s, the per-instruction
+   intermediate values as **temporary variables** (`var`s holding no
+   architectural state) computed by an `action prepare`, and one `action step`
+   that consumes them to advance the architectural state. One instruction is
+   `prepare; step`.
+
+2. **`trace` isolate**: instantiates the ISA as `arch` and an abstract sequence
+   type `tag`; stores an array `st(T:tag) : state_t` of recorded states and a
+   pointer `now : tag`. Provides ghost `action step` (advance `arch`, extend the
+   trace). Carries the auxiliary invariants that make the recorded history a
+   faithful ISA execution.
+
+3. **The implementation** (`object cpu`): the real datapath, plus ghost `tag`
+   variables for each stage and local invariants relating each stage's contents
+   to `trace.st(<its tag>)`. Ghost updates live in a `specification { ... }`
+   block, never in the datapath.
+
+## Recipe
+
+1. **Types and I/O.** Declare bit-vector types (`type word; interpret word ->
+   bv[16]`, etc.). The clock is `export action posedge`. Initial memory contents
+   are top-level *uninterpreted* functions `init_mem`, `init_imem` (arbitrary
+   fixed image), passed to `isa_model`; the cpu initializes its own memories
+   from the same functions, so the proof holds for any program. (See "Memory
+   init" below for why this must be shared and uninterpreted.)
+
+2. **Write `isa_model`.** State as `var`s. Intermediate values as **temporary
+   `var`s** (`var opcode : opc`, `var a_val : word`, `var take_branch : bool`,
+   ...), *computed* by an `action prepare` (`opcode := fetched<<15:13>>;
+   a_val := rf(ra); take_branch := (opcode=6)&(a_val=0); ...`). `after init` sets
+   `pc`, zeroes `rf`, and loads `mem(A) := init_mem(A)`, `imem(A) :=
+   init_imem(A)`. `action step` executes one instruction, reading the temporary
+   `var`s directly (they already hold the pre-state values, so no `old` is
+   needed — see gotchas) and advancing the PC with `if take_branch { ... }`.
+
+3. **Write the `trace` isolate.** `instance arch : isa_model(init_mem,
+   init_imem)`; `instance tag : unbounded_sequence`; a `state_t` struct with the
+   architectural state *and every intermediate value*; `var now`, `var st`; an
+   `action current` that snapshots `arch` into a `state_t`; `action step = {
+   arch.step; arch.prepare; now := now.next; st(now) := current }`; `after init
+   { now := 0; arch.prepare; st(now) := current }`. The `arch.prepare` call
+   after each `arch.step` (and in the initializer) recomputes the temporaries in
+   the new state before it is recorded, so every trace entry's intermediate
+   values are the correct decode of *its own* architectural state. Close the
+   isolate with `with addr,opc` (see gotchas).
+
+4. **Trace auxiliary invariants** (boilerplate — mirror the ISA transition over
+   recorded entries; an LLM can generate these from `isa_model`):
+   - `st(now).X = arch.X` for every field X.
+   - Consistency for *all* recorded entries: `T <= now -> st(T).opcode =
+     st(T).fetched<<15:13>>`, `... st(T).a_val = st(T).rf(st(T).ra)`, etc.
+   - Step relation between consecutive entries: `succ(T,U) & U <= now ->
+     st(U).pc = (st(T).target if st(T).take_branch else st(T).pc + 1)`, and
+     likewise for `rf`, `mem`, `imem`. Without these, past entries `st(T)` for
+     `T<now` are unconstrained and the cpu proof fails.
+
+5. **Implementation datapath.** Model combinational signals as `wire` +
+   `definition`, registers/latches as `var`, memories as `var f(A:addr):word`.
+   Each stage decodes its instruction word with the `<<hi:lo>>` bit-select;
+   stalls/squashes are ordinary `if`s over the latches.
+
+6. **Ghost tags + step in the `specification` block.** Give each stage a
+   `var <stage>_tag : trace.tag` (or boundary counters `commit/mcommit/...`, one
+   per stage boundary, for deeper pipes). In a **ghost `after posedge` inside
+   `specification`**, advance the tags mirroring the datapath's stage movement
+   and call `trace.step` exactly when a valid instruction is issued on the
+   correct path. A tag does *not* advance when its stage stalls or is squashed.
+
+7. **Per-stage invariants.** For each stage: `<valid> -> <ir> =
+   trace.st(<tag>).fetched`; `rf(R) = trace.st(<commit tag>).rf(R)`; `mem(M) =
+   trace.st(<mem tag>).mem(M)`; and, for computed latch values, tie them to the
+   trace's recorded intermediate values (e.g. `m_valid & m_opcode=1 -> m_res =
+   st(mcommit).a_val + st(mcommit).b_val`). Also the structural tag invariants
+   (the pipeline occupancy is a contiguous run of trace indices) and a PC
+   invariant (`~fetch_stall -> pc = st(now).pc`, plus the fall-through case
+   while a branch is pending).
+
+8. **Verify:** `ivy_check <file>.ivy` should print `OK`. Iterate on
+   counterexamples (`ivy_check trace=true ...`; write per-CTI failures to files
+   with `trace_dir=<dir>`). Missing invariants usually show up as spurious
+   (unreachable) pre-states — add the structural fact that rules them out.
+
+## Gotchas (each cost real debugging time)
+
+- **Compute the ISA's intermediate values in `prepare`, not as defined
+  functions.** Do *not* model the intermediate values as `wire`s (a wire is
+  frozen for the whole action) nor as `function`s. A defined `function` is
+  re-evaluated whenever its dependencies change, so its value shifts *mid-action*
+  as `step` writes `rf`/`mem`; reading the start-of-action value then requires
+  the `old` operator on *every* such use (`if old take_branch`, `pc := old
+  target`, `ddirty(old mem_addr) := true`), and a single forgotten `old` silently
+  reads a post-writeback value and breaks the proof. Instead make the
+  intermediate values plain `var`s, set them once in `action prepare` from the
+  current state, and have `step` read them directly — no `old` anywhere. The
+  `trace` runs `arch.prepare` after every `arch.step` (and in `after init`)
+  before recording, so each entry's temporaries decode its own architectural
+  state. (This is the current pattern in all four reference examples; earlier
+  versions used the `function`+`old` style and repeatedly hit the forgotten-`old`
+  bug — which is exactly why the examples were changed.)
+
+- **Use the bit-select / concat sugar; pin the bit-select's result sort.**
+  ivy1.8+ writes `bfe[i][j](w)` as `w<<j:i>>` (Verilog-style high:low) and
+  `concat(a, ...)` as `a :: ...`; the examples use this sugar throughout. It
+  desugars in the parser, so every `bfe`/`concat` note here applies unchanged. A
+  bit-select is polymorphic in its result sort: when compared to a numeric
+  literal or otherwise unconstrained, ascribe it: `(x<<15:13>>:opc) = 6`. When it
+  defines a value of known sort (`wire opcode : opc; definition opcode =
+  ir<<15:13>>`) the sort is inferred.
+
+- **Interpret the small bit-vector types in the trace isolate.** Quantified
+  invariants that compare recorded fields to numerals need the bit-vector
+  interpretation, or the solver collapses distinct numerals. Close the trace
+  isolate with `with addr,opc` (interpreting `word` is not needed for these).
+
+- **Memory init must be shared and uninterpreted.** Both the cpu and `arch`
+  initialize their memories from the *same* top-level `init_mem`/`init_imem`.
+  Do not have `arch` read the cpu's mutable memory at init — that creates a
+  spurious interference (posedge writes cpu.mem, which the initializer would
+  observe). Leaving them uninterpreted proves correctness for every program.
+
+- **Auxiliary trace invariants are mandatory.** The `st(now)=arch` invariants
+  alone leave `st(T)` for `T<now` free; the consistency + step-relation
+  invariants (step 4) are what make lagging-stage comparisons sound.
+
+- **Unified memory makes the `prepare` pattern especially valuable.** If
+  instructions are fetched from the same `mem` as data (no separate `imem`),
+  then `fetched` and everything decoded from it (`mem_addr`, `target`, ...)
+  depends on `mem`, which a store mutates mid-`step`. With the intermediate
+  values as `var`s set in `prepare` *before* `step` runs, a self-modifying store
+  cannot re-derive them: `step` reads the pre-state `mem_addr`/`target`/`pc`
+  directly (`ddirty(mem_addr) := true`, `pc := target`). (With the older
+  `function` style these had to be read as `old mem_addr` / `old target`, and
+  this is where the forgotten-`old` bugs were most common.)
+
+- **Packing with `::` (concat).** `a :: b :: ...` (sugar for a variadic
+  `concat`) builds a packed cache line in one shot: `((1:bit) :: (0:bit) ::
+  hi_addr :: data : cline)` (assign to / ascribe a `cline`/`bv[22]`-interpreted
+  type). Decode fields with the `w<<hi:lo>>` bit-select. A concatenation is given
+  bit-vector semantics only when every argument sort *and* the result sort is a
+  bit-vector and the argument widths sum to the result width; otherwise it is
+  uninterpreted (still sound by congruence) and a width mismatch warns rather
+  than crashing. Two consequences: (1) each argument's sort must be pinned — a
+  bare bit-select inside a concat needs an ascription like `(pc<<7:4>>:nib)`,
+  since the `:cline` on the whole concatenation does not constrain the argument
+  widths; (2) inside an isolate closed `with addr,opc` (so `word` is not
+  interpreted there), a concat returning `word` is left uninterpreted — which is
+  exactly what you want for the trace's recorded values.
+
+- **Debugging CTIs: use `shrink=false`.** Counterexample generation can be very
+  slow; `shrink=false` skips minimization. `trace_dir=<dir>` dumps a CTI for
+  *every* failing check at once; `ivy replay <file>.a2g` prints it. A CTI whose
+  state is impossible (e.g. `st(0).error = true`, or a cache line at the wrong
+  index) means a missing *structural* invariant — add the fact that rules it
+  out, don't weaken the property. `ivy_check check=<isolate>.<invname>` restricts
+  to one named invariant, and `ivy_check assume_invariants=false` speeds up CEX
+  search by dropping known-true postconditions of called procedures — but it can
+  drop assumptions you actually need, so re-confirm a CTI without it.
+
+- **A `definition` can be deadly to Z3 — try inlining it.** A whole-CPU
+  invariant that made Z3 return `unknown` (neither proof nor counterexample) was
+  traced to a *single* defined function — `il_full(L) = (L<<35:35>>:bit) = 1` —
+  whose inlining at its use site made the identical query return instantly.
+  Sibling definitions of the same shape were harmless, so there is no clean rule
+  yet; but when a proof is mysteriously slow or inconclusive, inlining a suspect
+  `definition` is a cheap thing to try before assuming the property is wrong or
+  the fragment is undecidable.
+
+- **Bit-vector arrays are slow to reason about — add a tracking invariant for
+  every array read, with a zero-delay dependence on the array's own tracking
+  invariant.** Ivy/Z3 are markedly slow reasoning about arrays of bit-vectors
+  (functions from a bit-vector type to a bit-vector type — register files,
+  memories, caches). Wherever the *implementation* reads such an array, the proof
+  goes much faster if you add an invariant that pins the read *value* to the
+  trace, instead of letting every consumer re-derive it through the array's
+  coherence each time. Concretely: the register file `rf` has a tracking
+  invariant `[rf_track] ~error -> rf(R) = st(commit).rf(R)`; the EX operands are
+  reads `e_a = rf(e_ra)`, so add `[ea_trk] (e_valid & ~ex_stall & ~error) -> e_a
+  = st(ecommit).a_val` and give it **`with rf_track`** — the read is a zero-delay
+  (combinational) path from the array to the operand wire, so the array's
+  post-state coherence must be available in the post-state (same trick as the
+  combinational input→output paths under isolation). Then the *downstream*
+  invariants (the ALU result `m_res = st(mcommit).res`, etc.) consume the operand
+  equality directly instead of re-expanding `rf` + the hazard argument. Measured
+  effect on the dual-issue CPU: the ALU-result invariants dropped from >150 s
+  (timeout territory) to ~12 s each, and the whole `isolate=this` proof from
+  ~68 min to ~25 min. The guard matters: the operand only equals the trace value
+  when the reader is *not* stalled (`~ex_stall`); under a hazard the register
+  file holds a stale value and the equality is genuinely false (but unused).
+
+## Data hazards, control hazards, speculation
+
+- **Data hazard → stall.** Detect when an operand register matches an older
+  in-flight writer; stall the reading stage (its tag does not advance, a bubble
+  enters the stage below). Operand correctness then follows from the trace
+  step relation — no extra invariant needed.
+
+- **Control hazard, no speculation** (`5stage_cpu_ref`): stall fetch while a
+  branch is unresolved, so the trace only ever steps on the correct path. You
+  need the fact `branch in EX -> ID slot empty` (rules out fetched-past-branch
+  states) and the PC-during-stall invariant (`pc = st(now-1).pc + 1`, the
+  fall-through).
+
+- **Speculation** (`5stage_bp_cpu_ref`): add a ghost **shadow** bit per stage
+  (+ a `spec_wrong` fetch-stream bit). At fetch, compare the prediction against
+  the *true* outcome from the trace (`st(now).take_branch`); on agreement call
+  `trace.step`, on disagreement stop stepping and mark subsequent fetches
+  shadowed — so the trace never backtracks. Relax the per-stage data invariants
+  to hold only when `~shadow`. The core obligation is *shadowed state is never
+  committed*: prove `~(e_valid & e_shadow)`, `~(m_valid & m_shadow)`,
+  `~(w_valid & w_shadow)` (a mispredicted branch resolves in EX and squashes
+  younger instructions before MEM/WB) and `EX holds a mispredicted branch -> the
+  ID instruction behind it is shadowed`. **Correctness is independent of the
+  prediction values**, so the predictor's logic is not part of the proof — the
+  CPU reads `bp.predicted_taken` and Ivy verifies it with that bit left
+  arbitrary (see next bullet for how to package the predictor).
+
+- **The predictor is a separate (sub-)isolate, connected by the parent.** Give
+  the predictor its own I/O *wires* — inputs `fetch_pc`, `br_valid`, `br_pc`,
+  `br_taken`; output `predicted_taken` — and put its logic (e.g. a bimodal
+  `bht` of 2-bit counters) in its `implementation` block so it is hidden. In the
+  parent CPU, *connect* it with definitions of the child's input wires and read
+  its output: `definition bp.fetch_pc = pc`, `definition bp.br_taken = e_take`,
+  ..., `definition f_ptaken = f_is_branch & bp.predicted_taken`. The predictor's
+  hidden implementation means the CPU is verified with `bp.predicted_taken`
+  arbitrary (assume-guarantee); the predictor itself carries no invariants (any
+  prediction is correct), so its isolate is discharged trivially. Do *not* have
+  the predictor reach into CPU state directly — declare its inputs as wires and
+  let the parent drive them (the standard isolate-I/O pattern). This also
+  translates cleanly to RTL: `ivy_to_rtl` emits the predictor as a submodule
+  (`cpu.bp`) with its `bht` memory.
+
+## Caches, incoherence, multi-cycle memory
+
+The `5stage_cache_cpu_ref` example goes further: unified memory (fetch from the
+same `mem` as load/store), separate non-coherent I- and D-caches, a `FLUSH`
+instruction, and a two-cycle memory. This is the one design where the
+**reference model itself changes** — worth studying if your target has caches,
+weak memory, or any "software must synchronize" contract.
+
+- **Model the incoherence in the ISA, then relax.** Add architectural state that
+  captures the hazard: here `ddirty(A)` (set by store, cleared by `FLUSH`) and a
+  sticky `error` set when an instruction is fetched from a dirty address. Then
+  guard *every* implementation-vs-reference invariant by `~st(now).error`: once
+  the program executes stale code, you no longer require the CPU to match. This
+  `~error` relaxation is the correctness statement for an incoherent machine.
+
+- **`~error`-guard the TAG-COUNT invariants too, not just the data ones** (cost
+  real time in dual-issue Step 5). The rule is: *any invariant that relates the
+  trace and the implementation must be conditioned on `~error`; only invariants
+  over implementation state alone are exempt.* The boundary-counter/run-size facts
+  (`w_valid1 -> commit.succ(w1_tag)`, `m_valid1 -> ecommit = mcommit+2`, …) look
+  like pure structural bookkeeping that holds regardless — and they do, UNTIL a
+  squash/advance starts keying on a datapath signal whose meaning depends on being
+  on the reference path. Example: once a mispredicting lane-0 branch squashes its
+  lane-1 fall-through via the datapath `mispredict`, that signal is garbage under
+  `error` (bogus operands), so a bogus squash desyncs the valid bits from the tag
+  counts. Guarding the MEM/WB tag invariants with `~error` (matching the EX/ID
+  ones) fixes it. Symptom to recognize: a tag-count invariant fails and the CTI
+  has `error = true`.
+
+- **Caches are pinned by local invariants, relative to the trace at the stage
+  that owns them** (`st(mcommit)` for the D-cache in MEM): dirty line ⇒ dirty in
+  the reference; present line ⇒ holds the reference value; not-dirty address ⇒
+  main memory holds the reference value; I-line not dirty ⇒ holds the reference
+  value. Same reference-tagging style, one fact per cache property.
+
+- **Direct-mapped geometry: keep only `hi_addr` in the tag.** If a line stores
+  only the high address bits (not the full address), the address it caches is
+  structurally `hi_addr :: index`, always at its own index, so no "line is
+  filed at the right index" invariant is needed. (If you instead store a full
+  address in the tag — e.g. to dodge a concat — you *do* need the structural
+  invariant `valid(I) -> tag(I)<<3:0>> = I`, or the prover imagines a line
+  under the wrong index and writes a victim back to a bogus address.)
+
+- **`FLUSH` + fetch stall re-establish coherence.** `FLUSH A` writes back the
+  dirty D-line and evicts `A` from both caches; fetch stalls while a `FLUSH` is
+  in ID/EX/MEM so nothing behind it is fetched until it has taken effect. The
+  "visibility" lemma you might expect to need (dirty@MEM & clean@IF ⇒ FLUSH in
+  flight) turned out *not* to be needed as an explicit invariant — the prover
+  derived fetch-correctness from the trace step relations + cache invariants +
+  the stall. Try without it first.
+
+- **Multi-cycle memory costs no new invariants.** A fill that takes extra cycles
+  is just a longer stall, and the "stall ⇒ tag holds" discipline already covers
+  it: the stalled stage's tag stops advancing, no `trace.step` is issued, and
+  every per-element invariant is preserved across the stall for free. Model the
+  memory latency as additional stall conditions folded into the existing
+  stage-stall/bubble logic; don't try to verify the memory's own timing (leave
+  that to a downstream timing tool).
+
+## Isolating a component's proof (the two-word I-cache)
+
+`dual_issue_cpu_ref.ivy` widens the I-cache line to two words (so a later
+dual-issue fetch can read an even/odd instruction pair) and, more importantly,
+factors the *entire* I-cache — the array, the two-word fill state machine, the
+field accessors, and the I-cache data invariant — into a nested sub-isolate
+`cpu.ic`, so that invariant is discharged **locally**. Reach for this when a
+single whole-machine invariant is so large that Z3 returns `unknown` (not a
+proof, not a counterexample): confine it to an isolate that holds only the
+relevant state, and give/assume just the facts that cross the boundary. (The
+project spec is `doc/projects/isolate_icache.md`.)
+
+- **Component-isolate shape (same as the predictor).** `ic` declares its I/O as
+  `wire`s — inputs `fetch_addr`, `fetch_addr_valid`, `ifill_data`,
+  `ifill_data_valid`, and the FLUSH inputs `flush_addr`/`flush_valid`; outputs
+  `fetch_data`, `fetch_valid`, `ifill_addr`, `ifill_addr_valid`, `ifill_busy`.
+  It owns its state (`icache` array; `ifill_on`/`ifill_got`/`ifill_miss`). The
+  parent drives the inputs with interconnect `definition`s placed in **neither**
+  `specification` nor `implementation` (so they reach both RTL and the
+  sub-isolate). The shared memory port stays in the parent; `ic` only *requests*
+  reads (`ifill_addr`/`ifill_addr_valid`) and consumes the returned word — a
+  req/return handshake, so a D-fill and the I-fill still share one port.
+
+- **Every bit-vector type the isolate uses must be in its `with` clause** —
+  otherwise `bfe`/constants over it are *uninterpreted* and you get **spurious**
+  counterexamples (this cost several rounds). Symptoms: a "two numerals assigned
+  same value" warning, or a field taking an impossible value — e.g. the full bit
+  of the all-zero line reading 1 (`icline` uninterpreted), or `ddirty`/`mem` step
+  relations misbehaving because opcode constants 5/7 aren't distinct (`opc`
+  uninterpreted). Fix: list them all — `with this, trace, word, addr, nib, bit,
+  icline, itag, opc, tag`. Use **`ivy_show isolate=<name> <file>`** to print an
+  isolate's contents *and exactly which invariants it assumes* — the right tool
+  for auditing this boundary.
+
+- **Export only what the sub-isolate needs; keep the rest `private`.** Split the
+  parent's invariants into interleaved `specification { }` / `private { }` blocks
+  (you may have many; ordering is free, so you needn't reorder definitions).
+  `cpu.ic` needs only two things from the parent: the **input assumption** (the
+  fill word equals the reference at the MEM tag when not dirty — proved in cpu,
+  since `ifill_data` is driven from main memory), and the **tag-ordering chain**
+  (`commit ≤ mcommit ≤ ecommit ≤ dcommit ≤ now`, which gives `mcommit.next ≤ now`
+  when `m_valid`, so the trace's single-step relations apply at the MEM tag).
+  Everything else (pipeline match, shadow bits, D-cache coherence) stays
+  `private` — still used to prove cpu's own obligations, just not dumped into
+  `ic`'s VC, keeping it small.
+
+- **Two Ivy `with`-clause misfeatures to work around (both silent).** (1) *Give
+  every isolate a `with` clause that includes `cpu`* (the top-level object that
+  owns `posedge`). Without it, Ivy does not treat `posedge` as an action of the
+  isolate, so a combinational invariant that merely *reads* a register another
+  action writes is reported as a spurious interference — "External call to
+  posedge may have visible effect on cpu.<reg>". This bites interface/`*_props`
+  wrapper isolates that hold no state of their own (e.g. a `mem_ic` whose only
+  content is a nested `ic_props`): add `with cpu` to the wrapper too. (2) *To
+  cite an invariant `A.B.inv` in an individual invariant's `with`, the enclosing
+  isolate's own `with` clause must list `A.B` (or `A`) as a dependency* — else
+  the citation is **silently ignored** and the invariant is checked without it
+  (you see the proof fail, or fall back to some other cited fact, with no error
+  about the missing citation). Symptom: an invariant that should follow from a
+  guarantee you cited fails, and the cited guarantee is absent from the isolate's
+  "properties assumed" list in the check output. Fix: add the guarantee's owning
+  isolate to the consuming isolate's `with`. (Diagnose by grepping the isolate's
+  section of `ivy_check` output for the guarantee name; if it is not listed as
+  assumed, the citation did not take.)
+
+- **A cross-stage fact must live in the shared interface (`*_props`) isolate,
+  not in one stage's implementation isolate — or a sibling cannot assume it.**
+  In the per-stage decomposition style (each pipeline stage is an implementation
+  isolate; each inter-stage interface is a ghost `*_props` isolate carrying that
+  boundary's tracking invariants), an isolate assumes the invariants of the
+  *props* isolates it depends on, but **not** the private invariants of a sibling
+  stage's implementation isolate. So when stage `Y`'s proof needs a fact about
+  stage `X`'s registers, state that fact as an invariant of the shared
+  `X`-interface `*_props` isolate, not inside `X`'s stage isolate. Symptom of
+  getting this wrong: the invariant proves fine where you put it, but the
+  sibling's *consecution* FAILs for want of it, and moving the **identical**
+  invariant into the props isolate fixes it — nothing else changes. (In
+  `5stage_bp_cpu_dec.ivy`, `d_pred_branch` — "a valid predicted-taken IF/ID
+  instruction is a branch" — had to move from the `if_stage` implementation
+  isolate into the `if_id.if_props` interface isolate before
+  `id_ex.id_props.e_pred_branch` could assume it. The tell was that the sibling
+  `e_pc_track` already consumes `if_props`'s tracking invariants without trouble
+  — props-isolate facts are assumable across the boundary, stage-isolate ones are
+  not.) Corollary: only assert an invariant where both its subject (the register)
+  and the reference it is compared to (the boundary tag / trace) are in scope.
+
+- **When a component isolate is slow, localize its dependencies before you reach
+  for type abstraction.** `with this` makes the sub-isolate depend on the *entire*
+  parent — including cpu's whole ghost monitor (every tag/shadow update and the
+  `trace.step` calls), which the SMT query then has to reason about even though
+  the component barely touches it. Cutting that down is the highest-leverage
+  speedup. The pattern that worked for `cpu.ic`: put the small piece of interface
+  state the component actually shares with the parent into a **tiny interface
+  isolate** — here `mem_intf`, holding just the ghost `ifill_addr_old` and its
+  one-line latch — and have the component depend on *that* plus the few parent
+  invariants it genuinely needs, **cherry-picked by name** in the `with` clause
+  (`with mem_intf, trace, …, icache_input, mcommit_le_now`), dropping `this`
+  entirely. Facts the component needs that live in the parent (e.g.
+  `mcommit ≤ now`) get *named* and proved in the parent (where the tag context
+  is), then listed in the component's `with`. Measured: this took `cpu.ic` from
+  not-converging to **4.5 s**, and the whole-machine check from ~11.5 min to
+  ~6 min. **Ablation caveat:** we also tried abstracting the address types
+  (`addr`/`nib` → uninterpreted, with an injectivity theory and a `sib` function)
+  — it bought essentially *nothing* (`cpu.ic` 4.5 s with plain interpreted `bv`
+  arithmetic vs 5.8 s with the abstraction). So try localization *first*;
+  bit-vector type abstraction is more machinery for, here, no gain. One
+  consequence to watch: erasing the parent's ghost monitor from the component's
+  view also erases the `trace.step` calls, so Ivy must re-check that those ghost
+  steps (now *external* actions from the component's perspective) cannot violate
+  the component's invariants — which is exactly what the cherry-picked invariants
+  and interface state have to be strong enough to guarantee.
+
+- **Specify the interface as an abstract protocol over ghost state.** The clean
+  way to state a cross-isolate contract is to introduce ghost variables for the
+  *protocol state* and write the assumption/guarantee as invariants over them —
+  the *same* invariant is a guarantee for one side and an assumption for the
+  other. The memory↔I-cache protocol here is deliberately minimal: *memory
+  returns `mem` at the address presented on the previous cycle, and that word is
+  valid exactly when `ifill_data_valid`* — that is all `icache_input` says. Keep
+  the protocol as weak as the proof allows: a stronger, more realistic handshake
+  (a "request pending" ghost bit, with the cache obliged to hold the address
+  constant while pending) is a design choice you *can* add, not a requirement.
+  The weakness is what lets the cache be *defensive* (next bullet) rather than
+  forcing memory to promise it returns data only when asked.
+
+- **Design for verification: make the isolate *defensive* instead of adding an
+  input assumption.** An isolate treats its inputs as arbitrary, so an
+  input combination that "can't really happen" still appears as a (spurious)
+  counterexample. You can rule it out two ways: add an *input assumption* the
+  parent must prove, or **gate the input inside the isolate** so the bad case is
+  harmless. Prefer the gate when it is cheap — it shrinks the interface contract
+  and makes the proof robust. Example: a stray `ifill_data_valid` while no fill
+  is in progress cannot really occur (the parent only raises it on a read this
+  isolate requested), but rather than burden `cpu` with an
+  `ifill_data_valid -> filling` guarantee, `ic` simply writes
+  `ifill_on & ifill_data_valid` everywhere it consumes the fill word. One AND
+  gate of real hardware buys a smaller assume-guarantee contract and a simpler,
+  more defensive block. The same spirit drives voiding the fetch bypass and the
+  install on a same-cycle FLUSH (below): `ic` self-protects against stale data
+  instead of demanding the environment never present it. Weigh the (usually
+  tiny) hardware cost against the proof/interface simplification.
+
+- **A pipeline latch on the interface breaks a naive coherence invariant —
+  bridge it with a ghost of the delayed value.** The returned fill word is
+  `mem(mfa)`, i.e. memory at the address presented *one cycle earlier* (the port
+  latches the request address into `mfa`). Stating the input coherence over the
+  *current* `ic.ifill_addr` fails: in the parent's abstraction of `ic`,
+  `ifill_addr` is a free output, so the solver moves it and the datum no longer
+  matches (the CTI shows `ifill_addr` jumping to an unrelated value in the
+  post-state). Fix: add a ghost `ifill_addr_old` mirroring the latched address
+  (`ifill_addr_old := ic.ifill_addr` every posedge, in `specification` so `ic`
+  sees the update logic), and state `icache_input` over `ifill_addr_old` — the
+  parent proves it because `mfa` and `ifill_addr_old` latch the *same* previous
+  value. The isolate then only has to guarantee it *holds the address stable*
+  across the request→response, i.e. `held_addr: ifill_on -> ifill_addr =
+  ifill_addr_old`. General move: when a property couples two isolates across a
+  pipeline register, introduce ghost state for the delayed value and split the
+  obligation at that register.
+
+- **Redefine the FSM's state so the bridging invariant is inductive, instead of
+  piling on guards.** `held_addr` was *not* inductive under the first encoding:
+  `ifill_addr` changes on the miss→sibling switch and on a flush-reset while
+  `ifill_on` still held. Guarding it (`ifill_on & ifill_data_valid -> ...`) still
+  failed, because `ifill_data_valid` is a *free input* to the isolate — nothing
+  stops the solver asserting it the cycle after the address moved. The fix was to
+  change the *meaning* of `ifill_on` to "a fill request went out last cycle",
+  giving the fill machine the clean four-state cycle `(off,¬got) -> (on,¬got) ->
+  (off,got) -> (on,got) -> (off,¬got)` in which `ifill_addr` never moves while
+  `ifill_on` — so `held_addr` holds *unguarded*. Picking the right state
+  abstraction is often far cheaper than strengthening a stuck proof. (This
+  transition edit also fixed a liveness bug — see "A safety proof is not a live
+  design".)
+
+- **Combinational input→output paths need the input assumption in the
+  *post*-state.** `ic`'s output guarantee (a valid fetched word is coherent with
+  the reference) has a **zero-delay path** from an input (`ifill_data`, the fill
+  bypass) to an output (`fetch_data`). Proving the *output* invariant in the
+  post-state therefore needs the *input* invariant **in the post-state**, but
+  ordinary assume-guarantee only hands you pre-state assumptions. Fix: name the
+  input invariant (`invariant [icache_input] ...`) and add **`with icache_input`**
+  to the output invariant (`invariant [icache_output] ... with icache_input`).
+  This is sound exactly because the dependency is acyclic — the input assumption
+  is discharged by the parent independently of the output. Without it the bypass
+  case is a spurious counterexample. (This wrinkle applies to any isolate with a
+  combinational path from an assumed input to a guaranteed output.)
+
+- **The half-filled line must be a distinct, well-formed state.** With one `full`
+  bit per two-word line, a line mid-fill has `full = 0` and holds only its miss
+  word (the fill state machine, not a per-word valid bit, records which word is
+  live). State this as an invariant (`midfill`: while `ifill_on & ifill_got`, the
+  line at the miss index is `~full` and carries the miss word's tag). The `~full`
+  part is load-bearing: it is what stops a FLUSH — which only evicts *full* lines
+  with a matching tag — from silently clobbering the in-progress fill.
+
+## Widening to superscalar (dual issue)
+
+Going from one instruction per cycle to two (in-order, 2-wide) is a large change
+to the *implementation* but **the ISA reference and the `trace` isolate do not
+change at all** — the reference still executes one instruction per step; the
+trace is still a linear sequence. Superscalar is entirely an implementation-side
+refinement, and reference tagging absorbs it by *indexing the per-element
+invariants by lane*. Lessons from the dual-issue CPU (`dual_issue_cpu_ref.ivy`):
+
+- **Grow incrementally; keep `ivy_check` green at every step; split-on-hazard as
+  the always-available fallback.** The staging that worked: (1) two-lane latch
+  *skeleton* with issue width hardwired to 1 (lane 1 provably always empty —
+  `~*_valid1` invariants — so the machine is proven equivalent to single-issue
+  before any hazard exists); (2) the I-cache dual read port; (3) the tag scheme +
+  lane-1 data invariants, still dormant; (4) *activation*. Because any bundle can
+  always fall back to issuing one instruction and recirculating the other (here:
+  "fetch as two singles", `pc += 1`, no recirculation buffer), the machine is
+  correct at every step and each later relaxation (bypass, dual memory, branches)
+  only adds IPC. Do the big mechanical proof change (the tag scheme) *first*, in
+  isolation, before turning issue width up.
+
+- **The tag scheme generalizes to an adjacency chain — carry a ghost tag per lane
+  and relate adjacent lanes.** Each boundary counter (`commit`/`mcommit`/…) is
+  the tag of its stage's lane-0 instruction; a stage holding two instructions has
+  its lane-1 instruction one tag later, named by a ghost "middle" tag
+  (`w1_tag`/`m1_tag`/…). List the lanes oldest-first across the pipeline; **every
+  adjacent pair (older, younger) — whether within a stage (`X0,X1`) or across a
+  boundary (`X1,Y0`) — satisfies `younger.tag = older.tag` (younger is a bubble)
+  or `succ(older.tag, younger.tag)` (younger is real).** The valid lanes' tags
+  then form a contiguous run. Advancing a counter "by two" needs no tag
+  arithmetic — invariants can only use the `succ` relation (`.next` is an action,
+  unusable in invariants), so the middle tag is what lets a two-instruction jump
+  be written `succ(lo,mid) & succ(mid,hi)`. In the ghost monitor, advance a
+  counter by two with `t := t.next.next` and step the trace twice when a bundle
+  of two issues.
+
+- **Per-lane data invariants are the single-issue ones indexed by lane.** Lane
+  `j` holds `st(<lane-j tag>).fetched`, its operands equal the trace's recorded
+  values at that tag, etc. A bundle *shares one shadow/speculation bit* (both
+  lanes are on the same fetch path), so `d_shadow` gates both lanes — no per-lane
+  shadow bits.
+
+- **Constrain the issued bundle enough to keep lane 1 simple, and say so with
+  invariants.** In the easy case both lanes of a dual bundle are "simple"
+  (non-branch, non-memory), and lane 0 is simple too (`issue_two` requires it).
+  State *both* — `*_valid1 -> lane1 simple` **and** `*_valid1 -> lane0 simple`.
+  The lane-0 one is easy to forget and its absence shows up as a spurious CTI: a
+  dual bundle with a *branch in lane 0* that mispredicts, whose recovery does not
+  track the PC. (Also state intra-bundle independence — lane 0's destination
+  differs from lane 1's source/dest registers — established at issue by the
+  issue predicate; lane 1's operand read needs it because lane 0 sits inside the
+  window `[commit, lane1_tag)` and the ordinary hazard-stall does not cover a
+  same-cycle sibling.)
+
+- **A one-cycle-delayed reference belongs in the array's owner, re-exported as a
+  fetch-time guarantee.** The dual fetch needs *both* fetched words coherent with
+  the trace at the *current* position `now` (not just at `mcommit`). Stating that
+  as a `cpu` invariant made the whole-machine query stop converging (Z3 churns,
+  neither proof nor CTI — the classic sign to decompose). The fix mirrors the
+  I-cache guarantee: the I-cache isolate already guarantees word-1 coherence at
+  `mcommit` (`icache_output1`); re-export the *now*-form as a `cpu` invariant
+  `fetch1_coh` that depends on `ic.icache_output1` with **zero delay** (`with
+  ic.icache_output1`). The isolate cannot prove the `now`-form itself (it does not
+  own `now`, and does not see cpu's private invariants), but cpu can, cheaply,
+  using the isolate's `mcommit`-form guarantee across the combinational fetch
+  path. With both fetched words pinned this way, PC-tracking converges.
+
+- **`res` (the ALU result) as a recorded ISA intermediate.** Recording the ALU
+  result in the ISA model / trace (`res`, computed in `prepare`) lets the WB/MEM
+  result invariants read `= st(tag).res` instead of recomputing
+  `a_val ± b_val` — one invariant per stage instead of one per opcode, and it
+  composes with the operand-tracking trick above so Z3 matches `res` symbolically
+  rather than expanding the bit-vector arithmetic.
+
+- **A parameterized `function` used in the datapath will not translate to RTL.**
+  A convenience like `function hazard_on(R) = …`, used in a wire's `definition`,
+  is rejected by `ivy_to_rtl` (a non-wire function "can reflect state updates
+  made earlier in the same action", so it is not treated as combinational).
+  Replace it with one nullary `wire` per concrete argument you actually apply it
+  to (here `hz_ea`/`hz_eb`/`hz_ea1`/`hz_eb1`). Semantically identical, but
+  RTL-translatable — and a reminder to re-verify after the swap, since it changes
+  the SMT encoding.
+
+## Out-of-order execution (Tomasulo + ROB)
+
+`ooo_cpu_ref.ivy` verifies an out-of-order core against the *same* reference
+tagging setup: the ISA model and `trace` isolate are unchanged in shape; only
+where the tags live and what they tie together changes. Lessons from stage 1
+(ALU ops, single-wide dispatch, 4-entry ROB, one ALU; the proof closed after two
+CTI rounds, both spurious: uninitialized `rob_done`, and operand-tracking guards
+that also fired for NOPs whose operands are don't-cares).
+
+- **Tag the ROB entries; the ROB is the tag run.** Each entry has a ghost
+  `rob_tag(I)`, set to `trace.now` at dispatch (where `trace.step` is called —
+  dispatch is in program order, so the trace never needs to see the
+  out-of-order execution at all). `commit` is the head's tag (`rf(R) =
+  st(commit).rf(R)`) and steps at retire. The structural facts are the
+  single-issue tag-run facts read off a circular queue: `busy(head) ->
+  rob_tag(head) = commit`, `~busy(head) -> commit = now`, `busy(I) & busy(I+1) &
+  I+1 ~= tail -> succ(rob_tag(I), rob_tag(I+1))`, and `busy(I) & I+1 = tail ->
+  succ(rob_tag(I), now)`. The occupancy itself is one bi-implication over
+  head-relative distances: `busy(I) <-> ((I-head) < (tail-head)) | (busy(head) &
+  head = tail)` — per-entry busy bits plus head/tail, with `busy(head)`
+  disambiguating full from empty. bv[2] modular arithmetic on the distances is
+  cheap for Z3.
+
+- **Characterize the rename table so no window reasoning is needed.** The
+  obvious statement — "no busy entry between `commit` and the reader's tag
+  writes R, hence `st(reader).rf(R) = st(commit).rf(R)`" — needs an induction
+  over the trace step relation across up to ROB-depth entries, which Z3 will not
+  do for you. Instead state two facts about the *current* trace position that
+  each step of dispatch/retire preserves in one ISA step:
+
+      ~rat_valid(R) -> rf(R) = st(now).rf(R)                        [rf_now_trk]
+       rat_valid(R) -> st(now).rf(R) = st(rob_tag(rat_idx(R))).res  [rat_trk]
+
+  i.e. with no in-flight writer the architectural file is already current, and
+  otherwise the youngest in-flight writer's *result* is the current value. Plus
+  the youngest-writer fact `busy(I) & writes(I) -> rat_valid(rd(I)) & (I-head) <=
+  (rat_idx(rd(I))-head)`, which is what lets retire clear the rename entry only
+  when `rat_idx = head` and know that no other busy writer remains. Every operand
+  capture case at dispatch then closes in one step: from `rf` (`rf_now_trk`),
+  from a done ROB entry (`rat_trk` + `rob_val_trk`), from the result bus
+  (`rat_trk` + the ALU-latch tracking), or pending on the writer's index.
+
+- **A pending operand points at a busy, NOT-done entry whose result it is.**
+  `busy(I) & ~a_rdy(I) -> busy(src) & ~done(src) & st(rob_tag(src)).res =
+  st(rob_tag(I)).a_val`. The `~done(src)` part is load-bearing twice: it rules
+  out the classic dangling-pointer bug (a producer retiring and its slot being
+  reallocated while a consumer still waits on it — impossible, since retire
+  requires done), and it is a *liveness guard the safety proof enforces*: if the
+  dispatching instruction missed a same-cycle result broadcast (no bypass from
+  the ALU result bus into dispatch), after the edge the producer is done but the
+  consumer is not ready, and this invariant fails. Without it, the deadlock would
+  be invisible to the inductive check.
+
+- **Operand/result tracking is guarded by what the instruction actually reads.**
+  `a_rdy(I)` is set true at dispatch for LI/NOP with a don't-care value, so
+  `rob_a_trk` must be guarded by `opcode = ADD | SUB`, not by `~LI`. The general
+  rule from the in-order designs (only claim a value equals the trace when the
+  datapath actually uses it) applies per operand here.
+
+- **The issued-but-not-done entry is exactly the ALU latch.** `busy(I) &
+  issued(I) & ~done(I) -> ex_valid & ex_idx = I` and its converse (`ex_valid ->
+  busy(ex_idx) & issued & ~done & ex_ir = rob_ir(ex_idx)`) tie the execution
+  latch to the ROB, so the completion write `rob_val(ex_idx) := ex_res` lands on
+  the right entry and `rob_val_trk` follows from the latch's operand tracking.
+  With several ALUs this becomes one such pair per unit.
+
+- **Issue selection is irrelevant to the proof; write it as nullary wires.**
+  Oldest-first selection over `head, head+1, ..` is four `rdyK` wires and a
+  priority mux — no invariant mentions it (any ready entry may issue). A
+  parameterized `ready(I)` would be cleaner but is not RTL-translatable.
+
+- **The result broadcast is not a point write — it lowers to a register bank.**
+  Tomasulo's CDB updates *every* entry waiting on the completing tag in one
+  cycle (`rob_a(I) := ex_res if (busy(I) & ~a_rdy(I) & a_src(I) = ex_idx) else
+  rob_a(I)`). That has no memory write-port form, so `ivy_to_rtl` now lowers a
+  small array whose update is not a set of point writes to one register per
+  index (see "Preparing the model for ivy_to_rtl"). Arrays that *are*
+  point-written (`rob_busy`, `rob_val`, `rat_*`, `rf`) stay memories — mixing is
+  fine.
+
+- **Speculation in an OoO core: resolve at retire, name the mispredicted entry
+  (stage 2, `ooo_cpu_ref.ivy`; the ALU-only stage 1 is frozen as
+  `ooo_cpu_alu_ref.ivy`).** A BEQZ is a one-operand ALU op; the ALU stores the
+  outcome (`rob_take`), the fetch-time prediction rides in the entry
+  (`rob_pred`), and the branch is resolved when it reaches the head: on a
+  mismatch retire squashes the *entire* ROB (everything is younger), clears the
+  rename table wholesale, kills the ALU/fetch latches and redirects the pc. No
+  rename checkpoints are needed, and the proof is the in-order shadow discipline
+  transplanted: `rob_shadow(I)` per entry, `d_shadow` for the fetch latch,
+  `spec_wrong`, plus a ghost **`mp_idx`** naming the mispredicted branch's
+  entry. The structural facts: `spec_wrong -> busy(mp) & ~shadow(mp) & branch &
+  pred(mp) ~= st(tag(mp)).take_branch`; its converse (any non-shadowed
+  mispredicted entry *is* mp_idx, so there is exactly one); shadowed entries are
+  a suffix (`shadow(I) & I+1 ~= tail -> shadow(I+1)`) strictly younger than
+  `mp_idx`; `busy & shadow -> spec_wrong`; and `d_valid -> d_shadow = spec_wrong`.
+  From these, `busy(head) -> ~shadow(head)` (a wrong-path instruction never
+  retires — the core obligation) and, at the squash, "the youngest non-shadowed
+  entry is the head" gives `commit.next = now` and the redirect
+  `pc = st(now).pc`. The rename invariants are simply guarded by `~spec_wrong`
+  (only wrong-path instructions dispatch while it holds, and the squash clears
+  the table). Every tag/data invariant gets a `~rob_shadow(I)` guard; the
+  tag-chain facts skip shadowed entries. `pc_trk` has one extra case: when the
+  fetch latch holds a not-yet-dispatched branch the pc is its *predicted*
+  successor (`st(now).target if d_pred else st(now).pc+1`) — the ghost only
+  learns of the mispredict at dispatch. Closed on the first CTI round; the one
+  bug was **reading `d_pred` in the ghost monitor without `old`** (the datapath
+  monitor may run first and overwrite it with the *next* fetch's prediction) —
+  the skill's "read real state via `old` in the monitor" rule, again.
+
+- **Memory ops at the head need no memory rename table (stage 3a).** With no
+  LD/ST queue, LD/ST/FLUSH entries are never issued to the ALU (`issued` and
+  `done` both stay false — getting `issued` right cost a CTI round); the head
+  entry, once its operands are ready, drives the `idcache` request wires and
+  retires in the same cycle idc serves it, so `idc.mem/ddirty =
+  st(commit).mem/ddirty` *exactly* and a load reads `st(commit).mem` at
+  `st(commit).mem_addr` (`load_coh`, a derived invariant `with idc.data_output`).
+  Recording the loaded value in the ISA's `res` makes a LD just another renamed
+  writer, so `rat_trk`/`rob_val_trk` are unchanged. A retiring load is a second
+  broadcast source: write the ALU and load broadcasts as ONE array statement
+  (pre-state reads) and add a dispatch bypass for the retiring load, exactly as
+  for the ALU bus. Fetch coherence across the window `[commit, now)` closes with
+  two one-step invariants instead of an unrolling: a FLUSH stalls fetch from the
+  cycle it is fetched until it retires (so `busy(I) & flush(I) -> I+1 = tail &
+  ~d_valid`), and then `~flush_pending & store(I) in flight ->
+  st(now).ddirty(addr(I))` and `~flush_pending & ~st(now).ddirty(A) ->
+  st(commit).mem(A) = st(now).mem(A) & ~st(commit).ddirty(A)`. The IF/ID word
+  fetched from a *dirty* address is garbage until it executes and sets `error`,
+  so `d_ir_trk`/`pc_trk` carry an extra `~st(now).ddirty(st(now).pc)` guard (the
+  in-order designs got this for free because their ID tag was already past
+  `now`). CTI lesson: the pending-operand invariant must say the producer is a
+  *register writer* — otherwise the prover imagines a consumer waiting on a
+  store, which retires without broadcasting.
+
+- **A LD/ST queue needs the memory analogue of the rename table — as ghost
+  state (stage 3b).** Once a load may perform before it is the head, its value
+  comes from `idc.mem = st(commit).mem` but its reference value is
+  `st(tag).mem(addr)` at its *own* tag, and closing that gap by unrolling the
+  window `[commit, tag)` does not scale. State it inductively instead, exactly
+  as for registers: ghost `mrat_valid(A)/mrat_idx(A)` = the youngest in-flight
+  correct-path store to A (set in the monitor at a store's dispatch from the
+  *reference's* address `st(now).mem_addr` — the ghost need not wait for the
+  datapath to compute it; cleared when that store retires or on squash), with
+  `~mrat_valid(A) -> st(now).mem(A) = st(commit).mem(A)` and `mrat_valid(A) ->
+  st(now).mem(A) = st(tag(mrat_idx(A))).b_val` plus `mrat_youngest`. Then per
+  load a ghost binding `ld_src_valid(I)/ld_src(I)` := mrat at the load's
+  dispatch (the youngest OLDER store to its address), released by a ghost
+  broadcast when that store retires, with `~ld_src_valid(I) ->
+  st(tag(I)).mem(a) = st(commit).mem(a)`, `ld_src_valid(I) -> st(tag(I)).mem(a)
+  = st(tag(ld_src(I))).b_val`, and the two side conditions that make them
+  inductive under retire: `ld_src` is the youngest older store to `a`
+  (`ld_src_youngest`), and an unbound load has *no* older in-flight store to
+  `a` (`ld_nosrc_nostore`). The datapath fact that ties it together is
+  `mem_sel_oldest`: every busy entry older than the selected memory op is done
+  or not a memory op — a pure statement about the priority scan, stated as an
+  invariant so the prover need not re-derive it. With stores never `done`
+  (they perform as they retire), a bound load's source is an older unperformed
+  memory op, so a performing load is unbound and `load_coh` gives its reference
+  value. The whole stage closed after one CTI round (`rob_done_issued` must
+  exempt loads, which the memory port completes without an ALU issue). The
+  design also frees stage 3a's "in-order at the head" restriction for free: the
+  LD/ST queue *is* the ROB order plus a "oldest unperformed memory op" scan — no
+  separate queue storage.
+
+- **Store-to-load forwarding needs no new ghost state — tie the datapath's
+  search to the ghost binding with derived invariants (stage 3c).** The
+  forwarding source the hardware finds (the youngest older unperformed store
+  with a known matching address, over the head-relative positions) must equal
+  the ghost `ld_src`. State it as `derived invariant [sel_fwd_src] fwd_perform &
+  ~shadow(fwd_sel) -> ld_src_valid(fwd_sel) & ld_src(fwd_sel) = fwd_src &
+  b_rdy(fwd_src)` and `[sel_nofwd] (cache-slot load) -> ~ld_src_valid`, each
+  `with` a purely combinational derived fact about the scan (`fwd_older_st`:
+  every store older than the selected load has a known address — i.e. no
+  blocker). They follow in one state from `rob_a_trk` (known addresses equal
+  the reference's), `ld_src_youngest`, `ld_src_trk` and `ld_nosrc_nostore`;
+  then `rob_val_trk` closes via `rob_b_trk` on the source. Zero CTIs. Two
+  design lessons: (1) with a *single* oldest-first memory slot, forwarding never
+  fires in practice — a store at the head missing in the cache owns the slot
+  and the dependent load queues behind it — so give forwarding its own slot
+  (it needs no cache access) and let the two perform in parallel: a third
+  result broadcast and dispatch bypass, no new state; (2) a test program has to
+  be *shaped* to exhibit forwarding (the store stuck behind older non-memory
+  work while its data is ready — here an ADD waiting on a cold-missing load),
+  and reading `fwd_perform` in the simulation is the only way to know it did.
+
+- **Dual dispatch into a ROB is cheap for the proof (`ooo_cpu_alu_dd_ref.ivy`,
+  ALU-only, OK first run, ~2 min).** Unlike the in-order dual-issue design, no
+  lane-1 "middle tag" or per-lane invariants are needed: the ROB entries already
+  carry their own tags, so a dual dispatch is just two allocations with `rob_tag
+  := now; trace.step` twice, and the existing per-entry invariants cover both.
+  Intra-bundle RAW needs no bypass: a lane-1 source written by lane 0 binds to
+  lane 0's new entry (`d1_a_idx = rob_tail`, pending), and `rob_a_pend` closes
+  from the step relation between the two new tags. Lane 1's rename write comes
+  second and wins a shared destination (`rat_youngest` holds). The only new
+  invariants are on the fetch latch: `d_valid1 -> d_valid0`, `pc_trk` with a
+  0/1/2 offset, and the lane-1 word stated as `st(now).mem(st(now).pc + 1)`
+  (the trace has not recorded the lane-1 state yet; it becomes
+  `st(now.next).fetched` by the step relation at dispatch). Dispatch is
+  all-or-one: both lanes when two entries are free, else lane 0 alone with lane
+  1 shifted down and no refetch — the same split-on-hazard fallback as the
+  in-order design. **Dual retire** is as cheap: retire head and head+1 when
+  both are done (the younger's rf write comes second and wins; each clears its
+  own rename entry; `commit` steps twice), with no new invariant. What it DID
+  do is make one consecution query heavy — `rf_now_trk` now sees two rf writes
+  and two trace steps in one transition — heavy enough that a plain `ivy_check`
+  sat on it for 6+ minutes while `ivy_check isolate=this trace=true
+  shrink=false` (the standard command line for these designs) finished the
+  whole file in 1-4 min (solver variance on this file is ~2x run to run, so
+  compare timings only under identical options). Zero-delay `derived invariant`s
+  naming the retiring entries' array reads against the trace (`retire -> r_val =
+  st(commit).res`, `retire1 -> succ(commit, rob_tag(head1)) & r1_val =
+  st(rob_tag(head1)).res`, and the `r_ir`/`r1_ir` counterparts) make even the
+  plain mode pass — the array-read rule from the "Gotchas" section, applied to
+  the retire side. **On the full design** (`ooo_cpu_mem_dd_ref.ivy`: caches,
+  branches, memory ops at the head) the same recipe passed first run (~20 min)
+  with these additions: dual fetch through `idc`'s two lanes gated by "lane 0
+  not predicted taken and not a FLUSH" (so `flush_youngest` survives and pc+1
+  is really the successor); a lane-1 BEQZ predicted *not taken* implicitly,
+  its ghost check `d1_branch & st(now).take_branch` placed *after* the first
+  `trace.step` so `now` is the lane-1 state; lane 1's `rob_shadow` taken after
+  lane 0's check (a mispredicting lane-0 BEQZ shadows its own lane 1) and
+  `d_shadow := spec_wrong` on shift as well as on fetch; `d_ir1_trk` stated as
+  `st(now).mem(st(now).pc + 1)` guarded by `~ddirty(pc + 1)` with a
+  zero-delay `fetch1_coh` from `idc.fetch_output1`; and the second retiree
+  restricted to done non-branches with no squash under way (a memory op is
+  never done off the head, so it never retires second — no second data port
+  needed).
+
+- **Stage-restricted ISA.** Stage 1 disables LD/ST/BEQZ/FLUSH by making them
+  NOPs *in the ISA model* (and dropping `ddirty`/`error`/`mem_addr`/
+  `take_branch`), so the proof is over all programs and needs no `~error`
+  guards. Later stages restore the full ISA; the cpu-side invariants are then
+  re-guarded as in the cache designs.
+
+## Ghost values instead of tags: a ROB needs no trace history
+
+`ooo_cpu_mem_alt_ref.ivy` proves the stage-3a datapath **10x faster** (20 s vs
+~3.5 min) with no counterexample rounds, by dropping the recorded trace
+altogether (idea from the user; compare `doc/examples/cav2020/cav-18/
+tomasulo_inv.ivy`). Reference tagging with a history is what an *in-order
+pipeline* needs, because a stage register holds only a fragment of an
+instruction and the recorded state at its tag supplies the rest. A ROB entry
+already holds the whole instruction, so:
+
+- **The reference is one state, `arch`, after every dispatched correct-path
+  instruction**; `trace.step` = `arch.step; arch.prepare`. Before the step,
+  arch's prepared intermediates are the correct values *of the instruction
+  being dispatched*, and the ghost copies them into the new entry: `g_ir`,
+  `g_pc`, `g_a`, `g_b`, `g_res`, `g_take`. No `tag` sequence, no `st(T)`, no
+  `commit`, none of the trace's consistency/step-relation boilerplate — only
+  arch's own decode facts (`arch.a_val = arch.rf(arch.ra)`, …) remain.
+- **Per-entry invariants compare datapath to ghost**: `rob_a = g_a` when ready,
+  `rob_val = g_res` when done, `rob_take = g_take`, pending operand ⇒
+  `g_res(src) = g_a(I)`; plus *consistency* of the ghost values (`g_res` is the
+  ALU function of `g_ir/g_a/g_b`; `g_take = (BEQZ & g_a = 0)`), which is what
+  lets the ALU's computation from tracked operands land on `g_res`.
+- **Architectural state goes through ghost rename tables.** `grat` for
+  registers — `~grat_valid(R) -> rf(R) = arch.rf(R)` and `grat_valid(R) ->
+  arch.rf(R) = g_res(grat_idx(R))` — replaces both `rf_trk` (the value at
+  commit) and `rat_trk`; the *real* table equals it while `~spec_wrong` and is
+  otherwise polluted by wrong-path dispatches, which is why the ghost is needed
+  at all (the real one loses the youngest correct-path writer once a shadowed
+  writer overwrites the entry). `mrat` + per-load `ld_src` for memory exactly
+  as in stage 3b (`unbound -> g_res = idc.mem(addr)`, `bound -> g_res =
+  g_b(src)`; a retiring store releases its loads). A ghost `fl` for the single
+  in-flight FLUSH relates `idc.ddirty` to `arch.ddirty` (`~mrat_valid(A) & ~(fl
+  to A) -> idc.ddirty(A) = arch.ddirty(A)`; `mrat_valid(A) & ~(fl to A) ->
+  arch.ddirty(A)`), which is what fetch coherence and the `~error` guard need.
+- **Speculation is unchanged** (`rob_shadow`, `d_shadow`, `spec_wrong`,
+  `mp_idx`) plus one fact: while `spec_wrong`, `arch` is exactly the state after
+  the mispredicted branch, so `arch.pc` is its true successor — the redirect.
+- Same `~arch.error` guard on every implementation-vs-reference invariant.
+
+- **It scales.** `ooo_cpu_fwd_alt_ref.ivy` (the stage-3c datapath: LD/ST queue,
+  forwarding, two memory slots) proves in **32 s** vs 17.5-39 min tag-based —
+  a 30-70x speedup — with the forwarding facts carried over verbatim: every
+  `trace.st(rob_tag(X)).field` simply becomes the ghost field `g_field(X)`,
+  `trace.st(trace.now).field` becomes `trace.arch.field`, and the tag-run
+  invariants (`rob_head_tag`, `rob_chain`, `rob_youngest`, `rob_tag_range`,
+  `rf_trk`, `idc_mem_rel`) are deleted rather than translated. The
+  transformation is mechanical enough to script. Dual dispatch/retire
+  (`ooo_cpu_mem_dd_alt_ref.ivy`): 20 min -> 33 s, and the retire-value
+  `derived` facts the tag proof needed to keep `rf_now_trk` tractable are simply
+  gone — there is no history for the query to see through. Lane 1's ghost values
+  are copied *after* the first `trace.step` (arch is then exactly lane 1's
+  state), which is also where a lane-1 branch's implicit not-taken prediction is
+  checked. The full combination — forwarding + two memory slots + dual
+  dispatch/retire (`ooo_cpu_fwd_dd_alt_ref.ivy`) — proves in **77 s**, first
+  run; lane 1's operand capture simply adds the intra-bundle binding in front of
+  the same three bypasses lane 0 has. A **second ALU**
+  (`ooo_cpu_2alu_dd_alt_ref.ivy`) is a copy of the latch invariants plus
+  `ex_distinct` (the two latches never hold the same entry) and `issued_in_ex`
+  reading "in one of the two latches"; its result is one more broadcast source
+  and dispatch bypass. First run, zero CTIs, 3.5 min — the first ghost-value
+  proof over a minute, since every operand-capture and broadcast query now has
+  four sources.
+
+Use this style for anything ROB-based; keep the trace history for in-order
+pipelines, where it is the natural fit.
+
+## Common hardware design issues
+
+Verification surfaces genuine design bugs, not only proof-engineering ones. When
+designing a cache, **explicitly consider the collision of a fill and a FLUSH (or
+any invalidation) on the same address.** A multi-cycle fill reads memory over
+several cycles; if a FLUSH of the address being filled lands in that window, the
+word in flight — or the miss word already installed — is stale w.r.t. the
+freshly-flushed memory, and installing or forwarding it violates coherence. The
+two-word I-cache needed guards on the *read* paths (don't forward a stale word)
+and on the *write* path (don't let two writers collide on the array), each found
+from a counterexample:
+
+  1. **Void the fetch bypass** when a FLUSH this cycle targets the fill address
+     (`~(flush_valid & flush_addr = ifill_addr)` on `f_bypass`), so fetch misses
+     and refetches rather than forwarding the stale word being returned. Easy to
+     forget — the install and the fetch consume the same returned word by two
+     different routes; this read-path guard is what finally closed `icache_output`.
+  2. **Refetch the miss word** when a FLUSH hits the already-installed miss word of
+     a half-filled line (`flush_addr = ifill_miss -> ifill_on := false; ifill_got
+     := false`), so the machine rereads it from now-current memory. (The CTI showed
+     the stale address is `ifill_miss`, the cached word — not `fetch_addr`.)
+  3. **Give FLUSH blanket priority over the fill *install*** — suppress the install
+     on *any* flush cycle (`if ifill_on & ifill_data_valid & ~flush_valid {
+     …install… }`; the fill holds, `ifill_on` stays set, and the memory port
+     re-reads and reinstalls next cycle). This write-path guard **subsumes the
+     earlier per-address install guards**: both "ignore the returned word when the
+     FLUSH targets the fill address" and the subtler *same-line, different-address*
+     collision — a FLUSH evicting a whole line (`icache(fl_index) := 0`) while the
+     fill installs a half-line at the *same index* but a *different address*, both
+     writing the array in one edge and the eviction clobbering the just-installed
+     half-line. Keying the guard on address equality misses that case; keying it on
+     the shared resource (any flush suppresses any install) covers it and is
+     simpler. *Collision guards belong at the granularity of the shared resource —
+     here the icache array — not the logical address; and "one writer wins the whole
+     cycle" is often the cleanest statement of that.*
+
+**Why blanket priority rather than a same-line address guard — the `ivy_to_rtl`
+single-write-port limitation.** `ivy_to_rtl` groups `after posedge` writes to a
+memory into write ports, and originally emitted **one** port, so two writes to the
+array at *different* addresses in one cycle silently dropped one. The I-cache hit
+this exactly: the decoupled fill FSM can install a line the same cycle a FLUSH
+evicts a *different* line — two `icache` writes, one port, one lost. A
+combinational equivalence check against the golden model exposed it as all 576
+icache bits unproven while everything else (CPU, D-cache, main memory, rf,
+predictor) matched. Two complementary fixes: (a) `ivy_to_rtl` now emits multiple
+*mutually-exclusive* write ports when it can prove the write sets disjoint; (b)
+better, keep same-cycle writers to a memory mutually exclusive by design (FLUSH
+priority) so a single port is provably correct. Prefer (b) — the disjointness the
+translator needs is exactly what the design rule guarantees. (The inline
+`5stage_cache_cpu_ref` and the D-cache never tripped this: their icache writes were
+already mutually exclusive.)
+
+The general lesson: for any in-flight, multi-cycle operation (fill, prefetch,
+write-back), enumerate the invalidations that can occur *during* it and decide,
+per case, whether in-flight data must be dropped, re-issued, or is safe — and
+whenever two updates can hit the *same array* in one cycle, make them mutually
+exclusive so the emitted RTL's write port is sound.
+
+Two wiring lessons from connecting the I-cache into the decomposed pipeline:
+
+- **Only wire a cross-stage input to a signal that carries a tracking invariant;
+  fix a non-local-reference failure by restoring tracking, NOT by widening `with`.**
+  If you drive one stage's input from another stage's *internal* wire that has no
+  invariant relating it to the trace, the consuming isolate sees it as a free
+  variable and the proof invents adversarial values. Example: wiring the I-cache's
+  `flush_valid` to `ex_stage.m_opcode` (an internal decode wire, untracked) failed;
+  wiring it to `ex_stage.m_ir` — the EX/MEM register, which *does* have a tracking
+  invariant — fixed it (the same mistake recurred with `main_mem.dwrite_en` keyed
+  on `m_opcode`, fixed the same way via `m_ir`). When the signal you want is just a
+  bit-field of a tracked register, read the register (and slice it) rather than
+  exposing a new untracked wire. **The important corollary: when an invariant fails
+  because it references a non-local, untracked signal, do NOT add that signal's
+  isolate to the `with` clause to make the reference resolve — that couples the
+  proof non-locally. Instead restore locality: add a tracking invariant to the
+  interface, or rewire the input to a signal that already has one.** For a simple
+  5-stage pipeline the shortcut would work, but keeping each proof local is what
+  scales to complex architectures.
+
+- **Extracting a shared resource into its own isolate is mostly re-wiring; the
+  breakages are locality, not missing lemmas.** Moving main memory and its
+  two-cycle fill port into a `main_mem` isolate made `icache_input` fail, and it
+  was tempting to blame a missing invariant relating the port's latched `mfa` to
+  the interface ghost `ifill_addr_old` — but that bridge already existed
+  (`mfa_track`), and an extra copy was not needed. The actual fixes were purely
+  local-coupling ones: a non-local untracked reference (`dwrite_en` keyed on
+  `m_opcode`, fixed via `m_ir` per the bullet above) and a couple of missing
+  `with` entries causing interference errors. Lesson: after such an extraction,
+  first restore the `with`/tracking hygiene the move disturbed before adding any
+  new invariant — the existing interface invariants usually still suffice.
+
+- **Fold a stage's stall conditions into one named wire and use it everywhere.**
+  When a stage has several stall/no-issue conditions (here fetch: `~ex_stall &
+  ~flush_in_pipe & ic.fetch_valid`), define their conjunction/disjunction once as a
+  global wire and reference that wire at every site (the fetch gate, the trace-step
+  gate, each fetch_track forward's guard). Otherwise adding a new stall condition
+  (like the I-cache miss) means editing every site, and it is easy to miss one —
+  which shows up as a subtle CTI, not a compile error.
+
+## A safety proof is not a live design — simulate
+
+Reference tagging proves *safety* (nothing bad relative to the ISA). It says
+nothing about *liveness*, and the isolate machinery can hide a dead design.
+
+- **All-invariants-pass does not mean the machine does anything.** The whole
+  `cpu.ic` proof passed while the fill state machine was actually *stuck* — a
+  missing `(off,got) -> (on,got)` transition meant no fill ever completed, so the
+  cache never held a full line. A machine that never leaves a coherent
+  idle/half-filled state trivially satisfies every coherence invariant. Adding
+  the transition made the fill machine live *and* was the state redefinition that
+  made `held_addr` inductive (above) — one edit fixed both.
+
+- **Inductive "probe" invariants are not reachability tests.** Tempted to check
+  whether a state is reachable by asserting its negation and seeing if it fails?
+  Don't: `ivy_check check=X` assumes *every other* listed invariant in the
+  pre-state — including any hand-added probes, even false ones — so the probes
+  contaminate each other and the result answers "is X implied by the invariant
+  set under one step", not "is state S reachable". Probing `~ifill_got` this way
+  falsely suggested the fill machine was unreachable (proof vacuous); it was not.
+
+- **Simulate to settle liveness and non-vacuity — it is the ground truth the
+  inductive checker cannot give.** Because the emitted RTL is real hardware, run
+  it: `sim_cpu.sh <design> [prog.hex] [cycles] [extra_signals]` emits RTLIL,
+  injects a program into `\mem` at the RTL boundary (via `load_program.py`, so
+  the program stays *out* of the Ivy source — main memory is uninterpreted, and
+  the proof still holds for every program), runs `yosys sim`, and prints the pc
+  trace plus any extra signals per cycle. It is generic across same-ISA designs
+  with unified memory in `cpu.mem` (it keys only on an 8-bit `pc` and the `\mem`
+  array). Passing `"ifill_on,ifill_got,mbusy"` showed the full four-state fill
+  cycle firing on every line — proof-positive of liveness that no invariant
+  check surfaced. Make a quick simulation a routine companion to the proof.
+
+## Packaging a verified block as a reusable `module isolate`
+
+A verified block (e.g. the I/D-cache + main-memory subsystem) can be repackaged
+as a **`module isolate`** — a template for an isolate — so it drops into any
+design with an assume/guarantee contract, using the `require`/`provide` feature
+(`require { invariant [a] ... }` states an assumption the module makes; a parent
+discharges it with `provide inst.a [with ...] [using ...]`). Two lessons from
+building the generic `idcache` module (`doc/examples/hardware/idcache.ivy`,
+disentangled from `5stage_cache_cpu_dec.ivy`; its spec is stated over the
+module's own abstract `mem`/`ddirty` rather than an ISA trace, so there is no
+`error` flag and the internal invariants simplify):
+
+- **There is no name for the module *instance* inside the template — make one
+  with `alias self = this`.** The nested isolates (`main_mem`/`ic`/`dc`, and
+  especially the interface isolates `mem_ic`/`mem_dc`) need to name the whole
+  instance in their `with` clauses — the module analog of `with cpu` (so
+  `posedge` counts as their action; see the `with cpu` misfeature above). But the
+  instance name (`dut`) is only chosen at instantiation, and `this` written in a
+  *nested* isolate's `with` resolves to that nested isolate, not the module. Fix:
+  put `alias self = this` at the top of the module body, and write `with self,
+  …` in the inner isolates. (An inner isolate whose `this` *is* the module —
+  e.g. `main_mem` closed at the module's top implementation level — can use `with
+  this`; the wrapper isolates one level deeper need `self`.)
+
+- **Put the interconnect wiring in the module's *normal* section, NOT inside
+  `implementation` — otherwise the sub-blocks cannot see it and their inputs go
+  free.** The `definition`s that wire the sub-blocks to each other and to the
+  module's interface (`definition dc.is_flush = flush_req`, `definition read_data
+  = dc.ld_data`, …) must be visible to every sub-block via `self`/`this`. In the
+  non-modular CPU this was automatic — the wiring sat in `cpu`'s normal section,
+  visible to anyone with `with cpu`. Inside a `module isolate`, wiring placed
+  *within* the `implementation { }` block is **not** delivered to the sub-blocks
+  through `self`, so each sub-block treats its wired inputs as free — decoupled
+  from the interface *and* from the abstract spec state. Symptom: a consecution
+  CTI where a wired-equal pair disagrees (here `dut.dc.is_flush = true` while
+  `dut.flush_req = false`), which lets `one_data_op` no longer constrain the
+  decode and breaks the entire coherence chain (mem_track / dc_val_ok / dc_ddirty
+  / hard / icache_input / dcache_output all FAIL at once). Fix: move the
+  interconnect `definition`s out to the module's normal section (after the
+  `implementation`/`private` blocks close). Every failure clears together. Cost:
+  the wiring becomes visible *outside* the module too — an encapsulation leak
+  that is harmless here (a future Ivy feature may hide it), but note it.
+
+- **CLI nits that cost time here.** `ivy_check`'s `key=value` options must come
+  **before** the filename (`ivy_check check=… trace=true file.ivy`; options after
+  the file print the usage message), and `check=` wants the **full hierarchical**
+  invariant name (`check=dut.dc.dc_ddirty`, not `check=dc_ddirty`).
+
+## Preparing the model for ivy_to_rtl
+
+The datapath must be free of ghost/abstract constructs:
+
+- **Keep all ghost updates in `specification`.** Tag counters, shadow bits, and
+  `trace.step` go in the ghost `after posedge` inside `specification { }`, never
+  in the datapath `after posedge` — otherwise the cpu is seen writing
+  `trace.st` and translation reports an interference error. (Read the real
+  validity bits in that ghost monitor via `old` so it is insensitive to monitor
+  ordering.)
+
+- **In the MEM stage, read before you write.** Latch the load value
+  (`w_val := mem(m_addr)`) *before* performing the store (`mem(m_addr) :=
+  m_store`). A MEM instruction is a load or a store, not both, so this is
+  behavior-preserving, and it keeps the load a function of the *current* memory
+  — otherwise `w_val` depends on `new_mem`, which has no RTL form.
+
+- **No uninterpreted functions in the datapath.** An arbitrary function used in
+  hardware logic has no RTL realization. Either expose it as an `import wire`
+  top-level input, or — better when it is a real component like a branch
+  predictor — put it in its own isolate with wire I/O and connect it in the
+  parent (see the predictor bullet under "speculation"); its hidden
+  implementation is what lets the CPU proof treat its output as arbitrary.
+
+- **State arrays must be point-written.** Cache/memory arrays translate to RTLIL
+  memories, so every write must be to a single index (`dcache(idx) := ...`),
+  never a whole-array assignment in the clock logic (that has no single-cycle RTL
+  form). Power-on `after init` may assign the whole array a constant
+  (`valid(I) := false`) or a per-index function — that becomes a `$meminit`.
+  Writing an array in several sequential branches of one clock action is fine
+  (each is a point write); it composes to the memory's write port.
+  **Exception — small arrays with a non-point update become register banks.** If
+  the update cannot be decomposed into point writes (a broadcast `rob_a(I) :=
+  v if cond(I) else rob_a(I)`, or an index test that is not an equality) and
+  the array has at most `BANK_MAX_ENTRIES` (16) entries, `ivy_to_rtl` emits one
+  synchronously-reset flip-flop per index (`rob_a_0..rob_a_3`), each with the
+  update body instantiated at its constant index; reads at a variable index
+  become a mux tree on the index bits, reads at a constant index the element
+  net, and reads of a mid-state copy (`__m_arr(i)`, from an earlier write in the
+  same action) are inlined by substitution. This is the natural RTL for a
+  reservation-station file. Larger non-point updates are still an error.
+  (Validated: old-vs-new translator output on `pipe_cpu_ref` is combinationally
+  equivalent under `rtlil_eqv`; the OoO CPU's RTL simulates correctly.)
+
+- Translate with `ivy_to_rtl <file>.ivy` and sanity-check the RTLIL with
+  `yosys -q -p "read_rtlil <file>.il"`.
+
+- **Inject the program at the RTL boundary, not in the Ivy source.** Because main
+  memory is emitted with no `$meminit` (its init function is uninterpreted), a
+  program is supplied for simulation by patching a `$meminit` for `\mem` into the
+  netlist — that is what `load_program.py` does, and what `sim_cpu.sh` wraps
+  together with `yosys sim` (see "A safety proof is not a live design"). The Ivy
+  model — and its proof — stay program-independent.
+
+- **Equivalence-check against a golden model (optional, strong).** Because the
+  emitted RTL is real hardware, you can cross-check it against an independent
+  hand-written SystemVerilog model whose register/memory/port names match the Ivy
+  model. This is a *second, independent* correctness signal (it catches
+  `ivy_to_rtl` bugs and modeling slips the Ivy proof cannot), and it is how the
+  single-write-port limitation above was found. Worked goldens:
+  [cpu_golden.sv](cpu_golden.sv) for the cache CPU, `cpu_gen_golden.sv` for the
+  module-based `5stage_gen_cache_cpu_ref`, and `dual_issue_golden.sv` for the
+  dual-issue CPU (the last is WIP — see the register-boundary caveat below).
+
+- **Prefer the combinational, state-independent check (`rtlil_eqv`).** The goal is
+  *per-cycle* equivalence: from **any** equal register state (not just reachable
+  ones), the two designs compute the same next state and outputs. `rtlil_eqv
+  <config>.ileq` (`ivy/ivy_rtlil_eqv.py`, installed as a console script) does this
+  directly: yosys lowers each `.il` to AIGER (FFs become uninitialized latches =
+  cut points), it checks that inputs/outputs/registers match one-to-one by name,
+  builds a name-matched combinational miter (clk and reset paired across the two
+  designs), and `abc` proves it or returns a counterexample it maps back to the
+  offending cone. The `.ileq` config gives, per design, the `.il` file, top
+  module, clock name, and reset name. (If `rtlil_eqv` is not on PATH, run
+  `python3 -m ivy.ivy_rtlil_eqv <cfg>.ileq` from the repo root.) Registers are
+  paired by *any shared alias name*: yosys names a flip-flop bit by whichever
+  public wire it picks (the register `d_ir` or a wire sliced from it, `d_opcode`),
+  nondeterministically per run, so the checker collects every name of each
+  position and pairs positions that share one. Unnamed latches with **no
+  fanout** are ignored — yosys's `proc` leaves such dead temporaries behind for
+  every Verilog memory write (`$memwr$..._EN/_ADDR/_DATA`), and on a design
+  with no outputs `opt_clean` cannot sweep them without sweeping everything.
+  Unnamed *live* latches remain an error. Because it cuts at the registers, it ignores
+  reachability *and* initial values — which sidesteps the init-attribute asymmetry
+  (ivy_to_rtl resets via per-register `rst`-muxes and emits no FF `init`
+  attributes; a golden's `initial` blocks do) that makes arbitrary-state checkers
+  report spurious mismatches. Uses `submodules/abc` + `submodules/aiger`
+  (overridable via `IVY_ABC`/`IVY_AIGER`/`IVY_YOSYS`).
+
+- **Worked, passing goldens: `ooo_alu_golden.sv` ↔ `ooo_cpu_alu_ref.ivy` (524
+  cones), `ooo_beqz_golden.sv` ↔ `ooo_cpu_beqz_ref.ivy` (605 cones, the predictor
+  as a `bp` submodule whose `bht` pairs by name after flattening) and
+  `ooo_mem_golden.sv` ↔ `ooo_cpu_mem_ref.ivy` (stage 3a; 5947 cones incl. the
+  idcache's `real_mem`/`icache`/`dcache` and fill registers, ~2 min) and
+  `ooo_lsq_golden.sv` ↔ `ooo_cpu_lsq_ref.ivy` (stage 3b, the LD/ST queue; same
+  boundary, ~80 s) and `ooo_fwd_golden.sv` ↔ `ooo_cpu_ref.ivy` (stage 3c,
+  store-to-load forwarding with two memory slots; same boundary, ~2.5 min) and
+  `ooo_mem_dd_golden.sv` ↔ `ooo_cpu_mem_dd_ref.ivy` (3a + dual dispatch/retire;
+  the boundary grows only by the second fetch lane `d_ir1`/`d_valid1`, ~2 min) and
+  `ooo_fwd_dd_golden.sv` ↔ `ooo_cpu_fwd_dd_alt_ref.ivy` (forwarding + dual
+  dispatch/retire, ~3.5 min — the ghost-value proof style leaves the datapath and
+  hence the golden untouched) and `ooo_2alu_dd_golden.sv` ↔
+  `ooo_cpu_2alu_dd_alt_ref.ivy` (+ a second ALU: five more registers, ~3.5 min)** —
+  run `check_ooo_golden.sh [design] [golden]`; mutation-tested (an ALU, bypass,
+  squash-condition, redirect, predictor-saturation, memory-stall, load-bypass,
+  FLUSH-fetch-stall, reset-list, speculative-store, memory-op-selection-order,
+  load-completion, forwarding-source-priority, missing-blocker or
+  forward-before-data-ready bug in the golden is reported on the registers it
+  feeds). Once the stage-1 golden passed, stages 2, 3a, 3b and 3c each passed on
+  the first run — the boundary rules below are the whole story. The idcache golden modules
+  (`idcache`/`main_mem`/`ic`/`dc`) are reused verbatim from `dual_issue_golden.sv`
+  except that their `if (rst)` lists had to be *completed*: the address latches
+  `mfa`, `ifill_miss`, `dfill_miss` reset to 0 too (ivy_to_rtl resets every
+  scalar), which the dual-issue golden omits. Lessons from getting it to pass:
+  - *Give the Ivy clock action nonblocking semantics first.* Ivy's action is
+    sequential: a later block reads what an earlier block wrote in the same
+    cycle. That is invisible on reachable states but a combinational check from
+    *arbitrary* states sees it (e.g. the broadcast reading `rob_busy(head)` just
+    cleared by retire). Order the blocks so no block reads an array an earlier
+    block wrote, and route the remaining reads through wires (`r_val =
+    rob_val(rob_head)`, `r_rat_clear`), which are frozen at the pre-state. Then
+    the golden is a line-by-line transcription. Re-run `ivy_check` after the
+    reorder (it is semantics-preserving on reachable states, but check).
+  - *The RTL boundary includes the translator's choices:* every scalar register
+    is reset by `rst` (to its `after init` value, else 0 — including `d_ir`,
+    `ex_ir`, `ex_a`, `ex_b`, which Ivy never initializes); banked arrays are
+    per-index registers `rob_a_0..3` reset to 0; point-written arrays are
+    memories with a power-on `$meminit` and NO `rst` reset — so the golden
+    resets scalars/banks under `if (rst)` and gives memories only `initial`
+    blocks.
+  - *Never call a Verilog function inside the always block* — yosys
+    synthesizes its `$result`/argument locals into stray registers (16+2 bits
+    per call) that break the boundary. Call it in a `wire` assignment and use
+    the wire.
+  - *Do NOT run `memory_dff` on the golden.* It merges the read-side registers
+    (`ex_ir <= rob_ir[issue_idx]`) into synchronous read ports, which
+    `memory_map` then lowers into anonymous registers — and it does not even
+    remove the dead write-port temporaries. Plain `read_verilog -sv; proc;
+    write_rtlil` is the right elaboration; the checker ignores the dead
+    temporaries itself.
+
+- **The golden must have the *same register boundary* as the Ivy model, or the
+  combinational check cannot pair the state.** `rtlil_eqv` matches registers by
+  name; if the golden stores different state it reports an incomplete match rather
+  than a false pass. This is a real design constraint on the golden, not a tool
+  limitation: e.g. the dual-issue golden initially stored the raw instruction word
+  per stage (`e_ir`/`d_ir`…) and re-decoded combinationally, while the Ivy model
+  stores *decoded* pipeline fields (`e_opcode`/`e_rd`/`e_ra`/…) — so the two are the
+  same machine with different pipeline-register encodings, and the golden has to be
+  rewritten to the Ivy boundary before it can be checked this way. (Also avoid
+  synthesizing stray state: a `for`-loop variable assigned in an `always @(posedge)`
+  reset becomes a register — name/scope it so it does not.)
+
+- **Older yosys-native routes and why they were dropped.** [cpu_equiv.ys](cpu_equiv.ys)
+  uses yosys `equiv_make` (pairs registers/memories by name) + `memory_map` +
+  `equiv_induct`; it works for the cache CPU but `equiv_induct` proves a *sequential*
+  equivalence and was found brittle here (it ignores reset by comparing arbitrary
+  *equal* states, yet still stumbles on designs where one lone bit differs only in
+  unreachable states). The OSS-CAD **EQY** flow was also tried and its partitioner
+  segfaults in this build. `rtlil_eqv` exists because of these — reach for it first.
+  Whatever route you use: tie/pair the reset (ivy_to_rtl models `after init` as a
+  per-register synchronous-reset mux the golden need not reproduce), and when the
+  design is hierarchical — e.g. the CPU instantiates the predictor `cpu.bp` — make
+  the golden hierarchical the same way and `flatten` both before pairing, so shared
+  instance names line the inlined names up (the predictor's `bp.bht` pairs by name).

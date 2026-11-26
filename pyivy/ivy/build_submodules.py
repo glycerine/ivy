@@ -1,8 +1,9 @@
-import sys
+import argparse
 import os
 import platform
 import shutil
 import subprocess
+import sys
 
 def do_cmd(cmd):
     print(cmd)
@@ -74,29 +75,29 @@ def install_z3():
         shutil.copy2(os.path.join(build, 'libz3.lib'), os.path.join('ivy', 'lib'))
 
 def build_picotls():
-        
-    if not os.path.exists('submodules/picotls'):
-        print("submodules/picotls not found. try 'git submodule update; git submodule update'")
-        exit(1)
-
-    cwd = os.getcwd()
-
-    os.chdir('submodules/picotls')
-
-    do_cmd('git submodule init')
-    do_cmd('git submodule update')
-
-    
+    source = 'submodules/picotls'
+    if not os.path.isdir(source):
+        raise SystemExit('submodules/picotls not found. Try git submodule update --init.')
     if platform.system() == 'Windows':
-        do_cmd('"{}" & msbuild /p:OPENSSL64DIR=c:\\OpenSSL-Win64 picotlsvs\\picotls\\picotls.vcxproj'.format(find_vs()))
-    else:
-        if platform.system() == 'Darwin':
-            do_cmd('PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig" cmake . -DOPENSSL_CRYPTO_LIBRARY=/usr/local/opt/openssl/lib/libcrypto.dylib -DOPENSSL_SSL_LIBRARY=/usr/local/opt/openssl/lib/libssl.dylib')
-        else:
-            do_cmd('cmake .')
-        do_cmd('make')
-
-    os.chdir(cwd)
+        cmd = '"{}" & msbuild /p:OPENSSL64DIR=c:\\OpenSSL-Win64 picotlsvs\\picotls\\picotls.vcxproj'.format(find_vs())
+        subprocess.run(cmd, shell=True, cwd=source, check=True)
+        return
+    configure = ['cmake', '-S', '.', '-B', 'build', '-DBUILD_TESTING=OFF', '-DBUILD_SHARED_LIBS=OFF',
+                 '-DCMAKE_POLICY_VERSION_MINIMUM=3.5']
+    ssl = os.environ.get('OPENSSL_ROOT_DIR')
+    brew = shutil.which('brew')
+    if platform.system() == 'Darwin' and not ssl and brew:
+        for package in ('openssl@3', 'openssl'):
+            result = subprocess.run([brew, '--prefix', package], capture_output=True, text=True)
+            if result.returncode == 0 and os.path.isdir(result.stdout.strip()):
+                ssl = result.stdout.strip()
+                break
+    if ssl:
+        configure.append(f'-DOPENSSL_ROOT_DIR={ssl}')
+    subprocess.run(configure, cwd=source, check=True)
+    subprocess.run(['cmake', '--build', 'build', '--target',
+                    'picotls-core', 'picotls-minicrypto', 'picotls-openssl'],
+                   cwd=source, check=True)
 
 def install_picotls():
     
@@ -115,7 +116,7 @@ def install_picotls():
         do_cmd('copy picotlsvs\\picotls\\x64\\Debug\\picotls.lib ..\\..\\ivy\\lib\\')
     else:
         do_cmd('cp -a include/*.h include/picotls ../../ivy/include/')
-        do_cmd('cp -a *.a ../../ivy/lib/')
+        do_cmd('cp -a build/*.a ../../ivy/lib/')
 
     os.chdir(cwd)
 
@@ -179,11 +180,15 @@ def install_abc():
     os.chdir(cwd)
     
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Build Ivy native dependencies.')
+    parser.add_argument('--with-picotls', action='store_true', help='also build the TLS libraries')
+    args = parser.parse_args()
     if not os.path.isfile(os.path.join('ivy', 'z3', z3_library_name())):
         build_z3()
         install_z3()
-    # build_picotls()
-    # install_picotls()
+    if args.with_picotls:
+        build_picotls()
+        install_picotls()
 
     if platform.system() == 'Windows':
         print("*******************************************")

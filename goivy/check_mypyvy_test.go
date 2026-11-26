@@ -73,6 +73,30 @@ invariant [known_color] saved = red | saved = green
 	}
 }
 
+func TestMypyvyExportContinuesCheckingOtherIsolates(t *testing.T) {
+	const source = `#lang ivy1.8
+isolate a_model = {
+    attribute method = convert_to_mypyvy
+}
+isolate z_proof = {
+    invariant [must_fail] false
+}
+`
+	mod := New()
+	path := filepath.Join(t.TempDir(), "model")
+	if err := SourceString(path+".ivy", source, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		t.Fatal(err)
+	}
+	mod.Name = path
+	err := CheckModule(mod)
+	if err == nil || !strings.Contains(err.Error(), "failed checks:") {
+		t.Fatalf("later isolate must report its failed proof, got %v", err)
+	}
+	if _, err := os.Stat(path + ".pyv"); err != nil {
+		t.Fatalf("earlier isolate must still export its model: %v", err)
+	}
+}
+
 func TestMypyvyExportOptionsUseSolverAndIntermediateDefinitions(t *testing.T) {
 	mod := New()
 	if err := ApplyIvyCheckParams(mod.Cfg, map[string]string{"unfold_macros": "true", "simplify": "true"}); err != nil {

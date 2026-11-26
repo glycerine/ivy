@@ -40,6 +40,10 @@ For development, install the package in editable mode with
 fork for its interpolation support. The build script prepares that
 library along with the native tools used for model checking.
 
+Pass `--with-picotls` to build and install the TLS libraries. After
+building native dependencies, reinstall PyIvy to include them in a
+non-editable installation.
+
 Optionally, build the experimental Ivy v2.0 compiler:
 
     $ python build_v2_compiler.py
@@ -79,8 +83,9 @@ install it and add it to your path.
 
 Create the environment with `python3.10 -m venv .venv` and follow the
 [source installation](#linuxnotes) above. The native build script
-builds ABC and AIGER on macOS. The C++ extractor links the same
-vendored Z3 fork.
+builds ABC and AIGER on macOS. Set
+`OPENSSL_ROOT_DIR` to use a custom OpenSSL for the optional picotls build.
+The C++ extractor links the same vendored Z3 fork.
 
 <a name="binary"></a> Installing a wheel
 --------------------------------------
