@@ -79,6 +79,9 @@ func Ssw_SecWithSimilarity(p0, p1 *aig.Graph, pars *Ssw_Pars_t) int32 {
 	}
 	var a, b *aig.Graph
 	if p1 == nil {
+		if pars.FVerbose != 0 {
+			aig.Aig_ManPrintStats(p0)
+		}
 		if saig.Saig_ManDemiterSimpleDiff(p0, &a, &b) == 0 {
 			fmt.Println("Demitering has failed.")
 			return -1
