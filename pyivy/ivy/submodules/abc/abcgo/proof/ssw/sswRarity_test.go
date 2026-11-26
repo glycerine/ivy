@@ -53,7 +53,7 @@ func TestSswRarityTransposeAndInitialization(t *testing.T) {
 	}
 	Ssw_RarManInitialize(p, init)
 	for i := 0; i < 70; i++ {
-		lo := g.Inputs()[i+1]
+		lo := g.InputAt(int(i + 1))
 		s := Ssw_RarObjSim(p, int32(lo.NodeID()))
 		for w := 0; w < 2; w++ {
 			want := uint64(0)
@@ -64,7 +64,7 @@ func TestSswRarityTransposeAndInitialization(t *testing.T) {
 				t.Fatalf("LO %d word %d", i, w)
 			}
 		}
-		li := g.Outputs()[i+1]
+		li := g.OutputAt(int(i + 1))
 		copy(Ssw_RarObjSim(p, int32(li.NodeID())), s)
 	}
 	Ssw_RarTranspose(p)

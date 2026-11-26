@@ -61,7 +61,7 @@ func TestSourceSignalSelectorsUseExplicitAIG(t *testing.T) {
 	n := &Network{Graph: named, OutputNames: []string{"assert_fair_x", "assume_fair_x", "Assert_x", "Assume_x"}}
 	for i, selectSignal := range []func(*Network, *aig.Graph) []aig.Edge{populateLivenessVector, populateFairnessVector, populateSafetyAssertionVector, populateSafetyAssumptionVector} {
 		got := selectSignal(n, g)
-		if len(got) != 1 || got[0] != g.Outputs()[i] {
+		if len(got) != 1 || got[0] != g.OutputAt(int(i)) {
 			t.Fatalf("selector %d got %v", i, got)
 		}
 	}

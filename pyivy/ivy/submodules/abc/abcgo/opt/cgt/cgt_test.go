@@ -65,7 +65,7 @@ func TestClockGatingFindsEnableAndPreservesTransitions(t *testing.T) {
 	}
 	found := false
 	for _, gate := range all[0] {
-		found = found || gate == g.Inputs()[0].Not()
+		found = found || gate == g.InputAt(int(0)).Not()
 	}
 	if !found {
 		t.Fatal("missing !enable hold condition", all)

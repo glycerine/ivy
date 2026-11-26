@@ -41,10 +41,10 @@ func Sim_ComputeFunSupp(network *Abc_Ntk_t, verbose int32) *Vec_Ptr_t {
 		}
 
 		values := fraig.Fraig_ManReadModel(manager)
-		if len(values) != len(network.Inputs()) {
+		if len(values) != network.InputCount() {
 			panic("Sim_ComputeFunSupp: satisfiable cofactor miter has no model")
 		}
-		assignment := make([]bool, len(network.Inputs()))
+		assignment := make([]bool, network.InputCount())
 		packed := make([]uint32, sim.SIM_NUM_WORDS(len(assignment)))
 		for i := range assignment {
 			assignment[i] = values[i] != 0

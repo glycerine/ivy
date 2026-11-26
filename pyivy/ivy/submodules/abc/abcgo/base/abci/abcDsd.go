@@ -39,8 +39,8 @@ func Abc_NtkDsdGlobal(n *abc.Network, verbose, printTree, short int32) *abc.Netw
 	if n == nil || abc.Abc_NtkIsStrash(n) == 0 {
 		return nil
 	}
-	dd := core.NewBDDManager(max(1, len(n.Inputs())))
-	functions := make([]*core.DdNode, 0, len(n.Outputs()))
+	dd := core.NewBDDManager(max(1, n.InputCount()))
+	functions := make([]*core.DdNode, 0, n.OutputCount())
 	for _, output := range n.Outputs() {
 		fanins := output.Fanins()
 		if len(fanins) != 1 {
@@ -155,7 +155,7 @@ func abcNetworkBDD(n *abc.Network, dd *core.DdManager, root abc.Edge) (*core.DdN
 }
 
 func abcDsdBuildNetwork(src *abc.Network, dd *core.DdManager, functions []*core.DdNode, printTree, short, verbose bool) (*abc.Network, error) {
-	manager := dsd.Dsd_ManagerStart(dd, len(src.Inputs()), 0)
+	manager := dsd.Dsd_ManagerStart(dd, src.InputCount(), 0)
 	if manager == nil {
 		return nil, fmt.Errorf("DSD manager allocation failed")
 	}
@@ -233,7 +233,7 @@ func abcDsdBuildNetwork(src *abc.Network, dd *core.DdManager, functions []*core.
 			return nil, err
 		}
 		po := out.NewObject(abc.ObjectPO)
-		po.SetName(src.Outputs()[i].Name())
+		po.SetName(src.OutputAt(int(i)).Name())
 		if err = out.AddFanin(po, abc.Edge{Object: driver, Complement: dsd.Dsd_IsComplement(root)}); err != nil {
 			return nil, err
 		}
@@ -324,11 +324,11 @@ func Abc_NtkDsdConstruct(manager *dsd.Dsd_Manager_t, src, dst *abc.Network) erro
 		return fmt.Errorf("nil DSD network construction argument")
 	}
 	dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadConst1(manager), dst.One().Object.ID)
-	if len(src.Inputs()) != len(dst.Inputs()) {
+	if src.InputCount() != dst.InputCount() {
 		return fmt.Errorf("source and destination CI counts differ")
 	}
 	for i := range src.Inputs() {
-		dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadInput(manager, i), dst.Inputs()[i].ID)
+		dsd.Dsd_NodeSetMark(dsd.Dsd_ManagerReadInput(manager, i), dst.InputAt(int(i)).ID)
 	}
 	count := 0
 	nodes := dsd.Dsd_TreeCollectNodesDfs(manager, &count)
@@ -372,7 +372,7 @@ func Abc_NtkDsdInternal(n *abc.Network, verbose, printTree, short int32) *abc.Ne
 	if !ok {
 		return nil
 	}
-	functions := make([]*core.DdNode, 0, len(n.Outputs()))
+	functions := make([]*core.DdNode, 0, n.OutputCount())
 	for _, co := range n.Outputs() {
 		f, ok := co.FaninAt(int32(0)).Object.Data.(*core.DdNode)
 		if !ok {

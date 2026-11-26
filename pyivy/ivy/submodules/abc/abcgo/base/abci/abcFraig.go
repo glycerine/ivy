@@ -113,7 +113,7 @@ func Abc_NtkToFraigExdc(manager *Fraig_Man_t, main, exdc *Abc_Ntk_t) *Fraig_Node
 		f := node.Fanins()
 		mapping[node] = fraig.Fraig_NodeAnd(manager, fraig.Fraig_NotCond(mapping[f[0].Object], f[0].Complement), fraig.Fraig_NotCond(mapping[f[1].Object], f[1].Complement))
 	}
-	co := strashed.Outputs()[0].FaninAt(int32(0))
+	co := strashed.OutputAt(int(0)).FaninAt(int32(0))
 	return fraig.Fraig_NotCond(mapping[co.Object], co.Complement)
 }
 
@@ -166,7 +166,7 @@ func Abc_NtkFromFraig(manager *Fraig_Man_t, network *Abc_Ntk_t) *Abc_Ntk_t {
 	}
 	for i := range network.Outputs() {
 		edge := abcFraigBuildAIG(manager, fraig.Fraig_ManReadOutputs(manager)[i], aig, memo)
-		if err := result.Outputs()[i].Network().AddFanin(result.Outputs()[i], edge); err != nil {
+		if err := result.OutputAt(int(i)).Network().AddFanin(result.OutputAt(int(i)), edge); err != nil {
 			panic(err)
 		}
 	}

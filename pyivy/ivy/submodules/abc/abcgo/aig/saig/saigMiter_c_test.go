@@ -85,8 +85,8 @@ int main(void){Aig_Man_t*a=fixture(0),*b=fixture(1),*m,*l,*r;int i;for(i=0;i<2;i
 		if _, err := fmt.Fscan(reader, &inputs, &outputs, &regs, &nodes); err != nil {
 			t.Fatal(err)
 		}
-		if inputs != g.InputCount() || outputs != len(g.Outputs()) || regs != int(Saig_ManRegNum(g)) {
-			t.Fatalf("sample%d interface Go%d/%d/%d C%d/%d/%d", sample, g.InputCount(), len(g.Outputs()), Saig_ManRegNum(g), inputs, outputs, regs)
+		if inputs != g.InputCount() || outputs != g.OutputCount() || regs != int(Saig_ManRegNum(g)) {
+			t.Fatalf("sample%d interface Go%d/%d/%d C%d/%d/%d", sample, g.InputCount(), g.OutputCount(), Saig_ManRegNum(g), inputs, outputs, regs)
 		}
 		// Graph hashing can choose different physical XOR decompositions; truth and
 		// sequential interface are the observable miter contracts.

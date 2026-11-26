@@ -56,7 +56,7 @@ func TestConstraintMetadataThroughMonitorBuilders(t *testing.T) {
 	}
 	checkMonitorConstraint(t, disj)
 	checkMonitorConstraint(t, negateOutputs(disj, int(start)))
-	checkMonitorConstraint(t, disjunctiveTesterMode(g, []aig.Edge{g.Outputs()[1]}, 1, false))
+	checkMonitorConstraint(t, disjunctiveTesterMode(g, []aig.Edge{g.OutputAt(int(1))}, 1, false))
 	zero := int32(-1)
 	working := createNewAigWith0LivePoMode(g, []aig.Edge{outputDriver(g, 2)}, &zero, false)
 	if zero != 4 {

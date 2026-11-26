@@ -51,7 +51,7 @@ func TestPartitionDiagnosticsClearTerminalCioIDs(t *testing.T) {
 			g.AddOutput(a)
 			g.AddOutput(b)
 			aig.Aig_ManSetCioIds(g)
-			if aig.Aig_ObjCioId(g, b) != 1 || aig.Aig_ObjCioId(g, g.Outputs()[1]) != 1 {
+			if aig.Aig_ObjCioId(g, b) != 1 || aig.Aig_ObjCioId(g, g.OutputAt(int(1))) != 1 {
 				t.Fatal("fixture lacks nonzero IDs")
 			}
 			tc.run(g)

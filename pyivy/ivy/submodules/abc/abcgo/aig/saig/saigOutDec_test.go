@@ -39,7 +39,7 @@ func TestSaigManDecPropertyOutputPreservesFunction(t *testing.T) {
 	y := g.AND(a, c)
 	g.AddOutput(g.AND(x, y))
 	decomposed := Saig_ManDecPropertyOutput(g, 2, 0)
-	if got, want := len(decomposed.Outputs())-int(aig.Aig_ManRegNum(decomposed)), 2; got != want {
+	if got, want := decomposed.OutputCount()-int(aig.Aig_ManRegNum(decomposed)), 2; got != want {
 		t.Fatalf("PO count = %d, want original property plus one prime", got)
 	}
 	for mask := 0; mask < 1<<3; mask++ {

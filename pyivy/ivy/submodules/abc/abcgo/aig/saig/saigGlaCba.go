@@ -519,8 +519,8 @@ func reasonPriority(graph *aig.Graph, valuesByFrame [][]bool, edge aig.Edge, fra
 }
 
 func evalSequentialGraphFrame(graph *aig.Graph, inputs []bool) ([]bool, []bool, error) {
-	if len(inputs) != len(graph.Inputs()) {
-		return nil, nil, fmt.Errorf("saig: got %d frame inputs, want %d", len(inputs), len(graph.Inputs()))
+	if len(inputs) != graph.InputCount() {
+		return nil, nil, fmt.Errorf("saig: got %d frame inputs, want %d", len(inputs), graph.InputCount())
 	}
 	nodes := graph.Nodes()
 	values := make([]bool, len(nodes))
@@ -543,7 +543,7 @@ func evalSequentialGraphFrame(graph *aig.Graph, inputs []bool) ([]bool, []bool, 
 			values[id] = values[node.Fanins[0].NodeID()] != node.Fanins[0].Complemented()
 		}
 	}
-	outputs := make([]bool, len(graph.Outputs()))
+	outputs := make([]bool, graph.OutputCount())
 	for i, output := range graph.Outputs() {
 		outputs[i] = values[aig.Aig_ObjChild0(graph, output).NodeID()] != aig.Aig_ObjChild0(graph, output).Complemented()
 	}
@@ -589,7 +589,7 @@ func Aig_Gla1ExtendIncluded(manager *Aig_Gla1Man_t) {
 // It returns nil for a concrete counterexample and otherwise the current gate
 // bitmap, including when SAT reaches a resource limit.
 func Aig_Gla1ManPerform(src *aig.Graph, oldClasses *vec.Vec_Int_t, start, maxFrames, conflictLimit, timeLimit, naiveCNF, verbose int32, piFrame *int32) *vec.Vec_Int_t {
-	if src == nil || len(src.Outputs())-int(aig.Aig_ManRegNum(src)) != 1 {
+	if src == nil || src.OutputCount()-int(aig.Aig_ManRegNum(src)) != 1 {
 		if piFrame != nil {
 			*piFrame = 0
 		}

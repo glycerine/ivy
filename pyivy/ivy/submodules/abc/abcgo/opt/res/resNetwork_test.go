@@ -76,7 +76,7 @@ func TestResNetworkFromGraphEncodesExplicitXorWithoutDeadGate(t *testing.T) {
 	if got := len(network.ObjectsOfKind(abc.ObjectNode)); got != 3 {
 		t.Fatalf("explicit XOR produced %d AND nodes, want 3", got)
 	}
-	inputs, output := network.Inputs(), network.Outputs()[0]
+	inputs, output := network.Inputs(), network.OutputAt(int(0))
 	for assignment := 0; assignment < 4; assignment++ {
 		values := map[*abc.Object]bool{inputs[0]: assignment&1 != 0, inputs[1]: assignment&2 != 0}
 		got, err := network.Evaluate(output.FaninAt(int32(0)), values)

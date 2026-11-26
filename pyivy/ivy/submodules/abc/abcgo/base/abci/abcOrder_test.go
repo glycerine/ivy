@@ -60,7 +60,7 @@ func TestFindCiOrderUsesNetworkSupportAndReverse(t *testing.T) {
 	for _, ci := range n.Inputs() {
 		foundUnused = foundUnused || ci == unused
 	}
-	if len(n.Inputs()) != 3 || !foundUnused {
+	if n.InputCount() != 3 || !foundUnused {
 		t.Fatal("unused CI was not retained")
 	}
 }

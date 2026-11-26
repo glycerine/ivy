@@ -14,8 +14,8 @@ func Llb_ManPrepareVarMap(manager *Llb_Man_t) {
 	manager.vCs2Glo = vec.Vec_IntStartFull(variables)
 	manager.vGlo2Cs = vec.Vec_IntStartFull(registers)
 	manager.vGlo2Ns = vec.Vec_IntStartFull(registers)
-	inputStart := len(manager.pAig.Inputs()) - registers
-	outputStart := len(manager.pAig.Outputs()) - registers
+	inputStart := manager.pAig.InputCount() - registers
+	outputStart := manager.pAig.OutputCount() - registers
 	for i := 0; i < registers; i++ {
 		li := aig.Aig_ManCo(manager.pAig, int32(outputStart+i))
 		lo := aig.Aig_ManCi(manager.pAig, int32(inputStart+i))

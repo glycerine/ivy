@@ -21,7 +21,7 @@ func oldUnrollWithCex(g *aig.Graph, cex *util.Abc_Cex_t, nInputs int32, mapping 
 	}
 	nFrames := int(cex.IFrame) + 1
 	roots, objects := make([][]aig.Edge, nFrames), make([][]aig.Edge, nFrames)
-	roots[nFrames-1] = append(roots[nFrames-1], g.Outputs()[cex.IPo])
+	roots[nFrames-1] = append(roots[nFrames-1], g.OutputAt(int(cex.IPo)))
 	loToLi := make(map[int]aig.Edge)
 	inputIndex := make(map[int]int32)
 	for i, e := range g.Inputs() {
@@ -118,7 +118,7 @@ func oldUnrollWithCex(g *aig.Graph, cex *util.Abc_Cex_t, nInputs int32, mapping 
 			}
 		}
 	}
-	result.AddOutput(copies[g.Outputs()[cex.IPo].NodeID()].Not())
+	result.AddOutput(copies[g.OutputAt(int(cex.IPo)).NodeID()].Not())
 	return result
 }
 

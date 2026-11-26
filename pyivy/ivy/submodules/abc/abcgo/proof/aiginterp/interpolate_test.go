@@ -106,11 +106,11 @@ func TestIncrementalSATAllTwoInputOutputPairs(t *testing.T) {
 	for a := uint32(0); a < 16; a++ {
 		for b := uint32(0); b < 16; b++ {
 			on, off := predicate(a), predicate(b)
-			original := on.Node(on.Outputs()[0]).Fanins[0]
+			original := on.Node(on.OutputAt(int(0))).Fanins[0]
 			on.AddOutput(original.Not())
 			on.AddOutput(on.Const1())
 			on.AddOutput(on.Const0())
-			other := off.Node(off.Outputs()[0]).Fanins[0]
+			other := off.Node(off.OutputAt(int(0))).Fanins[0]
 			for i := 0; i < 3; i++ {
 				off.AddOutput(other)
 			}

@@ -139,7 +139,7 @@ func TestDominatorVolumeUsesGraphMarksAndTraversal(t *testing.T) {
 		t.Error("volume did not leave source traversal state at marked boundary")
 	}
 	Aig_ObjClearMarkA(g, x)
-	if got := Aig_ObjDomVolume(s, NewDominator(x.NodeID(), g.Outputs()[0].NodeID())); got != 2 {
+	if got := Aig_ObjDomVolume(s, NewDominator(x.NodeID(), g.OutputAt(int(0)).NodeID())); got != 2 {
 		t.Errorf("overlapping cones counted terminals more than once: %d", got)
 	}
 }

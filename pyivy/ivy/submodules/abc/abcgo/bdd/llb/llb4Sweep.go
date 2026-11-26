@@ -24,7 +24,7 @@ func Llb_Nonlin4SweepPartitions_rec(dd *DdManager, g *Aig_Man_t, e *Aig_Obj_t, o
 	if dd == nil || g == nil || e == nil {
 		return nil
 	}
-	vars := make([]*core.DdNode, len(g.Inputs()))
+	vars := make([]*core.DdNode, g.InputCount())
 	for i := range vars {
 		vars[i] = core.Cudd_bddIthVar(dd, i)
 	}
@@ -40,11 +40,11 @@ func Llb_Nonlin4SweepVars2Q(g *Aig_Man_t, order *Vec_Int_t, addLis int32) *Vec_I
 	mask := vec.Vec_IntAlloc(0)
 	vec.Vec_IntFill(mask, int(aig.Aig_ManObjNumMax(g)), 1)
 	regs := int(g.RegisterCount())
-	for _, edge := range g.Inputs()[len(g.Inputs())-regs:] {
+	for _, edge := range g.Inputs()[g.InputCount()-regs:] {
 		vec.Vec_IntWriteEntry(mask, int(vec.Vec_IntEntry(order, edge.NodeID())), 0)
 	}
 	if addLis != 0 {
-		for _, edge := range g.Outputs()[len(g.Outputs())-regs:] {
+		for _, edge := range g.Outputs()[g.OutputCount()-regs:] {
 			vec.Vec_IntWriteEntry(mask, int(vec.Vec_IntEntry(order, edge.NodeID())), 0)
 		}
 	}

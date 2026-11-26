@@ -93,7 +93,7 @@ func TestSequentialReachTransitionAndUnreachableDcs(t *testing.T) {
 		t.Fatal("transition relation should release per-object global BDDs")
 	}
 	piCount := len(n.ObjectsOfKind(abc.ObjectPI))
-	current, next := piCount, len(n.Inputs())
+	current, next := piCount, n.InputCount()
 	for state := 0; state < 2; state++ {
 		for successor := 0; successor < 2; successor++ {
 			assignment := make([]bool, len(dd.Vars))
@@ -129,12 +129,12 @@ func TestSequentialReachTransitionAndUnreachableDcs(t *testing.T) {
 		t.Fatal("EXDC network construction failed")
 	}
 	defer abc.Abc_NtkDelete(exdc)
-	if len(exdc.Inputs()) != 1 || len(exdc.Outputs()) != 1 {
-		t.Fatalf("EXDC dimensions = %d inputs, %d outputs", len(exdc.Inputs()), len(exdc.Outputs()))
+	if exdc.InputCount() != 1 || exdc.OutputCount() != 1 {
+		t.Fatalf("EXDC dimensions = %d inputs, %d outputs", exdc.InputCount(), exdc.OutputCount())
 	}
 	for state := 0; state < 2; state++ {
-		values := map[*abc.Object]bool{exdc.Inputs()[0]: state != 0}
-		got, err := exdc.Evaluate(exdc.Outputs()[0].FaninAt(int32(0)), values)
+		values := map[*abc.Object]bool{exdc.InputAt(int(0)): state != 0}
+		got, err := exdc.Evaluate(exdc.OutputAt(int(0)).FaninAt(int32(0)), values)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -153,15 +153,15 @@ func TestExtractSequentialDcsAttachesExdc(t *testing.T) {
 		t.Fatal("sequential unreachable states were not attached as EXDC")
 	}
 	defer abc.Abc_NtkDelete(n.Exdc)
-	if got := len(n.Exdc.Inputs()); got != 1 {
+	if got := n.Exdc.InputCount(); got != 1 {
 		t.Fatalf("EXDC input count = %d, want 1", got)
 	}
-	if got := len(n.Exdc.Outputs()); got != 1 {
+	if got := n.Exdc.OutputCount(); got != 1 {
 		t.Fatalf("EXDC output count = %d, want 1", got)
 	}
 	for state := 0; state < 2; state++ {
-		values := map[*abc.Object]bool{n.Exdc.Inputs()[0]: state != 0}
-		got, err := n.Exdc.Evaluate(n.Exdc.Outputs()[0].FaninAt(int32(0)), values)
+		values := map[*abc.Object]bool{n.Exdc.InputAt(int(0)): state != 0}
+		got, err := n.Exdc.Evaluate(n.Exdc.OutputAt(int(0)).FaninAt(int32(0)), values)
 		if err != nil {
 			t.Fatal(err)
 		}

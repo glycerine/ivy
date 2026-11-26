@@ -14,8 +14,8 @@ func TestDuplicateDualRailUnknownOutput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(dual.Inputs()) != 2 || len(dual.Outputs()) != 1 {
-		t.Fatalf("dual interface = %d inputs, %d outputs", len(dual.Inputs()), len(dual.Outputs()))
+	if dual.InputCount() != 2 || dual.OutputCount() != 1 {
+		t.Fatalf("dual interface = %d inputs, %d outputs", dual.InputCount(), dual.OutputCount())
 	}
 	for _, tc := range []struct {
 		inputs []bool
@@ -39,7 +39,7 @@ func TestBlockPrimaryOutputsAddsRegisters(t *testing.T) {
 	if got := aig.Aig_ManRegNum(g); got != 2 {
 		t.Fatalf("registers = %d, want 2", got)
 	}
-	if got := len(g.Outputs()); got != 3 {
+	if got := g.OutputCount(); got != 3 {
 		t.Fatalf("outputs = %d, want property plus two LIs", got)
 	}
 }

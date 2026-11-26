@@ -39,7 +39,7 @@ func Saig_ManCexVerifyUsingTernary(g *aig.Graph, cex, care *util.Abc_Cex_t) int3
 					v = SAIG_ONE
 				}
 			}
-			values[g.Inputs()[i].NodeID()] = v
+			values[g.InputAt(int(i)).NodeID()] = v
 			bit++
 		}
 		for _, e := range g.LiveEdges() {
@@ -63,7 +63,7 @@ func Saig_ManCexVerifyUsingTernary(g *aig.Graph, cex, care *util.Abc_Cex_t) int3
 	if bit != cex.NBits {
 		panic("counterexample bit count does not match graph")
 	}
-	if values[g.Outputs()[cex.IPo].NodeID()] == SAIG_ONE {
+	if values[g.OutputAt(int(cex.IPo)).NodeID()] == SAIG_ONE {
 		return 1
 	}
 	return 0

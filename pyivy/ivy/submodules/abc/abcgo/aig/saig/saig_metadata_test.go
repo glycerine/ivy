@@ -61,12 +61,12 @@ func TestHideExposePreservesCioIDsAndBadListOrder(t *testing.T) {
 		t.Fatalf("hidden %d", got)
 	}
 	for i, e := range []aig.Edge{pi, r2, r0, r1} {
-		if g.Inputs()[i] != e {
+		if g.InputAt(int(i)) != e {
 			t.Fatalf("input order=%v", g.Inputs())
 		}
 	}
 	for i, e := range []aig.Edge{po, l2, l0, l1} {
-		if g.Outputs()[i] != e {
+		if g.OutputAt(int(i)) != e {
 			t.Fatalf("output order=%v", g.Outputs())
 		}
 	}
@@ -81,7 +81,7 @@ func TestHideExposePreservesCioIDsAndBadListOrder(t *testing.T) {
 	beforeExpose := append([]aig.Edge(nil), g.Outputs()...)
 	Saig_ManExposeBadRegs(g, 2)
 	for i, edge := range beforeExpose {
-		if g.Outputs()[i] != edge {
+		if g.OutputAt(int(i)) != edge {
 			t.Fatal("C expose must not reorder constrained outputs")
 		}
 	}

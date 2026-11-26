@@ -12,7 +12,7 @@ import (
 // FRAIG sweep. This miter is UNSAT but exceeds the initial 600-conflict limit.
 func TestCecSourceXorHeavyFallbackBalancesBeforeSweep(t *testing.T) {
 	g := cecPigeonholeMiter()
-	out := g.Outputs()[0]
+	out := g.OutputAt(int(0))
 	base := g.Node(out).Fanins[0]
 	inputs := g.Inputs()
 	parity := inputs[0]

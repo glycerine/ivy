@@ -229,7 +229,7 @@ func Ssw_ManSweepBmcFilter(p *Ssw_Man_t, timeLimit int32) int32 {
 			Ssw_ObjSetFrame(p, out, f, Ssw_ObjChild0Fra(p, out, f))
 		}
 		for i, lo := range g.Inputs()[pis:] {
-			next := Ssw_ObjFrame(p, g.Outputs()[int(pos)+i], f)
+			next := Ssw_ObjFrame(p, g.OutputAt(int(int(pos)+i)), f)
 			Ssw_ObjSetFrame(p, lo, f+1, next)
 			Ssw_CnfNodeAddToSolver(p.pMSat, aig.Aig_Regular(next))
 		}

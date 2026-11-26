@@ -99,13 +99,13 @@ func interCheckPerformClock(p *Inter_Check_t, data *cnf.Cnf_Dat_t, deadline abct
 		for i, input := range graph.Inputs() {
 			var frameNode aig.Edge
 			if frame == 0 {
-				frameNode = p.pFrames.Inputs()[i]
+				frameNode = p.pFrames.InputAt(int(i))
 			} else {
-				frameNode = p.pFrames.Outputs()[i+int(frame-1)*regs]
+				frameNode = p.pFrames.OutputAt(int(i + int(frame-1)*regs))
 			}
 			Inter_CheckAddEqual(p, data.VarNums[input.NodeID()], p.pCnf.VarNums[frameNode.NodeID()])
 		}
-		output := data.VarNums[graph.Outputs()[0].NodeID()]
+		output := data.VarNums[graph.OutputAt(int(0)).NodeID()]
 		if frame < p.nFramesK {
 			if int(frame) == len(p.vOrLits) {
 				p.vOrLits = append(p.vOrLits, output)

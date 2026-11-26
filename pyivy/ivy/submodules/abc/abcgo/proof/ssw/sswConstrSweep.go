@@ -68,7 +68,7 @@ func sswConstrTransfer(p *Ssw_Man_t, frame int32) {
 	}
 }
 func sswConstrCheckInitCount(p *Ssw_Man_t, index int) {
-	pis := len(p.pAig.Inputs()) - int(p.pAig.RegisterCount())
+	pis := p.pAig.InputCount() - int(p.pAig.RegisterCount())
 	if vec.Vec_IntSize(p.vInits) != index+pis {
 		panic("ssw: incorrect initial phase count")
 	}

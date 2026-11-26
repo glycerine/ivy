@@ -60,7 +60,7 @@ func Abc_ObjExpandCubes(sop *vec.Vec_Str_t, p *gia.Gia_Man_t, nVars int32) int32
 	if solver == nil {
 		return -1
 	}
-	output := formula.VarNums[g.Outputs()[0].NodeID()]
+	output := formula.VarNums[g.OutputAt(int(0)).NodeID()]
 	if output < 0 {
 		return -1
 	}

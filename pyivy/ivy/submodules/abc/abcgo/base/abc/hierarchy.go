@@ -227,7 +227,14 @@ func (d *Design) AddModule(n *Network) error {
 func (d *Design) Module(name string) *Network { return d.byName[name] }
 func (n *Network) Inputs() []*Object          { return append([]*Object(nil), n.cis...) }
 func (n *Network) Outputs() []*Object         { return append([]*Object(nil), n.cos...) }
-func (n *Network) Boxes() []*Object           { return append([]*Object(nil), n.boxes...) }
+
+// InputCount, OutputCount, InputAt and OutputAt read the CI/CO arrays
+// without copying them, as len(n.Inputs()) and n.Inputs()[i] do.
+func (n *Network) InputCount() int        { return len(n.cis) }
+func (n *Network) OutputCount() int       { return len(n.cos) }
+func (n *Network) InputAt(i int) *Object  { return n.cis[i] }
+func (n *Network) OutputAt(i int) *Object { return n.cos[i] }
+func (n *Network) Boxes() []*Object       { return append([]*Object(nil), n.boxes...) }
 func (n *Network) TerminalIDs(kind ObjectKind) []int {
 	objects := n.ObjectsOfKind(kind)
 	ids := make([]int, len(objects))

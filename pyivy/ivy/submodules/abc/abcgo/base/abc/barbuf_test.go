@@ -141,7 +141,7 @@ func TestOrderedTerminalIDs(t *testing.T) {
 	if err := n.SetTerminalOrder(ObjectPI, []int{b.ID, a.ID}); err != nil {
 		t.Fatal(err)
 	}
-	if n.Inputs()[0] != b || n.ObjectsOfKind(ObjectPI)[0] != b || a.ID != beforeA || b.ID != beforeB {
+	if n.InputAt(int(0)) != b || n.ObjectsOfKind(ObjectPI)[0] != b || a.ID != beforeA || b.ID != beforeB {
 		t.Fatal("order changed stable IDs")
 	}
 	if err := n.SetTerminalOrder(ObjectPI, []int{a.ID, a.ID}); err == nil {
@@ -153,7 +153,7 @@ func TestOrderedTerminalIDs(t *testing.T) {
 	if err := n.DeleteObject(b); err != nil {
 		t.Fatal(err)
 	}
-	if len(n.Inputs()) != 1 || n.Inputs()[0] != a {
+	if n.InputCount() != 1 || n.InputAt(int(0)) != a {
 		t.Fatal("deleted interface remains ordered")
 	}
 }

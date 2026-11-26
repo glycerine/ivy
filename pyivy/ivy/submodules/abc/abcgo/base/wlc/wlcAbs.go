@@ -294,7 +294,7 @@ func Wlc_NtkGetCoreSels(pFrames *Gia_Man_t, nFrames int32, first_sel_pi int32, n
 	}
 	for i := int32(0); i < num_sel_pis; i++ {
 		cur := first_sel_pi + i
-		v := data.VarNums[graph.Inputs()[cur].NodeID()]
+		v := data.VarNums[graph.InputAt(int(cur)).NodeID()]
 		assert(v >= 0, "selector has no CNF variable")
 		varToSel[v] = i
 		lit := bsat.Positive(v)

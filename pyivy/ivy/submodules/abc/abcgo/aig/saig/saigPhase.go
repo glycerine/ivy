@@ -405,7 +405,7 @@ func Saig_ManPerformAbstraction(p *Saig_Tsim_t, frames, verbose int32) *aig.Grap
 			} else if value != SAIG_XVS0 {
 				panic("saig: selected register is not binary")
 			}
-			copies[source.Inputs()[pis+int(reg)].NodeID()] = edge
+			copies[source.InputAt(int(pis+int(reg))).NodeID()] = edge
 		}
 		var copyEdge func(aig.Edge) aig.Edge
 		copyEdge = func(edge aig.Edge) aig.Edge {

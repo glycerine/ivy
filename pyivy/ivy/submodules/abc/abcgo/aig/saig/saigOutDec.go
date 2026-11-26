@@ -12,7 +12,7 @@ import (
 // the property output. Each returned Vec_Int_t contains packed AIG literals
 // (2*objectID + complement), in candidate traversal order.
 func Saig_ManFindPrimes(graph *aig.Graph, nLits, verbose int32) *vec.Vec_Ptr_t {
-	if graph == nil || (nLits != 1 && nLits != 2) || len(graph.Outputs()) == 0 {
+	if graph == nil || (nLits != 1 && nLits != 2) || graph.OutputCount() == 0 {
 		return nil
 	}
 	outputs := graph.Outputs()

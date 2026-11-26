@@ -37,7 +37,7 @@ func TestDsdGlobalPreservesTruthTable(t *testing.T) {
 		inputs := got.Inputs()
 		values := map[*abc.Object]bool{inputs[0]: mask&1 != 0, inputs[1]: mask&2 != 0, inputs[2]: mask&4 != 0}
 		want := mask&3 == 3 || mask&4 != 0
-		value, err := got.Evaluate(got.Outputs()[0].FaninAt(int32(0)), values)
+		value, err := got.Evaluate(got.OutputAt(int(0)).FaninAt(int32(0)), values)
 		if err != nil {
 			t.Fatalf("assignment %03b: %v", mask, err)
 		}
@@ -80,7 +80,7 @@ func TestDsdLocalAndSparsifyTruthTables(t *testing.T) {
 	if Abc_NtkDsdLocal(n, 0, 0) == 0 {
 		t.Fatal("local DSD failed")
 	}
-	inputs, output := n.Inputs(), n.Outputs()[0].FaninAt(int32(0))
+	inputs, output := n.Inputs(), n.OutputAt(int(0)).FaninAt(int32(0))
 	for mask := 0; mask < 8; mask++ {
 		values := map[*abc.Object]bool{inputs[0]: mask&1 != 0, inputs[1]: mask&2 != 0, inputs[2]: mask&4 != 0}
 		got, err := n.Evaluate(output, values)
@@ -97,9 +97,9 @@ func TestDsdLocalAndSparsifyTruthTables(t *testing.T) {
 	}
 	defer abc.Abc_NtkDelete(sparse)
 	for mask := 0; mask < 8; mask++ {
-		values := map[*abc.Object]bool{sparse.Inputs()[0]: mask&1 != 0, sparse.Inputs()[1]: mask&2 != 0, sparse.Inputs()[2]: mask&4 != 0}
+		values := map[*abc.Object]bool{sparse.InputAt(int(0)): mask&1 != 0, sparse.InputAt(int(1)): mask&2 != 0, sparse.InputAt(int(2)): mask&4 != 0}
 		for i, want := range []bool{mask != 0, mask == 0} {
-			got, err := sparse.Evaluate(sparse.Outputs()[i].FaninAt(int32(0)), values)
+			got, err := sparse.Evaluate(sparse.OutputAt(int(i)).FaninAt(int32(0)), values)
 			if err != nil {
 				t.Fatal(err)
 			}

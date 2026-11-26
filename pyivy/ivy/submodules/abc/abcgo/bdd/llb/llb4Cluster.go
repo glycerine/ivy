@@ -13,7 +13,7 @@ func llbOrderedInputs(dd *DdManager, g *Aig_Man_t, order *Vec_Int_t) []*core.DdN
 	if dd == nil || g == nil {
 		return nil
 	}
-	inputs := make([]*core.DdNode, len(g.Inputs()))
+	inputs := make([]*core.DdNode, g.InputCount())
 	for i, edge := range g.Inputs() {
 		index := int32(edge.NodeID())
 		if order != nil {
@@ -75,12 +75,12 @@ func Llb_Nonlin4FindPartitions(dd *DdManager, g *Aig_Man_t, order *Vec_Int_t, ou
 	if functions == nil {
 		return parts
 	}
-	limit := len(g.Outputs())
+	limit := g.OutputCount()
 	if outputs == 0 && int(g.RegisterCount()) < limit {
 		limit -= int(g.RegisterCount())
 	}
 	for i := 0; i < limit; i++ {
-		vec.Vec_PtrPush(parts, llbBDDForEdge(g, functions, g.Outputs()[i]))
+		vec.Vec_PtrPush(parts, llbBDDForEdge(g, functions, g.OutputAt(int(i))))
 	}
 	return parts
 }

@@ -20,7 +20,7 @@ func AigInterpolationTest(graph *aig.Graph) *aig.Graph {
 	for _, edge := range graph.Inputs() {
 		globals = append(globals, int32(edge.NodeID()))
 	}
-	output := int32(graph.Outputs()[0].NodeID())
+	output := int32(graph.OutputAt(int(0)).NodeID())
 	globals = append(globals, output)
 	for _, edge := range graph.LiveEdges() {
 		v := int32(edge.NodeID())

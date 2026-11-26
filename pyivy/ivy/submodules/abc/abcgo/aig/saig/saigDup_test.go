@@ -37,7 +37,7 @@ func TestDupPhaseAndCones(t *testing.T) {
 		}
 	}
 	cone := Saig_ManDupCones(p, []int32{0}, 1)
-	if cone.RegisterCount() != 1 || len(cone.Inputs()) != 2 {
+	if cone.RegisterCount() != 1 || cone.InputCount() != 2 {
 		t.Fatal("lost transitive register")
 	}
 	for mask := 0; mask < 4; mask++ {
@@ -62,14 +62,14 @@ func TestDupOrAndEquivalence(t *testing.T) {
 	}
 	ins := p.Inputs()
 	r := Saig_ManCreateEquivMiter(p, dupInts(int32(ins[0].NodeID()), int32(ins[1].NodeID())), 1)
-	if r.RegisterCount() != 1 || len(r.Outputs()) != 2 {
+	if r.RegisterCount() != 1 || r.OutputCount() != 2 {
 		t.Fatal("miter interface")
 	}
 }
 func TestDupAbstractionAndTrim(t *testing.T) {
 	p := dupFixture()
 	a := Saig_ManDupAbstraction(p, dupInts())
-	if a.RegisterCount() != 0 || len(a.Inputs()) != 2 {
+	if a.RegisterCount() != 0 || a.InputCount() != 2 {
 		t.Fatal("abstract state not PI")
 	}
 	b := Saig_ManDupAbstraction(p, dupInts(0))
@@ -83,7 +83,7 @@ func TestDupAbstractionAndTrim(t *testing.T) {
 	aig.Aig_ManSetRegNum(q, 0)
 	q.InputNumbers = []int32{7, 9}
 	r := Saig_ManTrimPis(q)
-	if len(r.Inputs()) != 1 || r.InputNumbers[0] != 7 {
+	if r.InputCount() != 1 || r.InputNumbers[0] != 7 {
 		t.Fatal("trim/provenance")
 	}
 	s := aig.NewGraph()
@@ -91,7 +91,7 @@ func TestDupAbstractionAndTrim(t *testing.T) {
 	s.NewInput()
 	s.AddOutput(s.Const0())
 	aig.Aig_ManSetRegNum(s, 0)
-	if len(Saig_ManTrimPis(s).Inputs()) != 2 {
+	if Saig_ManTrimPis(s).InputCount() != 2 {
 		t.Fatal("all-unused source special case")
 	}
 }
@@ -101,7 +101,7 @@ func TestDupCounterexampleReplay(t *testing.T) {
 	c.IFrame = 1
 	c.IPo = 0
 	c.PData[0] = 6 // initial0, inputs1,1 => state1 at frame1
-	if Saig_ManVerifyCexNoClear(p, c) != 1 || !p.Node(p.Outputs()[0]).MarkB {
+	if Saig_ManVerifyCexNoClear(p, c) != 1 || !p.Node(p.OutputAt(int(0))).MarkB {
 		t.Fatal("failure not replayed")
 	}
 	state := Saig_ManReturnFailingState(p, c, 0)

@@ -27,7 +27,7 @@ func enumerateDerivedPatterns(p *gia.Gia_Man_t, limit int) int {
 	for i, e := range inputs {
 		inputVars[i] = formula.VarNums[e.NodeID()]
 	}
-	outputVar := formula.VarNums[graph.Outputs()[0].NodeID()]
+	outputVar := formula.VarNums[graph.OutputAt(int(0)).NodeID()]
 	if outputVar < 0 {
 		return 0
 	}
@@ -79,7 +79,7 @@ func enumerateDerivedPatterns(p *gia.Gia_Man_t, limit int) int {
 				return count + 1
 			}
 		}
-		output := dc.VarNums[dg.Outputs()[0].NodeID()]
+		output := dc.VarNums[dg.OutputAt(int(0)).NodeID()]
 		if output < 0 || !solver.AddClause(bsat.Negative(mapped[output])) {
 			return count + 1
 		}

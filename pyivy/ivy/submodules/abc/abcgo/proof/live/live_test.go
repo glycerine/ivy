@@ -59,7 +59,7 @@ func TestBiereLoopAndFairness(t *testing.T) {
 		}
 	}
 	n := liveFixture(false)
-	result, err := LivenessToSafety(n, TransformOptions{Mode: 2, Liveness: []aig.Edge{n.Graph.Outputs()[0]}, Fairness: []aig.Edge{1}})
+	result, err := LivenessToSafety(n, TransformOptions{Mode: 2, Liveness: []aig.Edge{n.Graph.OutputAt(int(0))}, Fairness: []aig.Edge{1}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -71,7 +71,7 @@ func TestLTLPipeline(t *testing.T) {
 	n := liveFixture(true)
 	n.OutputNames[1] = "nq"
 	// Replace the fair-true output by the complementary state signal.
-	aig.Aig_ObjPatchFanin0(n.Graph, n.Graph.Outputs()[1], n.Graph.Inputs()[0].Not())
+	aig.Aig_ObjPatchFanin0(n.Graph, n.Graph.OutputAt(int(1)), n.Graph.InputAt(int(0)).Not())
 	formula := "& :G :F assert_fair_q :G :F nq"
 	node, err := ParseFormula(formula)
 	if err != nil || node.String() != formula || isWellFormed(node) != 1 {
@@ -156,7 +156,7 @@ func TestKLiveAbsorberProofBoundary(t *testing.T) {
 		n := liveFixture(oscillate)
 		n.OutputNames[0] = "csLiveTarget_signal"
 		if !oscillate {
-			aig.Aig_ObjPatchFanin0(n.Graph, n.Graph.Outputs()[0], 0)
+			aig.Aig_ObjPatchFanin0(n.Graph, n.Graph.OutputAt(int(0)), 0)
 		}
 		result := KLive(n, KLiveOptions{MaxAbsorbers: 2})
 		if !oscillate && result.Status != 1 {

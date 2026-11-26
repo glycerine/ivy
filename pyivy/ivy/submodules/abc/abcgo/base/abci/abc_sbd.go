@@ -66,10 +66,10 @@ func abcSbdImport(p *Gia_Man_t) (*sbd.Network, error) {
 			inputs := tim.Tim_ManBoxInputNum(timing, box)
 			for pin := 0; pin < tim.Tim_ManBoxOutputNum(timing, box); pin++ {
 				ci := tim.Tim_ManBoxOutputFirst(timing, box) + pin
-				id := int32(g.Inputs()[ci].NodeID())
+				id := int32(g.InputAt(int(ci)).NodeID())
 				n.BoxLevelInputs[id] = []int32{}
 				for k := 0; k < inputs; k++ {
-					co := int32(g.Outputs()[tim.Tim_ManBoxInputFirst(timing, box)+k].NodeID())
+					co := int32(g.OutputAt(int(tim.Tim_ManBoxInputFirst(timing, box) + k)).NodeID())
 					n.BoxInputs[id] = append(n.BoxInputs[id], co)
 					if table == nil || table[3+pin*inputs+k] != -tim.TIM_ETERNITY {
 						n.BoxLevelInputs[id] = append(n.BoxLevelInputs[id], co)

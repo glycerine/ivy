@@ -39,7 +39,7 @@ func TestSATFreeOutputCNFMatchesABC(t *testing.T) {
 	if f == nil {
 		t.Fatal("CNF derivation failed")
 	}
-	if f.Variables != 7 || f.VarNums[x.NodeID()] != 4 || f.VarNums[y.NodeID()] != 5 || f.VarNums[g.Outputs()[0].NodeID()] != 1 || f.VarNums[g.Outputs()[1].NodeID()] != 2 {
+	if f.Variables != 7 || f.VarNums[x.NodeID()] != 4 || f.VarNums[y.NodeID()] != 5 || f.VarNums[g.OutputAt(int(0)).NodeID()] != 1 || f.VarNums[g.OutputAt(int(1)).NodeID()] != 2 {
 		t.Fatalf("unexpected variable numbering: %d %v", f.Variables, f.VarNums)
 	}
 	want := [][]bsat.Literal{{6, 9, 11}, {7, 8}, {7, 10}, {12}, {2, 7}, {3, 6}, {4, 6}, {5, 7}}

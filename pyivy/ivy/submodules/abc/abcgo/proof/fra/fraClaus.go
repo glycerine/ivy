@@ -37,7 +37,7 @@ func clausSlices(lits, ends *vec.Vec_Int_t) [][]int32 {
 	return out
 }
 func Fra_ClausRunBmc(p *Clu_Man_t) int32 {
-	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
+	out := p.pCnf.VarNums[p.pAig.OutputAt(int(0)).NodeID()]
 	for i := int32(0); i < p.nPref+p.nFrames; i++ {
 		if p.pSatBmc.SolveWithSourceLimits([]bsat.Literal{bsat.Positive(out + i*int32(p.pCnf.Variables))}, int64(p.nBTLimit), 0, 0, 0) != bsat.Unsatisfiable {
 			return 0
@@ -46,7 +46,7 @@ func Fra_ClausRunBmc(p *Clu_Man_t) int32 {
 	return 1
 }
 func Fra_ClausRunSat(p *Clu_Man_t) int32 {
-	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
+	out := p.pCnf.VarNums[p.pAig.OutputAt(int(0)).NodeID()]
 	lits := make([]int32, p.nFrames+1)
 	for i := int32(0); i <= p.nFrames; i++ {
 		v := out + i*int32(p.pCnf.Variables)
@@ -65,7 +65,7 @@ func Fra_ClausRunSat(p *Clu_Man_t) int32 {
 	return 0
 }
 func Fra_ClausRunSat0(p *Clu_Man_t) int32 {
-	out := p.pCnf.VarNums[p.pAig.Outputs()[0].NodeID()]
+	out := p.pCnf.VarNums[p.pAig.OutputAt(int(0)).NodeID()]
 	if p.pSatMain.SolveWithSourceLimits([]bsat.Literal{bsat.Positive(out)}, int64(p.nBTLimit), 0, 0, 0) == bsat.Unsatisfiable {
 		return 1
 	}

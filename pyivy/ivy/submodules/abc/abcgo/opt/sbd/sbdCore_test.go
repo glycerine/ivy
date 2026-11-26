@@ -50,7 +50,7 @@ func TestOptimizerUsesInternalDontCares(t *testing.T) {
 	parameters.LUTSize, parameters.LUTCount, parameters.CutSize = 2, 2, 4
 	result := Sbd_NtkPerform(network, &parameters)
 	checkSameTruth(t, before, result.Graph)
-	if result.Graph.Node(result.Graph.Node(result.Graph.Outputs()[0]).Fanins[0]).Kind != aig.Constant {
+	if result.Graph.Node(result.Graph.Node(result.Graph.OutputAt(int(0))).Fanins[0]).Kind != aig.Constant {
 		t.Fatal("unobservable nonconstant pivot was not eliminated")
 	}
 }

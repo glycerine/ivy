@@ -15,7 +15,7 @@ func TestSourceAbstractionShadowChoices(t *testing.T) {
 	aig.Aig_ObjCreateCo(p, s0)
 	aig.Aig_ManSetRegNum(p, 2)
 	n := &Network{Graph: p}
-	live, fair := []aig.Edge{p.Outputs()[0]}, []aig.Edge{p.Outputs()[1]}
+	live, fair := []aig.Edge{p.OutputAt(int(0))}, []aig.Edge{p.OutputAt(int(1))}
 	full := LivenessToSafetyTransformation(FULL_BIERE_MODE, n, p, live, fair, nil, nil)
 	both := LivenessToSafetyTransformationAbs(FULL_BIERE_MODE, n, p, []int32{0, 1}, live, fair, nil, nil)
 	none := LivenessToSafetyTransformationAbs(FULL_BIERE_MODE, n, p, []int32{}, live, fair, nil, nil)
@@ -58,7 +58,7 @@ func TestSourceAbstractionShadowsOnlySelectedRegister(t *testing.T) {
 	g.AddOutput(s1.Not())
 	aig.Aig_ManSetRegNum(g, 2)
 	n := &Network{Graph: g}
-	live, fair := []aig.Edge{g.Outputs()[0]}, []aig.Edge{g.Outputs()[1]}
+	live, fair := []aig.Edge{g.OutputAt(int(0))}, []aig.Edge{g.OutputAt(int(1))}
 	full := LivenessToSafetyTransformation(IGNORE_SAFETY_KEEP_LIVENESS_MODE, n, g, live, fair, nil, nil)
 	partial := LivenessToSafetyTransformationAbs(IGNORE_SAFETY_KEEP_LIVENESS_MODE, n, g, []int32{0}, live, fair, nil, nil)
 	fullState, partState := make([]bool, registers(full)), make([]bool, registers(partial))

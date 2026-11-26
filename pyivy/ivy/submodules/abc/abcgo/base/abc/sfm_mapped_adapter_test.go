@@ -13,7 +13,7 @@ func TestAbcExtractSfmMappedNetwork(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(objects) != 4 || objects[0] != pi || objects[1] != driver || objects[2] != consumer || objects[3] != n.Outputs()[0] {
+	if len(objects) != 4 || objects[0] != pi || objects[1] != driver || objects[2] != consumer || objects[3] != n.OutputAt(int(0)) {
 		t.Fatalf("object order: %v", objects)
 	}
 	for _, input := range []bool{false, true} {

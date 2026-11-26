@@ -2043,7 +2043,7 @@ func Abc_NtkDarBmcInter_int(pMan *Aig_Man_t, pPars *Inter_ManParams_t, ppNtkRes 
 		var pObjPo aiggraph.Edge
 		var i, Counter int32
 		for i = 0; i < Saig_ManPoNum(pMan); i++ {
-			pObjPo = pMan.Outputs()[i]
+			pObjPo = pMan.OutputAt(int(i))
 			if aiggraph.Aig_ObjFanin0(pMan, pObjPo) == aiggraph.Aig_ManConst1(pMan) {
 				continue
 			}

@@ -116,7 +116,7 @@ func Saig_ManInduction(p *Aig_Man_t, timeout, framesMax, conflictsMax, unique, u
 		}
 		aig.Aig_SupportNodes(p, top, int32(len(top)), &bottom)
 		part := aig.Aig_ManDupSimpleDfsPart(p, bottom, top)
-		partCnf := cnf.Cnf_Derive(part, int32(len(part.Outputs())))
+		partCnf := cnf.Cnf_Derive(part, int32(part.OutputCount()))
 		if partCnf == nil {
 			return -1
 		}
@@ -230,7 +230,7 @@ func Saig_ManInduction(p *Aig_Man_t, timeout, framesMax, conflictsMax, unique, u
 			sat.SetLimits(int64(conflictsMax), 0)
 			status = sat.Solve()
 			if verbose != 0 {
-				fmt.Printf("Frame %4d : PI =%5d. PO =%5d. AIG =%5d. Var =%7d. Clau =%7d. Conf =%7d. Time = %9.2f sec\n", frame, len(part.Inputs()), len(part.Outputs()), aig.Aig_ManNodeNum(part), nSatVarNum, nClauses, sat.Statistics().Conflicts-nConflictsBefore, time.Since(frameStart).Seconds())
+				fmt.Printf("Frame %4d : PI =%5d. PO =%5d. AIG =%5d. Var =%7d. Clau =%7d. Conf =%7d. Time = %9.2f sec\n", frame, part.InputCount(), part.OutputCount(), aig.Aig_ManNodeNum(part), nSatVarNum, nClauses, sat.Statistics().Conflicts-nConflictsBefore, time.Since(frameStart).Seconds())
 			}
 			if status == bsat.Unknown {
 				break

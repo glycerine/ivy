@@ -35,10 +35,10 @@ func introduceAbsorberLogicMode(p *aig.Graph, zero, index *int32, nonFirst int32
 	c.copyInputs()
 	state := aig.Aig_ObjCreateCi(c.destination)
 	c.copySourceNodes()
-	input := c.signal(p.Outputs()[*zero])
+	input := c.signal(p.OutputAt(int(*zero)))
 	previous := input
 	if nonFirst != 0 {
-		previous = c.signal(p.Outputs()[*index])
+		previous = c.signal(p.OutputAt(int(*index)))
 	}
 	next := aig.Aig_Or(c.destination, previous.Not(), state)
 	property := aig.Aig_Or(c.destination, input, state.Not())
@@ -46,7 +46,7 @@ func introduceAbsorberLogicMode(p *aig.Graph, zero, index *int32, nonFirst int32
 		*index = int32(c.outputCount())
 	}
 	for i := 0; i < c.outputCount(); i++ {
-		driver := c.signal(p.Outputs()[i])
+		driver := c.signal(p.OutputAt(int(i)))
 		if int32(i) == *index {
 			driver = property
 		}
@@ -57,7 +57,7 @@ func introduceAbsorberLogicMode(p *aig.Graph, zero, index *int32, nonFirst int32
 	}
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
 	}
 	aig.Aig_ObjCreateCo(c.destination, next)
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+1))
@@ -66,7 +66,7 @@ func introduceAbsorberLogicMode(p *aig.Graph, zero, index *int32, nonFirst int32
 }
 func modifyAigToApplySafetyInvar(p *aig.Graph, target, invariant int32) {
 	property := aig.Aig_And(p, outputDriver(p, int(target)), outputDriver(p, int(invariant)))
-	aig.Aig_ObjPatchFanin0(p, p.Outputs()[target], property)
+	aig.Aig_ObjPatchFanin0(p, p.OutputAt(int(target)), property)
 }
 func kLiveProofModel(p *aig.Graph, directive, target, invariant int32) *aig.Graph {
 	return kLiveProofModelMode(p, directive, target, invariant, false)
@@ -79,18 +79,18 @@ func kLiveProofModelMode(p *aig.Graph, directive, target, invariant int32, sourc
 	c.copyInputs()
 	c.copySourceNodes()
 	for i := 0; i < c.outputCount(); i++ {
-		property := c.signal(p.Outputs()[i])
+		property := c.signal(p.OutputAt(int(i)))
 		if int32(i) == target && (directive == 1 || directive == 3 || directive == 4) {
 			if invariant < 0 {
 				panic("live: safety invariant missing")
 			}
-			property = aig.Aig_And(c.destination, property, c.signal(p.Outputs()[invariant]))
+			property = aig.Aig_And(c.destination, property, c.signal(p.OutputAt(int(invariant))))
 		}
 		aig.Aig_ObjCreateCo(c.destination, property.Not())
 	}
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
 	// Aig_ManDupSimple, unlike the new source constructors, copies nConstrs.

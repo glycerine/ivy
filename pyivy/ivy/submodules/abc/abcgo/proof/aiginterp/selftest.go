@@ -69,7 +69,7 @@ func Aig_ManInterTest(graph *aig.Graph, verbose int32) error {
 			return err
 		}
 	}
-	output := data.VarNums[graph.Outputs()[0].NodeID()]
+	output := data.VarNums[graph.OutputAt(int(0)).NodeID()]
 	if err := aig.Aig_ManInterAddXor(sink, output, width+output, 2*width, 0, 0); err != nil {
 		return err
 	}

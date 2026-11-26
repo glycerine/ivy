@@ -148,7 +148,7 @@ func Aig_ManInterRepar(graph *aig.Graph, verbose int32) *aig.Graph {
 				}
 			}
 			i = int32(interpolant.InputCount())
-			output := interpolant.Outputs()[0]
+			output := interpolant.OutputAt(int(0))
 			buffer(shiftP[c]+k, data.VarNums[output.NodeID()], 0, mark)
 			if c == 1 {
 				cnf.Cnf_DataLift(interCNF, -int32(interCNF.Variables))

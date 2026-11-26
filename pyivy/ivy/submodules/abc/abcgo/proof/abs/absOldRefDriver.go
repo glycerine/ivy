@@ -90,7 +90,7 @@ func Saig_ManCexRefine(g, abstraction *aig.Graph, flops *vec.Vec_Int_t, frames, 
 		}
 		original := abstraction.InputNumbers[input]
 		piCount := saig.Saig_ManPiNum(g)
-		if original < piCount || int(original) >= len(g.Inputs()) {
+		if original < piCount || int(original) >= g.InputCount() {
 			panic("abstract input is not a register")
 		}
 		vec.Vec_IntPush(flops, original-piCount)

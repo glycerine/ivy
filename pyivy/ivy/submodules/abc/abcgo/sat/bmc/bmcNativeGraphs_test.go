@@ -21,20 +21,20 @@ func TestProjectAIGPropertiesPreservesRegisterInterface(t *testing.T) {
 	if projected.InputCount() != 2 || projected.OutputCount() != 2 || projected.RegisterCount() != 1 {
 		t.Fatalf("terminals=(inputs %d, outputs %d, registers %d), want (2,2,1)", projected.InputCount(), projected.OutputCount(), projected.RegisterCount())
 	}
-	property := projected.Node(projected.Outputs()[0])
+	property := projected.Node(projected.OutputAt(int(0)))
 	if !property.Fanins[0].Complemented() {
 		t.Fatalf("projected property driver=%v, want complemented state", property.Fanins[0])
 	}
-	registerInput := projected.Node(projected.Outputs()[1])
-	if registerInput.Fanins[0] != projected.Inputs()[0] {
-		t.Fatalf("projected register driver=%v, want primary input %v", registerInput.Fanins[0], projected.Inputs()[0])
+	registerInput := projected.Node(projected.OutputAt(int(1)))
+	if registerInput.Fanins[0] != projected.InputAt(int(0)) {
+		t.Fatalf("projected register driver=%v, want primary input %v", registerInput.Fanins[0], projected.InputAt(int(0)))
 	}
 }
 
 func TestProjectAIGPropertiesRejectsInvalidIndex(t *testing.T) {
 	graph := aig.NewGraph()
 	graph.NewInput()
-	graph.AddOutput(graph.Inputs()[0])
+	graph.AddOutput(graph.InputAt(int(0)))
 	if _, err := projectAIGProperties(graph, []int{1}); err == nil {
 		t.Fatal("expected invalid output index to fail")
 	}

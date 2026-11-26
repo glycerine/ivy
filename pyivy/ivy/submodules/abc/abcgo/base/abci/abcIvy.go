@@ -476,10 +476,10 @@ func Abc_NtkIvySat(pNtk *Abc_Ntk_t, nConfLimit int32, fVerbose int32) *Abc_Ntk_t
 func Abc_NtkTransferPointers(pNtk *Abc_Ntk_t, pNtkAig *Abc_Ntk_t) {
 	baseabc.Abc_AigConst1(pNtk).Object.SetCopyEdge(baseabc.Abc_AigConst1(pNtkAig))
 	for i, obj := range pNtk.Inputs() {
-		obj.Copy = pNtkAig.Inputs()[i]
+		obj.Copy = pNtkAig.InputAt(int(i))
 	}
 	for i, obj := range pNtk.Outputs() {
-		obj.Copy = pNtkAig.Outputs()[i]
+		obj.Copy = pNtkAig.OutputAt(int(i))
 	}
 	for i, obj := range pNtk.Boxes() {
 		obj.Copy = pNtkAig.Boxes()[i]

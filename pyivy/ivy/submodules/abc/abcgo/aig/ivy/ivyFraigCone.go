@@ -110,7 +110,7 @@ func Ivy_FraigCheckCone(global *Ivy_FraigMan_t, p *Ivy_Man_t, a, b *Ivy_Obj_t, l
 		}
 	}
 	solver.SetLimits(int64(max(limit, 0)), 0)
-	status := solver.Solve(literal(graph.Outputs()[0]))
+	status := solver.Solve(literal(graph.OutputAt(int(0))))
 	if status == bsat.Unsatisfiable {
 		return 1
 	}

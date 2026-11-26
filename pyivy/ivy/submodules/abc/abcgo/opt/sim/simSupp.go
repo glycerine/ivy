@@ -8,7 +8,7 @@ import (
 // Sim_ComputeStrSupp returns node-ID-indexed structural supports, including COs.
 func Sim_ComputeStrSupp(g *aig.Graph) Info {
 	order := graphOrder(g)
-	words := SIM_NUM_WORDS(len(g.Inputs()))
+	words := SIM_NUM_WORDS(g.InputCount())
 	r := Sim_UtilInfoAlloc(int(aig.Aig_ManObjNumMax(g)), words, true)
 	for i, e := range g.Inputs() {
 		Sim_SetBit(r[e.NodeID()], i)

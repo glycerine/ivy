@@ -462,7 +462,7 @@ func abcVerifyNtkToFraig(pNtk *Abc_Ntk_t, params *fraig.Fraig_Params_t) *fraig.F
 	nodes := graph.Nodes()
 	mapped := make([]*fraig.Fraig_Node_t, len(nodes))
 	mapped[0] = fraig.Fraig_ManReadConst1(manager)
-	inputIDs := make(map[int]int, len(graph.Inputs()))
+	inputIDs := make(map[int]int, graph.InputCount())
 	for i, input := range graph.Inputs() {
 		inputIDs[input.NodeID()] = i
 		mapped[input.NodeID()] = fraig.Fraig_ManReadIthVar(manager, int32(i))

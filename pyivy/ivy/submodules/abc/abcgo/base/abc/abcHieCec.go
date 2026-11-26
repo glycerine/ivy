@@ -79,7 +79,7 @@ func graphAndCount(graph *aig.Graph) int32 {
 	return count
 }
 func importHierarchyGraph(dst, source *aig.Graph, inputs []aig.Edge) ([]aig.Edge, error) {
-	if len(inputs) != len(source.Inputs()) {
+	if len(inputs) != source.InputCount() {
 		return nil, fmt.Errorf("cached module input count mismatch")
 	}
 	copies := map[int]aig.Edge{0: 0}
@@ -124,7 +124,7 @@ func importHierarchyGraph(dst, source *aig.Graph, inputs []aig.Edge) ([]aig.Edge
 		}
 		return value, nil
 	}
-	outputs := make([]aig.Edge, len(source.Outputs()))
+	outputs := make([]aig.Edge, source.OutputCount())
 	for i, edge := range source.Outputs() {
 		value, err := visit(edge)
 		if err != nil {

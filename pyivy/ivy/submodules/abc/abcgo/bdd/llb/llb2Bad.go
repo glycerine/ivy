@@ -7,10 +7,10 @@ import (
 // Llb_BddComputeBad forms the disjunction of the AIG's primary outputs. The
 // final register-count outputs encode next-state functions and are excluded.
 func Llb_BddComputeBad(g *Aig_Man_t, dd *DdManager, timeout abctime) *DdNode {
-	if g == nil || dd == nil || len(dd.Vars) < len(g.Inputs()) {
+	if g == nil || dd == nil || len(dd.Vars) < g.InputCount() {
 		return nil
 	}
-	variables := make([]*core.DdNode, len(g.Inputs()))
+	variables := make([]*core.DdNode, g.InputCount())
 	for i := range variables {
 		variables[i] = core.Cudd_bddIthVar(dd, i)
 	}
@@ -18,13 +18,13 @@ func Llb_BddComputeBad(g *Aig_Man_t, dd *DdManager, timeout abctime) *DdNode {
 	if functions == nil {
 		return nil
 	}
-	propertyCount := len(g.Outputs()) - int(g.RegisterCount())
+	propertyCount := g.OutputCount() - int(g.RegisterCount())
 	if propertyCount < 0 {
 		return nil
 	}
 	bad := core.Cudd_ReadLogicZero(dd)
 	for i := 0; i < propertyCount; i++ {
-		bad = core.Cudd_bddOr(dd, bad, llbBDDForEdge(g, functions, g.Outputs()[i]))
+		bad = core.Cudd_bddOr(dd, bad, llbBDDForEdge(g, functions, g.OutputAt(int(i))))
 		if bad == nil {
 			return nil
 		}
@@ -37,7 +37,7 @@ func Llb_BddQuantifyPis(g *Aig_Man_t, dd *DdManager, f *DdNode) *DdNode {
 	if g == nil || dd == nil || f == nil {
 		return nil
 	}
-	piCount := len(g.Inputs()) - int(g.RegisterCount())
+	piCount := g.InputCount() - int(g.RegisterCount())
 	if piCount < 0 {
 		return nil
 	}

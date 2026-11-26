@@ -136,7 +136,7 @@ func Pdr_ManEquivClasses(graph *aig.Graph) {
 	for frame := 0; frame < 100; frame++ {
 		reduced := Pdr_ManRehashWithMap(graph, mapping)
 		property := "unknown"
-		if reduced.OutputCount() > 0 && reduced.Node(reduced.Outputs()[0]).Fanins[0] == reduced.Const0() {
+		if reduced.OutputCount() > 0 && reduced.Node(reduced.OutputAt(int(0))).Fanins[0] == reduced.Const0() {
 			property = "proof"
 		}
 		fmt.Printf("F =%4d : Total = %6d. Nodes = %6d. RedRegs = %6d. Prop = %s\n", frame+1, aig.Aig_ManNodeNum(graph), aig.Aig_ManNodeNum(reduced), Pdr_ManCountMap(mapping), property)

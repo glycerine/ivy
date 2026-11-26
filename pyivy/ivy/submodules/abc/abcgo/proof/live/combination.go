@@ -84,7 +84,7 @@ func generateCombinatorialStabilExhaust(new, old *aig.Graph, disjunctions *[]aig
 	ForEachCombination(int(n), int(k), func(values []int) bool {
 		signals := []aig.Edge{}
 		for j := len(values) - 1; j >= 0; j-- {
-			signals = append(signals, aig.Aig_ObjCopy(old, old.Inputs()[trueInputs(old)+values[j]]))
+			signals = append(signals, aig.Aig_ObjCopy(old, old.InputAt(int(trueInputs(old)+values[j]))))
 		}
 		*disjunctions = append(*disjunctions, disjoin(new, signals))
 		count++
@@ -130,14 +130,14 @@ func disjunctiveTesterMode(p *aig.Graph, candidates []aig.Edge, k int32, source 
 		properties[i] = aig.Aig_Or(c.destination, disjoin(c.destination, signals).Not(), states[i])
 	}
 	for i := 0; i < c.outputCount(); i++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(i))))
 	}
 	for _, e := range properties {
 		aig.Aig_ObjCreateCo(c.destination, e)
 	}
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
 	}
 	for _, e := range properties {
 		aig.Aig_ObjCreateCo(c.destination, e)
@@ -155,7 +155,7 @@ func generateDisjunctiveTester(n *Network, p *aig.Graph, combN, combK int32) *ai
 	}
 	signals := make([]aig.Edge, len(hints))
 	for i, index := range hints {
-		signals[i] = p.Outputs()[index]
+		signals[i] = p.OutputAt(int(index))
 	}
 
 	return disjunctiveTester(p, signals, combK)

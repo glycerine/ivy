@@ -38,7 +38,7 @@ func TestFraigRoundTripKeepsComplementedOutput(t *testing.T) {
 		t.Fatal("no-choice reconstruction returned nil")
 	}
 	defer abc.Abc_NtkDelete(gotNoChoices)
-	if !gotNoChoices.Outputs()[0].FaninAt(int32(0)).Complement {
+	if !gotNoChoices.OutputAt(int(0)).FaninAt(int32(0)).Complement {
 		t.Fatal("no-choice reconstruction lost output polarity")
 	}
 	got := Abc_NtkFromFraig(manager, n)
@@ -46,10 +46,10 @@ func TestFraigRoundTripKeepsComplementedOutput(t *testing.T) {
 		t.Fatal("FRAIG reconstruction returned nil")
 	}
 	defer abc.Abc_NtkDelete(got)
-	if len(got.Outputs()) != 1 || got.Outputs()[0].FaninNum() != 1 {
+	if got.OutputCount() != 1 || got.OutputAt(int(0)).FaninNum() != 1 {
 		t.Fatal("reconstructed network has malformed output")
 	}
-	if !got.Outputs()[0].FaninAt(int32(0)).Complement {
+	if !got.OutputAt(int(0)).FaninAt(int32(0)).Complement {
 		t.Fatal("reconstructed output lost its complement")
 	}
 }
@@ -65,7 +65,7 @@ func TestFraigTopLevelChecksReconstruction(t *testing.T) {
 		t.Fatal("top-level FRAIG rejected the reconstructed AIG")
 	}
 	defer abc.Abc_NtkDelete(got)
-	if len(got.Outputs()) != 1 || got.Outputs()[0].FaninNum() != 1 || !got.Outputs()[0].FaninAt(int32(0)).Complement {
+	if got.OutputCount() != 1 || got.OutputAt(int(0)).FaninNum() != 1 || !got.OutputAt(int(0)).FaninAt(int32(0)).Complement {
 		t.Fatal("top-level FRAIG changed the output function")
 	}
 }
@@ -104,10 +104,10 @@ func TestFraigTrustPreservesOrChoices(t *testing.T) {
 		_ = i
 	}
 	edge := Abc_NodeFraigTrust(dest, node)
-	if edge.Object != dest.Inputs()[0] || edge.Complement {
+	if edge.Object != dest.InputAt(int(0)) || edge.Complement {
 		t.Fatal("trust reconstruction did not preserve the OR root as the first choice")
 	}
-	if edge.Object.Choice != dest.Inputs()[1] || edge.Object.Choice.Choice != dest.Inputs()[2] {
+	if edge.Object.Choice != dest.InputAt(int(1)) || edge.Object.Choice.Choice != dest.InputAt(int(2)) {
 		t.Fatal("trust reconstruction did not link all alternative choices")
 	}
 }

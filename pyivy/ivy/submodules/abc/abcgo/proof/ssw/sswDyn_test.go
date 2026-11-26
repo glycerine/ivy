@@ -36,7 +36,7 @@ func TestSswDynamicCollectConstraintSupport(t *testing.T) {
 	if vec.Vec_IntSize(outputs) != 2 || vec.Vec_IntEntry(outputs, 0) != 0 || vec.Vec_IntEntry(outputs, 1) != 0 {
 		t.Fatalf("constraint pairs: %v", vec.Vec_IntArray(outputs))
 	}
-	if g.Node(g.Outputs()[2]).MarkB != true {
+	if g.Node(g.OutputAt(int(2))).MarkB != true {
 		t.Fatal("register output should be visited and excluded")
 	}
 }

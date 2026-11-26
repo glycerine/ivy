@@ -51,7 +51,7 @@ func Ssw_MatchingStart(p0, p1 *aig.Graph, pairs *vec.Vec_Int_t) {
 		panic("ssw: PI count mismatch")
 	}
 	for i := 0; i < pi; i++ {
-		check(p0.Inputs()[i], p1.Inputs()[i])
+		check(p0.InputAt(int(i)), p1.InputAt(int(i)))
 	}
 	for _, e := range p0.Outputs() {
 		if _, ok := sswIslandMatch(p0, e); ok {

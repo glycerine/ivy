@@ -9,7 +9,7 @@ import (
 // Faig_ManComputeProbOne when estimating transition activity.
 func TestFastTransitionOddFrameDenominatorMatchesSource(t *testing.T) {
 	g := simulationFixture()
-	state := g.Inputs()[1].NodeID()
+	state := g.InputAt(int(1)).NodeID()
 	activity, err := SwitchingProbabilities(g, 3, 0, false)
 	if err != nil {
 		t.Fatal(err)

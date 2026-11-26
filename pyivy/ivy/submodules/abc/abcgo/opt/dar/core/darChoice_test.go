@@ -78,8 +78,8 @@ func TestNewChoiceRestoresTimingBeforeComputingLevels(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if result.Timing != manager || aig.Aig_ObjLevel(result, result.Outputs()[1]) != 3 {
-		t.Fatalf("timing=%v output level=%d", result.Timing, aig.Aig_ObjLevel(result, result.Outputs()[1]))
+	if result.Timing != manager || aig.Aig_ObjLevel(result, result.OutputAt(int(1))) != 3 {
+		t.Fatalf("timing=%v output level=%d", result.Timing, aig.Aig_ObjLevel(result, result.OutputAt(int(1))))
 	}
 }
 

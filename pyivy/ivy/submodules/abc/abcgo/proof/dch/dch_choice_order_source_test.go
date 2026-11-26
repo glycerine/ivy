@@ -23,7 +23,7 @@ func TestSourceMultipleChoiceOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		head := q.Node(q.Outputs()[0]).Fanins[0]
+		head := q.Node(q.OutputAt(int(0))).Fanins[0]
 		var got []string
 		for n := head; n != aig.InvalidEdge; n = aig.Aig_ObjEquiv(q, n) {
 			obj := q.Node(n)

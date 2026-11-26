@@ -83,8 +83,8 @@ func Aig_ManCreateDualOutputMiter(p1, p2 *aig.Graph) *aig.Graph {
 		return mapped
 	}
 	for i := range p1.Outputs() {
-		out1 := p1.Node(p1.Outputs()[i]).Fanins[0]
-		out2 := p2.Node(p2.Outputs()[i]).Fanins[0]
+		out1 := p1.Node(p1.OutputAt(int(i))).Fanins[0]
+		out2 := p2.Node(p2.OutputAt(int(i))).Fanins[0]
 		pNew.AddOutput(copyEdge(p1, out1))
 		pNew.AddOutput(copyEdge(p2, out2))
 	}

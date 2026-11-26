@@ -23,7 +23,7 @@ func Abc_NtkInitStateVarMap(dd *core.DdManager, network *abc.Network, verbose in
 	if dd == nil || network == nil {
 		return nil
 	}
-	piNum, ciNum, latches := len(network.ObjectsOfKind(abc.ObjectPI)), len(network.Inputs()), network.ObjectsOfKind(abc.ObjectLatch)
+	piNum, ciNum, latches := len(network.ObjectsOfKind(abc.ObjectPI)), network.InputCount(), network.ObjectsOfKind(abc.ObjectLatch)
 	if size := ciNum + len(latches); size > 0 && core.Cudd_bddIthVar(dd, size-1) == nil {
 		return nil
 	}
@@ -53,7 +53,7 @@ func Abc_NtkCreatePartitions(dd *core.DdManager, network *abc.Network, reorder, 
 	if dd == nil || network == nil {
 		return nil
 	}
-	ciNum := len(network.Inputs())
+	ciNum := network.InputCount()
 	latches := network.ObjectsOfKind(abc.ObjectLatch)
 	if size := ciNum + len(latches); size > 0 && core.Cudd_bddIthVar(dd, size-1) == nil {
 		return nil
@@ -116,7 +116,7 @@ func Abc_NtkComputeReachable(dd *core.DdManager, network *abc.Network, parts []*
 	if dd == nil || network == nil || initial == nil || output == nil || maxIterations <= 1 || len(parts) != len(network.ObjectsOfKind(abc.ObjectLatch)) {
 		return nil
 	}
-	piNum, ciNum, latches := len(network.ObjectsOfKind(abc.ObjectPI)), len(network.Inputs()), network.ObjectsOfKind(abc.ObjectLatch)
+	piNum, ciNum, latches := len(network.ObjectsOfKind(abc.ObjectPI)), network.InputCount(), network.ObjectsOfKind(abc.ObjectLatch)
 	care := extrab.Extra_bddComputeRangeCube(dd, piNum, ciNum)
 	if care == nil {
 		return nil

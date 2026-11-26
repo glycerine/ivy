@@ -158,7 +158,7 @@ func runNewChoice(g *aig.Graph, p *ChoiceOptions, classicSynthesis bool) (*aig.G
 	if err = result.Check(); err != nil {
 		return nil, err
 	}
-	if len(result.Inputs()) != len(g.Inputs()) || len(result.Outputs()) != len(g.Outputs()) {
+	if result.InputCount() != g.InputCount() || result.OutputCount() != g.OutputCount() {
 		return nil, fmt.Errorf("dar: choice engine changed the ordered interface size")
 	}
 	order := aig.Aig_ManOrderPios(result, g)

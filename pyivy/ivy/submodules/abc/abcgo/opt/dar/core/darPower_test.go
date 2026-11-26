@@ -1,4 +1,5 @@
 package core
+
 import (
 	"context"
 	"math"
@@ -61,7 +62,7 @@ func TestActivityStableIDsAndNativeXor(t *testing.T) {
 	if math.Abs(float64(probabilities[old.NodeID()]+probabilities[xor.NodeID()]-1)) > 1e-7 {
 		t.Fatal("buffer phase lost", probabilities)
 	}
-	if probabilities[old.NodeID()] != probabilities[g.Outputs()[0].NodeID()] {
+	if probabilities[old.NodeID()] != probabilities[g.OutputAt(int(0)).NodeID()] {
 		t.Fatal("output probability lost")
 	}
 }

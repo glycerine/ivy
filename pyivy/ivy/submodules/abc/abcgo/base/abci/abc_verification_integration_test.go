@@ -72,7 +72,7 @@ func TestIvyProveReturnsReplacementForLogicInput(t *testing.T) {
 		var parameters Prove_Params_t
 		Prove_ParamsSetDefault(&parameters)
 		status := Abc_NtkIvyProve(&logic, &parameters)
-		if abc.Abc_NtkIsStrash(logic) == 0 || len(logic.Inputs()) != 2 || len(logic.Outputs()) != 1 {
+		if abc.Abc_NtkIsStrash(logic) == 0 || logic.InputCount() != 2 || logic.OutputCount() != 1 {
 			t.Fatalf("prover returned deleted or unconverted network for truth %x", truth)
 		}
 		if (status == 1) != (truth == 0) {

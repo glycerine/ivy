@@ -128,7 +128,7 @@ func Abc_NtkMiterSatCreateInt(s *bsat.Solver2, n *Abc_Ntk_t) bool {
 	for _, ci := range n.Inputs() {
 		ci.CopyData = s.NewVariable()
 	}
-	roots := make([]*Object, 0, len(n.Outputs()))
+	roots := make([]*Object, 0, n.OutputCount())
 	for _, po := range n.Outputs() {
 		f := po.Fanins()
 		if len(f) != 0 {

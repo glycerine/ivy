@@ -1,4 +1,5 @@
 package core
+
 import (
 	"bufio"
 	"bytes"
@@ -63,7 +64,7 @@ func TestPowerOriginalCOracle(t *testing.T) {
 			t.Fatal(err)
 		}
 		nodes := g.Nodes()
-		fmt.Fprintf(&input, "S %d %d %d %d %d %d %d %d %d\n", len(nodes), len(g.Inputs()), len(g.Outputs()), registers, options.Words, options.Frames, options.Prefix, boolInt(options.Transitions), options.RandomFactor)
+		fmt.Fprintf(&input, "S %d %d %d %d %d %d %d %d %d\n", len(nodes), g.InputCount(), g.OutputCount(), registers, options.Words, options.Frames, options.Prefix, boolInt(options.Transitions), options.RandomFactor)
 		want := []uint32{uint32(len(nodes))}
 		for id, n := range nodes {
 			kind := 0

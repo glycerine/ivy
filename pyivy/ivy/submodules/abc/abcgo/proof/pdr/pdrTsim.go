@@ -202,7 +202,7 @@ func Pdr_ManDeriveResult(g *aig.Graph, cis, vals, removed, res, pis *vec.Vec_Int
 	}
 }
 func Pdr_ManPrintCex(g *aig.Graph, cis, vals, removed *vec.Vec_Int_t) {
-	b := make([]byte, len(g.Inputs()))
+	b := make([]byte, g.InputCount())
 	for i := range b {
 		b[i] = '-'
 	}

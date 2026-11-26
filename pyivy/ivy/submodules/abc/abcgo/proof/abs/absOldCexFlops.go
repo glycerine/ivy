@@ -36,7 +36,7 @@ func Saig_ManCbaFilterFlops(g *aig.Graph, cex *util.Abc_Cex_t, classes, candidat
 		base := cex.NRegs + frame*cex.NPis
 		// The C implementation omitted these real PIs, incorrectly treating them as zero.
 		for i := int32(0); i < piCount; i++ {
-			values[g.Inputs()[i].NodeID()] = util.Abc_InfoHasBit(cex.PData, base+i)
+			values[g.InputAt(int(i)).NodeID()] = util.Abc_InfoHasBit(cex.PData, base+i)
 		}
 		for i, reg := range mapping {
 			values[saig.Saig_ManLo(g, reg).NodeID()] = util.Abc_InfoHasBit(cex.PData, base+piCount+int32(i))

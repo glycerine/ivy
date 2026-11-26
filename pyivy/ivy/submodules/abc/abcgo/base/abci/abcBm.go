@@ -322,7 +322,7 @@ func Abc_NtkSimulateOneNode(pNtk *Abc_Ntk_t, model []int32, input int32, topOrde
 	_ = input
 	_ = topOrder
 	graph := baseabc.Abc_NtkStrashToGia(pNtk)
-	inputs := make([]bool, len(graph.Inputs()))
+	inputs := make([]bool, graph.InputCount())
 	for i := range inputs {
 		if i < len(model) {
 			inputs[i] = model[i] != 0
@@ -332,7 +332,7 @@ func Abc_NtkSimulateOneNode(pNtk *Abc_Ntk_t, model []int32, input int32, topOrde
 	if err != nil {
 		panic(err)
 	}
-	outputs := make([]int32, len(graph.Outputs()))
+	outputs := make([]int32, graph.OutputCount())
 	for i := range graph.Outputs() {
 		if values[i] {
 			outputs[i] = 1
@@ -377,7 +377,7 @@ func bmSplitByKey(match []*Vec_Int_t, group []int32, groupIndex int32, lastItem 
 func refineIOBySimulation(pNtk *Abc_Ntk_t, iMatch []*Vec_Int_t, iLastItem *int32, iGroup []int32, iDep []*Vec_Int_t, oMatch []*Vec_Int_t, oLastItem *int32, oGroup []int32, oDep []*Vec_Int_t, piValues string, observability []int32, topOrder []*Vec_Ptr_t) int32 {
 	_ = oDep
 	graph := baseabc.Abc_NtkStrashToGia(pNtk)
-	inputCount, outputEdges := len(graph.Inputs()), graph.Outputs()
+	inputCount, outputEdges := graph.InputCount(), graph.Outputs()
 	model := make([]int32, inputCount)
 	for i := 0; i < inputCount && i < len(piValues); i++ {
 		model[i] = int32(piValues[i] - '0')
@@ -605,7 +605,7 @@ func Abc_NtkMiterBm(pNtk1, pNtk2 *Abc_Ntk_t, iCurrMatch, oCurrMatch *Vec_Ptr_t) 
 
 func Abc_NtkVerifyReportErrorWithMismatch(pNtk1, pNtk2 *Abc_Ntk_t, model []int32, mismatch *Vec_Int_t) {
 	graph1, graph2 := baseabc.Abc_NtkStrashToGia(pNtk1), baseabc.Abc_NtkStrashToGia(pNtk2)
-	if len(graph1.Inputs()) != len(model) || len(graph2.Inputs()) != len(model) {
+	if graph1.InputCount() != len(model) || graph2.InputCount() != len(model) {
 		return
 	}
 	inputs := make([]bool, len(model))
@@ -708,10 +708,10 @@ func computeCofactor(pNtk *Abc_Ntk_t, nodesInLevel []*Vec_Ptr_t, bitVector []int
 	}
 	for i := int32(0); i < Vec_IntSize(currInputs); i++ {
 		index := int(Vec_IntEntry(currInputs, i))
-		if index < 0 || index >= len(source.Inputs()) {
+		if index < 0 || index >= source.InputCount() {
 			continue
 		}
-		input := source.Inputs()[index]
+		input := source.InputAt(int(index))
 		known[input.NodeID()], mapped[input.NodeID()] = true, destination.NewInput()
 	}
 	for id := 1; id < len(nodes); id++ {

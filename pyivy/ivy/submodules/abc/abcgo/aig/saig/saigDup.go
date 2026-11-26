@@ -157,7 +157,7 @@ func Saig_ManDupAbstraction(p *aig.Graph, flops *vec.Vec_Int_t) *aig.Graph {
 	}
 	for i, keep := range selected {
 		if keep {
-			d.dst.AddOutput(d.edge(p.Outputs()[int(Saig_ManPoNum(p))+i]))
+			d.dst.AddOutput(d.edge(p.OutputAt(int(int(Saig_ManPoNum(p)) + i))))
 		}
 	}
 	d.finish(int32(vec.Vec_IntSize(flops)))
@@ -207,7 +207,7 @@ func Saig_ManDupCones(p *aig.Graph, outputs []int32, nOutputs int32) *aig.Graph 
 	}
 	roots := make([]aig.Edge, nOutputs)
 	for i := range roots {
-		roots[i] = p.Outputs()[outputs[i]]
+		roots[i] = p.OutputAt(int(outputs[i]))
 	}
 	seen := map[int]bool{0: true}
 	var leaves, regs []aig.Edge

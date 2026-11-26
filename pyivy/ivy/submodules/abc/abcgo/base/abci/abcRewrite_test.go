@@ -60,7 +60,7 @@ func TestRewriteI10PreservesZeroInput(t *testing.T) {
 	}
 	for i, output := range evaluateNetwork(t, second, 0) {
 		if output != want[i] {
-			t.Fatalf("all zeros: %s changed from %t to %t", second.Outputs()[i].Name(), want[i], output)
+			t.Fatalf("all zeros: %s changed from %t to %t", second.OutputAt(int(i)).Name(), want[i], output)
 		}
 	}
 }

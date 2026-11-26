@@ -41,11 +41,11 @@ func TestRestrashPreservesComplementedTruthTableAndCleanup(t *testing.T) {
 		}
 		for bits := 0; bits < 8; bits++ {
 			inputs := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}
-			want, err := original.Evaluate(original.Outputs()[0].FaninAt(int32(0)), mapInputs(original.Inputs(), inputs))
+			want, err := original.Evaluate(original.OutputAt(int(0)).FaninAt(int32(0)), mapInputs(original.Inputs(), inputs))
 			if err != nil {
 				t.Fatal(err)
 			}
-			value, err := got.Evaluate(got.Outputs()[0].FaninAt(int32(0)), mapInputs(got.Inputs(), inputs))
+			value, err := got.Evaluate(got.OutputAt(int(0)).FaninAt(int32(0)), mapInputs(got.Inputs(), inputs))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -63,12 +63,12 @@ func TestTopmostAndBottommostPreserveCutOrderingAndComplement(t *testing.T) {
 	if top == nil {
 		t.Fatal("Abc_NtkTopmost failed")
 	}
-	if got := len(top.Inputs()); got != 2 {
+	if got := top.InputCount(); got != 2 {
 		t.Fatalf("top cut input count=%d, want 2", got)
 	}
 	for mask := 0; mask < 4; mask++ {
 		want := !(mask&1 != 0 && mask&2 != 0)
-		got, err := top.Evaluate(top.Outputs()[0].FaninAt(int32(0)), mapInputs(top.Inputs(), []bool{mask&1 != 0, mask&2 != 0}))
+		got, err := top.Evaluate(top.OutputAt(int(0)).FaninAt(int32(0)), mapInputs(top.Inputs(), []bool{mask&1 != 0, mask&2 != 0}))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -82,15 +82,15 @@ func TestTopmostAndBottommostPreserveCutOrderingAndComplement(t *testing.T) {
 	if bottom == nil {
 		t.Fatal("Abc_NtkBottommost failed")
 	}
-	if got := len(bottom.Inputs()); got != 3 {
+	if got := bottom.InputCount(); got != 3 {
 		t.Fatalf("bottom cut input count=%d, want 3", got)
 	}
-	if got := len(bottom.Outputs()); got != 1 {
+	if got := bottom.OutputCount(); got != 1 {
 		t.Fatalf("bottom cut output count=%d, want 1", got)
 	}
 	for mask := 0; mask < 8; mask++ {
 		want := mask&1 != 0 && mask&2 == 0
-		got, err := bottom.Evaluate(bottom.Outputs()[0].FaninAt(int32(0)), mapInputs(bottom.Inputs(), []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}))
+		got, err := bottom.Evaluate(bottom.OutputAt(int(0)).FaninAt(int32(0)), mapInputs(bottom.Inputs(), []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}))
 		if err != nil {
 			t.Fatal(err)
 		}

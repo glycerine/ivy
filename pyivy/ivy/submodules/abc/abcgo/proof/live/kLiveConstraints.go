@@ -53,7 +53,7 @@ func createNewAigWith0LivePoMode(p *aig.Graph, signals []aig.Edge, index *int32,
 		c.signal(e)
 	}
 	for i := 0; i < c.outputCount(); i++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(i))))
 	}
 	if index != nil {
 		*index = int32(c.outputCount())
@@ -61,7 +61,7 @@ func createNewAigWith0LivePoMode(p *aig.Graph, signals []aig.Edge, index *int32,
 	aig.Aig_ObjCreateCo(c.destination, createConstrained0LiveCone(p, c.destination, signals))
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
 	c.setConstraints()

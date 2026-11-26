@@ -15,7 +15,7 @@ func Abc_NtkTransitionRelation(dd *core.DdManager, network *abc.Network, verbose
 	if dd == nil || network == nil {
 		return nil
 	}
-	piNum, ciNum := len(network.ObjectsOfKind(abc.ObjectPI)), len(network.Inputs())
+	piNum, ciNum := len(network.ObjectsOfKind(abc.ObjectPI)), network.InputCount()
 	latches := network.ObjectsOfKind(abc.ObjectLatch)
 	for i := 0; i < ciNum+len(latches); i++ {
 		core.Cudd_bddIthVar(dd, i)
@@ -85,7 +85,7 @@ func Abc_NtkComputeUnreachable(dd *core.DdManager, network *abc.Network, transit
 	if dd == nil || network == nil || transition == nil || initial == nil {
 		return nil
 	}
-	piNum, ciNum := len(network.ObjectsOfKind(abc.ObjectPI)), len(network.Inputs())
+	piNum, ciNum := len(network.ObjectsOfKind(abc.ObjectPI)), network.InputCount()
 	latchNum := len(network.ObjectsOfKind(abc.ObjectLatch))
 	if core.Cudd_bddVarMap(dd, dd.One) == nil && !abcRegisterLatchMap(dd, piNum, ciNum, latchNum) {
 		return nil

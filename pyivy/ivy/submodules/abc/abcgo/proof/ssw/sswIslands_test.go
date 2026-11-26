@@ -20,7 +20,7 @@ func TestIslandMatchingExtendAndComplete(t *testing.T) {
 	a, ai, ax, ay := build()
 	b, bi, bx, by := build()
 	pairs := vec.Vec_IntAlloc(10)
-	for _, pair := range [][2]aig.Edge{{a.Const1(), b.Const1()}, {ai, bi}, {a.Inputs()[1], b.Inputs()[1]}, {ax, bx}} {
+	for _, pair := range [][2]aig.Edge{{a.Const1(), b.Const1()}, {ai, bi}, {a.InputAt(int(1)), b.InputAt(int(1))}, {ax, bx}} {
 		vec.Vec_IntPushTwo(pairs, int32(pair[0].NodeID()), int32(pair[1].NodeID()))
 	}
 	Ssw_MatchingStart(a, b, pairs)

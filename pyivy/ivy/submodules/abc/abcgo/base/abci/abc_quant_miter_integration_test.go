@@ -43,7 +43,7 @@ func evaluateNetwork(t *testing.T, n *abc.Network, bits int) []bool {
 	for i, input := range n.Inputs() {
 		inputs[input] = bits>>i&1 != 0
 	}
-	result := make([]bool, len(n.Outputs()))
+	result := make([]bool, n.OutputCount())
 	for i, output := range n.Outputs() {
 		var err error
 		result[i], err = n.Evaluate(output.Signal(), inputs)
@@ -185,7 +185,7 @@ func TestSequentialFramesAndTransitionRelation(t *testing.T) {
 		if framed == nil {
 			t.Fatal("framing failed")
 		}
-		for bits := 0; bits < 1<<len(framed.Inputs()); bits++ {
+		for bits := 0; bits < 1<<framed.InputCount(); bits++ {
 			got := evaluateNetwork(t, framed, bits)
 			current := true
 			if initial == 0 {

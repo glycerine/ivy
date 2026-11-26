@@ -26,14 +26,14 @@ func TestFunctionalConstraintInductionMiter(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := len(miter.Outputs()); got != 1 {
+	if got := miter.OutputCount(); got != 1 {
 		t.Fatalf("outputs = %d, want 1", got)
 	}
 	cnf, err := encodeAIG(miter)
 	if err != nil {
 		t.Fatal(err)
 	}
-	assumption := cnf.lit(aig.Aig_ObjChild0(miter, miter.Outputs()[0]))
+	assumption := cnf.lit(aig.Aig_ObjChild0(miter, miter.OutputAt(int(0))))
 	if got := cnf.solver.Solve(assumption); got != bsat.Satisfiable {
 		t.Fatalf("transition x(0) && !x(1) status = %v, want satisfiable", got)
 	}
@@ -106,7 +106,7 @@ func TestUnfoldFunctionalConstraintAddsPipelineFlop(t *testing.T) {
 	if got := aig.Aig_ManConstrNum(unfolded); got != 1 {
 		t.Fatalf("constraints = %d, want 1", got)
 	}
-	if got := len(unfolded.Outputs()); got != 4 {
+	if got := unfolded.OutputCount(); got != 4 {
 		t.Fatalf("outputs = %d, want original property, new constraint, and two LIs", got)
 	}
 }
@@ -122,7 +122,7 @@ func TestFoldFunctionalConstraintGatesProperties(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := len(folded.Outputs()); got != 1 {
+	if got := folded.OutputCount(); got != 1 {
 		t.Fatalf("outputs = %d, want 1", got)
 	}
 	for _, tc := range []struct {

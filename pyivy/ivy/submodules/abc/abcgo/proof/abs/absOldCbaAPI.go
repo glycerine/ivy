@@ -10,7 +10,7 @@ import (
 )
 
 func printCbaStats(p *Saig_ManCba_t, reasons, inputs *vec.Vec_Int_t, started time.Time) {
-	fmt.Printf("Frame PIs = %4d (essential = %4d)   AIG PIs = %4d (essential = %4d)   Time = %s\n", len(p.pFrames.Inputs()), vec.Vec_IntSize(reasons), saig.Saig_ManPiNum(p.pAig)-p.nInputs, vec.Vec_IntSize(inputs), time.Since(started))
+	fmt.Printf("Frame PIs = %4d (essential = %4d)   AIG PIs = %4d (essential = %4d)   Time = %s\n", p.pFrames.InputCount(), vec.Vec_IntSize(reasons), saig.Saig_ManPiNum(p.pAig)-p.nInputs, vec.Vec_IntSize(inputs), time.Since(started))
 }
 func Saig_ManCbaFindCexCareBits(g *aig.Graph, cex *util.Abc_Cex_t, nInputs, verbose int32) *util.Abc_Cex_t {
 	started := time.Now()
@@ -30,7 +30,7 @@ func Saig_ManCbaFindCexCareBits(g *aig.Graph, cex *util.Abc_Cex_t, nInputs, verb
 }
 func Saig_ManCbaFilterInputs(g *aig.Graph, firstFlopPI int32, cex *util.Abc_Cex_t, verbose int32) *vec.Vec_Int_t {
 	if saig.Saig_ManPiNum(g) != cex.NPis {
-		fmt.Printf("Saig_ManCbaFilterInputs(): The PI count of AIG (%d) does not match that of cex (%d).\n", len(g.Inputs()), cex.NPis)
+		fmt.Printf("Saig_ManCbaFilterInputs(): The PI count of AIG (%d) does not match that of cex (%d).\n", g.InputCount(), cex.NPis)
 		return nil
 	}
 	started := time.Now()

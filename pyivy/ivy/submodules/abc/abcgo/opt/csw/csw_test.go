@@ -12,7 +12,7 @@ func compareSweep(t *testing.T, g *aig.Graph, cuts, leaves int32) {
 	if err := out.Check(); err != nil {
 		t.Fatal(err)
 	}
-	n := len(g.Inputs())
+	n := g.InputCount()
 	for assignment := 0; assignment < 1<<n; assignment++ {
 		in := make([]bool, n)
 		for i := range in {

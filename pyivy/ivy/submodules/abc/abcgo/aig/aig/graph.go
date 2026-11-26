@@ -107,7 +107,12 @@ func (g *Graph) Const1() Edge     { return 0 }
 func (g *Graph) Const0() Edge     { return 1 }
 func (g *Graph) InputCount() int  { return len(g.inputs) }
 func (g *Graph) OutputCount() int { return len(g.outputs) }
-func (g *Graph) NodeCount() int   { return len(g.nodes) - g.nDeleted }
+
+// InputAt and OutputAt read one entry without copying the arrays, as
+// g.InputAt(int(i)) and g.OutputAt(int(i)) do.
+func (g *Graph) InputAt(i int) Edge  { return g.inputs[i] }
+func (g *Graph) OutputAt(i int) Edge { return g.outputs[i] }
+func (g *Graph) NodeCount() int      { return len(g.nodes) - g.nDeleted }
 
 // isDeleted reports whether object id was removed. Deletion is permanent.
 func (g *Graph) isDeleted(id int) bool { return id < len(g.deleted) && g.deleted[id] }

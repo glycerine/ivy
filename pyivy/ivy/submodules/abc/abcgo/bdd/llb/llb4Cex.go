@@ -127,7 +127,7 @@ func Llb4_Nonlin4VerifyCex(g *Aig_Man_t, cex *Abc_Cex_t) *Vec_Ptr_t {
 		return nil
 	}
 	registers, pis := int(cex.NRegs), int(cex.NPis)
-	if registers != int(g.RegisterCount()) || pis != len(g.Inputs())-registers {
+	if registers != int(g.RegisterCount()) || pis != g.InputCount()-registers {
 		return nil
 	}
 	states := vec.Vec_PtrAlloc(int(cex.IFrame) + 1)
@@ -175,7 +175,7 @@ func Llb4_Nonlin4NormalizeCex(original, reduced *Aig_Man_t, cex *Abc_Cex_t) *Abc
 }
 
 func llbCexValidForGraph(g *Aig_Man_t, cex *Abc_Cex_t) bool {
-	if g == nil || cex == nil || int(g.RegisterCount()) != int(cex.NRegs) || len(g.Inputs())-int(g.RegisterCount()) != int(cex.NPis) || cex.IFrame < 0 {
+	if g == nil || cex == nil || int(g.RegisterCount()) != int(cex.NRegs) || g.InputCount()-int(g.RegisterCount()) != int(cex.NPis) || cex.IFrame < 0 {
 		return false
 	}
 	registers, pis := int(cex.NRegs), int(cex.NPis)
@@ -183,7 +183,7 @@ func llbCexValidForGraph(g *Aig_Man_t, cex *Abc_Cex_t) bool {
 	for i := range current {
 		current[i] = llbCexGet(cex.PData, i)
 	}
-	properties := len(g.Outputs()) - registers
+	properties := g.OutputCount() - registers
 	for frame := 0; frame <= int(cex.IFrame); frame++ {
 		assignment := make([]bool, pis+registers)
 		for i := 0; i < pis; i++ {

@@ -96,7 +96,7 @@ func UnfoldStructuralConstraints(src *aig.Graph) (*aig.Graph, bool, error) {
 	}
 	regs := int(aig.Aig_ManRegNum(src))
 	outputs := src.Outputs()
-	if regs < 0 || regs > len(src.Inputs()) || regs > len(outputs) {
+	if regs < 0 || regs > src.InputCount() || regs > len(outputs) {
 		return nil, false, errors.New("saig: malformed sequential interface")
 	}
 	poCount := len(outputs) - regs

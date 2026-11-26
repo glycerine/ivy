@@ -19,7 +19,7 @@ func oldRefinementReason(p *Saig_RefMan_t) (*vec.Vec_Int_t, []bool) {
 	for i := range priority {
 		priority[i] = -1
 	}
-	inputIndex := make(map[int]int, len(g.Inputs()))
+	inputIndex := make(map[int]int, g.InputCount())
 	for i, e := range g.Inputs() {
 		priority[e.NodeID()] = i
 		inputIndex[e.NodeID()] = i
@@ -44,7 +44,7 @@ func oldRefinementReason(p *Saig_RefMan_t) (*vec.Vec_Int_t, []bool) {
 			priority[e.NodeID()] = min(ap, bp)
 		}
 	}
-	out := g.Node(g.Outputs()[0]).Fanins[0]
+	out := g.Node(g.OutputAt(int(0))).Fanins[0]
 	if value(out) {
 		panic("refinement reason requires a false output")
 	}

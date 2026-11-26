@@ -65,8 +65,8 @@ func TestSbdBoxTimingPreservesDisabledArcsAndOwnership(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ci := int32(imported.Graph.Inputs()[2].NodeID())
-	co := int32(imported.Graph.Outputs()[1].NodeID())
+	ci := int32(imported.Graph.InputAt(int(2)).NodeID())
+	co := int32(imported.Graph.OutputAt(int(1)).NodeID())
 	if len(imported.BoxInputs[ci]) != 2 || len(imported.BoxLevelInputs[ci]) != 1 || imported.BoxLevelInputs[ci][0] != co {
 		t.Fatalf("box arcs: all=%v enabled=%v", imported.BoxInputs, imported.BoxLevelInputs)
 	}

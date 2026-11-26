@@ -62,7 +62,7 @@ func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *mono
 		delayedInOrder = append(delayedInOrder, d)
 	}
 	c.copySourceNodes()
-	pending := c.signal(p.Outputs()[indexes.attrPendingSignalIndex])
+	pending := c.signal(p.OutputAt(int(indexes.attrPendingSignalIndex)))
 	guard := aig.Aig_And(c.destination, pending, pendingOld)
 	for _, id := range vectors.attrKnownMonotone {
 		driverID, previous := id, delayed[id]
@@ -70,18 +70,18 @@ func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *mono
 			driverID = id - indexes.attrHintSingalBeginningMarker + 1 + indexes.attrPendingSignalIndex
 			previous = delayedInOrder[int(driverID)-c.outputCount()]
 		}
-		guard = aig.Aig_And(c.destination, guard, aig.Aig_Exor(c.destination, c.signal(p.Outputs()[driverID]), previous).Not())
+		guard = aig.Aig_And(c.destination, guard, aig.Aig_Exor(c.destination, c.signal(p.OutputAt(int(driverID))), previous).Not())
 	}
 	properties := []aig.Edge{}
 	for _, id := range vectors.attrHintMonotone {
 		if slices.Contains(vectors.attrKnownMonotone, id) {
 			continue
 		}
-		property := aig.Aig_Or(c.destination, aig.Aig_And(c.destination, guard, delayed[id]).Not(), c.signal(p.Outputs()[id]))
+		property := aig.Aig_Or(c.destination, aig.Aig_And(c.destination, guard, delayed[id]).Not(), c.signal(p.OutputAt(int(id))))
 		properties = append(properties, property)
 	}
 	for i := 0; i < c.outputCount(); i++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(i))))
 	}
 	if start != nil {
 		*start = int32(c.outputCount())
@@ -91,11 +91,11 @@ func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *mono
 	}
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
 	}
 	aig.Aig_ObjCreateCo(c.destination, pending)
 	for _, id := range vectors.attrHintMonotone {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[id]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(id))))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+1+len(vectors.attrHintMonotone)))
 	c.setConstraints()
@@ -105,7 +105,7 @@ func negateOutputs(p *aig.Graph, first int) *aig.Graph {
 	c := newGraphCopy(p, "_check")
 	c.copyInputs()
 	for i := 0; i < propertyOutputs(p); i++ {
-		driver := c.signal(p.Outputs()[i])
+		driver := c.signal(p.OutputAt(int(i)))
 		if i >= first {
 			driver = driver.Not()
 		}
@@ -113,7 +113,7 @@ func negateOutputs(p *aig.Graph, first int) *aig.Graph {
 	}
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
 	}
 	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
 	c.setConstraints()
@@ -140,7 +140,7 @@ func findNewMonotone(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVecto
 	tester := createMonotoneTester(p, indexes, vectors, &start)
 	var proved []int32
 	for i := int(start); i < trueOutputs(tester); i++ {
-		output := tester.Outputs()[i]
+		output := tester.OutputAt(int(i))
 		driver := outputDriver(tester, i)
 		aig.Aig_ObjPatchFanin0(tester, output, driver.Not())
 		result, err := pdr.Solve(tester, nil)

@@ -27,7 +27,7 @@ func Ssw_SmlSavePattern1(p *Ssw_Man_t, init int32) {
 		return
 	}
 	nRegs := int(p.pAig.RegisterCount())
-	nPis := len(p.pAig.Inputs()) - nRegs
+	nPis := p.pAig.InputCount() - nRegs
 	for i := 0; i < nRegs; i++ {
 		sswTogglePatternBit(p.pPatWords, nPis*int(p.nFrames)+i)
 	}

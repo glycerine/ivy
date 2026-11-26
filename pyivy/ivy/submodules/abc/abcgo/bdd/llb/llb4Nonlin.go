@@ -19,7 +19,7 @@ func Llb_Nonlin4ComputeBad(dd *DdManager, g *Aig_Man_t, order *Vec_Int_t) *DdNod
 	if dd == nil || g == nil {
 		return nil
 	}
-	inputs := make([]*core.DdNode, len(g.Inputs()))
+	inputs := make([]*core.DdNode, g.InputCount())
 	for i, e := range g.Inputs() {
 		index := int(e.NodeID())
 		if order != nil && int(e.NodeID()) < vec.Vec_IntSize(order) {
@@ -33,10 +33,10 @@ func Llb_Nonlin4ComputeBad(dd *DdManager, g *Aig_Man_t, order *Vec_Int_t) *DdNod
 	if fs == nil {
 		return nil
 	}
-	count := len(g.Outputs()) - int(g.RegisterCount())
+	count := g.OutputCount() - int(g.RegisterCount())
 	bad := core.Cudd_ReadLogicZero(dd)
 	for i := 0; i < count; i++ {
-		bad = core.Cudd_bddOr(dd, bad, llbBDDForEdge(g, fs, g.Outputs()[i]))
+		bad = core.Cudd_bddOr(dd, bad, llbBDDForEdge(g, fs, g.OutputAt(int(i))))
 	}
 	return bad
 }
@@ -45,7 +45,7 @@ func Llb_Nonlin4DerivePartitions(dd *DdManager, g *Aig_Man_t, order *Vec_Int_t) 
 	if dd == nil || g == nil {
 		return result
 	}
-	inputs := make([]*core.DdNode, len(g.Inputs()))
+	inputs := make([]*core.DdNode, g.InputCount())
 	for i := range inputs {
 		inputs[i] = core.Cudd_bddIthVar(dd, i)
 	}
@@ -258,7 +258,7 @@ func Llb_MnxCheckNextStateVars(p *Llb_Mnx_t) {
 	if p == nil || p.pAig == nil {
 		return
 	}
-	if int(p.pAig.RegisterCount()) > len(p.pAig.Outputs()) {
+	if int(p.pAig.RegisterCount()) > p.pAig.OutputCount() {
 		panic("llb: invalid next-state output count")
 	}
 }

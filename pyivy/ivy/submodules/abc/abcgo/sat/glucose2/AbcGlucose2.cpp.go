@@ -408,7 +408,7 @@ func bmcg2_sat_solver_sop(p *aig.Graph, limit int32) string {
 	if p.OutputCount() != 1 {
 		panic("SOP extraction requires one output")
 	}
-	root := p.Outputs()[0]
+	root := p.OutputAt(int(0))
 	solvers := [2]*SimpSolver{bmcg2_sat_solver_start(), bmcg2_sat_solver_start()}
 	for i, s := range solvers {
 		graphCNF(p, s, []aig.Edge{root}, false)

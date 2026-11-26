@@ -203,7 +203,7 @@ func TestEmptyConstantAndWideNetworks(t *testing.T) {
 		t.Fatal("constant support")
 	}
 	info := Sim_SimulateSeqRandom(g, 3, 2)
-	for _, w := range info[g.Outputs()[0].NodeID()] {
+	for _, w := range info[g.OutputAt(int(0)).NodeID()] {
 		if w != ^uint32(0) {
 			t.Fatal("constant propagation")
 		}
@@ -238,7 +238,7 @@ func TestWordUtilitiesAndSwitching(t *testing.T) {
 	g.AddOutput(x)
 	g.AddOutput(g.Const1())
 	s := Sim_NtkComputeSwitching(g, 3200)
-	if s[x.NodeID()] < 0.49 || s[g.Outputs()[1].NodeID()] != 0 {
+	if s[x.NodeID()] < 0.49 || s[g.OutputAt(int(1)).NodeID()] != 0 {
 		t.Fatal(s)
 	}
 }

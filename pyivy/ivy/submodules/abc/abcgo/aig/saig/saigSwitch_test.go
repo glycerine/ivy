@@ -29,7 +29,7 @@ func TestSwitchingSimulationStoresFloatBits(t *testing.T) {
 		t.Fatalf("result length = %d, want %d", vec.Vec_IntSize(values), g.NodeSlots())
 	}
 	pi := math.Float32frombits(uint32(vec.Vec_IntEntry(values, x.NodeID())))
-	po := math.Float32frombits(uint32(vec.Vec_IntEntry(values, g.Outputs()[0].NodeID())))
+	po := math.Float32frombits(uint32(vec.Vec_IntEntry(values, g.OutputAt(int(0)).NodeID())))
 	if pi != po {
 		t.Fatalf("PI probability %v differs from its output probability %v", pi, po)
 	}

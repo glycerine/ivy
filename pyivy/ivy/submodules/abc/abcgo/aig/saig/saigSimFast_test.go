@@ -29,7 +29,7 @@ func TestFastSimulationProbabilities(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	lo := graph.Inputs()[1].NodeID()
+	lo := graph.InputAt(int(1)).NodeID()
 	if probabilities[lo] < 0.99 || probabilities[lo] > 1 {
 		t.Fatalf("toggle activity %g", probabilities[lo])
 	}
@@ -55,7 +55,7 @@ func TestFastSimulationSparseIDs(t *testing.T) {
 	p := Faig_ManCreate(graph)
 	aig.Aig_ManRandom(1)
 	counts := Faig_ManSimulateFrames(p, 16, 0, 0)
-	if len(counts) != len(p.ids) || p.ids[len(p.ids)-1] != graph.Outputs()[0] {
+	if len(counts) != len(p.ids) || p.ids[len(p.ids)-1] != graph.OutputAt(int(0)) {
 		t.Fatal("sparse ID mapping lost output")
 	}
 	probabilities, err := SwitchingProbabilities(graph, 16, 0, true)

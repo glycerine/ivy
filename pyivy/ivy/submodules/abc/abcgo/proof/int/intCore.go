@@ -141,7 +141,7 @@ func Inter_ManPerformInterpolation(graph *aig.Graph, pars *Inter_ManParams_t, fr
 					return finish(-1, 1)
 				}
 			}
-			if p.pInterNew == nil || p.pInterNew.Node(p.pInterNew.Outputs()[0]).Fanins[0] == p.pInterNew.Const0() {
+			if p.pInterNew == nil || p.pInterNew.Node(p.pInterNew.OutputAt(int(0))).Fanins[0] == p.pInterNew.Const0() {
 				return finish(1, 1)
 			}
 			status := int32(0)

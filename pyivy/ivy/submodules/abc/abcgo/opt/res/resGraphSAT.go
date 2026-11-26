@@ -122,7 +122,7 @@ func (p *GraphSAT) Solve(edges []aig.Edge, values []bool) ([]bool, bsat.Status, 
 		return nil, status, nil
 	}
 	model := p.Solver.Model()
-	inputs := make([]bool, len(p.Graph.Inputs()))
+	inputs := make([]bool, p.Graph.InputCount())
 	for i, edge := range p.Graph.Inputs() {
 		inputs[i] = model[p.vars[edge.NodeID()]]
 	}

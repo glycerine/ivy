@@ -50,9 +50,9 @@ func copyFrameCounterExample(g, frames *aig.Graph, model []int32) *util.Abc_Cex_
 		panic("fra: nil counterexample graph")
 	}
 	regs := int(aig.Aig_ManRegNum(g))
-	pis, pos := len(g.Inputs())-regs, len(g.Outputs())-regs
-	numInputs := len(frames.Inputs())
-	if regs <= 0 || aig.Aig_ManRegNum(frames) != 0 || pis <= 0 || numInputs%pis != 0 || len(frames.Outputs()) != numInputs/pis*pos || len(model) <= numInputs {
+	pis, pos := g.InputCount()-regs, g.OutputCount()-regs
+	numInputs := frames.InputCount()
+	if regs <= 0 || aig.Aig_ManRegNum(frames) != 0 || pis <= 0 || numInputs%pis != 0 || frames.OutputCount() != numInputs/pis*pos || len(model) <= numInputs {
 		panic("fra: invalid counterexample frames or model")
 	}
 	for i, output := range frames.Outputs() {

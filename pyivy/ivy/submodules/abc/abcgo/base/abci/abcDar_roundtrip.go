@@ -92,7 +92,7 @@ func abcNtkFromDarSeq(old *abc.Network, g *aig.Graph) *abc.Network {
 		return nil
 	}
 	regs := aig.Aig_ManRegNum(g)
-	if regs < 0 || int(regs) > len(g.Inputs()) || int(regs) > len(g.Outputs()) {
+	if regs < 0 || int(regs) > g.InputCount() || int(regs) > g.OutputCount() {
 		return nil
 	}
 	n := abc.Abc_NtkStartFromNoLatches(old, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
@@ -101,7 +101,7 @@ func abcNtkFromDarSeq(old *abc.Network, g *aig.Graph) *abc.Network {
 	abcGraphSetMapped(g, aig.Aig_ManConst1(g), n.One())
 	piCount := aig.Aig_ManCiNum(g) - aig.Aig_ManRegNum(g)
 	for i := int32(0); i < piCount; i++ {
-		if i >= int32(len(n.Inputs())) {
+		if i >= int32(n.InputCount()) {
 			return nil
 		}
 		abcGraphSetMapped(g, aig.Aig_ManCi(g, i), abc.Abc_NtkPi(n, i).Signal())

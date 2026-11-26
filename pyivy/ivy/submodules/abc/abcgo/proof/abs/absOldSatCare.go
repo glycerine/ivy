@@ -20,7 +20,7 @@ func Saig_RefManOrderLiterals(p *Saig_RefMan_t, varToPI, assumptions *vec.Vec_In
 	groups := make(map[int32]int)
 	for _, lit := range vec.Vec_IntArray(assumptions) {
 		pi := vec.Vec_IntEntry(varToPI, int(lit>>1))
-		if pi < 0 || int(pi) >= len(p.pFrames.Inputs()) {
+		if pi < 0 || int(pi) >= p.pFrames.InputCount() {
 			panic("invalid frame input")
 		}
 		input := vec.Vec_IntEntry(p.vMapPiF2A, int(2*pi))
@@ -40,7 +40,7 @@ func Saig_RefManCreateCex(p *Saig_RefMan_t, varToPI, assumptions *vec.Vec_Int_t)
 	clear(care.PData)
 	for _, lit := range vec.Vec_IntArray(assumptions) {
 		pi := vec.Vec_IntEntry(varToPI, int(lit>>1))
-		if pi < 0 || int(pi) >= len(p.pFrames.Inputs()) {
+		if pi < 0 || int(pi) >= p.pFrames.InputCount() {
 			panic("invalid frame input")
 		}
 		input, frame := vec.Vec_IntEntry(p.vMapPiF2A, int(2*pi)), vec.Vec_IntEntry(p.vMapPiF2A, int(2*pi+1))
@@ -51,11 +51,11 @@ func Saig_RefManCreateCex(p *Saig_RefMan_t, varToPI, assumptions *vec.Vec_Int_t)
 
 // Saig_RefManReason2Inputs returns distinct original inputs in reason order.
 func Saig_RefManReason2Inputs(p *Saig_RefMan_t, reasons *vec.Vec_Int_t) *vec.Vec_Int_t {
-	result := vec.Vec_IntAlloc(len(p.pAig.Inputs()))
+	result := vec.Vec_IntAlloc(p.pAig.InputCount())
 	visited := make(map[int32]bool)
 	for _, framePI := range vec.Vec_IntArray(reasons) {
 		input := vec.Vec_IntEntry(p.vMapPiF2A, int(2*framePI))
-		if input < 0 || int(input) >= len(p.pAig.Inputs()) {
+		if input < 0 || int(input) >= p.pAig.InputCount() {
 			panic("invalid original input")
 		}
 		if !visited[input] {
@@ -71,7 +71,7 @@ func Saig_RefManReason2Cex(p *Saig_RefMan_t, reasons *vec.Vec_Int_t) *util.Abc_C
 	care := util.Abc_CexDup(p.pCex, p.pCex.NRegs)
 	clear(care.PData)
 	for _, pi := range vec.Vec_IntArray(reasons) {
-		if pi < 0 || int(pi) >= len(p.pFrames.Inputs()) {
+		if pi < 0 || int(pi) >= p.pFrames.InputCount() {
 			panic("invalid frame input")
 		}
 		input, frame := vec.Vec_IntEntry(p.vMapPiF2A, int(2*pi)), vec.Vec_IntEntry(p.vMapPiF2A, int(2*pi+1))
@@ -110,7 +110,7 @@ func Saig_RefManSetPhases(p *Saig_RefMan_t, care *util.Abc_Cex_t, value1 int32) 
 	for _, e := range g.Outputs() {
 		p.phase[e.NodeID()] = value(g.Node(e).Fanins[0])
 	}
-	if p.phase[g.Outputs()[0].NodeID()] {
+	if p.phase[g.OutputAt(int(0)).NodeID()] {
 		return 1
 	}
 	return 0

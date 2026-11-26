@@ -23,7 +23,7 @@ func Bmc_CollapseOneInt2(p *gia.Gia_Man_t, cubeLimit, conflictLimit, canonical, 
 	if on == nil || off == nil || clean == nil {
 		return nil
 	}
-	output := formula.VarNums[graph.Outputs()[0].NodeID()]
+	output := formula.VarNums[graph.OutputAt(int(0)).NodeID()]
 	if output < 0 {
 		return nil
 	}

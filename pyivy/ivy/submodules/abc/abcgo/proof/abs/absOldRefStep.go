@@ -25,7 +25,7 @@ func Saig_ManCexRefineStep(g *aig.Graph, flops, classes *vec.Vec_Int_t, cex *uti
 	}
 	if vec.Vec_IntSize(selected) == 0 {
 		fmt.Println("Refinement did not happen. Discovered a true counter-example.")
-		fmt.Printf("Remapping counter-example from %d to %d primary inputs.\n", len(abstract.Inputs()), len(g.Inputs()))
+		fmt.Printf("Remapping counter-example from %d to %d primary inputs.\n", abstract.InputCount(), g.InputCount())
 		model := Saig_ManCexRemap(g, abstract, cex)
 		if model != nil {
 			if err := g.SetSequentialCounterexample(model); err != nil {
@@ -54,7 +54,7 @@ func Saig_ManCexRefineStep(g *aig.Graph, flops, classes *vec.Vec_Int_t, cex *uti
 			panic("invalid abstract input")
 		}
 		original := abstract.InputNumbers[input]
-		if original < piCount || int(original) >= len(g.Inputs()) {
+		if original < piCount || int(original) >= g.InputCount() {
 			panic("abstract input is not a latch")
 		}
 		vec.Vec_IntPush(flops, original-piCount)

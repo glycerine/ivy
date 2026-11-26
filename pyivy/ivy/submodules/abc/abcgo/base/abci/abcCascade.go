@@ -107,7 +107,7 @@ func Abc_ResBuildBdd(n *Abc_Ntk_t, dd *core.DdManager) *core.DdNode {
 		if f == nil {
 			return nil
 		}
-		out := core.Cudd_bddIthVar(dd, i+len(n.Inputs()))
+		out := core.Cudd_bddIthVar(dd, i+n.InputCount())
 		part := core.Cudd_bddXnor(dd, f, out)
 		core.Cudd_Ref(part)
 		old := result
@@ -604,23 +604,23 @@ func Abc_NtkBddDec(n *Abc_Ntk_t, verbose int32) *Abc_Ntk_t {
 	for i, co := range n.Outputs() {
 		functions[i] = Abc_ObjGlobalBdd(co)
 	}
-	if len(dd.Vars) != len(n.Inputs()) {
+	if len(dd.Vars) != n.InputCount() {
 		return nil
 	}
 	for i := 0; i < len(functions); i++ {
 		core.Cudd_addNewVarAtLevel(dd, len(dd.Vars))
 	}
-	reorder := reo.Extra_ReorderInit(len(n.Inputs()), 1000)
+	reorder := reo.Extra_ReorderInit(n.InputCount(), 1000)
 	defer reo.Extra_ReorderQuit(reorder)
 	reo.Extra_ReorderSetMinimizationType(reorder, reo.REO_MINIMIZE_WIDTH)
 	reo.Extra_ReorderSetVerification(reorder, 1)
 	reo.Extra_ReorderSetVerbosity(reorder, 1)
-	characteristic := Abc_NtkBddDecInt(reorder, dd, functions, int32(len(n.Inputs())), int32(len(functions)))
+	characteristic := Abc_NtkBddDecInt(reorder, dd, functions, int32(n.InputCount()), int32(len(functions)))
 	if characteristic == nil {
 		return nil
 	}
 	core.Cudd_Ref(characteristic)
 	defer core.Cudd_RecursiveDeref(dd, characteristic)
-	Abc_NtkExploreCofs(dd, characteristic, dd.Vars, int32(len(n.Inputs())), 6)
+	Abc_NtkExploreCofs(dd, characteristic, dd.Vars, int32(n.InputCount()), 6)
 	return abc.Abc_NtkDup(n)
 }

@@ -21,7 +21,7 @@ func TestFramesNonInitial(t *testing.T) {
 	if err := q.Check(); err != nil {
 		t.Fatal(err)
 	}
-	if Saig_ManGetMap1(g, pi, 0) != int32(q.Inputs()[1].NodeID()) || Saig_ManGetMap1(g, pi, 1) != int32(q.Inputs()[2].NodeID()) || Saig_ManGetMap1(g, lo, 0) != int32(q.Inputs()[0].NodeID()) {
+	if Saig_ManGetMap1(g, pi, 0) != int32(q.InputAt(int(1)).NodeID()) || Saig_ManGetMap1(g, pi, 1) != int32(q.InputAt(int(2)).NodeID()) || Saig_ManGetMap1(g, lo, 0) != int32(q.InputAt(int(0)).NodeID()) {
 		t.Fatal("incorrect input maps")
 	}
 	for bits := 0; bits < 8; bits++ {

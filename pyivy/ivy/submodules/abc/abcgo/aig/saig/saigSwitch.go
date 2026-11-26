@@ -294,7 +294,7 @@ func Aig_CManCreate(g *aig.Graph) *Aig_CMan_t {
 			andCount++
 		}
 	}
-	manager := Aig_CManStart(int32(len(g.Inputs())), int32(andCount), int32(len(outputs)))
+	manager := Aig_CManStart(int32(g.InputCount()), int32(andCount), int32(len(outputs)))
 	for _, node := range nodes {
 		if node.Kind == aig.And {
 			Aig_CManAddNode(manager, int32(node.Fanins[0]), int32(node.Fanins[1]))

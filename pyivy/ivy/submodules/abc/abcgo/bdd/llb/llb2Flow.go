@@ -118,7 +118,7 @@ func Llb_ManCutPiNum(g *Aig_Man_t, cut *Vec_Ptr_t) int32 {
 	if g == nil {
 		return 0
 	}
-	piLimit := len(g.Inputs()) - int(g.RegisterCount())
+	piLimit := g.InputCount() - int(g.RegisterCount())
 	for _, edge := range llbEdges(cut) {
 		if aig.Aig_ObjIsCi(g, edge) && int(aig.Aig_ObjCioId(g, edge)) < piLimit {
 			count++
@@ -131,7 +131,7 @@ func Llb_ManCutLoNum(g *Aig_Man_t, cut *Vec_Ptr_t) int32 {
 	if g == nil {
 		return 0
 	}
-	piLimit := len(g.Inputs()) - int(g.RegisterCount())
+	piLimit := g.InputCount() - int(g.RegisterCount())
 	for _, edge := range llbEdges(cut) {
 		if aig.Aig_ObjIsCi(g, edge) && int(aig.Aig_ObjCioId(g, edge)) >= piLimit {
 			count++
@@ -251,7 +251,7 @@ func Llb_ManCutMap(g *Aig_Man_t, cuts, supports *Vec_Ptr_t) *Vec_Ptr_t {
 // the native reachability engine no longer requires heuristic flow cuts.
 func Llb_ManComputeCuts(g *Aig_Man_t, num, verbose, veryVerbose int32) *Vec_Ptr_t {
 	cuts := vec.Vec_PtrAlloc(1)
-	cut := vec.Vec_PtrAlloc(len(g.Inputs()) + len(g.Outputs()))
+	cut := vec.Vec_PtrAlloc(g.InputCount() + g.OutputCount())
 	for _, edge := range g.Inputs() {
 		vec.Vec_PtrPush(cut, edge)
 	}

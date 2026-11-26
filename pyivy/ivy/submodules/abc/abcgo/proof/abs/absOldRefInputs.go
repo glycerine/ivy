@@ -7,7 +7,7 @@ import (
 
 // Saig_ManCexFirstFlopPi finds the first abstracted CI originating as a latch.
 func Saig_ManCexFirstFlopPi(g, abstraction *aig.Graph) int32 {
-	if len(abstraction.InputNumbers) != len(abstraction.Inputs()) {
+	if len(abstraction.InputNumbers) != abstraction.InputCount() {
 		panic("abstraction lacks original input numbers")
 	}
 	for i, input := range abstraction.InputNumbers {

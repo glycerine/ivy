@@ -179,7 +179,7 @@ func Fra_LcrCreatePart(p *Fra_Lcr_t, outputs []int32) *aig.Graph {
 		}
 		edge := dst.Const1()
 		if p.marked[int(index)] {
-			edge = copyEdge(src.Node(src.Outputs()[index]).Fanins[0])
+			edge = copyEdge(src.Node(src.OutputAt(int(index))).Fanins[0])
 		}
 		dst.AddOutput(edge)
 	}
@@ -192,7 +192,7 @@ func (p *Fra_Lcr_t) outputForNode(id int) (aig.Edge, *aig.Graph) {
 	}
 	part := p.inputPart[index]
 	g := p.fraigs[part]
-	return g.Node(g.Outputs()[p.inputOutput[index]]).Fanins[0], g
+	return g.Node(g.OutputAt(int(p.inputOutput[index]))).Fanins[0], g
 }
 func (p *Fra_Lcr_t) nodesEqual(a, b int) bool {
 	ia, ib := p.inputIndices[a], p.inputIndices[b]

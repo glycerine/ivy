@@ -24,7 +24,7 @@ func TestCbaUnrollRecordsLatchInput(t *testing.T) {
 		t.Fatalf("mapping %v", got)
 	}
 	entries := vec.Vec_IntArray(vec.Vec_VecEntryInt(frames, 0))
-	if len(entries) != 2 || entries[0] != int32(li.NodeID()) || entries[1] != int32(graph.Inputs()[0]) {
+	if len(entries) != 2 || entries[0] != int32(li.NodeID()) || entries[1] != int32(graph.InputAt(int(0))) {
 		t.Fatalf("register/frame map %v", entries)
 	}
 }

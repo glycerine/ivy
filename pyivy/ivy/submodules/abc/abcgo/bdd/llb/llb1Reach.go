@@ -15,7 +15,7 @@ func Llb_ManConstructOutBdd(g *Aig_Man_t, edge *Aig_Obj_t, dd *DdManager) *DdNod
 	if g == nil || edge == nil || dd == nil {
 		return nil
 	}
-	variables := make([]*core.DdNode, len(g.Inputs()))
+	variables := make([]*core.DdNode, g.InputCount())
 	for i := range variables {
 		variables[i] = core.Cudd_bddIthVar(dd, i)
 	}
@@ -212,7 +212,7 @@ func Llb_ManComputeImage(p *Llb_Man_t, states *DdNode, backward int32) *DdNode {
 	}
 	relation := states
 	for i := 0; i < nRegs; i++ {
-		nextEdge := g.Outputs()[len(g.Outputs())-nRegs+i]
+		nextEdge := g.OutputAt(int(g.OutputCount() - nRegs + i))
 		nextValue := llbBDDForEdge(g, functions, nextEdge)
 		nextVar := core.Cudd_bddIthVar(p.dd, nRegs+nPis+i)
 		relation = core.Cudd_bddAnd(p.dd, relation, core.Cudd_bddXnor(p.dd, nextVar, nextValue))
@@ -249,7 +249,7 @@ func Llb_ManCreateConstraints(p *Llb_Man_t, hints *Vec_Int_t, useNext int32) *Dd
 	if hints == nil {
 		return core.Cudd_ReadOne(p.dd)
 	}
-	inputs := make([]*core.DdNode, len(p.pAigGlo.Inputs()))
+	inputs := make([]*core.DdNode, p.pAigGlo.InputCount())
 	for i := range inputs {
 		inputs[i] = core.Cudd_bddIthVar(p.dd, i)
 	}
@@ -314,7 +314,7 @@ func llbTransitionRelation(g *Aig_Man_t, dd *core.DdManager) *core.DdNode {
 	ci := g.Inputs()
 	registers := int(g.RegisterCount())
 	pis := len(ci) - registers
-	if pis < 0 || len(g.Outputs()) < registers {
+	if pis < 0 || g.OutputCount() < registers {
 		return nil
 	}
 	variables := make([]*core.DdNode, len(ci))
@@ -349,7 +349,7 @@ func Llb_ManReachDeriveCex(p *Llb_Man_t) *Abc_Cex_t {
 	}
 	g := p.pAig
 	registers := int(g.RegisterCount())
-	pis := len(g.Inputs()) - registers
+	pis := g.InputCount() - registers
 	frames := len(p.frameSets)
 	if registers < 0 || pis < 0 {
 		return nil
@@ -401,7 +401,7 @@ func Llb_ManReachDeriveCex(p *Llb_Man_t) *Abc_Cex_t {
 			}
 		}
 	}
-	assignment := make([]bool, len(g.Inputs()))
+	assignment := make([]bool, g.InputCount())
 	copy(assignment, inputs[frames-1])
 	copy(assignment[pis:], states[frames-1])
 	outputs, err := g.Evaluate(assignment)
@@ -427,8 +427,8 @@ func Llb_ManReachability(p *Llb_Man_t, hints *Vec_Int_t, global **DdManager) int
 	}
 	g := p.pAig
 	nRegs := int(g.RegisterCount())
-	nPis := len(g.Inputs()) - nRegs
-	if nRegs < 0 || nPis < 0 || len(g.Outputs()) < nRegs {
+	nPis := g.InputCount() - nRegs
+	if nRegs < 0 || nPis < 0 || g.OutputCount() < nRegs {
 		return -1
 	}
 	p.pPars.iFrame = -1
@@ -453,7 +453,7 @@ func Llb_ManReachability(p *Llb_Man_t, hints *Vec_Int_t, global **DdManager) int
 	if p.pPars.TimeLimit > 0 {
 		deadline = time.Now().Add(time.Duration(p.pPars.TimeLimit) * time.Second)
 	}
-	propertyCount := len(g.Outputs()) - nRegs
+	propertyCount := g.OutputCount() - nRegs
 	for frame := 0; frame < limit; frame++ {
 		p.pPars.iFrame = int32(frame)
 		p.frameSets = append(p.frameSets, current)
@@ -461,7 +461,7 @@ func Llb_ManReachability(p *Llb_Man_t, hints *Vec_Int_t, global **DdManager) int
 			return -1
 		}
 		// Check if any state in the current frontier can assert a property.
-		ciVars := make([]*core.DdNode, len(g.Inputs()))
+		ciVars := make([]*core.DdNode, g.InputCount())
 		for i := range ciVars {
 			if i < nPis {
 				ciVars[i] = core.Cudd_bddIthVar(p.dd, nRegs+i)
@@ -472,7 +472,7 @@ func Llb_ManReachability(p *Llb_Man_t, hints *Vec_Int_t, global **DdManager) int
 		functions := llbBuildBDDTable(g, p.dd, ciVars)
 		bad := core.Cudd_ReadLogicZero(p.dd)
 		for i := 0; i < propertyCount; i++ {
-			bad = core.Cudd_bddOr(p.dd, bad, llbBDDForEdge(g, functions, g.Outputs()[i]))
+			bad = core.Cudd_bddOr(p.dd, bad, llbBDDForEdge(g, functions, g.OutputAt(int(i))))
 		}
 		piCube := core.Cudd_ReadOne(p.dd)
 		for i := 0; i < nPis; i++ {

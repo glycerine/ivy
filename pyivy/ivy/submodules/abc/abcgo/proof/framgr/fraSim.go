@@ -37,7 +37,7 @@ func Fra_SmlSavePattern1(p *Fra_Man_t, init int32) {
 	}
 	if init != 0 {
 		regs := int(aig.Aig_ManRegNum(p.PManAig))
-		pis := len(p.PManAig.Inputs()) - regs
+		pis := p.PManAig.InputCount() - regs
 		for i := 0; i < regs; i++ {
 			bit := pis*int(p.NFramesAll) + i
 			p.PPatWords[bit/32] &^= uint32(1) << uint(bit%32)
@@ -54,12 +54,12 @@ func Fra_SmlSavePattern(p *Fra_Man_t) {
 	}
 	if p.VCex != nil {
 		vec.Vec_IntClear(p.VCex)
-		pis := len(p.PManAig.Inputs()) - int(aig.Aig_ManRegNum(p.PManAig))
+		pis := p.PManAig.InputCount() - int(aig.Aig_ManRegNum(p.PManAig))
 		push := func(i int) { vec.Vec_IntPush(p.VCex, int32((p.PPatWords[i/32]>>uint(i%32))&1)) }
 		for i := 0; i < pis; i++ {
 			push(i)
 		}
-		inputs := len(p.PManFraig.Inputs())
+		inputs := p.PManFraig.InputCount()
 		regs := int(aig.Aig_ManRegNum(p.PManFraig))
 		for i := inputs - regs; i < inputs; i++ {
 			push(i)
@@ -82,7 +82,7 @@ func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, output aig.Edge) {
 	}
 	bit := 32*word + bits.TrailingZeros32(words[word])
 	inputs := p.PManAig.Inputs()
-	model := make([]int32, len(p.PManFraig.Inputs())+1)
+	model := make([]int32, p.PManFraig.InputCount()+1)
 	if len(model) <= len(inputs) {
 		panic("fra: model has too few inputs")
 	}
@@ -96,7 +96,7 @@ func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, output aig.Edge) {
 	p.PManFraig.Data = model
 }
 func Fra_SmlCheckOutput(p *Fra_Man_t) int32 {
-	first := p.PManAig.Outputs()[0]
+	first := p.PManAig.OutputAt(int(0))
 	fanin := p.PManAig.Node(first).Fanins[0]
 	assert(p.PManAig.Node(fanin).Phase == fanin.Complemented(), "Aig_ObjFanin0(pObj)->fPhase == Aig_ObjFaninC0(pObj)")
 	for _, output := range p.PManAig.Outputs() {
@@ -280,7 +280,7 @@ func Fra_SmlSimulateCombGiven(g *aig.Graph, name string, check, verbose int32) *
 		return nil
 	}
 	n := vec.Vec_StrSize(values)
-	inputs := len(g.Inputs())
+	inputs := g.InputCount()
 	if inputs == 0 || n%inputs != 0 {
 		fmt.Printf("File %q: invalid number of input digits (%d).\n", name, n)
 		return nil

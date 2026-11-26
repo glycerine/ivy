@@ -18,7 +18,7 @@ func Saig_ManRetimeInitState(graph *aig.Graph) *vec.Vec_Int_t {
 	if err != nil {
 		return nil
 	}
-	assumptions := make([]bsat.Literal, len(graph.Outputs()))
+	assumptions := make([]bsat.Literal, graph.OutputCount())
 	for i, output := range graph.Outputs() {
 		assumptions[i] = cnf.lit(aig.Aig_ObjChild0(graph, output)) ^ 1
 	}
@@ -27,7 +27,7 @@ func Saig_ManRetimeInitState(graph *aig.Graph) *vec.Vec_Int_t {
 		return nil
 	}
 	model := cnf.solver.Model()
-	values := vec.Vec_IntAlloc(len(graph.Inputs()))
+	values := vec.Vec_IntAlloc(graph.InputCount())
 	for _, input := range graph.Inputs() {
 		value := int32(0)
 		if model[cnf.vars[input.NodeID()]] {
@@ -186,7 +186,7 @@ func Saig_ManRetimeDupBackward(src *aig.Graph, cut *vec.Vec_Ptr_t, initial *vec.
 	mapped[0], known[0] = dst.Const1(), true
 	for i := 0; i < piCount; i++ {
 		e := inputs[i]
-		mapped[e.NodeID()], known[e.NodeID()] = dst.Inputs()[i], true
+		mapped[e.NodeID()], known[e.NodeID()] = dst.InputAt(int(i)), true
 	}
 	for i := range next {
 		mapped[inputs[piCount+i].NodeID()], known[inputs[piCount+i].NodeID()] = next[i], true

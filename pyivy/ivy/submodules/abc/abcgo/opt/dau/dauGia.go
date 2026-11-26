@@ -30,7 +30,7 @@ func dsdFromEdge(edge aig.Edge) int32 {
 	return int32(edge)
 }
 func (p dsdKitGraph) Const1() int32              { return 1 }
-func (p dsdKitGraph) InputLiteral(i int32) int32 { return dsdFromEdge(p.graph.Inputs()[i]) }
+func (p dsdKitGraph) InputLiteral(i int32) int32 { return dsdFromEdge(p.graph.InputAt(int(i))) }
 func (p dsdKitGraph) AndLiteral(a, b int32, hash bool) int32 {
 	return dsdFromEdge(p.graph.AND(dsdToEdge(a), dsdToEdge(b)))
 }

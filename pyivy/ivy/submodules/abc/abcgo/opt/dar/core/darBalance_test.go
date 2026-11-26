@@ -26,7 +26,7 @@ func TestBalanceDeepCone(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	output := balanced.Node(balanced.Outputs()[0]).Fanins[0]
+	output := balanced.Node(balanced.OutputAt(int(0))).Fanins[0]
 	if balanced.Node(output).Level != 3 {
 		t.Fatalf("depth got %d, was %d", balanced.Node(output).Level, before)
 	}
@@ -68,11 +68,11 @@ func TestBalanceTimingMetadataIsCopiedAndUpdatedOnDestination(t *testing.T) {
 		t.Fatalf("timing manager was not duplicated: %T", balanced.Timing)
 	}
 	for i, want := range []int{4, 1, 0} {
-		if level := balanced.Node(balanced.Inputs()[i]).Level; level != want {
+		if level := balanced.Node(balanced.InputAt(int(i))).Level; level != want {
 			t.Fatalf("timed CI %d level=%d want %d", i, level, want)
 		}
 	}
-	if gotTime := tim.Tim_ManGetCoArrival(got, 0); gotTime != float32(balanced.Node(balanced.Node(balanced.Outputs()[0]).Fanins[0]).Level) {
+	if gotTime := tim.Tim_ManGetCoArrival(got, 0); gotTime != float32(balanced.Node(balanced.Node(balanced.OutputAt(int(0))).Fanins[0]).Level) {
 		t.Fatalf("destination CO arrival=%v", gotTime)
 	}
 	if sourceTime := tim.Tim_ManGetCoArrival(manager, 0); sourceTime != 99 {
@@ -91,7 +91,7 @@ func TestBalanceBarrierOrderAndInputLevel(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got := balanced.Node(balanced.Inputs()[3]).Level; got != 2 {
+	if got := balanced.Node(balanced.InputAt(int(3))).Level; got != 2 {
 		t.Fatalf("barrier CI level=%d want %d", got, 2)
 	}
 	for mask := 0; mask < 16; mask++ {
@@ -117,7 +117,7 @@ func TestBalanceReusesPreviouslyBuiltSharedPair(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	shared := balanced.Node(balanced.Outputs()[0]).Fanins[0]
+	shared := balanced.Node(balanced.OutputAt(int(0))).Fanins[0]
 	var containsShared func(aig.Edge) bool
 	containsShared = func(edge aig.Edge) bool {
 		if edge.NodeID() == shared.NodeID() {
@@ -126,7 +126,7 @@ func TestBalanceReusesPreviouslyBuiltSharedPair(t *testing.T) {
 		n := balanced.Node(edge)
 		return (n.Kind == aig.And || n.Kind == aig.ExclusiveOr) && (containsShared(n.Fanins[0]) || containsShared(n.Fanins[1]))
 	}
-	second := balanced.Node(balanced.Outputs()[1]).Fanins[0]
+	second := balanced.Node(balanced.OutputAt(int(1))).Fanins[0]
 	if !containsShared(second) {
 		t.Fatal("balanced second cone did not reuse the first output's pair")
 	}
@@ -179,7 +179,7 @@ func TestBalanceNativeXor(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	driver := result.Node(result.Outputs()[0]).Fanins[0]
+	driver := result.Node(result.OutputAt(int(0))).Fanins[0]
 	// Three balanced XOR stages cost two structural AIG levels each in C.
 	if result.Node(driver).Level != 6 {
 		t.Fatal("XOR not balanced", result.Node(driver).Level)

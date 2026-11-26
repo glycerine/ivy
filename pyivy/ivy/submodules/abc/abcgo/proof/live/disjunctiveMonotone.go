@@ -33,26 +33,26 @@ func createDisjunctiveMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, ve
 		delayed[i] = aig.Aig_ObjCreateCi(c.destination)
 	}
 	c.copySourceNodes()
-	pending := c.signal(p.Outputs()[indexes.attrPendingSignalIndex])
+	pending := c.signal(p.OutputAt(int(indexes.attrPendingSignalIndex)))
 	guard := aig.Aig_And(c.destination, pending, previousPending)
 	antecedents := []aig.Edge{}
 	for _, id := range vectors.attrAntecedents {
-		antecedents = append(antecedents, c.signal(p.Outputs()[id]))
+		antecedents = append(antecedents, c.signal(p.OutputAt(int(id))))
 	}
 	antecedent := disjoin(c.destination, antecedents)
 	invariant := aig.Edge(0)
 	if indexes.attrSafetyInvarIndex >= 0 {
-		invariant = c.signal(p.Outputs()[indexes.attrSafetyInvarIndex])
+		invariant = c.signal(p.OutputAt(int(indexes.attrSafetyInvarIndex)))
 	}
 	candidates, properties := make([]aig.Edge, len(delayed)), make([]aig.Edge, len(delayed))
 	for i, id := range vectors.attrConsequentCandidates {
-		candidate := aig.Aig_Or(c.destination, c.signal(p.Outputs()[id]), antecedent)
+		candidate := aig.Aig_Or(c.destination, c.signal(p.OutputAt(int(id))), antecedent)
 		candidates[i] = candidate
 		property := aig.Aig_Or(c.destination, aig.Aig_And(c.destination, guard, delayed[i]).Not(), candidate)
 		properties[i] = aig.Aig_And(c.destination, property, invariant)
 	}
 	for i := 0; i < c.outputCount(); i++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(i))))
 	}
 	if start != nil {
 		*start = int32(c.outputCount())
@@ -62,7 +62,7 @@ func createDisjunctiveMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, ve
 	}
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
 	}
 	aig.Aig_ObjCreateCo(c.destination, pending)
 	for _, e := range candidates {
@@ -90,7 +90,7 @@ func findNewDisjunctiveMonotone(p *aig.Graph, indexes *aigPoIndices, vectors *an
 	var start int32
 	tester := createDisjunctiveMonotoneTester(p, indexes, vectors, &start)
 	for i := 0; i < trueOutputs(tester); i++ {
-		out := tester.Outputs()[i]
+		out := tester.OutputAt(int(i))
 		aig.Aig_ObjPatchFanin0(tester, out, outputDriver(tester, i).Not())
 	}
 	opts := pdr.DefaultOptions()

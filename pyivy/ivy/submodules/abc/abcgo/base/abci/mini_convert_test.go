@@ -76,8 +76,8 @@ func TestMiniAigSourceSequentialInterface(t *testing.T) {
 	miniaig.Mini_AigCreatePo(p, input)
 	miniaig.Mini_AigSetRegNum(p, 1)
 	n := Abc_NtkFromMiniAig(p)
-	if abc.Abc_NtkLatchNum(n) != 1 || len(n.Inputs()) != 2 || len(n.Outputs()) != 2 {
-		t.Fatalf("interface inputs=%d outputs=%d latches=%d", len(n.Inputs()), len(n.Outputs()), abc.Abc_NtkLatchNum(n))
+	if abc.Abc_NtkLatchNum(n) != 1 || n.InputCount() != 2 || n.OutputCount() != 2 {
+		t.Fatalf("interface inputs=%d outputs=%d latches=%d", n.InputCount(), n.OutputCount(), abc.Abc_NtkLatchNum(n))
 	}
 	q := Abc_NtkToMiniAig(n)
 	if miniaig.Mini_AigRegNum(q) != 1 {

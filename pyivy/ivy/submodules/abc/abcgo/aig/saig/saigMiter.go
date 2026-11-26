@@ -92,7 +92,7 @@ func miterCompatible(a, b *aig.Graph, sequential bool) {
 		if Saig_ManPiNum(a) != Saig_ManPiNum(b) || Saig_ManPoNum(a) != Saig_ManPoNum(b) || Saig_ManRegNum(a)+Saig_ManRegNum(b) == 0 {
 			panic("saig: incompatible sequential interfaces")
 		}
-	} else if a.InputCount() != b.InputCount() || len(a.Outputs()) != len(b.Outputs()) {
+	} else if a.InputCount() != b.InputCount() || a.OutputCount() != b.OutputCount() {
 		panic("saig: incompatible combinational interfaces")
 	}
 }

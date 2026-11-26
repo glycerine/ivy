@@ -75,7 +75,7 @@ func TestBalanceWideSupergatePreservesEveryInputPhase(t *testing.T) {
 	}
 	inputs := balanced.Inputs()
 	values := make(map[*abc.Object]bool, width)
-	output := abc.Abc_ObjChild0(balanced.Outputs()[0])
+	output := abc.Abc_ObjChild0(balanced.OutputAt(int(0)))
 	for a := 0; a < 1<<width; a++ {
 		for i, input := range inputs {
 			values[input] = a>>i&1 != 0

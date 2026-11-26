@@ -188,7 +188,7 @@ func Saig_ManExplorePaths_rec(graph *aig.Graph, object aig.Edge, frame, last int
 		index := aig.Aig_ObjCioId(graph, object)
 		for f := last; f >= 0; f-- {
 			if f != frame {
-				Saig_ManSetAndDriveImplications_rec(graph, graph.Inputs()[index], f, last, info)
+				Saig_ManSetAndDriveImplications_rec(graph, graph.InputAt(int(index)), f, last, info)
 			}
 		}
 		return
@@ -225,7 +225,7 @@ func Saig_ManProcessCex(graph *aig.Graph, firstFlopPI int32, cex *util.Abc_Cex_t
 			Saig_ManSetAndDriveImplications_rec(graph, inputs[i], frame, cex.IFrame, info)
 		}
 	}
-	Saig_ManExplorePaths_rec(graph, graph.Outputs()[cex.IPo], cex.IFrame, cex.IFrame, info)
+	Saig_ManExplorePaths_rec(graph, graph.OutputAt(int(cex.IPo)), cex.IFrame, cex.IFrame, info)
 	result, omitted := vec.Vec_IntAlloc(0), vec.Vec_IntAlloc(0)
 	for i := firstFlopPI; i < saig.Saig_ManPiNum(graph); i++ {
 		found := false

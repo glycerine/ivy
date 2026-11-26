@@ -21,7 +21,7 @@ func TestSswBmcUnrollSequentialFrames(t *testing.T) {
 		}
 		f.pFrames.AddOutput(result)
 	}
-	if got := len(f.pFrames.Inputs()); got != 3 {
+	if got := f.pFrames.InputCount(); got != 3 {
 		t.Fatalf("unrolling four outputs needs three PI frames; got %d", got)
 	}
 	aig.Aig_ManSetCioIds(f.pFrames)

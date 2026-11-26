@@ -205,7 +205,7 @@ func TestCutStretchAllFourInputPlacements(t *testing.T) {
 
 func TestCachedCutsHaveIndependentBoundaries(t *testing.T) {
 	g := layeredCutGraph()
-	edge := g.Outputs()[0]
+	edge := g.OutputAt(int(0))
 	m := NewCutEnumerator(g, 10)
 	m.skipTruthMin = true
 	want := m.Slots(edge)

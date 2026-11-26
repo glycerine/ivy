@@ -55,7 +55,7 @@ func TestCECDriverFallbackSATWitness(t *testing.T) {
 	if !ok || len(model) != len(vars)+1 {
 		t.Fatalf("invalid witness %v", g.Data)
 	}
-	if want := int32(g.Outputs()[0].NodeID()); model[len(vars)] != want {
+	if want := int32(g.OutputAt(int(0)).NodeID()); model[len(vars)] != want {
 		t.Fatalf("source PO ID = %d, want %d", model[len(vars)], want)
 	}
 	inputs := make([]bool, len(vars))

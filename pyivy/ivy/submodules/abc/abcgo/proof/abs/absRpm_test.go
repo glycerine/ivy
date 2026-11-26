@@ -53,12 +53,12 @@ func TestStructuralReparameterizationOutputRange(t *testing.T) {
 			t.Fatalf("table %04b lost output", table)
 		}
 		g := gia.Gia_ManToAigSimple(q)
-		if len(g.Inputs()) > 10 {
+		if g.InputCount() > 10 {
 			t.Fatalf("table %04b produced too many inputs", table)
 		}
 		seen := [2]bool{}
-		for mask := 0; mask < 1<<len(g.Inputs()); mask++ {
-			inputs := make([]bool, len(g.Inputs()))
+		for mask := 0; mask < 1<<g.InputCount(); mask++ {
+			inputs := make([]bool, g.InputCount())
 			for i := range inputs {
 				inputs[i] = mask&(1<<i) != 0
 			}
@@ -125,7 +125,7 @@ func TestStructuralReparameterizationPreservesOutputPairs(t *testing.T) {
 			gia.Gia_ManHashStop(p)
 			q := Abs_RpmPerform(p, 4, 0, 0)
 			g := gia.Gia_ManToAigSimple(q)
-			if len(g.Inputs()) > 10 {
+			if g.InputCount() > 10 {
 				t.Fatal("unexpectedly large input interface")
 			}
 			var want, got [4]bool
@@ -133,8 +133,8 @@ func TestStructuralReparameterizationPreservesOutputPairs(t *testing.T) {
 				index := (left >> mask & 1) | ((right >> mask & 1) << 1)
 				want[index] = true
 			}
-			for mask := 0; mask < 1<<len(g.Inputs()); mask++ {
-				inputs := make([]bool, len(g.Inputs()))
+			for mask := 0; mask < 1<<g.InputCount(); mask++ {
+				inputs := make([]bool, g.InputCount())
 				for i := range inputs {
 					inputs[i] = mask&(1<<i) != 0
 				}

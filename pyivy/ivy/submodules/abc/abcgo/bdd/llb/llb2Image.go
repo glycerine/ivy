@@ -39,9 +39,9 @@ func Llb_ImgSupports(g *Aig_Man_t, managers *Vec_Ptr_t, starts, stops *Vec_Int_t
 		}
 	}
 	if addPis != 0 {
-		nPis := len(g.Inputs()) - int(g.RegisterCount())
+		nPis := g.InputCount() - int(g.RegisterCount())
 		for i := 0; i < nPis; i++ {
-			vec.Vec_IntWriteEntry(final, g.Inputs()[i].NodeID(), 1)
+			vec.Vec_IntWriteEntry(final, g.InputAt(int(i)).NodeID(), 1)
 		}
 	}
 	vec.Vec_PtrPush(supports, final)
@@ -100,7 +100,7 @@ func Llb_ImgPartition(g *Aig_Man_t, lower, upper *Vec_Ptr_t, timeout abctime) *D
 	if dd == nil {
 		return nil
 	}
-	inputs := make([]*core.DdNode, len(g.Inputs()))
+	inputs := make([]*core.DdNode, g.InputCount())
 	for _, e := range g.Inputs() {
 		if e.NodeID() < len(dd.Vars) {
 			inputs[e.NodeID()] = core.Cudd_bddIthVar(dd, e.NodeID())
@@ -111,7 +111,7 @@ func Llb_ImgPartition(g *Aig_Man_t, lower, upper *Vec_Ptr_t, timeout abctime) *D
 	funcs[0] = core.Cudd_ReadOne(dd)
 	for id, variable := range inputs {
 		if variable != nil {
-			funcs[g.Inputs()[id].NodeID()] = variable
+			funcs[g.InputAt(int(id)).NodeID()] = variable
 		}
 	}
 	for _, item := range llbEdges(Llb_ManCutNodes(g, lower, upper)) {

@@ -105,7 +105,7 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 	}
 	copyGraph.copySourceNodes()
 	for r := 0; r < regs; r++ {
-		next = append(next, copyGraph.signal(p.Outputs()[pos+r]))
+		next = append(next, copyGraph.signal(p.OutputAt(int(pos+r))))
 	}
 	mapSignals := func(signals []aig.Edge) []aig.Edge {
 		result := make([]aig.Edge, len(signals))
@@ -193,7 +193,7 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 
 				// Populate all source PO copies before binding formula leaves.
 				for i := 0; i < pos; i++ {
-					copyGraph.signal(p.Outputs()[i])
+					copyGraph.signal(p.OutputAt(int(i)))
 				}
 				populateBoolWithAigNodePtr(network, p, dst, node)
 				var signals []aig.Edge
@@ -244,7 +244,7 @@ func livenessToSafety(network *Network, options TransformOptions, source, source
 		constraints = 0
 	}
 	for i := pos - constraints; i < pos; i++ {
-		aig.Aig_ObjCreateCo(dst, copyGraph.signal(p.Outputs()[i]))
+		aig.Aig_ObjCreateCo(dst, copyGraph.signal(p.OutputAt(int(i))))
 		outputNames = append(outputNames, outputName(network, i))
 	}
 	for i, e := range next {
@@ -334,7 +334,7 @@ func selectOutputsMode(n *Network, prefix string, source bool) []aig.Edge {
 	signals := []aig.Edge{}
 	for i := 0; i < outputCount(n.Graph, source); i++ {
 		if strings.HasPrefix(outputName(n, i), prefix) {
-			signals = append(signals, n.Graph.Outputs()[i])
+			signals = append(signals, n.Graph.OutputAt(int(i)))
 		}
 	}
 	return signals
@@ -353,7 +353,7 @@ func selectOutputAliasesMode(n *Network, source bool, prefixes ...string) []aig.
 	for i := 0; i < outputCount(n.Graph, source); i++ {
 		for _, prefix := range prefixes {
 			if strings.HasPrefix(outputName(n, i), prefix) {
-				result = append(result, n.Graph.Outputs()[i])
+				result = append(result, n.Graph.OutputAt(int(i)))
 				break
 			}
 		}
@@ -376,8 +376,8 @@ func prepareFlopVector(_ *aig.Graph, length int32) []int32 {
 	}
 	return result
 }
-func Aig_ManCiCleanupBiere(p *aig.Graph) int32 { return aig.Aig_ManCiNum(p) - int32(len(p.Inputs())) } // Native graph interfaces maintain their counts on every edit.
-func Aig_ManCoCleanupBiere(p *aig.Graph) int32 { return aig.Aig_ManCoNum(p) - int32(len(p.Outputs())) }
+func Aig_ManCiCleanupBiere(p *aig.Graph) int32 { return aig.Aig_ManCiNum(p) - int32(p.InputCount()) } // Native graph interfaces maintain their counts on every edit.
+func Aig_ManCoCleanupBiere(p *aig.Graph) int32 { return aig.Aig_ManCoNum(p) - int32(p.OutputCount()) }
 func getPoIndex(p *aig.Graph, pivot aig.Edge) int32 {
 	for i, e := range p.Outputs()[:trueOutputs(p)] {
 		if e == pivot {
@@ -400,7 +400,7 @@ func retrieveTruePiName(n *Network, old, new *aig.Graph, pivot aig.Edge) string 
 	if index == trueInputs(new)-1 {
 		return "SAVE_BIERE"
 	}
-	if index >= trueInputs(old) || aig.Aig_ObjCopy(old, old.Inputs()[index]) != pivot {
+	if index >= trueInputs(old) || aig.Aig_ObjCopy(old, old.InputAt(int(index))) != pivot {
 		panic("live: PI copy mismatch")
 	}
 	return inputName(n, index)
@@ -419,7 +419,7 @@ func retrieveLOName(n *Network, old, new *aig.Graph, pivot aig.Edge, live, fair 
 	r := registers(old)
 	if index < r {
 		oldIndex := trueInputs(old) + index
-		if aig.Aig_ObjCopy(old, old.Inputs()[oldIndex]) != pivot {
+		if aig.Aig_ObjCopy(old, old.InputAt(int(oldIndex))) != pivot {
 			panic("live: latch copy mismatch")
 		}
 		return inputName(n, oldIndex)

@@ -46,7 +46,7 @@ func TestNonlinearStateHelpersUseOrderedLatchVariables(t *testing.T) {
 		}
 	}
 	quantify := Llb_Nonlin4CreateVars2Q(dd, g, order, 0)
-	nextID := int(g.Outputs()[1].NodeID())
+	nextID := int(g.OutputAt(int(1)).NodeID())
 	if vec.Vec_IntEntry(quantify, nextID) != 0 || vec.Vec_IntEntry(quantify, int(state.NodeID())) != 1 {
 		t.Fatal("forward quantification must retain next-state variables")
 	}

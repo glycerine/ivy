@@ -31,7 +31,7 @@ func TestNtkToDarCreatesOutputsAfterAllAnds(t *testing.T) {
 			t.Fatalf("got kinds %v, want %v", kinds, want)
 		}
 	}
-	if lev := g.Node(g.Inputs()[1]).Level; lev != 2 {
+	if lev := g.Node(g.InputAt(int(1))).Level; lev != 2 {
 		t.Fatalf("CI level %d, want the network level 2", lev)
 	}
 }

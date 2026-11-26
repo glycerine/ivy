@@ -144,7 +144,7 @@ func TestMappedWriterSourceFreeOutputRestrictions(t *testing.T) {
 	}
 	aig.Aig_ManSetRegNum(g, 1)
 	data := Cnf_ManWriteCnf(m, mapped, 1)
-	if data == nil || data.VarNums[g.Outputs()[0].NodeID()] != -1 || data.VarNums[g.Outputs()[1].NodeID()] != 1 {
+	if data == nil || data.VarNums[g.OutputAt(int(0)).NodeID()] != -1 || data.VarNums[g.OutputAt(int(1)).NodeID()] != 1 {
 		t.Fatal("last register output was not assigned first")
 	}
 	if Cnf_ManWriteCnf(m, mapped, 2) == nil {

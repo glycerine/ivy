@@ -83,7 +83,7 @@ func Inter_ManAppendCone(old, dst *aig.Graph, inputs []aig.Edge, complement int3
 	for i, edge := range old.Inputs() {
 		copies[edge.NodeID()] = inputs[i]
 	}
-	output := duplicateTransitionEdge(old, dst, copies, old.Node(old.Outputs()[0]).Fanins[0])
+	output := duplicateTransitionEdge(old, dst, copies, old.Node(old.OutputAt(int(0))).Fanins[0])
 	if complement != 0 {
 		output = output.Not()
 	}

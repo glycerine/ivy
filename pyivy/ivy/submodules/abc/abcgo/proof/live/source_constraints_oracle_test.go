@@ -60,7 +60,7 @@ func TestSourceBuildersIncludeTrailingConstraintPO(t *testing.T) {
 	if start != 5 || trueOutputs(disj) != 6 || aig.Aig_ManConstrNum(disj) != 0 {
 		t.Fatalf("disj start=%d POs=%d constraints=%d", start, trueOutputs(disj), aig.Aig_ManConstrNum(disj))
 	}
-	comb := disjunctiveTester(p, []aig.Edge{p.Outputs()[1]}, 1)
+	comb := disjunctiveTester(p, []aig.Edge{p.OutputAt(int(1))}, 1)
 	if trueOutputs(comb) != 6 || aig.Aig_ManConstrNum(comb) != 0 {
 		t.Fatalf("comb POs=%d constraints=%d", trueOutputs(comb), aig.Aig_ManConstrNum(comb))
 	}

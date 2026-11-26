@@ -20,7 +20,7 @@ func UnrollProperty(src *aig.Graph, frames int) (*aig.Graph, error) {
 	}
 	outputs, regs := src.Outputs(), int(aig.Aig_ManRegNum(src))
 	poCount := len(outputs) - regs
-	if regs < 0 || poCount < 1 || regs > len(src.Inputs()) {
+	if regs < 0 || poCount < 1 || regs > src.InputCount() {
 		return nil, errors.New("saig: malformed sequential graph")
 	}
 	return unrollGraph(src, frames, 0, true)
@@ -56,7 +56,7 @@ func DetectFunctionalConstraints(src *aig.Graph, frameCount int, conflicts, prop
 	if src == nil || frameCount < 1 {
 		return nil, errors.New("saig: functional detection needs a graph and at least one frame")
 	}
-	poCount := len(src.Outputs()) - int(aig.Aig_ManRegNum(src))
+	poCount := src.OutputCount() - int(aig.Aig_ManRegNum(src))
 	if poCount != 1 {
 		return nil, fmt.Errorf("saig: functional detection requires one property output, got %d", poCount)
 	}
@@ -64,13 +64,13 @@ func DetectFunctionalConstraints(src *aig.Graph, frameCount int, conflicts, prop
 	if err != nil {
 		return nil, err
 	}
-	property := mappedEdge(maps, aig.Aig_ObjChild0(src, src.Outputs()[0]), frameCount-1)
+	property := mappedEdge(maps, aig.Aig_ObjChild0(src, src.OutputAt(int(0))), frameCount-1)
 	frames.AddOutput(property)
 	cnf, err := encodeAIG(frames)
 	if err != nil {
 		return nil, err
 	}
-	propertyLit := cnf.lit(aig.Aig_ObjChild0(frames, frames.Outputs()[0]))
+	propertyLit := cnf.lit(aig.Aig_ObjChild0(frames, frames.OutputAt(int(0))))
 	cnf.solver.SetLimits(conflicts, propagations)
 	if cnf.solver.Solve(propertyLit) != bsat.Satisfiable {
 		return nil, nil
@@ -124,7 +124,7 @@ func UnfoldFunctionalConstraints(src *aig.Graph, candidates FunctionalCandidates
 	outputs := src.Outputs()
 	regs := int(aig.Aig_ManRegNum(src))
 	poCount := len(outputs) - regs
-	if regs < 0 || regs > len(src.Inputs()) || poCount < int(aig.Aig_ManConstrNum(src)) {
+	if regs < 0 || regs > src.InputCount() || poCount < int(aig.Aig_ManConstrNum(src)) {
 		return nil, errors.New("saig: malformed sequential interface")
 	}
 	newFlops := 0
@@ -185,7 +185,7 @@ func FoldFunctionalConstraints(src *aig.Graph, complemented bool) (*aig.Graph, e
 		copy, _, err := duplicateSequentialGraph(src, nil)
 		return copy, err
 	}
-	if regs < 0 || regs > len(src.Inputs()) || constraints >= poCount {
+	if regs < 0 || regs > src.InputCount() || constraints >= poCount {
 		return nil, errors.New("saig: malformed functional constraint interface")
 	}
 	copy, _, err := duplicateSequentialGraph(src, func(dst *aig.Graph, copyEdge func(aig.Edge) aig.Edge) error {
@@ -242,7 +242,7 @@ func FilterInductiveCandidates(src *aig.Graph, candidates FunctionalCandidates, 
 	output := 0
 	for level, group := range candidates {
 		for _, candidate := range group {
-			assumption := cnf.lit(aig.Aig_ObjChild0(miter, miter.Outputs()[output]))
+			assumption := cnf.lit(aig.Aig_ObjChild0(miter, miter.OutputAt(int(output))))
 			cnf.solver.SetLimits(conflicts, propagations)
 			status := cnf.solver.Solve(assumption)
 			if status == bsat.Unsatisfiable {
@@ -310,11 +310,11 @@ func unrollGraph(src *aig.Graph, frameCount, propertyOutput int, includeProperty
 		return nil, err
 	}
 	if includeProperty {
-		poCount := len(src.Outputs()) - int(aig.Aig_ManRegNum(src))
+		poCount := src.OutputCount() - int(aig.Aig_ManRegNum(src))
 		if propertyOutput < 0 || propertyOutput >= poCount {
 			return nil, fmt.Errorf("saig: property output %d outside [0,%d)", propertyOutput, poCount)
 		}
-		dst.AddOutput(mappedEdge(maps, aig.Aig_ObjChild0(src, src.Outputs()[propertyOutput]), frameCount-1))
+		dst.AddOutput(mappedEdge(maps, aig.Aig_ObjChild0(src, src.OutputAt(int(propertyOutput))), frameCount-1))
 	}
 	return dst, nil
 }

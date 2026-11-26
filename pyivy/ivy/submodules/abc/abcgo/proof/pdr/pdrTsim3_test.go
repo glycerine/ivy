@@ -93,7 +93,7 @@ func TestTxs3MapsReorderedGiaInterfaceIDs(t *testing.T) {
 		t.Fatalf("flop mapped to %d, want %d", got, flop.NodeID())
 	}
 	output := gia.Gia_ObjId(s.pGia, gia.Gia_ManCo(s.pGia, 0))
-	if got := s.giaToAig[output]; got != int32(g.Outputs()[0].NodeID()) {
+	if got := s.giaToAig[output]; got != int32(g.OutputAt(int(0)).NodeID()) {
 		t.Fatalf("output mapped to %d", got)
 	}
 }

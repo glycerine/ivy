@@ -93,5 +93,5 @@ func Llb_DriverLastPartition(g *Aig_Man_t, nextState *Vec_Int_t, timeout abctime
 	if g == nil {
 		return nil
 	}
-	return core.NewBDDManager(len(g.Inputs()))
+	return core.NewBDDManager(g.InputCount())
 }

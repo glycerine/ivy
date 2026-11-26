@@ -9,7 +9,7 @@ import (
 // Abc_NtkExpandCubes expands each SOP output against its corresponding GIA
 // cone and removes node fanins when the resulting function is constant.
 func Abc_NtkExpandCubes(network *abc.Network, graph *gia.Gia_Man_t, verbose int32) {
-	if network == nil || graph == nil || abc.Abc_NtkIsSopLogic(network) == 0 || len(network.Inputs()) != int(gia.Gia_ManCiNum(graph)) || len(network.Outputs()) != int(gia.Gia_ManCoNum(graph)) {
+	if network == nil || graph == nil || abc.Abc_NtkIsSopLogic(network) == 0 || network.InputCount() != int(gia.Gia_ManCiNum(graph)) || network.OutputCount() != int(gia.Gia_ManCoNum(graph)) {
 		panic("bmc: incompatible SOP and GIA networks")
 	}
 	for i, output := range network.Outputs() {

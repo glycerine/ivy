@@ -140,15 +140,15 @@ func createNewAigWith0LivePoWithDSCMode(p *aig.Graph, signals []aig.Edge, index 
 	}
 	// Populate copied PO drivers before the source-compatible barrier collector.
 	for i := 0; i < trueOutputs(p); i++ {
-		c.signal(p.Outputs()[i])
+		c.signal(p.OutputAt(int(i)))
 	}
-	begin, within := c.signal(p.Outputs()[windowBegin]), c.signal(p.Outputs()[withinWindow])
+	begin, within := c.signal(p.OutputAt(int(windowBegin))), c.signal(p.OutputAt(int(withinWindow)))
 	var barrierNext, barrierSignals []aig.Edge
 	violation := createArenaViolationMode(p, c.destination, begin, within, barriers, arenaLatches, &barrierNext, &barrierSignals, source)
-	pending := c.signal(p.Outputs()[pendingIndex])
+	pending := c.signal(p.OutputAt(int(pendingIndex)))
 	monotone := createMonotoneBarriers(c.destination, barrierSignals, monotoneOld, pending, pendingOld)
 	for i := 0; i < c.outputCount(); i++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[i]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(i))))
 	}
 	property := aig.Aig_And(c.destination, aig.Aig_Or(c.destination, createConstrained0LiveConeWithDSC(p, c.destination, signals), violationOld), monotone)
 	if index != nil {
@@ -157,7 +157,7 @@ func createNewAigWith0LivePoWithDSCMode(p *aig.Graph, signals []aig.Edge, index 
 	aig.Aig_ObjCreateCo(c.destination, property)
 	c.appendConstraints()
 	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.Outputs()[trueOutputs(p)+r]))
+		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
 	}
 	createArenaLi(c.destination, barriers, barrierNext)
 	aig.Aig_ObjCreateCo(c.destination, aig.Aig_Or(c.destination, violation, violationOld))

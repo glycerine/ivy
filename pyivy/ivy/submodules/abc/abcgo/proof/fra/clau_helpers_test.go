@@ -33,13 +33,13 @@ func TestClauSaveVariables(t *testing.T) {
 	if got := vec.Vec_IntArray(clauLatchVars(g, data, true)); len(got) != 1 || got[0] != data.VarNums[lo.NodeID()] {
 		t.Fatal(got)
 	}
-	if got := vec.Vec_IntArray(clauLatchVars(g, data, false)); len(got) != 1 || got[0] != data.VarNums[g.Outputs()[1].NodeID()] {
+	if got := vec.Vec_IntArray(clauLatchVars(g, data, false)); len(got) != 1 || got[0] != data.VarNums[g.OutputAt(int(1)).NodeID()] {
 		t.Fatal(got)
 	}
 	if got := vec.Vec_IntArray(clauInputVars(g, data, 1)); len(got) != 1 || got[0] != data.VarNums[lo.NodeID()] {
 		t.Fatal(got)
 	}
-	if got := vec.Vec_IntArray(clauOutputVars(g, data)); len(got) != 2 || got[0] != data.VarNums[g.Outputs()[0].NodeID()] {
+	if got := vec.Vec_IntArray(clauOutputVars(g, data)); len(got) != 2 || got[0] != data.VarNums[g.OutputAt(int(0)).NodeID()] {
 		t.Fatal(got)
 	}
 }

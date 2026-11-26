@@ -39,9 +39,9 @@ func TestOneStepSourceSafetyOutputOnlyWithAssertions(t *testing.T) {
 		want       int
 	}{
 		{nil, 1},
-		{[]aig.Edge{p.Outputs()[0]}, 2},
+		{[]aig.Edge{p.OutputAt(int(0))}, 2},
 	} {
-		got := LivenessToSafetyTransformationOneStepLoop(FULL_BIERE_ONE_LOOP_MODE, n, p, []aig.Edge{p.Outputs()[0]}, nil, tc.assertions, nil)
+		got := LivenessToSafetyTransformationOneStepLoop(FULL_BIERE_ONE_LOOP_MODE, n, p, []aig.Edge{p.OutputAt(int(0))}, nil, tc.assertions, nil)
 		if count := trueOutputs(got); count != tc.want {
 			t.Fatalf("assertions %d: got %d outputs, want %d", len(tc.assertions), count, tc.want)
 		}

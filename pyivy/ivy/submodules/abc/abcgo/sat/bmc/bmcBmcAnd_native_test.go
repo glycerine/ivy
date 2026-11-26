@@ -40,7 +40,7 @@ func TestProjectAIGPropertiesRetainsRegisterInterface(t *testing.T) {
 	if projected.InputCount() != 2 || projected.OutputCount() != 2 || projected.RegisterCount() != 1 {
 		t.Fatalf("projected terminals = (%d,%d,%d), want (2 inputs, 1 property + 1 register output, 1 register)", projected.InputCount(), projected.OutputCount(), projected.RegisterCount())
 	}
-	if got := projected.Node(projected.Outputs()[0]).Fanins[0]; !got.Complemented() {
+	if got := projected.Node(projected.OutputAt(int(0))).Fanins[0]; !got.Complemented() {
 		t.Fatalf("projected property driver=%v, want complement of state", got)
 	}
 }

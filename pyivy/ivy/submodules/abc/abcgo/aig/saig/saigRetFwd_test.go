@@ -37,7 +37,7 @@ func TestSaigRetimeForwardOneKeepsUnreachableLatch(t *testing.T) {
 	if fixed != 1 || moved != 0 {
 		t.Fatalf("fixed=%d moved=%d, want one fixed latch and no moved gates", fixed, moved)
 	}
-	if aig.Aig_ManRegNum(got) != 1 || len(got.Outputs()) != 2 {
-		t.Fatalf("retimed graph has %d regs and %d outputs, want 1 and 2", aig.Aig_ManRegNum(got), len(got.Outputs()))
+	if aig.Aig_ManRegNum(got) != 1 || got.OutputCount() != 2 {
+		t.Fatalf("retimed graph has %d regs and %d outputs, want 1 and 2", aig.Aig_ManRegNum(got), got.OutputCount())
 	}
 }

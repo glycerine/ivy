@@ -66,7 +66,7 @@ func Abc_NtkExtractSfm(n *Network) (*sfm.Sfm_Ntk_t, []*Object, error) {
 		gates[i] = sfm.Sfm_GateFromMio(gate)
 		truths[i] = append([]uint64(nil), gates[i].Truth...)
 	}
-	result, err := sfm.NewNetwork(fanins, len(n.Inputs()), len(n.Outputs()), truths, nil, nil)
+	result, err := sfm.NewNetwork(fanins, n.InputCount(), n.OutputCount(), truths, nil, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -82,7 +82,7 @@ func Abc_NtkExtractSfm(n *Network) (*sfm.Sfm_Ntk_t, []*Object, error) {
 // Existing live nodes and terminals retain their identities; new mapped nodes
 // are added and removed nodes are deleted after all replacement edges exist.
 func Abc_NtkApplySfm(n *Network, p *sfm.Sfm_Ntk_t, original []*Object) error {
-	if n == nil || p == nil || Abc_NtkIsMappedLogic(n) == 0 || p.Pis != len(n.Inputs()) || p.Pos != len(n.Outputs()) || len(original) < p.Pis+p.Pos || len(p.Mapping) != len(p.Fanins) {
+	if n == nil || p == nil || Abc_NtkIsMappedLogic(n) == 0 || p.Pis != n.InputCount() || p.Pos != n.OutputCount() || len(original) < p.Pis+p.Pos || len(p.Mapping) != len(p.Fanins) {
 		return fmt.Errorf("sfm: incompatible mapped network")
 	}
 	if err := n.Check(); err != nil {
@@ -100,7 +100,7 @@ func Abc_NtkApplySfm(n *Network, p *sfm.Sfm_Ntk_t, original []*Object) error {
 		if !n.contains(obj) {
 			return fmt.Errorf("sfm: original object %d is missing", i)
 		}
-		if i < p.Pis && n.Inputs()[i] != obj || i >= oldInternalEnd && n.Outputs()[i-oldInternalEnd] != obj || i >= p.Pis && i < oldInternalEnd && obj.Kind != ObjectNode {
+		if i < p.Pis && n.InputAt(int(i)) != obj || i >= oldInternalEnd && n.OutputAt(int(i-oldInternalEnd)) != obj || i >= p.Pis && i < oldInternalEnd && obj.Kind != ObjectNode {
 			return fmt.Errorf("sfm: original object order changed")
 		}
 	}

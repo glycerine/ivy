@@ -50,8 +50,8 @@ func TestOldReparameterizationPreservesOutputRange(t *testing.T) {
 	}
 	g := gia.Gia_ManToAigSimple(result)
 	seen := [2]bool{}
-	for mask := 0; mask < 1<<len(g.Inputs()); mask++ {
-		inputs := make([]bool, len(g.Inputs()))
+	for mask := 0; mask < 1<<g.InputCount(); mask++ {
+		inputs := make([]bool, g.InputCount())
 		for i := range inputs {
 			inputs[i] = mask&(1<<i) != 0
 		}

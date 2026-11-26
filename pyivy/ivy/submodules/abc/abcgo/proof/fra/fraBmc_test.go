@@ -27,7 +27,7 @@ func TestBmcDriverRefinesAcrossFrameWindows(t *testing.T) {
 			for depth := int32(1); depth <= 3; depth++ {
 				p := makeManager(imp)
 				Fra_BmcPerform(p, prefix, depth)
-				state := p.PManAig.Inputs()[2]
+				state := p.PManAig.InputAt(int(2))
 				if p.PCla.Reprs[state.NodeID()] >= 0 {
 					t.Fatalf("imp=%v prefix=%d depth=%d: invalid equivalence retained", imp, prefix, depth)
 				}

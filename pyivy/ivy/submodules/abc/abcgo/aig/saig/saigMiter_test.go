@@ -73,7 +73,7 @@ func TestMiterUnrollTwo(t *testing.T) {
 	bot, top := miterFixture(true), miterFixture(false)
 	for frames := int32(1); frames <= 3; frames++ {
 		g := Saig_ManUnrollTwo(bot, top, frames)
-		if g.InputCount() != 1+int(frames)*2 || len(g.Outputs()) != int(frames)+1 || Saig_ManRegNum(g) != 0 {
+		if g.InputCount() != 1+int(frames)*2 || g.OutputCount() != int(frames)+1 || Saig_ManRegNum(g) != 0 {
 			t.Fatal("unrolled interface")
 		}
 		for x := 0; x < 1<<g.InputCount(); x++ {

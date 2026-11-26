@@ -120,7 +120,7 @@ func balanceRecursive(ctx context.Context, src *aig.Graph, update bool) (*aig.Gr
 		return value, nil
 	}
 	outputs := src.Outputs()
-	deferOutputs := src.Timing == nil && src.BarrierBuffers > 0 && int(src.BarrierBuffers) <= len(outputs) && int(src.BarrierBuffers) <= len(src.Inputs())
+	deferOutputs := src.Timing == nil && src.BarrierBuffers > 0 && int(src.BarrierBuffers) <= len(outputs) && int(src.BarrierBuffers) <= src.InputCount()
 	balancedOutputs := make([]aig.Edge, len(outputs))
 	order := make([]int, len(outputs))
 	for i := range order {
@@ -151,8 +151,8 @@ func balanceRecursive(ctx context.Context, src *aig.Graph, update bool) (*aig.Gr
 			tim.Tim_ManSetCoArrival(timing, int(co.CioID), float32(dst.Node(value).Level))
 		}
 		if src.Timing == nil && i < int(src.BarrierBuffers) {
-			ciIndex := len(src.Inputs()) - int(src.BarrierBuffers) + i
-			input := dst.Inputs()[ciIndex]
+			ciIndex := src.InputCount() - int(src.BarrierBuffers) + i
+			input := dst.InputAt(int(ciIndex))
 			aig.Aig_ObjSetLevel(dst, input, int32(dst.Node(value).Level))
 		}
 	}

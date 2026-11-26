@@ -56,7 +56,7 @@ func Abc_NtkWriteSorterCnf(fileName string, nVars, nQueens int32) {
 		return
 	}
 	n := Abc_FrameReadNtk(frame)
-	if n == nil || int32(len(n.Outputs())) <= nVars-nQueens {
+	if n == nil || int32(n.OutputCount()) <= nVars-nQueens {
 		return
 	}
 	// The full writer is kept behind the source network's two selected PO roots.

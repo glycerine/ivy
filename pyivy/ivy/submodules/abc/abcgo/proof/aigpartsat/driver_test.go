@@ -232,15 +232,15 @@ func TestPartitionSATTransparentOutputFanins(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(a)
-	g.AddOutput(g.AND(g.Outputs()[0], b.Not()))
-	g.AddOutput(g.Outputs()[1])
+	g.AddOutput(g.AND(g.OutputAt(int(0)), b.Not()))
+	g.AddOutput(g.OutputAt(int(1)))
 	checkPartitionedSAT(t, g)
 }
 func TestPartitionSATInputContradictionThroughCO(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	g.AddOutput(a)
-	g.AddOutput(g.AND(g.Outputs()[0].Not(), b))
+	g.AddOutput(g.AND(g.OutputAt(int(0)).Not(), b))
 	checkPartitionedSAT(t, g)
 }
 

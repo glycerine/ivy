@@ -45,7 +45,7 @@ func Saig_RefManRunSat(p *Saig_RefMan_t, newOrder int32) *util.Abc_Cex_t {
 		return care
 	}
 	varToPI := vec.Vec_IntStartFull(formula.Variables)
-	assumptions := vec.Vec_IntAlloc(len(p.pFrames.Inputs()))
+	assumptions := vec.Vec_IntAlloc(p.pFrames.InputCount())
 	for i, e := range p.pFrames.Inputs() {
 		v := formula.VarNums[e.NodeID()]
 		vec.Vec_IntPush(assumptions, 2*v+1)
@@ -112,13 +112,13 @@ func Saig_RefManRefineWithSat(p *Saig_RefMan_t, aigPIs *vec.Vec_Int_t) *vec.Vec_
 	solver.SetLimits(1000000, 0)
 	selected := make(map[int32]bool)
 	for _, i := range vec.Vec_IntArray(aigPIs) {
-		if i < 0 || int(i) >= len(p.pAig.Inputs()) {
+		if i < 0 || int(i) >= p.pAig.InputCount() {
 			panic("invalid original input")
 		}
 		selected[i] = true
 	}
 	varToPI := vec.Vec_IntStartFull(formula.Variables)
-	assumptions := vec.Vec_IntAlloc(len(p.pFrames.Inputs()))
+	assumptions := vec.Vec_IntAlloc(p.pFrames.InputCount())
 	for i, e := range p.pFrames.Inputs() {
 		input, frame := vec.Vec_IntEntry(p.vMapPiF2A, 2*i), vec.Vec_IntEntry(p.vMapPiF2A, 2*i+1)
 		if !selected[input] {

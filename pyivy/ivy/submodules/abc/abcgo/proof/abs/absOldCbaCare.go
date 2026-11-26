@@ -18,11 +18,11 @@ type Saig_ManCba_t struct {
 // Saig_ManCbaReason2Inputs maps frame inputs to distinct additional inputs,
 // numbered relative to the first abstracted register input.
 func Saig_ManCbaReason2Inputs(p *Saig_ManCba_t, reasons *vec.Vec_Int_t) *vec.Vec_Int_t {
-	result := vec.Vec_IntAlloc(len(p.pAig.Inputs()))
+	result := vec.Vec_IntAlloc(p.pAig.InputCount())
 	seen := make(map[int32]bool)
 	for _, reason := range vec.Vec_IntArray(reasons) {
 		input := vec.Vec_IntEntry(p.vMapPiF2A, int(2*reason))
-		if input < p.nInputs || int(input) >= len(p.pAig.Inputs()) {
+		if input < p.nInputs || int(input) >= p.pAig.InputCount() {
 			panic("invalid CBA reason input")
 		}
 		if !seen[input] {
@@ -36,7 +36,7 @@ func Saig_ManCbaReason2Cex(p *Saig_ManCba_t, reasons *vec.Vec_Int_t) *util.Abc_C
 	care := util.Abc_CexDup(p.pCex, p.pCex.NRegs)
 	clear(care.PData)
 	for _, pi := range vec.Vec_IntArray(reasons) {
-		if pi < 0 || int(pi) >= len(p.pFrames.Inputs()) {
+		if pi < 0 || int(pi) >= p.pFrames.InputCount() {
 			panic("invalid CBA frame input")
 		}
 		input, frame := vec.Vec_IntEntry(p.vMapPiF2A, int(2*pi)), vec.Vec_IntEntry(p.vMapPiF2A, int(2*pi+1))
