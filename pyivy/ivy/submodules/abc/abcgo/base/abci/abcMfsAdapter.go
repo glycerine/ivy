@@ -201,6 +201,17 @@ func mfsNegateInput(truth []uint32, vars, variable int) []uint32 {
 	return out
 }
 
+// mfsTruthConstant reports whether the vars-input truth table is constant.
+func mfsTruthConstant(truth []uint32, vars int) (bool, bool) {
+	first := truth[0]&1 != 0
+	for m := 0; m < 1<<uint(vars); m++ {
+		if (truth[m>>5]>>uint(m&31)&1 != 0) != first {
+			return false, false
+		}
+	}
+	return first, true
+}
+
 func mfsWriteABC(pNtk *Abc_Ntk_t, imported *mfsABCMap) error {
 	if len(imported.objects) != len(imported.network.Nodes) || len(imported.original) != len(imported.network.Nodes) {
 		return fmt.Errorf("MFS: object map is inconsistent")
@@ -224,6 +235,17 @@ func mfsWriteABC(pNtk *Abc_Ntk_t, imported *mfsABCMap) error {
 				return fmt.Errorf("MFS: node %d has invalid replacement fanin %d", object.ID, id)
 			}
 			newFanins[j] = imported.objects[id].Signal()
+		}
+		if value, constant := mfsTruthConstant(local.truth, len(newFanins)); constant {
+			// A node simplified to a constant has no SOP cover; give it a
+			// constant local function without fanins.
+			baseabc.Abc_ObjRemoveFanins(object)
+			if value {
+				object.Data = hop.Hop_ManConst1(manager)
+			} else {
+				object.Data = hop.Hop_ManConst0(manager)
+			}
+			continue
 		}
 		text := baseabc.Abc_SopCreateFromTruth((*mem.Mem_Flex_t)(nil), int32(len(newFanins)), local.truth)
 		root := baseabc.Abc_ConvertSopToAig(manager, text)

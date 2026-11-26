@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 	"testing"
 
 	abcio "github.com/glycerine/abcgo/base/io"
@@ -88,4 +89,11 @@ func TestDarRewriteMatchesNative(t *testing.T) {
 // Native: abc -c "read i10.aig; dc2; print_stats".
 func TestDc2MatchesNative(t *testing.T) {
 	expectStats(t, "read ../../../i10.aig; dc2; print_stats", "and =   1834  lev = 36")
+}
+
+// 'mfs' used to panic when a node simplified to a constant.
+func TestMfsConstantNodeDoesNotPanic(t *testing.T) {
+	if out := runScript(t, "read test_vectors/bench/sort16.aig; if -K 6; mfs; print_stats"); !strings.Contains(out, "nd =") {
+		t.Fatalf("no statistics after mfs:\n%s", out)
+	}
 }
