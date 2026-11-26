@@ -153,7 +153,8 @@ func Abc_RealMain(args []string) int32 {
 			command += "_" + *inputType
 		}
 		if status := f.Execute(command + " " + strconvQuote(flags.Arg(0))); status != 0 {
-			return normalizeExit(status)
+			// Abc_RealMain skips the remaining steps and still exits 0.
+			return 0
 		}
 	}
 	if len(commands) != 0 {
@@ -162,7 +163,7 @@ func Abc_RealMain(args []string) int32 {
 			fmt.Fprintf(f.Out, "ABC command line: %q.\n\n", line)
 		}
 		if status := f.Execute(line); status > 0 {
-			return status
+			return 0 // as in Abc_RealMain: no final write, exit status 0
 		} else if status < 0 && !interactiveAfter {
 			return 0
 		}

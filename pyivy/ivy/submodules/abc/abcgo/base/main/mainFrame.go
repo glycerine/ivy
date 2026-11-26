@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -460,8 +461,15 @@ func (f *Frame) Dispatch(args []string) int32 {
 		return 0
 	}
 	command, exists := f.LookupCommand(args[0])
+	if !exists && len(args) == 1 && strings.Contains(args[0], ".") {
+		// Like CmdCommandDispatch, a lone file name is read.
+		args = []string{"read", args[0]}
+		command, exists = f.LookupCommand(args[0])
+	}
 	if !exists {
-		fmt.Fprintf(f.Err, "unknown command: %s\n", args[0])
+		fmt.Fprintf(f.Err, "** cmd error: unknown command '%s'\n", args[0])
+		fmt.Fprintf(f.Err, "(this is likely caused by using an alias defined in \"abc.rc\"\n")
+		fmt.Fprintf(f.Err, "without having this file in the current or parent directory)\n")
 		return 1
 	}
 	if command.ChangesNetwork {
