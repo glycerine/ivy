@@ -104,3 +104,23 @@ and states how the Go port was verified.
   recursion now walks the live network as `abcCut.c` does (`supercl` creates
   nodes after the cut manager starts). `strash; supercl` is in the native-golden
   sweep and gives the native result on all five benchmarks.
+
+## 5. `&print_truth` reads past its truth tables on sequential AIGs
+
+- **File:** `src/base/abci/abc.c`, `Abc_CommandAbc9PrintTruth`.
+- **Found:** 2026-11-26, by running every command with default arguments on
+  s27; the Go port panicked where native `abc` printed hexadecimal noise.
+- **Bug:** the command refuses AIGs with more than six *primary inputs*, but
+  `Gia_LutComputeTruth6Simple` indexes `s_Truths6` by CI number and
+  `Extra_PrintHex` prints `Gia_ManCiNum` variables from one 64-bit word. With
+  registers there are more CIs than PIs (s27: 4 PIs, 7 CIs), so both read out
+  of bounds.
+- **Fix:** check the number of CIs instead of PIs (same message).
+- **Test:** `abcgo/base/abci/print_truth_c_bounds_test.go`
+  (`TestNativePrintTruthStaysInBounds`) compiles `giaTruth.c` and `abc.c` from
+  `src/` with AddressSanitizer, links them ahead of the native library named by
+  `ABC_LIBABC`, and runs `&print_truth` on s27. Before the fix ASan reported a
+  global-buffer-overflow in `Gia_LutComputeTruth6Simple_rec`; now the command
+  refuses the AIG.
+- **Go port:** it had the same PI check and panicked on the missing CI; it has
+  the same fix (`TestPrintTruthRefusesMoreThanSixCis`).

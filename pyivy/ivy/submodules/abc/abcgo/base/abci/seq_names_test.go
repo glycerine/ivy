@@ -64,3 +64,12 @@ func TestDframesCombinationalLikeNative(t *testing.T) {
 	expectStats(t, "read test_vectors/bench/mul8.aig; strash; dframes; print_stats",
 		"i/o =   80/   80  lat =    0  and =   2120  lev = 53")
 }
+
+// &print_truth computes truth tables over all CIs; with registers s27 has
+// 7 and is refused (CBUGS_FIXED.md #5: ABC read past its tables).
+func TestPrintTruthRefusesMoreThanSixCis(t *testing.T) {
+	out, _ := runScriptStatus(t, "read test_vectors/seq/s27.blif; strash; &get; &print_truth")
+	if !strings.Contains(out, "The number of inputs of the AIG exceeds 6.") {
+		t.Fatalf("&print_truth on s27:\n%s", out)
+	}
+}

@@ -30889,7 +30889,8 @@ func Abc_CommandAbc9PrintTruth(pAbc *Abc_Frame_t, argc int32, argv []string) int
 		Abc_Print(-1, "Abc_CommandAbc9PrintTruth(): There is no AIG.\n")
 		return 1
 	}
-	if Gia_ManPiNum(abcFrameGia(pAbc)) > 6 {
+	// the truth tables range over all CIs (CBUGS_FIXED.md #5)
+	if Gia_ManCiNum(abcFrameGia(pAbc)) > 6 {
 		Abc_Print(-1, "The number of inputs of the AIG exceeds 6.\n")
 		return 1
 	}

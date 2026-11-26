@@ -31729,7 +31729,8 @@ int Abc_CommandAbc9PrintTruth( Abc_Frame_t * pAbc, int argc, char ** argv )
         Abc_Print( -1, "Abc_CommandAbc9PrintTruth(): There is no AIG.\n" );
         return 1;
     }
-    if ( Gia_ManPiNum(pAbc->pGia) > 6 )
+    // the truth tables range over all CIs (register outputs included)
+    if ( Gia_ManCiNum(pAbc->pGia) > 6 )
     {
         Abc_Print( -1, "The number of inputs of the AIG exceeds 6.\n" );
         return 1;
