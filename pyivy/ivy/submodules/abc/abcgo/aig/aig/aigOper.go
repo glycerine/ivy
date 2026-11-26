@@ -16,7 +16,28 @@ func Aig_IthVar(p *Graph, i int32) Edge {
 }
 func Aig_And(p *Graph, a, b Edge) Edge        { return p.AND(a, b) }
 func Aig_Or(p *Graph, a, b Edge) Edge         { return p.OR(a, b) }
-func Aig_Exor(p *Graph, a, b Edge) Edge       { return p.XOR(a, b) }
+// Aig_Exor follows aigOper.c (without fCatchExor). The native binary is
+// compiled by GCC, which evaluates the arguments of
+// Aig_Or( p, Aig_And(p, p0, Aig_Not(p1)), Aig_And(p, Aig_Not(p0), p1) )
+// right to left, so AND(!p0, p1) is created first; node IDs depend on it.
+func Aig_Exor(p *Graph, p0, p1 Edge) Edge {
+	// check trivial cases
+	if p0 == p1 {
+		return p.Const0()
+	}
+	if p0 == p1.Not() {
+		return p.Const1()
+	}
+	if Aig_Regular(p0) == p.Const1() {
+		return p1 ^ Edge(p0&1^1)
+	}
+	if Aig_Regular(p1) == p.Const1() {
+		return p0 ^ Edge(p1&1^1)
+	}
+	n1 := p.AND(p0.Not(), p1)
+	n0 := p.AND(p0, p1.Not())
+	return p.OR(n0, n1)
+}
 func Aig_Mux2(p *Graph, c, yes, no Edge) Edge { return p.Mux(c, yes, no) }
 func Aig_Mux(p *Graph, c, yes, no Edge) Edge  { return p.Mux(c, yes, no) }
 func Aig_Maj(p *Graph, a, b, c Edge) Edge     { return p.OR(p.OR(p.AND(a, b), p.AND(a, c)), p.AND(b, c)) }
