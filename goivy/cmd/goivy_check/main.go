@@ -18,6 +18,7 @@
 //	diagnose=bool          Launch diagnostic UI on failure (default false)
 //	coverage=bool          Check assertion coverage (default true)
 //	action=name            Check only the named action
+//	check=patterns         Check only names matching a comma-separated pattern
 //	trusted=bool           Skip verification, trust all isolates (default false)
 //	mc=bool                Force model checking method (default false)
 //	trace=bool             Print execution trace on counterexample (default false)

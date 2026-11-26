@@ -54,6 +54,26 @@ each check of a guarantee, `PASS` is printed if the check passes and
 
 The options of the `ivy_check` command are:
 
+`check=pattern,...,pattern`
+
+Selects named invariants, properties, and program assertions in the inductive
+checker. Each pattern matches a substring of the fully qualified check name.
+`?` matches one character. All other characters are literal, so `check=cpu.`
+matches `cpu.invar12` but does not match `cpufoo.invar12`. The empty default
+selects every check. With a nonempty filter, unnamed checks are skipped.
+Unselected invariants still contribute to the induction hypotheses, and
+unselected ordinary assertions are treated as assumptions.
+
+`assert=file:line`
+
+Selects a check by source location. The file name can include or omit `.ivy`.
+When used with `check=`, a check must satisfy both filters.
+
+`shrink=boolean`
+
+Controls countermodel minimization. The default is true. With `shrink=false`
+the checker returns the model without constraining it to smaller domains.
+
 `diagnose=boolean`
 
 If true, this options causes the check to stop at the first guarantee

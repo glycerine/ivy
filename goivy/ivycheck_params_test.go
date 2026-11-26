@@ -1,6 +1,9 @@
 package goivy
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestParseIvyCheckParamsRejectsMultipleEqualsLikePython(t *testing.T) {
 	_, _, err := ParseIvyCheckParams([]string{"diagnose=true=false", "foo.ivy"})
@@ -84,6 +87,62 @@ func TestApplyIvyCheckParamsRejectsBadAssertLocationLikePython(t *testing.T) {
 		if err == nil {
 			t.Fatalf("ApplyIvyCheckParams accepted assert=%s; Python rejects malformed checked_assert locations", val)
 		}
+	}
+}
+
+func TestCheckNamePatterns(t *testing.T) {
+	cfg := NewConfig()
+	if err := ApplyIvyCheckParams(cfg, map[string]string{"check": "cpu.,err?r"}); err != nil {
+		t.Fatal(err)
+	}
+	for _, name := range []string{"top.cpu.valid", "driver.error"} {
+		if !cfg.checkNameSelected(name) {
+			t.Errorf("%q did not match", name)
+		}
+	}
+	for _, name := range []string{"cpu0.valid", "errr", ""} {
+		if cfg.checkNameSelected(name) {
+			t.Errorf("%q matched", name)
+		}
+	}
+}
+
+func TestCheckByName(t *testing.T) {
+	const filename = "check_names.ivy"
+	for _, tc := range []struct {
+		name, source, check, location string
+		wantFailure                   bool
+	}{
+		{"property selected", "#lang ivy1.7\nproperty [bad] false\n", "b?d", "", true},
+		{"property skipped", "#lang ivy1.7\nproperty [bad] false\n", "other", "", false},
+		{"invariant selected", "#lang ivy1.7\ninvariant [bad] false\n", "bad", "", true},
+		{"invariant skipped", "#lang ivy1.7\ninvariant [bad] false\n", "other", "", false},
+		{"assertion selected", "#lang ivy1.7\nexport action step = { assert [bad] false }\n", "bad", "", true},
+		{"assertion skipped", "#lang ivy1.7\nexport action step = { assert [bad] false }\n", "bad", filename + ":1", false},
+		{"assertion assumed", "#lang ivy1.7\nrelation p\nexport action step = { assert [given] p; assert [goal] p }\n", "goal", "", false},
+		{"initializer selected", "#lang ivy1.7\nafter init { assert [bad] false }\n", "bad", "", true},
+		{"initializer skipped", "#lang ivy1.7\nafter init { assert [bad] false }\n", "other", "", false},
+		{"legacy assertion", "#lang ivy1.5\nexport action step = { assert false }\n", "", "", true},
+		{"legacy assertion skipped", "#lang ivy1.5\nexport action step = { assert false }\n", "other", "", false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			cfg := NewConfig()
+			params := map[string]string{"check": tc.check}
+			if tc.location != "" {
+				params["assert"] = tc.location
+			}
+			if err := ApplyIvyCheckParams(cfg, params); err != nil {
+				t.Fatal(err)
+			}
+			err := StartSourceWithConfig(filename, tc.source, cfg)
+			if tc.wantFailure {
+				if err == nil || !strings.Contains(err.Error(), "failed checks: 1") {
+					t.Fatalf("expected one failed check, got %v", err)
+				}
+			} else if err != nil {
+				t.Fatal(err)
+			}
+		})
 	}
 }
 

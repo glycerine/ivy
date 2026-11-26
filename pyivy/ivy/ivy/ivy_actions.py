@@ -1,6 +1,8 @@
 #
 # Copyright (c) Microsoft Corporation. All Rights Reserved.
 #
+import re
+
 from .ivy_logic import Variable,Constant,Atom,Literal,App,sig,Iff,And,Or,Not,Implies,EnumeratedSort,Ite,Definition, is_atom, equals, Equals, Symbol,ast_match_lists, is_in_logic, Exists, RelationSort, is_boolean, is_app, is_eq, pto, close_formula,symbol_is_polymorphic,is_interpreted_symbol 
 
 from .ivy_logic_utils import to_clauses, formula_to_clauses, substitute_constants_clause,\
@@ -26,6 +28,16 @@ def p_c_a(s):
 checked_assert = iu.Parameter("assert","",check=lambda s: len(s.split(':'))==2,
                               process=p_c_a)
 check_unprovable = iu.BooleanParameter("unprovable",False)
+checked_names = iu.Parameter("check","")
+
+def check_name_selected(name):
+    patterns = checked_names.get()
+    if not patterns:
+        return True
+    if name is None:
+        return False
+    return any(re.search(re.escape(pattern).replace(r'\?', '.'), name)
+               for pattern in patterns.split(','))
 
 class Schema(AST):
     def __init__(self,defn):
@@ -374,21 +386,23 @@ class AssertAction(Action):
         if __debug__: xtracer.trace("actions.AssertAction.action_update ENTER")
         fmla = self.args[0]
         unprovable = False
+        name = None
         if isinstance(fmla,ivy_ast.LabeledFormula):
             unprovable = fmla.unprovable
+            if fmla.label is not None:
+                name = fmla.name
             fmla = fmla.formula
         type_check(domain,fmla)
         if check_unprovable.get() != unprovable:
             if __debug__: xtracer.trace("actions.AssertAction.action_update EXIT")
             return ([],true_clauses(annot = EmptyAnnotation()),false_clauses(annot = EmptyAnnotation()))
         ca = checked_assert.get()
-        if ca:
-            if ca != self.lineno:
-                if unprovable:
-                    if __debug__: xtracer.trace("actions.AssertAction.action_update EXIT")
-                    return ([],true_clauses(annot = EmptyAnnotation()),false_clauses(annot = EmptyAnnotation()))
+        if (ca and ca != self.lineno) or not check_name_selected(name):
+            if unprovable:
                 if __debug__: xtracer.trace("actions.AssertAction.action_update EXIT")
-                return ([],formula_to_clauses(fmla,annot = EmptyAnnotation()),false_clauses(annot = EmptyAnnotation()))
+                return ([],true_clauses(annot = EmptyAnnotation()),false_clauses(annot = EmptyAnnotation()))
+            if __debug__: xtracer.trace("actions.AssertAction.action_update EXIT")
+            return ([],formula_to_clauses(fmla,annot = EmptyAnnotation()),false_clauses(annot = EmptyAnnotation()))
 
         cl = formula_to_clauses(dual_formula(fmla))
 #        return ([],formula_to_clauses_tseitin(self.args[0]),cl)

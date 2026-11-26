@@ -715,7 +715,9 @@ func CheckConjsInState(mod *Module, indent int, pcs []*LabeledFormula) bool {
 	// Build checkers for the filtered list.
 	var checkers []Checker
 	for _, c := range checkable {
-		checkers = append(checkers, NewConjChecker(mod, c, indent))
+		if mod.Cfg.checkNameSelected(lfLabelName(c)) {
+			checkers = append(checkers, NewConjChecker(mod, c, indent))
+		}
 	}
 
 	return CheckFcsInState(mod, checkers)
@@ -849,6 +851,13 @@ func IsUnprovableAssert(asrt interface{}) bool {
 // Python: is_unprovable_assert(asrt) == act.check_unprovable.get()
 func IsGuaranteeModUnprovable(cfg *Config, asrt interface{}) bool {
 	return IsUnprovableAssert(asrt) == cfg.OnlyCheckUnprovable
+}
+
+func guaranteeName(action ActionsAction) string {
+	if labeled, ok := action.(interface{ GetLF() *LabeledFormula }); ok {
+		return lfLabelName(labeled.GetLF())
+	}
+	return ""
 }
 
 // IsCheckModUnprovable checks if a labeled formula should be checked given the unprovable flag.

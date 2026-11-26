@@ -380,22 +380,20 @@ func (a *LogicAssertAction) ActionUpdate(ctx *UpdateContext) *Update {
 
 	// Python: if ca != self.lineno — compares full Location(file, line).
 	// CheckedAssert format: "file:line" via Location.FileLineKey().
-	if ctx.CheckedAssert != "" {
-		loc := a.GetLineno()
-		if ctx.CheckedAssert != loc.FileLineKey() {
-			if unprovable {
-				return &Update{
-					Modified: []*Const{},
-					TR:       TrueClauses(EmptyAnnotation{}),
-					Pre:      FalseClauses(EmptyAnnotation{}),
-				}
-			}
-			// Python: return ([],formula_to_clauses(fmla,annot=EmptyAnnotation()),false_clauses(annot=EmptyAnnotation()))
+	selectedByLocation := ctx.CheckedAssert == "" || ctx.CheckedAssert == a.GetLineno().FileLineKey()
+	selectedByName := ctx.Domain == nil || ctx.Domain.Cfg.checkNameSelected(lfLabelName(a.LF))
+	if !selectedByLocation || !selectedByName {
+		if unprovable {
 			return &Update{
 				Modified: []*Const{},
-				TR:       FormulaToClauses(fmla, EmptyAnnotation{}),
+				TR:       TrueClauses(EmptyAnnotation{}),
 				Pre:      FalseClauses(EmptyAnnotation{}),
 			}
+		}
+		return &Update{
+			Modified: []*Const{},
+			TR:       FormulaToClauses(fmla, EmptyAnnotation{}),
+			Pre:      FalseClauses(EmptyAnnotation{}),
 		}
 	}
 

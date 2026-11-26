@@ -1,5 +1,7 @@
 package goivy
 
+import "regexp"
+
 // GuiArtHook is the type for the analysis-graph GUI hook stored on
 // Config.GuiArtHook. It is invoked by GuiArt to display an analysis graph in
 // an interactive UI.
@@ -83,7 +85,8 @@ type Config struct {
 	CheckedActionFound bool
 
 	// CheckLineno is the current line number being checked, or empty for all.
-	CheckLineno string
+	CheckLineno       string
+	checkNamePatterns []*regexp.Regexp
 
 	// SolverOpts controls per-solver Z3 behavior.
 	SolverOpts *SolverOptions

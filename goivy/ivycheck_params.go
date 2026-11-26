@@ -2,6 +2,7 @@ package goivy
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -285,6 +286,14 @@ func ApplyIvyCheckParams(cfg *Config, params map[string]string) error {
 				return err
 			}
 			cfg.CheckLineno = parsed
+		case "check":
+			cfg.checkNamePatterns = nil
+			if val != "" {
+				for _, pattern := range strings.Split(val, ",") {
+					expr := strings.ReplaceAll(regexp.QuoteMeta(pattern), `\?`, ".")
+					cfg.checkNamePatterns = append(cfg.checkNamePatterns, regexp.MustCompile(expr))
+				}
+			}
 		case "parser":
 			return fmt.Errorf("unknown parameter: %s", key)
 		default:
@@ -292,6 +301,21 @@ func ApplyIvyCheckParams(cfg *Config, params map[string]string) error {
 		}
 	}
 	return nil
+}
+
+func (cfg *Config) checkNameSelected(name string) bool {
+	if cfg == nil || len(cfg.checkNamePatterns) == 0 {
+		return true
+	}
+	if name == "" {
+		return false
+	}
+	for _, pattern := range cfg.checkNamePatterns {
+		if pattern.MatchString(name) {
+			return true
+		}
+	}
+	return false
 }
 
 func parseIvyCheckInt(key, s string) (int, error) {

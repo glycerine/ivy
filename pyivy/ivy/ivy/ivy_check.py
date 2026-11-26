@@ -218,6 +218,12 @@ def is_unprovable_assert(asrt):
 def is_guarantee_mod_unprovable(asrt):
     return is_unprovable_assert(asrt) == act.check_unprovable.get()
 
+def guarantee_name(asrt):
+    args = getattr(asrt, 'args', ())
+    if args and isinstance(args[0], ivy_ast.LabeledFormula) and args[0].label is not None:
+        return args[0].name
+    return None
+
 def is_check_mod_unprovable(lf):
     return lf.unprovable == act.check_unprovable.get()
 
@@ -474,6 +480,7 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[]):
         lcs = [sub for sub in conjs if sub.lineno == check_lineno]
     else:
         lcs = conjs
+    lcs = [c for c in lcs if act.check_name_selected(c.name if c.label is not None else None)]
     return check_fcs_in_state(mod,ag,post,[ConjChecker(c,indent) for c in lcs])
 
 def check_safety_in_state(mod,ag,post,report_pass=True):
@@ -601,6 +608,7 @@ def check_isolate(trace_hook = None):
                 pre = itp.State(value = clauses1)
                 props = [x for x in im.module.labeled_props if not x.temporal]
                 props = [p for p in props if not(p.id in subgoalmap and p.explicit)]
+                props = [p for p in props if act.check_name_selected(p.name if p.label is not None else None)]
                 fcs = ([(ConjAssumer if prop.assumed or prop.id in subgoalmap else ConjChecker)(prop) for prop in props])
                 check_fcs_in_state(mod,ag,pre,fcs)
             else:
@@ -663,6 +671,7 @@ def check_isolate(trace_hook = None):
             if check_lineno is not None:
                 guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
             guarantees = [x for x in guarantees if is_guarantee_mod_unprovable(x)]
+            guarantees = [x for x in guarantees if act.check_name_selected(guarantee_name(x))]
             if guarantees and not unprovable:
                 print("\n    Any assertions in initializers must be checked", end=' ')
                 if check:
@@ -743,7 +752,7 @@ def check_isolate(trace_hook = None):
             for _x in guarantees:
                 _pass = is_guarantee_mod_unprovable(_x)
                 if __debug__: xtracer.trace("check.guarantee_phase unprov_filter HASH actname=%s pass=%s canon=%s" % (actname, "True" if _pass else "False", _x.canon()))
-                if _pass:
+                if _pass and act.check_name_selected(guarantee_name(_x)):
                     _filtered.append(_x)
             guarantees = _filtered
             if __debug__: xtracer.trace("check.guarantee_phase post unprov_filter actname=%s guarantees=%d" % (actname, len(guarantees)))

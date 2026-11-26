@@ -15,7 +15,7 @@ Track `8f7763f..257e3da` in the local upstream checkout. The [commit inventory](
 ### 1. Standalone correctness and CLI foundations
 
 - **PyIvy.** Backport `28cce61` into the logic label grammar and proof attachment. Review the existing assignment VC fix against `c94e328`. Bring over sort ascription from `d5e30fb`, delayed definition resolution from `01d1ace`, the assertion filename and nil-label fixes, loopback/TCP corrections, current-Z3 C++ generation, and the solver debug cleanup and shrink toggle. Port the empty-SMT-conjunction fix from `bba0acf` independently when practical. The later wire-aware definition rule belongs with the wire work.
-- **GoIvy.** Work through `AttachProofs` and the full-file and logic grammars for `[this]`, `CompileApp` for ascription, `DefinitionDecl` and `CheckDefinitions` for forward references, `PCA` and the checker options for assertion selection, `ivy2cpp/thunk.go` for the Z3 vector API, and the native/Go library targets for networking. Verify `c94e328` with both existing destructor-assignment paths, which already constrain the original indexed application. Reconcile `ext:` normalization in the shared isolate/action reference transform and retain current deterministic names and traces wherever the upstream behavior permits.
+- **GoIvy.** Work through `AttachProofs` and the full-file and logic grammars for `[this]`, `CompileApp` for ascription, `DefinitionDecl` and `CheckDefinitions` for forward references, `PCA` and the checker options for assertion selection, and `ivy2cpp/thunk.go` and `include2cpp/ivy_z3_gen.hpp` for the Z3 vector API. Update the Go standard-library sources in `ivy-lang-examples/ivy/include/` alongside the Python include tree. Verify `c94e328` with both existing destructor-assignment paths, which already constrain the original indexed application. Reconcile `ext:` normalization in the shared isolate/action reference transform and retain current deterministic names and traces wherever the upstream behavior permits.
 - **Tests.** Use the implicit `this` isolate and an explicit isolate to check proof attachment and execution. Exercise unknown and duplicate proof labels, result ascription on a polymorphic operator with an ambiguous output, conflicting ascription, forward/recursive/scoped definitions, and indexed destructor updates at both the assigned and an untouched index. Compile generated C++ against the local toolchain. Check `assert=file:line` against `assert=file.ivy:line`, an unnamed old-version assertion, and countermodel search with default minimization and with minimization disabled.
 
 ### 2. Structs, VMT, inference, and liveness
@@ -57,3 +57,13 @@ Track `8f7763f..257e3da` in the local upstream checkout. The [commit inventory](
 ## Acceptance checks
 
 Every inventory entry must map to an integrated change, a later upstream change that supersedes it, or verified equivalent behavior already present in the correct subtree. Validate clean and conflicting Python changes against the upstream tip and the prior fork. For Go, exercise the normal entry points and compare the affected semantics against upstream. Check that the fork's existing fast tests still pass, run each new focused feature test, and record any upstream regressions or external tool coverage gaps with their exact scope.
+
+## Implementation checkpoints
+
+| Upstream change | Status and verification |
+| --- | --- |
+| `28cce61` | Both checkers run `vcgen1.ivy` to `OK`. Go tests cover proof attachment and parsing across Ivy 1.6, 1.7, and 1.8. |
+| `c7f10b9`, `46cd023` | Both include trees carry the TCP argument and loopback changes. Both C++ generators emit `INADDR_LOOPBACK` for `udp_test.ivy`. |
+| `7431454` | Both checkers expose `shrink=`. PyIvy trace output confirms that minimization is skipped with `shrink=false`. A Go solver test verifies that the disabled setting leaves the domain unconstrained. |
+| `054188a`, `18ccb00` | Both checkers accept both spellings of `assert=`. Check-name tests cover property, invariant, and assertion selection, combining both filters, keeping skipped assertions as assumptions, and handling unnamed legacy assertions. |
+| Example and project files under `doc/examples`, `doc/projects`, and `examples` | 201 upstream paths imported into PyIvy. The CAV tactic example passes. Hardware checking, RTL translation, and regression runner integration are pending. |

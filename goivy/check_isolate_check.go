@@ -152,6 +152,9 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			nonTemporal = filterExplicitSubgoals(nonTemporal, subgoalMap)
 			var checkers []Checker
 			for _, prop := range nonTemporal {
+				if !mod.Cfg.checkNameSelected(lfLabelName(prop)) {
+					continue
+				}
 				if prop.Assumed || subgoalMap[prop.ID] {
 					checkers = append(checkers, NewConjAssumer(mod, prop))
 				} else {
@@ -490,7 +493,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			for _, sub := range guarantees {
 				pass := IsGuaranteeModUnprovable(mod.Cfg, sub)
 				xtracer.Trace("check.guarantee_phase unprov_filter HASH actname=%s pass=%v canon=%s", actname, pass, sub.Canon())
-				if pass {
+				if pass && mod.Cfg.checkNameSelected(guaranteeName(sub)) {
 					filtered = append(filtered, sub)
 				}
 			}
@@ -645,7 +648,7 @@ func initializerGuaranteesForCheckIsolate(mod *Module) []ActionsAction {
 	}
 	var filtered []ActionsAction
 	for _, sub := range guarantees {
-		if IsGuaranteeModUnprovable(mod.Cfg, sub) {
+		if IsGuaranteeModUnprovable(mod.Cfg, sub) && mod.Cfg.checkNameSelected(guaranteeName(sub)) {
 			filtered = append(filtered, sub)
 		}
 	}
@@ -1511,7 +1514,9 @@ func CheckConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent
 
 	var checkers []Checker
 	for _, c := range checkable {
-		checkers = append(checkers, NewConjChecker(mod, c, indent))
+		if mod.Cfg.checkNameSelected(lfLabelName(c)) {
+			checkers = append(checkers, NewConjChecker(mod, c, indent))
+		}
 	}
 
 	return CheckFcsInStateWithAG(mod, ag, post, checkers)
