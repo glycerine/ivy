@@ -1214,3 +1214,25 @@ read-and-balance profile was dominated by `mallocgc`, GC assist and write
 barriers. Networks now carve AND cells from slabs that double up to 512 cells.
 i10 read+balance: 4.53 ms / 11,193 allocs before, 3.77–3.91 ms / 6,143 allocs
 after (CPU 14, 200x). Release C same session: 1.37–1.39 ms.
+
+### i10 read/balance/rewrite now matches native ABC structurally
+
+The long-standing 2,004 (Go) vs 2,039 (C) AND difference after
+read → balance ×2 → rewrite was not "equivalent internal choices". It came from
+four real differences, found by tracing per-node rewrite gains in both ports:
+
+1. Go's AIGER reader created objects in a different order (POs after ANDs;
+   latch as BI/latch/BO), so object IDs differed from `Io_ReadAiger`.
+2. `Network.CreateAndEdges` (used by the reader, strash and dup) did not order
+   fanins by ID as `Abc_AigAndCreate` does.
+3. The reader left the strashed network without an AIG manager, so
+   `read; rewrite` panicked.
+4. A C bug: `Extra_Truth4VarNPN` mapped the complements of all 221 NPN class
+   representatives to the empty constant class (CBUGS_FIXED.md #1). The Go port
+   already had this right, so Go rewrote cuts that C skipped.
+
+With 1–3 fixed in Go and 4 fixed in C, both produce byte-identical AIG bodies
+at every stage (2,394 ANDs at depth 37 after balance, 2,020 at depth 36 after
+rewrite). `TestI10BalanceRewriteMatchesNativeABC` compares each stage against
+native goldens in `base/abci/test_vectors`. Fault-injecting the fanin-order fix
+makes it fail.
