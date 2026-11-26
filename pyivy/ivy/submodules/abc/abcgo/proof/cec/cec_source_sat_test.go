@@ -21,8 +21,10 @@ func TestSourceSATFrontierAndClauses(t *testing.T) {
 		if s.cnf.IDs()[node>>1] != 2 || s.cnf.IDs()[a>>1] != 4 || s.cnf.IDs()[b>>1] != 5 || s.cnf.IDs()[c>>1] != 3 {
 			t.Fatalf("frontier: %v", s.cnf.IDs())
 		}
-		if s.cnf.Solver().NumVars() != 6 {
-			t.Fatalf("SAT variable count %d", s.cnf.Solver().NumVars())
+		// As Cec_ManSatSolverRecycle: nSatVars counts the assigned
+		// variables, while the solver is sized for 1000.
+		if s.cnf.NumSatVars() != 6 || s.cnf.Solver().NumVars() != 1000 {
+			t.Fatalf("SAT variable counts %d, %d", s.cnf.NumSatVars(), s.cnf.Solver().NumVars())
 		}
 		if s.cnf.Solver().Solve(s.literal(node)) != bsat.Satisfiable {
 			t.Fatal("source SAT query failed")

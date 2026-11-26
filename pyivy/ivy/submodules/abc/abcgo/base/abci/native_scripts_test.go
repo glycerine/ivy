@@ -117,8 +117,7 @@ var nativeSeqScripts = []string{
 	"strash; fraig -r",
 	"strash; dc2; scorr; dretime",
 	"strash; &get; &scorr; &put",
-	// "strash; &get; &scorr -c; &put": the CNF solver path awaits a faithful
-	// port of cecSolve.c's Cec_ManSatCheckNode (different SAT models).
+	"strash; &get; &scorr -c; &put",
 	"strash; &get; &dc2; &put",
 	"strash; if -K 4; mfs",
 }

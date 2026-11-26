@@ -33,6 +33,7 @@ type SourceCNF struct {
 	polarFlip func() bool
 	sat       *bsat.Solver
 	ids       []int32
+	next      int32 // nSatVars: the next SAT variable to assign
 }
 
 func NewSourceCNF(g SourceCNFGraph, polarFlip func() bool) *SourceCNF {
@@ -44,16 +45,21 @@ func NewSourceCNF(g SourceCNFGraph, polarFlip func() bool) *SourceCNF {
 func (s *SourceCNF) Solver() *bsat.Solver { return s.sat }
 func (s *SourceCNF) IDs() []int32         { return s.ids }
 
+// Reset is Cec_ManSatSolverRecycle: a solver sized for 1000 variables,
+// variable 0 unused and variable 1 the constant-zero node.
 func (s *SourceCNF) Reset() {
 	s.sat = bsat.NewSolver()
-	s.sat.NewVariable()
-	s.sat.NewVariable()
+	s.sat.SetNumVars(1000)
 	if !s.sat.AddClause(3) {
 		panic("cec: constant clause")
 	}
 	s.ids = make([]int32, s.graph.Nodes)
 	s.ids[0] = 1
+	s.next = 2
 }
+
+// NumSatVars is nSatVars, the number of SAT variables assigned so far.
+func (s *SourceCNF) NumSatVars() int32 { return s.next }
 
 func (s *SourceCNF) Literal(lit int32) int32 {
 	id, sign := lit>>1, lit&1
@@ -76,13 +82,21 @@ func (s *SourceCNF) AddNode(root int32) {
 	if s.ids[root] != 0 {
 		return
 	}
+	if s.graph.Node(root).Input {
+		// as Cec_CnfNodeAddToSolver for a CI: number it and size the solver
+		s.ids[root] = s.next
+		s.next++
+		s.sat.SetNumVars(s.next)
+		return
+	}
 	var frontier []int32
 	add := func(id int32) {
 		if s.ids[id] != 0 {
 			return
 		}
 		o := s.graph.Node(id)
-		s.ids[id] = s.sat.NewVariable()
+		s.ids[id] = s.next
+		s.next++
 		if o.And {
 			frontier = append(frontier, id)
 		} else if !o.Input {

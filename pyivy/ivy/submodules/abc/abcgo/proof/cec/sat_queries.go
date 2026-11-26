@@ -31,14 +31,22 @@ func (p *Cec_ManSat_t) query(a int32, b *int32) int32 {
 	s := p.source
 	s.since++
 	s.calls++
-	if s.cnf.Solver() == nil || p.pPars.NSatVarMax > 0 && s.cnf.Solver().NumVars() > p.pPars.NSatVarMax && s.since > p.pPars.NCallsRecycle {
+	if s.cnf.Solver() == nil || p.pPars.NSatVarMax > 0 && s.cnf.NumSatVars() > p.pPars.NSatVarMax && s.since > p.pPars.NCallsRecycle {
 		s.reset()
 	}
 	s.cnf.Solver().SetDeadline(p.pPars.deadline)
 	s.addNode(a >> 1)
-	lits := []int32{s.literal(a)}
 	if b != nil {
 		s.addNode(*b >> 1)
+	}
+	// propagate unit clauses, as Cec_ManSatCheckNode does
+	if s.cnf.Solver().NeedsPropagation() {
+		if !s.cnf.Solver().Simplify() {
+			panic("cec: inconsistent solver after unit propagation")
+		}
+	}
+	lits := []int32{s.literal(a)}
+	if b != nil {
 		lits = append(lits, s.literal(*b))
 	}
 	result := s.cnf.Solver().SolveWithResourceLimits(lits, int64(p.pPars.NBTLimit), 0, 0, 0)
