@@ -42,14 +42,13 @@ func TestOriginalWindowLevelsAndMffcOracle(t *testing.T) {
 		}
 		fs = append(fs, []int{26}, []int{27})
 		ts = append(ts, 0, 0)
-		p := testNetwork(t, fs, 6, 2, ts)
+		fixed := make([]bool, len(fs))
+		empty := make([]bool, len(fs))
 		for id := 6; id < 28; id++ {
-			p.Fixed[id] = rng.Intn(5) == 0
-			p.Empty[id] = rng.Intn(6) == 0
+			fixed[id] = rng.Intn(5) == 0
+			empty[id] = rng.Intn(6) == 0
 		}
-		if err := p.refresh(); err != nil {
-			t.Fatal(err)
-		}
+		p := testNetworkFlags(t, fs, 6, 2, ts, fixed, empty)
 		p.Params.TfoLevMax = rng.Intn(4)
 		p.Params.FanoutMax = rng.Intn(7)
 		p.Params.WinSizeMax = 1 + rng.Intn(35)
@@ -79,7 +78,7 @@ func TestOriginalWindowLevelsAndMffcOracle(t *testing.T) {
 			value = 1
 		}
 		fmt.Fprintf(&line, "%d %d ", value, mffc)
-		for _, row := range [][]int{p.Levels, p.Reverse, p.nodes, p.divs, p.roots, p.tfo, p.order} {
+		for _, row := range [][]int{p.Levels, p.Reverse, p.vNodes, p.vDivs, p.vRoots, p.vTfo, p.vOrder} {
 			for _, v := range row {
 				fmt.Fprintf(&line, "%d,", v)
 			}

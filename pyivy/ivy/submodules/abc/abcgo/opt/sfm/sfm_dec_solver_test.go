@@ -7,7 +7,7 @@ import (
 
 func TestSfmDecWindowSolver(t *testing.T) {
 	// x -> pivot buffer -> root buffer. A pivot flip must change the root.
-	cnfs := [][][]int{Sfm_TruthToCnf(0xaaaaaaaaaaaaaaaa, nil, 1)}
+	cnfs := [][][]int{sfmTruthToClauses(0xaaaaaaaaaaaaaaaa, nil, 1)}
 	w := sfmDecWindow{gates: []int{-1, 0, 0}, fanins: [][]int{nil, {0}, {1}}, roots: []int{2}, pivot: 1}
 	solver, ok := w.prepareSolver(cnfs)
 	if !ok {

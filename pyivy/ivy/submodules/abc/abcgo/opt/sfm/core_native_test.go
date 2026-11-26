@@ -2,18 +2,45 @@ package sfm
 
 import (
 	"math/rand"
+
+	"github.com/glycerine/abcgo/misc/util"
 	"reflect"
 	"testing"
 )
 
-func testNetwork(t *testing.T, fs [][]int, pis, pos int, ts []uint64) *Sfm_Ntk_t {
+// testNetworkFlags builds a network for the C engine. Truth words of nodes
+// with fewer than six fanins are stretched, as the C callers provide them.
+func testNetworkFlags(t *testing.T, fs [][]int, pis, pos int, ts []uint64, fixed, empty []bool) *Sfm_Ntk_t {
 	t.Helper()
-	n, err := Sfm_NtkConstruct(fs, pis, pos, nil, nil, ts, nil, nil)
+	words := make([]uint64, len(ts))
+	for i := range ts {
+		words[i] = util.Abc_Tt6Stretch(ts[i], int32(min(len(fs[i]), 6)))
+	}
+	n, err := Sfm_NtkConstruct(fs, pis, pos, fixed, empty, words, nil, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
 	return n
 }
+func testNetwork(t *testing.T, fs [][]int, pis, pos int, ts []uint64) *Sfm_Ntk_t {
+	t.Helper()
+	return testNetworkFlags(t, fs, pis, pos, ts, nil, nil)
+}
+
+// mappedNetwork builds a network for the Go-native mapped optimizer.
+func mappedNetwork(t *testing.T, fs [][]int, pis, pos int, ts []uint64) *Sfm_Ntk_t {
+	t.Helper()
+	rows := make([][]uint64, len(ts))
+	for i := range ts {
+		rows[i] = []uint64{ts[i]}
+	}
+	n, err := NewNetwork(fs, pis, pos, rows, nil, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return n
+}
+
 func coreTable(t *testing.T, p *Sfm_Ntk_t) [][]bool {
 	t.Helper()
 	r := make([][]bool, 1<<uint(p.Pis))
@@ -34,25 +61,21 @@ func TestCoreOneDivisorAndCleanup(t *testing.T) {
 	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
 	want := coreTable(t, p)
 	changed := Sfm_NtkPerform(p, nil)
-	if changed < 1 || p.Stats.Resubs < 1 || !p.Deleted[2] {
-		t.Fatal(changed, p.Stats, p.Deleted)
+	if changed < 1 || p.Stats.Resubs < 1 || Sfm_NodeReadUsed(p, 2) {
+		t.Fatal(changed, p.Stats, p.Fanins)
 	}
 	if !reflect.DeepEqual(coreTable(t, p), want) {
 		t.Fatal("resubstitution changed output")
 	}
 }
 func TestCoreFixedAndEmptyObjects(t *testing.T) {
-	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
-	p.Fixed[2] = true
-	p.Empty[2] = true
-	if err := p.refresh(); err != nil {
-		t.Fatal(err)
-	}
+	flags := []bool{false, false, true, false, false}
+	p := testNetworkFlags(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0}, flags, flags)
 	if p.Levels[2] != p.Levels[0] {
 		t.Fatal("transparent object added level")
 	}
 	Sfm_NtkPerform(p, nil)
-	if p.Deleted[2] || !reflect.DeepEqual(p.Fanins[2], []int{0, 1}) {
+	if !Sfm_NodeReadUsed(p, 2) || !reflect.DeepEqual(p.Fanins[2], []int{0, 1}) {
 		t.Fatal("fixed object removed")
 	}
 }
@@ -99,7 +122,19 @@ func TestCNFMatchesEveryTruthAssignment(t *testing.T) {
 			if vars < 6 {
 				words[0] = stretch(words[0], vars)
 			}
-			clauses := Sfm_TruthToCnf(words[0], words, vars)
+			var cover []uint32
+			var cnf []int8
+			Sfm_TruthToCnf(words[0], words, vars, &cover, &cnf)
+			var clauses [][]int
+			clause := []int{}
+			for _, e := range cnf {
+				if e == -1 {
+					clauses = append(clauses, clause)
+					clause = []int{}
+				} else {
+					clause = append(clause, int(e))
+				}
+			}
 			for a := 0; a < 1<<uint(vars+1); a++ {
 				satisfied := true
 				for _, c := range clauses {
@@ -119,19 +154,36 @@ func TestCNFMatchesEveryTruthAssignment(t *testing.T) {
 	}
 }
 
+func mappedTable(t *testing.T, p *Sfm_Ntk_t) [][]bool {
+	t.Helper()
+	r := make([][]bool, 1<<uint(p.Pis))
+	for a := range r {
+		in := make([]bool, p.Pis)
+		for i := range in {
+			in[i] = a&(1<<uint(i)) != 0
+		}
+		var err error
+		r[a], err = p.Evaluate(in)
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	return r
+}
+
 func polarityCells() []*Gate {
 	return []*Gate{{Name: "zero", Truth: []uint64{0}}, {Name: "one", Truth: []uint64{^uint64(0)}}, {Name: "buf", Inputs: 1, Truth: []uint64{0xaaaaaaaaaaaaaaaa}, Area: 1}, {Name: "inv", Inputs: 1, Truth: []uint64{0x5555555555555555}, Area: 1}, {Name: "and", Inputs: 2, Truth: []uint64{0x8888888888888888}, Area: 3}, {Name: "nand", Inputs: 2, Truth: []uint64{0x7777777777777777}, Area: 1}, {Name: "or", Inputs: 2, Truth: []uint64{0xeeeeeeeeeeeeeeee}, Area: 3}, {Name: "nor", Inputs: 2, Truth: []uint64{0x1111111111111111}, Area: 1}}
 }
 func TestAreaPolarityChangePreservesFunction(t *testing.T) {
 	cells := polarityCells()
-	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2}}, 2, 1, []uint64{0, 0, 8, 0})
+	p := mappedNetwork(t, [][]int{nil, nil, {0, 1}, {2}}, 2, 1, []uint64{0, 0, 8, 0})
 	p.Mapping[2] = cells[4]
-	want := coreTable(t, p)
+	want := mappedTable(t, p)
 	gain := Abc_NtkChangePerform(p, cells, false)
 	if gain != 1 || len(p.Fanins) != 5 {
 		t.Fatal("polarity substitution gain", gain, p.Fanins)
 	}
-	if !reflect.DeepEqual(want, coreTable(t, p)) {
+	if !reflect.DeepEqual(want, mappedTable(t, p)) {
 		t.Fatal("output polarity changed")
 	}
 }

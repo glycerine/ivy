@@ -7,7 +7,7 @@ import (
 
 func TestSfmExtractAreaWindow(t *testing.T) {
 	// The first AND belongs to the pivot's cone; its PI fanins are divisors.
-	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
+	p := mappedNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
 	pars := Sfm_Par_t{TfoLevMax: 2, TfiLevMax: 3, FanoutMax: 10, MffcMax: 3}
 	w := sfmExtractAreaWindow(p, 3, pars)
 	if !reflect.DeepEqual(w.roots, []int{3}) || !reflect.DeepEqual(w.mffc, []int{3, 2}) || !reflect.DeepEqual(w.mffcInputs, []int{0, 1}) {
@@ -35,7 +35,7 @@ func TestSfmExtractAreaWindow(t *testing.T) {
 }
 
 func TestSfmExtractTimingWindow(t *testing.T) {
-	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
+	p := mappedNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
 	gate := &Gate{Inputs: 2, Pins: []Pin{{Phase: 2, Rise: 2, Fall: 2}, {Phase: 2, Rise: 2, Fall: 2}}}
 	p.Mapping[2], p.Mapping[3] = gate, gate
 	timing := Sfm_TimStart(p, 3)

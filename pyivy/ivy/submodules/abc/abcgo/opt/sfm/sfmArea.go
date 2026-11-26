@@ -326,7 +326,6 @@ func Abc_ObjChangePerform(p *Sfm_Ntk_t, id int, cells []*Gate, pairs [][]CellPai
 	if err := p.refresh(); err != nil {
 		panic(err)
 	}
-	p.cnfs = Sfm_CreateCnf(p)
 }
 func Abc_NtkChangePerform(p *Sfm_Ntk_t, cells []*Gate, verbose bool) int {
 	if len(cells) < 4 {

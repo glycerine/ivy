@@ -23,7 +23,7 @@ func (w *sfmDecWindow) prepareSolver(gateCnfs [][][]int) (*satoko.Solver, bool) 
 		if gate < 0 || gate >= len(gateCnfs) {
 			panic("sfm: invalid gate")
 		}
-		for _, clause := range Sfm_TranslateCnf(gateCnfs[gate], inputs, pivot) {
+		for _, clause := range sfmTranslateClauses(gateCnfs[gate], inputs, pivot) {
 			if !solver.AddClause(clause) {
 				return false
 			}

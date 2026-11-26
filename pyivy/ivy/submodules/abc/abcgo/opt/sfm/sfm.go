@@ -2,8 +2,10 @@
 package sfm
 
 import (
+	"time"
+
 	"github.com/glycerine/abcgo/map/mio"
-	"github.com/glycerine/abcgo/sat/satoko"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 const SFM_FANIN_MAX = 6
@@ -47,25 +49,77 @@ type Pin struct {
 	Load       float64
 }
 
+// Sfm_Ntk_t is the port of C's struct Sfm_Ntk_t_ (sfmInt.h). The C engine
+// (Sfm_NtkConstruct/Sfm_NtkPerform, used by "&mfs" and "mfs2") uses the
+// lower-case fields, which mirror the C fields one-to-one, plus the exported
+// fields Pis, Pos, Fanins (vFanins), Fanouts (vFanouts), Levels (vLevels),
+// Reverse (vLevelsR), Fixed (vFixed), Empty (vEmpty) and LevelMax (nLevelMax).
+//
+// The Go-native mapped-network optimizer (sfm_dec_*.go, sfmArea.go) shares
+// this type and additionally uses Truths, Deleted, Mapping and SourceIDs; see
+// sfm_mapped_ntk.go. Those fields are not used by the C engine.
 type Sfm_Ntk_t struct {
-	Pis, Pos              int
-	Fanins, Fanouts       [][]int
-	Truths                [][]uint64
-	Fixed, Empty, Deleted []bool
-	Levels, Reverse       []int
-	LevelMax              int
-	Params                Sfm_Par_t
-	Stats                 Stats
+	// parameters
+	pPars  *Sfm_Par_t // parameters
+	Params Sfm_Par_t  // storage for pPars when the caller passes none
+	// objects
+	Pis      int // PI count (PIs should be first objects)
+	Pos      int // PO count (POs should be last objects)
+	nNodes   int // internal nodes
+	nObjs    int // total objects
+	LevelMax int // maximum level
+	// user data
+	Fixed    []bool   // persistent objects
+	Empty    []bool   // transparent objects (nil: none)
+	vTruths  []uint64 // truth tables
+	Fanins   [][]int  // fanins
+	vStarts  []int    // offsets
+	vTruths2 []uint64 // truth tables (large)
+	// attributes
+	Fanouts [][]int  // fanouts
+	Levels  []int    // logic level
+	Reverse []int    // logic level (reverse)
+	vCounts []int    // fanin counters
+	vId2Var []int32  // ObjId -> SatVar
+	vVar2Id []int    // SatVar -> ObjId
+	vCnfs   [][]int8 // CNFs
+	vCover  []uint32 // temporary
+	// traversal IDs
+	vTravIds  []int // traversal IDs
+	vTravIds2 []int // traversal IDs
+	nTravIds  int   // traversal IDs
+	nTravIds2 int   // traversal IDs
+	// window
+	iPivotNode int   // window pivot
+	vNodes     []int // internal
+	vDivs      []int // divisors
+	vRoots     []int // roots
+	vTfo       []int // TFO (excluding iNode)
+	// SAT solving
+	pSat     *bsat.Solver // SAT solver
+	nSatVars int32        // the number of variables
+	// counter-examples
+	nCexes    int      // number of CEXes
+	vDivCexes []uint64 // counter-examples
+	// intermediate data
+	vOrder    []int     // object order
+	vDivVars  []int32   // divisor SAT variables
+	vDivIds   []int32   // divisors indexes
+	vLits     []int32   // literals
+	vValues   []int32   // SAT variable values
+	vClauses  [][]int32 // CNF clauses for the node
+	vFaninMap []int32   // mapping fanins into their SAT vars
+	// statistics (the C counters nTryRemoves, nRemoves, nTotalNodesBeg, ...)
+	Stats Stats
+	// runtime
+	timeWin, timeDiv, timeCnf, timeSat, timeOther, timeTotal time.Duration
+
+	// Fields used only by the Go-native mapped-network optimizer.
+	Truths  [][]uint64
+	Deleted []bool
 	// Mapping associates each internal object with a library gate (nil for LUTs).
 	// Mapped algorithms share the same object IDs and fanin ordering.
 	Mapping []*Gate
 	// SourceIDs holds caller object IDs for the original mapped objects.
-	SourceIDs                      []int
-	pivot                          int
-	nodes, divs, roots, tfo, order []int
-	solver                         *satoko.Solver
-	idVar                          map[int]int
-	divIDs                         []int
-	witnesses                      [][]bool
-	cnfs                           [][][]int
+	SourceIDs []int
 }

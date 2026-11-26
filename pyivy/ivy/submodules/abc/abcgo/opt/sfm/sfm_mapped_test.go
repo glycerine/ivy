@@ -20,12 +20,12 @@ GATE nand2 1 O=!(a*b); PIN * INV 1 999 1 0 1 0
 	if err != nil {
 		t.Fatal(err)
 	}
-	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2}}, 2, 1, []uint64{0, 0, 8, 0})
+	p := mappedNetwork(t, [][]int{nil, nil, {0, 1}, {2}}, 2, 1, []uint64{0, 0, 8, 0})
 	p.Mapping[2] = Sfm_GateFromMio(mio.Mio_LibraryReadGateByName(lib, "and2", ""))
-	want := coreTable(t, p)
+	want := mappedTable(t, p)
 	pars := Sfm_Par_t{Area: true, VarMax: 6, MffcMax: 3, NodeOne: 99, FanoutMax: 10}
 	changed, err := Sfm_OptimizeMapped(p, pars, lib)
-	if err != nil || changed == 0 || !reflect.DeepEqual(coreTable(t, p), want) {
+	if err != nil || changed == 0 || !reflect.DeepEqual(mappedTable(t, p), want) {
 		t.Fatalf("changed=%d err=%v", changed, err)
 	}
 	if p.Mapping[2].Name != "nand2" {

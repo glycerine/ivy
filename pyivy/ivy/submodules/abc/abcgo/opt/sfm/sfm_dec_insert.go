@@ -83,6 +83,5 @@ func sfmInsertAreaMatch(p *Sfm_Ntk_t, pivot int, gates []int32, fanins [][]int32
 	if err := p.refresh(); err != nil {
 		panic(err)
 	}
-	p.cnfs = Sfm_CreateCnf(p)
 	return true
 }

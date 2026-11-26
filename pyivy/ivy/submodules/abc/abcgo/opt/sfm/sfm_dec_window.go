@@ -103,7 +103,7 @@ func sfmDecWindowFromNetwork(p *Sfm_Ntk_t, order, roots, boundary []int, pivot, 
 			window.fanins[i] = append(window.fanins[i], index)
 		}
 		window.gates[i] = len(cnfs)
-		cnfs = append(cnfs, Sfm_TruthToCnf(p.Truths[id][0], p.Truths[id], len(p.Fanins[id])))
+		cnfs = append(cnfs, sfmTruthToClauses(p.Truths[id][0], p.Truths[id], len(p.Fanins[id])))
 	}
 	for _, id := range roots {
 		index, exists := local[id]

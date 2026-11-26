@@ -9,7 +9,7 @@ func Sfm_DecCreateCnf(sizes []int, truths []uint64) [][][]int {
 	}
 	result := make([][][]int, len(sizes))
 	for i, n := range sizes {
-		result[i] = Sfm_TruthToCnf(truths[i], nil, n)
+		result[i] = sfmTruthToClauses(truths[i], nil, n)
 	}
 	return result
 }

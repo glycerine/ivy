@@ -76,8 +76,9 @@ int Sfm_TruthToCnf( word Truth, word * pTruth, int nVars, Vec_Int_t * vCover, Ve
     {
         if ( Truth == 0 || ~Truth == 0 )
         {
-            //assert( nVars == 0 );
-            Vec_StrPush( vCnf, (char)(Truth == 0) );
+            // the unit clause fixes the output (variable nVars); a node
+            // simplified to a constant may still have fanins (nVars > 0)
+            Vec_StrPush( vCnf, (char)Abc_Var2Lit(nVars, Truth == 0) );
             Vec_StrPush( vCnf, (char)-1 );
             return 1;
         }
@@ -90,7 +91,7 @@ int Sfm_TruthToCnf( word Truth, word * pTruth, int nVars, Vec_Int_t * vCover, Ve
                 break;
         if ( w == nWords )
         {
-            Vec_StrPush( vCnf, (char)1 );
+            Vec_StrPush( vCnf, (char)Abc_Var2Lit(nVars, 1) );
             Vec_StrPush( vCnf, (char)-1 );
             return 1;
         }
@@ -100,7 +101,7 @@ int Sfm_TruthToCnf( word Truth, word * pTruth, int nVars, Vec_Int_t * vCover, Ve
                 break;
         if ( w == nWords )
         {
-            Vec_StrPush( vCnf, (char)0 );
+            Vec_StrPush( vCnf, (char)Abc_Var2Lit(nVars, 0) );
             Vec_StrPush( vCnf, (char)-1 );
             return 1;
         }

@@ -3,7 +3,7 @@ package sfm
 import "testing"
 
 func TestSfmDecomposeAreaNode(t *testing.T) {
-	p := testNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
+	p := mappedNetwork(t, [][]int{nil, nil, {0, 1}, {2, 0}, {3}}, 2, 1, []uint64{0, 0, 8, 8, 0})
 	pars := Sfm_Par_t{TfoLevMax: 2, TfiLevMax: 3, FanoutMax: 10, MffcMax: 3, VarMax: 6, UseAndOr: true, UseSim: true}
 	truth, support, order, ok := sfmDecomposeAreaNode(p, 3, pars)
 	if !ok || len(support) != 2 {

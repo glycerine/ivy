@@ -1,95 +1,174 @@
 package sfm
 
+// Port of src/opt/sfm/sfmCnf.c.
+
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/bool/kit"
 )
 
-// Sfm_TruthToCnf derives both ISOP covers and emits implications to the local
-// output variable nVars. Clauses use ordinary var<<1|negative literals.
-func Sfm_TruthToCnf(truth uint64, large []uint64, vars int) [][]int {
-	if vars < 0 || vars > 16 {
-		panic("sfm: invalid truth support")
+func abcVar2Lit(Var int32, c int32) int32 { return Var + Var + c }
+func abcLit2Var(Lit int32) int32          { return Lit >> 1 }
+func abcLitIsCompl(Lit int32) bool        { return Lit&1 != 0 }
+func abcLitNot(Lit int32) int32           { return Lit ^ 1 }
+func abcLitNotCond(Lit int32, c bool) int32 {
+	if c {
+		return Lit ^ 1
 	}
-	words := []uint64{stretch(truth, vars)}
-	if vars > 6 {
-		if len(large) < truthWords(vars) {
-			panic("sfm: short truth")
-		}
-		words = large[:truthWords(vars)]
-	}
-	all0, all1 := true, true
-	for _, w := range words {
-		all0 = all0 && w == 0
-		all1 = all1 && w == ^uint64(0)
-	}
-	if all0 || all1 {
-		lit := vars << 1
-		if all0 {
-			lit ^= 1
-		}
-		return [][]int{{lit}}
-	}
-	var clauses [][]int
-	for c := 0; c < 2; c++ {
-		t := make([]uint32, 2*len(words))
-		for i, w := range words {
-			if c != 0 {
-				w = ^w
+	return Lit
+}
+
+// Sfm_PrintCnf prints a CNF in the vCnf encoding: literals separated by -1.
+func Sfm_PrintCnf(vCnf []int8) {
+	for _, Entry := range vCnf {
+		Lit := int32(Entry)
+		if Lit == -1 {
+			fmt.Printf("\n")
+		} else {
+			s := ""
+			if abcLitIsCompl(Lit) {
+				s = "-"
 			}
-			t[2*i], t[2*i+1] = uint32(w), uint32(w>>32)
+			fmt.Printf("%s%d ", s, abcLit2Var(Lit))
 		}
-		var cover []uint32
-		if kit.Kit_TruthIsop(t, int32(vars), &cover, 0) != 0 {
-			panic("sfm: ISOP failed")
+	}
+}
+
+// Sfm_TruthToCnf derives the CNF of a node with nVars fanins whose output is
+// variable nVars. Truth is used when nVars <= 6, pTruth otherwise. The CNF
+// is written to *vCnf as literals with -1 terminating each clause; the cover
+// is computed in *vCover. Returns the number of cubes.
+func Sfm_TruthToCnf(Truth uint64, pTruth []uint64, nVars int, vCover *[]uint32, vCnf *[]int8) int {
+	nWords := 1
+	if nVars > 6 {
+		nWords = 1 << uint(nVars-6)
+	}
+	*vCnf = (*vCnf)[:0]
+	if nVars <= 6 {
+		if Truth == 0 || ^Truth == 0 {
+			// the unit clause fixes the output (variable nVars); a node
+			// simplified to a constant may still have fanins (nVars > 0).
+			// C used variable 0 here (CBUGS_FIXED.md #3).
+			*vCnf = append(*vCnf, int8(abcVar2Lit(int32(nVars), int32(boolInt8(Truth == 0)))), -1)
+			return 1
 		}
-		for _, cube := range cover {
-			var clause []int
-			for v := 0; v < vars; v++ {
-				literal := (cube >> uint(2*v)) & 3
-				if literal == 1 {
-					clause = append(clause, v<<1)
-				} else if literal == 2 {
-					clause = append(clause, v<<1|1)
+	} else {
+		// const0
+		w := 0
+		for w = 0; w < nWords; w++ {
+			if pTruth[w] != 0 {
+				break
+			}
+		}
+		if w == nWords {
+			*vCnf = append(*vCnf, int8(abcVar2Lit(int32(nVars), 1)), -1)
+			return 1
+		}
+		// const1
+		for w = 0; w < nWords; w++ {
+			if ^pTruth[w] != 0 {
+				break
+			}
+		}
+		if w == nWords {
+			*vCnf = append(*vCnf, int8(abcVar2Lit(int32(nVars), 0)), -1)
+			return 1
+		}
+	}
+	{
+		nCubes := 0
+		assert(nVars > 0, "nVars > 0")
+		var small [2]uint32
+		var large []uint32
+		for c := 0; c < 2; c++ {
+			var RetValue int32
+			if nVars <= 6 {
+				if c != 0 {
+					Truth = ^Truth
 				}
+				small[0], small[1] = uint32(Truth), uint32(Truth>>32)
+				RetValue = kit.Kit_TruthIsop(small[:], int32(nVars), vCover, 0)
+			} else {
+				if large == nil {
+					large = make([]uint32, 2*nWords)
+				}
+				for k := 0; k < nWords; k++ {
+					w := pTruth[k]
+					if c != 0 {
+						w = ^w
+					}
+					large[2*k], large[2*k+1] = uint32(w), uint32(w>>32)
+				}
+				RetValue = kit.Kit_TruthIsop(large, int32(nVars), vCover, 0)
 			}
-			clause = append(clause, vars<<1|c)
-			clauses = append(clauses, clause)
-		}
-	}
-	return clauses
-}
-func Sfm_TranslateCnf(cnf [][]int, faninMap []int, pivot int) [][]int {
-	r := make([][]int, len(cnf))
-	for i, c := range cnf {
-		r[i] = make([]int, len(c))
-		for j, l := range c {
-			v := faninMap[l>>1]
-			r[i][j] = v<<1 | (l & 1)
-			if v == pivot {
-				r[i][j] ^= 1
+			assert(RetValue == 0, "RetValue == 0")
+			nCubes += len(*vCover)
+			for _, Cube := range *vCover {
+				for k := 0; k < nVars; k++ {
+					Literal := 3 & (Cube >> uint(k<<1))
+					if Literal == 1 { // '0'  -> pos lit
+						*vCnf = append(*vCnf, int8(abcVar2Lit(int32(k), 0)))
+					} else if Literal == 2 { // '1'  -> neg lit
+						*vCnf = append(*vCnf, int8(abcVar2Lit(int32(k), 1)))
+					} else if Literal != 0 {
+						assert(false, "Literal != 0")
+					}
+				}
+				*vCnf = append(*vCnf, int8(abcVar2Lit(int32(nVars), int32(c))), -1)
 			}
 		}
+		return nCubes
 	}
-	return r
 }
-func Sfm_CreateCnf(p *Sfm_Ntk_t) [][][]int {
-	r := make([][][]int, len(p.Fanins))
-	for id := p.Pis; id < len(p.Fanins)-p.Pos; id++ {
-		if !p.Deleted[id] {
-			r[id] = Sfm_TruthToCnf(p.Truths[id][0], p.Truths[id], len(p.Fanins[id]))
+
+func boolInt8(b bool) int8 {
+	if b {
+		return 1
+	}
+	return 0
+}
+
+// Sfm_CreateCnf derives the CNFs of all internal nodes.
+func Sfm_CreateCnf(p *Sfm_Ntk_t) [][]int8 {
+	var vCnf []int8
+	vCnfs := make([][]int8, p.nObjs)
+	for i := p.Pis; i < len(p.vTruths)-p.Pos; i++ {
+		uTruth := p.vTruths[i]
+		var pRes []uint64
+		if len(p.vTruths2) > 0 {
+			pRes = p.vTruths2[p.vStarts[i]:]
+		}
+		Sfm_TruthToCnf(uTruth, pRes, Sfm_ObjFaninNum(p, i), &p.vCover, &vCnf)
+		vCnfs[i] = append([]int8(nil), vCnf...)
+	}
+	return vCnfs
+}
+
+// Sfm_TranslateCnf maps the node CNF vCnf into SAT literals using vFaninMap
+// (the SAT variables of the fanins followed by that of the node). Literals of
+// variable iPivotVar are complemented. The clauses are written into *vRes,
+// which always ends with one empty clause, as Vec_WecPushLevel leaves in C.
+func Sfm_TranslateCnf(vRes *[][]int32, vCnf []int8, vFaninMap []int32, iPivotVar int32) {
+	res := (*vRes)[:0]
+	push := func() {
+		if len(res) < cap(res) {
+			res = res[:len(res)+1]
+			res[len(res)-1] = res[len(res)-1][:0]
+		} else {
+			res = append(res, make([]int32, 0, 8))
 		}
 	}
-	return r
-}
-func Sfm_PrintCnf(cnf [][]int) {
-	for _, c := range cnf {
-		for _, l := range c {
-			if l&1 != 0 {
-				fmt.Print("-")
-			}
-			fmt.Printf("%d ", l>>1)
+	push()
+	for _, Entry := range vCnf {
+		if int32(Entry) == -1 {
+			push()
+			continue
 		}
-		fmt.Println()
+		Lit := int32(Entry)
+		Lit = abcVar2Lit(vFaninMap[abcLit2Var(Lit)], 0) ^ (Lit & 1) // Abc_Lit2LitV
+		Lit = abcLitNotCond(Lit, abcLit2Var(Lit) == iPivotVar)
+		res[len(res)-1] = append(res[len(res)-1], Lit)
 	}
+	*vRes = res
 }

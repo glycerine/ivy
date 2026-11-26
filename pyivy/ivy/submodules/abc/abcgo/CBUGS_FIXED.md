@@ -47,3 +47,38 @@ and states how the Go port was verified.
   representatives and next links`) and has the same fix
   (`TestSynch2PutDoesNotPanic`). The Go `&synch2` result itself still differs
   from native ABC and is being investigated separately.
+
+## 3. `Sfm_TruthToCnf` fixes the first fanin, not the output, of a constant node
+
+- **File:** `src/opt/sfm/sfmCnf.c`, `Sfm_TruthToCnf`.
+- **Found:** 2026-11-26, while porting the SFM engine of `&mfs` line by line;
+  native `abc` segfaulted on `&if -K 4; &mfs -a -l` for i10 and sort16.
+- **Bug:** for a constant function the CNF is one unit clause on variable 0
+  (`(char)(Truth == 0)`, and `1`/`0` for more than six inputs). Variable `nVars`
+  is the node output; variable 0 is the output only when the node has no fanins
+  (note the commented-out `assert( nVars == 0 )`). `Sfm_NodeResubOne` (`-l`,
+  `fUseDcs`) can turn a node into a constant while it keeps its fanins, so its
+  CNF then forced the first fanin to a constant and left the output free. The
+  next window over that node is inconsistent: `Sfm_ComputeInterpolantInt` finds
+  a minterm in both the onset and the offset and returns `l_True`, which
+  `Sfm_NodeResubOne` asserts cannot happen. Release builds skip the assert, use
+  `SFM_SAT_SAT` as a truth table and write counter-example bits past
+  `vDivCexes`, and crash.
+- **Fix:** emit the unit clause on the output, `Abc_Var2Lit(nVars, Truth == 0)`
+  (and `Abc_Var2Lit(nVars, 1)`/`Abc_Var2Lit(nVars, 0)` for more than six
+  inputs). For `nVars == 0`, the only case the other callers produce, the CNF
+  is unchanged.
+- **Test:** `abcgo/opt/sfm/cnf_oracle_test.go` (`TestTruthToCnfMatchesC`)
+  compiles `Sfm_TruthToCnf` from `src/` through
+  `test_vectors/sfm/cnf_oracle.c`, compares its CNFs with the Go port on random
+  and constant functions of 0 to 8 inputs, and checks that each CNF holds
+  exactly when the output equals the function; before the fix it reported the
+  constant functions with fanins. `abcgo/base/abci/mfs_sfm_dcs_test.go`
+  (`TestNativeMfsDcsConstantNodeDoesNotCrash`) runs
+  `read i10.aig; &get; &if -K 4; &mfs -a -l; &ps` through the native binary
+  named by `ABC_BINARY`; it segfaulted before the fix and now reports
+  `lut = 798 edge = 2681 lev = 17`.
+- **Go port:** the line-by-line port of the SFM engine (`opt/sfm`) had the same
+  CNF (`TestTruthToCnfConstantWithFanins`) and panicked on the assert; it has
+  the same fix, and `TestMfsDcsConstantNodeMatchesNative` checks that it gives
+  the native result.

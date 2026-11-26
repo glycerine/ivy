@@ -11,7 +11,20 @@ import (
 // The source copy array is used to map optimized objects back during insertion.
 func Gia_ManExtractMfs(p *Gia_Man_t) *sfm.Sfm_Ntk_t {
 	d := giaMfsExtract(p)
-	n, err := sfm.NewNetwork(d.fanins, d.pis, d.pos, d.truths, d.fixed, d.empty)
+	// C keeps one truth word per object in vTruths and the truth tables of
+	// objects with more than six fanins in vTruths2 at offset vStarts.
+	vTruths := make([]uint64, len(d.fanins))
+	vStarts := make([]int, len(d.fanins))
+	var vTruths2 []uint64
+	for i, fanins := range d.fanins {
+		if len(fanins) <= 6 {
+			vTruths[i] = d.truths[i][0]
+		} else {
+			vStarts[i] = len(vTruths2)
+			vTruths2 = append(vTruths2, d.truths[i][:1<<uint(len(fanins)-6)]...)
+		}
+	}
+	n, err := sfm.Sfm_NtkConstruct(d.fanins, d.pis, d.pos, d.fixed, d.empty, vTruths, vStarts, vTruths2)
 	if err != nil {
 		panic(fmt.Sprintf("gia: invalid extracted MFS network: %v", err))
 	}
@@ -20,7 +33,15 @@ func Gia_ManExtractMfs(p *Gia_Man_t) *sfm.Sfm_Ntk_t {
 
 // Gia_ManInsertMfs rebuilds a mapped GIA after SFM has optimized the network.
 func Gia_ManInsertMfs(p *Gia_Man_t, n *sfm.Sfm_Ntk_t, allBoxes int32) *Gia_Man_t {
-	d := &giaMfsNetworkData{fanins: n.Fanins, truths: n.Truths, fixed: n.Fixed, empty: n.Empty, pis: n.Pis, pos: n.Pos}
+	d := &giaMfsNetworkData{fanins: make([][]int, len(n.Fanins)), truths: make([][]uint64, len(n.Fanins)), fixed: n.Fixed, empty: n.Empty, pis: n.Pis, pos: n.Pos}
+	for i := range d.fanins {
+		d.fanins[i] = sfm.Sfm_NodeReadFanins(n, i)
+		words := 1
+		if len(d.fanins[i]) > 6 {
+			words = 1 << uint(len(d.fanins[i])-6)
+		}
+		d.truths[i] = sfm.Sfm_NodeReadTruth(n, i)[:words]
+	}
 	return giaMfsInsert(p, d, allBoxes != 0)
 }
 
@@ -50,6 +71,7 @@ func Gia_ManPerformMfs(p *Gia_Man_t, pars *sfm.Sfm_Par_t) *Gia_Man_t {
 		result := Gia_ManDup(p)
 		result.VMapping = vec.Vec_IntDup(p.VMapping)
 		Gia_ManTransferTiming(result, p)
+		sfm.Sfm_NtkFree(n)
 		return result
 	}
 	allBoxes := int32(0)
@@ -60,5 +82,6 @@ func Gia_ManPerformMfs(p *Gia_Man_t, pars *sfm.Sfm_Par_t) *Gia_Man_t {
 	if pars != nil && pars.Verbose {
 		fmt.Printf("The network has %d nodes changed by \"&mfs\".\n", changed)
 	}
+	sfm.Sfm_NtkFree(n)
 	return result
 }
