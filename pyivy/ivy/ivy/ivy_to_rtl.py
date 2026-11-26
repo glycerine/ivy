@@ -1043,7 +1043,7 @@ class Translator(object):
         # symbols_ast yields applied function heads (ast.rep) as well as leaf
         # constants, so a memory-valued symbol used as f(x) is detected.
         for rhs in self.wire_defs.values():
-            if any(s.name == name for s in ilu.symbols_ast(rhs)):
+            if any(s.name == name for s in ilu.symbols_ilu_ast(rhs)):
                 return True
         for obj in self.objects:
             for clk in self.clocks:
@@ -1051,10 +1051,10 @@ class Translator(object):
                 if upd is None:
                     continue
                 for d in upd[1].defs:
-                    if any(s.name == name for s in ilu.symbols_ast(d.args[1])):
+                    if any(s.name == name for s in ilu.symbols_ilu_ast(d.args[1])):
                         return True
                 for f in upd[1].fmlas:
-                    if any(s.name == name for s in ilu.symbols_ast(f)):
+                    if any(s.name == name for s in ilu.symbols_ilu_ast(f)):
                         return True
         return False
 

@@ -20,6 +20,7 @@ precedence = (
     ('left', 'EQ','LE','LT','GE','GT'),
     ('left', 'TILDAEQ'),
     ('left', 'COLON'),
+    ('left', 'DCOLON'),
     ('left', 'PLUS'),
     ('left', 'MINUS'),
     ('left', 'TIMES'),
@@ -27,6 +28,7 @@ precedence = (
     ('left', 'DOLLAR'),
     ('left', 'OLD'),
     ('left', 'DOT'),
+    ('left', 'DLT','DGT'),
 )
 
 from .ivy_logic_parser import *

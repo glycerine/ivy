@@ -229,7 +229,6 @@ import (
 %type <nodes> symbols
 
 // Precedence declarations — copied exactly from Python v1.7+ precedence table.
-%right        PARSER_TOK_DLT PARSER_TOK_DGT PARSER_TOK_DCOLON
 %left         PARSER_TOK_SEMI
 %left         PARSER_TOK_GLOBALLY PARSER_TOK_EVENTUALLY
 %left         PARSER_TOK_ARROW PARSER_TOK_IFF
@@ -241,11 +240,13 @@ import (
 %left         PARSER_TOK_IF
 %left         PARSER_TOK_ELSE
 %left         PARSER_TOK_COLON
+%left         PARSER_TOK_DCOLON
 %left         PARSER_TOK_PLUS PARSER_TOK_MINUS
 %left         PARSER_TOK_TIMES PARSER_TOK_DIV
 %left         PARSER_TOK_DOLLAR
 %left         PARSER_TOK_OLD
 %left         PARSER_TOK_DOT
+%left         PARSER_TOK_DLT PARSER_TOK_DGT
 // Note: Python has no ASSIGN or ISA in precedence, but goyacc needs them
 // to resolve shift/reduce conflicts in action rules. These are harmless
 // since ASSIGN/ISA never appear in ambiguous expression positions.

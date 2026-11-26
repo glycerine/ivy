@@ -11,3 +11,9 @@ property [variadic] (concat(bfe[1][2](x) : pair, 2 : pair, 3 : pair) : packed) =
 property [sugar] (((x<<2:1>>) : pair) :: (2 : pair) :: (3 : pair)) : packed = 27
 property [nested] ((((1 : pair) :: (2 : pair)) : word) :: (3 : pair)) : packed = 27
 property [identity] (concat(bfe[1][2](x) : pair) : pair) = 1
+
+type record = struct { data : word }
+individual sample : record
+axiom sample.data = x
+property [field_extract] (1 : pair) = (sample.data)<<2:1>>
+property [packing_precedence] (27 : packed) = (0 : pair) + (1 : pair) :: (2 : pair) :: (3 : pair)

@@ -105,7 +105,6 @@ func lalr17AtypeToString(n Node) string {
 %type <node>  pflet
 
 // Precedence declarations — copied exactly from Python v1.7+ precedence table.
-%right        LALR17_TOK_DLT LALR17_TOK_DGT LALR17_TOK_DCOLON
 %left         LALR17_TOK_SEMI
 %left         LALR17_TOK_GLOBALLY LALR17_TOK_EVENTUALLY
 %left         LALR17_TOK_ARROW LALR17_TOK_IFF
@@ -117,11 +116,13 @@ func lalr17AtypeToString(n Node) string {
 %left         LALR17_TOK_IF
 %left         LALR17_TOK_ELSE
 %left         LALR17_TOK_COLON
+%left         LALR17_TOK_DCOLON
 %left         LALR17_TOK_PLUS LALR17_TOK_MINUS
 %left         LALR17_TOK_TIMES LALR17_TOK_DIV
 %left         LALR17_TOK_DOLLAR
 %left         LALR17_TOK_OLD
 %left         LALR17_TOK_DOT
+%left         LALR17_TOK_DLT LALR17_TOK_DGT
 %right        LALR17_TOK_ASSIGN
 
 %start        top

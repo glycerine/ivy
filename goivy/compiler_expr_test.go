@@ -62,6 +62,18 @@ func TestLogicParserHardwareTerms(t *testing.T) {
 	if NodeRep(nested) != "concat" || len(nested.Args()) != 2 || NodeRep(nested.Args()[0]) != "concat" {
 		t.Fatalf("unexpected nested concatenation: %s", nested)
 	}
+	for _, tc := range []struct{ formula, rhs string }{
+		{"r = (s.data)<<3:2>>", "bfe[2][3]"},
+		{"r = x + y::z", "concat"},
+	} {
+		parsed, err := ParseLogicV17(tc.formula, version)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if NodeRep(parsed) != "=" || len(parsed.Args()) != 2 || NodeRep(parsed.Args()[1]) != tc.rhs {
+			t.Errorf("unexpected precedence in %q: %s", tc.formula, parsed)
+		}
+	}
 }
 
 func TestAscribedBitFieldResult(t *testing.T) {
