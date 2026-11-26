@@ -2,6 +2,7 @@ package if_
 
 import (
 	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dau/canon"
 )
@@ -16,7 +17,77 @@ func ifTruthBit(table []uint64, assignment int) bool {
 	return table[assignment>>6]&(1<<uint(assignment&63)) != 0
 }
 func ifTruthSet(table []uint64, assignment int) { table[assignment>>6] |= 1 << uint(assignment&63) }
+
+// ifTruthProject expresses table, a function of the source leaves, over
+// the target leaves (with input phases flipped by the masks).
 func ifTruthProject(table []uint64, source, target []int32, sourceMask, targetMask uint32, complement bool) []uint64 {
+	if out := ifTruthStretch(table, source, target, sourceMask|targetMask == 0, complement); out != nil {
+		return out
+	}
+	return ifTruthProjectBits(table, source, target, sourceMask, targetMask, complement)
+}
+
+// ifTruthStretch handles the usual case, as Abc_TtExpand does: no phase
+// masks and the source leaves in increasing target positions. It
+// replicates the table over the target words and moves each variable to
+// its position with adjacent swaps. It returns nil otherwise.
+func ifTruthStretch(table []uint64, source, target []int32, noMasks, complement bool) []uint64 {
+	var positions [IF_MAX_LUTSIZE]int
+	if !noMasks || len(source) > len(target) || len(target) > IF_MAX_LUTSIZE {
+		return nil
+	}
+	j := 0
+	for i, id := range source {
+		for j < len(target) && target[j] != id {
+			j++
+		}
+		if j == len(target) {
+			return nil
+		}
+		positions[i] = j
+		j++
+	}
+	out := make([]uint64, ifTruthWords(len(target)))
+	sourceWords := ifTruthWords(len(source))
+	if len(table) < sourceWords {
+		return nil
+	}
+	first := table[0]
+	if k := len(source); k < 6 {
+		// replicate the 2^k meaningful bits over the word
+		first &= (uint64(1) << (uint(1) << uint(k))) - 1
+		for shift := uint(1) << uint(k); shift < 64; shift <<= 1 {
+			first |= first << shift
+		}
+	}
+	for w := range out {
+		if sourceWords == 1 {
+			out[w] = first
+		} else {
+			out[w] = table[w%sourceWords]
+		}
+	}
+	nWords := int32(len(out))
+	for i := len(source) - 1; i >= 0; i-- {
+		for v := i; v < positions[i]; v++ {
+			if v < 5 {
+				for w, x := range out {
+					out[w] = util.Abc_Tt6SwapAdjacent(x, int32(v))
+				}
+			} else {
+				util.Abc_TtSwapAdjacent(out, nWords, int32(v))
+			}
+		}
+	}
+	if complement {
+		for w := range out {
+			out[w] = ^out[w]
+		}
+	}
+	return out
+}
+
+func ifTruthProjectBits(table []uint64, source, target []int32, sourceMask, targetMask uint32, complement bool) []uint64 {
 	positions := make([]int, len(source))
 	for i, id := range source {
 		positions[i] = -1
