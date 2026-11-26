@@ -22,6 +22,10 @@ func proofMacroDefinition(premise *LabeledFormula) (*Const, proofMacro, bool) {
 	if !ok {
 		return nil, proofMacro{}, false
 	}
+	return definitionMacro(definition)
+}
+
+func definitionMacro(definition *IvyDefinition) (*Const, proofMacro, bool) {
 	macro := proofMacro{body: definition.Rhs}
 	if constant, ok := definition.Lhs.(*Const); ok {
 		return constant, macro, true

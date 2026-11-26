@@ -160,6 +160,16 @@ func ApplyIvyCheckParams(cfg *Config, params map[string]string) error {
 				return err
 			}
 			cfg.FullQI = parsed
+		case "unfold_macros", "simplify":
+			parsed, err := parseIvyCheckBool(key, val)
+			if err != nil {
+				return err
+			}
+			if key == "unfold_macros" {
+				cfg.MypyvyUnfoldMacros = parsed
+			} else {
+				cfg.MypyvySimplify = parsed
+			}
 		case "show_compiled":
 			parsed, err := parseIvyCheckBool(key, val)
 			if err != nil {

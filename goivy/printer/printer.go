@@ -17,6 +17,9 @@ import (
 func LabeledFmlasToStr(kwd string, lfmlas []*goivy.LabeledFormula) string {
 	var b strings.Builder
 	for _, f := range lfmlas {
+		if f.Unprovable {
+			b.WriteString("unprovable ")
+		}
 		b.WriteString(kwd)
 		b.WriteByte(' ')
 		if f.Label != nil {
@@ -29,8 +32,8 @@ func LabeledFmlasToStr(kwd string, lfmlas []*goivy.LabeledFormula) string {
 }
 
 // FormatModule formats an Ivy module's declarations and actions as a string.
-// It prints schemata, axioms, properties, init, conjectures, definitions,
-// interpretations, initializers, actions, and exports.
+// It prints schemata, axioms, properties, init, invariants, assumed invariants,
+// definitions, interpretations, initializers, actions, and exports.
 func FormatModule(mod *goivy.Module) string {
 	var b strings.Builder
 
@@ -55,7 +58,8 @@ func FormatModule(mod *goivy.Module) string {
 		{"axiom", mod.LabeledAxioms},
 		{"property", mod.LabeledProps},
 		{"init", mod.LabeledInits},
-		{"conjecture", mod.LabeledConjs},
+		{"invariant", mod.LabeledConjs},
+		{"assume invariant", mod.AssumedInvs},
 		{"definition", mod.Definitions},
 	}
 	for _, sec := range sections {

@@ -161,6 +161,10 @@ type Config struct {
 	OptionAbsInit bool `json:"-"`
 	// VMTVerbose enables verbose VMT output. (from vmt.Verbose)
 	VMTVerbose bool `json:"-"`
+	// MypyvyUnfoldMacros substitutes intermediate definitions before export.
+	MypyvyUnfoldMacros bool `json:"-"`
+	// MypyvySimplify removes redundant constraints with the SMT solver.
+	MypyvySimplify bool `json:"-"`
 
 	// IsolateCfg holds per-session isolate configuration.
 	IsolateCfg *IsolateConfig `json:"-"`

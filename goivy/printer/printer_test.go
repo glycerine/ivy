@@ -77,15 +77,19 @@ func TestFormatModule_WithAxioms(t *testing.T) {
 	}
 }
 
-func TestFormatModule_WithConjectures(t *testing.T) {
+func TestFormatModule_WithInvariantsAndUnprovableProperty(t *testing.T) {
 	mod := goivy.New()
-	label := boolConst("inv1")
 	acfg := goivy.NewAstConfig()
-	lf := acfg.NewLabeledFormula(label, goivy.True)
-	mod.LabeledConjs = []*goivy.LabeledFormula{lf}
+	mod.LabeledConjs = []*goivy.LabeledFormula{acfg.NewLabeledFormula(boolConst("inv1"), goivy.True)}
+	mod.AssumedInvs = []*goivy.LabeledFormula{acfg.NewLabeledFormula(boolConst("hyp"), goivy.True)}
+	prop := acfg.NewLabeledFormula(boolConst("goal"), goivy.False)
+	prop.Unprovable = true
+	mod.LabeledProps = []*goivy.LabeledFormula{prop}
 	result := FormatModule(mod)
-	if !strings.Contains(result, "conjecture") {
-		t.Errorf("expected 'conjecture' in output, got %q", result)
+	for _, want := range []string{"\ninvariant [inv1]", "\nassume invariant [hyp]", "\nunprovable property [goal]"} {
+		if !strings.Contains(result, want) {
+			t.Errorf("expected %q in output, got %q", want, result)
+		}
 	}
 }
 

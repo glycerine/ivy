@@ -129,7 +129,7 @@ func MypyvyExport(mod *Module) error {
 	if initCond == nil {
 		initCond = TrueClauses(EmptyAnnotation{})
 	}
-	initial := ForwardImage(initCond, background, initialUpdate).ToOpenFormula()
+	initial := mypyvyTransitionFormula(mod, ForwardImage(initCond, background, initialUpdate), nil)
 	forms = append(forms, initial)
 	mutable := make(map[string]bool)
 	for _, symbol := range initialUpdate.Modified {
@@ -146,7 +146,7 @@ func MypyvyExport(mod *Module) error {
 			continue
 		}
 		update := computeUpdate(mod, action)
-		transition := vmtTransition{name: name, formula: update.TR.ToOpenFormula(), modified: update.Modified}
+		transition := vmtTransition{name: name, formula: mypyvyTransitionFormula(mod, update.TR, update.Pre), modified: update.Modified}
 		for _, symbol := range transition.modified {
 			mutable[symbol.Name] = true
 		}
@@ -156,19 +156,27 @@ func MypyvyExport(mod *Module) error {
 	for _, invariant := range mod.LabeledConjs {
 		forms = append(forms, invariant.Formula.(Expr))
 	}
-	forms = append(forms, axioms...)
 	var text bytes.Buffer
 	for name, sort := range mod.Sig.Sorts.All() {
 		if SortEqual(sort, Boolean) {
 			continue
 		}
-		if _, uninterpreted := sort.(*UninterpretedSort); !uninterpreted || mod.Sig.Interp.Get(name) != nil {
+		switch typ := sort.(type) {
+		case *LogicEnumeratedSort:
+			axioms = append(axioms, mypyvyEnumAxioms(typ)...)
+		case *UninterpretedSort:
+			if mod.Sig.Interp.Get(name) != nil {
+				return fmt.Errorf("mypyvy requires uninterpreted sort %s", name)
+			}
+		default:
 			return fmt.Errorf("mypyvy requires uninterpreted sort %s", name)
 		}
 		fmt.Fprintf(&text, "sort %s\n", mypyvyName(name))
 	}
+	forms = append(forms, axioms...)
 	translation := mypyvyForm{numeric: make(map[NodeKey]string)}
 	declared := make(map[string]bool)
+	var intermediate []string
 	for _, symbol := range collectAllSymbols(forms) {
 		if IsNew(symbol.Name) && !mypyvyLocal(symbol) {
 			symbol = NewConst(NewOf(symbol.Name), symbol.CSort)
@@ -187,6 +195,9 @@ func MypyvyExport(mod *Module) error {
 			kind = "mutable"
 		}
 		if fs, ok := symbol.CSort.(*LogicFunctionSort); ok {
+			if mypyvyLocal(symbol) {
+				intermediate = append(intermediate, name)
+			}
 			var domain []string
 			for _, sort := range fs.Domain() {
 				domain = append(domain, mypyvyName(IvySortName(sort)))
@@ -223,6 +234,10 @@ func MypyvyExport(mod *Module) error {
 		}
 		fmt.Fprintf(&text, "  %s\n", translation.render(CloseFormula(action.formula)))
 	}
+	if len(intermediate) != 0 {
+		sort.Strings(intermediate)
+		fmt.Fprintf(&text, "transition ivy_havoc_intermediates()\n  modifies %s\n  true\n", strings.Join(intermediate, ", "))
+	}
 	for _, invariant := range mod.LabeledConjs {
 		label := ""
 		if invariant.Label != nil {
@@ -242,6 +257,96 @@ func MypyvyExport(mod *Module) error {
 	}
 	fmt.Println("output written to " + path)
 	return nil
+}
+
+func mypyvyEnumAxioms(sort *LogicEnumeratedSort) []Expr {
+	var constructors []*Const
+	for _, name := range sort.Extension {
+		constructors = append(constructors, NewConst(name, sort))
+	}
+	if len(constructors) == 0 {
+		return nil
+	}
+	value := &LogicVariable{Name: "IVYENUM", VSort: sort}
+	var axioms, coverage []Expr
+	for i, constructor := range constructors {
+		coverage = append(coverage, &Eq{T1: value, T2: constructor})
+		for _, earlier := range constructors[:i] {
+			axioms = append(axioms, &LogicNot{Body: &Eq{T1: earlier, T2: constructor}})
+		}
+	}
+	return append(axioms, IvyForAll([]*LogicVariable{value}, &LogicOr{Terms: coverage}))
+}
+
+func mypyvyTransitionFormula(mod *Module, clauses, failure *Clauses) Expr {
+	if failure != nil && !failure.IsFalse() {
+		clauses = clauses.Copy()
+		clauses.Fmlas = append(clauses.Fmlas, &LogicNot{Body: failure.ToOpenFormula()})
+	}
+	if mod.Cfg.MypyvyUnfoldMacros {
+		clauses = unfoldMypyvyIntermediates(mod.Sig, clauses)
+	}
+	formula := clauses.ToOpenFormula().(*LogicAnd)
+	if !mod.Cfg.MypyvySimplify {
+		return formula
+	}
+	terms := formula.Terms
+	if len(terms) < 2 {
+		return formula
+	}
+	solver := NewSolver(mod, mod.Cfg.SolverOpts)
+	defer solver.Close()
+	for i := len(terms) - 1; i >= 0; i-- {
+		other := append(append([]Expr(nil), terms[:i]...), terms[i+1:]...)
+		negated := &LogicNot{Body: CloseFormula(terms[i])}
+		trial := NewClauses(append(other, negated), nil, nil)
+		if model, err := solver.GetModelClauses(trial); err == nil && model == nil {
+			terms = other
+		}
+	}
+	return &LogicAnd{Terms: terms}
+}
+
+func unfoldMypyvyIntermediates(sig *Sig, clauses *Clauses) *Clauses {
+	expansion := macroExpansion{definitions: make(map[NodeKey]proofMacro), active: make(map[NodeKey]bool)}
+	var remaining []*IvyDefinition
+	for _, definition := range clauses.Defs {
+		symbol, macro, ok := definitionMacro(definition)
+		if ok && mypyvyLocal(symbol) && !strings.Contains(symbol.Name, "fml:") &&
+			!strings.Contains(symbol.Name, "prm:") && !sig.ContainsSymbol(symbol.Name, symbol.CSort) {
+			parameters := make(map[NodeKey]bool, len(macro.parameters))
+			for _, parameter := range macro.parameters {
+				parameters[Key(parameter)] = true
+			}
+			closed := true
+			for _, variable := range FreeVariablesList(macro.body) {
+				closed = closed && parameters[Key(variable)]
+			}
+			if closed {
+				expansion.definitions[Key(symbol)] = macro
+				continue
+			}
+		}
+		remaining = append(remaining, definition)
+	}
+	if len(expansion.definitions) == 0 {
+		return clauses
+	}
+	// Validate even unused definitions so mutual constraints never disappear.
+	for _, macro := range expansion.definitions {
+		expansion.rewrite(macro.body)
+	}
+	var formulas []Expr
+	for _, formula := range clauses.Fmlas {
+		formulas = append(formulas, expansion.rewrite(formula))
+	}
+	for i, definition := range remaining {
+		remaining[i] = NewDefinition(expansion.rewrite(definition.Lhs), expansion.rewrite(definition.Rhs))
+	}
+	if expansion.err != nil {
+		return clauses
+	}
+	return NewClauses(formulas, remaining, clauses.Annot)
 }
 
 func mypyvyBindInitializerLocals(initial Expr) Expr {

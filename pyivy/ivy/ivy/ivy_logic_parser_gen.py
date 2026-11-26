@@ -32,9 +32,12 @@ precedence = (
 )
 
 from .ivy_logic_parser import *
+from .ivy_utils import IvyError
 
 def p_error(token):
-    raise LogicParseError(token,"syntax error")
+    if token is None:
+        raise IvyError(None, "unexpected end of input")
+    raise IvyError(None, f"syntax error at token '{token.value}'")
 
 import os
 tabdir = os.path.dirname(os.path.abspath(__file__))

@@ -62,6 +62,22 @@ after init {
         assert [initial_when_false] false
     }
 }
+`
+	cfg := NewConfig()
+	cfg.TraceDir = filepath.Join(t.TempDir(), "initializers")
+	if err := StartSourceWithConfig("initializers.ivy", source, cfg); err == nil || !strings.Contains(err.Error(), "failed checks: 2") {
+		t.Fatalf("verification error = %v, want two failed checks", err)
+	}
+	for name, value := range map[string]string{"initial_when_true": "p = true", "initial_when_false": "p = false"} {
+		var view strings.Builder
+		if err := ReplayTrace(filepath.Join(cfg.TraceDir, name+".a2g"), &view, true, "p"); err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(view.String(), value) {
+			t.Errorf("%s did not record %s:\n%s", name, value, view.String())
+		}
+	}
+}
 
 func TestTraceTrackingWorksAcrossCheckers(t *testing.T) {
 	dir := t.TempDir()
@@ -70,7 +86,7 @@ func TestTraceTrackingWorksAcrossCheckers(t *testing.T) {
 		t.Fatal(err)
 	}
 	pyTraces := filepath.Join(dir, "python")
-	check := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy_check", "trace_dir="+pyTraces, source)
+	check := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy", "check", "trace_dir="+pyTraces, source)
 	if out, err := check.CombinedOutput(); err == nil || !strings.Contains(string(out), "failed checks:") {
 		t.Fatalf("PyIvy did not report the expected failures: %v\n%s", err, out)
 	}
@@ -98,22 +114,6 @@ func TestTraceTrackingWorksAcrossCheckers(t *testing.T) {
 			if !strings.Contains(replay, want) {
 				t.Errorf("cross-checker replay is missing %q:\n%s", want, replay)
 			}
-		}
-	}
-}
-`
-	cfg := NewConfig()
-	cfg.TraceDir = filepath.Join(t.TempDir(), "initializers")
-	if err := StartSourceWithConfig("initializers.ivy", source, cfg); err == nil || !strings.Contains(err.Error(), "failed checks: 2") {
-		t.Fatalf("verification error = %v, want two failed checks", err)
-	}
-	for name, value := range map[string]string{"initial_when_true": "p = true", "initial_when_false": "p = false"} {
-		var view strings.Builder
-		if err := ReplayTrace(filepath.Join(cfg.TraceDir, name+".a2g"), &view, true, "p"); err != nil {
-			t.Fatal(err)
-		}
-		if !strings.Contains(view.String(), value) {
-			t.Errorf("%s did not record %s:\n%s", name, value, view.String())
 		}
 	}
 }
