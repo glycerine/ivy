@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/glycerine/abcgo/bool/dec"
+	"github.com/glycerine/abcgo/misc/extra"
 )
 
 var globalFrame struct {
@@ -519,6 +520,12 @@ func Abc_FrameSetMode(f *Frame, mode int32) int32 {
 	f.SetFlag("namemode", strconv.Itoa(int(mode)))
 	return old
 }
+
+// Like Extra_ProgressBarStart, progress bars consult the global frame's flag.
+func init() {
+	extra.ProgressEnabled = func() bool { return Abc_FrameShowProgress(Abc_FrameGetGlobalFrame()) != 0 }
+}
+
 func Abc_FrameShowProgress(f *Frame) int32 {
 	if f.FlagEnabled("progressbar") {
 		return 1

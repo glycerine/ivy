@@ -43,6 +43,10 @@ func Extra_ProgressBarSetMode(enabled, batch bool) {
 	progressMode.Store(mode)
 }
 
+// ProgressEnabled, when set, reports whether ABC's command frame wants
+// progress bars (Abc_FrameShowProgress). The frame package installs it.
+var ProgressEnabled func() bool
+
 type ProgressBarStruct struct {
 	nItemsNext, nItemsTotal, posTotal, posCur int32
 	pFile                                     io.Writer
@@ -51,7 +55,7 @@ type ProgressBarStruct struct {
 type ProgressBar = ProgressBarStruct
 
 func Extra_ProgressBarStart(file io.Writer, total int32) *ProgressBar {
-	if progressMode.Load()&1 != 0 {
+	if progressMode.Load()&1 != 0 || ProgressEnabled != nil && !ProgressEnabled() {
 		return nil
 	}
 	if total < 0 {

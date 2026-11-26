@@ -551,8 +551,6 @@ func Lms_ManStart(pGia *Gia_Man_t, nVars int32, nCuts int32, fFuncOnly int32, fV
 	// if GIA is given, use the number of variables from GIA
 	if pGia != nil {
 		nVars = Gia_ManCiNum(pGia)
-	} else {
-		nVars = nVars
 	}
 	assert(nVars >= 6 && nVars <= LMS_VAR_MAX, "nVars >= 6 && nVars <= LMS_VAR_MAX")
 	// allocate manager
