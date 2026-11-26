@@ -1,17 +1,25 @@
 # bench|script=final print_stats line from native ABC (see native_scripts_test.go)
 add32.aig|&get; &b; &put=i/o =   64/   33  lat =    0  and =    282  lev = 64
 add32.aig|&get; &dc2; &put=i/o =   64/   33  lat =    0  and =    220  lev = 64
+add32.aig|&get; &dch; &put=i/o =   64/   33  lat =    0  and =    220  lev = 64
+add32.aig|&get; &if -K 6; &mfs; &put=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
 add32.aig|&get; &if -K 6; &put=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
 add32.aig|&get; &st; &put=i/o =   64/   33  lat =    0  and =    220  lev = 64
+add32.aig|&get; &st; &synch2; &put=i/o =   64/   33  lat =    0  and =    393  lev = 67
+add32.aig|&get; &syn2; &put=i/o =   64/   33  lat =    0  and =    343  lev = 73
+add32.aig|&get; &syn3; &put=i/o =   64/   33  lat =    0  and =    314  lev = 93
 add32.aig|balance=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|dc2=i/o =   64/   33  lat =    0  and =    220  lev = 64
+add32.aig|dch=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|drf=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|drf -z -l=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|drw=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|fraig=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|if -K 4 -a=i/o =   64/   33  lat =    0  nd =    63  edge =    190  aig  =   346  lev = 31
 add32.aig|if -K 6=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
+add32.aig|if -K 6; mfs=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
+add32.aig|if -K 6; mfs -r=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   451  lev = 13
 add32.aig|ifraig=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|multi=i/o =   64/   33  lat =    0  nd =   220  edge =    440  bdd  =   440  lev = 64
 add32.aig|renode=i/o =   64/   33  lat =    0  nd =   188  edge =    377  aig  =   251  lev = 62
@@ -20,17 +28,25 @@ add32.aig|rewrite -z; refactor -z=i/o =   64/   33  lat =    0  and =    220  le
 add32.aig|strash=i/o =   64/   33  lat =    0  and =    220  lev = 64
 i10.aig|&get; &b; &put=i/o =  257/  224  lat =    0  and =   2270  lev = 41
 i10.aig|&get; &dc2; &put=i/o =  257/  224  lat =    0  and =   1840  lev = 31
+i10.aig|&get; &dch; &put=i/o =  257/  224  lat =    0  and =   1803  lev = 33
+i10.aig|&get; &if -K 6; &mfs; &put=i/o =  257/  224  lat =    0  nd =   578  edge =   2420  aig  =  2691  lev = 11
 i10.aig|&get; &if -K 6; &put=i/o =  257/  224  lat =    0  nd =   611  edge =   2674  aig  =  4096  lev = 11
 i10.aig|&get; &st; &put=i/o =  257/  224  lat =    0  and =   2675  lev = 50
+i10.aig|&get; &st; &synch2; &put=i/o =  257/  224  lat =    0  and =   1861  lev = 28
+i10.aig|&get; &syn2; &put=i/o =  257/  224  lat =    0  and =   1992  lev = 37
+i10.aig|&get; &syn3; &put=i/o =  257/  224  lat =    0  and =   1918  lev = 39
 i10.aig|balance=i/o =  257/  224  lat =    0  and =   2396  lev = 37
 i10.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =  257/  224  lat =    0  and =   1833  lev = 36
 i10.aig|dc2=i/o =  257/  224  lat =    0  and =   1834  lev = 36
+i10.aig|dch=i/o =  257/  224  lat =    0  and =   4206 (choice = 602)  lev = 33
 i10.aig|drf=i/o =  257/  224  lat =    0  and =   2301  lev = 49
 i10.aig|drf -z -l=i/o =  257/  224  lat =    0  and =   2242  lev = 41
 i10.aig|drw=i/o =  257/  224  lat =    0  and =   2124  lev = 48
 i10.aig|fraig=i/o =  257/  224  lat =    0  and =   2249  lev = 47
 i10.aig|if -K 4 -a=i/o =  257/  224  lat =    0  nd =   841  edge =   2816  aig  =  3343  lev = 25
 i10.aig|if -K 6=i/o =  257/  224  lat =    0  nd =   611  edge =   2674  aig  =  4096  lev = 11
+i10.aig|if -K 6; mfs=i/o =  257/  224  lat =    0  nd =   576  edge =   2430  aig  =  3299  lev = 11
+i10.aig|if -K 6; mfs -r=i/o =  257/  224  lat =    0  nd =   611  edge =   2674  aig  =  2783  lev = 11
 i10.aig|ifraig=i/o =  257/  224  lat =    0  and =   2249  lev = 47
 i10.aig|multi=i/o =  257/  224  lat =    0  nd =  1525  edge =   4070  bdd  =  4059  lev = 34
 i10.aig|renode=i/o =  257/  224  lat =    0  nd =  1865  edge =   3990  aig  =  2372  lev = 33
@@ -39,17 +55,25 @@ i10.aig|rewrite -z; refactor -z=i/o =  257/  224  lat =    0  and =   1979  lev 
 i10.aig|strash=i/o =  257/  224  lat =    0  and =   2675  lev = 50
 mul12.aig|&get; &b; &put=i/o =   24/   24  lat =    0  and =   1154  lev = 85
 mul12.aig|&get; &dc2; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
+mul12.aig|&get; &dch; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
+mul12.aig|&get; &if -K 6; &mfs; &put=i/o =   24/   24  lat =    0  nd =   312  edge =   1308  aig  =  2996  lev = 17
 mul12.aig|&get; &if -K 6; &put=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2267  lev = 17
 mul12.aig|&get; &st; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
+mul12.aig|&get; &st; &synch2; &put=i/o =   24/   24  lat =    0  and =   1546  lev = 93
+mul12.aig|&get; &syn2; &put=i/o =   24/   24  lat =    0  and =   1444  lev = 96
+mul12.aig|&get; &syn3; &put=i/o =   24/   24  lat =    0  and =   1649  lev =115
 mul12.aig|balance=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =   24/   24  lat =    0  and =   1020  lev = 83
 mul12.aig|dc2=i/o =   24/   24  lat =    0  and =   1020  lev = 85
+mul12.aig|dch=i/o =   24/   24  lat =    0  and =   1035 (choice = 14)  lev = 85
 mul12.aig|drf=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|drf -z -l=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|drw=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|fraig=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|if -K 4 -a=i/o =   24/   24  lat =    0  nd =   275  edge =   1057  aig  =  1648  lev = 32
 mul12.aig|if -K 6=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2267  lev = 17
+mul12.aig|if -K 6; mfs=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2267  lev = 17
+mul12.aig|if -K 6; mfs -r=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2183  lev = 17
 mul12.aig|ifraig=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|multi=i/o =   24/   24  lat =    0  nd =  1020  edge =   2040  bdd  =  2040  lev = 85
 mul12.aig|renode=i/o =   24/   24  lat =    0  nd =   784  edge =   1670  aig  =  1463  lev = 69
@@ -58,17 +82,25 @@ mul12.aig|rewrite -z; refactor -z=i/o =   24/   24  lat =    0  and =   1019  le
 mul12.aig|strash=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul8.aig|&get; &b; &put=i/o =   16/   16  lat =    0  and =    482  lev = 53
 mul8.aig|&get; &dc2; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
+mul8.aig|&get; &dch; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
+mul8.aig|&get; &if -K 6; &mfs; &put=i/o =   16/   16  lat =    0  nd =   129  edge =    538  aig  =  1268  lev = 10
 mul8.aig|&get; &if -K 6; &put=i/o =   16/   16  lat =    0  nd =   129  edge =    542  aig  =   954  lev = 10
 mul8.aig|&get; &st; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
+mul8.aig|&get; &st; &synch2; &put=i/o =   16/   16  lat =    0  and =    615  lev = 55
+mul8.aig|&get; &syn2; &put=i/o =   16/   16  lat =    0  and =    617  lev = 57
+mul8.aig|&get; &syn3; &put=i/o =   16/   16  lat =    0  and =    678  lev = 70
 mul8.aig|balance=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =   16/   16  lat =    0  and =    424  lev = 51
 mul8.aig|dc2=i/o =   16/   16  lat =    0  and =    424  lev = 53
+mul8.aig|dch=i/o =   16/   16  lat =    0  and =    435 (choice = 10)  lev = 53
 mul8.aig|drf=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|drf -z -l=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|drw=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|fraig=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|if -K 4 -a=i/o =   16/   16  lat =    0  nd =   119  edge =    449  aig  =   684  lev = 20
 mul8.aig|if -K 6=i/o =   16/   16  lat =    0  nd =   129  edge =    542  aig  =   954  lev = 10
+mul8.aig|if -K 6; mfs=i/o =   16/   16  lat =    0  nd =   129  edge =    538  aig  =   950  lev = 10
+mul8.aig|if -K 6; mfs -r=i/o =   16/   16  lat =    0  nd =   129  edge =    542  aig  =   895  lev = 10
 mul8.aig|ifraig=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|multi=i/o =   16/   16  lat =    0  nd =   424  edge =    848  bdd  =   848  lev = 53
 mul8.aig|renode=i/o =   16/   16  lat =    0  nd =   331  edge =    726  aig  =   629  lev = 39
@@ -77,17 +109,25 @@ mul8.aig|rewrite -z; refactor -z=i/o =   16/   16  lat =    0  and =    423  lev
 mul8.aig|strash=i/o =   16/   16  lat =    0  and =    424  lev = 53
 sort16.aig|&get; &b; &put=i/o =   16/   16  lat =    0  and =    480  lev = 31
 sort16.aig|&get; &dc2; &put=i/o =   16/   16  lat =    0  and =    466  lev = 31
+sort16.aig|&get; &dch; &put=i/o =   16/   16  lat =    0  and =    240  lev = 16
+sort16.aig|&get; &if -K 6; &mfs; &put=i/o =   16/   16  lat =    0  nd =   103  edge =    437  aig  =   505  lev = 6
 sort16.aig|&get; &if -K 6; &put=i/o =   16/   16  lat =    0  nd =   242  edge =   1154  aig  =  1752  lev = 11
 sort16.aig|&get; &st; &put=i/o =   16/   16  lat =    0  and =    466  lev = 31
+sort16.aig|&get; &st; &synch2; &put=i/o =   16/   16  lat =    0  and =    330  lev = 24
+sort16.aig|&get; &syn2; &put=i/o =   16/   16  lat =    0  and =    676  lev = 46
+sort16.aig|&get; &syn3; &put=i/o =   16/   16  lat =    0  and =    523  lev = 41
 sort16.aig|balance=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|dc2=i/o =   16/   16  lat =    0  and =    466  lev = 37
+sort16.aig|dch=i/o =   16/   16  lat =    0  and =    275 (choice = 23)  lev = 16
 sort16.aig|drf=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|drf -z -l=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|drw=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|fraig=i/o =   16/   16  lat =    0  and =    240  lev = 16
 sort16.aig|if -K 4 -a=i/o =   16/   16  lat =    0  nd =   432  edge =    912  aig  =   520  lev = 30
 sort16.aig|if -K 6=i/o =   16/   16  lat =    0  nd =   242  edge =   1154  aig  =  1752  lev = 11
+sort16.aig|if -K 6; mfs=i/o =   16/   16  lat =    0  nd =   146  edge =    482  aig  =   562  lev = 10
+sort16.aig|if -K 6; mfs -r=i/o =   16/   16  lat =    0  nd =   242  edge =   1154  aig  =   483  lev = 11
 sort16.aig|ifraig=i/o =   16/   16  lat =    0  and =    240  lev = 16
 sort16.aig|multi=i/o =   16/   16  lat =    0  nd =   466  edge =    932  bdd  =   932  lev = 31
 sort16.aig|renode=i/o =   16/   16  lat =    0  nd =   466  edge =    932  aig  =   466  lev = 31

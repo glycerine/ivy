@@ -45,6 +45,14 @@ var nativeScripts = []string{
 	"if -K 6",
 	"if -K 4 -a",
 	"&get; &if -K 6; &put",
+	"dch",
+	"&get; &dch; &put",
+	"&get; &st; &synch2; &put",
+	"&get; &syn2; &put",
+	"&get; &syn3; &put",
+	"if -K 6; mfs",
+	"if -K 6; mfs -r",
+	"&get; &if -K 6; &mfs; &put",
 }
 
 const nativeStatsFile = "test_vectors/native_script_stats.txt"
