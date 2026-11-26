@@ -264,3 +264,24 @@ and states how the Go port was verified.
 - **Go port:** it returned nil, so the command failed and left the partial
   result of the failed script as the current AIG; it now keeps the best AIG
   as ABC does (`TestDeepSynSurvivesFailedCommand`).
+
+## 14. Functional-support simulation writes past an input's row
+
+- **File:** `src/opt/sim/simSupp.c`, `Sim_UtilAssignFromFifo`.
+- **Found:** 2026-11-26: the port, which checks the bound, stopped with
+  "source FIFO flip would exceed simulation row" running `saucy3` on i10
+  (257 inputs); native ABC silently corrupts memory instead.
+- **Bug:** each SAT pattern fills a series of `nSuppWords` words of the
+  2048-bit (64-word) simulation rows and flips bit `i` of input `i` in it.
+  When `nSuppWords` does not divide 64 the last series is shorter, and
+  flipping bit `i >= 32 * (iWordLim - iWord)` writes into the rows of the
+  following objects (the rows share one allocation, so no tool reports it).
+  The corrupted simulation values feed the functional-support computation
+  (`saucy3`, `print_supp -s`, `bm`).
+- **Fix:** flip only the bits that fit in the series.
+- **Test:** `abcgo/opt/sim/fifo_flip_test.go`
+  (`TestNativeFifoFlipStaysInRow`) links `opt/sim/test_vectors/fifo_oracle.c`,
+  which includes `simSupp.c` from `../src`, against `ABC_LIBABC`; on i10 it
+  counted 225 corrupted rows before the fix and 0 after.
+- **Go port:** it panicked; it now skips the same flips
+  (`TestFifoFlipStaysInRow`).

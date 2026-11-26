@@ -420,7 +420,9 @@ void Sim_UtilAssignFromFifo( Sim_Man_t * p )
                     for ( w = iWord; w < iWordLim; w++ )
                         pSimInfo[w] = 0;
                 }
-                Sim_XorBit( pSimInfo + iWord, i );
+                // the last series may be shorter than nSuppWords
+                if ( i < 32 * (iWordLim - iWord) )
+                    Sim_XorBit( pSimInfo + iWord, i );
                 // flip one bit
 //                if ( i >= p->iInput )
 //                    Sim_XorBit( pSimInfo + iWord, i-p->iInput );

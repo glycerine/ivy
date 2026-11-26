@@ -192,10 +192,10 @@ func sourceAssignFromFifo(p *Sim_Man_t) {
 			for w := offset; w < end; w++ {
 				row[w] = value
 			}
-			if i >= 32*(p.Words-offset) {
-				panic("sim: source FIFO flip would exceed simulation row")
+			// the last series may be shorter (CBUGS_FIXED.md #14)
+			if i < 32*(end-offset) {
+				Sim_XorBit(row[offset:], i)
 			}
-			Sim_XorBit(row[offset:], i)
 		}
 		Sim_ManPatFree(p, pat)
 		if end == p.Words {
