@@ -173,22 +173,25 @@ func Aig_ManCoCleanup(p *Graph) int32 {
 	p.refreshFanouts()
 	return int32(old - len(keep))
 }
-func Aig_ManPrintStats(p *Graph) {
-	fmt.Printf("%-15s : pi = %5d  po = %5d  ", p.Name, len(p.inputs)-int(p.nRegs), len(p.outputs)-int(p.nRegs))
+func Aig_ManPrintStats(p *Graph) { fmt.Print(Aig_ManStatsLine(p)) }
+
+// Aig_ManStatsLine formats Aig_ManPrintStats's line, ending in a newline.
+func Aig_ManStatsLine(p *Graph) string {
+	s := fmt.Sprintf("%-15s : pi = %5d  po = %5d  ", p.Name, len(p.inputs)-int(p.nRegs), len(p.outputs)-int(p.nRegs))
 	if p.nRegs != 0 {
-		fmt.Printf("lat = %5d  ", p.nRegs)
+		s += fmt.Sprintf("lat = %5d  ", p.nRegs)
 	}
-	fmt.Printf("and = %7d  ", Aig_ManAndNum(p))
+	s += fmt.Sprintf("and = %7d  ", Aig_ManAndNum(p))
 	if count := Aig_ManExorNum(p); count != 0 {
-		fmt.Printf("xor = %5d  ", count)
+		s += fmt.Sprintf("xor = %5d  ", count)
 	}
 	if count := Aig_ManChoiceNum(p); count != 0 {
-		fmt.Printf("ch = %5d  ", count)
+		s += fmt.Sprintf("ch = %5d  ", count)
 	}
 	if count := Aig_ManBufNum(p); count != 0 {
-		fmt.Printf("buf = %5d  ", count)
+		s += fmt.Sprintf("buf = %5d  ", count)
 	}
-	fmt.Printf("lev = %3d\n", Aig_ManLevels(p))
+	return s + fmt.Sprintf("lev = %3d\n", Aig_ManLevels(p))
 }
 func Aig_ManReportImprovement(p, q *Graph) {
 	reduction := func(a, b int32) float64 {

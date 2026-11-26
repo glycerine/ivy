@@ -148,6 +148,11 @@ func compressStages(g *aig.Graph, p CompressOptions, stages []synthesisStage) (*
 		return nil, err
 	}
 	result := aig.Aig_ManDupDfs(g)
+	if p.Progress != nil {
+		if err := writeProgress(p.Progress, "Starting:  %s", aig.Aig_ManStatsLine(result)); err != nil {
+			return nil, err
+		}
+	}
 	for _, stage := range stages {
 		if p.Context != nil {
 			if err := p.Context.Err(); err != nil {
@@ -178,7 +183,7 @@ func compressStages(g *aig.Graph, p CompressOptions, stages []synthesisStage) (*
 		}
 		result = aig.Aig_ManDupDfs(result)
 		if p.Progress != nil {
-			if err = writeProgress(p.Progress, "%s: %d nodes\n", stage.kind, result.NodeCount()); err != nil {
+			if err = writeProgress(p.Progress, "%s%s", stage.label(), aig.Aig_ManStatsLine(result)); err != nil {
 				return nil, err
 			}
 		}
@@ -311,4 +316,19 @@ func writeProgress(w io.Writer, format string, args ...any) error {
 		return io.ErrShortWrite
 	}
 	return err
+}
+
+// label is the stage name Dar_ManCompress/Dar_ManCompress2 print.
+func (s synthesisStage) label() string {
+	switch {
+	case s.kind == "balance":
+		return "Balance:   "
+	case s.kind == "rewrite" && s.zeros:
+		return "RewriteZ:  "
+	case s.kind == "rewrite":
+		return "Rewrite:   "
+	case s.zeros:
+		return "RefactorZ: "
+	}
+	return "Refactor:  "
 }
