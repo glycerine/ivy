@@ -258,181 +258,66 @@ func createArraySortRec(sig *Sig, dom []Sort, i int, rng Sort) (string, []Sort) 
 	return name, append([]Sort{sig.Sorts.Get(name)}, ssorts...)
 }
 
-// encodeAsArray returns true if the symbol should be converted to an array.
-// Corresponds to Python's encode_as_array.
-func encodeAsArray(m *Module, sig *Sig, sym *Const) bool {
-	if IsInterpretedSymbol(sig, sym) {
-		return false
+// vmtArrayEncoding lowers reads of mutable functions in symbolic transitions.
+type vmtArrayEncoding map[NodeKey][]Sort
+
+func (arrays vmtArrayEncoding) rewrite(node Expr) Expr {
+	children := NodeArgs(node)
+	if len(children) == 0 {
+		return node
 	}
-	_, isDestructor := m.DestructorSorts[sym.Name]
-	return !isDestructor
-}
-
-// ufToArrAST converts all uninterpreted functions in a formula to arrays.
-// Corresponds to Python's uf_to_arr_ast.
-func ufToArrAST(m *Module, sig *Sig, node Expr) Expr {
-	return ufToArrASTRec(m, sig, node)
-}
-
-func ufToArrASTRec(m *Module, sig *Sig, node Expr) Expr {
-	// Recursively transform arguments
-	args := NodeArgs(node)
-	newArgs := make([]Expr, len(args))
-	for i, arg := range args {
-		newArgs[i] = ufToArrASTRec(m, sig, arg)
+	args := make([]Expr, len(children))
+	for i, arg := range children {
+		args[i] = arrays.rewrite(arg)
 	}
-
-	// Check if this is a function application that should be encoded as array
-	if IsApp(node) && !IsNamedBinder(node) && len(args) > 0 {
-		sym := GetAppRep(node)
-		if sym != nil && encodeAsArray(m, sig, sym) {
-			fsort, ok := sym.CSort.(*LogicFunctionSort)
-			if ok {
-				sname, ssorts := createArraySort(sig, fsort)
-				_ = sname
-				asym := NewConst(sym.Name, ssorts[0])
-				var result Expr = asym
-				for i, arg := range newArgs {
-					selSort, _ := NewFunctionSort(result.NodeSort(), arg.NodeSort(), ssorts[i+1])
-					sel := NewConst("arrsel", selSort)
-					applied, err := NewApply(sel, result, arg)
-					if err != nil {
-						return CloneNode(node, newArgs)
-					}
-					result = applied
+	if IsApp(node) && !IsNamedBinder(node) {
+		if symbol := GetAppRep(node); symbol != nil {
+			if sorts := arrays[Key(symbol)]; len(sorts) != 0 {
+				var value Expr = NewConst(symbol.Name, sorts[0])
+				for i, arg := range args {
+					sort, err := NewFunctionSort(sorts[i], arg.NodeSort(), sorts[i+1])
+					panicOn(err)
+					value = NewApplyUnchecked(NewConst("arrsel", sort), value, arg)
 				}
-				return result
+				return value
 			}
 		}
 	}
-
-	return CloneNode(node, newArgs)
+	return CloneNode(node, args)
 }
 
-// encodeAssign encodes a parameterized assignment to use array operations.
-// Returns (newLHS, newRHS). Corresponds to Python's encode_assign.
-func encodeAssign(m *Module, sig *Sig, asgn ActionsAction, lhs, rhs Expr) (Expr, Expr, error) {
-	sym := GetAppRep(lhs)
-	if sym == nil {
-		return lhs, rhs, nil
-	}
-
-	if _, isDestructor := m.DestructorSorts[sym.Name]; isDestructor {
-		lhsArgs := NodeArgs(lhs)
-		if len(lhsArgs) > 0 {
-			nlhs, nrhs, err := encodeAssign(m, sig, asgn, lhsArgs[0], rhs)
-			if err != nil {
-				return nil, nil, err
-			}
-			newLhsArgs := make([]Expr, len(lhsArgs))
-			newLhsArgs[0] = nlhs
-			copy(newLhsArgs[1:], lhsArgs[1:])
-			return CloneNode(lhs, newLhsArgs), nrhs, nil
+// vmtArrayState converts state pairs and their reads after computing updates.
+// Ivy's symbolic update already captures point writes, full assignments and
+// possible aliasing between indices, including those dependent on a binder.
+func vmtArrayState(m *Module, state *InsMap[NodeKey, *Const], transitions []vmtTransition) (*InsMap[NodeKey, *Const], vmtArrayEncoding) {
+	arrays := make(vmtArrayEncoding)
+	rewrite := func(symbol *Const) *Const {
+		if sorts := arrays[Key(symbol)]; len(sorts) != 0 {
+			return NewConst(symbol.Name, sorts[0])
 		}
+		return symbol
 	}
-
-	// Check for variable overlap between lhs and rhs
-	lhsVars := UsedVariablesAST(lhs)
-	rhsVars := UsedVariablesAST(rhs)
-	for v := range lhsVars {
-		if _, ok := rhsVars[v]; ok {
-			return nil, nil, fmt.Errorf("cannot convert parameterized assignment to VMT")
-		}
-	}
-
-	fsort, ok := sym.CSort.(*LogicFunctionSort)
-	if !ok {
-		return lhs, ufToArrAST(m, sig, rhs), nil
-	}
-
-	_, ssorts := createArraySort(sig, fsort)
-	asort := ssorts[0]
-	asym := NewConst(sym.Name, asort)
-	arhs := ufToArrAST(m, sig, rhs)
-
-	lhsArgs := NodeArgs(lhs)
-	newRHS, err := encodeAssignRecur(m, sig, asgn, lhsArgs, ssorts, 0, asym, arhs)
-	if err != nil {
-		return nil, nil, err
-	}
-	return asym, newRHS, nil
-}
-
-// encodeAssignRecur recursively builds the array update expression.
-func encodeAssignRecur(m *Module, sig *Sig, asgn ActionsAction,
-	lhsArgs []Expr, ssorts []Sort, i int, val Expr, arhs Expr) (Expr, error) {
-
-	if i == len(lhsArgs) {
-		return arhs, nil
-	}
-	idx := lhsArgs[i]
-	if IsVariable(idx) {
-		sval, err := encodeAssignRecur(m, sig, asgn, lhsArgs, ssorts, i+1, nil, arhs)
-		if err != nil {
-			return nil, err
-		}
-		cstSort, _ := NewFunctionSort(ssorts[i+1], ssorts[i])
-		cst := NewConst("arrcst", cstSort)
-		applied, err := NewApply(cst, sval)
-		if err != nil {
-			return nil, err
-		}
-		return applied, nil
-	}
-
-	if val == nil {
-		return nil, fmt.Errorf("cannot convert parameterized assignment to VMT")
-	}
-
-	aidx := ufToArrAST(m, sig, idx)
-	selSort, _ := NewFunctionSort(ssorts[i], aidx.NodeSort(), ssorts[i+1])
-	sel := NewConst("arrsel", selSort)
-	selApp, err := NewApply(sel, val, aidx)
-	if err != nil {
-		return nil, err
-	}
-
-	sval, err := encodeAssignRecur(m, sig, asgn, lhsArgs, ssorts, i+1, selApp, arhs)
-	if err != nil {
-		return nil, err
-	}
-
-	updSort, _ := NewFunctionSort(ssorts[i], aidx.NodeSort(), ssorts[i+1], ssorts[i])
-	upd := NewConst("arrupd", updSort)
-	updApp, err := NewApply(upd, val, aidx, sval)
-	if err != nil {
-		return nil, err
-	}
-	return updApp, nil
-}
-
-// ufToArrayAction converts uninterpreted functions to array operations in an action.
-// Corresponds to Python's uf_to_array_action.
-func ufToArrayAction(m *Module, sig *Sig, action ActionsAction) ActionsAction {
-	args := action.ActionArgs()
-	newArgs := make([]Expr, len(args))
-	for i, arg := range args {
-		if childAct, ok := checkToAction(arg); ok {
-			newArgs[i] = ufToArrayAction(m, sig, childAct)
-		} else {
-			newArgs[i] = ufToArrAST(m, sig, arg)
-		}
-	}
-
-	if assign, ok := action.(*LogicAssignAction); ok {
-		lhsArgs := NodeArgs(assign.LHS)
-		if len(lhsArgs) > 0 {
-			sym := GetAppRep(assign.LHS)
-			if sym != nil && !IsInterpretedSymbol(sig, sym) {
-				nlhs, nrhs, err := encodeAssign(m, sig, action, assign.LHS, assign.RHS)
-				if err == nil {
-					newArgs = []Expr{nlhs, nrhs}
-				}
+	arrayState := NewInsMap[NodeKey, *Const]()
+	for _, symbol := range state.All() {
+		fs, function := symbol.CSort.(*LogicFunctionSort)
+		if function && !IsInterpretedSymbol(m.Sig, symbol) {
+			if _, destructor := m.DestructorSorts[symbol.Name]; !destructor {
+				_, sorts := createArraySort(m.Sig, fs)
+				arrays[Key(symbol)] = sorts
+				arrays[Key(NewConst(ActionNewName(symbol.Name), symbol.CSort))] = sorts
 			}
 		}
+		result := rewrite(symbol)
+		arrayState.Set(Key(result), result)
 	}
-
-	return action.ActionClone(newArgs)
+	for i := range transitions {
+		transitions[i].formula = arrays.rewrite(transitions[i].formula)
+		transitions[i].modified = append([]*Const(nil), transitions[i].modified...)
+		for j, symbol := range transitions[i].modified {
+			transitions[i].modified[j] = rewrite(symbol)
+		}
+	}
+	return arrayState, arrays
 }
 
 // hasAssert returns true if the action contains any AssertAction.
@@ -461,8 +346,6 @@ func exportVMTModel(method string, m *Module, encodeArrays bool, predicates []vm
 	if m == nil {
 		return fmt.Errorf("no module provided")
 	}
-	sig := m.Sig
-
 	// Use the error flag construction to turn assertion checks into
 	// an invariant check.
 	erf := NewConst("err_flag", Boolean)
@@ -552,20 +435,6 @@ func exportVMTModel(method string, m *Module, encodeArrays bool, predicates []vm
 		return err
 	}
 
-	if encodeArrays {
-		for i, na := range actionList {
-			actionList[i] = namedAction{
-				Name:   na.Name,
-				Action: ufToArrayAction(m, sig, na.Action),
-			}
-		}
-		initAction = ufToArrayAction(m, sig, initAction).(*LogicSequence)
-		for i, conj := range conjs {
-			newFormula := ufToArrAST(m, sig, conj.Formula.(Expr))
-			conjs[i] = conj.Clone([]Node{conj.Label, newFormula}).(*LabeledFormula)
-		}
-	}
-
 	var transitions []vmtTransition
 	state := NewInsMap[NodeKey, *Const]()
 	for _, na := range actionList {
@@ -600,6 +469,16 @@ func exportVMTModel(method string, m *Module, encodeArrays bool, predicates []vm
 			axioms = append(axioms, formula)
 		}
 	}
+	if encodeArrays {
+		var arrays vmtArrayEncoding
+		state, arrays = vmtArrayState(m, state, transitions)
+		initial = arrays.rewrite(initial)
+		for i, conj := range conjs {
+			formula := arrays.rewrite(conj.Formula.(Expr))
+			conjs[i] = conj.Clone([]Node{conj.Label, formula}).(*LabeledFormula)
+		}
+	}
+
 	addVMTImmutableSymbols(m, initial, transitions, state, axioms)
 	return writeVMT(m, initial, transitions, state, axioms, conjs, predicates)
 }

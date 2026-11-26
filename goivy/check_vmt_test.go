@@ -186,3 +186,57 @@ for constraint, want in [
 		t.Fatalf("VMT transition validation failed: %v\n%s\n%s", err, out, data)
 	}
 }
+
+func TestVMTExportIndexedUpdates(t *testing.T) {
+	const source = `#lang ivy1.8
+type index
+interpret index -> bv[4]
+function live(X:index) : index
+function saved(X:index) : index
+after init { live(X) := X + 3; saved(X) := 0 }
+export action save = { saved(X) := live(X) }
+export action step(x:index) = { live(x) := 7 }
+invariant [same] live(0) = saved(0) | live(0) ~= saved(0)
+`
+	mod := New()
+	if err := SourceString("vmt_array.ivy", source, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		t.Fatal(err)
+	}
+	if err := CreateIsolate("this", mod); err != nil {
+		t.Fatal(err)
+	}
+	leaveTheory := mod.TheoryContext()
+	defer leaveTheory()
+	mod.Name = filepath.Join(t.TempDir(), "vmt_array")
+	if err := VMTCheckIsolate("vmt", mod); err != nil {
+		t.Fatal(err)
+	}
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+from ivy import z3
+from pathlib import Path
+import sys
+
+model = Path(sys.argv[1]).read_text()
+step = next(token for token in model.split() if token.startswith('|ivy.action.') and token.endswith('.step|'))
+save = next(token for token in model.split() if token.startswith('|ivy.action.') and token.endswith('.save|'))
+for constraint, expected in [
+    ('(and $init (not (= (select live #x2) #x5)))', z3.unsat),
+    ('(and $init (not (= (select saved #x2) #x0)))', z3.unsat),
+    ('(and $trans ' + save + ' (not (= (select live #x2) (select new_saved #x2))))', z3.unsat),
+    ('(and $trans ' + save + ' (not (= live new_live)))', z3.unsat),
+    ('(and $trans ' + step + ' (= |__fml:x| #x2) (not (= (select new_live #x2) #x7)))', z3.unsat),
+    ('(and $trans ' + step + ' (= |__fml:x| #x2) (not (= (select new_live #x3) (select live #x3))))', z3.unsat),
+    ('(and $init $trans ' + save + ')', z3.sat),
+    ('(and $init $trans ' + step + ')', z3.sat),
+]:
+    solver = z3.Then('simplify', 'qe', 'smt').solver()
+    solver.add(z3.parse_smt2_string(model + '\n(assert ' + constraint + ')'))
+    got = solver.check()
+    if got != expected:
+        raise AssertionError((constraint, got, expected))
+`, mod.Name+".vmt")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		model, _ := os.ReadFile(mod.Name + ".vmt")
+		t.Fatalf("indexed VMT export failed: %v\n%s\n%s", err, out, model)
+	}
+}

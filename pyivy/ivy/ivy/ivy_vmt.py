@@ -17,7 +17,7 @@ from . import ivy_proof
 from . import ivy_trace
 from . import ivy_solver as slvr
 
-from .z3 import simplify, is_func_decl, DatatypeSortRef
+from .z3 import simplify, is_func_decl, DatatypeSortRef, Z3_ARRAY_SORT, Z3_UNINTERPRETED_SORT
 import tempfile
 import subprocess
 from collections import defaultdict
@@ -99,150 +99,19 @@ def create_array_sort(sort):
         return (name,[il.sig.sorts[name]]+ssorts)
     return aname(0)
 
-# Should I convert this symbol to an array?
-
-mod_set = set()
-
-def add_to_mod_set(action):
-    for act in action.iter_subactions():
-        mod_set.update(act.modifies())
-        if isinstance(act,ia.LocalAction):
-            mod_set.update(act.args[:-1])
-
-def encode_as_array(sym):
-    if tr.is_old(sym):
-        sym = tr.old_of(sym)
-    return not il.is_interpreted_symbol(sym) and sym.name not in im.module.destructor_sorts and sym in mod_set
-
-# Convert all uninterpreted functions in a formula to
-# arrays.
-
-def uf_to_arr_ast(ast):
-    args = [uf_to_arr_ast(arg) for arg in ast.args]
-    if il.is_app(ast) and not il.is_named_binder(ast) and ast.args:
-        sym = ast.rep
-        if encode_as_array(sym):
-            sname,ssorts = create_array_sort(sym.sort)
-            asym = il.Symbol(sym.name,ssorts[0])
-            for i,arg in enumerate(args):
-                sel = il.Symbol('arrsel',il.FunctionSort(asym.sort,arg.sort,ssorts[i+1]))
-                asym = sel(asym,arg)
-            return asym
+def lower_array_state(ast, arrays):
+    """Lower reads after the symbolic action has captured each indexed update."""
+    args = [lower_array_state(arg, arrays) for arg in ast.args]
+    if args and il.is_app(ast) and not il.is_named_binder(ast):
+        sorts = arrays.get(ast.rep)
+        if sorts:
+            value = il.Symbol(ast.rep.name, sorts[0])
+            for i, arg in enumerate(args):
+                select = il.Symbol('arrsel', il.FunctionSort(sorts[i], arg.sort, sorts[i+1]))
+                value = select(value, arg)
+            return value
     return ast.clone(args)
 
-fresh_skolem_ctr = 0
-
-def fresh_skolem(sort):
-    global fresh_skolem_ctr
-    res = il.Symbol('__havoc_'+str(fresh_skolem_ctr),sort)
-    fresh_skolem_ctr += 1
-    return res
-
-def encode_assign(asgn,lhs,rhs):
-    sym = lhs.rep
-    if sym.name in im.module.destructor_sorts:
-        (nlhs,nrhs) = encode_assign(asgn,lhs.args[0],rhs)
-        return (lhs.clone([nlhs]+[lhs.args[1:]]),rhs)
-    else:
-        lvs = set(ilu.variables_ast(lhs));
-        rvs = set(ilu.variables_ast(rhs)) if rhs is not None else set();
-        rhs_const = not any(v in rvs for v in lvs)
-        if any(v in rvs for v in lvs):
-            if (il.is_app(rhs) and rhs.args == lhs.args and all(il.is_variable(x) for x in lhs.args)
-                and len(set(lhs.args)) == len(lhs.args)):
-                sym = lhs.rep
-                sname, ssorts = create_array_sort(sym.sort)
-                asort = ssorts[0]
-                asym = il.Symbol(sym.name,asort)
-                rsym = il.Symbol(rhs.rep.name,asort)
-                return (asym,rsym)
-            # raise iu.IvyError(asgn,'cannot convert paramaterized assignment to VMT')
-        sym = lhs.rep
-        sname, ssorts = create_array_sort(sym.sort)
-        asort = ssorts[0]
-        asym = il.Symbol(sym.name,asort)
-        arhs = uf_to_arr_ast(rhs) if rhs is not None else fresh_skolem(lhs.sort)
-        def recur(i,val):
-            if i == len(lhs.args):
-                return arhs
-            idx = lhs.args[i]
-            aidx = uf_to_arr_ast(idx)
-            sel = il.Symbol('arrsel',il.FunctionSort(ssorts[i],aidx.sort,ssorts[i+1]))
-            sval = recur(i+1,sel(val,aidx))
-            if il.is_variable(idx):
-                # if il.is_app(sval) and sval.rep.name == 'arrcst' or i == len(lhs.args)-1 and rhs_const:
-                #     return il.Symbol('arrcst',il.FunctionSort(ssorts[i+1],ssorts[i]))(sval)
-                resval = il.Lambda([aidx],sval)
-                return il.Symbol('cast',il.FunctionSort(resval.sort,ssorts[i]))(resval)
-            else:
-                # work around z3 bug
-                if False and is_any_lambda(sval):
-                    rn = iu.UniqueRenamer('V',(v.rep for v in ilu.used_variables_ast(sval)))
-                    lvar = il.Variable(rn(),idx.sort)
-                    sval = ite_into_lambda(sval,il.Equals(lvar,idx),sel(val,lvar))
-                    resval = il.Lambda([lvar],sval)
-                    return il.Symbol('cast',il.FunctionSort(resval.sort,ssorts[i]))(resval)
-                upd = il.Symbol('arrupd',il.FunctionSort(ssorts[i],aidx.sort,ssorts[i+1],ssorts[i]))
-                return upd(val,aidx,sval)
-        res = (asym,recur(0,asym))
-        return res
-
-ret_val_ctr = 0
-
-def make_ret_val(sort):
-    global ret_val_ctr
-    res = il.Symbol('retval$'+str(ret_val_ctr),sort)
-    ret_val_ctr += 1
-    return res
-
-def is_constant_lambda(x):
-    if il.is_app(x) and x.rep.name == 'cast' or il.is_lambda(x):
-        return is_constant_lambda(x.args[0])
-    return il.is_true(x) or il.is_false(x)
-
-def is_any_lambda(x):
-    return il.is_app(x) and x.rep.name == 'cast'
-
-def ite_into_lambda(x,cond,elseval):
-    if il.is_app(x) and x.rep.name == 'cast':
-        arrsort = x.sort
-        lx = x.args[0]
-        assert il.is_lambda(lx)
-        idx = lx.variables[0]
-        ressort = lx.args[0].sort
-        sel = il.Symbol('arrsel',il.FunctionSort(arrsort,idx.sort,ressort))
-        elseval = sel(elseval,idx)
-        return x.clone([lx.clone([ite_into_lambda(lx.args[0],cond,elseval)])])
-    return il.Ite(cond,x,elseval)
-
-
-
-
-
-def uf_to_array_action(action):
-    if isinstance(action,ia.Action):
-        args = [uf_to_array_action(act) for act in action.args]
-        if isinstance(action,ia.AssignAction):
-            if action.args[0].args and not il.is_interpreted_symbol(action.args[0].rep):
-                args = encode_assign(action,action.args[0],action.args[1])
-        elif isinstance(action,ia.HavocAction):
-            if action.args[0].args and not il.is_interpreted_symbol(action.args[0].rep):
-                args = encode_assign(action,action.args[0],None)
-                return ia.AssignAction(args[0],args[1]).set_lineno(action.lineno)
-        elif isinstance(action,ia.CallAction) and len(args) > 1:
-            rvs = [make_ret_val(x.sort) for x in args[1:]]
-            code = ia.LocalAction(*(rvs + [
-                ia.Sequence(*(
-                    [action.clone([args[0]] + rvs)] +
-                    [uf_to_array_action(ia.AssignAction(v,w).set_lineno(action.lineno))
-                     for v,w in zip(action.args[1:],rvs)])).set_lineno(action.lineno)])).set_lineno(action.lineno)
-            return code
-        res = action.clone(args)
-        if isinstance(action,ia.WhileAction):
-            print (res)
-        return res
-    else:
-        return uf_to_arr_ast(action)
 
 def has_assert(action):
     for x in action.iter_subactions():
@@ -287,7 +156,16 @@ def get_dom_and_rng(sort_name):
 
 def frame_clauses(all_vars, mod_vars, clauses):
     mod_set = set(mod_vars)
-    return ilu.and_clauses(ilu.Clauses([il.Equals(x,tr.new(x)) for x in all_vars if x not in mod_set]), clauses)
+    frames = []
+    for symbol in all_vars:
+        if symbol in mod_set:
+            continue
+        if il.is_function_sort(symbol.sort):
+            args = [il.Variable(f'VMT{i}',sort) for i,sort in enumerate(symbol.sort.dom)]
+            frames.append(il.forall(args,il.Equals(symbol(*args),tr.new(symbol)(*args))))
+        else:
+            frames.append(il.Equals(symbol,tr.new(symbol)))
+    return ilu.and_clauses(ilu.Clauses(frames), clauses)
 
 def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
     mod = im.module
@@ -333,24 +211,8 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
 
     bgt = mod.background_theory()
 
-    # Convert uf's to arrays, if possible
-
-    # Only encode the modified symbols as arrays
-
-    mod_set.clear()
-    add_to_mod_set(init_action)
-    for action in mod.actions.values():
-        add_to_mod_set(action)
-    # print ('mod_set: {}'.format([str(x) for x in mod_set]))
-
-    if use_array_encoding:
-        for actname in list(mod.actions):
-            action = mod.actions[actname]
-            new_action = uf_to_array_action(action)
-            mod.actions[actname] = action.copy_formals(new_action)
-
-        init_action = uf_to_array_action(init_action)
-        conjs = [conj.clone([conj.label,uf_to_arr_ast(conj.formula)]) for conj in conjs]
+    modified = {sym for action in [init_action] + list(mod.actions.values())
+                for subaction in action.iter_subactions() for sym in subaction.modifies()}
 
     # Combine all actions nto a single action
 
@@ -362,7 +224,7 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
 
     # Seperate out the axioms that do not have modified symbols
 
-    have_mod = [any(y in mod_set for y in ilu.used_symbols_ast(x)) for x in bgt.fmlas]
+    have_mod = [any(y in modified for y in ilu.used_symbols_ast(x)) for x in bgt.fmlas]
     axioms = [x for x,hm in zip(bgt.fmlas,have_mod) if not hm]
     bgt = ilu.Clauses([x for x,hm in zip(bgt.fmlas,have_mod) if hm],defs=bgt.defs)
 
@@ -374,25 +236,22 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
     # for a in actupds:
         # print ('a[0]: {}'.format(a[0]))
         # print ('a[1]: {}'.format(a[1]))
+    istvars,init,_ = tr.action_to_state(action_to_tr(mod,init_action,method,bgt))
     stvars = list(iu.unique(sym for a in actupds for sym in a[0]))
-    transs = [ilu.clauses_to_formula(frame_clauses(stvars,a[0],a[1])) for a in actupds]
-    trans = il.Or(*[fmla for fmla in transs]) if len(actupds) != 1 else transs[0]
-    istvars,init,ierror = tr.action_to_state(action_to_tr(mod,init_action,method,bgt))
     stvars = list(iu.unique(stvars+istvars))
-
-    for action, tran_fm in zip(actions, transs):
-        # want to have (=> action trans) but have to declare boolean action vars
-        pass
-
-
-    # trans = ilu.clauses_to_formula(trans)
+    transs = [ilu.clauses_to_formula(frame_clauses(stvars,a[0],a[1])) for a in actupds]
     init = ilu.clauses_to_formula(init)
-
-    # print ('init: {}'.format(init))
-    # print ('trans: {}'.format(trans))
-    # for conj in conjs:
-    #     print ('conj: {}'.format(conj))
-
+    if use_array_encoding:
+        arrays = {}
+        for symbol in stvars:
+            if (il.is_function_sort(symbol.sort) and not il.is_interpreted_symbol(symbol)
+                and symbol.name not in mod.destructor_sorts):
+                _, sorts = create_array_sort(symbol.sort)
+                arrays[symbol] = arrays[tr.new(symbol)] = sorts
+        init = lower_array_state(init, arrays)
+        transs = [lower_array_state(formula, arrays) for formula in transs]
+        conjs = [conj.clone([conj.label,lower_array_state(conj.formula,arrays)]) for conj in conjs]
+    trans = il.Or(*transs)
 
     sorts = []
 
@@ -400,7 +259,7 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
 
     def add_sort(sort):
         if sort not in sorts:
-            if "Array" in sort.name():
+            if sort.kind() == Z3_ARRAY_SORT:
                 add_sort(sort.range())
                 add_sort(sort.domain())
             else:
@@ -450,9 +309,7 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
     # must declare sorts that are not built-in
     for sort in sorts:
         sort_name = sort.name()
-        if "Array" in sort_name:
-            continue
-        if sort_name in {"Bool", "Int", "Real", "BitVec"}:
+        if sort.kind() != Z3_UNINTERPRETED_SORT and not isinstance(sort,DatatypeSortRef):
             continue
         if sort_name.startswith("Arr"):
             dom, rng = get_dom_and_rng(sort_name)
@@ -465,7 +322,7 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
         if isinstance(sort,DatatypeSortRef):
             sort_str = f"(declare-datatypes () (({sort_name} {' '.join(str(sort.constructor(i)) for i in range(sort.num_constructors()))})))"
         else:
-            sort_str = f"(declare-sort {sort_name} 0)"
+            sort_str = f"(declare-sort {sort.sexpr()} 0)"
         vmt_sort_defs.append(sort_str)
 
     all_used = ilu.used_symbols_asts([init,trans])
