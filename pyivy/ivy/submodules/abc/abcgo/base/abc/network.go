@@ -156,6 +156,8 @@ type Network struct {
 	duplicateAnds       map[[2]int][]*Object
 	extraAnds           int
 	constant            *Object
+	andCells            []andCell
+	andSlab             int
 }
 
 func NewNetwork(name string) *Network {
@@ -198,12 +200,22 @@ func (n *Network) NewObject(kind ObjectKind) *Object {
 
 // An AIG gate has two fanins and usually only one or two fanouts. Keep the
 // initial backing arrays in the same allocation as its stable Object handle.
+// andCell keeps an AND's first fanins and fanouts beside its header.
+type andCell struct {
+	Object
+	inputs [2]Edge
+	uses   [2]*Object
+}
+
+// newAndObject takes cells from slabs, like ABC's fixed-size object pool.
+// Slabs double up to 512 cells, so small networks stay small.
 func (n *Network) newAndObject() *Object {
-	cell := new(struct {
-		Object
-		inputs [2]Edge
-		uses   [2]*Object
-	})
+	if len(n.andCells) == 0 {
+		n.andSlab = min(512, max(8, 2*n.andSlab))
+		n.andCells = make([]andCell, n.andSlab)
+	}
+	cell := &n.andCells[0]
+	n.andCells = n.andCells[1:]
 	cell.fanins, cell.fanouts = cell.inputs[:0], cell.uses[:0]
 	return n.addObject(&cell.Object, ObjectNode)
 }

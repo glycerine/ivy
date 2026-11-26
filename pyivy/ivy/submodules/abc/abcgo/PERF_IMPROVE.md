@@ -1205,3 +1205,12 @@ Eight pigeons in seven holes (identical 3,378 conflicts / 4,221 decisions /
 48,104 propagations), CPU 13, same session: Go 73.5–79.3 ms before,
 43.1–47.1 ms after; release C (gcc -O3) 31.3–32.2 ms. Seven pigeons:
 2.59–2.60 ms. i10 resynthesis CEC: 217–227 ms before, 212–224 ms after (noise).
+
+### Slab-allocated AND cells
+
+ABC fetches objects from a fixed-size pool. Go allocated each AND cell
+(header plus inline fanin/fanout arrays, ~340 bytes) separately, and the
+read-and-balance profile was dominated by `mallocgc`, GC assist and write
+barriers. Networks now carve AND cells from slabs that double up to 512 cells.
+i10 read+balance: 4.53 ms / 11,193 allocs before, 3.77–3.91 ms / 6,143 allocs
+after (CPU 14, 200x). Release C same session: 1.37–1.39 ms.
