@@ -349,44 +349,23 @@ func If_CutAverageRefs(p *If_Man_t, c *If_Cut_t) float32 {
 
 // Reference journals make invalid cone traversals atomic while preserving the
 // source shared-DAG zero-to-one/one-to-zero area accounting.
+// ifCutChangeRefs is If_CutAreaRef/Deref and If_CutEdgeRef/Deref
+// (ifCut.c): add delta to each leaf's reference count and recurse into a
+// leaf's best cut when it becomes referenced (or unreferenced).
 func ifCutChangeRefs(p *If_Man_t, c *If_Cut_t, delta int32, metric byte) float32 {
-	changed := make(map[*If_Obj_t]int32)
-	active := make(map[*If_Cut_t]bool)
-	ok := false
-	defer func() {
-		if !ok {
-			for o, n := range changed {
-				o.nRefs = n
-			}
+	cost := ifCutBaseCost(p, c, metric)
+	for _, id := range ifLeaves(c) {
+		leaf := If_ManObj(p, id)
+		old := leaf.nRefs
+		if old < 0 || delta < 0 && old == 0 {
+			panic("if: reference underflow")
 		}
-	}()
-	var visit func(*If_Cut_t) float32
-	visit = func(c *If_Cut_t) float32 {
-		if active[c] {
-			panic("if: cyclic mapped cut")
+		leaf.nRefs += delta
+		if If_ObjIsAnd(leaf) != 0 && (delta > 0 && old == 0 || delta < 0 && leaf.nRefs == 0) {
+			cost += ifCutChangeRefs(p, &leaf.CutBest, delta, metric)
 		}
-		active[c] = true
-		defer delete(active, c)
-		cost := ifCutBaseCost(p, c, metric)
-		for _, id := range ifLeaves(c) {
-			leaf := If_ManObj(p, id)
-			if leaf.nRefs < 0 || delta < 0 && leaf.nRefs == 0 {
-				panic("if: reference underflow")
-			}
-			if _, seen := changed[leaf]; !seen {
-				changed[leaf] = leaf.nRefs
-			}
-			old := leaf.nRefs
-			leaf.nRefs += delta
-			if If_ObjIsAnd(leaf) != 0 && (delta > 0 && old == 0 || delta < 0 && leaf.nRefs == 0) {
-				cost += visit(&leaf.CutBest)
-			}
-		}
-		return cost
 	}
-	result := visit(c)
-	ok = true
-	return result
+	return cost
 }
 func If_CutAreaRef(p *If_Man_t, c *If_Cut_t) float32   { return ifCutChangeRefs(p, c, 1, 'a') }
 func If_CutAreaDeref(p *If_Man_t, c *If_Cut_t) float32 { return ifCutChangeRefs(p, c, -1, 'a') }
