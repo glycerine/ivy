@@ -78,9 +78,9 @@ func nativeScriptKey(bench, script string) string {
 	return filepath.Base(bench) + "|" + script
 }
 
-func readNativeStats(t *testing.T) map[string]string {
+func readNativeStats(t *testing.T, file string) map[string]string {
 	t.Helper()
-	data, err := os.ReadFile(nativeStatsFile)
+	data, err := os.ReadFile(file)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -94,14 +94,50 @@ func readNativeStats(t *testing.T) map[string]string {
 }
 
 func TestScriptsMatchNativeABC(t *testing.T) {
+	checkScriptsMatchNative(t, nativeScriptBenches, nativeScripts, nativeStatsFile)
+}
+
+// Sequential (ISCAS'89) designs, read from BLIF.
+var nativeSeqBenches = []string{
+	"test_vectors/seq/s27.blif",
+	"test_vectors/seq/s713.blif",
+	"test_vectors/seq/s1494.blif",
+}
+
+var nativeSeqScripts = []string{
+	"strash",
+	"strash; scorr",
+	"strash; lcorr",
+	"strash; ssweep",
+	"strash; scleanup",
+	"strash; dretime",
+	"retime",
+	"strash; retime -M 4",
+	"strash; zero",
+	"strash; fraig -r",
+	"strash; dc2; scorr; dretime",
+	"strash; &get; &scorr; &put",
+	// "strash; &get; &scorr -c; &put": the CNF solver path awaits a faithful
+	// port of cecSolve.c's Cec_ManSatCheckNode (different SAT models).
+	"strash; &get; &dc2; &put",
+	"strash; if -K 4; mfs",
+}
+
+const nativeSeqStatsFile = "test_vectors/native_seq_stats.txt"
+
+func TestSequentialScriptsMatchNativeABC(t *testing.T) {
+	checkScriptsMatchNative(t, nativeSeqBenches, nativeSeqScripts, nativeSeqStatsFile)
+}
+
+func checkScriptsMatchNative(t *testing.T, benches, scripts []string, statsFile string) {
 	if testing.Short() {
 		t.Skip("differential script sweep")
 	}
-	golden := readNativeStats(t)
+	golden := readNativeStats(t, statsFile)
 	live := os.Getenv("ABC_BINARY") != ""
 	updated := map[string]string{}
-	for _, bench := range nativeScriptBenches {
-		for _, script := range nativeScripts {
+	for _, bench := range benches {
+		for _, script := range scripts {
 			key := nativeScriptKey(bench, script)
 			full := fmt.Sprintf("read %s; %s; print_stats", bench, script)
 			want, ok := golden[key]
@@ -133,7 +169,7 @@ func TestScriptsMatchNativeABC(t *testing.T) {
 		for _, k := range keys {
 			fmt.Fprintf(&b, "%s=%s\n", k, updated[k])
 		}
-		if err := os.WriteFile(nativeStatsFile, []byte(b.String()), 0o644); err != nil {
+		if err := os.WriteFile(statsFile, []byte(b.String()), 0o644); err != nil {
 			t.Fatal(err)
 		}
 	}

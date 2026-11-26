@@ -1,0 +1,43 @@
+# bench|script=final print_stats line from native ABC (see native_scripts_test.go)
+s1494.blif|retime=i/o =    8/   19  lat =    7  nd =   647  edge =   1393  cube =   894  lev = 16
+s1494.blif|strash=i/o =    8/   19  lat =    6  and =    673  lev = 15
+s1494.blif|strash; &get; &dc2; &put=i/o =    8/   19  lat =    6  and =    555  lev = 12
+s1494.blif|strash; &get; &scorr; &put=i/o =    8/   19  lat =    6  and =    671  lev = 15
+s1494.blif|strash; dc2; scorr; dretime=i/o =    8/   19  lat =    6  and =    548  lev = 13
+s1494.blif|strash; dretime=i/o =    8/   19  lat =    6  and =    673  lev = 15
+s1494.blif|strash; fraig -r=i/o =    8/   19  lat =    6  and =    673  lev = 15
+s1494.blif|strash; if -K 4; mfs=i/o =    8/   19  lat =    6  nd =   257  edge =    903  aig  =   790  lev = 6
+s1494.blif|strash; lcorr=i/o =    8/   19  lat =    6  and =    673  lev = 15
+s1494.blif|strash; retime -M 4=i/o =    8/   19  lat =    7  nd =   673  edge =   1346  cube =   673  lev = 14
+s1494.blif|strash; scleanup=i/o =    8/   19  lat =    6  and =    673  lev = 15
+s1494.blif|strash; scorr=i/o =    8/   19  lat =    6  and =    663  lev = 15
+s1494.blif|strash; ssweep=i/o =    8/   19  lat =    6  and =    663  lev = 15
+s1494.blif|strash; zero=i/o =    8/   19  lat =    6  and =    673  lev = 15
+s27.blif|retime=i/o =    4/    1  lat =    3  nd =    10  edge =     18  cube =    13  lev = 6
+s27.blif|strash=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s27.blif|strash; &get; &dc2; &put=i/o =    4/    1  lat =    3  and =      7  lev =  5
+s27.blif|strash; &get; &scorr; &put=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s27.blif|strash; dc2; scorr; dretime=i/o =    4/    1  lat =    3  and =      7  lev =  5
+s27.blif|strash; dretime=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s27.blif|strash; fraig -r=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s27.blif|strash; if -K 4; mfs=i/o =    4/    1  lat =    3  nd =     6  edge =     20  aig  =    14  lev = 2
+s27.blif|strash; lcorr=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s27.blif|strash; retime -M 4=i/o =    4/    1  lat =    3  nd =     9  edge =     17  cube =     9  lev = 5
+s27.blif|strash; scleanup=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s27.blif|strash; scorr=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s27.blif|strash; ssweep=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s27.blif|strash; zero=i/o =    4/    1  lat =    3  and =      8  lev =  5
+s713.blif|retime=i/o =   35/   23  lat =   19  nd =   393  edge =    591  cube =   449  lev = 74
+s713.blif|strash=i/o =   35/   23  lat =   19  and =    160  lev = 25
+s713.blif|strash; &get; &dc2; &put=i/o =   35/   23  lat =   19  and =    122  lev = 18
+s713.blif|strash; &get; &scorr; &put=i/o =   35/   23  lat =   14  and =    114  lev = 19
+s713.blif|strash; dc2; scorr; dretime=i/o =   35/   23  lat =   14  and =     98  lev = 17
+s713.blif|strash; dretime=i/o =   35/   23  lat =   17  and =    160  lev = 25
+s713.blif|strash; fraig -r=i/o =   35/   23  lat =   19  and =    160  lev = 25
+s713.blif|strash; if -K 4; mfs=i/o =   35/   23  lat =   19  nd =    79  edge =    237  aig  =   183  lev = 9
+s713.blif|strash; lcorr=i/o =   35/   23  lat =   14  and =    123  lev = 19
+s713.blif|strash; retime -M 4=i/o =   35/   23  lat =   19  nd =   164  edge =    324  cube =   164  lev = 25
+s713.blif|strash; scleanup=i/o =   35/   23  lat =   14  and =    123  lev = 19
+s713.blif|strash; scorr=i/o =   35/   23  lat =   14  and =    114  lev = 19
+s713.blif|strash; ssweep=i/o =   35/   23  lat =   14  and =    114  lev = 19
+s713.blif|strash; zero=i/o =   35/   23  lat =   19  and =    160  lev = 25

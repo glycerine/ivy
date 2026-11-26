@@ -5,6 +5,7 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"slices"
 	"time"
@@ -581,20 +582,29 @@ func Gia_ManCorrReduce(p *Gia_Man_t) *Gia_Man_t {
 	}
 	return result
 }
+
+// Cec_ManRefinedClassPrintStats is cecCorr.c's.
 func Cec_ManRefinedClassPrintStats(p *Gia_Man_t, status *Vec_Str_t, iteration int32, elapsed abctime) {
-	constants, classes, literals := 0, 0, 0
+	var counterX, counter0, counter int32
 	for id := int32(1); id < gia.Gia_ManObjNum(p); id++ {
-		if gia.Gia_ObjIsConst(p, id) != 0 {
-			constants++
-		}
-		if gia.Gia_ObjIsHead(p, id) != 0 {
-			classes++
-		}
-		if gia.Gia_ObjIsCand(gia.Gia_ManObj(p, id)) != 0 && gia.Gia_ObjIsNone(p, id) == 0 {
-			literals++
+		switch {
+		case gia.Gia_ObjIsNone(p, id) != 0:
+			counterX++
+		case gia.Gia_ObjIsConst(p, id) != 0:
+			counter0++
+		case gia.Gia_ObjIsHead(p, id) != 0:
+			counter++
 		}
 	}
-	proved, disproved, failed := 0, 0, 0
+	counterX -= gia.Gia_ManCoNum(p)
+	nLits := gia.Gia_ManCiNum(p) + gia.Gia_ManAndNum(p) - counter - counterX
+	if iteration == -1 {
+		fmt.Printf("BMC : ")
+	} else {
+		fmt.Printf("%3d : ", iteration)
+	}
+	fmt.Printf("c =%8d  cl =%7d  lit =%8d  ", counter0, counter, nLits)
+	var proved, disproved, failed int
 	if status != nil {
 		for _, value := range vec.Vec_StrArray(status) {
 			switch int8(value) {
@@ -607,7 +617,13 @@ func Cec_ManRefinedClassPrintStats(p *Gia_Man_t, status *Vec_Str_t, iteration in
 			}
 		}
 	}
-	fmt.Printf("%3d : c=%8d cl=%7d lit=%8d p=%6d d=%6d f=%6d T=%d\n", iteration, constants, classes, literals-classes, proved, disproved, failed, elapsed)
+	fmt.Printf("p =%6d  d =%6d  f =%6d  ", proved, disproved, failed)
+	mark := '-'
+	if gia.Gia_ObjIsConst(p, gia.Gia_ObjFaninId0p(p, gia.Gia_ManPo(p, 0))) != 0 {
+		mark = '+'
+	}
+	fmt.Printf("%c  ", mark)
+	util.Abc_PrintTime(1, "T", int64(elapsed))
 }
 func cecCorrDeadlineExpired(pars *Cec_ParCor_t) bool {
 	return !pars.deadline.IsZero() && !time.Now().Before(pars.deadline)
@@ -639,6 +655,10 @@ func cecCorrCallback(pars *Cec_ParCor_t) {
 		panic("cec: unsupported correspondence callback type")
 	}
 }
+
+// Cec_ManLSCorrespondenceBmc is cecCorr.c's: it refines the classes with
+// counterexamples from the initialized speculative reduction until none
+// is found.
 func Cec_ManLSCorrespondenceBmc(p *Gia_Man_t, pars *Cec_ParCor_t, prefix int32) {
 	// This legacy entry point has no status result. On interruption, discard
 	// candidates so a direct caller cannot mistake them for proved classes.
@@ -650,44 +670,51 @@ func Cec_ManLSCorrespondenceBmc(p *Gia_Man_t, pars *Cec_ParCor_t, prefix int32) 
 	if cecCorrDeadlineExpired(pars) {
 		return
 	}
-	sim := cecCorrSim(p, pars)
+	var simPars Cec_ParSim_t
+	Cec_ManSimSetDefaultParams(&simPars)
+	simPars.NWords = pars.nWords
+	simPars.NFrames = pars.nRounds
+	simPars.FVerbose = pars.FVerbose
+	simPars.fLatchCorr = pars.FLatchCorr
+	simPars.FSeqSimulate = 1
+	simPars.deadline = pars.deadline
+	sim := Cec_ManSimStart(p, &simPars)
 	defer Cec_ManSimStop(sim)
 	var sat Cec_ParSat_t
 	Cec_ManSatSetDefaultParams(&sat)
 	sat.NBTLimit = pars.NBTLimit
 	sat.FVerbose = pars.FVerbose
 	sat.deadline = pars.deadline
-	for {
+	for changes := true; changes; {
 		if cecCorrDeadlineExpired(pars) {
 			return
 		}
+		start := util.Abc_Clock()
+		changes = false
 		var outputs *Vec_Int_t
 		model := Gia_ManCorrSpecReduceInit(p, pars.NFrames, prefix, 1-pars.FLatchCorr, &outputs, pars.FUseRings)
-		if gia.Gia_ManCoNum(model) == 0 {
+		if gia.Gia_ManPoNum(model) == 0 {
 			break
 		}
-		if sat.NBTLimit > 0 {
-			sat.NBTLimit = int32(min(int64(sat.NBTLimit)*10, int64(1<<30)))
-		}
+		sat.NBTLimit = int32(min(int64(sat.NBTLimit)*10, int64(1<<30)))
 		var status *Vec_Str_t
-		store := Cec_ManSatSolveMiter(model, &sat, &status)
+		var store *Vec_Int_t
+		if pars.FUseCSat != 0 {
+			store = gia.Tas_ManSolveMiterNc(model, pars.NBTLimit, &status, 0)
+		} else {
+			store = Cec_ManSatSolveMiter(model, &sat, &status)
+		}
 		if cecCorrDeadlineExpired(pars) {
 			return
 		}
-		if vec.Vec_IntSize(store) == 0 {
-			break
+		// refine the classes with these counterexamples
+		if vec.Vec_IntSize(store) != 0 {
+			Cec_ManResimulateCounterExamples(sim, store, pars.NFrames+1+prefix)
+			Gia_ManCheckRefinements(p, status, outputs, sim, pars.FUseRings)
+			changes = true
 		}
-		before := cecCorrClassSignature(p)
-		Cec_ManResimulateCounterExamples(sim, store, pars.NFrames+1+prefix)
-		if cecCorrDeadlineExpired(pars) {
-			return
-		}
-		Gia_ManCheckRefinements(p, status, outputs, sim, pars.FUseRings)
-		if slices.Equal(before, cecCorrClassSignature(p)) {
-			cecCorrDiscardDisproved(p, status, outputs, sim)
-		}
-		if slices.Equal(before, cecCorrClassSignature(p)) {
-			break
+		if pars.FVerbose != 0 {
+			Cec_ManRefinedClassPrintStats(p, status, -1, abctime(util.Abc_Clock()-start))
 		}
 	}
 }
@@ -699,19 +726,9 @@ func cecCorrClassSignature(p *Gia_Man_t) []int32 {
 	return data
 }
 
-// A validated SAT witness must refine its candidate. Sparse bit packing may
-// combine independent cubes; fall back to deleting a still-disproved member.
-func cecCorrDiscardDisproved(p *Gia_Man_t, status *Vec_Str_t, outputs *Vec_Int_t, sim *Cec_ManSim_t) {
-	for i, value := range vec.Vec_StrArray(status) {
-		if int8(value) == 0 {
-			id := vec.Vec_IntEntry(outputs, 2*i+1)
-			if gia.Gia_ObjHasRepr(p, id) != 0 || gia.Gia_ObjIsHead(p, id) != 0 {
-				Cec_ManSimClassRemoveOne(sim, id)
-			}
-		}
-	}
-}
 func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result int32) {
+	const nIterMax = 100000
+	const nAddFrames = 1 // additional timeframes to simulate
 	if cecCorrDeadlineExpired(pars) {
 		return -1
 	}
@@ -720,7 +737,11 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result in
 			p.ClearRepresentatives()
 		}
 	}()
+	clkTotal := util.Abc_Clock()
+	var clkSat, clkSim, clkSrm int64
+	clk := util.Abc_Clock()
 	if gia.Gia_ManRegNum(p) == 0 {
+		fmt.Printf("Cec_ManLatchCorrespondence(): Not a sequential AIG.\n")
 		return 0
 	}
 	if pars.NFrames <= 0 || pars.nWords <= 0 {
@@ -731,9 +752,6 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result in
 	defer Cec_ManSimStop(sim)
 	if !p.HasRepresentatives() {
 		Cec_ManSimClassesPrepare(sim, pars.nLevelMax)
-		if cecCorrDeadlineExpired(pars) {
-			return -1
-		}
 		Cec_ManSimClassesRefine(sim)
 		if cecCorrDeadlineExpired(pars) {
 			return -1
@@ -747,6 +765,12 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result in
 	if pars.FUseCSat != 0 {
 		sat.NBTLimit = min(sat.NBTLimit, 1000)
 	}
+	if pars.FVerbose != 0 {
+		fmt.Printf("Obj = %7d. And = %7d. Conf = %5d. Fr = %d. Lcorr = %d. Ring = %d. CSat = %d.\n",
+			gia.Gia_ManObjNum(p), gia.Gia_ManAndNum(p), pars.NBTLimit, pars.NFrames, pars.FLatchCorr, pars.FUseRings, pars.FUseCSat)
+		Cec_ManRefinedClassPrintStats(p, nil, 0, abctime(util.Abc_Clock()-clk))
+	}
+	// check the base case first
 	if pars.FLatchCorr == 0 || pars.NFrames > 1 {
 		Cec_ManLSCorrespondenceBmc(p, pars, 0)
 		if cecCorrDeadlineExpired(pars) {
@@ -758,48 +782,79 @@ func Cec_ManLSCorrespondenceClasses(p *Gia_Man_t, pars *Cec_ParCor_t) (result in
 		return -1
 	}
 	cecCorrCallback(pars)
-	for round := int32(0); round < 100000; round++ {
+	if pars.nStepsMax == 0 {
+		fmt.Printf("Stopped signal correspondence after BMC.\n")
+		return 1
+	}
+	r := int32(0)
+	for ; r < nIterMax; r++ {
 		if cecCorrDeadlineExpired(pars) {
 			return -1
 		}
-		if pars.nStepsMax == round {
+		if pars.nStepsMax == r {
+			fmt.Printf("Stopped signal correspondence after %d refiment iterations.\n", r)
 			return 1
 		}
-		start := time.Now()
+		clk = util.Abc_Clock()
+		clk2 := util.Abc_Clock()
 		var outputs *Vec_Int_t
 		model := Gia_ManCorrSpecReduce(p, pars.NFrames, 1-pars.FLatchCorr, &outputs, pars.FUseRings)
+		clkSrm += util.Abc_Clock() - clk2
 		if gia.Gia_ManCoNum(model) == 0 {
-			return 1
+			break
 		}
+		clk2 = util.Abc_Clock()
 		var status *Vec_Str_t
-		store := Cec_ManSatSolveMiter(model, &sat, &status)
+		var store *Vec_Int_t
+		if pars.FUseCSat != 0 {
+			store = gia.Cbs_ManSolveMiterNc(model, pars.NBTLimit, &status, 0, 0)
+		} else {
+			store = Cec_ManSatSolveMiter(model, &sat, &status)
+		}
+		clkSat += util.Abc_Clock() - clk2
 		if cecCorrDeadlineExpired(pars) {
 			return -1
 		}
 		if vec.Vec_IntSize(store) == 0 {
-			return 1
+			break
 		}
+		// refine the classes with these counterexamples
+		clk2 = util.Abc_Clock()
 		before := cecCorrClassSignature(p)
-		Cec_ManResimulateCounterExamples(sim, store, pars.NFrames+2)
-		if cecCorrDeadlineExpired(pars) {
-			return -1
-		}
+		Cec_ManResimulateCounterExamples(sim, store, pars.NFrames+1+nAddFrames)
+		clkSim += util.Abc_Clock() - clk2
 		Gia_ManCheckRefinements(p, status, outputs, sim, pars.FUseRings)
-		if slices.Equal(before, cecCorrClassSignature(p)) {
-			cecCorrDiscardDisproved(p, status, outputs, sim)
-		}
 		if pars.FVerbose != 0 {
-			Cec_ManRefinedClassPrintStats(p, status, round+1, time.Since(start).Nanoseconds())
+			Cec_ManRefinedClassPrintStats(p, status, r+1, abctime(util.Abc_Clock()-clk))
 		}
 		cecCorrCallback(pars)
 		if pars.FStopWhenGone != 0 && gia.Gia_ManPoNum(p) == 1 && gia.Gia_ObjIsConst(p, gia.Gia_ObjFaninId0p(p, gia.Gia_ManPo(p, 0))) == 0 {
+			fmt.Printf("Iterative refinement is stopped after iteration %d\n", r)
+			fmt.Printf("because the property output is no longer a candidate constant.\n")
 			return 0
 		}
+		// ABC would repeat the same query forever if the counterexamples
+		// refined nothing; stop instead (this does not happen in ABC).
 		if slices.Equal(before, cecCorrClassSignature(p)) {
-			return 1
+			fmt.Printf("Signal correspondence made no progress; stopping.\n")
+			break
 		}
 	}
-	return 0
+	if pars.FVerbose != 0 {
+		Cec_ManRefinedClassPrintStats(p, nil, r+1, abctime(util.Abc_Clock()-clk))
+	}
+	if r == nIterMax {
+		fmt.Printf("The refinement was not finished. The result may be incorrect.\n")
+	}
+	clkTotal = util.Abc_Clock() - clkTotal
+	if pars.FVerbose != 0 {
+		util.Abc_PrintTimeP(1, "Srm  ", clkSrm, clkTotal)
+		util.Abc_PrintTimeP(1, "Sat  ", clkSat, clkTotal)
+		util.Abc_PrintTimeP(1, "Sim  ", clkSim, clkTotal)
+		util.Abc_PrintTimeP(1, "Other", clkTotal-clkSat-clkSrm-clkSim, clkTotal)
+		util.Abc_PrintTime(1, "TOTAL", clkTotal)
+	}
+	return 1
 }
 func Cec_ManLSCorrAnalyzeDependence(p *Gia_Man_t, equivs *Vec_Int_t, status *Vec_Str_t) int32 {
 	if 2*vec.Vec_StrSize(status) != vec.Vec_IntSize(equivs) {
