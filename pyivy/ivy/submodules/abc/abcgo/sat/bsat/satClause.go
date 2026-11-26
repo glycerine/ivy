@@ -39,41 +39,20 @@ type clause struct {
 	lrn, mark, partA, lbd uint8
 }
 
-// Short clauses keep their literals next to the header.
-// Blocks are never overwritten while a caller may retain a clause pointer.
-type shortClause struct {
-	clause
-	data [4]lit
-}
-
-type shortClauseBlock struct {
-	records []shortClause
-	used    int
-}
-
-// Clauses in the middle of the size distribution share header and literal
-// allocations. The exact slice capacity protects neighboring clauses.
+// Clause headers are allocated in blocks and never overwritten while a caller
+// may retain a clause pointer. Literals live in their page's arena.
 type clauseBlock struct {
-	headers     []clause
-	nextHeader  int
-	literals    []lit
-	nextLiteral int
+	headers    []clause
+	nextHeader int
 }
 
-func (b *clauseBlock) take(size int) *clause {
+func (b *clauseBlock) take() *clause {
 	if b.nextHeader == len(b.headers) {
-		b.headers = make([]clause, min(64, max(1, 2*len(b.headers))))
+		b.headers = make([]clause, min(128, max(1, 2*len(b.headers))))
 		b.nextHeader = 0
-	}
-	if size > len(b.literals)-b.nextLiteral {
-		b.literals = make([]lit, min(1024, max(size, 2*len(b.literals))))
-		b.nextLiteral = 0
 	}
 	c := &b.headers[b.nextHeader]
 	b.nextHeader++
-	end := b.nextLiteral + size
-	c.lits = b.literals[b.nextLiteral:end:end]
-	b.nextLiteral = end
 	return c
 }
 
@@ -82,17 +61,45 @@ type Sat_Mem_t struct {
 	nPageSize                             int32
 	uPageMask, uLearnedMask               int32
 	pPages                                []clausePage
-	short                                 [2]shortClauseBlock
-	medium                                [2]clauseBlock
+	headers                               [2]clauseBlock
 }
 
 // The native page offset counts literal words. Only blocks containing a clause
 // header need an index. Most solvers use just a few entries in the first block.
 const clauseIndexBlockSize = 256
 
+// Like ABC, each page stores its clauses contiguously at their handle
+// offsets: data[offset] holds the literal count and the literals follow.
+// clause.lits aliases this arena, so propagation reaches a clause's literals
+// from its handle without visiting the header. Growing the arena re-points
+// the page's clauses at the new storage.
 type clausePage struct {
 	limit  int32
 	blocks [][]*clause
+	data   []lit
+}
+
+// reserve makes data hold at least end words, never more than pageWords.
+func (p *clausePage) reserve(end int32, pageWords int64) {
+	if int(end) <= len(p.data) {
+		return
+	}
+	grown := make([]lit, min(pageWords, int64(max(int(end), 2*len(p.data), 64))))
+	copy(grown, p.data)
+	p.data = grown
+	for blockID, block := range p.blocks {
+		for slot, c := range block {
+			if c != nil {
+				p.attach(int32(2*(blockID*clauseIndexBlockSize+slot)), c, int32(len(c.lits)))
+			}
+		}
+	}
+}
+
+// attach points c at size literals stored after the header word at offset.
+func (p *clausePage) attach(offset int32, c *clause, size int32) {
+	p.data[offset] = size
+	c.lits = p.data[offset+1 : offset+1+size : offset+1+size]
 }
 
 func (p *clausePage) put(offset int32, c *clause) {
@@ -116,6 +123,7 @@ func (p *clausePage) put(offset int32, c *clause) {
 }
 
 func (p *clausePage) truncate(limit int32) {
+	p.detach(limit)
 	end := int(limit >> 1)
 	blockID, slot := end/clauseIndexBlockSize, end%clauseIndexBlockSize
 	if blockID < len(p.blocks) {
@@ -129,6 +137,25 @@ func (p *clausePage) truncate(limit int32) {
 		p.blocks = p.blocks[:blockID]
 	}
 	p.limit = limit
+}
+
+// detach moves the literals of clauses at or beyond limit out of the arena
+// before it is reused, so retained clause pointers keep their contents.
+// Dropped clauses are contiguous, so one copy serves them all.
+func (p *clausePage) detach(limit int32) {
+	if limit >= p.limit {
+		return
+	}
+	saved := slices.Clone(p.data[limit:p.limit])
+	for blockID := int(limit>>1) / clauseIndexBlockSize; blockID < len(p.blocks); blockID++ {
+		for slot, c := range p.blocks[blockID] {
+			offset := int32(2 * (blockID*clauseIndexBlockSize + slot))
+			if c != nil && offset >= limit {
+				start := offset + 1 - limit
+				c.lits = saved[start : start+int32(len(c.lits)) : start+int32(len(c.lits))]
+			}
+		}
+	}
 }
 
 func Sat_MemLimit(p []int32) int32               { return p[0] }
@@ -231,8 +258,7 @@ func Sat_MemAlloc_(p *Sat_Mem_t, n int32) {
 }
 func Sat_MemAlloc(n int32) *Sat_Mem_t { p := new(Sat_Mem_t); Sat_MemAlloc_(p, n); return p }
 func Sat_MemRestart(p *Sat_Mem_t) {
-	p.short = [2]shortClauseBlock{}
-	p.medium = [2]clauseBlock{}
+	p.headers = [2]clauseBlock{}
 	p.nEntries = [2]int32{}
 	p.iPage = [2]int32{0, 1}
 	for i := range p.pPages {
@@ -282,23 +308,12 @@ func Sat_MemAppend(p *Sat_Mem_t, data []int32, size, lrn, plus int32) int32 {
 		p.iPage[lrn] = page
 		offset = 2
 	}
-	var c *clause
-	if size <= 4 {
-		block := &p.short[lrn]
-		if block.used == len(block.records) {
-			// Empty solvers need only the binary scratch record. Grow based
-			// on the number of short clauses, independently of longer ones.
-			block.records = make([]shortClause, min(128, max(1, 2*len(block.records))))
-			block.used = 0
-		}
-		entry := &block.records[block.used]
-		block.used++
-		c = &entry.clause
-		c.lits = entry.data[:size:size]
-	} else if size <= 128 {
-		c = p.medium[lrn].take(int(size))
-	} else {
-		c = &clause{lits: make([]lit, size)}
+	pg := &p.pPages[page]
+	pg.reserve(offset+words, limit)
+	c := p.headers[lrn].take()
+	pg.attach(offset, c, size)
+	if data == nil {
+		clear(c.lits)
 	}
 	c.lrn, c.allocWords = uint8(lrn), words
 	copy(c.lits, data)
@@ -408,8 +423,14 @@ func Sat_MemCompactLearned(p *Sat_Mem_t, move int32) int32 {
 		h := clause_id(c)
 		dest := &p.pPages[Sat_MemHandPage(p, h)]
 		at := Sat_MemHandShift(p, h)
-		dest.put(at, c)
 		c.allocWords = Sat_MemClauseSize(c)
+		// Destinations never pass a later survivor's source, and an
+		// overlapping move within one array is a memmove.
+		dest.reserve(at+c.allocWords, limit)
+		size := int32(len(c.lits))
+		copy(dest.data[at+1:at+1+size], c.lits)
+		dest.attach(at, c, size)
+		dest.put(at, c)
 		dest.limit = at + c.allocWords
 		clause_set_id(c, int32(id))
 	}

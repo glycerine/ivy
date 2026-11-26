@@ -57,15 +57,9 @@ func (r *resolutionTrace) writeRoot(c *Sto_Cls_t) error {
 	return err
 }
 func (r *resolutionTrace) add(c *Sto_Cls_t) cla {
-	// Reconstruction uses even opaque handles, not packed memory pages.
-	// Stored proof clauses therefore do not inherit a page-size limit.
-	if len(r.stored) >= 0x3fffffff {
-		panic("proof clause handle overflow")
-	}
-	h := int32(len(r.stored)+1) * 2
-	page := Sat_MemHandPage(r.memory, h)
-	r.memory.ensurePage(page)
-	r.memory.pPages[page].put(Sat_MemHandShift(r.memory, h), &clause{lits: append([]lit(nil), c.pLits[:c.nLits]...)})
+	// Proof clauses share the solver's arena layout so propagation can read
+	// them by handle. Large pages keep the handle range far beyond any proof.
+	h := Sat_MemAppend(r.memory, c.pLits[:c.nLits], c.nLits, 0, 0)
 	r.stored[h] = c
 	if c.nLits >= 2 {
 		veci_push(&r.watches[lit_neg(c.pLits[0])], h)
@@ -194,7 +188,7 @@ func reconstructResolutionWithClock(cnf *Sto_Man_t, observer proofAnnotation, wr
 	if cnf == nil || cnf.pHead == nil || cnf.pTail == nil || cnf.pEmpty == nil || cnf.pTail != cnf.pEmpty || cnf.nRoots > cnf.nClauses || cnf.nClausesA > cnf.nRoots {
 		return nil, fmt.Errorf("proof store lacks valid roots/final empty clause")
 	}
-	r := &resolutionTrace{cnf: cnf, assignments: newSatAssignments(cnf.nVars), memory: Sat_MemAlloc(10), watches: make([]veci, 2*cnf.nVars), stored: make(map[cla]*Sto_Cls_t), labels: make([]int32, cnf.nClauses), dependencies: make([][]int32, cnf.nClauses), observer: observer, writer: writer, deadline: deadline, clock: clock}
+	r := &resolutionTrace{cnf: cnf, assignments: newSatAssignments(cnf.nVars), memory: Sat_MemAlloc(30), watches: make([]veci, 2*cnf.nVars), stored: make(map[cla]*Sto_Cls_t), labels: make([]int32, cnf.nClauses), dependencies: make([][]int32, cnf.nClauses), observer: observer, writer: writer, deadline: deadline, clock: clock}
 	index := int32(0)
 	for c := cnf.pHead; c != nil; c = c.pNext {
 		if c.Id != index || c.nLits != int32(len(c.pLits)) || (c.fRoot != 0) != (index < cnf.nRoots) || (c.fA != 0) != (index < cnf.nClausesA) {

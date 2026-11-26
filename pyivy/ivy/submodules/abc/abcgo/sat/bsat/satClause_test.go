@@ -347,9 +347,12 @@ func TestSparseClauseOffsetsOnlyIndexLiveHeaders(t *testing.T) {
 	m := &s.Mem
 	huge := Sat_MemAppend(m, nil, 1<<16, 0, 0)
 	large := Sat_MemClauseHand(m, huge)
-	before := sat_solver_memory(s)
+	// The literal arena grows by doubling like any amortized buffer;
+	// this checks only the cost of indexing the new header.
+	arena := func() float64 { return float64(cap(m.pPages[0].data)) * 4 }
+	before := sat_solver_memory(s) - arena()
 	tail := Sat_MemAppend(m, []lit{2, 4, 6}, 3, 0, 1)
-	if extra := sat_solver_memory(s) - before; extra > 8192 {
+	if extra := sat_solver_memory(s) - arena() - before; extra > 8192 {
 		t.Fatalf("indexing one clause beyond 65536 literals uses %.0f more bytes", extra)
 	}
 	if c := Sat_MemClauseHand(m, tail); clause_size(c) != 3 || c.lits[2] != 6 || Sat_MemClauseHand(m, huge) != large {

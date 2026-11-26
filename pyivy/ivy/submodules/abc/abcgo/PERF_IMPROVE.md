@@ -1183,3 +1183,25 @@ All 130 packages with tests passed, along with targeted race checks.
 The final commit is dfe31a23d, and the abcgo worktree is clean.
 
 Performance report, profiles, and reproduction commands (abcgo/PERF_IMPROVE.md:24)
+
+## Session 2026-11-26: continued review and optimization
+
+### BSAT clause literals in a per-page arena (as in ABC)
+
+Propagation reached a watched clause's literals through five dependent loads:
+page, index block, `*clause`, `lits` slice header, literal data. The line
+profile put about 4.5 s of 8.4 s of eight-pigeon propagation on those loads.
+Each `clausePage` now owns a `data []lit` arena laid out at the handle offsets
+exactly like ABC (`data[offset]` = size, literals follow), and `clause.lits`
+aliases it. Propagation reads literals directly from the handle and touches the
+header only to refresh a learned clause's LBD when it becomes unit. The arena
+grows by doubling (capped at the page size) and re-points its clauses;
+truncation (rollback/restart/compaction) first detaches dropped clauses with
+one batch copy, preserving the port's guarantee that retained clause pointers
+keep their literals. Proof reconstruction now stores its clauses with
+`Sat_MemAppend` on 2^30-word pages instead of opaque two-word handles.
+
+Eight pigeons in seven holes (identical 3,378 conflicts / 4,221 decisions /
+48,104 propagations), CPU 13, same session: Go 73.5–79.3 ms before,
+43.1–47.1 ms after; release C (gcc -O3) 31.3–32.2 ms. Seven pigeons:
+2.59–2.60 ms. i10 resynthesis CEC: 217–227 ms before, 212–224 ms after (noise).

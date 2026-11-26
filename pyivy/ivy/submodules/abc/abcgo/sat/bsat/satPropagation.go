@@ -16,6 +16,7 @@ func satClauseLBD(a *satAssignments, c *clause) uint8 {
 // retains unprocessed watches on conflict and moves replacements to their list.
 func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandle cla, binary *clause, frequencies []uint8, stats *stats_t) cla {
 	assigns := a.assigns
+	pages, pageShift, pageMask, learnedMask := mem.pPages, uint32(mem.nPageSize), mem.uPageMask, mem.uLearnedMask
 	for a.qhead < a.qtail {
 		p := a.trail[a.qhead]
 		a.qhead++
@@ -43,8 +44,10 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 					binary.lits[1] = falseLit
 				}
 			} else {
-				c := mem.clauseAt(h)
-				lits := clause_begin(c)
+				// Read literals straight from the page arena, as ABC does.
+				data := pages[uint32(h)>>pageShift].data
+				offset := h & pageMask
+				lits := data[offset+1 : offset+1+data[offset]]
 				if len(lits) < 2 {
 					panic("watched unit clause")
 				}
@@ -72,7 +75,8 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 				}
 				read[write] = h
 				write++
-				if c.lrn != 0 {
+				if h&learnedMask != 0 {
+					c := mem.clauseAt(h)
 					c.lbd = satClauseLBD(a, c)
 				}
 				if !a.enqueueTracked(other, h, frequencies) {
