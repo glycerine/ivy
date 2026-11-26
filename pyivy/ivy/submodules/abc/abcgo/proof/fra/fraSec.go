@@ -133,6 +133,7 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 		panic("invalid sequential equivalence arguments")
 	}
 	pars.NSMnumber = -1
+	clkTotal := util.Abc_Clock()
 	graph := aig.Aig_ManDupSimple(original)
 	status := Fra_FraigMiterStatus(graph)
 	timedOut := false
@@ -151,18 +152,25 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 		if cex != nil && original.TruePiCount() == graph.TruePiCount() {
 			_ = original.SetSequentialCounterexample(util.Abc_CexDup(cex, original.RegisterCount()))
 		}
-		if status == -1 {
+		// Report as fraSec.c does: the verdict with its time, the optional
+		// solution line, and for an undecided miter the saved copy and file.
+		elapsed := util.Abc_Clock() - clkTotal
+		verdict, solution := "Networks are UNDECIDED.   ", "SOLUTION: UNDECIDED  "
+		switch status {
+		case 1:
+			verdict, solution = "Networks are equivalent.  ", "SOLUTION: PASS       "
+		case 0:
+			verdict, solution = "Networks are NOT EQUIVALENT.  ", "SOLUTION: FAIL       "
+		default:
 			secSaveUnsolved(graph)
 		}
+		if pars.fSilent == 0 {
+			fmt.Print(verdict)
+			util.Abc_PrintTime(1, "Time", elapsed)
+		}
 		if pars.FReportSolution != 0 && pars.fRecursive == 0 {
-			switch status {
-			case 1:
-				fmt.Println("SOLUTION: PASS")
-			case 0:
-				fmt.Println("SOLUTION: FAIL")
-			default:
-				fmt.Println("SOLUTION: UNDECIDED")
-			}
+			fmt.Print(solution)
+			util.Abc_PrintTime(1, "Time", elapsed)
 		}
 		if status == -1 && !timedOut && pars.fSilent == 0 {
 			number := secUnsolvedNumber.Add(1)
@@ -171,21 +179,14 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 			if err := ioa.Ioa_WriteAiger(graph, name, 0, 0); err != nil {
 				fmt.Printf("Could not write unsolved reduced miter %q: %v\n", name, err)
 			} else {
-				fmt.Printf("The unsolved reduced miter is written into file %q.\n", name)
+				fmt.Printf("The unsolved reduced miter is written into file \"%s\".\n", name)
 			}
+		}
+		if cex != nil && original.TruePiCount() != graph.TruePiCount() {
+			fmt.Println("The counter-example is invalid because of phase abstraction.")
 		}
 		if result != nil {
 			*result = aig.Aig_ManDupSimpleDfs(graph)
-		}
-		if pars.fSilent == 0 {
-			switch status {
-			case 1:
-				fmt.Println("Networks are equivalent.")
-			case 0:
-				fmt.Println("Networks are NOT EQUIVALENT.")
-			default:
-				fmt.Println("Networks are UNDECIDED.")
-			}
 		}
 		return status
 	}

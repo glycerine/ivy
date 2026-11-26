@@ -88,9 +88,11 @@ func (m *blifModel) output(name string) error {
 			return fmt.Errorf("duplicate output %s", name)
 		}
 	}
+	// As Io_ReadCreatePo: the net first, then the terminal.
+	net := m.net(name)
 	po := m.network.NewObject(abc.ObjectPO)
 	po.SetName(name)
-	return m.connect(po, m.net(name))
+	return m.connect(po, net)
 }
 func (m *blifModel) node(names []string, data any) (*abc.Object, error) {
 	if len(names) == 0 {
@@ -574,13 +576,15 @@ func blifLatch(m *blifModel, f []string) error {
 	if len(f) < 2 || len(f) > 5 {
 		return fmt.Errorf("invalid .latch")
 	}
-	input, output := m.net(f[0]), m.net(f[1])
-	if output.FaninNum() > 0 {
+	if existing := m.nets[f[1]]; existing != nil && existing.FaninNum() > 0 {
 		return fmt.Errorf("duplicate latch output")
 	}
+	// As Io_ReadCreateLatch: LI net, BI, latch, BO, then the LO net.
+	input := m.net(f[0])
 	bi := m.network.NewObject(abc.ObjectBI)
 	latch := m.network.NewObject(abc.ObjectLatch)
 	bo := m.network.NewObject(abc.ObjectBO)
+	output := m.net(f[1])
 	latch.SetName(f[1] + "L")
 	if err := m.connect(bi, input); err != nil {
 		return err

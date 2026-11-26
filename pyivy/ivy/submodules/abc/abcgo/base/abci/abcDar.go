@@ -388,7 +388,7 @@ func abcChoiceMappedEdge(edge abc.Edge) aiggraph.Edge {
 **********************************************************************
 */
 func Abc_NtkFromDar(pNtkOld *Abc_Ntk_t, pMan *Aig_Man_t) *Abc_Ntk_t {
-	return abc.Abc_NtkFromDarSeqSweep(pNtkOld, pMan)
+	return abc.Abc_NtkFromDar(pNtkOld, pMan)
 }
 
 /*

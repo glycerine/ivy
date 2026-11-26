@@ -69,8 +69,12 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 			}
 		}
 	}
+	latches := n.ObjectsOfKind(abc.ObjectLatch)
+	if writeLatches && len(latches) > 0 {
+		out.WriteString("\n")
+	}
 	if writeLatches {
-		for _, latch := range n.ObjectsOfKind(abc.ObjectLatch) {
+		for _, latch := range latches {
 			fans := latch.Fanins()
 			outs := latch.Fanouts()
 			if len(fans) != 1 || len(outs) != 1 {
@@ -80,13 +84,20 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 			if input == nil || output == nil {
 				return fmt.Errorf("latch is not connected through nets")
 			}
-			init := 2
-			if abc.Abc_LatchIsInit0(latch) != 0 {
+			// Io_NtkWriteLatch writes the reset value minus one.
+			init := -1
+			switch {
+			case abc.Abc_LatchIsInit0(latch) != 0:
 				init = 0
-			} else if abc.Abc_LatchIsInit1(latch) != 0 {
+			case abc.Abc_LatchIsInit1(latch) != 0:
 				init = 1
+			case abc.Abc_LatchIsInitDc(latch) != 0:
+				init = 2
 			}
-			fmt.Fprintf(&out, ".latch %s %s %d\n", blifObjectName(input), blifObjectName(output), init)
+			fmt.Fprintf(&out, ".latch %10s %10s  %d\n", blifObjectName(input), blifObjectName(output), init)
+		}
+		if len(latches) > 0 {
+			out.WriteString("\n")
 		}
 	}
 	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {

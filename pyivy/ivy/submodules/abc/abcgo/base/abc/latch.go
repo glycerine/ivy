@@ -81,8 +81,9 @@ func Abc_NtkAddLatch(n *Network, driver *Object, init Abc_InitType_t) *Object {
 	output := n.NewObject(ObjectBO)
 	latch := n.NewObject(ObjectLatch)
 	input := n.NewObject(ObjectBI)
-	output.SetName(latch.Name() + "_lo")
-	input.SetName(latch.Name() + "_li")
+	// As in abcLatch.c: an unnamed latch contributes its unique default name.
+	Abc_ObjAssignName(output, Abc_ObjName(latch), "_lo")
+	Abc_ObjAssignName(input, Abc_ObjName(latch), "_li")
 	Abc_ObjAddFanin(output, latch)
 	Abc_ObjAddFanin(latch, input)
 	if driver != nil {
@@ -195,12 +196,13 @@ func Abc_NtkConvertDcLatches(n *Network) {
 		output := latch.fanouts[0]
 		for _, fanout := range output.fanouts {
 			if fanout.IsCO() {
-				output.SetName(latch.Name() + "_lo")
+				Abc_ObjDeleteName(output)
+				Abc_ObjAssignName(output, Abc_ObjName(latch), "_lo")
 				break
 			}
 		}
 		input := n.NewObject(ObjectPI)
-		input.SetName(latch.Name() + "_pi")
+		Abc_ObjAssignName(input, Abc_ObjName(latch), "_pi")
 		mux := n.NewObject(ObjectNode)
 		Abc_ObjTransferFanout(output, mux)
 		Abc_NtkNodeConvertToMux(n, control, output, input, mux)
