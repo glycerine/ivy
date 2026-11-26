@@ -25,13 +25,16 @@ func Gia_ManToAigSimple(p *Gia_Man_t) *aig.Graph   { return gia.Gia_ManToAigSimp
 
 // The Go AIGER reader reports I/O/format failures as errors; the translated C
 // call sites use the original nil-on-failure pointer convention.
+// Gia_AigerRead reports why a file could not be read, as the C reader does,
+// instead of failing silently.
 func Gia_AigerRead(name string, simple, skip, check int32) *Gia_Man_t {
-	p, _ := gia.Gia_AigerRead(name, simple, skip, check)
+	p, err := gia.Gia_AigerRead(name, simple, skip, check)
+	if err != nil {
+		fmt.Fprintf(os.Stdout, "Gia_AigerRead(): %v\n", err)
+	}
 	return p
 }
 
-// The C writer reports errors through its status/output path; the source call
-// sites intentionally discard the Go writer's error as well.
 // Gia_AigerWrite reports write failures, as the C writer does for files it
 // cannot open, instead of silently producing no file.
 func Gia_AigerWrite(p *Gia_Man_t, name string, symbols, compact, newline int32) {

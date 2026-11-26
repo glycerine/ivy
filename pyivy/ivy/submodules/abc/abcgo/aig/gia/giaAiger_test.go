@@ -161,7 +161,7 @@ func TestAigerFilesAndPartExport(t *testing.T) {
 		t.Fatal(err)
 	}
 	q, err := Gia_AigerRead(path, 0, 1, 1)
-	if err != nil || q.PSpec != path || q.pName != p.pName {
+	if err != nil || q.PSpec != path || q.pName != Gia_FileNameGeneric(path) { // named after the file, as in C
 		t.Fatal(err)
 	}
 	part, err := Gia_AigerWriteIntoMemoryStrPart(p, p.vCis, aigerVecInts(aigerAllAnds(p)), p.vCos, 1)

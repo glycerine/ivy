@@ -554,9 +554,8 @@ func Gia_AigerRead(name string, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error
 		return nil, err
 	}
 	p.PSpec = name
-	if p.pName == "" {
-		p.pName = Gia_FileNameGeneric(name)
-	}
+	// Like Gia_AigerRead, the file name replaces any stored name.
+	p.pName = Gia_FileNameGeneric(name)
 	return p, nil
 }
 
@@ -647,6 +646,13 @@ func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, 
 				return fmt.Errorf("gia: truncated extension payload")
 			}
 			break
+		}
+		if renumbered && tag == 'm' {
+			// Like Gia_AigerRead: hashing invalidated the mapping, which is
+			// dropped with a warning.
+			fmt.Println("Warning: Structural hashing enabled while reading AIGER invalidated the mapping.  Consider using \"&r -s\".")
+			data = data[5+int(size):]
+			continue
 		}
 		if renumbered && aigerTagUsesObjectIDs(tag) {
 			return fmt.Errorf("gia: structural hashing would invalidate object-indexed AIGER metadata; use SkipStrash")
