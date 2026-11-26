@@ -3,6 +3,7 @@ add32.aig|&get; &b; &put=i/o =   64/   33  lat =    0  and =    282  lev = 64
 add32.aig|&get; &dc2; &put=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|&get; &dch; &put=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|&get; &fraig; &put=i/o =   64/   33  lat =    0  and =    220  lev = 64
+add32.aig|&get; &if -K 6 -n; &put=i/o =   64/   33  lat =    0  nd =    60  edge =    244  aig  =   528  lev = 13
 add32.aig|&get; &if -K 6; &mfs; &put=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
 add32.aig|&get; &if -K 6; &put=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
 add32.aig|&get; &st; &put=i/o =   64/   33  lat =    0  and =    220  lev = 64
@@ -37,6 +38,7 @@ i10.aig|&get; &b; &put=i/o =  257/  224  lat =    0  and =   2270  lev = 41
 i10.aig|&get; &dc2; &put=i/o =  257/  224  lat =    0  and =   1840  lev = 31
 i10.aig|&get; &dch; &put=i/o =  257/  224  lat =    0  and =   1803  lev = 33
 i10.aig|&get; &fraig; &put=i/o =  257/  224  lat =    0  and =   2251  lev = 47
+i10.aig|&get; &if -K 6 -n; &put=i/o =  257/  224  lat =    0  nd =   605  edge =   2652  aig  =  3059  lev = 11
 i10.aig|&get; &if -K 6; &mfs; &put=i/o =  257/  224  lat =    0  nd =   578  edge =   2420  aig  =  2691  lev = 11
 i10.aig|&get; &if -K 6; &put=i/o =  257/  224  lat =    0  nd =   611  edge =   2674  aig  =  4096  lev = 11
 i10.aig|&get; &st; &put=i/o =  257/  224  lat =    0  and =   2675  lev = 50
@@ -71,6 +73,7 @@ mul12.aig|&get; &b; &put=i/o =   24/   24  lat =    0  and =   1154  lev = 85
 mul12.aig|&get; &dc2; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|&get; &dch; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|&get; &fraig; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
+mul12.aig|&get; &if -K 6 -n; &put=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  3004  lev = 17
 mul12.aig|&get; &if -K 6; &mfs; &put=i/o =   24/   24  lat =    0  nd =   312  edge =   1308  aig  =  2996  lev = 17
 mul12.aig|&get; &if -K 6; &put=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2267  lev = 17
 mul12.aig|&get; &st; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
@@ -105,6 +108,7 @@ mul8.aig|&get; &b; &put=i/o =   16/   16  lat =    0  and =    482  lev = 53
 mul8.aig|&get; &dc2; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|&get; &dch; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|&get; &fraig; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
+mul8.aig|&get; &if -K 6 -n; &put=i/o =   16/   16  lat =    0  nd =   128  edge =    540  aig  =  1276  lev = 10
 mul8.aig|&get; &if -K 6; &mfs; &put=i/o =   16/   16  lat =    0  nd =   129  edge =    538  aig  =  1268  lev = 10
 mul8.aig|&get; &if -K 6; &put=i/o =   16/   16  lat =    0  nd =   129  edge =    542  aig  =   954  lev = 10
 mul8.aig|&get; &st; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
@@ -139,6 +143,7 @@ sort16.aig|&get; &b; &put=i/o =   16/   16  lat =    0  and =    480  lev = 31
 sort16.aig|&get; &dc2; &put=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|&get; &dch; &put=i/o =   16/   16  lat =    0  and =    240  lev = 16
 sort16.aig|&get; &fraig; &put=i/o =   16/   16  lat =    0  and =    240  lev = 16
+sort16.aig|&get; &if -K 6 -n; &put=i/o =   16/   16  lat =    0  nd =   241  edge =   1154  aig  =  1628  lev = 11
 sort16.aig|&get; &if -K 6; &mfs; &put=i/o =   16/   16  lat =    0  nd =   103  edge =    437  aig  =   505  lev = 6
 sort16.aig|&get; &if -K 6; &put=i/o =   16/   16  lat =    0  nd =   242  edge =   1154  aig  =  1752  lev = 11
 sort16.aig|&get; &st; &put=i/o =   16/   16  lat =    0  and =    466  lev = 31

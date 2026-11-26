@@ -37661,7 +37661,11 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if pPars.WireDelay > 0 && (pPars.PLutLib != nil) {
 		ifpkg.If_LibLutAddWireDelay(pPars.PLutLib, +pPars.WireDelay)
 	}
-	// perform mapping
+	// perform mapping (Gia_ManPerformMapping reads the frame's DSD manager)
+	if pPars.FUseDsd != 0 {
+		dsd, _ := base_main.Abc_FrameReadManDsd().(*ifpkg.If_DsdMan_t)
+		pPars.SetDsdManager(dsd)
+	}
 	pNew = ifpkg.Gia_ManPerformMapping(abcFrameGia(pAbc), pPars)
 	// subtract wire delay from LUT library delays
 	if pPars.WireDelay > 0 && (pPars.PLutLib != nil) {
