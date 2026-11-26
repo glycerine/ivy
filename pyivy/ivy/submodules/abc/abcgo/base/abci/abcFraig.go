@@ -406,7 +406,7 @@ func Abc_NodeFraigTrust(network *Abc_Ntk_t, node *Abc_Obj_t) abc.Edge {
 }
 
 func Abc_NtkFraigStore(network *Abc_Ntk_t) int32 {
-	strashed := abc.Abc_NtkStrash(network, 0, 0, 0)
+	strashed := Abc_NtkStrash(network, 0, 0, 0) // restrashes a strashed network, as abcStrash.c does
 	if strashed == nil {
 		return 0
 	}

@@ -39,13 +39,20 @@ func abcStrashLocal(dst *Network, node *Object) Edge {
 	return edge(root)
 }
 
+// RestrashHook is abci's Abc_NtkRestrash, which lives above this package.
+var RestrashHook func(src *Network, cleanup int32) *Network
+
 // Abc_NtkStrash builds a structurally hashed ABC network from local functions.
 func Abc_NtkStrash(src *Network, all, cleanup, record int32) *Network {
 	if src == nil || (Abc_NtkIsLogic(src) == 0 && Abc_NtkIsStrash(src) == 0) {
 		panic("abc: expected logic or strashed network")
 	}
 	if Abc_NtkIsStrash(src) != 0 {
-		return Abc_NtkDupDfs(src)
+		// as abcStrash.c: a strashed network is restrashed
+		if RestrashHook == nil {
+			panic("abc: restrashing requires package abci")
+		}
+		return RestrashHook(src, cleanup)
 	}
 	dst := Abc_NtkStartFrom(src, ABC_NTK_STRASH, ABC_FUNC_AIG)
 	for _, node := range Abc_NtkDfsIter(src, all) {

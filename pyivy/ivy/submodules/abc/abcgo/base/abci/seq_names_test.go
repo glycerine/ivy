@@ -39,3 +39,10 @@ func TestGiaSweepDefaultsMatchNative(t *testing.T) {
 	expectStats(t, "read test_vectors/bench/mul8.aig; &get; &sweep; &put; print_stats",
 		"i/o =   16/   16  lat =    0  and =    424  lev = 53")
 }
+
+// Native: abc -c "read mul8.aig; strash; fraig_store; balance; fraig_store;
+// fraig_restore; print_stats". Storing a strashed network restrashes it.
+func TestFraigStoreRestoreMatchesNative(t *testing.T) {
+	expectStats(t, "read test_vectors/bench/mul8.aig; strash; fraig_store; balance; fraig_store; fraig_restore; print_stats",
+		"i/o =   16/   16  lat =    0  and =    424  lev = 53")
+}
