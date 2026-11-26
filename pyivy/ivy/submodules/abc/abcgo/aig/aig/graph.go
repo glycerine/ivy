@@ -525,5 +525,8 @@ func (g *Graph) TopologicalObjects() []Edge {
 
 func (g *Graph) ValidEdge(e Edge) bool { return g.valid(e) }
 
+// Kind returns the kind of e's object without copying the node.
+func (g *Graph) Kind(e Edge) NodeKind { return g.node(e).Kind }
+
 // Node returns a read-only snapshot of one live object's payload in O(1).
 func (g *Graph) Node(e Edge) Node { return *g.node(e) }

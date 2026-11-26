@@ -42,7 +42,7 @@ func (r *darRefactorer) darRefactTryGraph(root aig.Edge, cut []aig.Edge, graph *
 	}
 	for i := range kit.Kit_GraphLeaveNum(graph) {
 		funcs[i] = cut[i]
-		levels[i] = int32(g.Node(cut[i]).Level)
+		levels[i] = aig.Aig_ObjLevel(g, cut[i])
 	}
 	var counter int32
 	for i, node := range kit.Kit_GraphForEachNode(graph) {
@@ -73,9 +73,9 @@ func (r *darRefactorer) darRefactTryGraph(root aig.Edge, cut []aig.Edge, graph *
 			case 0:
 				levelNew = 0
 			case and0.NodeID():
-				levelNew = int32(g.Node(and0).Level)
+				levelNew = aig.Aig_ObjLevel(g, and0)
 			case and1.NodeID():
-				levelNew = int32(g.Node(and1).Level)
+				levelNew = aig.Aig_ObjLevel(g, and1)
 			}
 		}
 		if levelNew > levelMax {
@@ -202,7 +202,7 @@ func Dar_ManRefactor(g *aig.Graph, params *RefactorParams) error {
 	nNodesOld := aig.Aig_ManObjNumMax(g)
 	for i := int32(0); i < aig.Aig_ManObjNumMax(g); i++ {
 		obj := aig.Edge(i) << 1
-		if !g.ValidEdge(obj) || g.Node(obj).Kind != aig.And {
+		if !g.ValidEdge(obj) || g.Kind(obj) != aig.And {
 			continue
 		}
 		if i > nNodesOld {

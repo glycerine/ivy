@@ -213,7 +213,7 @@ func (r *darRewriter) darCutFindValue(c *darCut) int32 {
 		if !r.g.ValidEdge(aig.Edge(id) << 1) {
 			return 0
 		}
-		refs := int32(r.g.Node(aig.Edge(id) << 1).Refs)
+		refs := aig.Aig_ObjRefs(r.g, aig.Edge(id) << 1)
 		value += refs
 		if refs == 1 {
 			ones++
@@ -505,7 +505,7 @@ func (r *darRewriter) darObjPrepareCuts(id int32) []darCut {
 	cuts := r.cutMem[start : start+r.nCutsMax]
 	c := &cuts[0]
 	c.used = true
-	if r.g.Node(aig.Edge(id)<<1).Kind == aig.Constant {
+	if r.g.Kind(aig.Edge(id)<<1) == aig.Constant {
 		c.nLeaves, c.sign, c.truth = 0, 0, 0xFFFF
 	} else {
 		c.nLeaves, c.leaves[0], c.sign, c.truth = 1, id, darObjCutSign(id), 0xAAAA
@@ -527,8 +527,8 @@ func (r *darRewriter) darManCutsRestart() {
 // darObjComputeCuts is Dar_ObjComputeCuts (fSkipTtMin = 0).
 func (r *darRewriter) darObjComputeCuts(id int32) []darCut {
 	g := r.g
-	n := g.Node(aig.Edge(id) << 1)
-	f0, f1 := aig.Aig_ObjReal_rec(g, n.Fanins[0]), aig.Aig_ObjReal_rec(g, n.Fanins[1])
+	e := aig.Edge(id) << 1
+	f0, f1 := aig.Aig_ObjReal_rec(g, aig.Aig_ObjChild0(g, e)), aig.Aig_ObjReal_rec(g, aig.Aig_ObjChild1(g, e))
 	cutSet := r.darObjPrepareCuts(id)
 	cuts0, cuts1 := r.cutsOf(int32(f0.NodeID())), r.cutsOf(int32(f1.NodeID()))
 	for i := range cuts0 {
@@ -572,15 +572,14 @@ func (r *darRewriter) darObjComputeCutsRec(e aig.Edge) []darCut {
 	if cuts := r.cutsOf(id); cuts != nil {
 		return cuts
 	}
-	n := r.g.Node(e)
-	switch n.Kind {
+	switch r.g.Kind(e) {
 	case aig.Input, aig.Constant:
 		return r.darObjPrepareCuts(id)
 	case aig.Buffer:
-		return r.darObjComputeCutsRec(aig.Aig_Regular(n.Fanins[0]))
+		return r.darObjComputeCutsRec(aig.Aig_ObjFanin0(r.g, e))
 	}
-	r.darObjComputeCutsRec(aig.Aig_Regular(n.Fanins[0]))
-	r.darObjComputeCutsRec(aig.Aig_Regular(n.Fanins[1]))
+	r.darObjComputeCutsRec(aig.Aig_ObjFanin0(r.g, e))
+	r.darObjComputeCutsRec(aig.Aig_ObjFanin1(r.g, e))
 	return r.darObjComputeCuts(id)
 }
 
@@ -599,7 +598,7 @@ func (r *darRewriter) darLibCutMatch(c *darCut) bool {
 			e = e.Not()
 		}
 		r.datas[i].fn = e
-		r.datas[i].level = int32(r.g.Node(e).Level)
+		r.datas[i].level = aig.Aig_ObjLevel(r.g, e)
 		if r.m.Params.Power {
 			r.datas[i].prob = edgeProbability(r.m.probabilities, e)
 		}
@@ -648,7 +647,7 @@ func (r *darRewriter) darLibEvalAssignNums(class int32, root aig.Edge) {
 		}
 		d.fn = aig.Aig_TableLookupTwo(g, x, y)
 		if d.fn != aig.InvalidEdge {
-			d.level = int32(g.Node(d.fn).Level)
+			d.level = aig.Aig_ObjLevel(g, d.fn)
 			d.mffc = aig.Aig_ObjIsTravIdCurrent(g, aig.Aig_Regular(d.fn))
 			if r.m.Params.Power {
 				d.prob = edgeProbability(r.m.probabilities, d.fn)
@@ -825,7 +824,7 @@ func (m *Manager) rewriteNative() error {
 			}
 		}
 		root := aig.Edge(i) << 1
-		if !g.ValidEdge(root) || g.Node(root).Kind != aig.And {
+		if !g.ValidEdge(root) || g.Kind(root) != aig.And {
 			continue
 		}
 		if i > nNodesOld {
