@@ -440,85 +440,160 @@ func Kit_DsdTruth(ntk *Kit_DsdNtk_t, out []uint32) {
 func Kit_DsdTruthPartial(p *Kit_DsdMan_t, ntk *Kit_DsdNtk_t, out []uint32, support uint32) {
 	copy(out, Kit_DsdTruthComputeOne(p, ntk, support))
 }
-func kitDsdSplitTruth(truth []uint32, nVars int32, support uint32, variable int32, dec []uint32) []uint32 {
-	if variable < 0 || variable >= nVars || support&(1<<uint(variable)) == 0 {
-		panic("kit: replacement variable must belong to bound support")
-	}
-	bound, free := []int32{}, []int32{}
-	for v := int32(0); v < nVars; v++ {
-		if support&(1<<uint(v)) != 0 {
-			bound = append(bound, v)
-		} else {
-			free = append(free, v)
-		}
-	}
-	scatter := func(index int, vars []int32) int32 {
-		var x int32
-		for b, v := range vars {
-			x |= int32(index>>uint(b)&1) << uint(v)
-		}
-		return x
-	}
-	var patterns [][]bool
-	labels := make([]int, 1<<uint(len(bound)))
-	for b := range labels {
-		values := make([]bool, 1<<uint(len(free)))
-		for f := range values {
-			values[f] = Kit_TruthHasBit(truth, scatter(b, bound)|scatter(f, free)) != 0
-		}
-		match := -1
-		for k, pattern := range patterns {
-			equal := true
-			for i, value := range values {
-				if value != pattern[i] {
-					equal = false
-					break
-				}
-			}
-			if equal {
-				match = k
-				break
-			}
-		}
-		if match < 0 {
-			if len(patterns) >= 2 {
-				panic("kit: bound support does not form a Boolean decomposition")
-			}
-			match = len(patterns)
-			patterns = append(patterns, values)
-		}
-		labels[b] = match
-	}
+
+// kitDsdNodeTruth returns a private copy of the full truth table of node id.
+func kitDsdNodeTruth(ntk *Kit_DsdNtk_t, id int32) []uint32 {
+	return append([]uint32(nil), kitDsdComputeNode(ntk, id, 0, map[int32][]uint32{})...)
+}
+
+// kitDsdComposePrime evaluates a prime node's truth table over the truth
+// tables of its fanins (Kit_TruthCompose).
+func kitDsdComposePrime(obj *Kit_DsdObj_t, fans [][]uint32, nVars int32) []uint32 {
 	out := make([]uint32, Kit_TruthWordNum(nVars))
-	clear(dec[:Kit_TruthWordNum(nVars)])
 	for x := int32(0); x < 32*Kit_TruthWordNum(nVars); x++ {
-		b, f := 0, 0
-		for i, v := range bound {
-			b |= int(x>>uint(v)&1) << uint(i)
+		index := int32(0)
+		for i, fan := range fans {
+			if Kit_TruthHasBit(fan, x) != 0 {
+				index |= 1 << uint(i)
+			}
 		}
-		for i, v := range free {
-			f |= int(x>>uint(v)&1) << uint(i)
-		}
-		if labels[b] != 0 {
-			Kit_TruthSetBit(dec, x)
-		}
-		label := int(x >> uint(variable) & 1)
-		if label >= len(patterns) {
-			label = 0
-		}
-		if patterns[label][f] {
+		if Kit_TruthHasBit(obj.truth, index) != 0 {
 			Kit_TruthSetBit(out, x)
 		}
 	}
 	return out
 }
+
+// Kit_DsdTruthComputeNodeTwo_rec is kitDsd.c's: it computes the composition
+// function of node id, with the part of the bound set uSupp replaced by
+// variable iVar, and stores the bound-set (decomposition) function in dec.
 func Kit_DsdTruthComputeNodeTwo_rec(p *Kit_DsdMan_t, ntk *Kit_DsdNtk_t, id int32, support uint32, variable int32, dec []uint32) []uint32 {
-	truth := Kit_DsdTruthComputeNode_rec(p, ntk, id)
-	return kitDsdSplitTruth(truth, int32(ntk.nVars), support, variable, dec)
+	n := int32(ntk.nVars)
+	obj := Kit_DsdNtkObj(ntk, id)
+	if obj == nil {
+		return kitDsdNodeTruth(ntk, id)
+	}
+	if obj.Type == KIT_DSD_CONST1 || obj.Type == KIT_DSD_VAR {
+		panic("kit: unexpected DSD node type")
+	}
+	fanins := obj.pFans[:obj.nFans]
+	nPartial, suppFan := 0, uint32(0)
+	for _, lit := range fanins {
+		if cur := Kit_DsdLitSupport(ntk, int32(lit)); support&cur != 0 {
+			nPartial++
+			suppFan |= cur
+		}
+	}
+	if nPartial == 0 || nPartial == len(fanins) {
+		return kitDsdNodeTruth(ntk, id)
+	}
+	fans := make([][]uint32, len(fanins))
+	res := make([]uint32, Kit_TruthWordNum(n))
+	if suppFan != suppFan&support {
+		// ABC asserts nPartial == 1 here; release builds go on as below.
+		for i, lit := range fanins {
+			if support&Kit_DsdLitSupport(ntk, int32(lit)) != 0 {
+				fans[i] = Kit_DsdTruthComputeNodeTwo_rec(p, ntk, int32(lit>>1), support, variable, dec)
+			} else {
+				fans[i] = kitDsdNodeTruth(ntk, int32(lit>>1))
+			}
+		}
+		switch obj.Type {
+		case KIT_DSD_AND:
+			Kit_TruthFill(res, n)
+			for i, lit := range fanins {
+				Kit_TruthAndPhase(res, res, fans[i], n, 0, int32(lit&1))
+			}
+			return res
+		case KIT_DSD_XOR:
+			compl := uint16(0)
+			for i, lit := range fanins {
+				compl ^= lit & 1
+				Kit_TruthXor(res, res, fans[i], n)
+			}
+			if compl != 0 {
+				Kit_TruthNot(res, res, n)
+			}
+			return res
+		}
+	} else {
+		bound := make([]bool, len(fanins))
+		for i, lit := range fanins {
+			fans[i] = kitDsdNodeTruth(ntk, int32(lit>>1))
+			bound[i] = support&Kit_DsdLitSupport(ntk, int32(lit)) != 0
+		}
+		switch obj.Type {
+		case KIT_DSD_AND:
+			Kit_TruthIthVar(res, n, variable)
+			Kit_TruthFill(dec, n)
+			for i, lit := range fanins {
+				if bound[i] {
+					Kit_TruthAndPhase(dec, dec, fans[i], n, 0, int32(lit&1))
+				} else {
+					Kit_TruthAndPhase(res, res, fans[i], n, 0, int32(lit&1))
+				}
+			}
+			return res
+		case KIT_DSD_XOR:
+			Kit_TruthIthVar(res, n, variable)
+			Kit_TruthClear(dec, n)
+			compl := uint16(0)
+			for i, lit := range fanins {
+				compl ^= lit & 1
+				if bound[i] {
+					Kit_TruthXor(dec, dec, fans[i], n)
+				} else {
+					Kit_TruthXor(res, res, fans[i], n)
+				}
+			}
+			if compl != 0 {
+				Kit_TruthNot(res, res, n)
+			}
+			return res
+		}
+		// ABC asserts nPartial == 1; release builds take the first one.
+		i := 0
+		for !bound[i] {
+			i++
+		}
+		Kit_TruthCopy(dec, fans[i], n)
+		Kit_TruthIthVar(fans[i], n, variable)
+	}
+	if obj.Type != KIT_DSD_PRIME {
+		panic("kit: unexpected DSD node type")
+	}
+	for i, lit := range fanins {
+		if lit&1 != 0 {
+			Kit_TruthNot(fans[i], fans[i], n)
+		}
+	}
+	return kitDsdComposePrime(obj, fans, n)
 }
+
+// Kit_DsdTruthComputeTwo is kitDsd.c's: the composition function of the DSD
+// network with bound set uSupp replaced by variable iVar; the decomposition
+// function goes to dec.
 func Kit_DsdTruthComputeTwo(p *Kit_DsdMan_t, ntk *Kit_DsdNtk_t, support uint32, variable int32, dec []uint32) []uint32 {
-	truth := Kit_DsdTruthCompute(p, ntk)
-	return kitDsdSplitTruth(truth, int32(ntk.nVars), support, variable, dec)
+	if support == 0 || int32(ntk.nVars) > p.nVars {
+		panic("kit: invalid bound set or DSD manager size")
+	}
+	n := int32(ntk.nVars)
+	all := Kit_DsdGetSupports(ntk)
+	if support&all == 0 {
+		Kit_TruthClear(dec, n)
+		return Kit_DsdTruthCompute(p, ntk)
+	}
+	if support&all == all {
+		res := Kit_DsdTruthCompute(p, ntk)
+		Kit_TruthCopy(dec, res, n)
+		Kit_TruthIthVar(res, n, variable)
+		return res
+	}
+	res := Kit_DsdTruthComputeNodeTwo_rec(p, ntk, int32(ntk.Root>>1), support, variable, dec)
+	if ntk.Root&1 != 0 {
+		Kit_TruthNot(res, res, n)
+	}
+	return res
 }
 func Kit_DsdTruthPartialTwo(p *Kit_DsdMan_t, ntk *Kit_DsdNtk_t, support uint32, variable int32, co, dec []uint32) {
 	copy(co, Kit_DsdTruthComputeTwo(p, ntk, support, variable, dec))

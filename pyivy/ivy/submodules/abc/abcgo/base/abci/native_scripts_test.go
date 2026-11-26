@@ -54,7 +54,7 @@ var nativeScripts = []string{
 	"if -K 6; mfs",
 	"if -K 6; mfs -r",
 	"if -K 6; lutpack",
-	"if -K 4; lutpack",
+	"if -K 4; lutpack; lutpack",
 	"&get; &if -K 6; &mfs; &put",
 }
 

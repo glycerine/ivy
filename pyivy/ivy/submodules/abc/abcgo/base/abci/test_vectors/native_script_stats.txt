@@ -18,7 +18,7 @@ add32.aig|drf -z -l=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|drw=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|fraig=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|if -K 4 -a=i/o =   64/   33  lat =    0  nd =    63  edge =    190  aig  =   346  lev = 31
-add32.aig|if -K 4; lutpack=i/o =   64/   33  lat =    0  nd =    73  edge =    240  aig  =   449  lev = 21
+add32.aig|if -K 4; lutpack; lutpack=i/o =   64/   33  lat =    0  nd =    73  edge =    240  aig  =   449  lev = 21
 add32.aig|if -K 6=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
 add32.aig|if -K 6; lutpack=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   533  lev = 13
 add32.aig|if -K 6; mfs=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
@@ -48,7 +48,7 @@ i10.aig|drf -z -l=i/o =  257/  224  lat =    0  and =   2242  lev = 41
 i10.aig|drw=i/o =  257/  224  lat =    0  and =   2124  lev = 48
 i10.aig|fraig=i/o =  257/  224  lat =    0  and =   2249  lev = 47
 i10.aig|if -K 4 -a=i/o =  257/  224  lat =    0  nd =   841  edge =   2816  aig  =  3343  lev = 25
-i10.aig|if -K 4; lutpack=i/o =  257/  224  lat =    0  nd =   786  edge =   2640  aig  =  2599  lev = 17
+i10.aig|if -K 4; lutpack; lutpack=i/o =  257/  224  lat =    0  nd =   786  edge =   2640  aig  =  2601  lev = 17
 i10.aig|if -K 6=i/o =  257/  224  lat =    0  nd =   611  edge =   2674  aig  =  4096  lev = 11
 i10.aig|if -K 6; lutpack=i/o =  257/  224  lat =    0  nd =   608  edge =   2658  aig  =  3249  lev = 11
 i10.aig|if -K 6; mfs=i/o =  257/  224  lat =    0  nd =   576  edge =   2430  aig  =  3299  lev = 11
@@ -78,7 +78,7 @@ mul12.aig|drf -z -l=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|drw=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|fraig=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|if -K 4 -a=i/o =   24/   24  lat =    0  nd =   275  edge =   1057  aig  =  1648  lev = 32
-mul12.aig|if -K 4; lutpack=i/o =   24/   24  lat =    0  nd =   383  edge =   1256  aig  =  2267  lev = 28
+mul12.aig|if -K 4; lutpack; lutpack=i/o =   24/   24  lat =    0  nd =   383  edge =   1256  aig  =  2267  lev = 28
 mul12.aig|if -K 6=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2267  lev = 17
 mul12.aig|if -K 6; lutpack=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2985  lev = 17
 mul12.aig|if -K 6; mfs=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2267  lev = 17
@@ -108,7 +108,7 @@ mul8.aig|drf -z -l=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|drw=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|fraig=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|if -K 4 -a=i/o =   16/   16  lat =    0  nd =   119  edge =    449  aig  =   684  lev = 20
-mul8.aig|if -K 4; lutpack=i/o =   16/   16  lat =    0  nd =   160  edge =    533  aig  =   948  lev = 17
+mul8.aig|if -K 4; lutpack; lutpack=i/o =   16/   16  lat =    0  nd =   160  edge =    533  aig  =   948  lev = 17
 mul8.aig|if -K 6=i/o =   16/   16  lat =    0  nd =   129  edge =    542  aig  =   954  lev = 10
 mul8.aig|if -K 6; lutpack=i/o =   16/   16  lat =    0  nd =   129  edge =    542  aig  =  1255  lev = 10
 mul8.aig|if -K 6; mfs=i/o =   16/   16  lat =    0  nd =   129  edge =    538  aig  =   950  lev = 10
@@ -138,7 +138,7 @@ sort16.aig|drf -z -l=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|drw=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|fraig=i/o =   16/   16  lat =    0  and =    240  lev = 16
 sort16.aig|if -K 4 -a=i/o =   16/   16  lat =    0  nd =   432  edge =    912  aig  =   520  lev = 30
-sort16.aig|if -K 4; lutpack=i/o =   16/   16  lat =    0  nd =   402  edge =   1200  aig  =  1182  lev = 16
+sort16.aig|if -K 4; lutpack; lutpack=i/o =   16/   16  lat =    0  nd =   402  edge =   1200  aig  =  1182  lev = 16
 sort16.aig|if -K 6=i/o =   16/   16  lat =    0  nd =   242  edge =   1154  aig  =  1752  lev = 11
 sort16.aig|if -K 6; lutpack=i/o =   16/   16  lat =    0  nd =   242  edge =   1154  aig  =  1652  lev = 11
 sort16.aig|if -K 6; mfs=i/o =   16/   16  lat =    0  nd =   146  edge =    482  aig  =   562  lev = 10
