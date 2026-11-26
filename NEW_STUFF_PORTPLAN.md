@@ -64,6 +64,7 @@ Every inventory entry must map to an integrated change, a later upstream change 
 | --- | --- |
 | `28cce61` | Both checkers run `vcgen1.ivy` to `OK`. Go tests cover proof attachment and parsing across Ivy 1.6, 1.7, and 1.8. |
 | `c7f10b9`, `46cd023` | Both include trees carry the TCP argument and loopback changes. Both C++ generators emit `INADDR_LOOPBACK` for `udp_test.ivy`. |
+| `33fbdea` (network includes) | Both Ivy 1.8 include trees use a separate IPv4 isolate and the strict-order form of the ordered TCP receive precondition. Both checkers verify a spec using the updated includes. |
 | `c94e328` | The existing indexed assignment fix is present in both subtrees. Both checkers prove that an update to one struct entry sets the chosen field and preserves the field at another index. |
 | `7431454` | Both checkers expose `shrink=`. PyIvy trace output confirms that minimization is skipped with `shrink=false`. A Go solver test verifies that the disabled setting leaves the domain unconstrained. |
 | `054188a`, `18ccb00` | Both checkers accept both spellings of `assert=`. Check-name tests cover property, invariant, and assertion selection, combining both filters, keeping skipped assertions as assumptions, and handling unnamed legacy assertions. |
