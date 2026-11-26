@@ -1396,6 +1396,9 @@ func startLoaded(filename string, cfg *Config, load func(mod *Module) error) err
 	}
 
 	if err := load(mod); err != nil {
+		if errors.Is(err, errRankingModelExported) {
+			return nil
+		}
 		return err
 	}
 
@@ -1409,6 +1412,9 @@ func startLoaded(filename string, cfg *Config, load func(mod *Module) error) err
 
 	// Python: check_module()
 	if err := CheckModule(mod); err != nil {
+		if errors.Is(err, errRankingModelExported) {
+			return nil
+		}
 		return err
 	}
 

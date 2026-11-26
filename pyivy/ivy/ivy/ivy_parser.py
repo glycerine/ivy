@@ -587,10 +587,18 @@ def p_optskolem_symbol(p):
 def p_top_property_labeledfmla(p):
     'top : top optexplicit opttemporal PROPERTY labeledfmla optskolem optproof'
     if __debug__: xtracer.trace("parser.p_top_property_labeledfmla ENTER (top)")
+    declare_property(p,False)
+
+def p_top_unprovable_property_labeledfmla(p):
+    'top : top UNPROVABLE opttemporal PROPERTY labeledfmla optskolem optproof'
+    declare_property(p,True)
+
+def declare_property(p,unprovable):
     p[0] = p[1]
     lf = addlabel(p[5],'prop')
     lf = addtemporal(lf) if p[3] else check_non_temporal(lf)
-    lf = addexplicit(lf) if p[2] else lf
+    lf = addexplicit(lf) if p[2] and not unprovable else lf
+    lf.unprovable = unprovable
     d = PropertyDecl(lf)
     d.lineno = get_lineno(p,4)
     p[0].declare(d)

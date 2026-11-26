@@ -338,20 +338,19 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
     # Only encode the modified symbols as arrays
 
     mod_set.clear()
-    if use_array_encoding:
-        add_to_mod_set(init_action)
-        for x,action in mod.actions.items():
-            add_to_mod_set(action)
+    add_to_mod_set(init_action)
+    for action in mod.actions.values():
+        add_to_mod_set(action)
     # print ('mod_set: {}'.format([str(x) for x in mod_set]))
 
+    if use_array_encoding:
         for actname in list(mod.actions):
             action = mod.actions[actname]
             new_action = uf_to_array_action(action)
             mod.actions[actname] = action.copy_formals(new_action)
 
         init_action = uf_to_array_action(init_action)
-    # print (init_action)
-    conjs = [conj.clone([conj.label,uf_to_arr_ast(conj.formula)]) for conj in conjs]
+        conjs = [conj.clone([conj.label,uf_to_arr_ast(conj.formula)]) for conj in conjs]
 
     # Combine all actions nto a single action
 
@@ -410,7 +409,8 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
 
     declared_symbols = set()
     enum_symbols = set()
-    refed_syms = list(ilu.used_symbols_asts([init,trans]+[lf.formula for lf in conjs]+axioms))
+    tagged_bodies = [definition.rhs() for _,definition in tagged_dfns]
+    refed_syms = list(ilu.used_symbols_asts([init,trans]+[lf.formula for lf in conjs]+axioms+tagged_bodies))
     extra_refed_syms = set()
     for x in refed_syms:
         if tr.is_new(x):
@@ -490,12 +490,13 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
             if is_func_decl(cur_sym):
                 decl = cur_sym
                 decl_sort = decl.range().sexpr()
-                decl_dom = ' '.join(decl.domain(i).sexpr() for i in range(decl.arity()))
-                # vmt_var_defs.append(f"(declare-fun {decl_sexpr} ({decl_dom}) {decl_sort})")
-                cur_name = cur_str.split(' ')[1]
-                next_name = next_str.split(' ')[1]
+                names = [f'arg{i}' for i in range(decl.arity())]
+                params = ' '.join(f'({name} {decl.domain(i).sexpr()})' for i,name in enumerate(names))
+                cur_name = cur_str.removeprefix('(declare-fun ').split(' (',1)[0]
+                next_name = next_str.removeprefix('(declare-fun ').split(' (',1)[0]
                 define_fun_str = cur_name.replace("|", "").replace(":", "")
-                full_str = f"(define-fun .{define_fun_str} ({decl_dom}) {decl_sort} (! {cur_name} :next {next_name}))"
+                current = f"({cur_name} {' '.join(names)})"
+                full_str = f"(define-fun .{define_fun_str} ({params}) {decl_sort} (! {current} :next {next_name}))"
             else:
                 sort = cur_sym.sort().sexpr()
                 define_fun_str = cur_str.replace("|", "").replace(":", "")

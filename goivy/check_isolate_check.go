@@ -141,10 +141,8 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 		}
 	}
 
-	// Python: if (mod.labeled_props or schema_instances) and not checked_action.get() and not unprovable:
-	//   print header always, then if check: do actual checking, else: print summaries
 	if (len(mod.LabeledProps) > 0 || len(schemaInstances) > 0) &&
-		mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable {
+		mod.Cfg.CheckedAction == "" {
 		fmt.Println("\n    The following properties are to be checked:")
 		if check {
 			for _, lf := range schemaInstances {
@@ -165,7 +163,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			nonTemporal = filterExplicitSubgoals(nonTemporal, subgoalMap)
 			var checkers []Checker
 			for _, prop := range nonTemporal {
-				if !mod.Cfg.checkNameSelected(lfLabelName(prop)) {
+				if prop.Unprovable != mod.Cfg.OnlyCheckUnprovable || !mod.Cfg.checkNameSelected(lfLabelName(prop)) {
 					continue
 				}
 				if prop.Assumed || subgoalMap[prop.ID] {
@@ -188,10 +186,9 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 		}
 	}
 
-	// After checking properties, make non-temporal ones axioms
-	// Python: im.module.labeled_axioms.extend(p for p in im.module.labeled_props if not p.temporal)
+	// State properties admitted as axioms must be ordinary proof obligations.
 	for _, p := range mod.LabeledProps {
-		if !p.IsTemporal() {
+		if !p.IsTemporal() && !p.Unprovable {
 			mod.LabeledAxioms = append(mod.LabeledAxioms, p)
 		}
 	}
@@ -784,6 +781,108 @@ func applyGoalTraceHookToFailure(goal *LabeledFormula, err error) (error, interf
 	return err, target
 }
 
+func temporalProofModule(mod *Module, goal *LabeledFormula, model Node) *Module {
+	// Python: mod = im.module.copy(); set fields from model
+	withLocalMod := mod.Copy()
+	withLocalMod.IsolateProof = nil
+	withLocalMod.LabeledProps = nil
+	withLocalMod.ConceptSpaces = nil
+
+	// Extract fields from NormalProgram if available.
+	if np, ok := model.(*NormalProgram); ok {
+		withLocalMod.LabeledConjs = np.Invars
+		if np.Postconds != nil {
+			withLocalMod.Postconds = np.Postconds
+		}
+		withLocalMod.PublicActions = NewInsMap[string, bool]()
+		for _, c := range np.Calls {
+			withLocalMod.PublicActions.Set(c, true)
+		}
+		withLocalMod.Actions = NewInsMap[string, Action]()
+		for _, b := range np.Bindings {
+			withLocalMod.Actions.Set(b.Name, b.Action.Stmt)
+		}
+		if np.Init != nil {
+			withLocalMod.Initializers = []NamedAction{{Name: "init", Action: np.Init}}
+		} else {
+			withLocalMod.Initializers = nil
+		}
+		withLocalMod.AssumedInvs = np.Asms
+		xtracer.Trace("check.CheckSubgoals TemporalModels applied mod.AssumedInvs nAsms=%d nLabeledConjs=%d nInvars_from_model=%d",
+			len(withLocalMod.AssumedInvs), len(withLocalMod.LabeledConjs), len(np.Invars))
+	}
+
+	// Python: mod.labeled_axioms = list(mod.labeled_axioms)
+	axiomsCopy := make([]*LabeledFormula, len(withLocalMod.LabeledAxioms))
+	copy(axiomsCopy, withLocalMod.LabeledAxioms)
+	withLocalMod.LabeledAxioms = axiomsCopy
+
+	// Python: mod.params = list(mod.params)
+	// Python: mod.updates = list(mod.updates)
+	// (params and updates are copied by mod.Copy() already)
+
+	// Add goal premises as axioms
+	// Python: for prem in ivy_proof.goal_prems(goal):
+	//             if ivy_proof.goal_is_property(prem):
+	//                 if prem.definition: mod.updates.append(act.DerivedUpdate(df))
+	//                 mod.labeled_axioms.append(prem)
+	//             elif ivy_proof.goal_is_defn(prem):
+	//                 dfnd = ivy_proof.goal_defines(prem)
+	//                 if lg.is_constant(dfnd): mod.params.append(dfnd)
+	goalPrems := GoalPrems(goal)
+	if xtracer.Enabled {
+		nLF, nProp := 0, 0
+		for _, p := range goalPrems {
+			if lf, ok := p.(*LabeledFormula); ok {
+				nLF++
+				if GoalIsProperty(lf) {
+					nProp++
+				}
+			}
+		}
+		xtracer.Trace("check.CheckSubgoals temporal prems nTotal=%d nLF=%d nProp=%d", len(goalPrems), nLF, nProp)
+	}
+	for _, premNode := range goalPrems {
+		// Python iterates ALL premise types, not just LabeledFormula.
+		// GoalIsProperty requires LF; GoalIsDefn handles ConstantDecl
+		// and UninterpretedSort which are NOT LabeledFormulas.
+		premLF, isLF := premNode.(*LabeledFormula)
+		if isLF && GoalIsProperty(premLF) {
+			if premLF.IsDefinition {
+				// Python: df = lg.drop_universals(prem.formula)
+				//         mod.updates.append(act.DerivedUpdate(df))
+				if fmla, ok := premLF.Formula.(Expr); ok {
+					df := IvyDropUniversals(fmla)
+					// Python DerivedUpdate(df) stores df and uses df.args[0] as symbol.
+					// Go NewDerivedUpdate(sym, defn) takes both. Extract sym from df.
+					var sym Expr
+					if args := df.Args(); len(args) > 0 {
+						if lhs, ok := args[0].(Expr); ok {
+							sym = IvyNodeRep(lhs)
+							if sym == nil {
+								sym = lhs
+							}
+						}
+					}
+					withLocalMod.Updates = append(withLocalMod.Updates, NewDerivedUpdate(sym, df))
+				}
+			}
+			modLF := AstLFToModuleLF(premLF)
+			if modLF != nil {
+				withLocalMod.LabeledAxioms = append(withLocalMod.LabeledAxioms, modLF)
+			}
+		} else if GoalIsDefn(premNode) {
+			dfnd := GoalDefines(premNode)
+			if dfnd != nil && IsConstant(dfnd) {
+				if sym, ok := dfnd.(*Const); ok {
+					withLocalMod.Params = append(withLocalMod.Params, sym)
+				}
+			}
+		}
+	}
+	return withLocalMod
+}
+
 func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Module) error {
 	if mod == nil {
 		mod = New()
@@ -812,104 +911,7 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 					return fmt.Errorf("the temporal subgoal %v has not been reduced to an invariance property. Try using a tactic such as l2s", goal)
 				}
 			}
-			// Python: mod = im.module.copy(); set fields from model
-			withLocalMod := mod.Copy()
-			withLocalMod.IsolateProof = nil
-			withLocalMod.LabeledProps = nil
-			withLocalMod.ConceptSpaces = nil
-
-			// Extract fields from NormalProgram if available.
-			if np, ok := model.(*NormalProgram); ok {
-				withLocalMod.LabeledConjs = np.Invars
-				if np.Postconds != nil {
-					withLocalMod.Postconds = np.Postconds
-				}
-				withLocalMod.PublicActions = NewInsMap[string, bool]()
-				for _, c := range np.Calls {
-					withLocalMod.PublicActions.Set(c, true)
-				}
-				withLocalMod.Actions = NewInsMap[string, Action]()
-				for _, b := range np.Bindings {
-					withLocalMod.Actions.Set(b.Name, b.Action.Stmt)
-				}
-				if np.Init != nil {
-					withLocalMod.Initializers = []NamedAction{{Name: "init", Action: np.Init}}
-				} else {
-					withLocalMod.Initializers = nil
-				}
-				withLocalMod.AssumedInvs = np.Asms
-				xtracer.Trace("check.CheckSubgoals TemporalModels applied mod.AssumedInvs nAsms=%d nLabeledConjs=%d nInvars_from_model=%d",
-					len(withLocalMod.AssumedInvs), len(withLocalMod.LabeledConjs), len(np.Invars))
-			}
-
-			// Python: mod.labeled_axioms = list(mod.labeled_axioms)
-			axiomsCopy := make([]*LabeledFormula, len(withLocalMod.LabeledAxioms))
-			copy(axiomsCopy, withLocalMod.LabeledAxioms)
-			withLocalMod.LabeledAxioms = axiomsCopy
-
-			// Python: mod.params = list(mod.params)
-			// Python: mod.updates = list(mod.updates)
-			// (params and updates are copied by mod.Copy() already)
-
-			// Add goal premises as axioms
-			// Python: for prem in ivy_proof.goal_prems(goal):
-			//             if ivy_proof.goal_is_property(prem):
-			//                 if prem.definition: mod.updates.append(act.DerivedUpdate(df))
-			//                 mod.labeled_axioms.append(prem)
-			//             elif ivy_proof.goal_is_defn(prem):
-			//                 dfnd = ivy_proof.goal_defines(prem)
-			//                 if lg.is_constant(dfnd): mod.params.append(dfnd)
-			goalPrems := GoalPrems(goal)
-			if xtracer.Enabled {
-				nLF, nProp := 0, 0
-				for _, p := range goalPrems {
-					if lf, ok := p.(*LabeledFormula); ok {
-						nLF++
-						if GoalIsProperty(lf) {
-							nProp++
-						}
-					}
-				}
-				xtracer.Trace("check.CheckSubgoals temporal prems nTotal=%d nLF=%d nProp=%d", len(goalPrems), nLF, nProp)
-			}
-			for _, premNode := range goalPrems {
-				// Python iterates ALL premise types, not just LabeledFormula.
-				// GoalIsProperty requires LF; GoalIsDefn handles ConstantDecl
-				// and UninterpretedSort which are NOT LabeledFormulas.
-				premLF, isLF := premNode.(*LabeledFormula)
-				if isLF && GoalIsProperty(premLF) {
-					if premLF.IsDefinition {
-						// Python: df = lg.drop_universals(prem.formula)
-						//         mod.updates.append(act.DerivedUpdate(df))
-						if fmla, ok := premLF.Formula.(Expr); ok {
-							df := IvyDropUniversals(fmla)
-							// Python DerivedUpdate(df) stores df and uses df.args[0] as symbol.
-							// Go NewDerivedUpdate(sym, defn) takes both. Extract sym from df.
-							var sym Expr
-							if args := df.Args(); len(args) > 0 {
-								if lhs, ok := args[0].(Expr); ok {
-									sym = IvyNodeRep(lhs)
-									if sym == nil {
-										sym = lhs
-									}
-								}
-							}
-							withLocalMod.Updates = append(withLocalMod.Updates, NewDerivedUpdate(sym, df))
-						}
-					}
-					modLF := AstLFToModuleLF(premLF)
-					if modLF != nil {
-						withLocalMod.LabeledAxioms = append(withLocalMod.LabeledAxioms, modLF)
-					}
-				} else if GoalIsDefn(premNode) {
-					dfnd := GoalDefines(premNode)
-					if dfnd != nil && IsConstant(dfnd) {
-						if sym, ok := dfnd.(*Const); ok {
-							withLocalMod.Params = append(withLocalMod.Params, sym)
-						}
-					}
-				}
-			}
+			withLocalMod := temporalProofModule(mod, goal, model)
 
 			// Enter module context and check with vocab
 			// Python: with lg.WithSymbols → with lg.WithSorts →

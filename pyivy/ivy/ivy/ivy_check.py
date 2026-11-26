@@ -701,7 +701,7 @@ def check_isolate(trace_hook = None):
             for lf in mod.definitions:
                 print(pretty_lf(lf))
 
-        if (mod.labeled_props or schema_instances) and not checked_action.get() and not unprovable :
+        if (mod.labeled_props or schema_instances) and not checked_action.get():
             print("\n    The following properties are to be checked:")
             if check:
                 for lf in schema_instances:
@@ -712,6 +712,7 @@ def check_isolate(trace_hook = None):
                 props = [x for x in im.module.labeled_props if not x.temporal]
                 props = [p for p in props if not(p.id in subgoalmap and p.explicit)]
                 props = [p for p in props if act.check_name_selected(p.name if p.label is not None else None)]
+                props = [p for p in props if is_check_mod_unprovable(p)]
                 fcs = ([(ConjAssumer if prop.assumed or prop.id in subgoalmap else ConjChecker)(prop) for prop in props])
                 check_fcs_in_state(mod,ag,pre,fcs)
             else:
@@ -719,7 +720,7 @@ def check_isolate(trace_hook = None):
                     print(pretty_lf(lf))
 
         # after checking properties, make them axioms, except temporals
-        im.module.labeled_axioms.extend(p for p in im.module.labeled_props if not p.temporal)
+        im.module.labeled_axioms.extend(p for p in mod.labeled_props if not p.temporal and not p.unprovable)
         im.module.update_theory()
 
 

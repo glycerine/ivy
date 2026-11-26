@@ -332,6 +332,13 @@ top:
         $$ = $1
         parser17DeclareProperty(parser17Acfg(parser17lex), $$, $5.(*LabeledFormula), $2 != nil, $3 != nil, tokLineno(parser17lex.(*parser17LexAdapter), $4), $6, $7)
     }
+    | top PARSER_TOK_UNPROVABLE opttemporal PARSER_TOK_PROPERTY labeledfmla optskolem optproof
+    {
+        $$ = $1
+        formula := $5.(*LabeledFormula)
+        formula.Unprovable = true
+        parser17DeclareProperty(parser17Acfg(parser17lex), $$, formula, false, $3 != nil, tokLineno(parser17lex.(*parser17LexAdapter), $4), $6, $7)
+    }
     // --- Conjecture ---
     | top PARSER_TOK_CONJECTURE labeledfmla
     {

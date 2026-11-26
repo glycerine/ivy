@@ -11,31 +11,25 @@ import (
 	"strings"
 )
 
-// rankingInvariants generates invariants and postconditions for the ranking tactic.
-// This extracts task/trigger definitions from the proof goal premises
-// and generates the appropriate ranking invariants and postconditions.
-//
-// Returns (invars, postconds, tasks, triggers, error).
-// prems is the caller's outer prems slice (check_ranking.go:246); the
-// prem-update (Python ivy_ranking.py:261-269) modifies it in place so that
-// modPass sees the strengthened work_invar definitions.
-func rankingInvariants(
-	goal *LabeledFormula,
-	invars []*LabeledFormula,
-	proofLabel string,
-	fmla Expr,
-	finiteSorts map[string]bool,
-	uninterpretedSorts []Sort,
-	mod *Module,
-	prems []Node,
-) ([]*LabeledFormula, []*LabeledFormula, map[string]*Task, map[string]*LogicTrigger, error) {
+type rankingDefinitions map[string]map[string]*Eq
 
-	// Helper: put into nested dict
-	type defnMap map[string]map[string]*Eq
-	rawTasks := make(defnMap)
-	rawTriggers := make(defnMap)
+func eqLHSArgs(eq *Eq) []*LogicVariable {
+	var variables []*LogicVariable
+	if app, ok := eq.T1.(*Apply); ok {
+		for _, term := range app.Terms {
+			if variable, ok := term.(*LogicVariable); ok {
+				variables = append(variables, variable)
+			}
+		}
+	}
+	return variables
+}
 
-	dictPut := func(dct defnMap, sfx, name string, dfn *Eq) {
+func rankingTaskDefinitions(goal *LabeledFormula, fmla Expr) (rankingDefinitions, rankingDefinitions, []string) {
+	rawTasks := make(rankingDefinitions)
+	rawTriggers := make(rankingDefinitions)
+
+	dictPut := func(dct rankingDefinitions, sfx, name string, dfn *Eq) {
 		if _, ok := dct[sfx]; !ok {
 			dct[sfx] = make(map[string]*Eq)
 		}
@@ -43,7 +37,7 @@ func rankingInvariants(
 	}
 
 	// getAuxDefn extracts definitions from goal premises
-	getAuxDefn := func(name string, dct defnMap) {
+	getAuxDefn := func(name string, dct rankingDefinitions) {
 		prems := GoalPrems(goal)
 		for _, prem := range prems {
 			var f Expr
@@ -58,7 +52,11 @@ func rankingInvariants(
 			tmp := IvyDropUniversals(f)
 			eq, ok := tmp.(*Eq)
 			if !ok {
-				continue
+				if definition, isDefinition := tmp.(*IvyDefinition); isDefinition {
+					eq = &Eq{T1: definition.Lhs, T2: definition.Rhs}
+				} else {
+					continue
+				}
 			}
 			var dname string
 			switch lhs := eq.T1.(type) {
@@ -72,7 +70,7 @@ func rankingInvariants(
 			if dname == "" || !strings.HasPrefix(dname, name) {
 				continue
 			}
-			freeVars := VariablesAST(f)
+			freeVars := FreeVariablesList(f)
 			if len(freeVars) > 0 {
 				continue
 			}
@@ -116,6 +114,29 @@ func rankingInvariants(
 			}
 		}
 	}
+	return rawTasks, rawTriggers, sortedTasks
+}
+
+// rankingInvariants generates invariants and postconditions for the ranking tactic.
+// This extracts task/trigger definitions from the proof goal premises
+// and generates the appropriate ranking invariants and postconditions.
+//
+// Returns (invars, postconds, tasks, triggers, error).
+// prems is the caller's outer prems slice (check_ranking.go:246); the
+// prem-update (Python ivy_ranking.py:261-269) modifies it in place so that
+// modPass sees the strengthened work_invar definitions.
+func rankingInvariants(
+	goal *LabeledFormula,
+	invars []*LabeledFormula,
+	proofLabel string,
+	fmla Expr,
+	finiteSorts map[string]bool,
+	uninterpretedSorts []Sort,
+	mod *Module,
+	prems []Node,
+) ([]*LabeledFormula, []*LabeledFormula, map[string]*Task, map[string]*LogicTrigger, error) {
+
+	rawTasks, rawTriggers, sortedTasks := rankingTaskDefinitions(goal, fmla)
 
 	// Validate
 	for _, sfx := range sortedTasks {
@@ -229,18 +250,6 @@ func rankingInvariants(
 	}
 
 	// Helper functions
-	eqLHSArgs := func(eq *Eq) []*LogicVariable {
-		if app, ok := eq.T1.(*Apply); ok {
-			var vars []*LogicVariable
-			for _, t := range app.Terms {
-				if v, ok := t.(*LogicVariable); ok {
-					vars = append(vars, v)
-				}
-			}
-			return vars
-		}
-		return nil
-	}
 	eqRHS := func(eq *Eq) Expr {
 		return eq.T2
 	}
@@ -280,6 +289,10 @@ func rankingInvariants(
 		neededArgs := eqLHSArgs(workNeeded)
 		helpfulArgs := eqLHSArgs(workHelpful)
 		progressArgs := eqLHSArgs(workProgress)
+		helpful := eqRHS(workHelpful)
+		if IsTemporalFormula(helpful) {
+			helpful = workHelpful.T1
+		}
 
 		// work_invar predicate application (Python: work_invar = task['work_invar'].args[D] with D=0)
 		workInvarVal := workInvar.T1
@@ -317,7 +330,7 @@ func rankingInvariants(
 
 		// Add current task's help to the accumulated helps
 		helps = append(helps, rankingMakeAnd(workInvarVal,
-			CheckExists(helpfulArgs, eqRHS(workHelpful))))
+			CheckExists(helpfulArgs, helpful)))
 
 		// --- l2s_progress postcond ---
 		waitingForProgress := rankApplyNB(l2sW(progressArgs, eqRHS(workProgress), ""),
@@ -333,7 +346,7 @@ func rankingInvariants(
 			&LogicNot{Body: workNeeded.T1}))
 		progressCond := rankingMakeAnd(
 			CheckOldOf(workInvarVal),
-			CheckOldOf(eqRHS(workHelpful)),
+			CheckOldOf(helpful),
 			&LogicNot{Body: waitingForProgress})
 		postconds = append(postconds, mklf("l2s_progress"+sfx,
 			&LogicImplies{T1: progressCond, T2: decreased}))
@@ -342,7 +355,7 @@ func rankingInvariants(
 		eventuallyProgress := &LogicEventually{Environ: strPtr(proofLabel), Body: eqRHS(workProgress)}
 		postconds = append(postconds, mklf("l2s_progress_eventually"+sfx,
 			&LogicImplies{
-				T1: rankingMakeAnd(CheckOldOf(workInvarVal), CheckOldOf(eqRHS(workHelpful))),
+				T1: rankingMakeAnd(CheckOldOf(workInvarVal), CheckOldOf(helpful)),
 				T2: eventuallyProgress,
 			}))
 
@@ -352,9 +365,9 @@ func rankingInvariants(
 				T1: rankingMakeAnd(
 					CheckOldOf(workInvarVal),
 					noHelp,
-					CheckOldOf(eqRHS(workHelpful)),
+					CheckOldOf(helpful),
 					waitingForProgress),
-				T2: eqRHS(workHelpful),
+				T2: helpful,
 			})
 		postconds = append(postconds, mklf("l2s_sched_stable"+sfx, schedStable))
 	}

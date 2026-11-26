@@ -217,8 +217,9 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
                     work_start = ilg.Definition(ilg.Symbol('work_start'+sfx,lg.Boolean),lg.Not(gfmla.body))
                     dict_put(triggers,sfx,'work_start',work_start)
         
-        for sfx in tasks:
-            for name in ['work_created','work_needed','work_progress','work_helpful']:
+        required = ['work_created','work_progress'] if tactic_name == 'ranking_infer' else ['work_created','work_needed','work_progress','work_helpful']
+        for sfx in sorted_tasks:
+            for name in required:
                 if name not in tasks[sfx]:
                     raise iu.IvyError(proof,"tactic requires a definition of " + name + sfx)
 
@@ -226,8 +227,11 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         # continue hold during work_invar. We establish this by strengthening
         # work_invar.
 
+        if tactic_name == 'ranking_infer':
+            from . import ivy_ranking_infer
+            ivy_ranking_infer.infer(goal,sorted_tasks,triggers,tasks)
+
         D = 0
-        E = 1
 
         def trig_glob(prop,res,pos):
             if pos and isinstance(prop,lg.Globally):
@@ -297,6 +301,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
             needed_args = work_needed.args[0].args
             helpful_args = work_helpful.args[0].args
             work_witness = tasks[sfx].get('work_witness',None)
+
+            E = 0 if ilg.has_temporal(work_helpful.args[1]) else 1
 
             # work_created, work_needed and work_done must have same sort
            
@@ -1273,3 +1279,4 @@ def auto_hook(tasks,triggers,subs,tr,fcs):
 # Register the l2s tactics
 
 ipr.register_tactic('ranking',l2s_tactic)
+ipr.register_tactic('ranking_infer',l2s_tactic)

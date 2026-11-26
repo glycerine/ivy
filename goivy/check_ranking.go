@@ -298,6 +298,10 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 		xtracer.Trace("ranking.RankingL2STactic compileInvar[%d] post-compile HASH canon=%v", idx, labeled.Canon())
 		invars = append(invars, labeled)
 	}
+	if cfg.TacticName == "ranking_infer" {
+		model.Invars = invars
+		return nil, exportRankingInference(m, goal, model, fmla)
+	}
 
 	// Generate ranking invariants and postconditions.
 	// Pass outer prems so that the internal prem-update (Python ivy_ranking.py:261-269)
@@ -1106,6 +1110,14 @@ func cloneWithTransform(node Expr, transform func(Expr) Expr) Expr {
 // RankingTactic adapts RankingL2STactic to the LogicProofTactic interface.
 // Mirrors Python ivy_ranking.py:48-53 (l2s_tactic registered as 'ranking').
 func RankingTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node) ([]*LabeledFormula, error) {
+	return rankingTactic(pc, goals, pf, "ranking")
+}
+
+func RankingInferTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node) ([]*LabeledFormula, error) {
+	return rankingTactic(pc, goals, pf, "ranking_infer")
+}
+
+func rankingTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node, name string) ([]*LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, fmt.Errorf("ranking: no proof goals")
 	}
@@ -1129,7 +1141,7 @@ func RankingTactic(pc ProofCheckerInterface, goals []*LabeledFormula, pf Node) (
 		}
 	}
 	cfg := &L2STacticConfig{
-		TacticName: "ranking",
+		TacticName: name,
 		Goals:      goals,
 		Mod:        m,
 		ProofLabel: "",

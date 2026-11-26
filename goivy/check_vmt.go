@@ -450,6 +450,10 @@ func hasAssert(action ActionsAction) bool {
 // It writes the VMT file to "ivy.vmt" and exits.
 // Corresponds to Python's ivy_vmt.check_isolate.
 func VMTCheckIsolate(method string, m *Module) error {
+	return exportVMTModel(method, m, true, nil)
+}
+
+func exportVMTModel(method string, m *Module, encodeArrays bool, predicates []vmtPredicate) error {
 	if method == "" {
 		method = "mc"
 	}
@@ -548,21 +552,18 @@ func VMTCheckIsolate(method string, m *Module) error {
 		return err
 	}
 
-	// Convert uninterpreted functions to arrays, if possible
-	for i, na := range actionList {
-		actionList[i] = namedAction{
-			Name:   na.Name,
-			Action: ufToArrayAction(m, sig, na.Action),
+	if encodeArrays {
+		for i, na := range actionList {
+			actionList[i] = namedAction{
+				Name:   na.Name,
+				Action: ufToArrayAction(m, sig, na.Action),
+			}
 		}
-	}
-
-	initAction = ufToArrayAction(m, sig, initAction).(*LogicSequence)
-
-	// Convert conjecture formulas. Python ivy_vmt.py:228:
-	//   conjs = [conj.clone([conj.label, uf_to_arr_ast(conj.formula)]) for conj in conjs]
-	for i, conj := range conjs {
-		newFormula := ufToArrAST(m, sig, conj.Formula.(Expr))
-		conjs[i] = conj.Clone([]Node{conj.Label, newFormula}).(*LabeledFormula)
+		initAction = ufToArrayAction(m, sig, initAction).(*LogicSequence)
+		for i, conj := range conjs {
+			newFormula := ufToArrAST(m, sig, conj.Formula.(Expr))
+			conjs[i] = conj.Clone([]Node{conj.Label, newFormula}).(*LabeledFormula)
+		}
 	}
 
 	var transitions []vmtTransition
@@ -600,7 +601,7 @@ func VMTCheckIsolate(method string, m *Module) error {
 		}
 	}
 	addVMTImmutableSymbols(m, initial, transitions, state, axioms)
-	return writeVMT(m, initial, transitions, state, axioms, conjs)
+	return writeVMT(m, initial, transitions, state, axioms, conjs, predicates)
 }
 
 // -----------------------------------------------------------------------

@@ -16,6 +16,13 @@ type vmtTransition struct {
 	modified []*Const
 }
 
+type vmtPredicate struct {
+	name       string
+	tag        string
+	parameters []*LogicVariable
+	body       Expr
+}
+
 func vmtMentionsState(formula Expr, state *InsMap[NodeKey, *Const]) bool {
 	for key := range UsedSymbolsAst(formula).All() {
 		if state.Get(key) != nil {
@@ -122,7 +129,7 @@ func (decls *vmtDeclarations) signature(symbol *Const) (name string, domain []st
 	return term.String(), nil, decls.sortName(term.ExprSort(), symbol.CSort), nil
 }
 
-func writeVMT(mod *Module, initial Expr, transitions []vmtTransition, state *InsMap[NodeKey, *Const], axioms []Expr, invariants []*LabeledFormula) error {
+func writeVMT(mod *Module, initial Expr, transitions []vmtTransition, state *InsMap[NodeKey, *Const], axioms []Expr, invariants []*LabeledFormula, predicates []vmtPredicate) error {
 	solver := NewSolver(mod, mod.Cfg.SolverOpts)
 	defer solver.Close()
 	decls := vmtDeclarations{solver: solver, sorts: make(map[string]string)}
@@ -144,6 +151,9 @@ func writeVMT(mod *Module, initial Expr, transitions []vmtTransition, state *Ins
 	for _, invariant := range invariants {
 		formulas = append(formulas, invariant.Formula.(Expr))
 	}
+	for _, predicate := range predicates {
+		formulas = append(formulas, predicate.body)
+	}
 	for _, formula := range formulas {
 		for _, variable := range VariablesAST(formula) {
 			zsort, err := solver.Translator().TranslateSort(variable.VSort)
@@ -164,7 +174,7 @@ func writeVMT(mod *Module, initial Expr, transitions []vmtTransition, state *Ins
 	}
 	var body bytes.Buffer
 	for _, symbol := range symbols.All() {
-		if solver.SolverName(symbol) == "" || IsNumeral(symbol) || IsInterpretedSymbol(mod.Sig, symbol) || mod.Sig.Constructors[symbol.Name] {
+		if solver.SolverName(symbol) == "" || IsInterpretedSymbol(mod.Sig, symbol) || mod.Sig.Constructors[symbol.Name] {
 			continue
 		}
 		name, domain, result, err := decls.signature(symbol)
@@ -195,7 +205,7 @@ func writeVMT(mod *Module, initial Expr, transitions []vmtTransition, state *Ins
 		fmt.Fprintf(&body, "(define-fun $state.%d (%s) %s (! %s :next %s))\n", index, strings.Join(parameters, " "), result, name, prime)
 		index++
 	}
-	init, err := solver.FormulaToZ3(initial)
+	init, err := solver.FormulaToZ3(CloseFormula(initial))
 	if err != nil {
 		return fmt.Errorf("serialize VMT initial state: %w", err)
 	}
@@ -206,7 +216,7 @@ func writeVMT(mod *Module, initial Expr, transitions []vmtTransition, state *Ins
 		choice := vmtName(fmt.Sprintf("ivy.action.%d.%s", i, CanonAct(transition.name)))
 		fmt.Fprintf(&body, "(declare-fun %s () Bool)\n", choice)
 		fmt.Fprintf(&body, "(define-fun $action.%d () Bool (! %s :action 0))\n", i, choice)
-		formula, err := solver.FormulaToZ3(transition.formula)
+		formula, err := solver.FormulaToZ3(CloseFormula(transition.formula))
 		if err != nil {
 			return fmt.Errorf("serialize VMT action %s: %w", transition.name, err)
 		}
@@ -222,18 +232,34 @@ func writeVMT(mod *Module, initial Expr, transitions []vmtTransition, state *Ins
 	}
 	fmt.Fprintf(&body, "(define-fun $trans () Bool (! %s :trans true))\n", transition)
 	for i, invariant := range invariants {
-		prop, err := solver.FormulaToZ3(invariant.Formula.(Expr))
+		prop, err := solver.FormulaToZ3(CloseFormula(invariant.Formula.(Expr)))
 		if err != nil {
 			return fmt.Errorf("serialize VMT invariant %s: %w", lfLabelName(invariant), err)
 		}
 		fmt.Fprintf(&body, "(define-fun $property.%d () Bool (! %s :invar-property %d))\n", i, prop.String(), i)
 	}
 	for _, axiom := range axioms {
-		formula, err := solver.FormulaToZ3(axiom)
+		formula, err := solver.FormulaToZ3(CloseFormula(axiom))
 		if err != nil {
 			return fmt.Errorf("serialize VMT axiom: %w", err)
 		}
 		fmt.Fprintf(&body, "(assert %s)\n", formula.String())
+	}
+	translator := solver.Translator()
+	for _, predicate := range predicates {
+		params := make([]string, len(predicate.parameters))
+		for i, variable := range predicate.parameters {
+			value, err := translator.TranslateVar(variable)
+			if err != nil {
+				return err
+			}
+			params[i] = fmt.Sprintf("(%s %s)", value.String(), decls.sortName(value.ExprSort(), variable.VSort))
+		}
+		formula, err := translator.TermToZ3(predicate.body)
+		if err != nil {
+			return fmt.Errorf("serialize VMT predicate %s: %w", predicate.name, err)
+		}
+		fmt.Fprintf(&body, "(define-fun %s (%s) Bool (! %s :%s true))\n", predicate.name, strings.Join(params, " "), formula.String(), predicate.tag)
 	}
 	var declarations []string
 	for _, decl := range decls.sorts {

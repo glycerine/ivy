@@ -1193,4 +1193,5 @@ func RegisterL2STactics(proofCfg *ProofConfig) {
 	proofCfg.RegisterTactic("l2s_auto4", L2STacticAuto)
 	proofCfg.RegisterTactic("l2s_auto5", L2STacticAuto)
 	proofCfg.RegisterTactic("ranking", RankingTactic)
+	proofCfg.RegisterTactic("ranking_infer", RankingInferTactic)
 }
