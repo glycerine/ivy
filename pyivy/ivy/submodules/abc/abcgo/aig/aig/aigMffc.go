@@ -23,7 +23,7 @@ func mffcNodeCost(n *Node) int32 {
 func Aig_NodeDeref_rec(p *Graph, e Edge, levelMin uint32, power *float32, probabilities []float32) int32 {
 	return mffcDeref(p, e, levelMin, power, probabilities, nil)
 }
-func mffcDeref(p *Graph, e Edge, levelMin uint32, power *float32, probabilities []float32, saved map[int]int) int32 {
+func mffcDeref(p *Graph, e Edge, levelMin uint32, power *float32, probabilities []float32, saved *[]mffcSavedRef) int32 {
 	n := p.node(e)
 	if probabilities != nil {
 		if power == nil {
@@ -104,18 +104,29 @@ func Aig_NodeMffcSupp_rec(p *Graph, e Edge, levelMin uint32, support *[]Edge, to
 
 // Public cone queries restore references even if malformed input panics. This
 // also preserves the original reference values when checking cone symmetry.
-func mffcSaveReference(p *Graph, e Edge, saved map[int]int) {
+// mffcSavedRef records a reference count before an MFFC query changes it.
+type mffcSavedRef struct{ id, refs int }
+
+func mffcSaveReference(p *Graph, e Edge, saved *[]mffcSavedRef) {
 	if saved == nil {
 		return
 	}
-	if _, exists := saved[e.NodeID()]; !exists {
-		saved[e.NodeID()] = p.node(e).Refs
-	}
+	*saved = append(*saved, mffcSavedRef{e.NodeID(), p.node(e).Refs})
 }
-func mffcRestoreReferences(p *Graph, saved map[int]int) {
-	for id, refs := range saved {
-		p.nodes[id].Refs = refs
+
+// mffcRestoreReferences undoes the log newest first, so each object ends
+// with the count it had before its first change.
+func mffcRestoreReferences(p *Graph, saved *[]mffcSavedRef) {
+	for i := len(*saved) - 1; i >= 0; i-- {
+		p.nodes[(*saved)[i].id].Refs = (*saved)[i].refs
 	}
+	*saved = (*saved)[:0]
+}
+
+// mffcLog returns the graph's reusable reference log.
+func (p *Graph) mffcLog() *[]mffcSavedRef {
+	p.mffcSaved = p.mffcSaved[:0]
+	return &p.mffcSaved
 }
 func mffcRequireRegular(p *Graph, e Edge) {
 	if !p.valid(e) || e.Complemented() {
@@ -136,7 +147,7 @@ func Aig_NodeMffcSupp(p *Graph, e Edge, levelMin int32, support *[]Edge) int32 {
 		}
 		return 0
 	}
-	saved := make(map[int]int)
+	saved := p.mffcLog()
 	defer mffcRestoreReferences(p, saved)
 	mffcIncrementTravID(p)
 	size := mffcDeref(p, e, uint32(levelMin), nil, nil, saved)
@@ -157,7 +168,7 @@ func Aig_NodeMffcLabel(p *Graph, e Edge, power *float32, probabilities []float32
 	if probabilities != nil && len(probabilities) < len(p.nodes) {
 		panic("aig: incomplete MFFC probabilities")
 	}
-	saved := make(map[int]int)
+	saved := p.mffcLog()
 	defer mffcRestoreReferences(p, saved)
 	mffcIncrementTravID(p)
 	size := mffcDeref(p, e, 0, power, probabilities, saved)
@@ -171,7 +182,7 @@ func Aig_NodeMffcLabelCut(p *Graph, e Edge, leaves []Edge) int32 {
 	if mffcTerminal(p.node(e)) {
 		panic("aig: MFFC cut requires an internal node")
 	}
-	saved := make(map[int]int)
+	saved := p.mffcLog()
 	defer mffcRestoreReferences(p, saved)
 	mffcIncrementTravID(p)
 	for _, leaf := range leaves {
@@ -201,7 +212,7 @@ func Aig_NodeMffcExtendCut(p *Graph, e Edge, leaves []Edge, result *[]Edge) bool
 	if maxLevel == 0 {
 		return false
 	}
-	saved := make(map[int]int)
+	saved := p.mffcLog()
 	defer mffcRestoreReferences(p, saved)
 	size := mffcDeref(p, e, 0, nil, nil, saved)
 	best := InvalidEdge

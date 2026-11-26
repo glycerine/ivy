@@ -215,12 +215,12 @@ func TestMffcRollbackLogTracksOnlyTouchedCone(t *testing.T) {
 	for i := 0; i < 10000; i++ {
 		g.NewInput()
 	}
-	saved := make(map[int]int)
+	saved := g.mffcLog()
 	if got := mffcDeref(g, root, 0, nil, nil, saved); got != 1 {
 		t.Fatal(got)
 	}
-	if len(saved) != 2 {
-		t.Fatal("rollback log scaled with whole graph", len(saved))
+	if len(*saved) != 2 {
+		t.Fatal("rollback log scaled with whole graph", len(*saved))
 	}
 	if got := mffcRef(g, root, 0, true); got != 1 {
 		t.Fatal(got)

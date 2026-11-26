@@ -74,6 +74,7 @@ type Graph struct {
 	editDepth                                   int
 	fanouts                                     *FanoutIndex
 	bufs                                        []Edge // pending buffers (vBufs), with fanouts active
+	mffcSaved                                   []mffcSavedRef
 	Assertions, BarrierBuffers                  int32
 	RetimingChanged                             bool
 	FlopNumbers                                 []int32
