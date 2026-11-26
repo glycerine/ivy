@@ -7,28 +7,6 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 )
 
-// Saig_ManCreateIndMiter retains ABC's entry-point spelling while accepting
-// native candidate edge groups and returning a native AIG.
-func Saig_ManCreateIndMiter(src *aig.Graph, candidates FunctionalCandidates) *aig.Graph {
-	graph, err := InductionMiter(src, candidates)
-	if err != nil {
-		panic(err)
-	}
-	return graph
-}
-
-// Saig_ManFilterUsingInd returns only candidates proved inductive by SAT.
-func Saig_ManFilterUsingInd(src *aig.Graph, candidates FunctionalCandidates, conflicts, propagations int32, verbose int32) FunctionalCandidates {
-	filtered, err := FilterInductiveCandidates(src, candidates, int64(conflicts), int64(propagations))
-	if err != nil {
-		panic(err)
-	}
-	if verbose != 0 {
-		fmt.Printf("Filtered %d candidates to %d inductive constraints.\n", candidateCount(candidates), candidateCount(filtered))
-	}
-	return filtered
-}
-
 // Saig_ManUnrollCOI returns a combinational unrolling of output zero at the
 // final frame. The native implementation copies graph state locally.
 func Saig_ManUnrollCOI(src *aig.Graph, frames int32) *aig.Graph {
@@ -45,12 +23,6 @@ func Saig_ManUnrollCOI_(src *aig.Graph, frames int32) *aig.Graph {
 	return Saig_ManUnrollCOI(src, frames)
 }
 
-// Ssw_ManFindDirectImplications finds functional constraints with SAT and
-// filters them through the two-frame induction miter.
-func Ssw_ManFindDirectImplications(src *aig.Graph, frames, conflicts, propagations, verbose int32) FunctionalCandidates {
-	return detectFunctionalOrPanic(src, frames, conflicts, propagations, verbose)
-}
-
 // Saig_ManDetectConstrFunc is the SAT implication detector used by the older
 // pattern-guided source path. The Go port proves implications directly.
 func Saig_ManDetectConstrFunc(src *aig.Graph, frames, conflicts, propagations, verbose int32) FunctionalCandidates {
@@ -58,6 +30,10 @@ func Saig_ManDetectConstrFunc(src *aig.Graph, frames, conflicts, propagations, v
 }
 
 func detectFunctionalOrPanic(src *aig.Graph, frames, conflicts, propagations, verbose int32) FunctionalCandidates {
+	if poNum := Saig_ManPoNum(src); poNum != 1 { // as Saig_ManDetectConstrFunc
+		fmt.Printf("The number of outputs is different from 1.\n")
+		return nil
+	}
 	candidates, err := DetectFunctionalConstraints(src, int(frames), int64(conflicts), int64(propagations))
 	if err != nil {
 		panic(err)
