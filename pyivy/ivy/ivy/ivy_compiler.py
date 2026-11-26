@@ -1350,6 +1350,9 @@ class IvyDomainSetup(IvyDeclInterp):
     def register(self,v):
         self.domain.registers.add(self.individual(v))
 
+    def invardep(self,dep):
+        self.domain.invardeps[dep.args[0].rep] = tuple(arg.rep for arg in dep.args[1:])
+
     def parameter(self,v):
         if __debug__: xtracer.trace("compiler.DomainSetup.parameter ENTER")
         if isinstance(v,ivy_ast.Definition):

@@ -19,6 +19,19 @@ import (
 // The traceHook parameter, if non-nil, is called to process trace output.
 func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	xtracer.Trace("check.CheckIsolate ENTER")
+	if available := invariantDependencyAssumptions(mod); available != nil {
+		for _, lf := range mod.LabeledConjs {
+			if !mod.Cfg.checkNameSelected(lfLabelName(lf)) || !IsCheckModUnprovable(mod.Cfg, lf) {
+				continue
+			}
+			if line := mod.Cfg.CheckLineno; line != "" && line != lf.GetLineno().FileLineKey() {
+				continue
+			}
+			if _, err := invariantDependencyHypotheses(mod, lf, available); err != nil {
+				return err
+			}
+		}
+	}
 	// Print axioms
 	fmt.Println("\n    The following properties are treated as axioms: ")
 	for _, lf := range mod.LabeledAxioms {
@@ -1035,6 +1048,9 @@ func CheckModule(mod *Module) error {
 		xtracer.Trace("check.CheckModule ENTER isolates=%d", mod.Isolates.Len())
 	}
 	var isolates []string
+	if err := checkInvariantDependencyCycles(mod); err != nil {
+		return err
+	}
 
 	// xtrace all the module data at this point.
 	mod.CanonSnapshot("top-of-CheckModule")
@@ -1513,9 +1529,15 @@ func CheckConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent
 	}
 
 	var checkers []Checker
+	available := invariantDependencyAssumptions(mod)
 	for _, c := range checkable {
 		if mod.Cfg.checkNameSelected(lfLabelName(c)) {
-			checkers = append(checkers, NewConjChecker(mod, c, indent))
+			goal, err := invariantWithDependencies(mod, c, available)
+			if err != nil {
+				fmt.Println(err)
+				return false
+			}
+			checkers = append(checkers, NewConjChecker(mod, goal, indent))
 		}
 	}
 

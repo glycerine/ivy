@@ -1061,6 +1061,15 @@ class DefinitionDecl(LabeledDecl):
     def name(self):
         return 'definition'
 
+class InvariantDependency(AST):
+    pass
+
+class InvariantDependencyDecl(Decl):
+    def name(self):
+        return 'invardep'
+    def defines(self):
+        return []
+
 class ProgressDecl(Decl):
     def name(self):
         return 'progress'

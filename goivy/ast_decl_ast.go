@@ -936,6 +936,18 @@ func (d *ConjectureDecl) Defines() []string {
 	return labeledDeclDefines(&d.DeclBase)
 }
 
+// InvariantDependencyDecl records an invariant label followed by its dependencies.
+type InvariantDependencyDecl struct {
+	DeclBase
+}
+
+func (d *InvariantDependencyDecl) Clone(args []Node) Node {
+	return &InvariantDependencyDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
+}
+
+func (d *InvariantDependencyDecl) Defines() []string { return nil }
+func (d *InvariantDependencyDecl) String() string    { return "invardep" }
+
 // ProofDecl declares a proof.
 type ProofDecl struct {
 	DeclBase
@@ -2706,6 +2718,8 @@ func DeclName(decl Node) string {
 		return "property"
 	case *ConjectureDecl:
 		return "conjecture"
+	case *InvariantDependencyDecl:
+		return d.String()
 	case *RelationDecl:
 		return "relation"
 	case *ConstantDecl:

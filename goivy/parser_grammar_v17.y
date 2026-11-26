@@ -152,7 +152,7 @@ import (
 %type <nodes> objectargs
 %type <node>  param
 %type <nodes> params
-%type <nodes> optwith
+%type <nodes> optwith optinvwith invdepnames
 
 // Nonterminal types — instantiate
 %type <node>  inst modinst pname
@@ -331,12 +331,12 @@ top:
         $$ = $1
         parser17DeclareConjecture(parser17Acfg(parser17lex), $$, $3.(*LabeledFormula), tokLineno(parser17lex.(*parser17LexAdapter), $2))
     }
-    // --- Invariant (v1.7+): top optexplicit INVARIANT labeledfmla optproof ---
-    | top optexplicit PARSER_TOK_INVARIANT labeledfmla optproof
+    // --- Invariant (v1.7+) ---
+    | top optexplicit PARSER_TOK_INVARIANT labeledfmla optinvwith optproof
     {
         xtracer.Trace("parser.p_top_invariant_labeledfmla ENTER (top)")
         $$ = $1
-        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), $2 != nil, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5)
+        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), $2 != nil, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5, $6)
     }
     // --- Unprovable Invariant ---
     | top PARSER_TOK_UNPROVABLE PARSER_TOK_INVARIANT labeledfmla optproof
@@ -2791,6 +2791,28 @@ callatoms:
     {
         xtracer.Trace("parser.p_callatoms_callatoms_callatom ENTER (callatoms)")
         $$ = append($1, $3)
+    }
+    ;
+
+optinvwith:
+    /* empty */
+    {
+        $$ = nil
+    }
+    | PARSER_TOK_WITH invdepnames
+    {
+        $$ = $2
+    }
+    ;
+
+invdepnames:
+    atype
+    {
+        $$ = []Node{parser17Acfg(parser17lex).NewAtom(nodeRep($1))}
+    }
+    | invdepnames PARSER_TOK_COMMA atype
+    {
+        $$ = append($1, parser17Acfg(parser17lex).NewAtom(nodeRep($3)))
     }
     ;
 

@@ -83,16 +83,17 @@ type Module struct {
 	NativeTypes       map[string]*NativeType // sort name → NativeType
 
 	// Properties and proofs
-	Progress     []interface{}
-	Rely         []Expr
-	MixOrd       []Node
-	Privates     map[string]bool
-	VPrivates    map[string]bool // verified-private names (from isolate processing)
-	Proofs       []ProofEntry
-	Named        []NamedEntry
-	Subgoals     []SubgoalEntry
-	ConjActions  map[string][]string
-	ConjSubgoals []*LabeledFormula
+	Progress              []interface{}
+	Rely                  []Expr
+	MixOrd                []Node
+	Privates              map[string]bool
+	VPrivates             map[string]bool // verified-private names (from isolate processing)
+	Proofs                []ProofEntry
+	Named                 []NamedEntry
+	Subgoals              []SubgoalEntry
+	ConjActions           map[string][]string
+	ConjSubgoals          []*LabeledFormula
+	InvariantDependencies map[string][]string
 
 	// Parameters
 	Params        []*Const
@@ -363,6 +364,7 @@ func (m *Module) Clear() {
 	m.Subgoals = nil
 	m.IsolateInfo = nil
 	m.ConjActions = make(map[string][]string)
+	m.InvariantDependencies = make(map[string][]string)
 	m.ConjSubgoals = nil
 	m.AssumedInvs = nil
 	m.FiniteSorts = make(map[string]bool)
@@ -433,6 +435,9 @@ func (m *Module) Copy() *Module {
 	c.Named = append([]NamedEntry{}, m.Named...)
 	c.Subgoals = append([]SubgoalEntry{}, m.Subgoals...)
 	c.ConjSubgoals = copyLFSlice(m.ConjSubgoals)
+	for name, deps := range m.InvariantDependencies {
+		c.InvariantDependencies[name] = append([]string(nil), deps...)
+	}
 	c.ConceptSpaces = append([]ConceptSpace{}, m.ConceptSpaces...)
 	c.Instantiations = append([]LogicInstantiation{}, m.Instantiations...)
 	c.IsolateInfo = m.IsolateInfo

@@ -83,6 +83,15 @@ func (d *DomainSetup) ProcessDecl(decl Node) error {
 				return err
 			}
 		}
+	case *InvariantDependencyDecl:
+		if len(n.DeclArgs) != 0 {
+			name := labelName(n.DeclArgs[0])
+			deps := make([]string, 0, len(n.DeclArgs)-1)
+			for _, arg := range n.DeclArgs[1:] {
+				deps = append(deps, labelName(arg))
+			}
+			d.Compiler.Module.InvariantDependencies[name] = deps
+		}
 	case *RelationDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Relation(arg); err != nil {

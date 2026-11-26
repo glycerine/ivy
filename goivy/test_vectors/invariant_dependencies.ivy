@@ -1,0 +1,9 @@
+#lang ivy1.8
+
+object scoped = {
+    relation x
+    relation y
+    invariant [basis] x
+    invariant [auxiliary] y
+    invariant [dependent] x & y with basis, auxiliary
+}

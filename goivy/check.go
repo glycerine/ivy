@@ -714,9 +714,15 @@ func CheckConjsInState(mod *Module, indent int, pcs []*LabeledFormula) bool {
 
 	// Build checkers for the filtered list.
 	var checkers []Checker
+	available := invariantDependencyAssumptions(mod)
 	for _, c := range checkable {
 		if mod.Cfg.checkNameSelected(lfLabelName(c)) {
-			checkers = append(checkers, NewConjChecker(mod, c, indent))
+			goal, err := invariantWithDependencies(mod, c, available)
+			if err != nil {
+				fmt.Println(err)
+				return false
+			}
+			checkers = append(checkers, NewConjChecker(mod, goal, indent))
 		}
 	}
 

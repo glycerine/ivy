@@ -613,10 +613,21 @@ def p_optexplicit_explicit(p):
 
 # from version 1.7, "invariant" replaces "conjecture"
 if not iu.get_numeric_version() <= [1,6]:
+    def p_optinvwith(p):
+        'optinvwith :'
+        p[0] = []
 
+    def p_optinvwith_with(p):
+        'optinvwith : WITH invdepnames'
+        p[0] = p[2]
+
+    def p_invdepnames(p):
+        '''invdepnames : atype
+                       | invdepnames COMMA atype'''
+        p[0] = [Atom(p[1])] if len(p) == 2 else p[1] + [Atom(p[3])]
 
     def p_top_invariant_labeledfmla(p):
-        'top : top optexplicit INVARIANT labeledfmla optproof'
+        'top : top optexplicit INVARIANT labeledfmla optinvwith optproof'
         if __debug__: xtracer.trace("parser.p_top_invariant_labeledfmla ENTER (top)")
         p[0] = p[1]
         lf = addlabel(p[4],'invar')
@@ -626,9 +637,13 @@ if not iu.get_numeric_version() <= [1,6]:
         d = ConjectureDecl(lf)
         d.lineno = get_lineno(p,3)
         if not lf.unprovable or check_unprovable.get():
+            if p[5]:
+                dep = InvariantDependency(lf.label,*p[5])
+                dep.lineno = d.lineno
+                p[0].declare(InvariantDependencyDecl(dep))
             p[0].declare(d)
-            if p[5] is not None:
-                p[0].declare(ProofDecl(p[5]))
+            if p[6] is not None:
+                p[0].declare(ProofDecl(p[6]))
 
     def p_top_unprovable_invariant_labeledfmla(p):
         'top : top UNPROVABLE INVARIANT labeledfmla optproof'

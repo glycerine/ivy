@@ -481,7 +481,20 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[]):
     else:
         lcs = conjs
     lcs = [c for c in lcs if act.check_name_selected(c.name if c.label is not None else None)]
-    return check_fcs_in_state(mod,ag,post,[ConjChecker(c,indent) for c in lcs])
+    if not mod.invardeps:
+        return check_fcs_in_state(mod,ag,post,[ConjChecker(c,indent) for c in lcs])
+    available = {c.name:c.formula for c in mod.assumed_invariants + mod.labeled_conjs if c.label is not None}
+    checkers = []
+    for c in lcs:
+        names = mod.invardeps.get(c.name,()) if c.label is not None else ()
+        missing = sorted(set(names).difference(available))
+        if missing:
+            raise iu.IvyError(c,"zero-delay dependency {} is not visible in this isolate".format(', '.join(missing)))
+        if names:
+            hypothesis = lg.And(*(available[name] for name in names))
+            c = c.clone([c.label,lg.Implies(hypothesis,c.formula)])
+        checkers.append(ConjChecker(c,indent))
+    return check_fcs_in_state(mod,ag,post,checkers)
 
 def check_safety_in_state(mod,ag,post,report_pass=True):
     return check_fcs_in_state(mod,ag,post,[Checker(lg.Or(),report_pass=report_pass)])
@@ -998,6 +1011,11 @@ def get_isolate_method(isolate):
 def check_module():
     # If user specifies an isolate, check it. Else, if any isolates
     # are specificied in the file, check all, else check globally.
+
+    arcs = [(name,dep) for name,deps in im.module.invardeps.items() for dep in deps]
+    cycles = sorted(', '.join(sorted(cycle)) for cycle in ivy_compiler.tarjan_arcs(arcs))
+    if cycles:
+        raise iu.IvyError(None,"zero-delay invariant dependency cycle: {}".format(cycles[0]))
 
     missing = []
 
