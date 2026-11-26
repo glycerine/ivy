@@ -3,6 +3,7 @@ package cnf
 import (
 	"math/bits"
 
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -129,8 +130,124 @@ func Cnf_ManWriteCnfOther(manager *Cnf_Man_t, mapped *Vec_Ptr_t) *Cnf_Dat_t {
 	}
 	return result
 }
-func Cnf_DeriveSimple(graph *Aig_Man_t, outputs int32) *Cnf_Dat_t {
-	return deriveLegacyAIG(graph, outputs)
+// Cnf_DeriveSimple is a line-by-line port of cnfWrite.c: it derives a simple
+// CNF for the AIG. The last nOutputs COs are not asserted; instead each gets a
+// new variable equivalent to its driver. Variable 0 is unused; COs (when
+// nOutputs != 0), AND nodes, CIs and the constant are numbered in that order.
+func Cnf_DeriveSimple(p *Aig_Man_t, nOutputs int32) *Cnf_Dat_t {
+	if p == nil || nOutputs < 0 || nOutputs > aig.Aig_ManCoNum(p) {
+		return nil
+	}
+	nObjs := aig.Aig_ManObjNumMax(p)
+	isNode := func(i int32) bool {
+		t := aig.Aig_ObjType(p, aig.Aig_ManObj(p, i))
+		return t == aig.AIG_OBJ_AND || t == aig.AIG_OBJ_EXOR
+	}
+	isExor := func(i int32) bool { return aig.Aig_ObjType(p, aig.Aig_ManObj(p, i)) == aig.AIG_OBJ_EXOR }
+	nNodes, nExors := int32(0), int32(0)
+	for i := int32(0); i < nObjs; i++ {
+		if isNode(i) {
+			nNodes++
+		}
+		if isExor(i) {
+			nExors++
+		}
+	}
+	nCos := aig.Aig_ManCoNum(p)
+	// count the number of literals and clauses
+	// (C encodes every node as an AND; native AIGs passed here never contain
+	// EXOR nodes. Go callers may, so EXOR nodes get their four XOR clauses.)
+	nLiterals := 1 + 7*(nNodes-nExors) + 12*nExors + nCos + 3*nOutputs
+	nClauses := 1 + 3*(nNodes-nExors) + 4*nExors + nCos + nOutputs
+
+	// create room for variable numbers
+	pVarNums := make([]int32, nObjs)
+	for i := range pVarNums {
+		pVarNums[i] = -1
+	}
+	// assign variables to the last (nOutputs) POs
+	Number := int32(1)
+	if nOutputs != 0 {
+		for i := int32(0); i < nCos; i++ {
+			pVarNums[aig.Aig_ManCo(p, i).NodeID()] = Number
+			Number++
+		}
+	}
+	// assign variables to the internal nodes
+	for i := int32(0); i < nObjs; i++ {
+		if isNode(i) {
+			pVarNums[i] = Number
+			Number++
+		}
+	}
+	// assign variables to the PIs and constant node
+	for i := int32(0); i < aig.Aig_ManCiNum(p); i++ {
+		pVarNums[aig.Aig_ManCi(p, i).NodeID()] = Number
+		Number++
+	}
+	pVarNums[aig.Aig_ManConst1(p).NodeID()] = Number
+	Number++
+	nVars := Number
+
+	// assign the clauses
+	storage := make([]int32, 0, nLiterals)
+	offsets := make([]int32, 0, nClauses+1)
+	clause := func(lits ...int32) {
+		offsets = append(offsets, int32(len(storage)))
+		storage = append(storage, lits...)
+	}
+	b2i := func(c int32) int32 { return c & 1 }
+	for i := int32(0); i < nObjs; i++ {
+		if !isNode(i) {
+			continue
+		}
+		pObj := aig.Aig_ManObj(p, i)
+		OutVar := pVarNums[i]
+		v0 := pVarNums[aig.Aig_ObjFanin0(p, pObj).NodeID()]
+		v1 := pVarNums[aig.Aig_ObjFanin1(p, pObj).NodeID()]
+		c0 := aig.Aig_ObjFaninC0(p, pObj)
+		c1 := aig.Aig_ObjFaninC1(p, pObj)
+		if isExor(i) {
+			l0, l1 := 2*v0+c0, 2*v1+c1
+			clause(2*OutVar+1, l0, l1)
+			clause(2*OutVar+1, l0^1, l1^1)
+			clause(2*OutVar, l0^1, l1)
+			clause(2*OutVar, l0, l1^1)
+			continue
+		}
+		// positive phase
+		clause(2*OutVar, 2*v0+b2i(c0^1), 2*v1+b2i(c1^1))
+		// negative phase
+		clause(2*OutVar+1, 2*v0+c0)
+		clause(2*OutVar+1, 2*v1+c1)
+	}
+	// write the constant literal
+	OutVar := pVarNums[aig.Aig_ManConst1(p).NodeID()]
+	clause(2 * OutVar)
+	// write the output literals
+	for i := int32(0); i < nCos; i++ {
+		pObj := aig.Aig_ManCo(p, i)
+		OutVar = pVarNums[aig.Aig_ObjFanin0(p, pObj).NodeID()]
+		c0 := aig.Aig_ObjFaninC0(p, pObj)
+		if i < nCos-nOutputs {
+			clause(2*OutVar + c0)
+		} else {
+			PoVar := pVarNums[pObj.NodeID()]
+			// first clause
+			clause(2*PoVar, 2*OutVar+b2i(c0^1))
+			// second clause
+			clause(2*PoVar+1, 2*OutVar+c0)
+		}
+	}
+	offsets = append(offsets, int32(len(storage)))
+	assert(int32(len(storage)) == nLiterals, "pLits - pCnf->pClauses[0] == nLiterals")
+	assert(int32(len(offsets)) == nClauses+1, "pClas - pCnf->pClauses == nClauses")
+
+	pCnf := &Cnf_Dat_t{pMan: p}
+	Cnf_DataSetPackedClauses(pCnf, nVars, offsets, storage)
+	pCnf.pVarNums = pVarNums
+	pCnf.VarNums = append([]int32(nil), pVarNums...)
+	return pCnf
 }
 func Cnf_DeriveSimpleForRetiming(graph *Aig_Man_t) *Cnf_Dat_t {
 	result, err := EncodeAIG(graph, 0)

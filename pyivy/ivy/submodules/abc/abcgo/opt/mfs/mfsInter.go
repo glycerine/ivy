@@ -2,152 +2,275 @@ package mfs
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/sat/satoko"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/sat/bsat"
+	"github.com/glycerine/abcgo/sat/cnf"
 )
 
-func encodeGraph(g *aig.Graph) ([][]int, int) {
-	var c [][]int
-	add := func(xs ...int) { c = append(c, xs) }
-	add(0)
-	for _, e := range g.LiveEdges() {
-		n := g.Node(e)
-		z := int(e)
-		a, b := int(n.Fanins[0]), int(n.Fanins[1])
-		switch n.Kind {
-		case aig.And:
-			add(a^1, b^1, z)
-			add(a, z^1)
-			add(b, z^1)
-		case aig.ExclusiveOr:
-			add(a, b, z^1)
-			add(a^1, b^1, z^1)
-			add(a, b^1, z)
-			add(a^1, b, z)
-		case aig.Buffer, aig.Output:
-			add(a, z^1)
-			add(a^1, z)
+// Port of mfsInter.c.
+
+// Abc_MfsSatAddXor adds constraints for the two-input AND-gate.
+func Abc_MfsSatAddXor(pSat *bsat.Solver, iVarA, iVarB, iVarC int32) int32 {
+	var Lits [3]int32
+
+	Lits[0] = toLitCond(iVarA, 1)
+	Lits[1] = toLitCond(iVarB, 1)
+	Lits[2] = toLitCond(iVarC, 1)
+	if sat_solver_addclause(pSat, Lits[:]) == 0 {
+		return 0
+	}
+
+	Lits[0] = toLitCond(iVarA, 1)
+	Lits[1] = toLitCond(iVarB, 0)
+	Lits[2] = toLitCond(iVarC, 0)
+	if sat_solver_addclause(pSat, Lits[:]) == 0 {
+		return 0
+	}
+
+	Lits[0] = toLitCond(iVarA, 0)
+	Lits[1] = toLitCond(iVarB, 1)
+	Lits[2] = toLitCond(iVarC, 0)
+	if sat_solver_addclause(pSat, Lits[:]) == 0 {
+		return 0
+	}
+
+	Lits[0] = toLitCond(iVarA, 0)
+	Lits[1] = toLitCond(iVarB, 0)
+	Lits[2] = toLitCond(iVarC, 1)
+	if sat_solver_addclause(pSat, Lits[:]) == 0 {
+		return 0
+	}
+	return 1
+}
+
+// cnfShiftLiterals adds delta to every literal of the CNF (the C code does
+// this through pClauses[0][i] for i < nLiterals).
+func cnfShiftLiterals(pCnf *cnf.Cnf_Dat_t, delta int32) {
+	for _, c := range cnf.Cnf_DataClauses(pCnf) {
+		for i := range c {
+			c[i] += delta
 		}
 	}
-	return c, int(aig.Aig_ManObjNumMax(g))
 }
-func graphLiteral(g *aig.Graph, output int) int { return int(g.Node(g.Outputs()[output]).Fanins[0]) }
-func Abc_MfsSatAddXor(s *satoko.Solver, a, b, z int) {
-	s.AddClause([]int{a, b, z ^ 1})
-	s.AddClause([]int{a ^ 1, b ^ 1, z ^ 1})
-	s.AddClause([]int{a, b ^ 1, z})
-	s.AddClause([]int{a ^ 1, b, z})
-}
-func newSolver(clauses [][]int, vars int) *satoko.Solver {
-	s := satoko.New()
-	s.SetVariables(vars)
+
+// Abc_MfsCreateSolverResub creates miter for the resubstitution problem.
+// pCands == nil corresponds to the C call with pCands == NULL.
+func Abc_MfsCreateSolverResub(p *Mfs_Man_t, pCands []int32, fInvert int32) *bsat.Solver {
+	var Lits [2]int32
+	nVars := cnf.Cnf_DataVarNum(p.pCnf)
+	nDivs := int32(len(p.vDivs))
+	clauses := cnf.Cnf_DataClauses(p.pCnf)
+
+	// get the literal for the output of F
+	nCos := aig.Aig_ManCoNum(p.pAigWin)
+	pObjPo := aig.Aig_ManCo(p.pAigWin, nCos-nDivs-1)
+	Lits[0] = toLitCond(p.pCnf.VarNums[pObjPo.NodeID()], fInvert)
+
+	// collect the outputs of the divisors
+	p.vProjVarsCnf = p.vProjVarsCnf[:0]
+	for i := nCos - nDivs; i < nCos; i++ {
+		pObjPo = aig.Aig_ManCo(p.pAigWin, i)
+		assert(p.pCnf.VarNums[pObjPo.NodeID()] >= 0, "p->pCnf->pVarNums[pObjPo->Id] >= 0")
+		p.vProjVarsCnf = append(p.vProjVarsCnf, p.pCnf.VarNums[pObjPo.NodeID()])
+	}
+	assert(int32(len(p.vProjVarsCnf)) == nDivs, "Vec_IntSize(p->vProjVarsCnf) == Vec_PtrSize(p->vDivs)")
+
+	// start the solver
+	pSat := bsat.NewSolver()
+	pSat.SetNumVars(2*nVars + nDivs)
+	if pCands != nil {
+		pSat.EnableClauseStore()
+	}
+
+	// load the first copy of the clauses
 	for _, c := range clauses {
-		s.AddClause(c)
-	}
-	return s
-}
-func addWindowConstraints(p *Mfs_Man_t, s *satoko.Solver, offset int) {
-	for o := 0; o <= p.CareOutputs; o++ {
-		s.AddClause([]int{graphLiteral(p.Window, o) + 2*offset})
-	}
-	if p.Params.OneHotness {
-		inputs := p.Window.Inputs()
-		for i, a := range inputs {
-			for _, b := range inputs[i+1:] {
-				s.AddClause([]int{int(a) ^ 1 + 2*offset, int(b) ^ 1 + 2*offset})
-			}
-		}
-	}
-}
-
-// Two independently constrained window copies have opposite target values.
-// Each projection variable is the XOR of one divisor across the copies.
-func Abc_MfsCreateSolverResub(p *Mfs_Man_t, candidates []int, invert bool) *satoko.Solver {
-	p.clauses, p.vars = encodeGraph(p.Window)
-	s := newSolver(p.clauses, 2*p.vars+len(p.Divisors))
-	for _, c := range p.clauses {
-		copy := make([]int, len(c))
-		for i, l := range c {
-			copy[i] = l + 2*p.vars
-		}
-		s.AddClause(copy)
-	}
-	addWindowConstraints(p, s, 0)
-	addWindowConstraints(p, s, p.vars)
-	f := graphLiteral(p.Window, 1+p.CareOutputs)
-	if invert {
-		f ^= 1
-	}
-	s.AddClause([]int{f})
-	s.AddClause([]int{(f ^ 1) + 2*p.vars})
-	p.projection = make([]int, len(p.Divisors))
-	for i := range p.Divisors {
-		a := graphLiteral(p.Window, 2+p.CareOutputs+i)
-		z := (2*p.vars + i) << 1
-		p.projection[i] = z
-		Abc_MfsSatAddXor(s, a, a+2*p.vars, z)
-	}
-	for _, i := range candidates {
-		s.AddClause([]int{p.projection[i] ^ 1})
-	}
-	p.Solver = s
-	return s
-}
-func solve(p *Mfs_Man_t, s *satoko.Solver, assumptions []int) int {
-	p.Stats.SATCalls++
-	status := s.SolveAssumptionsLimit(assumptions, p.Params.BTLimit)
-	if status == satoko.SATOKO_UNDEC {
-		p.Stats.Timeouts++
-	}
-	return status
-}
-
-// Interpolation is exact functional separation by projected SAT enumeration.
-// It returns a truth table, not a resolution proof trace. Unreachable projected
-// minterms are zero; every on/off care minterm is separated before any update.
-func Abc_NtkMfsInterplate(p *Mfs_Man_t, candidates []int) []uint32 {
-	if len(candidates) > MFS_FANIN_MAX {
-		panic("mfs: too many projected inputs")
-	}
-	s := newSolver(p.clauses, p.vars)
-	addWindowConstraints(p, s, 0)
-	s.AddClause([]int{graphLiteral(p.Window, 1+p.CareOutputs)})
-	truth := make([]uint32, truthWords(len(candidates)))
-	vars := make([]int, len(candidates))
-	for i, c := range candidates {
-		vars[i] = graphLiteral(p.Window, 2+p.CareOutputs+c)
-	}
-	for {
-		status := solve(p, s, nil)
-		if status == satoko.SATOKO_UNDEC {
+		if sat_solver_addclause(pSat, c) == 0 {
+			pSat.Delete()
 			return nil
 		}
-		if status == satoko.SATOKO_UNSAT {
-			break
+	}
+	// add the clause for the first output of F
+	if sat_solver_addclause(pSat, Lits[:1]) == 0 {
+		pSat.Delete()
+		return nil
+	}
+	// add one-hotness constraints
+	if p.pPars.FOneHotness != 0 {
+		p.pSat = pSat
+		if Abc_NtkAddOneHotness(p) == 0 {
+			return nil
 		}
-		mint := 0
-		block := make([]int, len(vars))
-		for i, l := range vars {
-			value := s.ModelValue(l>>1) == 1
-			if l&1 != 0 {
-				value = !value
-			}
-			block[i] = l
-			if value {
-				mint |= 1 << uint(i)
-				block[i] ^= 1
-			}
-		}
-		setBit(truth, mint)
-		if !s.AddClause(block) {
-			break
+		p.pSat = nil
+	}
+	// bookmark the clauses of A
+	if pCands != nil {
+		pSat.MarkClauseStorePartitionA()
+	}
+	// transform the literals
+	cnfShiftLiterals(p.pCnf, 2*nVars)
+	// load the second copy of the clauses
+	for _, c := range clauses {
+		if sat_solver_addclause(pSat, c) == 0 {
+			cnfShiftLiterals(p.pCnf, -2*nVars)
+			pSat.Delete()
+			return nil
 		}
 	}
-	return normalizeTruth(truth, len(candidates))
+	// add one-hotness constraints
+	if p.pPars.FOneHotness != 0 {
+		p.pSat = pSat
+		if Abc_NtkAddOneHotness(p) == 0 {
+			cnfShiftLiterals(p.pCnf, -2*nVars)
+			return nil
+		}
+		p.pSat = nil
+	}
+	// transform the literals
+	cnfShiftLiterals(p.pCnf, -2*nVars)
+	// add the clause for the second output of F
+	Lits[0] = 2*nVars + lit_neg(Lits[0])
+	if sat_solver_addclause(pSat, Lits[:1]) == 0 {
+		pSat.Delete()
+		return nil
+	}
+
+	if pCands != nil {
+		// add relevant clauses for EXOR gates
+		for c := range pCands {
+			// get the variable number of this divisor
+			i := lit_var(pCands[c]) - 2*nVars
+			// get the corresponding SAT variable
+			iVar := p.vProjVarsCnf[i]
+			// add the corresponding EXOR gate
+			if Abc_MfsSatAddXor(pSat, iVar, iVar+nVars, 2*nVars+i) == 0 {
+				pSat.Delete()
+				return nil
+			}
+			// add the corresponding clause
+			if sat_solver_addclause(pSat, pCands[c:c+1]) == 0 {
+				pSat.Delete()
+				return nil
+			}
+		}
+		// bookmark the roots
+		pSat.MarkClauseStoreRoots()
+	} else {
+		// add the clauses for the EXOR gates - and remember their outputs
+		p.vProjVarsSat = p.vProjVarsSat[:0]
+		for i, iVar := range p.vProjVarsCnf {
+			if Abc_MfsSatAddXor(pSat, iVar, iVar+nVars, 2*nVars+int32(i)) == 0 {
+				pSat.Delete()
+				return nil
+			}
+			p.vProjVarsSat = append(p.vProjVarsSat, 2*nVars+int32(i))
+		}
+		assert(len(p.vProjVarsCnf) == len(p.vProjVarsSat), "Vec_IntSize(p->vProjVarsCnf) == Vec_IntSize(p->vProjVarsSat)")
+		// simplify the solver
+		if !pSat.Simplify() {
+			pSat.Delete()
+			return nil
+		}
+	}
+	return pSat
 }
-func Abc_NtkMfsInterplateEval(p *Mfs_Man_t, candidates []int) int {
-	truth := Abc_NtkMfsInterplate(p, candidates)
-	if truth == nil {
-		return -1
+
+// Abc_NtkMfsInterplateTruth performs interpolation and returns its truth table.
+func Abc_NtkMfsInterplateTruth(p *Mfs_Man_t, pCands []int32, fInvert int32) []uint32 {
+	nCands := int32(len(pCands))
+	nVars := cnf.Cnf_DataVarNum(p.pCnf)
+	// derive the SAT solver for interpolation
+	pSat := Abc_MfsCreateSolverResub(p, pCands, fInvert)
+
+	// solve the problem
+	status := sat_solver_solve(pSat, nil, int64(p.pPars.NBTLimit), 0, 0, 0)
+	if status != l_False {
+		p.nTimeOuts++
+		return nil
 	}
-	return gateCount(truthGraph(truth, len(candidates)))
+	// get the learned clauses
+	pCnf := pSat.ReleaseClauseStore()
+	pSat.Delete()
+
+	// set the global variables
+	pGloVars := bsat.Int_ManSetGlobalVars(p.pMan, nCands)
+	for c := int32(0); c < nCands; c++ {
+		// get the variable number of this divisor
+		i := lit_var(pCands[c]) - 2*nVars
+		// get the corresponding SAT variable
+		pGloVars[c] = p.vProjVarsCnf[i]
+	}
+
+	// derive the interpolant
+	var puTruth []uint32
+	nFanins := bsat.Int_ManInterpolate(p.pMan, pCnf, 0, &puTruth)
+	bsat.Sto_ManFree(pCnf)
+	assert(nFanins == nCands, "nFanins == nCands")
+	return puTruth
+}
+
+// Abc_NtkMfsInterplateEval counts the number of don't-care minterms.
+func Abc_NtkMfsInterplateEval(p *Mfs_Man_t, pCands []int32) int32 {
+	var uTruth0, uTruth1 [2]uint32
+	nCands := len(pCands)
+	pTruth := Abc_NtkMfsInterplateTruth(p, pCands, 0)
+	if nCands == 6 {
+		uTruth1[0] = pTruth[0]
+		uTruth1[1] = pTruth[1]
+	} else {
+		uTruth1[0] = pTruth[0]
+		uTruth1[1] = pTruth[0]
+	}
+	pTruth = Abc_NtkMfsInterplateTruth(p, pCands, 1)
+	if nCands == 6 {
+		uTruth0[0] = ^pTruth[0]
+		uTruth0[1] = ^pTruth[1]
+	} else {
+		uTruth0[0] = ^pTruth[0]
+		uTruth0[1] = ^pTruth[0]
+	}
+	nCounter := extra.Extra_WordCountOnes(uTruth0[0] ^ uTruth1[0])
+	nCounter += extra.Extra_WordCountOnes(uTruth0[1] ^ uTruth1[1])
+	return nCounter
+}
+
+// Abc_NtkMfsInterplate performs interpolation and returns the new function.
+func Abc_NtkMfsInterplate(p *Mfs_Man_t, pCands []int32) *hop.Hop_Obj_t {
+	nCands := int32(len(pCands))
+	nVars := cnf.Cnf_DataVarNum(p.pCnf)
+
+	// derive the SAT solver for interpolation
+	pSat := Abc_MfsCreateSolverResub(p, pCands, 0)
+
+	// solve the problem
+	status := sat_solver_solve(pSat, nil, int64(p.pPars.NBTLimit), 0, 0, 0)
+	if status != l_False {
+		p.nTimeOuts++
+		return nil
+	}
+	// get the learned clauses
+	pCnf := pSat.ReleaseClauseStore()
+	pSat.Delete()
+
+	// set the global variables
+	pGloVars := bsat.Int_ManSetGlobalVars(p.pMan, nCands)
+	for c := int32(0); c < nCands; c++ {
+		// get the variable number of this divisor
+		i := lit_var(pCands[c]) - 2*nVars
+		// get the corresponding SAT variable
+		pGloVars[c] = p.vProjVarsCnf[i]
+	}
+
+	// derive the interpolant
+	var puTruth []uint32
+	nFanins := bsat.Int_ManInterpolate(p.pMan, pCnf, 0, &puTruth)
+	bsat.Sto_ManFree(pCnf)
+	assert(nFanins == nCands, "nFanins == nCands")
+
+	// transform interpolant into AIG
+	pGraph := kit.Kit_TruthToGraph(puTruth, nFanins, &p.vMem)
+	pFunc := kit.Kit_GraphToHop(p.pNtk.FunctionManager.(*hop.Hop_Man_t), pGraph)
+	kit.Kit_GraphFree(pGraph)
+	return pFunc
 }

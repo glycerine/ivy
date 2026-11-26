@@ -1,103 +1,155 @@
 package mfs
 
-import "sort"
+import (
+	"slices"
 
-func Abc_MfsComputeDivisors(p *Mfs_Man_t, target, maxLevel int) []int {
-	cone := Abc_MfsWinMarkTfi(p, []int{target})
-	inCone := make([]bool, len(p.Network.Nodes))
-	for _, id := range cone {
-		inCone[id] = true
+	"github.com/glycerine/abcgo/base/abc"
+)
+
+// Port of mfsDiv.c.
+
+// Abc_MfsWinMarkTfi_rec marks and collects the TFI cone of the node.
+func Abc_MfsWinMarkTfi_rec(pObj *abc.Object, vCone *[]*abc.Object) {
+	if abc.Abc_NodeIsTravIdCurrent(pObj) != 0 {
+		return
 	}
-	blocked := make([]bool, len(inCone))
-	var block func(int)
-	block = func(id int) {
-		if blocked[id] || p.levels[id] > maxLevel {
-			return
+	abc.Abc_NodeSetTravIdCurrent(pObj)
+	if abc.Abc_ObjIsCi(pObj) != 0 {
+		*vCone = append(*vCone, pObj)
+		return
+	}
+	assert(abc.Abc_ObjIsNode(pObj) != 0, "Abc_ObjIsNode(pObj)")
+	// visit the fanins of the node
+	for i := int32(0); i < abc.Abc_ObjFaninNum(pObj); i++ {
+		Abc_MfsWinMarkTfi_rec(abc.Abc_ObjFanin(pObj, i), vCone)
+	}
+	*vCone = append(*vCone, pObj)
+}
+
+// Abc_MfsWinMarkTfi marks and collects the TFI cone of the node.
+func Abc_MfsWinMarkTfi(pNode *abc.Object) []*abc.Object {
+	vCone := make([]*abc.Object, 0, 100)
+	Abc_MfsWinMarkTfi_rec(pNode, &vCone)
+	return vCone
+}
+
+// Abc_MfsWinSweepLeafTfo_rec marks the TFO of the collected nodes.
+func Abc_MfsWinSweepLeafTfo_rec(pObj *abc.Object, nLevelLimit int32) {
+	if abc.Abc_ObjIsCo(pObj) != 0 || int32(pObj.Level) > nLevelLimit {
+		return
+	}
+	if abc.Abc_NodeIsTravIdCurrent(pObj) != 0 {
+		return
+	}
+	abc.Abc_NodeSetTravIdCurrent(pObj)
+	for i := int32(0); i < abc.Abc_ObjFanoutNum(pObj); i++ {
+		Abc_MfsWinSweepLeafTfo_rec(abc.Abc_ObjFanout(pObj, i), nLevelLimit)
+	}
+}
+
+// Abc_MfsComputeDivisors computes divisors and window for the node.
+// (Abc_MfsNodeDeref_rec / Abc_MfsNodeRef_rec / Abc_MfsWinVisitMffc are only
+// called from commented-out code in C and are not ported.)
+func Abc_MfsComputeDivisors(p *Mfs_Man_t, pNode *abc.Object, nLevDivMax int32) []*abc.Object {
+	assert(p.vDivs == nil, "p->vDivs == NULL")
+
+	// mark the TFI with the current trav ID
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(pNode))
+	vCone := Abc_MfsWinMarkTfi(pNode)
+
+	// mark with the current trav ID those nodes that should not be divisors:
+	// (1) the node and its TFO
+	// (2) the MFFC of the node
+	// (3) the node's fanins (these are treated as a special case)
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(pNode))
+	Abc_MfsWinSweepLeafTfo_rec(pNode, nLevDivMax)
+	for k := int32(0); k < abc.Abc_ObjFaninNum(pNode); k++ {
+		abc.Abc_NodeSetTravIdCurrent(abc.Abc_ObjFanin(pNode, k))
+	}
+	// at this point the nodes are marked with two trav IDs:
+	// nodes to be collected as divisors are marked with previous trav ID
+	// nodes to be avoided as divisors are marked with current trav ID
+
+	// start collecting the divisors
+	nWinMax := int(p.pPars.NWinMax)
+	vDivs := make([]*abc.Object, 0, nWinMax+MFS_FANIN_MAX)
+	for _, pObj := range vCone {
+		if abc.Abc_NodeIsTravIdPrevious(pObj) == 0 {
+			continue
 		}
-		blocked[id] = true
-		for _, fo := range p.fanouts[id] {
-			block(fo)
+		if int32(pObj.Level) > nLevDivMax {
+			continue
+		}
+		vDivs = append(vDivs, pObj)
+		if len(vDivs) >= nWinMax {
+			break
 		}
 	}
-	block(target)
-	blocked[target] = true
-	for _, f := range p.Network.Nodes[target].Fanins {
-		blocked[f] = true
-	}
-	var divs []int
-	full := func() bool { return len(divs) >= p.Params.WinMax }
-	for _, id := range cone {
-		if !blocked[id] && p.levels[id] <= maxLevel {
-			divs = append(divs, id)
-			if full() {
+
+	// explore the fanouts of already collected divisors
+	if len(vDivs) < nWinMax {
+		for k := 0; k < len(vDivs); k++ {
+			pObj := vDivs[k]
+			// consider fanouts of this node
+			for f := int32(0); f < abc.Abc_ObjFanoutNum(pObj); f++ {
+				pFanout := abc.Abc_ObjFanout(pObj, f)
+				// stop if there are too many fanouts
+				if p.pPars.NFanoutsMax != 0 && f > p.pPars.NFanoutsMax {
+					break
+				}
+				// skip nodes that are already added
+				if abc.Abc_NodeIsTravIdPrevious(pFanout) != 0 {
+					continue
+				}
+				// skip nodes in the TFO or in the MFFC of node
+				if abc.Abc_NodeIsTravIdCurrent(pFanout) != 0 {
+					continue
+				}
+				// skip COs
+				if abc.Abc_ObjIsNode(pFanout) == 0 {
+					continue
+				}
+				// skip nodes with large level
+				if int32(pFanout.Level) > nLevDivMax {
+					continue
+				}
+				// skip nodes whose fanins are not divisors  -- here we skip more than we need to skip!!! (revise later)  August 7, 2009
+				m := int32(0)
+				for ; m < abc.Abc_ObjFaninNum(pFanout); m++ {
+					if abc.Abc_NodeIsTravIdPrevious(abc.Abc_ObjFanin(pFanout, m)) == 0 {
+						break
+					}
+				}
+				if m < abc.Abc_ObjFaninNum(pFanout) {
+					continue
+				}
+				// add the node to the divisors
+				vDivs = append(vDivs, pFanout)
+				if !slices.Contains(p.vNodes, pFanout) {
+					p.vNodes = append(p.vNodes, pFanout)
+				}
+				abc.Abc_NodeSetTravIdPrevious(pFanout)
+				if len(vDivs) >= nWinMax {
+					break
+				}
+			}
+			if len(vDivs) >= nWinMax {
 				break
 			}
 		}
 	}
-	for k := 0; k < len(divs) && !full(); k++ {
-		for f, fo := range p.fanouts[divs[k]] {
-			if p.Params.FanoutsMax > 0 && f > p.Params.FanoutsMax {
-				break
-			}
-			v := p.Network.Nodes[fo]
-			if inCone[fo] || blocked[fo] || v.Input || p.levels[fo] > maxLevel {
-				continue
-			}
-			ok := true
-			for _, fi := range v.Fanins {
-				ok = ok && inCone[fi] && !blocked[fi]
-			}
-			if !ok {
-				continue
-			}
-			divs = append(divs, fo)
-			inCone[fo] = true
-			p.Nodes = appendUnique(p.Nodes, fo)
-			if full() {
-				break
-			}
-		}
+	if len(vDivs) >= nWinMax {
+		p.nMaxDivs++
 	}
-	sort.SliceStable(divs, func(i, j int) bool {
-		if p.levels[divs[i]] != p.levels[divs[j]] {
-			return p.levels[divs[i]] < p.levels[divs[j]]
-		}
-		return divs[i] < divs[j]
+
+	// sort the divisors by level in the increasing order
+	slices.SortFunc(vDivs, func(a, b *abc.Object) int {
+		return int(abc.Abc_NodeCompareLevelsIncrease(&a, &b))
 	})
-	return append(divs, p.Network.Nodes[target].Fanins...)
-}
-func appendUnique(a []int, v int) []int {
-	for _, x := range a {
-		if x == v {
-			return a
-		}
-	}
-	return append(a, v)
-}
 
-// Abc_MfsWinVisitMffc computes dereference/ref closure on private counts.
-func Abc_MfsWinVisitMffc(p *Mfs_Man_t, target int) []int {
-	refs := make([]int, len(p.Network.Nodes))
-	for id := range refs {
-		refs[id] = len(p.fanouts[id])
+	// add the fanins of the node
+	for k := int32(0); k < abc.Abc_ObjFaninNum(pNode); k++ {
+		vDivs = append(vDivs, abc.Abc_ObjFanin(pNode, k))
 	}
-	for _, e := range p.Network.Outputs {
-		refs[e.ID()]++
-	}
-	var result []int
-	var rec func(int)
-	rec = func(id int) {
-		if p.Network.Nodes[id].Input || id == 0 {
-			return
-		}
-		result = append(result, id)
-		for _, f := range p.Network.Nodes[id].Fanins {
-			refs[f]--
-			if refs[f] == 0 {
-				rec(f)
-			}
-		}
-	}
-	rec(target)
-	return result
+	return vDivs
 }

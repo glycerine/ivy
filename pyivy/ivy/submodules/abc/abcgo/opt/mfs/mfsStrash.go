@@ -1,256 +1,172 @@
 package mfs
 
-import "github.com/glycerine/abcgo/aig/aig"
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/base/abc"
+)
 
-func truthGraph(truth []uint32, vars int) *aig.Graph {
-	g := aig.NewGraph()
-	inputs := make([]aig.Edge, vars)
-	for i := range inputs {
-		inputs[i] = g.NewInput()
+// Port of mfsStrash.c. The C code keeps AIG pointers in the Hop pData
+// fields and in the pCopy/pNext fields of the network objects; here AIG
+// literals are kept in the Hop iData fields and in Mfs_Man_t.objCopy/objNext.
+// (Abc_MfsConvertAigToHop, Abc_NtkAigForConstraints and
+// Abc_NtkConstraintRatio are only referenced from commented-out code.)
+
+// Abc_MfsConvertHopToAig_rec converts the Hop cone into the AIG manager.
+func Abc_MfsConvertHopToAig_rec(pObj *hop.Hop_Obj_t, pMan *aig.Graph) {
+	assert(hop.Hop_IsComplement(pObj) == 0, "!Hop_IsComplement(pObj)")
+	if hop.Hop_ObjIsNode(pObj) == 0 || hop.Hop_ObjIsMarkA(pObj) != 0 {
+		return
 	}
-	g.AddOutput(composeTruth(g, truth, inputs))
-	return g
-}
-func composeTruth(g *aig.Graph, truth []uint32, inputs []aig.Edge) aig.Edge {
-	var rec func(int, int) aig.Edge
-	rec = func(level, base int) aig.Edge {
-		if level == 0 {
-			if truthBit(truth, base) {
-				return g.Const1()
-			}
-			return g.Const0()
-		}
-		lo := rec(level-1, base)
-		hi := rec(level-1, base|(1<<uint(level-1)))
-		return g.Mux(inputs[level-1], hi, lo)
-	}
-	return rec(len(inputs), 0)
+	Abc_MfsConvertHopToAig_rec(hop.Hop_ObjFanin0(pObj), pMan)
+	Abc_MfsConvertHopToAig_rec(hop.Hop_ObjFanin1(pObj), pMan)
+	hop.Hop_ObjSetIData(pObj, int32(aig.Aig_And(pMan, aig.Edge(hop.Hop_ObjChild0CopyI(pObj)), aig.Edge(hop.Hop_ObjChild1CopyI(pObj)))))
+	assert(hop.Hop_ObjIsMarkA(pObj) == 0, "loop detection")
+	hop.Hop_ObjSetMarkA(pObj)
 }
 
-// Abc_NtkConstructAig constructs both original and target-flipped window copies.
-// Output zero is observability; external care clauses follow, then the target
-// and divisors (resubstitution) or target fanins (care enumeration).
-func Abc_NtkConstructAig(p *Mfs_Man_t, target int) *aig.Graph {
-	g := aig.NewGraph()
-	base, flipped := map[int]aig.Edge{0: g.Const1()}, map[int]aig.Edge{0: g.Const1()}
-	for _, id := range p.Support {
-		e := g.NewInput()
-		base[id] = e
-		flipped[id] = e
+// Abc_MfsConvertHopToAig converts the local function of the node twice:
+// once over the fanin pCopy literals and once over the fanin pNext literals.
+func Abc_MfsConvertHopToAig(p *Mfs_Man_t, pObjOld *abc.Object, pMan *aig.Graph) {
+	// get the local AIG
+	pHopMan := pObjOld.Network().FunctionManager.(*hop.Hop_Man_t)
+	pRoot := pObjOld.Data.(*hop.Hop_Obj_t)
+	id := pObjOld.ID
+	// check the case of a constant
+	if hop.Hop_ObjIsConst1(hop.Hop_Regular(pRoot)) != 0 {
+		p.objCopy[id] = aig.Aig_NotCond(aig.Aig_ManConst1(pMan), hop.Hop_IsComplement(pRoot))
+		p.objNext[id] = p.objCopy[id]
+		return
 	}
-	var rec func(int, bool) aig.Edge
-	rec = func(id int, flip bool) aig.Edge {
-		memo := base
-		if flip {
-			memo = flipped
+	nFanins := abc.Abc_ObjFaninNum(pObjOld)
+	// assign the fanin nodes
+	for i := int32(0); i < nFanins; i++ {
+		hop.Hop_ObjSetIData(hop.Hop_ManPi(pHopMan, i), int32(p.objCopy[abc.Abc_ObjFanin(pObjOld, i).ID]))
+	}
+	// construct the AIG
+	Abc_MfsConvertHopToAig_rec(hop.Hop_Regular(pRoot), pMan)
+	p.objCopy[id] = aig.Aig_NotCond(aig.Edge(hop.Hop_ObjIData(hop.Hop_Regular(pRoot))), hop.Hop_IsComplement(pRoot))
+	hop.Hop_ConeUnmark_rec(hop.Hop_Regular(pRoot))
+	// assign the fanin nodes
+	for i := int32(0); i < nFanins; i++ {
+		hop.Hop_ObjSetIData(hop.Hop_ManPi(pHopMan, i), int32(p.objNext[abc.Abc_ObjFanin(pObjOld, i).ID]))
+	}
+	// construct the AIG
+	Abc_MfsConvertHopToAig_rec(hop.Hop_Regular(pRoot), pMan)
+	p.objNext[id] = aig.Aig_NotCond(aig.Edge(hop.Hop_ObjIData(hop.Hop_Regular(pRoot))), hop.Hop_IsComplement(pRoot))
+	hop.Hop_ConeUnmark_rec(hop.Hop_Regular(pRoot))
+}
+
+// Abc_NtkConstructAig_rec computes the observability condition of the node.
+func Abc_NtkConstructAig_rec(p *Mfs_Man_t, pNode *abc.Object, pMan *aig.Graph) aig.Edge {
+	p.ensureObj(int(abc.Abc_NtkObjNumMax(p.pNtk)) - 1)
+	// assign AIG nodes to the leaves
+	for _, pObj := range p.vSupp {
+		e := aig.Aig_ObjCreateCi(pMan)
+		p.objCopy[pObj.ID] = e
+		p.objNext[pObj.ID] = e
+	}
+	// strash intermediate nodes
+	abc.Abc_NtkIncrementTravId(abc.Abc_ObjNtk(pNode))
+	for _, pObj := range p.vNodes {
+		Abc_MfsConvertHopToAig(p, pObj, pMan)
+		if pObj == pNode {
+			p.objNext[pObj.ID] = p.objNext[pObj.ID].Not()
 		}
-		if e, ok := memo[id]; ok {
+	}
+	// create the observability condition
+	pRoot := aig.Aig_ManConst0(pMan)
+	for _, pObj := range p.vRoots {
+		pExor := aig.Aig_Exor(pMan, p.objCopy[pObj.ID], p.objNext[pObj.ID])
+		pRoot = aig.Aig_Or(pMan, pRoot, pExor)
+	}
+	return pRoot
+}
+
+// careData holds the pData fields of the care-set AIG objects.
+type careData map[int]aig.Edge
+
+// Abc_NtkConstructCare_rec creates the care-set constraint in the window AIG.
+// aig.InvalidEdge plays the role of NULL.
+func Abc_NtkConstructCare_rec(pCare *aig.Graph, pObj aig.Edge, pMan *aig.Graph, data careData) aig.Edge {
+	if aig.Aig_ObjIsTravIdCurrent(pCare, pObj) {
+		if e, ok := data[pObj.NodeID()]; ok {
 			return e
 		}
-		v := p.Network.Nodes[id]
-		args := make([]aig.Edge, len(v.Fanins))
-		for i, f := range v.Fanins {
-			args[i] = rec(f, flip)
-		}
-		e := composeTruth(g, v.Truth, args)
-		if flip && id == target {
-			e = e.Not()
-		}
-		memo[id] = e
-		return e
+		return aig.InvalidEdge
 	}
-	observe := g.Const0()
-	for _, id := range p.Roots {
-		observe = g.OR(observe, g.XOR(rec(id, false), rec(id, true)))
+	aig.Aig_ObjSetTravIdCurrent(pCare, pObj)
+	if aig.Aig_ObjIsCi(pCare, pObj) {
+		data[pObj.NodeID()] = aig.InvalidEdge
+		return aig.InvalidEdge
 	}
-	g.AddOutput(observe)
-	p.CareOutputs = 0
-	if care := p.Network.Care; care != nil {
-		pi := map[int]aig.Edge{}
-		positions := map[int]int{}
-		for i, id := range p.Network.Inputs {
-			positions[id] = i
+	pObj0 := Abc_NtkConstructCare_rec(pCare, aig.Aig_ObjFanin0(pCare, pObj), pMan, data)
+	if pObj0 == aig.InvalidEdge {
+		data[pObj.NodeID()] = aig.InvalidEdge
+		return aig.InvalidEdge
+	}
+	pObj1 := Abc_NtkConstructCare_rec(pCare, aig.Aig_ObjFanin1(pCare, pObj), pMan, data)
+	if pObj1 == aig.InvalidEdge {
+		data[pObj.NodeID()] = aig.InvalidEdge
+		return aig.InvalidEdge
+	}
+	pObj0 = aig.Aig_NotCond(pObj0, aig.Aig_ObjFaninC0(pCare, pObj))
+	pObj1 = aig.Aig_NotCond(pObj1, aig.Aig_ObjFaninC1(pCare, pObj))
+	r := aig.Aig_And(pMan, pObj0, pObj1)
+	data[pObj.NodeID()] = r
+	return r
+}
+
+// Abc_NtkConstructAig creates AIG for the window with constraints.
+func Abc_NtkConstructAig(p *Mfs_Man_t, pNode *abc.Object) *aig.Graph {
+	// start the new manager
+	pMan := aig.Aig_ManStart(1000)
+	// construct the root node's AIG cone
+	pObjAig := Abc_NtkConstructAig_rec(p, pNode, pMan)
+	aig.Aig_ObjCreateCo(pMan, pObjAig)
+	if p.pCare != nil {
+		data := careData{}
+		// mark the care set
+		aig.Aig_ManIncrementTravId(p.pCare)
+		for _, pFanin := range p.vSupp {
+			pPi := aig.Aig_ManCi(p.pCare, p.ciIndex[pFanin.ID])
+			aig.Aig_ObjSetTravIdCurrent(p.pCare, pPi)
+			data[pPi.NodeID()] = p.objCopy[pFanin.ID]
 		}
-		cis := care.Inputs()
-		for _, id := range p.Support {
-			pi[cis[positions[id]].NodeID()] = base[id]
-		}
-		memo := map[int]aig.Edge{0: g.Const1()}
-		available := map[int]bool{0: true}
-		var copyCare func(aig.Edge) (aig.Edge, bool)
-		copyCare = func(e aig.Edge) (aig.Edge, bool) {
-			id := e.NodeID()
-			if x, ok := pi[id]; ok {
-				if e.Complemented() {
-					x = x.Not()
+		// construct the constraints
+		for _, pFanin := range p.vSupp {
+			vOuts := p.vSuppsInv[p.ciIndex[pFanin.ID]]
+			for _, iOut := range vOuts {
+				pPo := aig.Aig_ManCo(p.pCare, iOut)
+				if aig.Aig_ObjIsTravIdCurrent(p.pCare, pPo) {
+					continue
 				}
-				return x, true
-			}
-			if x, ok := memo[id]; ok {
-				if e.Complemented() {
-					x = x.Not()
+				aig.Aig_ObjSetTravIdCurrent(p.pCare, pPo)
+				if aig.Aig_ObjFanin0(p.pCare, pPo) == aig.Aig_ManConst1(p.pCare) {
+					continue
 				}
-				return x, available[id]
-			}
-			n := care.Node(e)
-			if n.Kind == aig.Input {
-				return aig.InvalidEdge, false
-			}
-			x, ok := copyCare(n.Fanins[0])
-			if !ok {
-				return aig.InvalidEdge, false
-			}
-			v := x
-			if n.Kind == aig.And || n.Kind == aig.ExclusiveOr {
-				y, ok := copyCare(n.Fanins[1])
-				if !ok {
-					return aig.InvalidEdge, false
+				pObjAig = Abc_NtkConstructCare_rec(p.pCare, aig.Aig_ObjFanin0(p.pCare, pPo), pMan, data)
+				if pObjAig == aig.InvalidEdge {
+					continue
 				}
-				if n.Kind == aig.And {
-					v = g.AND(x, y)
-				} else {
-					v = g.XOR(x, y)
-				}
-			}
-			memo[id] = v
-			available[id] = true
-			if e.Complemented() {
-				v = v.Not()
-			}
-			return v, true
-		}
-		for _, co := range care.Outputs() {
-			if e, ok := copyCare(co); ok {
-				g.AddOutput(e)
-				p.CareOutputs++
+				pObjAig = aig.Aig_NotCond(pObjAig, aig.Aig_ObjFaninC0(p.pCare, pPo))
+				aig.Aig_ObjCreateCo(pMan, pObjAig)
 			}
 		}
 	}
-	if p.Params.Resub {
-		g.AddOutput(rec(target, false))
-		for _, id := range p.Divisors {
-			g.AddOutput(rec(id, false))
+	if p.pPars.FResub != 0 {
+		// construct the node
+		aig.Aig_ObjCreateCo(pMan, p.objCopy[pNode.ID])
+		// construct the divisors
+		for _, pFanin := range p.vDivs {
+			aig.Aig_ObjCreateCo(pMan, p.objCopy[pFanin.ID])
 		}
 	} else {
-		for _, id := range p.Network.Nodes[target].Fanins {
-			g.AddOutput(rec(id, false))
+		// construct the fanins
+		for i := int32(0); i < abc.Abc_ObjFaninNum(pNode); i++ {
+			aig.Aig_ObjCreateCo(pMan, p.objCopy[abc.Abc_ObjFanin(pNode, i).ID])
 		}
 	}
-	p.Window, p.Values = g, base
-	return g
-}
-
-// ToAIG preserves the LUT interface and register partition.
-func (n *Network) ToAIG() (*aig.Graph, error) {
-	order, err := n.topology()
-	if err != nil {
-		return nil, err
-	}
-	g := aig.NewGraph()
-	g.Name, g.Spec = n.Name, n.Spec
-	values := map[int]aig.Edge{0: g.Const1()}
-	for _, id := range n.Inputs {
-		values[id] = g.NewInput()
-	}
-	for _, id := range order {
-		v := n.Nodes[id]
-		if id == 0 || v.Input {
-			continue
-		}
-		args := make([]aig.Edge, len(v.Fanins))
-		for i, f := range v.Fanins {
-			args[i] = values[f]
-		}
-		values[id] = composeTruth(g, v.Truth, args)
-	}
-	for _, e := range n.Outputs {
-		x := values[e.ID()]
-		if e&1 != 0 {
-			x = x.Not()
-		}
-		g.AddOutput(x)
-	}
-	aig.Aig_ManSetRegNum(g, int32(n.Registers))
-	return g, nil
-}
-
-// FromAIG retains original gates as local 2-input functions and unary buffers.
-func FromAIG(g *aig.Graph) (*Network, error) {
-	if err := g.Check(); err != nil {
-		return nil, err
-	}
-	n := NewNetwork()
-	n.Name, n.Spec = g.Name, g.Spec
-	n.Registers = int(aig.Aig_ManRegNum(g))
-	mapped := map[int]int{0: 0}
-	for _, e := range g.Inputs() {
-		mapped[e.NodeID()] = n.AddInput()
-	}
-	var rec func(aig.Edge) int
-	rec = func(e aig.Edge) int {
-		if id, ok := mapped[e.NodeID()]; ok {
-			return id
-		}
-		v := g.Node(e)
-		if v.Kind == aig.Output {
-			e = v.Fanins[0]
-			id := rec(e)
-			truth := uint32(0xaaaaaaaa)
-			if e.Complemented() {
-				truth = ^truth
-			}
-			return n.AddNode([]int{id}, []uint32{truth})
-		}
-		fs := []aig.Edge{v.Fanins[0]}
-		if v.Kind == aig.And || v.Kind == aig.ExclusiveOr {
-			fs = append(fs, v.Fanins[1])
-		}
-		ids := make([]int, len(fs))
-		for i, f := range fs {
-			ids[i] = rec(f)
-		}
-		var truth uint32
-		for a := 0; a < 32; a++ {
-			x := a&1 != 0
-			if fs[0].Complemented() {
-				x = !x
-			}
-			value := x
-			if len(fs) == 2 {
-				y := a&2 != 0
-				if fs[1].Complemented() {
-					y = !y
-				}
-				if v.Kind == aig.And {
-					value = x && y
-				} else {
-					value = x != y
-				}
-			}
-			if value {
-				truth |= 1 << uint(a)
-			}
-		}
-		id := n.AddNode(ids, []uint32{truth})
-		mapped[e.NodeID()] = id
-		return id
-	}
-	// The source optimizes all internal objects, including output-unreachable
-	// logic. Preserve these cones rather than silently sweeping the adapter.
-	for _, e := range g.LiveEdges() {
-		kind := g.Node(e).Kind
-		if kind == aig.And || kind == aig.ExclusiveOr || kind == aig.Buffer {
-			rec(e)
-		}
-	}
-	for _, co := range g.Outputs() {
-		e := g.Node(co).Fanins[0]
-		id := rec(e)
-		lit := Literal(id << 1)
-		if e.Complemented() {
-			lit = lit.Not()
-		}
-		n.AddOutput(lit)
-	}
-	return n, nil
+	aig.Aig_ManCleanup(pMan)
+	return pMan
 }

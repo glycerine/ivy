@@ -1,212 +1,53 @@
-// Package mfs minimizes multi-input logic using window observability don't-cares,
-// SAT resubstitution, divisor counterexamples and bi-decomposition.
+// Package mfs is a line-by-line port of ABC's src/opt/mfs ("the good old
+// minimization with complete don't-cares"). It operates directly on the
+// base/abc logic network whose local functions are Hop AIGs, exactly as
+// the C code does: windows are computed on the network, strashed into an
+// AIG, converted to CNF, and solved with the bsat solver; nodes are then
+// either resubstituted (interpolation) or re-decomposed (BDC).
+//
+// The legacy files mfs_.c, mfsCore_.c and mfsResub_.c and the optional
+// mfsGia.c are not part of upstream module.make (all mfsGia.c call sites
+// are commented out in mfsCore.c / mfsResub.c), so they are not ported.
 package mfs
 
 import (
-	"fmt"
-	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/hop"
+	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/bool/bdc"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
-const MFS_FANIN_MAX = 12
-
+// Mfs_Par_t mirrors the C struct field for field.
 type Mfs_Par_t struct {
-	WinTfoLevs, FanoutsMax, DepthMax, WinMax, GrowthLevel                                             int
-	BTLimit                                                                                           int64
-	RrOnly, Resub, Area, MoreEffort, SwapEdge, OneHotness, Delay, Power, GiaSat, Verbose, VeryVerbose bool
+	// general parameters
+	NWinTfoLevs  int32 // the maximum fanout levels
+	NFanoutsMax  int32 // the maximum number of fanouts
+	NDepthMax    int32 // the maximum number of logic levels
+	NWinMax      int32 // the maximum size of the window
+	NGrowthLevel int32 // the maximum allowed growth in level
+	NBTLimit     int32 // the maximum number of conflicts in one SAT run
+	FRrOnly      int32 // perform redundance removal
+	FResub       int32 // performs resubstitution
+	FArea        int32 // performs optimization for area
+	FMoreEffort  int32 // performs high-affort minimization
+	FSwapEdge    int32 // performs edge swapping
+	FOneHotness  int32 // adds one-hotness conditions
+	FDelay       int32 // performs optimization for delay
+	FPower       int32 // performs power-aware optimization
+	FGiaSat      int32 // use new SAT solver
+	FVerbose     int32 // enable basic stats
+	FVeryVerbose int32 // enable detailed stats
 }
 
-func Abc_NtkMfsParsDefault(p *Mfs_Par_t) {
-	*p = Mfs_Par_t{WinTfoLevs: 2, FanoutsMax: 30, DepthMax: 20, WinMax: 300, BTLimit: 5000, Resub: true}
-}
-func DefaultParams() Mfs_Par_t { var p Mfs_Par_t; Abc_NtkMfsParsDefault(&p); return p }
-
-// Literal names a node and optional output inversion; node zero is constant one.
-type Literal uint32
-
-func (e Literal) ID() int      { return int(e >> 1) }
-func (e Literal) Not() Literal { return e ^ 1 }
-
-type Node struct {
-	ID             int
-	Input, Deleted bool
-	Fanins         []int
-	Truth          []uint32
-	Level          int
-	local          *aig.Graph
-}
-
-// Network owns stable node IDs. Fanins refer to regular nodes; inversion is in
-// each local truth table. Outputs may be complemented. Register terminals, when
-// present, are trailing CIs/COs and are optimized as combinational boundaries.
-type Network struct {
-	Name, Spec string
-	Nodes      []Node
-	Inputs     []int
-	Outputs    []Literal
-	Registers  int
-	// Care outputs are clauses required true. A window uses clauses whose entire
-	// CI support lies in that window, as the original source does.
-	Care *aig.Graph
-}
-
-func NewNetwork() *Network { return &Network{Nodes: []Node{{ID: 0, Truth: []uint32{^uint32(0)}}}} }
-func (n *Network) AddInput() int {
-	id := len(n.Nodes)
-	n.Nodes = append(n.Nodes, Node{ID: id, Input: true})
-	n.Inputs = append(n.Inputs, id)
-	return id
-}
-func truthWords(vars int) int {
-	if vars <= 5 {
-		return 1
-	}
-	return 1 << uint(vars-5)
-}
-func truthBit(t []uint32, a int) bool { return t[a>>5]&(uint32(1)<<uint(a&31)) != 0 }
-func setBit(t []uint32, a int)        { t[a>>5] |= uint32(1) << uint(a&31) }
-func normalizeTruth(t []uint32, vars int) []uint32 {
-	if vars < 0 || vars > MFS_FANIN_MAX || len(t) < truthWords(vars) {
-		panic("mfs: invalid local truth dimensions")
-	}
-	r := append([]uint32(nil), t[:truthWords(vars)]...)
-	if vars < 5 {
-		mask := (1 << uint(vars)) - 1
-		for i := 0; i < 32; i++ {
-			if truthBit(t, i&mask) {
-				setBit(r, i)
-			} else {
-				r[0] &^= 1 << uint(i)
-			}
-		}
-	}
-	return r
-}
-func (n *Network) AddNode(fanins []int, truth []uint32) int {
-	for _, id := range fanins {
-		if id < 0 || id >= len(n.Nodes) || n.Nodes[id].Deleted {
-			panic("mfs: invalid fanin")
-		}
-	}
-	id := len(n.Nodes)
-	node := Node{ID: id, Fanins: append([]int(nil), fanins...), Truth: normalizeTruth(truth, len(fanins))}
-	node.local = truthGraph(node.Truth, len(fanins))
-	for _, f := range fanins {
-		node.Level = max(node.Level, n.Nodes[f].Level+1)
-	}
-	n.Nodes = append(n.Nodes, node)
-	return id
-}
-func (n *Network) AddOutput(e Literal) {
-	if e.ID() >= len(n.Nodes) || n.Nodes[e.ID()].Deleted {
-		panic("mfs: invalid output")
-	}
-	n.Outputs = append(n.Outputs, e)
-}
-func (n *Network) topology() ([]int, error) {
-	if n == nil || len(n.Nodes) == 0 || n.Nodes[0].Input || n.Nodes[0].Deleted || len(n.Nodes[0].Fanins) != 0 || len(n.Nodes[0].Truth) != 1 || n.Nodes[0].Truth[0] != ^uint32(0) {
-		return nil, fmt.Errorf("mfs: invalid constant")
-	}
-	state := make([]byte, len(n.Nodes))
-	var order []int
-	var rec func(int) error
-	rec = func(id int) error {
-		if id < 0 || id >= len(n.Nodes) || n.Nodes[id].Deleted {
-			return fmt.Errorf("mfs: invalid node %d", id)
-		}
-		if state[id] == 1 {
-			return fmt.Errorf("mfs: combinational cycle at %d", id)
-		}
-		if state[id] == 2 {
-			return nil
-		}
-		state[id] = 1
-		v := &n.Nodes[id]
-		if v.ID != id || len(v.Fanins) > MFS_FANIN_MAX {
-			return fmt.Errorf("mfs: invalid node shape %d", id)
-		}
-		if v.Input {
-			if len(v.Fanins) != 0 {
-				return fmt.Errorf("mfs: input has fanins")
-			}
-		} else if len(v.Truth) < truthWords(len(v.Fanins)) {
-			return fmt.Errorf("mfs: truth too short at %d", id)
-		}
-		for _, f := range v.Fanins {
-			if err := rec(f); err != nil {
-				return err
-			}
-		}
-		state[id] = 2
-		order = append(order, id)
-		return nil
-	}
-	for id, v := range n.Nodes {
-		if !v.Deleted {
-			if err := rec(id); err != nil {
-				return nil, err
-			}
-		}
-	}
-	seen := map[int]bool{}
-	for _, id := range n.Inputs {
-		if id <= 0 || id >= len(n.Nodes) || !n.Nodes[id].Input || n.Nodes[id].Deleted || seen[id] {
-			return nil, fmt.Errorf("mfs: invalid input list")
-		}
-		seen[id] = true
-	}
-	for id, v := range n.Nodes {
-		if v.Input && !v.Deleted && !seen[id] {
-			return nil, fmt.Errorf("mfs: unlisted input")
-		}
-	}
-	for _, e := range n.Outputs {
-		if e.ID() >= len(n.Nodes) || n.Nodes[e.ID()].Deleted {
-			return nil, fmt.Errorf("mfs: invalid output")
-		}
-	}
-	if n.Registers < 0 || n.Registers > len(n.Inputs) || n.Registers > len(n.Outputs) {
-		return nil, fmt.Errorf("mfs: invalid register partition")
-	}
-	if n.Care != nil {
-		if n.Care.InputCount() != len(n.Inputs) {
-			return nil, fmt.Errorf("mfs: care input count mismatch")
-		}
-		if err := n.Care.Check(); err != nil {
-			return nil, err
-		}
-	}
-	return order, nil
-}
-func (n *Network) Check() error { _, e := n.topology(); return e }
-func (n *Network) Evaluate(inputs []bool) ([]bool, error) {
-	order, err := n.topology()
-	if err != nil {
-		return nil, err
-	}
-	if len(inputs) != len(n.Inputs) {
-		return nil, fmt.Errorf("mfs: input width mismatch")
-	}
-	values := make([]bool, len(n.Nodes))
-	values[0] = true
-	for i, id := range n.Inputs {
-		values[id] = inputs[i]
-	}
-	for _, id := range order {
-		v := n.Nodes[id]
-		if v.Input || id == 0 {
-			continue
-		}
-		a := 0
-		for i, f := range v.Fanins {
-			if values[f] {
-				a |= 1 << uint(i)
-			}
-		}
-		values[id] = truthBit(v.Truth, a)
-	}
-	out := make([]bool, len(n.Outputs))
-	for i, e := range n.Outputs {
-		out[i] = values[e.ID()] != (e&1 != 0)
-	}
-	return out, nil
-}
+// Hooks for C functions that live in base/abci (which imports this package).
+// base/abci installs them in its init function.
+var (
+	// Abc_NodeIfNodeResyn (abcBidec.c)
+	NodeIfNodeResyn func(p *bdc.Bdc_Man_t, pHop *hop.Hop_Man_t, pRoot *hop.Hop_Obj_t, nVars int32, vTruth *vec.Vec_Int_t, puCare []uint32, dProb float32) *hop.Hop_Obj_t
+	// Abc_NtkPowerEstimate (abcSpeedup.c)
+	NtkPowerEstimate func(pNtk *abc.Network, fProbOne int32) *vec.Vec_Int_t
+	// Abc_NtkMfsTotalSwitching (abcPrint.c)
+	NtkMfsTotalSwitching func(pNtk *abc.Network) float32
+	// Abc_NtkStrash (abcStrash.c), used for the external care set
+	NtkStrash func(pNtk *abc.Network, fAllNodes, fCleanup, fRecord int32) *abc.Network
+)
