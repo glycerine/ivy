@@ -151,6 +151,7 @@ func If_ManRestart(p *If_Man_t) {
 	vec.Vec_PtrClear(p.vCis)
 	vec.Vec_PtrClear(p.vCos)
 	vec.Vec_PtrClear(p.vObjs)
+	p.objs = p.objs[:0]
 	vec.Vec_PtrClear(p.vTemp)
 	vec.Vec_PtrClear(p.vVisited)
 	p.ciCutSets = nil
@@ -358,6 +359,7 @@ func If_ManSetupObj(p *If_Man_t) *If_Obj_t {
 	obj.Id = int32(vec.Vec_PtrSize(p.vObjs))
 	obj.Required = IF_FLOAT_LARGE
 	vec.Vec_PtrPush(p.vObjs, obj)
+	p.objs = append(p.objs, obj)
 	return obj
 }
 

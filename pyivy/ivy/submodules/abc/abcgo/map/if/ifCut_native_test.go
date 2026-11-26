@@ -92,6 +92,7 @@ func TestCutNativeReferenceAccountingRollback(t *testing.T) {
 	objects := []*If_Obj_t{{Type: IF_CONST1, Id: 0}, {Type: IF_CI, Id: 1}, {Type: IF_CI, Id: 2}, {Type: IF_AND, Id: 3}}
 	for _, o := range objects {
 		vec.Vec_PtrPush(p.vObjs, o)
+		p.objs = append(p.objs, o)
 	}
 	objects[3].CutBest = *ifTestCut(6, 1, 2)
 	c := ifTestCut(6, 2, 3)

@@ -160,6 +160,7 @@ func TestClusteringNativeCacheAndStructDelay(t *testing.T) {
 		o := &If_Obj_t{Id: int32(i), Type: IF_CI}
 		o.CutBest.Delay = float32(i)
 		vec.Vec_PtrPush(p.vObjs, o)
+		p.objs = append(p.objs, o)
 	}
 	cut := &If_Cut_t{nLimit: 6, nLeaves: 4, pLeaves: []int32{1, 2, 3, 4}}
 	if delay := If_CutDelayLutStruct(p, cut, "44", 0); delay != 5 {

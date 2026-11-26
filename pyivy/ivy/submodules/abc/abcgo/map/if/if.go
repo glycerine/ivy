@@ -180,6 +180,7 @@ type If_Man_t_ struct {
 	pPars                                           *If_Par_t
 	pConst1                                         *If_Obj_t
 	vCis, vCos, vObjs, vObjsRev, vTemp              *Vec_Ptr_t
+	objs                                            []*If_Obj_t // typed mirror of vObjs for hot lookups
 	nObjs                                           [IF_VOID + 1]int32
 	nLevelMax                                       int32
 	fEpsilon, RequiredGlo, RequiredGlo2, AreaGlo    float32
@@ -340,7 +341,7 @@ func If_ManLi(p *If_Man_t, i int32) *If_Obj_t {
 func If_ManLo(p *If_Man_t, i int32) *If_Obj_t {
 	return If_ManCi(p, If_ManCiNum(p)-p.pPars.nLatchesCi+i)
 }
-func If_ManObj(p *If_Man_t, i int32) *If_Obj_t { return ifObjectAt(p.vObjs, i) }
+func If_ManObj(p *If_Man_t, i int32) *If_Obj_t { return p.objs[i] }
 
 func If_ObjIsConst1(p *If_Obj_t) int32 {
 	if p.Type == IF_CONST1 {
