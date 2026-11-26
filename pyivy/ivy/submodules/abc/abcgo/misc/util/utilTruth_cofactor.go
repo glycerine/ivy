@@ -32,15 +32,37 @@ func ttPut(t []word, i int, v bool) {
 		t[i>>6] |= word(1) << uint(i&63)
 	}
 }
-func ttMap(t []word, n int32, mapping func(int) int) {
-	old := append([]word(nil), t[:n]...)
-	clear(t[:n])
-	for i := 0; i < int(n)*64; i++ {
-		ttPut(t, i, ttBit(old, mapping(i)))
+
+// Abc_TtCofactor0, Abc_TtCofactor1 and Abc_TtFlip work on whole words, as
+// utilTruth.h does.
+func Abc_TtCofactor0(t []word, n, v int32) {
+	t = t[:n]
+	if v <= 5 {
+		mask, shift := s_Truths6Neg[v], uint(1)<<uint(v)
+		for w, x := range t {
+			t[w] = (x&mask)<<shift | x&mask
+		}
+		return
+	}
+	step := 1 << uint(v-6)
+	for base := 0; base < len(t); base += 2 * step {
+		copy(t[base+step:base+2*step], t[base:base+step])
 	}
 }
-func Abc_TtCofactor0(t []word, n, v int32) { ttMap(t, n, func(i int) int { return i &^ (1 << v) }) }
-func Abc_TtCofactor1(t []word, n, v int32) { ttMap(t, n, func(i int) int { return i | (1 << v) }) }
+func Abc_TtCofactor1(t []word, n, v int32) {
+	t = t[:n]
+	if v <= 5 {
+		mask, shift := s_Truths6[v], uint(1)<<uint(v)
+		for w, x := range t {
+			t[w] = x&mask | (x&mask)>>shift
+		}
+		return
+	}
+	step := 1 << uint(v-6)
+	for base := 0; base < len(t); base += 2 * step {
+		copy(t[base:base+step], t[base+step:base+2*step])
+	}
+}
 func Abc_TtCheckEqualCofs(t []word, n, i, j, a, b int32) int32 {
 	if i >= j || a < 0 || a >= b || b > 3 {
 		panic("truth: invalid cofactor comparison")
@@ -252,7 +274,22 @@ func Abc_Tt6IsXorType(t word, n int32) int32 {
 func Abc_Tt6Flip(t word, v int32) word {
 	return ((t << (1 << v)) & ttMask(v)) | ((t & ttMask(v)) >> (1 << v))
 }
-func Abc_TtFlip(t []word, n, v int32) { ttMap(t, n, func(i int) int { return i ^ (1 << v) }) }
+func Abc_TtFlip(t []word, n, v int32) {
+	t = t[:n]
+	if v <= 5 {
+		mask, shift := s_Truths6[v], uint(1)<<uint(v)
+		for w, x := range t {
+			t[w] = (x<<shift)&mask | (x&mask)>>shift
+		}
+		return
+	}
+	step := 1 << uint(v-6)
+	for base := 0; base < len(t); base += 2 * step {
+		for i := base; i < base+step; i++ {
+			t[i], t[i+step] = t[i+step], t[i]
+		}
+	}
+}
 func Abc_Tt6Permute_rec(t word, perm []int32, n int32) word {
 	var out word
 	for i := 0; i < 64; i++ {
@@ -321,12 +358,22 @@ func Abc_TtSwapAdjacent(t []word, n, v int32) {
 		}
 		return
 	}
-	ttMap(t, n, func(k int) int {
-		if (k>>v)&1 != (k>>(v+1))&1 {
-			k ^= 1<<v | 1<<(v+1)
+	t = t[:n]
+	if v == 5 {
+		// swap the upper half of each even word with the lower half of the next
+		for k := 0; k+1 < len(t); k += 2 {
+			lo, hi := t[k], t[k+1]
+			t[k] = lo&0x00000000FFFFFFFF | hi<<32
+			t[k+1] = hi&0xFFFFFFFF00000000 | lo>>32
 		}
-		return k
-	})
+		return
+	}
+	step := 1 << uint(v-6)
+	for base := 0; base < len(t); base += 4 * step {
+		for i := base; i < base+step; i++ {
+			t[i+step], t[i+2*step] = t[i+2*step], t[i+step]
+		}
+	}
 }
 func Abc_TtMoveVar(t []word, n int32, v2p, p2v []int32, v, p int32) {
 	a := v2p[v]
