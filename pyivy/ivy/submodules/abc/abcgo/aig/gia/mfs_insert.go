@@ -2,6 +2,7 @@ package gia
 
 import (
 	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/tim"
 	"github.com/glycerine/abcgo/misc/vec"
 )
@@ -90,9 +91,14 @@ func giaMfsInsert(p *Gia_Man_t, d *giaMfsNetworkData, allBoxes bool) *Gia_Man_t 
 			vals[copies[id]] = Gia_ManAppendCi(dst)
 		}
 	}
-	records := []int32{0, 0, 0}
-	offsets := map[int32]int32{0: 1}
-	var scratch []uint32
+	// vMapping is indexed by new object; vMapping2 holds the LUT records.
+	mapping := vec.Vec_IntStart(int(p.nObjs))
+	records := vec.Vec_IntStart(1)
+	vec.Vec_IntWriteEntry(mapping, 0, int32(vec.Vec_IntSize(records)))
+	vec.Vec_IntPush(records, 0)
+	vec.Vec_IntPush(records, 0)
+	leaves := vec.Vec_IntAlloc(6)
+	cover := vec.Vec_IntAlloc(1 << 16)
 	for _, node := range topo {
 		fanins := d.fanins[node]
 		group := groupMap[node]
@@ -104,45 +110,35 @@ func giaMfsInsert(p *Gia_Man_t, d *giaMfsNetworkData, allBoxes bool) *Gia_Man_t 
 			vals[node] = Gia_ManAppendCi(dst)
 			continue
 		}
-		leaves := make([]int32, len(fanins))
-		for i, f := range fanins {
-			leaves[i] = vals[f]
-			if leaves[i] < 0 {
+		vec.Vec_IntClear(leaves)
+		for _, f := range fanins {
+			if vals[f] < 0 {
 				panic("gia: MFS fanin not available")
 			}
+			vec.Vec_IntPush(leaves, vals[f])
 		}
 		if group < 0 {
 			truth := d.truths[node]
-			t32 := make([]uint32, 2*len(truth))
-			for i, w := range truth {
-				t32[2*i], t32[2*i+1] = uint32(w), uint32(w>>32)
-			}
-			lit = kit.Kit_TruthToGia(dst, t32, int32(len(leaves)), &scratch, leaves, 0)
-			if lit>>1 != 0 && Gia_ObjIsAnd(Gia_ManObj(dst, lit>>1)) != 0 {
-				offsets[lit>>1] = int32(len(records))
-				records = append(records, int32(len(leaves)))
-				for _, leaf := range leaves {
-					records = append(records, leaf>>1)
+			if old[node] >= 0 && Gia_ObjLutIsMux(p, old[node]) != 0 {
+				size := vec.Vec_IntSize(records)
+				var nVarsNew int32
+				util.Abc_TtSimplify(truth, vec.Vec_IntArray(leaves), int32(vec.Vec_IntSize(leaves)), &nVarsNew)
+				vec.Vec_IntShrink(leaves, int(nVarsNew))
+				lit = Gia_ManFromIfLogicCreateLut(dst, truth, leaves, cover, mapping, records)
+				if size < vec.Vec_IntSize(records) {
+					vec.Vec_IntWriteEntry(records, vec.Vec_IntSize(records)-1, -(lit >> 1))
 				}
-				root := lit >> 1
-				if old[node] >= 0 && Gia_ObjLutIsMux(p, old[node]) != 0 {
-					root = -root
-				}
-				records = append(records, root)
+			} else {
+				lit = Gia_ManFromIfLogicCreateLut(dst, truth, leaves, cover, mapping, records)
 			}
 		} else if group&1 != 0 {
 			lit = Gia_ManAppendCi(dst)
 		} else {
-			if len(leaves) != 1 {
-				panic("gia: invalid box input")
-			}
 			truth := d.truths[node][0]
-			if truth == 0x5555555555555555 {
-				leaves[0] ^= 1
-			} else if truth != 0xaaaaaaaaaaaaaaaa {
+			if truth != 0xaaaaaaaaaaaaaaaa && truth != 0x5555555555555555 {
 				panic("gia: invalid box buffer")
 			}
-			lit = Gia_ManAppendCo(dst, leaves[0])
+			lit = Gia_ManAppendCo(dst, vec.Vec_IntEntry(leaves, 0)^b2i32(truth == 0x5555555555555555))
 		}
 		vals[node] = lit
 	}
@@ -157,13 +153,17 @@ func giaMfsInsert(p *Gia_Man_t, d *giaMfsNetworkData, allBoxes bool) *Gia_Man_t 
 		}
 		Gia_ManAppendCo(dst, lit^Gia_ObjFaninC0(obj))
 	}
-	mapping := vec.Vec_IntStart(int(dst.nObjs))
-	for id, offset := range offsets {
-		vec.Vec_IntWriteEntry(mapping, int(id), dst.nObjs+offset)
+	if vec.Vec_IntSize(mapping) > int(dst.nObjs) {
+		vec.Vec_IntShrink(mapping, int(dst.nObjs))
+	} else {
+		vec.Vec_IntFillExtra(mapping, int(dst.nObjs), 0)
 	}
-	for _, v := range records {
-		vec.Vec_IntPush(mapping, v)
+	for i, offset := range vec.Vec_IntArray(mapping) {
+		if offset > 0 {
+			vec.Vec_IntWriteEntry(mapping, i, offset+dst.nObjs)
+		}
 	}
+	vec.Vec_IntAppend(mapping, records)
 	dst.VMapping = mapping
 	selected := vec.Vec_IntAlloc(len(remaining))
 	for _, b := range remaining {
@@ -183,4 +183,40 @@ func giaMfsInsert(p *Gia_Man_t, d *giaMfsNetworkData, allBoxes bool) *Gia_Man_t 
 	}
 	dst.nAnd2Delay = p.nAnd2Delay
 	return dst
+}
+
+func b2i32(b bool) int32 {
+	if b {
+		return 1
+	}
+	return 0
+}
+
+// Gia_ManFromIfLogicCreateLut (giaIf.c) builds a truth function over leaves
+// and records it as a LUT unless the result is a constant or one of the
+// leaves. A node reused through structural hashing gets its latest record.
+func Gia_ManFromIfLogicCreateLut(dst *Gia_Man_t, truth []word, leaves, cover, mapping, records *vec.Vec_Int_t) int32 {
+	n := vec.Vec_IntSize(leaves)
+	words := make([]uint32, len(truth)*2)
+	for i, value := range truth {
+		words[2*i], words[2*i+1] = uint32(value), uint32(value>>32)
+	}
+	var scratch []uint32
+	lit := kit.Kit_TruthToGia(dst, words, int32(n), &scratch, vec.Vec_IntArray(leaves), 0)
+	id := lit >> 1
+	if id == 0 {
+		return lit
+	}
+	for _, leaf := range vec.Vec_IntArray(leaves) {
+		if leaf>>1 == id {
+			return lit
+		}
+	}
+	vec.Vec_IntSetEntry(mapping, int(id), int32(vec.Vec_IntSize(records)))
+	vec.Vec_IntPush(records, int32(n))
+	for _, leaf := range vec.Vec_IntArray(leaves) {
+		vec.Vec_IntPush(records, leaf>>1)
+	}
+	vec.Vec_IntPush(records, id)
+	return lit
 }

@@ -97,3 +97,14 @@ func TestMfsConstantNodeDoesNotPanic(t *testing.T) {
 		t.Fatalf("no statistics after mfs:\n%s", out)
 	}
 }
+
+// Native: abc -c "read sort16.aig; &get; &if -K 6; &mfs; &ps" reports
+// "lut = 103  edge = 437  lev = 6"; Go's &mfs used to build a corrupt
+// mapping (LUTs whose root was one of their own leaves) and &put panicked.
+func TestGiaMfsMappingMatchesNative(t *testing.T) {
+	out := runScript(t, "read test_vectors/bench/sort16.aig; &get; &if -K 6; &mfs; &ps")
+	if !strings.Contains(out, "lut =    103  edge =     437  lev =    6") {
+		t.Fatalf("mapping after &mfs differs from native:\n%s", out)
+	}
+	runScript(t, "read test_vectors/bench/sort16.aig; &get; &if -K 6; &mfs; &put; print_stats")
+}

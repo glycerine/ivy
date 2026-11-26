@@ -2,41 +2,16 @@ package if_
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/bool/kit"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
 // Gia_ManFromIfLogicCreateLut builds a truth function and records its mapped
-// leaves when the result is an internal node. Constant and leaf results do not
-// require a separate LUT record. cover is reserved for factoring scratch.
+// leaves when the result is an internal node (see gia's implementation).
 func Gia_ManFromIfLogicCreateLut(dst *Gia_Man_t, truth []word, leaves, cover, mapping, records *Vec_Int_t) int32 {
-	n := Vec_IntSize(leaves)
-	needed := (1 << uint(n))
-	if n < 0 || n > IF_MAX_FUNC_LUTSIZE || len(truth)*64 < needed {
+	if n := Vec_IntSize(leaves); n < 0 || n > IF_MAX_FUNC_LUTSIZE || len(truth)*64 < 1<<uint(n) {
 		panic("if: invalid LUT truth table")
 	}
-	words := make([]uint32, len(truth)*2)
-	for i, value := range truth {
-		words[2*i], words[2*i+1] = uint32(value), uint32(value>>32)
-	}
-	var scratch []uint32
-	lit := kit.Kit_TruthToGia(dst, words, int32(n), &scratch, Vec_IntArray(leaves), 0)
-	id := lit >> 1
-	if id == 0 {
-		return lit
-	}
-	for _, leaf := range Vec_IntArray(leaves) {
-		if leaf>>1 == id {
-			return lit
-		}
-	}
-	vec.Vec_IntSetEntry(mapping, int(id), int32(Vec_IntSize(records)))
-	Vec_IntPush(records, int32(n))
-	for _, leaf := range Vec_IntArray(leaves) {
-		Vec_IntPush(records, leaf>>1)
-	}
-	Vec_IntPush(records, id)
-	return lit
+	return gia.Gia_ManFromIfLogicCreateLut(dst, truth, leaves, cover, mapping, records)
 }
 
 // Gia_ManFromIfLogicCreateLutSpecial reconstructs the pair of four-input LUTs
