@@ -47,7 +47,7 @@ func Dau_DsdMergeMatches(text string, matches []int32) {
 			}
 			open := stack[len(stack)-1]
 			stack = stack[:len(stack)-1]
-			expected := map[byte]byte{'(': ')', '[': ']', '<': '>', '{': '}'}[text[open]]
+			expected := dsClose(text[open])
 			if c != expected {
 				panic("mismatched DSD delimiter")
 			}

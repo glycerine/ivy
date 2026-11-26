@@ -49,10 +49,25 @@ func (e *dsExpr) text() string {
 		for _, c := range e.children {
 			b.WriteString(c.text())
 		}
-		b.WriteByte(map[byte]byte{'(': ')', '[': ']', '<': '>'}[e.kind])
+		b.WriteByte(dsClose(e.kind))
 	}
 	return b.String()
 }
+// dsClose returns the bracket closing open, or 0 if open is not one.
+func dsClose(open byte) byte {
+	switch open {
+	case '(':
+		return ')'
+	case '[':
+		return ']'
+	case '<':
+		return '>'
+	case '{':
+		return '}'
+	}
+	return 0
+}
+
 func dsParse(text string) *dsExpr {
 	position := 0
 	var parse func() *dsExpr
@@ -86,8 +101,17 @@ func dsParse(text string) *dsExpr {
 			panic("dau: prime truth has no argument list")
 		}
 		e.kind = text[position]
-		close, ok := map[byte]byte{'(': ')', '[': ']', '<': '>', '{': '}'}[e.kind]
-		if !ok {
+		var close byte
+		switch e.kind {
+		case '(':
+			close = ')'
+		case '[':
+			close = ']'
+		case '<':
+			close = '>'
+		case '{':
+			close = '}'
+		default:
 			panic("dau: invalid DSD operator")
 		}
 		position++
@@ -218,7 +242,7 @@ func Dau_DsdComputeMatches(text string) []int32 {
 			}
 			opening := stack[len(stack)-1]
 			stack = stack[:len(stack)-1]
-			if map[byte]byte{'(': ')', '[': ']', '<': '>', '{': '}'}[text[opening]] != c {
+			if dsClose(text[opening]) != c {
 				panic("dau: mismatched DSD delimiter")
 			}
 			matches[opening] = int32(i)
