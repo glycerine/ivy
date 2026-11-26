@@ -84,3 +84,8 @@ func TestDarRefactorMatchesNative(t *testing.T) {
 func TestDarRewriteMatchesNative(t *testing.T) {
 	expectStats(t, "read ../../../i10.aig; drw; print_stats", "and =   2124  lev = 48")
 }
+
+// Native: abc -c "read i10.aig; dc2; print_stats".
+func TestDc2MatchesNative(t *testing.T) {
+	expectStats(t, "read ../../../i10.aig; dc2; print_stats", "and =   1834  lev = 36")
+}

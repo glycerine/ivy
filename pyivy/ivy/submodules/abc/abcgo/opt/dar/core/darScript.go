@@ -140,14 +140,22 @@ type synthesisStage struct {
 	zeros, ignoreLevel bool
 }
 
-func compressStages(g *aig.Graph, p CompressOptions, stages []synthesisStage) (*aig.Graph, error) {
+// compressStages runs a darScript.c script. Like ABC, it duplicates in DFS
+// order after rewriting and refactoring but not after balancing, whose
+// result order later passes observe. The classic scripts start with a DFS
+// duplicate; the Dar_New* scripts work on the input as is (here a copy in
+// object order, so the caller's graph is not modified).
+func compressStages(g *aig.Graph, p CompressOptions, stages []synthesisStage, initialDfs bool) (*aig.Graph, error) {
 	if g == nil {
 		return nil, fmt.Errorf("dar: nil graph")
 	}
 	if err := g.Check(); err != nil {
 		return nil, err
 	}
-	result := aig.Aig_ManDupDfs(g)
+	result := aig.Aig_ManDupOrdered(g)
+	if initialDfs {
+		result = aig.Aig_ManDupDfs(g)
+	}
 	if p.Progress != nil {
 		if err := writeProgress(p.Progress, "Starting:  %s", aig.Aig_ManStatsLine(result)); err != nil {
 			return nil, err
@@ -181,7 +189,9 @@ func compressStages(g *aig.Graph, p CompressOptions, stages []synthesisStage) (*
 		if err != nil {
 			return nil, err
 		}
-		result = aig.Aig_ManDupDfs(result)
+		if stage.kind != "balance" {
+			result = aig.Aig_ManDupDfs(result)
+		}
 		if p.Progress != nil {
 			if err = writeProgress(p.Progress, "%s%s", stage.label(), aig.Aig_ManStatsLine(result)); err != nil {
 				return nil, err
@@ -190,13 +200,14 @@ func compressStages(g *aig.Graph, p CompressOptions, stages []synthesisStage) (*
 	}
 	return result, result.Check()
 }
-func Compress(g *aig.Graph, p CompressOptions) (*aig.Graph, error) {
+func Compress(g *aig.Graph, p CompressOptions) (*aig.Graph, error) { return compress(g, p, true) }
+func compress(g *aig.Graph, p CompressOptions, initialDfs bool) (*aig.Graph, error) {
 	stages := []synthesisStage{{kind: "rewrite"}, {kind: "refactor"}}
 	if p.Balance {
 		stages = append(stages, synthesisStage{kind: "balance"})
 	}
 	stages = append(stages, synthesisStage{kind: "rewrite", zeros: true})
-	return compressStages(g, p, stages)
+	return compressStages(g, p, stages, initialDfs)
 }
 func Compress2(g *aig.Graph, p CompressOptions) (*aig.Graph, error) { return compress2(g, p, false) }
 func compress2(g *aig.Graph, p CompressOptions, newVariant bool) (*aig.Graph, error) {
@@ -219,7 +230,7 @@ func compress2(g *aig.Graph, p CompressOptions, newVariant bool) (*aig.Graph, er
 	if p.Balance {
 		stages = append(stages, synthesisStage{kind: "balance"})
 	}
-	return compressStages(g, p, stages)
+	return compressStages(g, p, stages, !newVariant)
 }
 func Dar_ManCompress(g *aig.Graph, balance, updateLevel, power, verbose bool) (*aig.Graph, error) {
 	p := CompressOptions{Balance: balance, UpdateLevel: updateLevel, Power: power, Fanout: true}
@@ -236,7 +247,11 @@ func Dar_ManCompress2(g *aig.Graph, balance, updateLevel, fanout, power, verbose
 	return Compress2(g, p)
 }
 func Dar_NewCompress(g *aig.Graph, balance, updateLevel, power, verbose bool) (*aig.Graph, error) {
-	return Dar_ManCompress(g, balance, updateLevel, power, verbose)
+	p := CompressOptions{Balance: balance, UpdateLevel: updateLevel, Power: power, Fanout: true}
+	if verbose {
+		p.Progress = os.Stdout
+	}
+	return compress(g, p, false)
 }
 func Dar_NewCompress2(g *aig.Graph, balance, updateLevel, fanout, power, light, verbose bool) (*aig.Graph, error) {
 	p := CompressOptions{Balance: balance, UpdateLevel: updateLevel, Fanout: fanout, Power: power, Light: light}
