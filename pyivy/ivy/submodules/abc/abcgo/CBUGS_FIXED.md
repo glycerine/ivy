@@ -165,3 +165,21 @@ and states how the Go port was verified.
   refuses and `&ps` still shows `ff = 3`.
 - **Go port:** it panicked in `Gia_ManPerformMfs`; the command now refuses the
   same way (`TestMfsRefusesSequentialAig`).
+
+## 8. `&resim` without a counter-example crashes
+
+- **File:** `src/base/abci/abc.c`, `Abc_CommandAbc9Resim`.
+- **Found:** 2026-11-26, by running every command with default arguments;
+  native `abc` dumped core on `&resim` for every design.
+- **Bug:** `Cec_ManSeqResimulateCounter` reports a missing counter-example
+  ("Counter-example is not available.") and returns, but the command then
+  reads `pAbc->pCex->iFrame` with `pAbc->pCex == NULL`.
+- **Fix:** update `pAbc->nFrames` only when there is a counter-example.
+- **Test:** `abcgo/base/abci/resim_nocex_test.go`
+  (`TestNativeResimWithoutCexDoesNotCrash`) runs
+  `read s27.blif; strash; &get; &resim; &ps` through the native binary named by
+  `ABC_BINARY`; it segfaulted before the fix and now prints the message and the
+  unchanged AIG.
+- **Go port:** it panicked on the same dereference, and its
+  `Cec_ManSeqResimulateCounter` returned silently on each failed precondition;
+  it now has the fix and ABC's messages (`TestResimWithoutCexDoesNotPanic`).

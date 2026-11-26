@@ -32595,7 +32595,9 @@ func Abc_CommandAbc9Resim(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else {
 		abcFrameSetStatus(pAbc, -1)
 	}
-	abcFrameSetNFrames(pAbc, abcFrameCex(pAbc).IFrame)
+	if abcFrameCex(pAbc) != nil { // the counter-example may be missing (CBUGS_FIXED.md #8)
+		abcFrameSetNFrames(pAbc, abcFrameCex(pAbc).IFrame)
+	}
 	//    Abc_FrameReplaceCex( pAbc, &pAbc->pCex );
 	return 0
 

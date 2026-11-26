@@ -114,14 +114,39 @@ func Cec_ManSeqResimulateInfo(p *Gia_Man_t, info *Vec_Ptr_t, state *Abc_Cex_t, c
 	Cec_ManSimStop(sim)
 	return result
 }
+
+// Cec_ManSeqResimulateCounter is cecSeq.c's, messages included.
 func Cec_ManSeqResimulateCounter(p *Gia_Man_t, pars *Cec_ParSim_t, cex *Abc_Cex_t) int32 {
-	if cex == nil || !p.HasRepresentatives() || gia.Gia_ManRegNum(p) == 0 || gia.Gia_ManPiNum(p) != cex.NPis {
+	start := util.Abc_Clock()
+	switch {
+	case cex == nil:
+		fmt.Printf("Cec_ManSeqResimulateCounter(): Counter-example is not available.\n")
 		return -1
+	case !p.HasRepresentatives():
+		fmt.Printf("Cec_ManSeqResimulateCounter(): Equivalence classes are not available.\n")
+		return -1
+	case gia.Gia_ManRegNum(p) == 0:
+		fmt.Printf("Cec_ManSeqResimulateCounter(): Not a sequential AIG.\n")
+		return -1
+	case gia.Gia_ManPiNum(p) != cex.NPis:
+		fmt.Printf("Cec_ManSeqResimulateCounter(): The number of PIs in the AIG and the counter-example differ.\n")
+		return -1
+	}
+	if pars.FVerbose != 0 {
+		fmt.Printf("Resimulating %d timeframes.\n", pars.NFrames+cex.IFrame+1)
 	}
 	gia.Gia_ManRandom(1)
 	info := vec.Vec_PtrAllocSimInfo(int(gia.Gia_ManRegNum(p)+gia.Gia_ManPiNum(p)*(pars.NFrames+cex.IFrame+1)), 1)
 	Cec_ManSeqDeriveInfoFromCex(info, p, cex)
-	return Cec_ManSeqResimulateInfo(p, info, nil, pars.FCheckMiter)
+	if pars.FVerbose != 0 {
+		gia.Gia_ManEquivPrintClasses(p, 0, 0)
+	}
+	result := Cec_ManSeqResimulateInfo(p, info, nil, pars.FCheckMiter)
+	if pars.FVerbose != 0 {
+		gia.Gia_ManEquivPrintClasses(p, 0, 0)
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+	}
+	return result
 }
 func Cec_ManCountNonConstOutputs(p *Gia_Man_t) int32 {
 	if !p.HasRepresentatives() {

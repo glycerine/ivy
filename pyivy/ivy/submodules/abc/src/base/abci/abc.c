@@ -33482,7 +33482,8 @@ int Abc_CommandAbc9Resim( Abc_Frame_t * pAbc, int argc, char ** argv )
     }
     RetValue = Cec_ManSeqResimulateCounter( pAbc->pGia, pPars, pAbc->pCex );
     pAbc->Status  = RetValue ? 0 : -1;
-    pAbc->nFrames = pAbc->pCex->iFrame;
+    if ( pAbc->pCex ) // the counter-example may be missing (reported above)
+        pAbc->nFrames = pAbc->pCex->iFrame;
 //    Abc_FrameReplaceCex( pAbc, &pAbc->pCex );
     return 0;
 
