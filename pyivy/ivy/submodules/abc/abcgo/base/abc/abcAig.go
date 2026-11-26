@@ -96,7 +96,11 @@ func checkAigNodes(m *Abc_Aig_t) int32 {
 	}
 	return 1
 }
+// Abc_AigLevel reports the stored levels of the CO drivers.
 func Abc_AigLevel(n *Network) int32 {
+	if n.Barriers != 0 {
+		return Abc_NtkLevel(n)
+	}
 	max := 0
 	for _, o := range n.Objects() {
 		if o.IsCO() && len(o.fanins) > 0 && o.fanins[0].Object.Level > max {

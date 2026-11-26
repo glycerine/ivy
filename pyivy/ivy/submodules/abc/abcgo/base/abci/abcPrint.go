@@ -293,7 +293,7 @@ func Abc_NtkPrintStats(pNtk *Abc_Ntk_t, fFactored, fSaveBest, fDumpResult, fUseL
 		}
 	}
 	if baseabc.Abc_NtkIsStrash(pNtk) != 0 {
-		util.Abc_Print(1, "  lev =%3d", baseabc.Abc_NtkLevel(pNtk))
+		util.Abc_Print(1, "  lev =%3d", baseabc.Abc_AigLevel(pNtk))
 	} else {
 		util.Abc_Print(1, "  lev = %d", baseabc.Abc_NtkLevel(pNtk))
 	}

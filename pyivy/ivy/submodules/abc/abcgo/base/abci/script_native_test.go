@@ -119,3 +119,9 @@ func TestDchWithoutChoicesMatchesNative(t *testing.T) {
 	}
 	expectStats(t, script, "and =    220  lev = 64")
 }
+
+// Native: abc -c "read i10.aig; dch; print_stats". print_stats reports
+// Abc_AigLevel (stored levels) for strashed networks, not Abc_NtkLevel.
+func TestDchMatchesNative(t *testing.T) {
+	expectStats(t, "read ../../../i10.aig; dch; print_stats", "and =   4206 (choice = 602)  lev = 33")
+}

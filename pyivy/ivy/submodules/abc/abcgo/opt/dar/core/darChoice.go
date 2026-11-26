@@ -60,8 +60,11 @@ func Dar_NewChoiceSynthesis(g *aig.Graph, p *ChoiceOptions) ([]*aig.Graph, error
 	}
 	update := p.UpdateLevel && !Dar_NewChoiceSynthesisGuard(g)
 	options := CompressOptions{Context: p.Context, Balance: p.Balance, UpdateLevel: update, Power: p.Power, Fanout: true, Progress: p.Progress}
-	original := aig.Aig_ManDupDfs(g)
-	first, err := Compress(original, options)
+	// Like ABC: the original version is the input itself, and Dar_NewCompress
+	// works on the input without a DFS duplicate (copied here in object
+	// order, which keeps ABC's object IDs).
+	original := aig.Aig_ManDupOrdered(g)
+	first, err := compress(g, options, false)
 	if err != nil {
 		return nil, err
 	}
