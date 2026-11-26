@@ -167,6 +167,9 @@ const (
 	WHENNEXT
 	UNPROVABLE
 	TRIGGER
+	DLT
+	DGT
+	DCOLON
 )
 
 // tokenNames maps token types to their display names.
@@ -219,6 +222,7 @@ var tokenNames = map[TokenType]string{
 	WHENFIRST: "WHENFIRST", WHENLAST: "WHENLAST",
 	WHENPREV: "WHENPREV", WHENNEXT: "WHENNEXT",
 	UNPROVABLE: "UNPROVABLE", TRIGGER: "TRIGGER",
+	DLT: "DLT", DGT: "DGT", DCOLON: "DCOLON",
 }
 
 func (t TokenType) String() string {

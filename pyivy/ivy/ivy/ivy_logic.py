@@ -1077,6 +1077,7 @@ polymorphic_symbols_list = [
     ('bvand' , [alpha,alpha,alpha]),
     ('bvor' , [alpha,alpha,alpha]),
     ('bvnot' , [alpha,alpha]),
+    ('concat', [alpha,beta,gamma]),
     # for liveness to safety reduction:
     ('l2s_waiting', [lg.Boolean]),
     ('l2s_frozen', [lg.Boolean]),

@@ -103,6 +103,12 @@ func (l *lalr17LexAdapter) Lex(lval *lalr17SymType) int {
 		return LALR17_TOK_SEMI
 	case COLON:
 		return LALR17_TOK_COLON
+	case DLT:
+		return LALR17_TOK_DLT
+	case DGT:
+		return LALR17_TOK_DGT
+	case DCOLON:
+		return LALR17_TOK_DCOLON
 	case DOT:
 		return LALR17_TOK_DOT
 	case PLUS:

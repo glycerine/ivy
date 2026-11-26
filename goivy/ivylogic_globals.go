@@ -60,6 +60,10 @@ func IsUninterpretedSort(sig *Sig, s Sort) bool {
 func IsInterpretedSymbol(sig *Sig, s Expr) bool {
 	name := ExprName(s)
 	sort := s.NodeSort()
+	if name == "concat" {
+		result, total := concatBitVectorWidths(sig, sort)
+		return result != 0 && result == total
+	}
 	// Check if it's a numeral with interpreted sort
 	if IsNumeralName(name) && IsInterpretedSort(sig, SortRange(sort)) {
 		return true
@@ -74,6 +78,29 @@ func IsInterpretedSymbol(sig *Sig, s Expr) bool {
 		}
 	}
 	return false
+}
+
+// concatBitVectorWidths returns zero widths if any sort is uninterpreted
+// or if the signature is not a nonempty bit-vector function.
+func concatBitVectorWidths(sig *Sig, sort Sort) (result, total int) {
+	fs, ok := sort.(*LogicFunctionSort)
+	if sig == nil || !ok || fs.Arity() == 0 {
+		return 0, 0
+	}
+	for _, part := range fs.Sorts {
+		interp, ok := SortInterp(sig, part).(string)
+		if !ok {
+			return 0, 0
+		}
+		base, widths, ok := parseIntParamsNoTrace(interp)
+		if !ok || (base != "bv" && base != "intbv" && base != "strbv") ||
+			len(widths) == 0 || widths[len(widths)-1] <= 0 {
+			return 0, 0
+		}
+		width := widths[len(widths)-1]
+		total, result = total+result, width
+	}
+	return result, total
 }
 
 // SortInterp returns the interpretation for a sort in the given signature,

@@ -81,6 +81,34 @@ z3_builtins_rename = set([
     "rotate_left","rotate_right",
 ])
 
+def bv_interp_width(sort_name):
+    interpretation = ivy_logic.sig.interp.get(sort_name)
+    if isinstance(interpretation, str) and interpretation.startswith(('bv[', 'intbv[', 'strbv[')):
+        try:
+            width = int(interpretation[interpretation.rfind('[') + 1:-1])
+            return width if width > 0 else None
+        except ValueError:
+            pass
+    return None
+
+_concat_width_warned = set()
+
+def concat_is_interpreted(symbol):
+    if not isinstance(symbol.sort, ivy_logic.FunctionSort) or not symbol.sort.dom:
+        return False
+    widths = [bv_interp_width(sort.name) for sort in symbol.sort.dom]
+    result = bv_interp_width(symbol.sort.rng.name)
+    if result is None or any(width is None for width in widths):
+        return False
+    total = sum(widths)
+    if result != total:
+        key = str(symbol.sort)
+        if key not in _concat_width_warned:
+            _concat_width_warned.add(key)
+            iu.warn(None, 'concat result width {} does not equal the sum {} of its argument widths (for {}); treating this concat as an uninterpreted function'.format(result, total, key))
+        return False
+    return True
+
 def solver_name(symbol):
     if __debug__: xtracer.trace("ivy_solver.py:65 solver_name() ENTER name=%s" % symbol.name)
     name = symbol.name
@@ -88,7 +116,12 @@ def solver_name(symbol):
         if bfe_to_z3(symbol) is not None:
             if __debug__: xtracer.trace("ivy_solver.py:69 solver_name() EXIT 1")
             return None
-    elif name in iu.polymorphic_symbols:
+    elif name == 'concat' and isinstance(symbol.sort, ivy_logic.FunctionSort):
+        if concat_is_interpreted(symbol):
+            return None
+        if name not in ivy_logic.sig.interp:
+            name += ':' + ':'.join(s.name for s in list(symbol.sort.dom) + [symbol.sort.rng])
+    elif name in iu.polymorphic_symbols and name != 'concat':
         sort = symbol.sort.domain[0].name if name != 'arrcst' else symbol.sort.rng.name
         if sort in ivy_logic.sig.interp and not isinstance(ivy_logic.sig.interp[sort],ivy_logic.EnumeratedSort):
             if __debug__: xtracer.trace("ivy_solver.py:74 solver_name() EXIT 2")
@@ -205,7 +238,7 @@ functions_dict = {"+":(lambda x,y: x + y),
              "-":my_minus,
              "*":(lambda x,y: x * y),
              "/":(lambda x,y: x / y),
-             "concat":(lambda x,y: z3.Concat(x,y)),
+             "concat":(lambda *args: args[0] if len(args) == 1 else z3.Concat(*args)),
              "bvand":(lambda x,y: x & y),
              "bvor":(lambda x,y: x | y),
              "bvnot":(lambda x: ~x),
@@ -373,6 +406,8 @@ def lookup_native(thing,table,kind):
             if sort.name in ivy_logic.sig.interp:
                 if __debug__: xtracer.trace("TranslateSort_call callsite=lookup_native_arrcst HASH canon=%s" % sort.sexp())
                 return lambda x: z3.K(sort.to_z3().domain(),x)
+        if thing.name == 'concat':
+            return functions_dict['concat'] if concat_is_interpreted(thing) else None
         if thing.name in iu.polymorphic_symbols:
             sort = thing.sort.domain[0].name
             if sort in ivy_logic.sig.interp and not isinstance(ivy_logic.sig.interp[sort],ivy_logic.EnumeratedSort):

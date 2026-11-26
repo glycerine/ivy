@@ -8,6 +8,29 @@ import (
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
+func parserParenthesizedTerm(term Node) Node {
+	if app, ok := term.(*App); ok {
+		app.parenthesized = true
+	}
+	return term
+}
+
+func parserBitField(cfg *AstConfig, term Node, high, low string) *App {
+	return cfg.NewApp(cfg.NewSymbol("bfe["+low+"]["+high+"]", nil), term)
+}
+
+func parserConcat(cfg *AstConfig, left, right Node) *App {
+	var args []Node
+	for _, term := range []Node{left, right} {
+		if app, ok := term.(*App); ok && !app.parenthesized && app.ASort == nil && NodeRep(app.Rep) == "concat" {
+			args = append(args, app.Terms...)
+		} else {
+			args = append(args, term)
+		}
+	}
+	return cfg.NewApp(cfg.NewSymbol("concat", nil), args...)
+}
+
 // parser17Acfg extracts the *AstConfig from the v1.7 lexer for grammar actions.
 func parser17Acfg(lex parser17Lexer) *AstConfig {
 	return lex.(*parser17LexAdapter).astCfg

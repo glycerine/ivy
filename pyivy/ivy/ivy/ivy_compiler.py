@@ -380,6 +380,19 @@ def compile_inline_call(self,args,methodcall=False):
 def old_sym(sym,old):
     return sym.prefix('old_') if old else sym
 
+def ascribe_result_sort(term, sort):
+    if ivy_logic.is_topsort(sort):
+        return term
+    if isinstance(term, ivy_logic.App):
+        signature = term.func.sort
+        if isinstance(signature, ivy_logic.FunctionSort):
+            head = ivy_logic.Symbol(term.func.name,
+                                    ivy_logic.FunctionSort(*(list(signature.dom) + [sort])))
+            return head(*term.args)
+    elif ivy_logic.is_constant(term):
+        return ivy_logic.Symbol(term.name, sort)
+    return term
+
 def compile_app(self,old=False):
     if __debug__: xtracer.trace("compiler.CompileNode return case=%s" % type(self).__name__)  # Atom or App
     if __debug__: xtracer.trace("compiler.compile_app ENTER old=%s" % old)
@@ -398,15 +411,20 @@ def compile_app(self,old=False):
         # note, we are taking 'old' of an action to be the action, since actions are immutable
         return compile_inline_call(self,args)
     sym = rep.cmpl() if isinstance(rep,ivy_ast.NamedBinder) else ivy_logic.Equals if rep == '=' else ivy_logic.find_polymorphic_symbol(rep,throw=False) 
-    if sym is not ivy_logic.Equals:
-        if ivy_logic.is_numeral(sym):
-            if hasattr(self,'sort') and self.sort != 'S':
-                sym = ivy_logic.Symbol(sym.name,variable_sort(self))
+    ascribed = hasattr(self,'sort') and self.sort != 'S'
+    if sym is not ivy_logic.Equals and ivy_logic.is_numeral(sym) and ascribed:
+        sym = ivy_logic.Symbol(sym.name,variable_sort(self))
+        ascribed = False
     if sym is not None:
         sym = old_sym(sym,old)
-        return (sym)(*args)
-    res = compile_field_reference(rep,args,self.lineno,old=old)
-    return res
+        if rep == 'concat' and iu.ivy_have_polymorphism:
+            if not args:
+                raise IvyError(self, 'concat requires at least one argument')
+            sym = ivy_logic.Symbol(sym.name, ivy_logic.TopFunctionSort(len(args)))
+        result = sym(*args)
+    else:
+        result = compile_field_reference(rep,args,self.lineno,old=old)
+    return ascribe_result_sort(result, variable_sort(self)) if ascribed else result
     
 def compile_method_call(self):
     if __debug__: xtracer.trace("compiler.CompileNode return case=MethodCall")

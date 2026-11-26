@@ -44,6 +44,7 @@ import (
 // Terminal tokens — operators (carry line number only)
 %token <tok>  PARSER_TOK_PLUS PARSER_TOK_MINUS PARSER_TOK_TIMES PARSER_TOK_DIV
 %token <tok>  PARSER_TOK_EQ PARSER_TOK_TILDAEQ PARSER_TOK_TILDA PARSER_TOK_LE PARSER_TOK_LT PARSER_TOK_GE PARSER_TOK_GT
+%token <tok>  PARSER_TOK_DLT PARSER_TOK_DGT PARSER_TOK_DCOLON
 %token <tok>  PARSER_TOK_AND PARSER_TOK_OR PARSER_TOK_ARROW PARSER_TOK_IFF
 %token <tok>  PARSER_TOK_PTO PARSER_TOK_DOLLAR PARSER_TOK_CARET
 %token <tok>  PARSER_TOK_ASSIGN
@@ -227,6 +228,7 @@ import (
 %type <nodes> symbols
 
 // Precedence declarations — copied exactly from Python v1.7+ precedence table.
+%right        PARSER_TOK_DLT PARSER_TOK_DGT PARSER_TOK_DCOLON
 %left         PARSER_TOK_SEMI
 %left         PARSER_TOK_GLOBALLY PARSER_TOK_EVENTUALLY
 %left         PARSER_TOK_ARROW PARSER_TOK_IFF
@@ -1370,7 +1372,21 @@ term:
     | PARSER_TOK_LPAREN term PARSER_TOK_RPAREN
     {
         xtracer.Trace("parser.p_term_lp_term_lp ENTER (term)")
-        $$ = $2
+        $$ = parserParenthesizedTerm($2)
+    }
+    | term PARSER_TOK_DLT SYMBOLx PARSER_TOK_COLON SYMBOLx PARSER_TOK_DGT
+    {
+        xtracer.Trace("parser.p_term_term_bfe ENTER (term)")
+        app := parserBitField(parser17Acfg(parser17lex), $1, $3.Val, $5.Val)
+        app.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
+        $$ = app
+    }
+    | term PARSER_TOK_DCOLON term
+    {
+        xtracer.Trace("parser.p_term_term_dcolon_term ENTER (term)")
+        app := parserConcat(parser17Acfg(parser17lex), $1, $3)
+        app.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
+        $$ = app
     }
     // --- Arithmetic ---
     | term PARSER_TOK_PLUS term

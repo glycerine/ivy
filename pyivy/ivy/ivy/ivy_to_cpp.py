@@ -3232,15 +3232,31 @@ def parse_int_params(name):
 
 def emit_special_op(self,op,header,code):
     if op == 'concat':
-        sort_name = il.sig.interp[self.args[1].sort.name]
-        sname,sparms = parse_int_params(sort_name)
-        if sname == 'bv' and len(sparms) == 1:
-            code.append('(')
-            self.args[0].emit(header,code)
-            code.append(' << {} | '.format(sparms[0]))
-            self.args[1].emit(header,code)
+        widths = []
+        for argument in self.args:
+            interpretation = il.sig.interp.get(argument.sort.name, '')
+            name, params = parse_int_params(interpretation)
+            if name != 'bv' or len(params) != 1:
+                raise iu.IvyError(self, 'concat argument is not a bit-vector')
+            widths.append(params[0])
+        remaining = sum(widths)
+        if not widths or remaining != slv.bv_interp_width(self.sort.name):
+            raise iu.IvyError(self, 'concat result width does not match the argument widths')
+        cast = 'static_cast<{}>('.format(ctype(self.sort))
+        code.append('(')
+        for index, (argument, width) in enumerate(zip(self.args, widths)):
+            remaining -= width
+            if index:
+                code.append(' | ')
+            if remaining:
+                code.append('(')
+            code.append(cast)
+            argument.emit(header, code)
             code.append(')')
-            return
+            if remaining:
+                code.append(' << {})'.format(remaining))
+        code.append(')')
+        return
     if op.startswith('bfe['):
         opname,opparms = parse_int_params(op)
         mask = (1 << (opparms[0]-opparms[1]+1)) - 1
@@ -3299,6 +3315,9 @@ def emit_app(self,header,code,capture_args=None):
         return il.expand_macro(self).emit(header,code)
     # handle interpreted ops
     if slv.solver_name(self.func) == None or self.func.name == 'cast':
+        if self.func.name == 'concat' and self.func.name not in il.sig.interp:
+            emit_special_op(self, 'concat', header, code)
+            return
         if self.func.name in il.sig.interp and self.func.name != 'cast':
             op = il.sig.interp[self.func.name]
             emit_special_op(self,op,header,code)

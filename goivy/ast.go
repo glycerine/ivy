@@ -466,9 +466,10 @@ func (n *nativeAtomExpr) Sexp() NodeKey         { return NodeKey(n.Canon()) }
 // App is a function application (term level).
 type App struct {
 	Base
-	Rep   Node   // function symbol (usually *Symbol)
-	Terms []Node // arguments
-	ASort Node   // optional sort annotation
+	Rep           Node   // function symbol (usually *Symbol)
+	Terms         []Node // arguments
+	ASort         Node   // optional sort annotation
+	parenthesized bool
 }
 
 func (cfg *AstConfig) NewApp(rep Node, terms ...Node) *App {
@@ -479,9 +480,7 @@ func (cfg *AstConfig) NewApp(rep Node, terms ...Node) *App {
 
 func (a *App) Args() []Node { return a.Terms }
 func (a *App) Clone(args []Node) Node {
-	c := &App{Base: a.Base, Rep: a.Rep, Terms: args}
-	c.ASort = a.ASort
-	return c
+	return &App{Base: a.Base, Rep: a.Rep, Terms: args, ASort: a.ASort, parenthesized: a.parenthesized}
 }
 func (a *App) String() string {
 	if len(a.Terms) > 0 {
@@ -1025,6 +1024,7 @@ func (t *ThunkAction) String() string {
 	}
 	return s
 }
+
 // Canon matches Python's canon of the ThunkAction: its args (label,
 // action, sort, body and, when present, the continuation) as children.
 func (t *ThunkAction) Canon() Canonical {

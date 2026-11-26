@@ -143,6 +143,12 @@ func (l *parser17LexAdapter) Lex(lval *parser17SymType) int {
 		return PARSER_TOK_SEMI
 	case COLON:
 		return PARSER_TOK_COLON
+	case DLT:
+		return PARSER_TOK_DLT
+	case DGT:
+		return PARSER_TOK_DGT
+	case DCOLON:
+		return PARSER_TOK_DCOLON
 	case DOT:
 		return PARSER_TOK_DOT
 	case DOTS:

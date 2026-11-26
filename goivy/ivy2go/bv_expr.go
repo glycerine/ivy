@@ -69,22 +69,31 @@ func (g *Generator) emitBVApply(name string, a *goivy.Apply) (string, bool, erro
 	}
 	switch name {
 	case "concat":
-		if len(a.Terms) != 2 {
-			return "", true, fmt.Errorf("ivy2go: concat expected 2 arguments, got %d", len(a.Terms))
+		if len(a.Terms) == 0 {
+			return "", true, fmt.Errorf("ivy2go: concat requires at least one argument")
 		}
-		lhs, err := g.emitExpr(a.Terms[0])
-		if err != nil {
-			return "", true, err
+		var expr string
+		totalWidth := 0
+		for _, arg := range a.Terms {
+			width, ok := g.bvWidthForSort(arg.NodeSort())
+			if !ok {
+				return "", true, fmt.Errorf("ivy2go: concat argument is not a bitvector: %s", arg)
+			}
+			totalWidth += width
+			piece, err := g.emitExpr(arg)
+			if err != nil {
+				return "", true, err
+			}
+			piece = fmt.Sprintf("%s(%s)", primitive, piece)
+			if expr == "" {
+				expr = piece
+			} else {
+				expr = fmt.Sprintf("((%s << %d) | %s)", expr, width, piece)
+			}
 		}
-		rhs, err := g.emitExpr(a.Terms[1])
-		if err != nil {
-			return "", true, err
+		if totalWidth != result.Bits {
+			return "", true, fmt.Errorf("ivy2go: concat result width %d does not match argument width %d", result.Bits, totalWidth)
 		}
-		rhsWidth, ok := g.bvWidthForSort(a.Terms[1].NodeSort())
-		if !ok {
-			return "", true, fmt.Errorf("ivy2go: concat rhs is not a bitvector: %s", a.Terms[1].String())
-		}
-		expr := fmt.Sprintf("((%s(%s) << %d) | %s(%s))", primitive, lhs, rhsWidth, primitive, rhs)
 		return g.maskBVExpr(expr, result), true, nil
 	case "bvand", "bvor", "bvxor", "+", "-", "*", "/", "%", "bvadd", "bvsub", "bvmul", "bvudiv", "bvurem":
 		if len(a.Terms) != 2 {
@@ -420,22 +429,31 @@ func (g *Generator) emitWideBVApply(name string, a *goivy.Apply, result goInterp
 		}
 		return fmt.Sprintf("wideBVMask(%s, %d)", wideBVAsCall(body), result.Bits), true, nil
 	case "concat":
-		if len(a.Terms) != 2 {
-			return "", true, fmt.Errorf("ivy2go: concat expected 2 arguments, got %d", len(a.Terms))
+		if len(a.Terms) == 0 {
+			return "", true, fmt.Errorf("ivy2go: concat requires at least one argument")
 		}
-		lhs, err := g.emitExpr(a.Terms[0])
-		if err != nil {
-			return "", true, err
+		var expr string
+		totalWidth := 0
+		for _, arg := range a.Terms {
+			width, ok := g.bvWidthForSort(arg.NodeSort())
+			if !ok {
+				return "", true, fmt.Errorf("ivy2go: concat argument is not a bitvector: %s", arg)
+			}
+			totalWidth += width
+			piece, err := g.emitExpr(arg)
+			if err != nil {
+				return "", true, err
+			}
+			if expr == "" {
+				expr = wideBVAsCall(piece)
+			} else {
+				expr = fmt.Sprintf("wideBVConcat(%s, %s, %d, %d)", expr, wideBVAsCall(piece), width, totalWidth)
+			}
 		}
-		rhs, err := g.emitExpr(a.Terms[1])
-		if err != nil {
-			return "", true, err
+		if totalWidth != result.Bits {
+			return "", true, fmt.Errorf("ivy2go: concat result width %d does not match argument width %d", result.Bits, totalWidth)
 		}
-		rhsWidth, ok := g.bvWidthForSort(a.Terms[1].NodeSort())
-		if !ok {
-			return "", true, fmt.Errorf("ivy2go: concat rhs is not a bitvector: %s", a.Terms[1].String())
-		}
-		return fmt.Sprintf("wideBVConcat(%s, %s, %d, %d)", wideBVAsCall(lhs), wideBVAsCall(rhs), rhsWidth, result.Bits), true, nil
+		return expr, true, nil
 	default:
 		return "", true, fmt.Errorf("ivy2go: unsupported wide BV operator %q", name)
 	}

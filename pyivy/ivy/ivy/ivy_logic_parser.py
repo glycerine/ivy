@@ -787,4 +787,23 @@ if not (iu.get_numeric_version() <= [1,6]):
         p[0] = Isa(p[1],tp)
         p[0].lineno = get_lineno(p,2)
     
+if not (iu.get_numeric_version() <= [1,7]):
+    def p_term_term_bfe(p):
+        'term : term DLT SYMBOL COLON SYMBOL DGT'
+        if __debug__: xtracer.trace("parser.p_term_term_bfe ENTER (term)")
+        p[0] = App('bfe[' + p[5] + '][' + p[3] + ']', [p[1]])
+        p[0].lineno = get_lineno(p,2)
+
+    def p_term_term_dcolon_term(p):
+        'term : term DCOLON term'
+        if __debug__: xtracer.trace("parser.p_term_term_dcolon_term ENTER (term)")
+        args = []
+        for term in (p[1],p[3]):
+            if isinstance(term, App) and term.rep == 'concat' and not getattr(term, 'parenthesized', False):
+                args.extend(term.args)
+            else:
+                args.append(term)
+        p[0] = App('concat', args)
+        p[0].lineno = get_lineno(p,2)
+
 # TODO: should the above rules create formulas also or only for terms

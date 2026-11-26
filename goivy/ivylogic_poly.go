@@ -29,6 +29,7 @@ var polymorphicSymbolsDef = []struct {
 	{"bvand", []Sort{Alpha, Alpha, Alpha}},
 	{"bvor", []Sort{Alpha, Alpha, Alpha}},
 	{"bvnot", []Sort{Alpha, Alpha}},
+	{"concat", []Sort{Alpha, Beta, Gamma}},
 	// For liveness to safety reduction:
 	{"l2s_waiting", []Sort{Boolean}},
 	{"l2s_frozen", []Sort{Boolean}},

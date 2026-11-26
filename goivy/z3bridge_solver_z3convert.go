@@ -627,6 +627,12 @@ func (s *Solver) LookupNative(thing *Const, table func(string) any, kind string)
 
 	// Python line 314: if z3name == None:
 	if !hasInterp {
+		if name == "concat" {
+			if result, total := concatBitVectorWidths(s.sig, thing.CSort); result != 0 && result == total {
+				return s.lookupBuiltinFunc(name, false)
+			}
+			return nil
+		}
 		// Python line 315: if thing.name.startswith('bfe['):
 		if strings.HasPrefix(name, "bfe[") {
 			return s.bfeToZ3(thing)
@@ -806,10 +812,14 @@ func (s *Solver) lookupBuiltinFunc(name string, isRelation bool) NativeFunc {
 		}
 	case "concat":
 		return func(args ...smt.Z3Expr) smt.Z3Expr {
-			if len(args) == 2 {
-				return ctx.Concat(args[0], args[1])
+			if len(args) == 0 {
+				return ctx.BoolVal(false)
 			}
-			return ctx.BoolVal(false)
+			result := args[0]
+			for _, arg := range args[1:] {
+				result = ctx.Concat(result, arg)
+			}
+			return result
 		}
 	case "bvand":
 		return func(args ...smt.Z3Expr) smt.Z3Expr {
@@ -1164,6 +1174,17 @@ func SolverName(sym *Const, sig *Sig, bfeCheck func(*Const) bool) (string, error
 			xtracer.Trace("ivy_solver.py:69 solver_name() EXIT 1")
 			return "", nil // interpreted
 		}
+	} else if name == "concat" {
+		if result, total := concatBitVectorWidths(sig, sym.CSort); result != 0 && result == total {
+			return "", nil
+		}
+		if fs, ok := sym.CSort.(*LogicFunctionSort); ok {
+			if sig == nil || sig.Interp.Get(name) == nil {
+				for _, sort := range fs.Sorts {
+					name += ":" + sortToName(sort)
+				}
+			}
+		}
 	} else if _, isPoly := PolymorphicSymbols[name]; isPoly {
 		// Python: elif name in iu.polymorphic_symbols:
 		if sig != nil {
@@ -1220,6 +1241,14 @@ func SolverName(sym *Const, sig *Sig, bfeCheck func(*Const) bool) (string, error
 // SolverName, providing the Solver's sig and bfeToZ3 capability.
 // Preserves existing string return + panic-on-error behavior.
 func (s *Solver) SolverName(sym *Const) string {
+	if sym.Name == "concat" && s.sig.Interp.Get(sym.Name) == nil {
+		if result, total := concatBitVectorWidths(s.sig, sym.CSort); result != 0 && result != total {
+			signature := sym.CSort.String()
+			if _, seen := s.concatWidthWarnings.LoadOrStore(signature, struct{}{}); !seen {
+				fmt.Printf("warning: concat result width %d does not equal the sum %d of its argument widths (for %s); treating this concat as an uninterpreted function\n", result, total, signature)
+			}
+		}
+	}
 	//vv("Solver.SolverName called with sym='%v'; caller='%v'", sym.Canon(), caller(1))
 	bfeCheck := func(c *Const) bool { return s.bfeToZ3(c) != nil }
 	n, err := SolverName(sym, s.sig, bfeCheck)

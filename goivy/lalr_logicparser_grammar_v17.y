@@ -54,6 +54,7 @@ func lalr17AtypeToString(n Node) string {
 %token        LALR17_TOK_COMMA LALR17_TOK_SEMI LALR17_TOK_COLON LALR17_TOK_DOT
 %token        LALR17_TOK_PLUS LALR17_TOK_MINUS LALR17_TOK_TIMES LALR17_TOK_DIV
 %token        LALR17_TOK_EQ LALR17_TOK_TILDAEQ LALR17_TOK_TILDA LALR17_TOK_LE LALR17_TOK_LT LALR17_TOK_GE LALR17_TOK_GT
+%token        LALR17_TOK_DLT LALR17_TOK_DGT LALR17_TOK_DCOLON
 %token        LALR17_TOK_AND LALR17_TOK_OR LALR17_TOK_ARROW LALR17_TOK_IFF
 %token        LALR17_TOK_PTO LALR17_TOK_DOLLAR
 %token        LALR17_TOK_FORALL LALR17_TOK_EXISTS
@@ -104,6 +105,7 @@ func lalr17AtypeToString(n Node) string {
 %type <node>  pflet
 
 // Precedence declarations — copied exactly from Python v1.7+ precedence table.
+%right        LALR17_TOK_DLT LALR17_TOK_DGT LALR17_TOK_DCOLON
 %left         LALR17_TOK_SEMI
 %left         LALR17_TOK_GLOBALLY LALR17_TOK_EVENTUALLY
 %left         LALR17_TOK_ARROW LALR17_TOK_IFF
@@ -337,7 +339,15 @@ term:
     }
     | LALR17_TOK_LPAREN term LALR17_TOK_RPAREN
     {
-        $$ = $2
+        $$ = parserParenthesizedTerm($2)
+    }
+    | term LALR17_TOK_DLT SYMBOLx LALR17_TOK_COLON SYMBOLx LALR17_TOK_DGT
+    {
+        $$ = parserBitField(lalr17Acfg(lalr17lex), $1, $3, $5)
+    }
+    | term LALR17_TOK_DCOLON term
+    {
+        $$ = parserConcat(lalr17Acfg(lalr17lex), $1, $3)
     }
     // --- Arithmetic (App, not Atom — matches Python's App for term-level ops) ---
     | term LALR17_TOK_PLUS term
@@ -484,8 +494,11 @@ term:
     // --- Sort annotation ---
     | term LALR17_TOK_COLON atype
     {
-        if v, ok := $1.(*Variable); ok {
+        switch v := $1.(type) {
+        case *Variable:
             v.VSort = lalr17AtypeToString($3)
+        case *App:
+            v.ASort = $3
         }
         $$ = $1
     }

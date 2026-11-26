@@ -134,22 +134,24 @@ type Version [2]int
 
 // Lexer tokenizes Ivy source code.
 type Lexer struct {
-	input    string
-	pos      int // current byte position
-	line     int
-	col      int
-	reserved map[string]TokenType
-	peeked   *Token
+	input             string
+	pos               int // current byte position
+	line              int
+	col               int
+	reserved          map[string]TokenType
+	peeked            *Token
+	hardwareOperators bool
 }
 
 // New creates a new Lexer for the given input and language version.
 func NewLexer(input string, version Version) *Lexer {
 	l := &Lexer{
-		input:    input,
-		pos:      0,
-		line:     1,
-		col:      1,
-		reserved: buildReserved(version),
+		input:             input,
+		pos:               0,
+		line:              1,
+		col:               1,
+		reserved:          buildReserved(version),
+		hardwareOperators: version[0] > 1 || (version[0] == 1 && version[1] >= 8),
 	}
 	return l
 }
@@ -334,6 +336,9 @@ func (l *Lexer) scan() Token {
 
 	case '<':
 		l.advance()
+		if l.hardwareOperators && l.match("<") {
+			return Token{Type: DLT, Value: "<<", Line: line, Column: col}
+		}
 		if l.pos < len(l.input) && l.input[l.pos] == '-' {
 			l.advance()
 			if l.pos < len(l.input) && l.input[l.pos] == '>' {
@@ -353,6 +358,9 @@ func (l *Lexer) scan() Token {
 
 	case '>':
 		l.advance()
+		if l.hardwareOperators && l.match(">") {
+			return Token{Type: DGT, Value: ">>", Line: line, Column: col}
+		}
 		if l.pos < len(l.input) && l.input[l.pos] == '=' {
 			l.advance()
 			return Token{Type: GE, Value: ">=", Line: line, Column: col}
@@ -377,6 +385,9 @@ func (l *Lexer) scan() Token {
 
 	case ':':
 		l.advance()
+		if l.hardwareOperators && l.match(":") {
+			return Token{Type: DCOLON, Value: "::", Line: line, Column: col}
+		}
 		if l.pos < len(l.input) && l.input[l.pos] == '=' {
 			l.advance()
 			return Token{Type: ASSIGN, Value: ":=", Line: line, Column: col}

@@ -852,37 +852,78 @@ func (c *Compiler) CompileApp(n *Atom, old bool) (Expr, error) {
 	}
 
 	if sym != nil {
-		// Handle numerals with explicit sort annotation
-		// B4-R6: Python guards with `sym is not ivy_logic.Equals` here, but
-		// Go handles "=" with an early return above, so that guard is already satisfied.
-		if IsNumeral(sym) {
-			if n.ASort != nil {
-				sortName := compilerExtractSortRep(n.ASort)
-				if sortName != "S" {
-					s, err := c.CmplSort(sortName)
-					if err == nil {
-						sym = NewConst(sym.Name, s)
-					}
-				}
+		if rep == "concat" && found {
+			if len(args) == 0 {
+				return nil, NewIvyError(n, "concat requires at least one argument")
 			}
+			sorts := make([]Sort, len(args)+1)
+			for i := range sorts {
+				sorts[i] = &TopSort{Name: fmt.Sprintf("alpha%d", i)}
+			}
+			sym = NewConst(rep, &LogicFunctionSort{Sorts: sorts})
 		}
-
 		if old {
 			sym = NewConst("old_"+sym.Name, sym.CSort)
 		}
 		if len(args) == 0 {
-			return sym, nil
+			return c.ascribeResultSort(n, n.ASort, sym)
 		}
 		result, err := NewApply(sym, args...)
-		if err != nil {
-			// Sort mismatch in application: try field reference as fallback
-			return c.CompileFieldReference(rep, args, n.GetLineno(), old)
+		if err == nil {
+			return c.ascribeResultSort(n, n.ASort, result)
 		}
-		return result, nil
 	}
 
-	// Symbol not found: try field reference
-	return c.CompileFieldReference(rep, args, n.GetLineno(), old)
+	// Unknown symbols and application mismatches may be field references.
+	result, err := c.CompileFieldReference(rep, args, n.GetLineno(), old)
+	if err != nil {
+		return nil, err
+	}
+	return c.ascribeResultSort(n, n.ASort, result)
+}
+
+// ascribeResultSort supplies the expected result to sort inference. Keep
+// the argument constraints and, for an operator such as +, propagate the
+// ascription to any argument that shares the result's type variable.
+func (c *Compiler) ascribeResultSort(node Node, annotation Node, term Expr) (Expr, error) {
+	if annotation == nil || compilerExtractSortRep(annotation) == "S" {
+		return term, nil
+	}
+	switch term.(type) {
+	case *Apply, *Const:
+	default:
+		return term, nil
+	}
+	want, err := c.CmplSort(compilerExtractSortRep(annotation))
+	if err != nil {
+		return nil, err
+	}
+	have := term.NodeSort()
+	if IsTopSort(want) || SortEqual(want, have) {
+		return term, nil
+	}
+	if !IsTopSort(have) {
+		return nil, NewIvyError(node, fmt.Sprintf("sort mismatch in %s: expected %s, got %s", term, want, have))
+	}
+	switch term := term.(type) {
+	case *Const:
+		return NewConst(term.Name, want), nil
+	case *Apply:
+		head, ok := term.Func.(*Const)
+		if !ok {
+			return term, nil
+		}
+		if signature, ok := head.CSort.(*LogicFunctionSort); ok {
+			sorts := append([]Sort(nil), signature.Sorts...)
+			for i, s := range sorts {
+				if SortEqual(s, have) {
+					sorts[i] = want
+				}
+			}
+			return NewApply(NewConst(head.Name, &LogicFunctionSort{Sorts: sorts}), term.Terms...)
+		}
+	}
+	return term, nil
 }
 
 // compileAppNode compiles an App node (function application with a Node rep).

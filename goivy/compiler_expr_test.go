@@ -1,9 +1,91 @@
 package goivy
 
 import (
+	"os"
 	"strings"
 	"testing"
 )
+
+func TestBitVectorSyntaxAndVariadicConcat(t *testing.T) {
+	const filename = "test_vectors/bitvector_syntax.ivy"
+	source, err := os.ReadFile(filename)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := StartSourceWithConfig(filename, string(source), NewConfig()); err != nil {
+		t.Fatal(err)
+	}
+	for _, version := range []string{"1.6", "1.7"} {
+		legacy := strings.Replace(string(source), "#lang ivy1.8", "#lang ivy"+version, 1)
+		if _, err := IvyFromString(legacy); err == nil {
+			t.Fatalf("Ivy %s accepted Ivy 1.8 hardware syntax", version)
+		}
+	}
+}
+
+func TestConcatKeepsUninterpretedResultSignaturesSeparate(t *testing.T) {
+	const source = `#lang ivy1.8
+type bits
+interpret bits -> bv[2]
+type small
+interpret small -> bv[3]
+type large
+interpret large -> bv[5]
+type abstract
+individual x : bits
+individual y : abstract
+axiom (concat(x,x) : small) = 1
+axiom (concat(x,x) : large) = 2
+axiom (concat(x,y) : small) = 3
+property [left] (concat(x,x) : small) ~= 2
+property [right] (concat(x,x) : large) ~= 1
+property [mixed] (concat(x,y) : small) ~= 1
+`
+	if err := StartSourceWithConfig("uninterpreted_concat.ivy", source, NewConfig()); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestLogicParserHardwareTerms(t *testing.T) {
+	version := Version{1, 8}
+	flat, err := ParseLogicV17("x<<3:2>>::y::z", version)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if NodeRep(flat) != "concat" || len(flat.Args()) != 3 || NodeRep(flat.Args()[0]) != "bfe[2][3]" {
+		t.Fatalf("unexpected flat hardware term: %s", flat)
+	}
+	nested, err := ParseLogicV17("(x::y)::z", version)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if NodeRep(nested) != "concat" || len(nested.Args()) != 2 || NodeRep(nested.Args()[0]) != "concat" {
+		t.Fatalf("unexpected nested concatenation: %s", nested)
+	}
+}
+
+func TestAscribedBitFieldResult(t *testing.T) {
+	for _, version := range []string{"1.7", "1.8"} {
+		t.Run(version, func(t *testing.T) {
+			source := "#lang ivy" + version + `
+type word
+interpret word -> bv[4]
+type pair
+interpret pair -> bv[2]
+individual x : word
+axiom x = 10
+property [selected] (bfe[1][2](x) : pair) = 1
+`
+			if err := StartSourceWithConfig("bitfield.ivy", source, NewConfig()); err != nil {
+				t.Fatal(err)
+			}
+			conflict := strings.Replace(source, "= 1", "= (1 : word)", 1)
+			if err := StartSourceWithConfig("conflicting_sort.ivy", conflict, NewConfig()); err == nil {
+				t.Fatal("accepted an equality between bit vectors of different Ivy sorts")
+			}
+		})
+	}
+}
 
 // =============================================================================
 // Batch B — Compilation Expression Fixes (RED phase)

@@ -23,13 +23,14 @@ import (
 // Solver wraps a Translator and manages caches for
 // converting Ivy logic structures to Z3 and back.
 type Solver struct {
-	mu               sync.Mutex
-	tr               *Translator
-	z3u              *Z3Utils // z3_utils.py operations (ToZ3, Z3Implies, Z3ImpliesBatch)
-	opts             *SolverOptions
-	sig              *Sig
-	mod              *Module // module this solver belongs to (nil = ad-hoc/test)
-	HandleRangeSorts bool    // controls range sort clamped arithmetic; default true
+	concatWidthWarnings sync.Map
+	mu                  sync.Mutex
+	tr                  *Translator
+	z3u                 *Z3Utils // z3_utils.py operations (ToZ3, Z3Implies, Z3ImpliesBatch)
+	opts                *SolverOptions
+	sig                 *Sig
+	mod                 *Module // module this solver belongs to (nil = ad-hoc/test)
+	HandleRangeSorts    bool    // controls range sort clamped arithmetic; default true
 }
 
 // NewSolver creates a new Solver bound to the given module. The module's

@@ -38,6 +38,9 @@ tokens = (
    'PTO',
    'DOLLAR',
    'CARET',
+   'DLT',
+   'DGT',
+   'DCOLON',
     'LB',
     'RB',
     'WHENFIRST',
@@ -204,6 +207,9 @@ t_DOTS = r'\.\.'
 t_DOTDOTDOT = r'\.\.\.'
 t_DOLLAR = r'\$'
 t_CARET = r'\^'
+t_DLT = r'\<\<'
+t_DGT = r'\>\>'
+t_DCOLON = r'::'
 t_LB  = r'\['
 t_RB  = r'\]'
 

@@ -138,22 +138,31 @@ func (g *Generator) emitBVApply(name string, a *goivy.Apply) (string, bool, erro
 	}
 	switch name {
 	case "concat":
-		if len(a.Terms) != 2 {
-			return "", true, fmt.Errorf("ivy2golang: concat expected 2 arguments, got %d", len(a.Terms))
+		if len(a.Terms) == 0 {
+			return "", true, fmt.Errorf("ivy2golang: concat requires at least one argument")
 		}
-		lhs, err := g.emitExpr(a.Terms[0])
-		if err != nil {
-			return "", true, err
+		var expr string
+		totalWidth := 0
+		for _, arg := range a.Terms {
+			width, ok := g.bvWidthForSort(arg.NodeSort())
+			if !ok {
+				return "", true, fmt.Errorf("ivy2golang: concat argument is not a bitvector: %s", arg)
+			}
+			totalWidth += width
+			piece, err := g.emitExpr(arg)
+			if err != nil {
+				return "", true, err
+			}
+			if expr == "" {
+				expr = piece
+			} else {
+				expr = fmt.Sprintf("((%s) << %d | (%s))", expr, width, piece)
+			}
 		}
-		rhs, err := g.emitExpr(a.Terms[1])
-		if err != nil {
-			return "", true, err
+		if totalWidth != result.Bits {
+			return "", true, fmt.Errorf("ivy2golang: concat result width %d does not match argument width %d", result.Bits, totalWidth)
 		}
-		rhsWidth, ok := g.bvWidthForSort(a.Terms[1].NodeSort())
-		if !ok {
-			return "", true, fmt.Errorf("ivy2golang: concat rhs is not a bitvector: %s", a.Terms[1].String())
-		}
-		code, err := g.maskBVExpr(fmt.Sprintf("((%s) << %d | (%s))", lhs, rhsWidth, rhs), result)
+		code, err := g.maskBVExpr(expr, result)
 		return code, true, err
 	case "bvand", "bvor", "bvxor", "+", "-", "*", "/", "%", "bvadd", "bvsub", "bvmul", "bvudiv", "bvurem":
 		if len(a.Terms) != 2 {

@@ -1,0 +1,13 @@
+#lang ivy1.8
+type word
+interpret word -> bv[4]
+type pair
+interpret pair -> bv[2]
+type packed
+interpret packed -> bv[6]
+individual x : word
+axiom x = 10
+property [variadic] (concat(bfe[1][2](x) : pair, 2 : pair, 3 : pair) : packed) = 27
+property [sugar] (((x<<2:1>>) : pair) :: (2 : pair) :: (3 : pair)) : packed = 27
+property [nested] ((((1 : pair) :: (2 : pair)) : word) :: (3 : pair)) : packed = 27
+property [identity] (concat(bfe[1][2](x) : pair) : pair) = 1
