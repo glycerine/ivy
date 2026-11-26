@@ -1096,6 +1096,12 @@ func MCTactic(prover interface{}, goals []*LabeledFormula, proofNode Node, mod *
 // VMTTactic exports the verification problem in VMT format and checks it.
 // Corresponds to Python's vmt_tactic (ivy_check.py:819-831).
 func VMTTactic(prover interface{}, goals []*LabeledFormula, proofNode Node, mod *Module) ([]*LabeledFormula, error) {
+	return modelExportTactic(prover, goals, proofNode, mod, func(m *Module) error {
+		return VMTCheckIsolate("vmt", m)
+	})
+}
+
+func modelExportTactic(prover interface{}, goals []*LabeledFormula, proofNode Node, mod *Module, export func(*Module) error) ([]*LabeledFormula, error) {
 	if len(goals) == 0 {
 		return nil, nil
 	}
@@ -1103,11 +1109,7 @@ func VMTTactic(prover interface{}, goals []*LabeledFormula, proofNode Node, mod 
 	if err != nil {
 		return nil, err
 	}
-	// Python: check_subgoals(goals[0:1], method=ivy_vmt.check_isolate)
-	vmtMethod := func(m *Module) error {
-		return VMTCheckIsolate("vmt", m)
-	}
-	err = CheckSubgoals(goals[0:1], vmtMethod, mod)
+	err = CheckSubgoals(goals[0:1], export, mod)
 	return goals[1:], err
 }
 
@@ -1190,6 +1192,12 @@ func RegisterTactics(proofCfg *ProofConfig, mod *Module) {
 	})
 	proofCfg.RegisterTactic("vmt", func(pc ProofCheckerInterface, goals []*LabeledFormula, p Node) ([]*LabeledFormula, error) {
 		return VMTTactic(pc, goals, p, pc.GetModule())
+	})
+	proofCfg.RegisterTactic("mypyvy", func(pc ProofCheckerInterface, goals []*LabeledFormula, p Node) ([]*LabeledFormula, error) {
+		return modelExportTactic(pc, goals, p, pc.GetModule(), MypyvyExport)
+	})
+	proofCfg.RegisterTactic("duoai", func(pc ProofCheckerInterface, goals []*LabeledFormula, p Node) ([]*LabeledFormula, error) {
+		return modelExportTactic(pc, goals, p, pc.GetModule(), DuoAIExport)
 	})
 	// Register all ivy_tactics.py proof tactics.
 	RegisterProofTactics(proofCfg)

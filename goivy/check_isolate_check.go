@@ -1188,6 +1188,8 @@ func CheckModule(mod *Module) error {
 
 		methodName := GetIsolateMethod(isolate, isoMod)
 		switch {
+		case methodName == "convert_to_mypyvy":
+			return MypyvyExport(isoMod)
 		case methodName == "mc":
 			mcMethod := func(m *Module) error {
 				res, err := MCCheckIsolate(m, "mc")

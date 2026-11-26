@@ -41,7 +41,8 @@ type IvyUtilsConfig struct {
 	// LocalActionCtr generates unique IDs for LocalAction nodes.
 	// Shared by both ast and actions packages (matching Python's single
 	// global local_action_ctr in ivy_actions.py).
-	LocalActionCtr int64
+	LocalActionCtr     int64
+	ConstructorArgsCtr int64
 
 	// CallActionCtr generates unique IDs for CallAction nodes.
 	// Shared by both ast and actions packages (matching Python's single

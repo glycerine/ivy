@@ -1406,6 +1406,7 @@ var DefinedAttributes = map[string]bool{
 	"method": true, "separate": true, "iterable": true, "cardinality": true,
 	"radix": true, "override": true, "cppstd": true, "libspec": true,
 	"macro_finder": true, "global_parameter": true, "complete": true,
+	"constructors": true,
 }
 
 // KnownLogics matches Python ivy_logic.logics.

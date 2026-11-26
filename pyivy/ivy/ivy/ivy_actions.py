@@ -201,6 +201,46 @@ class NamedUpdate(object):
     def __str__(self):
         return str(self.sym)
 
+constructor_args_counter = 0
+
+def eliminate_struct_destructors(domain,clauses):
+    if clauses.is_false() or not domain.sort_constructors:
+        return clauses
+    memo = {}
+    constraints = []
+
+    def rewrite(term):
+        global constructor_args_counter
+        if is_app(term) and len(term.args) == 1 and isinstance(term.rep,Symbol):
+            sort = domain.destructor_sorts.get(term.rep.name)
+            if sort is not None and not used_variables_ast(term):
+                if term in memo:
+                    return memo[term]
+                fields = domain.sort_destructors[sort.name]
+                constructors = domain.sort_constructors.get(sort.name,())
+                if constructors and fields and all(len(field.sort.dom) == 1 for field in fields):
+                    ctor = constructors[0]
+                    if list(ctor.sort.dom) == [field.sort.rng for field in fields]:
+                        base = rewrite(term.args[0])
+                        serial = constructor_args_counter
+                        constructor_args_counter += 1
+                        params = []
+                        for field in fields:
+                            value = Symbol('{}${}${}'.format(sort.name,field.name,serial),field.sort.rng).skolem()
+                            memo[field(term.args[0])] = value
+                            if field.name == term.rep.name:
+                                memo[term] = value
+                            params.append(value)
+                        constraints.append(Equals(base,ctor(*params)))
+                        return memo[term]
+        return term.clone([rewrite(arg) for arg in term.args])
+
+    formulas = [rewrite(formula) for formula in clauses.fmlas]
+    definitions = [defn.clone([defn.lhs(),rewrite(defn.rhs())]) for defn in clauses.defs]
+    if not constraints:
+        return clauses
+    return Clauses(formulas+constraints,definitions,clauses.annot)
+
 class Action(AST):
     def __init__(self,*args):
         self.args = list(args)
@@ -245,6 +285,9 @@ class Action(AST):
         if updated is not None and domain.wires:
             modified = set(updated)
             updated = updated + [wire for wire in domain.wires if wire not in modified]
+        if 'constructors' in domain.attributes:
+            clauses = eliminate_struct_destructors(domain,clauses)
+            pre = eliminate_struct_destructors(domain,pre)
         return updated,clauses,pre
     def hide_formals(self,update):
         to_hide = []

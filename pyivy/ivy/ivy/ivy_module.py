@@ -1074,3 +1074,15 @@ def sort_dependencies(mod,sortname,with_variants=True):
 class IsolateInfo(object):
     def __init__(self):
         self.implementations,self.monitors = [],[]
+
+def is_destructor(symbol):
+    return symbol.name in module.destructor_sorts
+
+def is_struct_sort(sort):
+    return sort.name in module.sort_destructors
+
+def sort_destructors(sort):
+    return module.sort_destructors[sort.name]
+
+def is_constructor(symbol):
+    return symbol.name in module.constructor_sorts

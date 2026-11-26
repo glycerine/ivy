@@ -516,4 +516,6 @@ func RegisterProofTactics(cfg *ProofConfig) {
 	cfg.RegisterTactic("tempind", Tempind)
 	cfg.RegisterTactic("tempcase", Tempcase)
 	cfg.RegisterTactic("sorry", Sorry)
+	cfg.RegisterTactic("flatten_structs", FlattenStructsTactic)
+	cfg.RegisterTactic("macro_expand", MacroExpandTactic)
 }

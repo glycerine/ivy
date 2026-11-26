@@ -1974,6 +1974,11 @@ func (a *LogicCallAction) IntUpdate(ctx *UpdateContext) *Update {
 // Corresponds to Python CallAction.apply_actuals.
 // Includes capture avoidance via distinct_obj_renaming.
 func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction) *Update {
+	formals, body := a.bindActuals(ctx.Domain, callee)
+	return Hide(formals, IntUpdate(body, ctx))
+}
+
+func (a *LogicCallAction) bindActuals(domain *Module, callee ActionsAction) ([]*Const, ActionsAction) {
 	formalParams := callee.GetFormalParams()
 	formalReturns := callee.GetFormalReturns()
 	actualParams := nodeArgs(a.Callee)
@@ -2048,12 +2053,12 @@ func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction)
 	//   for x,y in zip(formal_params,actual_params):
 	//       if x.sort != y.sort and not domain.is_variant(x.sort, y.sort):
 	//           raise IvyError("value for input parameter ... has wrong sort")
-	if ctx.Domain != nil {
+	if domain != nil {
 		for i, fp := range renamedFormalParams {
 			fpSort := fp.CSort
 			apSort := actualParams[i].NodeSort()
 			if fpSort != nil && apSort != nil && fpSort != apSort {
-				if !ctx.Domain.IsVariant(fpSort, apSort) {
+				if !domain.IsVariant(fpSort, apSort) {
 					panic(fmt.Sprintf("value for input parameter %s has wrong sort", fp.Name))
 				}
 			}
@@ -2064,7 +2069,7 @@ func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction)
 			frSort := fr.CSort
 			arSort := actualReturns[i].NodeSort()
 			if frSort != nil && arSort != nil && frSort != arSort {
-				if !ctx.Domain.IsVariant(arSort, frSort) {
+				if !domain.IsVariant(arSort, frSort) {
 					panic(fmt.Sprintf("value for output parameter %s has wrong sort", fr.Name))
 				}
 			}
@@ -2095,15 +2100,7 @@ func (a *LogicCallAction) applyActuals(ctx *UpdateContext, callee ActionsAction)
 	outputSeq := NewSequence(outputAsgns...)
 	fullSeq := NewSequence(inputSeq, bindOlds, outputSeq)
 
-	update := IntUpdate(fullSeq, ctx)
-
-	// Hide the renamed formal parameters and returns.
-	// Python (ivy_actions.py:1377): res = hide(formal_params+formal_returns, res)
-	// Always called, even with empty toHide.
-	toHide := make([]*Const, 0, len(renamedFormalParams)+len(renamedFormalReturns))
-	toHide = append(toHide, renamedFormalParams...)
-	toHide = append(toHide, renamedFormalReturns...)
-	return Hide(toHide, update)
+	return append(renamedFormalParams, renamedFormalReturns...), fullSeq
 }
 
 func callActionRenamedFormal(sym *Const, substMap map[NodeKey]Expr) *Const {
@@ -2281,6 +2278,12 @@ func GetUpdate(action ActionsAction, ctx *UpdateContext) *Update {
 			modified = appendUniqueConst(modified, seen, wire)
 		}
 		update.Modified = modified
+	}
+	if ctx.Domain != nil {
+		if _, enabled := ctx.Domain.Attributes.Get2("constructors"); enabled {
+			update.TR = eliminateStructDestructors(ctx.Domain, update.TR)
+			update.Pre = eliminateStructDestructors(ctx.Domain, update.Pre)
+		}
 	}
 	return update
 }
