@@ -627,12 +627,14 @@ if not iu.get_numeric_version() <= [1,6]:
         p[0] = [Atom(p[1])] if len(p) == 2 else p[1] + [Atom(p[3])]
 
     def p_top_invariant_labeledfmla(p):
-        'top : top optexplicit INVARIANT labeledfmla optinvwith optproof'
+        '''top : top optexplicit INVARIANT labeledfmla optinvwith optproof
+               | top DERIVED INVARIANT labeledfmla optinvwith optproof'''
         if __debug__: xtracer.trace("parser.p_top_invariant_labeledfmla ENTER (top)")
         p[0] = p[1]
         lf = addlabel(p[4],'invar')
         lf.unprovable = False
-        if p[2]:
+        lf.derived = p.slice[2].type == 'DERIVED'
+        if p[2] and not lf.derived:
             lf.explicit = True
         d = ConjectureDecl(lf)
         d.lineno = get_lineno(p,3)

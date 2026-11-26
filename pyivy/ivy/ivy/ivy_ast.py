@@ -632,6 +632,7 @@ class LabeledFormula(AST):
         self.definition = False
         self.assumed = False
         self.unprovable = False
+        self.derived = False
         lf_counter += 1
         if __debug__ and not LabeledFormula._in_clone:
             xtracer.trace("ast.LF.__init__ id=%d counter=%d" % (self.id, lf_counter))
@@ -665,6 +666,7 @@ class LabeledFormula(AST):
         res.definition = self.definition
         res.assumed = self.assumed
         res.unprovable = self.unprovable
+        res.derived = self.derived
         return res
 
     def clone_with_fresh_id(self,args):
@@ -675,6 +677,7 @@ class LabeledFormula(AST):
         res.definition = self.definition
         res.assumed = self.assumed
         res.unprovable = self.unprovable
+        res.derived = self.derived
         return res
 
     def rename(self,s):

@@ -469,9 +469,9 @@ def convert_postconds(state,postconds):
     return [x.clone([x.args[0],lut.rename_ast(x.formula,renaming)])
             for x in postconds]
 
-def check_conjs_in_state(mod,ag,post,indent=8,pcs=[]):
+def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False):
     conjs = mod.conj_subgoals if mod.conj_subgoals is not None else mod.labeled_conjs
-    conjs = [x for x in conjs if is_check_mod_unprovable(x)]
+    conjs = [x for x in conjs if x.derived == derived and is_check_mod_unprovable(x)]
     conjs += convert_postconds(post,pcs)
     check_lineno = act.checked_assert.get()
     if check_lineno == "":
@@ -483,7 +483,7 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[]):
     lcs = [c for c in lcs if act.check_name_selected(c.name if c.label is not None else None)]
     if not mod.invardeps:
         return check_fcs_in_state(mod,ag,post,[ConjChecker(c,indent) for c in lcs])
-    available = {c.name:c.formula for c in mod.assumed_invariants + mod.labeled_conjs if c.label is not None}
+    available = {c.name:c for c in mod.assumed_invariants + mod.labeled_conjs if c.label is not None}
     checkers = []
     for c in lcs:
         names = mod.invardeps.get(c.name,()) if c.label is not None else ()
@@ -491,7 +491,11 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[]):
         if missing:
             raise iu.IvyError(c,"zero-delay dependency {} is not visible in this isolate".format(', '.join(missing)))
         if names:
-            hypothesis = lg.And(*(available[name] for name in names))
+            if not c.derived:
+                for name in names:
+                    if available[name].derived:
+                        raise iu.IvyError(c,"normal invariant has a zero-delay dependency on derived invariant {}".format(name))
+            hypothesis = lg.And(*(available[name].formula for name in names))
             c = c.clone([c.label,lg.Implies(hypothesis,c.formula)])
         checkers.append(ConjChecker(c,indent))
     return check_fcs_in_state(mod,ag,post,checkers)
@@ -503,8 +507,9 @@ opt_summary = iu.BooleanParameter("summary",False)
 
 # This gets the pre-state for inductive checks. Only implicit conjectures are used.
 
-def get_conjs(mod):
-    fmlas = [lf.formula for lf in mod.labeled_conjs + mod.assumed_invariants if not lf.explicit and not lf.unprovable]
+def get_conjs(mod,include_derived=True):
+    fmlas = [lf.formula for lf in mod.labeled_conjs + mod.assumed_invariants if not lf.explicit and not lf.unprovable
+             and (include_derived or not lf.derived)]
     return lut.Clauses(fmlas,annot=act.EmptyAnnotation())
 
 def apply_conj_proofs(mod):
@@ -518,6 +523,8 @@ def apply_conj_proofs(mod):
             proof = pmap[lf.id]
             subgoals = pc.admit_proposition(lf,proof)
             subgoals = list(map(ivy_compiler.theorem_to_property,subgoals))
+            for subgoal in subgoals:
+                subgoal.derived = lf.derived
             conjs.extend(subgoals)
         else:
             conjs.append(lf)
@@ -638,6 +645,8 @@ def check_isolate(trace_hook = None):
             for lf in mod.labeled_inits:
                 print(pretty_lf(lf))
         checked_invariants = [x for x in mod.labeled_conjs if is_check_mod_unprovable(x)]
+        check_normal = any(not lf.derived for lf in checked_invariants)
+        check_derived = any(lf.derived for lf in checked_invariants)
         if checked_invariants:
             print("\n    The inductive invariant consists of the following conjectures:")
             for lf in checked_invariants:
@@ -668,7 +677,7 @@ def check_isolate(trace_hook = None):
                     lineno="(internal)"
                 print("initializer:        {} {}".format(lineno, actname))
 
-        if checked_invariants and not checked_action.get() and not unprovable:
+        if check_normal and not checked_action.get() and not unprovable:
             print("\n    Initialization must establish the invariant")
             if check:
                 with itp.EvalContext(check=False):
@@ -698,7 +707,7 @@ def check_isolate(trace_hook = None):
         prioritized = prioritized.intersection(checked_actions)
         actions = sorted(list(prioritized)) + sorted(list(checked_actions.difference(prioritized)))
 
-        if checked_actions and checked_invariants:
+        if checked_actions and check_normal:
             print("\n    The following set of external actions must preserve the invariant:")
             if priority_actions.get()!=None:
                 print("\n         (prioritized checking order: ", str(sorted(list(prioritized))), ')')
@@ -717,6 +726,14 @@ def check_isolate(trace_hook = None):
                     print('')
 
 
+
+        if check_derived:
+            print("\n    The following derived invariants must be implied by the invariants:")
+            if check:
+                ag = ivy_art.AnalysisGraph()
+                state = itp.State()
+                state.clauses = get_conjs(mod,include_derived=False)
+                check_conjs_in_state(mod,ag,state,derived=True)
 
         callgraph = defaultdict(list)
         for actname,action in mod.actions.items():

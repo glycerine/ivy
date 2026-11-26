@@ -1,0 +1,13 @@
+#lang ivy1.8
+
+isolate model = {
+    individual x : bool
+    individual y : bool
+    after init { x := true; y := true }
+    export action step = { x := x; y := y }
+
+    invariant [basis] x
+    invariant [extra] y
+    derived invariant [lemma] x
+    derived invariant [goal] x & y with lemma
+}

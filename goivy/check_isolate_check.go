@@ -209,9 +209,12 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	// Print checked invariants
 	// Python: checked_invariants = [x for x in mod.labeled_conjs if is_check_mod_unprovable(x)]
 	var checkedInvariants []*LabeledFormula
+	var checkNormal, checkDerived bool
 	for _, c := range mod.LabeledConjs {
 		if IsCheckModUnprovable(mod.Cfg, c) {
 			checkedInvariants = append(checkedInvariants, c)
+			checkDerived = checkDerived || c.Derived
+			checkNormal = checkNormal || !c.Derived
 		}
 	}
 	if len(checkedInvariants) > 0 {
@@ -276,7 +279,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	// AddInitialState computes init state from mod.InitCond + initializer actions.
 	// Python: if checked_invariants and not checked_action.get() and not unprovable:
 	//   print header always, then if check: do checking, else: print('')
-	if len(checkedInvariants) > 0 && mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable {
+	if checkNormal && mod.Cfg.CheckedAction == "" && !mod.Cfg.OnlyCheckUnprovable {
 		fmt.Println("\n    Initialization must establish the invariant")
 		if check {
 			ag := NewAnalysisGraph(mod)
@@ -351,7 +354,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	prioritizedChecked := intersect(prioritized, checkedActions)
 	actionOrder := sortedUnion(prioritizedChecked, checkedActions)
 
-	if len(checkedActions) > 0 && len(checkedInvariants) > 0 {
+	if len(checkedActions) > 0 && checkNormal {
 		fmt.Println("\n    The following set of external actions must preserve the invariant:")
 		if mod.Cfg.PriorityActionsSet {
 			var plist []string
@@ -394,6 +397,16 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 					CheckConjsInStateWithAG(mod, ag, post, 12, pcs)
 				}
 			}
+		}
+	}
+
+	if checkDerived {
+		fmt.Println("\n    The following derived invariants must be implied by the invariants:")
+		if check {
+			ag := NewAnalysisGraph(mod)
+			state := NewState(mod, getConjs(mod, false))
+			ag.Add(state, nil)
+			checkConjsInStateWithAG(mod, ag, state, 8, nil, true)
 		}
 	}
 
@@ -1491,6 +1504,10 @@ func sortedUnion(priority, all map[string]bool) []string {
 // CheckConjsInStateWithAG checks conjectures against a state using the
 // analysis graph. This is the full version of CheckConjsInState.
 func CheckConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent int, pcs []*LabeledFormula) bool {
+	return checkConjsInStateWithAG(mod, ag, post, indent, pcs, false)
+}
+
+func checkConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent int, pcs []*LabeledFormula, derived bool) bool {
 	conjs := mod.ConjSubgoals
 	if conjs == nil {
 		conjs = mod.LabeledConjs
@@ -1500,7 +1517,7 @@ func CheckConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent
 	// Python: conjs = [x for x in conjs if is_check_mod_unprovable(x)]
 	var checkable []*LabeledFormula
 	for _, c := range conjs {
-		if IsCheckModUnprovable(mod.Cfg, c) {
+		if c.Derived == derived && IsCheckModUnprovable(mod.Cfg, c) {
 			checkable = append(checkable, c)
 		}
 	}

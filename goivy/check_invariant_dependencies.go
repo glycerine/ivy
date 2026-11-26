@@ -28,16 +28,16 @@ func checkInvariantDependencyCycles(mod *Module) error {
 	return &IvyError{Msg: "zero-delay invariant dependency cycle: " + cycles[0]}
 }
 
-func invariantDependencyAssumptions(mod *Module) map[string]Expr {
+func invariantDependencyAssumptions(mod *Module) map[string]*LabeledFormula {
 	if len(mod.InvariantDependencies) == 0 {
 		return nil
 	}
-	available := make(map[string]Expr, len(mod.AssumedInvs)+len(mod.LabeledConjs))
+	available := make(map[string]*LabeledFormula, len(mod.AssumedInvs)+len(mod.LabeledConjs))
 	for _, invariants := range [][]*LabeledFormula{mod.AssumedInvs, mod.LabeledConjs} {
 		for _, lf := range invariants {
 			if name := lfLabelName(lf); name != "" {
-				if formula, ok := lf.Formula.(Expr); ok {
-					available[name] = formula
+				if _, ok := lf.Formula.(Expr); ok {
+					available[name] = lf
 				}
 			}
 		}
@@ -45,12 +45,15 @@ func invariantDependencyAssumptions(mod *Module) map[string]Expr {
 	return available
 }
 
-func invariantDependencyHypotheses(mod *Module, lf *LabeledFormula, available map[string]Expr) ([]Expr, error) {
+func invariantDependencyHypotheses(mod *Module, lf *LabeledFormula, available map[string]*LabeledFormula) ([]Expr, error) {
 	var missing []string
 	var hypotheses []Expr
 	for _, name := range mod.InvariantDependencies[lfLabelName(lf)] {
-		if formula, ok := available[name]; ok {
-			hypotheses = append(hypotheses, formula)
+		if dependency, ok := available[name]; ok {
+			if !lf.Derived && dependency.Derived {
+				return nil, NewIvyError(lf, fmt.Sprintf("normal invariant has a zero-delay dependency on derived invariant %s", name))
+			}
+			hypotheses = append(hypotheses, dependency.Formula.(Expr))
 		} else {
 			missing = append(missing, name)
 		}
@@ -62,7 +65,7 @@ func invariantDependencyHypotheses(mod *Module, lf *LabeledFormula, available ma
 	return hypotheses, nil
 }
 
-func invariantWithDependencies(mod *Module, lf *LabeledFormula, available map[string]Expr) (*LabeledFormula, error) {
+func invariantWithDependencies(mod *Module, lf *LabeledFormula, available map[string]*LabeledFormula) (*LabeledFormula, error) {
 	if available == nil {
 		return lf, nil
 	}

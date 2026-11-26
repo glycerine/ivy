@@ -335,10 +335,14 @@ func CheckTemporals(mod *Module) error {
 // Only implicit (non-explicit), non-unprovable conjectures and assumed invariants
 // are included.
 func GetConjs(mod *Module) *Clauses {
+	return getConjs(mod, true)
+}
+
+func getConjs(mod *Module, includeDerived bool) *Clauses {
 	var fmlas []Expr
 	all := append(mod.LabeledConjs, mod.AssumedInvs...)
 	for _, lf := range all {
-		if !lf.Explicit && !lf.Unprovable {
+		if !lf.Explicit && !lf.Unprovable && (includeDerived || !lf.Derived) {
 			fmlas = append(fmlas, lf.Formula.(Expr))
 		}
 	}
@@ -409,6 +413,7 @@ func ApplyConjProofs(mod *Module) error {
 				if err != nil {
 					return err
 				}
+				modSG.Derived = lf.Derived
 				conjs = append(conjs, modSG)
 			}
 		} else {
@@ -688,7 +693,7 @@ func CheckConjsInState(mod *Module, indent int, pcs []*LabeledFormula) bool {
 	// Python: conjs = [x for x in conjs if is_check_mod_unprovable(x)]
 	var checkable []*LabeledFormula
 	for _, c := range conjs {
-		if IsCheckModUnprovable(mod.Cfg, c) {
+		if !c.Derived && IsCheckModUnprovable(mod.Cfg, c) {
 			checkable = append(checkable, c)
 		}
 	}

@@ -55,9 +55,10 @@ func parser17DeclareConjecture(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula
 	top.declare(d)
 }
 
-func parser17DeclareInvariant(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, explicit bool, loc Location, deps []Node, proof Node) {
+func parser17DeclareInvariant(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, explicit, derived bool, loc Location, deps []Node, proof Node) {
 	lf = parser17AddLabel(cfg, lf, "invar")
 	lf.Unprovable = false
+	lf.Derived = derived
 	if explicit {
 		lf.Explicit = true
 	}

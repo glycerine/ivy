@@ -336,7 +336,12 @@ top:
     {
         xtracer.Trace("parser.p_top_invariant_labeledfmla ENTER (top)")
         $$ = $1
-        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), $2 != nil, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5, $6)
+        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), $2 != nil, false, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5, $6)
+    }
+    | top PARSER_TOK_DERIVED PARSER_TOK_INVARIANT labeledfmla optinvwith optproof
+    {
+        $$ = $1
+        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), false, true, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5, $6)
     }
     // --- Unprovable Invariant ---
     | top PARSER_TOK_UNPROVABLE PARSER_TOK_INVARIANT labeledfmla optproof
