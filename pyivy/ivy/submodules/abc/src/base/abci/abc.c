@@ -46300,6 +46300,13 @@ int Abc_CommandAbc9Mfs( Abc_Frame_t * pAbc, int argc, char ** argv )
         Abc_Print( -1, "Abc_CommandAbc9Mfs(): The current AIG has no mapping.\n" );
         return 0;
     }
+    // Gia_ManPerformMfs() handles combinational networks only (it asserts so);
+    // on a sequential one it used to drop the registers and most of the logic
+    if ( Gia_ManRegNum(pAbc->pGia) )
+    {
+        Abc_Print( -1, "Abc_CommandAbc9Mfs(): The current AIG is sequential; \"&mfs\" works only for combinational networks.\n" );
+        return 0;
+    }
     if ( Gia_ManLutSizeMax(pAbc->pGia) > 15 )
     {
         Abc_Print( -1, "Abc_CommandAbc9Mfs(): The current mapping has nodes with more than 15 inputs. Cannot use \"mfs\".\n" );

@@ -144,3 +144,24 @@ and states how the Go port was verified.
   `TestMuxPosSkipsCoDrivers`). It also asserted a combinational GIA, which
   release ABC does not enforce; that panic is removed so `&muxpos` runs on
   sequential AIGs as native ABC does.
+
+## 7. `&mfs` destroys sequential designs
+
+- **File:** `src/base/abci/abc.c`, `Abc_CommandAbc9Mfs` (with
+  `src/aig/gia/giaMfs.c`, `Gia_ManPerformMfs`).
+- **Found:** 2026-11-26, while porting `&flow3`, which runs `&mfs`; the Go port
+  (which keeps `Gia_ManPerformMfs`'s assertions) panicked on s27.
+- **Bug:** `Gia_ManPerformMfs` asserts a combinational AIG, but the command does
+  not check. Release builds go on and return a network without registers and
+  with almost no logic: after `&if -K 4`, s27 (3 flops, 12 ANDs) becomes 1 AND,
+  s713 (19 flops, 184 ANDs) becomes 0, and s1494 (6 flops, 808 ANDs) becomes 9.
+  `&flow3` and other scripts that call `&mfs` silently lost the design.
+- **Fix:** the command refuses sequential AIGs, like its other preconditions
+  (`The current AIG is sequential; "&mfs" works only for combinational
+  networks.`), and leaves the AIG unchanged.
+- **Test:** `abcgo/base/abci/mfs_sequential_native_test.go`
+  (`TestNativeMfsRefusesSequentialAig`) runs the native binary named by
+  `ABC_BINARY` on s27; before the fix the flops were gone, now the command
+  refuses and `&ps` still shows `ff = 3`.
+- **Go port:** it panicked in `Gia_ManPerformMfs`; the command now refuses the
+  same way (`TestMfsRefusesSequentialAig`).

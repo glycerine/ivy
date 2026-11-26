@@ -47,6 +47,7 @@ func Gia_ManInsertMfs(p *Gia_Man_t, n *sfm.Sfm_Ntk_t, allBoxes int32) *Gia_Man_t
 
 // Gia_ManPerformMfs optimizes the mapped network and retains timing metadata.
 func Gia_ManPerformMfs(p *Gia_Man_t, pars *sfm.Sfm_Par_t) *Gia_Man_t {
+	// As ABC asserts: the &mfs command refuses sequential AIGs (CBUGS_FIXED.md #7).
 	if Gia_ManRegNum(p) != 0 || p.VMapping == nil {
 		panic("gia: MFS requires a mapped combinational network")
 	}

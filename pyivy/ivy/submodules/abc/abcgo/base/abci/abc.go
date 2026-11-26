@@ -45134,6 +45134,11 @@ func Abc_CommandAbc9Mfs(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Abc_CommandAbc9Mfs(): The current AIG has no mapping.\n")
 		return 0
 	}
+	// Gia_ManPerformMfs handles combinational networks only (CBUGS_FIXED.md #7)
+	if Gia_ManRegNum(abcFrameGia(pAbc)) != 0 {
+		Abc_Print(-1, "Abc_CommandAbc9Mfs(): The current AIG is sequential; \"&mfs\" works only for combinational networks.\n")
+		return 0
+	}
 	if Gia_ManLutSizeMax(abcFrameGia(pAbc)) > 15 {
 		Abc_Print(-1, "Abc_CommandAbc9Mfs(): The current mapping has nodes with more than 15 inputs. Cannot use \"mfs\".\n")
 		return 0
