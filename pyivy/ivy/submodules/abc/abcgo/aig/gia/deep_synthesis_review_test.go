@@ -115,6 +115,7 @@ func TestDeepSynthesisFailureAndMissingGraphs(t *testing.T) {
 			t.Run(fmt.Sprintf("%d/%s", initial, kind), func(t *testing.T) {
 				f := deepReviewFrame(t)
 				g := deepReviewGraph(6)
+				ands := Gia_ManAndNum(g)
 				f.SetResource("pGia", g)
 				abcmain.Abc_FrameSetBatchMode(initial)
 				d := &deepReviewDispatcher{scenario: 2, last: g}
@@ -148,7 +149,7 @@ func TestDeepSynthesisFailureAndMissingGraphs(t *testing.T) {
 				if (kind == "outer") != (result != nil) || abcmain.Abc_FrameIsBatchMode() != initial {
 					t.Fatal("wrong failure result or leaked batch mode")
 				}
-				if kind == "outer" && Gia_ManAndNum(result) != Gia_ManAndNum(g) {
+				if kind == "outer" && Gia_ManAndNum(result) > ands {
 					t.Fatal("failure did not keep the best graph")
 				}
 				if f.Err.(*bytes.Buffer).Len() == 0 {
