@@ -19,6 +19,7 @@ type DomainSetup struct {
 
 	deferDefinitionReferences bool
 	pendingDefinitions        []pendingDefinition
+	explicitSymbols           map[string]bool
 }
 
 type pendingDefinition struct {
@@ -36,6 +37,19 @@ func NewDomainSetup(c *Compiler) *DomainSetup {
 func (d *DomainSetup) ProcessDecls(decls []Node) error {
 	d.deferDefinitionReferences = true
 	defer func() { d.deferDefinitionReferences = false }()
+	d.explicitSymbols = make(map[string]bool)
+	for _, decl := range decls {
+		switch node := decl.(type) {
+		case *ConstantDecl:
+			for _, name := range node.Defines() {
+				d.explicitSymbols[name] = true
+			}
+		case *RelationDecl:
+			for _, name := range node.Defines() {
+				d.explicitSymbols[name] = true
+			}
+		}
+	}
 	for _, decl := range decls {
 		if err := d.ProcessDecl(decl); err != nil {
 			// Python IvyDeclInterp.__call__: with ASTContext(decl).
@@ -864,11 +878,29 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 }
 
 func (d *DomainSetup) compileDefinitionBody(node Node) (Expr, *Definition, error) {
+	awaitDeclaration := func(def *Definition) error {
+		name := ResolveAlias(def.Defines(), d.Compiler.Module)
+		if !d.explicitSymbols[name] {
+			return nil
+		}
+		if _, declared := d.Compiler.Sig.Symbols.Get2(name); declared {
+			return nil
+		}
+		err := NewIvyError(def, fmt.Sprintf("unknown symbol: %s", name))
+		err.unresolvedName = name
+		return err
+	}
 	switch def := node.(type) {
 	case *DefinitionSchema:
+		if err := awaitDeclaration(&def.Definition); err != nil {
+			return nil, &def.Definition, err
+		}
 		compiled, err := d.Compiler.CompileDefnSchema(def)
 		return compiled, &def.Definition, err
 	case *Definition:
+		if err := awaitDeclaration(def); err != nil {
+			return nil, def, err
+		}
 		compiled, err := d.Compiler.CompileDefn(def)
 		return compiled, def, err
 	default:

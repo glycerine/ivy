@@ -110,3 +110,60 @@ func TestMacroExpandExpandsDefinitionAcrossTemporalModel(t *testing.T) {
 		t.Fatalf("macro remained in the transformed model: %v", model)
 	}
 }
+
+func TestFlattenStructsPreservesIndexedFieldUpdates(t *testing.T) {
+	mod := New()
+	outer := &UninterpretedSort{Name: "outer"}
+	inner := &UninterpretedSort{Name: "inner"}
+	index := &UninterpretedSort{Name: "index"}
+	for _, sort := range []*UninterpretedSort{outer, inner, index} {
+		mod.Sig.Sorts.Set(sort.Name, sort)
+	}
+	fieldSort, err := NewFunctionSort(outer, inner)
+	if err != nil {
+		t.Fatal(err)
+	}
+	indexedSort, err := NewFunctionSort(inner, index, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	entries := NewConst("entries", fieldSort)
+	active := NewConst("active", indexedSort)
+	mod.SortDestructors.Set(outer.Name, []*Const{entries})
+	mod.SortDestructors.Set(inner.Name, []*Const{active})
+	mod.DestructorSorts[entries.Name] = outer
+	mod.DestructorSorts[active.Name] = inner
+	state := NewConst("state", outer)
+	i, j := NewConst("i", index), NewConst("j", index)
+	field := NewApplyUnchecked(active, NewApplyUnchecked(entries, state), i)
+	program := &NormalProgram{Init: NewAssignAction(field, True)}
+	ast := mod.Cfg.AstCfg
+	goal := ast.NewLabeledFormula(ast.NewAtom("update"), ast.NewTemporalModels(program, field))
+	proof := NewProofChecker(mod.Cfg.ProofCfg, mod, nil, nil, nil)
+	goals, err := FlattenStructsTactic(proof, []*LabeledFormula{goal}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	temporal := GoalConc(goals[0]).(*TemporalModels)
+	flatSort, err := NewFunctionSort(index, Boolean)
+	if err != nil {
+		t.Fatal(err)
+	}
+	flat := NewConst("state.entries.active", flatSort)
+	if !temporal.Fmla.(Expr).Equal(NewApplyUnchecked(flat, i)) {
+		t.Fatalf("flattened field = %s", temporal.Fmla)
+	}
+	updated := computeUpdate(mod, temporal.Model.(*NormalProgram).Init)
+	solver := NewSolver(mod, mod.Cfg.SolverOpts)
+	defer solver.Close()
+	next := NewConst(ActionNewName(flat.Name), flatSort)
+	prior := &LogicAnd{Terms: []Expr{&LogicNot{Body: &Eq{T1: i, T2: j}}, &LogicNot{Body: NewApplyUnchecked(flat, j)}}}
+	contradiction := &LogicOr{Terms: []Expr{&LogicNot{Body: NewApplyUnchecked(next, i)}, NewApplyUnchecked(next, j)}}
+	clauses := AndClausesTyped(FormulaToClauses(prior, nil), updated.TR)
+	if model, err := solver.GetModelClauses(clauses); err != nil || model == nil {
+		t.Fatalf("no transition for indexed field assignment: %v", err)
+	}
+	if model, err := solver.GetModelClauses(AndClausesTyped(clauses, FormulaToClauses(contradiction, nil))); err != nil || model != nil {
+		t.Fatalf("indexed update changed the wrong index: %v", err)
+	}
+}

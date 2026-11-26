@@ -511,6 +511,60 @@ func CreateIsolate(iso string, mod *Module) error {
 	return nil
 }
 
+// normalizeCheckedActionNames gives each checked export its source name. The
+// internal variant remains a separate target for calls made within the isolate.
+func normalizeCheckedActionNames(mod *Module) {
+	names := make(map[string]string)
+	for name := range mod.PublicActions.All() {
+		if base := CanonAct(name); base != name {
+			names[name] = base
+			names[base] = "int$" + base
+		}
+	}
+	if len(names) == 0 {
+		return
+	}
+	rename := func(name string) string {
+		if renamed, ok := names[name]; ok {
+			return renamed
+		}
+		return name
+	}
+	fixAction := func(action Action) Action {
+		if a, ok := action.(ActionsAction); ok {
+			fixed := PrefixCallsFunc(a, rename)
+			if labeled, ok := a.(interface{ GetLabel() string }); ok && labeled.GetLabel() != "" {
+				if setter, ok := fixed.(interface{ SetLabel(string) }); ok {
+					setter.SetLabel(rename(labeled.GetLabel()))
+				}
+			}
+			return fixed
+		}
+		return action
+	}
+	actions := NewInsMap[string, Action]()
+	for name, action := range mod.Actions.All() {
+		actions.Set(rename(name), fixAction(action))
+	}
+	mod.Actions = actions
+	public := NewInsMap[string, bool]()
+	for name, exported := range mod.PublicActions.All() {
+		public.Set(rename(name), exported)
+	}
+	mod.PublicActions = public
+	for i, init := range mod.Initializers {
+		mod.Initializers[i].Action = fixAction(init.Action)
+	}
+	for i, init := range mod.InitialActions {
+		mod.InitialActions[i] = fixAction(init)
+	}
+	posts := make(map[string][]*LabeledFormula, len(mod.Postconds))
+	for name, post := range mod.Postconds {
+		posts[rename(name)] = post
+	}
+	mod.Postconds = posts
+}
+
 // getModCone returns the Python get_mod_cone(mod) result: public roots,
 // native anti-quote action references, and their transitive callees.
 func getModCone(mod *Module) map[string]bool {

@@ -3,7 +3,6 @@ package goivy
 import (
 	"fmt"
 	"slices"
-	"strings"
 )
 
 type structField struct {
@@ -50,6 +49,10 @@ func (f *structFlattening) fieldTypes(typ Sort, active map[string]bool) []struct
 }
 
 func (f *structFlattening) splitSymbol(symbol *Const, args []Expr, result Sort) []flatTerm {
+	return f.splitFieldSymbol(symbol, "", args, result)
+}
+
+func (f *structFlattening) splitFieldSymbol(symbol *Const, prefix string, args []Expr, result Sort) []flatTerm {
 	var terms []flatTerm
 	domain := make([]Sort, len(args))
 	for i, arg := range args {
@@ -57,7 +60,7 @@ func (f *structFlattening) splitSymbol(symbol *Const, args []Expr, result Sort) 
 	}
 	for _, field := range f.fieldTypes(result, make(map[string]bool)) {
 		var sort Sort = field.typ
-		name := symbol.Name + field.path
+		name := symbol.Name + prefix + field.path
 		if len(domain) > 0 {
 			sig, err := NewFunctionSort(append(append([]Sort(nil), domain...), sort)...)
 			if err != nil {
@@ -82,6 +85,75 @@ func (f *structFlattening) splitSymbol(symbol *Const, args []Expr, result Sort) 
 	return terms
 }
 
+type structSelection struct {
+	symbol *Const
+	args   []Expr
+}
+
+// selectFields keeps the indices with their selector until it reaches the
+// structure's storage symbol. They become extra parameters of the flattened
+// field function, after any parameters on the structure itself.
+func (f *structFlattening) selectFields(expr Expr, selections []structSelection) []flatTerm {
+	selected := selections[0]
+	if IsMacro(expr, f.mod.Cfg.IuCfg) {
+		return f.selectFields(ExpandMacro(expr), selections)
+	}
+	if node, ok := expr.(*LogicIte); ok {
+		condition := f.scalar(node.Cond)
+		return f.mergeBranches(condition, f.selectFields(node.Then, selections), f.selectFields(node.Else, selections))
+	}
+	if call, ok := expr.(*Apply); ok {
+		if symbol := GetAppRep(call); symbol != nil {
+			if f.mod.DestructorSorts[symbol.Name] != nil && len(call.Terms) != 0 {
+				p := structSelection{symbol: symbol, args: f.terms(call.Terms[1:])}
+				return f.selectFields(call.Terms[0], append([]structSelection{p}, selections...))
+			}
+			if sort := f.mod.ConstructorSorts[symbol.Name]; sort != nil {
+				for i, field := range f.mod.SortDestructors.Get(IvySortName(sort)) {
+					if field.Name == selected.symbol.Name && len(selected.args) == 0 && i < len(call.Terms) {
+						if len(selections) == 1 {
+							return f.expr(call.Terms[i])
+						}
+						return f.selectFields(call.Terms[i], selections[1:])
+					}
+				}
+			}
+		}
+	}
+	var path string
+	var indices []Expr
+	for _, selection := range selections {
+		path += "." + selection.symbol.Name
+		indices = append(indices, selection.args...)
+	}
+	result := SortRange(selections[len(selections)-1].symbol.CSort)
+	if variable, ok := expr.(*LogicVariable); ok && len(indices) == 0 {
+		var terms []flatTerm
+		for _, field := range f.fieldTypes(result, make(map[string]bool)) {
+			terms = append(terms, flatTerm{field.path, &LogicVariable{Name: variable.Name + path + field.path, VSort: field.typ}})
+		}
+		return terms
+	}
+	if symbol := GetAppRep(expr); symbol != nil {
+		args := append(f.terms(NodeArgs(expr)), indices...)
+		return f.splitFieldSymbol(symbol, path, args, result)
+	}
+	f.err = fmt.Errorf("cannot project field %s from %s", path, expr)
+	return nil
+}
+
+func (f *structFlattening) mergeBranches(condition Expr, then, otherwise []flatTerm) []flatTerm {
+	if len(then) != len(otherwise) {
+		f.err = fmt.Errorf("incompatible structure branches")
+		return nil
+	}
+	var terms []flatTerm
+	for i, branch := range then {
+		terms = append(terms, flatTerm{branch.path, &LogicIte{ISort: branch.term.NodeSort(), Cond: condition, Then: branch.term, Else: otherwise[i].term}})
+	}
+	return terms
+}
+
 func (f *structFlattening) expr(expr Expr) []flatTerm {
 	if f.err != nil || expr == nil {
 		return nil
@@ -97,15 +169,9 @@ func (f *structFlattening) expr(expr Expr) []flatTerm {
 		return f.splitSymbol(node, nil, node.CSort)
 	case *Apply:
 		if symbol, ok := node.Func.(*Const); ok {
-			if f.mod.DestructorSorts[symbol.Name] != nil && len(node.Terms) == 1 {
-				prefix := "." + symbol.Name
-				var terms []flatTerm
-				for _, field := range f.expr(node.Terms[0]) {
-					if field.path == prefix || strings.HasPrefix(field.path, prefix+".") {
-						terms = append(terms, flatTerm{strings.TrimPrefix(field.path, prefix), field.term})
-					}
-				}
-				return terms
+			if f.mod.DestructorSorts[symbol.Name] != nil && len(node.Terms) != 0 {
+				selection := structSelection{symbol: symbol, args: f.terms(node.Terms[1:])}
+				return f.selectFields(node.Terms[0], []structSelection{selection})
 			}
 			if sort := f.mod.ConstructorSorts[symbol.Name]; sort != nil {
 				fields := f.mod.SortDestructors.Get(IvySortName(sort))
@@ -133,17 +199,7 @@ func (f *structFlattening) expr(expr Expr) []flatTerm {
 	case *Eq:
 		return []flatTerm{{term: &LogicAnd{Terms: f.zip(node.T1, node.T2, func(a, b Expr) Expr { return &Eq{T1: a, T2: b} })}}}
 	case *LogicIte:
-		condition := f.scalar(node.Cond)
-		var terms []flatTerm
-		then, otherwise := f.expr(node.Then), f.expr(node.Else)
-		if len(then) != len(otherwise) {
-			f.err = fmt.Errorf("incompatible structure branches")
-			return nil
-		}
-		for i, branch := range then {
-			terms = append(terms, flatTerm{branch.path, &LogicIte{ISort: branch.term.NodeSort(), Cond: condition, Then: branch.term, Else: otherwise[i].term}})
-		}
-		return terms
+		return f.mergeBranches(f.scalar(node.Cond), f.expr(node.Then), f.expr(node.Else))
 	case *ForAll:
 		return []flatTerm{{term: CloneBinder(node, f.vars(node.Variables), f.scalar(node.Body))}}
 	case *LogicExists:

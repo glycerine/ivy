@@ -6,6 +6,30 @@ import (
 	"testing"
 )
 
+func TestCheckedActionNamesKeepInternalCallDistinct(t *testing.T) {
+	mod := New()
+	mod.SetAction("step", NewAssignAction(NewConst("changed", Boolean), True))
+	mod.SetAction("ext:step", NewSequence())
+	mod.SetAction("helper", NewCallActionOn(mod.Cfg.ActCfg, NewConst("step", TopS)))
+	mod.PublicActions.Set("ext:step", true)
+	normalizeCheckedActionNames(mod)
+	if !mod.PublicActions.Get("step") || mod.PublicActions.Get("ext:step") {
+		t.Fatalf("exported names = %v", GetCheckedActions(mod))
+	}
+	for _, option := range []string{"step", "ext:step"} {
+		mod.Cfg.CheckedAction = option
+		if selected := GetCheckedActions(mod); len(selected) != 1 || selected[0] != "step" {
+			t.Fatalf("action=%s selected %v", option, selected)
+		}
+	}
+	if _, ok := mod.Actions.Get("int$step").(*LogicAssignAction); !ok {
+		t.Fatalf("internal action was lost: %v", mod.Actions.Get("int$step"))
+	}
+	if call := mod.Actions.Get("helper").(*LogicCallAction); ExprName(call.Callee) != "int$step" {
+		t.Fatalf("internal call resolved to %s", call.Callee)
+	}
+}
+
 // =============================================================================
 // Fix 1: IsCheckModUnprovable filtering
 // =============================================================================

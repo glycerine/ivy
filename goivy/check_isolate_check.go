@@ -320,7 +320,10 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 
 	// Check that external actions preserve the invariant
 	checkedActions := setFromSlice(GetCheckedActions(mod))
-	prioritized := setFromSlice(GetPrioritizedActions(mod.Cfg))
+	prioritized := make(map[string]bool)
+	for _, name := range GetPrioritizedActions(mod.Cfg) {
+		prioritized[checkedExportName(mod, name)] = true
+	}
 	prioritizedChecked := intersect(prioritized, checkedActions)
 	actionOrder := sortedUnion(prioritizedChecked, checkedActions)
 
@@ -1233,6 +1236,7 @@ func CheckModule(mod *Module) error {
 		if err := CreateIsolate(isolate, isoMod); err != nil {
 			return fmt.Errorf("create_isolate(%s): %w", isolate, err)
 		}
+		normalizeCheckedActionNames(isoMod)
 
 		if mod.Cfg.OptTrusted {
 			continue

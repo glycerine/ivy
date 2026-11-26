@@ -768,10 +768,7 @@ func CheckSafetyInState(mod *Module, reportPass bool) bool {
 func GetCheckedActions(mod *Module) []string {
 	cact := mod.Cfg.CheckedAction
 	if cact != "" {
-		extName := "ext:" + cact
-		if mod.PublicActions.Get(extName) {
-			cact = extName
-		}
+		cact = checkedExportName(mod, cact)
 	}
 	if cact != "" && !mod.PublicActions.Get(cact) {
 		return nil
@@ -786,6 +783,17 @@ func GetCheckedActions(mod *Module) []string {
 	}
 	sort.Strings(result)
 	return result
+}
+
+func checkedExportName(mod *Module, name string) string {
+	base := CanonAct(name)
+	if mod.PublicActions.Get("ext:" + base) {
+		return "ext:" + base
+	}
+	if mod.PublicActions.Get(base) {
+		return base
+	}
+	return name
 }
 
 // GetPrioritizedActions returns the list of prioritized actions parsed

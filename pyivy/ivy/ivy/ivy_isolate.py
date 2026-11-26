@@ -2093,6 +2093,37 @@ def create_isolate(iso,mod = None,**kwargs):
         if __debug__: xtracer.trace("check.CreateIsolate EXIT name=%s" % str(iso))
 
 
+def normalize_checked_action_names(mod):
+    names = {}
+    for name in mod.public_actions:
+        if name.startswith('ext:'):
+            names[name] = name[4:]
+            names[name[4:]] = 'int$' + name[4:]
+    if not names:
+        return
+
+    def rename(name):
+        return names.get(name,name)
+
+    def fix_action(action):
+        fixed = action.prefix_calls(rename)
+        if hasattr(action,'label'):
+            fixed.label = rename(action.label)
+        return fixed
+
+    actions = [(rename(name),fix_action(action)) for name,action in mod.actions.items()]
+    if isinstance(mod.public_actions,dict):
+        public = {rename(name): value for name,value in mod.public_actions.items()}
+    else:
+        public = [rename(name) for name in mod.public_actions]
+    mod.actions.clear()
+    mod.actions.update(actions)
+    mod.public_actions.clear()
+    mod.public_actions.update(public)
+    mod.initializers = [(name,fix_action(action)) for name,action in mod.initializers]
+    mod.postconds = {rename(name): value for name,value in mod.postconds.items()}
+
+
 def has_assertions(mod,callee):
     assert callee in mod.actions, callee
     return any(isinstance(action,ia.AssertAction) for action in mod.actions[callee].iter_subactions())

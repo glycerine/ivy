@@ -17,6 +17,21 @@ func TestForwardDefinitions(t *testing.T) {
 	}
 }
 
+func TestDefinitionUsesLaterDeclaredWireSignature(t *testing.T) {
+	const source = `#lang ivy1.8
+type index
+interpret index -> bv[1]
+wire zero_case : bool = true
+wire one_case : bool = false
+definition selected(X) = zero_case if X = 0 else one_case
+wire selected(X:index) : bool
+property [points] selected(0) & ~selected(1)
+`
+	if err := StartSourceWithConfig("forward_wire.ivy", source, NewConfig()); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestForwardDefinitionErrors(t *testing.T) {
 	tests := []struct {
 		name   string

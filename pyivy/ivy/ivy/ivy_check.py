@@ -194,13 +194,20 @@ checked_action_found = False
 
 def get_checked_actions():
     cact = checked_action.get()
-    if cact and 'ext:'+cact in im.module.public_actions:
-        cact = 'ext:'+cact
+    if cact:
+        cact = checked_export_name(cact)
     if not(cact and cact not in im.module.public_actions):
         global checked_action_found
         checked_action_found = True
         return [cact] if cact else sorted(im.module.public_actions)
     return []
+
+def checked_export_name(name):
+    base = name.removeprefix('ext:')
+    for candidate in ('ext:'+base, base):
+        if candidate in im.module.public_actions:
+            return candidate
+    return name
 
 def get_prioritized_actions():
     pas = priority_actions.get()
@@ -803,7 +810,7 @@ def check_isolate(trace_hook = None):
 
 
         checked_actions = set(get_checked_actions())
-        prioritized = set(get_prioritized_actions())
+        prioritized = {checked_export_name(name) for name in get_prioritized_actions()}
         prioritized = prioritized.intersection(checked_actions)
         actions = sorted(list(prioritized)) + sorted(list(checked_actions.difference(prioritized)))
 
@@ -1202,6 +1209,7 @@ def check_module():
                 islv.set_macro_finder(False)
         with im.module.copy():
             ivy_isolate.create_isolate(isolate) # ,ext='ext'
+            ivy_isolate.normalize_checked_action_names(im.module)
             if opt_trusted.get():
                 continue
             method_name = get_isolate_method(isolate)
