@@ -755,7 +755,7 @@ func kitDsdPrint(w io.Writer, ntk *Kit_DsdNtk_t, id int32, hex bool) {
 		fmt.Fprint(w, "Const1")
 		return
 	}
-	separator := " , "
+	separator := ","
 	if obj.Type == KIT_DSD_AND {
 		separator = "*"
 	}
@@ -781,7 +781,12 @@ func kitDsdPrint(w io.Writer, ntk *Kit_DsdNtk_t, id int32, hex bool) {
 	}
 	fmt.Fprint(w, closing)
 }
-func Kit_DsdPrintHex(w io.Writer, truth []uint32, nFans int32) { Kit_PrintHexadecimal(w, truth, nFans) }
+// Kit_DsdPrintHex prints (1<<nFans)/4 uppercase digits, as kitDsd.c does.
+func Kit_DsdPrintHex(w io.Writer, truth []uint32, nFans int32) {
+	for k := (1<<uint(nFans))/4 - 1; k >= 0; k-- {
+		fmt.Fprintf(w, "%X", truth[k/8]>>uint(4*(k%8))&15)
+	}
+}
 func Kit_DsdWriteHex(prefix string, truth []uint32, nFans int32) string {
 	var text strings.Builder
 	text.WriteString(prefix)
@@ -791,6 +796,7 @@ func Kit_DsdWriteHex(prefix string, truth []uint32, nFans int32) string {
 func Kit_DsdPrint_rec(w io.Writer, ntk *Kit_DsdNtk_t, id int32)  { kitDsdPrint(w, ntk, id, true) }
 func Kit_DsdPrint2_rec(w io.Writer, ntk *Kit_DsdNtk_t, id int32) { kitDsdPrint(w, ntk, id, false) }
 func Kit_DsdPrint(w io.Writer, ntk *Kit_DsdNtk_t) {
+	fmt.Fprint(w, "F = ")
 	if ntk.Root&1 != 0 {
 		fmt.Fprint(w, "!")
 	}
@@ -810,22 +816,25 @@ func Kit_DsdWrite_rec(prefix string, ntk *Kit_DsdNtk_t, id int32) string {
 }
 func Kit_DsdWrite(ntk *Kit_DsdNtk_t) string {
 	var text strings.Builder
-	Kit_DsdPrint(&text, ntk)
+	if ntk.Root&1 != 0 {
+		text.WriteString("!")
+	}
+	Kit_DsdPrint_rec(&text, ntk, int32(ntk.Root>>1))
 	return text.String()
 }
 func Kit_DsdPrintExpanded(ntk *Kit_DsdNtk_t) {
 	Kit_DsdPrint(os.Stdout, Kit_DsdExpand(ntk))
-	fmt.Println()
 }
 func Kit_DsdPrintFromTruth(truth []uint32, nVars int32) {
 	Kit_DsdPrintFromTruth2(os.Stdout, truth, nVars)
 }
+// Kit_DsdPrintFromTruth2 is Kit_DsdPrintFromTruth writing to w: the
+// expanded MUX-aware decomposition, without a trailing newline.
 func Kit_DsdPrintFromTruth2(w io.Writer, truth []uint32, nVars int32) {
-	Kit_DsdPrint(w, Kit_DsdDecompose(truth, nVars))
-	fmt.Fprintln(w)
+	Kit_DsdPrint(w, Kit_DsdExpand(Kit_DsdDecomposeMux(truth, nVars, 8)))
 }
 func Kit_DsdWriteFromTruth(truth []uint32, nVars int32) string {
-	return Kit_DsdWrite(Kit_DsdDecompose(truth, nVars))
+	return Kit_DsdWrite(Kit_DsdExpand(Kit_DsdDecomposeMux(truth, nVars, 8)))
 }
 
 func Kit_DsdExpandCollectAnd_rec(ntk *Kit_DsdNtk_t, lit uint32, out []uint32, count *int32) {
