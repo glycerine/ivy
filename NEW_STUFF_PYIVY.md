@@ -1,0 +1,223 @@
+# Upstream Python Ivy changes
+
+Source: local `~/go/src/github.com/kenmcmil/ivy`, `8f7763fdf643d8fd75ed9bc061f6e977742f45d6..257e3da96557df04303ccb38e80b5da1cd16cbae`. This covers 202 commits in topological order, oldest first, including side branches and merges. Intermediate implementations are recorded where they appeared. The port should reproduce the resulting behavior at the endpoint. [Port plan](NEW_STUFF_PORTPLAN.md)
+
+## Proofs, model export, and packaging
+
+- `28cce61` Accept the reserved `this` token inside labels and attach `proof [this]` to the implicit whole-program isolate. Update the VC-generation example to exercise that proof.
+- `1f8039c` Switch VMT export to Cole's translation, including property normalization, Herbrandization, and per-action transition construction.
+- `4773d57` Carry uninterpreted sorts and functions, axioms, and unchanged-state frame clauses into VMT.
+- `3a2feca` Start lambda encoding for VMT and add a checker method parameter to select the verification path.
+- `18c08b3` Complete the lambda update encoding, including conditional updates under lambdas, and update the Z3 revision.
+- `435635b` Add the `ranking_infer` tactic and `unprovable property` handling. Convert the temporal goal into a module for the inference backend.
+- `494e376` Add the missing `ranking_infer1.ivy` example.
+- `2189d68` Add the missing ranking-inference implementation, which prepares task/trigger obligations for the backend.
+- `c7f10b9` Fix the older IPv4/TCP model's connection call by passing its missing identifier.
+- `4e47477` Merge the VMT lambda and TCP model branches.
+- `33fbdea` Add struct constructors and destructor elimination, struct flattening and macro-expansion tactics, and support for struct/datatype values in VMT. Update the IPv4/network examples.
+- `d8e4ea3` Merge the struct/datatype and VMT changes.
+- `df84328` Reconcile VMT and the regression suite. Add mypyvy and DuoAI translation/tactic paths, including mypyvy syntax support, action inlining, and Z3 conversion helpers.
+- `e34f3cd` Put helpful conditions containing temporal operators on the temporal ranking path instead of treating them as ordinary state formulas.
+- `dd87dde` Remove stray solver debug output.
+- `f141f5f` Stop creating the solver-state debug file.
+- `2dfa55f` Strip the `ext:` prefix from isolated action names and propagate that rename through action references and C++ generation.
+- `7431454` Add `shrink=false` to disable small-countermodel minimization. The default still shrinks models.
+- `c94e328` Constrain a destructor-chain assignment with the actual arguments of the mutated application, fixing incorrect VCs for indexed updates.
+- `06cbcf3` Integrate dependency and installation changes with the export work. Switch solver imports to external `z3`, update submodule configuration, and cache enum sort declarations.
+- `346fe2d` Fix wheel/setup dependencies and reset the enum-sort cache with the solver context.
+- `992566a` Correct installation instructions and keep the compiler's isolate loop variable from shadowing the selected isolate.
+- `f5ac087` Add the CAV 2020 artifact examples, including earlier verification artifacts and liveness cases.
+- `3796bfa` Pin the wheel-build runner to Ubuntu 22.04.
+- `fbdfce8` Update the build workflow's artifact actions to v4.
+- `d97b603` Correct the documentation deployment script.
+- `14cc02a` Fix the installation documentation.
+- `912e296` Add the ticket-ranking example and adjust isolate construction to accept additional AST inputs.
+- `737e6b0` Remove the Tix dependency from the Python GUI and update the event and graph views.
+
+## Wires and RTL translation
+
+- `3893ae6` Introduce `wire` declarations and definitions. Carry wires through the compiler and isolate so the value read by an action is held across that action.
+- `001da59` Add invariant `with` clauses for zero-delay dependencies. Use the named dependencies in the post-state proof.
+- `18a6276` Register the upcoming `ivy_to_rtl` command, include wire symbols in interference analysis, clean up wire diagnostics, and add refinement examples.
+- `d750a2f` Add `import wire` and `export wire` declarations, track explicit hardware ports, and add a translation fixture and design notes.
+- `dc25e40` Implement RTLIL emission from Ivy's combinational wire definitions, state transitions, and isolate structure.
+- `f197fce` Support a global-scope top module, omit specification-only isolates, and infer cross-isolate I/O.
+- `ea9a514` Enable the `concat` operator and add an RTL example for bit-field extraction and concatenation.
+- `4137fcd` Add hardware usage notes and a reference RTLIL netlist for `refinement3`.
+- `01506a3` Add a small pipelined CPU model.
+- `c41ccea` Lower indexed arrays to RTLIL memories with reads and point writes. Translate the pipelined CPU using that support.
+- `d3f65e1` Document the pipelined CPU's memory layout and simulation recipe.
+- `12d6548` Turn supported Ivy array initializers into RTLIL memory-init cells and wire that support into the CPU example.
+- `7bb8aae` Document Ivy hardware constructs and the pipelined CPU from a user's perspective.
+- `46cd023` Bind the generated TCP and UDP test sockets to loopback in the affected standard-library versions.
+- `c849303` Update generated C++ for the current Z3 C API. Convert the parsed assertion vector to a conjunction before adding it to the solver.
+- `7b5b7f8` Link the hardware docs from the site navigation and document comparison operators.
+- `dfb65f3` Guard label lookups in the circular compositional checker so an unlabeled invariant remains usable.
+- `532fc86` Fix the wire-related export-discovery regression that classified internal actions as externally callable.
+
+## Build, site, regression runner, and replay
+
+- `557b626` Add a Pages workflow to publish the docs from `master`.
+- `8d83bef` Build the Pages site with Bundler and `doc/Gemfile`. Add local Jekyll setup.
+- `5e74fc6` Document the Bundler preview and Pages build.
+- `c849644` Move macOS wheel CI to arm64 Tahoe, update Actions and dependencies, resolve Homebrew OpenSSL by prefix, and use pip's Z3.
+- `94a8089` Make the picotls submodule build compatible with CMake 4.
+- `0aafee8` Declare the setuptools build system in `pyproject.toml`.
+- `8ed743b` Publish macOS CI wheels to production PyPI.
+- `ae3a6ff` Correct Tahoe installation and dependency instructions.
+- `9d11bec` Add the GitHub-generated Jekyll Pages workflow.
+- `f9b7b02` Adjust the generated workflow's `_site` location.
+- `d8df3b8` Merge the Tahoe instructions and server-side Pages workflow changes.
+- `08ee611` Disable push-triggered deploys from the duplicate generated Pages workflow.
+- `0ebc390` Rename and modernize Linux wheel CI for Ubuntu 24.04, Python 3.10, newer Actions, and a smaller build-dependency set.
+- `4e8e47e` Switch Linux CI wheel publishing to production PyPI.
+- `a6b9a5f` Consolidate the regression runner and move manifests to per-directory `ivy_tests.py`.
+- `56bb304` Add optional test group tags and a `group=` selector.
+- `0b95998` Register Apple examples as regressions and mark the unreliable number-theory test separately.
+- `539e66c` Add a nightly normal-group regression run gated on recent commits, plus manual dispatch.
+- `5ed561b` Move the `ivyc` borrow example into the v2 test group.
+- `b201f86` Restore push deploys on the GitHub Pages gem workflow and make the Bundler workflow manual.
+- `d5e30fb` Preserve result-sort ascriptions on polymorphic applications and constants. A wire declared separately from its definition now also stays frozen through an action.
+- `f5dffa7` Save checker traces for replay, load them in the UI/CLI, enable tracking selected expressions, and reconnect liveness/ranking instrumentation when replaying.
+- `44eb960` Merge replay with the updated checker and compiler.
+- `54c868e` Add a pipelined CPU checked against a reference ISA by tagging in-flight instructions.
+- `054188a` Add `check=` name patterns for properties, invariants, and program assertions. Preserve unselected checks as assumptions and accept `assert=` filenames with or without `.ivy`.
+- `4477049` Add `trace_dir=` to collect an independent counterexample for every failing check. Keep the first trace per name and create a fresh output directory.
+- `8e34c20` Add regressions for the wire trace and reference-tagged pipelined CPU.
+- `e3bab4e` Add a five-stage ISA-refinement example and its regression.
+- `a6936f4` Add branch prediction to the five-stage example and register it as a regression.
+- `2940532` Inline defined array initializers in RTL. An undefined source can become arbitrary initial contents only where the rest of the translated logic does not observe that source.
+- `fb4f815` Add the `to_rtl` test class and memory-initialization fixtures.
+- `6bab6c5` Assert that RTL translation rejects an unsupported whole-array copy.
+- `3a5b4b2` Adjust the five-stage models so they translate to RTL and add coverage.
+- `ee42d1e` Document the reference-tagging method.
+- `01efd13` Add a reference-tagging skill with example proofs.
+- `18ccb00` Fix the check-name path for unnamed Ivy 1.5 assertions.
+- `f2b1ae6` Regenerate the `pipe_cpu` RTLIL.
+- `85f7633` Add the reference-tagging documentation to navigation.
+
+## Caches, bit vectors, and dual issue
+
+- `86f6651` Start the cache-CPU model with unified memory and reference error/dirty-state tracking.
+- `996b2b2` Add a write-back data cache with single-cycle backing memory.
+- `2e9a46f` Add an instruction cache and a functional FLUSH that restores coherence between the caches.
+- `e82f7b6` Model multi-cycle memory fills and stall only the affected pipeline stages.
+- `d270516` Accept boolean memory initializer values and follow intermediate state copies to recover multiple writes in RTL lowering.
+- `b5762fa` Add cache-CPU regression coverage and document its reference proof.
+- `c9daa6e` Add the cache CPU and its verification approach to the reference-tagging skill.
+- `9cb5cb9` Make `concat` variadic in the compiler, solver, and C++ emitter. Interpret it as bit-vector concatenation only when all sorts are bit vectors and their widths add up. Preserve an uninterpreted per-signature function otherwise.
+- `1a09463` Store cache-line parts in a single `bv[22]` value using variadic concatenation.
+- `a625105` Keep cache-query helpers in the specification and inline bit-field extraction in the implementation.
+- `3c143fc` Add a hand-written SystemVerilog cache CPU and a combinational equivalence regression.
+- `bbe47ce` Document the golden model and how to run the equivalence check.
+- `54a1bb3` Inline applied wire functions in RTL, omit specification functions, and diagnose unsupported ordinary defined-function calls in the implementation. Add tests for all three cases.
+- `deffc7f` Isolate the branch predictor and update the cache CPU, golden model, and proof notes.
+- `3749b55` Add a hardware-verification article and sync the reference-tagging material.
+- `8638b38` Compute reference ISA intermediate values in a `prepare` action to make the state dependencies explicit.
+- `45b2f13` Add Ivy 1.8+ syntax `a<<hi:lo>>` and `a::b`. Lower to `bfe[lo][hi]` and variadic `concat`, preserving grouping around parenthesized concatenations.
+- `9a50924` Adopt the bit-field and concat notation in the hardware examples and docs.
+- `6be2ee6` Record the hardware examples' invariant debugging history.
+- `5dc160f` Add a loader and simulation script for running a program supplied outside the cache CPU model.
+- `4d665c7` Add a revised blog draft focused on where SMT helps in hardware verification.
+- `339b88a` Remove the first article draft.
+- `d47ef3e` Rename the remaining draft to `blog_post.md`.
+- `edbc478` Add the Hugo/PaperMod blog under `/blog`, with a full-content feed and registered Ivy highlighting.
+- `23471a0` Fix the Pages build by transferring ownership of the Jekyll output to the runner before Hugo writes into it.
+- `3a13bc1` Declare CC BY 4.0 on the blog feed.
+- `3ad0fbc` Document instruction-cache isolation and verification-friendly design in the skill.
+- `7bdc300` Document the two-word I-cache proof and add a generic CPU simulation script.
+- `7a48a10` Add a dual-issue model starting with a two-word I-cache and an isolated proof.
+- `b9d885c` Add two-lane pipeline latches and a dual-issue project plan.
+- `f48148a` Add a second instruction-cache read port.
+- `fa70cfb` Add the dormant second-lane datapath and reference tags.
+- `f20a498` Activate and verify dual issue and document the fetch isolate.
+- `e09e650` Speed up the dual-issue proof and restore RTL translation.
+- `4346d54` Localize the instruction-cache proof to reduce verification time.
+- `167069c` Record dual-issue invariant and proof-performance lessons.
+- `63813d2` Plan bypassing a read-after-write dependency within an issue bundle.
+- `77ea84c` Add the bypass datapath with dependent dual issue still disabled.
+- `69dd5fe` Record the partial state of the bypass proof and remaining work.
+- `e88042c` Restore a passing dual-issue proof and update the generated pipeline RTL.
+- `bba0acf` Add `register` declarations and visibility metadata. Include assumed invariants in interference checking, update wires correctly when several dependencies change, distinguish pure actions, correct isolate export discovery, and emit SMT-LIB `true` for an empty conjunction.
+
+## Stage decomposition and compositional invariants
+
+- `ab3fef7` Add a verified five-stage model decomposed by pipeline stage.
+- `d98accc` Introduce the intermediate `res` in the decomposed datapath.
+- `451f70b` Remove unreachable or unused code and update comments in the decomposed model.
+- `1d21181` Bring the PC-hazard invariant labels into line with the decomposition plan.
+- `bc2c09d` Remove a stale comment describing a two-stage design.
+- `5f46bd4` Express the late PC write as a gated write enable.
+- `623c8c4` Move tag-chain invariants into the stages that own them.
+- `c12cbfe` Emit cross-isolate register reads as connected ports. Retain valid nullary foreign wires when building ports.
+- `06d8b7e` Add an RTL simulation script and regression tests for the decomposed five-stage model.
+- `1f2c5bd` Add the `simple3_dec` model and a tutorial on simple hazards.
+- `9090084` Pass the instruction as an explicit argument in `simple3_dec`.
+- `b05ef7b` Add an early/late-write model for the complex-hazard tutorial.
+- `80c29c1` Add a conditional-load variant of the complex-hazard model.
+- `41d9c9d` Emit unsigned bit-vector `<`, `<=`, `>`, and `>=` as one-bit RTLIL comparisons.
+- `be57ea8` Add the register-dependent CMAX hazard example, a program, and a simulation harness.
+- `2674a79` Move instruction decoding into the owning stages of the complex-hazard models and simplify names.
+- `2014d9a` Simplify the register-reservation representation in the early/late-write examples.
+- `b9a2cbc` Complete the write-after-write tutorial and add it to the site navigation.
+- `01d1ace` Resolve definition bodies after the declarations are available so definitions can refer forward. Normalize definitions before cycle validation and use.
+- `42080cb` Remove redundant zero-delay dependencies from `complex3_dec`.
+- `77882b6` Regenerate the bit-field and pipelined CPU netlists.
+- `c179527` Remove a liveness-to-safety debug print.
+- `117dd30` Make the invariant private to the `rfn` isolate so the Apple example passes interference checking of assumed invariants.
+- `0a5d16b` Align `pc_reserved_onward` naming with the docs and refresh generated RTL.
+- `16e368d` Clean generated `to_rtl` test artifacts after use.
+- `9ad4d1c` Add always-not-taken branch prediction to the decomposed pipeline.
+- `99008b7` Replace the stub with an isolated branch predictor.
+- `8b3abf7` Add a speculative five-stage model, tutorial section, and regression coverage.
+- `cefc289` Document where to place an assume/guarantee invariant in the isolate hierarchy.
+- `360189b` Start the decomposed cache CPU with a FLUSH instruction that stalls.
+- `aee50b1` Merge instruction and data memory in the decomposed cache CPU.
+- `0292800` Add the instruction-cache interface skeleton.
+- `2129b5c` Diagnose a named zero-delay dependency missing from the isolate instead of silently dropping it.
+- `450cc43` Implement the read-only instruction cache.
+- `8473c43` Extract backing memory into its own isolate.
+- `a00dbcd` Remove the redundant `mfa_ok` invariant and correct the corresponding proof guidance.
+- `5fe010c` Add the data-cache interface skeleton.
+- `0bcc985` Implement the write-back data cache.
+- `7b17a57` Write back dirty victims on data-cache eviction.
+- `417fa73` Implement FLUSH with one write-back word per cycle.
+- `0816939` Add simulation programs and regressions for instruction/data caches and FLUSH.
+- `139d6a8` Preserve the intermediate unified-memory FLUSH design as a separate example.
+- `b34983d` Move the `mfa_track` verification state into the backing-memory isolate.
+- `336cb70` Document weak read-after-write hazards, error flags, and compositional cache verification.
+- `8c68700` Add `using` and `patdef` for selecting inductive pre-state hypotheses. Support scoped exact and wildcard names, root anchoring, union, and difference.
+- `2601b10` Add `require` blocks and `provide` declarations. Transfer the obligation to prove a required invariant to the provider isolate and validate missing or invalid providers.
+- `31ddc6e` Add a reusable instruction/data-cache module and stand-alone verification bench.
+- `666c983` Add a five-stage CPU using the reusable cache and register it with the test runner.
+- `0b1561e` Add `derived invariant` with single-state implication checks. Derived invariants can support normal pre-state proofs, while normal invariants cannot depend on them at zero delay.
+- `901af25` Refactor dual-issue CPU invariants into derived lemmas to speed up CPU checks. The commit records remaining I-cache proof errors.
+- `a5ecac6` Ignore unlabeled conjectures when looking for named zero-delay dependencies.
+- `2393d79` Switch both fetch lanes of the dual-issue model to the reusable cache.
+- `fc3a794` Enable intra-bundle read-after-write bypass and remove the independence lemma.
+- `038d0db` Add an aligned dependent-pair simulation and RTL regression.
+- `351fb96` Allow a lane-0 memory operation per issue bundle and add a simulation case.
+- `cd3e121` Allow the memory operation in lane 1 as well, using a shared-port multiplexer.
+- `6461deb` Dual-issue a lane-0 branch with its fall-through and add a regression program.
+- `667a652` Remove the redundant shadow/misprediction lemma.
+- `dbeb5a6` Add a regression proving that a normal invariant can use a derived pre-state hypothesis.
+- `b598a27` Prioritize FLUSH over instruction-cache fill and add equivalence coverage for the generated-cache CPU.
+- `9a09f84` Emit multiple memory write ports when addresses can be written concurrently. Share ports for mutually exclusive guards and preserve program-order priority on collisions. Add a focused equivalence fixture.
+- `151fd6e` Add a dual-issue SystemVerilog golden model and simulation harness. The commit records equivalence work in progress.
+- `dd6e6fc` Give the dual-issue golden model a synchronous reset.
+- `e19893d` Add `rtlil_eqv`. Normalize RTLIL through Yosys to AIGER, pair ports and registers by name, treat register state as a free input, and prove the output and next-state cones equivalent with ABC. Report mismatches and counterexamples.
+- `d148d36` Document the cache FLUSH priority and RTLIL equivalence procedure in the skill.
+
+## Out-of-order cores and German cache protocol
+
+- `10d61b7` Add the verified single-dispatch Tomasulo ALU core with a four-entry reorder buffer and a golden model. Lower small non-point-updated arrays to resettable register banks and pair RTLIL registers by shared aliases while ignoring dead unnamed latches.
+- `9baf040` Add BEQZ prediction and retire-time misprediction recovery. Preserve the ALU-only model and add a branch-capable golden model.
+- `2a3c01b` Add in-order LD/ST/FLUSH at the reorder-buffer head using the reusable cache.
+- `aa8fcec` Add a load/store queue that executes speculative loads ahead of older instructions, with a corresponding golden model.
+- `8911210` Add store-to-load forwarding through a separate forwarding slot and extend golden checks.
+- `555ae8f` Add dual dispatch and retirement to the ALU-only model.
+- `e8493df` Add dual dispatch and retirement to the memory design and alternative ghost-value proofs without an explicit reference trace.
+- `587e737` Combine forwarding with dual dispatch/retirement, add a second ALU variant, and document proof timing for the trace-free models.
+- `8858a02` Add and check the SystemVerilog golden model for the two-ALU design.
+- `35ddb1a` Add German cache-coherence protocol models covering refinement, abstract memory, and directory projection, along with a smoke test.
+- `257e3da` Add an explanatory comment to the abstract German cache-memory model.
