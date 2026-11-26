@@ -289,6 +289,44 @@ func mvCover(m *blifModel, names []string, rows []blifLine) (*abc.MVTable, error
 	return abc.ParseMVTable(text.String(), domains)
 }
 
+// blifIgnoredDirective reports directives that Io_MvReadPreparse accepts
+// and ignores; like it, it matches by prefix.
+func blifIgnoredDirective(d string) bool {
+	if !strings.HasPrefix(d, ".") {
+		return false
+	}
+	for _, prefix := range []string{"attrib", "delay", "input_", "output_", "no_merge", "wd"} {
+		if strings.HasPrefix(d[1:], prefix) {
+			return true
+		}
+	}
+	return false
+}
+
+// blifKnownDirective reports lines Io_MvReadPreparse keeps (by prefix):
+// table rows and every directive it recognizes, including those this port
+// reports as unsupported later.
+func blifKnownDirective(d string, multiValued bool) bool {
+	if !strings.HasPrefix(d, ".") {
+		return true // a table row
+	}
+	if multiValued && (d == ".def" || strings.HasPrefix(d, ".default")) {
+		return true
+	}
+	for _, prefix := range []string{"names", "table", "gate", "ltlformula", "latch", "flop", "r", "reset", "inputs", "outputs", "subckt", "short", "onehot", "constraint", "blackbox", "exdc"} {
+		if prefix == "r" {
+			if d == ".r" {
+				return true
+			}
+			continue
+		}
+		if strings.HasPrefix(d[1:], prefix) {
+			return true
+		}
+	}
+	return multiValued && strings.HasPrefix(d, ".mv")
+}
+
 // ParseBLIF reads all models before resolving instances, so forward module
 // references retain their original port order and shared model identity.
 func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error) {
@@ -331,6 +369,14 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 		default:
 			if current == nil {
 				return nil, blifError(name, line, "content outside .model")
+			}
+			if blifIgnoredDirective(f[0]) {
+				continue
+			}
+			if !blifKnownDirective(f[0], multiValued) {
+				// As Io_MvReadPreparse does, skip what it does not recognize.
+				fmt.Printf("Line %d: Skipping line \"%s\".\n", line.number, line.text)
+				continue
 			}
 			current.lines = append(current.lines, line)
 		}
