@@ -2351,10 +2351,11 @@ Gia_Man_t * Gia_ManDupWithMuxPos( Gia_Man_t * p )
              (Vec_BitEntry(vHeads, iData0) && Vec_BitEntry(vDatas, iData0)) || 
              (Vec_BitEntry(vHeads, iData1) && Vec_BitEntry(vDatas, iData1)) )
         {
-            Gia_Obj_t * pObj   = Gia_ManObj( p, iObj );
-            Gia_Obj_t * pCtrl  = Gia_ManObj( p, iCtrl );
-            Gia_Obj_t * pData0 = Gia_ManObj( p, iData0 );
-            Gia_Obj_t * pData1 = Gia_ManObj( p, iData1 );
+            // the CO drivers are marked in pNew, whose IDs these are
+            Gia_Obj_t * pObj   = Gia_ManObj( pNew, iObj );
+            Gia_Obj_t * pCtrl  = Gia_ManObj( pNew, iCtrl );
+            Gia_Obj_t * pData0 = Gia_ManObj( pNew, iData0 );
+            Gia_Obj_t * pData1 = Gia_ManObj( pNew, iData1 );
             if ( Gia_ObjIsAnd(pObj)   && !pObj->fMark0   )  Vec_IntPush( vPoints, iObj   );
             if ( Gia_ObjIsAnd(pCtrl)  && !pCtrl->fMark0  )  Vec_IntPush( vPoints, iCtrl  );
             if ( Gia_ObjIsAnd(pData0) && !pData0->fMark0 )  Vec_IntPush( vPoints, iData0 );

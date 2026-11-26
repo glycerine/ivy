@@ -11,9 +11,8 @@ import (
 // Gia_ManDupWithMuxPos adds outputs at shared MUX boundaries.
 func Gia_ManDupWithMuxPos(p *Gia_Man_t) *Gia_Man_t {
 	q := Gia_ManDup(p)
-	if Gia_ManRegNum(q) != 0 {
-		panic("gia: MUX outputs require a combinational graph")
-	}
+	// ABC asserts a combinational graph; release builds go on, appending
+	// the new outputs after the register inputs.
 	type quad struct{ root, control, otherwise, then int32 }
 	var quads []quad
 	heads, datas := make([]bool, q.nObjs), make([]bool, q.nObjs)

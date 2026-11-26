@@ -124,3 +124,23 @@ and states how the Go port was verified.
   refuses the AIG.
 - **Go port:** it had the same PI check and panicked on the missing CI; it has
   the same fix (`TestPrintTruthRefusesMoreThanSixCis`).
+
+## 6. `&muxpos` adds outputs for nodes that already drive outputs
+
+- **File:** `src/aig/gia/giaUtil.c`, `Gia_ManDupWithMuxPos`.
+- **Found:** 2026-11-26, comparing `&muxpos` output counts (native 196 POs on
+  mul8, the port 190).
+- **Bug:** the function marks the CO drivers of the duplicate `pNew` (`fMark0`)
+  so that they get no extra output, but then reads the candidate objects from
+  the original `p` (`Gia_ManObj( p, ... )`), whose marks are never set. Every
+  MUX-related node that already drives a CO received a second output.
+- **Fix:** read the candidates from `pNew` (the IDs are `pNew`'s).
+- **Test:** `abcgo/aig/gia/muxpos_c_oracle_test.go`
+  (`TestNativeMuxPosSkipsCoDrivers`) links `test_vectors/muxpos_oracle.c` and
+  `giaUtil.c` from `src/` against the native library named by `ABC_LIBABC` and
+  runs it on mul8. Before the fix it reported 180 added outputs, 6 of them
+  duplicating an existing output's driver; now 174 and none.
+- **Go port:** it already skipped the CO drivers (174 outputs,
+  `TestMuxPosSkipsCoDrivers`). It also asserted a combinational GIA, which
+  release ABC does not enforce; that panic is removed so `&muxpos` runs on
+  sequential AIGs as native ABC does.
