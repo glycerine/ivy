@@ -189,6 +189,11 @@ func Ivy_NodeRewrite(p *Ivy_Man_t, manager *rwt.Rwt_Man_t, node *Ivy_Obj_t, upda
 	if bestGain == 0 && useZeroCost == 0 {
 		return 0
 	}
+	// The library graphs are shared: later cuts overwrote the leaves of the
+	// best one. Copy the best cut's leaves back, as ivyRwr.c does.
+	for i, fanin := range bestFanins {
+		dec.Dec_GraphSetLeafFunc(bestGraph, int32(i), fanin)
+	}
 	rwt.Rwt_ManStoreBest(manager, bestGraph, bestCompl, bestFanins, bestTruth, bestGain, useZeroCost != 0)
 	return bestGain
 }

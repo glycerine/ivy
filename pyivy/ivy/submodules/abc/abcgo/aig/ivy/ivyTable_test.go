@@ -8,6 +8,13 @@ func ivyTableObject(p *Ivy_Man_t, typ Ivy_Type_t, a, b *Ivy_Obj_t, init Ivy_Init
 	node.Type = typ
 	node.Init = init
 	node.pFanin0, node.pFanin1 = a, b
+	// As Ivy_ObjConnect does: fanins are referenced (Ivy_TableLookup skips
+	// nodes whose fanins are unreferenced, as ivyTable.c does).
+	for _, fanin := range []*Ivy_Obj_t{a, b} {
+		if fanin != nil {
+			Ivy_Regular(fanin).nRefs++
+		}
+	}
 	p.vObjs = append(p.vObjs, node)
 	return node
 }

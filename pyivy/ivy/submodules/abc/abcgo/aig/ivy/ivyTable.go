@@ -34,6 +34,10 @@ func Ivy_TableLookup(p *Ivy_Man_t, node *Ivy_Obj_t) *Ivy_Obj_t {
 	if Ivy_ObjIsHash(node) == 0 {
 		return nil
 	}
+	// As ivyTable.c: a node with an unreferenced fanin is not looked up.
+	if Ivy_ObjFanin0(node).nRefs == 0 || Ivy_ObjChild1(node) != nil && Ivy_ObjFanin1(node).nRefs == 0 {
+		return nil
+	}
 	return p.pTable[ivyKey(p, node)]
 }
 func Ivy_TableInsert(p *Ivy_Man_t, node *Ivy_Obj_t) {

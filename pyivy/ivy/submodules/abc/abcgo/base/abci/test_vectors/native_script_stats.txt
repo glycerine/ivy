@@ -26,6 +26,7 @@ add32.aig|if -K 6; lutpack=i/o =   64/   33  lat =    0  nd =    59  edge =    2
 add32.aig|if -K 6; mfs=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   453  lev = 13
 add32.aig|if -K 6; mfs -r=i/o =   64/   33  lat =    0  nd =    59  edge =    243  aig  =   451  lev = 13
 add32.aig|ifraig=i/o =   64/   33  lat =    0  and =    220  lev = 64
+add32.aig|iresyn=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|multi=i/o =   64/   33  lat =    0  nd =   220  edge =    440  bdd  =   440  lev = 64
 add32.aig|renode=i/o =   64/   33  lat =    0  nd =   188  edge =    377  aig  =   251  lev = 62
 add32.aig|renode; sop; fx=i/o =   64/   33  lat =    0  nd =   189  edge =    378  cube =   220  lev = 63
@@ -58,6 +59,7 @@ i10.aig|if -K 6; lutpack=i/o =  257/  224  lat =    0  nd =   608  edge =   2658
 i10.aig|if -K 6; mfs=i/o =  257/  224  lat =    0  nd =   576  edge =   2430  aig  =  3299  lev = 11
 i10.aig|if -K 6; mfs -r=i/o =  257/  224  lat =    0  nd =   611  edge =   2674  aig  =  2783  lev = 11
 i10.aig|ifraig=i/o =  257/  224  lat =    0  and =   2249  lev = 47
+i10.aig|iresyn=i/o =  257/  224  lat =    0  and =   1864  lev = 32
 i10.aig|multi=i/o =  257/  224  lat =    0  nd =  1525  edge =   4070  bdd  =  4059  lev = 34
 i10.aig|renode=i/o =  257/  224  lat =    0  nd =  1865  edge =   3990  aig  =  2372  lev = 33
 i10.aig|renode; sop; fx=i/o =  257/  224  lat =    0  nd =  1955  edge =   3985  cube =  2142  lev = 38
@@ -90,6 +92,7 @@ mul12.aig|if -K 6; lutpack=i/o =   24/   24  lat =    0  nd =   313  edge =   13
 mul12.aig|if -K 6; mfs=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2267  lev = 17
 mul12.aig|if -K 6; mfs -r=i/o =   24/   24  lat =    0  nd =   313  edge =   1314  aig  =  2183  lev = 17
 mul12.aig|ifraig=i/o =   24/   24  lat =    0  and =   1020  lev = 85
+mul12.aig|iresyn=i/o =   24/   24  lat =    0  and =   1020  lev = 83
 mul12.aig|multi=i/o =   24/   24  lat =    0  nd =  1020  edge =   2040  bdd  =  2040  lev = 85
 mul12.aig|renode=i/o =   24/   24  lat =    0  nd =   784  edge =   1670  aig  =  1463  lev = 69
 mul12.aig|renode; sop; fx=i/o =   24/   24  lat =    0  nd =   869  edge =   1806  cube =  1112  lev = 71
@@ -122,6 +125,7 @@ mul8.aig|if -K 6; lutpack=i/o =   16/   16  lat =    0  nd =   129  edge =    54
 mul8.aig|if -K 6; mfs=i/o =   16/   16  lat =    0  nd =   129  edge =    538  aig  =   950  lev = 10
 mul8.aig|if -K 6; mfs -r=i/o =   16/   16  lat =    0  nd =   129  edge =    542  aig  =   895  lev = 10
 mul8.aig|ifraig=i/o =   16/   16  lat =    0  and =    424  lev = 53
+mul8.aig|iresyn=i/o =   16/   16  lat =    0  and =    424  lev = 51
 mul8.aig|multi=i/o =   16/   16  lat =    0  nd =   424  edge =    848  bdd  =   848  lev = 53
 mul8.aig|renode=i/o =   16/   16  lat =    0  nd =   331  edge =    726  aig  =   629  lev = 39
 mul8.aig|renode; sop; fx=i/o =   16/   16  lat =    0  nd =   377  edge =    788  cube =   483  lev = 42
@@ -154,6 +158,7 @@ sort16.aig|if -K 6; lutpack=i/o =   16/   16  lat =    0  nd =   242  edge =   1
 sort16.aig|if -K 6; mfs=i/o =   16/   16  lat =    0  nd =   146  edge =    482  aig  =   562  lev = 10
 sort16.aig|if -K 6; mfs -r=i/o =   16/   16  lat =    0  nd =   242  edge =   1154  aig  =   483  lev = 11
 sort16.aig|ifraig=i/o =   16/   16  lat =    0  and =    240  lev = 16
+sort16.aig|iresyn=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|multi=i/o =   16/   16  lat =    0  nd =   466  edge =    932  bdd  =   932  lev = 31
 sort16.aig|renode=i/o =   16/   16  lat =    0  nd =   466  edge =    932  aig  =   466  lev = 31
 sort16.aig|renode; sop; fx=i/o =   16/   16  lat =    0  nd =   466  edge =    932  cube =   466  lev = 31

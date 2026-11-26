@@ -58,6 +58,7 @@ var nativeScripts = []string{
 	"&get; &if -K 6; &mfs; &put",
 	"&get; &sweep; &put",
 	"&get; &fraig; &put",
+	"iresyn",
 }
 
 const nativeStatsFile = "test_vectors/native_script_stats.txt"
