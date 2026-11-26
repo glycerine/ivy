@@ -11,7 +11,7 @@ func Aig_ManCheck(p *Graph) int32 {
 // Aig_ManCheckMarkA detects marks left behind by temporary traversals.
 func Aig_ManCheckMarkA(p *Graph) {
 	for id, n := range p.nodes {
-		if !p.deleted[id] && n.MarkA {
+		if !p.isDeleted(id) && n.MarkA {
 			panic("aig: traversal mark A was not cleared")
 		}
 	}
@@ -20,7 +20,7 @@ func Aig_ManCheckMarkA(p *Graph) {
 // Aig_ManCheckPhase validates each node's all-zero-input simulation value.
 func Aig_ManCheckPhase(p *Graph) {
 	for id, n := range p.nodes {
-		if p.deleted[id] {
+		if p.isDeleted(id) {
 			continue
 		}
 		phase := false

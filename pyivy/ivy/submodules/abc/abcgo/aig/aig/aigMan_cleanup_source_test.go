@@ -91,7 +91,7 @@ func TestCleanupAgainstCompiledSource(t *testing.T) {
 				removed := Aig_ManCleanup(g)
 				fmt.Fprintf(&want, "removed %d gates %d hash %d:", removed, Aig_ManNodeNum(g), Aig_TableCountEntries(g))
 				for id, node := range g.nodes {
-					if g.deleted[id] {
+					if g.isDeleted(id) {
 						want.WriteString(" dead")
 						continue
 					}

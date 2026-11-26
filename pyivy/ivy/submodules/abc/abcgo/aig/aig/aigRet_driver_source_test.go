@@ -188,7 +188,7 @@ func writeRetimingSourceCase(t *testing.T, input *strings.Builder, g *Graph, for
 		literals[e.NodeID()] = 2 * (i + 1)
 	}
 	for id, n := range g.nodes {
-		if !g.deleted[id] && n.Kind == And {
+		if !g.isDeleted(id) && n.Kind == And {
 			literals[id] = 2 * (1 + len(g.inputs) + len(nodes))
 			nodes = append(nodes, Edge(id)<<1)
 		}

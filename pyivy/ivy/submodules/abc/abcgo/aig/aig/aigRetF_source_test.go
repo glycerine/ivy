@@ -82,7 +82,7 @@ func TestRetimingFrontierSimplifiedNextState(t *testing.T) {
 				}
 				checkRetFTraces(t, before, out)
 				for id, n := range g.nodes {
-					if !g.deleted[id] && (n.MarkA || n.MarkB) {
+					if !g.isDeleted(id) && (n.MarkA || n.MarkB) {
 						t.Fatalf("simplified result leaked scratch flags at %d", id)
 					}
 				}

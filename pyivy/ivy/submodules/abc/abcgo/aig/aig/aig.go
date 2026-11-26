@@ -166,7 +166,7 @@ func Aig_ManCoNum(p *Graph) int32 { return int32(len(p.outputs)) }
 func Aig_ManBufNum(p *Graph) int32 {
 	var n int32
 	for id, node := range p.nodes {
-		if p.deleted[id] {
+		if p.isDeleted(id) {
 			continue
 		}
 		if node.Kind == Buffer {
@@ -178,7 +178,7 @@ func Aig_ManBufNum(p *Graph) int32 {
 func Aig_ManAndNum(p *Graph) int32 {
 	var n int32
 	for id, node := range p.nodes {
-		if p.deleted[id] {
+		if p.isDeleted(id) {
 			continue
 		}
 		if node.Kind == And {
@@ -190,7 +190,7 @@ func Aig_ManAndNum(p *Graph) int32 {
 func Aig_ManExorNum(p *Graph) int32 {
 	var n int32
 	for id, node := range p.nodes {
-		if p.deleted[id] {
+		if p.isDeleted(id) {
 			continue
 		}
 		if node.Kind == ExclusiveOr {
@@ -221,7 +221,7 @@ func Aig_ManObj(p *Graph, i int32) Edge {
 }
 
 func Aig_ObjType(p *Graph, e Edge) Aig_Type_t {
-	if p.deleted[e.NodeID()] {
+	if p.isDeleted(e.NodeID()) {
 		return AIG_OBJ_NONE
 	}
 	switch p.node(e).Kind {
@@ -479,7 +479,7 @@ func Aig_ManRecycleMemory(p *Graph, e Edge) {
 	if p.node(e).Refs != 0 {
 		panic("aig: recycling referenced node")
 	}
-	p.deleted[e.NodeID()] = true
+	p.markDeleted(e.NodeID())
 }
 
 ////////////////////////////////////////////////////////////////////////

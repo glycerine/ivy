@@ -86,7 +86,7 @@ func (f *FanoutIndex) Rebuild(p *Graph) {
 	clear(f.data)
 	f.ensure(len(p.nodes) - 1)
 	for id, n := range p.nodes {
-		if p.deleted[id] {
+		if p.isDeleted(id) {
 			continue
 		}
 		for pin := 0; pin < fanoutPins(n); pin++ {

@@ -30,7 +30,7 @@ func Aig_ManRetimeMark_rec(p *Graph, e Edge) int32 {
 func Aig_ManRetimeMark(p *Graph) {
 	registers, pis, pos := sclLayout(p)
 	for id, n := range p.nodes {
-		if !p.deleted[id] && n.MarkB {
+		if !p.isDeleted(id) && n.MarkB {
 			panic("aig: retiming requires clear MarkB flags")
 		}
 	}
@@ -100,12 +100,12 @@ func Aig_ManRetimeFrontier(p *Graph, steps int32) *Graph {
 	}
 	cleanMarks := func() {
 		for id := range liByLo {
-			if !p.deleted[id] {
+			if !p.isDeleted(id) {
 				p.nodes[id].MarkA = false
 			}
 		}
 		for id := range p.nodes {
-			if !p.deleted[id] {
+			if !p.isDeleted(id) {
 				p.nodes[id].MarkB = false
 			}
 		}
@@ -119,7 +119,7 @@ func Aig_ManRetimeFrontier(p *Graph, steps int32) *Graph {
 		// iterator observes the growing manager. Never retain node pointers across
 		// append: Graph owns a slice whose backing array can move.
 		for id := 0; id < len(p.nodes) && moves < steps; id++ {
-			if p.deleted[id] {
+			if p.isDeleted(id) {
 				continue
 			}
 			node := p.nodes[id]

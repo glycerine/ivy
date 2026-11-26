@@ -173,7 +173,7 @@ func independentNodeValues(g *Graph, assignment int) []bool {
 		return values[id]
 	}
 	for id := range g.nodes {
-		if !g.deleted[id] {
+		if !g.isDeleted(id) {
 			visit(id)
 		}
 	}
@@ -199,7 +199,7 @@ func TestPriorityCutsTruthMatchesGraph(t *testing.T) {
 		for assignment := 0; assignment < 16; assignment++ {
 			values := independentNodeValues(g, assignment)
 			for id := range g.nodes {
-				if g.deleted[id] {
+				if g.isDeleted(id) {
 					continue
 				}
 				for _, c := range p.Cuts(Edge(id) << 1) {

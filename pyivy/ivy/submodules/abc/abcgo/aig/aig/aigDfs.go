@@ -267,7 +267,7 @@ func Aig_ManDfsReverse(p *Graph) []Edge {
 	var nodes []Edge
 	active := make(map[int]bool)
 	for id, n := range p.nodes {
-		if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !p.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			p.reverseDfsRec(Edge(id)<<1, &nodes, active)
 		}
 	}
@@ -280,7 +280,7 @@ func Aig_ManLevelize(p *Graph) [][]Edge {
 	maxLevel := int(Aig_ManLevelNum(p))
 	levels := make([][]Edge, maxLevel+1)
 	for id, n := range p.nodes {
-		if p.deleted[id] {
+		if p.isDeleted(id) {
 			continue
 		}
 		if n.Level < 0 || n.Level > maxLevel {
@@ -297,7 +297,7 @@ func Aig_ManChoiceLevel(p *Graph) int32 {
 	defer Aig_ManCleanCioIds(p)
 	p.levelModes = make([]byte, (len(p.nodes)+3)/4)
 	for i := range p.nodes {
-		if p.deleted[i] {
+		if p.isDeleted(i) {
 			continue
 		}
 		p.nodes[i].Level = 0
@@ -458,7 +458,7 @@ func Aig_SupportSizeTest(p *Graph) int32 {
 	started := util.Abc_Clock()
 	var total int32
 	for id, node := range p.nodes {
-		if !p.deleted[id] && (node.Kind == And || node.Kind == ExclusiveOr) && Aig_SupportSize(p, Edge(id)<<1) <= 16 {
+		if !p.isDeleted(id) && (node.Kind == And || node.Kind == ExclusiveOr) && Aig_SupportSize(p, Edge(id)<<1) <= 16 {
 			total++
 		}
 	}

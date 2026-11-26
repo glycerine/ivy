@@ -196,7 +196,7 @@ func ternarySimulateOutputs(p *Graph, outputs []Edge) {
 		return ternaryEdgeValue(p, e)
 	}
 	for id, n := range p.nodes {
-		if !p.deleted[id] && n.Kind != Output {
+		if !p.isDeleted(id) && n.Kind != Output {
 			visit(Edge(id) << 1)
 		}
 	}

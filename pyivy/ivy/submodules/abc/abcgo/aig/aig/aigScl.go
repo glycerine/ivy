@@ -90,7 +90,7 @@ func Aig_ManRemap(p *Graph, mapping []Edge) *Graph {
 	}
 	active := make(map[int]bool)
 	for id, n := range p.nodes {
-		if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !p.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			dupVisit(q, p, Edge(id)<<1, false, false, active)
 		}
 	}
@@ -188,7 +188,7 @@ func Aig_ManSeqCleanup(p *Graph) int32 {
 		removedInputs = append(removedInputs, input)
 		if p.node(output).Kind == Output {
 			Aig_ObjDisconnect(p, Aig_Regular(output))
-			p.deleted[output.NodeID()] = true
+			p.markDeleted(output.NodeID())
 		} else {
 			p.node(output).Refs-- // Legacy implicit CO consumer.
 		}
@@ -254,7 +254,7 @@ func Aig_ManSeqCleanup(p *Graph) int32 {
 	Aig_ManCleanup(p)
 	sclReleaseRemovedInputBuffers(p, removedInputs)
 	for _, input := range removedInputs {
-		p.deleted[input.NodeID()] = true
+		p.markDeleted(input.NodeID())
 	}
 	return before - Aig_ManNodeNum(p)
 }
@@ -292,7 +292,7 @@ func sclReleaseRemovedInputBuffers(p *Graph, inputs []Edge) {
 		return false
 	}
 	for id, node := range p.nodes {
-		if !p.deleted[id] && node.Kind == Buffer && node.Refs == 0 && visit(Edge(id)<<1) {
+		if !p.isDeleted(id) && node.Kind == Buffer && node.Refs == 0 && visit(Edge(id)<<1) {
 			Aig_ObjDelete_rec(p, Edge(id)<<1, 1)
 		}
 	}

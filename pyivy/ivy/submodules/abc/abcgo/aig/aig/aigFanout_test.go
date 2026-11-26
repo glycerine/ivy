@@ -47,7 +47,7 @@ func TestFanoutRebuildDeletedUnaryAndDuplicatePins(t *testing.T) {
 	checkFanoutLinks(t, g, a, 1)
 	Aig_ObjAddFanoutPin(g, a, x, 1)
 	checkFanoutLinks(t, g, a, 2)
-	g.deleted[x.NodeID()] = true
+	g.markDeleted(x.NodeID())
 	g.nodes = g.nodes[:len(g.nodes)-1]
 	Aig_ManFanoutRebuild(g)
 	checkFanoutLinks(t, g, a, 0)

@@ -3,7 +3,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"runtime/pprof"
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/base/abci"
@@ -35,4 +37,22 @@ func init() {
 	}
 }
 
-func main() { os.Exit(abcmain.Run(os.Args)) }
+// Setting ABCGO_CPUPROFILE=file writes a Go CPU profile of the whole run.
+func main() {
+	if path := os.Getenv("ABCGO_CPUPROFILE"); path != "" {
+		f, err := os.Create(path)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		if err := pprof.StartCPUProfile(f); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		status := abcmain.Run(os.Args)
+		pprof.StopCPUProfile()
+		f.Close()
+		os.Exit(status)
+	}
+	os.Exit(abcmain.Run(os.Args))
+}

@@ -108,7 +108,7 @@ func Aig_ObjCutPrint(p *Aig_ManCut_t, e Edge) {
 func Aig_ManCutCount(p *Aig_ManCut_t, full *int32) int32 {
 	var total, k int32
 	for id, n := range p.pAig.nodes {
-		if p.pAig.deleted[id] || n.Kind != And && n.Kind != ExclusiveOr {
+		if p.pAig.isDeleted(id) || n.Kind != And && n.Kind != ExclusiveOr {
 			continue
 		}
 		for c := p.pCuts[id]; c != nil; c = c.pNext {
@@ -443,7 +443,7 @@ func Aig_ComputeCuts(g *Graph, nCutsMax, nLeafMax, fTruth, fVerbose int32) *Aig_
 	p := Aig_ManCutStart(g, nCutsMax, nLeafMax, fTruth, fVerbose)
 	roots := make([]Edge, 0, len(g.nodes))
 	for id := range g.nodes {
-		if !g.deleted[id] {
+		if !g.isDeleted(id) {
 			roots = append(roots, Edge(id)<<1)
 		}
 	}

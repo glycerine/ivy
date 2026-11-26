@@ -96,7 +96,7 @@ func TestRetimeFrontierPolarityAndXor(t *testing.T) {
 				}
 				checkRetFTraces(t, before, q)
 				for id, n := range p.nodes {
-					if !p.deleted[id] && (n.MarkA || n.MarkB) {
+					if !p.isDeleted(id) && (n.MarkA || n.MarkB) {
 						t.Fatal("scratch marks leaked", id)
 					}
 				}

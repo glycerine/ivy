@@ -177,7 +177,7 @@ func TestDominatorBruteForcePaths(t *testing.T) {
 		s := Aig_ManComputeDomsNodes(domTestFanouts(g), 2)
 		fanins, fanouts := make([][]int, len(g.nodes)), make([][]int, len(g.nodes))
 		for id, n := range g.nodes {
-			if g.deleted[id] {
+			if g.isDeleted(id) {
 				continue
 			}
 			for _, e := range nodeFanins(n) {

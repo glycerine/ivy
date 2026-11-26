@@ -182,7 +182,7 @@ func TestGraphCheckRejectsRepeatedRegularFanin(t *testing.T) {
 }
 func TestGraphCheckRequiresLiveConstant(t *testing.T) {
 	g := NewGraph()
-	g.deleted[0] = true
+	g.markDeleted(0)
 	if err := g.Check(); err == nil {
 		t.Fatal("accepted deleted constant one")
 	}

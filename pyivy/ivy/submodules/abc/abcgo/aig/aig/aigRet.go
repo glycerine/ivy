@@ -183,7 +183,7 @@ func Rtm_ManFromAig(g *Graph) *Rtm_Man_t {
 		allocate(e, 1, 1)
 	}
 	for id, n := range g.nodes {
-		if !g.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !g.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			allocate(Edge(id)<<1, int32(len(nodeFanins(n))), int32(n.Refs))
 		}
 	}
@@ -197,7 +197,7 @@ func Rtm_ManFromAig(g *Graph) *Rtm_Man_t {
 		connect(e, g.outputs[npo+i])
 	}
 	for id, n := range g.nodes {
-		if !g.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !g.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			for _, f := range nodeFanins(n) {
 				connect(Edge(id)<<1, f)
 			}

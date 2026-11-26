@@ -18,7 +18,7 @@ func Aig_ManOrderStart(p *Graph) {
 	p.order[0] = orderLinks{0, 0}
 	p.iPrev, p.iNext, p.nAndTotal, p.nAndPrev = 0, 0, 0, 0
 	for id, n := range p.nodes {
-		if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr) {
+		if !p.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr) {
 			Aig_ObjOrderInsert(p, int32(id))
 		}
 	}

@@ -108,7 +108,7 @@ func Aig_ObjDelete(p *Graph, e Edge) {
 			delete(table, tableKey(n))
 		}
 	}
-	p.deleted[e.NodeID()] = true
+	p.markDeleted(e.NodeID())
 	*n = Node{}
 	p.refreshFanouts()
 }
@@ -267,7 +267,7 @@ func Aig_ManPropagateBuffers(p *Graph, updateLevel int32) int32 {
 	for {
 		progress := false
 		for id, n := range p.nodes {
-			if p.deleted[id] {
+			if p.isDeleted(id) {
 				continue
 			}
 			if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Output {
@@ -397,7 +397,7 @@ func (p *Graph) recomputeLevels() {
 		state[id] = 2
 	}
 	for id := range p.nodes {
-		if !p.deleted[id] {
+		if !p.isDeleted(id) {
 			visit(id)
 		}
 	}

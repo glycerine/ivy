@@ -165,7 +165,7 @@ func Aig_ManVerifyLevel(p *Graph) error {
 		return fmt.Errorf("aig: level verification requires active fanouts")
 	}
 	for id, n := range p.nodes {
-		if p.deleted[id] || n.Kind != And && n.Kind != ExclusiveOr {
+		if p.isDeleted(id) || n.Kind != And && n.Kind != ExclusiveOr {
 			continue
 		}
 		expected := Aig_ObjLevelNew(p, Edge(id)<<1)
@@ -180,7 +180,7 @@ func Aig_ManVerifyReverseLevel(p *Graph) error {
 		return fmt.Errorf("aig: reverse levels not active")
 	}
 	for id, n := range p.nodes {
-		if p.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer) {
+		if p.isDeleted(id) || (n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer) {
 			continue
 		}
 		edge := Edge(id) << 1

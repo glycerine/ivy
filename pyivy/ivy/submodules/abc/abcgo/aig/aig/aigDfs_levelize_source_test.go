@@ -20,7 +20,7 @@ func TestLevelizeIncludesAllLiveObjects(t *testing.T) {
 	// Deleted slots must not become phantom members of a level.
 	dead := p.AND(a, unused)
 	Aig_ManCleanup(p)
-	if !p.deleted[dead.NodeID()] {
+	if !p.isDeleted(dead.NodeID()) {
 		t.Fatal("fixture did not delete the dangling node")
 	}
 	if got := Aig_ManLevelize(p); !reflect.DeepEqual(got, want) {

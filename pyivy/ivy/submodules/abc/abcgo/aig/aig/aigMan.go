@@ -84,7 +84,7 @@ func Aig_ManCleanup(p *Graph) int32 {
 	before := Aig_ManNodeNum(p)
 	var roots []Edge
 	for id, node := range p.nodes {
-		if !p.deleted[id] && (node.Kind == And || node.Kind == ExclusiveOr) && node.Refs == 0 {
+		if !p.isDeleted(id) && (node.Kind == And || node.Kind == ExclusiveOr) && node.Refs == 0 {
 			roots = append(roots, Edge(id)<<1)
 		}
 	}
@@ -101,7 +101,7 @@ func (p *Graph) recountReferences() {
 		p.nodes[i].Refs = 0
 	}
 	for id, n := range p.nodes {
-		if p.deleted[id] {
+		if p.isDeleted(id) {
 			continue
 		}
 		if n.Kind == And || n.Kind == ExclusiveOr {
@@ -120,7 +120,7 @@ func (p *Graph) recountReferences() {
 func Aig_ManAntiCleanup(p *Graph) int32 {
 	old := len(p.outputs)
 	for id, n := range p.nodes {
-		if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr) && n.Refs == 0 {
+		if !p.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr) && n.Refs == 0 {
 			p.AddOutput(Edge(id) << 1)
 		}
 	}
@@ -133,7 +133,7 @@ func Aig_ManCiCleanup(p *Graph) int32 {
 		if i >= old-int(p.nRegs) || p.node(e).Refs > 0 {
 			keep = append(keep, e)
 		} else {
-			p.deleted[e.NodeID()] = true
+			p.markDeleted(e.NodeID())
 		}
 	}
 	p.inputs = keep
@@ -162,7 +162,7 @@ func Aig_ManCoCleanup(p *Graph) int32 {
 		delete(removed, e.NodeID())
 	}
 	for id := range removed {
-		p.deleted[id] = true
+		p.markDeleted(id)
 	}
 	p.outputs = keep
 	if p.nRegs != 0 {

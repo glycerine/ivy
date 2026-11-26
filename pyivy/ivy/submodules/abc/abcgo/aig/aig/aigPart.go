@@ -520,7 +520,7 @@ func Aig_ManDupPart(dst, src *Graph, part []int32, support *[]int32, inverse int
 			result = append(result, Aig_ManDupPart_rec(dst, src, src.outputDriver(output), nil))
 		}
 		for id, n := range src.nodes {
-			if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) && n.Refs == 0 {
+			if !src.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) && n.Refs == 0 {
 				Aig_ManDupPart_rec(dst, src, Edge(id)<<1, nil)
 			}
 		}
@@ -748,7 +748,7 @@ func Aig_ManChoiceConstructiveOne(destination, previous, current *Graph) {
 	// C checks these pData links using destination object marks. The caller
 	// supplies equivalent versions; constructive choicing does not prove them.
 	for id := range previous.nodes {
-		if previous.deleted[id] {
+		if previous.isDeleted(id) {
 			continue
 		}
 		copy, ok := previous.copies[id]
@@ -761,7 +761,7 @@ func Aig_ManChoiceConstructiveOne(destination, previous, current *Graph) {
 		current.copies[e.NodeID()] = destination.inputs[i]
 	}
 	for id, n := range current.nodes {
-		if !current.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !current.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			partClone(destination, current, Edge(id)<<1, current.copies, nil)
 		}
 	}
@@ -777,7 +777,7 @@ func Aig_ManChoiceConstructiveOne(destination, previous, current *Graph) {
 }
 func Aig_ManChoiceEval(p *Graph) {
 	for id, n := range p.nodes {
-		if p.deleted[id] || n.Refs == 0 {
+		if p.isDeleted(id) || n.Refs == 0 {
 			continue
 		}
 		if _, ok := p.equivs[id]; !ok {

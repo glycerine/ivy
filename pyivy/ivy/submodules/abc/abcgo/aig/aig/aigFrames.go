@@ -104,7 +104,7 @@ func Aig_ManFrames(p *Graph, frames, init, outs, regs, enlarge int32, returnedMa
 		// Include every internal object as in the source; cleanup later removes
 		// unused cones while keeping frame-map indices stable.
 		for id, n := range p.nodes {
-			if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			if !p.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 				visit(Edge(id)<<1, f)
 			}
 		}

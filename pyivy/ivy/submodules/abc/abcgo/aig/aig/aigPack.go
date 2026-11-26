@@ -128,7 +128,7 @@ func Aig_ManPackSimulate(p *Aig_ManPack_t) {
 		return value
 	}
 	for id := range g.nodes {
-		if !g.deleted[id] {
+		if !g.isDeleted(id) {
 			simulate(Edge(id) << 1)
 		}
 	}
@@ -136,7 +136,7 @@ func Aig_ManPackSimulate(p *Aig_ManPack_t) {
 func (p *Aig_ManPack_t) histogram() (counts [33]int, total int) {
 	p.checkInputs()
 	for id, n := range p.pAig.nodes {
-		if p.pAig.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr) {
+		if p.pAig.isDeleted(id) || (n.Kind != And && n.Kind != ExclusiveOr) {
 			continue
 		}
 		ones := bits.OnesCount64(p.vSigns[id])
@@ -166,7 +166,7 @@ func Aig_ManPackConstNodes(p *Aig_ManPack_t) []int32 {
 	p.checkInputs()
 	var nodes []int32
 	for id, n := range p.pAig.nodes {
-		if p.pAig.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr) {
+		if p.pAig.isDeleted(id) || (n.Kind != And && n.Kind != ExclusiveOr) {
 			continue
 		}
 		signature := p.vSigns[id]

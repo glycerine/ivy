@@ -15,7 +15,7 @@ func Aig_ManPartitionLevelized(g *Graph, size int32) []int32 {
 	// consume positions too, even though only gates are split into partitions.
 	var ids []int
 	for id := range g.nodes {
-		if !g.deleted[id] {
+		if !g.isDeleted(id) {
 			ids = append(ids, id)
 		}
 	}
@@ -154,7 +154,7 @@ func Aig_ManPartSplit(source *Graph, node2part []int32) (parts []*Graph, pio [][
 	}
 	groups := map[int32][]Edge{}
 	for id, n := range source.nodes {
-		if source.deleted[id] || !satPartitionNode(n.Kind) {
+		if source.isDeleted(id) || !satPartitionNode(n.Kind) {
 			continue
 		}
 		label := node2part[id]
@@ -287,7 +287,7 @@ func Aig_ManPartSetNodePolarity(source, part *Graph, pio []int32) {
 		return part.nodes[id].Phase != edge.Complemented()
 	}
 	for id := range part.nodes {
-		if !part.deleted[id] {
+		if !part.isDeleted(id) {
 			phase(Edge(id) << 1)
 		}
 	}

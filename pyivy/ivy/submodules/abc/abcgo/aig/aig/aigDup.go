@@ -170,7 +170,7 @@ func Aig_ManDupSimple(src *Graph) *Graph {
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
-		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !src.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			dupEdge(dst, src, Edge(id)<<1)
 		}
 	}
@@ -181,7 +181,7 @@ func Aig_ManDupSimpleWithHints(src *Graph, hints []int32) *Graph {
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
-		if src.deleted[id] || n.Kind == Constant || n.Kind == Output {
+		if src.isDeleted(id) || n.Kind == Constant || n.Kind == Output {
 			continue
 		}
 		if n.Kind != Input {
@@ -224,7 +224,7 @@ func Aig_ManDupOrdered(src *Graph) *Graph {
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
-		if src.deleted[id] {
+		if src.isDeleted(id) {
 			continue
 		}
 		e := Edge(id) << 1
@@ -282,7 +282,7 @@ func Aig_ManDupTrim(src *Graph) *Graph {
 		}
 	}
 	for id, n := range src.nodes {
-		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !src.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			dupEdge(dst, src, Edge(id)<<1)
 		}
 	}
@@ -294,7 +294,7 @@ func Aig_ManDupExor(src *Graph) *Graph {
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
-		if src.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer) {
+		if src.isDeleted(id) || (n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer) {
 			continue
 		}
 		if n.Kind == And && n.Fanins[0].Complemented() && n.Fanins[1].Complemented() {
@@ -434,7 +434,7 @@ func Aig_ManDupLevelized(src *Graph) *Graph {
 	defer dst.updateTrueTerminalCounts()
 	var nodes []int
 	for id, n := range src.nodes {
-		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !src.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			nodes = append(nodes, id)
 		}
 	}
@@ -452,7 +452,7 @@ func Aig_ManDupWithoutPos(src *Graph) *Graph {
 	dst.nRegs = 0
 	dst.nConstrs = 0
 	for id, n := range src.nodes {
-		if !src.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !src.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			dupEdge(dst, src, Edge(id)<<1)
 		}
 	}
@@ -491,7 +491,7 @@ func Aig_ManDupRepres(src *Graph) *Graph {
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
 	for id, n := range src.nodes {
-		if !src.deleted[id] && (n.Kind == Input || n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !src.isDeleted(id) && (n.Kind == Input || n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			dupVisit(dst, src, Edge(id)<<1, false, true, map[int]bool{})
 		}
 	}

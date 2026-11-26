@@ -123,7 +123,7 @@ func TestDuplicateExorCapturesXor(t *testing.T) {
 	equalDup(t, g, q)
 	found := false
 	for id, n := range q.nodes {
-		if !q.deleted[id] && n.Kind == ExclusiveOr {
+		if !q.isDeleted(id) && n.Kind == ExclusiveOr {
 			found = true
 		}
 	}

@@ -222,7 +222,7 @@ func TestSeqCleanupStatesAgainstCompiledSource(t *testing.T) {
 						}
 						want.WriteString(" | objects")
 						for id, node := range g.nodes {
-							if g.deleted[id] {
+							if g.isDeleted(id) {
 								want.WriteString(" dead")
 								continue
 							}

@@ -37,7 +37,7 @@ func aigDOT(p *Graph, bold []Edge) ([]byte, error) {
 	// Unlike C's implicit DOT nodes for high dangling gates, give every live
 	// object an explicit rank and label. Outputs remain above all logic.
 	for id, n := range p.nodes {
-		if !p.deleted[id] && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !p.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			levelMax = max(levelMax, n.Level+1)
 		}
 	}
@@ -119,7 +119,7 @@ edge [dir = back];
 	for level := levelMax - 1; level > 0; level-- {
 		beginRank(level)
 		for id, n := range p.nodes {
-			if !p.deleted[id] && n.Kind != Input && n.Kind != Output && n.Kind != Constant && n.Level == level {
+			if !p.isDeleted(id) && n.Kind != Input && n.Kind != Output && n.Kind != Constant && n.Level == level {
 				writeNode(Edge(id) << 1)
 			}
 		}
@@ -133,7 +133,7 @@ edge [dir = back];
 		writeNode(e)
 	}
 	for id, n := range p.nodes {
-		if !p.deleted[id] && n.Level == 0 && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+		if !p.isDeleted(id) && n.Level == 0 && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
 			writeNode(Edge(id) << 1)
 		}
 	}
@@ -146,7 +146,7 @@ edge [dir = back];
 		fmt.Fprintf(&b, "Node%d -> Node%d [style = invis];\n", p.outputs[i-1].NodeID(), p.outputs[i].NodeID())
 	}
 	for id, n := range p.nodes {
-		if p.deleted[id] {
+		if p.isDeleted(id) {
 			continue
 		}
 		for _, fanin := range nodeFanins(n) {

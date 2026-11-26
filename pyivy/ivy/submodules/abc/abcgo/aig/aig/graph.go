@@ -87,7 +87,8 @@ type Graph struct {
 	nRegs, nTruePis, nTruePos, nConstrs, travID int32
 	ghost                                       Node
 	copies, equivs, reprs, next                 map[int]Edge
-	deleted                                     map[int]bool
+	deleted                                     []bool
+	nDeleted                                    int
 }
 
 // emptyNode distinguishes a zeroed C record from the real constant-one node.
@@ -98,7 +99,6 @@ func NewGraph() *Graph {
 		nodes:   []Node{{Kind: Constant, Phase: true, Fanins: [2]Edge{InvalidEdge, InvalidEdge}}},
 		hash:    make(map[edgePair]Edge),
 		ghost:   emptyNode(),
-		deleted: make(map[int]bool),
 		travID:  1,
 	}
 }
@@ -106,7 +106,20 @@ func (g *Graph) Const1() Edge         { return 0 }
 func (g *Graph) Const0() Edge         { return 1 }
 func (g *Graph) InputCount() int      { return len(g.inputs) }
 func (g *Graph) OutputCount() int     { return len(g.outputs) }
-func (g *Graph) NodeCount() int       { return len(g.nodes) - len(g.deleted) }
+func (g *Graph) NodeCount() int       { return len(g.nodes) - g.nDeleted }
+
+// isDeleted reports whether object id was removed. Deletion is permanent.
+func (g *Graph) isDeleted(id int) bool { return id < len(g.deleted) && g.deleted[id] }
+
+func (g *Graph) markDeleted(id int) {
+	if id >= len(g.deleted) {
+		g.deleted = append(g.deleted, make([]bool, max(id+1, len(g.nodes))-len(g.deleted))...)
+	}
+	if !g.deleted[id] {
+		g.deleted[id] = true
+		g.nDeleted++
+	}
+}
 func (g *Graph) RegisterCount() int32 { return g.nRegs }
 
 func (g *Graph) updateTrueTerminalCounts() {
@@ -135,7 +148,7 @@ func (g *Graph) CopyTruePoCount(src *Graph) { g.nTruePos = src.nTruePos }
 func (g *Graph) Nodes() []Node              { return append([]Node(nil), g.nodes...) }
 func (g *Graph) Inputs() []Edge             { return append([]Edge(nil), g.inputs...) }
 func (g *Graph) Outputs() []Edge            { return append([]Edge(nil), g.outputs...) }
-func (g *Graph) valid(e Edge) bool          { return e.NodeID() < len(g.nodes) && !g.deleted[e.NodeID()] }
+func (g *Graph) valid(e Edge) bool          { return e.NodeID() < len(g.nodes) && !g.isDeleted(e.NodeID()) }
 func (g *Graph) NewInput() Edge {
 	e := Edge(len(g.nodes)) << 1
 	g.nodes = append(g.nodes, Node{Kind: Input, Fanins: [2]Edge{InvalidEdge, InvalidEdge}})
@@ -280,7 +293,7 @@ func (g *Graph) Check() error {
 	if g.nConstrs < 0 || int(g.nConstrs) > len(g.outputs)-int(g.nRegs) {
 		return fmt.Errorf("aig: invalid constraint terminal count")
 	}
-	if len(g.nodes) == 0 || g.deleted[0] || g.nodes[0].Kind != Constant {
+	if len(g.nodes) == 0 || g.isDeleted(0) || g.nodes[0].Kind != Constant {
 		return fmt.Errorf("aig: missing constant node")
 	}
 	refs := make([]int, len(g.nodes))
@@ -310,7 +323,7 @@ func (g *Graph) Check() error {
 	andCount, xorCount := 0, 0
 	ordered := true
 	for id, n := range g.nodes {
-		if g.deleted[id] {
+		if g.isDeleted(id) {
 			continue
 		}
 		if n.Kind > Output {
@@ -434,7 +447,7 @@ func (g *Graph) Check() error {
 		return nil
 	}
 	for id := range g.nodes {
-		if !g.deleted[id] {
+		if !g.isDeleted(id) {
 			if err := visit(id); err != nil {
 				return err
 			}
@@ -480,7 +493,7 @@ func (g *Graph) NewXor(a, b Edge) Edge {
 func (g *Graph) LiveEdges() []Edge {
 	edges := make([]Edge, 0, g.NodeCount())
 	for id := range g.nodes {
-		if !g.deleted[id] {
+		if !g.isDeleted(id) {
 			edges = append(edges, Edge(id)<<1)
 		}
 	}
@@ -496,7 +509,7 @@ func (g *Graph) TopologicalObjects() []Edge {
 	edges := g.LiveEdges()
 	for _, edge := range edges {
 		for _, fanin := range nodeFanins(g.nodes[edge.NodeID()]) {
-			if fanin.NodeID() >= edge.NodeID() || g.deleted[fanin.NodeID()] {
+			if fanin.NodeID() >= edge.NodeID() || g.isDeleted(fanin.NodeID()) {
 				return g.dfs(edges, false, false, false)
 			}
 		}

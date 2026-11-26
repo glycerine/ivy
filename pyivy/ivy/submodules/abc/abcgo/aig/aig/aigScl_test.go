@@ -244,7 +244,7 @@ func TestSequentialRemapConstantsAndNoRegisters(t *testing.T) {
 	}
 	dangling := p.AND(a, b.Not())
 	before := len(p.nodes)
-	if removed := Aig_ManSeqCleanup(p); removed != 1 || !p.deleted[dangling.NodeID()] || len(p.inputs) != 2 || len(p.nodes) != before {
+	if removed := Aig_ManSeqCleanup(p); removed != 1 || !p.isDeleted(dangling.NodeID()) || len(p.inputs) != 2 || len(p.nodes) != before {
 		t.Fatal("combinational cleanup changed terminal IDs", removed)
 	}
 }
@@ -356,7 +356,7 @@ func TestSequentialCleanupRetainsStandaloneBufferStorage(t *testing.T) {
 	a, b := p.NewInput(), p.NewInput()
 	gate := p.AND(a, b)
 	buffer := Aig_ObjCreate(p, &Node{Kind: Buffer, Fanins: [2]Edge{gate, InvalidEdge}, Level: p.node(gate).Level})
-	if count := Aig_ManSeqCleanup(p); count != 0 || p.deleted[gate.NodeID()] || p.deleted[buffer.NodeID()] {
+	if count := Aig_ManSeqCleanup(p); count != 0 || p.isDeleted(gate.NodeID()) || p.isDeleted(buffer.NodeID()) {
 		t.Fatal(count, p.deleted)
 	}
 }

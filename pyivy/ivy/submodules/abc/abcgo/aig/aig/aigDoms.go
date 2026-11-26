@@ -250,7 +250,7 @@ func Aig_ObjDomUnion(s *Aig_Sto_t, dst *[]*Aig_Dom_t, src []*Aig_Dom_t) {
 }
 func Aig_ObjDomCompute(s *Aig_Sto_t, e Edge) {
 	id := e.NodeID()
-	if id >= len(s.Graph.nodes) || s.Graph.deleted[id] {
+	if id >= len(s.Graph.nodes) || s.Graph.isDeleted(id) {
 		panic("aig: invalid dominator object")
 	}
 	if s.Graph.nodes[id].Kind == And || s.Graph.nodes[id].Kind == ExclusiveOr {
@@ -543,7 +543,7 @@ func Aig_ManComputeDomsForCofactoring(g *Graph) map[int]map[int]int {
 	defer Aig_ManDomStop(s)
 	result := map[int]map[int]int{}
 	for id, n := range g.nodes {
-		if g.deleted[id] || n.Kind != Input && n.Kind != And && n.Kind != ExclusiveOr || n.Refs < 10 {
+		if g.isDeleted(id) || n.Kind != Input && n.Kind != And && n.Kind != ExclusiveOr || n.Refs < 10 {
 			continue
 		}
 		counts := Aig_ObjDomCount(s, Edge(id)<<1)

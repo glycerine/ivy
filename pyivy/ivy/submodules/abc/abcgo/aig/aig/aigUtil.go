@@ -54,7 +54,7 @@ func Aig_ManResetRefs(p *Graph) {
 		p.nodes[i].Refs = 0
 	}
 	for i, n := range p.nodes {
-		if p.deleted[i] {
+		if p.isDeleted(i) {
 			continue
 		}
 		for _, e := range nodeFanins(n) {
@@ -84,7 +84,7 @@ func Aig_ManCleanNext(p *Graph) {
 	// C's pNext storage also holds CioId. Preserve that union's cleanup
 	// effect while keeping Go's independent structural hash tables intact.
 	for id := range p.nodes {
-		if !p.deleted[id] {
+		if !p.isDeleted(id) {
 			p.nodes[id].CioID = 0
 		}
 	}
@@ -599,7 +599,7 @@ func Aig_ManCleanCioIds(p *Graph) {
 func Aig_ManChoiceNum(p *Graph) int32 {
 	var count int32
 	for i, n := range p.nodes {
-		if !p.deleted[i] && (n.Kind == And || n.Kind == ExclusiveOr) && Aig_ObjIsChoice(p, Edge(i)<<1) {
+		if !p.isDeleted(i) && (n.Kind == And || n.Kind == ExclusiveOr) && Aig_ObjIsChoice(p, Edge(i)<<1) {
 			count++
 		}
 	}
@@ -614,7 +614,7 @@ func Aig_ManPrintControlFanouts(p *Graph) {
 	Aig_ObjPrint(p, control)
 	fmt.Print("\n\n")
 	for i, n := range p.nodes {
-		if p.deleted[i] || len(nodeFanins(n)) != 2 {
+		if p.isDeleted(i) || len(nodeFanins(n)) != 2 {
 			continue
 		}
 		for j, f := range n.Fanins {
@@ -734,7 +734,7 @@ func aigMergeLists(a, b []Edge, intersection bool) []Edge {
 func aigUtilOrder(p *Graph) []Edge {
 	roots := make([]Edge, 0, len(p.nodes))
 	for i := range p.nodes {
-		if !p.deleted[i] {
+		if !p.isDeleted(i) {
 			roots = append(roots, Edge(i)<<1)
 		}
 	}
@@ -817,7 +817,7 @@ func Aig_ManCounterExampleValueStop(p *Graph) {
 	p.cexValues = nil
 }
 func Aig_ManCounterExampleValueLookup(p *Graph, id, frame int32) int32 {
-	if id < 0 || int(id) >= len(p.nodes) || p.deleted[int(id)] || frame < 0 || int(frame) >= len(p.cexValues) {
+	if id < 0 || int(id) >= len(p.nodes) || p.isDeleted(int(id)) || frame < 0 || int(frame) >= len(p.cexValues) {
 		panic("aig: counterexample lookup bounds")
 	}
 	if p.cexValues[frame][id] {
@@ -836,7 +836,7 @@ func Aig_ManCounterExampleValueTest(p *Graph, cex *util.Abc_Cex_t) {
 func Aig_ManSetPhase(p *Graph) {
 	values := aigSimulate(p, aigUtilOrder(p), make([]bool, len(p.inputs)))
 	for i := range p.nodes {
-		if !p.deleted[i] {
+		if !p.isDeleted(i) {
 			p.nodes[i].Phase = values[i]
 		}
 	}
@@ -844,7 +844,7 @@ func Aig_ManSetPhase(p *Graph) {
 func Aig_ManMuxesCollect(p *Graph) []Edge {
 	result := []Edge{}
 	for i, n := range p.nodes {
-		if !p.deleted[i] && n.Kind == And && Aig_ObjIsMuxType(p, Edge(i)<<1) {
+		if !p.isDeleted(i) && n.Kind == And && Aig_ObjIsMuxType(p, Edge(i)<<1) {
 			result = append(result, Edge(i)<<1)
 		}
 	}

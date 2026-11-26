@@ -7,7 +7,7 @@ func Aig_ManReprStart(g *Graph, capacity int32) {
 		panic("aig: representative storage already started or invalid capacity")
 	}
 	for id, n := range g.nodes {
-		if !g.deleted[id] && n.Kind == Buffer {
+		if !g.isDeleted(id) && n.Kind == Buffer {
 			panic("aig: representatives require buffer-free graph")
 		}
 	}
@@ -93,7 +93,7 @@ func Aig_ManTransferRepr(destination, source *Graph) {
 		panic("aig: representative storage not started")
 	}
 	for id := range source.nodes {
-		if source.deleted[id] {
+		if source.isDeleted(id) {
 			continue
 		}
 		representative := Aig_ObjFindRepr(source, Edge(id)<<1)
@@ -167,7 +167,7 @@ func Aig_ManDupRepr(src *Graph, ordered int32) *Graph {
 	defer dst.updateTrueTerminalCounts()
 	if ordered != 0 {
 		for id, n := range src.nodes {
-			if src.deleted[id] {
+			if src.isDeleted(id) {
 				continue
 			}
 			if n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer {
@@ -274,7 +274,7 @@ func Aig_ManDupReprBasic(src *Graph) *Graph {
 func Aig_ManRemapRepr(g *Graph) int32 {
 	var fanouts int32
 	for id, n := range g.nodes {
-		if g.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr) {
+		if g.isDeleted(id) || (n.Kind != And && n.Kind != ExclusiveOr) {
 			continue
 		}
 		node := Edge(id) << 1
@@ -295,7 +295,7 @@ func Aig_ManRemapRepr(g *Graph) int32 {
 func Aig_ManCountReprs(g *Graph) int32 {
 	var count int32
 	for id, representative := range g.reprs {
-		if id >= 0 && id < len(g.nodes) && !g.deleted[id] && representative != InvalidEdge {
+		if id >= 0 && id < len(g.nodes) && !g.isDeleted(id) && representative != InvalidEdge {
 			count++
 		}
 	}
@@ -359,7 +359,7 @@ func Aig_ManMarkValidChoices(g *Graph) {
 	}
 	g.equivs = map[int]Edge{}
 	for id, n := range g.nodes {
-		if g.deleted[id] || (n.Kind != And && n.Kind != ExclusiveOr) {
+		if g.isDeleted(id) || (n.Kind != And && n.Kind != ExclusiveOr) {
 			continue
 		}
 		node := Edge(id) << 1
@@ -387,7 +387,7 @@ func Aig_TransferMappedClasses(destination, part *Graph, mapping []int32) int32 
 	}
 	var count int32
 	for id := range part.nodes {
-		if part.deleted[id] {
+		if part.isDeleted(id) {
 			continue
 		}
 		representative := Aig_ObjFindRepr(part, Edge(id)<<1)
