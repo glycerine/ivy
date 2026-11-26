@@ -167,8 +167,8 @@ func Abc_NtkTransferCopy(n *Network) {
 }
 
 func Abc_ObjCrossCutInc(node *Object) int32 {
-	node.crossCutVisits++
-	return abcBool(node.crossCutVisits == len(node.fanouts))
+	node.extra().crossCutVisits++
+	return abcBool(node.extra().crossCutVisits == len(node.fanouts))
 }
 
 func Abc_NtkCrossCut_rec(node *Object, size, maximum *int32) int32 {
@@ -193,7 +193,9 @@ func Abc_NtkCrossCut_rec(node *Object, size, maximum *int32) int32 {
 
 func Abc_NtkCrossCut(n *Network) int32 {
 	for _, node := range n.Objects() {
-		node.crossCutVisits = 0
+		if node.aux != nil {
+			node.aux.crossCutVisits = 0
+		}
 	}
 	Abc_NtkIncrementTravId(n)
 	var size, maximum int32

@@ -215,7 +215,7 @@ func Abc_NodeStrashUsingNetwork(dst *Network, box *Object) {
 		if edge.Complement {
 			value = value.Not()
 		}
-		if i/32 < len(box.BoxInputPolarity) && util.Abc_InfoHasBit(box.BoxInputPolarity, int32(i)) {
+		if i/32 < len(box.BoxInputPolarity()) && util.Abc_InfoHasBit(box.BoxInputPolarity(), int32(i)) {
 			value = value.Not()
 		}
 		setCopy(input, value)

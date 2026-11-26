@@ -57,12 +57,81 @@ func (e Edge) DecValue() any {
 	return values[0]
 }
 
+// objectAux stores rarely used object fields out of line.
+type objectAux struct {
+	mvEncoding []Edge
+	// boxInputPolarity records the optional input-complement mask used by
+	// ABC's hierarchical gate strashing interface.
+	boxInputPolarity []uint32
+	terminalIndex    int
+	dTemp            float64
+	crossCutVisits   int
+}
+
+// extra returns o's auxiliary fields, allocating them on first use.
+func (o *Object) extra() *objectAux {
+	if o.aux == nil {
+		o.aux = new(objectAux)
+	}
+	return o.aux
+}
+
+// MVEncoding returns a multi-valued net's per-value signals.
+func (o *Object) MVEncoding() []Edge {
+	if o.aux == nil {
+		return nil
+	}
+	return o.aux.mvEncoding
+}
+func (o *Object) SetMVEncoding(e []Edge) {
+	if e != nil || o.aux != nil {
+		o.extra().mvEncoding = e
+	}
+}
+
+// BoxInputPolarity returns the box's optional input-complement mask.
+func (o *Object) BoxInputPolarity() []uint32 {
+	if o.aux == nil {
+		return nil
+	}
+	return o.aux.boxInputPolarity
+}
+func (o *Object) SetBoxInputPolarity(p []uint32) {
+	if p != nil || o.aux != nil {
+		o.extra().boxInputPolarity = p
+	}
+}
+
+// TerminalIndex is the position of a terminal within its box or model.
+func (o *Object) TerminalIndex() int {
+	if o.aux == nil {
+		return 0
+	}
+	return o.aux.terminalIndex
+}
+func (o *Object) SetTerminalIndex(i int) {
+	if i != 0 || o.aux != nil {
+		o.extra().terminalIndex = i
+	}
+}
+
+// DTemp is ABC's temporary floating-point object field.
+func (o *Object) DTemp() float64 {
+	if o.aux == nil {
+		return 0
+	}
+	return o.aux.dTemp
+}
+func (o *Object) SetDTemp(d float64) {
+	if d != 0 || o.aux != nil {
+		o.extra().dTemp = d
+	}
+}
+
 // Object is a network object. Fanin order and fanout multiplicity are retained.
 type Object struct {
-	MVEncoding []Edge
-	// BoxInputPolarity records the optional input-complement mask used by ABC's
-	// hierarchical gate strashing interface.
-	BoxInputPolarity    []uint32
+	// aux holds fields few objects use, keeping AIG cells small.
+	aux                 *objectAux
 	CopyEdge            Edge
 	CopyData            any // temporary non-object copy payload (e.g. a mapped gate)
 	fanoutAdjustment    int
@@ -75,13 +144,10 @@ type Object struct {
 	Kind                ObjectKind
 	reverseLevel        int
 	travID              uint64
-	crossCutVisits      int
 	ID                  int
 	nodeSlot            int
 	Level               int
 	Temp                int
-	DTemp               float64
-	TerminalIndex       int
 	Data                any
 	Copy                *Object
 	decValues           atomic.Pointer[[2]any]

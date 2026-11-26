@@ -60,7 +60,7 @@ type NetworkFunctionCloner interface{ CloneForNetwork(*Network) any }
 
 func Abc_NtkDupObj(n *Network, old *Object, copyName int32) *Object {
 	o := n.NewObject(old.Kind)
-	o.BoxInputPolarity = append([]uint32(nil), old.BoxInputPolarity...)
+	o.SetBoxInputPolarity(append([]uint32(nil), old.BoxInputPolarity()...))
 	copyMVVariable(old, o)
 	o.Level = old.Level
 	if cloner, ok := old.Data.(NetworkFunctionCloner); ok {

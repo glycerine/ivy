@@ -259,20 +259,20 @@ func Gia_ManSweepHierarchy(g *aig.Graph) *aig.Graph { return hierarchySweep(g, t
 func Gia_ManFlattenLogicPrepare(n *Network) int32 {
 	fillHierarchyTemps(n)
 	for i, o := range n.ObjectsOfKind(ObjectPI) {
-		o.TerminalIndex = i
+		o.SetTerminalIndex(i)
 	}
 	for i, o := range n.ObjectsOfKind(ObjectPO) {
-		o.TerminalIndex = i
+		o.SetTerminalIndex(i)
 	}
 	for _, box := range n.Boxes() {
 		if box.Kind == ObjectLatch {
 			panic("sequential hierarchy is not supported")
 		}
 		for i, e := range box.fanins {
-			e.Object.TerminalIndex = i
+			e.Object.SetTerminalIndex(i)
 		}
 		for i, o := range box.fanouts {
-			o.TerminalIndex = i
+			o.SetTerminalIndex(i)
 		}
 	}
 	return int32(len(n.ObjectsOfKind(ObjectPI)) + len(n.ObjectsOfKind(ObjectPO)))
@@ -308,7 +308,7 @@ func Abc_NtkFlattenHierarchyGia_rec(g *aig.Graph, supers *[]*Object, o *Object, 
 		}
 		box := (*supers)[len(*supers)-1]
 		*supers = (*supers)[:len(*supers)-1]
-		value = read(box.fanins[o.TerminalIndex])
+		value = read(box.fanins[o.TerminalIndex()])
 		*supers = append(*supers, box)
 		if buffers != nil {
 			value = g.Data.(*HierarchyBufferInfo).append(g, o, value)
@@ -320,7 +320,7 @@ func Abc_NtkFlattenHierarchyGia_rec(g *aig.Graph, supers *[]*Object, o *Object, 
 		}
 		box := o.fanins[0].Object
 		*supers = append(*supers, box)
-		po := boxModel(box).ObjectsOfKind(ObjectPO)[o.TerminalIndex]
+		po := boxModel(box).ObjectsOfKind(ObjectPO)[o.TerminalIndex()]
 		value = Abc_NtkFlattenHierarchyGia_rec(g, supers, po, buffers)
 		*supers = (*supers)[:len(*supers)-1]
 		if buffers != nil {

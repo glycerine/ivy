@@ -13,21 +13,21 @@ func Abc_NtkComputeDelay(n *Network) float32 {
 		panic("abc: unsupported fanin count for delay estimate")
 	}
 	for _, input := range n.cis {
-		input.DTemp = 0
+		input.SetDTemp(0)
 	}
 	for _, node := range Abc_NtkDfs(n, 1) {
-		node.DTemp = 0
+		arrival := 0.0
 		for _, edge := range node.fanins {
-			node.DTemp = max(node.DTemp, edge.Object.DTemp)
+			arrival = max(arrival, edge.Object.DTemp())
 		}
-		node.DTemp += float64(float32(delays[len(node.fanins)] / delays[maximum]))
+		node.SetDTemp(arrival + float64(float32(delays[len(node.fanins)]/delays[maximum])))
 	}
 	var result float64
 	for _, output := range n.cos {
 		if len(output.fanins) != 1 {
 			panic("abc: output has no driver")
 		}
-		result = max(result, output.fanins[0].Object.DTemp)
+		result = max(result, output.fanins[0].Object.DTemp())
 	}
 	return float32(result)
 }

@@ -110,7 +110,7 @@ func Abc_NodeStrashBlifMv(n *Network, o *Object) int32 {
 	}
 	values := make([][]Edge, len(o.fanins))
 	for i, e := range o.fanins {
-		values[i] = e.Object.MVEncoding
+		values[i] = e.Object.MVEncoding()
 		if len(values[i]) != table.DomainSizes[i] {
 			return 0
 		}
@@ -124,7 +124,7 @@ func Abc_NodeStrashBlifMv(n *Network, o *Object) int32 {
 		} else {
 			result[0] = n.One()
 		}
-		o.fanouts[0].MVEncoding = result
+		o.fanouts[0].SetMVEncoding(result)
 		return 1
 	}
 	for _, cube := range table.Cubes {
@@ -163,7 +163,7 @@ func Abc_NodeStrashBlifMv(n *Network, o *Object) int32 {
 			}
 		}
 	}
-	o.fanouts[0].MVEncoding = result
+	o.fanouts[0].SetMVEncoding(result)
 	return 1
 }
 func Abc_NtkConvertAssignName(o, net *Object, index int32) {
@@ -194,7 +194,7 @@ func Abc_NtkStrashBlifMv(old *Network) *Network {
 	}
 	defer func() {
 		for _, net := range old.ObjectsOfKind(ObjectNet) {
-			net.MVEncoding = nil
+			net.SetMVEncoding(nil)
 		}
 	}()
 	n := NewNetwork(old.Name)
@@ -205,7 +205,7 @@ func Abc_NtkStrashBlifMv(old *Network) *Network {
 		if size := int(Abc_ObjMvVarNum(net)); size > maxValues {
 			maxValues = size
 		}
-		net.MVEncoding = nil
+		net.SetMVEncoding(nil)
 	}
 	var registerInputs, registerOutputs []*Object
 	for _, kind := range []ObjectKind{ObjectPI, ObjectBO} {
@@ -225,7 +225,7 @@ func Abc_NtkStrashBlifMv(old *Network) *Network {
 					registerOutputs = append(registerOutputs, o)
 				}
 			}
-			net.MVEncoding = make([]Edge, size)
+			net.SetMVEncoding(make([]Edge, size))
 			for value := 0; value < size; value++ {
 				signal := n.One()
 				for bit, input := range encodingBits {
@@ -234,7 +234,7 @@ func Abc_NtkStrashBlifMv(old *Network) *Network {
 					}
 					signal = Abc_AigAnd(m, signal, input)
 				}
-				net.MVEncoding[value] = signal
+				net.MVEncoding()[value] = signal
 			}
 		}
 	}
@@ -247,12 +247,12 @@ func Abc_NtkStrashBlifMv(old *Network) *Network {
 		for _, co := range old.ObjectsOfKind(kind) {
 			net := mvNet(co, false)
 			size := int(Abc_ObjMvVarNum(net))
-			if len(net.MVEncoding) != size {
+			if len(net.MVEncoding()) != size {
 				return nil
 			}
 			for bit := 0; bit < mvBits(size); bit++ {
 				signal := n.One().Not()
-				for value, input := range net.MVEncoding {
+				for value, input := range net.MVEncoding() {
 					if value&(1<<bit) != 0 {
 						signal = Abc_AigOr(m, signal, input)
 					}
@@ -297,7 +297,7 @@ func Abc_NtkStrashBlifMv(old *Network) *Network {
 		n.cis = append(n.ObjectsOfKind(ObjectPI), n.ObjectsOfKind(ObjectBO)...)
 	}
 	for _, net := range old.ObjectsOfKind(ObjectNet) {
-		net.MVEncoding = nil
+		net.SetMVEncoding(nil)
 	}
 	Abc_AigCleanup(m)
 	if n.Check() != nil {

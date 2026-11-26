@@ -133,7 +133,8 @@ func TestStrashBoxModelPreservesInputAndOutputPhases(t *testing.T) {
 	parent := NewNetwork("parent")
 	a, b := parent.NewObject(ObjectPI), parent.NewObject(ObjectPI)
 	box, boxOutput := parent.NewObject(ObjectWhitebox), parent.NewObject(ObjectNet)
-	box.Data, box.BoxInputPolarity = model, []uint32{1}
+	box.Data = model
+	box.SetBoxInputPolarity([]uint32{1})
 	Abc_ObjAddFanin(box, a)
 	Abc_ObjAddFanin(box, b)
 	Abc_ObjAddFanin(boxOutput, box)
@@ -152,8 +153,8 @@ func TestStrashBoxModelPreservesInputAndOutputPhases(t *testing.T) {
 		}
 	}
 	copy := Abc_NtkDupObj(NewNetwork("copy"), box, 0)
-	box.BoxInputPolarity[0] = 0
-	if copy.BoxInputPolarity[0] != 1 {
+	box.BoxInputPolarity()[0] = 0
+	if copy.BoxInputPolarity()[0] != 1 {
 		t.Fatal("box polarity mask aliased the source")
 	}
 }

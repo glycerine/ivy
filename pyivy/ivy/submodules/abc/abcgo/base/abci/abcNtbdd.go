@@ -109,7 +109,7 @@ func Abc_NtkBuildGlobalBdds(n *Abc_Ntk_t, sizeMax, dropInternal, reorder, revers
 			idx = int(abc.Abc_NtkCiNum(n)) - 1 - idx
 		}
 		if idx < 0 || idx >= len(d.Vars) {
-			idx = ci.TerminalIndex
+			idx = ci.TerminalIndex()
 		}
 		if idx < 0 || idx >= len(d.Vars) {
 			continue

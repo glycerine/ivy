@@ -89,7 +89,7 @@ func TestMVStrashEncodingTruthTable(t *testing.T) {
 		}
 	}
 	for _, net := range old.ObjectsOfKind(ObjectNet) {
-		if net.MVEncoding != nil {
+		if net.MVEncoding() != nil {
 			t.Fatal("temporary encoding retained")
 		}
 	}
@@ -254,7 +254,7 @@ func TestMVDefaultEqualityAndFailureCleanup(t *testing.T) {
 		t.Fatal("accepted malformed cover")
 	}
 	for _, net := range n.ObjectsOfKind(ObjectNet) {
-		if net.MVEncoding != nil {
+		if net.MVEncoding() != nil {
 			t.Fatal("failed conversion retained encoding graph")
 		}
 	}

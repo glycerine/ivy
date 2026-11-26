@@ -321,7 +321,7 @@ func ntkDuplicate(src *Network, dfs, skipBarriers bool) *Network {
 		} else {
 			copy := Abc_NtkDupObj(dst, o, abcBool(Abc_NtkHasBlackbox(src) != 0 && o.Kind == ObjectNet))
 			copy.Barrier = o.Barrier
-			copy.TerminalIndex = o.TerminalIndex
+			copy.SetTerminalIndex(o.TerminalIndex())
 		}
 	}
 	for _, o := range src.Objects() {
