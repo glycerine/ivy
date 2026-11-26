@@ -906,6 +906,32 @@ func Kit_DsdExpandNode_rec(next, old *Kit_DsdNtk_t, lit int32) int32 {
 			Kit_TruthChangePhase(node.truth, int32(node.nFans), int32(i))
 		}
 	}
+	if t := node.truth[0]; obj.nFans == 3 && (t == 0xCACACACA || t == 0xC5C5C5C5 || t == 0x3A3A3A3A || t == 0x35353535) {
+		// translate into a regular MUX, as kitDsd.c does
+		switch t {
+		case 0xC5C5C5C5:
+			node.pFans[0] ^= 1
+		case 0x3A3A3A3A:
+			node.pFans[1] ^= 1
+		case 0x35353535:
+			node.pFans[0] ^= 1
+			node.pFans[1] ^= 1
+		}
+		node.truth[0] = 0xCACACACA
+		// resolve the complemented control input
+		if node.pFans[2]&1 != 0 {
+			node.pFans[0], node.pFans[1] = node.pFans[1], node.pFans[0]
+			node.pFans[2] ^= 1
+		}
+		// resolve the complemented true input
+		if node.pFans[1]&1 != 0 {
+			lit ^= 1
+			node.pFans[0] ^= 1
+			node.pFans[1] ^= 1
+		}
+		return int32(2*node.Id) ^ (lit & 1)
+	}
+	// if the incoming phase is complemented, absorb it into the prime node
 	if lit&1 != 0 {
 		Kit_TruthNot(node.truth, node.truth, int32(node.nFans))
 	}
