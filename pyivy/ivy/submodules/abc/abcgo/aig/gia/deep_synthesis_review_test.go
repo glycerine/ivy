@@ -144,8 +144,12 @@ func TestDeepSynthesisFailureAndMissingGraphs(t *testing.T) {
 						result = Gia_ManDeepSynOne(3, 0, 0, 0, 0, 0)
 					}
 				})
-				if result != nil || abcmain.Abc_FrameIsBatchMode() != initial {
-					t.Fatal("failure returned a graph or leaked batch mode")
+				// Gia_ManDeepSyn keeps the best graph so far (CBUGS_FIXED.md #13).
+				if (kind == "outer") != (result != nil) || abcmain.Abc_FrameIsBatchMode() != initial {
+					t.Fatal("wrong failure result or leaked batch mode")
+				}
+				if kind == "outer" && Gia_ManAndNum(result) != Gia_ManAndNum(g) {
+					t.Fatal("failure did not keep the best graph")
 				}
 				if f.Err.(*bytes.Buffer).Len() == 0 {
 					t.Fatal("missing error report")
