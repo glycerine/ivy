@@ -46,3 +46,14 @@ func TestFraigStoreRestoreMatchesNative(t *testing.T) {
 	expectStats(t, "read test_vectors/bench/mul8.aig; strash; fraig_store; balance; fraig_store; fraig_restore; print_stats",
 		"i/o =   16/   16  lat =    0  and =    424  lev = 53")
 }
+
+// Native (release) ABC: on a combinational network absec and simsec report
+// that demitering failed; their register-count assertions are compiled out.
+func TestSecOnCombinationalNetworkLikeNative(t *testing.T) {
+	for _, cmd := range []string{"absec", "simsec"} {
+		out, _ := runScriptStatus(t, "read test_vectors/bench/mul8.aig; strash; "+cmd)
+		if !strings.Contains(out, "Demitering has failed.") {
+			t.Errorf("%s:\n%s", cmd, out)
+		}
+	}
+}

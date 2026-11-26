@@ -2635,7 +2635,7 @@ func Abc_NtkDarAbSec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nFrames int32, fVerbose
 		Abc_Print(1, "Converting miter into AIG has failed.\n")
 		return -1
 	}
-	assert(aiggraph.Aig_ManRegNum(pMan1) > 0, "Aig_ManRegNum(pMan1) > 0")
+	// ABC asserts Aig_ManRegNum(pMan1) > 0; release builds go on (and report a failed demitering)
 	// derive AIG manager
 	if pNtk2 != nil {
 		pMan2 = Abc_NtkToDar(pNtk2, 0, 1)
@@ -2644,7 +2644,7 @@ func Abc_NtkDarAbSec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nFrames int32, fVerbose
 			Abc_Print(1, "Converting miter into AIG has failed.\n")
 			return -1
 		}
-		assert(aiggraph.Aig_ManRegNum(pMan2) > 0, "Aig_ManRegNum(pMan2) > 0")
+		// ABC asserts Aig_ManRegNum(pMan2) > 0; release builds go on (and report a failed demitering)
 		if aig_saig.Saig_ManPiNum(pMan1) != aig_saig.Saig_ManPiNum(pMan2) {
 			Aig_ManStop(pMan1)
 			Aig_ManStop(pMan2)
@@ -2696,7 +2696,7 @@ func Abc_NtkDarSimSec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pPars *Ssw_Pars_t) int
 		Abc_Print(1, "Converting miter into AIG has failed.\n")
 		return -1
 	}
-	assert(aiggraph.Aig_ManRegNum(pMan1) > 0, "Aig_ManRegNum(pMan1) > 0")
+	// ABC asserts Aig_ManRegNum(pMan1) > 0; release builds go on (and report a failed demitering)
 	// derive AIG manager
 	if pNtk2 != nil {
 		pMan2 = Abc_NtkToDar(pNtk2, 0, 1)
@@ -2704,7 +2704,7 @@ func Abc_NtkDarSimSec(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pPars *Ssw_Pars_t) int
 			Abc_Print(1, "Converting miter into AIG has failed.\n")
 			return -1
 		}
-		assert(aiggraph.Aig_ManRegNum(pMan2) > 0, "Aig_ManRegNum(pMan2) > 0")
+		// ABC asserts Aig_ManRegNum(pMan2) > 0; release builds go on (and report a failed demitering)
 	}
 
 	// perform verification
@@ -2742,7 +2742,7 @@ func Abc_NtkDarMatch(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nDist int32, fVerbose i
 		Abc_Print(1, "Converting miter into AIG has failed.\n")
 		return nil
 	}
-	assert(aiggraph.Aig_ManRegNum(pMan1) > 0, "Aig_ManRegNum(pMan1) > 0")
+	// ABC asserts Aig_ManRegNum(pMan1) > 0; release builds go on (and report a failed demitering)
 	// derive AIG manager
 	if pNtk2 != nil {
 		pMan2 = Abc_NtkToDar(pNtk2, 0, 1)
@@ -2750,7 +2750,7 @@ func Abc_NtkDarMatch(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nDist int32, fVerbose i
 			Abc_Print(1, "Converting miter into AIG has failed.\n")
 			return nil
 		}
-		assert(aiggraph.Aig_ManRegNum(pMan2) > 0, "Aig_ManRegNum(pMan2) > 0")
+		// ABC asserts Aig_ManRegNum(pMan2) > 0; release builds go on (and report a failed demitering)
 	}
 
 	// perform verification
