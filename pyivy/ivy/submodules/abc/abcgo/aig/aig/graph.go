@@ -73,6 +73,7 @@ type Graph struct {
 	inductionCex                                *util.Abc_Cex_t
 	editDepth                                   int
 	fanouts                                     *FanoutIndex
+	bufs                                        []Edge // pending buffers (vBufs), with fanouts active
 	Assertions, BarrierBuffers                  int32
 	RetimingChanged                             bool
 	FlopNumbers                                 []int32

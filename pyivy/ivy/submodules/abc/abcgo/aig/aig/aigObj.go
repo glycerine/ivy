@@ -115,6 +115,14 @@ func Aig_ObjDelete(p *Graph, e Edge) {
 			}
 		}
 	}
+	if n.Kind == Buffer {
+		for i, b := range p.bufs {
+			if b.NodeID() == e.NodeID() {
+				p.bufs = append(p.bufs[:i], p.bufs[i+1:]...)
+				break
+			}
+		}
+	}
 	// ABC deletes only disconnected objects; release any remaining fanins.
 	for _, fanin := range nodeFanins(*n) {
 		if p.valid(fanin) {
@@ -277,6 +285,9 @@ func Aig_NodeFixBufferFanins(p *Graph, e Edge, updateLevel int32) {
 	Aig_ObjReplace(p, e, result, updateLevel)
 }
 func Aig_ManPropagateBuffers(p *Graph, updateLevel int32) int32 {
+	if p.fanouts != nil {
+		return p.propagateBufferList(updateLevel)
+	}
 	var changed int32
 	for {
 		progress := false
@@ -315,51 +326,107 @@ func Aig_ManPropagateBuffers(p *Graph, updateLevel int32) int32 {
 	p.refreshFanouts()
 	return changed
 }
+// Aig_ObjReplace follows aigObj.c: the old object keeps its ID and fanouts.
+// It becomes a buffer when the replacement is complemented, referenced or not
+// a logic node; otherwise it absorbs the replacement's fanins. With fanouts
+// active, levels update incrementally and buffers are propagated at once.
 func Aig_ObjReplace(p *Graph, old, replacement Edge, updateLevel int32) {
 	p.editDepth++
 	defer func() { p.editDepth--; p.refreshFanouts() }()
-	if old.Complemented() || old.NodeID() == replacement.NodeID() {
+	newR := Aig_Regular(replacement)
+	if old.Complemented() || old.NodeID() == newR.NodeID() {
 		panic("aig: invalid replacement")
 	}
-	if p.node(old).Kind == Input || p.node(old).Kind == Output || p.node(old).Kind == Constant {
+	if k := p.node(old).Kind; k == Input || k == Output || k == Constant {
 		panic("aig: cannot replace terminal")
 	}
-	if p.node(replacement).Kind == Buffer || p.node(replacement).Kind == Output {
+	if k := p.node(newR).Kind; k == Buffer || k == Output {
 		panic("aig: invalid replacement object")
 	}
-	for _, e := range p.dfs([]Edge{replacement}, false, false, false) {
-		if e.NodeID() == old.NodeID() {
+	for _, fanin := range nodeFanins(*p.node(newR)) {
+		if fanin.NodeID() == old.NodeID() {
 			panic("aig: replacement introduces cycle")
 		}
 	}
-	p.node(replacement).Refs++
+	p.node(newR).Refs++
 	Aig_ObjDelete_rec(p, old, 0)
-	p.node(replacement).Refs--
+	p.node(newR).Refs--
 	n := p.node(old)
-	r := p.node(replacement)
-	if replacement.Complemented() || r.Refs != 0 || r.Kind != And && r.Kind != ExclusiveOr {
-		// The source keeps a buffer when the replacement is complemented,
-		// referenced, or a terminal.
+	if r := p.node(newR); replacement.Complemented() || r.Refs > 0 || r.Kind != And && r.Kind != ExclusiveOr {
 		n.Kind = Buffer
-		n.Fanins = [2]Edge{replacement, InvalidEdge}
-		r.Refs++
-		p.linkFanins(old.NodeID())
+		n.Fanins = [2]Edge{InvalidEdge, InvalidEdge}
+		Aig_ObjConnect(p, old, replacement, InvalidEdge)
 	} else {
-		// Move an unused positive node into the old object slot, preserving
-		// the old ID and its fanouts as in Aig_ObjReplace in aigObj.c.
-		kind, fanins := r.Kind, r.Fanins
-		Aig_ObjDisconnect(p, replacement)
-		n.Kind, n.Fanins = kind, fanins
-		for _, fanin := range nodeFanins(*n) {
-			p.node(fanin).Refs++
+		kind, fanins, levelOld := r.Kind, r.Fanins, n.Level
+		Aig_ObjDisconnect(p, newR)
+		n.Kind = kind
+		Aig_ObjConnect(p, old, fanins[0], fanins[1])
+		Aig_ObjDelete(p, newR)
+		if p.fanouts != nil {
+			n.Level = levelOld
+			Aig_ManUpdateLevel(p, old)
 		}
-		p.linkFanins(old.NodeID())
-		Aig_TableInsert(p, old)
-		Aig_ObjDelete(p, replacement)
+		// ABC asserts that reverse levels exist; the Go API tolerates callers
+		// that request level updates without them.
+		if updateLevel != 0 && p.reverseLevels != nil {
+			Aig_ObjClearReverseLevel(p, old)
+			Aig_ManUpdateReverseLevel(p, old)
+		}
 	}
-	p.recomputeLevels()
-	p.refreshFanouts()
+	if p.fanouts != nil && p.node(old).Kind == Buffer {
+		p.bufs = append(p.bufs, old)
+		Aig_ManPropagateBuffers(p, updateLevel)
+	}
+	if p.fanouts == nil {
+		// ABC leaves fanout levels stale here; the Go graph keeps its exact
+		// level invariant (checked by Graph.Check) instead.
+		p.recomputeLevels()
+	}
 }
+// propagateBufferList is aigObj.c's Aig_ManPropagateBuffers: repeatedly
+// take the last pending buffer, walk first fanouts to a non-buffer consumer
+// and rebuild that consumer on the buffers' real drivers.
+func (p *Graph) propagateBufferList(updateLevel int32) int32 {
+	var steps int32
+	for ; len(p.bufs) > 0; steps++ {
+		e := p.bufs[len(p.bufs)-1]
+		for p.node(e).Kind == Buffer {
+			fan := Aig_ObjFanout0Int(p, int32(e.NodeID()))
+			if fan == 0 {
+				// Only bare interface edges (no CO object) use this buffer.
+				p.bypassBareOutputs(e)
+				break
+			}
+			e = Aig_ManObj(p, fan>>1)
+		}
+		if p.node(e).Kind != Buffer {
+			Aig_NodeFixBufferFanins(p, e, updateLevel)
+		}
+		if steps > 1000000 {
+			fmt.Println("Error: A cycle is encountered while propagating buffers.")
+			break
+		}
+	}
+	return steps
+}
+
+// bypassBareOutputs points interface entries that name buffer b at its real
+// driver and deletes b once unreferenced.
+func (p *Graph) bypassBareOutputs(b Edge) {
+	for i, out := range p.outputs {
+		if out.NodeID() == b.NodeID() {
+			p.outputs[i] = p.real(out)
+			p.node(p.outputs[i]).Refs++
+			p.node(b).Refs--
+		}
+	}
+	if p.node(b).Refs == 0 {
+		Aig_ObjDelete_rec(p, b, 1)
+	} else {
+		panic("aig: buffer has references but no fanouts")
+	}
+}
+
 func nodeFanins(n Node) []Edge {
 	if n.Kind == And || n.Kind == ExclusiveOr {
 		return n.Fanins[:]

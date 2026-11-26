@@ -74,3 +74,8 @@ func TestIfAreaMappingMatchesNative(t *testing.T) {
 	expectStats(t, "read ../../../i10.aig; if -K 4 -a; print_stats",
 		fmt.Sprintf("nd = %5d  edge = %6d  aig  = %5d  lev = %d", 841, 2816, 3343, 25))
 }
+
+// Native: abc -c "read i10.aig; drf; print_stats" (it used to panic in Go).
+func TestDarRefactorMatchesNative(t *testing.T) {
+	expectStats(t, "read ../../../i10.aig; drf; print_stats", "and =   2301  lev = 49")
+}
