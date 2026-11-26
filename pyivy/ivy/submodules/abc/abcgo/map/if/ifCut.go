@@ -215,7 +215,60 @@ func ifCompare(p *If_Man_t, a, b *If_Cut_t, fields string) int32 {
 func If_CutCompareDelay(p *If_Man_t, a, b **If_Cut_t) int32    { return ifCompare(p, *a, *b, "dna") }
 func If_CutCompareDelayOld(p *If_Man_t, a, b **If_Cut_t) int32 { return ifCompare(p, *a, *b, "dan") }
 func If_CutCompareArea(p *If_Man_t, a, b **If_Cut_t) int32     { return ifCompare(p, *a, *b, "and") }
+// ifCmpEps compares x and y with tolerance eps, as ifCut.c does.
+func ifCmpEps(x, y, eps float32) int32 {
+	if x < y-eps {
+		return -1
+	}
+	if x > y+eps {
+		return 1
+	}
+	return 0
+}
+func ifCmpInt(x, y uint32) int32 {
+	if x < y {
+		return -1
+	}
+	if x > y {
+		return 1
+	}
+	return 0
+}
+
 func If_ManSortCompare(p *If_Man_t, a, b *If_Cut_t) int32 {
+	if p.pPars.FPower == 0 {
+		// The regular orders, written out as in ifCut.c.
+		e := p.fEpsilon
+		var r int32
+		switch p.SortMode {
+		case 0: // delay, leaves, area, edge, power, useless
+			if r = ifCmpEps(a.Delay, b.Delay, e); r == 0 {
+				if r = ifCmpInt(a.nLeaves, b.nLeaves); r == 0 {
+					if r = ifCmpEps(a.Area, b.Area, e); r == 0 {
+						if r = ifCmpEps(a.Edge, b.Edge, e); r == 0 {
+							if r = ifCmpEps(a.Power, b.Power, e); r == 0 {
+								r = ifCmpInt(uint32(a.fUseless), uint32(b.fUseless))
+							}
+						}
+					}
+				}
+			}
+			return r
+		case 1: // area, edge, power, leaves, delay, useless
+			if r = ifCmpEps(a.Area, b.Area, e); r == 0 {
+				if r = ifCmpEps(a.Edge, b.Edge, e); r == 0 {
+					if r = ifCmpEps(a.Power, b.Power, e); r == 0 {
+						if r = ifCmpInt(a.nLeaves, b.nLeaves); r == 0 {
+							if r = ifCmpEps(a.Delay, b.Delay, e); r == 0 {
+								r = ifCmpInt(uint32(a.fUseless), uint32(b.fUseless))
+							}
+						}
+					}
+				}
+			}
+			return r
+		}
+	}
 	fields := ""
 	if p.pPars.FPower != 0 {
 		switch p.SortMode {
