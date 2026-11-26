@@ -2,74 +2,84 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/sat/satoko"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"time"
 )
 
-// Gia_ManSatEnum enumerates assignments satisfying a single-output circuit.
-// It returns 1 when enumeration completes and 0 when a limit is reached.
+// Gia_ManSatEnum is giaQbf.c's: it enumerates the PI assignments for which
+// some output is 1 (Mf_ManGenerateCnf adds the OR of the outputs), blocking
+// each one found. It returns 1 when enumeration completes and 0 when a
+// limit is reached.
 func Gia_ManSatEnum(g *Gia_Man_t, confLimit, timeout, verbose int32) int32 {
-	if g == nil || g.nRegs != 0 || Gia_ManPoNum(g) != 1 {
-		panic("gia: invalid SAT enumeration graph")
-	}
-	n := int(Gia_ManPiNum(g))
-	s := satoko.New()
-	s.SetVariables(n)
-	inputs := make([]int, n)
-	for i := range inputs {
-		inputs[i] = 2 * i
-	}
-	output := qbfEncodeGraph(s, g, inputs)
-	s.AddClause([]int{output})
 	start := time.Now()
-	solutions := 0
-	complete := int32(0)
-	for {
-		status := s.SolveAssumptionsLimit(nil, int64(confLimit))
-		if status == satoko.SATOKO_UNSAT {
-			complete = 1
+	cnf := Mf_ManGenerateCnf(g, 8, 0, 1, 0, 0)
+	if cnf == nil {
+		return 0
+	}
+	// Cnf_DataWriteIntoSolver( pCnf, 1, 0 )
+	s := bsat.NewSolver()
+	s.SetNumVars(int32(cnf.Variables))
+	consistent := true
+	for _, clause := range cnf.Clauses {
+		if !s.AddClause(clause...) {
+			consistent = false
 			break
 		}
-		if status != satoko.SATOKO_SAT {
+	}
+	if consistent {
+		consistent = s.Simplify()
+	}
+	firstPar := int32(cnf.Variables) - Gia_ManPiNum(g)
+	solutions, result := 0, int32(0)
+	lits := make([]int32, Gia_ManPiNum(g))
+	for iter := 1; consistent; iter++ {
+		status := s.SolveWithResourceLimits(nil, int64(confLimit), 0, 0, 0)
+		if status == bsat.Unsatisfiable {
+			result = 1
+			break
+		}
+		if status != bsat.Satisfiable {
 			break
 		}
 		solutions++
-		block := make([]int, n)
-		if verbose != 0 {
-			fmt.Printf("%5d : ", solutions)
-		}
-		for i := range block {
-			value := s.ModelValue(i) == 1
-			block[i] = 2 * i
+		for i := range lits {
+			v := firstPar + int32(i)
+			value, _ := s.Value(v)
+			lits[i] = 2 * v
 			if value {
-				block[i] ^= 1
-			}
-			if verbose != 0 {
-				if value {
-					fmt.Print("1")
-				} else {
-					fmt.Print("0")
-				}
+				lits[i] |= 1
 			}
 		}
 		if verbose != 0 {
+			fmt.Printf("%5d : ", iter)
+			for _, lit := range lits {
+				fmt.Print(1 - lit&1)
+			}
 			fmt.Println()
 		}
-		if !s.AddClause(block) {
-			complete = 1
+		if !s.AddClause(lits...) {
+			result = 1
 			break
 		}
-		if timeout > 0 && time.Since(start) >= time.Duration(timeout)*time.Second {
+		if timeout != 0 && time.Since(start) >= time.Duration(timeout)*time.Second {
+			result = 0
 			break
 		}
 	}
-	if complete != 0 {
-		fmt.Printf("Enumerated the complete set of %d assignments.\n", solutions)
+	if !consistent {
+		result = 1 // ABC's solver creation fails on an inconsistent CNF
+	}
+	if timeout != 0 && time.Since(start) >= time.Duration(timeout)*time.Second {
+		fmt.Printf("Enumerated %d assignments when timeout (%d sec) was reached.  ", solutions, timeout)
+	} else if confLimit != 0 && result == 0 {
+		fmt.Printf("Enumerated %d assignments when conflict limit (%d) was reached.  ", solutions, confLimit)
 	} else {
-		fmt.Printf("Enumeration stopped after %d assignments.\n", solutions)
+		fmt.Printf("Enumerated the complete set of %d assignments.  ", solutions)
 	}
-	return complete
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds())
+	return result
 }
 
 // Gia_QbfSolve solves exists parameters, forall remaining inputs, output=1.

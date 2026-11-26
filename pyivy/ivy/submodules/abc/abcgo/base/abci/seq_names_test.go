@@ -91,3 +91,13 @@ func TestAtreeSequentialLikeNative(t *testing.T) {
 		t.Fatalf("&atree on s27:\n%s", out)
 	}
 }
+
+// Native: abc -c "read s27.blif; strash; &get; &satenum" enumerates the 16
+// PI assignments making some output 1 (giaQbf.c has no single-output or
+// combinational precondition).
+func TestSatEnumLikeNative(t *testing.T) {
+	out := runScript(t, "read test_vectors/seq/s27.blif; strash; &get; &satenum")
+	if !strings.Contains(out, "Enumerated the complete set of 16 assignments.  Time =") {
+		t.Fatalf("&satenum on s27:\n%s", out)
+	}
+}
