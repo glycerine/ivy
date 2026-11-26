@@ -451,6 +451,7 @@ func Abc_NtkAigToBdd(n *Network) int32 {
 	}
 	converted := make(map[*Object]*core.DdNode)
 	reordered := make(map[*Object][]Edge)
+	nextDyn := uint32(4004) // CUDD's DD_FIRST_REORDER
 	for _, o := range n.ObjectsOfKind(ObjectNode) {
 		if o.Barrier {
 			continue
@@ -464,7 +465,15 @@ func Abc_NtkAigToBdd(n *Network) int32 {
 			return 0
 		}
 		core.Cudd_Ref(function)
-		core.Cudd_ReduceHeap(temporary, core.CUDD_REORDER_SYMM_SIFT, 0)
+		// ABC enables CUDD's automatic symmetric sifting on the temporary
+		// manager, which reorders only once the live nodes reach a
+		// threshold (DD_FIRST_REORDER, then twice the size after each
+		// reordering). LUT-sized functions therefore keep their fanin order.
+		if live := core.Cudd_ReadKeys(temporary) - core.Cudd_ReadDead(temporary); live >= nextDyn {
+			core.Cudd_ReduceHeap(temporary, core.CUDD_REORDER_SYMM_SIFT, 0)
+			live = core.Cudd_ReadKeys(temporary) - core.Cudd_ReadDead(temporary)
+			nextDyn = max(nextDyn+20, (live+1)*2)
+		}
 		held := function
 		function, reordered[o] = funcRemapBDD(temporary, main, function, o.fanins)
 		core.Cudd_RecursiveDeref(temporary, held)

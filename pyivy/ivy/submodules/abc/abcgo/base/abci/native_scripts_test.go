@@ -53,6 +53,8 @@ var nativeScripts = []string{
 	"&get; &syn4; &put",
 	"if -K 6; mfs",
 	"if -K 6; mfs -r",
+	"if -K 6; lutpack",
+	"if -K 4; lutpack",
 	"&get; &if -K 6; &mfs; &put",
 }
 

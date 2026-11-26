@@ -3,6 +3,7 @@ package abci
 import (
 	"bytes"
 	"fmt"
+	ifpkg "github.com/glycerine/abcgo/map/if"
 	"io"
 	"os"
 	"regexp"
@@ -38,6 +39,9 @@ func runScript(t *testing.T, script string) string {
 	base_main.Abc_FrameInit(frame)
 	abcio.Io_Init(frame)
 	Abc_Init(frame)
+	// As in the CLI: If_Init installs the default 4-LUT library, which
+	// commands such as lutpack read.
+	ifpkg.If_Init(frame)
 	status, panicked := 0, any(nil)
 	func() {
 		defer func() { panicked = recover() }()
