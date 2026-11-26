@@ -11,20 +11,35 @@ import (
 // equivalence. Members and representatives are sorted by stable object ID.
 type Classes struct {
 	groups [][]aig.Edge
-	byNode map[int]int
+	byNode []int32 // class index by node ID, or -1
 }
 type Dch_Cla_t = Classes
 
 func (c *Classes) index() {
-	c.byNode = map[int]int{}
+	for i := range c.byNode {
+		c.byNode[i] = -1
+	}
 	for i, group := range c.groups {
 		for _, node := range group {
-			c.byNode[node.NodeID()] = i
+			id := node.NodeID()
+			for id >= len(c.byNode) {
+				c.byNode = append(c.byNode, -1)
+			}
+			c.byNode[id] = int32(i)
 		}
 	}
 }
+
+// classOf returns the class index of node, if it is in a class.
+func (c *Classes) classOf(node aig.Edge) (int, bool) {
+	id := node.NodeID()
+	if id >= len(c.byNode) || c.byNode[id] < 0 {
+		return 0, false
+	}
+	return int(c.byNode[id]), true
+}
 func (c *Classes) representative(node aig.Edge) aig.Edge {
-	i, ok := c.byNode[node.NodeID()]
+	i, ok := c.classOf(node)
 	if !ok || len(c.groups[i]) < 2 || c.groups[i][0] == node {
 		return aig.InvalidEdge
 	}
