@@ -1,6 +1,10 @@
 package abs
 
-import "sync"
+import (
+	"sync"
+
+	"github.com/glycerine/abcgo/misc/util"
+)
 
 // absProverControl tracks the asynchronous prover state used by ABC.
 // Like the C pthread code, cancellation does not discard a published proof.
@@ -16,6 +20,8 @@ func (c *absProverControl) start(solve func(int32) int32) int32 {
 	id := c.runID
 	c.proved = false
 	c.mu.Unlock()
+	// The prover runs beside the abstraction loop, as ABC's pthread does.
+	util.EnsureProcs(2)
 	go func() {
 		result := solve(id)
 		c.mu.Lock()

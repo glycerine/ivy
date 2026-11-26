@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
@@ -39,6 +40,7 @@ func Kf_ManComputeCuts(p *Kf_Man_t) {
 	if workers <= 0 {
 		panic("KF requires workers")
 	}
+	defer util.RaiseProcs(workers + 1)()
 	g := p.pGia
 	counts := vec.Vec_IntArray(Kf_ManCreateFaninCounts(g))
 	fanouts := make([][]int32, g.nObjs)

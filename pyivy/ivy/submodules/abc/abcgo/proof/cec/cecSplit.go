@@ -326,6 +326,7 @@ func Cec_GiaSplitTestInt(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, v
 	if workers < 1 || workers > 100 {
 		panic("cec: invalid split processor count")
 	}
+	defer util.RaiseProcs(int(procs))()
 	status, model := splitRunMode(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, true, splitSolve)
 	if model != nil {
 		if err := splitSetModel(p, model, 0); err != nil {

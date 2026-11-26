@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"runtime/pprof"
 
 	"github.com/glycerine/abcgo/aig/gia"
@@ -40,6 +41,10 @@ func init() {
 // Setting ABCGO_CPUPROFILE=file writes a Go CPU profile of the whole run;
 // with it, ABCGO_MEMPROFILE=file also writes an allocation profile.
 func main() {
+	// ABC is sequential; see misc/util/procs.go.
+	if os.Getenv("GOMAXPROCS") == "" {
+		runtime.GOMAXPROCS(1)
+	}
 	if path := os.Getenv("ABCGO_CPUPROFILE"); path != "" {
 		f, err := os.Create(path)
 		if err != nil {

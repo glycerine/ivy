@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia/satcost"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/satoko"
 	"io"
 	"math"
@@ -303,6 +304,7 @@ func evaluateAuto(models []*ioa.Model, options satoko.Options, cores int, evalua
 	if workers > len(models) {
 		workers = len(models)
 	}
+	defer util.RaiseProcs(workers + 1)()
 	jobs := make(chan *ioa.Model)
 	var group sync.WaitGroup
 	var mu sync.Mutex
