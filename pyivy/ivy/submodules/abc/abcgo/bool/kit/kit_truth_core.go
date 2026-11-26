@@ -101,15 +101,25 @@ func Kit_TruthNot(out, in []uint32, n int32) {
 	}
 }
 func Kit_TruthAndPhase(out, a, b []uint32, n, c0, c1 int32) {
-	for i := range out[:Kit_TruthWordNum(n)] {
-		x, y := a[i], b[i]
-		if c0 != 0 {
-			x = ^x
+	w := int(Kit_TruthWordNum(n))
+	out, a, b = out[:w], a[:w], b[:w]
+	switch {
+	case c0 == 0 && c1 == 0:
+		for i := range out {
+			out[i] = a[i] & b[i]
 		}
-		if c1 != 0 {
-			y = ^y
+	case c0 == 0:
+		for i := range out {
+			out[i] = a[i] &^ b[i]
 		}
-		out[i] = x & y
+	case c1 == 0:
+		for i := range out {
+			out[i] = b[i] &^ a[i]
+		}
+	default:
+		for i := range out {
+			out[i] = ^(a[i] | b[i])
+		}
 	}
 }
 func Kit_TruthOrPhase(out, a, b []uint32, n, c0, c1 int32) {

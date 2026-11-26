@@ -24,12 +24,12 @@ func Abc_NtkTransitionRelation(dd *core.DdManager, network *abc.Network, verbose
 	relation := core.Cudd_ReadOne(dd)
 	core.Cudd_Ref(relation)
 	for i, latch := range latches {
-		if len(latch.Fanins()) != 1 {
+		if latch.FaninNum() != 1 {
 			core.Cudd_RecursiveDeref(dd, relation)
 			Abc_NtkFreeGlobalBdds(network, 0)
 			return nil
 		}
-		bi := latch.Fanins()[0].Object
+		bi := latch.FaninAt(int32(0)).Object
 		function := Abc_ObjGlobalBdd(bi)
 		if function == nil {
 			core.Cudd_RecursiveDeref(dd, relation)
@@ -195,10 +195,10 @@ func Abc_NtkConstructExdc(dd *core.DdManager, network *abc.Network, unreachable 
 	core.Cudd_Ref(node.Data.(*core.DdNode))
 	abc.Abc_NodeMinimumBase(node)
 	for _, po := range network.ObjectsOfKind(abc.ObjectPO) {
-		if len(po.Fanins()) == 0 {
+		if po.FaninNum() == 0 {
 			return nil
 		}
-		driver := po.Fanins()[0].Object
+		driver := po.FaninAt(int32(0)).Object
 		if driver.IsCI() {
 			continue
 		}
@@ -224,7 +224,7 @@ func Abc_NtkConstructExdc(dd *core.DdManager, network *abc.Network, unreachable 
 }
 
 func latchPredecessorObject(latch *abc.Object) *abc.Object {
-	if latch == nil || len(latch.Fanouts()) == 0 {
+	if latch == nil || latch.FanoutCount() == 0 {
 		return nil
 	}
 	for _, object := range latch.Network().ObjectsOfKind(abc.ObjectBO) {

@@ -34,7 +34,7 @@ func WriteGML(w stdio.Writer, n *abc.Network) error {
 	fmt.Fprintf(&b, "# GML for %s written by ABC\ngraph [\n", exportQuoted(n.Name))
 	for _, kind := range []abc.ObjectKind{abc.ObjectPO, abc.ObjectPI, abc.ObjectLatch, abc.ObjectNode, abc.ObjectConst1, abc.ObjectBI, abc.ObjectBO, abc.ObjectNet, abc.ObjectBlackbox, abc.ObjectWhitebox} {
 		for _, o := range n.ObjectsOfKind(kind) {
-			if kind == abc.ObjectConst1 && len(o.Fanouts()) == 0 {
+			if kind == abc.ObjectConst1 && o.FanoutCount() == 0 {
 				continue
 			}
 			shape, color := "ellipse", "#CCCCFF"

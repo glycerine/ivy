@@ -41,11 +41,11 @@ func TestRestrashPreservesComplementedTruthTableAndCleanup(t *testing.T) {
 		}
 		for bits := 0; bits < 8; bits++ {
 			inputs := []bool{bits&1 != 0, bits&2 != 0, bits&4 != 0}
-			want, err := original.Evaluate(original.Outputs()[0].Fanins()[0], mapInputs(original.Inputs(), inputs))
+			want, err := original.Evaluate(original.Outputs()[0].FaninAt(int32(0)), mapInputs(original.Inputs(), inputs))
 			if err != nil {
 				t.Fatal(err)
 			}
-			value, err := got.Evaluate(got.Outputs()[0].Fanins()[0], mapInputs(got.Inputs(), inputs))
+			value, err := got.Evaluate(got.Outputs()[0].FaninAt(int32(0)), mapInputs(got.Inputs(), inputs))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -68,7 +68,7 @@ func TestTopmostAndBottommostPreserveCutOrderingAndComplement(t *testing.T) {
 	}
 	for mask := 0; mask < 4; mask++ {
 		want := !(mask&1 != 0 && mask&2 != 0)
-		got, err := top.Evaluate(top.Outputs()[0].Fanins()[0], mapInputs(top.Inputs(), []bool{mask&1 != 0, mask&2 != 0}))
+		got, err := top.Evaluate(top.Outputs()[0].FaninAt(int32(0)), mapInputs(top.Inputs(), []bool{mask&1 != 0, mask&2 != 0}))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -90,7 +90,7 @@ func TestTopmostAndBottommostPreserveCutOrderingAndComplement(t *testing.T) {
 	}
 	for mask := 0; mask < 8; mask++ {
 		want := mask&1 != 0 && mask&2 == 0
-		got, err := bottom.Evaluate(bottom.Outputs()[0].Fanins()[0], mapInputs(bottom.Inputs(), []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}))
+		got, err := bottom.Evaluate(bottom.Outputs()[0].FaninAt(int32(0)), mapInputs(bottom.Inputs(), []bool{mask&1 != 0, mask&2 != 0, mask&4 != 0}))
 		if err != nil {
 			t.Fatal(err)
 		}

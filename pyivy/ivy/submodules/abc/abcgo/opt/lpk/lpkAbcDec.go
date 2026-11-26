@@ -44,7 +44,7 @@ func abcLevelNew(obj *Abc_Obj_t) int32 {
 			level = int32(fanin.Object.Level)
 		}
 	}
-	if len(obj.Fanins()) > 0 {
+	if obj.FaninNum() > 0 {
 		level++
 	}
 	return level

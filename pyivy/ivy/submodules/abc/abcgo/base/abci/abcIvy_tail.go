@@ -199,7 +199,7 @@ func Abc_NodeStrashAig(manager *ivy.Ivy_Man_t, node *abc.Object) *ivy.Ivy_Obj_t 
 }
 
 func Abc_NodeStrashAigSopAig(manager *ivy.Ivy_Man_t, node *abc.Object, sop string) *ivy.Ivy_Obj_t {
-	assert(int32(len(node.Fanins())) == abc.Abc_SopGetVarNum(sop), "SOP fanin count matches")
+	assert(int32(node.FaninNum()) == abc.Abc_SopGetVarNum(sop), "SOP fanin count matches")
 	var sum = ivy.Ivy_Not(ivy.Ivy_ManConst1(manager))
 	for _, cube := range ivySopCubes(sop, int(abc.Abc_SopGetVarNum(sop))) {
 		product := ivy.Ivy_ManConst1(manager)
@@ -232,7 +232,7 @@ func ivySopCubes(sop string, variables int) []string {
 }
 
 func Abc_NodeStrashAigExorAig(manager *ivy.Ivy_Man_t, node *abc.Object, sop string) *ivy.Ivy_Obj_t {
-	assert(int32(len(node.Fanins())) == abc.Abc_SopGetVarNum(sop), "XOR SOP fanin count matches")
+	assert(int32(node.FaninNum()) == abc.Abc_SopGetVarNum(sop), "XOR SOP fanin count matches")
 	sum := ivy.Ivy_Not(ivy.Ivy_ManConst1(manager))
 	for _, edge := range node.Fanins() {
 		sum = ivy.Ivy_Exor(manager, sum, ivyCopyOf(edge.Object))

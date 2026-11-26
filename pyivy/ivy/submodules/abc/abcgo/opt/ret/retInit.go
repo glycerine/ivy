@@ -27,7 +27,7 @@ func Abc_ObjSopSimulate(o *abc.Object) int32 {
 		}
 		term := true
 		for i := 0; i < n; i++ {
-			v := retFanValue(o.Fanins()[i])
+			v := retFanValue(o.FaninAt(int32(i)))
 			switch cube[i] {
 			case '0':
 				term = term && v == 0
@@ -83,7 +83,7 @@ func Abc_NtkRetimeInitialValues(cone *abc.Network, values []int32, verbose int32
 			panic("ret: XOR SOP is unsupported")
 		}
 		n := int(abc.Abc_SopGetVarNum(s))
-		if n != len(o.Fanins()) {
+		if n != o.FaninNum() {
 			panic("ret: SOP arity differs")
 		}
 		var terms []bsat.Literal
@@ -123,7 +123,7 @@ func Abc_NtkRetimeInitialValues(cone *abc.Network, values []int32, verbose int32
 		solver.AddClause(clause...)
 	}
 	for i, o := range pos {
-		target := lit(o.Fanins()[0])
+		target := lit(o.FaninAt(int32(0)))
 		if values[i] == 0 {
 			target ^= 1
 		}
@@ -234,7 +234,7 @@ func Abc_NtkCycleInitStateSop(n *abc.Network, nFrames, verbose int32) {
 			o.Temp = int(Abc_ObjSopSimulate(o))
 		}
 		for _, o := range append(n.ObjectsOfKind(abc.ObjectPO), n.ObjectsOfKind(abc.ObjectBI)...) {
-			o.Temp = int(retFanValue(o.Fanins()[0]))
+			o.Temp = int(retFanValue(o.FaninAt(int32(0))))
 		}
 		for _, o := range pis {
 			o.Temp = int(random.next() & 1)
@@ -246,7 +246,7 @@ func Abc_NtkCycleInitStateSop(n *abc.Network, nFrames, verbose int32) {
 		}
 	}
 	for _, o := range retLatches(n) {
-		if o.Fanouts()[0].Temp != 0 {
+		if o.FanoutAt(int32(0)).Temp != 0 {
 			abc.Abc_LatchSetInit1(o)
 		} else {
 			abc.Abc_LatchSetInit0(o)

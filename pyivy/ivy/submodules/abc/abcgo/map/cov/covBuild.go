@@ -250,7 +250,7 @@ func deriveAIGToSOP(source *abc.Network, nFaninMax, nCubesMax int32, useESOP, us
 		return result, nil
 	}
 	for _, output := range outputs {
-		edge := output.Fanins()[0]
+		edge := output.FaninAt(int32(0))
 		fanin, err := build(edge.Object)
 		if err != nil {
 			return nil, err

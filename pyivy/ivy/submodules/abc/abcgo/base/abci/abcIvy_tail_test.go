@@ -43,7 +43,7 @@ func evalIvyRoundtripOutputs(network *abc.Network, assignment map[*abc.Object]bo
 	outputs := make([]bool, abc.Abc_NtkCoNum(network))
 	for i := range outputs {
 		co := abc.Abc_NtkCo(network, int32(i))
-		fanin := co.Fanins()[0]
+		fanin := co.FaninAt(int32(0))
 		outputs[i] = evalIvyRoundtrip(network, fanin.Object, assignment, map[*abc.Object]bool{})
 		if fanin.Complement {
 			outputs[i] = !outputs[i]

@@ -81,7 +81,7 @@ func Abc_NtkFraigSweepUsingExdc(manager *Fraig_Man_t, network *Abc_Ntk_t) {
 	}
 	exdc := Abc_NtkToFraigExdc(manager, network, network.Exdc)
 	for _, node := range abc.Abc_NtkNodes(network) {
-		if len(node.Fanins()) == 0 {
+		if node.FaninNum() == 0 {
 			continue
 		}
 		aigNode := node.Copy
@@ -105,7 +105,7 @@ func Abc_NtkFraigEquiv(network *Abc_Ntk_t, useInv, verbose, veryVerbose int32) [
 	byFunction := make(map[*Fraig_Node_t][]*Abc_Obj_t)
 	functionCount := 0
 	for _, node := range abc.Abc_NtkNodes(network) {
-		if len(node.Fanins()) == 0 || abc.Abc_NodeFindCoFanout(node) != nil {
+		if node.FaninNum() == 0 || abc.Abc_NodeFindCoFanout(node) != nil {
 			continue
 		}
 		aigNode := node.Copy

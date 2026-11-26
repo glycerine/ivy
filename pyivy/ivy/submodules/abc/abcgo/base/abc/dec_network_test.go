@@ -45,7 +45,7 @@ func TestDecNetworkReplacementUsesAigUpdatePath(t *testing.T) {
 	if n.Object(root.Object.ID) != nil {
 		t.Fatal("replacement left the old AIG node alive")
 	}
-	if po.Fanins()[0].Object != ab.Object {
+	if po.FaninAt(int32(0)).Object != ab.Object {
 		t.Fatal("replacement did not redirect the output")
 	}
 	if Abc_AigCheck(aig) == 0 || Abc_NtkCheck(n) == 0 {

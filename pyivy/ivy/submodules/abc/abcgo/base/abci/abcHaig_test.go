@@ -62,7 +62,7 @@ func haigEval(n *abc.Network, assignment uint32) []bool {
 	}
 	result := make([]bool, len(n.Outputs()))
 	for i, co := range n.Outputs() {
-		f := co.Fanins()[0]
+		f := co.FaninAt(int32(0))
 		result[i] = values[f.Object] != f.Complement
 	}
 	return result

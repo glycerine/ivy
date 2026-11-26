@@ -160,7 +160,15 @@ func (o *Object) Network() *Network  { return o.network }
 func (o *Object) Signal() Edge       { return Edge{Object: o} }
 func (o *Object) Fanins() []Edge     { return append([]Edge(nil), o.fanins...) }
 func (o *Object) Fanouts() []*Object { return append([]*Object(nil), o.fanouts...) }
-func (o *Object) Name() string       { return nm.Nm_ManFindNameById(o.network.names, int32(o.ID)) }
+
+// FaninNum, FaninAt, FanoutCount and FanoutAt read the live fanin and
+// fanout arrays without copying them, as o.FaninNum(), o.FaninAt(int32(i)),
+// o.FanoutCount() and o.FanoutAt(int32(i)) do with a copy.
+func (o *Object) FaninNum() int            { return len(o.fanins) }
+func (o *Object) FaninAt(i int32) Edge     { return o.fanins[i] }
+func (o *Object) FanoutCount() int         { return len(o.fanouts) }
+func (o *Object) FanoutAt(i int32) *Object { return o.fanouts[i] }
+func (o *Object) Name() string             { return nm.Nm_ManFindNameById(o.network.names, int32(o.ID)) }
 func (o *Object) SetName(name string) {
 	nm.Nm_ManDeleteIdName(o.network.names, int32(o.ID))
 	nm.Nm_ManStoreIdName(o.network.names, int32(o.ID), int32(o.Kind), name, "")

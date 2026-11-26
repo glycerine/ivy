@@ -215,7 +215,7 @@ func TestMappedGiaRetainsLutBoundariesAndHopFunctions(t *testing.T) {
 		}
 		found := false
 		for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
-			if len(node.Fanins()) == 3 {
+			if node.FaninNum() == 3 {
 				found = true
 			}
 			if _, ok := node.Data.(*Hop_Obj_t); !ok {

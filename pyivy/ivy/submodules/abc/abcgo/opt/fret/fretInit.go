@@ -762,7 +762,7 @@ func Abc_FlowRetime_PartialSat(vNodes []*abc.Abc_Obj_t, cut int32) int32 {
 	}
 	po := abc.Abc_NtkPo(initNtk, 0)
 	assert(abc.Abc_ObjFaninNum(po) == 1, "init output has one driver")
-	poEdge := po.Fanins()[0]
+	poEdge := po.FaninAt(int32(0))
 	output := copies[poEdge.Object]
 	assert(output != nil, "init output driver copied")
 	if err := part.AddFanin(abc.Abc_NtkCreatePo(part), abc.Edge{Object: output, Complement: poEdge.Complement}); err != nil {

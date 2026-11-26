@@ -134,7 +134,7 @@ func TestSequentialReachTransitionAndUnreachableDcs(t *testing.T) {
 	}
 	for state := 0; state < 2; state++ {
 		values := map[*abc.Object]bool{exdc.Inputs()[0]: state != 0}
-		got, err := exdc.Evaluate(exdc.Outputs()[0].Fanins()[0], values)
+		got, err := exdc.Evaluate(exdc.Outputs()[0].FaninAt(int32(0)), values)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -161,7 +161,7 @@ func TestExtractSequentialDcsAttachesExdc(t *testing.T) {
 	}
 	for state := 0; state < 2; state++ {
 		values := map[*abc.Object]bool{n.Exdc.Inputs()[0]: state != 0}
-		got, err := n.Exdc.Evaluate(n.Exdc.Outputs()[0].Fanins()[0], values)
+		got, err := n.Exdc.Evaluate(n.Exdc.Outputs()[0].FaninAt(int32(0)), values)
 		if err != nil {
 			t.Fatal(err)
 		}

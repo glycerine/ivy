@@ -130,7 +130,7 @@ func retEquivalent(a, b *abc.Network) bool {
 			values[o] = in[i]
 		}
 		for i, l := range latches {
-			values[l.Fanouts()[0]] = state[i]
+			values[l.FanoutAt(int32(0))] = state[i]
 		}
 		outs, next := make([]bool, len(pos)), make([]bool, len(latches))
 		for i, o := range pos {

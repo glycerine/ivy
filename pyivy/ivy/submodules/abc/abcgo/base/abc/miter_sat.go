@@ -221,10 +221,10 @@ func satAddSOPPhase(s *bsat.Solver2, node *Object, sop string, positive bool) bo
 		}
 		clause := make([]bsat.Literal, 0, len(fields))
 		for i, c := range []byte(fields[0]) {
-			if i >= len(node.Fanins()) {
+			if i >= node.FaninNum() {
 				break
 			}
-			e := node.Fanins()[i]
+			e := node.FaninAt(int32(i))
 			switch c {
 			case '0':
 				clause = append(clause, satEdgeLit(s, e))

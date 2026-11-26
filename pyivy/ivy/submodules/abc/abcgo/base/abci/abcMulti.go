@@ -64,7 +64,7 @@ func Abc_NtkMultiInt(n, out *Abc_Ntk_t) {
 		core.Cudd_Ref(constant.Copy.Data.(*core.DdNode))
 	}
 	for _, co := range n.Objects() {
-		if !co.IsCO() || len(co.Fanins()) == 0 {
+		if !co.IsCO() || co.FaninNum() == 0 {
 			continue
 		}
 		root := abc.Abc_ObjFanin0(co)
@@ -193,7 +193,7 @@ func Abc_NtkMultiSetBounds(n *Abc_Ntk_t, threshold, max int32) {
 		}
 	}
 	for _, co := range n.Objects() {
-		if co.IsCO() && len(co.Fanins()) > 0 {
+		if co.IsCO() && co.FaninNum() > 0 {
 			abc.Abc_ObjFanin0(co).MarkA = true
 		}
 	}
@@ -255,7 +255,7 @@ func Abc_NtkMultiSetBoundsFactor(n *Abc_Ntk_t) {
 }
 func markCoDrivers(n *Abc_Ntk_t) {
 	for _, co := range n.Objects() {
-		if co.IsCO() && len(co.Fanins()) > 0 {
+		if co.IsCO() && co.FaninNum() > 0 {
 			abc.Abc_ObjFanin0(co).MarkA = true
 		}
 	}

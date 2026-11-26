@@ -35,7 +35,7 @@ func TestGlobalBddBuildPreservesMultiOutputFunctions(t *testing.T) {
 			values[pi] = assignment[i]
 		}
 		for _, po := range pos {
-			edge := po.Fanins()[0]
+			edge := po.FaninAt(int32(0))
 			expected := evalMultiNode(t, n, edge.Object, values, map[*abc.Object]bool{}) != edge.Complement
 			got, err := dd.Evaluate(Abc_ObjGlobalBdd(po), assignment)
 			if err != nil {

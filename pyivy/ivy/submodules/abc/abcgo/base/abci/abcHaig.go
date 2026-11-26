@@ -251,7 +251,7 @@ func Abc_NtkHaigRecreateAig(network *Abc_Ntk_t, manager *Hop_Man_t) *Abc_Ntk_t {
 			panic("HAIG choice mapping is complemented")
 		}
 		this, head := thisEdge.Object, reprEdge.Object
-		if this.Choice != nil || len(this.Fanouts()) != 0 || head == this {
+		if this.Choice != nil || this.FanoutCount() != 0 || head == this {
 			panic("HAIG choice candidate violates source invariants")
 		}
 		if Abc_NtkHaigCheckTfi(result, head, this) != 0 {

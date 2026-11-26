@@ -71,7 +71,7 @@ func TestBAFANDAndLatchRoundTrip(t *testing.T) {
 		t.Fatal(err)
 	}
 	latch := seq.ObjectsOfKind(abc.ObjectLatch)[0]
-	if abc.Abc_LatchIsInit1(latch) == 0 || latch.Name() != "state" || latch.Fanins()[0].Object.Name() != "next" || latch.Fanouts()[0].Name() != "current" {
+	if abc.Abc_LatchIsInit1(latch) == 0 || latch.Name() != "state" || latch.FaninAt(int32(0)).Object.Name() != "next" || latch.FanoutAt(int32(0)).Name() != "current" {
 		t.Fatal("latch metadata lost")
 	}
 }

@@ -25,9 +25,9 @@ func TestGlobalBddToLocalNetworkPreservesFamiliesAndOrder(t *testing.T) {
 	}
 	for i, po := range out.ObjectsOfKind(abc.ObjectPO) {
 		if i < 2 {
-			node := po.Fanins()[0].Object
+			node := po.FaninAt(int32(0)).Object
 			for level, index := range order {
-				if node.Fanins()[level].Object != abc.Abc_NtkCi(out, int32(index)) {
+				if node.FaninAt(int32(level)).Object != abc.Abc_NtkCi(out, int32(index)) {
 					t.Fatalf("output %d local fanin %d does not follow manager order %v", i, level, order)
 				}
 			}
@@ -39,7 +39,7 @@ func TestGlobalBddToLocalNetworkPreservesFamiliesAndOrder(t *testing.T) {
 			values[pi] = mask&(1<<i) != 0
 		}
 		for i, po := range n.ObjectsOfKind(abc.ObjectPO) {
-			want := evalMultiNode(t, n, po.Fanins()[0].Object, values, map[*abc.Object]bool{}) != po.Fanins()[0].Complement
+			want := evalMultiNode(t, n, po.FaninAt(int32(0)).Object, values, map[*abc.Object]bool{}) != po.FaninAt(int32(0)).Complement
 			got, err := out.Evaluate(out.ObjectsOfKind(abc.ObjectPO)[i].Signal(), mapLocalInputs(out, values, inputs))
 			if err != nil || got != want {
 				t.Fatalf("mask=%04b output=%d got=%v want=%v err=%v", mask, i, got, want, err)
@@ -106,7 +106,7 @@ func TestSatCollapsePreservesOutputFamiliesWithSharedAndLocalCnf(t *testing.T) {
 				local[abc.Abc_NtkCi(out, int32(i))] = value
 			}
 			for i, po := range n.ObjectsOfKind(abc.ObjectPO) {
-				want := evalMultiNode(t, n, po.Fanins()[0].Object, values, map[*abc.Object]bool{}) != po.Fanins()[0].Complement
+				want := evalMultiNode(t, n, po.FaninAt(int32(0)).Object, values, map[*abc.Object]bool{}) != po.FaninAt(int32(0)).Complement
 				got, err := out.Evaluate(abc.Abc_NtkPo(out, int32(i)).Signal(), local)
 				if err != nil || got != want {
 					t.Fatalf("shared=%d mask=%04b output=%d got=%v want=%v err=%v", shared, mask, i, got, want, err)

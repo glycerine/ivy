@@ -32,8 +32,8 @@ func TestIvyFastMapReconstructsCutFunctionAndComplementedPO(t *testing.T) {
 	}
 	first := abc.Abc_ObjFanin0(abc.Abc_NtkCo(mapped, 0))
 	second := abc.Abc_ObjFanin0(abc.Abc_NtkCo(mapped, 1))
-	if len(first.Fanins()) != 2 || len(second.Fanins()) != 2 {
-		t.Fatalf("mapped node fanins = %d and %d, want 2 each", len(first.Fanins()), len(second.Fanins()))
+	if first.FaninNum() != 2 || second.FaninNum() != 2 {
+		t.Fatalf("mapped node fanins = %d and %d, want 2 each", first.FaninNum(), second.FaninNum())
 	}
 	one := first.Data.(*hop.Hop_Obj_t)
 	two := second.Data.(*hop.Hop_Obj_t)

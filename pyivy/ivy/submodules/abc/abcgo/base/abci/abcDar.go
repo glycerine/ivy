@@ -195,10 +195,10 @@ func Abc_NtkToDarBmc(pNtk *Abc_Ntk_t, pvMap **Vec_Int_t) *Aig_Man_t {
 	}
 	for i := int32(0); i < abc.Abc_NtkPoNum(pNtk); i++ {
 		po := abc.Abc_NtkPo(pNtk, i)
-		if po == nil || len(po.Fanins()) != 1 {
+		if po == nil || po.FaninNum() != 1 {
 			return nil
 		}
-		driver := po.Fanins()[0]
+		driver := po.FaninAt(int32(0))
 		terms := make([]abc.Edge, 0, 2)
 		if pNtk.Constraints != 0 && i >= pNtk.Constraints {
 			terms = append(terms, driver.Not())
@@ -323,7 +323,7 @@ func Abc_NtkToDarChoices(pNtk *Abc_Ntk_t) *Aig_Man_t {
 		ci.Temp = int(pMan.NewInput())
 	}
 	for _, node := range abc.Abc_AigDfs(pNtk, 0, 0) {
-		if node.Kind != abc.ObjectNode || len(node.Fanins()) != 2 {
+		if node.Kind != abc.ObjectNode || node.FaninNum() != 2 {
 			continue
 		}
 		fanins := node.Fanins()
@@ -682,7 +682,7 @@ func Abc_NtkFromMappedGia(p *Gia_Man_t, fFindEnables int32, fUseBuffs int32) *Ab
 	abc.Abc_NtkAddDummyPoNames(n)
 	abc.Abc_NtkAddDummyBoxNames(n)
 	abc.Abc_NtkLogicMakeSimpleCos(n, boolInt(fUseBuffs == 0))
-	if constant.Kind != abc.ObjectNone && len(constant.Fanouts()) == 0 {
+	if constant.Kind != abc.ObjectNone && constant.FanoutCount() == 0 {
 		abc.Abc_NtkDeleteObj(constant)
 	}
 	if abc.Abc_NtkCheck(n) == 0 {

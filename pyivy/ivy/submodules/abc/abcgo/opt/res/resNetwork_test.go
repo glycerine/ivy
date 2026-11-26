@@ -79,7 +79,7 @@ func TestResNetworkFromGraphEncodesExplicitXorWithoutDeadGate(t *testing.T) {
 	inputs, output := network.Inputs(), network.Outputs()[0]
 	for assignment := 0; assignment < 4; assignment++ {
 		values := map[*abc.Object]bool{inputs[0]: assignment&1 != 0, inputs[1]: assignment&2 != 0}
-		got, err := network.Evaluate(output.Fanins()[0], values)
+		got, err := network.Evaluate(output.FaninAt(int32(0)), values)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -138,7 +138,7 @@ func evaluateNetworkOutputs(t *testing.T, n *abc.Network, values []bool) []bool 
 	outputs := n.Outputs()
 	result := make([]bool, len(outputs))
 	for i, output := range outputs {
-		fanin := output.Fanins()[0]
+		fanin := output.FaninAt(int32(0))
 		value, err := n.Evaluate(fanin, assignment)
 		if err != nil {
 			t.Fatal(err)

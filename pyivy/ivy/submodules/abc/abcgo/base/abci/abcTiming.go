@@ -544,8 +544,8 @@ func Abc_NtkDelayTraceCritPathCollect_rec(slacks *Vec_Int_t, node *Abc_Obj_t, be
 	}
 	if node.Kind == baseabc.ObjectNode {
 		i := vec.Vec_IntEntry(best, node.ID)
-		if i >= 0 && int(i) < len(node.Fanins()) {
-			Abc_NtkDelayTraceCritPathCollect_rec(slacks, node.Fanins()[i].Object, best, path)
+		if i >= 0 && int(i) < node.FaninNum() {
+			Abc_NtkDelayTraceCritPathCollect_rec(slacks, node.FaninAt(int32(i)).Object, best, path)
 		}
 	}
 	vec.Vec_PtrPush(path, node)
@@ -562,8 +562,8 @@ func Abc_NodeDelayTraceArrival(node *Abc_Obj_t, slacks *Vec_Int_t) {
 		return
 	}
 	*out = Abc_Time_t{Rise: -abcTimingInfinity, Fall: -abcTimingInfinity}
-	if baseabc.Abc_ObjIsBarBuf(node) != 0 && len(node.Fanins()) > 0 {
-		if in := Abc_NodeArrival(node.Fanins()[0].Object); in != nil {
+	if baseabc.Abc_ObjIsBarBuf(node) != 0 && node.FaninNum() > 0 {
+		if in := Abc_NodeArrival(node.FaninAt(int32(0)).Object); in != nil {
 			*out = *in
 		}
 		return

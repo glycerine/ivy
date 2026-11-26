@@ -119,7 +119,7 @@ func Abc_NtkFromGlobalBdds(n *Abc_Ntk_t, reverse int32) *Abc_Ntk_t {
 		}
 		driver := abc.Abc_ObjFanin0(co)
 		if driver.IsCI() && abc.Abc_ObjName(co) == abc.Abc_ObjName(driver) {
-			abc.Abc_ObjAddFanin(co.Copy, abc.Edge{Object: driver.Copy, Complement: co.Fanins()[0].Complement})
+			abc.Abc_ObjAddFanin(co.Copy, abc.Edge{Object: driver.Copy, Complement: co.FaninAt(int32(0)).Complement})
 			continue
 		}
 		f := Abc_ObjGlobalBdd(co)
@@ -284,7 +284,7 @@ func Abc_NtkCollapseSat(n *Abc_Ntk_t, cubeLimit, conflictLimit, costMax, canonic
 		if i >= len(sops) {
 			break
 		}
-		edge := co.Fanins()[0]
+		edge := co.FaninAt(int32(0))
 		driver := edge.Object
 		if driver.IsCI() && abc.Abc_ObjName(co) == abc.Abc_ObjName(driver) {
 			abc.Abc_ObjAddFanin(co.Copy, abc.Edge{Object: driver.Copy, Complement: edge.Complement})

@@ -30,7 +30,7 @@ func abcCutNetworkNode(object *abc.Object) cut.NetworkNode {
 	fanins := object.Fanins()
 	node := cut.NetworkNode{
 		ID:           int32(object.ID),
-		FanoutAdjust: abc.Abc_ObjFanoutNum(object) - int32(len(object.Fanouts())),
+		FanoutAdjust: abc.Abc_ObjFanoutNum(object) - int32(object.FanoutCount()),
 		Input:        object.IsCI(),
 		Output:       object.IsCO(),
 		Constant:     object.Kind == abc.ObjectConst1,
@@ -215,7 +215,7 @@ func Abc_NtkComputeArea(pNtk *Abc_Ntk_t, p *Cut_Man_t) int32 {
 	var area int32
 	for i := int32(0); i < abc.Abc_NtkCoNum(pNtk); i++ {
 		co := abc.Abc_NtkCo(pNtk, i)
-		area += cut.Cut_ManMappingArea_rec(p, int32(co.Fanins()[0].Object.ID))
+		area += cut.Cut_ManMappingArea_rec(p, int32(co.FaninAt(int32(0)).Object.ID))
 	}
 	return area
 }

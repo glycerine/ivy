@@ -80,7 +80,7 @@ func Abc_NtkToFraig(network *Abc_Ntk_t, params any, allNodes, useExdc int32) any
 		Abc_NtkFraigRemapUsingExdc(manager, network, mapping)
 	}
 	for _, co := range network.Outputs() {
-		f := co.Fanins()[0]
+		f := co.FaninAt(int32(0))
 		mapped := mapping[f.Object]
 		if mapped == nil {
 			panic("unmapped AIG output")
@@ -113,7 +113,7 @@ func Abc_NtkToFraigExdc(manager *Fraig_Man_t, main, exdc *Abc_Ntk_t) *Fraig_Node
 		f := node.Fanins()
 		mapping[node] = fraig.Fraig_NodeAnd(manager, fraig.Fraig_NotCond(mapping[f[0].Object], f[0].Complement), fraig.Fraig_NotCond(mapping[f[1].Object], f[1].Complement))
 	}
-	co := strashed.Outputs()[0].Fanins()[0]
+	co := strashed.Outputs()[0].FaninAt(int32(0))
 	return fraig.Fraig_NotCond(mapping[co.Object], co.Complement)
 }
 
@@ -254,7 +254,7 @@ func Abc_NtkFromFraig2(manager *Fraig_Man_t, network *Abc_Ntk_t) *Abc_Ntk_t {
 		ci.CopyEdge = abc.Abc_NtkCi(result, int32(i)).Signal()
 	}
 	for _, co := range network.Outputs() {
-		fan := co.Fanins()[0]
+		fan := co.FaninAt(int32(0))
 		abcFraigFrom2Rec(network, fan.Object, reprs, aig, make(map[*Abc_Obj_t]bool))
 	}
 	vec.Vec_PtrFree(reprs)
@@ -302,7 +302,7 @@ func abcFraigNodeFromFraig(network *Abc_Ntk_t, node *Fraig_Node_t) abc.Edge {
 }
 
 func abcFraigFrom2Rec(_ *Abc_Ntk_t, node *Abc_Obj_t, reprs *Vec_Ptr_t, aig *abc.Abc_Aig_t, visited map[*Abc_Obj_t]bool) {
-	if node == nil || len(node.Fanins()) < 2 || visited[node] {
+	if node == nil || node.FaninNum() < 2 || visited[node] {
 		return
 	}
 	visited[node] = true
@@ -334,7 +334,7 @@ func Abc_NtkFraigTrust(network *Abc_Ntk_t) *Abc_Ntk_t {
 }
 func Abc_NtkFraigTrustCheck(network *Abc_Ntk_t) int32 {
 	for _, node := range abc.Abc_NtkNodes(network) {
-		n := len(node.Fanins())
+		n := node.FaninNum()
 		if n < 2 {
 			continue
 		}
@@ -358,8 +358,8 @@ func Abc_NtkFraigTrustOne(network, result *Abc_Ntk_t) {
 		}
 		edge := Abc_NodeFraigTrust(result, node)
 		old := node
-		if abc.Abc_NtkIsNetlist(network) != 0 && len(node.Fanouts()) != 0 {
-			old = node.Fanouts()[0]
+		if abc.Abc_NtkIsNetlist(network) != 0 && node.FanoutCount() != 0 {
+			old = node.FanoutAt(int32(0))
 		}
 		old.CopyEdge = edge
 	}
@@ -487,9 +487,9 @@ func Abc_NtkFraigStoreCheck(network *Abc_Ntk_t) {
 	}
 	per := poCount / stored
 	for i := 0; i < per; i++ {
-		first := abc.Abc_NtkPo(network, int32(i)).Fanins()[0].Object
+		first := abc.Abc_NtkPo(network, int32(i)).FaninAt(int32(0)).Object
 		for k := 1; k < stored; k++ {
-			if abc.Abc_NtkPo(network, int32(k*per+i)).Fanins()[0].Object != first {
+			if abc.Abc_NtkPo(network, int32(k*per+i)).FaninAt(int32(0)).Object != first {
 				fmt.Printf("Verification for PO #%d of network #%d has failed. The PO function is not used.\n", i+1, k+1)
 			}
 		}

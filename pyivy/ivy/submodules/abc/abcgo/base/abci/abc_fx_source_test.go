@@ -95,7 +95,7 @@ func TestAbcNtkFxPerformReconstructsSharedNetworkNode(t *testing.T) {
 		t.Fatalf("node count = %d, want 4", len(nodes))
 	}
 	shared := nodes[len(nodes)-1]
-	if shared.Data != "11 1\n" || len(shared.Fanins()) != 2 || shared.Fanins()[0].Object != a || shared.Fanins()[1].Object != b {
+	if shared.Data != "11 1\n" || shared.FaninNum() != 2 || shared.FaninAt(int32(0)).Object != a || shared.FaninAt(int32(1)).Object != b {
 		t.Fatalf("unexpected extracted node: data=%v fanins=%v", shared.Data, shared.Fanins())
 	}
 	for _, node := range old {

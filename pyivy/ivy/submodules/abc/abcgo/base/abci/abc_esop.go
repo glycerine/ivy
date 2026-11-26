@@ -32,11 +32,11 @@ func abcNtkESOP(n *Abc_Ntk_t) *Vec_Wec_t {
 			return nil
 		}
 		for _, cube := range strings.Split(strings.TrimSuffix(sop, "\n"), "\n") {
-			if len(cube) < len(driver.Fanins())+2 {
+			if len(cube) < driver.FaninNum()+2 {
 				vec.Vec_WecFree(rows)
 				return nil
 			}
-			if cube[len(driver.Fanins())+1] == '0' {
+			if cube[driver.FaninNum()+1] == '0' {
 				continue
 			}
 			row := vec.Vec_WecPushLevel(rows)

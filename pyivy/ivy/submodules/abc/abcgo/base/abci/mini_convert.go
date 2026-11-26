@@ -71,7 +71,7 @@ func Abc_NtkFromMiniAig(p *miniaig.Mini_Aig_t) *abc.Network {
 	return n
 }
 func miniFaninLiteral(node *abc.Object, index int) int {
-	fanin := node.Fanins()[index]
+	fanin := node.FaninAt(int32(index))
 	lit := fanin.Object.Temp
 	if fanin.Complement {
 		lit ^= 1

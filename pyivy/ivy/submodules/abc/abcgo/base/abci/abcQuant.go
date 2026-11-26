@@ -125,9 +125,9 @@ func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) i
 		fanin := Abc_ObjFanin0(output)
 		var result baseabc.Edge
 		if fUniv != 0 {
-			result = baseabc.Abc_AigAnd(manager, cofactor(zero, output.Fanins()[0]), cofactor(one, output.Fanins()[0]))
+			result = baseabc.Abc_AigAnd(manager, cofactor(zero, output.FaninAt(int32(0))), cofactor(one, output.FaninAt(int32(0))))
 		} else {
-			result = baseabc.Abc_AigOr(manager, cofactor(zero, output.Fanins()[0]), cofactor(one, output.Fanins()[0]))
+			result = baseabc.Abc_AigOr(manager, cofactor(zero, output.FaninAt(int32(0))), cofactor(one, output.FaninAt(int32(0))))
 		}
 		result = baseabc.Abc_ObjNotCond(result, baseabc.Abc_ObjFaninC0(output))
 		if result.Object != fanin {
@@ -396,7 +396,7 @@ func Abc_NtkReachability(pNtkRel *Abc_Ntk_t, nIters int32, fVerbose int32) *Abc_
 			fFixedPoint = 1
 			// A constant-one image reaches every state. The C source stops
 			// before merging it, incorrectly returning the old reached set.
-			if !Abc_NtkPo(pNtkNext, 0).Fanins()[0].Complement {
+			if !Abc_NtkPo(pNtkNext, 0).FaninAt(int32(0)).Complement {
 				Abc_NtkDelete(pNtkReached)
 				pNtkReached = Abc_NtkDup(pNtkNext)
 			}

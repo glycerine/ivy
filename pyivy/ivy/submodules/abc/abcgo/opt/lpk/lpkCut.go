@@ -116,8 +116,8 @@ func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {
 		// clean the data field of the nodes in the AIG subgraph
 		hop.Hop_ObjCleanData_rec(pObjHop)
 		// set the initial truth tables at the fanins
-		for k = 0; k < int32(len(pObj.Fanins())); k++ {
-			pFanin = pObj.Fanins()[k].Object
+		for k = 0; k < int32(pObj.FaninNum()); k++ {
+			pFanin = pObj.FaninAt(int32(k)).Object
 			hop.Hop_ObjSetData(hop.Hop_ManPi(pManHop, k), pFanin.Copy.Data)
 		}
 		// compute the truth table of internal nodes
@@ -215,8 +215,8 @@ func Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) []uint32 {
 		// clean the data field of the nodes in the AIG subgraph
 		hop.Hop_ObjCleanData_rec(pObjHop)
 		// set the initial truth tables at the fanins
-		for k = 0; k < int32(len(pObj.Fanins())); k++ {
-			pFanin = pObj.Fanins()[k].Object
+		for k = 0; k < int32(pObj.FaninNum()); k++ {
+			pFanin = pObj.FaninAt(int32(k)).Object
 			hop.Hop_ObjSetData(hop.Hop_ManPi(pManHop, k), pFanin.Copy.Data)
 		}
 		// compute the truth table of internal nodes
@@ -311,8 +311,8 @@ func Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {
 	for i = 0; i < int32(pCut.nNodes); i++ {
 		pObj = abc.Abc_NtkObj(p.pNtk, pCut.pNodes[i])
 		fLeavesOnly = 1
-		for k = 0; k < int32(len(pObj.Fanins())); k++ {
-			pFanin = pObj.Fanins()[k].Object
+		for k = 0; k < int32(pObj.FaninNum()); k++ {
+			pFanin = pObj.FaninAt(int32(k)).Object
 			if pFanin.MarkA {
 				p.pRefs[pFanin.Temp]++
 			} else {
@@ -328,8 +328,8 @@ func Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {
 	RetValue = 0
 	for i = 0; i < nCands; i++ {
 		pObj = abc.Abc_NtkObj(p.pNtk, p.pCands[i])
-		for k = 0; k < int32(len(pObj.Fanins())); k++ {
-			pFanin = pObj.Fanins()[k].Object
+		for k = 0; k < int32(pObj.FaninNum()); k++ {
+			pFanin = pObj.FaninAt(int32(k)).Object
 			assert(pFanin.MarkA, "pFanin.MarkA == 1")
 			if p.pRefs[int32(pFanin.Temp)] > 1 {
 				break
@@ -551,8 +551,8 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 
 	// check the possibility of adding this node using the signature
 	nLeavesNew = int32(pCut.nLeaves) - 1
-	for i = 0; i < int32(len(pObj.Fanins())); i++ {
-		pFanin = pObj.Fanins()[i].Object
+	for i = 0; i < int32(pObj.FaninNum()); i++ {
+		pFanin = pObj.FaninAt(int32(i)).Object
 		if pCut.uSign[(pFanin.ID>>5)&1]&(1<<(pFanin.ID&31)) != 0 {
 			continue
 		}
@@ -574,8 +574,8 @@ func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {
 	}
 
 	// add new nodes
-	for i = 0; i < int32(len(pObj.Fanins())); i++ {
-		pFanin = pObj.Fanins()[i].Object
+	for i = 0; i < int32(pObj.FaninNum()); i++ {
+		pFanin = pObj.FaninAt(int32(i)).Object
 		// find the place where this node belongs
 		for k = 0; k < int32(pCutNew.nLeaves); k++ {
 			if pCutNew.pLeaves[k] >= int32(pFanin.ID) {

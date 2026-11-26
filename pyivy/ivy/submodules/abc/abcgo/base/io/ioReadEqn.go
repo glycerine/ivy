@@ -134,7 +134,7 @@ func ParseEqn(name, text string, check bool) (*abc.Network, error) {
 	}
 	if check {
 		for signal, net := range m.nets {
-			if len(net.Fanins()) == 0 {
+			if net.FaninNum() == 0 {
 				return nil, fmt.Errorf("%s: undriven signal %s", name, signal)
 			}
 		}

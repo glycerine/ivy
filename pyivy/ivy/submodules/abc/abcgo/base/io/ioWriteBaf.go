@@ -58,7 +58,7 @@ func WriteBAF(w stdio.Writer, n *abc.Network) error {
 		return fmt.Errorf("BAF register metadata mismatch")
 	}
 	for _, latch := range latches {
-		names := [3]string{blifObjectName(latch), blifObjectName(latch.Fanins()[0].Object), blifObjectName(latch.Fanouts()[0])}
+		names := [3]string{blifObjectName(latch), blifObjectName(latch.FaninAt(int32(0)).Object), blifObjectName(latch.FanoutAt(int32(0)))}
 		for _, name := range names {
 			if err = field(name); err != nil {
 				return err

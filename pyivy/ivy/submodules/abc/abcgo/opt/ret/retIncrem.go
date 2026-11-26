@@ -14,9 +14,9 @@ type LatchBindings struct {
 func Abc_NtkRetimePrepareLatches(n *abc.Network) *LatchBindings {
 	bindings := &LatchBindings{old: make(map[*abc.Object]latchTerminals)}
 	for _, latch := range retLatches(n) {
-		in, out := retFan0(latch), latch.Fanouts()[0]
+		in, out := retFan0(latch), latch.FanoutAt(int32(0))
 		bindings.old[latch] = latchTerminals{in, out}
-		driver := in.Fanins()[0]
+		driver := in.FaninAt(int32(0))
 		retTransfer(in, driver.Object)
 		if driver.Complement {
 			for i, e := range latch.Fanins() {
@@ -45,7 +45,7 @@ func Abc_NtkRetimeFinalizeLatches(n *abc.Network, bindings *LatchBindings, idSta
 			term.in.SetName(base + "_in")
 			term.out.SetName(base + "_out")
 		}
-		driver := latch.Fanins()[0]
+		driver := latch.FaninAt(int32(0))
 		retAdd(term.in, driver)
 		retPatch(latch, 0, term.in.Signal())
 		retTransfer(latch, term.out)
@@ -53,7 +53,7 @@ func Abc_NtkRetimeFinalizeLatches(n *abc.Network, bindings *LatchBindings, idSta
 	}
 	for _, term := range bindings.old {
 		for _, o := range []*abc.Object{term.in, term.out} {
-			if o.Network() == n && len(o.Fanins()) == 0 && len(o.Fanouts()) == 0 {
+			if o.Network() == n && o.FaninNum() == 0 && o.FanoutCount() == 0 {
 				retDelete(o)
 			}
 		}
@@ -155,12 +155,12 @@ func Abc_NtkRetimeNode(o *abc.Object, forward, initial int32) {
 			if latch.Kind != abc.ObjectLatch {
 				panic("ret: enabled node has non-latch fanin")
 			}
-			driver := latch.Fanins()[0]
+			driver := latch.FaninAt(int32(0))
 			if e.Complement {
 				driver = driver.Not()
 			}
 			retPatch(o, i, driver)
-			if len(latch.Fanouts()) == 0 {
+			if latch.FanoutCount() == 0 {
 				retDelete(latch)
 			}
 		}
@@ -215,7 +215,7 @@ func Abc_NtkRetimeCheckCompatibleLatchFanouts(o *abc.Object) int32 {
 		if first == nil {
 			first = next
 		}
-		if reflect.DeepEqual(next.Data, first.Data) && next.Fanins()[0].Complement == first.Fanins()[0].Complement {
+		if reflect.DeepEqual(next.Data, first.Data) && next.FaninAt(int32(0)).Complement == first.FaninAt(int32(0)).Complement {
 			count++
 		}
 	}
@@ -235,7 +235,7 @@ func Abc_NtkRetimeShareLatches(n *abc.Network, initial int32) {
 				top = latch
 				continue
 			}
-			if !reflect.DeepEqual(latch.Data, top.Data) || latch.Fanins()[0].Complement != top.Fanins()[0].Complement {
+			if !reflect.DeepEqual(latch.Data, top.Data) || latch.FaninAt(int32(0)).Complement != top.FaninAt(int32(0)).Complement {
 				continue
 			}
 			if initial != 0 {

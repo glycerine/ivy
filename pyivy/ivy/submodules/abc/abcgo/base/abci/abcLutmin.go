@@ -157,7 +157,7 @@ func Abc_NtkBddCofactors(dd *core.DdManager, node *core.DdNode, levels int32) []
 
 // Abc_NtkCreateCofLut transfers one cofactor to a new node's local fanin order.
 func Abc_NtkCreateCofLut(dst *Abc_Ntk_t, dd *core.DdManager, cof *core.DdNode, old *Abc_Obj_t, level int32) *Abc_Obj_t {
-	if dst == nil || dd == nil || cof == nil || old == nil || int(level) >= len(old.Fanins()) {
+	if dst == nil || dd == nil || cof == nil || old == nil || int(level) >= old.FaninNum() {
 		return nil
 	}
 	fanins := old.Fanins()
@@ -199,7 +199,7 @@ func Abc_NtkBddCurtis(dst *Abc_Ntk_t, old *Abc_Obj_t, cofactors, unique []*core.
 	}
 	k := int32(utilLog2(uint32(len(cofactors))))
 	nBits := int32(utilLog2(uint32(len(unique))))
-	if nBits+2 > k || k >= int32(len(old.Fanins())) || k > 10 || nBits > 10 {
+	if nBits+2 > k || k >= int32(old.FaninNum()) || k > 10 || nBits > 10 {
 		return nil
 	}
 	bound := old.Fanins()[:k]
@@ -249,7 +249,7 @@ func Abc_NtkBddCurtis(dst *Abc_Ntk_t, old *Abc_Obj_t, cofactors, unique []*core.
 	}
 	funcNode := ddNew.LogicZero
 	core.Cudd_Ref(funcNode)
-	codeVars := ddNew.Vars[len(old.Fanins())-int(k):]
+	codeVars := ddNew.Vars[old.FaninNum()-int(k):]
 	for u, item := range unique {
 		moved := extrab.Extra_bddMove(ddOld, item, -int(k))
 		if moved == nil {
@@ -302,14 +302,14 @@ func lutUniqueCofactors(cofs []*core.DdNode) []*core.DdNode {
 
 // Abc_NtkBddFindCofactor tries the source's two-LUT decomposition for K+1 fanins.
 func Abc_NtkBddFindCofactor(dst *Abc_Ntk_t, node *Abc_Obj_t, lutSize int32) *Abc_Obj_t {
-	if dst == nil || node == nil || int32(len(node.Fanins())) != lutSize+1 {
+	if dst == nil || node == nil || int32(node.FaninNum()) != lutSize+1 {
 		return nil
 	}
 	oldDD, newDD := lutManager(node.Network()), lutManager(dst)
 	if oldDD == nil || newDD == nil {
 		return nil
 	}
-	n := len(node.Fanins())
+	n := node.FaninNum()
 	f, ok := node.Data.(*core.DdNode)
 	if !ok || f == nil {
 		return nil
@@ -395,13 +395,13 @@ func Abc_NtkBddFindCofactor(dst *Abc_Ntk_t, node *Abc_Obj_t, lutSize int32) *Abc
 }
 
 func Abc_NtkBddDecompose(dst *Abc_Ntk_t, node *Abc_Obj_t, lutSize, verbose int32) *Abc_Obj_t {
-	if node == nil || dst == nil || int32(len(node.Fanins())) <= lutSize {
+	if node == nil || dst == nil || int32(node.FaninNum()) <= lutSize {
 		return nil
 	}
-	if int32(len(node.Fanins())) == lutSize+1 {
+	if int32(node.FaninNum()) == lutSize+1 {
 		if result := Abc_NtkBddFindCofactor(dst, node, lutSize); result != nil {
 			if verbose != 0 {
-				fmt.Printf("Decomposing %d-input node %d using MUX.\n", len(node.Fanins()), node.ID)
+				fmt.Printf("Decomposing %d-input node %d using MUX.\n", node.FaninNum(), node.ID)
 			}
 			return result
 		}
@@ -413,10 +413,10 @@ func Abc_NtkBddDecompose(dst *Abc_Ntk_t, node *Abc_Obj_t, lutSize, verbose int32
 	if len(uniq) > 1<<uint(lutSize-2) {
 		cofs = Abc_NtkBddCofactors(dd, f, 2)
 		if verbose != 0 {
-			fmt.Printf("Decomposing %d-input node %d using cofactoring with %d cofactors.\n", len(node.Fanins()), node.ID, len(cofs))
+			fmt.Printf("Decomposing %d-input node %d using cofactoring with %d cofactors.\n", node.FaninNum(), node.ID, len(cofs))
 		}
 		fanins := make([]*abc.Object, 6)
-		fanins[0], fanins[1] = node.Fanins()[0].Object.Copy, node.Fanins()[1].Object.Copy
+		fanins[0], fanins[1] = node.FaninAt(int32(0)).Object.Copy, node.FaninAt(int32(1)).Object.Copy
 		for i, cof := range cofs {
 			fanins[i+2] = Abc_NtkCreateCofLut(dst, dd, cof, node, 2)
 		}
@@ -431,7 +431,7 @@ func Abc_NtkBddDecompose(dst *Abc_Ntk_t, node *Abc_Obj_t, lutSize, verbose int32
 		return nil
 	}
 	if verbose != 0 {
-		fmt.Printf("Decomposing %d-input node %d using Curtis with %d unique columns.\n", len(node.Fanins()), node.ID, len(uniq))
+		fmt.Printf("Decomposing %d-input node %d using Curtis with %d unique columns.\n", node.FaninNum(), node.ID, len(uniq))
 	}
 	return Abc_NtkBddCurtis(dst, node, cofs, uniq)
 }
@@ -441,7 +441,7 @@ func Abc_NtkLutminConstruct(collapsed, decomposed *Abc_Ntk_t, lutSize, verbose i
 		return
 	}
 	for _, node := range abc.Abc_NtkDfs(collapsed, 0) {
-		if int32(len(node.Fanins())) <= lutSize {
+		if int32(node.FaninNum()) <= lutSize {
 			node.Copy = abc.Abc_NtkDupObj(decomposed, node, 0)
 			for _, edge := range node.Fanins() {
 				abc.Abc_ObjAddFanin(node.Copy, edge.Object.Copy)

@@ -408,7 +408,7 @@ func ParseEDIF(filename, text string, check bool) (*abc.Network, error) {
 			}
 			if cell.model.network.Function != uint8(abc.ABC_FUNC_BLACKBOX) {
 				for name, net := range cell.model.nets {
-					if len(net.Fanouts()) > 0 && len(net.Fanins()) == 0 {
+					if net.FanoutCount() > 0 && net.FaninNum() == 0 {
 						return nil, fmt.Errorf("%s: cell %s: undriven net %s", filename, cell.key, name)
 					}
 				}

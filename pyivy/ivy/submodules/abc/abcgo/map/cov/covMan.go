@@ -30,7 +30,7 @@ func Cov_ManAlloc(pNtk *Abc_Ntk_t, nFaninMax, nCubesMax int32) *Cov_Man_t {
 	}
 	fanouts := vec.Vec_IntStart(maxID + 1)
 	for _, object := range pNtk.Objects() {
-		vec.Vec_IntWriteEntry(fanouts, object.ID, int32(len(object.Fanouts())))
+		vec.Vec_IntWriteEntry(fanouts, object.ID, int32(object.FanoutCount()))
 	}
 	p := &Cov_Man_t{
 		nFaninMax:  nFaninMax,

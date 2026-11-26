@@ -127,11 +127,11 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 				fmt.Fprintln(&out, ".default", term)
 			}
 			for _, cube := range data.Cubes {
-				if len(cube.Inputs) != len(node.Fanins()) {
+				if len(cube.Inputs) != node.FaninNum() {
 					return fmt.Errorf("MV table arity mismatch")
 				}
 				for i, input := range cube.Inputs {
-					term, err := blifMVTerm(input, node.Fanins()[i].Object, node.Fanins())
+					term, err := blifMVTerm(input, node.FaninAt(int32(i)).Object, node.Fanins())
 					if err != nil {
 						return err
 					}
@@ -236,6 +236,7 @@ func writeNetworkBLIF(n *abc.Network, filename string) error {
 	}
 	return Io_WriteBlif(n, filename, 1, 0, 0)
 }
+
 // Io_WriteBlifLogic derives the netlist first, as ABC does.
 func Io_WriteBlifLogic(n *abc.Network, filename string, writeLatches int32) error {
 	netlist := abc.Abc_NtkToNetlist(n)

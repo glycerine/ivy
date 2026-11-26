@@ -150,7 +150,7 @@ func TestSweepBufferAndInverterPreserveAIGTruth(t *testing.T) {
 	if removed := Abc_NtkSweepBufsInvs(network, 0); removed != 1 {
 		t.Fatalf("buffer/inverter sweep removed %d nodes, want 1", removed)
 	}
-	if root.Fanins()[0].Object != a {
+	if root.FaninAt(int32(0)).Object != a {
 		t.Fatal("inverter was not removed from the root fanin")
 	}
 	for bits := 0; bits < 4; bits++ {

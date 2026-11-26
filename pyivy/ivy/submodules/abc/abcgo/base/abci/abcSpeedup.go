@@ -102,7 +102,7 @@ func Abc_NtkDelayTraceLut(n *Abc_Ntk_t, useLib int32) float32 {
 	arrival := float32(-float32(1e9))
 	for i := int32(0); i < baseabc.Abc_NtkCoNum(n); i++ {
 		co := baseabc.Abc_NtkCo(n, i)
-		if len(co.Fanins()) == 0 {
+		if co.FaninNum() == 0 {
 			continue
 		}
 		fanin := baseabc.Abc_ObjFanin0(co)
@@ -112,7 +112,7 @@ func Abc_NtkDelayTraceLut(n *Abc_Ntk_t, useLib int32) float32 {
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCoNum(n); i++ {
 		co := baseabc.Abc_NtkCo(n, i)
-		if len(co.Fanins()) != 0 {
+		if co.FaninNum() != 0 {
 			f := baseabc.Abc_ObjFanin0(co)
 			if Abc_ObjRequired(f) > arrival {
 				Abc_ObjSetRequired(f, arrival)

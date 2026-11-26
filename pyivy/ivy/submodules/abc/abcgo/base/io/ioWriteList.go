@@ -47,7 +47,7 @@ func WriteList(w stdio.Writer, n *abc.Network, useHost bool) error {
 	}
 	for _, kind := range []abc.ObjectKind{abc.ObjectConst1, abc.ObjectPI, abc.ObjectNode} {
 		for _, o := range n.ObjectsOfKind(kind) {
-			if kind == abc.ObjectConst1 && len(o.Fanouts()) == 0 {
+			if kind == abc.ObjectConst1 && o.FanoutCount() == 0 {
 				continue
 			}
 			if err := Io_WriteListEdge(w, o); err != nil {
@@ -73,8 +73,8 @@ func Io_WriteList(n *abc.Network, filename string, useHost int32) error {
 	return exportFile(filename, func(w stdio.Writer) error { return WriteList(w, n, useHost != 0) })
 }
 func cellNetSink(o *abc.Object) *abc.Object {
-	if o.Kind == abc.ObjectBO && len(o.Fanins()) == 1 {
-		return o.Fanins()[0].Object
+	if o.Kind == abc.ObjectBO && o.FaninNum() == 1 {
+		return o.FaninAt(int32(0)).Object
 	}
 	return o
 }
@@ -95,13 +95,13 @@ func WriteCellNet(w stdio.Writer, n *abc.Network) error {
 				typ = 1
 			case abc.ObjectLatch:
 				typ = 2
-				if len(o.Fanins()) != 1 || len(o.Fanouts()) != 1 {
+				if o.FaninNum() != 1 || o.FanoutCount() != 1 {
 					return fmt.Errorf("latch %s lacks terminal pair", exportName(o))
 				}
-				id = o.Fanins()[0].Object.ID
+				id = o.FaninAt(int32(0)).Object.ID
 				drivers = append(drivers, o)
 			case abc.ObjectNode:
-				typ = 3 + len(o.Fanins())
+				typ = 3 + o.FaninNum()
 				drivers = append(drivers, o)
 			}
 			fmt.Fprintf(&b, "cell %d is %d\n", id, typ)
@@ -111,8 +111,8 @@ func WriteCellNet(w stdio.Writer, n *abc.Network) error {
 		id := driver.ID
 		source := driver
 		if driver.Kind == abc.ObjectLatch {
-			id = driver.Fanins()[0].Object.ID
-			source = driver.Fanouts()[0]
+			id = driver.FaninAt(int32(0)).Object.ID
+			source = driver.FanoutAt(int32(0))
 		}
 		fmt.Fprintf(&b, "net %d  %d 0", id, id)
 		seen := make(map[*abc.Object]bool)

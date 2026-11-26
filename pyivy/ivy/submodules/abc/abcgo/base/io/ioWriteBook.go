@@ -41,7 +41,7 @@ func bookSOP(o *abc.Object) string {
 	return ""
 }
 func bookTwo(o *abc.Object, truth byte) int32 {
-	if len(o.Fanins()) != 2 {
+	if o.FaninNum() != 2 {
 		return 0
 	}
 	s := bookSOP(o)
@@ -60,13 +60,13 @@ func Abc_NodeIsNand2(o *abc.Object) int32 { return bookTwo(o, 7) }
 func Abc_NodeIsNor2(o *abc.Object) int32  { return bookTwo(o, 1) }
 func Abc_NodeIsAnd2(o *abc.Object) int32 {
 	s := bookSOP(o)
-	if len(o.Fanins()) == 2 && s != "" {
+	if o.FaninNum() == 2 && s != "" {
 		return abc.Abc_SopIsAndType(s)
 	}
 	return 0
 }
 func Abc_NodeIsOr2(o *abc.Object) int32 {
-	if len(o.Fanins()) != 2 {
+	if o.FaninNum() != 2 {
 		return 0
 	}
 	s := bookSOP(o)
@@ -91,7 +91,7 @@ func bookWidth(o *abc.Object) (int, error) {
 		return 0, nil
 	}
 	if o.Kind == abc.ObjectBlackbox || o.Kind == abc.ObjectWhitebox {
-		return max(1, len(o.Fanins())), nil
+		return max(1, o.FaninNum()), nil
 	}
 	if gate, ok := o.Data.(*mio.Mio_Gate_t); ok {
 		area := mio.Mio_GateReadArea(gate)
@@ -122,7 +122,7 @@ func bookWidth(o *abc.Object) (int, error) {
 	if Abc_NodeIsXor2(o) != 0 || Abc_NodeIsXnor2(o) != 0 {
 		return 5, nil
 	}
-	return len(o.Fanins()) + int(abc.Abc_SopGetCubeNum(s)), nil
+	return o.FaninNum() + int(abc.Abc_SopGetCubeNum(s)), nil
 }
 func bookInputNet(o *abc.Object) *abc.Object {
 	in := o.Fanins()
@@ -147,11 +147,11 @@ func bookCellName(o *abc.Object) string {
 		return "o" + exportName(bookInputNet(o)) + "_output"
 	case abc.ObjectLatch:
 		in, out := "in", "out"
-		if len(o.Fanins()) == 1 {
-			in = exportName(bookInputNet(o.Fanins()[0].Object))
+		if o.FaninNum() == 1 {
+			in = exportName(bookInputNet(o.FaninAt(int32(0)).Object))
 		}
-		if len(o.Fanouts()) == 1 {
-			out = exportName(bookOutputNet(o.Fanouts()[0]))
+		if o.FanoutCount() == 1 {
+			out = exportName(bookOutputNet(o.FanoutAt(int32(0))))
 		}
 		return in + "_" + out + "_latch"
 	}
@@ -196,7 +196,7 @@ func makeBook(n *abc.Network) (*bookModel, error) {
 		}
 		for _, kind := range []abc.ObjectKind{abc.ObjectPI, abc.ObjectPO, abc.ObjectLatch, abc.ObjectNode, abc.ObjectConst1, abc.ObjectBlackbox, abc.ObjectWhitebox} {
 			for _, o := range module.ObjectsOfKind(kind) {
-				if kind == abc.ObjectConst1 && len(o.Fanouts()) == 0 {
+				if kind == abc.ObjectConst1 && o.FanoutCount() == 0 {
 					continue
 				}
 				terminal := kind == abc.ObjectPI || kind == abc.ObjectPO

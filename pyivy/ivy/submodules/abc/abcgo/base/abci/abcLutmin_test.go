@@ -98,7 +98,7 @@ func TestAbcNtkBddCurtisReconstructsBoundColumns(t *testing.T) {
 		}
 		for bit := 0; bit < 1; bit++ {
 			want := column&(1<<uint(bit)) != 0
-			if got := evalLutTestBDD(dst.FunctionManager.(*core.DdManager), result.Fanins()[1].Object.Data.(*core.DdNode), append(bound, false)); got != want {
+			if got := evalLutTestBDD(dst.FunctionManager.(*core.DdManager), result.FaninAt(int32(1)).Object.Data.(*core.DdNode), append(bound, false)); got != want {
 				t.Fatalf("bound-set code bit at row %03b = %v, want %v", code, got, want)
 			}
 		}

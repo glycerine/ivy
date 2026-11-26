@@ -440,11 +440,11 @@ func Abc_NtkFaninFanoutCounters(pNtk *Abc_Ntk_t, vFan, vFon, vFanR, vFonR *Vec_I
 	objects := pNtk.Objects()
 	maxIn, maxOut := 0, 0
 	for _, obj := range objects {
-		if len(obj.Fanins()) > maxIn {
-			maxIn = len(obj.Fanins())
+		if obj.FaninNum() > maxIn {
+			maxIn = obj.FaninNum()
 		}
-		if len(obj.Fanouts()) > maxOut {
-			maxOut = len(obj.Fanouts())
+		if obj.FanoutCount() > maxOut {
+			maxOut = obj.FanoutCount()
 		}
 	}
 	vec.Vec_IntFill(vFan, int(maxIn+1), 0)
@@ -453,7 +453,7 @@ func Abc_NtkFaninFanoutCounters(pNtk *Abc_Ntk_t, vFan, vFon, vFanR, vFonR *Vec_I
 	vec.Vec_IntFill(vFonR, int(maxOut+1), 0)
 	for i := len(objects) - 1; i >= 0; i-- {
 		obj := objects[i]
-		ni, no := len(obj.Fanins()), len(obj.Fanouts())
+		ni, no := obj.FaninNum(), obj.FanoutCount()
 		vec.Vec_IntAddToEntry(vFan, int(ni), 1)
 		vec.Vec_IntAddToEntry(vFon, int(no), 1)
 		vec.Vec_IntWriteEntry(vFanR, ni, int32(i))
@@ -469,8 +469,8 @@ func Abc_NtkInputOutputCounters(pNtk *Abc_Ntk_t, vFan, vFon, vFanR, vFonR *Vec_I
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCoNum(pNtk); i++ {
 		co := baseabc.Abc_NtkCo(pNtk, i)
-		if len(baseabc.Abc_ObjFanin0(co).Fanins()) > maxIn {
-			maxIn = len(baseabc.Abc_ObjFanin0(co).Fanins())
+		if baseabc.Abc_ObjFanin0(co).FaninNum() > maxIn {
+			maxIn = baseabc.Abc_ObjFanin0(co).FaninNum()
 		}
 	}
 	vec.Vec_IntFill(vFan, int(maxIn+1), 0)
@@ -1087,7 +1087,7 @@ func Abc_NodePrintLevel(pFile *os.File, pNode *Abc_Obj_t) {
 		return
 	case baseabc.Abc_NodeIsConst(driver) != 0:
 		value := baseabc.Abc_NodeIsConst1(driver)
-		if len(pNode.Fanins()) > 0 && pNode.Fanins()[0].Complement {
+		if pNode.FaninNum() > 0 && pNode.FaninAt(int32(0)).Complement {
 			value = 1 - value
 		}
 		fmt.Fprintf(pFile, "Constant %d.\n", value)
@@ -1384,7 +1384,7 @@ func Abc_NtkPrintStrSupports(pNtk *Abc_Ntk_t, fMatrix int32) {
 
 **********************************************************************
 */
-func Abc_ObjPrint(pFile *os.File, pObj *Abc_Obj_t) { baseabc.Abc_ObjPrint(pFile,pObj) }
+func Abc_ObjPrint(pFile *os.File, pObj *Abc_Obj_t) { baseabc.Abc_ObjPrint(pFile, pObj) }
 
 /*
 *Function*************************************************************
@@ -1412,7 +1412,7 @@ func Abc_NtkPrintMiter(pNtk *Abc_Ntk_t) {
 	one := pNtk.One()
 	for i := int32(0); i < baseabc.Abc_NtkPoNum(pNtk); i++ {
 		po := baseabc.Abc_NtkPo(pNtk, i)
-		edge := po.Fanins()[0]
+		edge := po.FaninAt(int32(0))
 		if edge.Object == one.Object && edge.Complement {
 			unsat++
 		} else if edge.Object == one.Object && !edge.Complement {
@@ -1466,7 +1466,7 @@ func Abc_NtkPrintPoEquivs(pNtk *Abc_Ntk_t) {
 	}
 	for i := int32(0); i < baseabc.Abc_NtkPoNum(pNtk); i++ {
 		po := baseabc.Abc_NtkPo(pNtk, i)
-		edge := po.Fanins()[0]
+		edge := po.FaninAt(int32(0))
 		driver := edge.Object
 		if baseabc.Abc_NtkIsStrash(pNtk) != 0 && driver == pNtk.One().Object {
 			fmt.Printf("%s = Const%d\n", po.Name(), boolInt(!edge.Complement))
@@ -1482,7 +1482,7 @@ func Abc_NtkPrintPoEquivs(pNtk *Abc_Ntk_t) {
 			continue
 		}
 		repr := baseabc.Abc_NtkCo(pNtk, int32(mapping[id]))
-		reprEdge := repr.Fanins()[0]
+		reprEdge := repr.FaninAt(int32(0))
 		prefix := ""
 		if reprEdge.Complement != edge.Complement {
 			prefix = "!"

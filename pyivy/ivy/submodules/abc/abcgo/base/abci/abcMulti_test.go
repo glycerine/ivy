@@ -38,7 +38,7 @@ func evalMultiNode(t *testing.T, n *abc.Network, node *abc.Object, input map[*ab
 	if node.Kind != abc.ObjectNode {
 		t.Fatalf("unexpected node kind %v", node.Kind)
 	}
-	values := make([]bool, len(node.Fanins()))
+	values := make([]bool, node.FaninNum())
 	for i, edge := range node.Fanins() {
 		values[i] = evalMultiNode(t, n, edge.Object, input, memo) != edge.Complement
 	}

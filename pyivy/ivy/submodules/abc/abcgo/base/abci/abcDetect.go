@@ -641,7 +641,7 @@ func finSimOutputs(network *Abc_Ntk_t, coSet, ciSet, pairs *Vec_Int_t, fault int
 	outputs := make([]bool, Vec_IntSize(coSet))
 	for i := int32(0); i < Vec_IntSize(coSet); i++ {
 		co := baseabc.Abc_NtkObj(network, Vec_IntEntry(coSet, i))
-		edge := co.Fanins()[0]
+		edge := co.FaninAt(int32(0))
 		outputs[i] = values[baseabc.Abc_ObjId(edge.Object)] != edge.Complement
 	}
 	return outputs
@@ -782,7 +782,7 @@ func Abc_NtkFinCheckPair(network *Abc_Ntk_t, types, coSet, ciSet, nodeSet *Vec_I
 	var mismatch int32
 	for i := int32(0); i < Vec_IntSize(coSet); i++ {
 		co := baseabc.Abc_NtkObj(network, Vec_IntEntry(coSet, i))
-		edge := co.Fanins()[0]
+		edge := co.FaninAt(int32(0))
 		a, b := firstLits[baseabc.Abc_ObjId(edge.Object)], secondLits[baseabc.Abc_ObjId(edge.Object)]
 		if edge.Complement {
 			a, b = a^1, b^1
@@ -1002,9 +1002,9 @@ func Abc_NtkFrameExtend(network *Abc_Ntk_t) {
 			continue
 		}
 		start := int(nPosOld + 4*(int32(i)-nPisOld))
-		reset := pos[start+1].Fanins()[0].Object
-		enable := pos[start+2].Fanins()[0].Object
-		signal := pos[start+3].Fanins()[0].Object
+		reset := pos[start+1].FaninAt(int32(0)).Object
+		enable := pos[start+2].FaninAt(int32(0)).Object
+		signal := pos[start+3].FaninAt(int32(0)).Object
 		resetN := baseabc.Abc_NtkCreateNodeInv(network, reset)
 		enableN := baseabc.Abc_NtkCreateNodeInv(network, enable)
 		and0 := baseabc.Abc_NtkCreateNodeAnd(network, []*Abc_Obj_t{enableN, pi})
@@ -1033,7 +1033,7 @@ func Abc_NtkFrameExtend(network *Abc_Ntk_t) {
 		if int32(i) < nPosOld-4*nConstr {
 			copy := baseabc.Abc_NtkDupObj(network, po, 0)
 			baseabc.Abc_ObjAssignName(copy, baseabc.Abc_ObjName(po), "_frame1")
-			old := po.Fanins()[0]
+			old := po.FaninAt(int32(0))
 			mapped := old.Object.ReadCopyEdge()
 			if old.Complement {
 				mapped = mapped.Not()
@@ -1041,7 +1041,7 @@ func Abc_NtkFrameExtend(network *Abc_Ntk_t) {
 			baseabc.Abc_ObjAddFanin(copy, mapped)
 			continue
 		}
-		old := po.Fanins()[0]
+		old := po.FaninAt(int32(0))
 		mapped := old.Object.ReadCopyEdge()
 		if old.Complement {
 			mapped = mapped.Not()

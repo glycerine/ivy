@@ -242,7 +242,7 @@ func Io_ReadCreatePi(n *abc.Network, name string) *abc.Object {
 	if err := m.input(name); err != nil {
 		panic(err)
 	}
-	return m.net(name).Fanins()[0].Object
+	return m.net(name).FaninAt(int32(0)).Object
 }
 func Io_ReadCreatePo(n *abc.Network, name string) *abc.Object {
 	m := ioBuilder(n)

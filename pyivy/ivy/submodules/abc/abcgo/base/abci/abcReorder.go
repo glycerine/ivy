@@ -27,7 +27,7 @@ func Abc_NtkBddReorder(network *Abc_Ntk_t, verbose int32) {
 	defer reo.Extra_ReorderQuit(reorder)
 
 	for _, node := range network.ObjectsOfKind(abc.ObjectNode) {
-		if len(node.Fanins()) < 3 {
+		if node.FaninNum() < 3 {
 			continue
 		}
 		before := 0

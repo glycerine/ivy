@@ -63,7 +63,7 @@ func Abc_NtkRetimeSearch_rec(n *abc.Network, nodes, latches []*abc.Object, low, 
 func Abc_NtkRetimeForPeriod(n *abc.Network, nodes, latches []*abc.Object, period, iterations, verbose int32) int32 {
 	for _, o := range n.Objects() {
 		o.Temp = -retInfinity
-		if len(o.Fanins()) == 0 {
+		if o.FaninNum() == 0 {
 			o.Temp = 0
 		}
 	}
@@ -97,7 +97,7 @@ func Abc_NtkRetimeUpdateLValue(n *abc.Network, nodes, latches []*abc.Object, per
 		}
 	}
 	for _, latch := range latches {
-		latch.Fanouts()[0].Temp = retFan0(retFan0(latch)).Temp - int(period)
+		latch.FanoutAt(int32(0)).Temp = retFan0(retFan0(latch)).Temp - int(period)
 	}
 	return retBool(changed)
 }

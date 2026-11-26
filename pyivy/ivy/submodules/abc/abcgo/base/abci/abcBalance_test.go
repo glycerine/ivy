@@ -119,10 +119,10 @@ func TestBalanceConeRecDetectsContradiction(t *testing.T) {
 	a, b := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
 	root := n.CreateAndEdges(a.Signal(), b.Signal()).Object
 	v := vec.Vec_PtrAlloc(2)
-	if got := Abc_NodeBalanceCone_rec(root.Fanins()[0].Object, v, 0, 1, 0); got != 0 {
+	if got := Abc_NodeBalanceCone_rec(root.FaninAt(int32(0)).Object, v, 0, 1, 0); got != 0 {
 		t.Fatalf("first branch ret=%d, want 0", got)
 	}
-	if got := balanceConeRec(root.Fanins()[0].Not(), v, 0, 1, 0); got != -1 {
+	if got := balanceConeRec(root.FaninAt(int32(0)).Not(), v, 0, 1, 0); got != -1 {
 		t.Fatalf("opposite-polarity ret=%d, want -1", got)
 	}
 }

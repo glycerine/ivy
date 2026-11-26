@@ -323,14 +323,14 @@ func TestLpkImplementRecBuildsEachComponentOnce(t *testing.T) {
 	if got := abc.Abc_NtkNodeNum(network); got != 2 {
 		t.Fatalf("created node count = %d, want child and root exactly once", got)
 	}
-	if got := len(result.Fanins()); got != 2 {
+	if got := result.FaninNum(); got != 2 {
 		t.Fatalf("root fanin count = %d, want 2", got)
 	}
 	if man.nMuxes != 0 || man.nDsds != 2 {
 		t.Fatalf("manager implementation counts = mux %d, DSD %d; want mux 0, DSD 2", man.nMuxes, man.nDsds)
 	}
-	childNode := result.Fanins()[1].Object
-	if got := len(childNode.Fanins()); got != 2 {
+	childNode := result.FaninAt(int32(1)).Object
+	if got := childNode.FaninNum(); got != 2 {
 		t.Fatalf("decomposition fanin count = %d, want 2", got)
 	}
 	if result.Level != 2 || childNode.Level != 1 {

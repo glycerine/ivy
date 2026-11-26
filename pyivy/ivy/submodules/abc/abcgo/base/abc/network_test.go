@@ -30,7 +30,7 @@ func TestNetworkAIG(t *testing.T) {
 	if err := n.Check(); err != nil {
 		t.Fatal(err)
 	}
-	if a.Name() != "a" || len(and.Object.Fanouts()) != 1 {
+	if a.Name() != "a" || and.Object.FanoutCount() != 1 {
 		t.Fatal("name/fanout")
 	}
 	if err := n.AddFanin(po, a.Signal()); err == nil {
@@ -62,13 +62,13 @@ func TestNetworkMutation(t *testing.T) {
 	a := n.NewObject(ObjectPI)
 	b := n.NewObject(ObjectPI)
 	node := n.CreateAndEdges(a.Signal(), a.Signal())
-	if len(a.Fanouts()) != 2 {
+	if a.FanoutCount() != 2 {
 		t.Fatal("lost duplicate edge")
 	}
 	if err := n.PatchFanin(node.Object, 1, b.Signal().Not()); err != nil {
 		t.Fatal(err)
 	}
-	if len(a.Fanouts()) != 1 || len(b.Fanouts()) != 1 {
+	if a.FanoutCount() != 1 || b.FanoutCount() != 1 {
 		t.Fatal("reciprocity")
 	}
 	if err := n.Check(); err != nil {
@@ -80,7 +80,7 @@ func TestNetworkMutation(t *testing.T) {
 	if err := n.DeleteObject(node.Object); err != nil {
 		t.Fatal(err)
 	}
-	if len(a.Fanouts()) != 0 || len(b.Fanouts()) != 0 || n.Object(node.Object.ID) != nil {
+	if a.FanoutCount() != 0 || b.FanoutCount() != 0 || n.Object(node.Object.ID) != nil {
 		t.Fatal("deletion")
 	}
 	foreign := NewNetwork("other").NewObject(ObjectPI)
@@ -116,7 +116,7 @@ func TestDecNetworkAdapterReplacement(t *testing.T) {
 		t.Fatal("lookup")
 	}
 	d.Replace(old, a.Signal(), true)
-	if po.Fanins()[0] != a.Signal().Not() {
+	if po.FaninAt(int32(0)) != a.Signal().Not() {
 		t.Fatal("complement not propagated")
 	}
 	if err := n.Check(); err != nil {
@@ -166,7 +166,7 @@ func TestPatchRejectsOutputSource(t *testing.T) {
 	if err := n.PatchFanin(node.Object, 0, po.Signal()); err == nil {
 		t.Fatal("accepted PO as source")
 	}
-	if node.Object.Fanins()[0] != a.Signal() {
+	if node.Object.FaninAt(int32(0)) != a.Signal() {
 		t.Fatal("changed object on error")
 	}
 }

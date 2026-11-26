@@ -110,7 +110,7 @@ func retTrace(n *abc.Network) [16]uint64 {
 				inputs[o] = sequence&(1<<(2*frame+i)) != 0
 			}
 			for i, l := range latches {
-				inputs[l.Fanouts()[0]] = state[i]
+				inputs[l.FanoutAt(int32(0))] = state[i]
 			}
 			value, err := n.Evaluate(pos[0].Signal(), inputs)
 			if err != nil {

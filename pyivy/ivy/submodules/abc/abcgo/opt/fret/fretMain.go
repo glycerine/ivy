@@ -496,7 +496,7 @@ func Abc_FlowRetime_FixLatchBoxes(ntk *abc.Abc_Ntk_t, boxInputs *vec.Vec_Ptr_t) 
 		bi := abc.Abc_ObjFanin0(latch)
 		if abc.Abc_ObjIsBi(bi) == 0 {
 			newBI := pop(&freeBIs, abc.ABC_OBJ_BI)
-			oldInput := latch.Fanins()[0]
+			oldInput := latch.FaninAt(int32(0))
 			if err := ntk.AddFanin(newBI, oldInput); err != nil {
 				panic(err)
 			}

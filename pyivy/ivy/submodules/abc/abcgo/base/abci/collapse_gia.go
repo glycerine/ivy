@@ -39,7 +39,7 @@ func Abc_NtkClpGia(n *abc.Network) *gia.Gia_Man_t {
 		o.Temp = int(gia.Gia_ManAppendCi(dst))
 	}
 	for _, o := range n.Outputs() {
-		fanin := o.Fanins()[0]
+		fanin := o.FaninAt(int32(0))
 		lit := Abc_NtkClpGia_rec(dst, fanin.Object)
 		if fanin.Complement {
 			lit ^= 1

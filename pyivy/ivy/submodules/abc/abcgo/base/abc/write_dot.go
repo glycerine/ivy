@@ -22,7 +22,7 @@ func Abc_NtkPrintSop(s string) string {
 func Abc_NtkCountLogicNodes(nodes []*Object) int32 {
 	var count int32
 	for _, o := range nodes {
-		if o.Kind == ObjectNode && (len(o.Fanins()) > 0 || len(o.Fanouts()) > 0) {
+		if o.Kind == ObjectNode && (o.FaninNum() > 0 || o.FanoutCount() > 0) {
 			count++
 		}
 	}
@@ -46,7 +46,7 @@ func dotFunction(o *Object, gateNames bool) (string, error) {
 			return "", fmt.Errorf("BDD node has no manager")
 		}
 		var cube []byte
-		return strings.TrimSuffix(Abc_ConvertBddToSop(nil, dd, f, f, int32(len(o.Fanins())), 0, &cube, -1), "\n"), nil
+		return strings.TrimSuffix(Abc_ConvertBddToSop(nil, dd, f, f, int32(o.FaninNum()), 0, &cube, -1), "\n"), nil
 	case nil:
 		return "", nil
 	default:
@@ -201,24 +201,24 @@ func WriteDOT(w stdio.Writer, n *Network, nodes, highlight []*Object, gateNames,
 				shape, color = "invtriangle", true
 			case ObjectBI:
 				shape, color = "box", true
-				if len(o.Fanouts()) > 0 {
-					label = dotExportName(o.Fanouts()[0]) + "_in"
+				if o.FanoutCount() > 0 {
+					label = dotExportName(o.FanoutAt(int32(0))) + "_in"
 				}
 			case ObjectBO:
 				shape, color = "box", true
-				if len(o.Fanins()) > 0 {
-					label = dotExportName(o.Fanins()[0].Object)
+				if o.FaninNum() > 0 {
+					label = dotExportName(o.FaninAt(int32(0)).Object)
 				}
 			case ObjectLatch:
 				shape, color = "box", true
 			case ObjectConst1:
-				if len(o.Fanouts()) == 0 {
+				if o.FanoutCount() == 0 {
 					continue
 				}
 				label, color = "Const1", true
 			case ObjectNode:
-				if len(o.Fanins()) == 0 {
-					if len(o.Fanouts()) == 0 {
+				if o.FaninNum() == 0 {
+					if o.FanoutCount() == 0 {
 						continue
 					}
 					value := "0"

@@ -129,7 +129,7 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 		}
 	}
 	for signal, value := range map[string]string{"gnd": " 0\n", "vdd": " 1\n", "1": " 0\n", "2": " 1\n"} {
-		if net := m.nets[signal]; net != nil && len(net.Fanins()) == 0 {
+		if net := m.nets[signal]; net != nil && net.FaninNum() == 0 {
 			if _, err = m.node([]string{signal}, value); err != nil {
 				return nil, err
 			}
@@ -137,7 +137,7 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 	}
 	if check {
 		for signal, net := range m.nets {
-			if len(net.Fanins()) == 0 {
+			if net.FaninNum() == 0 {
 				return nil, fmt.Errorf("%s: undriven signal %s", name, signal)
 			}
 		}

@@ -92,17 +92,17 @@ func abcNetworkBDD(n *abc.Network, dd *core.DdManager, root abc.Edge) (*core.DdN
 		if index, ok := indices[object]; ok {
 			return core.Cudd_bddIthVar(dd, index), nil
 		}
-		if object.Data == "abcgo:AIG AND" && len(object.Fanins()) == 2 {
-			left, err := convert(object.Fanins()[0].Object)
+		if object.Data == "abcgo:AIG AND" && object.FaninNum() == 2 {
+			left, err := convert(object.FaninAt(int32(0)).Object)
 			if err != nil {
 				return nil, err
 			}
-			left = core.Cudd_NotCond(left, object.Fanins()[0].Complement)
-			right, err := convert(object.Fanins()[1].Object)
+			left = core.Cudd_NotCond(left, object.FaninAt(int32(0)).Complement)
+			right, err := convert(object.FaninAt(int32(1)).Object)
 			if err != nil {
 				return nil, err
 			}
-			right = core.Cudd_NotCond(right, object.Fanins()[1].Complement)
+			right = core.Cudd_NotCond(right, object.FaninAt(int32(1)).Complement)
 			f := core.Cudd_bddAnd(dd, left, right)
 			memo[object] = f
 			return f, nil
@@ -338,7 +338,7 @@ func Abc_NtkDsdConstruct(manager *dsd.Dsd_Manager_t, src, dst *abc.Network) erro
 		}
 	}
 	for i, co := range src.Outputs() {
-		if len(co.Fanins()) != 1 {
+		if co.FaninNum() != 1 {
 			return fmt.Errorf("output %d does not have one driver", i)
 		}
 		root := dsd.Dsd_ManagerReadRoot(manager, i)
@@ -374,11 +374,11 @@ func Abc_NtkDsdInternal(n *abc.Network, verbose, printTree, short int32) *abc.Ne
 	}
 	functions := make([]*core.DdNode, 0, len(n.Outputs()))
 	for _, co := range n.Outputs() {
-		f, ok := co.Fanins()[0].Object.Data.(*core.DdNode)
+		f, ok := co.FaninAt(int32(0)).Object.Data.(*core.DdNode)
 		if !ok {
 			return nil
 		}
-		functions = append(functions, core.Cudd_NotCond(f, co.Fanins()[0].Complement))
+		functions = append(functions, core.Cudd_NotCond(f, co.FaninAt(int32(0)).Complement))
 	}
 	out, err := abcDsdBuildNetwork(n, dd, functions, printTree != 0, short != 0, verbose != 0)
 	if err != nil {
@@ -431,7 +431,7 @@ func Abc_NtkCollectNodesForDsd(n *abc.Network) []*abc.Object {
 }
 
 func Abc_NodeIsForDsd(node *abc.Object) int32 {
-	if node != nil && node.Kind == abc.ObjectNode && len(node.Fanins()) > 2 {
+	if node != nil && node.Kind == abc.ObjectNode && node.FaninNum() > 2 {
 		return 1
 	}
 	return 0
@@ -475,7 +475,7 @@ func Abc_NodeDecompDsdAndMux(node *abc.Object, pending *[]*abc.Object, manager *
 		low := abc.Abc_NtkCloneObj(node)
 		high := abc.Abc_NtkCloneObj(node)
 		for _, child := range []*abc.Object{low, high} {
-			for j := len(child.Fanins()) - 1; j >= 0; j-- {
+			for j := child.FaninNum() - 1; j >= 0; j-- {
 				_ = node.Network().DeleteFanin(child, j)
 			}
 			for _, edge := range fanins {
@@ -673,10 +673,10 @@ func Abc_NtkSparsifyInternal(n *abc.Network, percentage, verbose int32) *abc.Net
 		oldToNew[old] = copy
 	}
 	for _, co := range n.Outputs() {
-		if len(co.Fanins()) != 1 {
+		if co.FaninNum() != 1 {
 			return nil
 		}
-		edge := co.Fanins()[0]
+		edge := co.FaninAt(int32(0))
 		name := co.Name()
 		if edge.Object.IsCI() {
 			driver := oldToNew[edge.Object]
@@ -693,7 +693,7 @@ func Abc_NtkSparsifyInternal(n *abc.Network, percentage, verbose int32) *abc.Net
 			}
 			continue
 		}
-		if edge.Object.Kind == abc.ObjectConst1 || len(edge.Object.Fanins()) == 0 {
+		if edge.Object.Kind == abc.ObjectConst1 || edge.Object.FaninNum() == 0 {
 			value, evalErr := n.Evaluate(edge, map[*abc.Object]bool{})
 			if evalErr != nil {
 				return nil
@@ -730,7 +730,7 @@ func Abc_NtkSparsifyInternal(n *abc.Network, percentage, verbose int32) *abc.Net
 				}
 			}
 			function := core.Cudd_NotCond(original, c == 1)
-			copy.Data = Abc_NtkSparsifyInternalOne(destDD, function, len(copy.Fanins()), percentage)
+			copy.Data = Abc_NtkSparsifyInternalOne(destDD, function, copy.FaninNum(), percentage)
 			if copy.Data == nil {
 				return nil
 			}

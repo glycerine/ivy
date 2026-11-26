@@ -273,10 +273,10 @@ func Abc_NtkTraverseSupers(manager *Abc_ShaMan_t, andMode int32) {
 	inputs := vec.Vec_PtrStart(inputCount)
 	abc.Abc_NtkIncrementTravId(manager.pNtk)
 	for _, co := range manager.pNtk.Outputs() {
-		if len(co.Fanins()) != 1 {
+		if co.FaninNum() != 1 {
 			continue
 		}
-		root := co.Fanins()[0].Object
+		root := co.FaninAt(int32(0)).Object
 		if abc.Abc_ObjIsNode(root) == 0 {
 			continue
 		}

@@ -133,7 +133,7 @@ func Abc_NtkMaxFlow(n *abc.Network, forward, verbose int32) []*abc.Object {
 	abc.Abc_NtkIncrementTravId(n)
 	augment := func(latch *abc.Object) int32 {
 		if forward != 0 {
-			return Abc_NtkMaxFlowFwdPath2_rec(latch.Fanouts()[0])
+			return Abc_NtkMaxFlowFwdPath2_rec(latch.FanoutAt(int32(0)))
 		}
 		return Abc_NtkMaxFlowBwdPath2_rec(retFan0(latch))
 	}
@@ -195,7 +195,7 @@ func Abc_NtkMaxFlowMinCutUpdate(n *abc.Network, cut []*abc.Object, forward int32
 		o.MarkA = false
 	}
 	for _, latch := range retLatches(n) {
-		latch.Fanouts()[0].MarkA = true
+		latch.FanoutAt(int32(0)).MarkA = true
 	}
 	for _, o := range cut {
 		Abc_NtkMaxFlowMarkCut_rec(o)
@@ -250,7 +250,7 @@ func Abc_NtkMaxFlowVerifyCut(n *abc.Network, cut []*abc.Object, forward int32) i
 	for _, latch := range retLatches(n) {
 		start := retFan0(latch)
 		if forward != 0 {
-			start = latch.Fanouts()[0]
+			start = latch.FanoutAt(int32(0))
 		}
 		if Abc_NtkMaxFlowVerifyCut_rec(start, forward) == 0 {
 			return 0
@@ -275,7 +275,7 @@ func Abc_NtkMaxFlowTest(n *abc.Network) {
 	}
 	for _, o := range retLatches(n) {
 		o.MarkA = true
-		o.Fanouts()[0].MarkA = true
+		o.FanoutAt(int32(0)).MarkA = true
 	}
 	Abc_NtkMaxFlow(n, 0, 1)
 	for _, o := range n.Objects() {
@@ -286,7 +286,7 @@ func Abc_NtkMaxFlowPrintFlow(n *abc.Network, forward int32) {
 	for _, latch := range retLatches(n) {
 		o := retFan0(latch)
 		if forward != 0 {
-			o = latch.Fanouts()[0]
+			o = latch.FanoutAt(int32(0))
 		}
 		if o.Copy == nil {
 			continue

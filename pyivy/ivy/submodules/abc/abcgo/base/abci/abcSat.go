@@ -69,7 +69,7 @@ func Abc_NtkWriteSorterCnf(fileName string, nVars, nQueens int32) {
 func writeSorterCNF(fileName string, n *Abc_Ntk_t, nVars, nQueens int32) error {
 	po := n.Outputs()
 	first, second := po[nVars-nQueens-1], po[nVars-nQueens]
-	roots := []*abc.Object{first.Fanins()[0].Object, second.Fanins()[0].Object}
+	roots := []*abc.Object{first.FaninAt(int32(0)).Object, second.FaninAt(int32(0)).Object}
 	nodes := abc.Abc_NtkDfsNodes(n, roots, 2)
 	counter := int32(0)
 	for _, pi := range n.Inputs() {
@@ -110,7 +110,7 @@ func writeSorterCNF(fileName string, n *Abc_Ntk_t, nVars, nQueens int32) error {
 			return err
 		}
 	}
-	if _, err = fmt.Fprintf(f, "%s 0\n%s 0\n", litText(first.Fanins()[0].Not()), litText(second.Fanins()[0])); err != nil {
+	if _, err = fmt.Fprintf(f, "%s 0\n%s 0\n", litText(first.FaninAt(int32(0)).Not()), litText(second.FaninAt(int32(0)))); err != nil {
 		return err
 	}
 	return f.Close()

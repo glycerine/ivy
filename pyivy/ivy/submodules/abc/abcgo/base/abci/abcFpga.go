@@ -84,7 +84,7 @@ func abcFpgaSwitching(ntk *Abc_Ntk_t) []float32 {
 		abcFpgaSetRandom(info[node.ID], abcFpgaSimulationRNG)
 	}
 	for _, node := range baseabc.Abc_AigDfs(ntk, 1, 0) {
-		if node.Kind != baseabc.ObjectNode || len(node.Fanins()) != 2 {
+		if node.Kind != baseabc.ObjectNode || node.FaninNum() != 2 {
 			continue
 		}
 		fanins := node.Fanins()

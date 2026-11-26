@@ -512,21 +512,21 @@ func Abc_NtkPartStitchFindRepr_rec(equivalents *Vec_Ptr_t, object *Abc_Obj_t) *A
 	}
 }
 func Abc_NtkPartStitchCopy0(equivalents *Vec_Ptr_t, object *Abc_Obj_t) abc.Edge {
-	fanin := object.Fanins()[0]
+	fanin := object.FaninAt(int32(0))
 	repr := Abc_NtkPartStitchFindRepr_rec(equivalents, fanin.Object)
 	return abc.Abc_ObjNotCond(repr.CopyEdge, boolInt32(repr.Phase != fanin.Object.Phase)^abc.Abc_ObjFaninC1(object))
 }
 func Abc_NtkPartStitchCopy1(equivalents *Vec_Ptr_t, object *Abc_Obj_t) abc.Edge {
-	fanin := object.Fanins()[1]
+	fanin := object.FaninAt(int32(1))
 	repr := Abc_NtkPartStitchFindRepr_rec(equivalents, fanin.Object)
 	return abc.Abc_ObjNotCond(repr.CopyEdge, boolInt32(repr.Phase != fanin.Object.Phase)^abc.Abc_ObjFaninC1(object))
 }
 func Hop_ObjChild0Next(object *Abc_Obj_t, mapping map[*Abc_Obj_t]*Hop_Obj_t) *Hop_Obj_t {
-	fanin := object.Fanins()[0]
+	fanin := object.FaninAt(int32(0))
 	return hop.Hop_NotCond(mapping[fanin.Object], boolInt32(fanin.Complement))
 }
 func Hop_ObjChild1Next(object *Abc_Obj_t, mapping map[*Abc_Obj_t]*Hop_Obj_t) *Hop_Obj_t {
-	fanin := object.Fanins()[1]
+	fanin := object.FaninAt(int32(1))
 	return hop.Hop_NotCond(mapping[fanin.Object], boolInt32(fanin.Complement))
 }
 func Abc_NtkPartStartHop(network *Abc_Ntk_t) *Hop_Man_t {
@@ -611,7 +611,7 @@ func Abc_NtkPartStitchChoices(network *Abc_Ntk_t, parts *Vec_Ptr_t) *Abc_Ntk_t {
 				return nil
 			}
 			co.CopyEdge = target.Signal()
-			fanin := co.Fanins()[0]
+			fanin := co.FaninAt(int32(0))
 			edge := abc.Abc_ObjNotCond(fanin.Object.CopyEdge, boolInt32(fanin.Complement))
 			if err := target.Network().AddFanin(target, edge); err != nil {
 				panic(err)
@@ -620,8 +620,8 @@ func Abc_NtkPartStitchChoices(network *Abc_Ntk_t, parts *Vec_Ptr_t) *Abc_Ntk_t {
 	}
 	for _, co := range network.Outputs() {
 		target := abc.Abc_ObjRegular(co.CopyEdge.Object)
-		if target != nil && len(target.Fanins()) == 0 {
-			fanin := co.Fanins()[0]
+		if target != nil && target.FaninNum() == 0 {
+			fanin := co.FaninAt(int32(0))
 			edge := abc.Abc_ObjNotCond(fanin.Object.CopyEdge, boolInt32(fanin.Complement))
 			if err := target.Network().AddFanin(target, edge); err != nil {
 				panic(err)

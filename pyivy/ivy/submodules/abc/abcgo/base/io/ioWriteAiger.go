@@ -189,10 +189,10 @@ func aigerModelFromNetwork(network *abc.Network) (*ioa.Model, error) {
 	}
 	latches := network.ObjectsOfKind(abc.ObjectLatch)
 	for index, latch := range latches {
-		if len(latch.Fanins()) != 1 || latch.Fanins()[0].Object.Kind != abc.ObjectBI || len(latch.Fanouts()) != 1 || latch.Fanouts()[0].Kind != abc.ObjectBO {
+		if latch.FaninNum() != 1 || latch.FaninAt(int32(0)).Object.Kind != abc.ObjectBI || latch.FanoutCount() != 1 || latch.FanoutAt(int32(0)).Kind != abc.ObjectBO {
 			return nil, fmt.Errorf("latch %d lacks BI/BO terminals", index)
 		}
-		bo := latch.Fanouts()[0]
+		bo := latch.FanoutAt(int32(0))
 		literal := nextVariable << 1
 		nextVariable++
 		literalByObject[bo] = literal
@@ -286,7 +286,7 @@ func aigerModelFromNetwork(network *abc.Network) (*ioa.Model, error) {
 		}
 	}
 	for i, latch := range latches {
-		input := latch.Fanins()[0].Object
+		input := latch.FaninAt(int32(0)).Object
 		next, err := literalForObject(input)
 		if err != nil {
 			return nil, err

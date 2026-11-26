@@ -65,11 +65,11 @@ func Abc_NtkCreatePartitions(dd *core.DdManager, network *abc.Network, reorder, 
 	}
 	parts := make([]*core.DdNode, len(latches))
 	for i, latch := range latches {
-		if len(latch.Fanins()) != 1 {
+		if latch.FaninNum() != 1 {
 			Abc_NtkFreeGlobalBdds(network, 0)
 			return nil
 		}
-		bi := latch.Fanins()[0].Object
+		bi := latch.FaninAt(int32(0)).Object
 		function := Abc_ObjGlobalBdd(bi)
 		if function == nil {
 			Abc_NtkFreeGlobalBdds(network, 0)

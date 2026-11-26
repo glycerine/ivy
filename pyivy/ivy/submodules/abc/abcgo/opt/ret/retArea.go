@@ -117,7 +117,7 @@ func Abc_NtkRetimeMinAreaPrepare(n *abc.Network, forward int32) {
 		}
 		for _, o := range retLatches(n) {
 			o.MarkA = true
-			o.Fanouts()[0].MarkA = true
+			o.FanoutAt(int32(0)).MarkA = true
 		}
 		for _, o := range n.ObjectsOfKind(abc.ObjectPO) {
 			Abc_NtkMarkCone_rec(o, forward)
@@ -248,8 +248,8 @@ func Abc_NtkRetimeMinAreaUpdateLatches(n *abc.Network, cut []*abc.Object, forwar
 			}
 		} else if o.IsCO() && forward == 0 {
 			in = o
-			latch = in.Fanouts()[0]
-			out = latch.Fanouts()[0]
+			latch = in.FanoutAt(int32(0))
+			out = latch.FanoutAt(int32(0))
 			reused[latch] = true
 		} else {
 			out = abc.Abc_NtkCreateBo(n)
@@ -287,7 +287,7 @@ func Abc_NtkRetimeMinAreaUpdateLatches(n *abc.Network, cut []*abc.Object, forwar
 		if reused[latch] {
 			continue
 		}
-		out, in := latch.Fanouts()[0], retFan0(latch)
+		out, in := latch.FanoutAt(int32(0)), retFan0(latch)
 		retTransfer(out, retFan0(in))
 		retDelete(out)
 		retDelete(latch)
@@ -330,7 +330,7 @@ func retAttachBottom(top, bottom *abc.Network) *abc.Network {
 		panic("ret: initial-state cone interfaces differ")
 	}
 	for i, o := range inputs {
-		e := outputs[i].Fanins()[0]
+		e := outputs[i].FaninAt(int32(0))
 		v := copies[e.Object]
 		if e.Complement {
 			v = v.Not()
@@ -340,7 +340,7 @@ func retAttachBottom(top, bottom *abc.Network) *abc.Network {
 	copies[top.One().Object] = dst.One()
 	copyLogic(top)
 	for _, o := range top.ObjectsOfKind(abc.ObjectPO) {
-		e := o.Fanins()[0]
+		e := o.FaninAt(int32(0))
 		v := copies[e.Object]
 		if e.Complement {
 			v = v.Not()

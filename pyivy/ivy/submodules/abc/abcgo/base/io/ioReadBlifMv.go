@@ -75,7 +75,7 @@ func (m *blifModel) net(name string) *abc.Object {
 func (m *blifModel) connect(out, in *abc.Object) error { return m.network.AddFanin(out, in.Signal()) }
 func (m *blifModel) input(name string) error {
 	net := m.net(name)
-	if len(net.Fanins()) > 0 {
+	if net.FaninNum() > 0 {
 		return fmt.Errorf("duplicate driver for %s", name)
 	}
 	pi := m.network.NewObject(abc.ObjectPI)
@@ -97,7 +97,7 @@ func (m *blifModel) node(names []string, data any) (*abc.Object, error) {
 		return nil, fmt.Errorf("node missing output")
 	}
 	output := m.net(names[len(names)-1])
-	if len(output.Fanins()) > 0 {
+	if output.FaninNum() > 0 {
 		return nil, fmt.Errorf("duplicate driver for %s", output.Name())
 	}
 	node := m.network.NewObject(abc.ObjectNode)
@@ -447,7 +447,7 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 		}
 		if check {
 			for signal, net := range m.nets {
-				if len(net.Fanins()) == 0 && m.network.Function != uint8(abc.ABC_FUNC_BLACKBOX) {
+				if net.FaninNum() == 0 && m.network.Function != uint8(abc.ABC_FUNC_BLACKBOX) {
 					return nil, fmt.Errorf("%s: model %s signal %s has no driver", name, m.network.Name, signal)
 				}
 			}
@@ -529,7 +529,7 @@ func blifLatch(m *blifModel, f []string) error {
 		return fmt.Errorf("invalid .latch")
 	}
 	input, output := m.net(f[0]), m.net(f[1])
-	if len(output.Fanins()) > 0 {
+	if output.FaninNum() > 0 {
 		return fmt.Errorf("duplicate latch output")
 	}
 	bi := m.network.NewObject(abc.ObjectBI)
@@ -632,7 +632,7 @@ func blifInstance(m *blifModel, f []string, models map[string]*blifModel, mv boo
 		}
 		delete(bindings, port.Name())
 		net := m.net(signal)
-		if len(net.Fanins()) > 0 {
+		if net.FaninNum() > 0 {
 			return fmt.Errorf("duplicate subcircuit output driver %s", signal)
 		}
 		bo := m.network.NewObject(abc.ObjectBO)

@@ -124,8 +124,8 @@ func ParseBAF(filename string, data []byte) (*abc.Network, error) {
 	for i, latch := range network.ObjectsOfKind(abc.ObjectLatch) {
 		latch.Data = initial[i]
 		latch.SetName(latchNames[i][0])
-		latch.Fanins()[0].Object.SetName(latchNames[i][1])
-		latch.Fanouts()[0].SetName(latchNames[i][2])
+		latch.FaninAt(int32(0)).Object.SetName(latchNames[i][1])
+		latch.FanoutAt(int32(0)).SetName(latchNames[i][2])
 	}
 	return network, nil
 }

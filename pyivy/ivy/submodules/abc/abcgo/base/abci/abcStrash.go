@@ -101,7 +101,7 @@ func Abc_NtkRestrashRandom(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	pNtkAig := abc.Abc_NtkStartFrom(pNtk, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
 	abc.Abc_NtkIncrementTravId(pNtk)
 	for _, co := range pNtk.Outputs() {
-		if len(co.Fanins()) != 0 {
+		if co.FaninNum() != 0 {
 			Abc_NtkRestrashRandom_rec(pNtkAig, abc.Abc_ObjFanin0(co))
 		}
 	}
@@ -127,8 +127,8 @@ func Abc_NtkRestrashZero(pNtk *Abc_Ntk_t, fCleanup int32) *Abc_Ntk_t {
 	for _, latch := range pNtk.ObjectsOfKind(abc.ObjectLatch) {
 		if abc.Abc_LatchIsInitDc(latch) != 0 {
 			counter++
-		} else if abc.Abc_LatchIsInit1(latch) != 0 && len(latch.Fanouts()) != 0 {
-			bo := latch.Fanouts()[0]
+		} else if abc.Abc_LatchIsInit1(latch) != 0 && latch.FanoutCount() != 0 {
+			bo := latch.FanoutAt(int32(0))
 			strashSetCopy(bo, abc.Abc_ObjNot(abc.Abc_ObjCopyEdge(bo)))
 		}
 	}
@@ -142,11 +142,11 @@ func Abc_NtkRestrashZero(pNtk *Abc_Ntk_t, fCleanup int32) *Abc_Ntk_t {
 	}
 	abc.Abc_NtkFinalize(pNtk, pNtkAig)
 	for _, latch := range pNtkAig.ObjectsOfKind(abc.ObjectLatch) {
-		if abc.Abc_LatchIsInit1(latch) != 0 && len(latch.Fanins()) != 0 {
-			bi := latch.Fanins()[0].Object
+		if abc.Abc_LatchIsInit1(latch) != 0 && latch.FaninNum() != 0 {
+			bi := latch.FaninAt(int32(0)).Object
 			abc.Abc_ObjXorFaninC(bi, 0)
-			if len(bi.Fanouts()) != 0 {
-				bo := bi.Fanouts()[0]
+			if bi.FanoutCount() != 0 {
+				bo := bi.FanoutAt(int32(0))
 				for _, po := range bo.Fanouts() {
 					if po.Kind == abc.ObjectPO {
 						bo.SetName(abc.Abc_ObjName(bo) + "_inv")
@@ -352,7 +352,7 @@ func Abc_NtkTopmost(pNtk *Abc_Ntk_t, nLevels int32) *Abc_Ntk_t {
 	abc.Abc_NtkCleanCopy(pNtk)
 	strashSetCopy(abc.Abc_AigConst1(pNtk).Object, abc.Abc_AigConst1(out))
 	for _, co := range pNtk.Outputs() {
-		if len(co.Fanins()) == 0 {
+		if co.FaninNum() == 0 {
 			continue
 		}
 		driver := Abc_NtkTopmost_rec(out, abc.Abc_ObjFanin0(co), levelCut)
@@ -400,7 +400,7 @@ func Abc_NtkBottommost(pNtk *Abc_Ntk_t, nLevels int32) *Abc_Ntk_t {
 		strashSetCopy(ci, abc.Abc_NtkCreatePi(out).Signal())
 	}
 	for _, co := range pNtk.Outputs() {
-		if len(co.Fanins()) != 0 {
+		if co.FaninNum() != 0 {
 			Abc_NtkBottommost_rec(out, abc.Abc_ObjFanin0(co), nLevels)
 		}
 	}

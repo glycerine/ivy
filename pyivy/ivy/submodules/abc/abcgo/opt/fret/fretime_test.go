@@ -335,7 +335,7 @@ func TestSilentRestrashRetainsLatchAndComplement(t *testing.T) {
 			t.Fatalf("cleanup=%d: latch lost", cleanup)
 		}
 		nodes := result.ObjectsOfKind(abc.ABC_OBJ_NODE)
-		if len(nodes) != 1 || !nodes[0].Fanins()[0].Complement && !nodes[0].Fanins()[1].Complement {
+		if len(nodes) != 1 || !nodes[0].FaninAt(int32(0)).Complement && !nodes[0].FaninAt(int32(1)).Complement {
 			t.Fatalf("cleanup=%d: complemented input lost", cleanup)
 		}
 	}
@@ -427,7 +427,7 @@ func TestFixLatchBoxesPreservesComplementOnInsertedBI(t *testing.T) {
 	if abc.Abc_ObjIsBi(bi) == 0 {
 		t.Fatal("inserted latch input is not a BI")
 	}
-	fanin := bi.Fanins()[0]
+	fanin := bi.FaninAt(int32(0))
 	if fanin.Object != node || !fanin.Complement {
 		t.Fatalf("inserted BI fanin = %+v, want complemented edge from node %d", fanin, node.ID)
 	}

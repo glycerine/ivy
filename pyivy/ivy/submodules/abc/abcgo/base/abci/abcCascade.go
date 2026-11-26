@@ -72,13 +72,13 @@ func Abc_ResBuildBdd(n *Abc_Ntk_t, dd *core.DdManager) *core.DdNode {
 		values[ci] = core.Cudd_bddIthVar(dd, i)
 	}
 	for _, node := range abc.Abc_NtkDfs(n, 0) {
-		if len(node.Fanins()) == 0 {
+		if node.FaninNum() == 0 {
 			sop, _ := node.Data.(string)
 			values[node] = core.Cudd_NotCond(dd.One, abc.Abc_SopIsConst0(sop) != 0)
 			core.Cudd_Ref(values[node])
 			continue
 		}
-		locals := make([]*core.DdNode, 0, len(node.Fanins()))
+		locals := make([]*core.DdNode, 0, node.FaninNum())
 		for _, edge := range node.Fanins() {
 			f := values[edge.Object]
 			if f == nil {

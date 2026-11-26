@@ -23,7 +23,7 @@ func Abc_NodeIsWhiteBox(obj *Abc_Obj_t) int32 {
 	if obj == nil || baseabc.Abc_ObjIsNode(obj) == 0 {
 		return 0
 	}
-	n := len(obj.Fanins())
+	n := obj.FaninNum()
 	return bool32(obj.ID%TIM_TEST_BOX_RATIO == 0 && n > 0 && n < 10)
 }
 
@@ -57,7 +57,7 @@ func Abc_NtkTestTimNodeStrash(g *Gia_Man_t, node *Abc_Obj_t) int32 {
 		panic("AIG logic node has no local Hop function")
 	}
 	regular := hop.Hop_Regular(root)
-	if len(node.Fanins()) == 0 || regular == hop.Hop_ManConst1(man) {
+	if node.FaninNum() == 0 || regular == hop.Hop_ManConst1(man) {
 		if hop.Hop_IsComplement(root) != 0 {
 			return 0
 		}
@@ -106,8 +106,8 @@ func Abc_NtkTestTimCollectCone(n *Abc_Ntk_t, obj *Abc_Obj_t) *Vec_Ptr_t {
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCoNum(n); i++ {
 		co := baseabc.Abc_NtkCo(n, i)
-		if len(co.Fanins()) > 0 {
-			Abc_NtkTestTimCollectCone_rec(co.Fanins()[0].Object, cone)
+		if co.FaninNum() > 0 {
+			Abc_NtkTestTimCollectCone_rec(co.FaninAt(int32(0)).Object, cone)
 		}
 	}
 	return cone
@@ -173,7 +173,7 @@ func Abc_NtkTestTimDeriveGia(n *Abc_Ntk_t, verbose int32) *Gia_Man_t {
 		if !white[o] {
 			continue
 		}
-		ins := int32(len(o.Fanins()))
+		ins := int32(o.FaninNum())
 		if int(ins) > maxInputs {
 			maxInputs = int(ins)
 		}
@@ -207,7 +207,7 @@ func Abc_NtkTestTimDeriveGia(n *Abc_Ntk_t, verbose int32) *Gia_Man_t {
 			o.Temp = int(Abc_NtkTestTimNodeStrash(g, o))
 			continue
 		}
-		ins := int32(len(o.Fanins()))
+		ins := int32(o.FaninNum())
 		boxID := ins
 		tim.Tim_ManCreateBox(manager, int(curPo), int(ins), int(curPi), 1, int(boxID), 0)
 		curPo += ins
@@ -224,10 +224,10 @@ func Abc_NtkTestTimDeriveGia(n *Abc_Ntk_t, verbose int32) *Gia_Man_t {
 	}
 	for i := int32(0); i < coNum; i++ {
 		co := baseabc.Abc_NtkCo(n, i)
-		if len(co.Fanins()) == 0 {
+		if co.FaninNum() == 0 {
 			panic("TIM CO has no driver")
 		}
-		gia.Gia_ManAppendCo(g, int32(co.Fanins()[0].Object.Temp))
+		gia.Gia_ManAppendCo(g, int32(co.FaninAt(int32(0)).Object.Temp))
 	}
 	for _, lit := range coLits {
 		gia.Gia_ManAppendCo(g, lit)

@@ -38,7 +38,7 @@ func TestFraigRoundTripKeepsComplementedOutput(t *testing.T) {
 		t.Fatal("no-choice reconstruction returned nil")
 	}
 	defer abc.Abc_NtkDelete(gotNoChoices)
-	if !gotNoChoices.Outputs()[0].Fanins()[0].Complement {
+	if !gotNoChoices.Outputs()[0].FaninAt(int32(0)).Complement {
 		t.Fatal("no-choice reconstruction lost output polarity")
 	}
 	got := Abc_NtkFromFraig(manager, n)
@@ -46,10 +46,10 @@ func TestFraigRoundTripKeepsComplementedOutput(t *testing.T) {
 		t.Fatal("FRAIG reconstruction returned nil")
 	}
 	defer abc.Abc_NtkDelete(got)
-	if len(got.Outputs()) != 1 || len(got.Outputs()[0].Fanins()) != 1 {
+	if len(got.Outputs()) != 1 || got.Outputs()[0].FaninNum() != 1 {
 		t.Fatal("reconstructed network has malformed output")
 	}
-	if !got.Outputs()[0].Fanins()[0].Complement {
+	if !got.Outputs()[0].FaninAt(int32(0)).Complement {
 		t.Fatal("reconstructed output lost its complement")
 	}
 }
@@ -65,7 +65,7 @@ func TestFraigTopLevelChecksReconstruction(t *testing.T) {
 		t.Fatal("top-level FRAIG rejected the reconstructed AIG")
 	}
 	defer abc.Abc_NtkDelete(got)
-	if len(got.Outputs()) != 1 || len(got.Outputs()[0].Fanins()) != 1 || !got.Outputs()[0].Fanins()[0].Complement {
+	if len(got.Outputs()) != 1 || got.Outputs()[0].FaninNum() != 1 || !got.Outputs()[0].FaninAt(int32(0)).Complement {
 		t.Fatal("top-level FRAIG changed the output function")
 	}
 }
