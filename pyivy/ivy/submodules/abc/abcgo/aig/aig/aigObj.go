@@ -79,8 +79,8 @@ func Aig_ObjDisconnect(p *Graph, e Edge) {
 	n := p.node(e)
 	if n.Kind == And || n.Kind == ExclusiveOr {
 		table := p.nodeTable(n.Kind)
-		if table[tableKey(n)] == Aig_Regular(e) {
-			delete(table, tableKey(n))
+		if old, _ := table.get(tableKey(n)); old == Aig_Regular(e) {
+			table.del(tableKey(n))
 		}
 	}
 	if p.fanouts != nil {

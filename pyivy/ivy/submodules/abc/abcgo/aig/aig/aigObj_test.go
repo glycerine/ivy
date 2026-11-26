@@ -84,7 +84,7 @@ func TestExplicitXorTruthAndDanglingCleanup(t *testing.T) {
 	if err != nil || table[0]&15 != 6 {
 		t.Fatal(table, err)
 	}
-	if Aig_ManCleanup(p) != 1 || len(p.xorHash) != 0 {
+	if Aig_ManCleanup(p) != 1 || p.xorHash.len() != 0 {
 		t.Fatal("explicit XOR hash retained")
 	}
 	if err := p.Check(); err != nil {

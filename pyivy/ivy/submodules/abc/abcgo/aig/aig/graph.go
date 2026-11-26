@@ -84,8 +84,8 @@ type Graph struct {
 	nodes                                       []Node
 	inputs                                      []Edge
 	outputs                                     []Edge
-	hash                                        map[edgePair]Edge
-	xorHash                                     map[edgePair]Edge
+	hash                                        strashTable
+	xorHash                                     strashTable
 	nRegs, nTruePis, nTruePos, nConstrs, travID int32
 	ghost                                       Node
 	copies, equivs, reprs, next                 map[int]Edge
@@ -98,17 +98,16 @@ func emptyNode() Node { return Node{Kind: vacant, Fanins: [2]Edge{InvalidEdge, I
 
 func NewGraph() *Graph {
 	return &Graph{
-		nodes:   []Node{{Kind: Constant, Phase: true, Fanins: [2]Edge{InvalidEdge, InvalidEdge}}},
-		hash:    make(map[edgePair]Edge),
-		ghost:   emptyNode(),
-		travID:  1,
+		nodes:  []Node{{Kind: Constant, Phase: true, Fanins: [2]Edge{InvalidEdge, InvalidEdge}}},
+		ghost:  emptyNode(),
+		travID: 1,
 	}
 }
-func (g *Graph) Const1() Edge         { return 0 }
-func (g *Graph) Const0() Edge         { return 1 }
-func (g *Graph) InputCount() int      { return len(g.inputs) }
-func (g *Graph) OutputCount() int     { return len(g.outputs) }
-func (g *Graph) NodeCount() int       { return len(g.nodes) - g.nDeleted }
+func (g *Graph) Const1() Edge     { return 0 }
+func (g *Graph) Const0() Edge     { return 1 }
+func (g *Graph) InputCount() int  { return len(g.inputs) }
+func (g *Graph) OutputCount() int { return len(g.outputs) }
+func (g *Graph) NodeCount() int   { return len(g.nodes) - g.nDeleted }
 
 // isDeleted reports whether object id was removed. Deletion is permanent.
 func (g *Graph) isDeleted(id int) bool { return id < len(g.deleted) && g.deleted[id] }
@@ -184,7 +183,7 @@ func (g *Graph) AND(a, b Edge) Edge {
 		a, b = b, a
 	}
 	key := edgePair{a, b}
-	if e, ok := g.hash[key]; ok {
+	if e, ok := g.hash.get(key); ok {
 		return e
 	}
 	level := g.nodes[a.NodeID()].Level
@@ -195,7 +194,7 @@ func (g *Graph) AND(a, b Edge) Edge {
 	g.nodes = append(g.nodes, Node{Kind: And, Fanins: [2]Edge{a, b}, Level: level + 1, Phase: (g.nodes[a.NodeID()].Phase != a.Complemented()) && (g.nodes[b.NodeID()].Phase != b.Complemented())})
 	g.nodes[a.NodeID()].Refs++
 	g.nodes[b.NodeID()].Refs++
-	g.hash[key] = e
+	g.hash.set(key, e)
 	g.linkFanins(e.NodeID())
 	g.refreshFanouts()
 	return e
@@ -402,16 +401,16 @@ func (g *Graph) Check() error {
 				return fmt.Errorf("aig: unordered fanins at %d", id)
 			}
 			key := edgePair{a, b}
-			table := g.hash
+			table := &g.hash
 			if n.Kind == ExclusiveOr {
 				xorCount++
-				table = g.xorHash
+				table = &g.xorHash
 			} else {
 				andCount++
 			}
 			// A table entry can identify only one node with this key. Checking
 			// its identity for every gate also detects duplicate gates.
-			if table[key] != Edge(id)<<1 {
+			if e, _ := table.get(key); e != Edge(id)<<1 {
 				return fmt.Errorf("aig: missing hash entry at %d", id)
 			}
 		}
@@ -421,7 +420,7 @@ func (g *Graph) Check() error {
 			return fmt.Errorf("aig: reference count at %d: %d != %d", id, n.Refs, refs[id])
 		}
 	}
-	if andCount != len(g.hash) || xorCount != len(g.xorHash) {
+	if andCount != g.hash.len() || xorCount != g.xorHash.len() {
 		return fmt.Errorf("aig: stale hash entries")
 	}
 	// Strictly increasing IDs along every fanout prove acyclicity.

@@ -24,18 +24,12 @@ func tableKey(node *Node) edgePair {
 	}
 	return edgePair{a, b}
 }
-func (p *Graph) nodeTable(kind NodeKind) map[edgePair]Edge {
+func (p *Graph) nodeTable(kind NodeKind) *strashTable {
 	if kind == And {
-		if p.hash == nil {
-			p.hash = make(map[edgePair]Edge)
-		}
-		return p.hash
+		return &p.hash
 	}
 	if kind == ExclusiveOr {
-		if p.xorHash == nil {
-			p.xorHash = make(map[edgePair]Edge)
-		}
-		return p.xorHash
+		return &p.xorHash
 	}
 	panic("aig: only AND/XOR nodes are hashable")
 }
@@ -43,21 +37,12 @@ func (p *Graph) nodeTable(kind NodeKind) map[edgePair]Edge {
 // Aig_TableFind returns the existing entry and presence. Map storage replaces
 // C's mutable pointer into a bucket chain; insert/delete are explicit operations.
 func Aig_TableFind(p *Graph, node *Node) (Edge, bool) {
-	e, ok := p.nodeTable(node.Kind)[tableKey(node)]
-	return e, ok
+	return p.nodeTable(node.Kind).get(tableKey(node))
 }
-func Aig_TableResize(p *Graph) {
-	old := p.hash
-	p.hash = make(map[edgePair]Edge, len(old))
-	for key, e := range old {
-		p.hash[key] = e
-	}
-	old = p.xorHash
-	p.xorHash = make(map[edgePair]Edge, len(old))
-	for key, e := range old {
-		p.xorHash[key] = e
-	}
-}
+
+// Aig_TableResize is a no-op: the table grows itself as entries are added.
+func Aig_TableResize(p *Graph) {}
+
 func Aig_TableLookup(p *Graph, ghost *Node) Edge {
 	if e, ok := Aig_TableFind(p, ghost); ok {
 		return e
@@ -74,22 +59,22 @@ func Aig_TableInsert(p *Graph, e Edge) {
 	n := p.node(e)
 	table := p.nodeTable(n.Kind)
 	key := tableKey(n)
-	if old, exists := table[key]; exists && old != e {
+	if old, exists := table.get(key); exists && old != e {
 		panic("aig: duplicate hash entry")
 	}
-	table[key] = Aig_Regular(e)
+	table.set(key, Aig_Regular(e))
 }
 func Aig_TableDelete(p *Graph, e Edge) {
 	n := p.node(e)
 	table := p.nodeTable(n.Kind)
 	key := tableKey(n)
-	if old, exists := table[key]; !exists || old != Aig_Regular(e) {
+	if old, exists := table.get(key); !exists || old != Aig_Regular(e) {
 		panic("aig: missing hash entry")
 	}
-	delete(table, key)
+	table.del(key)
 }
-func Aig_TableCountEntries(p *Graph) int32 { return int32(len(p.hash) + len(p.xorHash)) }
+func Aig_TableCountEntries(p *Graph) int32 { return int32(p.hash.len() + p.xorHash.len()) }
 func Aig_TableProfile(p *Graph) {
-	fmt.Printf("AIG hash: %d AND entries, %d XOR entries\n", len(p.hash), len(p.xorHash))
+	fmt.Printf("AIG hash: %d AND entries, %d XOR entries\n", p.hash.len(), p.xorHash.len())
 }
-func Aig_TableClear(p *Graph) { clear(p.hash); clear(p.xorHash) }
+func Aig_TableClear(p *Graph) { p.hash.clear(); p.xorHash.clear() }

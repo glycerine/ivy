@@ -115,7 +115,7 @@ func Aig_TableLookupInt(p *Graph, a, b Edge) (Edge, bool) {
 	if a > b {
 		a, b = b, a
 	}
-	e, ok := p.hash[edgePair{a, b}]
+	e, ok := p.hash.get(edgePair{a, b})
 	return e, ok
 }
 func Aig_ObjIsExorType(p *Graph, a, b Edge, fan0, fan1 *Edge) bool {

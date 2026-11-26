@@ -174,7 +174,7 @@ func TestGraphCheckRejectsRepeatedRegularFanin(t *testing.T) {
 	a := g.NewInput()
 	e := Edge(len(g.nodes)) << 1
 	g.nodes = append(g.nodes, Node{Kind: And, Fanins: [2]Edge{a, a.Not()}, Level: 1})
-	g.hash[edgePair{a, a.Not()}] = e
+	g.hash.set(edgePair{a, a.Not()}, e)
 	g.nodes[a.NodeID()].Refs = 2
 	if err := g.Check(); err == nil {
 		t.Fatal("accepted opposite phases of same regular fanin in a stored AND")
