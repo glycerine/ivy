@@ -748,7 +748,11 @@ func If_ManPerformMappingRound(p *If_Man_t, nCutsUsed, mode, preprocess, first i
 		} else if mode == 1 {
 			symbol = 'F'
 		}
-		Abc_Print(1, "%c: Del = %7.2f. Ar = %9.1f. Edge = %8d. Switch = %7.2f. Cuts = %8d. ", symbol, p.RequiredGlo, p.AreaGlo, p.nNets, p.dPower, p.nCutsMerged)
+		Abc_Print(1, "%c:  Del = %7.2f.  Ar = %9.1f.  Edge = %8d.  ", symbol, p.RequiredGlo, p.AreaGlo, p.nNets)
+		if p.dPower != 0 {
+			Abc_Print(1, "Switch = %7.2f.  ", p.dPower)
+		}
+		Abc_Print(1, "Cut = %8d.  ", p.nCutsMerged)
 		Abc_PrintTime(1, "T", Abc_Clock()-started)
 	}
 	return 1

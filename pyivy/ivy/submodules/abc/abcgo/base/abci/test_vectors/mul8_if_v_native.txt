@@ -1,0 +1,13 @@
+K = 6. Memory (bytes): Truth =    0. Cut =   56. Obj =  136. Set =  600. CutMin = no
+Node =     424.  Ch =     0.  Total mem =    0.07 MB. Peak cut mem =    0.01 MB.
+P:  Del =   10.00.  Ar =     150.0.  Edge =      572.  Cut =     8779.  T = sec
+P:  Del =   10.00.  Ar =     147.0.  Edge =      673.  Cut =     6835.  T = sec
+P:  Del =   10.00.  Ar =     157.0.  Edge =      701.  Cut =     8358.  T = sec
+E:  Del =   10.00.  Ar =     157.0.  Edge =      701.  Cut =     8358.  T = sec
+F:  Del =   10.00.  Ar =     133.0.  Edge =      600.  Cut =     5642.  T = sec
+E:  Del =   10.00.  Ar =     133.0.  Edge =      600.  Cut =     5642.  T = sec
+A:  Del =   10.00.  Ar =     130.0.  Edge =      543.  Cut =     5567.  T = sec
+E:  Del =   10.00.  Ar =     129.0.  Edge =      542.  Cut =     5567.  T = sec
+A:  Del =   10.00.  Ar =     129.0.  Edge =      542.  Cut =     5561.  T = sec
+E:  Del =   10.00.  Ar =     129.0.  Edge =      542.  Cut =     5561.  T = sec
+Total time = sec

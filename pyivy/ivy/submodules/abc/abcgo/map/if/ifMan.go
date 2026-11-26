@@ -134,8 +134,16 @@ func If_ManStart(pars *If_Par_t) *If_Man_t {
 		}
 	}
 	if pars.FVerbose != 0 {
-		fmt.Printf("K = %d. Cut record bytes = %d. Object bytes = %d. Set bytes = %d.\n",
-			pars.NLutSize, p.nCutBytes, p.nObjBytes, p.nSetBytes)
+		truth := int32(0)
+		if pars.FTruth != 0 {
+			truth = 8 * int32(p.nTruth6Words[pars.NLutSize])
+		}
+		cutMin := "no"
+		if pars.FCutMin != 0 {
+			cutMin = "yes"
+		}
+		fmt.Printf("K = %d. Memory (bytes): Truth = %4d. Cut = %4d. Obj = %4d. Set = %4d. CutMin = %s\n",
+			pars.NLutSize, truth, ifCCutBytes(p), ifCObjBytes(p), ifCSetBytes(p), cutMin)
 	}
 
 	p.pConst1 = If_ManSetupObj(p)
@@ -440,7 +448,25 @@ func If_ManSetupSetAll(p *If_Man_t, crossCut int32) {
 	p.pFreeList = p.ownedCutSets[0]
 	p.pMemAnd = p.pFreeList
 	if p.pPars.FVerbose != 0 {
-		fmt.Printf("Node = %d. Choice nodes = %d. Cut-set pool = %d.\n",
-			If_ManAndNum(p), p.nChoices, len(p.ownedCutSets))
+		fmt.Printf("Node = %7d.  Ch = %5d.  Total mem = %7.2f MB. Peak cut mem = %7.2f MB.\n",
+			If_ManAndNum(p), p.nChoices,
+			float64(ifCObjBytes(p)+2*8)*float64(If_ManObjNum(p))/(1<<20),
+			float64(ifCSetBytes(p))*float64(crossCut)/(1<<20))
 	}
+}
+
+// The verbose statistics report ABC's record sizes (x86-64 sizeof of
+// If_Cut_t, If_Obj_t and If_Set_t, plus the leaves and permutation words
+// stored after each record), as ifMan.c computes nCutBytes, nObjBytes and
+// nSetBytes; the port's own records are laid out differently.
+const (
+	ifCSizeofCut = 32
+	ifCSizeofObj = 112
+	ifCSizeofSet = 24
+)
+
+func ifCCutBytes(p *If_Man_t) int32 { return ifCSizeofCut + 4*(p.pPars.NLutSize+p.nPermWords) }
+func ifCObjBytes(p *If_Man_t) int32 { return ifCSizeofObj + 4*(p.pPars.NLutSize+p.nPermWords) }
+func ifCSetBytes(p *If_Man_t) int32 {
+	return ifCSizeofSet + (8+ifCCutBytes(p))*(p.pPars.NCutsMax+1)
 }
