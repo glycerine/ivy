@@ -130,15 +130,25 @@ dfflegalize -cell $_DFF_P_ x
 simplemap
 setundef -zero
 aigmap
+insbuf o:*
+techmap -map {buffers}
 write_aiger -map {mapf} {aigf}
+"""
+
+OUTPUT_BUFFERS = r"""module \$_BUF_ (input A, output Y);
+  \$_AND_ _TECHMAP_REPLACE_ (.A(A), .B(A), .Y(Y));
+endmodule
 """
 
 def run_yosys(yosys, cfg, workdir):
     aigf = os.path.join(workdir, cfg.section + ".aig")
     mapf = os.path.join(workdir, cfg.section + ".map")
     logf = os.path.join(workdir, cfg.section + ".yslog")
+    buffers = os.path.join(workdir, 'output_buffers.v')
+    with open(buffers, 'w') as f:
+        f.write(OUTPUT_BUFFERS)
     script = YOSYS_SCRIPT.format(il=cfg.file, top=cfg.top,
-                                 mapf=mapf, aigf=aigf)
+                                 mapf=mapf, aigf=aigf, buffers=buffers)
     scriptf = os.path.join(workdir, cfg.section + ".ys")
     with open(scriptf, 'w') as f:
         f.write(script)
@@ -250,6 +260,25 @@ def parse_design(cfg, aigf, mapf, aigtoaig):
             d.latch_names[idx] = names
             for (name, bit) in names:
                 d.latches[(name, bit)] = lat_defs[idx]
+
+    # Restore public aliases of latches separated by the output buffers.
+    buffers = {}
+    for lhs in sorted(d.ands):
+        left,right = d.ands[lhs]
+        if left == right:
+            buffers[lhs << 1] = buffers.get(left,left)
+    latch_positions = {cur:pos for pos,(cur,_) in enumerate(lat_defs)}
+    for pos,names in outs.items():
+        if not 0 <= pos < len(out_lits):
+            continue
+        lit = out_lits[pos]
+        latch = latch_positions.get(buffers.get(lit,lit))
+        if latch is not None:
+            aliases = d.latch_names.setdefault(latch,[])
+            for name in names:
+                if name not in aliases:
+                    aliases.append(name)
+                    d.latches[name] = lat_defs[latch]
 
     # A latch whose current-state literal is referenced nowhere (no AND gate,
     # no latch next-state, no output) is dead: it influences no cone.  yosys
