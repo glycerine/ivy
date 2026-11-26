@@ -371,7 +371,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 				}
 				if post != nil {
 					pcs := mod.Postconds[actname]
-					checkConjsInStateWithAG(mod, ag, post, 12, pcs, false, usingLiterals)
+					checkConjsInStateWithAG(mod, ag, post, 12, pcs, false, usingLiterals, actname)
 				}
 			}
 		}
@@ -383,7 +383,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			ag := NewAnalysisGraph(mod)
 			state := NewState(mod, getConjs(mod, false))
 			ag.Add(state, nil)
-			checkConjsInStateWithAG(mod, ag, state, 8, nil, true, nil)
+			checkConjsInStateWithAG(mod, ag, state, 8, nil, true, nil, "")
 		}
 	}
 
@@ -777,8 +777,44 @@ func applyGoalTraceHookToFailure(goal *LabeledFormula, err error) (error, interf
 		}
 		return tf, trace
 	}
+	var mc *MCCounterexampleFailure
+	if errors.As(err, &mc) {
+		if decoded, ok := mc.Trace.(*AigerMatchHandler2); ok && decoded.TraceBase != nil {
+			if goal != nil && goal.TraceHook != nil {
+				if hooked := goal.TraceHook(&Trace{TraceBase: decoded.TraceBase}, nil); hooked != nil {
+					decoded.TraceBase = hooked.TraceBase
+				}
+			}
+			return err, decoded
+		}
+	}
 	applyGoalTraceHook(goal)
 	return err, target
+}
+
+func writeSubgoalTrace(cfg *Config, goal *LabeledFormula, failure interface{}) (bool, error) {
+	if cfg.traceFiles == nil {
+		return false, nil
+	}
+	var trace *TraceBase
+	switch target := failure.(type) {
+	case *Trace:
+		trace = target.TraceBase
+	case *AigerMatchHandler2:
+		trace = target.TraceBase
+	}
+	if trace == nil {
+		return false, nil
+	}
+	if cfg.TraceDir != "" {
+		cfg.traceFiles.writeNamed(cfg.TraceDir, lfLabelName(goal), trace)
+		return false, cfg.traceFiles.err
+	}
+	if cfg.TraceOutput != "" {
+		cfg.traceFiles.write(cfg.TraceOutput, trace, false)
+		return cfg.traceFiles.err == nil, cfg.traceFiles.err
+	}
+	return false, nil
 }
 
 func temporalProofModule(mod *Module, goal *LabeledFormula, model Node) *Module {
@@ -937,6 +973,16 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 					mod.Cfg.Failures++
 					fmt.Print("FAIL\n\n") // Python: print("FAIL\n")
 					err, failureTarget := applyGoalTraceHookToFailure(goal, err)
+					wroteSingle, writeErr := writeSubgoalTrace(mod.Cfg, goal, failureTarget)
+					if writeErr != nil {
+						err = writeErr
+					}
+					if wroteSingle {
+						cleanup()
+						wsorts.Exit()
+						ws.Exit()
+						os.Exit(0)
+					}
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
 						fmt.Println(failureTarget)
@@ -1030,6 +1076,16 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 					mod.Cfg.Failures++
 					fmt.Print("FAIL\n\n") // Python: print("FAIL\n")
 					err, failureTarget := applyGoalTraceHookToFailure(goal, err)
+					wroteSingle, writeErr := writeSubgoalTrace(mod.Cfg, goal, failureTarget)
+					if writeErr != nil {
+						err = writeErr
+					}
+					if wroteSingle {
+						cleanup()
+						wsorts.Exit()
+						ws.Exit()
+						os.Exit(0)
+					}
 					// Python: if opt_trace.get(): print(str(foo)); exit(0)
 					if mod.Cfg.OptTrace {
 						fmt.Println(failureTarget)
@@ -1539,10 +1595,10 @@ func sortedUnion(priority, all map[string]bool) []string {
 // CheckConjsInStateWithAG checks conjectures against a state using the
 // analysis graph. This is the full version of CheckConjsInState.
 func CheckConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent int, pcs []*LabeledFormula) bool {
-	return checkConjsInStateWithAG(mod, ag, post, indent, pcs, false, nil)
+	return checkConjsInStateWithAG(mod, ag, post, indent, pcs, false, nil, "")
 }
 
-func checkConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent int, pcs []*LabeledFormula, derived bool, usingLiterals *InsMap[string, Expr]) bool {
+func checkConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent int, pcs []*LabeledFormula, derived bool, usingLiterals *InsMap[string, Expr], action string) bool {
 	conjs := mod.ConjSubgoals
 	if conjs == nil {
 		conjs = mod.LabeledConjs
@@ -1590,7 +1646,9 @@ func checkConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent
 				return false
 			}
 			goal = applyInvariantUsing(goal, mod.InvariantUsing[lfLabelName(c)], usingLiterals)
-			checkers = append(checkers, NewConjChecker(mod, goal, indent))
+			checker := NewConjChecker(mod, goal, indent)
+			checker.Action = action
+			checkers = append(checkers, checker)
 		}
 	}
 

@@ -1592,6 +1592,9 @@ export step
 }
 
 func TestBuildPlanUsesVendoredStaticZ3Only(t *testing.T) {
+	if runtime.GOOS == "darwin" {
+		t.Skip("macOS supports external Z3 installations")
+	}
 	fakeZ3 := t.TempDir()
 	t.Setenv("Z3DIR", fakeZ3)
 	mod := compileIvySource(t, `#lang ivy1.7
@@ -1630,6 +1633,30 @@ export set
 		if strings.HasPrefix(arg, "-Wl,-rpath") && strings.Contains(arg, "z3") {
 			t.Fatalf("build plan should not add z3 runtime search paths: %v", plan.Args)
 		}
+	}
+}
+
+func TestZ3PrefixRequiresPairedHeadersAndLibrary(t *testing.T) {
+	prefix := filepath.Join(t.TempDir(), "Z3 package")
+	include, lib := filepath.Join(prefix, "include"), filepath.Join(prefix, "lib")
+	for _, dir := range []string{include, lib} {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	library := filepath.Join(lib, "libz3.dylib")
+	if err := os.WriteFile(library, nil, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, ok := z3PrefixArgs(prefix); ok {
+		t.Fatal("accepted a Z3 library without its C++ header")
+	}
+	if err := os.WriteFile(filepath.Join(include, "z3++.h"), nil, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	in, link, ok := z3PrefixArgs(prefix)
+	if !ok || !sliceContains(in, "-I"+include) || !sliceContains(link, library) || !sliceContains(link, "-Wl,-rpath,"+lib) {
+		t.Fatalf("Z3 prefix = %v, %v, %v", in, link, ok)
 	}
 }
 

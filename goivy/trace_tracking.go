@@ -39,7 +39,7 @@ func recordTraceTracking(trace *TraceBase) *traceTracking {
 	tracking := &traceTracking{Version: DefaultVersion, Sorts: make(map[string]traceSort)}
 	version := trace.Domain.Cfg.IuCfg.GetStringVersion()
 	fmt.Sscanf(version, "%d.%d", &tracking.Version[0], &tracking.Version[1])
-	var lines []string
+	lines := append([]string(nil), trace.Notes...)
 	var offset int
 	trace.toLines(&lines, nil, 0, trace.HiddenSymbols, false, nil, nil, true,
 		func(state *State, indent int, prefix []string) {

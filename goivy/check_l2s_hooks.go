@@ -98,6 +98,40 @@ func applyRenamingToTrace(trace *Trace, subs map[string]string) *Trace {
 	return trace
 }
 
+func describeRankingFailure(trace *Trace, checkers []Checker, invariants, postconditions []*LabeledFormula) {
+	if trace == nil {
+		return
+	}
+	for _, candidate := range checkers {
+		if candidate == nil || !candidate.Failed() {
+			continue
+		}
+		checker, ok := candidate.(*ConjChecker)
+		if !ok || checker.LF == nil {
+			return
+		}
+		name := lfName(checker.LF)
+		for _, properties := range []struct {
+			kind string
+			list []*LabeledFormula
+		}{{"invariant", invariants}, {"postcondition", postconditions}} {
+			for _, original := range properties.list {
+				if lfName(original) != name {
+					continue
+				}
+				action := ""
+				if checker.Action != "" {
+					action = " executing action " + CanonAct(checker.Action)
+				}
+				trace.Notes = append(trace.Notes, fmt.Sprintf("The %s %s has failed%s.\n\n%s\n\n",
+					properties.kind, name, action, original.Formula))
+				return
+			}
+		}
+		return
+	}
+}
+
 // applyAutoDiagnosticsToTrace dispatches to the auto-failure diagnostic
 // printer based on which checker failed. Mirrors Python ivy_l2s.py:1528-1702
 // auto_hook.

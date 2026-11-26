@@ -3,6 +3,8 @@ package goivy
 import (
 	"encoding/json"
 	"fmt"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -25,6 +27,52 @@ func TestCheckSubgoalsMethodFailureAppliesTraceHook(t *testing.T) {
 	}
 	if !hookCalled {
 		t.Fatal("method subgoal failure did not apply goal.TraceHook before returning the failure")
+	}
+}
+
+func TestCheckSubgoalsArchivesDecodedLivenessLoop(t *testing.T) {
+	mod := New()
+	mod.Cfg.TraceDir = filepath.Join(t.TempDir(), "traces")
+	files, err := openTraceFiles(mod.Cfg.TraceDir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	mod.Cfg.traceFiles = files
+	goal := mod.Cfg.AstCfg.NewLabeledFormula(mod.Cfg.AstCfg.NewAtom("live_goal"), True)
+	goal.TraceHook = func(trace *Trace, _ []Checker) *Trace { return markLoopStart(trace) }
+	decoded := &AigerMatchHandler2{TraceBase: NewTraceBase(mod.Cfg.IuCfg, mod)}
+	decoded.TraceBase.AddTraceState([]Expr{&Eq{T1: NewConst("l2s_saved", Boolean), T2: False}})
+	decoded.TraceBase.AddTraceState([]Expr{&Eq{T1: NewConst("l2s_saved", Boolean), T2: True}})
+	if err := CheckSubgoals([]*LabeledFormula{goal}, func(*Module) error {
+		return &MCCounterexampleFailure{Trace: decoded}
+	}, mod); err == nil {
+		t.Fatal("expected the model-checking failure to remain visible")
+	}
+	var replay strings.Builder
+	path := filepath.Join(mod.Cfg.TraceDir, "live_goal.a2g")
+	if err := ReplayTrace(path, &replay, true, "l2s_saved"); err != nil {
+		t.Fatal(err)
+	}
+	for _, expected := range []string{"repeats infinitely", "l2s_saved = false", "l2s_saved = true"} {
+		if !strings.Contains(replay.String(), expected) {
+			t.Errorf("replay missing %q:\n%s", expected, replay.String())
+		}
+	}
+}
+
+func TestRankingFailureRetainsOriginalFormulaAndAction(t *testing.T) {
+	mod := New()
+	name := mod.Cfg.AstCfg.NewAtom("ranking_condition")
+	original := mod.Cfg.AstCfg.NewLabeledFormula(name, NewConst("original_condition", Boolean))
+	transformed := mod.Cfg.AstCfg.NewLabeledFormula(name, NewConst("l2s_g_0", Boolean))
+	checker := NewConjChecker(mod, transformed, 0)
+	checker.Action = "ext:step"
+	checker.FailedFlag = true
+	trace := NewTraceForModule(mod.Cfg.IuCfg, mod, nil, nil, nil, true)
+	describeRankingFailure(trace, []Checker{checker}, nil, []*LabeledFormula{original})
+	if rendered := trace.String(); !strings.Contains(rendered, "postcondition ranking_condition has failed executing action step") ||
+		!strings.Contains(rendered, "original_condition") {
+		t.Fatalf("missing original proof failure context:\n%s", rendered)
 	}
 }
 

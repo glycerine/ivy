@@ -115,7 +115,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
     # compiled definitions into goal
 
     for defn in tactic_defns:
-        goal = ipr.compile_definition_goal_vocab(defn,goal) 
+        with ivy_compiler.TopContext({}):
+            goal = ipr.compile_definition_goal_vocab(defn,goal)
 
     # compile definition dependcies
 
@@ -529,6 +530,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
         return expr.clone([desugar(a) for a in expr.args])
 
     
+    original_invars = tuple(model.invars) + tuple(invars)
+    original_postconds = tuple(postconds)
     invars = list(map(desugar,invars))
                           
     # Add the invariant phi to the list. TODO: maybe, if it is a G prop
@@ -1099,7 +1102,7 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     goal = ipr.remove_unused_definitions_goal(goal)
 
-    goal.trace_hook = lambda tr,fcs: auto_hook(tasks,triggers,subs,tr,fcs)
+    goal.trace_hook = lambda tr,fcs: auto_hook(tasks,triggers,subs,original_invars,original_postconds,tr,fcs)
     # goal.trace_hook = lambda tr,fcs: renaming_hook(subs,tr,fcs)
 
     # Return the new goal stack
@@ -1125,7 +1128,7 @@ def ls2_g_to_globally(ast):
     res = ilu.expand_named_binders_ast(ast,g2g)
     return ilu.denormalize_temporal(res)
 
-def auto_hook(tasks,triggers,subs,tr,fcs):
+def auto_hook(tasks,triggers,subs,invars,postconds,tr,fcs):
     tr = renaming_hook(subs,tr,fcs)
     tr.pp = ls2_g_to_globally
     # tr.hidden_symbols = temporal_and_l2s
@@ -1156,6 +1159,13 @@ def auto_hook(tasks,triggers,subs,tr,fcs):
     lf = failed_fc.lf
     invar = lf.formula
     name = lf.name
+    for kind, originals in [('invariant',invars),('postcondition',postconds)]:
+        original = next((x for x in originals if x.label is not None and x.name == name),None)
+        if original is not None:
+            action = getattr(failed_fc,'action',None)
+            location = ' executing action ' + action.removeprefix('ext:') if action else ''
+            tr.notes = [f'The {kind} {name} has failed{location}.\n\n{original.formula}\n\n']
+            break
     if name.startswith('l2s_created'):
         sfx = name[len('l2s_created'):]
         print ('\n\nFailed to prove that work_created{} is finite by induction.\n'.format(sfx))

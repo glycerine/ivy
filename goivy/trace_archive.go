@@ -64,13 +64,13 @@ func openTraceFiles(dir string) (*traceFiles, error) {
 	return &traceFiles{written: make(map[string]bool)}, nil
 }
 
-func (files *traceFiles) write(path string, trace *Trace, exclusive bool) {
+func (files *traceFiles) write(path string, trace *TraceBase, exclusive bool) {
 	if files.err != nil {
 		return
 	}
 	archive := traceArchive{
 		Format: traceArchiveFormat, Detailed: trace.format(true), Brief: trace.format(false),
-		Tracking: recordTraceTracking(trace.TraceBase),
+		Tracking: recordTraceTracking(trace),
 	}
 	flags := os.O_WRONLY | os.O_CREATE | os.O_TRUNC
 	if exclusive {
@@ -88,6 +88,23 @@ func (files *traceFiles) write(path string, trace *Trace, exclusive bool) {
 		return
 	}
 	fmt.Printf("        wrote counterexample to %s (view with \"goivy_check replay %s\")\n", path, path)
+}
+
+func traceArchiveName(name string) string {
+	name = strings.NewReplacer("/", "_", "\\", "_").Replace(name)
+	if name == "" {
+		return "trace"
+	}
+	return name
+}
+
+func (files *traceFiles) writeNamed(dir, name string, trace *TraceBase) {
+	name = traceArchiveName(name)
+	if files.written[name] {
+		return
+	}
+	files.write(filepath.Join(dir, name+".a2g"), trace, true)
+	files.written[name] = files.err == nil
 }
 
 func traceEachFailure(mod *Module, history *History, clauses *Clauses, checkers []Checker) {
@@ -108,14 +125,12 @@ func traceEachFailure(mod *Module, history *History, clauses *Clauses, checkers 
 		} else if base, ok := checker.(*BaseChecker); ok && base.TraceName != "" {
 			name = base.TraceName
 		}
-		name = strings.NewReplacer("/", "_", "\\", "_").Replace(name)
-		if files.written[name] {
+		if files.written[traceArchiveName(name)] {
 			continue
 		}
 		failed := []Checker{checker}
 		trace := buildCheckTrace(mod, history, clauses, failed, failed, solver, model)
-		files.write(filepath.Join(mod.Cfg.TraceDir, name+".a2g"), trace, true)
-		files.written[name] = files.err == nil
+		files.writeNamed(mod.Cfg.TraceDir, name, trace.TraceBase)
 	}
 }
 

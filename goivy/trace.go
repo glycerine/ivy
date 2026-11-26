@@ -43,6 +43,7 @@ type TraceBase struct {
 	Renaming      map[string]string
 	PP            func(Expr) Expr
 	IsFullTrace   bool
+	Notes         []string
 }
 
 // NewTraceBase creates a new empty TraceBase.
@@ -524,7 +525,7 @@ func (tb *TraceBase) String() string {
 }
 
 func (tb *TraceBase) format(detailed bool) string {
-	var lines []string
+	lines := append([]string(nil), tb.Notes...)
 	hash := make(map[string]string)
 	tb.toLines(&lines, hash, 0, tb.HiddenSymbols, false, nil, nil, detailed, nil)
 	return strings.Join(lines, "")

@@ -182,7 +182,8 @@ def l2s_tactic_int(prover,goals,proof,tactic_name):
 
     for idx, defn in enumerate(tactic_defns):
         if __debug__: xtracer.trace("l2s.l2sTacticInt compileDefn[%d] type=%s" % (idx, type(defn).__name__))
-        goal = ipr.compile_definition_goal_vocab(defn,goal)
+        with ivy_compiler.TopContext({}):
+            goal = ipr.compile_definition_goal_vocab(defn,goal)
 
     # compile definition dependcies
 

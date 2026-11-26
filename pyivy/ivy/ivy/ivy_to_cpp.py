@@ -23,6 +23,10 @@ from . import ivy_fragment as ifc
 import sys
 import os
 import platform
+import importlib.util
+import shlex
+import shutil
+import subprocess
 
 from collections import defaultdict
 from operator import mul
@@ -1255,18 +1259,44 @@ def expand_field_references(pre_clauses):
     dfs = [df for df in dfs if df.args[0] != df.args[1]]
     return ilu.Clauses(list(map(recur,pre_clauses.fmlas)),dfs)
 
+def find_openssl():
+    def valid(path):
+        return path and os.path.isfile(os.path.join(path, 'include', 'openssl', 'ssl.h')) and any(
+            os.path.isfile(os.path.join(path, 'lib', lib)) for lib in ('libssl.dylib', 'libssl.a', 'libssl.so'))
+
+    for path in (os.environ.get('OPENSSL_ROOT_DIR'), os.environ.get('OPENSSL_PREFIX')):
+        if valid(path):
+            return path
+    brew = shutil.which('brew')
+    if brew:
+        for package in ('openssl@3', 'openssl@1.1', 'openssl'):
+            result = subprocess.run([brew, '--prefix', package], capture_output=True, text=True)
+            path = result.stdout.strip()
+            if result.returncode == 0 and valid(path):
+                return path
+    for path in ('/opt/local', '/opt/homebrew/opt/openssl@3', '/usr/local/opt/openssl@3',
+                 '/usr/local/opt/openssl', '/opt/homebrew', '/usr/local'):
+        if valid(path):
+            return path
+
 def get_lib_dirs(with_z3=True):
-    import platform
-    def file_dir_path(x):
-        return os.path.dirname(os.path.abspath(x))
-    files = [__file__]
-#    if sys.version_info[0] >= 3 and with_z3:
-#        files.append(z3.__file__)
-    dirs = [file_dir_path(x) for x in files]
+    dirs = [os.path.dirname(os.path.abspath(__file__))]
+    explicit = os.environ.get('Z3DIR') if with_z3 else None
     if platform.system() == 'Darwin':
-        dirs.append('/usr/local/opt/openssl')  # work around Mac openssl bug
-    if with_z3 and 'Z3DIR' in os.environ:
-        dirs.append('$Z3DIR')
+        if with_z3:
+            package = importlib.util.find_spec('z3')
+            if package and package.origin:
+                root = os.path.dirname(os.path.abspath(package.origin))
+                if os.path.isfile(os.path.join(root, 'include', 'z3++.h')) and any(
+                    os.path.isfile(os.path.join(root, 'lib', lib)) for lib in ('libz3.dylib', 'libz3.a')):
+                    dirs.insert(0, root)
+        if explicit:
+            dirs.insert(0, explicit)
+        openssl = find_openssl()
+        if openssl:
+            dirs.append(openssl)
+    elif explicit:
+        dirs.append(explicit)
     return dirs
 
 def get_support_include_dir():
@@ -4994,7 +5024,12 @@ def main_int(is_ivyc):
                     else:
                         support_path = '-I {}'.format(get_support_include_dir())
                         if target.get() in ['gen','test']:
-                            paths = support_path + ' ' + ' '.join('-I {} -L {} -Xlinker -rpath -Xlinker {}'.format(os.path.join(_dir,'include'),os.path.join(_dir,'lib'),os.path.join(_dir,'lib')) for _dir in get_lib_dirs())
+                            paths = support_path + ' ' + ' '.join(
+                                '-I {} -L {} -Xlinker -rpath -Xlinker {}'.format(
+                                    shlex.quote(os.path.join(directory,'include')),
+                                    shlex.quote(os.path.join(directory,'lib')),
+                                    shlex.quote(os.path.join(directory,'lib')))
+                                for directory in get_lib_dirs())
                         else:
                             paths = support_path
                         for lib in libs:

@@ -472,6 +472,8 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 	}
 
 	// --- Model pass helper (ranking version: also transforms postconds) ---
+	originalInvariants := append([]*LabeledFormula(nil), model.Invars...)
+	originalPostconditions := append([]*LabeledFormula(nil), postconds...)
 	// Use Clone (not NewLabeledFormula) to preserve LF id + metadata,
 	// matching Python ivy_ranking.py:526-527 where each `transform(x)` ends
 	// up calling `LF.clone(args)` via the recursive `ast.clone` dispatch.
@@ -687,6 +689,7 @@ func RankingL2STactic(cfg *L2STacticConfig) ([]*LabeledFormula, error) {
 				if subs != nil {
 					trace = applyRenamingToTrace(trace, subs)
 				}
+				describeRankingFailure(trace, fcs, originalInvariants, originalPostconditions)
 				return applyAutoDiagnosticsToTrace(trace, fcs, tasks, triggers, rsubs, fullSubs)
 			})
 		}

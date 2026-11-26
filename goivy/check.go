@@ -128,6 +128,7 @@ type ConjChecker struct {
 	BaseChecker
 	LF     *LabeledFormula
 	Indent int
+	Action string
 }
 
 // NewConjChecker creates a ConjChecker for the given labeled formula.
@@ -518,7 +519,7 @@ func checkFcsTracePath(mod *Module, ag *AnalysisGraph, post *State,
 
 		handler := buildCheckTrace(mod, history, clauses, failed, ffcs, modelSlv, model)
 		if mod.Cfg.TraceOutput != "" {
-			mod.Cfg.traceFiles.write(mod.Cfg.TraceOutput, handler, false)
+			mod.Cfg.traceFiles.write(mod.Cfg.TraceOutput, handler.TraceBase, false)
 			if mod.Cfg.traceFiles.err == nil {
 				os.Exit(0)
 			}

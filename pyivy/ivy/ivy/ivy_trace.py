@@ -234,7 +234,7 @@ class TraceBase(art.AnalysisGraph):
                     lines.append(indent * '    ' + ']\n')
         
     def __str__(self):
-        lines = []
+        lines = list(getattr(self,'notes',()))
         hash = dict()
         missing = {}
         self.to_lines(lines,hash,0,self.hidden_symbols or show_all_symbols,terms=tracked_terms(),missing=missing)
@@ -242,6 +242,16 @@ class TraceBase(art.AnalysisGraph):
             if error is not None:
                 raise error
         return ''.join(lines)
+
+    def pickle(self,file):
+        hook = getattr(self.domain,'trace_hook',None)
+        if hook is not None:
+            self.domain.trace_hook = None
+        try:
+            super().pickle(file)
+        finally:
+            if hook is not None:
+                self.domain.trace_hook = hook
 
                 
 
@@ -313,16 +323,6 @@ class Trace(TraceBase):
         state = self.__dict__.copy()
         state['model'] = None
         return state
-
-    def pickle(self,file):
-        hook = getattr(self.domain,'trace_hook',None)
-        if hook is not None:
-            self.domain.trace_hook = None
-        try:
-            super().pickle(file)
-        finally:
-            if hook is not None:
-                self.domain.trace_hook = hook
 
     def get_universes(self):
         return self.model.universes(numerals=True)

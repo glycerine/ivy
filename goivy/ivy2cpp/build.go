@@ -114,6 +114,14 @@ func BuildPlanFor(out *Output, outDir string, cfg Config) (*BuildPlan, error) {
 		args = append(args, includeArgs...)
 		linkArgs = z3LinkArgs
 	}
+	if runtime.GOOS == "darwin" && (strings.Contains(out.Header, "openssl/") ||
+		strings.Contains(out.Impl, "openssl/") || strings.Contains(strings.Join(linkLibSpecArgs(out), " "), "-lssl")) {
+		if prefix := macOpenSSLPrefix(); prefix != "" {
+			args = append(args, "-I"+filepath.Join(prefix, "include"))
+			lib := filepath.Join(prefix, "lib")
+			linkArgs = append(linkArgs, "-L"+lib, "-Wl,-rpath,"+lib)
+		}
+	}
 	args = append(args, includeLibSpecArgs(out)...)
 	args = append(args, cppPath)
 	if compileOnly {
@@ -309,6 +317,22 @@ func outputUsesWideBV(out *Output) bool {
 }
 
 func z3BuildArgs() ([]string, []string, error) {
+	if runtime.GOOS == "darwin" {
+		if include, link, ok := z3PrefixArgs(os.Getenv("Z3DIR")); ok {
+			return include, link, nil
+		}
+		code := "import importlib.util, pathlib; s = importlib.util.find_spec('z3'); print(pathlib.Path(s.origin).resolve().parent if s and s.origin else '')"
+		if result, err := exec.Command("python3", "-c", code).Output(); err == nil {
+			if include, link, ok := z3PrefixArgs(strings.TrimSpace(string(result))); ok {
+				return include, link, nil
+			}
+		}
+		if result, err := exec.Command("brew", "--prefix", "z3").Output(); err == nil {
+			if include, link, ok := z3PrefixArgs(strings.TrimSpace(string(result))); ok {
+				return include, link, nil
+			}
+		}
+	}
 	goivyRoot, err := packageGoivyRoot()
 	if err != nil {
 		return nil, nil, err
@@ -335,6 +359,62 @@ func z3BuildArgs() ([]string, []string, error) {
 		linkArgs = append(linkArgs, "-lm", "-lgomp")
 	}
 	return includeArgs, linkArgs, nil
+}
+
+func z3PrefixArgs(prefix string) ([]string, []string, bool) {
+	if prefix == "" {
+		return nil, nil, false
+	}
+	include := filepath.Join(prefix, "include")
+	if _, err := os.Stat(filepath.Join(include, "z3++.h")); err != nil {
+		return nil, nil, false
+	}
+	lib := filepath.Join(prefix, "lib")
+	for _, name := range []string{"libz3.dylib", "libz3.a"} {
+		library := filepath.Join(lib, name)
+		if _, err := os.Stat(library); err == nil {
+			return []string{"-I" + include}, []string{library, "-Wl,-rpath," + lib}, true
+		}
+	}
+	return nil, nil, false
+}
+
+func macOpenSSLPrefix() string {
+	valid := func(prefix string) bool {
+		if prefix == "" {
+			return false
+		}
+		if _, err := os.Stat(filepath.Join(prefix, "include", "openssl", "ssl.h")); err != nil {
+			return false
+		}
+		for _, name := range []string{"libssl.dylib", "libssl.a", "libssl.so"} {
+			if _, err := os.Stat(filepath.Join(prefix, "lib", name)); err == nil {
+				return true
+			}
+		}
+		return false
+	}
+	for _, prefix := range []string{os.Getenv("OPENSSL_ROOT_DIR"), os.Getenv("OPENSSL_PREFIX")} {
+		if valid(prefix) {
+			return prefix
+		}
+	}
+	if brew, err := exec.LookPath("brew"); err == nil {
+		for _, pkg := range []string{"openssl@3", "openssl@1.1", "openssl"} {
+			if result, err := exec.Command(brew, "--prefix", pkg).Output(); err == nil {
+				if prefix := strings.TrimSpace(string(result)); valid(prefix) {
+					return prefix
+				}
+			}
+		}
+	}
+	for _, prefix := range []string{"/opt/local", "/opt/homebrew/opt/openssl@3", "/usr/local/opt/openssl@3",
+		"/usr/local/opt/openssl", "/opt/homebrew", "/usr/local"} {
+		if valid(prefix) {
+			return prefix
+		}
+	}
+	return ""
 }
 
 func existingIncludeDirs(candidates []string) []string {

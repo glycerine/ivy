@@ -280,9 +280,10 @@ def pretty_lf(lf,indent=8):
     return indent*' ' + "{}{}".format(pretty_lineno(lf),pretty_label(lf.label))
     
 class ConjChecker(Checker):
-    def __init__(self,lf,indent=8):
+    def __init__(self,lf,indent=8,action=None):
         self.lf = lf
         self.indent = indent
+        self.action = action
         Checker.__init__(self,lf.formula)
     def start(self):
         print(pretty_lf(self.lf,self.indent), end=' ')
@@ -531,7 +532,7 @@ def get_gated_conjs(mod):
         formulas.append(formula)
     return lut.Clauses(formulas,annot=act.EmptyAnnotation()),literals
 
-def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False,using_literals=None):
+def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False,using_literals=None,action=None):
     conjs = mod.conj_subgoals if mod.conj_subgoals is not None else mod.labeled_conjs
     conjs = [x for x in conjs if x.derived == derived and is_check_mod_unprovable(x)]
     conjs += convert_postconds(post,pcs)
@@ -544,7 +545,7 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False,using_literal
         lcs = conjs
     lcs = [c for c in lcs if act.check_name_selected(c.name if c.label is not None else None)]
     if not mod.invardeps and not using_literals:
-        return check_fcs_in_state(mod,ag,post,[ConjChecker(c,indent) for c in lcs])
+        return check_fcs_in_state(mod,ag,post,[ConjChecker(c,indent,action) for c in lcs])
     available = {c.name:c for c in mod.assumed_invariants + mod.labeled_conjs if c.label is not None}
     checkers = []
     for c in lcs:
@@ -568,7 +569,7 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False,using_literal
                 selected = [lit for name,lit in using_literals.items() if matches(name)]
             if selected:
                 c = c.clone([c.label,lg.Implies(lg.And(*selected),c.formula)])
-        checkers.append(ConjChecker(c,indent))
+        checkers.append(ConjChecker(c,indent,action))
     return check_fcs_in_state(mod,ag,post,checkers)
 
 def check_safety_in_state(mod,ag,post,report_pass=True,name='trace'):
@@ -824,7 +825,7 @@ def check_isolate(trace_hook = None):
                     with itp.EvalContext(check=False): # don't check safety
     #                    post = ag.execute(action, pre, None, actname)
                         post = ag.execute(action, pre)
-                    check_conjs_in_state(mod,ag,post,indent=12,pcs=mod.postconds.get(actname,[]),using_literals=using_literals)
+                    check_conjs_in_state(mod,ag,post,indent=12,pcs=mod.postconds.get(actname,[]),using_literals=using_literals,action=actname)
                 else:
                     print('')
 
@@ -1017,7 +1018,16 @@ def check_subgoals(goals,method=None):
                                 failures += 1
                                 print("FAIL\n")
                                 if hasattr(goal,"trace_hook"):
-                                    foo = goal.trace_hook(foo)
+                                    foo = goal.trace_hook(foo,[])
+                                if opt_trace_dir.get():
+                                    name = goal.name if goal.label is not None else 'trace'
+                                    name = name.replace('/','_').replace('\\','_')
+                                    if name not in written_trace_names:
+                                        write_trace(os.path.join(opt_trace_dir.get(),name+'.a2g'),foo,True)
+                                        written_trace_names.add(name)
+                                elif opt_out.get():
+                                    write_trace(opt_out.get(),foo)
+                                    exit(0)
                                 if opt_trace.get():
                                     print(str(foo))
                                     exit(0)
