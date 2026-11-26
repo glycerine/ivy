@@ -1,6 +1,7 @@
 package aig
 
 import (
+	"fmt"
 	"slices"
 	"sort"
 )
@@ -255,6 +256,7 @@ func Aig_ManDupCof(src *Graph, index, value int32) *Graph {
 	dst := NewGraph()
 	defer dst.updateTrueTerminalCounts()
 	dupMetadata(dst, src)
+	dupChoiceTables(dst, src)
 	src.copies = map[int]Edge{0: 0}
 	for i, e := range src.inputs {
 		if i == int(index) {
@@ -316,11 +318,26 @@ func Aig_ManDupDfs_rec(dst, src *Graph, e Edge) Edge {
 func Aig_ManDupDfs(src *Graph) *Graph {
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
+	dupChoiceTables(dst, src)
 	dupOutputs(dst, src, src.outputs, true, false)
-	if len(src.equivs) == 0 && len(src.reprs) == 0 {
-		Aig_ManCleanup(dst)
+	// Like ABC, only a graph without choice tables is cleaned up.
+	if src.equivs == nil && src.reprs == nil {
+		if removed := Aig_ManCleanup(dst); removed != 0 {
+			fmt.Printf("Aig_ManDupDfs(): Cleanup after AIG duplication removed %d nodes.\n", removed)
+		}
 	}
 	return dst
+}
+
+// dupChoiceTables allocates the destination's choice tables when the
+// source has them, as ABC's duplicators allocate pEquivs and pReprs.
+func dupChoiceTables(dst, src *Graph) {
+	if src.equivs != nil && dst.equivs == nil {
+		dst.equivs = map[int]Edge{}
+	}
+	if src.reprs != nil && dst.reprs == nil {
+		dst.reprs = map[int]Edge{}
+	}
 }
 
 // PIO describes a logical terminal even when outputs are stored as driver edges.
@@ -432,6 +449,7 @@ func Aig_ManDupDfsGuided(src *Graph, order []PIO) *Graph {
 func Aig_ManDupLevelized(src *Graph) *Graph {
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
+	dupChoiceTables(dst, src)
 	var nodes []int
 	for id, n := range src.nodes {
 		if !src.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {

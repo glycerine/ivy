@@ -114,6 +114,7 @@ func DeriveChoiceAig(source *aig.Graph, skipRedundantSupport bool) (*aig.Graph, 
 	}
 	result := aig.NewGraph()
 	aig.Aig_ManReprStart(result, int32(source.NodeCount()))
+	aig.Aig_ManStartEquivs(result) // Dch_DeriveChoiceAig always allocates pEquivs
 	copies := map[int]aig.Edge{0: result.Const1()}
 	for _, input := range source.Inputs() {
 		copies[input.NodeID()] = result.NewInput()

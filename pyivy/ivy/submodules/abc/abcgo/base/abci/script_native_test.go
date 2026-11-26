@@ -108,3 +108,14 @@ func TestGiaMfsMappingMatchesNative(t *testing.T) {
 	}
 	runScript(t, "read test_vectors/bench/sort16.aig; &get; &if -K 6; &mfs; &put; print_stats")
 }
+
+// Native: abc -c "read add32.aig; dch; print_stats". With no choices found,
+// Go used to fail the command because the choice AIG had no equivalence
+// table (Dch_DeriveChoiceAig always allocates pEquivs).
+func TestDchWithoutChoicesMatchesNative(t *testing.T) {
+	const script = "read test_vectors/bench/add32.aig; dch; print_stats"
+	if out := runScript(t, script); strings.Contains(out, "Command has failed") {
+		t.Fatalf("dch failed:\n%s", out)
+	}
+	expectStats(t, script, "and =    220  lev = 64")
+}

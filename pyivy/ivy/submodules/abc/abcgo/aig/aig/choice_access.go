@@ -8,3 +8,11 @@ func Aig_ManHasEquivs(g *Graph) int32 {
 	}
 	return 1
 }
+
+// Aig_ManStartEquivs allocates the choice table (pEquivs), so a graph built
+// for choices has one even when it ends up with no choices.
+func Aig_ManStartEquivs(g *Graph) {
+	if g.equivs == nil {
+		g.equivs = make(map[int]Edge)
+	}
+}
