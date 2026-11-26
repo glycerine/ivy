@@ -450,11 +450,11 @@ func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, 
 		abc.Abc_ObjAddFanin(node, Abc_NodeFromIf_rec(pNtkNew, pIfMan, leaf, vCover))
 	}
 	abc.Abc_ObjSetLevel(node, abc.Abc_ObjLevelNew(node))
-	truthWords := kit.Kit_TruthWordNum(n)
-	truth := unsafe.Slice(ifpkg.If_CutTruth(pIfMan, cut), int(truthWords))
 	params := pars
 	var function any
 	if params.TruthMode() {
+		// Like the C, read the cut's truth table only when truths are computed.
+		truth := unsafe.Slice(ifpkg.If_CutTruth(pIfMan, cut), int(kit.Kit_TruthWordNum(n)))
 		if params.DelayOptimization() || params.DsdBalance() {
 			mode := int32(0)
 			if params.DsdBalance() {
