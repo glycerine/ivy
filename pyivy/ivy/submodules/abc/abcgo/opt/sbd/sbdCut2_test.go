@@ -16,12 +16,12 @@ func TestCutServerDelayImprovementAndExpansion(t *testing.T) {
 	graph.AddOutput(root)
 	network := NewNetwork(graph)
 	network.deriveLevels()
-	mirrors := vec.Vec_IntStartFull(len(graph.Nodes()))
+	mirrors := vec.Vec_IntStartFull(graph.NodeSlots())
 	levels := vec.Vec_IntAlloc(len(network.Levels))
 	for _, level := range network.Levels {
 		vec.Vec_IntPush(levels, level)
 	}
-	refs := vec.Vec_IntStart(len(graph.Nodes()))
+	refs := vec.Vec_IntStart(graph.NodeSlots())
 	server := Sbd_ManCutServerStart(network, mirrors, levels, levels, refs, 2, 4, 100, 0)
 	defer Sbd_ManCutServerStop(server)
 	out := make([]int32, 10)
@@ -55,7 +55,7 @@ func TestCutTopologyRejectsMissingBoundary(t *testing.T) {
 	root := graph.AND(a, b)
 	graph.AddOutput(root)
 	network := NewNetwork(graph)
-	mirrors := vec.Vec_IntStartFull(len(graph.Nodes()))
+	mirrors := vec.Vec_IntStartFull(graph.NodeSlots())
 	cut := vec.Vec_IntAlloc(1)
 	vec.Vec_IntPush(cut, int32(a.NodeID()))
 	defer func() {
@@ -73,9 +73,9 @@ func TestCutCollectionResolvesMirrors(t *testing.T) {
 	graph.AddOutput(root)
 	network := NewNetwork(graph)
 	network.deriveLevels()
-	mirrors := vec.Vec_IntStartFull(len(graph.Nodes()))
+	mirrors := vec.Vec_IntStartFull(graph.NodeSlots())
 	vec.Vec_IntWriteEntry(mirrors, x.NodeID(), sourceLiteral(a.Not()))
-	levels := vec.Vec_IntStart(len(graph.Nodes()))
+	levels := vec.Vec_IntStart(graph.NodeSlots())
 	cut := vec.Vec_IntAlloc(4)
 	if Sbd_ManCutCollect_rec(network, mirrors, int32(root.NodeID()), -1, levels, cut) != 0 {
 		t.Fatal("below-PI level should fail")

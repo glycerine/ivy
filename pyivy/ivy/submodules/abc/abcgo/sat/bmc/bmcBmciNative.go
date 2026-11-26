@@ -127,7 +127,7 @@ func initialAIGEdge(graph *aig.Graph, value int32) aig.Edge {
 func cloneSequentialFrame(dst, src *aig.Graph, primaryInputs, state []aig.Edge, pis, regs int) ([]aig.Edge, []aig.Edge) {
 	inputs := src.Inputs()
 	outputs := src.Outputs()
-	mapEdges := make([]aig.Edge, len(src.Nodes()))
+	mapEdges := make([]aig.Edge, src.NodeSlots())
 	for i, in := range inputs {
 		if i < pis {
 			mapEdges[in.NodeID()] = primaryInputs[i]

@@ -12,7 +12,7 @@ type strSimWords struct {
 }
 
 func newStrSimWords(g *aig.Graph) *strSimWords {
-	s := &strSimWords{graph: g, words: make([][SAIG_WORDS]uint32, len(g.Nodes()))}
+	s := &strSimWords{graph: g, words: make([][SAIG_WORDS]uint32, g.NodeSlots())}
 	for i := range s.words[0] {
 		s.words[0][i] = ^uint32(0)
 	}

@@ -74,7 +74,7 @@ func Aig_Gla1ManStart(src *aig.Graph, oldClasses *vec.Vec_Int_t, naiveCNF int32)
 	if src == nil {
 		return nil
 	}
-	included := make([]int32, len(src.Nodes()))
+	included := make([]int32, src.NodeSlots())
 	if oldClasses != nil {
 		limit := min(len(included), vec.Vec_IntSize(oldClasses))
 		for i := 0; i < limit; i++ {
@@ -103,8 +103,8 @@ func Aig_Gla1CollectAbstr(manager *Aig_Gla1Man_t) {
 	if manager == nil || manager.pAig == nil {
 		return
 	}
-	if len(manager.vIncluded) < len(manager.pAig.Nodes()) {
-		manager.vIncluded = append(manager.vIncluded, make([]int32, len(manager.pAig.Nodes())-len(manager.vIncluded))...)
+	if len(manager.vIncluded) < manager.pAig.NodeSlots() {
+		manager.vIncluded = append(manager.vIncluded, make([]int32, manager.pAig.NodeSlots()-len(manager.vIncluded))...)
 	}
 	manager.vPis, manager.vPPis, manager.vFlops, manager.vNodes = nil, nil, nil, nil
 	for id, assigned := range manager.assigned {
@@ -195,9 +195,9 @@ func Aig_Gla1FetchVecId(manager *Aig_Gla1Man_t, object aig.Edge) int32 {
 		return -1
 	}
 	if manager.objToVec == nil {
-		manager.objToVec = make([]int32, len(manager.pAig.Nodes()))
-		manager.assigned = make([]bool, len(manager.pAig.Nodes()))
-		manager.addedFrame = make([][]bool, len(manager.pAig.Nodes()))
+		manager.objToVec = make([]int32, manager.pAig.NodeSlots())
+		manager.assigned = make([]bool, manager.pAig.NodeSlots())
+		manager.addedFrame = make([][]bool, manager.pAig.NodeSlots())
 	}
 	id := object.NodeID()
 	if manager.objToVec[id] == 0 {
@@ -253,7 +253,7 @@ func Aig_Gla1ObjAddToSolver(manager *Aig_Gla1Man_t, object aig.Edge, frame int32
 	}
 	manager.addedFrame[id][frame] = true
 	var node aig.Node
-	if object.NodeID() < len(manager.pAig.Nodes()) {
+	if object.NodeID() < manager.pAig.NodeSlots() {
 		node = manager.pAig.Node(object)
 	}
 	variable := Aig_Gla1FetchVar(manager, object, frame)
@@ -300,7 +300,7 @@ func Aig_Gla1CollectAssigned(manager *Aig_Gla1Man_t, classes *vec.Vec_Int_t) {
 		return
 	}
 	for id := 0; id < vec.Vec_IntSize(classes); id++ {
-		if vec.Vec_IntEntry(classes, id) == 0 || id >= len(manager.pAig.Nodes()) {
+		if vec.Vec_IntEntry(classes, id) == 0 || id >= manager.pAig.NodeSlots() {
 			continue
 		}
 		object := aig.Edge(id) << 1

@@ -21,7 +21,7 @@ func TestMiterCopyMappingsPreservePhase(t *testing.T) {
 	a, edgeA := makeGraph(false)
 	b, edgeB := makeGraph(true)
 	m, ca, cb := Saig_ManCreateMiterWithCopies(a, b, 0)
-	if len(ca) != len(a.Nodes()) || len(cb) != len(b.Nodes()) {
+	if len(ca) != a.NodeSlots() || len(cb) != b.NodeSlots() {
 		t.Fatal("mapping dimensions")
 	}
 	for _, tc := range []struct {

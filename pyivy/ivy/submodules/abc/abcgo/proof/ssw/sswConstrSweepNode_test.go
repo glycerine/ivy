@@ -18,7 +18,7 @@ func TestConstrainedSweepProvesAndMerges(t *testing.T) {
 	}
 	sat := Ssw_SatStart(0)
 	sat.pAig = frames
-	p := &Ssw_Man_t{pAig: source, pFrames: frames, pPars: &Ssw_Pars_t{}, pMSat: sat, iOutputLit: -1, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(source.Nodes()))}
+	p := &Ssw_Man_t{pAig: source, pFrames: frames, pPars: &Ssw_Pars_t{}, pMSat: sat, iOutputLit: -1, nFrames: 1, pNodeToFrames: make([]aig.Edge, source.NodeSlots())}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}

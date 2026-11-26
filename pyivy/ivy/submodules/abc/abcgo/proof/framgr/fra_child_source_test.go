@@ -10,7 +10,7 @@ func TestSourceMappedChildRejectsComplementedParent(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	n := g.AND(a, b)
-	m := &Fra_Man_t{PManAig: g, NFramesAll: 1, PMemFraig: make([]aig.Edge, len(g.Nodes()))}
+	m := &Fra_Man_t{PManAig: g, NFramesAll: 1, PMemFraig: make([]aig.Edge, g.NodeSlots())}
 	for _, get := range []struct {
 		name string
 		fn   func(*Fra_Man_t, aig.Edge, int32) aig.Edge

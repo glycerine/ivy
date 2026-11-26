@@ -18,7 +18,7 @@ func TestSimulationAgainstAllPackedAssignments(t *testing.T) {
 	network.SimWords = 3
 	for round := 0; round < 3; round++ {
 		mapping := Sbd_GiaSimRound(network, 0)
-		if vec.Vec_IntSize(mapping) != len(graph.Nodes()) {
+		if vec.Vec_IntSize(mapping) != graph.NodeSlots() {
 			t.Fatal("class map size")
 		}
 		for pattern := 0; pattern < 192; pattern++ {

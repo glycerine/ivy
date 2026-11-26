@@ -7,7 +7,7 @@ import (
 )
 
 func evaluateStep(p *aig.Graph, state, inputs []bool) ([]bool, []bool) {
-	values := make([]bool, len(p.Nodes()))
+	values := make([]bool, p.NodeSlots())
 	values[0] = true
 	for i, e := range p.Inputs() {
 		if i < trueInputs(p) {

@@ -13,8 +13,8 @@ func simpleAndWindow() (*Network, *vec.Vec_Int_t, *vec.Vec_Int_t, *vec.Vec_Int_t
 	pivot := graph.AND(a, b)
 	graph.AddOutput(pivot)
 	network := NewNetwork(graph)
-	mirrors := vec.Vec_IntStartFull(len(graph.Nodes()))
-	mapping := vec.Vec_IntStartFull(len(graph.Nodes()))
+	mirrors := vec.Vec_IntStartFull(graph.NodeSlots())
+	mapping := vec.Vec_IntStartFull(graph.NodeSlots())
 	window := sbdVector(0, int32(a.NodeID()), int32(b.NodeID()), int32(pivot.NodeID()))
 	for i, id := range vec.Vec_IntArray(window) {
 		vec.Vec_IntWriteEntry(mapping, int(id), int32(i))
@@ -53,9 +53,9 @@ func TestWindowObservabilityAndQbfReplacement(t *testing.T) {
 	root := graph.AND(pivot, c)
 	graph.AddOutput(root)
 	network := NewNetwork(graph)
-	mirrors := vec.Vec_IntStartFull(len(graph.Nodes()))
+	mirrors := vec.Vec_IntStartFull(graph.NodeSlots())
 	window := sbdVector(0, int32(a.NodeID()), int32(b.NodeID()), int32(c.NodeID()), int32(pivot.NodeID()), int32(root.NodeID()))
-	mapping := vec.Vec_IntStartFull(len(graph.Nodes()))
+	mapping := vec.Vec_IntStartFull(graph.NodeSlots())
 	for i, id := range vec.Vec_IntArray(window) {
 		vec.Vec_IntWriteEntry(mapping, int(id), int32(i))
 	}

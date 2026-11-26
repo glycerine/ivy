@@ -439,7 +439,7 @@ func Sbd_StoAlloc(network *Network, mirrors *vec.Vec_Int_t, lutSize, cutSize, cu
 	if lutSize < 1 || lutSize > cutSize || cutSize < 2 || cutSize > 10 || cutNum < 2 || cutNum >= 501 {
 		panic("invalid SBD cut dimensions")
 	}
-	count := len(network.Graph.Nodes())
+	count := network.Graph.NodeSlots()
 	p := &Sbd_Sto_t{pGia: network, vMirrors: mirrors, nLutSize: lutSize, nCutSize: cutSize, nCutNum: cutNum, fCutMin: minimize, fVerbose: verbose, vDelays: vec.Vec_IntStart(count), vLevels: vec.Vec_IntStart(count), vRefs: vec.Vec_IntAlloc(count), cuts: make([][]Sbd_Cut_t, count), truthIndex: map[string]int32{}}
 	words := 1
 	if cutSize > 6 {

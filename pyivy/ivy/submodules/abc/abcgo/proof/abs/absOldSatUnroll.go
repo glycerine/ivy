@@ -31,7 +31,7 @@ func oldUnrollWithCex(g *aig.Graph, cex *util.Abc_Cex_t, nInputs int32, mapping 
 		loToLi[saig.Saig_ManLo(g, i).NodeID()] = saig.Saig_ManLi(g, i)
 	}
 	for frame := nFrames - 1; frame >= 0; frame-- {
-		seen := make([]bool, len(g.Nodes()))
+		seen := make([]bool, g.NodeSlots())
 		var visit func(aig.Edge)
 		visit = func(e aig.Edge) {
 			e = aig.Aig_Regular(e)
@@ -65,7 +65,7 @@ func oldUnrollWithCex(g *aig.Graph, cex *util.Abc_Cex_t, nInputs int32, mapping 
 	result.Name = g.Name
 	result.Spec = g.Spec
 	*mapping = vec.Vec_IntAlloc(1000)
-	copies := make([]aig.Edge, len(g.Nodes()))
+	copies := make([]aig.Edge, g.NodeSlots())
 	copies[g.Const1().NodeID()] = result.Const1()
 	for i := int32(0); i < regCount; i++ {
 		v := result.Const0()

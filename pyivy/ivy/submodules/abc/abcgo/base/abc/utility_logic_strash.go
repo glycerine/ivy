@@ -10,7 +10,7 @@ func abcStrashLocal(dst *Network, node *Object) Edge {
 		args[i] = g.NewInput()
 	}
 	root := localFunctionAIG(g, node, args)
-	copies := make([]Edge, len(g.Nodes()))
+	copies := make([]Edge, g.NodeSlots())
 	copies[0] = dst.One()
 	for i, e := range args {
 		copies[e.NodeID()] = ntkCopiedEdge(node.fanins[i])

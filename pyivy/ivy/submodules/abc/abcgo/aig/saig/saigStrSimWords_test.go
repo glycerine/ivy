@@ -36,7 +36,7 @@ func TestStrSimWordsPreservesMatchedGate(t *testing.T) {
 	out := g.AddOutput(gate.Not())
 	s := newStrSimWords(g)
 	s.words[gate.NodeID()][0] = 0x12345678
-	matched := make([]bool, len(g.Nodes()))
+	matched := make([]bool, g.NodeSlots())
 	matched[gate.NodeID()] = true
 	s.frame(0, matched)
 	if got := s.words[out.NodeID()][0]; got != ^uint32(0x12345678) {

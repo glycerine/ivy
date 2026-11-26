@@ -10,7 +10,7 @@ import (
 // The source graph stays intact for simulation and publishing representatives.
 func (m *Manager) sweep() error {
 	m.satGraph = aig.NewGraph()
-	m.mapped = make([]aig.Edge, len(m.graph.Nodes()))
+	m.mapped = make([]aig.Edge, m.graph.NodeSlots())
 	for i := range m.mapped {
 		m.mapped[i] = aig.InvalidEdge
 	}

@@ -23,7 +23,7 @@ func TestStructuralCNFTruthTables(t *testing.T) {
 				out = g.AND(g.AND(a, b).Not(), g.AND(a.Not(), c).Not())
 			}
 			p := &Fra_Man_t{PManFraig: g, PSat: bsat.NewSolver(), NSatVars: 1}
-			Fra_ManClean(p, int32(len(g.Nodes())))
+			Fra_ManClean(p, int32(g.NodeSlots()))
 			if !p.PSat.AddClause(bsat.Positive(0)) {
 				t.Fatal("constant setup")
 			}
@@ -66,7 +66,7 @@ func TestStructuralCNFSupergateAndSharedNode(t *testing.T) {
 	root := graph.AND(graph.AND(shared, c.Not()), d)
 	graph.AddOutput(shared) // Give the shared node a second reference.
 	p := &Fra_Man_t{PManFraig: graph, PSat: bsat.NewSolver(), NSatVars: 1}
-	Fra_ManClean(p, int32(len(graph.Nodes())))
+	Fra_ManClean(p, int32(graph.NodeSlots()))
 	if !p.PSat.AddClause(bsat.Positive(0)) {
 		t.Fatal("constant setup")
 	}
@@ -95,7 +95,7 @@ func TestStructuralCNFIncrementalSharedCone(t *testing.T) {
 	shared := graph.AND(a, b)
 	left, right := graph.AND(shared, c), graph.AND(shared, d.Not())
 	p := &Fra_Man_t{PManFraig: graph, PSat: bsat.NewSolver(), NSatVars: 1}
-	Fra_ManClean(p, int32(len(graph.Nodes())))
+	Fra_ManClean(p, int32(graph.NodeSlots()))
 	if !p.PSat.AddClause(bsat.Positive(0)) {
 		t.Fatal("constant setup")
 	}
@@ -132,7 +132,7 @@ func TestStructuralCNFReusesPreencodedVariableZero(t *testing.T) {
 	a, b := graph.NewInput(), graph.NewInput()
 	root := graph.AND(a, b)
 	p := &Fra_Man_t{PManFraig: graph, PSat: bsat.NewSolver(), NSatVars: 2}
-	Fra_ManClean(p, int32(len(graph.Nodes())))
+	Fra_ManClean(p, int32(graph.NodeSlots()))
 	p.PSat.NewVariable()
 	p.PSat.NewVariable()
 	Fra_ObjSetSatNum(p, a, 0)
@@ -158,7 +158,7 @@ func TestStructuralCNFConstrainsBufferedFanin(t *testing.T) {
 	buffer := aig.Aig_ObjCreate(g, &aig.Node{Kind: aig.Buffer, Fanins: [2]aig.Edge{a.Not(), aig.InvalidEdge}, Phase: true})
 	root := g.AND(buffer, b)
 	p := &Fra_Man_t{PManFraig: g, PSat: bsat.NewSolver(), NSatVars: 1}
-	Fra_ManClean(p, int32(len(g.Nodes())))
+	Fra_ManClean(p, int32(g.NodeSlots()))
 	if !p.PSat.AddClause(bsat.Positive(0)) {
 		t.Fatal("constant setup")
 	}

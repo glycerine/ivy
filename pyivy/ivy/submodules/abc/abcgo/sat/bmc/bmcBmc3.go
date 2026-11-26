@@ -461,7 +461,7 @@ func makeBmcCounterexample(graph, unrolled *aig.Graph, mapping []aig.Edge, varNu
 	model.PData = make([]uint32, (int(model.NBits)+31)/32)
 	for f := int32(0); f <= frame; f++ {
 		for i, input := range graph.Inputs()[:int(nPis)] {
-			idx := int(f)*len(graph.Nodes()) + input.NodeID()
+			idx := int(f)*graph.NodeSlots() + input.NodeID()
 			if idx < 0 || idx >= len(mapping) {
 				return nil
 			}

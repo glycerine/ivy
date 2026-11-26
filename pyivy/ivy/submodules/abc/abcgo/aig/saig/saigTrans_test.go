@@ -17,7 +17,7 @@ func TestTimeframeSimplify(t *testing.T) {
 			if limit != 1000 || prove != 0 {
 				t.Fatalf("unexpected FRA options %d/%d", limit, prove)
 			}
-			aig.Aig_ManReprStart(frames, int32(len(frames.Nodes())))
+			aig.Aig_ManReprStart(frames, int32(frames.NodeSlots()))
 			return frames
 		})
 		if q == nil {
@@ -83,7 +83,7 @@ func TestTimeframeSimplifyFrameBoundAfterFRA(t *testing.T) {
 	}()
 	Saig_ManTimeframeSimplifyWithFraig(g, 2, 1, 0, 0, func(frames *aig.Graph, _, _ int32) *aig.Graph {
 		called = true
-		aig.Aig_ManReprStart(frames, int32(len(frames.Nodes())))
+		aig.Aig_ManReprStart(frames, int32(frames.NodeSlots()))
 		return frames
 	})
 }

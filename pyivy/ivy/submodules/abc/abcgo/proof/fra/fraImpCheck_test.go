@@ -11,7 +11,7 @@ func TestImpCheckForNodeRefinesOppositeRepresentatives(t *testing.T) {
 	a, b, c := original.NewInput(), original.NewInput(), original.NewInput()
 	reduced := aig.NewGraph()
 	x := reduced.NewInput()
-	p := &Fra_Man_t{PManAig: original, PManFraig: reduced, PPars: &Fra_Par_t{}, NFramesAll: 1, PCla: Fra_ClassesStart(original), PMemFraig: make([]aig.Edge, len(original.Nodes()))}
+	p := &Fra_Man_t{PManAig: original, PManFraig: reduced, PPars: &Fra_Par_t{}, NFramesAll: 1, PCla: Fra_ClassesStart(original), PMemFraig: make([]aig.Edge, original.NodeSlots())}
 	Fra_ObjSetFraig(p, a, 0, x)
 	Fra_ObjSetFraig(p, b, 0, x.Not())
 	imps := vec.Vec_IntAlloc(2)

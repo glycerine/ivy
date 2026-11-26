@@ -15,7 +15,7 @@ func sswReduction(before, after int32) float64 {
 	return 100 * float64(before-after) / float64(denominator)
 }
 func Ssw_ManPrintStats(p *Ssw_Man_t) {
-	memory := float64(len(p.pAig.Nodes())) * float64(p.nFrames) * (2*4 + 2*strconv.IntSize/8) / (1 << 20)
+	memory := float64(p.pAig.NodeSlots()) * float64(p.nFrames) * (2*4 + 2*strconv.IntSize/8) / (1 << 20)
 	fmt.Printf("Parameters: F = %d. AddF = %d. C-lim = %d. Constr = %d. MaxLev = %d. Mem = %0.2f MB.\n", p.pPars.NFramesK, p.pPars.NFramesAddSim, p.pPars.NBTLimit, aig.Aig_ManConstrNum(p.pAig), p.pPars.NMaxLevs, memory)
 	fmt.Printf("AIG       : PI = %d. PO = %d. Latch = %d. Node = %d.  Ave SAT vars = %d.\n", saig.Saig_ManPiNum(p.pAig), saig.Saig_ManPoNum(p.pAig), p.pAig.RegisterCount(), aig.Aig_ManNodeNum(p.pAig), 0)
 	fmt.Printf("SAT calls : Proof = %d. Cex = %d. Fail = %d. Lits proved = %d.\n", p.nSatProof, p.nSatCallsSat, p.nSatFailsReal, Ssw_ManCountEquivs(p))

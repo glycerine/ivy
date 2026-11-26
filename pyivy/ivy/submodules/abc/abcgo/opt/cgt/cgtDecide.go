@@ -11,7 +11,7 @@ func evaluateNodes(g *aig.Graph, inputs []bool) []bool {
 	if len(inputs) != g.InputCount() {
 		panic("cgt: wrong simulation input count")
 	}
-	values := make([]bool, len(g.Nodes()))
+	values := make([]bool, g.NodeSlots())
 	done := make([]bool, len(values))
 	for i, e := range g.Inputs() {
 		values[e.NodeID()] = inputs[i]
@@ -112,7 +112,7 @@ func sequentialSamples(g *aig.Graph) [][]uint32 {
 	for i := range states {
 		states[i] = make([]bool, regs)
 	}
-	samples := make([][]uint32, len(g.Nodes()))
+	samples := make([][]uint32, g.NodeSlots())
 	for i := range samples {
 		samples[i] = make([]uint32, frames)
 	}

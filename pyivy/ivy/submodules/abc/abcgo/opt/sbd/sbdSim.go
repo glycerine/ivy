@@ -15,7 +15,7 @@ func (p *Network) ensureSimulation() {
 	if p.SimWords < 0 {
 		panic("negative simulation width")
 	}
-	count := len(p.Graph.Nodes()) * int(p.SimWords)
+	count := p.Graph.NodeSlots() * int(p.SimWords)
 	if len(p.SimValues) < count {
 		p.SimValues = append(p.SimValues, make([]uint64, count-len(p.SimValues))...)
 	}
@@ -136,7 +136,7 @@ func Sbd_GiaSatOne_rec(p *Network, id, value, first, pattern int32) int32 {
 	return child(node.Fanins[index], 0)
 }
 func sbdPhases(p *Network) []int32 {
-	values := make([]int32, len(p.Graph.Nodes()))
+	values := make([]int32, p.Graph.NodeSlots())
 	read := func(edge aig.Edge) int32 { lit := sourceLiteral(edge); return values[lit>>1] ^ (lit & 1) }
 	for _, edge := range p.Graph.LiveEdges() {
 		node := p.Graph.Node(edge)
@@ -198,7 +198,7 @@ func Sbd_GiaSatOne(p *Network, pairs *vec.Vec_Int_t) int32 {
 }
 func Sbd_GiaSimRoundBack(p *Network) {
 	mapping := Sbd_GiaSimRound(p, 0)
-	representatives := make([]int32, len(p.Graph.Nodes()))
+	representatives := make([]int32, p.Graph.NodeSlots())
 	pairs := vec.Vec_IntAlloc(1000)
 	constants, classes := 0, 0
 	for _, edge := range p.Graph.LiveEdges() {
@@ -243,7 +243,7 @@ func Sbd_GiaSimRound(p *Network, try int32) *vec.Vec_Int_t {
 		}
 	}
 	clear(Sbd_ObjSims(p, 0))
-	mapping := vec.Vec_IntStart(len(p.Graph.Nodes()))
+	mapping := vec.Vec_IntStart(p.Graph.NodeSlots())
 	index := map[string]int32{}
 	key := func(values []uint64, compl bool) string {
 		data := make([]byte, 8*len(values))

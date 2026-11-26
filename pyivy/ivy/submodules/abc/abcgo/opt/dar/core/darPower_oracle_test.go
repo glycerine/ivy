@@ -136,7 +136,7 @@ func TestPowerOriginalCOracle(t *testing.T) {
 			leaves = append(leaves, shared)
 		}
 		size := aig.Aig_NodeMffcLabelCut(g, root, leaves)
-		probabilities := make([]float32, len(g.Nodes()))
+		probabilities := make([]float32, g.NodeSlots())
 		for i := range probabilities {
 			probabilities[i] = random.Float32()
 		}

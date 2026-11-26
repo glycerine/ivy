@@ -35,7 +35,7 @@ func clausBudgetFixture(t *testing.T, limit int32) *Clu_Man_t {
 		}
 	}
 	s.NewVariable() // The second frame output used by the induction check.
-	vars := make([]int32, len(g.Nodes()))
+	vars := make([]int32, g.NodeSlots())
 	return &Clu_Man_t{pAig: g, pCnf: &cnf.Cnf_Dat_t{Variables: 13, VarNums: vars}, pSatMain: s, pSatBmc: s, nFrames: 1, nBTLimit: limit}
 }
 

@@ -66,17 +66,25 @@ func (m *Manager) simulateTFO(inputs []bool) map[int]bool {
 // Refine candidates with an actual SAT counterexample. Classes are partitioned
 // by the full counterexample history, so unchanged classes need no splitting.
 func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
-	var tfoCandidates map[int]bool
-	var tfoClasses map[int]bool
-	if m.params.SimulateTFO && len(target) == 2 {
-		tfoCandidates, tfoClasses = map[int]bool{}, map[int]bool{}
-		seen := map[int]bool{0: true}
+	// TFO sets: a node is in a set when its stamp equals gen.
+	tfo := m.params.SimulateTFO && len(target) == 2
+	gen := m.tfoGen
+	inSet := func(set []uint32, id int) bool { return id < len(set) && set[id] == gen }
+	if tfo {
+		nodes := m.graph.NodeSlots()
+		if len(m.tfoSeen) < nodes {
+			m.tfoSeen, m.tfoCandidates, m.tfoClasses = make([]uint32, nodes), make([]uint32, nodes), make([]uint32, nodes)
+		}
+		m.tfoGen++
+		gen = m.tfoGen
+		seen := m.tfoSeen
+		seen[0] = gen
 		var visit func(int)
 		visit = func(id int) {
-			if seen[id] {
+			if seen[id] == gen {
 				return
 			}
-			seen[id] = true
+			seen[id] = gen
 			for _, fanout := range m.fanouts[id] {
 				visit(fanout)
 			}
@@ -85,14 +93,16 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 				return
 			}
 			if repr.NodeID() == 0 {
-				tfoCandidates[id] = true
+				m.tfoCandidates[id] = gen
 			} else {
-				tfoClasses[repr.NodeID()] = true
+				m.tfoClasses[repr.NodeID()] = gen
 			}
 		}
 		visit(target[0].NodeID())
 		visit(target[1].NodeID())
 	}
+	isCandidate := func(id int) bool { return inSet(m.tfoCandidates, id) }
+	isTfoClass := func(id int) bool { return inSet(m.tfoClasses, id) }
 	var values []bool
 	var changed map[int]bool
 	if len(target) == 2 {
@@ -103,7 +113,7 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 			m.random = aig.NewAigRandomSource()
 		}
 		// The previous values are replaced wholesale, so reuse their storage.
-		nodes := len(m.graph.Nodes())
+		nodes := m.graph.NodeSlots()
 		if len(m.lastValues) == nodes {
 			values = m.lastValues
 			clear(values)
@@ -148,11 +158,11 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 			if head == 0 {
 				for _, node := range group[1:] {
 					id := node.NodeID()
-					if tfoCandidates != nil && tfoCandidates[id] || !m.params.SimulateTFO && target[1].NodeID() == 0 && id >= target[0].NodeID() && id < target[0].NodeID()+500 {
+					if tfo && isCandidate(id) || !m.params.SimulateTFO && target[1].NodeID() == 0 && id >= target[0].NodeID() && id < target[0].NodeID()+500 {
 						roots = append(roots, id)
 					}
 				}
-			} else if tfoClasses != nil && tfoClasses[head] || !m.params.SimulateTFO && head == target[1].NodeID() {
+			} else if tfo && isTfoClass(head) || !m.params.SimulateTFO && head == target[1].NodeID() {
 				classes = append(classes, head)
 			}
 		}
@@ -177,7 +187,7 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 	}
 	refined := make([][]aig.Edge, 0, len(m.classes.groups)+16)
 	for _, group := range m.classes.groups {
-		if tfoClasses != nil && group[0].NodeID() != 0 && !tfoClasses[group[0].NodeID()] {
+		if tfo && group[0].NodeID() != 0 && !isTfoClass(group[0].NodeID()) {
 			refined = append(refined, group)
 			continue
 		}
@@ -200,7 +210,7 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 		}
 		zero, one := []aig.Edge{}, []aig.Edge{}
 		for _, node := range group {
-			if tfoCandidates != nil && group[0].NodeID() == 0 && !tfoCandidates[node.NodeID()] {
+			if tfo && group[0].NodeID() == 0 && !isCandidate(node.NodeID()) {
 				zero = append(zero, node)
 				continue
 			}

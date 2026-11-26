@@ -26,7 +26,7 @@ func Saig_ManCbaFilterFlops(g *aig.Graph, cex *util.Abc_Cex_t, classes, candidat
 	if piCount+int32(len(mapping)) != cex.NPis {
 		panic("counterexample input count does not match abstraction")
 	}
-	values := make([]bool, len(g.Nodes()))
+	values := make([]bool, g.NodeSlots())
 	values[g.Const1().NodeID()] = true
 	costs := make([]int, len(mapping))
 	value := func(e aig.Edge) bool { return values[e.NodeID()] != e.Complemented() }

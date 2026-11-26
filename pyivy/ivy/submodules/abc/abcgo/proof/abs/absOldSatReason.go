@@ -15,7 +15,7 @@ func Saig_RefManFindReason(p *Saig_RefMan_t) *vec.Vec_Int_t {
 func oldRefinementReason(p *Saig_RefMan_t) (*vec.Vec_Int_t, []bool) {
 	g := p.pFrames
 	Saig_RefManSetPhases(p, nil, 0)
-	priority := make([]int, len(g.Nodes()))
+	priority := make([]int, g.NodeSlots())
 	for i := range priority {
 		priority[i] = -1
 	}

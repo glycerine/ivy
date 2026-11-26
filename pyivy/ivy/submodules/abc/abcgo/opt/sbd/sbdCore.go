@@ -87,7 +87,7 @@ func sbdCoreOrder(network *Network, boxes bool) []int32 {
 	return result
 }
 func Sbd_ManWindowRoots(network *Network, tfoLevels, fanoutMax int32) *vec.Vec_Wec_t {
-	count := len(network.Graph.Nodes())
+	count := network.Graph.NodeSlots()
 	tfos := vec.Vec_WecStart(count)
 	temporary := make([][]int32, count)
 	levels, refs := make([]int32, count), make([]int32, count)
@@ -152,7 +152,7 @@ func Sbd_ManStart(network *Network, parameters *Parameters) *Sbd_Man_t {
 	if parameters.LUTSize < 2 || parameters.LUTSize > 6 || parameters.LUTCount < 1 || parameters.LUTCount > 3 || parameters.CutSize < parameters.LUTSize || parameters.CutSize > 10 || parameters.SimulationWords < 1 {
 		panic("invalid SBD parameters")
 	}
-	count := len(network.Graph.Nodes())
+	count := network.Graph.NodeSlots()
 	p := &Sbd_Man_t{pPars: parameters, pGia: network, vTfos: Sbd_ManWindowRoots(network, parameters.TFOLevels, parameters.TFOFanoutMax), vLutLevs: vec.Vec_IntStart(count), vLutCuts: vec.Vec_IntStart(count * int(parameters.LUTSize+1)), vMirrors: vec.Vec_IntStartFull(count), vCover: sbdVector(), vLits: sbdVector(), vLits2: sbdVector(), vRoots: sbdVector(), vWinObjs: sbdVector(), vObj2Var: vec.Vec_IntStart(count), vDivSet: sbdVector(), vDivVars: sbdVector(), vDivValues: sbdVector(), vDivLevels: vec.Vec_WecAlloc(100), vMatrix: vec.Vec_WrdAlloc(100), random: aig.NewAigRandomSource(), started: time.Now()}
 	for i := range p.vSims {
 		p.vSims[i] = vec.Vec_WrdStart(count * int(parameters.SimulationWords))

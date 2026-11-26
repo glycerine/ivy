@@ -15,7 +15,7 @@ func Fra_ManStart(graph *aig.Graph, pars *Fra_Par_t) *Fra_Man_t {
 	if graph == nil || pars == nil || pars.NFramesK < 0 {
 		panic("fra: invalid manager parameters")
 	}
-	p := &Fra_Man_t{PManAig: graph, PPars: pars, NSizeAlloc: int32(len(graph.Nodes())), NFramesAll: pars.NFramesK + 1}
+	p := &Fra_Man_t{PManAig: graph, PPars: pars, NSizeAlloc: int32(graph.NodeSlots()), NFramesAll: pars.NFramesK + 1}
 	bits := (int32(graph.InputCount())-graph.RegisterCount())*p.NFramesAll + graph.RegisterCount()
 	p.NPatWords = (bits + 31) / 32
 	p.PPatWords = make([]uint32, p.NPatWords)
@@ -84,7 +84,7 @@ func Fra_ManStop(p *Fra_Man_t) []aig.Edge {
 }
 
 func Fra_ManPrint(p *Fra_Man_t) {
-	size := float64(len(p.PManAig.Nodes())) * float64(p.PSml.WordsTotal*4+6*8) / (1 << 20)
+	size := float64(p.PManAig.NodeSlots()) * float64(p.PSml.WordsTotal*4+6*8) / (1 << 20)
 	denom := p.NLitsBeg
 	if denom == 0 {
 		denom = 1

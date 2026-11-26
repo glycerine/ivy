@@ -23,7 +23,7 @@ func TestBMCImplicationsSkipPrefixFrames(t *testing.T) {
 		Bmc_ObjSetFrames(b, x, frame, fx)
 		Bmc_ObjSetFrames(b, y, frame, fx)
 	}
-	p := &Fra_Man_t{PManAig: frames, PManFraig: reduced, NFramesAll: 1, PMemFraig: make([]aig.Edge, len(frames.Nodes()))}
+	p := &Fra_Man_t{PManAig: frames, PManFraig: reduced, NFramesAll: 1, PMemFraig: make([]aig.Edge, frames.NodeSlots())}
 	Fra_ObjSetFraig(p, fx, 0, rep)
 	Fra_ObjSetFraig(p, fy, 0, rep.Not())
 	imp := Fra_ImpCreate(int32(x.NodeID()), int32(y.NodeID()))

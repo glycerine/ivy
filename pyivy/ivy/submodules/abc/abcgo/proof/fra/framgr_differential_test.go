@@ -283,7 +283,7 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	}
 	if aig.Aig_ManNodeNum(g) == 0 && callback == nil {
 		result := aig.Aig_ManDupOrdered(g)
-		mapping := make([]aig.Edge, len(g.Nodes()))
+		mapping := make([]aig.Edge, g.NodeSlots())
 		for i := range mapping {
 			mapping[i] = aig.Aig_ObjCopy(g, aig.Edge(i<<1))
 		}
@@ -310,7 +310,7 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	if pars.FChoicing != 0 {
 		traversal := time.Now()
 		result = aig.Aig_ManDupRepr(g, 1)
-		aig.Aig_ManReprStart(result, int32(len(result.Nodes())))
+		aig.Aig_ManReprStart(result, int32(result.NodeSlots()))
 		aig.Aig_ManTransferRepr(result, g)
 		aig.Aig_ManMarkValidChoices(result)
 		p.TimeTrav += time.Since(traversal)

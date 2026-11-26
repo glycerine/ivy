@@ -30,7 +30,7 @@ func Fra_FraigInductionPart(g *aig.Graph, pars *Fra_Ssw_t) *aig.Graph {
 	} else {
 		parts = aig.Aig_ManRegPartitionSimple(g, size, pars.NOverSize)
 	}
-	aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
+	aig.Aig_ManReprStart(g, int32(g.NodeSlots()))
 	for i, part := range parts {
 		var pis, regs int32
 		var mapping []int32
@@ -63,7 +63,7 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 	started := time.Now()
 	if aig.Aig_ManNodeNum(g) == 0 {
 		params.nIters = 0
-		aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
+		aig.Aig_ManReprStart(g, int32(g.NodeSlots()))
 		return aig.Aig_ManDupOrdered(g)
 	}
 	if g.RegisterCount() <= 0 || params.NFramesK <= 0 {
@@ -154,7 +154,7 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 				panic("fra: implication constraints contradict induction CNF")
 			}
 		}
-		Fra_ManClean(p, int32(len(p.PManFraig.Nodes()))+aig.Aig_ManNodeNum(g))
+		Fra_ManClean(p, int32(p.PManFraig.NodeSlots())+aig.Aig_ManNodeNum(g))
 		for _, edge := range p.PManFraig.LiveEdges() {
 			number := data.VarNums[edge.NodeID()]
 			if number >= 0 {
@@ -233,7 +233,7 @@ func Fra_FraigInductionTest(filename string, pars *Fra_Ssw_t) int32 {
 	if !ok {
 		panic("fra: BLIF reader omitted node IDs")
 	}
-	ids := make([]int32, len(graph.Nodes()))
+	ids := make([]int32, graph.NodeSlots())
 	for i := range ids {
 		ids[i] = -1
 	}

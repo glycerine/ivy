@@ -30,7 +30,10 @@ type Manager struct {
 	// scratch for refineCounterexample, reused across counterexamples
 	cexVisited []bool
 	inputIndex []int32
-	random     randomSource
-	stats      Statistics
+	// generation-stamped node sets for the counterexample's TFO
+	tfoGen                             uint32
+	tfoSeen, tfoCandidates, tfoClasses []uint32
+	random                             randomSource
+	stats                              Statistics
 }
 type Dch_Man_t = Manager

@@ -34,7 +34,7 @@ func Saig_ManWindowOutline(g *aig.Graph, pivot aig.Edge, distance int32) *vec.Ve
 	}
 	aig.Aig_ManIncrementTravId(g)
 	fanouts := windowFanouts(g)
-	dists := make([]int32, len(g.Nodes()))
+	dists := make([]int32, g.NodeSlots())
 	var nodes []aig.Edge
 	var visit func(aig.Edge, int32)
 	visit = func(e aig.Edge, d int32) {

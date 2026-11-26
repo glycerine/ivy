@@ -193,7 +193,7 @@ func (p *classPartition) PairCount() int {
 // latchCorrespondence starts with every register output in the constant class.
 // Subsequent sequential simulation refines those provisional candidates.
 func (p *classPartition) LatchCorrespondence(graph *aig.Graph) {
-	if graph == nil || len(graph.Nodes()) > len(p.Reprs) {
+	if graph == nil || graph.NodeSlots() > len(p.Reprs) {
 		panic("fra: invalid AIG for class partition")
 	}
 	p.Constants = nil
@@ -268,7 +268,7 @@ func (p *classPartition) SelectRepresentatives(support, level func(int) int) {
 // explicitly failed nodes. InvalidEdge denotes no representative; edge zero is
 // the valid constant-one representative.
 func (p *classPartition) CopyRepresentatives(graph *aig.Graph, failed []int) {
-	if graph == nil || len(graph.Nodes()) > len(p.Reprs) {
+	if graph == nil || graph.NodeSlots() > len(p.Reprs) {
 		panic("fra: invalid AIG for class partition")
 	}
 	failedSet := make(map[int]bool, len(failed))
@@ -292,7 +292,7 @@ func (p *classPartition) CopyRepresentatives(graph *aig.Graph, failed []int) {
 // relation for frames+1 frames and emit each candidate-equality miter. Earlier
 // frame outputs are assumptions; the final frame outputs are checks.
 func (p *classPartition) DeriveSequentialAIG(graph *aig.Graph, frames int) *aig.Graph {
-	if graph == nil || frames <= 0 || graph.RegisterCount() <= 0 || int(graph.RegisterCount()) >= graph.InputCount() || len(graph.Nodes()) > len(p.Reprs) {
+	if graph == nil || frames <= 0 || graph.RegisterCount() <= 0 || int(graph.RegisterCount()) >= graph.InputCount() || graph.NodeSlots() > len(p.Reprs) {
 		panic("fra: invalid sequential class derivation")
 	}
 	out := aig.NewGraph()

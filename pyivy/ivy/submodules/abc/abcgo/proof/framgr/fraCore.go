@@ -26,7 +26,7 @@ func Fra_FraigVerifyCounterEx(p *Fra_Man_t, cex *vec.Vec_Int_t) {
 			panic("fra: counterexample simulation marks must be clear")
 		}
 	}
-	values := make([]bool, len(g.Nodes()))
+	values := make([]bool, g.NodeSlots())
 	values[0] = true
 	for i, e := range inputs {
 		values[e.NodeID()] = vec.Vec_IntEntry(cex, i)&1 != 0
@@ -153,7 +153,7 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	// ABC returns before invoking the implication callback on this path.
 	if aig.Aig_ManNodeNum(g) == 0 {
 		result := aig.Aig_ManDupOrdered(g)
-		mapping := make([]aig.Edge, len(g.Nodes()))
+		mapping := make([]aig.Edge, g.NodeSlots())
 		for i := range mapping {
 			mapping[i] = aig.Aig_ObjCopy(g, aig.Edge(i<<1))
 		}
@@ -180,7 +180,7 @@ func fraFraigPerformMapped(g *aig.Graph, pars *Fra_Par_t, callback func(*Fra_Man
 	if pars.FChoicing != 0 {
 		traversal := time.Now()
 		result = aig.Aig_ManDupRepr(g, 1)
-		aig.Aig_ManReprStart(result, int32(len(result.Nodes())))
+		aig.Aig_ManReprStart(result, int32(result.NodeSlots()))
 		aig.Aig_ManTransferRepr(result, g)
 		aig.Aig_ManMarkValidChoices(result)
 		p.TimeTrav += time.Since(traversal)

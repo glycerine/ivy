@@ -13,7 +13,7 @@ func TestConstraintConeKeepsRepresentativesWhenFullMergeEnabled(t *testing.T) {
 	g.AddOutput(lo)
 	aig.Aig_ManSetRegNum(g, 1)
 	aig.Aig_ManSetConstrNum(g, 1)
-	aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
+	aig.Aig_ManReprStart(g, int32(g.NodeSlots()))
 	aig.Aig_ObjSetRepr(g, pi, g.Const1())
 	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{FConstrs: 1, FMergeFull: 1}}
 	Ssw_ManUpdateEquivs(p, g, 0)

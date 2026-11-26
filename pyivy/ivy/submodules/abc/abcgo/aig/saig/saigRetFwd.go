@@ -15,7 +15,7 @@ func Aig_ManStaticFanoutStart(graph *aig.Graph) *Aig_StaticFanout_t {
 	if graph == nil {
 		return nil
 	}
-	fanouts := &Aig_StaticFanout_t{nodes: make([][]aig.Edge, len(graph.Nodes()))}
+	fanouts := &Aig_StaticFanout_t{nodes: make([][]aig.Edge, graph.NodeSlots())}
 	for id, node := range graph.Nodes() {
 		if !graph.ValidEdge(aig.Edge(id) << 1) {
 			continue
@@ -76,7 +76,7 @@ func Saig_ManMarkAutonomous(graph *aig.Graph) {
 		Aig_ObjSetFanoutStatic(fanouts, li, lo)
 	}
 	aig.Aig_ManIncrementTravId(graph)
-	reached := make([]bool, len(graph.Nodes()))
+	reached := make([]bool, graph.NodeSlots())
 	Saig_ManMarkAutonomous_rec(graph, graph.Const1(), fanouts, reached)
 	for pi := int32(0); pi < Saig_ManPiNum(graph); pi++ {
 		Saig_ManMarkAutonomous_rec(graph, aig.Aig_ManCi(graph, pi), fanouts, reached)

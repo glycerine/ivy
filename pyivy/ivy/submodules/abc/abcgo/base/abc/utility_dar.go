@@ -97,7 +97,7 @@ func Abc_NtkFromDarSeqSweep(old *Network, g *aig.Graph) *Network {
 	if len(dst.cis) != piCount || len(dst.cos) != poCount {
 		panic("abc: AIG interface mismatch")
 	}
-	copies := make([]Edge, len(g.Nodes()))
+	copies := make([]Edge, g.NodeSlots())
 	valid := make([]bool, len(copies))
 	copies[0], valid[0] = dst.One(), true
 	inputs := g.Inputs()

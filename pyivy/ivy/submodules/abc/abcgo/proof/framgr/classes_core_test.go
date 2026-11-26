@@ -17,7 +17,7 @@ func TestClassPartitionGraphSelection(t *testing.T) {
 	allSame := func(int) uint64 { return 0 }
 	notConst := func(int) bool { return false }
 	equal := func(int, int) bool { return true }
-	p := newClassPartition(len(g.Nodes()))
+	p := newClassPartition(g.NodeSlots())
 	p.PrepareGraph(g, false, 1, allSame, notConst, equal)
 	if !reflect.DeepEqual(p.Classes, [][]int{{a.NodeID(), b.NodeID(), c.NodeID(), ab.NodeID()}}) {
 		t.Fatalf("level-filtered classes %v", p.Classes)
@@ -131,7 +131,7 @@ func TestClassPartitionLatchCorrespondenceAndPrune(t *testing.T) {
 	g.AddOutput(lo0)
 	g.AddOutput(lo1)
 	aig.Aig_ManSetRegNum(g, 2)
-	p := newClassPartition(len(g.Nodes()))
+	p := newClassPartition(g.NodeSlots())
 	p.LatchCorrespondence(g)
 	if !reflect.DeepEqual(p.Constants, []int{lo0.NodeID(), lo1.NodeID()}) || p.Reprs[lo0.NodeID()] != 0 {
 		t.Fatalf("incorrect latch candidates: %+v", p)
@@ -161,7 +161,7 @@ func TestClassPartitionSelectRepresentatives(t *testing.T) {
 func TestClassPartitionCopiesRepresentatives(t *testing.T) {
 	g := aig.NewGraph()
 	a, b, c := g.NewInput(), g.NewInput(), g.NewInput()
-	p := newClassPartition(len(g.Nodes()))
+	p := newClassPartition(g.NodeSlots())
 	p.Reprs[a.NodeID()] = 0
 	p.Reprs[b.NodeID()] = a.NodeID()
 	p.Reprs[c.NodeID()] = a.NodeID()
@@ -181,7 +181,7 @@ func TestClassPartitionSequentialDerivation(t *testing.T) {
 	x, lo := g.NewInput(), g.NewInput()
 	g.AddOutput(x) // latch input becomes x in the next frame
 	aig.Aig_ManSetRegNum(g, 1)
-	p := newClassPartition(len(g.Nodes()))
+	p := newClassPartition(g.NodeSlots())
 	p.Reprs[lo.NodeID()] = 0
 	unrolled := p.DeriveSequentialAIG(g, 1)
 	if unrolled.InputCount() != 3 || unrolled.OutputCount() != 2 || unrolled.Assertions != 1 {
@@ -205,7 +205,7 @@ func TestClassPartitionSequentialInternalMiter(t *testing.T) {
 	gate := g.AND(x, lo)
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := newClassPartition(len(g.Nodes()))
+	p := newClassPartition(g.NodeSlots())
 	p.Reprs[gate.NodeID()] = x.NodeID()
 	unrolled := p.DeriveSequentialAIG(g, 1)
 	if unrolled.InputCount() != 3 || unrolled.OutputCount() != 2 || unrolled.Assertions != 1 {
@@ -229,7 +229,7 @@ func TestClassPartitionSequentialNativeXorUsesSourceAnd(t *testing.T) {
 	gate := g.NewXor(x, state)
 	g.AddOutput(x)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := newClassPartition(len(g.Nodes()))
+	p := newClassPartition(g.NodeSlots())
 	p.Reprs[gate.NodeID()] = x.NodeID()
 	unrolled := p.DeriveSequentialAIG(g, 1)
 	for mask := 0; mask < 8; mask++ {
@@ -250,7 +250,7 @@ func TestSimulationDrivesCandidateRefinement(t *testing.T) {
 	s.FrameWords(x.NodeID(), 0)[0] = 0xaaaaaaaa
 	s.FrameWords(y.NodeID(), 0)[0] = 0xaaaaaaaa
 	s.SimulateOne()
-	p := newClassPartition(len(g.Nodes()))
+	p := newClassPartition(g.NodeSlots())
 	p.PrepareGraph(g, false, 0, s.Hash, s.IsConstant, s.Equal)
 	if !reflect.DeepEqual(p.Classes, [][]int{{x.NodeID(), y.NodeID(), gate.NodeID()}}) {
 		t.Fatalf("unexpected initial simulation classes %v", p.Classes)
@@ -270,7 +270,7 @@ func TestClassPartitionSequentialBufferFanin(t *testing.T) {
 	gate := g.AND(buffer, latch)
 	g.AddOutput(input)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := newClassPartition(len(g.Nodes()))
+	p := newClassPartition(g.NodeSlots())
 	p.Reprs[gate.NodeID()] = latch.NodeID()
 	unrolled := p.DeriveSequentialAIG(g, 1)
 	if unrolled.OutputCount() != 2 {

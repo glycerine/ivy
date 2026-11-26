@@ -27,7 +27,7 @@ func Ssw_ManCreate(g *aig.Graph, pars *Ssw_Pars_t) *Ssw_Man_t {
 	aig.Aig_ManSetCioIds(g)
 	nFrames := pars.NFramesK + 1
 	p := &Ssw_Man_t{pAig: g, pPars: pars, nFrames: nFrames, iOutputLit: -1,
-		pNodeToFrames: make([]aig.Edge, len(g.Nodes())*int(nFrames)),
+		pNodeToFrames: make([]aig.Edge, g.NodeSlots()*int(nFrames)),
 		vCommon:       vec.Vec_PtrAlloc(100), vNewLos: vec.Vec_PtrAlloc(100), vNewPos: vec.Vec_IntAlloc(100),
 		vResimConsts: vec.Vec_PtrAlloc(100), vResimClasses: vec.Vec_PtrAlloc(100)}
 	for i := range p.pNodeToFrames {

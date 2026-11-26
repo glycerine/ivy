@@ -78,7 +78,7 @@ func NewNetwork(graph *aig.Graph) *Network {
 	return p
 }
 func (p *Network) resize() {
-	count := len(p.Graph.Nodes())
+	count := p.Graph.NodeSlots()
 	for len(p.Mirrors) < count {
 		p.Mirrors = append(p.Mirrors, -1)
 	}

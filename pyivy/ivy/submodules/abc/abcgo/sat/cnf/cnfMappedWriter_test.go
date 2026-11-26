@@ -15,7 +15,7 @@ func TestMappedWriterSourceVariableOrderAndTruth(t *testing.T) {
 	m := Cnf_ManStart()
 	defer Cnf_ManStop(m)
 	m.pManAig = g
-	m.selectedCuts = make([]*Cnf_Cut_t, len(g.Nodes()))
+	m.selectedCuts = make([]*Cnf_Cut_t, g.NodeSlots())
 	m.selectedCuts[n.NodeID()] = Cnf_CutFromTruth([]int32{int32(a.NodeID()), int32(b.NodeID())}, []uint32{0x88888888})
 	mapped := vec.Vec_PtrAlloc(1)
 	vec.Vec_PtrPush(mapped, n)
@@ -72,7 +72,7 @@ func TestMappedWriterFiveInputISOP(t *testing.T) {
 	m := Cnf_ManStart()
 	defer Cnf_ManStop(m)
 	m.pManAig = g
-	m.selectedCuts = make([]*Cnf_Cut_t, len(g.Nodes()))
+	m.selectedCuts = make([]*Cnf_Cut_t, g.NodeSlots())
 	cut := Cnf_CutFromTruth(leaves, []uint32{0x80000000})
 	cut.vIsop[0] = vec.Vec_IntAlloc(5)
 	cut.vIsop[1] = vec.Vec_IntAlloc(1)

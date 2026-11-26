@@ -82,7 +82,7 @@ func TestRewiredUnframedRepresentativeIsDiscarded(t *testing.T) {
 			Ssw_ObjAddClass(classes, early, []aig.Edge{early, late}, 2)
 			aig.Aig_ObjSetRepr(g, late, early)
 			frames := aig.NewGraph()
-			p := &Ssw_Man_t{pAig: g, pFrames: frames, pPars: &Ssw_Pars_t{}, ppClasses: classes, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(g.Nodes()))}
+			p := &Ssw_Man_t{pAig: g, pFrames: frames, pPars: &Ssw_Pars_t{}, ppClasses: classes, nFrames: 1, pNodeToFrames: make([]aig.Edge, g.NodeSlots())}
 			for i := range p.pNodeToFrames {
 				p.pNodeToFrames[i] = aig.InvalidEdge
 			}

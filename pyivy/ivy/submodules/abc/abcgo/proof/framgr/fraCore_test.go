@@ -48,7 +48,7 @@ func TestFraFraigMappedCallbackAndTruth(t *testing.T) {
 			t.Fatal("callback ran without mapping")
 		}
 	})
-	if !called || len(mapping) != len(g.Nodes()) || mapping[n.NodeID()] == aig.InvalidEdge {
+	if !called || len(mapping) != g.NodeSlots() || mapping[n.NodeID()] == aig.InvalidEdge {
 		t.Fatalf("callback %v mapping %v", called, mapping)
 	}
 	for i := 0; i < 4; i++ {

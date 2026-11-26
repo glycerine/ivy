@@ -85,7 +85,7 @@ func Sbc_ManCriticalPath_rec(p *Network, levels []int32, id, level int32, path *
 }
 func Sbc_ManCriticalPath(p *Network) *vec.Vec_Bit_t {
 	maximum := p.deriveLevels()
-	path := vec.Vec_BitStart(len(p.Graph.Nodes()))
+	path := vec.Vec_BitStart(p.Graph.NodeSlots())
 	seen := map[int32]bool{}
 	for _, co := range p.Graph.Outputs() {
 		driver := p.outputDriver(int32(co.NodeID()))
@@ -102,7 +102,7 @@ func Sbc_ManDelayTrace(p *Network) {
 		return
 	}
 	maximum := p.deriveLevels()
-	path := vec.Vec_BitStart(len(p.Graph.Nodes()))
+	path := vec.Vec_BitStart(p.Graph.NodeSlots())
 	for _, co := range p.Graph.Outputs() {
 		driver := p.outputDriver(int32(co.NodeID()))
 		if p.Levels[driver] == maximum {

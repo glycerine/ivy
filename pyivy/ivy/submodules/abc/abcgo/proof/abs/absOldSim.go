@@ -255,7 +255,7 @@ func Saig_ManExtendCounterExampleTest2(graph *aig.Graph, firstFlopPI int32, cex 
 	}
 	aig.Aig_ManFanoutStart(graph)
 	defer aig.Aig_ManFanoutStop(graph)
-	info := vec.Vec_PtrAllocSimInfo(len(graph.Nodes()), int((2*(cex.IFrame+1)+31)/32))
+	info := vec.Vec_PtrAllocSimInfo(graph.NodeSlots(), int((2*(cex.IFrame+1)+31)/32))
 	started := time.Now()
 	result := Saig_ManProcessCex(graph, firstFlopPI, cex, info, verbose)
 	if verbose != 0 {

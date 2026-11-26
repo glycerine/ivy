@@ -23,7 +23,7 @@ func TestImpCheckCoincidentConstantRepresentatives(t *testing.T) {
 			g := aig.NewGraph()
 			a, b := g.NewInput(), g.NewInput()
 			reduced := aig.NewGraph()
-			p := &Fra_Man_t{PManAig: g, PManFraig: reduced, PPars: &Fra_Par_t{}, NFramesAll: 1, PCla: Fra_ClassesStart(g), PMemFraig: make([]aig.Edge, len(g.Nodes()))}
+			p := &Fra_Man_t{PManAig: g, PManFraig: reduced, PPars: &Fra_Par_t{}, NFramesAll: 1, PCla: Fra_ClassesStart(g), PMemFraig: make([]aig.Edge, g.NodeSlots())}
 			left, right := reduced.Const1(), reduced.Const1()
 			if tc.leftNeg {
 				left = left.Not()

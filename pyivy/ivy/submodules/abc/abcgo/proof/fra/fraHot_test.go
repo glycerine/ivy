@@ -16,7 +16,7 @@ func TestOneHotComputeAndConstraints(t *testing.T) {
 	sim := newFraSimulation(g, 0, 1, 1)
 	sim.NodeWords(a.NodeID())[0] = 0x55555555
 	sim.NodeWords(b.NodeID())[0] = 0xaaaaaaaa
-	p := &Fra_Man_t{PManAig: g, PManFraig: g, PPars: &Fra_Par_t{NFramesK: 1}, PSml: sim, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, len(g.Nodes()))}
+	p := &Fra_Man_t{PManAig: g, PManFraig: g, PPars: &Fra_Par_t{NFramesK: 1}, PSml: sim, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, g.NodeSlots())}
 	clauses := Fra_OneHotCompute(p, sim)
 	if Fra_OneHotCount(p, clauses) != 1 {
 		t.Fatal("expected one candidate")
@@ -63,7 +63,7 @@ func TestOneHotCandidatePolarities(t *testing.T) {
 			aig.Aig_ManSetRegNum(g, 2)
 			sim := newFraSimulation(g, 0, 1, 1)
 			sim.NodeWords(a.NodeID())[0], sim.NodeWords(b.NodeID())[0] = tc.a, tc.b
-			p := &Fra_Man_t{PManAig: g, PManFraig: g, PPars: &Fra_Par_t{NFramesK: 1}, PSml: sim, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, len(g.Nodes()))}
+			p := &Fra_Man_t{PManAig: g, PManFraig: g, PPars: &Fra_Par_t{NFramesK: 1}, PSml: sim, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, g.NodeSlots())}
 			clauses := Fra_OneHotCompute(p, sim)
 			if vec.Vec_IntSize(clauses) != 2 || vec.Vec_IntEntry(clauses, 0) != Fra_RegToLit(0, tc.signA) || vec.Vec_IntEntry(clauses, 1) != Fra_RegToLit(1, tc.signB) {
 				t.Fatalf("unexpected candidates: %v", vec.Vec_IntArray(clauses))

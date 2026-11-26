@@ -28,7 +28,7 @@ func Llb_ManConstructGroupBdd(p *Llb_Man_t, group *Llb_Grp_t) *DdNode {
 	if p == nil || p.dd == nil || p.pAig == nil || p.vObj2Var == nil || group == nil {
 		return nil
 	}
-	functions := make([]*DdNode, len(p.pAig.Nodes()))
+	functions := make([]*DdNode, p.pAig.NodeSlots())
 	functions[0] = core.Cudd_ReadOne(p.dd)
 	if group.vIns != nil {
 		for i := 0; i < vec.Vec_PtrSize(group.vIns); i++ {

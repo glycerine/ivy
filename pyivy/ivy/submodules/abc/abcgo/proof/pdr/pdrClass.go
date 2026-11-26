@@ -18,7 +18,7 @@ func Pdr_ManRehashWithMap(graph *aig.Graph, mapping *vec.Vec_Int_t) *aig.Graph {
 	result := aig.NewGraph()
 	result.Name, result.Spec = graph.Name, graph.Spec
 	inputs := graph.Inputs()
-	copies := make([]aig.Edge, len(graph.Nodes()))
+	copies := make([]aig.Edge, graph.NodeSlots())
 	done := make([]bool, len(copies))
 	done[0] = true
 	for _, input := range inputs {

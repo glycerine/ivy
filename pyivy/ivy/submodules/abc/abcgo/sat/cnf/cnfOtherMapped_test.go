@@ -83,7 +83,7 @@ func TestOtherMappedCNFExhaustive(t *testing.T) {
 		t.Fatal("root cut not mapped")
 	}
 	for assignment := 0; assignment < 8; assignment++ {
-		values := make([]bool, len(g.Nodes()))
+		values := make([]bool, g.NodeSlots())
 		values[0] = true
 		values[a.NodeID()] = assignment&1 != 0
 		values[b.NodeID()] = assignment&2 != 0
@@ -148,7 +148,7 @@ func TestOtherMappedCNFComplementedCuts(t *testing.T) {
 			t.Fatalf("mask=%d: %v", mask, err)
 		}
 		for assignment := 0; assignment < 8; assignment++ {
-			values := make([]bool, len(g.Nodes()))
+			values := make([]bool, g.NodeSlots())
 			values[0] = true
 			for i, input := range inputs {
 				values[input.NodeID()] = assignment&(1<<i) != 0
@@ -197,7 +197,7 @@ func TestOtherMappedCNFXor(t *testing.T) {
 		t.Fatalf("XOR clause count=%d", data.Obj2Count[x.NodeID()])
 	}
 	for assignment := 0; assignment < 4; assignment++ {
-		vals := make([]bool, len(g.Nodes()))
+		vals := make([]bool, g.NodeSlots())
 		vals[0] = true
 		vals[a.NodeID()] = assignment&1 != 0
 		vals[b.NodeID()] = assignment&2 != 0

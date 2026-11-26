@@ -11,7 +11,7 @@ func Ssw_FramesWithConstraints(g *aig.Graph, nFrames int32) *aig.Graph {
 	}
 	target := aig.NewGraph()
 	nodes := g.TopologicalObjects()
-	mapped := make([]aig.Edge, len(g.Nodes()))
+	mapped := make([]aig.Edge, g.NodeSlots())
 	for i := range mapped {
 		mapped[i] = aig.InvalidEdge
 	}

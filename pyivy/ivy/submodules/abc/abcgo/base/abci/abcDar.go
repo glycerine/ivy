@@ -442,7 +442,7 @@ func Abc_NtkFromAigPhase(pMan *Aig_Man_t) *Abc_Ntk_t {
 	for i := 0; i < pos; i++ {
 		abc.Abc_NtkCreatePo(pNtkNew)
 	}
-	copies := make([]abc.Edge, len(pMan.Nodes()))
+	copies := make([]abc.Edge, pMan.NodeSlots())
 	valid := make([]bool, len(copies))
 	copies[0], valid[0] = pNtkNew.One(), true
 	inputs := pMan.Inputs()

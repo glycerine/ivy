@@ -29,7 +29,7 @@ func Ssw_SignalCorrespondencePart(g *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 	} else {
 		partitions = aig.Aig_ManRegPartitionSimple(g, partSize, pars.NOverSize)
 	}
-	aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
+	aig.Aig_ManReprStart(g, int32(g.NodeSlots()))
 	for i, part := range partitions {
 		var countPis, countRegs int32
 		var mapping []int32

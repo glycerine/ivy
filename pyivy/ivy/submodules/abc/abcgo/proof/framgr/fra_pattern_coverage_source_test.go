@@ -28,7 +28,7 @@ func TestSavePatternCopiesModelAndSourceCounterexampleOrder(t *testing.T) {
 	frames.AddOutput(frames.Const0())
 	aig.Aig_ManSetRegNum(frames, 1)
 	solver := bsat.NewSolver()
-	p := &Fra_Man_t{PManAig: original, PManFraig: frames, PSat: solver, PMemSatNums: make([]int32, len(frames.Nodes())), PPatWords: []uint32{^uint32(0)}, VCex: vec.Vec_IntAlloc(4)}
+	p := &Fra_Man_t{PManAig: original, PManFraig: frames, PSat: solver, PMemSatNums: make([]int32, frames.NodeSlots()), PPatWords: []uint32{^uint32(0)}, VCex: vec.Vec_IntAlloc(4)}
 	want := []bool{true, false, true, false, true}
 	for i, input := range frames.Inputs() {
 		variable := solver.NewVariable()

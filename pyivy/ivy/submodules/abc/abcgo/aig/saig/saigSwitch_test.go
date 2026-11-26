@@ -25,8 +25,8 @@ func TestSwitchingSimulationStoresFloatBits(t *testing.T) {
 	x := g.NewInput()
 	g.AddOutput(x)
 	values := Saig_ManComputeSwitchProb4s(g, 4, 0, 1)
-	if vec.Vec_IntSize(values) != len(g.Nodes()) {
-		t.Fatalf("result length = %d, want %d", vec.Vec_IntSize(values), len(g.Nodes()))
+	if vec.Vec_IntSize(values) != g.NodeSlots() {
+		t.Fatalf("result length = %d, want %d", vec.Vec_IntSize(values), g.NodeSlots())
 	}
 	pi := math.Float32frombits(uint32(vec.Vec_IntEntry(values, x.NodeID())))
 	po := math.Float32frombits(uint32(vec.Vec_IntEntry(values, g.Outputs()[0].NodeID())))

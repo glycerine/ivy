@@ -219,7 +219,7 @@ func Fra_FraigLatchCorrespondence(graph *aig.Graph, prefix, conflicts, prove, ve
 		if iterations != nil {
 			*iterations = 0
 		}
-		aig.Aig_ManReprStart(graph, int32(len(graph.Nodes())))
+		aig.Aig_ManReprStart(graph, int32(graph.NodeSlots()))
 		return aig.Aig_ManDupOrdered(graph)
 	}
 	if graph.RegisterCount() <= 0 {

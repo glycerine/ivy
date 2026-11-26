@@ -38,7 +38,7 @@ func Iso_StoStart(graph *aig.Graph) *Iso_Sto_t {
 	if graph == nil {
 		return nil
 	}
-	n := len(graph.Nodes())
+	n := graph.NodeSlots()
 	return &Iso_Sto_t{
 		pAig: graph, nObjs: int32(n), pData: make([]Iso_Dat_t, n),
 		pCounters: make([]uint32, 1<<AIG_ISO_NUM),

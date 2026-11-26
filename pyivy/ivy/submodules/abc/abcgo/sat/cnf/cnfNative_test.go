@@ -105,7 +105,7 @@ func TestAlternateDerivationRecordsObjectClauses(t *testing.T) {
 	x := g.NewXor(a, b)
 	out := g.AddOutput(x)
 	data := Cnf_DeriveOther(g, 0)
-	if data == nil || len(data.Obj2Clause) != len(g.Nodes()) || len(data.Obj2Count) != len(g.Nodes()) {
+	if data == nil || len(data.Obj2Clause) != g.NodeSlots() || len(data.Obj2Count) != g.NodeSlots() {
 		t.Fatalf("missing object clause metadata: %+v", data)
 	}
 	for _, edge := range []aig.Edge{x, out} {
@@ -128,11 +128,11 @@ func TestDeriveMappingArrayUsesObjectOffsets(t *testing.T) {
 	root := g.AND(x, y)
 	g.AddOutput(root)
 	mapping := vec.Vec_IntArray(Cnf_DeriveMappingArray(g))
-	if len(mapping) < len(g.Nodes()) {
+	if len(mapping) < g.NodeSlots() {
 		t.Fatalf("short mapping %v", mapping)
 	}
 	offset := int(mapping[root.NodeID()])
-	if offset < len(g.Nodes()) || offset+5 > len(mapping) {
+	if offset < g.NodeSlots() || offset+5 > len(mapping) {
 		t.Fatalf("invalid root offset %d in %v", offset, mapping)
 	}
 	if uint32(mapping[offset])&15 != 8 {

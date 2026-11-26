@@ -17,7 +17,7 @@ func TestOldSimulationAndSensitization(t *testing.T) {
 	cex := util.Abc_CexAlloc(0, 2, 1)
 	util.Abc_InfoSetBit(cex.PData, 0)
 	util.Abc_InfoSetBit(cex.PData, 1)
-	info := vec.Vec_PtrAllocSimInfo(len(g.Nodes()), 1)
+	info := vec.Vec_PtrAllocSimInfo(g.NodeSlots(), 1)
 	if got := Saig_ManSimDataInit(g, cex, info, nil); got != SAIG_ONE {
 		t.Fatalf("concrete output %d", got)
 	}
@@ -40,7 +40,7 @@ func TestOldSimulationPropagatesLatchAcrossFrames(t *testing.T) {
 	cex := util.Abc_CexAlloc(1, 1, 2)
 	cex.IFrame = 1
 	util.Abc_InfoSetBit(cex.PData, 1) // input in frame zero becomes the next state
-	info := vec.Vec_PtrAllocSimInfo(len(g.Nodes()), 1)
+	info := vec.Vec_PtrAllocSimInfo(g.NodeSlots(), 1)
 	if got := Saig_ManSimDataInit(g, cex, info, nil); got != SAIG_ONE {
 		t.Fatalf("second-frame latch output %d", got)
 	}

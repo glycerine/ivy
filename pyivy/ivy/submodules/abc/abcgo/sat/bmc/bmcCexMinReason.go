@@ -15,7 +15,7 @@ func cexFramePriorities(g *aig.Graph, cex *util.Abc_Cex_t, terms *vec.Vec_Vec_t)
 	vec.Vec_VecExpandInt(result, len(frames)-1)
 	roots := vec.Vec_IntAlloc(0)
 	for f := int32(0); f <= cex.IFrame; f++ {
-		pp := make([]int32, len(g.Nodes()))
+		pp := make([]int32, g.NodeSlots())
 		for i := range pp {
 			pp[i] = -1
 		}

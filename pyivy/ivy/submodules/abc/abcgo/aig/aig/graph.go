@@ -147,9 +147,12 @@ func (g *Graph) CopyTruePiCount(src *Graph) { g.nTruePis = src.nTruePis }
 // CopyTruePoCount preserves the source output metadata.
 func (g *Graph) CopyTruePoCount(src *Graph) { g.nTruePos = src.nTruePos }
 func (g *Graph) Nodes() []Node              { return append([]Node(nil), g.nodes...) }
-func (g *Graph) Inputs() []Edge             { return append([]Edge(nil), g.inputs...) }
-func (g *Graph) Outputs() []Edge            { return append([]Edge(nil), g.outputs...) }
-func (g *Graph) valid(e Edge) bool          { return e.NodeID() < len(g.nodes) && !g.isDeleted(e.NodeID()) }
+
+// NodeSlots is g.NodeSlots() without copying the nodes.
+func (g *Graph) NodeSlots() int    { return len(g.nodes) }
+func (g *Graph) Inputs() []Edge    { return append([]Edge(nil), g.inputs...) }
+func (g *Graph) Outputs() []Edge   { return append([]Edge(nil), g.outputs...) }
+func (g *Graph) valid(e Edge) bool { return e.NodeID() < len(g.nodes) && !g.isDeleted(e.NodeID()) }
 func (g *Graph) NewInput() Edge {
 	e := Edge(len(g.nodes)) << 1
 	g.nodes = append(g.nodes, Node{Kind: Input, Fanins: [2]Edge{InvalidEdge, InvalidEdge}})

@@ -115,7 +115,7 @@ func TestCutClauseCountMatchesEmittedClauses(t *testing.T) {
 		vec.Vec_PtrPush(leaves, e)
 	}
 	vec.Vec_PtrPush(nodes, root)
-	mapping := vec.Vec_IntAlloc(len(g.Nodes()))
+	mapping := vec.Vec_IntAlloc(g.NodeSlots())
 	for i := range g.Nodes() {
 		vec.Vec_IntPush(mapping, int32(i+1))
 	}

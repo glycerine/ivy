@@ -85,7 +85,7 @@ func Saig_RefManReason2Cex(p *Saig_RefMan_t, reasons *vec.Vec_Int_t) *util.Abc_C
 // refinement manager so concurrent users of the graph do not overwrite them.
 func Saig_RefManSetPhases(p *Saig_RefMan_t, care *util.Abc_Cex_t, value1 int32) int32 {
 	g := p.pFrames
-	p.phase = make([]bool, len(g.Nodes()))
+	p.phase = make([]bool, g.NodeSlots())
 	p.phase[g.Const1().NodeID()] = true
 	for i, e := range g.Inputs() {
 		input, frame := vec.Vec_IntEntry(p.vMapPiF2A, 2*i), vec.Vec_IntEntry(p.vMapPiF2A, 2*i+1)

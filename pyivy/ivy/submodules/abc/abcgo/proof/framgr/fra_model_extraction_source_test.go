@@ -41,7 +41,7 @@ func TestSavePatternPacksSolverModelAndProjectsCounterexample(t *testing.T) {
 	if status := solver.Solve(assumptions...); status != bsat.Satisfiable {
 		t.Fatalf("solve = %v", status)
 	}
-	p := &Fra_Man_t{PManAig: original, PManFraig: reduced, PSat: solver, PMemSatNums: make([]int32, len(reduced.Nodes())), PPatWords: []uint32{^uint32(0), ^uint32(0)}, VCex: vec.Vec_IntAlloc(1)}
+	p := &Fra_Man_t{PManAig: original, PManFraig: reduced, PSat: solver, PMemSatNums: make([]int32, reduced.NodeSlots()), PPatWords: []uint32{^uint32(0), ^uint32(0)}, VCex: vec.Vec_IntAlloc(1)}
 	vec.Vec_IntPush(p.VCex, 9)
 	for i, input := range reduced.Inputs() {
 		Fra_ObjSetSatNum(p, input, variables[39-i])

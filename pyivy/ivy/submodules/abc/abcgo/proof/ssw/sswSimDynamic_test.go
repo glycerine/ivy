@@ -15,7 +15,7 @@ func TestDynamicSimulationRecursesAcrossFrames(t *testing.T) {
 	p := Ssw_SmlStart(g, 0, 2, 1)
 	Ssw_SmlSimInfo(p, pi)[0] = 0xf
 	Ssw_SmlSimInfo(p, pi)[1] = 0x33
-	visited := make([]int32, len(g.Nodes())*2)
+	visited := make([]int32, g.NodeSlots()*2)
 	Ssw_SmlSimulateOneDyn_rec(p, out, 1, visited, 1)
 	if got := Ssw_SmlSimInfo(p, out)[1]; got != 3 {
 		t.Fatalf("got %x", got)

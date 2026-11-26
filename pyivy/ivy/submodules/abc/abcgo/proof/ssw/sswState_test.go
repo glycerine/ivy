@@ -10,11 +10,11 @@ func TestFrameMapsAndComplementedFanins(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
 	gate := g.AND(a.Not(), b)
-	manager := &Ssw_Man_t{pAig: g, nFrames: 2, pNodeToFrames: make([]aig.Edge, 2*len(g.Nodes()))}
+	manager := &Ssw_Man_t{pAig: g, nFrames: 2, pNodeToFrames: make([]aig.Edge, 2*g.NodeSlots())}
 	for i := range manager.pNodeToFrames {
 		manager.pNodeToFrames[i] = aig.InvalidEdge
 	}
-	frames := &Ssw_Frm_t{pAig: g, nObjs: int32(len(g.Nodes())), vAig2Frm: vec.Vec_PtrAlloc(0)}
+	frames := &Ssw_Frm_t{pAig: g, nObjs: int32(g.NodeSlots()), vAig2Frm: vec.Vec_PtrAlloc(0)}
 	Ssw_ObjSetFrame(manager, a, 1, 0)
 	Ssw_ObjSetFrame(manager, b, 1, a)
 	Ssw_ObjSetFrame_(frames, a, 1, 0)

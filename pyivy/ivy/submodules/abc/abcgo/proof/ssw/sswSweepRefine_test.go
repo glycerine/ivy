@@ -19,7 +19,7 @@ func TestSweepBmcRefinesFalseInputLatchPair(t *testing.T) {
 	defer Ssw_ManStop(p)
 	pairs := vec.Vec_IntAlloc(2)
 	vec.Vec_IntPushTwo(pairs, int32(pi.NodeID()), int32(lo.NodeID()))
-	classes := Ssw_TransformPairsIntoTempClasses(pairs, int32(len(g.Nodes())))
+	classes := Ssw_TransformPairsIntoTempClasses(pairs, int32(g.NodeSlots()))
 	p.ppClasses = Ssw_ClassesPreparePairs(g, classes)
 	p.pSml = Ssw_SmlStart(g, 0, 1, 1)
 	Ssw_ClassesSetData(p.ppClasses, p.pSml, func(d any, e aig.Edge) uint32 { return Ssw_SmlObjHashWord(d.(*Ssw_Sml_t), e) }, func(d any, e aig.Edge) int32 { return Ssw_SmlObjIsConstWord(d.(*Ssw_Sml_t), e) }, func(d any, a, b aig.Edge) int32 { return Ssw_SmlObjsAreEqualWord(d.(*Ssw_Sml_t), a, b) })

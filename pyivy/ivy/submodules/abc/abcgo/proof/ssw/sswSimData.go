@@ -27,7 +27,7 @@ func Ssw_SmlStart(graph *aig.Graph, prefix, frames, wordsPerFrame int32) *Ssw_Sm
 	if frameCount > int64(^uint32(0)>>1) || total > int64(^uint32(0)>>1) {
 		panic("ssw: simulation dimensions overflow")
 	}
-	nObjects := len(graph.Nodes())
+	nObjects := graph.NodeSlots()
 	return &Ssw_Sml_t_{
 		pAig: graph, nPref: prefix, nFrames: prefix + frames,
 		nObjects:    nObjects,

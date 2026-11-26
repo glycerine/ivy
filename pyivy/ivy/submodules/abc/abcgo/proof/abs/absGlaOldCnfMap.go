@@ -25,7 +25,7 @@ func glaOldCnfForGia(g *gia.Gia_Man_t) (*cnf.Cnf_Dat_t, error) {
 		return nil, err
 	}
 	n := int(gia.Gia_ManObjNum(g))
-	reverse := make([]int32, len(aigGraph.Nodes()))
+	reverse := make([]int32, aigGraph.NodeSlots())
 	inverted := make([]int32, len(reverse))
 	for i := range reverse {
 		reverse[i] = -1

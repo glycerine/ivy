@@ -13,12 +13,12 @@ func TestSweepNodeProvesEquivalentAndReusesRepresentative(t *testing.T) {
 	left := g.AND(g.AND(a, b), c)
 	right := g.AND(a, g.AND(b, c))
 	aig.Aig_ManSetPhase(g)
-	aig.Aig_ManReprStart(g, int32(len(g.Nodes())))
+	aig.Aig_ManReprStart(g, int32(g.NodeSlots()))
 	aig.Aig_ObjSetRepr(g, right, left)
 	sat := Ssw_SatStart(0)
 	defer Ssw_SatStop(sat)
 	sat.pAig = g
-	p := &Ssw_Man_t{pAig: g, pFrames: g, pPars: &Ssw_Pars_t{NBTLimit: 1000}, nFrames: 1, pMSat: sat, pNodeToFrames: make([]aig.Edge, len(g.Nodes())), iOutputLit: -1}
+	p := &Ssw_Man_t{pAig: g, pFrames: g, pPars: &Ssw_Pars_t{NBTLimit: 1000}, nFrames: 1, pMSat: sat, pNodeToFrames: make([]aig.Edge, g.NodeSlots()), iOutputLit: -1}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}
@@ -38,7 +38,7 @@ func TestSweepBmcConstructsInitializedFrames(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	sat := Ssw_SatStart(0)
 	defer Ssw_SatStop(sat)
-	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{NFramesK: 1, NBTLimit: 1000}, nFrames: 2, pMSat: sat, pNodeToFrames: make([]aig.Edge, 2*len(g.Nodes())), iOutputLit: -1}
+	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{NFramesK: 1, NBTLimit: 1000}, nFrames: 2, pMSat: sat, pNodeToFrames: make([]aig.Edge, 2*g.NodeSlots()), iOutputLit: -1}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}
@@ -57,7 +57,7 @@ func TestUnassignedComplementedFrameRetainsSourceDefault(t *testing.T) {
 	x := frames.NewInput()
 	sat := Ssw_SatStart(0)
 	sat.pAig = frames
-	p := &Ssw_Man_t{pAig: source, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{}, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(source.Nodes()))}
+	p := &Ssw_Man_t{pAig: source, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{}, nFrames: 1, pNodeToFrames: make([]aig.Edge, source.NodeSlots())}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}
@@ -77,7 +77,7 @@ func TestSatPatternRetainsSourceParameterPolarity(t *testing.T) {
 	sat := Ssw_SatStart(0)
 	sat.pAig = frames
 	Ssw_CnfNodeAddToSolver(sat, frame)
-	p := &Ssw_Man_t{pAig: source, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{FPolarFlip: 1}, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(source.Nodes()))}
+	p := &Ssw_Man_t{pAig: source, pFrames: frames, pMSat: sat, pPars: &Ssw_Pars_t{FPolarFlip: 1}, nFrames: 1, pNodeToFrames: make([]aig.Edge, source.NodeSlots())}
 	Ssw_ObjSetFrame(p, obj, 0, frame)
 	if sat.pSat.Solve(sswLit(sat, frame, false)) != bsat.Satisfiable {
 		t.Fatal("expected SAT")

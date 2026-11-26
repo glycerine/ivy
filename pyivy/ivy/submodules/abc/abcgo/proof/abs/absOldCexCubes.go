@@ -14,7 +14,7 @@ func Saig_ManDupWithCubes(g *aig.Graph, cubes *vec.Vec_Vec_t) *aig.Graph {
 	}
 	result := aig.NewGraph()
 	result.Name = g.Name
-	copies := make([]aig.Edge, len(g.Nodes()))
+	copies := make([]aig.Edge, g.NodeSlots())
 	copies[g.Const1().NodeID()] = result.Const1()
 	for _, e := range g.Inputs() {
 		copies[e.NodeID()] = result.NewInput()

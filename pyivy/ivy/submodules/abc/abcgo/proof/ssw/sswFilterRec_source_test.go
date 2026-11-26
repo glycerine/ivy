@@ -17,7 +17,7 @@ func TestFilterRecursiveUnrollingAndCache(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	frames := aig.NewGraph()
 	x0, x1 := frames.NewInput(), frames.NewInput()
-	p := &Ssw_Man_t{pAig: g, pFrames: frames, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Ssw_Man_t{pAig: g, pFrames: frames, nFrames: 2, pNodeToFrames: make([]aig.Edge, g.NodeSlots()*2)}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}
@@ -33,8 +33,8 @@ func TestFilterRecursiveUnrollingAndCache(t *testing.T) {
 	if got := Ssw_ManSweepBmcFilter_rec(p, node, 1); got != x1 {
 		t.Fatalf("node frame 1 = %v, want %v", got, x1)
 	}
-	count := len(frames.Nodes())
-	if got := Ssw_ManSweepBmcFilter_rec(p, node, 1); got != x1 || len(frames.Nodes()) != count {
+	count := frames.NodeSlots()
+	if got := Ssw_ManSweepBmcFilter_rec(p, node, 1); got != x1 || frames.NodeSlots() != count {
 		t.Fatal("cached frame result was not reused")
 	}
 }
@@ -44,7 +44,7 @@ func TestFilterRecursiveUnrollingRejectsMissingInput(t *testing.T) {
 	pi := g.NewInput()
 	g.AddOutput(pi)
 	aig.Aig_ManSetRegNum(g, 0)
-	p := &Ssw_Man_t{pAig: g, pFrames: aig.NewGraph(), nFrames: 1, pNodeToFrames: make([]aig.Edge, len(g.Nodes()))}
+	p := &Ssw_Man_t{pAig: g, pFrames: aig.NewGraph(), nFrames: 1, pNodeToFrames: make([]aig.Edge, g.NodeSlots())}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}

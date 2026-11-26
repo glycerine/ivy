@@ -127,7 +127,7 @@ func sbdImplementationLeaves(p *Sbd_Man_t) []aig.Edge {
 	return leaves
 }
 func sbdExtendImplementation(p *Sbd_Man_t, previous int, pivot int32) {
-	count := len(p.pGia.Graph.Nodes())
+	count := p.pGia.Graph.NodeSlots()
 	for id := previous; id < count; id++ {
 		vec.Vec_IntPush(p.vMirrors, -1)
 		mirror := int32(-1)
@@ -162,7 +162,7 @@ func Sbd_ManImplement(p *Sbd_Man_t, pivot int32, truth uint64) int32 {
 	return Sbd_ManImplement2(p, pivot, 1, []Sbd_Str_t{structure})
 }
 func Sbd_ManImplement2(p *Sbd_Man_t, pivot, count int32, structures []Sbd_Str_t) int32 {
-	previous := len(p.pGia.Graph.Nodes())
+	previous := p.pGia.Graph.NodeSlots()
 	oldLevel := vec.Vec_IntEntry(p.vLutLevs, int(pivot))
 	literals := sbdImplementationLeaves(p)
 	divs := len(literals)
@@ -290,7 +290,7 @@ func Sbd_ManDeriveMapping_rec(p *Sbd_Man_t, target *Network, id int32) {
 	target.SetLUT(id, LUTCut{Leaves: leaves, Truth: words})
 }
 func Sbd_ManDeriveMapping(p *Sbd_Man_t, target *Network) {
-	p.vLutCuts2 = vec.Vec_IntStart(len(target.Graph.Nodes()) * int(p.pPars.LUTSize+1))
+	p.vLutCuts2 = vec.Vec_IntStart(target.Graph.NodeSlots() * int(p.pPars.LUTSize+1))
 	target.LUTs = map[int32]LUTCut{}
 	for _, edge := range p.pGia.Graph.LiveEdges() {
 		id := int32(edge.NodeID())
@@ -430,7 +430,7 @@ func Sbd_NtkPerformOne(p *Sbd_Man_t, pivot int32) {
 func Sbd_NtkPerform(network *Network, parameters *Parameters) *Network {
 	p := Sbd_ManStart(network, parameters)
 	defer Sbd_ManStop(p)
-	original := len(network.Graph.Nodes())
+	original := network.Graph.NodeSlots()
 	for id := 0; id < original; id++ {
 		if network.Graph.ValidEdge(aig.Edge(id) << 1) {
 			Sbd_StoRefObj(p.pSto, int32(id), -1)

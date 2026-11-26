@@ -26,7 +26,7 @@ func Res_SatEncodeGraph(s *bsat.Solver, g *aig.Graph) (*GraphSAT, error) {
 		return nil, fmt.Errorf("res: invalid AIG graph: %w", err)
 	}
 
-	p := &GraphSAT{Graph: g, Solver: s, vars: make([]int32, len(g.Nodes()))}
+	p := &GraphSAT{Graph: g, Solver: s, vars: make([]int32, g.NodeSlots())}
 	for i := range p.vars {
 		p.vars[i] = s.NewVariable()
 	}

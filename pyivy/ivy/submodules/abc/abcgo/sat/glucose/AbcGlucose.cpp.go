@@ -408,7 +408,7 @@ func Bmcg_sat_solver_sop(p *aig.Graph, limit int32) string {
 		}
 	}
 	vars := make([]int32, p.InputCount())
-	mapping := make([]int32, len(p.Nodes()))
+	mapping := make([]int32, p.NodeSlots())
 	for i := range mapping {
 		mapping[i] = -1
 	}
@@ -434,7 +434,7 @@ func graphSOPForLiteral(p *aig.Graph, root aig.Edge, limit int32) string {
 	}
 	inputs := p.Inputs()
 	vars := make([]int32, len(inputs))
-	mapping := make([]int32, len(p.Nodes()))
+	mapping := make([]int32, p.NodeSlots())
 	for i := range mapping {
 		mapping[i] = -1
 	}
@@ -576,7 +576,7 @@ func Bmcg_sat_solver_quantify(solvers [2]*Solver, p *aig.Graph, lit, hash int32,
 	for i, e := range p.Inputs() {
 		ciIndices[int32(e.NodeID())] = int32(i)
 	}
-	mapping := make([]int32, len(p.Nodes()))
+	mapping := make([]int32, p.NodeSlots())
 	for i := range mapping {
 		mapping[i] = -1
 	}

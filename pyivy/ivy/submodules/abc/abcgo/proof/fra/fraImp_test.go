@@ -22,13 +22,13 @@ func TestSelectHighestCostImplications(t *testing.T) {
 func TestImplicationConstraintsAcrossFrames(t *testing.T) {
 	g := aig.NewGraph()
 	left, right := g.NewInput(), g.NewInput()
-	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 1}, NFramesAll: 2, NSatVars: 3, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 1}, NFramesAll: 2, NSatVars: 3, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, g.NodeSlots()*2)}
 	for i := range p.PMemFraig {
 		p.PMemFraig[i] = aig.InvalidEdge
 	}
 	Fra_ObjSetFraig(p, left, 0, left)
 	Fra_ObjSetFraig(p, right, 0, right)
-	vars := make([]int32, len(g.Nodes()))
+	vars := make([]int32, g.NodeSlots())
 	vars[left.NodeID()] = 1
 	vars[right.NodeID()] = 2
 	imps := vec.Vec_IntAlloc(1)
@@ -48,13 +48,13 @@ func TestImplicationConstraintsAcrossFrames(t *testing.T) {
 func TestImplicationConstraintAllowsSATVariableZero(t *testing.T) {
 	g := aig.NewGraph()
 	left, right := g.NewInput(), g.NewInput()
-	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 1}, NFramesAll: 2, NSatVars: 2, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 1}, NFramesAll: 2, NSatVars: 2, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, g.NodeSlots()*2)}
 	for i := range p.PMemFraig {
 		p.PMemFraig[i] = aig.InvalidEdge
 	}
 	Fra_ObjSetFraig(p, left, 0, left)
 	Fra_ObjSetFraig(p, right, 0, right)
-	vars := make([]int32, len(g.Nodes()))
+	vars := make([]int32, g.NodeSlots())
 	vars[left.NodeID()] = 0
 	vars[right.NodeID()] = 1
 	imps := vec.Vec_IntAlloc(1)
@@ -79,7 +79,7 @@ func TestImplicationCompactionAfterSimplificationFailure(t *testing.T) {
 		!solver.AddClause(bsat.Positive(0)) {
 		t.Fatal("fixture clauses rejected before simplification")
 	}
-	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 1}, NFramesAll: 1, PSat: solver, PMemFraig: make([]aig.Edge, len(g.Nodes()))}
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 1}, NFramesAll: 1, PSat: solver, PMemFraig: make([]aig.Edge, g.NodeSlots())}
 	for i := range p.PMemFraig {
 		p.PMemFraig[i] = aig.InvalidEdge
 	}
@@ -96,7 +96,7 @@ func TestImplicationCompactionAfterSimplificationFailure(t *testing.T) {
 func TestImplicationMissingOneFrameIsCompacted(t *testing.T) {
 	g := aig.NewGraph()
 	x, y, z := g.NewInput(), g.NewInput(), g.NewInput()
-	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 2}, NFramesAll: 2, NSatVars: 4, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Fra_Man_t{PManAig: g, PPars: &Fra_Par_t{NFramesK: 2}, NFramesAll: 2, NSatVars: 4, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, g.NodeSlots()*2)}
 	for i := range p.PMemFraig {
 		p.PMemFraig[i] = aig.InvalidEdge
 	}
@@ -105,7 +105,7 @@ func TestImplicationMissingOneFrameIsCompacted(t *testing.T) {
 		Fra_ObjSetFraig(p, y, frame, y)
 	}
 	Fra_ObjSetFraig(p, z, 0, z) // The second frame is missing.
-	variables := make([]int32, len(g.Nodes()))
+	variables := make([]int32, g.NodeSlots())
 	variables[x.NodeID()], variables[y.NodeID()], variables[z.NodeID()] = 1, 2, 3
 	keep := Fra_ImpCreate(int32(x.NodeID()), int32(y.NodeID()))
 	imps := vec.Vec_IntAlloc(2)
@@ -127,11 +127,11 @@ func TestImplicationConstraintsFramePolarity(t *testing.T) {
 		source, frames := aig.NewGraph(), aig.NewGraph()
 		left, right := source.NewInput(), source.NewInput()
 		copies := []aig.Edge{frames.NewInput(), frames.NewInput(), frames.NewInput(), frames.NewInput()}
-		p := &Fra_Man_t{PManAig: source, PManFraig: frames, PPars: &Fra_Par_t{NFramesK: 2}, NFramesAll: 2, NSatVars: 4, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, len(source.Nodes())*2)}
+		p := &Fra_Man_t{PManAig: source, PManFraig: frames, PPars: &Fra_Par_t{NFramesK: 2}, NFramesAll: 2, NSatVars: 4, PSat: bsat.NewSolver(), PMemFraig: make([]aig.Edge, source.NodeSlots()*2)}
 		for i := range p.PMemFraig {
 			p.PMemFraig[i] = aig.InvalidEdge
 		}
-		vars := make([]int32, len(frames.Nodes()))
+		vars := make([]int32, frames.NodeSlots())
 		for i, edge := range copies {
 			vars[edge.NodeID()] = int32(i)
 			if polarity&(1<<i) != 0 {

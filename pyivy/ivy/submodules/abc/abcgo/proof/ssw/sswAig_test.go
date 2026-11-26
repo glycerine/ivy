@@ -87,7 +87,7 @@ func TestFrameConstructionPreservesBufferedTransition(t *testing.T) {
 	g.AddOutput(lo)
 	g.AddOutput(buffer)
 	aig.Aig_ManSetRegNum(g, 1)
-	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{NFramesK: 1}, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Ssw_Man_t{pAig: g, pPars: &Ssw_Pars_t{NFramesK: 1}, nFrames: 2, pNodeToFrames: make([]aig.Edge, g.NodeSlots()*2)}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}

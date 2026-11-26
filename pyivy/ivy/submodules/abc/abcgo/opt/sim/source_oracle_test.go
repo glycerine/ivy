@@ -57,7 +57,7 @@ func TestOriginalCWordSquareAndStructuralOracles(t *testing.T) {
 			y = y.Not()
 		}
 		z := g.AND(x, y)
-		info := Sim_UtilInfoAlloc(len(g.Nodes()), n, true)
+		info := Sim_UtilInfoAlloc(g.NodeSlots(), n, true)
 		copy(info[x.NodeID()], a)
 		copy(info[y.NodeID()], b)
 		Sim_UtilSimulateNodeOne(g, z, info, n, 0)

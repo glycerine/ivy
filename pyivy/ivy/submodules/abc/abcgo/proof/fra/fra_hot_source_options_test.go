@@ -11,7 +11,7 @@ import (
 func TestOneHotKnownConstraintSourceTruthTable(t *testing.T) {
 	g := aig.NewGraph()
 	inputs := []aig.Edge{g.NewInput(), g.NewInput(), g.NewInput()}
-	p := &Fra_Man_t{PManFraig: g, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, len(g.Nodes()))}
+	p := &Fra_Man_t{PManFraig: g, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, g.NodeSlots())}
 	for i, x := range inputs {
 		p.PMemSatNums[x.NodeID()] = int32(i + 1)
 	}
@@ -41,7 +41,7 @@ func TestOneHotAssumeContradictionClearsSolver(t *testing.T) {
 	g.AddOutput(a)
 	g.AddOutput(b)
 	aig.Aig_ManSetRegNum(g, 2)
-	p := &Fra_Man_t{PManFraig: g, PPars: &Fra_Par_t{NFramesK: 1}, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, len(g.Nodes()))}
+	p := &Fra_Man_t{PManFraig: g, PPars: &Fra_Par_t{NFramesK: 1}, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, g.NodeSlots())}
 	p.PMemSatNums[a.NodeID()] = 1
 	p.PMemSatNums[b.NodeID()] = 2
 	if !p.PSat.AddClause(bsat.Positive(1)) || !p.PSat.AddClause(bsat.Positive(2)) {
@@ -57,7 +57,7 @@ func TestOneHotAssumeContradictionClearsSolver(t *testing.T) {
 func TestOneHotKnownConstraintContradictionClearsSolver(t *testing.T) {
 	g := aig.NewGraph()
 	a, b := g.NewInput(), g.NewInput()
-	p := &Fra_Man_t{PManFraig: g, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, len(g.Nodes()))}
+	p := &Fra_Man_t{PManFraig: g, PSat: bsat.NewSolver(), PMemSatNums: make([]int32, g.NodeSlots())}
 	p.PMemSatNums[a.NodeID()] = 1
 	p.PMemSatNums[b.NodeID()] = 2
 	if !p.PSat.AddClause(bsat.Positive(1)) || !p.PSat.AddClause(bsat.Positive(2)) {
@@ -104,7 +104,7 @@ func oneHotCheckFixture() *Fra_Man_t {
 	data := cnf.Cnf_Derive(p.PManFraig, p.PManFraig.RegisterCount())
 	p.PSat = cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
 	p.NSatVars = int32(data.Variables)
-	Fra_ManClean(p, int32(len(p.PManFraig.Nodes())))
+	Fra_ManClean(p, int32(p.PManFraig.NodeSlots()))
 	for _, edge := range p.PManFraig.LiveEdges() {
 		if n := data.VarNums[edge.NodeID()]; n >= 0 {
 			Fra_ObjSetSatNum(p, edge, n)

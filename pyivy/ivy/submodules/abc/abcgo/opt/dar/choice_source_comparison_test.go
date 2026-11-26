@@ -162,8 +162,8 @@ func TestChoiceMiterAndSkipAgainstCompiledC(t *testing.T) {
 	got := gia.Gia_ManToAigSkip(gia.Gia_ManChoiceMiter(snapshots), 3)
 	reader := bufio.NewReader(bytes.NewReader(output))
 	var count int
-	if _, err := fmt.Fscan(reader, &count); err != nil || count != len(got.Nodes()) {
-		t.Fatalf("C node count %d, Go %d: %v", count, len(got.Nodes()), err)
+	if _, err := fmt.Fscan(reader, &count); err != nil || count != got.NodeSlots() {
+		t.Fatalf("C node count %d, Go %d: %v", count, got.NodeSlots(), err)
 	}
 	for i, node := range got.Nodes() {
 		var kind, first, second int
@@ -221,7 +221,7 @@ func TestChoiceMiterAndTotalAIGHaveDifferentNodeOrder(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if len(got.Nodes()) != len(want.Nodes()) {
+		if got.NodeSlots() != want.NodeSlots() {
 			different = true
 			continue
 		}

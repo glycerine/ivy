@@ -47,13 +47,13 @@ func TestAigGla1BoundedCheckProvesConstantSafeBound(t *testing.T) {
 	if classes == nil || frame != 3 {
 		t.Fatalf("result=%v frame=%d, want full abstraction after 3 frames", classes, frame)
 	}
-	if got := vec.Vec_IntSize(classes); got != len(g.Nodes()) {
-		t.Fatalf("class bitmap length = %d, want %d", got, len(g.Nodes()))
+	if got := vec.Vec_IntSize(classes); got != g.NodeSlots() {
+		t.Fatalf("class bitmap length = %d, want %d", got, g.NodeSlots())
 	}
 	if got := vec.Vec_IntEntry(classes, 0); got != 1 {
 		t.Fatalf("constant inclusion = %d, want 1", got)
 	}
-	for id := 1; id < len(g.Nodes()); id++ {
+	for id := 1; id < g.NodeSlots(); id++ {
 		if got := vec.Vec_IntEntry(classes, id); got != 0 {
 			t.Fatalf("safe constant property unexpectedly included object %d", id)
 		}
@@ -78,7 +78,7 @@ func TestAigGla1RefinesAbstractLatchBeforeProvingSafe(t *testing.T) {
 	if got := vec.Vec_IntEntry(classes, int(q.NodeID())); got != 1 {
 		t.Fatalf("latch inclusion bitmap[%d] = %d, want 1 after it refines the spurious frame-0 CEX", q.NodeID(), got)
 	}
-	for id := 0; id < len(g.Nodes()); id++ {
+	for id := 0; id < g.NodeSlots(); id++ {
 		want := int32(0)
 		if id == 0 || id == int(q.NodeID()) {
 			want = 1

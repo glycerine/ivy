@@ -10,7 +10,7 @@ func (p *Manager) encodePart() {
 		p.solver = satoko.New()
 		p.encoded = make(map[int]bool)
 	}
-	p.solver.SetVariables(len(p.Part.Nodes()))
+	p.solver.SetVariables(p.Part.NodeSlots())
 	for _, e := range p.Part.LiveEdges() {
 		id := e.NodeID()
 		if p.encoded[id] {

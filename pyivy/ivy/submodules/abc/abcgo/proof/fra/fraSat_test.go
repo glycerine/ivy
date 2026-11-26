@@ -10,7 +10,7 @@ func satTestManager(graph *aig.Graph) *Fra_Man_t {
 	Fra_ParamsDefault(&pars)
 	p := Fra_ManStart(graph, &pars)
 	p.PManFraig = graph
-	Fra_ManClean(p, int32(len(graph.Nodes())))
+	Fra_ManClean(p, int32(graph.NodeSlots()))
 	return p
 }
 

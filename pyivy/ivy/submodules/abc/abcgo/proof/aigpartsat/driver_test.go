@@ -123,7 +123,7 @@ func TestPartitionSplitSparseLabelsAndMappings(t *testing.T) {
 	x := g.AND(a, b)
 	y := g.NewXor(x, c)
 	g.AddOutput(y.Not())
-	labels := make([]int32, len(g.Nodes()))
+	labels := make([]int32, g.NodeSlots())
 	labels[x.NodeID()] = 7
 	labels[y.NodeID()] = 91
 	parts, pio, outputs := aig.Aig_ManPartSplit(g, labels)

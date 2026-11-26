@@ -14,7 +14,7 @@ func frameMaps(g *aig.Graph, create bool) *frameMappings {
 		panic("saig: nil graph")
 	}
 	if g.Data == nil && create {
-		g.Data = &frameMappings{size: len(g.Nodes())}
+		g.Data = &frameMappings{size: g.NodeSlots()}
 	}
 	maps, ok := g.Data.(*frameMappings)
 	if !ok {

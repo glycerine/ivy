@@ -10,7 +10,7 @@ import (
 )
 
 func Fra_ClassesStart(graph *aig.Graph) *Fra_Cla_t {
-	p := newClassPartition(len(graph.Nodes()))
+	p := newClassPartition(graph.NodeSlots())
 	p.Graph = graph
 	return p
 }

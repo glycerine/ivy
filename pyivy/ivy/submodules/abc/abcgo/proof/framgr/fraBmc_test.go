@@ -15,7 +15,7 @@ func TestFraBmcRefinementRespectsFramesAndFraig(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	b := Fra_BmcStart(g, 0, 2)
 	b.PAigFrames = Fra_BmcFrames(b, 0)
-	b.PObjToFraig = make([]aig.Edge, len(b.PAigFrames.Nodes()))
+	b.PObjToFraig = make([]aig.Edge, b.PAigFrames.NodeSlots())
 	for i := range b.PObjToFraig {
 		b.PObjToFraig[i] = aig.Edge(i << 1)
 	}
@@ -82,7 +82,7 @@ func TestFraBmcFilterImplicationsSameRepresentative(t *testing.T) {
 	b.VImps = vec.Vec_IntAlloc(4)
 	imp := Fra_ImpCreate(int32(x.NodeID()), int32(y.NodeID()))
 	vec.Vec_IntPush(b.VImps, imp)
-	p := &Fra_Man_t{PManAig: frames, PManFraig: reduced, NFramesAll: 1, PMemFraig: make([]aig.Edge, len(frames.Nodes()))}
+	p := &Fra_Man_t{PManAig: frames, PManFraig: reduced, NFramesAll: 1, PMemFraig: make([]aig.Edge, frames.NodeSlots())}
 	Fra_ObjSetFraig(p, fx, 0, rep)
 	Fra_ObjSetFraig(p, fy, 0, rep)
 	Fra_BmcFilterImplications(p, b)

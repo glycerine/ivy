@@ -12,7 +12,7 @@ func Saig_ManCexVerifyUsingTernary(g *aig.Graph, cex, care *util.Abc_Cex_t) int3
 	if cex.IFrame != care.IFrame || cex.NBits != care.NBits || cex.IPo < 0 || cex.IPo >= saig.Saig_ManPoNum(g) {
 		panic("invalid ternary counterexample")
 	}
-	values := make([]int32, len(g.Nodes()))
+	values := make([]int32, g.NodeSlots())
 	values[g.Const1().NodeID()] = SAIG_ONE
 	for i := int32(0); i < saig.Saig_ManRegNum(g); i++ {
 		// The source does not increment iBit in this loop, so its assertion

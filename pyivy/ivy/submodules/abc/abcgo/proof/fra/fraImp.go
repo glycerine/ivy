@@ -21,7 +21,7 @@ func Fra_SmlCountOnesOne(s *Fra_Sml_t, node int32) int32 {
 	return result
 }
 func Fra_SmlCountOnes(s *Fra_Sml_t) []int32 {
-	counts := make([]int32, len(s.Graph.Nodes()))
+	counts := make([]int32, s.Graph.NodeSlots())
 	for _, edge := range s.Graph.LiveEdges() {
 		counts[edge.NodeID()] = Fra_SmlCountOnesOne(s, int32(edge.NodeID()))
 	}
@@ -99,7 +99,7 @@ func fraImpMaxID(imp int32) int32 {
 }
 
 func Fra_ImpDerive(p *Fra_Man_t, maxLimit, useLimit, latchCorr int32) *vec.Vec_Int_t {
-	if len(p.PManAig.Nodes()) >= 1<<15 || maxLimit <= 0 || useLimit <= 0 || useLimit > maxLimit {
+	if p.PManAig.NodeSlots() >= 1<<15 || maxLimit <= 0 || useLimit <= 0 || useLimit > maxLimit {
 		panic("fra: invalid implication derivation limits")
 	}
 	started := time.Now()

@@ -26,7 +26,7 @@ func Fsim_ManSwitchSimulate(g *aig.Graph, parameters *Fsim_ParSwitch_t) (*Switch
 	if err = Fsim_ManFront(p, false); err != nil {
 		return nil, err
 	}
-	count := len(g.Nodes())
+	count := g.NodeSlots()
 	ones, transitions := make([]uint64, count), make([]uint64, count)
 	var previous [][]uint32
 	if pars.ProbabilityTransition {

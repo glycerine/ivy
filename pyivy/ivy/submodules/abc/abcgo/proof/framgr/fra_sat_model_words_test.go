@@ -24,7 +24,7 @@ func TestSATQuerySavesModelAcrossWords(t *testing.T) {
 		PManAig:     g,
 		PManFraig:   g,
 		PSat:        solver,
-		PMemSatNums: make([]int32, len(g.Nodes())),
+		PMemSatNums: make([]int32, g.NodeSlots()),
 		PPatWords:   make([]uint32, 2),
 		NPatWords:   2,
 		PPars:       &Fra_Par_t{},

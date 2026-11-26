@@ -111,7 +111,7 @@ func Fra_BmcStart(g *aig.Graph, prefix, depth int32) *Fra_Bmc_t {
 		panic("fra: invalid BMC dimensions")
 	}
 	b := &Fra_Bmc_t{PAig: g, NPref: prefix, NDepth: depth, NFramesAll: prefix + depth}
-	b.PObjToFrames = make([]aig.Edge, len(g.Nodes())*int(b.NFramesAll))
+	b.PObjToFrames = make([]aig.Edge, g.NodeSlots()*int(b.NFramesAll))
 	for i := range b.PObjToFrames {
 		b.PObjToFrames[i] = aig.InvalidEdge
 	}

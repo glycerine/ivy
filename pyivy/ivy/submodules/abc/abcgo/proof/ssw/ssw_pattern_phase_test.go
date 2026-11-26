@@ -14,7 +14,7 @@ func TestSavePatternAigPhaseAcrossWords(t *testing.T) {
 	}
 	high := frames.NewInput()
 	aig.Aig_ObjSetPhase(frames, high, true)
-	p := &Ssw_Man_t{pAig: original, pFrames: frames, nFrames: 1, pNodeToFrames: make([]aig.Edge, len(original.Nodes())), pPatWords: []uint32{^uint32(0), ^uint32(0), ^uint32(0)}}
+	p := &Ssw_Man_t{pAig: original, pFrames: frames, nFrames: 1, pNodeToFrames: make([]aig.Edge, original.NodeSlots()), pPatWords: []uint32{^uint32(0), ^uint32(0), ^uint32(0)}}
 	for i, node := range nodes {
 		mapped := high
 		if i%3 == 0 {

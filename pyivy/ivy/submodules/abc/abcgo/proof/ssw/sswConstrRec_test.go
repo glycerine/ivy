@@ -12,7 +12,7 @@ func TestConstrainedRecUnrollsLatchDriver(t *testing.T) {
 	aig.Aig_ManSetRegNum(g, 1)
 	frames := aig.NewGraph()
 	mapped := frames.NewInput()
-	p := &Ssw_Man_t{pAig: g, pFrames: frames, nFrames: 2, pNodeToFrames: make([]aig.Edge, len(g.Nodes())*2)}
+	p := &Ssw_Man_t{pAig: g, pFrames: frames, nFrames: 2, pNodeToFrames: make([]aig.Edge, g.NodeSlots()*2)}
 	for i := range p.pNodeToFrames {
 		p.pNodeToFrames[i] = aig.InvalidEdge
 	}

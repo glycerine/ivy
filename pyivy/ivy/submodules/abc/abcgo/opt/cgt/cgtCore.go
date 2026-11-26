@@ -62,7 +62,7 @@ func Cgt_ClockGatingCandidates(g, care *aig.Graph, parameters *Cgt_Par_t, useful
 		return nil, err
 	}
 	defer Cgt_ManStop(p)
-	if useful != nil && len(useful) < len(g.Nodes()) {
+	if useful != nil && len(useful) < g.NodeSlots() {
 		return nil, fmt.Errorf("cgt: useful-node mask is too short")
 	}
 	p.Useful = append([]bool(nil), useful...)

@@ -169,7 +169,7 @@ func Saig_ManDecPropertyOutput(graph *aig.Graph, nLits, verbose int32) *aig.Grap
 }
 
 func outputConeNodes(graph *aig.Graph, root aig.Edge) []int {
-	seen := make([]bool, len(graph.Nodes()))
+	seen := make([]bool, graph.NodeSlots())
 	var order []int
 	var visit func(aig.Edge)
 	visit = func(edge aig.Edge) {

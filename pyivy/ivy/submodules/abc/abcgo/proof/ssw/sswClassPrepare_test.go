@@ -80,7 +80,7 @@ func TestPrepareClassesFromPairs(t *testing.T) {
 	group := vec.Vec_IntAlloc(2)
 	vec.Vec_IntPush(group, int32(a.NodeID()))
 	vec.Vec_IntPush(group, int32(b.NodeID()))
-	classes := make([]*vec.Vec_Int_t, len(g.Nodes()))
+	classes := make([]*vec.Vec_Int_t, g.NodeSlots())
 	classes[0] = constants
 	classes[a.NodeID()] = group
 	p := Ssw_ClassesPreparePairs(g, classes)

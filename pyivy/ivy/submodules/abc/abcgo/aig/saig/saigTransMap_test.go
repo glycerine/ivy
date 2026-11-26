@@ -39,7 +39,7 @@ func TestCreateFrameMappingUsesFirstEquivalentObject(t *testing.T) {
 	defer Saig_ManStopMap1(g)
 	frames := aig.NewGraph()
 	x, y := frames.NewInput(), frames.NewInput()
-	aig.Aig_ManReprStart(frames, int32(len(frames.Nodes())))
+	aig.Aig_ManReprStart(frames, int32(frames.NodeSlots()))
 	aig.Aig_ObjCreateRepr(frames, x, y)
 	Saig_ManSetMap1(g, a, 0, x)
 	Saig_ManSetMap1(g, b, 1, y)

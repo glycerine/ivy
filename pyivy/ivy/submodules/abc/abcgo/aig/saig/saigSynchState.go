@@ -18,7 +18,7 @@ func newSynchState(g *aig.Graph, nwords int) *synchState {
 	if g == nil || nwords <= 0 {
 		panic("saig: invalid synchronizer simulation")
 	}
-	s := &synchState{graph: g, words: make([][]uint32, len(g.Nodes())), random: rand.New(rand.NewSource(1))}
+	s := &synchState{graph: g, words: make([][]uint32, g.NodeSlots()), random: rand.New(rand.NewSource(1))}
 	for i := range s.words {
 		s.words[i] = make([]uint32, nwords)
 	}
