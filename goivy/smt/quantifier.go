@@ -476,7 +476,7 @@ func (ctx *Z3Context) And(args ...Z3Expr) Z3Expr {
 }
 
 // AndApp returns Z3's raw and-application, preserving the AST shape even for
-// zero arguments. This matches z3py's z3.And(list) form used by clauses_to_z3.
+// zero arguments.
 func (ctx *Z3Context) AndApp(args ...Z3Expr) Z3Expr {
 	cargs := make([]C.Z3_ast, len(args))
 	for i, a := range args {

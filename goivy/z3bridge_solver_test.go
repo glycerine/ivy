@@ -1416,8 +1416,15 @@ func TestZ3BridgeClausesToZ3Empty(t *testing.T) {
 	}
 	z3solver := s.newZ3Solver()
 	z3solver.Assert(expr)
-	if got, want := z3solver.CanonZ3Assertions(), "(asserts (c and Bool))"; got != want {
+	if got, want := z3solver.CanonZ3Assertions(), "(asserts (c true Bool))"; got != want {
 		t.Fatalf("empty clauses Z3 canon = %s, want %s", got, want)
+	}
+	nested, err := s.ClausesToZ3(NewClauses([]Expr{&LogicAnd{}}, nil, nil))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if smtlib := nested.String(); strings.Contains(smtlib, "(and)") || !strings.Contains(smtlib, "true") {
+		t.Fatalf("expected literal true for a nested empty conjunction, got %s", smtlib)
 	}
 }
 

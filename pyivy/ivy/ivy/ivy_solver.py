@@ -685,10 +685,13 @@ def clause_to_z3(clause):
         z3_variables = [term_to_z3(v) for v in variables]
         return forall(variables, z3_variables, z3_formula)
 
+def z3_and(expressions):
+    return z3.And(expressions) if expressions else z3.BoolVal(True)
+
 def conj_to_z3(cl):
     if __debug__: xtracer.trace("ivy_solver.py:585 conj_to_z3() ENTER type=%s" % type(cl).__name__)
     if isinstance(cl,ivy_logic.And):
-        return z3.And(*[conj_to_z3(t) for t in cl.args])
+        return z3_and([conj_to_z3(t) for t in cl.args])
     return formula_to_z3_closed(cl)
 
 def type_constraints(syms):
@@ -737,7 +740,7 @@ def clauses_to_z3(clauses):
             raise
     z3_clauses.extend(type_constraints(used_symbols_clauses(clauses)))
     if __debug__: xtracer.trace("solver.ClausesToZ3 EXIT exprs=%d" % len(z3_clauses))
-    res = z3.And(z3_clauses)
+    res = z3_and(z3_clauses)
     return res
 
 def formula_to_z3_int(fmla, caller):
@@ -1970,7 +1973,7 @@ def encode_equality(*terms):
     n = len(sort.defines())
     bits = ceillog2(n)
     eterms = [encode_term(t,bits,sort) for t in terms]
-    eqs = z3.And([x == y for x,y in zip(*eterms)])
+    eqs = z3_and([x == y for x,y in zip(*eterms)])
     alt = z3.And([gebin(e,n-1) for e in eterms])
     res =  z3.Or(eqs,alt)
 #    print "encode_equality terms={},{}".format(terms[0],terms[1])
