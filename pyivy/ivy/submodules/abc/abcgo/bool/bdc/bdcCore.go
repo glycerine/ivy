@@ -17,8 +17,8 @@ func Bdc_ManFree(p *Bdc_Man_t) {
 		return
 	}
 	if p.Pars.FVerbose != 0 {
-		fmt.Printf("Bi-decomposition stats: Calls = %d. Nodes = %d. Reuse = %d.\n", p.calls, p.numNodes, p.numReuse)
-		fmt.Printf("ANDs = %d. ORs = %d. Weak = %d. Muxes = %d.\n", p.numAnds, p.numOrs, p.numWeaks, p.numMuxes)
+		fmt.Printf("Bi-decomposition stats: Calls = %d.  Nodes = %d. Reuse = %d.\n", p.calls, p.numNodes, p.numReuse)
+		fmt.Printf("ANDs = %d.  ORs = %d.  Weak = %d.  Muxes = %d.\n", p.numAnds, p.numOrs, p.numWeaks, p.numMuxes)
 	}
 	p.nodes = nil
 	p.root = nil

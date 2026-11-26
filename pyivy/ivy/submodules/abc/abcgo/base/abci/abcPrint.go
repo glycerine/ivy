@@ -7,9 +7,9 @@ import (
 	"time"
 	"unsafe"
 
+	aigpkg "github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/aig/hop"
-	"github.com/glycerine/abcgo/aig/saig"
 	baseabc "github.com/glycerine/abcgo/base/abc"
 	abcio "github.com/glycerine/abcgo/base/io"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
@@ -154,25 +154,37 @@ func Abc_NtkMfsTotalSwitching(pNtk *Abc_Ntk_t) float32 {
 	if pNtk == nil {
 		return 0
 	}
-	strashed := baseabc.Abc_NtkStrash(pNtk, 0, 1, 0)
-	graph := baseabc.Abc_NtkToDar(strashed, 0, boolInt(baseabc.Abc_NtkLatchNum(pNtk) > 0))
-	values := saig.Saig_ManComputeSwitchProb4s(graph, 48, 16, 0)
-	defer vec.Vec_IntFree(values)
-	var total float32
-	for _, obj := range pNtk.Objects() {
-		strashObj := baseabc.Abc_ObjCopyEdge(obj).Object
-		if strashObj == nil || baseabc.Abc_ObjIsNode(obj) == 0 {
+	// strash the network
+	pNtkStr := baseabc.Abc_NtkStrash(pNtk, 0, 1, 0)
+	// map network into an AIG
+	pAig := baseabc.Abc_NtkToDar(pNtkStr, 0, boolInt(baseabc.Abc_NtkLatchNum(pNtk) > 0))
+	vSwitching := gia.Saig_ManComputeSwitchProbs(pAig, 48, 16, 0)
+	defer vec.Vec_IntFree(vSwitching)
+	var Result float32
+	for _, pObjAbc := range pNtk.Objects() {
+		// C clears pTemp of objects that are neither CIs nor nodes
+		if baseabc.Abc_ObjIsCi(pObjAbc) == 0 && baseabc.Abc_ObjIsNode(pObjAbc) == 0 {
 			continue
 		}
-		id := strashObj.Temp
-		if id < 0 || int(id) >= vec.Vec_IntSize(values) {
-			continue
+		if id, ok := powerAigObjId(pObjAbc); ok {
+			Result += float32(baseabc.Abc_ObjFanoutNum(pObjAbc)) * math.Float32frombits(uint32(vec.Vec_IntEntry(vSwitching, id)))
 		}
-		activity := math.Float32frombits(uint32(vec.Vec_IntEntry(values, int(id))))
-		total += float32(baseabc.Abc_ObjFanoutNum(obj)) * activity
 	}
-	baseabc.Abc_NtkDelete(strashed)
-	return total
+	baseabc.Abc_NtkDelete(pNtkStr)
+	return Result
+}
+
+// powerAigObjId follows pObjAbc->pTemp (its strashed copy) and that
+// object's pTemp (its AIG object, set by Abc_NtkToDar, kept as an AIG
+// literal in Temp) and returns the AIG object ID, as in
+// Abc_NtkMfsTotalSwitching / Abc_NtkPowerEstimate. Objects whose copy was
+// removed by strash cleanup and COs (whose copies get no AIG object) have none.
+func powerAigObjId(pObjAbc *Abc_Obj_t) (int, bool) {
+	pObjAbc2 := pObjAbc.ReadCopyEdge().Object
+	if pObjAbc2 == nil || pObjAbc2.Network() == nil || pObjAbc2.Temp < 0 || baseabc.Abc_ObjIsCo(pObjAbc2) != 0 {
+		return 0, false
+	}
+	return aigpkg.Edge(pObjAbc2.Temp).NodeID(), true
 }
 
 /*

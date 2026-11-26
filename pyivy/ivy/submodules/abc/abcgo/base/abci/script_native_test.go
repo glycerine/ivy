@@ -76,6 +76,13 @@ func TestIfAreaMappingMatchesNative(t *testing.T) {
 		fmt.Sprintf("nd = %5d  edge = %6d  aig  = %5d  lev = %d", 841, 2816, 3343, 25))
 }
 
+// Native: abc -c "read mul8.aig; if -K 6; print_stats -p" reports
+// "power = 231.24" (Abc_NtkMfsTotalSwitching); mfs -p depends on the same
+// strash/AIG mapping in Abc_NtkPowerEstimate.
+func TestTotalSwitchingMatchesNative(t *testing.T) {
+	expectStats(t, "read test_vectors/bench/mul8.aig; if -K 6; print_stats -p", "power = 231.24")
+}
+
 // Native: abc -c "read i10.aig; drf; print_stats" (it used to panic in Go).
 func TestDarRefactorMatchesNative(t *testing.T) {
 	expectStats(t, "read ../../../i10.aig; drf; print_stats", "and =   2301  lev = 49")

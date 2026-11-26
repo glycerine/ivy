@@ -521,28 +521,25 @@ func Abc_NtkSpeedup(n *Abc_Ntk_t, useLib, percentage, degree, verbose, veryVerbo
 }
 
 func Abc_NtkPowerEstimate(n *Abc_Ntk_t, probOne int32) *Vec_Int_t {
-	v := vec.Vec_IntStart(int(baseabc.Abc_NtkObjNumMax(n)))
-	strashed := Abc_NtkStrash(n, 0, 1, 0)
-	if strashed == nil {
-		return v
+	// start the resulting array
+	vProbs := vec.Vec_IntStart(int(baseabc.Abc_NtkObjNumMax(n)))
+	// strash the network
+	pNtkStr := Abc_NtkStrash(n, 0, 1, 0)
+	if pNtkStr == nil {
+		return vProbs
 	}
-	graph := baseabc.Abc_NtkToDar(strashed, 0, boolToInt32(baseabc.Abc_NtkLatchNum(n) > 0))
-	switching := gia.Saig_ManComputeSwitchProbs(graph, 48, 16, probOne)
-	values := vec.Vec_IntArray(switching)
-	for _, obj := range n.Objects() {
-		edge := obj.ReadCopyEdge()
-		if edge.Object == nil {
-			continue
-		}
-		mapped := edge.Object.ReadCopyEdge()
-		if mapped.Object != nil && mapped.Object.Temp >= 0 && mapped.Object.Temp < len(values) {
-			vec.Vec_IntWriteEntry(v, obj.ID, values[mapped.Object.Temp])
+	// map network into an AIG
+	pAig := baseabc.Abc_NtkToDar(pNtkStr, 0, boolToInt32(baseabc.Abc_NtkLatchNum(n) > 0))
+	vSwitching := gia.Saig_ManComputeSwitchProbs(pAig, 48, 16, probOne)
+	for _, pObjAbc := range n.Objects() {
+		if id, ok := powerAigObjId(pObjAbc); ok {
+			vec.Vec_IntWriteEntry(vProbs, pObjAbc.ID, vec.Vec_IntEntry(vSwitching, id))
 		}
 	}
-	Vec_IntFree(switching)
-	aig.Aig_ManStop(graph)
-	baseabc.Abc_NtkDelete(strashed)
-	return v
+	Vec_IntFree(vSwitching)
+	aig.Aig_ManStop(pAig)
+	baseabc.Abc_NtkDelete(pNtkStr)
+	return vProbs
 }
 func Abc_NtkPowerPrint(n *Abc_Ntk_t, probs *Vec_Int_t) {
 	data := float32FromVecIntBits(vec.Vec_IntArray(probs))
