@@ -54,7 +54,7 @@ func Gia_PolynCorePrintCones(p *Gia_Man_t, leaves *Vec_Int_t, verbose int32) {
 		supp := gia.Gia_ManSuppSize(p, []int32{id}, 1)
 		cone := gia.Gia_ManConeSize(p, []int32{id}, 1)
 		if verbose != 0 {
-			fmt.Printf("%4d : Supp = %3d  Cone = %3d\n", i, supp, cone)
+			fmt.Printf("%4d : Supp = %3d  Cone = %3d  \n", i, supp, cone)
 		}
 		if supp > maxSupp {
 			maxSupp = supp
@@ -83,9 +83,7 @@ func Gia_PolynCoreDupTreePlus_rec(dst, p *Gia_Man_t, o *Gia_Obj_t) int32 {
 	return int32(o.Value)
 }
 func Gia_PolynCoreDupTree(p *Gia_Man_t, extra, leaves, nodes *Vec_Int_t, cones int32) *Gia_Man_t {
-	if gia.Gia_ManRegNum(p) != 0 {
-		panic("acec: core duplication requires combinational graph")
-	}
+	// ABC asserts a combinational graph; release builds go on.
 	gia.Gia_ManFillValue(p)
 	dst := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
 	dst.CopyIdentityFrom(p)

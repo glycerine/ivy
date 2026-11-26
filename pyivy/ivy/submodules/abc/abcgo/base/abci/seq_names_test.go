@@ -82,3 +82,12 @@ func TestSetRegNumOverwritesLikeNative(t *testing.T) {
 		t.Fatalf("&setregnum:\n%s", out)
 	}
 }
+
+// Native: abc -c "read s27.blif; strash; &get; &atree -v". Release ABC runs
+// on sequential AIGs and prints C's "inf" for a division by zero adders.
+func TestAtreeSequentialLikeNative(t *testing.T) {
+	out := runScript(t, "read test_vectors/seq/s27.blif; strash; &get; &atree -v")
+	if !strings.Contains(out, "Hashed/Adders = inf.") || !strings.Contains(out, "   1 : Supp =   6  Cone =   7  \n") {
+		t.Fatalf("&atree on s27:\n%s", out)
+	}
+}

@@ -85,7 +85,7 @@ func Ree_ManComputeCuts(p *Gia_Man_t, pxors **Vec_Int_t, verbose int32) *Vec_Int
 		copy(raw[6*i:6*i+6], records[i][:])
 	}
 	if verbose != 0 {
-		fmt.Printf("Adders = %d.  Total cuts = %d.  Hashed cuts = %d.  Hashed/Adders = %.2f.\n", len(records), vec.Vec_IntSize(data)/3, vec.Hash_IntManEntryNum(h), 6*float64(vec.Hash_IntManEntryNum(h))/float64(vec.Vec_IntSize(adds)))
+		fmt.Printf("Adders = %d.  Total cuts = %d.  Hashed cuts = %d.  Hashed/Adders = %s.\n", len(records), vec.Vec_IntSize(data)/3, vec.Hash_IntManEntryNum(h), util.CFloat(6*float64(vec.Hash_IntManEntryNum(h))/float64(vec.Vec_IntSize(adds)), 2))
 	}
 	vec.Hash_IntManStop(h)
 	Ree_ManRemoveTrivial(p, adds)
