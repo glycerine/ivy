@@ -1,0 +1,13 @@
+.model sym2
+.inputs a b c
+.outputs m x
+.names a b c m
+11- 1
+1-1 1
+-11 1
+.names a b c x
+100 1
+010 1
+001 1
+111 1
+.end

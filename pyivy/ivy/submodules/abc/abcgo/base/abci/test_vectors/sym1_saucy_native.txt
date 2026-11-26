@@ -1,0 +1,19 @@
+Build functional dependency graph (dependency stats are below) ... Total func supps   =        8.
+Total struct supps =        8.
+Sat runs SAT       =        0.
+Sat runs UNSAT     =        0.
+	--------------------
+Initial Refine by Dependency graph ... done!
+Initial Refine by Simulation ... done!
+	--------------------
+(d a)(c b)
+(d b)(a c)
+(f g)(c b)
+group size = 8.000000e0
+levels = 5
+nodes = 34
+generators = 3
+total support = 12
+average support = 4.00
+nodes per generator = 11.33
+bad nodes = 6

@@ -1444,8 +1444,12 @@ func select_statically(s *saucy, target, lmin, rmin *int32) {
 	*target = s.left.cfront[s.splitvar[s.lev]]
 	*rmin = *target
 	*lmin = s.left.unlab[s.splitvar[s.lev]]
+	// "try to map identically!": abcSaucy.c compares right.lab[*rmin], not
+	// right.lab[i], so the loop can only keep rmin where it is. Mapping
+	// identically would change the search (on sym1 it adds a bad node), so
+	// the port keeps ABC's comparison.
 	for i := *rmin; i <= *rmin+s.right.clen[*target]; i++ {
-		if s.right.lab[i] == s.left.lab[*lmin] {
+		if s.right.lab[*rmin] == s.left.lab[*lmin] {
 			*rmin = i
 			break
 		}
@@ -1869,7 +1873,8 @@ func saucy_search(pNtk *Abc_Ntk_t, s *saucy, directed int32, colors []int32, sta
 		add_induce(s, &s.left, i)
 		fix_fronts(&s.left, i, i)
 	}
-	for i, j := int32(0), int32(-1); i < s.n; i += s.left.clen[i] + 1 {
+	j := int32(-1)
+	for i := int32(0); i < s.n; i += s.left.clen[i] + 1 {
 		if s.left.clen[i] == 0 {
 			continue
 		}
@@ -1877,8 +1882,9 @@ func saucy_search(pNtk *Abc_Ntk_t, s *saucy, directed int32, colors []int32, sta
 		s.nextnon[j+1] = i
 		j = i
 	}
-	s.prevnon[s.n] = int32(-1)
-	s.nextnon[s.n+1] = int32(-1)
+	// Fix the end: the last nonsingleton cell is followed by the sentinel n
+	s.prevnon[s.n] = j
+	s.nextnon[j+1] = s.n
 	s.split = split_init
 	s.refineBySim1 = refineBySim1_init
 	s.refineBySim2 = refineBySim2_init
@@ -2062,7 +2068,9 @@ func buildDepGraph(pNtk *Abc_Ntk_t, iDep, oDep []*Vec_Int_t) *saucy_graph {
 func assignRandomBitsToCells(pNtk *Abc_Ntk_t, c *coloring) *Vec_Int_t {
 	randVec := Vec_IntAlloc(1)
 	for i := int32(0); i < baseabc.Abc_NtkPiNum(pNtk); i += c.clen[i+baseabc.Abc_NtkPoNum(pNtk)] + 1 {
-		Vec_IntPush(randVec, int32(cascadeRandN(2)))
+		// SIM_RANDOM_UNSIGNED % 2, on ABC's process-wide rand() stream
+		bit := ((abcutil.C_Rand() << 24) ^ (abcutil.C_Rand() << 12) ^ abcutil.C_Rand()) % 2
+		Vec_IntPush(randVec, int32(bit))
 	}
 	return randVec
 }

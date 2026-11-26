@@ -2,6 +2,7 @@ package sim
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -23,8 +24,8 @@ func Sim_ComputeFunSuppSourceWithSolver(g *aig.Graph, verbose bool, solver Sourc
 	p := Sim_ManStart(g, false)
 	start := time.Now()
 	defer func() { p.timeTotal = time.Since(start).Nanoseconds(); Sim_ManPrintStats(p) }() // as Sim_ManStop
-	rng := newSourceRand(0xABC)
-	sourceAssignRandom(p, rng)
+	util.C_Srand(0xABC)                                                                    // ABC's process-wide rand() stream
+	sourceAssignRandom(p, nil)
 	sourceComputeSuppRound(p, false)
 	Sim_ComputeSuppSetTargets(p)
 	if verbose {
@@ -34,7 +35,7 @@ func Sim_ComputeFunSuppSourceWithSolver(g *aig.Graph, verbose bool, solver Sourc
 		return p.Functional
 	}
 
-	sourceAssignRandom(p, rng)
+	sourceAssignRandom(p, nil)
 	nSolved := sourceComputeSuppRound(p, true)
 	if targetCount(p) == 0 {
 		return p.Functional
@@ -255,7 +256,11 @@ func sourceAssignRandom(p *Sim_Man_t, rng *sourceRand) {
 	for _, e := range p.Inputs {
 		row := p.Sim0[e.NodeID()]
 		for i := range row {
-			row[i] = (rng.Uint31() << 24) ^ (rng.Uint31() << 12) ^ rng.Uint31()
+			if rng != nil {
+				row[i] = (rng.Uint31() << 24) ^ (rng.Uint31() << 12) ^ rng.Uint31()
+			} else { // SIM_RANDOM_UNSIGNED on the process-wide stream
+				row[i] = (util.C_Rand() << 24) ^ (util.C_Rand() << 12) ^ util.C_Rand()
+			}
 		}
 	}
 }
