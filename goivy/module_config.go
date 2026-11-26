@@ -174,13 +174,14 @@ type Config struct {
 
 // SolverOptions controls per-solver Z3 behavior.
 type SolverOptions struct {
-	Seed           int
-	SeedSet        bool
-	Incremental    bool
-	MacroFinder    bool
-	MacroFinderSet bool
-	ShowVCs        bool
-	UseZ3Enums     bool
+	Seed                  int
+	SeedSet               bool
+	Incremental           bool
+	MacroFinder           bool
+	MacroFinderSet        bool
+	ShowVCs               bool
+	UseZ3Enums            bool
+	DisableModelShrinking bool
 }
 
 // DefaultSolverOptions returns the default solver options.

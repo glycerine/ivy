@@ -20,7 +20,8 @@ from .canon import node_canon
 
 def p_c_a(s):
     a = s.split(':')
-    return iu.Location(a[0]+'.ivy',int(a[1]))
+    filename = a[0] if a[0].endswith('.ivy') else a[0] + '.ivy'
+    return iu.Location(filename,int(a[1]))
 
 checked_assert = iu.Parameter("assert","",check=lambda s: len(s.split(':'))==2,
                               process=p_c_a)

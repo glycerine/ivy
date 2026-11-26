@@ -47,6 +47,7 @@ def set_macro_finder(truth):
 
 opt_incremental = iu.BooleanParameter("incremental",True)
 opt_show_vcs = iu.BooleanParameter("show_vcs",False)
+opt_shrink = iu.BooleanParameter("shrink",True)
 
 #z3.set_param('smt.mbqi.trace',True)
 opt_macro_finder = iu.BooleanParameter("macro_finder",True)
@@ -1320,7 +1321,6 @@ def model_if_none(clauses1,implied,model):
                 s.add(formula_to_z3(sort_size_constraint(sort,sort_size)))
             if s.check() != z3.unsat:
                 m = get_model(s)
-                print("model = {}, size = {}".format(m,sort_size))
 ##        print "clauses1 = {}".format(clauses1)
 ##        print "z3c = {}".format(str(z3c))
                 syms = used_symbols_clauses(clauses1)
@@ -1561,7 +1561,7 @@ def get_small_model(clauses, sorts_to_minimize, relations_to_minimize, final_con
     if res == z3.unsat:
         return None
 
-    if shrink:
+    if shrink and opt_shrink.get():
         print("searching for a small model...", end=' ')
         sys.stdout.flush()
         for x in chain(sorts_to_minimize, relations_to_minimize):

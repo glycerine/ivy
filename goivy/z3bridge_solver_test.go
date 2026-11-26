@@ -2100,6 +2100,37 @@ func TestZ3BridgeGetSmallModelUnsat(t *testing.T) {
 	}
 }
 
+func TestGetSmallModelShrinkOption(t *testing.T) {
+	for _, tc := range []struct {
+		value string
+		want  smt.Z3CheckResult
+	}{{"true", smt.Unsat}, {"false", smt.Sat}} {
+		t.Run(tc.value, func(t *testing.T) {
+			cfg := NewConfig()
+			if err := ApplyIvyCheckParams(cfg, map[string]string{"shrink": tc.value}); err != nil {
+				t.Fatal(err)
+			}
+			sort := z3UnintSort("node")
+			sig := NewSig()
+			sig.AddSort(sort)
+			solver := NewSolverFromSig(sig, cfg.SolverOpts)
+			model, err := solver.GetSmallModel(TrueClauses(nil), []Sort{sort}, nil)
+			if err != nil || model == nil {
+				t.Fatalf("expected a model, got %v, %v", model, err)
+			}
+			distinct := &LogicNot{Body: &Eq{T1: NewConst("a", sort), T2: NewConst("b", sort)}}
+			condition, err := solver.FormulaToZ3(distinct)
+			if err != nil {
+				t.Fatal(err)
+			}
+			model.Solver.Assert(condition)
+			if got := model.Solver.Check(); got != tc.want {
+				t.Fatalf("check with two distinct nodes: got %v, want %v", got, tc.want)
+			}
+		})
+	}
+}
+
 // --- Test: FilterRedundantFacts ---
 
 func TestZ3BridgeFilterRedundantFactsNoNeg(t *testing.T) {

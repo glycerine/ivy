@@ -101,6 +101,12 @@ func ApplyIvyCheckParams(cfg *Config, params map[string]string) error {
 				return err
 			}
 			cfg.SolverOpts.ShowVCs = parsed
+		case "shrink":
+			parsed, err := parseIvyCheckBool(key, val)
+			if err != nil {
+				return err
+			}
+			cfg.SolverOpts.DisableModelShrinking = !parsed
 		case "detailed":
 			parsed, err := parseIvyCheckBool(key, val)
 			if err != nil {
@@ -305,7 +311,7 @@ func parseIvyCheckAssertLocation(s string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("bad parameter value: assert=%s", s)
 	}
-	return fmt.Sprintf("%s.ivy:%d", parts[0], line), nil
+	return fmt.Sprintf("%s:%d", checkedAssertionFilename(parts[0]), line), nil
 }
 
 func parseIvyCheckBool(key, s string) (bool, error) {

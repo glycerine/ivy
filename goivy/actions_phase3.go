@@ -10,7 +10,7 @@ import (
 // --- PCA ---
 
 // PCA parses a checked-assertion location string of the form "filename:line".
-// Returns a Location with ".ivy" appended to the filename.
+// Accepts the filename with or without the ".ivy" extension.
 // Corresponds to Python's p_c_a.
 func PCA(s string) Location {
 	parts := strings.SplitN(s, ":", 2)
@@ -19,7 +19,14 @@ func PCA(s string) Location {
 	}
 	line := 0
 	fmt.Sscanf(parts[1], "%d", &line)
-	return Location{Filename: parts[0] + ".ivy", Line: line}
+	return Location{Filename: checkedAssertionFilename(parts[0]), Line: line}
+}
+
+func checkedAssertionFilename(filename string) string {
+	if strings.HasSuffix(filename, ".ivy") {
+		return filename
+	}
+	return filename + ".ivy"
 }
 
 // --- UnrollContext ---

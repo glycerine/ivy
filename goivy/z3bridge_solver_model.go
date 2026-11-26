@@ -1410,7 +1410,7 @@ func (s *Solver) GetSmallModelWithCond(
 		return nil, nil
 	}
 
-	if shrink {
+	if shrink && !s.opts.DisableModelShrinking {
 		// Minimize sorts. Python ivy_solver.py:1463 calls decide(s) here.
 		for _, sort := range sortsToMinimize {
 			for n := 1; ; n++ {

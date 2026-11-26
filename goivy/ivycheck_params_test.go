@@ -65,13 +65,15 @@ func TestApplyIvyCheckParamsParserParameterReturnsErrorLikePython(t *testing.T) 
 }
 
 func TestApplyIvyCheckParamsAssertParameterNormalizesLocationLikePython(t *testing.T) {
-	cfg := NewConfig()
-	err := ApplyIvyCheckParams(cfg, map[string]string{"assert": "foo:17"})
-	if err != nil {
-		t.Fatalf("ApplyIvyCheckParams returned error: %v", err)
-	}
-	if cfg.CheckLineno != "foo.ivy:17" {
-		t.Fatalf("expected assert=foo:17 to become foo.ivy:17 like Python, got %q", cfg.CheckLineno)
+	for _, input := range []string{"foo:17", "foo.ivy:17"} {
+		cfg := NewConfig()
+		if err := ApplyIvyCheckParams(cfg, map[string]string{"assert": input}); err != nil {
+			t.Fatalf("assert=%s: %v", input, err)
+		}
+		if want := "foo.ivy:17"; cfg.CheckLineno != want || PCA(input).FileLineKey() != want {
+			t.Fatalf("assert=%s: config location %q, PCA location %q, want %q", input,
+				cfg.CheckLineno, PCA(input).FileLineKey(), want)
+		}
 	}
 }
 
