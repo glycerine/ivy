@@ -3,7 +3,6 @@ package gia
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
-	"github.com/glycerine/abcgo/opt/dau"
 	"github.com/glycerine/abcgo/proof/dch"
 )
 
@@ -31,7 +30,7 @@ func giaAigSynch2(input *Gia_Man_t, pars *dch.Params, relax int32, dsdBalance fu
 	if Gia_ManHasMapping(input) != 0 {
 		Gia_ManTransferMapping(first, input)
 		previous := first
-		first = Gia_ManFromAig(dau.Dsm_ManDeriveGia(previous, 0))
+		first = Dsm_ManDeriveGia(previous, 0)
 		Gia_ManStop(previous)
 	}
 	second := Gia_ManAreaBalance(first, 0, util.ABC_INFINITY, 0, 0)

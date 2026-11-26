@@ -6,7 +6,6 @@ import (
 
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/opt/dau"
 )
 
 // Balance ordered supergates by level, preferring already hashed pairs.
@@ -654,8 +653,7 @@ func Gia_ManAreaBalance(src *Gia_Man_t, simple, limit, verbose, veryVerbose int3
 	inputs := Gia_ManGetCiLevels(src)
 	var initial *Gia_Man_t
 	if Gia_ManHasMapping(src) != 0 {
-		graph := dau.Dsm_ManDeriveGia(src, 0)
-		initial = Gia_ManFromAig(graph)
+		initial = Dsm_ManDeriveGia(src, 0)
 		giaCopyInterfaceMetadata(initial, src)
 	} else {
 		initial = Gia_ManDup(src)
