@@ -2,7 +2,6 @@ package acec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
-	"runtime"
 	"testing"
 )
 
@@ -13,11 +12,10 @@ func TestNormalizeWithoutArithmeticBox(t *testing.T) {
 	if box := Acec_DeriveBox(p, nil, 0, 0, 0); box != nil {
 		t.Fatal("expected no arithmetic box")
 	}
-	// Compiled C dereferences the absent box in Acec_InsertBox.
-	defer func() {
-		if _, ok := recover().(runtime.Error); !ok {
-			t.Fatal("expected nil dereference of absent arithmetic box")
-		}
-	}()
-	Acec_Normalize(p, 0, 0)
+	// ABC dereferenced the absent box in Acec_InsertBox; now it reports it
+	// and returns a copy (CBUGS_FIXED.md #11).
+	q := Acec_Normalize(p, 0, 0)
+	if q == nil || gia.Gia_ManCiNum(q) != 1 || gia.Gia_ManCoNum(q) != 1 || gia.Gia_ManAndNum(q) != 0 {
+		t.Fatal("expected a copy of the AIG")
+	}
 }
