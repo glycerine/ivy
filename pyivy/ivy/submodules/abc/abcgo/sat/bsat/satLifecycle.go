@@ -1,5 +1,7 @@
 package bsat
 
+import "sync"
+
 // Default activity initialization has only the integer branch: the C routine
 // itself sets both representation selectors to zero before choosing a branch.
 func solver_init_activities(s *sat_solver) {
@@ -12,8 +14,18 @@ func solver_init_activities(s *sat_solver) {
 }
 func sat_solver_new() *sat_solver                   { return newSatSolver(17, 91648253) }
 func zsat_solver_new_seed(seed float64) *sat_solver { return newSatSolver(15, seed) }
+
+// satWatchPool recycles the watch lists of deleted solvers: windowed
+// clients such as mfs build hundreds of small solvers, and regrowing every
+// list from four entries dominated clause loading. Only storage is reused;
+// every list is empty when handed out.
+var satWatchPool sync.Pool
+
 func newSatSolver(pageBits int32, seed float64) *sat_solver {
 	s := new(sat_solver)
+	if w, ok := satWatchPool.Get().(*[]veci); ok {
+		s.wlists = (*w)[:0]
+	}
 	s.satAssignments = newSatAssignments(0)
 	Sat_MemAlloc_(&s.Mem, pageBits)
 	s.hLearnts = -1
@@ -121,6 +133,12 @@ func sat_solver_addvar(s *sat_solver) int32 { sat_solver_setnvars(s, s.size+1); 
 // All owned buffers and proof-store chunks are managed by Go's collector.
 func sat_solver_delete(s *sat_solver) {
 	if s != nil {
+		if w := s.wlists[:cap(s.wlists)]; len(w) > 0 && len(w) <= 1<<16 {
+			for i := range w {
+				w[i].size = 0
+			}
+			satWatchPool.Put(&w)
+		}
 		*s = sat_solver{}
 	}
 }
