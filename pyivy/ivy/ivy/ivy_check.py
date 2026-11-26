@@ -28,6 +28,7 @@ from . import ivy_l2s
 from . import ivy_ranking
 from . import ivy_mc
 from . import ivy_vmt
+from . import ivy_mypyvy
 from . import ivy_bmc
 from . import ivy_tactics
 from . import ivy_acl
@@ -1045,7 +1046,7 @@ def mc_tactic(prover,goals,proof):
 
 ivy_proof.register_tactic('mc',mc_tactic)
 
-def vmt_tactic(prover,goals,proof):
+def model_export_tactic(prover,goals,proof,method):
     goal = goals[0]
     conc = ivy_proof.goal_conc(goal)
     if isinstance(conc,ivy_ast.TemporalModels):
@@ -1054,10 +1055,22 @@ def vmt_tactic(prover,goals,proof):
             goals = ivy_tactics.skolemizenp(prover,goals,proof)
             l2s_pf = proof.clone([proof.args[0],ivy_ast.TacticLets()]+list(proof.args[2:]))
             goals = ivy_l2s.l2s_tactic_full(prover,goals,l2s_pf)
-    check_subgoals(goals[0:1],method=ivy_vmt.check_isolate)
+    check_subgoals(goals[0:1],method=method)
     return goals[1:]
 
+def vmt_tactic(prover,goals,proof):
+    return model_export_tactic(prover,goals,proof,ivy_vmt.check_isolate)
+
+def mypyvy_tactic(prover,goals,proof):
+    return model_export_tactic(prover,goals,proof,ivy_mypyvy.check_isolate)
+
+def duoai_tactic(prover,goals,proof):
+    from . import ivy_duoai
+    return model_export_tactic(prover,goals,proof,ivy_duoai.check_isolate)
+
 ivy_proof.register_tactic('vmt',vmt_tactic)
+ivy_proof.register_tactic('mypyvy',mypyvy_tactic)
+ivy_proof.register_tactic('duoai',duoai_tactic)
                     
 def all_assert_linenos():
     mod = im.module
@@ -1183,7 +1196,9 @@ def check_module():
             method_name = get_isolate_method(isolate)
             if opt_unchecked_properties.get() != None:
                 preprocess_assumed_ignored_properties()
-            if method_name == 'mc':
+            if method_name == 'convert_to_mypyvy':
+                ivy_mypyvy.check_isolate()
+            elif method_name == 'mc':
                 mc_isolate(isolate)
             elif method_name == 'vmt':
                 mc_isolate(isolate,meth=ivy_vmt.check_isolate)

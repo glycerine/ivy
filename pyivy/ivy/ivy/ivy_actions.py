@@ -1379,7 +1379,7 @@ class CallAction(Action):
 
         if __debug__: xtracer.trace("actions.CallAction.int_update EXIT")
         return v
-    def apply_actuals(self,domain,pvars,v):
+    def bind_actuals(self,domain,v):
         assert hasattr(v,'formal_params'), v
         actual_params = self.args[0].args
         actual_returns = self.args[1:]
@@ -1414,12 +1414,13 @@ class CallAction(Action):
                 raise IvyError(self,"value for output parameter {} has wrong sort".format(x))
         input_asgns = [AssignAction(x,y) for x,y in zip(formal_params,actual_params)]
         output_asgns = [AssignAction(y,x) for x,y in zip(formal_returns,actual_returns)]
-        res = Sequence(Sequence(*input_asgns),BindOldsAction(v),Sequence(*output_asgns))
-        res = res.int_update(domain,pvars)
-#        print "call update: {}".format(res)
-        res = hide(formal_params+formal_returns,res)
-#        print "after hide: {}".format(res)
-        return res
+        return formal_params+formal_returns,Sequence(Sequence(*input_asgns),BindOldsAction(v),Sequence(*output_asgns))
+    def apply_actuals(self,domain,pvars,v):
+        formals,body = self.bind_actuals(domain,v)
+        return hide(formals,body.int_update(domain,pvars))
+    def inline(self,domain,v):
+        formals,body = self.bind_actuals(domain,v)
+        return LocalAction(*(formals+[body])) if formals else body
     def prefix_calls(self,pref):
         if __debug__: xtracer.trace("actions.prefix_calls ENTER type=%s" % type(self).__name__)
         res = CallAction(*([self.args[0].prefix(pref) if isinstance(pref,str)

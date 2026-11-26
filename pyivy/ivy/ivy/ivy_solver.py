@@ -374,6 +374,13 @@ def symbol_to_z3(s):
     if __debug__: xtracer.trace("TranslateSort_call callsite=symbol_to_z3_func HASH canon=%s" % s.sexp())
     return z3.Function(s.name, s.sort.to_z3())
 
+def symbol_to_z3_full(symbol):
+    if symbol.is_numeral():
+        return numeral_to_z3(symbol)
+    name = solver_name(symbol)
+    sort = symbol.sort.to_z3()
+    return z3.Function(name,sort) if symbol.sort.dom else z3.Const(name,sort)
+
 ivy_logic.UninterpretedSort.to_z3 = uninterpretedsort
 ivy_logic.FunctionSort.to_z3 = functionsort
 ivy_logic.EnumeratedSort.to_z3 = enumeratedsort

@@ -3,6 +3,7 @@ package goivy
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"reflect"
 	"sort"
 	"strings"
@@ -132,5 +133,56 @@ print(json.dumps({"nconjs": len(subgoals)}))
 	}
 	if got := strings.Count(string(vmt), ":invar-property"); got != want.NConjs {
 		t.Fatalf("VMT invariant property count differs from Python proof-tactic result\nwant: %d\ngot:  %d\n%s", want.NConjs, got, vmt)
+	}
+}
+
+func TestVMTExportFramesIndependentActions(t *testing.T) {
+	const source = `#lang ivy1.8
+type item
+individual sample : item
+relation stable(X:item)
+axiom [fixed] stable(sample)
+relation p
+relation q
+after init { p := false; q := false }
+export action set_p = { p := true }
+export action set_q = { q := true }
+invariant [p_safe] p | ~p
+invariant [q_safe] q | ~q
+`
+	mod := New()
+	if err := SourceString("framed.ivy", source, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		t.Fatal(err)
+	}
+	if err := CreateIsolate("this", mod); err != nil {
+		t.Fatal(err)
+	}
+	exitTheory := mod.TheoryContext()
+	defer exitTheory()
+	mod.Name = filepath.Join(t.TempDir(), "framed")
+	if err := VMTCheckIsolate("vmt", mod); err != nil {
+		t.Fatal(err)
+	}
+	cmd := pythonIvyCommandForTest(t, "-O", "-c", `
+from ivy import z3
+from pathlib import Path
+import sys
+
+model = Path(sys.argv[1]).read_text()
+for constraint, want in [
+    ("(and $trans (not p) (not q) new_p (not new_q))", z3.sat),
+    ("(and $trans (not p) (not q) new_p new_q)", z3.unsat),
+    ("(and $init (or p q))", z3.unsat),
+    ("(not (stable sample))", z3.unsat),
+]:
+    solver = z3.Solver()
+    solver.add(z3.parse_smt2_string(model + "\n(assert " + constraint + ")"))
+    got = solver.check()
+    if got != want:
+        raise AssertionError((constraint, str(got), str(want)))
+`, mod.Name+".vmt")
+	if out, err := cmd.CombinedOutput(); err != nil {
+		data, _ := os.ReadFile(mod.Name + ".vmt")
+		t.Fatalf("VMT transition validation failed: %v\n%s\n%s", err, out, data)
 	}
 }

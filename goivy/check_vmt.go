@@ -3,9 +3,7 @@ package goivy
 
 import (
 	"fmt"
-	"os"
 	"sort"
-	"strings"
 
 	"github.com/glycerine/ivy/goivy/xtracer"
 )
@@ -36,9 +34,15 @@ func checkedAction(a ActionsAction, checkLineno string) bool {
 // actionToTR converts an action to a transition relation triple
 // (stateVars, trans, error). Corresponds to Python's action_to_tr.
 func actionToTR(m *Module, action ActionsAction, method string) ([]string, Expr, Expr, error) {
-	// Get background theory
-	bgt := m.BackgroundTheory(nil)
+	modified, transition, failure, err := vmtActionTransition(m, action, method, m.BackgroundTheory(nil))
+	var names []string
+	for _, symbol := range modified {
+		names = append(names, symbol.Name)
+	}
+	return names, transition, failure, err
+}
 
+func vmtActionTransition(m *Module, action ActionsAction, method string, bgt *Clauses) ([]*Const, Expr, Expr, error) {
 	// For fsmc method, unroll loops before computing the update.
 	// Python: with ia.UnrollContext(im.module.sort_card): ...
 	if method == "fsmc" && m.Cfg != nil && m.Cfg.ActCfg != nil {
@@ -89,8 +93,8 @@ func actionToTR(m *Module, action ActionsAction, method string) ([]string, Expr,
 			newSym := ActionNewName(sym)
 			rn[newSym] = "__" + newSym
 		}
-		transNode = checkRenameNode(transNode, rn)
-		errNodeFmla = checkRenameNode(errNodeFmla, rn)
+		transNode = RenameASTByName(transNode, rn)
+		errNodeFmla = RenameASTByName(errNodeFmla, rn)
 
 		var filtered []*Const
 		for _, sv := range stvars {
@@ -101,7 +105,7 @@ func actionToTR(m *Module, action ActionsAction, method string) ([]string, Expr,
 		stvars = filtered
 	}
 
-	return ModifiedNames(postUpd), transNode, errNodeFmla, nil
+	return stvars, transNode, errNodeFmla, nil
 }
 
 // addErrFlag transforms an action tree to use an error flag for assertion checking.
@@ -561,141 +565,42 @@ func VMTCheckIsolate(method string, m *Module) error {
 		conjs[i] = conj.Clone([]Node{conj.Label, newFormula}).(*LabeledFormula)
 	}
 
-	// Convert the global action and initializer to logic
-	var transs []Expr
-	var allStVars []string
+	var transitions []vmtTransition
+	state := NewInsMap[NodeKey, *Const]()
 	for _, na := range actionList {
-		stvars, trans, _, err := actionToTR(m, na.Action, method)
+		modified, transition, _, err := vmtActionTransition(m, na.Action, method, m.BackgroundTheory(nil))
 		if err != nil {
 			return fmt.Errorf("action_to_tr failed for %s: %w", na.Name, err)
 		}
-		transs = append(transs, trans)
-		allStVars = appendUnique(allStVars, stvars)
+		for _, symbol := range modified {
+			state.Set(Key(symbol), symbol)
+		}
+		transitions = append(transitions, vmtTransition{name: na.Name, formula: transition, modified: modified})
 	}
-
-	// Build combined transition relation: disjunction of all action transitions
-	var trans Expr
-	if len(transs) == 1 {
-		trans = transs[0]
-	} else if len(transs) > 1 {
-		trans = &LogicOr{Terms: transs}
-	} else {
-		trans = False
-	}
-
-	// Convert initializer to state predicate
-	istvars, init, _, err := actionToTR(m, initAction, method)
+	modified, init, _, err := vmtActionTransition(m, initAction, method, m.BackgroundTheory(nil))
 	if err != nil {
 		return fmt.Errorf("action_to_tr failed for init: %w", err)
 	}
-	allStVars = appendUnique(allStVars, istvars)
-
-	// Convert init to a state predicate (strongest post)
-	// In Python: action_to_state converts from action style to state style
-	// Convert string names to Consts for the Update
-	var istConsts []*Const
-	for _, name := range istvars {
-		istConsts = append(istConsts, NewConst(name, TopS))
+	for _, symbol := range modified {
+		state.Set(Key(symbol), symbol)
 	}
-	initState := ActionToState(&Update{
-		Modified: istConsts,
-		TR:       FormulaToClauses(init, nil),
-		Pre:      FalseClauses(nil),
-	})
-	initFormula := initState.TRNode()
-
-	// Write the VMT file
-	slv := NewSolver(m, m.Cfg.SolverOpts)
-
-	f, err := os.Create("ivy.vmt")
-	if err != nil {
-		return fmt.Errorf("failed to create ivy.vmt: %w", err)
+	initUpdate := &Update{
+		Modified: modified,
+		TR:       FormulaToClauses(init, EmptyAnnotation{}),
+		Pre:      FalseClauses(EmptyAnnotation{}),
 	}
-	defer f.Close()
-
-	// Collect all symbols used in init, trans, and conjecture formulas
-	allFormulas := []Expr{initFormula, trans}
-	for _, conj := range conjs {
-		allFormulas = append(allFormulas, conj.Formula.(Expr))
+	initial := ActionToState(initUpdate).TRNode()
+	if m.InitCond != nil {
+		initial = ForwardImage(m.InitCond, m.BackgroundTheory(nil), initUpdate).ToOpenFormula()
 	}
-
-	syms := collectAllSymbols(allFormulas)
-	for _, sym := range syms {
-		name := solverName(sig, sym)
-		if name == "" {
-			continue
-		}
-		decl, err := slv.Translator().Translate(sym)
-		if err != nil {
-			continue
-		}
-		if IsFunctionSort(sym.CSort) {
-			fmt.Fprintln(f, decl.String())
-		} else {
-			if !IsInterpretedSymbol(sig, sym) {
-				declSort := decl.ExprSort()
-				fmt.Fprintf(f, "(declare-const %s %s)\n", decl.String(), declSort.String())
-			}
+	var axioms []Expr
+	for _, formula := range m.BackgroundTheory(nil).Fmlas {
+		if !vmtMentionsState(formula, state) {
+			axioms = append(axioms, formula)
 		}
 	}
-
-	// Declare state variable pairs (current and next)
-	ctr := 0
-	initTransFormulas := []Expr{initFormula, trans}
-	initTransSyms := collectAllSymbols(initTransFormulas)
-	for _, sym := range initTransSyms {
-		if !IsNew(sym.Name) {
-			continue
-		}
-		decl, err := slv.Translator().Translate(sym)
-		if err != nil {
-			continue
-		}
-		baseSym := NewConst(NewOf(sym.Name), sym.CSort)
-		declc, err := slv.Translator().Translate(baseSym)
-		if err != nil {
-			continue
-		}
-		declSort := decl.ExprSort()
-		fmt.Fprintf(f, "(declare-fun $sv.%d () %s (! %s :next %s))\n",
-			ctr, declSort.String(), declc.String(), decl.String())
-		ctr++
-	}
-
-	// Write init predicate
-	initZ3, err := slv.FormulaToZ3(initFormula)
-	if err != nil {
-		return fmt.Errorf("failed to translate init to Z3: %w", err)
-	}
-	fmt.Fprintf(f, "(define-fun $init () Bool (!\n%s :init true))\n", initZ3.String())
-
-	// Write trans predicate
-	transZ3, err := slv.FormulaToZ3(trans)
-	if err != nil {
-		return fmt.Errorf("failed to translate trans to Z3: %w", err)
-	}
-	fmt.Fprintf(f, "(define-fun $trans () Bool (!\n%s :trans true))\n", transZ3.String())
-
-	// Write invariant properties (conjectures)
-	propCtr := 1
-	for _, lf := range conjs {
-		var labelExpr Expr
-		if lf.Label != nil {
-			labelExpr = lf.Label.(Expr)
-		}
-		labelStr := labelString(labelExpr)
-		fmlaZ3, err := slv.FormulaToZ3(lf.Formula.(Expr))
-		if err != nil {
-			continue
-		}
-		fmt.Fprintf(f, "(define-fun %s () Bool (!\n%s :invar-property %d))\n",
-			labelStr, fmlaZ3.String(), propCtr)
-		propCtr++
-	}
-
-	fmt.Println("output written to ivy.vmt")
-
-	return nil
+	addVMTImmutableSymbols(m, initial, transitions, state, axioms)
+	return writeVMT(m, initial, transitions, state, axioms, conjs)
 }
 
 // -----------------------------------------------------------------------
@@ -826,73 +731,22 @@ func extractDefSymNames(bgt Expr) map[string]bool {
 	return nil
 }
 
-// renameNode renames constants in a node according to the name map.
-func checkRenameNode(node Expr, nameMap map[string]string) Expr {
-	if len(nameMap) == 0 || node == nil {
-		return node
-	}
-	constMap := make(map[NodeKey]*Const, len(nameMap))
-	for old, new_ := range nameMap {
-		oldSym := NewConst(old, TopS)
-		constMap[Key(oldSym)] = NewConst(new_, TopS)
-	}
-	return RenameAST(node, constMap)
-}
-
 // collectAllSymbols collects all constant symbols from a list of formulas.
 func collectAllSymbols(formulas []Expr) []*Const {
-	seen := make(map[string]Expr)
+	seen := make(map[NodeKey]*Const)
 	for _, f := range formulas {
-		syms := UsedSymbolsAST(f)
-		for _, sym := range syms.All() {
-			name := ExprName(sym)
-			if _, ok := seen[name]; !ok {
-				seen[name] = sym
+		for key, sym := range UsedSymbolsAST(f).All() {
+			if symbol, ok := sym.(*Const); ok {
+				seen[key] = symbol
 			}
 		}
 	}
-	// Return in sorted order for determinism
-	names := make([]string, 0, len(seen))
-	for name := range seen {
-		names = append(names, name)
+	result := make([]*Const, 0, len(seen))
+	for _, symbol := range seen {
+		result = append(result, symbol)
 	}
-	sort.Strings(names)
-	result := make([]*Const, 0, len(names))
-	for _, name := range names {
-		if c, ok := seen[name].(*Const); ok {
-			result = append(result, c)
-		}
-	}
+	sort.Slice(result, func(i, j int) bool { return Key(result[i]) < Key(result[j]) })
 	return result
-}
-
-// solverName returns the solver-level name for a symbol, or empty string
-// if the symbol should not be declared. Corresponds to Python's
-// slvr.solver_name(sym).
-func solverName(sig *Sig, sym *Const) string {
-	if sym.Name == "" {
-		return ""
-	}
-	// Skip interpreted symbols like numerals, =, etc.
-	if sym.Name == "=" || sym.Name == "true" || sym.Name == "false" {
-		return ""
-	}
-	return sym.Name
-}
-
-// labelString extracts a string from a label node for VMT output.
-func labelString(label Expr) string {
-	if label == nil {
-		return "$prop"
-	}
-	s := fmt.Sprint(label)
-	// Replace any characters that aren't valid in SMT-LIB identifiers
-	s = strings.ReplaceAll(s, " ", "_")
-	s = strings.ReplaceAll(s, ".", "_")
-	if s == "" {
-		return "$prop"
-	}
-	return s
 }
 
 // sortedKeys returns the sorted keys of a map[string]bool.
@@ -903,19 +757,4 @@ func checkSortedKeys(m map[string]bool) []string {
 	}
 	sort.Strings(keys)
 	return keys
-}
-
-// appendUnique appends elements from src to dst, skipping duplicates.
-func appendUnique(dst, src []string) []string {
-	seen := make(map[string]bool, len(dst))
-	for _, s := range dst {
-		seen[s] = true
-	}
-	for _, s := range src {
-		if !seen[s] {
-			seen[s] = true
-			dst = append(dst, s)
-		}
-	}
-	return dst
 }
