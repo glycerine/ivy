@@ -53,6 +53,7 @@ func (e *dsExpr) text() string {
 	}
 	return b.String()
 }
+
 // dsClose returns the bracket closing open, or 0 if open is not one.
 func dsClose(open byte) byte {
 	switch open {
@@ -826,6 +827,85 @@ func dsDecomposeInternal(p *Dau_Dsd_t, t []uint64, initial int32) int32 {
 	}
 	return status
 }
+
+// dsComputeMatches is Dau_DsdComputeMatches: for every bracket, the index
+// of its partner.
+func dsComputeMatches(s []byte) []int32 {
+	matches := make([]int32, len(s))
+	var stack [64]int32
+	top := 0
+	for i, c := range s {
+		switch c {
+		case '(', '[', '<', '{':
+			stack[top] = int32(i)
+			top++
+		case ')', ']', '>', '}':
+			top--
+			matches[stack[top]] = int32(i)
+			matches[i] = stack[top]
+		}
+	}
+	return matches
+}
+
+// dsRemoveBracesRec is Dau_DsdRemoveBraces_rec: it blanks the braces of an
+// AND nested in an AND (unless complemented) and of an XOR nested in an XOR.
+func dsRemoveBracesRec(s []byte, p *int, m []int32) {
+	if s[*p] == '!' {
+		*p++
+	}
+	for c := s[*p]; c >= 'A' && c <= 'F' || c >= '0' && c <= '9'; c = s[*p] {
+		*p++
+	}
+	if s[*p] == '<' {
+		if q := int(m[*p]); q+1 < len(s) && s[q+1] == '{' {
+			*p = q + 1
+		}
+	}
+	c := s[*p]
+	if c >= 'a' && c <= 'z' {
+		return
+	}
+	if c != '(' && c != '[' && c != '<' && c != '{' {
+		panic("dau: invalid DSD string")
+	}
+	q := int(m[*p])
+	for *p++; *p < q; *p++ {
+		compl := s[*p] == '!'
+		begin := *p
+		if compl {
+			begin++
+		}
+		dsRemoveBracesRec(s, p, m)
+		if !compl && s[begin] == '(' && s[q] == ')' || s[begin] == '[' && s[q] == ']' {
+			s[begin], s[*p] = ' ', ' '
+		}
+	}
+}
+
+// dsRemoveBraces is Dau_DsdRemoveBraces: it removes the blanked braces and
+// the double complements this leaves.
+func dsRemoveBraces(s []byte) []byte {
+	if len(s) <= 1 {
+		return s
+	}
+	p := 0
+	dsRemoveBracesRec(s, &p, dsComputeMatches(s))
+	q := 0
+	for i, c := range s {
+		if c == ' ' {
+			continue
+		}
+		if c == '!' && q > 0 && s[q-1] == '!' && i != q {
+			q--
+			continue
+		}
+		s[q] = c
+		q++
+	}
+	return s[:q]
+}
+
 func Dau_DsdDecompose(truth []uint64, n, split, write int32, result *[]byte) int32 {
 	return Dau_DsdDecomposeLevel(truth, n, split, write, result, nil)
 }
@@ -842,10 +922,7 @@ func Dau_DsdDecomposeLevel(truth []uint64, n, split, write int32, result *[]byte
 	}
 	p := &Dau_Dsd_t{fSplitPrime: split, fWriteTruth: write, pVarLevels: levels}
 	status := dsDecomposeInternal(p, truth, n)
-	text := p.output.String()
-	if len(text) > 1 {
-		text = dsFlatten(dsParse(text)).text()
-	}
+	text := dsRemoveBraces([]byte(p.output.String()))
 	if result != nil {
 		*result = append((*result)[:0], text...)
 	}
