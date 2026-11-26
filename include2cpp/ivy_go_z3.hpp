@@ -1,6 +1,6 @@
 #pragma once
 
-#include "z3++.h"
+#include "ivy_z3_assertions.hpp"
 #include "ivy_wide_uint.hpp"
 
 #include <cctype>
@@ -252,7 +252,7 @@ public:
              it != decls.end(); ++it) {
             dv.push_back(it->second);
         }
-        return ctx.parse_string(smtlib.c_str(), sv, dv);
+        return ivy_z3_assertion_formula(ctx.parse_string(smtlib.c_str(), sv, dv));
     }
 
     void add_alit(const z3::expr &pred) {

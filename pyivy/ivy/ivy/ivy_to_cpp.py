@@ -472,11 +472,11 @@ thunk_counter = 0
 
 def expr_to_z3(expr,prefix=''):
     fmla = '(assert ' + slv.formula_to_z3(expr).sexpr().replace('|!1','!1|').replace('\\|','').replace('\n',' "\n"') + ')'
-    return 'z3::expr(g.ctx,Z3_parse_smtlib2_string({}ctx, "{}", {}sort_names.size(), &{}sort_names[0], &{}sorts[0], {}decl_names.size(), &{}decl_names[0], &{}decls[0]))'.format(prefix,fmla,prefix,prefix,prefix,prefix,prefix,prefix)
+    return '{}parse_expr("{}")'.format(prefix,fmla)
 
 def expr_to_z3_no_type_cnst(expr,prefix=''):
     fmla = '(assert ' + slv.formula_to_z3_int(expr, "expr_to_z3_no_type_cnst").sexpr().replace('|!1','!1|').replace('\\|','').replace('\n',' "\n"') + ')'
-    return 'z3::expr(g.ctx,Z3_parse_smtlib2_string({}ctx, "{}", {}sort_names.size(), &{}sort_names[0], &{}sorts[0], {}decl_names.size(), &{}decl_names[0], &{}decls[0]))'.format(prefix,fmla,prefix,prefix,prefix,prefix,prefix,prefix)
+    return '{}parse_expr("{}")'.format(prefix,fmla)
 
 
 

@@ -2,7 +2,7 @@
 
 #include "ivy_hash.hpp"
 #include "chacha8c.hpp"
-#include "z3++.h"
+#include "ivy_z3_assertions.hpp"
 
 extern chacha8c::ChaCha8 __chacha8c_rng;
 
@@ -89,7 +89,7 @@ public:
             if (foo.is_int()) {
                 assert(foo.is_numeral());
                 int v;
-                if (Z3_get_numeral_int(ctx, foo, &v) != Z3_TRUE) {
+                if (!Z3_get_numeral_int(ctx, foo, &v)) {
                     std::cerr << "integer value from Z3 too large for machine int: " << foo << std::endl;
                     assert(false);
                 }
@@ -98,7 +98,7 @@ public:
             if (foo.is_bv()) {
                 assert(foo.is_numeral());
                 uint64_t v;
-                if (Z3_get_numeral_uint64(ctx, foo, &v) != Z3_TRUE) {
+                if (!Z3_get_numeral_uint64(ctx, foo, &v)) {
                     std::cerr << "bit vector value from Z3 too large for machine uint64: " << foo << std::endl;
                     assert(false);
                 }
@@ -134,7 +134,7 @@ public:
             if (foo.is_int()) {
                 assert(foo.is_numeral());
                 int v;
-                if (Z3_get_numeral_int(ctx, foo, &v) != Z3_TRUE) {
+                if (!Z3_get_numeral_int(ctx, foo, &v)) {
                     assert(false && "integer value from Z3 too large for machine int");
                 }
                 return v;
@@ -142,7 +142,7 @@ public:
             if (foo.is_bv()) {
                 assert(foo.is_numeral());
                 uint64_t v;
-                if (Z3_get_numeral_uint64(ctx, foo, &v) != Z3_TRUE) {
+                if (!Z3_get_numeral_uint64(ctx, foo, &v)) {
                     assert(false && "bit vector value from Z3 too large for machine uint64");
                 }
                 return v;
@@ -150,7 +150,7 @@ public:
             if (foo.is_bv() || foo.is_int()) {
                 assert(foo.is_numeral());
                 unsigned v;
-                if (Z3_get_numeral_uint(ctx, foo, &v) != Z3_TRUE)
+                if (!Z3_get_numeral_uint(ctx, foo, &v))
                     assert(false && "bit vector value too large for machine int");
                 return v;
             }
@@ -492,9 +492,9 @@ public:
         Z3_sort *sorts_ptr = sorts.empty() ? 0 : &sorts[0];
         Z3_symbol *decl_names_ptr = decl_names.empty() ? 0 : &decl_names[0];
         Z3_func_decl *decls_ptr = decls.empty() ? 0 : &decls[0];
-        z3::expr fmla(ctx, Z3_parse_smtlib2_string(ctx, z3inp.c_str(), sort_names.size(), sort_names_ptr, sorts_ptr, decl_names.size(), decl_names_ptr, decls_ptr));
+        auto parsed = Z3_parse_smtlib2_string(ctx, z3inp.c_str(), sort_names.size(), sort_names_ptr, sorts_ptr, decl_names.size(), decl_names_ptr, decls_ptr);
         ctx.check_error();
-        return fmla;
+        return ivy_z3_assertion_formula(ctx, parsed);
     }
 
     void add(const std::string &z3inp) {

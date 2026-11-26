@@ -54,7 +54,7 @@ func TestMakeThunkZ3GeneralSingleArgEnvEncoding(t *testing.T) {
 		`g.mk_decl(loc_savedv.c_str(), {}, "value");`,
 		`g.slvr.add(__to_solver(g, g.apply(loc_savedv.c_str()), this->ivy_thunk_env_0));`,
 		`rn["__thunk__0_env_0"] = loc_savedv.c_str();`,
-		`z3::expr the_expr = z3::expr(g.ctx,Z3_parse_smtlib2_string(g.ctx, "(assert (= __thunk__0_res_0 __thunk__0_env_0))"`,
+		`z3::expr the_expr = g.parse_expr("(assert (= __thunk__0_res_0 __thunk__0_env_0))");`,
 		`the_expr = __z3_rename(the_expr, rn);`,
 		`src.push_back(g.ctx.constant("__thunk__0_arg_0",g.sort("node")));;`,
 		`dst.push_back(v.arg(0));`,

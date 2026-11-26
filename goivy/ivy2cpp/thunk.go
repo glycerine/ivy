@@ -443,7 +443,7 @@ func (g *Generator) emitThunkToZ3(w *cppWriter, name string, vs []*goivy.LogicVa
 		})
 		w.linef("rn[%s] = %s.c_str();", strconv.Quote(envSymsLocal[i].Name), locv)
 	}
-	w.linef("z3::expr the_expr = z3::expr(g.ctx,Z3_parse_smtlib2_string(g.ctx, %s, g.sort_names.size(), &g.sort_names[0], &g.sorts[0], g.decl_names.size(), &g.decl_names[0], &g.decls[0]));", pythonZ3StringLiteral("(assert "+smt+")"))
+	w.linef("z3::expr the_expr = g.parse_expr(%s);", pythonZ3StringLiteral("(assert "+smt+")"))
 	w.line("the_expr = __z3_rename(the_expr, rn);")
 	w.line("g.ctx.check_error();")
 	w.line("z3::expr_vector src(g.ctx);")
