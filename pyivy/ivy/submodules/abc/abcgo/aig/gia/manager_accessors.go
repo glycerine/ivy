@@ -157,6 +157,15 @@ func Gia_ManRi(p *Gia_Man_t, id int32) *Gia_Obj_t {
 	return Gia_ManCo(p, Gia_ManPoNum(p)+id)
 }
 
+// Gia_ManOverwriteRegNum sets the register count unconditionally, as
+// &setregnum assigns p->nRegs directly.
+func Gia_ManOverwriteRegNum(p *Gia_Man_t, count int32) {
+	if count < 0 {
+		panic("gia: negative register count")
+	}
+	p.nRegs = count
+}
+
 func Gia_ManSetRegNum(p *Gia_Man_t, count int32) {
 	if p.nRegs != 0 || count < 0 {
 		panic("gia: invalid or already assigned register count")

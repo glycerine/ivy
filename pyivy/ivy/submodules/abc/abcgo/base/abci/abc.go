@@ -31213,7 +31213,7 @@ func Abc_CommandAbc9SetRegNum(pAbc *Abc_Frame_t, argc int32, argv []string) int3
 		Abc_Print(-1, "Abc_CommandAbc9SetRegNum(): The number of registers should be less than the number of COs.\n")
 		return 1
 	}
-	giapkg.Gia_ManSetRegNum(abcFrameGia(pAbc), nRegNum)
+	giapkg.Gia_ManOverwriteRegNum(abcFrameGia(pAbc), nRegNum)
 	return 0
 
 usage:

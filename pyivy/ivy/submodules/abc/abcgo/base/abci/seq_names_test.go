@@ -73,3 +73,12 @@ func TestPrintTruthRefusesMoreThanSixCis(t *testing.T) {
 		t.Fatalf("&print_truth on s27:\n%s", out)
 	}
 }
+
+// Native: abc -c "read s27.blif; strash; &get; &setregnum; &ps": the
+// command overwrites the register count (here with 0).
+func TestSetRegNumOverwritesLikeNative(t *testing.T) {
+	out := runScript(t, "read test_vectors/seq/s27.blif; strash; &get; &setregnum; &ps")
+	if !strings.Contains(out, "i/o =      7/      4  and =       8  lev =    5 (3.75)") {
+		t.Fatalf("&setregnum:\n%s", out)
+	}
+}
