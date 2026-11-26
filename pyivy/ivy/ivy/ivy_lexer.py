@@ -175,6 +175,7 @@ reserved = all_reserved = {
     'trigger' : 'TRIGGER',
     'wire' : 'WIRE',
     'register' : 'REGISTER',
+    'patdef' : 'PATDEF',
 }
 
 tokens += tuple(all_reserved.values())
@@ -293,7 +294,7 @@ class LexerVersion(object):
                 if s in reserved:
                     del reserved[s]
         if self.version <= [1,6]:
-            for s in ['decreases','specification','implementation','require','ensure','around','parameter','apply','theorem','showgoals','spoil','explicit','thunk','isa','autoinstance','constructor','tactic','finite','unfold','forget','wire','register']:
+            for s in ['decreases','specification','implementation','require','ensure','around','parameter','apply','theorem','showgoals','spoil','explicit','thunk','isa','autoinstance','constructor','tactic','finite','unfold','forget','wire','register','patdef']:
                 if s in reserved:
                     del reserved[s]
         if self.version <= [1,7]:

@@ -97,6 +97,8 @@ class Module(object):
         self.output_wires = []
         self.registers = set()
         self.invardeps = {}
+        self.patdefs = {}
+        self.usingpats = {}
         self.sig = il.sig.copy() # capture the current signature
 
     def __enter__(self):

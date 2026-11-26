@@ -628,9 +628,49 @@ if not iu.get_numeric_version() <= [1,6]:
                        | invdepnames COMMA atype'''
         p[0] = [Atom(p[1])] if len(p) == 2 else p[1] + [Atom(p[3])]
 
+    def p_optusing(p):
+        '''optusing :
+                    | USING namepat'''
+        p[0] = p[2] if len(p) == 3 else None
+
+    def p_namepat(p):
+        '''namepat : namediff
+                   | namepat OR namediff'''
+        p[0] = Or(p[1],p[3]) if len(p) == 4 else p[1]
+
+    def p_namediff(p):
+        '''namediff : nameprim
+                    | namediff MINUS nameprim'''
+        p[0] = InvariantPatternDifference(p[1],p[3]) if len(p) == 4 else p[1]
+
+    def p_nameprim(p):
+        '''nameprim : LPAREN namepat RPAREN
+                    | nameleaf'''
+        p[0] = p[2] if len(p) == 4 else Atom(p[1])
+
+    def p_nameleaf(p):
+        '''nameleaf : nameleaftok
+                    | nameleaf nameleaftok'''
+        p[0] = p[1] + p[2] if len(p) == 3 else p[1]
+
+    def p_nameleaftok(p):
+        '''nameleaftok : PRESYMBOL
+                       | DOT
+                       | TIMES
+                       | DOLLAR'''
+        p[0] = p[1]
+
+    def p_top_patdef(p):
+        'top : top PATDEF SYMBOL EQ namepat'
+        p[0] = p[1]
+        name = Atom(p[3])
+        name.lineno = get_lineno(p,3)
+        binding = InvariantPatternBinding(name,p[5])
+        p[0].declare(InvariantPatternDecl(binding))
+
     def p_top_invariant_labeledfmla(p):
-        '''top : top optexplicit INVARIANT labeledfmla optinvwith optproof
-               | top DERIVED INVARIANT labeledfmla optinvwith optproof'''
+        '''top : top optexplicit INVARIANT labeledfmla optinvwith optusing optproof
+               | top DERIVED INVARIANT labeledfmla optinvwith optusing optproof'''
         if __debug__: xtracer.trace("parser.p_top_invariant_labeledfmla ENTER (top)")
         p[0] = p[1]
         lf = addlabel(p[4],'invar')
@@ -645,9 +685,11 @@ if not iu.get_numeric_version() <= [1,6]:
                 dep = InvariantDependency(lf.label,*p[5])
                 dep.lineno = d.lineno
                 p[0].declare(InvariantDependencyDecl(dep))
-            p[0].declare(d)
             if p[6] is not None:
-                p[0].declare(ProofDecl(p[6]))
+                p[0].declare(InvariantUsingDecl(InvariantPatternBinding(lf.label,p[6])))
+            p[0].declare(d)
+            if p[7] is not None:
+                p[0].declare(ProofDecl(p[7]))
 
     def p_top_unprovable_invariant_labeledfmla(p):
         'top : top UNPROVABLE INVARIANT labeledfmla optproof'

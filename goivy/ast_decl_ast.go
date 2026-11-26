@@ -2722,6 +2722,10 @@ func DeclName(decl Node) string {
 		return "conjecture"
 	case *InvariantDependencyDecl:
 		return d.String()
+	case *InvariantUsingDecl:
+		return d.String()
+	case *InvariantPatternDecl:
+		return d.String()
 	case *RelationDecl:
 		return "relation"
 	case *ConstantDecl:

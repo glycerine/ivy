@@ -1073,6 +1073,24 @@ class InvariantDependencyDecl(Decl):
     def defines(self):
         return []
 
+class InvariantPatternDifference(AST):
+    pass
+
+class InvariantPatternBinding(AST):
+    pass
+
+class InvariantUsingDecl(Decl):
+    def name(self):
+        return 'usingpat'
+    def defines(self):
+        return []
+
+class InvariantPatternDecl(Decl):
+    def name(self):
+        return 'patdef'
+    def defines(self):
+        return [(arg.args[0].rep,lineno(arg.args[0])) for arg in self.args]
+
 class ProgressDecl(Decl):
     def name(self):
         return 'progress'

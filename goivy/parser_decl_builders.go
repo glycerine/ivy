@@ -55,7 +55,7 @@ func parser17DeclareConjecture(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula
 	top.declare(d)
 }
 
-func parser17DeclareInvariant(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, explicit, derived bool, loc Location, deps []Node, proof Node) {
+func parser17DeclareInvariant(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, explicit, derived bool, loc Location, deps []Node, pattern, proof Node) {
 	lf = parser17AddLabel(cfg, lf, "invar")
 	lf.Unprovable = false
 	lf.Derived = derived
@@ -70,6 +70,12 @@ func parser17DeclareInvariant(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula,
 		dependency.Cfg = cfg
 		dependency.SetLineno(loc)
 		top.declare(dependency)
+	}
+	if pattern != nil {
+		using := &InvariantUsingDecl{DeclBase: DeclBase{DeclArgs: []Node{lf.Label, pattern}}}
+		using.Cfg = cfg
+		using.SetLineno(loc)
+		top.declare(using)
 	}
 	top.declare(d)
 	if proof != nil {

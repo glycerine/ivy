@@ -88,6 +88,11 @@ from .ivy_ast import ASTContext
 
 ivy_ast.Variable.get_sort = lambda self: ivy_logic.find_sort(resolve_alias(self.sort.rep))
 
+def expand_invariant_pattern(pattern,definitions):
+    if isinstance(pattern,ivy_ast.Atom):
+        return definitions.get(pattern.rep,pattern)
+    return pattern.clone([expand_invariant_pattern(arg,definitions) for arg in pattern.args])
+
 def thing(self):
     if __debug__: xtracer.trace("compiler.Thing ENTER type=%s" % type(self).__name__)
     if __debug__: xtracer.trace("compiler.CompileNode ENTER type=%s" % type(self).__name__)
@@ -1352,6 +1357,12 @@ class IvyDomainSetup(IvyDeclInterp):
 
     def invardep(self,dep):
         self.domain.invardeps[dep.args[0].rep] = tuple(arg.rep for arg in dep.args[1:])
+
+    def patdef(self,binding):
+        self.domain.patdefs[binding.args[0].rep] = expand_invariant_pattern(binding.args[1],self.domain.patdefs)
+
+    def usingpat(self,binding):
+        self.domain.usingpats[binding.args[0].rep] = expand_invariant_pattern(binding.args[1],self.domain.patdefs)
 
     def parameter(self,v):
         if __debug__: xtracer.trace("compiler.DomainSetup.parameter ENTER")

@@ -34,6 +34,7 @@ from . import ivy_acl
 from . import xtracer
 
 import sys
+import re
 from collections import defaultdict
 
 import pdb, traceback, sys, code
@@ -469,7 +470,37 @@ def convert_postconds(state,postconds):
     return [x.clone([x.args[0],lut.rename_ast(x.formula,renaming)])
             for x in postconds]
 
-def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False):
+def compile_using_pattern(pattern,owner):
+    if isinstance(pattern,ivy_ast.Or):
+        children = [compile_using_pattern(child,owner) for child in pattern.args]
+        return lambda name: any(child(name) for child in children)
+    if isinstance(pattern,ivy_ast.InvariantPatternDifference):
+        left,right = [compile_using_pattern(child,owner) for child in pattern.args]
+        return lambda name: left(name) and not right(name)
+    leaf = pattern.rep
+    prefixes = ['']
+    if leaf.startswith('$'):
+        leaf = leaf[1:]
+    else:
+        prefixes.extend(owner[:i+1] for i,ch in enumerate(owner) if ch == '.')
+    body = '.*'.join(re.escape(chunk) for chunk in leaf.split('*'))
+    regex = re.compile('(?:' + '|'.join(re.escape(prefix) for prefix in prefixes) + ')' + body)
+    return regex.fullmatch
+
+def get_gated_conjs(mod):
+    formulas,literals = [],{}
+    for lf in mod.labeled_conjs + mod.assumed_invariants:
+        if lf.explicit or lf.unprovable:
+            continue
+        formula = lf.formula
+        if lf.label is not None:
+            lit = lut.bool_const('__using$' + lf.name)
+            literals[lf.name] = lit
+            formula = lg.Implies(lit,formula)
+        formulas.append(formula)
+    return lut.Clauses(formulas,annot=act.EmptyAnnotation()),literals
+
+def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False,using_literals=None):
     conjs = mod.conj_subgoals if mod.conj_subgoals is not None else mod.labeled_conjs
     conjs = [x for x in conjs if x.derived == derived and is_check_mod_unprovable(x)]
     conjs += convert_postconds(post,pcs)
@@ -481,7 +512,7 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False):
     else:
         lcs = conjs
     lcs = [c for c in lcs if act.check_name_selected(c.name if c.label is not None else None)]
-    if not mod.invardeps:
+    if not mod.invardeps and not using_literals:
         return check_fcs_in_state(mod,ag,post,[ConjChecker(c,indent) for c in lcs])
     available = {c.name:c for c in mod.assumed_invariants + mod.labeled_conjs if c.label is not None}
     checkers = []
@@ -497,6 +528,15 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False):
                         raise iu.IvyError(c,"normal invariant has a zero-delay dependency on derived invariant {}".format(name))
             hypothesis = lg.And(*(available[name].formula for name in names))
             c = c.clone([c.label,lg.Implies(hypothesis,c.formula)])
+        if using_literals:
+            pattern = mod.usingpats.get(c.name) if c.label is not None else None
+            if pattern is None:
+                selected = list(using_literals.values())
+            else:
+                matches = compile_using_pattern(pattern,c.name)
+                selected = [lit for name,lit in using_literals.items() if matches(name)]
+            if selected:
+                c = c.clone([c.label,lg.Implies(lg.And(*selected),c.formula)])
         checkers.append(ConjChecker(c,indent))
     return check_fcs_in_state(mod,ag,post,checkers)
 
@@ -717,11 +757,15 @@ def check_isolate(trace_hook = None):
                 if check:
                     ag = ivy_art.AnalysisGraph()
                     pre = itp.State()
-                    pre.clauses = get_conjs(mod)
+                    using_literals = None
+                    if mod.usingpats:
+                        pre.clauses,using_literals = get_gated_conjs(mod)
+                    else:
+                        pre.clauses = get_conjs(mod)
                     with itp.EvalContext(check=False): # don't check safety
     #                    post = ag.execute(action, pre, None, actname)
                         post = ag.execute(action, pre)
-                    check_conjs_in_state(mod,ag,post,indent=12,pcs=mod.postconds.get(actname,[]))
+                    check_conjs_in_state(mod,ag,post,indent=12,pcs=mod.postconds.get(actname,[]),using_literals=using_literals)
                 else:
                     print('')
 

@@ -94,6 +94,8 @@ type Module struct {
 	ConjActions           map[string][]string
 	ConjSubgoals          []*LabeledFormula
 	InvariantDependencies map[string][]string
+	InvariantPatterns     map[string]Node
+	InvariantUsing        map[string]Node
 
 	// Parameters
 	Params        []*Const
@@ -365,6 +367,8 @@ func (m *Module) Clear() {
 	m.IsolateInfo = nil
 	m.ConjActions = make(map[string][]string)
 	m.InvariantDependencies = make(map[string][]string)
+	m.InvariantPatterns = make(map[string]Node)
+	m.InvariantUsing = make(map[string]Node)
 	m.ConjSubgoals = nil
 	m.AssumedInvs = nil
 	m.FiniteSorts = make(map[string]bool)
@@ -438,6 +442,8 @@ func (m *Module) Copy() *Module {
 	for name, deps := range m.InvariantDependencies {
 		c.InvariantDependencies[name] = append([]string(nil), deps...)
 	}
+	c.InvariantPatterns = copyMapNode(m.InvariantPatterns)
+	c.InvariantUsing = copyMapNode(m.InvariantUsing)
 	c.ConceptSpaces = append([]ConceptSpace{}, m.ConceptSpaces...)
 	c.Instantiations = append([]LogicInstantiation{}, m.Instantiations...)
 	c.IsolateInfo = m.IsolateInfo

@@ -129,6 +129,7 @@ var allReserved = map[string]TokenType{
 	"trigger":        TRIGGER,
 	"wire":           WIRE,
 	"register":       REGISTER,
+	"patdef":         PATDEF,
 }
 
 // Version represents an Ivy language version like [1, 7].
@@ -200,7 +201,7 @@ func buildReserved(v Version) map[string]TokenType {
 		for _, s := range []string{"decreases", "specification", "implementation", "require",
 			"ensure", "around", "parameter", "apply", "theorem", "showgoals", "spoil",
 			"explicit", "thunk", "isa", "autoinstance", "constructor", "tactic", "finite",
-			"unfold", "forget", "wire", "register"} {
+			"unfold", "forget", "wire", "register", "patdef"} {
 			delete(res, s)
 		}
 	}

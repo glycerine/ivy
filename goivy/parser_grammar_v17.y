@@ -69,6 +69,7 @@ import (
 // Terminal tokens — keywords (declarations, carry line number only)
 %token <tok>  PARSER_TOK_RELATION PARSER_TOK_INDIV PARSER_TOK_FUNCTION PARSER_TOK_DERIVED
 %token <tok>  PARSER_TOK_WIRE PARSER_TOK_REGISTER
+%token <tok>  PARSER_TOK_PATDEF
 %token <tok>  PARSER_TOK_AXIOM PARSER_TOK_CONJECTURE PARSER_TOK_SCHEMA PARSER_TOK_THEOREM
 %token <tok>  PARSER_TOK_PROPERTY PARSER_TOK_DEFINITION
 %token <tok>  PARSER_TOK_TYPE PARSER_TOK_STRUCT
@@ -153,6 +154,8 @@ import (
 %type <node>  param
 %type <nodes> params
 %type <nodes> optwith optinvwith invdepnames
+%type <node>  optusing namepat namediff nameprim
+%type <str>   nameleaf nameleaftok
 
 // Nonterminal types — instantiate
 %type <node>  inst modinst pname
@@ -333,16 +336,27 @@ top:
         parser17DeclareConjecture(parser17Acfg(parser17lex), $$, $3.(*LabeledFormula), tokLineno(parser17lex.(*parser17LexAdapter), $2))
     }
     // --- Invariant (v1.7+) ---
-    | top optexplicit PARSER_TOK_INVARIANT labeledfmla optinvwith optproof
+    | top optexplicit PARSER_TOK_INVARIANT labeledfmla optinvwith optusing optproof
     {
         xtracer.Trace("parser.p_top_invariant_labeledfmla ENTER (top)")
         $$ = $1
-        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), $2 != nil, false, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5, $6)
+        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), $2 != nil, false, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5, $6, $7)
     }
-    | top PARSER_TOK_DERIVED PARSER_TOK_INVARIANT labeledfmla optinvwith optproof
+    | top PARSER_TOK_DERIVED PARSER_TOK_INVARIANT labeledfmla optinvwith optusing optproof
     {
         $$ = $1
-        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), false, true, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5, $6)
+        parser17DeclareInvariant(parser17Acfg(parser17lex), $$, $4.(*LabeledFormula), false, true, tokLineno(parser17lex.(*parser17LexAdapter), $3), $5, $6, $7)
+    }
+    | top PARSER_TOK_PATDEF SYMBOLx PARSER_TOK_EQ namepat
+    {
+        $$ = $1
+        cfg := parser17Acfg(parser17lex)
+        name := cfg.NewAtom($3.Val)
+        name.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $3))
+        d := &InvariantPatternDecl{DeclBase: DeclBase{DeclArgs: []Node{name, $5}}}
+        d.Cfg = cfg
+        d.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
+        $$.declare(d)
     }
     // --- Unprovable Invariant ---
     | top PARSER_TOK_UNPROVABLE PARSER_TOK_INVARIANT labeledfmla optproof
@@ -2820,6 +2834,43 @@ invdepnames:
     {
         $$ = append($1, parser17Acfg(parser17lex).NewAtom(nodeRep($3)))
     }
+    ;
+
+optusing:
+    /* empty */ { $$ = nil }
+    | PARSER_TOK_USING namepat { $$ = $2 }
+    ;
+
+namepat:
+    namediff { $$ = $1 }
+    | namepat PARSER_TOK_OR namediff { $$ = parser17Acfg(parser17lex).NewOr($1, $3) }
+    ;
+
+namediff:
+    nameprim { $$ = $1 }
+    | namediff PARSER_TOK_MINUS nameprim
+    {
+        p := &InvariantPatternDifference{Left: $1, Right: $3}
+        p.Cfg = parser17Acfg(parser17lex)
+        $$ = p
+    }
+    ;
+
+nameprim:
+    PARSER_TOK_LPAREN namepat PARSER_TOK_RPAREN { $$ = $2 }
+    | nameleaf { $$ = parser17Acfg(parser17lex).NewAtom($1) }
+    ;
+
+nameleaf:
+    nameleaftok { $$ = $1 }
+    | nameleaf nameleaftok { $$ = $1 + $2 }
+    ;
+
+nameleaftok:
+    SYMBOLx { $$ = $1.Val }
+    | PARSER_TOK_DOT { $$ = "." }
+    | PARSER_TOK_TIMES { $$ = "*" }
+    | PARSER_TOK_DOLLAR { $$ = "$" }
     ;
 
 // ============================================================

@@ -92,6 +92,13 @@ func (d *DomainSetup) ProcessDecl(decl Node) error {
 			}
 			d.Compiler.Module.InvariantDependencies[name] = deps
 		}
+	case *InvariantPatternDecl:
+		name := labelName(n.DeclArgs[0])
+		patterns := d.Compiler.Module.InvariantPatterns
+		patterns[name] = expandInvariantPattern(n.DeclArgs[1], patterns)
+	case *InvariantUsingDecl:
+		name := labelName(n.DeclArgs[0])
+		d.Compiler.Module.InvariantUsing[name] = expandInvariantPattern(n.DeclArgs[1], d.Compiler.Module.InvariantPatterns)
 	case *RelationDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Relation(arg); err != nil {

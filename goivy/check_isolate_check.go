@@ -383,7 +383,14 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 				//             post = ag.execute(action, pre)
 				//         check_conjs_in_state(mod, ag, post, indent=12, pcs=...)
 				ag := NewAnalysisGraph(mod)
-				pre := NewState(mod, GetConjs(mod))
+				var preClauses *Clauses
+				var usingLiterals *InsMap[string, Expr]
+				if len(mod.InvariantUsing) != 0 {
+					preClauses, usingLiterals = gatedInvariantClauses(mod)
+				} else {
+					preClauses = GetConjs(mod)
+				}
+				pre := NewState(mod, preClauses)
 				ag.Add(pre, nil)
 				// Execute action to get post-state
 				// Python uses EvalContext(check=False) here, so checkPrecond=false.
@@ -394,7 +401,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 				}
 				if post != nil {
 					pcs := mod.Postconds[actname]
-					CheckConjsInStateWithAG(mod, ag, post, 12, pcs)
+					checkConjsInStateWithAG(mod, ag, post, 12, pcs, false, usingLiterals)
 				}
 			}
 		}
@@ -406,7 +413,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 			ag := NewAnalysisGraph(mod)
 			state := NewState(mod, getConjs(mod, false))
 			ag.Add(state, nil)
-			checkConjsInStateWithAG(mod, ag, state, 8, nil, true)
+			checkConjsInStateWithAG(mod, ag, state, 8, nil, true, nil)
 		}
 	}
 
@@ -1504,10 +1511,10 @@ func sortedUnion(priority, all map[string]bool) []string {
 // CheckConjsInStateWithAG checks conjectures against a state using the
 // analysis graph. This is the full version of CheckConjsInState.
 func CheckConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent int, pcs []*LabeledFormula) bool {
-	return checkConjsInStateWithAG(mod, ag, post, indent, pcs, false)
+	return checkConjsInStateWithAG(mod, ag, post, indent, pcs, false, nil)
 }
 
-func checkConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent int, pcs []*LabeledFormula, derived bool) bool {
+func checkConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent int, pcs []*LabeledFormula, derived bool, usingLiterals *InsMap[string, Expr]) bool {
 	conjs := mod.ConjSubgoals
 	if conjs == nil {
 		conjs = mod.LabeledConjs
@@ -1554,6 +1561,7 @@ func checkConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent
 				fmt.Println(err)
 				return false
 			}
+			goal = applyInvariantUsing(goal, mod.InvariantUsing[lfLabelName(c)], usingLiterals)
 			checkers = append(checkers, NewConjChecker(mod, goal, indent))
 		}
 	}
