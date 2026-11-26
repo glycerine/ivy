@@ -37,7 +37,8 @@ func init() {
 	}
 }
 
-// Setting ABCGO_CPUPROFILE=file writes a Go CPU profile of the whole run.
+// Setting ABCGO_CPUPROFILE=file writes a Go CPU profile of the whole run;
+// with it, ABCGO_MEMPROFILE=file also writes an allocation profile.
 func main() {
 	if path := os.Getenv("ABCGO_CPUPROFILE"); path != "" {
 		f, err := os.Create(path)
@@ -52,6 +53,12 @@ func main() {
 		status := abcmain.Run(os.Args)
 		pprof.StopCPUProfile()
 		f.Close()
+		if mem := os.Getenv("ABCGO_MEMPROFILE"); mem != "" {
+			if m, err := os.Create(mem); err == nil {
+				pprof.Lookup("allocs").WriteTo(m, 0)
+				m.Close()
+			}
+		}
 		os.Exit(status)
 	}
 	os.Exit(abcmain.Run(os.Args))
