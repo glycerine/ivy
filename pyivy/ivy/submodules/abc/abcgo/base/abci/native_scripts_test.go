@@ -56,6 +56,8 @@ var nativeScripts = []string{
 	"if -K 6; lutpack",
 	"if -K 4; lutpack; lutpack",
 	"&get; &if -K 6; &mfs; &put",
+	"&get; &sweep; &put",
+	"&get; &fraig; &put",
 }
 
 const nativeStatsFile = "test_vectors/native_script_stats.txt"
@@ -120,6 +122,9 @@ var nativeSeqScripts = []string{
 	"strash; &get; &scorr -c; &put",
 	"strash; &get; &dc2; &put",
 	"strash; if -K 4; mfs",
+	"strash; &get; &sweep; &put",
+	"strash; &get; &lcorr; &put",
+	"strash; &get; &fraig; &put",
 }
 
 const nativeSeqStatsFile = "test_vectors/native_seq_stats.txt"

@@ -36516,9 +36516,9 @@ func Abc_CommandAbc9Sweep(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 0
 	}
 	if giapkg.Gia_ManBoxNum(abcFrameGia(pAbc)) != 0 {
-		pTemp = giapkg.Gia_ManSweepWithBoxes(abcFrameGia(pAbc), pPars, nil, 0, 0, pPars.fVerbose, 0)
+		pTemp = giapkg.Gia_ManSweepWithBoxes(abcFrameGia(pAbc), pPars.dchParams(), nil, 0, 0, pPars.fVerbose, 0)
 	} else {
-		pTemp = giapkg.Gia_ManFraigSweepSimple(abcFrameGia(pAbc), pPars)
+		pTemp = giapkg.Gia_ManFraigSweepSimple(abcFrameGia(pAbc), pPars.dchParams())
 	}
 	Abc_FrameUpdateGia(pAbc, pTemp)
 	return 0

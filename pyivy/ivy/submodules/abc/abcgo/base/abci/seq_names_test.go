@@ -33,3 +33,9 @@ func TestPutLeavesNoSpecLikeNative(t *testing.T) {
 		t.Fatalf("dsec after &put:\n%s", out)
 	}
 }
+
+// Native: abc -c "read mul8.aig; &get; &sweep; &put; print_stats".
+func TestGiaSweepDefaultsMatchNative(t *testing.T) {
+	expectStats(t, "read test_vectors/bench/mul8.aig; &get; &sweep; &put; print_stats",
+		"i/o =   16/   16  lat =    0  and =    424  lev = 53")
+}

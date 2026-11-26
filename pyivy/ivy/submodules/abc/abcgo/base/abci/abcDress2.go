@@ -31,6 +31,17 @@ func Dch_ManSetDefaultParams(p *Dch_Pars_t) {
 	}
 }
 
+// dchParams converts the command's C-shaped parameters to the DCH engine's.
+func (p *Dch_Pars_t) dchParams() *dch.Params {
+	return &dch.Params{
+		Words: int(p.nWords), ConflictLimit: int(p.nBTLimit), SatVarMax: int(p.nSatVarMax),
+		NodesAhead: int(p.nNodesAhead), CallsRecycle: int(p.nCallsRecycle),
+		Synthesis: p.fSynthesis != 0, PolarFlip: p.fPolarFlip != 0, SimulateTFO: p.fSimulateTfo != 0,
+		Power: p.fPower != 0, UseGia: p.fUseGia != 0, UseCSat: p.fUseCSat != 0, UseNew: p.fUseNew != 0,
+		LightSynth: p.fLightSynth != 0, SkipRedundantSupport: p.fSkipRedSupp != 0, Verbose: p.fVerbose != 0,
+	}
+}
+
 func Abc_ObjEquivId2ObjId(id int32) int32 { return id >> 2 }
 func Abc_ObjEquivId2Polar(id int32) int32 { return (id >> 1) & 1 }
 func Abc_ObjEquivId2NtkId(id int32) int32 { return id & 1 }
