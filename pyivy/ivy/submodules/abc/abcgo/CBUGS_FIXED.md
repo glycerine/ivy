@@ -211,3 +211,17 @@ and states how the Go port was verified.
 - **Test:** `TestNativeWlcTestWithoutDesign` (same file) segfaulted before the
   fix; `TestWlcTestWithoutDesign` checks the port, which panicked the same way
   and has the same fix.
+
+## 11. `&anorm` crashes on AIGs without adder trees
+
+- **File:** `src/proof/acec/acecNorm.c`, `Acec_Normalize`.
+- **Found:** 2026-11-26, by running every command with default arguments;
+  native `abc` dumped core in `Acec_InsertBox` on s27.
+- **Bug:** `Acec_DeriveBox` returns NULL when it finds no adder tree, and
+  `Acec_Normalize` passed it straight to `Acec_InsertBox`.
+- **Fix:** report it and return a copy of the AIG, as `Acec_ManDecla` already
+  does for the same case (`Cannot find arithmetic boxes.`).
+- **Test:** `abcgo/base/abci/anorm_nobox_test.go`
+  (`TestNativeAnormWithoutAdders`) runs `&anorm` on s27 through the native
+  binary named by `ABC_BINARY`; it segfaulted before the fix.
+- **Go port:** it panicked on the nil box; same fix (`TestAnormWithoutAdders`).

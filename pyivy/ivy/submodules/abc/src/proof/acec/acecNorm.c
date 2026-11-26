@@ -211,9 +211,15 @@ Gia_Man_t * Acec_Normalize( Gia_Man_t * pGia, int fBooth, int fVerbose )
 {
     Vec_Bit_t * vIgnore = fBooth ? Acec_BoothFindPPG( pGia ) : NULL;
     Acec_Box_t * pBox = Acec_DeriveBox( pGia, vIgnore, 0, 0, fVerbose );
-    Gia_Man_t * pNew  = Acec_InsertBox( pBox, 1 );
-    Acec_BoxFreeP( &pBox );
+    Gia_Man_t * pNew;
     Vec_BitFreeP( &vIgnore );
+    if ( pBox == NULL ) // no adder trees (as in Acec_ManDecla)
+    {
+        printf( "Cannot find arithmetic boxes.\n" );
+        return Gia_ManDup( pGia );
+    }
+    pNew = Acec_InsertBox( pBox, 1 );
+    Acec_BoxFreeP( &pBox );
     return pNew;
 }
 
