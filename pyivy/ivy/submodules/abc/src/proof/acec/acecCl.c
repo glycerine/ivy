@@ -354,7 +354,7 @@ Vec_Int_t * Acec_RewriteTop( Gia_Man_t * p, Acec_Box_t * pBox )
     // determine how much to shift
     Driver = Gia_ObjFaninId0p( p, Gia_ManCo(p, 0) );
     Vec_WecForEachLevel( pBox->vRootLits, vLevel, iStart )
-        if ( Abc_Lit2Var(Vec_IntEntry(vLevel,0)) == Driver )
+        if ( Vec_IntSize(vLevel) > 0 && Abc_Lit2Var(Vec_IntEntry(vLevel,0)) == Driver )
             break;
     if ( iStart == Vec_WecSize(pBox->vRootLits) ) // the first output is not a root
     {
@@ -366,7 +366,11 @@ Vec_Int_t * Acec_RewriteTop( Gia_Man_t * p, Acec_Box_t * pBox )
     Vec_WecForEachLevelStart( pBox->vRootLits, vLevel, i, iStart )
     {
         int In[3] = {0}, Out[2];
-        assert( Vec_IntSize(vLevel) > 0 );
+        if ( Vec_IntSize(vLevel) == 0 ) // an empty rank: cannot match
+        {
+            Vec_IntFree( vRes );
+            return NULL;
+        }
         assert( Vec_IntSize(vLevel) <= 3 );
         if ( Vec_IntSize(vLevel) == 1 )
         {

@@ -235,12 +235,16 @@ and states how the Go port was verified.
 - **Bug:** the root ranks of the adder box found in mul8 cover fewer bits than
   the AIG has outputs, so the rewritten-output vector is short and
   `Acec_RewriteReplace` reads past its end (the same happens if the first
-  output is not a root: `iStart` runs off the end).
-- **Fix:** `Acec_RewriteTop` returns NULL in both cases; `Acec_ManDecla` prints
+  output is not a root: `iStart` runs off the end). On i10 the box also has
+  empty root ranks, and the search for the first output read entry 0 of one
+  (an assert-enabled build stops in `Vec_IntEntry`).
+- **Fix:** the search skips empty ranks; `Acec_RewriteTop` returns NULL when
+  it meets an empty rank or cannot cover every output; `Acec_ManDecla` prints
   `Cannot match the outputs of the arithmetic box.` and returns the AIG
   cleaned of the adders already added to it.
 - **Test:** `abcgo/base/abci/decla_outputs_test.go`
-  (`TestNativeDeclaWhenBoxMissesOutputs`) segfaulted before the fix.
+  (`TestNativeDeclaWhenBoxMissesOutputs` on mul8,
+  `TestNativeDeclaWithEmptyRootRanks` on i10) segfaulted before the fix.
 - **Go port:** it panicked ("insufficient rewritten outputs"); same fix
   (`TestDeclaWhenBoxMissesOutputs`), and its time line now uses ABC's format.
 

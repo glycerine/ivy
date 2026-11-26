@@ -24,3 +24,19 @@ func TestDeclaWhenBoxMissesOutputs(t *testing.T) {
 		t.Fatalf("&decla on mul8:\n%s", out)
 	}
 }
+
+// On i10 the adder box has empty root ranks, and Acec_RewriteTop read the
+// first entry of one (CBUGS_FIXED.md #12).
+func TestNativeDeclaWithEmptyRootRanks(t *testing.T) {
+	out := runNativeABC(t, "read ../../../i10.aig; strash; &get; &decla; &ps")
+	if !strings.Contains(out, declaNoMatch) || !strings.Contains(out, "and =    2675") {
+		t.Fatalf("native &decla on i10:\n%s", out)
+	}
+}
+
+func TestDeclaWithEmptyRootRanks(t *testing.T) {
+	out := runScript(t, "read ../../../i10.aig; strash; &get; &decla; &ps")
+	if !strings.Contains(out, declaNoMatch) || !strings.Contains(out, "and =    2675") {
+		t.Fatalf("&decla on i10:\n%s", out)
+	}
+}

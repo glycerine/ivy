@@ -15,7 +15,7 @@ func Acec_RewriteTop(p *Gia_Man_t, box *Acec_Box_t) *Vec_Int_t {
 	start := 0
 	for ; start < vec.Vec_WecSize(box.vRootLits); start++ {
 		level := vec.Vec_WecEntry(box.vRootLits, start)
-		if vec.Vec_IntEntry(level, 0)>>1 == driver {
+		if vec.Vec_IntSize(level) > 0 && vec.Vec_IntEntry(level, 0)>>1 == driver {
 			break
 		}
 	}
@@ -29,7 +29,10 @@ func Acec_RewriteTop(p *Gia_Man_t, box *Acec_Box_t) *Vec_Int_t {
 	for i := start; i < vec.Vec_WecSize(box.vRootLits); i++ {
 		level := vec.Vec_WecEntry(box.vRootLits, i)
 		n := vec.Vec_IntSize(level)
-		if n == 0 || n > 3 {
+		if n == 0 { // an empty rank: cannot match (CBUGS_FIXED.md #12)
+			return nil
+		}
+		if n > 3 {
 			panic("acec: invalid adder level")
 		}
 		if n == 1 {
