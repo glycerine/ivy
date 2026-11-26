@@ -174,6 +174,14 @@ func writeVMT(mod *Module, initial Expr, transitions []vmtTransition, state *Ins
 	}
 	var body bytes.Buffer
 	for _, symbol := range symbols.All() {
+		if enumeration, ok := symbol.CSort.(*LogicEnumeratedSort); ok && mod.Sig.Constructors[symbol.Name] {
+			sort, err := solver.Translator().TranslateSort(enumeration)
+			if err != nil {
+				return err
+			}
+			decls.sortName(sort, enumeration)
+			continue
+		}
 		if solver.SolverName(symbol) == "" || IsInterpretedSymbol(mod.Sig, symbol) || mod.Sig.Constructors[symbol.Name] {
 			continue
 		}

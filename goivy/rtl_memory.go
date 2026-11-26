@@ -191,7 +191,8 @@ func rtlMatchGuards(a, b []rtlGuard) bool {
 }
 
 func rtlMergeWrite(a, b rtlWrite) (rtlWrite, bool) {
-	if !a.address.Equal(b.address) || !a.data.Equal(b.data) {
+	// Different depths encode different priorities against other writes.
+	if a.depth != b.depth || !a.address.Equal(b.address) || !a.data.Equal(b.data) {
 		return rtlWrite{}, false
 	}
 	for i, x := range a.guards {
@@ -202,7 +203,7 @@ func rtlMergeWrite(a, b rtlWrite) (rtlWrite, bool) {
 			xrest := append(slices.Clone(a.guards[:i]), a.guards[i+1:]...)
 			yrest := append(slices.Clone(b.guards[:j]), b.guards[j+1:]...)
 			if rtlMatchGuards(xrest, yrest) {
-				a.guards, a.depth = xrest, max(a.depth, b.depth)
+				a.guards = xrest
 				return a, true
 			}
 		}

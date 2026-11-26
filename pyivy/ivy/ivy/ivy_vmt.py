@@ -17,7 +17,7 @@ from . import ivy_proof
 from . import ivy_trace
 from . import ivy_solver as slvr
 
-from .z3 import simplify, is_func_decl, DatatypeSortRef, Z3_ARRAY_SORT, Z3_UNINTERPRETED_SORT
+from .z3 import Bool, simplify, is_func_decl, DatatypeSortRef, Z3_ARRAY_SORT, Z3_UNINTERPRETED_SORT
 import tempfile
 import subprocess
 from collections import defaultdict
@@ -236,7 +236,9 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
     # for a in actupds:
         # print ('a[0]: {}'.format(a[0]))
         # print ('a[1]: {}'.format(a[1]))
-    istvars,init,_ = tr.action_to_state(action_to_tr(mod,init_action,method,bgt))
+    init_update = action_to_tr(mod,init_action,method,bgt)
+    istvars = init_update[0]
+    init = tr.forward_image(mod.init_cond,bgt,init_update)
     stvars = list(iu.unique(sym for a in actupds for sym in a[0]))
     stvars = list(iu.unique(stvars+istvars))
     transs = [ilu.clauses_to_formula(frame_clauses(stvars,a[0],a[1])) for a in actupds]
@@ -268,6 +270,7 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
 
     declared_symbols = set()
     enum_symbols = set()
+    used_names = {str(definition.defines()) for _, definition in tagged_dfns}
     tagged_bodies = [definition.rhs() for _,definition in tagged_dfns]
     refed_syms = list(ilu.used_symbols_asts([init,trans]+[lf.formula for lf in conjs]+axioms+tagged_bodies))
     extra_refed_syms = set()
@@ -280,6 +283,7 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
         if il.is_enumerated_sort(sym.sort):
             if sym in sym.sort.constructors:
                 enum_symbols.add(sym)
+                add_sort(sym.sort.to_z3())
                 continue
         if sym not in declared_symbols and slvr.solver_name(sym) is not None and sym.name != "cast":
             declared_symbols.add(sym)
@@ -291,6 +295,7 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
                     add_sort(decl.range())
                     if not il.is_interpreted_symbol(sym):
                         decl_sexpr = decl.sexpr()
+                        used_names.add(decl.name())
                         vmt_var_defs.append(decl_sexpr)
                         # decl_sort = decl.range().sexpr()
                         # decl_dom = ' '.join(decl.domain(i).sexpr() for i in range(decl.arity()))
@@ -300,6 +305,7 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
                     if not il.is_interpreted_symbol(sym):
                         decl_sexpr = decl.sexpr()
                         decl_sort = decl.sort().sexpr()
+                        used_names.add(decl.decl().name())
                         vmt_var_defs.append(f'(declare-fun {decl_sexpr} () {decl_sort})')
             else:
                 vmt_var_defs.append(decl.sexpr())
@@ -320,17 +326,27 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
             vmt_func_defs.append(write)
             vmt_func_defs.append(const)
         if isinstance(sort,DatatypeSortRef):
+            used_names.update(sort.constructor(i).name() for i in range(sort.num_constructors()))
             sort_str = f"(declare-datatypes () (({sort_name} {' '.join(str(sort.constructor(i)) for i in range(sort.num_constructors()))})))"
         else:
             sort_str = f"(declare-sort {sort.sexpr()} 0)"
         vmt_sort_defs.append(sort_str)
+
+    def fresh_name(base):
+        name = base
+        suffix = 1
+        while name in used_names:
+            name = f'{base}${suffix}'
+            suffix += 1
+        used_names.add(name)
+        return Bool(name).sexpr()
 
     all_used = ilu.used_symbols_asts([init,trans])
     immutable = [sym for sym in all_used if not il.is_function_sort(sym.sort)
                  and not sym.is_skolem() and not sym.is_numeral() and not tr.is_new(sym)
                  and "fml:" not in sym.name and "loc:" not in sym.name and 'prm:' not in sym.name and tr.new(sym) not in all_used
                  and all(sym not in upd[0] for upd in actupds)]
-    background_symbols = ilu.used_symbols_asts(axioms)
+    background_symbols = set(ilu.used_symbols_asts(axioms))
     background_symbols.update(enum_symbols)
     immutable = [sym for sym in immutable if not sym in background_symbols]
     # print ('immutable: {}'.format(immutable))
@@ -351,13 +367,13 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
                 params = ' '.join(f'({name} {decl.domain(i).sexpr()})' for i,name in enumerate(names))
                 cur_name = cur_str.removeprefix('(declare-fun ').split(' (',1)[0]
                 next_name = next_str.removeprefix('(declare-fun ').split(' (',1)[0]
-                define_fun_str = cur_name.replace("|", "").replace(":", "")
+                define_fun_str = fresh_name('.' + cur_name.replace("|", "").replace(":", ""))
                 current = f"({cur_name} {' '.join(names)})"
-                full_str = f"(define-fun .{define_fun_str} ({params}) {decl_sort} (! {current} :next {next_name}))"
+                full_str = f"(define-fun {define_fun_str} ({params}) {decl_sort} (! {current} :next {next_name}))"
             else:
                 sort = cur_sym.sort().sexpr()
-                define_fun_str = cur_str.replace("|", "").replace(":", "")
-                full_str = f"(define-fun .{define_fun_str} () {sort} (! {cur_str} :next {next_str}))"
+                define_fun_str = fresh_name('.' + cur_str.replace("|", "").replace(":", ""))
+                full_str = f"(define-fun {define_fun_str} () {sort} (! {cur_str} :next {next_str}))"
             vmt_var_defs.append(full_str)
         elif "fml:" in sym.name or "loc:" in sym.name or "prm:" in sym.name or sym.is_skolem() or sym in immutable:
             next_sym_str = f"new_{sym.name.replace(':', '')}"
@@ -367,8 +383,9 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
             sort = slvr.symbol_to_z3(sym).sort().sexpr()
             next_fml_def = f"(declare-fun {next_sym_str} () {sort})"
             vmt_var_defs.append(next_fml_def)
-            define_fun_str = cur_sym_str.replace("|", "").replace(":", "")
-            full_str = f"(define-fun .{define_fun_str} () {sort} (! {cur_sym_str} :next {next_sym_str}))"
+            used_names.add(next_sym_str)
+            define_fun_str = fresh_name('.' + cur_sym_str.replace("|", "").replace(":", ""))
+            full_str = f"(define-fun {define_fun_str} () {sort} (! {cur_sym_str} :next {next_sym_str}))"
             vmt_var_defs.append(full_str)
 
     frame = [il.Equals(x,tr.new(x)) for x in immutable]
@@ -382,19 +399,26 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
         # vmt_var_defs.extend(var_defs)
         # prop_formula = normalize_prop(slvr.formula_to_z3(lf.formula))
         prop_formula = slvr.formula_to_z3(lf.formula).sexpr()
-        props.append(f'(define-fun property_{i} () Bool (! {prop_formula} :invar-property {i}))')
+        prop_name = fresh_name(f'property_{i}')
+        props.append(f'(define-fun {prop_name} () Bool (! {prop_formula} :invar-property {i}))')
 
     init_formula_str = simplify(slvr.formula_to_z3(init)).sexpr()
     trans_formula_str = simplify(slvr.formula_to_z3(trans)).sexpr()
     vmt_formula_defs = []
-    init_vmt = f"(define-fun init () Bool (! {init_formula_str} :init true))"
+    init_name = fresh_name('init')
+    init_vmt = f"(define-fun {init_name} () Bool (! {init_formula_str} :init true))"
     vmt_formula_defs.append(init_vmt)
 
-    vmt_var_defs.extend(get_action_defs(actions))
+    transition_name = fresh_name('trans')
+    action_names = [fresh_name(name.split(':')[-1]) for name, _ in actions]
+    for action_name in action_names:
+        vmt_var_defs.append(f'(declare-fun {action_name} () Bool)')
+        metadata_name = fresh_name('.' + action_name.strip('|'))
+        vmt_var_defs.append(f'(define-fun {metadata_name} () Bool (! {action_name} :action 0))')
 
     # print ('foo : {}'.format(transs[-1]))
 
-    trans_vmt = get_trans_str(transs, actions, herbrand_trans) # transs not a typo
+    trans_vmt = get_trans_str(transs, action_names, herbrand_trans, transition_name)
     vmt_formula_defs.append(trans_vmt)
     vmt_formula_defs.extend(props)
 
@@ -421,12 +445,9 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
     exit(0)
 
 
-def get_trans_str(trans_fm_list, actions, herbrand_trans):
+def get_trans_str(trans_fm_list, action_names, herbrand_trans, transition_name):
     vmt_list = []
-    action_names = []
-    for action, trans_fm in zip(actions, trans_fm_list):
-        action_name = action[0].split(":")[-1]
-        action_names.append(action_name)
+    for action_name, trans_fm in zip(action_names, trans_fm_list):
         trans_str = simplify(slvr.formula_to_z3(trans_fm)).sexpr()
         full_str = f"(=> {action_name} {trans_str})"
         vmt_list.append(full_str)
@@ -437,15 +458,5 @@ def get_trans_str(trans_fm_list, actions, herbrand_trans):
     for ht in herbrand_trans:
         vmt_list.append(ht)
     vmt_str = '\n'.join(vmt_list)
-    return f"(define-fun trans () Bool (! (and {vmt_str}) :trans true))"
-
-def get_action_defs(actions):
-    action_defs = []
-    for action in actions:
-        action_name = action[0].split(":")[-1]
-        action_def = f"(declare-fun {action_name} () Bool)"
-        define = f"(define-fun .{action_name} () Bool (! {action_name} :action 0))"
-        action_defs.append(action_def)
-        action_defs.append(define)
-    return action_defs
+    return f"(define-fun {transition_name} () Bool (! (and {vmt_str}) :trans true))"
 

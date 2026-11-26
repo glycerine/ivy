@@ -949,38 +949,28 @@ class Translator(object):
                    for (ca, na) in conds_a)
 
     def merge_dup(self, wa, wb):
-        """If two writes are the same write duplicated by the sequential-update
-        decomposition -- identical addr and data, guard lists differing in
-        exactly one literal's polarity -- return the merged write with that
-        literal dropped; else None. The pair fires, together, exactly when the
-        shared guards hold, so dropping the split literal is exact. The merged
-        write keeps the DEEPER depth: the duplicate reached through a later
-        statement's else-arm sits at that statement's (shallow) depth, but the
-        write truly belongs to the earlier statement it fell through from, whose
-        depth is the larger one."""
+        """Merge equal-address, equal-data writes at the same priority when
+        their guards differ by just the polarity of one literal."""
         conds_a, addr_a, data_a, depth_a = wa
         conds_b, addr_b, data_b, depth_b = wb
-        if not (addr_a == addr_b and data_a == data_b):
+        if not (depth_a == depth_b and addr_a == addr_b and data_a == data_b):
             return None
-        depth = max(depth_a, depth_b)
         for i, (la, na) in enumerate(conds_a):
             for j, (lb, nb) in enumerate(conds_b):
                 if la == lb and na != nb:
                     rem_a = conds_a[:i] + conds_a[i + 1:]
                     rem_b = conds_b[:j] + conds_b[j + 1:]
                     if self.conds_equal(rem_a, rem_b):
-                        return (rem_a, addr_a, data_a, depth)
+                        return (rem_a, addr_a, data_a, depth_a)
         return None
 
     def dedup_writes(self, writes):
         """Collapse writes duplicated by the update decomposition. A guarded
         statement `if g { arr := .. }` compiles to `if g then (.. else M) else M`,
         so the prior state M's writes are collected under both (g,True) and
-        (g,False); with everything folded into one port that was harmless, but as
-        separate ports each duplicate would become a redundant port. Merge such
-        pairs (see merge_dup) to a fixpoint; the merged write carries the deeper
-        of the two depths, so port priority stays correct regardless of which
-        list slot survives."""
+        (g,False). Merge such pairs at the same depth to a fixpoint. Writes at
+        different depths can have different priority relative to another write
+        to the same address, so they keep their separate guards."""
         writes = list(writes)
         changed = True
         while changed:

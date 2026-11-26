@@ -231,15 +231,8 @@ class IvyToRtl(Test):
         cmd = shlex.join([translator] + self.opts + [self.name + '.ivy'])
         print(cmd)
         child = spawn(cmd, timeout=self.timeout)
-        child.logfile = sys.stdout
-        try:
-            if self.res is not None:
-                child.expect(self.res)      # e.g. an expected error message
-            child.expect(pexpect.EOF)
-        except (pexpect.EOF, pexpect.TIMEOUT):
-            print(child.before)
+        if not self.expect_command_exit(child, self.res):
             return False
-        child.close()
         if self.validate is None:
             # pass if the expected output matched, or (no `expect` given) the
             # translation exited cleanly
@@ -252,10 +245,27 @@ class IvyToRtl(Test):
         vcmd = self.validate.replace('{name}', self.name)
         print('validating: {}'.format(vcmd))
         vchild = spawn('/bin/bash', ['-c', vcmd], timeout=self.timeout)
-        vchild.logfile = sys.stdout
-        vchild.expect(pexpect.EOF)
-        vchild.close()
-        return vchild.exitstatus == 0
+        return self.expect_command_exit(vchild) and vchild.exitstatus == 0
+
+    @staticmethod
+    def expect_command_exit(child, expected=None):
+        child.logfile = sys.stdout
+        finished = False
+        try:
+            if expected is not None:
+                child.expect(expected)
+            child.expect(pexpect.EOF)
+            finished = True
+        except (pexpect.EOF, pexpect.TIMEOUT):
+            print(child.before)
+        finally:
+            if hasattr(child, 'close'):
+                child.close()
+            else:
+                if not finished and child.proc.poll() is None:
+                    child.proc.terminate()
+                child.wait()
+        return finished
 
 
 TEST_TYPES = {

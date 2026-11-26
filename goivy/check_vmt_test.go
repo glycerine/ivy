@@ -187,6 +187,127 @@ for constraint, want in [
 	}
 }
 
+func TestPyIvyVMTExportUsesDeclaredInitBeforeInitializer(t *testing.T) {
+	const source = `#lang ivy1.6
+relation p
+relation q
+init p
+after init { q := p; p := false }
+action step = { p := true; q := false }
+export step
+`
+	path := exportPyIvyVMT(t, source)
+	validate := pythonIvyCommandForTest(t, "-O", "-c", `
+from pathlib import Path
+import sys
+from ivy import z3
+
+vmt = Path(sys.argv[1]).read_text()
+for condition, expected in [('init', z3.sat), ('(and init (or p (not q)))', z3.unsat)]:
+    solver = z3.Solver()
+    solver.add(z3.parse_smt2_string(vmt + "\n(assert " + condition + ")"))
+    actual = solver.check()
+    if actual != expected:
+        raise AssertionError((condition, actual, expected, vmt))
+`, path)
+	if out, err := validate.CombinedOutput(); err != nil {
+		t.Fatalf("check PyIvy VMT initial states: %v\n%s", err, out)
+	}
+}
+
+func TestPyIvyVMTExportKeepsStateAndMetadataNamesDistinct(t *testing.T) {
+	const source = `#lang ivy1.8
+relation trans
+relation property_0
+after init { trans := false; property_0 := true }
+export action step = { trans := true; property_0 := false }
+invariant [observe] ~trans & property_0
+`
+	path := exportPyIvyVMT(t, source)
+	validate := pythonIvyCommandForTest(t, "-O", "-c", `
+from pathlib import Path
+import sys
+from ivy import z3
+
+vmt = Path(sys.argv[1]).read_text()
+solver = z3.Solver()
+solver.add(z3.parse_smt2_string(vmt + "\n(assert (and init (or trans (not property_0))))"))
+if solver.check() != z3.unsat:
+    raise AssertionError("source state names were not preserved:\n" + vmt)
+`, path)
+	if out, err := validate.CombinedOutput(); err != nil {
+		t.Fatalf("check PyIvy VMT names: %v\n%s", err, out)
+	}
+}
+
+func TestVMTExportDeclaresSortUsedOnlyByEnumConstructors(t *testing.T) {
+	const source = `#lang ivy1.8
+type color = {red, green}
+invariant [colors_differ] red ~= green
+`
+	for _, engine := range []string{"GoIvy", "PyIvy"} {
+		t.Run(engine, func(t *testing.T) {
+			var path, property string
+			switch engine {
+			case "GoIvy":
+				mod := New()
+				if err := SourceString("color.ivy", source, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
+					t.Fatal(err)
+				}
+				if err := CreateIsolate("this", mod); err != nil {
+					t.Fatal(err)
+				}
+				endTheory := mod.TheoryContext()
+				defer endTheory()
+				mod.Name = filepath.Join(t.TempDir(), "color")
+				if err := VMTCheckIsolate("vmt", mod); err != nil {
+					t.Fatal(err)
+				}
+				path, property = mod.Name+".vmt", "$property.0"
+			case "PyIvy":
+				path, property = exportPyIvyVMT(t, source), "property_0"
+			}
+			validate := pythonIvyCommandForTest(t, "-O", "-c", `
+from pathlib import Path
+import sys
+from ivy import z3
+
+model = Path(sys.argv[1]).read_text()
+solver = z3.Solver()
+solver.add(z3.parse_smt2_string(model + "\n(assert (not " + sys.argv[2] + "))"))
+if solver.check() != z3.unsat:
+    raise AssertionError("different enum constructors must be distinct:\n" + model)
+`, path, property)
+			if out, err := validate.CombinedOutput(); err != nil {
+				t.Fatalf("check VMT enumeration: %v\n%s", err, out)
+			}
+		})
+	}
+}
+
+func exportPyIvyVMT(t *testing.T, source string) string {
+	t.Helper()
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "initial.ivy"), []byte(source), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	export := pythonIvyCommandForTest(t, "-O", "-c", `
+from ivy import ivy_init, ivy_isolate, ivy_module, ivy_vmt
+
+with ivy_module.Module():
+    with open("initial.ivy") as source:
+        ivy_init.source_file("initial.ivy", source, create_isolate=False)
+    ivy_isolate.create_isolate(None)
+    with ivy_module.module.theory_context():
+        ivy_vmt.check_isolate()
+`)
+	export.Dir = dir
+	if out, err := export.CombinedOutput(); err != nil {
+		t.Fatalf("export PyIvy VMT: %v\n%s", err, out)
+	}
+	return filepath.Join(dir, "initial.vmt")
+}
+
 func TestVMTExportIndexedUpdates(t *testing.T) {
 	const source = `#lang ivy1.8
 type index

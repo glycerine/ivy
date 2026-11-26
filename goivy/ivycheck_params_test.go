@@ -1,6 +1,8 @@
 package goivy
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -141,6 +143,49 @@ func TestCheckByName(t *testing.T) {
 				}
 			} else if err != nil {
 				t.Fatal(err)
+			}
+		})
+	}
+}
+
+func TestCheckByNameSelectsTemporalProperties(t *testing.T) {
+	const source = `#lang ivy1.8
+invariant [safe] true
+temporal property [must_fail] globally false
+`
+	const filename = "temporal_checks.ivy"
+	path := filepath.Join(t.TempDir(), filename)
+	if err := os.WriteFile(path, []byte(source), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	for _, engine := range []string{"GoIvy", "PyIvy"} {
+		t.Run(engine, func(t *testing.T) {
+			for _, name := range []string{"safe", "must_fail"} {
+				t.Run(name, func(t *testing.T) {
+					var diagnostic string
+					var err error
+					if engine == "GoIvy" {
+						cfg := NewConfig()
+						if err := ApplyIvyCheckParams(cfg, map[string]string{"check": name}); err != nil {
+							t.Fatal(err)
+						}
+						err = StartSourceWithConfig(filename, source, cfg)
+						if err != nil {
+							diagnostic = err.Error()
+						}
+					} else {
+						var out []byte
+						out, err = pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy", "check", "check="+name, path).CombinedOutput()
+						diagnostic = string(out)
+					}
+					if name == "safe" {
+						if err != nil {
+							t.Fatalf("checking safe should skip the unrelated temporal property: %v\n%s", err, diagnostic)
+						}
+					} else if err == nil || !strings.Contains(diagnostic, "no proof given for property") {
+						t.Fatalf("selecting the temporal property should report its proof error, got %v\n%s", err, diagnostic)
+					}
+				})
 			}
 		})
 	}

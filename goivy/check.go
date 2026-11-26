@@ -291,7 +291,7 @@ func CheckTemporals(mod *Module) error {
 				fmt.Printf("     ... admitting %s as axiom because it is an externally assumed property and unchecked property file is supplied.\n", propLabel)
 			}
 			pc.AdmitAxiom(prop)
-		} else {
+		} else if mod.Cfg.checkNameSelected(lfLabelName(prop)) {
 			fmt.Print("\n    The following temporal property is being proved:\n\n")
 			// Python: print(pretty_lf(prop) + ' ...') -- pretty_lf's default indent is 8.
 			fmt.Print(PrettyLF(prop, 8) + " ...\n")

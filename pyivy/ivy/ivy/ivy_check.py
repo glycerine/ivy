@@ -148,7 +148,7 @@ def check_temporals():
                 if opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
                     print('     ... admitting ', prop.label, ' as axiom because it is an externally assumed property and unchecked property file is supplied.')
                 pc.admit_axiom(prop)
-            else:
+            elif act.check_name_selected(prop.name if prop.label is not None else None):
                 print('\n    The following temporal property is being proved:\n')
                 print(pretty_lf(prop) + ' ...', end='\n')
                 sys.stdout.flush()
