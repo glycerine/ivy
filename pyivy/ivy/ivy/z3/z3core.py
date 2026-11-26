@@ -2,66 +2,22 @@
 # Automatically generated file
 import sys, os
 import ctypes
-import pkg_resources
 from .z3types import *
 from .z3consts import *
 
 _ext = 'dll' if sys.platform in ('win32', 'cygwin') else 'dylib' if sys.platform == 'darwin' else 'so'
-_lib = None
-_default_dirs = ['.',
-                 os.path.dirname(os.path.abspath(__file__)),
-#                 pkg_resources.resource_filename('z3', 'lib'),
-                 os.path.join(sys.prefix, 'lib'),
-                 None]
-_all_dirs = []
+_library_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f'libz3.{_ext}')
+try:
+    _lib = ctypes.CDLL(_library_path)
+except OSError as exc:
+    raise Z3Exception(f"Could not load Ivy's bundled Z3 4.7.1 fork at {_library_path}. "
+                      "Build it with build_submodules.py from the PyIvy source tree.") from exc
 
-#if sys.version < '3':
-#  import __builtin__
-#  if hasattr(__builtin__, "Z3_LIB_DIRS"):
-#    _all_dirs = __builtin__.Z3_LIB_DIRS
-#else:
-#  import builtins
-#  if hasattr(builtins, "Z3_LIB_DIRS"):
-#    _all_dirs = builtins.Z3_LIB_DIRS
-#
-#for v in ('Z3_LIBRARY_PATH', 'PATH', 'PYTHONPATH'):
-#  if v in os.environ:
-#    lp = os.environ[v];
-#    lds = lp.split(';') if sys.platform in ('win32') else lp.split(':')
-#    _all_dirs.extend(lds)
-
-_all_dirs.extend(_default_dirs)
-
-for d in _all_dirs:
-  try:
-    d = os.path.realpath(d)
-    if os.path.isdir(d):
-      d = os.path.join(d, 'libz3.%s' % _ext)
-      if os.path.isfile(d):
-        _lib = ctypes.CDLL(d)
-        break
-  except:
-    pass
-
-#if _lib is None:
-#  # If all else failed, ask the system to find it.
-#  try:
-#    _lib = ctypes.CDLL('libz3.%s' % _ext)
-#  except:
-#    pass
-
-if _lib is None:
-  print("Could not find libz3.%s; consider adding the directory containing it to" % _ext)
-  print("  - your system's PATH environment variable,")
-  print("  - the Z3_LIBRARY_PATH environment variable, or ")
-  print("  - to the custom Z3_LIBRARY_DIRS Python-builtin before importing the z3 module, e.g. via")
-  if sys.version < '3':
-    print("    import __builtin__")
-    print("    __builtin__.Z3_LIB_DIRS = [ '/path/to/libz3.%s' ] " % _ext)
-  else:
-    print("    import builtins")
-    print("    builtins.Z3_LIB_DIRS = [ '/path/to/libz3.%s' ] " % _ext)
-  raise Z3Exception("libz3.%s not found." % _ext)
+_version = [ctypes.c_uint() for _ in range(4)]
+_lib.Z3_get_version.restype = None
+_lib.Z3_get_version(*[ctypes.byref(part) for part in _version])
+if tuple(part.value for part in _version[:3]) != (4, 7, 1) or not hasattr(_lib, 'Z3_mk_interpolant'):
+    raise Z3Exception(f"{_library_path} must be Ivy's Z3 4.7.1 fork with interpolation support.")
 
 def _to_ascii(s):
   if isinstance(s, str):
@@ -4545,6 +4501,5 @@ def Z3_qe_lite(a0, a1, a2, _elems=Elementaries(_lib.Z3_qe_lite)):
 
 # Clean up
 del _lib
-del _default_dirs
-del _all_dirs
 del _ext
+del _version

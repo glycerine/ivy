@@ -1,6 +1,8 @@
 import sys
 import os
 import platform
+import shutil
+import subprocess
 
 def do_cmd(cmd):
     print(cmd)
@@ -41,56 +43,35 @@ def find_vs():
                 return vcvars
     print('Cannot find a suitable version of Visual Studio (require 10.0-15.0 or 2017 or 2019)')
 
+def z3_library_name():
+    extension = {'Darwin': 'dylib', 'Windows': 'dll'}.get(platform.system(), 'so')
+    return f'libz3.{extension}'
+
 def build_z3():
-
-    cwd = os.getcwd()
-
-    if not os.path.exists('submodules/z3'):
-        print("submodules/z3 not found. try 'git submodule update; git submodule update'")
-        exit(1)
-
-    os.chdir('submodules/z3')
-
-    ivydir = os.path.join(cwd,'ivy')
-
-
-    if platform.system() != 'Windows':
-        cmd = 'python scripts/mk_make.py --python --prefix {} --pypkgdir {}/'.format(cwd,ivydir)
-    else:
-        cmd = 'python scripts/mk_make.py -x --python --pypkgdir {}/'.format(ivydir)
-
-    do_cmd(cmd)
-
-    os.chdir('build')
-
+    source = 'submodules/z3'
+    if not os.path.isfile(os.path.join(source, 'scripts', 'mk_make.py')):
+        raise SystemExit('The vendored Ivy Z3 source is missing from submodules/z3.')
+    generate = [sys.executable, 'scripts/mk_make.py']
     if platform.system() == 'Windows':
-        do_cmd('"{}" & nmake'.format(find_vs()))
-    else:
-        do_cmd('make -j 4')
-        do_cmd('make install')
+        generate.append('-x')
+    subprocess.run(generate, cwd=source, check=True)
 
-    os.chdir(cwd)
+    build = os.path.join(source, 'build')
+    if platform.system() == 'Windows':
+        subprocess.run('"{}" & nmake'.format(find_vs()), shell=True, cwd=build, check=True)
+    else:
+        subprocess.run(['make', '-j', '4'], cwd=build, check=True)
 
 def install_z3():
-
-    make_dir_exist('ivy/lib')
-    make_dir_exist('ivy/z3')
-
+    library = z3_library_name()
+    build = os.path.join('submodules', 'z3', 'build')
+    for directory in ('lib', 'z3'):
+        destination = os.path.realpath(os.path.join('ivy', directory, library))
+        os.makedirs(os.path.dirname(destination), exist_ok=True)
+        if not os.path.isfile(destination):
+            shutil.copy2(os.path.join(build, library), destination)
     if platform.system() == 'Windows':
-        do_cmd('copy submodules\\z3\\src\\api\\*.h ivy\\include')
-        do_cmd('copy "submodules\\z3\\src\\api\\c++\\*.h" ivy\\include')
-        do_cmd('copy submodules\\z3\\build\\*.dll ivy\\lib')
-        do_cmd('copy submodules\\z3\\build\\*.lib ivy\\lib')
-        do_cmd('copy submodules\\z3\\build\\*.dll ivy\\z3')
-        do_cmd('copy submodules\\z3\\build\\python\\z3\\*.py ivy\\z3')
-    elif platform.system() == 'Darwin':
-        do_cmd('cp include/*.h ivy/include')
-        do_cmd('cp lib/*.dylib ivy/lib')
-        do_cmd('cp lib/*.dylib ivy/z3')
-    else:
-        do_cmd('cp include/*.h ivy/include')
-        do_cmd('cp lib/*.so ivy/lib')
-        do_cmd('cp lib/*.so ivy/z3')
+        shutil.copy2(os.path.join(build, 'libz3.lib'), os.path.join('ivy', 'lib'))
 
 def build_picotls():
         
@@ -198,8 +179,9 @@ def install_abc():
     os.chdir(cwd)
     
 if __name__ == "__main__":
-    build_z3()
-    install_z3()
+    if not os.path.isfile(os.path.join('ivy', 'z3', z3_library_name())):
+        build_z3()
+        install_z3()
     # build_picotls()
     # install_picotls()
 

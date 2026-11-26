@@ -40,7 +40,6 @@ setup(name='ms_ivy',
           'ply',
           'tarjan',
           'pydot',
-          'z3-solver>=4.8.12; sys_platform == "darwin"',
           'applescript; sys_platform == "darwin"',
       ],
       entry_points = {

@@ -317,22 +317,6 @@ func outputUsesWideBV(out *Output) bool {
 }
 
 func z3BuildArgs() ([]string, []string, error) {
-	if runtime.GOOS == "darwin" {
-		if include, link, ok := z3PrefixArgs(os.Getenv("Z3DIR")); ok {
-			return include, link, nil
-		}
-		code := "import importlib.util, pathlib; s = importlib.util.find_spec('z3'); print(pathlib.Path(s.origin).resolve().parent if s and s.origin else '')"
-		if result, err := exec.Command("python3", "-c", code).Output(); err == nil {
-			if include, link, ok := z3PrefixArgs(strings.TrimSpace(string(result))); ok {
-				return include, link, nil
-			}
-		}
-		if result, err := exec.Command("brew", "--prefix", "z3").Output(); err == nil {
-			if include, link, ok := z3PrefixArgs(strings.TrimSpace(string(result))); ok {
-				return include, link, nil
-			}
-		}
-	}
 	goivyRoot, err := packageGoivyRoot()
 	if err != nil {
 		return nil, nil, err
@@ -359,24 +343,6 @@ func z3BuildArgs() ([]string, []string, error) {
 		linkArgs = append(linkArgs, "-lm", "-lgomp")
 	}
 	return includeArgs, linkArgs, nil
-}
-
-func z3PrefixArgs(prefix string) ([]string, []string, bool) {
-	if prefix == "" {
-		return nil, nil, false
-	}
-	include := filepath.Join(prefix, "include")
-	if _, err := os.Stat(filepath.Join(include, "z3++.h")); err != nil {
-		return nil, nil, false
-	}
-	lib := filepath.Join(prefix, "lib")
-	for _, name := range []string{"libz3.dylib", "libz3.a"} {
-		library := filepath.Join(lib, name)
-		if _, err := os.Stat(library); err == nil {
-			return []string{"-I" + include}, []string{library, "-Wl,-rpath," + lib}, true
-		}
-	}
-	return nil, nil, false
 }
 
 func macOpenSSLPrefix() string {

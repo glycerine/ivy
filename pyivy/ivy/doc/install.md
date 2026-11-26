@@ -6,50 +6,39 @@ title: Installing IVy
 There are two ways to install ivy:
 
 1. [Install from source](#source)
-2. [Install a binary release](#binary)
+2. [Install a wheel](#binary)
 
 <a name="source"></a> Installing from source
 --------------------------------------------
 
 1. [Install from source on Linux](#linuxnotes)
-3. [Install from source on Mac](#macnotes)
-
-
-<a name="source"></a> Installing a binary release
---------------------------------------------
-
-1. [Install from source on Linux](#linuxbinary)
+2. [Install from source on macOS](#macnotes)
 
 
 <a name="linuxnotes"></a> Installation from source on Linux
 ===========================================================
 
-This describes the steps need to install IVy on Ubuntu 20.04. This may
-also work on other Debian-based distributions.
+These commands use Python 3.10 or later on Ubuntu and other
+Debian-based distributions.
 
 ### Prerequisites
 
-    $ sudo apt-get install python3 python3-pip g++ cmake python3-ply python3-pygraphviz git python3-tk tix pkg-config libssl-dev libreadline-dev
+    $ sudo apt-get install python3 python3-pip python3-venv g++ cmake git python3-tk graphviz pkg-config libssl-dev libreadline-dev
 
 ### Install IVy
 
-Get the source like this:
+Use the `pyivy/ivy` directory of the GoIvy checkout.
 
-    $ git clone --recurse-submodules https://github.com/kenmcmil/ivy.git
-    $ cd ivy
+    $ cd ~/ivy/pyivy/ivy
+    $ python3 -m venv .venv
+    $ . .venv/bin/activate
+    $ python build_submodules.py
+    $ python -m pip install .
 
-Build the submodules like this (it takes a while):
-
-    $ python3 build_submodules.py
-
-Install into your local Python like this:
-
-    $ sudo python3 setup.py install
-
-If you want to run from the source tree for development purposes, do
-this instead:
-
-    $ sudo python3 setup.py develop
+For development, install the package in editable mode with
+`python -m pip install -e .`. PyIvy uses Ken McMillan's vendored Z3 4.7.1
+fork for its interpolation support. The build script prepares that
+library along with the native tools used for model checking.
 
 Optionally, build the experimental Ivy v2.0 compiler:
 
@@ -78,90 +67,27 @@ somewhere in your emacs load path and add the following code to your
     (autoload 'ivy-mode  "ivy-mode.el" "Major mode for editing Ivy code" t nil)
 
     
-<a name="macnotes"></a> Installation from source on MacOS
-=========================================================
+<a name="macnotes"></a> Installation from source on macOS
+=======================================================
 
-Install using MacPorts
-----------------------
+Install the Xcode command-line tools and the Homebrew prerequisites.
+Follow [Homebrew's installation instructions](https://brew.sh/) to
+install it and add it to your path.
 
-These instructions have not been tested on recent MacOS versions.
+    $ xcode-select --install
+    $ brew install cmake coreutils git graphviz pkgconf openssl@3 readline python@3.10 python-tk@3.10
 
-1. Install Xcode from App Store
-2. Install Xcode command line tools
+Create the environment with `python3.10 -m venv .venv` and follow the
+[source installation](#linuxnotes) above. The native build script
+builds ABC and AIGER on macOS. The C++ extractor links the same
+vendored Z3 fork.
 
-        $ xcode-select --install
+<a name="binary"></a> Installing a wheel
+--------------------------------------
 
-3. Install Xserver
+Install a wheel built from this checkout into an active virtual
+environment. The examples and documentation are available in the checkout.
 
-    - [https://www.xquartz.org](https://www.xquartz.org)
+    $ python -m pip install /path/to/ms_ivy-<version>-<platform>.whl
 
-4. Macports
-
-        $ sudo xcodebuild -license
-
-   Install Macports from [https://www.macports.org/install.php](https://www.macports.org/install.php). Select
-   the version matching the macOS version running on your
-   machine.
-
-        $ sudo port install python310 py310-pip graphviz tix py310-tkinter git cmake openssl
-        $ sudo port select --set python3 python310
-        $ sudo port select --set pip3 pip310
-        
-5. Install Ivy:
-
-        $ git clone --recurse-submodules https://github.com/kenmcmil/ivy.git
-        $ cd ivy
-
-    Build the submodules like this (it takes a while):
-
-        $ python3 build_submodules.py
-
-    Install into your local Python like this
-
-        $ sudo python3 setup.py install
-        $ sudo ln -s /opt/local/Library/Frameworks/Python.framework/Versions/3.10/bin/ivy* /opt/local/bin
-
-    The second command may not be necessary, but works around a bug in
-    the python setup tools installed by macports.
-
-    If you want to run from the source tree for development purposes, do
-    this instead:
-
-        $ sudo python setup.py develop
-        $ sudo ln -s /opt/local/Library/Frameworks/Python.framework/Versions/3.10/bin/ivy* /opt/local/bin
-
-
-6. Running a test
-
-        $ cd doc/examples
-        $ ivy_check diagnose=true client_server_example_new.ivy
-
-    This should fire up a GUI.
-
-
-
-<a name="binary"></a> Binary releases
---------------------
-
-Ivy is released as a Python package in the PyPI repository. I
-
-### <a name="linuxbinary"> Install binary release on Linux
-
-    $ sudo apt-get install python3 python3-pip g++ cmake python3-ply python3-pygraphviz git python3-tk tix pkg-config libssl-dev libreadline-dev
-    $ sudo pip3 install ms-ivy
-
-Note, if you omit `sudo` in the second command, Ivy will be installed
-into `~\.local\bin`, which is probably not what you want, so be
-careful.
-
-This does not install the documentation and example files. You can get
-these from github like this (see the directory `ivy/doc`):
-
-    $ sudo apt-get install git
-    $ git clone https://github.com/kenmcmil/ivy.git
-
-### <a name="macbinary"> Install binary release on Mac
-
-Mac binary distributions are not yet available.
-
- 
+The upstream IVy project publishes its own `ms-ivy` wheels on PyPI.

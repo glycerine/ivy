@@ -23,7 +23,7 @@ from . import ivy_fragment as ifc
 import sys
 import os
 import platform
-import importlib.util
+import filecmp
 import shlex
 import shutil
 import subprocess
@@ -1279,24 +1279,12 @@ def find_openssl():
         if valid(path):
             return path
 
-def get_lib_dirs(with_z3=True):
+def get_lib_dirs():
     dirs = [os.path.dirname(os.path.abspath(__file__))]
-    explicit = os.environ.get('Z3DIR') if with_z3 else None
     if platform.system() == 'Darwin':
-        if with_z3:
-            package = importlib.util.find_spec('z3')
-            if package and package.origin:
-                root = os.path.dirname(os.path.abspath(package.origin))
-                if os.path.isfile(os.path.join(root, 'include', 'z3++.h')) and any(
-                    os.path.isfile(os.path.join(root, 'lib', lib)) for lib in ('libz3.dylib', 'libz3.a')):
-                    dirs.insert(0, root)
-        if explicit:
-            dirs.insert(0, explicit)
         openssl = find_openssl()
         if openssl:
             dirs.append(openssl)
-    elif explicit:
-        dirs.append(explicit)
     return dirs
 
 def get_support_include_dir():
@@ -4911,12 +4899,6 @@ def main_int(is_ivyc):
             with im.module.copy():
                 with iu.ErrorPrinter():
 
-                    def do_cmd(cmd):
-                        print(cmd)
-                        status = os.system(cmd)
-                        if status:
-                            exit(1)
-    
                     if isolate:
                         if len(isolates) > 1:
                             print("Compiling isolate {}...".format(isolate))
@@ -4989,22 +4971,19 @@ def main_int(is_ivyc):
                                 libspec += ''.join(' {}'.format(ll) for ll in y.rep.strip('"').split(',') if ll.endswith('.lib'))
                             else:
                                 libspec += ''.join(' -l' + ll for ll in y.rep.strip('"').split(',') if not ll.endswith('.lib'))
+                    requires_z3 = target.get() in ('gen', 'test')
+                    vendored_z3 = slv.z3.z3core._library_path
                     if platform.system() == 'Windows':
-                        # if 'Z3DIR' in os.environ:
-                        #     incspec = '/I %Z3DIR%\\include'
-                        #     libpspec = '/LIBPATH:%Z3DIR%\\lib /LIBPATH:%Z3DIR%\\bin'
-                        # else:
-                        #     import z3
-                        #     z3path = os.path.dirname(os.path.abspath(z3.__file__))
-                        #     incspec = '/I {}'.format(z3path)
-                        #     libpspec = '/LIBPATH:{}'.format(z3path)
                         _dir = os.path.dirname(os.path.abspath(__file__))
                         incspec = '/I {} /I {}'.format(os.path.join(_dir,'include'),get_support_include_dir())
                         libpspec = '/LIBPATH:{}'.format(os.path.join(_dir,'lib'))
-                        if not os.path.exists('libz3.dll'):
-                            print('Copying libz3.dll to current directory.')
-                            print('If the binary {}.exe is moved to another directory, this file must also be moved.'.format(basename))
-                            do_cmd('copy {} libz3.dll'.format(os.path.join(_dir,'lib','libz3.dll')))
+                        if requires_z3:
+                            executable_dir = opt_outdir.get() or builddir
+                            dll = os.path.join(executable_dir, 'libz3.dll')
+                            if not os.path.exists(dll):
+                                shutil.copyfile(vendored_z3, dll)
+                            elif not filecmp.cmp(vendored_z3, dll, shallow=False):
+                                raise iu.IvyError(None, f"{dll} differs from Ivy's bundled Z3 4.7.1 fork.")
                         for lib in libs:
                             _incdir = lib[1] if len(lib) >= 2 else []
                             _libdir = lib[2] if len(lib) >= 3 else []
@@ -5015,18 +4994,20 @@ def main_int(is_ivyc):
                         vsdir = find_vs()
                         if opt_compiler.get() != 'g++':
                             cmd = '"{}\\VC\\vcvarsall.bat" amd64& cl /EHsc /Zi {} {}.cpp ws2_32.lib'.format(vsdir,incspec,basename)
-                            if target.get() in ['gen','test']:
-                                cmd = '"{}\\VC\\vcvarsall.bat" amd64& cl /MDd /EHsc /Zi {} {}.cpp ws2_32.lib libz3.lib /link {}'.format(vsdir,incspec,basename,libpspec)
+                            if requires_z3:
+                                import_library = os.path.join(_dir, 'lib', 'libz3.lib')
+                                cmd = '"{}\\VC\\vcvarsall.bat" amd64& cl /MDd /EHsc /Zi {} {}.cpp ws2_32.lib "{}" /link {}'.format(vsdir,incspec,basename,import_library,libpspec)
                             cmd += libspec
                         else:
-                            cmd = "g++ {} -I {} -I %Z3DIR%/include -L %Z3DIR%/lib -L %Z3DIR%/bin -g -o {} {}.cpp -lws2_32".format(gpp11_spec,get_support_include_dir(),basename,basename)
-                            if target.get() in ['gen','test']:
-                                cmd = cmd + ' -lz3'
+                            cmd = 'g++ {} -I "{}" -I "{}" -g -o {} {}.cpp -lws2_32'.format(
+                                gpp11_spec, get_support_include_dir(), os.path.join(_dir, 'include'), basename, basename)
+                            if requires_z3:
+                                cmd += ' "{}"'.format(vendored_z3)
                         if opt_outdir.get():
                             cmd = 'cd {} & '.format(opt_outdir.get()) + cmd
                     else:
                         support_path = '-I {}'.format(get_support_include_dir())
-                        if target.get() in ['gen','test']:
+                        if requires_z3:
                             paths = support_path + ' ' + ' '.join(
                                 '-I {} -L {} -Xlinker -rpath -Xlinker {}'.format(
                                     shlex.quote(os.path.join(directory,'include')),
@@ -5043,8 +5024,9 @@ def main_int(is_ivyc):
                             cmd = "g++ -Wno-parentheses-equality {} {} -g -o {} {}.cpp".format(gpp11_spec,paths,basename,basename)
                         else:
                             cmd = "g++ -Wno-parentheses-equality {} {} -g -c {}.cpp".format(gpp11_spec,paths,basename)
-                        if target.get() in ['gen','test']:
-                            cmd = cmd + ' -lz3'
+                        if requires_z3:
+                            cmd += ' {} -Xlinker -rpath -Xlinker {}'.format(
+                                shlex.quote(vendored_z3), shlex.quote(os.path.dirname(vendored_z3)))
                         cmd += libspec
                         cmd += ' -pthread'
                     print(cmd)
