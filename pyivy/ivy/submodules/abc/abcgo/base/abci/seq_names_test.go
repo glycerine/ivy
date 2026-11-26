@@ -111,3 +111,15 @@ func TestInterOnMul8DoesNotPanic(t *testing.T) {
 		t.Fatalf("inter on mul8:\n%s", out)
 	}
 }
+
+// Native: abc -c "read and2x2.blif; strash; saucy3" (f = a&b, g = b&c).
+// Sim_ManStop prints the support statistics, and the colors array is sized
+// by the number of outputs and inputs.
+func TestSaucyOnSmallDesignLikeNative(t *testing.T) {
+	out, _ := runScriptStatus(t, "read test_vectors/seq/and2x2.blif; strash; saucy3")
+	for _, want := range []string{"Total func supps   =        4.", "Sat runs UNSAT     =        0.", "average support = 4.00", "Runtime =     0.00 sec"} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("saucy3 missing %q:\n%s", want, out)
+		}
+	}
+}

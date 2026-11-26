@@ -32,6 +32,9 @@ type Sim_Man_t struct {
 	Input                  int
 	SATRuns, SAT, UNSAT    int
 	rng                    *aig.AigRandomSource
+	// timeSim, timeTrav, timeFraig and timeSat are reported as in simMan.c;
+	// the port measures only the total.
+	timeSim, timeTrav, timeFraig, timeSat, timeTotal int64
 }
 type Sym_Man_t struct {
 	Graph                             *aig.Graph

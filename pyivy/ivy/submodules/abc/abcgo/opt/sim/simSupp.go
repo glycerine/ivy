@@ -3,6 +3,7 @@ package sim
 import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"math/bits"
+	"time"
 )
 
 // Sim_ComputeStrSupp returns node-ID-indexed structural supports, including COs.
@@ -31,6 +32,8 @@ func Sim_ComputeStrSupp(g *aig.Graph) Info {
 // establishes positive dependencies; SAT removes the remaining false targets.
 func Sim_ComputeFunSupp(g *aig.Graph, verbose bool) Info {
 	p := Sim_ManStart(g, false)
+	start := time.Now()
+	defer func() { p.timeTotal = time.Since(start).Nanoseconds(); Sim_ManPrintStats(p) }() // as Sim_ManStop
 	Sim_UtilAssignRandom(p)
 	Sim_ComputeSuppRound(p, false)
 	Sim_ComputeSuppSetTargets(p)
@@ -42,9 +45,6 @@ func Sim_ComputeFunSupp(g *aig.Graph, verbose bool) Info {
 			Sim_UtilAssignFromFifo(p)
 			Sim_ComputeSuppRound(p, true)
 		}
-	}
-	if verbose {
-		Sim_ManPrintStats(p)
 	}
 	return p.Functional
 }

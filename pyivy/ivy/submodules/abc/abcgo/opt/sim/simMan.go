@@ -3,6 +3,7 @@ package sim
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func Sim_ManStart(g *aig.Graph, lightweight bool) *Sim_Man_t {
@@ -19,8 +20,18 @@ func Sim_ManStart(g *aig.Graph, lightweight bool) *Sim_Man_t {
 	return p
 }
 func Sim_ManStop(p *Sim_Man_t) { *p = Sim_Man_t{} }
+
+// Sim_ManPrintStats is simMan.c's; Sim_ManStop prints it unconditionally.
 func Sim_ManPrintStats(p *Sim_Man_t) {
-	fmt.Printf("Functional supports = %d. Structural supports = %d. SAT = %d. UNSAT = %d.\n", Sim_UtilCountSuppSizes(p, false), Sim_UtilCountSuppSizes(p, true), p.SAT, p.UNSAT)
+	fmt.Printf("Total func supps   = %8d.\n", Sim_UtilCountSuppSizes(p, false))
+	fmt.Printf("Total struct supps = %8d.\n", Sim_UtilCountSuppSizes(p, true))
+	fmt.Printf("Sat runs SAT       = %8d.\n", p.SAT)
+	fmt.Printf("Sat runs UNSAT     = %8d.\n", p.UNSAT)
+	util.Abc_PrintTime(1, "Simulation  ", p.timeSim)
+	util.Abc_PrintTime(1, "Traversal   ", p.timeTrav)
+	util.Abc_PrintTime(1, "Fraiging    ", p.timeFraig)
+	util.Abc_PrintTime(1, "SAT         ", p.timeSat)
+	util.Abc_PrintTime(1, "TOTAL       ", p.timeTotal)
 }
 func Sim_ManPatAlloc(p *Sim_Man_t) *Sim_Pat_t {
 	return &Sim_Pat_t{Output: -1, Data: make([]uint32, SIM_NUM_WORDS(len(p.Inputs)))}

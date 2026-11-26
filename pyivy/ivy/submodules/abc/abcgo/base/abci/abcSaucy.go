@@ -2,6 +2,7 @@ package abci
 
 import (
 	"fmt"
+	abcutil "github.com/glycerine/abcgo/misc/util"
 	"os"
 	"time"
 
@@ -2005,7 +2006,7 @@ func saucyFindTopologicalOrder(pNtk *Abc_Ntk_t) []*Vec_Ptr_t {
 }
 
 func saucyGetDependencies(pNtk *Abc_Ntk_t, iDep, oDep []*Vec_Int_t) {
-	supports := sim.Sim_ComputeFunSupp(baseabc.Abc_NtkStrashToGia(pNtk), false)
+	supports := sim.Sim_ComputeFunSuppSource(baseabc.Abc_NtkStrashToGia(pNtk), false)
 	for output := range supports {
 		for input := 0; input < int(baseabc.Abc_NtkPiNum(pNtk)); input++ {
 			if sim.Sim_HasBit(supports[output], input) {
@@ -2337,8 +2338,9 @@ func saucyGateWay(orig *Abc_Ntk_t, po *Abc_Obj_t, gFile *os.File, booleanMatchin
 	saucyGetDependencies(ntk, s.iDep, s.oDep)
 	fmt.Println("\t--------------------")
 	s.topOrder = saucyFindTopologicalOrder(ntk)
-	colors := ints(s.n)
+	// as abcSaucy.c: one color per output and input (s.n is set later)
 	no := baseabc.Abc_NtkPoNum(ntk)
+	colors := ints(no + baseabc.Abc_NtkPiNum(ntk))
 	for i := int32(0); i < no; i++ {
 		if fixOutputs != 0 {
 			colors[i] = i
@@ -2393,7 +2395,7 @@ func saucyGateWay(orig *Abc_Ntk_t, po *Abc_Obj_t, gFile *os.File, booleanMatchin
 		fmt.Fprintf(f, "group size = %fe%d\n", stats.grpsize_base, stats.grpsize_exp)
 		_ = f.Close()
 	}
-	fmt.Printf("Runtime = %9.2f sec\n", time.Since(started).Seconds())
+	abcutil.Abc_PrintTime(1, "Runtime", time.Since(started).Nanoseconds())
 }
 
 //ABC_NAMESPACE_IMPL_END

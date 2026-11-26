@@ -2,6 +2,7 @@ package sim
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 )
@@ -20,6 +21,8 @@ func Sim_ComputeFunSuppSource(g *aig.Graph, verbose bool) Info {
 
 func Sim_ComputeFunSuppSourceWithSolver(g *aig.Graph, verbose bool, solver SourceSupportSolver) Info {
 	p := Sim_ManStart(g, false)
+	start := time.Now()
+	defer func() { p.timeTotal = time.Since(start).Nanoseconds(); Sim_ManPrintStats(p) }() // as Sim_ManStop
 	rng := newSourceRand(0xABC)
 	sourceAssignRandom(p, rng)
 	sourceComputeSuppRound(p, false)
