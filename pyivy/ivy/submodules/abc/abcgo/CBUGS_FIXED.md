@@ -225,3 +225,21 @@ and states how the Go port was verified.
   (`TestNativeAnormWithoutAdders`) runs `&anorm` on s27 through the native
   binary named by `ABC_BINARY`; it segfaulted before the fix.
 - **Go port:** it panicked on the nil box; same fix (`TestAnormWithoutAdders`).
+
+## 12. `&decla` crashes when the adder box does not reach every output
+
+- **File:** `src/proof/acec/acecCl.c`, `Acec_RewriteTop` and `Acec_ManDecla`.
+- **Found:** 2026-11-26, by running every command with default arguments;
+  native `abc` dumped core in `Acec_RewriteReplace` on mul8. With asserts
+  enabled it stops at `assert( Vec_IntSize(vRes) >= Gia_ManCoNum(p) )`.
+- **Bug:** the root ranks of the adder box found in mul8 cover fewer bits than
+  the AIG has outputs, so the rewritten-output vector is short and
+  `Acec_RewriteReplace` reads past its end (the same happens if the first
+  output is not a root: `iStart` runs off the end).
+- **Fix:** `Acec_RewriteTop` returns NULL in both cases; `Acec_ManDecla` prints
+  `Cannot match the outputs of the arithmetic box.` and returns the AIG
+  cleaned of the adders already added to it.
+- **Test:** `abcgo/base/abci/decla_outputs_test.go`
+  (`TestNativeDeclaWhenBoxMissesOutputs`) segfaulted before the fix.
+- **Go port:** it panicked ("insufficient rewritten outputs"); same fix
+  (`TestDeclaWhenBoxMissesOutputs`), and its time line now uses ABC's format.

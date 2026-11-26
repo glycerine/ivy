@@ -356,6 +356,11 @@ Vec_Int_t * Acec_RewriteTop( Gia_Man_t * p, Acec_Box_t * pBox )
     Vec_WecForEachLevel( pBox->vRootLits, vLevel, iStart )
         if ( Abc_Lit2Var(Vec_IntEntry(vLevel,0)) == Driver )
             break;
+    if ( iStart == Vec_WecSize(pBox->vRootLits) ) // the first output is not a root
+    {
+        Vec_IntFree( vRes );
+        return NULL;
+    }
     assert( iStart < Gia_ManCoNum(p) );
     //Vec_WecPrintLits( pBox->vRootLits );
     Vec_WecForEachLevelStart( pBox->vRootLits, vLevel, i, iStart )
@@ -378,7 +383,11 @@ Vec_Int_t * Acec_RewriteTop( Gia_Man_t * p, Acec_Box_t * pBox )
             Vec_IntPush( Vec_WecPushLevel(pBox->vRootLits), Out[1] );
         Count++;
     }
-    assert( Vec_IntSize(vRes) >= Gia_ManCoNum(p) );
+    if ( Vec_IntSize(vRes) < Gia_ManCoNum(p) ) // the box does not reach every output
+    {
+        Vec_IntFree( vRes );
+        return NULL;
+    }
     Vec_IntShrink( vRes, Gia_ManCoNum(p) );
     printf( "Added %d adders for replace CLAs.  ", Count );
     return vRes;
@@ -430,6 +439,11 @@ Gia_Man_t * Acec_ManDecla( Gia_Man_t * pGia, int fBooth, int fVerbose )
     }
     vResult = Acec_RewriteTop( pGia, pBox );
     Acec_BoxFreeP( &pBox );
+    if ( vResult == NULL ) // cannot match
+    {
+        printf( "Cannot match the outputs of the arithmetic box.\n" );
+        return Gia_ManCleanup( pGia ); // drops the adders added to pGia
+    }
     pNew = Acec_RewriteReplace( pGia, vResult );
     Vec_IntFree( vResult );
     Abc_PrintTime( 1, "Time", Abc_Clock() - clk );

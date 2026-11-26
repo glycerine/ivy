@@ -4,6 +4,7 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
@@ -17,6 +18,9 @@ func Acec_RewriteTop(p *Gia_Man_t, box *Acec_Box_t) *Vec_Int_t {
 		if vec.Vec_IntEntry(level, 0)>>1 == driver {
 			break
 		}
+	}
+	if start == vec.Vec_WecSize(box.vRootLits) { // the first output is not a root
+		return nil
 	}
 	if start >= int(gia.Gia_ManCoNum(p)) {
 		panic("acec: missing first output in arithmetic box")
@@ -44,8 +48,8 @@ func Acec_RewriteTop(p *Gia_Man_t, box *Acec_Box_t) *Vec_Int_t {
 		}
 		count++
 	}
-	if vec.Vec_IntSize(result) < int(gia.Gia_ManCoNum(p)) {
-		panic("acec: insufficient rewritten outputs")
+	if vec.Vec_IntSize(result) < int(gia.Gia_ManCoNum(p)) { // the box does not reach every output (CBUGS_FIXED.md #12)
+		return nil
 	}
 	vec.Vec_IntShrink(result, int(gia.Gia_ManCoNum(p)))
 	fmt.Printf("Added %d adders for replace CLAs.  ", count)
@@ -95,7 +99,11 @@ func Acec_ManDecla(p *Gia_Man_t, booth, verbose int32) *Gia_Man_t {
 		return gia.Gia_ManDup(p)
 	}
 	result := Acec_RewriteTop(p, box)
+	if result == nil { // cannot match
+		fmt.Printf("Cannot match the outputs of the arithmetic box.\n")
+		return gia.Gia_ManCleanup(p) // drops the adders added to p
+	}
 	dst := Acec_RewriteReplace(p, result)
-	fmt.Printf("Time = %v\n", time.Since(start))
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds())
 	return dst
 }
