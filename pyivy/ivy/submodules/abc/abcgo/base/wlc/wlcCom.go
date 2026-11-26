@@ -1957,11 +1957,11 @@ func Abc_CommandTest(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	//    if ( pNtk == NULL )
-	//    {
-	//        Abc_Print( 1, "Abc_CommandTest(): There is no current design.\n" );
-	//        return 0;
-	//    }
+	// Wlc_NtkExploreMem below needs a design (CBUGS_FIXED.md #10)
+	if pNtk == nil {
+		Abc_Print(1, "Abc_CommandTest(): There is no current design.\n")
+		return 0
+	}
 
 	// transform
 	//pNtk = Wlc_NtkUifNodePairs( pNtk, NULL );

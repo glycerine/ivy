@@ -28496,6 +28496,12 @@ int Abc_CommandSaucy( Abc_Frame_t * pAbc, int argc, char ** argv )
         Abc_Print( -1, "This command works only for AIGs (run \"strash\").\n" );
         return 1;
     }
+    // saucy sizes its data by the PIs and POs but works on all CIs and COs
+    if ( Abc_NtkLatchNum(pNtk) > 0 )
+    {
+        Abc_Print( -1, "This command works only for combinational AIGs.\n" );
+        return 1;
+    }
 
     pNtk = Abc_NtkDup( pNtk );
     Abc_NtkOrderObjsByName( pNtk, 1 );

@@ -183,3 +183,31 @@ and states how the Go port was verified.
 - **Go port:** it panicked on the same dereference, and its
   `Cec_ManSeqResimulateCounter` returned silently on each failed precondition;
   it now has the fix and ABC's messages (`TestResimWithoutCexDoesNotPanic`).
+
+## 9. `saucy3` crashes on sequential AIGs
+
+- **File:** `src/base/abci/abc.c`, `Abc_CommandSaucy` (with
+  `src/base/abci/abcSaucy.c`).
+- **Found:** 2026-11-26, by running every command with default arguments;
+  native `abc` dumped core in `saucyGateWay` on s27.
+- **Bug:** the symmetry search sizes its data (colors, dependency arrays) by the
+  numbers of PIs and POs, but the functional supports it computes range over
+  all CIs and COs, so register outputs and inputs index past the arrays.
+- **Fix:** the command refuses AIGs with latches (`This command works only for
+  combinational AIGs.`), next to its existing "only for AIGs" check.
+- **Test:** `abcgo/base/abci/saucy_sequential_test.go`
+  (`TestNativeSaucyRefusesSequentialAig`) runs `saucy3` on s27 through the
+  native binary named by `ABC_BINARY`; it segfaulted before the fix.
+- **Go port:** it panicked with an index out of range; it refuses the same way
+  (`TestSaucyRefusesSequentialAig`).
+
+## 10. `%test` crashes when no word-level design is loaded
+
+- **File:** `src/base/wlc/wlcCom.c`, `Abc_CommandTest`.
+- **Found:** 2026-11-26, by running every command with default arguments.
+- **Bug:** the command's "no current design" check is commented out, and
+  `Wlc_NtkExploreMem` dereferences the missing design.
+- **Fix:** restore the check.
+- **Test:** `TestNativeWlcTestWithoutDesign` (same file) segfaulted before the
+  fix; `TestWlcTestWithoutDesign` checks the port, which panicked the same way
+  and has the same fix.

@@ -27719,6 +27719,11 @@ func Abc_CommandSaucy(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "This command works only for AIGs (run \"strash\").\n")
 		return 1
 	}
+	// saucy sizes its data by the PIs and POs but works on all CIs and COs (CBUGS_FIXED.md #9)
+	if baseabc.Abc_NtkLatchNum(pNtk) > 0 {
+		Abc_Print(-1, "This command works only for combinational AIGs.\n")
+		return 1
+	}
 
 	pNtk = Abc_NtkDup(pNtk)
 	baseabc.Abc_NtkOrderObjsByName(pNtk, 1)

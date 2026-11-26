@@ -31,6 +31,13 @@ func runScript(t *testing.T, script string) string {
 // exit status; a panic fails the test.
 func runScriptStatus(t *testing.T, script string) (string, int) {
 	t.Helper()
+	return runScriptStatusWith(t, script)
+}
+
+// runScriptStatusWith also runs extra package initializers on the frame
+// (the CLI registers every package's commands).
+func runScriptStatusWith(t *testing.T, script string, inits ...func(*base_main.Frame)) (string, int) {
+	t.Helper()
 	previous := base_main.Abc_FrameReadGlobalFrame()
 	frame := base_main.NewFrame()
 	base_main.Abc_FrameSetGlobalFrame(frame)
@@ -53,6 +60,9 @@ func runScriptStatus(t *testing.T, script string) (string, int) {
 	// As in the CLI: If_Init installs the default 4-LUT library, which
 	// commands such as lutpack read.
 	ifpkg.If_Init(frame)
+	for _, init := range inits {
+		init(frame)
+	}
 	status, panicked := 0, any(nil)
 	func() {
 		defer func() { panicked = recover() }()

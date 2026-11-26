@@ -1913,11 +1913,12 @@ int Abc_CommandTest( Abc_Frame_t * pAbc, int argc, char ** argv )
             goto usage;
         }
     }
-//    if ( pNtk == NULL )
-//    {
-//        Abc_Print( 1, "Abc_CommandTest(): There is no current design.\n" );
-//        return 0;
-//    }
+    // Wlc_NtkExploreMem() below needs a design
+    if ( pNtk == NULL )
+    {
+        Abc_Print( 1, "Abc_CommandTest(): There is no current design.\n" );
+        return 0;
+    }
 
     // transform
     //pNtk = Wlc_NtkUifNodePairs( pNtk, NULL );
