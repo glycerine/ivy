@@ -1302,7 +1302,10 @@ def get_lib_dirs(with_z3=True):
 def get_support_include_dir():
     ivy_py_dir = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.dirname(os.path.dirname(os.path.dirname(ivy_py_dir)))
-    return os.path.join(repo_root, 'include2cpp')
+    source_headers = os.path.join(repo_root, 'include2cpp')
+    if os.path.isfile(os.path.join(source_headers, 'ivy_hash.hpp')):
+        return source_headers
+    return os.path.join(ivy_py_dir, 'support_headers')
 
 def is_empty_sequence_action(action):
     return isinstance(action,ia.Sequence) and len(action.args) == 0

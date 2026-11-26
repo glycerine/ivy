@@ -105,10 +105,13 @@ def ivy_init(**kwargs):
         fn,f = files.pop(0)
         with f:
             if verb == 'replay' and f.peek(1)[:1] == b'{':
-                archive = json.load(f)
-                if archive.get('format') != 'ivy-trace-1':
+                try:
+                    archive = json.load(f)
+                except (ValueError, UnicodeError) as error:
+                    raise IvyError(None,'invalid trace archive {}: {}'.format(fn,error)) from error
+                if not isinstance(archive,dict) or archive.get('format') != 'ivy-trace-1':
                     raise IvyError(None,'unsupported trace format in {}'.format(fn))
-                return archive['detailed' if ivy_trace.option_detailed.get() else 'brief']
+                return archive
             ag = pickle.load(f)
         ivy_module.module = ag.domain
         ivy_logic.sig = ag.domain.sig

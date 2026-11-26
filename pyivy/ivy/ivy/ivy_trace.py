@@ -123,7 +123,7 @@ class TraceBase(art.AnalysisGraph):
                 return c.args[1]
         return None
 
-    def to_lines(self,lines,hash,indent,hidden,failed=False,renaming=None,pp=None,terms=(),missing=None):
+    def to_lines(self,lines,hash,indent,hidden,failed=False,renaming=None,pp=None,terms=(),missing=None,visit_state=None):
         renaming = renaming or self.renaming
         pp = pp or self.pp
         for idx,state in enumerate(self.states):
@@ -197,7 +197,7 @@ class TraceBase(art.AnalysisGraph):
                     if option_detailed.get():
                         lines.append(indent * '    ' + '{\n')
                     expr.subgraph.to_lines(lines,hash,indent+1,hidden,failed=failed,renaming=renaming,pp=pp,
-                                           terms=terms,missing=missing)
+                                           terms=terms,missing=missing,visit_state=visit_state)
                     if option_detailed.get():
                         lines.append(indent * '    ' + '}\n')
                 if option_detailed.get():
@@ -206,6 +206,9 @@ class TraceBase(art.AnalysisGraph):
                 foo = False
                 if hasattr(state,"loop_start") and state.loop_start:
                     lines.append('\n--- the following repeats infinitely ---\n\n')
+                if visit_state is not None:
+                    visit_state(state,indent,lines)
+                    continue
                 if terms:
                     line_eqns = track_state(state,terms,missing)
                 else:

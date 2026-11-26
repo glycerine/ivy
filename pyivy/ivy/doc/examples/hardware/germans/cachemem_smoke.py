@@ -21,10 +21,8 @@ from pathlib import Path
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
-
-
-VENV = Path('/home/anthonydu/memory_sys_verif/ivy/venv/bin')
 
 
 def run(command, cwd, env):
@@ -37,7 +35,7 @@ def build_and_run(build, source, env):
     for path in source.glob('*.ivy'):
         shutil.copy2(path, build / path.name)
     shutil.copy2(source / 'cachemem_smoke.cpp', build / 'cachemem_smoke.cpp')
-    ivy = shutil.which('ivy_to_rtl', path=env['PATH'])
+    ivy = shutil.which(env.get('IVY_TO_RTL', 'ivy_to_rtl'), path=env['PATH'])
     yosys = (shutil.which('yowasp-yosys', path=env['PATH']) or
              shutil.which('yosys', path=env['PATH']))
     verilator = shutil.which('verilator', path=env['PATH'])
@@ -47,7 +45,7 @@ def build_and_run(build, source, env):
         raise RuntimeError('Missing required tools: ' + ', '.join(missing))
     run([ivy, 'cachemem-abs.ivy'], build, env)
     run([yosys, '-p', 'read_rtlil cachemem-abs.il; hierarchy -check -top '
-         'memory_system; proc; memory_map; opt_clean; write_verilog '
+         'memory_system; proc; memory -nomap; opt_clean; write_verilog '
          '-noattr cachemem-smoke.v'], build, env)
     run([verilator, '--cc', '--exe', '--build', '-j', '2', '-Wno-fatal',
          '--top-module', 'memory_system', '--prefix', 'Vmemory_system',
@@ -62,7 +60,7 @@ def main():
     args = parser.parse_args()
     source = Path(__file__).resolve().parent
     env = os.environ.copy()
-    env['PATH'] = str(VENV) + os.pathsep + env.get('PATH', '')
+    env['PATH'] = str(Path(sys.executable).parent) + os.pathsep + env.get('PATH', '')
     if args.build_dir:
         build = args.build_dir.resolve()
         build.mkdir(parents=True, exist_ok=False)

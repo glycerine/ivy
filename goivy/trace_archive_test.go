@@ -62,6 +62,45 @@ after init {
         assert [initial_when_false] false
     }
 }
+
+func TestTraceTrackingWorksAcrossCheckers(t *testing.T) {
+	dir := t.TempDir()
+	source, err := filepath.Abs("test_vectors/trace_failures.ivy")
+	if err != nil {
+		t.Fatal(err)
+	}
+	pyTraces := filepath.Join(dir, "python")
+	check := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy_check", "trace_dir="+pyTraces, source)
+	if out, err := check.CombinedOutput(); err == nil || !strings.Contains(string(out), "failed checks:") {
+		t.Fatalf("PyIvy did not report the expected failures: %v\n%s", err, out)
+	}
+	converted := filepath.Join(dir, "portable.a2g")
+	convert := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy", "replay", "export_trace="+converted, filepath.Join(pyTraces, "keep_p.a2g"))
+	if out, err := convert.CombinedOutput(); err != nil {
+		t.Fatalf("PyIvy could not convert its trace: %v\n%s", err, out)
+	}
+	var goReplay strings.Builder
+	if err := ReplayTrace(converted, &goReplay, true, "p & q"); err != nil {
+		t.Fatal(err)
+	}
+	goCfg := NewConfig()
+	goCfg.TraceDir = filepath.Join(dir, "go")
+	if err := Start([]string{source}, goCfg); err == nil || !strings.Contains(err.Error(), "failed checks:") {
+		t.Fatalf("GoIvy did not report the expected failures: %v", err)
+	}
+	pyReplay := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy", "replay", "track=p & q", filepath.Join(goCfg.TraceDir, "keep_p.a2g"))
+	out, err := pyReplay.CombinedOutput()
+	if err != nil {
+		t.Fatalf("PyIvy could not replay the Go archive: %v\n%s", err, out)
+	}
+	for _, replay := range []string{goReplay.String(), string(out)} {
+		for _, want := range []string{"(p & q) = true", "(p & q) = false"} {
+			if !strings.Contains(replay, want) {
+				t.Errorf("cross-checker replay is missing %q:\n%s", want, replay)
+			}
+		}
+	}
+}
 `
 	cfg := NewConfig()
 	cfg.TraceDir = filepath.Join(t.TempDir(), "initializers")

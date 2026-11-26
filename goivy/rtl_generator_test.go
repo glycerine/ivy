@@ -22,6 +22,7 @@ func TestGenerateRTLILHardwareExamples(t *testing.T) {
 		{"bfe_concat", "top", "module \\top.swap", 8, 8},
 		{"pipe_cpu", "cpu", "cell $memwr_v2", 8, 4249},
 		{"ooo_cpu_alu_dd_ref", "cpu", "cell $dff $dff$cpu.rob_a$", 0, 0},
+		{"germans/cachemem-abs", "memory_system", "module \\memory_system.cachemem.dir_body", 0, 0},
 	} {
 		t.Run(tc.file, func(t *testing.T) {
 			source := filepath.Join(rtlExampleDir, tc.file)

@@ -35,8 +35,9 @@ Each `.il` beside a `.ivy` is the committed golden output of the translator.
 
 ### Verifying German's caches
 
-Run `ivy_check germans_caches.ivy` from this directory; use
-`timeout 180s ivy_check germans_caches.ivy` to enforce the verification deadline.
+Run `ivy_check germans/cachemem-abs.ivy` from this directory. Run
+`python3 germans/cachemem_smoke.py` to exercise overlapping requests, store
+acknowledgements, and cross-cache reads in the generated netlist.
 The hardware wrapper assumes the request-slot/payload contract and the external
 DRAM read contract stated in the model.
 

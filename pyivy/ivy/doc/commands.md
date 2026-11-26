@@ -7,6 +7,10 @@ IVy's commands share a common argument syntax:
 
 *command* *option*=*value* ... *file*.ivy
 
+or
+
+ivy *verb* *option*=*value* ... *file*.ivy
+
 Common options
 --------------
 
@@ -17,7 +21,7 @@ character, and `boolean` represents a Boolean value `true` or `false`.
 
 `isolate=name`
 
-This options specifies the name of a isolate to verify or extract. 
+This options specifies the name of a isolate to verify or extract.
 
 `show_compiled=boolean`
 
@@ -32,12 +36,21 @@ isolate.
 
 If true, certain optional warnings are enabled. The default value is false.
 
+`track=string`
+
+The string is a semicolon-separated list of expressions, or the name of
+a file ending in `.trk` that contains the list. When displaying a
+counterexample, changes to the values of these expressions are
+tracked. Without this option, all symbols are tracked.
+
 
 Commands
 --------
 
-ivy_check
-=========
+`ivy_check`
+==========
+
+[Alternately: `ivy check`]
 
 This command checks the proof of an IVy program. This includes
 checking all the invariants and program assertions as well as the
@@ -89,8 +102,28 @@ corresponding execution trace is printed on standard out. The trace is
 formatted so that in an emacs compilation buffer, references to source
 lines are active links. The printed trace can be more convenient than the
 graphical counterexample viewer, especially if the state contains functions
-or relations of arity greater than two. 
+or relations of arity greater than two. The `track` option (see above) is
+often useful with `trace` for debugging purposes.
 The default value is false.
+
+`out=file.a2g`
+
+Saves the first counterexample to `file.a2g`. Use `ivy replay` to read it or
+`ivy interact` to open it in the Python viewer.
+
+`trace_dir=dir`
+
+Computes a counterexample trace for *every* failing check, rather than
+stopping at the first one, and writes them to the directory `dir`. For
+each failing check named `name` (see the `check=` option for how check
+names are formed), a trace is written to `dir/name.a2g`, in the same
+binary format as `out=` (view with `ivy replay dir/name.a2g`). If a
+check fails in more than one context, the first counterexample found for
+it is kept. The directory `dir` must not already exist; it is created, so
+that traces from a previous run are never overwritten. This is intended
+for tools, such as an editor integration, that annotate each failing
+property with its counterexample. Unlike `trace=true`, this option does
+not stop at the first failure, and does not print traces to standard out.
 
 `summary=boolean`
 
@@ -116,11 +149,10 @@ value is true.
 
 This option affects the behavior of the fragment checker that checkers
 whether verification conditions are contained in the prover's
-decidable fragment. The possible values of `logic` are: 
+decidable fragment. The possible values of `logic` are:
 
 - `epr` This is the "effectively propositional" fragment, which is extended to
   include stratified use of function symbols.
-- `qf` This fragment allows interpreted theories of the prover, but no quantifiers.
 - `fo` This is unrestricted first-order logic modulo the prover's theories.
 
 The last option does not guarantee decidability and may result in
@@ -139,20 +171,41 @@ If true, Z3 is used incrementally when checking invariants. Default is true.
 
 `seed=integer`
 
-Sets the random seed for the SMT solver. 
+Sets the random seed for the SMT solver.
+
+`ivy replay`
+===========
+
+Prints out a readable version of a trace stored with `out=file.a2g`. The
+filename must end with `.a2g`. The `track` option (see above) is useful
+for controlling the output.
+
+PyIvy also reads the portable archives produced by GoIvy. To replay a trusted
+Python archive in GoIvy, export it to the portable format first.
+
+```sh
+ivy replay export_trace=portable.a2g original.a2g
+goivy_check replay track="p & q" portable.a2g
+```
 
 ivy_show
---------
+========
 
 This command prints the elaborated program (see the option
 `show_compiled` above) and exits.
 
 
-ivy
------
+`ivy interact`
+==============
 
 This command runs an interactive user interface for constructing
-inductive invariants. The options are as follows:
+inductive invariants. The file argument of this command can be either
+an Ivy file (`.ivy`) or a trace file (`.a2g`). The latter is useful
+for debugging a counterexample trace using the graphical interface,
+and allows refining an invariant to eliminate a counterexample to
+induction previously produced.
+
+The options are as follows:
 
 `ui=interface`
 
@@ -164,64 +217,43 @@ Here, `interface` specifies the user interface for invariant construction. The v
 
 The default value is `art`.
 
-ivy_to_cpp
-------------
+ivyc
+----
 
-This command extracts an IVY program to C++. The `isolate` option in
-this command usually references an 'extract' in the IVy program,
-representing an implementation to be extracted. The options are:
+This command compiles an Ivy program to executable code. The `isolate` option
+can be used to compile code for a single isolate.
+
+The options are:
 
 `target={repl,test,class}"
 
-The `ivy_to_cpp` command can extract code in several forms:
+The `ivyc` command can extract code in several forms:
 
-- `repl` This is a a "read-eval-print" loop that reads calls to exported actions from the
-command line and writes output on calls to imported actions. 
+- `repl` This is a "read-eval-print" loop that reads calls to exported actions from the
+standard input and writes standard output on calls to imported actions. Each process
+in the Ivy program is compiled to a separate executable.
 
-- `test` This composes the extract with a randomized tester.
+- `test` This composes the program with an automatically generated randomized tester to form a single executable.
 
-- `class` This produces only a C++ class representing the extract, without a main function.
+- `class` This produces only a C++ class, without a main function, and does not produce an executable.
 
-There is no default value.
+The default is `repl`.
 
 `classname=cname`
 
-This gives the name of the extracted C++ class. The default is the
-name of the main IVy file, without the `.ivy` extension. The names of
-the extracted header and implementation files are `cname.h` and
-`cname.cpp` respectively.
+With `target=class`, this gives the name of the extracted C++
+class. The default is the name of the main IVy file, without the
+`.ivy` extension. The names of the extracted header and implementation
+files are `cname.h` and `cname.cpp` respectively.
 
 `build=boolean`
 
-If true, this option causes the extracted C++ to be compiled. In case
-of `repl` or `test` targets, the code is also linked into an
-executable file. On Unix the name of the executable is the same as the
-class name, whereas on Windows it is `cname.exe`, where `cname` is the
-class name.
-
-`compiler={g++,cl}`
-
-This option determines the compiler used to build the code. The default is g++
-on Unix and cl on Windows.
-
-`trace=boolean`
-
-This option causes statements producing trace information on stdout to
-be inserted in the extracted code.
+If false, C++ code is extracted, but not compiled. Default is true.
 
 `main=cname`
 
 Determines the name of the main function, if one is generated. The default is `main`.
 
-`stdafx=boolean`
-
-Causes the file `stdafx.h` to be included in the first line of the implementation file.
-
 `outdir=directory`
 
 Causes output files to be generated in `directory`. Default is the current directory.
-
- 
- 
-
- 

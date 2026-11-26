@@ -30,11 +30,11 @@ setup(name='ms_ivy',
       author_email='nomail@example.com',
       license='MIT',
       packages=find_packages(),
-      package_data=({'ivy':['include/*/*.ivy','include/*/*.h','include/*.h','lib/*.dll','lib/*.lib','z3/*.dll']}
+      package_data=({'ivy':['include/*/*.ivy','include/*/*.h','include/*.h','support_headers/*.hpp','lib/*.dll','lib/*.lib','z3/*.dll']}
                     if platform.system() == 'Windows' else
-                    {'ivy':['include/*/*.ivy','include/*/*.h','include/*.h','lib/*.dylib','lib/*.a','z3/*.dylib','bin/*']}
+                    {'ivy':['include/*/*.ivy','include/*/*.h','include/*.h','support_headers/*.hpp','lib/*.dylib','lib/*.a','z3/*.dylib','bin/*']}
                     if platform.system() == 'Darwin' else
-                    {'ivy':['include/*/*.ivy','include/*/*.h','include/*.h','lib/*.so','lib/*.a','z3/*.so','ivy2/s3/ivyc_s3','bin/*']}),
+                    {'ivy':['include/*/*.ivy','include/*/*.h','include/*.h','support_headers/*.hpp','lib/*.so','lib/*.a','z3/*.so','ivy2/s3/ivyc_s3','bin/*']}),
       install_requires=[
           'pyparsing',
           'ply',
