@@ -48,6 +48,7 @@ type edgePair struct{ a, b Edge }
 // gates; complemented edges represent inversion directly. Deletion leaves holes
 // so existing edges remain valid, and rewriting may change topological ID order.
 type Graph struct {
+	dfsSkipCheck bool // set by Aig_ManDfsUnchecked
 	// Time2Quit is an absolute deadline for source-style AIG optimization.
 	// A zero value means no deadline.
 	Time2Quit time.Time

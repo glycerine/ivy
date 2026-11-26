@@ -101,3 +101,13 @@ func TestSatEnumLikeNative(t *testing.T) {
 		t.Fatalf("&satenum on s27:\n%s", out)
 	}
 }
+
+// Native: abc -c "read mul8.aig; strash; inter". Interpolating the network
+// against itself leaves dangling nodes, which release ABC's
+// Abc_NtkFromDar tolerates.
+func TestInterOnMul8DoesNotPanic(t *testing.T) {
+	out, _ := runScriptStatus(t, "read test_vectors/bench/mul8.aig; strash; inter")
+	if !strings.Contains(out, "Error: Deriving new circuit structure for the current network.") {
+		t.Fatalf("inter on mul8:\n%s", out)
+	}
+}

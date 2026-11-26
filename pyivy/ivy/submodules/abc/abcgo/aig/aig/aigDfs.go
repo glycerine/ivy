@@ -82,6 +82,15 @@ func (p *Graph) dfs(roots []Edge, nodesOnly, preorder, choices bool) []Edge {
 func Aig_ManDfs(p *Graph, nodesOnly int32) []Edge {
 	return p.dfsOutputOrder(nodesOnly != 0, false)
 }
+
+// Aig_ManDfsUnchecked is Aig_ManDfs without its completeness assertion,
+// for callers that, as in release ABC, may see dangling nodes (such as the
+// AIG of an interpolant converted by Abc_NtkFromDar).
+func Aig_ManDfsUnchecked(p *Graph, nodesOnly int32) []Edge {
+	p.dfsSkipCheck = true
+	defer func() { p.dfsSkipCheck = false }()
+	return p.dfsOutputOrder(nodesOnly != 0, false)
+}
 func Aig_ManDfs_rec(p *Graph, e Edge, nodes *[]Edge) {
 	if e == InvalidEdge {
 		return
@@ -131,7 +140,7 @@ func (p *Graph) dfsOutputOrder(nodesOnly, preorder bool) []Edge {
 	if nodesOnly {
 		expected = Aig_ManNodeNum(p)
 	}
-	if int32(len(nodes)) != expected {
+	if int32(len(nodes)) != expected && !p.dfsSkipCheck {
 		panic("aig: DFS object count differs from manager count")
 	}
 	return nodes

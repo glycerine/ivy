@@ -112,7 +112,7 @@ func Abc_NtkFromDar(old *Network, g *aig.Graph) *Network {
 	}
 	manager := dst.FunctionManager.(*Abc_Aig_t)
 	// rebuild the AIG in Aig_ManDfs order
-	for _, e := range aig.Aig_ManDfs(g, 1) {
+	for _, e := range aig.Aig_ManDfsUnchecked(g, 1) {
 		node := g.Node(e)
 		switch node.Kind {
 		case aig.Buffer:
