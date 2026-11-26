@@ -215,6 +215,8 @@ func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
 	outputCount := len(model.Outputs) + len(model.Bad) + len(model.Constraints)
 	network := abc.NewAIGNetworkWithCapacity(model.Name, len(model.Inputs), len(model.Latches), outputCount, len(model.ANDs))
 	network.Type, network.Function = uint8(abc.ABC_NTK_STRASH), uint8(abc.ABC_FUNC_AIG)
+	// Like Abc_NtkAlloc(ABC_NTK_STRASH, ...), a strashed network owns an AIG manager.
+	network.FunctionManager = abc.Abc_AigAlloc(network)
 	network.Spec = string(model.Comment)
 	network.Data = &aigerNetworkMetadata{
 		comment:  string(model.Comment),
@@ -228,11 +230,16 @@ func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
 		pi := network.NewObject(abc.ObjectPI)
 		inputObjects[i] = pi
 	}
+	// Like Io_ReadAiger: PIs, then all outputs, then latches, then ANDs.
+	outputObjects := make([]*abc.Object, outputCount)
+	for i := range outputObjects {
+		outputObjects[i] = network.NewObject(abc.ObjectPO)
+	}
 	latchBoxes := make([]*abc.Object, len(model.Latches))
 	latchInputs := make([]*abc.Object, len(model.Latches))
 	latchOutputs := make([]*abc.Object, len(model.Latches))
 	for i, latchModel := range model.Latches {
-		bi, latch, bo := network.NewObject(abc.ObjectBI), network.NewObject(abc.ObjectLatch), network.NewObject(abc.ObjectBO)
+		latch, bi, bo := network.NewObject(abc.ObjectLatch), network.NewObject(abc.ObjectBI), network.NewObject(abc.ObjectBO)
 		latchBoxes[i], latchInputs[i], latchOutputs[i] = latch, bi, bo
 		if err := network.AddFanin(latch, bi.Signal()); err != nil {
 			return nil, err
@@ -266,17 +273,14 @@ func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
 	outputLits = append(outputLits, model.Outputs...)
 	outputLits = append(outputLits, model.Bad...)
 	outputLits = append(outputLits, model.Constraints...)
-	outputObjects := make([]*abc.Object, len(outputLits))
 	for i, literal := range outputLits {
 		edge, err := edgeForLiteral(literal)
 		if err != nil {
 			return nil, err
 		}
-		po := network.NewObject(abc.ObjectPO)
-		if err = network.AddFanin(po, edge); err != nil {
+		if err = network.AddFanin(outputObjects[i], edge); err != nil {
 			return nil, err
 		}
-		outputObjects[i] = po
 	}
 	for symbol, name := range model.Symbols {
 		if name == "" {

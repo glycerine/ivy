@@ -164,8 +164,12 @@ func setAndPins(o *Object, a, b Edge) {
 	o.Phase = (a.Object.Phase != a.Complement) && (b.Object.Phase != b.Complement)
 }
 
+// CreateAndEdges orders fanins by ID, as Abc_AigAndCreate does.
 func (n *Network) CreateAndEdges(a, b Edge) Edge {
 	n.checkAndInputs(a, b)
+	if a.Object.ID > b.Object.ID {
+		a, b = b, a
+	}
 	o := n.newAndObject()
 	setAndPins(o, a, b)
 	return o.Signal()

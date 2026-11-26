@@ -44,7 +44,8 @@ func TestDFSLevelsSupportAndInitialArrival(t *testing.T) {
 	if got := Abc_NtkNodeSupportInt(n, 0); !reflect.DeepEqual(got, []int32{0, 1, 2}) {
 		t.Fatal(got)
 	}
-	if got := Abc_NtkNodeSupport(n, []*Object{y}, 1); !reflect.DeepEqual(got, []*Object{a, b, c}) {
+	// y's fanins are ordered by ID like ABC's, so the DFS reaches c first.
+	if got := Abc_NtkNodeSupport(n, []*Object{y}, 1); !reflect.DeepEqual(got, []*Object{c, a, b}) {
 		t.Fatal(got)
 	}
 	n.CILevel = func(o *Object) int {
