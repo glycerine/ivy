@@ -672,6 +672,8 @@ void Extra_Truth4VarNPN( unsigned short ** puCanons, char ** puPhases, char ** p
             continue;
         }
         uMap[uTruth] = nClasses++;
+        // the complement of a class representative is never visited above (it is >= 2^15)
+        uMap[~uTruth & 0xFFFF] = uMap[uTruth];
         for ( i = 0; i < 16; i++ )
         {
             uPhase = Extra_TruthPolarize( uTruth, i, 4 );
