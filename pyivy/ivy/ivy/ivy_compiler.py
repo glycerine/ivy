@@ -1364,6 +1364,14 @@ class IvyDomainSetup(IvyDeclInterp):
     def usingpat(self,binding):
         self.domain.usingpats[binding.args[0].rep] = expand_invariant_pattern(binding.args[1],self.domain.patdefs)
 
+    def provide(self,decl):
+        owner,target = decl.args
+        name = target.rep
+        if name in self.domain.invariant_providers:
+            raise IvyError(decl,"multiple providers for invariant {}".format(name))
+        owner_name = 'this' if isinstance(owner.rep,ivy_ast.This) else owner.rep
+        self.domain.invariant_providers[name] = (owner_name,decl)
+
     def parameter(self,v):
         if __debug__: xtracer.trace("compiler.DomainSetup.parameter ENTER")
         if isinstance(v,ivy_ast.Definition):
@@ -1806,6 +1814,10 @@ class IvyARGSetup(IvyDeclInterp):
             self.mod.assertions.append(type(a)(a.args[0],sortify_with_inference(a.args[1])))
     def isolate(self,iso):
         args = [a.rename('this') if isinstance(a.rep,ivy_ast.This) else a for a in iso.args]
+        for i in range(1,len(args)):
+            name = resolve_alias(args[i].rep)
+            if name != args[i].rep:
+                args[i] = args[i].rename(name)
         if hasattr(iso,'is_object') and iso.is_object:
             args[0] = args[0].clone([])  # strip off parameters from isolate objects
             args[1] = args[1].clone([])
@@ -2553,6 +2565,7 @@ def create_conj_actions(mod):
     if iu.version_le(iu.get_string_version(),"1.6"):
         if __debug__: xtracer.trace("compiler.CreateConjActions EXIT")
         return
+    iso.validate_invariant_providers(mod)
     # for each isolate, find the exported actions
     myexports = dict()
     objects = defaultdict(list)
@@ -2563,6 +2576,8 @@ def create_conj_actions(mod):
             objects[x.rep].append(isol)
     for conj in mod.labeled_conjs:
         lbl = conj.label.rep
+        if lbl in mod.invariant_providers:
+            lbl = mod.invariant_providers[lbl][0]
         while lbl != 'this' and lbl not in objects:
             lbl,_ = iu.parent_child_name(lbl)
         if lbl == 'this':

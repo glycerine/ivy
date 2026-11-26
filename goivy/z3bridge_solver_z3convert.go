@@ -635,7 +635,10 @@ func (s *Solver) LookupNative(thing *Const, table func(string) any, kind string)
 		}
 		// Python line 315: if thing.name.startswith('bfe['):
 		if strings.HasPrefix(name, "bfe[") {
-			return s.bfeToZ3(thing)
+			if extract := s.bfeToZ3(thing); extract != nil {
+				return extract
+			}
+			return nil
 		}
 
 		// Python line 317-320: if thing.name == 'arrcst':

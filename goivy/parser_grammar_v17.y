@@ -69,7 +69,7 @@ import (
 // Terminal tokens — keywords (declarations, carry line number only)
 %token <tok>  PARSER_TOK_RELATION PARSER_TOK_INDIV PARSER_TOK_FUNCTION PARSER_TOK_DERIVED
 %token <tok>  PARSER_TOK_WIRE PARSER_TOK_REGISTER
-%token <tok>  PARSER_TOK_PATDEF
+%token <tok>  PARSER_TOK_PATDEF PARSER_TOK_PROVIDE
 %token <tok>  PARSER_TOK_AXIOM PARSER_TOK_CONJECTURE PARSER_TOK_SCHEMA PARSER_TOK_THEOREM
 %token <tok>  PARSER_TOK_PROPERTY PARSER_TOK_DEFINITION
 %token <tok>  PARSER_TOK_TYPE PARSER_TOK_STRUCT
@@ -294,6 +294,10 @@ top:
             $$.attributes = append($$.attributes, lex.commonAttribute)
             lex.commonAttribute = ""
         }
+        if lex.requireAttribute {
+            $$.attributes = append($$.attributes, "require")
+            lex.requireAttribute = false
+        }
         // Python: if self.attributes and stack: self.attributes = stack[-1].attributes + self.attributes
         if len($$.attributes) > 0 && parent != nil {
             $$.attributes = append(append([]string{}, parent.attributes...), $$.attributes...)
@@ -357,6 +361,20 @@ top:
         d.Cfg = cfg
         d.SetLineno(tokLineno(parser17lex.(*parser17LexAdapter), $2))
         $$.declare(d)
+    }
+    | top PARSER_TOK_PROVIDE callatom optinvwith optusing optproof
+    {
+        $$ = $1
+        cfg := parser17Acfg(parser17lex)
+        loc := tokLineno(parser17lex.(*parser17LexAdapter), $2)
+        d := &InvariantProvideDecl{DeclBase: DeclBase{DeclArgs: []Node{cfg.NewAtom("this"), $3}}}
+        d.Cfg = cfg
+        d.SetLineno(loc)
+        $$.declare(d)
+        parser17DeclareInvariantClauses(cfg, $$, $3, loc, $4, $5)
+        if $6 != nil {
+            $$.declare(cfg.NewProofDecl(cfg.NewLabeledFormula($3, $6)))
+        }
     }
     // --- Unprovable Invariant ---
     | top PARSER_TOK_UNPROVABLE PARSER_TOK_INVARIANT labeledfmla optproof
@@ -3211,6 +3229,11 @@ specimpl:
         $$ = "common"
         // Python: global common_attribute; common_attribute = "common"
         parser17lex.(*parser17LexAdapter).commonAttribute = "common"
+    }
+    | PARSER_TOK_REQUIRE
+    {
+        $$ = "require"
+        parser17lex.(*parser17LexAdapter).requireAttribute = true
     }
     ;
 

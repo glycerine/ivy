@@ -99,6 +99,13 @@ func (d *DomainSetup) ProcessDecl(decl Node) error {
 	case *InvariantUsingDecl:
 		name := labelName(n.DeclArgs[0])
 		d.Compiler.Module.InvariantUsing[name] = expandInvariantPattern(n.DeclArgs[1], d.Compiler.Module.InvariantPatterns)
+	case *InvariantProvideDecl:
+		providers := d.Compiler.Module.InvariantProviders
+		name := labelName(n.DeclArgs[1])
+		if _, duplicate := providers[name]; duplicate {
+			return NewIvyError(n, fmt.Sprintf("multiple providers for invariant %s", name))
+		}
+		providers[name] = invariantProvider{owner: labelName(n.DeclArgs[0]), decl: n}
 	case *RelationDecl:
 		for _, arg := range n.DeclArgs {
 			if err := d.Relation(arg); err != nil {

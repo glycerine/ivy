@@ -2726,6 +2726,8 @@ func DeclName(decl Node) string {
 		return d.String()
 	case *InvariantPatternDecl:
 		return d.String()
+	case *InvariantProvideDecl:
+		return d.String()
 	case *RelationDecl:
 		return "relation"
 	case *ConstantDecl:

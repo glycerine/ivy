@@ -2885,6 +2885,19 @@ func TestZ3BridgeSortCardStrbvIntbv(t *testing.T) {
 
 // --- Batch C Tests: Binary Encoding / bfe format ---
 
+func TestZ3BridgeBfeWithoutInterpretedSort(t *testing.T) {
+	solver := NewSolverFromSig(NewSig(), nil)
+	sort := &UninterpretedSort{Name: "abstract_word"}
+	signature, err := NewFunctionSort(sort, sort)
+	if err != nil {
+		t.Fatal(err)
+	}
+	extract := NewConst("bfe[0][0]", signature)
+	if native := solver.LookupNative(extract, solver.Functions, "function"); native != nil {
+		t.Fatalf("abstract part select has native interpretation %T", native)
+	}
+}
+
 // TestBfeToZ3_BracketFormat verifies bfe[lo][hi] format (Python's format) parses correctly.
 func TestZ3BridgeBfeToZ3_BracketFormat(t *testing.T) {
 	sig := NewSig()

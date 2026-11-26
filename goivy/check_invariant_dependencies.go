@@ -6,6 +6,49 @@ import (
 	"strings"
 )
 
+type InvariantProvideDecl struct{ DeclBase }
+
+func (d *InvariantProvideDecl) Clone(args []Node) Node {
+	return &InvariantProvideDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
+}
+
+func (d *InvariantProvideDecl) Defines() []string { return nil }
+func (d *InvariantProvideDecl) String() string    { return "provide" }
+
+type invariantProvider struct {
+	owner string
+	decl  *InvariantProvideDecl
+}
+
+func requiresInvariant(mod *Module, label string) bool {
+	return label != "" && hasAttribute(mod, mod.Cfg.IuCfg.ComposeNames(label, "require"))
+}
+
+func validateInvariantProviders(mod *Module) error {
+	if len(mod.InvariantProviders) == 0 {
+		return nil
+	}
+	defined := make(map[string]bool, len(mod.LabeledConjs))
+	for _, invariant := range mod.LabeledConjs {
+		defined[lfLabelName(invariant)] = true
+	}
+	var names []string
+	for label := range mod.InvariantProviders {
+		names = append(names, label)
+	}
+	sort.Strings(names)
+	for _, label := range names {
+		decl := mod.InvariantProviders[label].decl
+		if !defined[label] {
+			return NewIvyError(decl, fmt.Sprintf("invariant %s is provided but not defined", label))
+		}
+		if !requiresInvariant(mod, label) {
+			return NewIvyError(decl, fmt.Sprintf("invariant %s is provided but not required", label))
+		}
+	}
+	return nil
+}
+
 func checkInvariantDependencyCycles(mod *Module) error {
 	if len(mod.InvariantDependencies) == 0 {
 		return nil

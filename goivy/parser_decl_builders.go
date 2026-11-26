@@ -64,22 +64,26 @@ func parser17DeclareInvariant(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula,
 	}
 	d := cfg.NewConjectureDecl(lf)
 	d.SetLineno(loc)
+	parser17DeclareInvariantClauses(cfg, top, lf.Label, loc, deps, pattern)
+	top.declare(d)
+	if proof != nil {
+		top.declare(cfg.NewProofDecl(proof))
+	}
+}
+
+func parser17DeclareInvariantClauses(cfg *AstConfig, top *ivyAccum, label Node, loc Location, deps []Node, pattern Node) {
 	if len(deps) != 0 {
-		args := append([]Node{lf.Label}, deps...)
+		args := append([]Node{label}, deps...)
 		dependency := &InvariantDependencyDecl{DeclBase: DeclBase{DeclArgs: args}}
 		dependency.Cfg = cfg
 		dependency.SetLineno(loc)
 		top.declare(dependency)
 	}
 	if pattern != nil {
-		using := &InvariantUsingDecl{DeclBase: DeclBase{DeclArgs: []Node{lf.Label, pattern}}}
+		using := &InvariantUsingDecl{DeclBase: DeclBase{DeclArgs: []Node{label, pattern}}}
 		using.Cfg = cfg
 		using.SetLineno(loc)
 		top.declare(using)
-	}
-	top.declare(d)
-	if proof != nil {
-		top.declare(cfg.NewProofDecl(proof))
 	}
 }
 

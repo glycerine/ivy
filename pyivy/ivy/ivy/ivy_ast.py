@@ -1091,6 +1091,15 @@ class InvariantPatternDecl(Decl):
     def defines(self):
         return [(arg.args[0].rep,lineno(arg.args[0])) for arg in self.args]
 
+class InvariantProvide(AST):
+    pass
+
+class InvariantProvideDecl(Decl):
+    def name(self):
+        return 'provide'
+    def defines(self):
+        return []
+
 class ProgressDecl(Decl):
     def name(self):
         return 'progress'

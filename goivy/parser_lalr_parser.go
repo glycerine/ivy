@@ -87,13 +87,14 @@ type parser17LexAdapter struct {
 	err              *ParseError
 	importer         ImporterFunc
 	included         map[string]bool
-	nested           bool       // true for nested (include) parses — skip expand_auto
-	lastTok          Token      // most recently returned token (lookahead), for line tracking
-	prevTok          Token      // token before lastTok — the last token actually consumed
-	filename         string     // source filename, matching Python's iu.filename
-	specialAttribute string     // Python: global special_attribute — for "spec", "impl", "private"
-	globalAttribute  string     // Python: global global_attribute — for "global"
-	commonAttribute  string     // Python: global common_attribute — for "common"
+	nested           bool   // true for nested (include) parses — skip expand_auto
+	lastTok          Token  // most recently returned token (lookahead), for line tracking
+	prevTok          Token  // token before lastTok — the last token actually consumed
+	filename         string // source filename, matching Python's iu.filename
+	specialAttribute string // Python: global special_attribute — for "spec", "impl", "private"
+	globalAttribute  string // Python: global global_attribute — for "global"
+	commonAttribute  string // Python: global common_attribute — for "common"
+	requireAttribute bool
 	parentObjName    string     // Python: global parent_object — passed to newIvyAccum
 	astCfg           *AstConfig // session-wide config (shared across nested parses)
 }
@@ -287,6 +288,8 @@ func (l *parser17LexAdapter) Lex(lval *parser17SymType) int {
 		return PARSER_TOK_REGISTER
 	case PATDEF:
 		return PARSER_TOK_PATDEF
+	case PROVIDE:
+		return PARSER_TOK_PROVIDE
 	case DERIVED:
 		return PARSER_TOK_DERIVED
 	case AXIOM:

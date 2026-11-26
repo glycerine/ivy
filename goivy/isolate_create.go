@@ -928,7 +928,6 @@ type BracketEntry struct {
 // Corresponds to Python bracket_action (lines 1529-1531).
 func IsolateBracketAction(mod *Module, actname string, before, after []ActionsAction) {
 	bracketActionInt(mod, actname, before, after)
-	bracketActionInt(mod, "ext:"+actname, before, after)
 }
 
 func bracketActionInt(mod *Module, actname string, before, after []ActionsAction) {

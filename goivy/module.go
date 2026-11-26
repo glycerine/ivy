@@ -96,6 +96,7 @@ type Module struct {
 	InvariantDependencies map[string][]string
 	InvariantPatterns     map[string]Node
 	InvariantUsing        map[string]Node
+	InvariantProviders    map[string]invariantProvider
 
 	// Parameters
 	Params        []*Const
@@ -369,6 +370,7 @@ func (m *Module) Clear() {
 	m.InvariantDependencies = make(map[string][]string)
 	m.InvariantPatterns = make(map[string]Node)
 	m.InvariantUsing = make(map[string]Node)
+	m.InvariantProviders = make(map[string]invariantProvider)
 	m.ConjSubgoals = nil
 	m.AssumedInvs = nil
 	m.FiniteSorts = make(map[string]bool)
@@ -444,6 +446,9 @@ func (m *Module) Copy() *Module {
 	}
 	c.InvariantPatterns = copyMapNode(m.InvariantPatterns)
 	c.InvariantUsing = copyMapNode(m.InvariantUsing)
+	for name, provider := range m.InvariantProviders {
+		c.InvariantProviders[name] = provider
+	}
 	c.ConceptSpaces = append([]ConceptSpace{}, m.ConceptSpaces...)
 	c.Instantiations = append([]LogicInstantiation{}, m.Instantiations...)
 	c.IsolateInfo = m.IsolateInfo

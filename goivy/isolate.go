@@ -795,7 +795,6 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	propDeps := GetPropDependencies(mod)
 
 	var newConjs []*LabeledFormula
-	var assumedConjs []*LabeledFormula
 
 	if versionLE(isoCfg.IvyVersion, "1.6") {
 		for _, c := range mod.LabeledConjs {
@@ -806,14 +805,17 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	} else {
 		for _, c := range mod.LabeledConjs {
 			name := lfLabelName(c)
-			if VStartsWithEqSome(name, verified, mod, implementationMap) {
+			isVerified := VStartsWithEqSome(name, verified, mod, implementationMap)
+			provider, provided := mod.InvariantProviders[name]
+			required := requiresInvariant(mod, name)
+			if isVerified && required && !provided && isolateName != "this" {
+				return NewIvyError(c, fmt.Sprintf("invariant %s is required but not provided", name))
+			}
+			if (isVerified && !required) || (provided && VStartsWithEqSome(provider.owner, verified, mod, implementationMap)) {
 				newConjs = append(newConjs, c)
-			} else if StartsWithEqSome(name, present, mod, implementationMap) {
-				assumedConjs = append(assumedConjs, c)
 			}
 		}
 	}
-	_ = assumedConjs
 
 	mod.LabeledConjs = nil
 	if !isoCfg.CreateImports || isoCfg.CompileWithInvariants {
@@ -1031,9 +1033,10 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	// matching Python's set of Const objects distinguished by (name, sort).
 	const as1 = "isolate.allSyms"
 	allSyms := NewInsMap[NodeKey, Expr]()
-	as1ListNames := []string{"axioms", "props", "inits", "conjs"}
+	// An assumed invariant can use a wire that no retained action reads.
+	as1ListNames := []string{"axioms", "props", "inits", "conjs", "assumed_invariants"}
 	for listIdx, lfSlice := range [][]*LabeledFormula{
-		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs,
+		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs, mod.AssumedInvs,
 	} {
 		for fIdx, lf := range lfSlice {
 			if lf.Formula != nil {

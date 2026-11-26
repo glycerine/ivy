@@ -1216,8 +1216,16 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     if iu.version_le(iu.get_string_version(),"1.6"):
         new_conjs = [c for c in mod.labeled_conjs if keep_ax(c.label)]
     else:
-        new_conjs = [c for c in mod.labeled_conjs if vstartswith_eq_some(c.label.rep,verified,mod)]
-        assumed_conjs = [c for c in mod.labeled_conjs if startswith_eq_some(c.label.rep,present,mod) and not vstartswith_eq_some(c.label.rep,verified,mod)]
+        new_conjs = []
+        for c in mod.labeled_conjs:
+            label = c.name if c.label is not None else ''
+            is_verified = vstartswith_eq_some(label,verified,mod)
+            required = requires_invariant(mod,label)
+            provider = mod.invariant_providers.get(label)
+            if is_verified and required and provider is None and isolate_name != 'this':
+                raise iu.IvyError(c,"invariant {} is required but not provided".format(label))
+            if (is_verified and not required) or (provider is not None and vstartswith_eq_some(provider[0],verified,mod)):
+                new_conjs.append(c)
         
     del mod.labeled_conjs[:]
     if not create_imports.get() or compile_with_invariants.get(): # no conjectures if compiling
@@ -1334,8 +1342,9 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     _as1_label = "isolate.allSyms"
     # Phase 1: formulas
     all_syms_raw = OrderedSymSet()
-    _as1_list_names = ["axioms", "props", "inits", "conjs"]
-    for _list_idx, x in enumerate([mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs]):
+    # Retain definitions even when only an assumed invariant references them.
+    _as1_list_names = ["axioms", "props", "inits", "conjs", "assumed_invariants"]
+    for _list_idx, x in enumerate([mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs,mod.assumed_invariants]):
         for _f_idx, y in enumerate(x):
             if not isinstance(y.formula,ivy_ast.SchemaBody):
                 if __debug__:
@@ -1785,7 +1794,6 @@ def bracket_action_int(mod,actname,before,after):
 
 def bracket_action(mod,actname,before,after):
     bracket_action_int(mod,actname,before,after)
-    bracket_action_int(mod,'ext:'+actname,before,after)
 
 def apply_present_conjectures(isol,mod):
     if not assume_invariants.get():
@@ -2267,14 +2275,14 @@ def iter_isolate(mod,iso,fun,verified=True,present=True):
 
 # Get the set of actions present in an isolate. 
 
-def get_isolate_actions(mod,iso):
+def get_isolate_actions(mod,iso,present=True):
     # dict, not set: iter_isolate order, independent of hashing. Go:
     # GetIsolateActions returns an InsMap.
     actions = dict()
     def fun(name):
         if name in mod.actions:
             actions[name] = None
-    iter_isolate(mod,iso,fun)
+    iter_isolate(mod,iso,fun,present=present)
     return actions
 
 def get_isolate_lfs(mod,iso,lfs,verified=True,present=True):
@@ -2295,8 +2303,36 @@ def get_isolate_lfs(mod,iso,lfs,verified=True,present=True):
     return lfs
 
 
+def requires_invariant(mod,label):
+    return label and iu.compose_names(label,'require') in mod.attributes
+
+def validate_invariant_providers(mod):
+    if not mod.invariant_providers:
+        return
+    defined = {lf.name for lf in mod.labeled_conjs if lf.label is not None}
+    for label,(_,decl) in sorted(mod.invariant_providers.items()):
+        if label not in defined:
+            raise iu.IvyError(decl,"invariant {} is provided but not defined".format(label))
+        if not requires_invariant(mod,label):
+            raise iu.IvyError(decl,"invariant {} is provided but not required".format(label))
+
 def get_isolate_conjs(mod,iso,verified=True,present=True):
-    return get_isolate_lfs(mod,iso,mod.labeled_conjs,verified,present)
+    result = get_isolate_lfs(mod,iso,mod.labeled_conjs,verified,present)
+    if present and not verified:
+        result.extend(lf for lf in get_isolate_lfs(mod,iso,mod.labeled_conjs,present=False)
+                      if requires_invariant(mod,lf.name))
+    if not mod.invariant_providers and present:
+        return result
+    owners = set()
+    iter_isolate(mod,iso,owners.add,present=False)
+    provided = {label for label,(owner,_) in mod.invariant_providers.items() if owner in owners}
+    if not verified:
+        return [lf for lf in result if lf.name not in provided]
+    if not present:
+        result = [lf for lf in result if not requires_invariant(mod,lf.name) or lf.name in provided]
+    seen = {lf.name for lf in result}
+    result.extend(lf for lf in mod.labeled_conjs if lf.label is not None and lf.name in provided and lf.name not in seen)
+    return result
 
 def get_isolate_post_conjs(mod,iso):
     ver_conjs = get_isolate_conjs(mod,iso,present=False)
@@ -2311,11 +2347,40 @@ def get_isolate_post_conjs(mod,iso):
 
 def get_isolate_exports(mod,cg,iso):
     actions = get_isolate_actions(mod,iso)
+    verified = get_isolate_actions(mod,iso,present=False)
+    mixees = defaultdict(list)
+    for mixins in mod.mixins.values():
+        for mixin in mixins:
+            mixees[mixin.mixer()].append(mixin.mixee())
+    for name in list(actions):
+        for mixee in mixees[name]:
+            actions[mixee] = None
+            if name in verified:
+                verified[mixee] = None
     mod_exports = set(exp.exported() for exp in mod.exports)
-    # dict, not set: in the order of actions (see get_isolate_actions).
-    exports = dict.fromkeys(act for act in actions if act in mod_exports
-                  or any((x not in actions) for x in cg[act]))
-    return exports
+    return dict.fromkeys(name for name in actions
+                         if (name in mod_exports or any(caller not in actions for caller in cg[name]))
+                         and has_isolate_side_effect(mod,name,actions,verified,set()))
+
+def has_isolate_side_effect(mod,name,present,verified,seen):
+    name = canon_act(name)
+    if name in seen or name not in present or name not in mod.actions:
+        return False
+    seen.add(name)
+    for sub in mod.actions[name].iter_subactions():
+        if isinstance(sub,ia.NativeAction) and sub.impure:
+            return True
+        if any(sym.name in mod.sig.symbols for sym in sub.modifies()):
+            return True
+        if name in verified and isinstance(sub,(ia.AssertAction,ia.Ranking)):
+            return True
+        if isinstance(sub,ia.CallAction):
+            if any(sym.name in mod.sig.symbols for target in sub.args[1:] for sym in ia.HavocAction(target).modifies()):
+                return True
+            if has_isolate_side_effect(mod,sub.args[0].rep,present,verified,seen):
+                return True
+    return any(has_isolate_side_effect(mod,mixin.mixer(),present,verified,seen)
+               for mixin in mod.mixins.get(name,()))
 
 # This creates a map that takes each name in the hierarchy to
 # a list of the isolates in which it is present/verified

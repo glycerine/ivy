@@ -99,6 +99,7 @@ class Module(object):
         self.invardeps = {}
         self.patdefs = {}
         self.usingpats = {}
+        self.invariant_providers = {}
         self.sig = il.sig.copy() # capture the current signature
 
     def __enter__(self):

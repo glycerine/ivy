@@ -1753,6 +1753,9 @@ func CreateConjActions(mod *Module) error {
 		xtracer.Trace("compiler.CreateConjActions EXIT")
 		return nil
 	}
+	if err := validateInvariantProviders(mod); err != nil {
+		return err
+	}
 
 	if mod.ConjActions == nil {
 		mod.ConjActions = make(map[string][]string)
@@ -1782,6 +1785,9 @@ func CreateConjActions(mod *Module) error {
 		}
 		lbl := labelName(conj.Label)
 		origLbl := lbl
+		if provider, ok := mod.InvariantProviders[lbl]; ok {
+			lbl = provider.owner
+		}
 
 		// Python: while lbl != 'this' and lbl not in objects: lbl, _ = iu.parent_child_name(lbl)
 		for lbl != "this" {
@@ -2113,6 +2119,13 @@ func registerIsolateDecl(declArgs []Node, mod *Module) {
 		}
 		if isoDef != nil {
 			isoDef = cloneIsolateForARGSetup(isoDef)
+			for i := 1; i < len(isoDef.Elems); i++ {
+				if atom, ok := isoDef.Elems[i].(*Atom); ok {
+					if name := ResolveAlias(atom.Rep, mod); name != atom.Rep {
+						isoDef.Elems[i] = atom.Rename(name)
+					}
+				}
+			}
 			name := isoDef.IsoName()
 			xtracer.Trace("compiler.ARGSetup.isolate ENTER name=%s", name)
 			mod.Isolates.Set(name, isoDef)

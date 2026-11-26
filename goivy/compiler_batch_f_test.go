@@ -425,9 +425,13 @@ func TestCreateConjActions_IsolateScoping(t *testing.T) {
 	hierB.Set("act2", true)
 	mod.Hierarchy.Set("obj_b", hierB)
 
-	// Actions registered with composed names (obj_a.act1, obj_b.act2)
-	mod.Actions.Set("obj_a.act1", NewSequence()) // placeholder action body
-	mod.Actions.Set("obj_b.act2", NewSequence())
+	// Verified assertions make the composed actions part of invariant checking.
+	truth, err := NewAnd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	mod.Actions.Set("obj_a.act1", NewAssertAction(truth))
+	mod.Actions.Set("obj_b.act2", NewAssertAction(truth))
 
 	// Exports use the composed action names
 	exp1 := cfg.NewExportDef(cfg.NewAtom("obj_a.act1"), nil)
@@ -482,7 +486,11 @@ func TestCreateConjActions_NestedObjectWalk(t *testing.T) {
 	hierObj := NewInsMap[string, bool]()
 	hierObj.Set("act1", true)
 	mod.Hierarchy.Set("obj", hierObj)
-	mod.Actions.Set("obj.act1", NewSequence())
+	truth, err := NewAnd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	mod.Actions.Set("obj.act1", NewAssertAction(truth))
 
 	// Two exports — only obj.act1 belongs to iso1's isolate
 	exp1 := cfg.NewExportDef(cfg.NewAtom("obj.act1"), nil)
@@ -530,10 +538,10 @@ func TestCreateConjActions_NoLabelSkipped(t *testing.T) {
 const createConjActionsInterferenceSource = `#lang ivy1.7
 individual p : bool
 object x = {
-    action victim = { call o.a }
+    action victim = { assert true; call o.a }
 }
 object o = {
-    action a = { call x.victim }
+    action a = { assert true; call x.victim }
     invariant [inv] p
 }
 object y = {

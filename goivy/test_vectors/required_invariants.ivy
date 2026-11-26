@@ -1,0 +1,12 @@
+#lang ivy1.8
+
+isolate consumer = {
+    require {
+        invariant [ready] true
+    }
+    invariant [main] true with ready
+}
+
+isolate provider = {
+    provide consumer.ready
+}

@@ -138,6 +138,10 @@ func hasAttribute(mod *Module, name string) bool {
 // Python returns an insertion-ordered dict (iter_isolate order); so does
 // this (an InsMap, not a randomly ordered Go map).
 func GetIsolateActions(mod *Module, iso IsolateDefIface) *InsMap[string, bool] {
+	return getIsolateActions(mod, iso, true)
+}
+
+func getIsolateActions(mod *Module, iso IsolateDefIface, includePresent bool) *InsMap[string, bool] {
 	result := NewInsMap[string, bool]()
 	IterIsolate(mod, iso, func(name string) {
 		if _, ok := mod.Actions.Get2(name); ok {
@@ -145,7 +149,7 @@ func GetIsolateActions(mod *Module, iso IsolateDefIface) *InsMap[string, bool] {
 				result.Set(name, true)
 			}
 		}
-	}, true, true)
+	}, true, includePresent)
 	return result
 }
 
@@ -197,7 +201,39 @@ func isExplicitOnly(lf *LabeledFormula) bool {
 // GetIsolateConjs returns conjectures present in an isolate.
 // Corresponds to Python get_isolate_conjs().
 func GetIsolateConjs(mod *Module, iso IsolateDefIface, verified, present bool) []*LabeledFormula {
-	return GetIsolateLFs(mod, iso, mod.LabeledConjs, verified, present)
+	result := GetIsolateLFs(mod, iso, mod.LabeledConjs, verified, present)
+	if present && !verified {
+		for _, lf := range GetIsolateLFs(mod, iso, mod.LabeledConjs, true, false) {
+			if requiresInvariant(mod, lfLabelName(lf)) {
+				result = append(result, lf)
+			}
+		}
+	}
+	if len(mod.InvariantProviders) == 0 && present {
+		return result
+	}
+	owners := make(map[string]bool)
+	IterIsolate(mod, iso, func(name string) { owners[name] = true }, true, false)
+	seen := make(map[string]bool)
+	filtered := result[:0]
+	for _, lf := range result {
+		label := lfLabelName(lf)
+		providesHere := owners[mod.InvariantProviders[label].owner]
+		if (!verified && providesHere) || (verified && !present && requiresInvariant(mod, label) && !providesHere) {
+			continue
+		}
+		filtered = append(filtered, lf)
+		seen[label] = true
+	}
+	if verified {
+		for _, lf := range mod.LabeledConjs {
+			label := lfLabelName(lf)
+			if !seen[label] && owners[mod.InvariantProviders[label].owner] {
+				filtered = append(filtered, lf)
+			}
+		}
+	}
+	return filtered
 }
 
 // GetIsolatePostConjs returns conjectures that appear before the first
@@ -221,35 +257,92 @@ func GetIsolatePostConjs(mod *Module, iso IsolateDefIface) []*LabeledFormula {
 }
 
 // GetIsolateExports returns the set of exported action names for an isolate.
-// An action is exported if it's in the module's exports and present in the
-// isolate, or if it calls an action outside the isolate.
+// A present action contributes an invariant obligation if it has side effects
+// and is exported or can be called from outside the isolate.
 // Corresponds to Python get_isolate_exports().
 //
 // Python: dict.fromkeys(act for act in actions if ...), in the order of
 // get_isolate_actions; so this returns an InsMap in that order.
 func GetIsolateExports(mod *Module, callGraph map[string][]string, iso IsolateDefIface) *InsMap[string, bool] {
 	isoActions := GetIsolateActions(mod, iso)
+	verified := getIsolateActions(mod, iso, false)
+	mixees := make(map[string][]string)
+	for _, mixins := range mod.Mixins.All() {
+		for _, mixin := range mixins {
+			mixees[mixin.Mixer()] = append(mixees[mixin.Mixer()], mixin.Mixee())
+		}
+	}
+	for name := range isoActions.Clone().All() {
+		for _, mixee := range mixees[name] {
+			isoActions.Set(mixee, true)
+			if verified.Get(name) {
+				verified.Set(mixee, true)
+			}
+		}
+	}
 	modExports := make(map[string]bool)
 	for _, exp := range mod.Exports {
 		modExports[exp.Exported()] = true
 	}
 	exports := NewInsMap[string, bool]()
 	for act := range isoActions.All() {
-		if modExports[act] {
-			exports.Set(act, true)
-			continue
-		}
-		// Check if any caller of this action is outside the isolate
-		if callers, ok := callGraph[act]; ok {
-			for _, caller := range callers {
-				if !isoActions.Get(caller) {
-					exports.Set(act, true)
-					break
-				}
+		external := modExports[act]
+		for _, caller := range callGraph[act] {
+			if !isoActions.Get(caller) {
+				external = true
+				break
 			}
+		}
+		if external && hasIsolateSideEffect(mod, act, isoActions, verified, make(map[string]bool)) {
+			exports.Set(act, true)
 		}
 	}
 	return exports
+}
+
+func hasIsolateSideEffect(mod *Module, name string, present, verified *InsMap[string, bool], seen map[string]bool) bool {
+	name = CanonAct(name)
+	if seen[name] || !present.Get(name) {
+		return false
+	}
+	seen[name] = true
+	action := mod.Actions.Get(name)
+	if action == nil {
+		return false
+	}
+	for _, sub := range action.IterSubactions() {
+		if native, ok := sub.(*LogicNativeAction); ok && native.Impure {
+			return true
+		}
+		for _, sym := range ModifiesSingle(sub, mod.Cfg.ActCfg) {
+			if _, inSignature := mod.Sig.Symbols.Get2(sym.Name); inSignature {
+				return true
+			}
+		}
+		if verified.Get(name) {
+			if _, ranking := sub.(*LogicRanking); ranking || IsAssertLike(sub) {
+				return true
+			}
+		}
+		if call, ok := sub.(*LogicCallAction); ok {
+			for _, target := range call.ActualReturns {
+				for _, sym := range ModifiesSingle(NewHavocAction(target), mod.Cfg.ActCfg) {
+					if _, inSignature := mod.Sig.Symbols.Get2(sym.Name); inSignature {
+						return true
+					}
+				}
+			}
+			if hasIsolateSideEffect(mod, call.CalleeName(), present, verified, seen) {
+				return true
+			}
+		}
+	}
+	for _, mixin := range mod.Mixins.Get(name) {
+		if hasIsolateSideEffect(mod, mixin.Mixer(), present, verified, seen) {
+			return true
+		}
+	}
+	return false
 }
 
 // GetIsolateMap creates a map from hierarchy names to the list of

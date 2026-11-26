@@ -285,6 +285,7 @@ special_attribute = None
 parent_object = None
 global_attribute = None
 common_attribute = None
+require_attribute = False
 
 class Ivy(object):
     def __init__(self):
@@ -304,12 +305,15 @@ class Ivy(object):
         global special_attribute
         global global_attribute
         global common_attribute
+        global require_attribute
         self.attributes = (((special_attribute,) if special_attribute is not None else ()) +
                            ((global_attribute,) if global_attribute is not None else ()) +
-                           ((common_attribute,) if common_attribute is not None else ()))
+                           ((common_attribute,) if common_attribute is not None else ()) +
+                           (('require',) if require_attribute else ()))
         special_attribute = None
         global_attribute = None
         common_attribute = None
+        require_attribute = False
         # if we are the body of an attribute declaration, keep all of the enclosing attributes
         if self.attributes and stack:
             self.attributes = stack[-1].attributes + self.attributes
@@ -668,6 +672,27 @@ if not iu.get_numeric_version() <= [1,6]:
         binding = InvariantPatternBinding(name,p[5])
         p[0].declare(InvariantPatternDecl(binding))
 
+    def declare_invariant_clauses(ivy,label,loc,dependencies,pattern):
+        if dependencies:
+            dep = InvariantDependency(label,*dependencies)
+            dep.lineno = loc
+            ivy.declare(InvariantDependencyDecl(dep))
+        if pattern is not None:
+            ivy.declare(InvariantUsingDecl(InvariantPatternBinding(label,pattern)))
+
+    def p_top_provide(p):
+        'top : top PROVIDE callatom optinvwith optusing optproof'
+        p[0] = p[1]
+        loc = get_lineno(p,2)
+        provider = InvariantProvide(Atom(This()),p[3])
+        provider.lineno = loc
+        decl = InvariantProvideDecl(provider)
+        decl.lineno = loc
+        p[0].declare(decl)
+        declare_invariant_clauses(p[0],p[3],loc,p[4],p[5])
+        if p[6] is not None:
+            p[0].declare(ProofDecl(LabeledFormula(p[3],p[6])))
+
     def p_top_invariant_labeledfmla(p):
         '''top : top optexplicit INVARIANT labeledfmla optinvwith optusing optproof
                | top DERIVED INVARIANT labeledfmla optinvwith optusing optproof'''
@@ -681,12 +706,7 @@ if not iu.get_numeric_version() <= [1,6]:
         d = ConjectureDecl(lf)
         d.lineno = get_lineno(p,3)
         if not lf.unprovable or check_unprovable.get():
-            if p[5]:
-                dep = InvariantDependency(lf.label,*p[5])
-                dep.lineno = d.lineno
-                p[0].declare(InvariantDependencyDecl(dep))
-            if p[6] is not None:
-                p[0].declare(InvariantUsingDecl(InvariantPatternBinding(lf.label,p[6])))
+            declare_invariant_clauses(p[0],lf.label,d.lineno,p[5],p[6])
             p[0].declare(d)
             if p[7] is not None:
                 p[0].declare(ProofDecl(p[7]))
@@ -2479,6 +2499,12 @@ if not (iu.get_numeric_version() <= [1,6]):
         p[0] = p[1]
         global common_attribute
         common_attribute =  "common"
+
+    def p_specimpl_require(p):
+        'specimpl : REQUIRE'
+        p[0] = p[1]
+        global require_attribute
+        require_attribute = True
 
     def p_top_specification_lcb_top_rcb(p):
         'top : top specimpl LCB top RCB'
