@@ -31301,7 +31301,7 @@ func Abc_CommandAbc9Strash(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) && (abcFrameGia(pAbc).VConfigs != nil) {
 		pTemp = abcAsGia(ifpkg.If_ManDeriveGiaFromCells(abcFrameGia(pAbc)))
 	} else if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
-		pTemp = abcGiaFromOwnedAig(opt_dau.Dsm_ManDeriveGia(abcFrameGia(pAbc), fAddMuxes)) // delay-oriented unmapping
+		pTemp = giapkg.Dsm_ManDeriveGia(abcFrameGia(pAbc), fAddMuxes) // delay-oriented unmapping (dauGia.c)
 	} else if fAddMuxes != 0 {
 		if abcFrameGia(pAbc).PMuxes != nil {
 			Abc_Print(-1, "Abc_CommandAbc9Strash(): The AIG already has MUXes.\n")
