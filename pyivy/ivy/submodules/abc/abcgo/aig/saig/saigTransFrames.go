@@ -5,7 +5,8 @@ import "github.com/glycerine/abcgo/aig/aig"
 // Saig_ManFramesNonInitial unrolls the graph with unconstrained initial
 // registers. Each original object/frame maps to an object in the returned graph.
 func Saig_ManFramesNonInitial(g *aig.Graph, nFrames int32) *aig.Graph {
-	if g == nil || nFrames <= 0 || Saig_ManRegNum(g) <= 0 {
+	// ABC asserts registers; release builds also unroll combinational AIGs.
+	if g == nil || nFrames <= 0 {
 		return nil
 	}
 	Saig_ManStartMap1(g, nFrames)
@@ -56,7 +57,7 @@ func Saig_ManFramesNonInitial(g *aig.Graph, nFrames int32) *aig.Graph {
 // Saig_ManFramesInitialMapped unrolls initialized or arbitrary-state frames,
 // applying any previously discovered equivalence map to each internal node.
 func Saig_ManFramesInitialMapped(g *aig.Graph, nFrames, nFramesMax, init int32) *aig.Graph {
-	if g == nil || nFrames <= 0 || nFrames > nFramesMax || Saig_ManRegNum(g) <= 0 {
+	if g == nil || nFrames <= 0 || nFrames > nFramesMax {
 		return nil
 	}
 	Saig_ManStartMap1(g, nFramesMax)

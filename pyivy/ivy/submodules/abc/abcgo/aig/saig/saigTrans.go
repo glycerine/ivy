@@ -19,9 +19,6 @@ func Saig_ManTimeframeSimplifyWithFraig(g *aig.Graph, nFrames, nFramesMax, init,
 	if g == nil || nFrames <= 0 {
 		return nil
 	}
-	if Saig_ManRegNum(g) <= 0 {
-		panic("saig: timeframe simplification requires registers")
-	}
 	if fraig == nil {
 		panic("saig: timeframe simplification requires a FRA backend")
 	}

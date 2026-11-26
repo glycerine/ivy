@@ -57,3 +57,10 @@ func TestSecOnCombinationalNetworkLikeNative(t *testing.T) {
 		}
 	}
 }
+
+// Native: abc -c "read mul8.aig; strash; dframes; print_stats". ABC's
+// Saig_ManTimeframeSimplify has no register precondition.
+func TestDframesCombinationalLikeNative(t *testing.T) {
+	expectStats(t, "read test_vectors/bench/mul8.aig; strash; dframes; print_stats",
+		"i/o =   80/   80  lat =    0  and =   2120  lev = 53")
+}
