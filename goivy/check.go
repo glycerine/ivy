@@ -56,6 +56,7 @@ type BaseChecker struct {
 	ReportPass bool
 	Inverted   bool
 	FailedFlag bool
+	TraceName  string
 }
 
 // NewBaseChecker creates a BaseChecker for the given conjecture formula.
@@ -109,7 +110,8 @@ func (c *BaseChecker) Fail() bool {
 	c.Mod.Cfg.Failures++
 	c.FailedFlag = true
 	// Python: return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get()
-	return !(c.Mod.Cfg.Diagnose || c.Mod.Cfg.OptTrace) || c.Mod.Cfg.OnlyCheckUnprovable
+	cfg := c.Mod.Cfg
+	return !(cfg.Diagnose || cfg.OptTrace || cfg.TraceOutput != "" || cfg.TraceDir != "") || cfg.OnlyCheckUnprovable
 }
 
 func (c *BaseChecker) Pass() bool {
@@ -465,7 +467,7 @@ func CheckFcsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, checkers
 	}
 	axioms := mod.BackgroundTheory(nil)
 
-	if mod.Cfg.OptTrace || mod.Cfg.Diagnose {
+	if mod.Cfg.OptTrace || mod.Cfg.Diagnose || mod.Cfg.TraceOutput != "" || mod.Cfg.TraceDir != "" {
 		// Trace/diagnose path (Python lines 379-411)
 		return checkFcsTracePath(mod, ag, post, history, axioms, checkers)
 	}
@@ -489,6 +491,10 @@ func checkFcsTracePath(mod *Module, ag *AnalysisGraph, post *State,
 
 	// Python: ffcs = filter_fcs(fcs)
 	ffcs := FilterCheckers(checkers, mod.Cfg.CheckLineno)
+	if mod.Cfg.TraceDir != "" {
+		traceEachFailure(mod, history, clauses, ffcs)
+		return !anyFailed(checkers)
+	}
 
 	// Python: model = itr.small_model_clauses(clauses, ffcs, shrink=True)
 	var finalConds []FinalCond
@@ -510,91 +516,102 @@ func checkFcsTracePath(mod *Module, ag *AnalysisGraph, post *State,
 			return true
 		}
 
-		// Python: mclauses = lut.and_clauses(*([clauses] + [c.cond() for c in failed]))
-		mclauses := clauses
-		for _, c := range failed {
-			if c.Cond() != nil {
-				mclauses = AndClausesTyped(mclauses, c.Cond())
+		handler := buildCheckTrace(mod, history, clauses, failed, ffcs, modelSlv, model)
+		if mod.Cfg.TraceOutput != "" {
+			mod.Cfg.traceFiles.write(mod.Cfg.TraceOutput, handler, false)
+			if mod.Cfg.traceFiles.err == nil {
+				os.Exit(0)
 			}
-		}
-
-		// Python: vocab = lut.used_symbols_clauses(mclauses)
-		vocabMap := mclauses.Symbols()
-		vocab := make([]*Const, 0, vocabMap.Len())
-		traceVocab := make([]Expr, 0, vocabMap.Len())
-		for _, sym := range vocabMap.All() {
-			if c, ok := sym.(*Const); ok {
-				vocab = append(vocab, c)
-				traceVocab = append(traceVocab, c)
-			}
-		}
-
-		// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
-		hm := NewHerbrandModel(modelSlv, model.Solver, model.Model, vocab)
-		handler := NewTraceForModule(mod.Cfg.IuCfg, mod, mclauses, hm, traceVocab, true)
-		if modClauses, err := modelSlv.ClausesModelToClausesWithModel(mclauses, model, traceModelIgnore(modelSlv), true); err == nil {
-			handler.SetEqsFromClauses(modClauses)
-		}
-
-		// Python: thing = failed[-1].get_annot()
-		thing := failed[len(failed)-1].GetAnnot()
-		if thing == nil {
-			// Python: actions = [mod.actions[a] if isinstance(a,str) else a for a in history.actions]
-			//         action = act.Sequence(*actions); annot = clauses.annot
-			// In Go, history.Actions is []lg.Expr. String action names are *lg.Const.
-			var actionExprs []Expr
-			for _, a := range history.Actions {
-				// Python: mod.actions[a] if isinstance(a, str) else a
-				if sym, ok := a.(*Const); ok {
-					if act, exists := mod.Actions.Get2(sym.Name); exists {
-						if actAction, ok := act.(ActionsAction); ok {
-							actionExprs = append(actionExprs, actAction)
-							continue
-						}
-					}
+		} else if mod.Cfg.OptTrace {
+			if mod.Cfg.TraceDetailed && mod.Cfg.TraceTrack != "" {
+				if err := recordTraceTracking(handler.TraceBase).replay(os.Stdout, mod.Cfg.TraceTrack); err != nil {
+					fmt.Fprintf(os.Stderr, "error: %v\n", err)
+					os.Exit(1)
 				}
-				actionExprs = append(actionExprs, a)
+			} else {
+				fmt.Println(handler.String())
 			}
-			action := NewSequence(actionExprs...)
-			MatchAnnotation(action, clauses.Annot, handler, mod)
-		} else {
-			// Python: action, annot = thing
-			MatchAnnotation(thing.Action, thing.Annot, handler, mod)
-		}
-		handler.End()
-
-		// C5 / Python ivy_check.py:406-407 (and ivy_l2s.py:1310-1313):
-		// Apply the trace hook attached by L2S tactics, if any. The hook is
-		// stored on Module/LabeledFormula.
-		if mod.TraceHook != nil {
-			handler = mod.TraceHook(handler, ffcs)
-		}
-
-		// Python: ff = failed[0]
-		// handler.is_cti = lut.formula_to_clauses(ff.lf.formula) if isinstance(ff, ConjChecker) else None
-		ff := failed[0]
-		if cc, ok := ff.(*ConjChecker); ok {
-			handler.IsCti = FormulaToClauses(cc.LF.Formula.(Expr), nil)
-		}
-
-		// Python ivy_check.py:411-415:
-		//   if not opt_trace.get(): gui_art(handler)
-		//   else: print(str(handler)); exit(0)
-		if mod.Cfg.OptTrace {
-			fmt.Println(handler.String())
 			os.Exit(0)
 		} else {
-			// Python: gui_art(handler) — passes the trace handler. The handler
-			// carries the IsCti clauses for the GUI's CTI display mode.
 			if err := GuiArt(mod, handler, handler.IsCti); err != nil {
 				fmt.Fprintf(os.Stderr, "GuiArt: %v\n", err)
 			}
-			// Python: gui_art ends with exit(1) after the Tk mainloop returns.
 			os.Exit(1)
 		}
 	}
 
 	return !anyFailed(checkers)
+}
+
+func buildCheckTrace(mod *Module, history *History, clauses *Clauses, failed, ffcs []Checker, modelSlv *Solver, model *ModelResult) *Trace {
+	// Python: mclauses = lut.and_clauses(*([clauses] + [c.cond() for c in failed]))
+	mclauses := clauses
+	for _, c := range failed {
+		if c.Cond() != nil {
+			mclauses = AndClausesTyped(mclauses, c.Cond())
+		}
+	}
+
+	// Python: vocab = lut.used_symbols_clauses(mclauses)
+	vocabMap := mclauses.Symbols()
+	vocab := make([]*Const, 0, vocabMap.Len())
+	traceVocab := make([]Expr, 0, vocabMap.Len())
+	for _, sym := range vocabMap.All() {
+		if c, ok := sym.(*Const); ok {
+			vocab = append(vocab, c)
+			traceVocab = append(traceVocab, c)
+		}
+	}
+
+	// Python: handler = ivy_trace.Trace(mclauses, model, vocab)
+	hm := NewHerbrandModel(modelSlv, model.Solver, model.Model, vocab)
+	handler := NewTraceForModule(mod.Cfg.IuCfg, mod, mclauses, hm, traceVocab, true)
+	if modClauses, err := modelSlv.ClausesModelToClausesWithModel(mclauses, model, traceModelIgnore(modelSlv), true); err == nil {
+		handler.SetEqsFromClauses(modClauses)
+	}
+
+	// Python: thing = failed[-1].get_annot()
+	thing := failed[len(failed)-1].GetAnnot()
+	if thing == nil {
+		// Python: actions = [mod.actions[a] if isinstance(a,str) else a for a in history.actions]
+		//         action = act.Sequence(*actions); annot = clauses.annot
+		// In Go, history.Actions is []lg.Expr. String action names are *lg.Const.
+		var actionExprs []Expr
+		for _, a := range history.Actions {
+			// Python: mod.actions[a] if isinstance(a, str) else a
+			if sym, ok := a.(*Const); ok {
+				if act, exists := mod.Actions.Get2(sym.Name); exists {
+					if actAction, ok := act.(ActionsAction); ok {
+						actionExprs = append(actionExprs, actAction)
+						continue
+					}
+				}
+			}
+			actionExprs = append(actionExprs, a)
+		}
+		action := NewSequence(actionExprs...)
+		MatchAnnotation(action, clauses.Annot, handler, mod)
+	} else {
+		// Python: action, annot = thing
+		MatchAnnotation(thing.Action, thing.Annot, handler, mod)
+	}
+	handler.End()
+
+	// C5 / Python ivy_check.py:406-407 (and ivy_l2s.py:1310-1313):
+	// Apply the trace hook attached by L2S tactics, if any. The hook is
+	// stored on Module/LabeledFormula.
+	if mod.TraceHook != nil {
+		handler = mod.TraceHook(handler, ffcs)
+	}
+
+	// Python: ff = failed[0]
+	// handler.is_cti = lut.formula_to_clauses(ff.lf.formula) if isinstance(ff, ConjChecker) else None
+	ff := failed[0]
+	if cc, ok := ff.(*ConjChecker); ok {
+		handler.IsCti = FormulaToClauses(cc.LF.Formula.(Expr), nil)
+	}
+
+	return handler
 }
 
 // checkFcsNormalPath implements the normal (non-trace) branch of check_fcs_in_state.
@@ -1383,7 +1400,7 @@ func startLoaded(filename string, cfg *Config, load func(mod *Module) error) err
 	}
 
 	// Python: check_module()
-	if err := CheckModule(mod); err != nil { // in StartWithConfig()
+	if err := CheckModule(mod); err != nil {
 		return err
 	}
 

@@ -22,6 +22,8 @@
 //	trusted=bool           Skip verification, trust all isolates (default false)
 //	mc=bool                Force model checking method (default false)
 //	trace=bool             Print execution trace on counterexample (default false)
+//	out=file.a2g          Save the first counterexample for replay
+//	trace_dir=directory    Save one counterexample per failing check
 //	separate=bool          Check each assertion separately
 //	isolate=name           Check only the named isolate
 //	summary=bool           Summary mode, no actual checking (default false)
@@ -86,14 +88,13 @@ func main() {
 
 	// Parse key=value parameters from command-line args.
 	// Python: ivy_init.read_params() extracts key=value pairs from sys.argv.
-	params, args, err := goivy.ParseIvyCheckParams(myflags.Args())
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "usage: %s [key=value ...] file.ivy\n", os.Args[0])
-		os.Exit(1)
+	args := myflags.Args()
+	replay := len(args) > 0 && args[0] == "replay"
+	if replay {
+		args = args[1:]
 	}
-
-	// Validate: exactly one .ivy file argument remaining.
-	if len(args) != 1 || !strings.HasSuffix(args[0], ".ivy") {
+	params, args, err := goivy.ParseIvyCheckParams(args)
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "usage: %s [key=value ...] file.ivy\n", os.Args[0])
 		os.Exit(1)
 	}
@@ -105,6 +106,21 @@ func main() {
 
 	if err := goivy.ApplyIvyCheckParams(cfg, params); err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+	if replay {
+		if len(args) != 1 || !strings.HasSuffix(args[0], ".a2g") {
+			fmt.Fprintf(os.Stderr, "usage: %s replay [detailed=bool] [track=expressions] file.a2g\n", os.Args[0])
+			os.Exit(1)
+		}
+		if err := goivy.ReplayTrace(args[0], os.Stdout, cfg.TraceDetailed, cfg.TraceTrack); err != nil {
+			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
+	if len(args) != 1 || !strings.HasSuffix(args[0], ".ivy") {
+		fmt.Fprintf(os.Stderr, "usage: %s [key=value ...] file.ivy\n", os.Args[0])
 		os.Exit(1)
 	}
 

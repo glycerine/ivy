@@ -12,6 +12,7 @@ if __name__ == "__main__":
 #    print "path: {}".format(sys.path)
 
 import pickle
+import json
 import string
 from .ivy_compiler import IvyError, ivy_new, ivy_load_file
 from .ivy_utils import Parameter, set_parameters
@@ -30,11 +31,16 @@ def usage():
 
 def open_read(fn):
     try:
-        f = open(fn,'r')
+        f = open(fn,'rb' if fn.endswith('.a2g') else 'r')
         return f
     except:
         print("not found: %s" % fn)
         sys.exit(1)
+
+def get_verb():
+    if len(sys.argv) > 1 and '.' not in sys.argv[1] and '=' not in sys.argv[1]:
+        return sys.argv.pop(1)
+    return 'interact'
 
 def read_params():
     ps = dict()
@@ -81,6 +87,7 @@ def source_file(fn,f,**kwargs):
     if __debug__: xtracer.trace("init.SourceFile EXIT file=%s" % xtracer.normalize_filename(fn))
 
 def ivy_init(**kwargs):
+    verb = kwargs.pop('verb',None)
     read_params()
 
 #    if mode.get() == "ivy2":
@@ -88,15 +95,25 @@ def ivy_init(**kwargs):
 
     if len(sys.argv) < 2 or len(sys.argv) > 3:
         usage()
+    if verb == 'replay' and (len(sys.argv) != 2 or not sys.argv[1].endswith('.a2g')):
+        usage()
 
+    from . import ivy_trace
     files = [(fn,open_read(fn)) for fn in sys.argv[1:]]
 
     if files[0][0].endswith('.a2g'):
         fn,f = files.pop(0)
-        ag = pickle.load(f)
-        im.module = ag.domain
-        il.sig = ag.domain.sig
-        f.close()
+        with f:
+            if verb == 'replay' and f.peek(1)[:1] == b'{':
+                archive = json.load(f)
+                if archive.get('format') != 'ivy-trace-1':
+                    raise IvyError(None,'unsupported trace format in {}'.format(fn))
+                return archive['detailed' if ivy_trace.option_detailed.get() else 'brief']
+            ag = pickle.load(f)
+        ivy_module.module = ag.domain
+        ivy_logic.sig = ag.domain.sig
+        if hasattr(ag,'ivy_version'):
+            iu.set_string_version(ag.ivy_version)
     else:
         ag = None
 

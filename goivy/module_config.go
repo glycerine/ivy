@@ -47,6 +47,9 @@ type Config struct {
 	OptTrusted        bool   `json:"trusted"`
 	OptMC             bool   `json:"mc"`
 	OptTrace          bool   `json:"trace"`
+	TraceOutput       string `json:"out"`
+	TraceDir          string `json:"trace_dir"`
+	TraceTrack        string `json:"track"`
 	OptSeparate       bool   `json:"separate"`
 	OptUncheckedProps string `json:"unchecked_properties"` // a filename
 	OptIvyStats       bool   `json:"ivy_stats"`
@@ -66,7 +69,8 @@ type Config struct {
 	OnlyCheckUnprovable bool `json:"unprovable"`
 
 	// Failures tracks the number of failed checks during verification.
-	Failures int
+	Failures   int
+	traceFiles *traceFiles
 
 	// SomeBounded tracks whether any isolate in this session used the BMC
 	// (bounded model checking) verification method. When true, Start prints

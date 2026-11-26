@@ -62,6 +62,15 @@ func ApplyIvyCheckParams(cfg *Config, params map[string]string) error {
 				return err
 			}
 			cfg.OptTrace = parsed
+		case "out":
+			if !strings.HasSuffix(val, ".a2g") {
+				return fmt.Errorf("out must name an .a2g file")
+			}
+			cfg.TraceOutput = val
+		case "trace_dir":
+			cfg.TraceDir = val
+		case "track":
+			cfg.TraceTrack = val
 		case "separate":
 			parsed, err := parseIvyCheckBool(key, val)
 			if err != nil {

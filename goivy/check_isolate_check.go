@@ -307,42 +307,15 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 		if len(guarantees) > 0 && !mod.Cfg.OnlyCheckUnprovable {
 			fmt.Print("\n    Any assertions in initializers must be checked ")
 			if check {
-				ag := NewAnalysisGraph(mod)
-				ag.Initialize(AbstractorFunc(func(s *State) {})) // no-op abstractor
-				if len(ag.States) > 0 {
-					initState := ag.States[0]
-
-					failState := NewState(mod, TrueClauses(EmptyAnnotation{}))
-
-					var innerAction ActionsAction
-					if aa, ok := initState.Prov.(*ActionApp); ok {
-						switch rep := aa.Rep.(type) {
-						case string:
-							failState.Prov = NewActionApp("fail_"+rep, aa.Args...)
-							if v, ok := mod.Actions.Get2(rep); ok {
-								if a, ok := v.(ActionsAction); ok {
-									innerAction = a
-								}
-							}
-						case ActionsAction:
-							failState.Prov = NewActionApp("fail_"+rep.Name(), aa.Args...)
-							innerAction = rep
-						}
+				if mod.Cfg.TraceDir == "" {
+					checkInitializerSafety(mod, guaranteeTraceName(guarantees[0]))
+				} else {
+					original := mod.Cfg.CheckLineno
+					for _, guarantee := range guarantees {
+						mod.Cfg.CheckLineno = guarantee.GetLineno().FileLineKey()
+						checkInitializerSafety(mod, guaranteeTraceName(guarantee))
 					}
-					if innerAction == nil {
-						innerAction = initState.Action
-					}
-
-					if innerAction != nil {
-						failState.Action = NewFailAction(innerAction)
-						if initState.Pred != nil {
-							failState.Pred = initState.Pred
-						} else if aa, ok := initState.Prov.(*ActionApp); ok && len(aa.Args) > 0 {
-							failState.Pred = aa.Args[0]
-						}
-					}
-
-					CheckSafetyInStateWithAG(mod, ag, failState, true)
+					mod.Cfg.CheckLineno = original
 				}
 			}
 		}
@@ -612,7 +585,7 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 								failState.Pred = aa.Args[0]
 							}
 
-							if !CheckSafetyInStateWithAG(mod, ag, failState, false) {
+							if !checkNamedSafetyInState(mod, ag, failState, false, guaranteeTraceName(sub)) {
 								someFailed = true
 								break
 							}
@@ -647,6 +620,39 @@ func CheckIsolate(mod *Module, traceHook func(interface{}) interface{}) error {
 	return nil
 }
 
+func checkInitializerSafety(mod *Module, name string) {
+	ag := NewAnalysisGraph(mod)
+	ag.Initialize(AbstractorFunc(func(s *State) {}))
+	if len(ag.States) == 0 {
+		return
+	}
+	initial := ag.States[0]
+	fail := NewState(mod, TrueClauses(EmptyAnnotation{}))
+	action := initial.Action
+	if app, ok := initial.Prov.(*ActionApp); ok {
+		switch rep := app.Rep.(type) {
+		case string:
+			fail.Prov = NewActionApp("fail_"+rep, app.Args...)
+			if resolved := mod.Actions.Get(rep); resolved != nil {
+				action = resolved
+			}
+		case ActionsAction:
+			fail.Prov = NewActionApp("fail_"+rep.Name(), app.Args...)
+			action = rep
+		}
+	}
+	if action != nil {
+		fail.Action = NewFailAction(action)
+		fail.Pred = initial.Pred
+		if fail.Pred == nil {
+			if app, ok := initial.Prov.(*ActionApp); ok && len(app.Args) > 0 {
+				fail.Pred = app.Args[0]
+			}
+		}
+	}
+	checkNamedSafetyInState(mod, ag, fail, true, name)
+}
+
 func initializerGuaranteesForCheckIsolate(mod *Module) []ActionsAction {
 	if mod == nil || len(mod.Initializers) == 0 {
 		return nil
@@ -655,18 +661,26 @@ func initializerGuaranteesForCheckIsolate(mod *Module) []ActionsAction {
 	inits := make([]NamedAction, len(mod.Initializers))
 	copy(inits, mod.Initializers)
 	sort.Slice(inits, func(i, j int) bool { return inits[i].Name < inits[j].Name })
-	action, _ := inits[len(inits)-1].Action.(ActionsAction)
-	if action == nil {
-		return nil
+	legacy := mod.Cfg.TraceDir == ""
+	if legacy {
+		inits = inits[len(inits)-1:]
 	}
-
 	var guarantees []ActionsAction
-	for _, sub := range action.IterSubactions() {
-		isAssert := IsAssertLike(sub)
-		_, isRanking := sub.(*LogicRanking)
-		if isAssert || isRanking {
-			for range mod.Initializers {
-				guarantees = append(guarantees, sub)
+	for _, init := range inits {
+		action, _ := init.Action.(ActionsAction)
+		if action == nil {
+			continue
+		}
+		for _, sub := range action.IterSubactions() {
+			_, isRanking := sub.(*LogicRanking)
+			if IsAssertLike(sub) || isRanking {
+				count := 1
+				if legacy {
+					count = len(mod.Initializers)
+				}
+				for range count {
+					guarantees = append(guarantees, sub)
+				}
 			}
 		}
 	}
@@ -1064,6 +1078,13 @@ func CheckSubgoals(goals []*LabeledFormula, method func(*Module) error, mod *Mod
 // isolates to check and dispatches to the appropriate checking method.
 // This corresponds to Python's check_module.
 func CheckModule(mod *Module) error {
+	if mod.Cfg.TraceDir != "" || mod.Cfg.TraceOutput != "" {
+		files, err := openTraceFiles(mod.Cfg.TraceDir)
+		if err != nil {
+			return err
+		}
+		mod.Cfg.traceFiles = files
+	}
 	if xtracer.Enabled {
 		xtracer.Trace("check.CheckModule ENTER isolates=%d", mod.Isolates.Len())
 	}
@@ -1233,6 +1254,9 @@ func CheckModule(mod *Module) error {
 			// Python's failures is a module-level global; propagate
 			// delta back from the copy to the original mod.
 			mod.Cfg.Failures += isoMod.Cfg.Failures - failsBefore
+			if mod.Cfg.traceFiles != nil && mod.Cfg.traceFiles.err != nil {
+				return mod.Cfg.traceFiles.err
+			}
 			if err != nil {
 				return err
 			}
@@ -1571,7 +1595,12 @@ func checkConjsInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, indent
 
 // CheckSafetyInStateWithAG checks safety in a state using the analysis graph.
 func CheckSafetyInStateWithAG(mod *Module, ag *AnalysisGraph, post *State, reportPass bool) bool {
+	return checkNamedSafetyInState(mod, ag, post, reportPass, "")
+}
+
+func checkNamedSafetyInState(mod *Module, ag *AnalysisGraph, post *State, reportPass bool, name string) bool {
 	checker := NewBaseChecker(mod, &LogicOr{}, reportPass, true)
+	checker.TraceName = name
 	return CheckFcsInStateWithAG(mod, ag, post, []Checker{checker})
 }
 

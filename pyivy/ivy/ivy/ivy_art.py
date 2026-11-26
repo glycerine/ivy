@@ -450,6 +450,9 @@ class AnalysisGraph(object):
     def as_cy_elements(self,dot_layout):
         return dot_layout(render_rg(self),edge_labels=True)
 
+    def pickle(self,file):
+        pickle.dump(self,file,protocol=2)
+
 def label_from_action(action):
     if hasattr(action,'label'):
         return action.label

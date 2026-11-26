@@ -9,6 +9,7 @@ from . import ivy_solver as islv
 from . import ivy_art as art
 from . import ivy_interp as itp
 from . import ivy_actions as act
+from . import ivy_compiler
 from . import ivy_logic as lg
 from . import ivy_transrel as itr
 from . import ivy_logic_utils as lut
@@ -29,6 +30,42 @@ from collections import defaultdict
 ################################################################################
 
 option_detailed = iu.BooleanParameter("detailed",True)
+opt_track = iu.Parameter("track")
+
+def show_all_symbols(sym):
+    return False
+
+def tracked_terms():
+    track = opt_track.get()
+    if track is None:
+        return []
+    if track.endswith('.trk'):
+        try:
+            with open(track) as file:
+                track = file.read()
+        except OSError as error:
+            raise iu.IvyError(None,'cannot read tracking file: {}'.format(error))
+    return [term.strip() for term in track.split(';') if term.strip()]
+
+def track_state(state,terms,missing):
+    model = islv.get_model_clauses(state.clauses)
+    if model is None:
+        return []
+    numerals = islv.numeral_assign(state.clauses,model)
+    equations = []
+    for text in terms:
+        try:
+            with ivy_compiler.TopContext({}):
+                formula = state.string_to_formula(text)
+        except iu.IvyError as error:
+            if 'unknown symbol' not in str(error):
+                raise
+            missing.setdefault(text,error)
+            continue
+        missing[text] = None
+        value = lut.substitute_constants_ast(model.eval_to_constant(formula),numerals)
+        equations.append(lg.Equals(formula,value))
+    return equations
 
 class TraceBase(art.AnalysisGraph):
     def __init__(self):
@@ -36,10 +73,11 @@ class TraceBase(art.AnalysisGraph):
         self.last_action = None
         self.sub = None
         self.returned = None
-        self.hidden_symbols = lambda sym: False
+        self.hidden_symbols = show_all_symbols
         self.renaming = None
         self.pp = None
         self.is_full_trace = False
+        self.ivy_version = iu.get_string_version()
         
     def rename(self,map):
         self.renaming = map
@@ -85,7 +123,7 @@ class TraceBase(art.AnalysisGraph):
                 return c.args[1]
         return None
 
-    def to_lines(self,lines,hash,indent,hidden,failed=False,renaming=None,pp=None):
+    def to_lines(self,lines,hash,indent,hidden,failed=False,renaming=None,pp=None,terms=(),missing=None):
         renaming = renaming or self.renaming
         pp = pp or self.pp
         for idx,state in enumerate(self.states):
@@ -158,7 +196,8 @@ class TraceBase(art.AnalysisGraph):
                 if hasattr(expr,'subgraph'):
                     if option_detailed.get():
                         lines.append(indent * '    ' + '{\n')
-                    expr.subgraph.to_lines(lines,hash,indent+1,hidden,failed=failed,renaming=renaming,pp=pp)
+                    expr.subgraph.to_lines(lines,hash,indent+1,hidden,failed=failed,renaming=renaming,pp=pp,
+                                           terms=terms,missing=missing)
                     if option_detailed.get():
                         lines.append(indent * '    ' + '}\n')
                 if option_detailed.get():
@@ -167,18 +206,22 @@ class TraceBase(art.AnalysisGraph):
                 foo = False
                 if hasattr(state,"loop_start") and state.loop_start:
                     lines.append('\n--- the following repeats infinitely ---\n\n')
-                line_eqns = []
-                for c in state.clauses.fmlas:
-                    if hidden(c.args[0].rep):
-                        continue
-                    if renaming is not None:
-                        c = lut.rename_ast(c,renaming)
-                    c = lut.reduce_named_binders(c)
-                    if pp is not None:
-                        c = pp(c)
-                    if lut.reduce_numerically(c.args[0]) == c.args[1]:
-                        continue
-                    line_eqns.append(c)
+                if terms:
+                    line_eqns = track_state(state,terms,missing)
+                else:
+                    line_eqns = []
+                    for c in state.clauses.fmlas:
+                        if hidden(c.args[0].rep):
+                            continue
+                        if renaming is not None:
+                            c = lut.rename_ast(c,renaming)
+                        c = lut.reduce_named_binders(c)
+                        if pp is not None:
+                            c = pp(c)
+                        c = lut.named_binders_to_temporal(c)
+                        if lut.reduce_numerically(c.args[0]) == c.args[1]:
+                            continue
+                        line_eqns.append(c)
                 for c in sorted(line_eqns,key=str):
                     s1,s2 = list(map(str,c.args))
                     if not(s1 in hash and hash[s1] == s2): # or state is self.states[0]:
@@ -193,7 +236,11 @@ class TraceBase(art.AnalysisGraph):
     def __str__(self):
         lines = []
         hash = dict()
-        self.to_lines(lines,hash,0,self.hidden_symbols)
+        missing = {}
+        self.to_lines(lines,hash,0,self.hidden_symbols or show_all_symbols,terms=tracked_terms(),missing=missing)
+        for error in missing.values():
+            if error is not None:
+                raise error
         return ''.join(lines)
 
                 
@@ -261,6 +308,21 @@ class Trace(TraceBase):
 
     def clone(self):
         return Trace(self.clauses,self.model,self.vocab,False)
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state['model'] = None
+        return state
+
+    def pickle(self,file):
+        hook = getattr(self.domain,'trace_hook',None)
+        if hook is not None:
+            self.domain.trace_hook = None
+        try:
+            super().pickle(file)
+        finally:
+            if hook is not None:
+                self.domain.trace_hook = hook
 
     def get_universes(self):
         return self.model.universes(numerals=True)

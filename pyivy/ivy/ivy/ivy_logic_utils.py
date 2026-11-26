@@ -419,6 +419,15 @@ def expand_named_binders_ast(ast,fun):
     args = [expand_named_binders_ast(x, fun) for x in ast.args]
     return ast.clone(args)
 
+def named_binders_to_temporal(ast):
+    def expand(binder):
+        if binder.name == 'glo':
+            return lg.Globally(binder.environ,binder.body)
+        if binder.name == 'fut':
+            return lg.Eventually(binder.environ,binder.body)
+        return None
+    return denormalize_temporal(expand_named_binders_ast(ast,expand))
+
 def denormalize_temporal(ast):
     """
     Expand nullary named binders by applying function fun. Recurs into the

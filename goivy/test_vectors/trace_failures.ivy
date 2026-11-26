@@ -1,0 +1,13 @@
+#lang ivy1.8
+
+relation p
+relation q
+
+after init { p := true; q := true }
+export action unset_p = { p := false }
+export action unset_q = { q := false }
+export action check_p = { p := *; assert [requires_p] p }
+export action check_not_p = { p := *; assert [requires_not_p] ~p }
+
+invariant [keep_p] p
+invariant [keep_q] q

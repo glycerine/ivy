@@ -405,7 +405,12 @@ func (tb *TraceBase) appendCallEnvSummary(lines *[]string, arrow, name string, p
 // ToLines generates the human-readable trace lines.
 func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int,
 	hidden func(string) bool, failed bool, renaming map[string]string, pp func(Expr) Expr) {
+	tb.toLines(lines, hash, indent, hidden, failed, renaming, pp, tb.Domain.Cfg.TraceDetailed, nil)
+}
 
+func (tb *TraceBase) toLines(lines *[]string, hash map[string]string, indent int,
+	hidden func(string) bool, failed bool, renaming map[string]string, pp func(Expr) Expr, detailed bool,
+	visitState func(*State, int, []string)) {
 	if renaming == nil {
 		renaming = tb.Renaming
 	}
@@ -422,7 +427,7 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 			if isAA {
 				action, _ = aa.Rep.(ActionsAction)
 				hideAction = traceHideDetailedAction(action)
-				if tb.Domain.Cfg.TraceDetailed && action != nil && !hideAction {
+				if detailed && action != nil && !hideAction {
 					if _, labeled := traceActionLabel(action); !labeled && action.HasLineno() {
 						*lines = append(*lines, action.GetLineno().String()+"\n")
 					}
@@ -437,23 +442,27 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 				}
 			}
 			if ts.Subgraph != nil {
-				if tb.Domain.Cfg.TraceDetailed {
+				if detailed {
 					*lines = append(*lines, strings.Repeat("    ", indent)+"{\n")
 				}
-				ts.Subgraph.Graph.ToLines(lines, hash, indent+1, hidden, failed, renaming, pp)
-				if tb.Domain.Cfg.TraceDetailed {
+				ts.Subgraph.Graph.toLines(lines, hash, indent+1, hidden, failed, renaming, pp, detailed, visitState)
+				if detailed {
 					*lines = append(*lines, strings.Repeat("    ", indent)+"}\n")
 				}
 			}
-			if tb.Domain.Cfg.TraceDetailed && !hideAction {
+			if detailed && !hideAction {
 				*lines = append(*lines, "\n")
 			}
 		}
 
-		if tb.Domain.Cfg.TraceDetailed {
+		if detailed {
 			_ = idx
 			if ts.LoopStart {
 				*lines = append(*lines, "\n--- the following repeats infinitely ---\n\n")
+			}
+			if visitState != nil {
+				visitState(state, indent, *lines)
+				continue
 			}
 			var lineEqns []Expr
 			if state.Clauses != nil {
@@ -511,9 +520,13 @@ func (tb *TraceBase) ToLines(lines *[]string, hash map[string]string, indent int
 
 // String returns the human-readable trace.
 func (tb *TraceBase) String() string {
+	return tb.format(tb.Domain.Cfg.TraceDetailed)
+}
+
+func (tb *TraceBase) format(detailed bool) string {
 	var lines []string
 	hash := make(map[string]string)
-	tb.ToLines(&lines, hash, 0, tb.HiddenSymbols, false, nil, nil)
+	tb.toLines(&lines, hash, 0, tb.HiddenSymbols, false, nil, nil, detailed, nil)
 	return strings.Join(lines, "")
 }
 

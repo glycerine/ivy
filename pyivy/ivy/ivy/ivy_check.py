@@ -35,6 +35,7 @@ from . import xtracer
 
 import sys
 import re
+import os
 from collections import defaultdict
 
 import pdb, traceback, sys, code
@@ -45,6 +46,8 @@ checked_action = iu.Parameter("action","")
 opt_trusted = iu.BooleanParameter("trusted",False)
 opt_mc = iu.BooleanParameter("mc",False)
 opt_trace = iu.BooleanParameter("trace",False)
+opt_out = iu.Parameter("out",check=lambda path: path.endswith('.a2g'))
+opt_trace_dir = iu.Parameter("trace_dir","")
 opt_separate = iu.BooleanParameter("separate",None)
 opt_unchecked_properties = iu.Parameter("unchecked_properties", None)
 opt_ivy_stats = iu.BooleanParameter("ivy_stats", False)
@@ -260,7 +263,7 @@ class Checker(object):
         global failures
         failures += 1
         self.failed = True
-        return not (diagnose.get() or opt_trace.get()) or act.check_unprovable.get() # ignore failures if not diagnosing
+        return not (diagnose.get() or opt_trace.get() or opt_out.get() or opt_trace_dir.get()) or act.check_unprovable.get()
     def _pass(self):
         if self.report_pass:
             print('PASS')
@@ -382,55 +385,82 @@ class MatchHandler(object):
 
                 
 def filter_fcs(fcs):
-    global check_lineno
-    if check_lineno is None:
+    if not check_lineno:
         return fcs
     return [fc for fc in fcs if (not isinstance(fc,ConjChecker) or fc.lf.lineno == check_lineno)]
 
+def build_trace_handler(mod,history,clauses,model,failed,checkers):
+    mclauses = lut.and_clauses(clauses,*(checker.cond() for checker in failed))
+    vocab = lut.used_symbols_clauses(mclauses)
+    handler = ivy_trace.Trace(mclauses,model,vocab)
+    annotation = failed[-1].get_annot()
+    if annotation is None:
+        actions = [mod.actions[a] if isinstance(a,str) else a for a in history.actions]
+        action,annot = act.Sequence(*actions),clauses.annot
+    else:
+        action,annot = annotation
+    act.match_annotation(action,annot,handler)
+    handler.end()
+    hook = getattr(mod,'trace_hook',None)
+    if hook is not None:
+        handler = hook(handler,checkers)
+    first = failed[0]
+    handler.is_cti = lut.formula_to_clauses(first.lf.formula) if isinstance(first,ConjChecker) else None
+    return handler
+
+written_trace_names = set()
+
+def write_trace(path,handler,in_directory=False):
+    try:
+        with open(path,'xb' if in_directory else 'wb') as file:
+            handler.pickle(file)
+    except (OSError,TypeError) as error:
+        raise iu.IvyError(None,'cannot write trace {}: {}'.format(path,error))
+    print('        wrote counterexample to {} (view with "ivy replay {}")'.format(path,path))
+
+def trace_each_failure(mod,history,clauses,checkers):
+    for checker in checkers:
+        if checker.assume():
+            checker.start()
+            clauses = lut.and_clauses(clauses,checker.cond())
+            continue
+        model = itr.small_model_clauses(clauses,[checker],shrink=True)
+        if model is None or not checker.failed:
+            continue
+        label = checker.lf.label if isinstance(checker,ConjChecker) else None
+        name = str(checker.lf.name) if label is not None else getattr(checker,'trace_name','trace')
+        name = name.replace('/','_').replace('\\','_')
+        if name in written_trace_names:
+            continue
+        handler = build_trace_handler(mod,history,clauses,model,[checker],[checker])
+        write_trace(os.path.join(opt_trace_dir.get(),name+'.a2g'),handler,in_directory=True)
+        written_trace_names.add(name)
+
+check_lineno = None
+
 def check_fcs_in_state(mod,ag,post,fcs):
-#    iu.dbg('"foo"')
     history = ag.get_history(post)
-#    iu.dbg('history.actions')
     gmc = lambda cls, final_cond: itr.small_model_clauses(cls,final_cond,shrink=diagnose.get())
     axioms = im.module.background_theory()
-    if opt_trace.get() or diagnose.get():
-        clauses = history.post
-        clauses = lut.and_clauses(clauses,axioms)
+    if opt_trace_dir.get():
+        trace_each_failure(mod,history,lut.and_clauses(history.post,axioms),filter_fcs(fcs))
+    elif opt_trace.get() or opt_out.get() or diagnose.get():
+        clauses = lut.and_clauses(history.post,axioms)
         ffcs = filter_fcs(fcs)
         model = itr.small_model_clauses(clauses,ffcs,shrink=True)
         if model is not None:
-#            iu.dbg('history.actions')
-            failed = [c for c in ffcs if c.failed]
-            mclauses = lut.and_clauses(*([clauses] + [c.cond() for c in failed]))
-            vocab = lut.used_symbols_clauses(mclauses)
-#            handler = MatchHandler(mclauses,model,vocab) if opt_trace.get() else ivy_trace.Trace(mclauses,model,vocab)
-            handler = ivy_trace.Trace(mclauses,model,vocab)
-            thing = failed[-1].get_annot()
-            if thing is None:
-                assert all(x is not None for x in history.actions)
-                # work around a bug in ivy_interp
-                actions = [im.module.actions[a] if isinstance(a,str) else a for a in history.actions]
-                action = act.Sequence(*actions)
-                annot = clauses.annot
-            else:
-                action,annot = thing
-            act.match_annotation(action,annot,handler)
-            handler.end()
-            if hasattr(mod,"trace_hook"):
-                handler = mod.trace_hook(handler,ffcs)
-            ff = failed[0]
-            handler.is_cti = (lut.formula_to_clauses(ff.lf.formula) if isinstance(ff,ConjChecker)
-                              else None)
-            if not opt_trace.get():
-                gui_art(handler)
-            else:
+            failed = [checker for checker in ffcs if checker.failed]
+            handler = build_trace_handler(mod,history,clauses,model,failed,ffcs)
+            if opt_out.get():
+                write_trace(opt_out.get(),handler)
+            elif opt_trace.get():
                 print(str(handler))
+            else:
+                gui_art(handler)
             exit(0)
     else:
         if __debug__: xtracer.trace("check.checkFcsNormalPath history path postFmlas=%d postDefs=%d axiomFmlas=%d axiomDefs=%d checkers=%d" % (len(history.post.fmlas), len(history.post.defs), len(axioms.fmlas), len(axioms.defs), len(filter_fcs(fcs))))
-        res = history.satisfy(axioms,gmc,filter_fcs(fcs))
-        if res is not None and diagnose.get():
-            show_counterexample(ag,post,res)
+        history.satisfy(axioms,gmc,filter_fcs(fcs))
     return not any(fc.failed for fc in fcs)
 
 def convert_postconds(state,postconds):
@@ -540,8 +570,20 @@ def check_conjs_in_state(mod,ag,post,indent=8,pcs=[],derived=False,using_literal
         checkers.append(ConjChecker(c,indent))
     return check_fcs_in_state(mod,ag,post,checkers)
 
-def check_safety_in_state(mod,ag,post,report_pass=True):
-    return check_fcs_in_state(mod,ag,post,[Checker(lg.Or(),report_pass=report_pass)])
+def check_safety_in_state(mod,ag,post,report_pass=True,name='trace'):
+    checker = Checker(lg.Or(),report_pass=report_pass)
+    checker.trace_name = name
+    return check_fcs_in_state(mod,ag,post,[checker])
+
+def guarantee_trace_name(action):
+    name = guarantee_name(action)
+    if name is not None:
+        return name
+    location = getattr(action,'lineno',None)
+    if location is not None and location.line:
+        stem = os.path.splitext(os.path.basename(str(location.filename)))[0]
+        return 'assert_{}_{}'.format(stem or 'assert',location.line)
+    return 'assert'
 
 opt_summary = iu.BooleanParameter("summary",False)
 
@@ -727,9 +769,13 @@ def check_isolate(trace_hook = None):
                 print('')
 
         if mod.initializers:
-            guarantees = [sub for sub in action.iter_subactions()
-                          if isinstance(sub,(act.AssertAction,act.Ranking))
-                          for action in mod.initializers]
+            if opt_trace_dir.get():
+                guarantees = [sub for _,initializer in mod.initializers for sub in initializer.iter_subactions()
+                              if isinstance(sub,(act.AssertAction,act.Ranking))]
+            else:
+                guarantees = [sub for sub in action.iter_subactions()
+                              if isinstance(sub,(act.AssertAction,act.Ranking))
+                              for _ in mod.initializers]
             if check_lineno is not None:
                 guarantees = [sub for sub in guarantees if sub.lineno == check_lineno]
             guarantees = [x for x in guarantees if is_guarantee_mod_unprovable(x)]
@@ -737,9 +783,20 @@ def check_isolate(trace_hook = None):
             if guarantees and not unprovable:
                 print("\n    Any assertions in initializers must be checked", end=' ')
                 if check:
-                    ag = ivy_art.AnalysisGraph(initializer=lambda x:None)
-                    fail = itp.State(expr = itp.fail_expr(ag.states[0].expr))
-                    check_safety_in_state(mod,ag,fail)
+                    if opt_trace_dir.get():
+                        old_checked_assert = act.checked_assert.get()
+                        try:
+                            for guarantee in guarantees:
+                                act.checked_assert.value = guarantee.lineno
+                                ag = ivy_art.AnalysisGraph(initializer=lambda x:None)
+                                fail = itp.State(expr=itp.fail_expr(ag.states[0].expr))
+                                check_safety_in_state(mod,ag,fail,name=guarantee_trace_name(guarantee))
+                        finally:
+                            act.checked_assert.value = old_checked_assert
+                    else:
+                        ag = ivy_art.AnalysisGraph(initializer=lambda x:None)
+                        fail = itp.State(expr=itp.fail_expr(ag.states[0].expr))
+                        check_safety_in_state(mod,ag,fail,name=guarantee_trace_name(guarantees[0]))
 
 
         checked_actions = set(get_checked_actions())
@@ -865,7 +922,7 @@ def check_isolate(trace_hook = None):
                                with itp.EvalContext(check=False):
                                    post = ag.execute(action,prestate=pre)
                                fail = itp.State(expr = itp.fail_expr(post.expr))
-                               if not check_safety_in_state(mod,ag,fail,report_pass=False):
+                               if not check_safety_in_state(mod,ag,fail,report_pass=False,name=guarantee_trace_name(sub)):
                                    some_failed = True
                                    break
                         if not some_failed:
@@ -1172,6 +1229,14 @@ def start():
 
     with im.Module():
         with utl.ErrorPrinter():
+            if opt_trace_dir.get():
+                written_trace_names.clear()
+                try:
+                    os.mkdir(opt_trace_dir.get())
+                except FileExistsError:
+                    raise iu.IvyError(None,'trace_dir "{}" already exists'.format(opt_trace_dir.get()))
+                except OSError as error:
+                    raise iu.IvyError(None,'cannot create trace directory: {}'.format(error))
             if opt_ivy_stats.get():
                 print(" +++ IVY_STATS reading in source file", sys.argv[1], " ...")
             src_file_read_start_time = time.time() 

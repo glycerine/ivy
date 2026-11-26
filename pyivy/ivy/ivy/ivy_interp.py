@@ -161,6 +161,13 @@ class State(object):
     def to_formula(self):
         return self.clauses.to_formula()
 
+    def string_to_formula(self,text):
+        with self.domain.sig.copy():
+            for symbol in used_symbols_clauses(self.clauses):
+                if not isinstance(symbol.sort,EnumeratedSort) and not symbol.is_numeral():
+                    add_symbol(symbol.name,symbol.sort)
+            return to_formula(text)
+
 class EvalContext(object):
     """ Context Manager for evaluating states and actions. """
     def __init__(self,check=True):
