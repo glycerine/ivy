@@ -123,3 +123,24 @@ func TestSaucyOnSmallDesignLikeNative(t *testing.T) {
 		}
 	}
 }
+
+// Native: abc -c "read s1494.blif; strash; irws; print_stats" gives
+// lat = 117, and = 599. Ivy_NodeRewriteSeq re-prepares the best subgraph
+// with the best cut's leaves and latches; the port kept those of the last
+// cut evaluated with the shared subgraph and overstated the gain.
+func TestIrwsOnS1494LikeNative(t *testing.T) {
+	out := runScript(t, "read test_vectors/seq/s1494.blif; strash; irws; print_stats")
+	if got := statsLine(out); !strings.Contains(got, "lat =  117") || !strings.Contains(got, "and =    599") {
+		t.Fatalf("irws on s1494: %q", got)
+	}
+}
+
+// Native gives lat = 17, and = 136 on s713. Ivy_GraphToNetworkSeqCountSeq
+// stops walking a fanin's latches once one is not in the table; the port
+// kept going and built a latch ghost from the missing (nil) node.
+func TestIrwsOnS713LikeNative(t *testing.T) {
+	out := runScript(t, "read test_vectors/seq/s713.blif; strash; irws; print_stats")
+	if got := statsLine(out); !strings.Contains(got, "lat =   17") || !strings.Contains(got, "and =    136") {
+		t.Fatalf("irws on s713: %q", got)
+	}
+}

@@ -84,6 +84,8 @@ func ivyNodeRewriteSeq(p *Ivy_Man_t, manager *rwt.Rwt_Man_t, root *Ivy_Obj_t, us
 	var bestFanins []any
 	var bestTruth uint16
 	var bestCompl bool
+	var bestCut *Ivy_Cut_t
+	var bestPermutation []byte
 	for cutIndex := int32(1); cutIndex < store.nCuts; cutIndex++ {
 		cut := &store.pCuts[cutIndex]
 		if cut.nSize != 4 {
@@ -143,6 +145,7 @@ func ivyNodeRewriteSeq(p *Ivy_Man_t, manager *rwt.Rwt_Man_t, root *Ivy_Obj_t, us
 			gain := nodesSaved - added
 			if gain > bestGain {
 				bestGain, bestGraph, bestFanins, bestTruth = gain, graph, append([]any(nil), fanins...), truth
+				bestCut, bestPermutation = cut, permutation
 				bestCompl = phase&(1<<4) != 0
 				if rwt.Rwt_IsComplement(candidate) != 0 {
 					bestCompl = !bestCompl
@@ -154,6 +157,12 @@ func ivyNodeRewriteSeq(p *Ivy_Man_t, manager *rwt.Rwt_Man_t, root *Ivy_Obj_t, us
 	if bestGain < 0 || bestGraph == nil || (bestGain == 0 && useZeroCost == 0) {
 		return -1
 	}
+	// The subgraph is shared by a class and later cuts overwrote its leaves
+	// and latches: copy the best cut's back, as Ivy_GraphPrepare does here.
+	for i, fanin := range bestFanins {
+		dec.Dec_GraphSetLeafFunc(bestGraph, int32(i), fanin)
+	}
+	ivyGraphPrepareSeq(bestGraph, bestCut, bestPermutation)
 	rwt.Rwt_ManStoreBest(manager, bestGraph, bestCompl, bestFanins, bestTruth, bestGain, useZeroCost != 0)
 	return bestGain
 }
@@ -471,10 +480,8 @@ func ivyGraphNodeSignal(graph *dec.Dec_Graph_t, index int32) *Ivy_Obj_t {
 }
 
 func ivyGraphCountLatches(p *Ivy_Man_t, signal *Ivy_Obj_t, count int32) *Ivy_Obj_t {
-	if signal == nil {
-		return nil
-	}
-	for i := int32(0); i < count; i++ {
+	// as Ivy_GraphToNetworkSeqCountSeq: stop once a latch is not in the table
+	for i := int32(0); signal != nil && i < count; i++ {
 		complemented := Ivy_IsComplement(signal)
 		signal = Ivy_TableLookup(p, Ivy_ObjCreateGhost(p, Ivy_Regular(signal), nil, IVY_LATCH, IVY_INIT_DC))
 		if signal != nil {

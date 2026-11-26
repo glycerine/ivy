@@ -128,6 +128,8 @@ var nativeSeqScripts = []string{
 	"strash; &get; &sweep; &put",
 	"strash; &get; &lcorr; &put",
 	"strash; &get; &fraig; &put",
+	"strash; irws",
+	"strash; irws -z",
 }
 
 const nativeSeqStatsFile = "test_vectors/native_seq_stats.txt"

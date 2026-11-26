@@ -11,6 +11,8 @@ s1494.blif|strash; dc2; scorr; dretime=i/o =    8/   19  lat =    6  and =    54
 s1494.blif|strash; dretime=i/o =    8/   19  lat =    6  and =    673  lev = 15
 s1494.blif|strash; fraig -r=i/o =    8/   19  lat =    6  and =    673  lev = 15
 s1494.blif|strash; if -K 4; mfs=i/o =    8/   19  lat =    6  nd =   257  edge =    903  aig  =   790  lev = 6
+s1494.blif|strash; irws=i/o =    8/   19  lat =  117  and =    599  lev = 22
+s1494.blif|strash; irws -z=i/o =    8/   19  lat =  126  and =    621  lev = 22
 s1494.blif|strash; lcorr=i/o =    8/   19  lat =    6  and =    673  lev = 15
 s1494.blif|strash; retime -M 4=i/o =    8/   19  lat =    7  nd =   673  edge =   1346  cube =   673  lev = 14
 s1494.blif|strash; scleanup=i/o =    8/   19  lat =    6  and =    673  lev = 15
@@ -29,6 +31,8 @@ s27.blif|strash; dc2; scorr; dretime=i/o =    4/    1  lat =    3  and =      7 
 s27.blif|strash; dretime=i/o =    4/    1  lat =    3  and =      8  lev =  5
 s27.blif|strash; fraig -r=i/o =    4/    1  lat =    3  and =      8  lev =  5
 s27.blif|strash; if -K 4; mfs=i/o =    4/    1  lat =    3  nd =     6  edge =     20  aig  =    14  lev = 2
+s27.blif|strash; irws=i/o =    4/    1  lat =    3  and =      7  lev =  5
+s27.blif|strash; irws -z=i/o =    4/    1  lat =    3  and =      7  lev =  4
 s27.blif|strash; lcorr=i/o =    4/    1  lat =    3  and =      8  lev =  5
 s27.blif|strash; retime -M 4=i/o =    4/    1  lat =    3  nd =     9  edge =     17  cube =     9  lev = 5
 s27.blif|strash; scleanup=i/o =    4/    1  lat =    3  and =      8  lev =  5
@@ -47,6 +51,8 @@ s713.blif|strash; dc2; scorr; dretime=i/o =   35/   23  lat =   14  and =     98
 s713.blif|strash; dretime=i/o =   35/   23  lat =   17  and =    160  lev = 25
 s713.blif|strash; fraig -r=i/o =   35/   23  lat =   19  and =    160  lev = 25
 s713.blif|strash; if -K 4; mfs=i/o =   35/   23  lat =   19  nd =    79  edge =    237  aig  =   183  lev = 9
+s713.blif|strash; irws=i/o =   35/   23  lat =   17  and =    136  lev = 26
+s713.blif|strash; irws -z=i/o =   35/   23  lat =   19  and =    143  lev = 27
 s713.blif|strash; lcorr=i/o =   35/   23  lat =   14  and =    123  lev = 19
 s713.blif|strash; retime -M 4=i/o =   35/   23  lat =   19  nd =   164  edge =    324  cube =   164  lev = 25
 s713.blif|strash; scleanup=i/o =   35/   23  lat =   14  and =    123  lev = 19
