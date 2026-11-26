@@ -27,6 +27,9 @@ type Manager struct {
 	fanouts    map[int][]int
 	ranks      map[int]int
 	lastValues []bool
+	// scratch for refineCounterexample, reused across counterexamples
+	cexVisited []bool
+	inputIndex []int32
 	random     randomSource
 	stats      Statistics
 }

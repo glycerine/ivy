@@ -102,13 +102,24 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 		if m.random == nil {
 			m.random = aig.NewAigRandomSource()
 		}
-		values = make([]bool, len(m.graph.Nodes()))
-		visited := make([]bool, len(values))
-		values[0], visited[0] = true, true
-		inputIndex := make(map[int]int, m.graph.InputCount())
-		for i, input := range m.graph.Inputs() {
-			inputIndex[input.NodeID()] = i
+		// The previous values are replaced wholesale, so reuse their storage.
+		nodes := len(m.graph.Nodes())
+		if len(m.lastValues) == nodes {
+			values = m.lastValues
+			clear(values)
+		} else {
+			values = make([]bool, nodes)
 		}
+		if len(m.cexVisited) != nodes {
+			m.cexVisited = make([]bool, nodes)
+			m.inputIndex = make([]int32, nodes)
+			for i, input := range m.graph.Inputs() {
+				m.inputIndex[input.NodeID()] = int32(i)
+			}
+		}
+		visited, inputIndex := m.cexVisited, m.inputIndex
+		clear(visited)
+		values[0], visited[0] = true, true
 		var simulate func(aig.Edge, bool) bool
 		simulate = func(edge aig.Edge, solved bool) bool {
 			id := edge.NodeID()
@@ -164,7 +175,7 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 		values = simulateAssignment(m.graph, m.order, inputs)
 		m.lastValues = values
 	}
-	refined := [][]aig.Edge{}
+	refined := make([][]aig.Edge, 0, len(m.classes.groups)+16)
 	for _, group := range m.classes.groups {
 		if tfoClasses != nil && group[0].NodeID() != 0 && !tfoClasses[group[0].NodeID()] {
 			refined = append(refined, group)
