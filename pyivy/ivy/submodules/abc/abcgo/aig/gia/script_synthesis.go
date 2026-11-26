@@ -108,15 +108,22 @@ func Gia_ManAigSyn4(p *Gia_Man_t, verbose, veryVerbose int32) *Gia_Man_t {
 		Gia_ManTransferTiming(q, p)
 		return q
 	}
+	// Like ABC, report statistics after every stage when verbose.
+	stats := func(g *Gia_Man_t) {
+		if verbose != 0 {
+			Gia_ManPrintStats(g, nil)
+		}
+	}
 	q := Gia_ManAreaBalance(p, 0, util.ABC_INFINITY, veryVerbose, 0)
+	stats(q)
 	for _, size := range []int32{7, 5} {
 		pars.NLutSize = size
 		q = Jf_ManPerformMapping(q, &pars)
+		stats(q)
 		q = Gia_ManPerformFx(q, util.ABC_INFINITY, 0, 0, veryVerbose, 0)
+		stats(q)
 		q = Gia_ManAreaBalance(q, 0, util.ABC_INFINITY, veryVerbose, 0)
-		if verbose != 0 {
-			Gia_ManPrintStats(q, nil)
-		}
+		stats(q)
 	}
 	return q
 }

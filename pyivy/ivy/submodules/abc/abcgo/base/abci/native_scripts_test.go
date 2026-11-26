@@ -50,6 +50,7 @@ var nativeScripts = []string{
 	"&get; &st; &synch2; &put",
 	"&get; &syn2; &put",
 	"&get; &syn3; &put",
+	"&get; &syn4; &put",
 	"if -K 6; mfs",
 	"if -K 6; mfs -r",
 	"&get; &if -K 6; &mfs; &put",

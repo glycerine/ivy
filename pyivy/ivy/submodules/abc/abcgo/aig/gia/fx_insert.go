@@ -3,8 +3,6 @@ package gia
 import (
 	"strings"
 
-	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/opt/dau"
 )
 
 // Gia_ManFxInsert rebuilds a network from extracted cube covers. Small
@@ -19,6 +17,8 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 	}
 	result := Gia_ManStart(p.nObjs)
 	result.pName, result.PSpec = p.pName, p.PSpec
+	// As in Gia_ManFxInsert, DSD balancing reads and updates these levels.
+	result.vLevels = Vec_IntStart(int(6*Gia_ManObjNum(p)/5 + 100))
 	Gia_ManHashStart(result)
 	copies := make([]int32, Vec_IntSize(order))
 	for i := range copies {
@@ -33,7 +33,6 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 	}
 	var fanins []int32
 	leaves := Vec_IntAlloc(16)
-	var levels []int32
 	patterns := [6]uint64{0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xf0f0f0f0f0f0f0f0, 0xff00ff00ff00ff00, 0xffff0000ffff0000, 0xffffffff00000000}
 	for k := int(Gia_ManCiNum(p)); k < Vec_IntSize(order); k++ {
 		owner := Vec_IntEntry(order, k)
@@ -78,8 +77,7 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 				if truth == 0 {
 					truth = ^truth
 				}
-				levels = giaFxExtendLevels(result, levels)
-				lit = giaFxDsdToGiaLevels(result, truth, Vec_IntArray(leaves), levels)
+				lit = Dsm_ManTruthToGia(result, []word{truth}, Vec_IntArray(leaves))
 			} else {
 				var sop strings.Builder
 				for c := int32(0); c < n; c++ {
@@ -126,45 +124,7 @@ func Gia_ManFxInsert(p *Gia_Man_t, cubes *Vec_Wec_t, phases *Vec_Str_t) *Gia_Man
 	return result
 }
 
-// giaFxDsdToGia imports the decomposer's AND graph into the destination's
-// structural hash. The temporary graph uses the opposite constant polarity.
+// giaFxDsdToGia builds truth over leaves in p as Gia_ManFxInsert does.
 func giaFxDsdToGia(p *Gia_Man_t, truth uint64, leaves []int32) int32 {
-	return giaFxDsdToGiaLevels(p, truth, leaves, giaFxExtendLevels(p, nil))
-}
-
-// Extend each newly appended destination node's level once. Source fast
-// extraction maintains the same levels incrementally in its destination.
-func giaFxExtendLevels(p *Gia_Man_t, levels []int32) []int32 {
-	for id := int32(len(levels)); id < p.nObjs; id++ {
-		obj := p.pObjs[id]
-		level := int32(0)
-		if Gia_ObjIsAnd(obj) != 0 {
-			level = 1 + max(levels[Gia_ObjFaninId0(obj, id)], levels[Gia_ObjFaninId1(obj, id)])
-		}
-		levels = append(levels, level)
-	}
-	return levels
-}
-
-func giaFxDsdToGiaLevels(p *Gia_Man_t, truth uint64, leaves, levels []int32) int32 {
-	graph := aig.NewGraph()
-	inputs := make([]aig.Edge, len(leaves))
-	for i, lit := range leaves {
-		inputs[i] = graph.NewInput()
-		aig.Aig_ObjSetLevel(graph, inputs[i], levels[lit>>1])
-	}
-	root := dau.Dsm_ManTruthToGia(graph, []uint64{truth}, inputs, nil)
-	nodes := graph.Nodes()
-	values := make([]int32, len(nodes))
-	values[0] = 1
-	for i, input := range inputs {
-		values[input.NodeID()] = leaves[i]
-	}
-	edge := func(e aig.Edge) int32 { return values[e.NodeID()] ^ int32(uint32(e)&1) }
-	for id, node := range nodes {
-		if node.Kind == aig.And {
-			values[id] = Gia_ManHashAnd(p, edge(node.Fanins[0]), edge(node.Fanins[1]))
-		}
-	}
-	return edge(root)
+	return Dsm_ManTruthToGia(p, []word{truth}, leaves)
 }

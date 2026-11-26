@@ -8,6 +8,7 @@ add32.aig|&get; &st; &put=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|&get; &st; &synch2; &put=i/o =   64/   33  lat =    0  and =    393  lev = 67
 add32.aig|&get; &syn2; &put=i/o =   64/   33  lat =    0  and =    343  lev = 73
 add32.aig|&get; &syn3; &put=i/o =   64/   33  lat =    0  and =    314  lev = 93
+add32.aig|&get; &syn4; &put=i/o =   64/   33  lat =    0  and =    314  lev = 63
 add32.aig|balance=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|dc2=i/o =   64/   33  lat =    0  and =    220  lev = 64
@@ -35,6 +36,7 @@ i10.aig|&get; &st; &put=i/o =  257/  224  lat =    0  and =   2675  lev = 50
 i10.aig|&get; &st; &synch2; &put=i/o =  257/  224  lat =    0  and =   1861  lev = 28
 i10.aig|&get; &syn2; &put=i/o =  257/  224  lat =    0  and =   1992  lev = 37
 i10.aig|&get; &syn3; &put=i/o =  257/  224  lat =    0  and =   1918  lev = 39
+i10.aig|&get; &syn4; &put=i/o =  257/  224  lat =    0  and =   1938  lev = 38
 i10.aig|balance=i/o =  257/  224  lat =    0  and =   2396  lev = 37
 i10.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =  257/  224  lat =    0  and =   1833  lev = 36
 i10.aig|dc2=i/o =  257/  224  lat =    0  and =   1834  lev = 36
@@ -62,6 +64,7 @@ mul12.aig|&get; &st; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|&get; &st; &synch2; &put=i/o =   24/   24  lat =    0  and =   1546  lev = 93
 mul12.aig|&get; &syn2; &put=i/o =   24/   24  lat =    0  and =   1444  lev = 96
 mul12.aig|&get; &syn3; &put=i/o =   24/   24  lat =    0  and =   1649  lev =115
+mul12.aig|&get; &syn4; &put=i/o =   24/   24  lat =    0  and =   1763  lev =105
 mul12.aig|balance=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =   24/   24  lat =    0  and =   1020  lev = 83
 mul12.aig|dc2=i/o =   24/   24  lat =    0  and =   1020  lev = 85
@@ -89,6 +92,7 @@ mul8.aig|&get; &st; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|&get; &st; &synch2; &put=i/o =   16/   16  lat =    0  and =    615  lev = 55
 mul8.aig|&get; &syn2; &put=i/o =   16/   16  lat =    0  and =    617  lev = 57
 mul8.aig|&get; &syn3; &put=i/o =   16/   16  lat =    0  and =    678  lev = 70
+mul8.aig|&get; &syn4; &put=i/o =   16/   16  lat =    0  and =    772  lev = 63
 mul8.aig|balance=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =   16/   16  lat =    0  and =    424  lev = 51
 mul8.aig|dc2=i/o =   16/   16  lat =    0  and =    424  lev = 53
@@ -116,6 +120,7 @@ sort16.aig|&get; &st; &put=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|&get; &st; &synch2; &put=i/o =   16/   16  lat =    0  and =    330  lev = 24
 sort16.aig|&get; &syn2; &put=i/o =   16/   16  lat =    0  and =    676  lev = 46
 sort16.aig|&get; &syn3; &put=i/o =   16/   16  lat =    0  and =    523  lev = 41
+sort16.aig|&get; &syn4; &put=i/o =   16/   16  lat =    0  and =    487  lev = 36
 sort16.aig|balance=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|balance; rewrite; refactor; resub; rewrite -z=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|dc2=i/o =   16/   16  lat =    0  and =    466  lev = 37
