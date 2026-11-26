@@ -20,44 +20,88 @@ func kitRemapTruth(out, in []uint32, nVars int32, index func(int) int) {
 		}
 	}
 }
+var kitSwapMasks = [4][3]uint32{
+	{0x99999999, 0x22222222, 0x44444444},
+	{0xC3C3C3C3, 0x0C0C0C0C, 0x30303030},
+	{0xF00FF00F, 0x00F000F0, 0x0F000F00},
+	{0xFF0000FF, 0x0000FF00, 0x00FF0000},
+}
+
+// Kit_TruthSwapAdjacentVars swaps variables v and v+1 with word
+// operations, as kitTruth.c does. out and in may be the same slice.
 func Kit_TruthSwapAdjacentVars(out, in []uint32, nVars, v int32) {
 	if v < 0 || v >= nVars-1 {
 		panic("kit: adjacent truth variable out of range")
 	}
-	mask := 1<<uint(v) | 1<<uint(v+1)
-	kitRemapTruth(out, in, nVars, func(x int) int { return x&^mask | (x>>uint(v)&1)<<uint(v+1) | (x>>uint(v+1)&1)<<uint(v) })
+	nWords := int(Kit_TruthWordNum(nVars))
+	switch {
+	case v < 4:
+		m, shift := kitSwapMasks[v], uint(1)<<uint(v)
+		for i, x := range in[:nWords] {
+			out[i] = x&m[0] | (x&m[1])<<shift | (x&m[2])>>shift
+		}
+	case v == 4:
+		for i := 0; i < nWords; i += 2 {
+			a, b := in[i], in[i+1]
+			out[i] = a&0x0000FFFF | (b&0x0000FFFF)<<16
+			out[i+1] = b&0xFFFF0000 | (a&0xFFFF0000)>>16
+		}
+	default:
+		step := 1 << uint(v-5)
+		for k := 0; k < nWords; k += 4 * step {
+			copy(out[k:k+step], in[k:k+step])
+			copy(out[k+3*step:k+4*step], in[k+3*step:k+4*step])
+			for i := 0; i < step; i++ {
+				out[k+step+i], out[k+2*step+i] = in[k+2*step+i], in[k+step+i]
+			}
+		}
+	}
 }
 func Kit_TruthSwapAdjacentVars2(in, out []uint32, nVars, start int32) {
 	Kit_TruthSwapAdjacentVars(out, in, nVars, start)
 }
+// kitTruthMove is Kit_TruthStretch (shrink false) or Kit_TruthShrink
+// (shrink true): the same sequence of adjacent swaps as kitTruth.c, done
+// on scratch buffers so that in is left unchanged unless returnIn is set.
 func kitTruthMove(out, in []uint32, nVars, total int32, phase uint32, shrink bool, returnIn int32) {
 	if nVars < 0 || total < nVars || total > 30 || bits.OnesCount32(phase) != int(nVars) || phase&^Kit_BitMask(total) != 0 {
 		panic("kit: invalid truth support mapping")
 	}
-	order := make([]int32, 0, total)
-	for v := int32(0); v < total; v++ {
-		if phase&(1<<uint(v)) != 0 {
-			order = append(order, v)
-		}
+	nWords := int(Kit_TruthWordNum(total))
+	var buffer [2 * 64]uint32
+	var a, b []uint32
+	if 2*nWords <= len(buffer) {
+		a, b = buffer[:nWords], buffer[nWords:2*nWords]
+	} else {
+		a, b = make([]uint32, nWords), make([]uint32, nWords)
 	}
-	for v := int32(0); v < total; v++ {
-		if phase&(1<<uint(v)) == 0 {
-			order = append(order, v)
-		}
-	}
-	kitRemapTruth(out, in, total, func(x int) int {
-		old := x &^ int(Kit_BitMask(total))
-		for new, original := range order {
-			if shrink {
-				old |= (x >> uint(new) & 1) << uint(original)
-			} else {
-				old |= (x >> uint(original) & 1) << uint(new)
+	copy(a, in[:nWords])
+	if shrink {
+		next := int32(0)
+		for i := int32(0); i < total; i++ {
+			if phase&(1<<uint(i)) != 0 {
+				for k := i - 1; k >= next; k-- {
+					Kit_TruthSwapAdjacentVars(b, a, total, k)
+					a, b = b, a
+				}
+				next++
 			}
 		}
-		return old
-	})
+	} else {
+		next := nVars - 1
+		for i := total - 1; i >= 0; i-- {
+			if phase&(1<<uint(i)) != 0 {
+				for k := next; k < i; k++ {
+					Kit_TruthSwapAdjacentVars(b, a, total, k)
+					a, b = b, a
+				}
+				next--
+			}
+		}
+	}
+	copy(out[:nWords], a)
 	if returnIn != 0 {
-		Kit_TruthCopy(in, out, total)
+		copy(in[:nWords], a)
 	}
 }
 
