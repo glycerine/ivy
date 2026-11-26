@@ -12,8 +12,9 @@ type ABCFrameState struct {
 	cexVec   any
 	poEquivs any
 	statuses any
-	status   int32
-	frames   int32
+	// frame owns the verification status and frame count (Abc_Frame_t's
+	// Status and nFrames); this view reads and writes them there.
+	frame *Frame
 }
 
 // ReadABCFrameState returns the frame's shared opaque state container.
@@ -21,7 +22,7 @@ func ReadABCFrameState(f *Frame) *ABCFrameState {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	if f.abcState == nil {
-		f.abcState = &ABCFrameState{}
+		f.abcState = &ABCFrameState{frame: f}
 	}
 	return f.abcState
 }
@@ -76,12 +77,14 @@ func (s *ABCFrameState) ReplaceStatuses(v *any) {
 	s.mu.Unlock()
 }
 func (s *ABCFrameState) VerificationStatus() (int32, int32) {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	return s.status, s.frames
+	f := s.frame
+	f.mu.RLock()
+	defer f.mu.RUnlock()
+	return f.Status, f.NFrames
 }
 func (s *ABCFrameState) SetVerificationStatus(status, frames int32) {
-	s.mu.Lock()
-	s.status, s.frames = status, frames
-	s.mu.Unlock()
+	f := s.frame
+	f.mu.Lock()
+	f.Status, f.NFrames = status, frames
+	f.mu.Unlock()
 }
