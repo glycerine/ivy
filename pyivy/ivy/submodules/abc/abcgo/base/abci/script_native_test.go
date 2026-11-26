@@ -20,6 +20,17 @@ var ansiEscape = regexp.MustCompile("\x1b\\[[0-9;]*m")
 // returns its output without color codes. A panic fails the test.
 func runScript(t *testing.T, script string) string {
 	t.Helper()
+	out, status := runScriptStatus(t, script)
+	if status != 0 {
+		t.Fatalf("script %q failed:\n%s", script, out)
+	}
+	return out
+}
+
+// runScriptStatus runs script in a fresh frame and returns its output and
+// exit status; a panic fails the test.
+func runScriptStatus(t *testing.T, script string) (string, int) {
+	t.Helper()
 	previous := base_main.Abc_FrameReadGlobalFrame()
 	frame := base_main.NewFrame()
 	base_main.Abc_FrameSetGlobalFrame(frame)
@@ -53,10 +64,7 @@ func runScript(t *testing.T, script string) string {
 	if panicked != nil {
 		t.Fatalf("script %q panicked: %v\n%s", script, panicked, out.String())
 	}
-	if status != 0 {
-		t.Fatalf("script %q failed:\n%s", script, out.String())
-	}
-	return ansiEscape.ReplaceAllString(out.String(), "")
+	return ansiEscape.ReplaceAllString(out.String(), ""), status
 }
 
 // expectStats checks the final print_stats line against native ABC's.

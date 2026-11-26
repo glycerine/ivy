@@ -218,6 +218,13 @@ func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
 	// Like Abc_NtkAlloc(ABC_NTK_STRASH, ...), a strashed network owns an AIG manager.
 	network.FunctionManager = abc.Abc_AigAlloc(network)
 	network.Spec = string(model.Comment)
+	// As Io_ReadAiger: the last outputs are the constraints.
+	if n := len(model.Constraints); n == 1 {
+		fmt.Printf("Warning: The last output is interpreted as a constraint.\n")
+	} else if n > 1 {
+		fmt.Printf("Warning: The last %d outputs are interpreted as constraints.\n", n)
+	}
+	network.Constraints = int32(len(model.Constraints))
 	network.Data = &aigerNetworkMetadata{
 		comment:  string(model.Comment),
 		badCount: len(model.Bad), constraintCount: len(model.Constraints),

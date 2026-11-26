@@ -43,7 +43,10 @@ func Abc_NtkToDar(n *Network, exors, registers int32) *aig.Graph {
 			}
 		}
 		if dc != 0 {
-			fmt.Printf("Warning: %d registers have don't-care init values; assuming zero.\n", dc)
+			fmt.Printf("Warning: %d registers in this network have don't-care init values.\n", dc)
+			fmt.Printf("The don't-care are assumed to be 0. The result may not verify.\n")
+			fmt.Printf("Use command \"print_latch\" to see the init values of registers.\n")
+			fmt.Printf("Use command \"zero\" to convert or \"init\" to change the values.\n")
 		}
 	}
 	Abc_NtkIncrementTravId(n)
@@ -67,6 +70,7 @@ func Abc_NtkToDar(n *Network, exors, registers int32) *aig.Graph {
 		g.AddOutput(lit)
 	}
 	aig.Aig_ManSetRegNum(g, int32(len(latches)))
+	aig.Aig_ManSetConstrNum(g, n.Constraints) // pMan->nConstrs (set once the COs exist)
 	if registers != 0 {
 		g.FlopNumbers = make([]int32, len(latches))
 		for i := range g.FlopNumbers {

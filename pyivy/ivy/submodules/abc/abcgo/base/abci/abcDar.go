@@ -315,7 +315,7 @@ func Abc_NtkToDarChoices(pNtk *Abc_Ntk_t) *Aig_Man_t {
 	}
 	pMan := aiggraph.NewGraph()
 	pMan.Name, pMan.Spec = pNtk.Name, pNtk.Spec
-	pMan.Assertions = pNtk.Constraints
+	aiggraph.Aig_ManSetConstrNum(pMan, pNtk.Constraints) // pMan->nConstrs, not nAsserts
 	pMan.BarrierBuffers = int32(pNtk.Barriers)
 	abc.Abc_AigConst1(pNtk).Object.Temp = int(pMan.Const1())
 	for i := int32(0); i < abc.Abc_NtkCiNum(pNtk); i++ {
@@ -428,9 +428,9 @@ func Abc_NtkFromAigPhase(pMan *Aig_Man_t) *Abc_Ntk_t {
 		return nil
 	}
 	pNtkNew := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 1)
-	pNtkNew.Constraints = pMan.Assertions
+	pNtkNew.Constraints = aiggraph.Aig_ManConstrNum(pMan)
 	pNtkNew.Barriers = int(pMan.BarrierBuffers)
-	pNtkNew.Name, pNtkNew.Spec = pMan.Name, pMan.Spec
+	// As in abcDar.c, the name and spec are left to the callers.
 	pis := int(pMan.InputCount() - int(pMan.RegisterCount()))
 	pos := int(pMan.OutputCount() - int(pMan.RegisterCount()))
 	if pis < 0 || pos < 0 {
