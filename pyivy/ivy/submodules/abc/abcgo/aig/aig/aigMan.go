@@ -162,6 +162,7 @@ func Aig_ManCoCleanup(p *Graph) int32 {
 		delete(removed, e.NodeID())
 	}
 	for id := range removed {
+		p.unlinkFanins(id)
 		p.markDeleted(id)
 	}
 	p.outputs = keep

@@ -152,6 +152,9 @@ func (g *Graph) valid(e Edge) bool          { return e.NodeID() < len(g.nodes) &
 func (g *Graph) NewInput() Edge {
 	e := Edge(len(g.nodes)) << 1
 	g.nodes = append(g.nodes, Node{Kind: Input, Fanins: [2]Edge{InvalidEdge, InvalidEdge}})
+	if g.fanouts != nil {
+		g.fanouts.ensure(len(g.nodes) - 1)
+	}
 	g.inputs = append(g.inputs, e)
 	g.refreshFanouts()
 	return e
@@ -191,6 +194,7 @@ func (g *Graph) AND(a, b Edge) Edge {
 	g.nodes[a.NodeID()].Refs++
 	g.nodes[b.NodeID()].Refs++
 	g.hash[key] = e
+	g.linkFanins(e.NodeID())
 	g.refreshFanouts()
 	return e
 }
@@ -214,6 +218,7 @@ func (g *Graph) AddOutput(driver Edge) Edge {
 	g.nodes = append(g.nodes, n)
 	g.outputs = append(g.outputs, e)
 	g.node(driver).Refs++
+	g.linkFanins(e.NodeID())
 	g.refreshFanouts()
 	return e
 }

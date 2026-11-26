@@ -29,12 +29,15 @@ func Aig_ObjCreate(p *Graph, ghost *Node) Edge {
 	}
 	e := Edge(len(p.nodes)) << 1
 	n.Refs = 0
+	n.Level, n.Phase = p.levelNew(n), p.phaseNew(n)
 	p.nodes = append(p.nodes, n)
+	for _, fanin := range nodeFanins(n) {
+		p.node(fanin).Refs++
+	}
 	if n.Kind == ExclusiveOr {
 		Aig_TableInsert(p, e)
 	}
-	p.recountReferences()
-	p.recomputeLevels()
+	p.linkFanins(e.NodeID())
 	p.refreshFanouts()
 	return e
 }
@@ -46,6 +49,13 @@ func Aig_ObjConnect(p *Graph, e, a, b Edge) {
 	if (n.Kind == And || n.Kind == ExclusiveOr) && !p.valid(b) {
 		panic("aig: invalid second fanin")
 	}
+	// ABC connects only disconnected objects; the Go API also rewires.
+	for _, fanin := range nodeFanins(*n) {
+		if p.valid(fanin) {
+			Aig_ObjDisconnect(p, e)
+			break
+		}
+	}
 	if n.Kind == And || n.Kind == ExclusiveOr {
 		if a > b {
 			a, b = b, a
@@ -55,8 +65,11 @@ func Aig_ObjConnect(p *Graph, e, a, b Edge) {
 		b = InvalidEdge
 	}
 	n.Fanins = [2]Edge{a, b}
-	p.recountReferences()
-	p.recomputeLevels()
+	for _, fanin := range nodeFanins(*n) {
+		p.node(fanin).Refs++
+	}
+	n.Level, n.Phase = p.levelNew(*n), p.phaseNew(*n)
+	p.linkFanins(e.NodeID())
 	if n.Kind == And || n.Kind == ExclusiveOr {
 		Aig_TableInsert(p, e)
 	}
@@ -102,10 +115,11 @@ func Aig_ObjDelete(p *Graph, e Edge) {
 			}
 		}
 	}
-	if n.Kind == And || n.Kind == ExclusiveOr {
-		table := p.nodeTable(n.Kind)
-		if table[tableKey(n)] == e {
-			delete(table, tableKey(n))
+	// ABC deletes only disconnected objects; release any remaining fanins.
+	for _, fanin := range nodeFanins(*n) {
+		if p.valid(fanin) {
+			Aig_ObjDisconnect(p, e)
+			break
 		}
 	}
 	p.markDeleted(e.NodeID())
@@ -329,6 +343,7 @@ func Aig_ObjReplace(p *Graph, old, replacement Edge, updateLevel int32) {
 		n.Kind = Buffer
 		n.Fanins = [2]Edge{replacement, InvalidEdge}
 		r.Refs++
+		p.linkFanins(old.NodeID())
 	} else {
 		// Move an unused positive node into the old object slot, preserving
 		// the old ID and its fanouts as in Aig_ObjReplace in aigObj.c.
@@ -338,6 +353,7 @@ func Aig_ObjReplace(p *Graph, old, replacement Edge, updateLevel int32) {
 		for _, fanin := range nodeFanins(*n) {
 			p.node(fanin).Refs++
 		}
+		p.linkFanins(old.NodeID())
 		Aig_TableInsert(p, old)
 		Aig_ObjDelete(p, replacement)
 	}
@@ -402,9 +418,63 @@ func (p *Graph) recomputeLevels() {
 		}
 	}
 }
+// Fanouts are maintained incrementally, as in ABC: every connection appends
+// its fanout at the tail of the driver's list. Tests set verifyFanouts to
+// compare the index against a full rebuild after each edit.
+var verifyFanouts bool
+
 func (p *Graph) refreshFanouts() {
-	if p.editDepth == 0 && p.fanouts != nil {
-		p.fanouts.Rebuild(p)
+	if verifyFanouts && p.editDepth == 0 && p.fanouts != nil {
+		p.checkFanouts()
+	}
+}
+
+// linkFanins records the fanouts of node id's fanins (Aig_ObjConnect).
+func (p *Graph) linkFanins(id int) {
+	if p.fanouts == nil {
+		return
+	}
+	p.fanouts.ensure(id)
+	n := p.nodes[id]
+	for pin := 0; pin < fanoutPins(n); pin++ {
+		p.fanouts.add(n.Fanins[pin].NodeID(), id, int32(pin))
+	}
+}
+
+// unlinkFanins removes the fanouts of node id's fanins.
+func (p *Graph) unlinkFanins(id int) {
+	if p.fanouts == nil {
+		return
+	}
+	n := p.nodes[id]
+	for pin := 0; pin < fanoutPins(n); pin++ {
+		p.fanouts.remove(n.Fanins[pin].NodeID(), id, int32(pin))
+	}
+}
+
+// checkFanouts panics unless the index holds exactly the live connections.
+func (p *Graph) checkFanouts() {
+	want := new(FanoutIndex)
+	want.Rebuild(p)
+	for id := range p.nodes {
+		if p.isDeleted(id) {
+			continue
+		}
+		got, exp := map[int32]int{}, map[int32]int{}
+		for _, h := range p.fanouts.Handles(Edge(id) << 1) {
+			got[h]++
+		}
+		for _, h := range want.Handles(Edge(id) << 1) {
+			exp[h]++
+		}
+		if len(got) != len(exp) {
+			panic(fmt.Sprintf("aig: incremental fanouts of %d differ: %v vs %v", id, got, exp))
+		}
+		for h, c := range exp {
+			if got[h] != c {
+				panic(fmt.Sprintf("aig: incremental fanouts of %d differ: %v vs %v", id, got, exp))
+			}
+		}
 	}
 }
 
@@ -450,4 +520,34 @@ func Aig_ObjReplaceInputFanouts(p *Graph, input, replacement Edge) {
 			Aig_ObjReplace(p, e, p.NewXor(fanins[0], fanins[1]), 0)
 		}
 	}
+}
+
+// levelNew is Aig_ObjLevelNew for a node about to be connected.
+func (p *Graph) levelNew(n Node) int {
+	fanins := nodeFanins(n)
+	if len(fanins) == 0 {
+		return n.Level
+	}
+	level := p.node(fanins[0]).Level
+	if len(fanins) == 2 {
+		level = max(level, p.node(fanins[1]).Level) + nodeLevelCost(n.Kind)
+	}
+	return level
+}
+
+// phaseNew is the simulation phase Aig_ObjConnect assigns.
+func (p *Graph) phaseNew(n Node) bool {
+	fanins := nodeFanins(n)
+	if len(fanins) == 0 {
+		return n.Kind == Constant
+	}
+	phase := Aig_ObjPhaseReal(p, fanins[0])
+	if len(fanins) == 2 {
+		if n.Kind == And {
+			phase = phase && Aig_ObjPhaseReal(p, fanins[1])
+		} else {
+			phase = phase != Aig_ObjPhaseReal(p, fanins[1])
+		}
+	}
+	return phase
 }
