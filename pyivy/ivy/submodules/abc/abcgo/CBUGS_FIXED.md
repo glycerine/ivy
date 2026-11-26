@@ -243,3 +243,20 @@ and states how the Go port was verified.
   (`TestNativeDeclaWhenBoxMissesOutputs`) segfaulted before the fix.
 - **Go port:** it panicked ("insufficient rewritten outputs"); same fix
   (`TestDeclaWhenBoxMissesOutputs`), and its time line now uses ABC's format.
+
+## 13. `&deepsyn` crashes when one of its commands fails
+
+- **File:** `src/aig/gia/giaDeep.c`, `Gia_ManDeepSyn` and `Gia_ManDeepSynOne`.
+- **Found:** 2026-11-26, by running every command with default arguments.
+  Without an `abc.rc`, the `compress2rs` alias that `&deepsyn` runs is
+  unknown.
+- **Bug:** `Gia_ManDeepSynOne` returns NULL when a command fails, and
+  `Gia_ManDeepSyn` passed it to `Gia_ManAndNum`. The failure path also left
+  the frame in batch mode and leaked the best AIG.
+- **Fix:** `Gia_ManDeepSyn` stops and returns the best AIG so far;
+  `Gia_ManDeepSynOne` restores the batch mode and frees its copy.
+- **Test:** `abcgo/base/abci/deepsyn_failure_test.go`
+  (`TestNativeDeepSynSurvivesFailedCommand`) segfaulted before the fix.
+- **Go port:** it returned nil, so the command failed and left the partial
+  result of the failed script as the current AIG; it now keeps the best AIG
+  as ABC does (`TestDeepSynSurvivesFailedCommand`).

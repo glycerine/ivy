@@ -79,6 +79,7 @@ Gia_Man_t * Gia_ManDeepSynOne( int nNoImpr, int TimeOut, int nAnds, int Seed, in
             if ( Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) )
             {
                 Abc_Print( 1, "Something did not work out with the command \"%s\".\n", Command );
+                Gia_ManStop( pNew );
                 return NULL;
             }
         }
@@ -88,6 +89,8 @@ Gia_Man_t * Gia_ManDeepSynOne( int nNoImpr, int TimeOut, int nAnds, int Seed, in
             if ( Cmd_CommandExecute(Abc_FrameGetGlobalFrame(), Command) )
             {
                 Abc_Print( 1, "Something did not work out with the command \"%s\".\n", Command );
+                Abc_FrameSetBatchMode( 0 );
+                Gia_ManStop( pNew );
                 return NULL;
             }
             Abc_FrameSetBatchMode( 0 );
@@ -147,6 +150,8 @@ Gia_Man_t * Gia_ManDeepSyn( Gia_Man_t * pGia, int nIters, int nNoImpr, int TimeO
     {
         Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), Gia_ManDup(pInit) );
         pThis = Gia_ManDeepSynOne( nNoImpr, TimeOut, nAnds, Seed+i, fUseTwo, fVerbose );
+        if ( pThis == NULL ) // a command failed; keep the best so far
+            break;
         if ( Gia_ManAndNum(pBest) > Gia_ManAndNum(pThis) ) 
         {
             Gia_ManStop( pBest );

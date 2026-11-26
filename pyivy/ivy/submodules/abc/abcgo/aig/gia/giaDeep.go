@@ -104,9 +104,8 @@ func Gia_ManDeepSyn(g *Gia_Man_t, iters, noImprovement, timeout, goal, seed, use
 	for i := int32(0); i < iters; i++ {
 		abcmain.Abc_FrameUpdateGia(frame, Gia_ManDup(initial))
 		next := Gia_ManDeepSynOne(noImprovement, timeout, goal, seed+i, useTwo, verbose)
-		if next == nil {
-			Gia_ManStop(best)
-			return nil
+		if next == nil { // a command failed; keep the best so far (CBUGS_FIXED.md #13)
+			break
 		}
 		if Gia_ManAndNum(best) > Gia_ManAndNum(next) {
 			Gia_ManStop(best)
