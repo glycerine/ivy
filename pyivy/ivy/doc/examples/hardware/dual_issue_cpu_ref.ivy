@@ -1,0 +1,1327 @@
+#lang ivy1.8
+
+# A very simple two-stage pipelined processor.
+#
+# In this version, we create an unpipelined reference model
+# (essentially an ISA defininition) and show the our simple two-stage
+# pipelined version implementes it. This would be be easy to do in a
+# direct way using invariants and simple auxiliary variables. However,
+# we will do the specification and verification in a more general way
+# that we cn apply to mode complex processor designs.
+#
+# This example is intended to illustrate a design pattern we will call
+# 'reference tagging' that lets us break down the proof of large designs
+# into isolated proofs of its components. 
+
+# Instruction encoding (16 bits):
+#
+#     [15:13] opcode   [12:10] rd   [9:7] ra   [6:4] rb   [7:0] imm/target
+#
+#   opcode 0  NOP
+#          1  ADD  rd, ra, rb     rf[rd] := rf[ra] + rf[rb]
+#          2  SUB  rd, ra, rb     rf[rd] := rf[ra] - rf[rb]
+#          3  LI   rd, imm        rf[rd] := zero_extend(imm8)
+#          4  LD   rd, [ra]       rf[rd] := mem[ rf[ra] ]
+#          5  ST   [ra], rb       mem[ rf[ra] ] := rf[rb]
+#          6  BEQZ ra, target     if rf[ra] == 0 then pc := target
+#          7  FLUSH [ra]          make prior writes to mem[ rf[ra] ] visible to fetch
+#
+# Memory is now *unified*: instructions are fetched from the same `mem` that
+# LD/ST access (there is no separate `imem`). Because the implementation caches
+# instructions and data separately (I-cache and D-cache) and the caches are not
+# kept coherent, a store to an address followed by an instruction fetch of that
+# address can read a stale instruction. The ISA models this: a per-address dirty
+# bit `ddirty(A)` is set by ST and cleared by FLUSH, and executing an instruction
+# at a dirty address drives the ISA into a sticky `error` state, after which the
+# implementation is no longer required to match the reference.
+
+# The implementation:
+#
+# Pipeline stages:
+#   F (fetch)   : read the instruction at PC from instruction memory.
+#   X (execute) : decode and execute the instruction fetched last cycle,
+#                 reading/writing the register file and data memory and
+#                 redirecting the PC on a taken branch.
+#
+# The pipeline register between F and X is (ir, ir_valid). Operands are read
+# and results written in the same stage (X), so there are no data hazards. A
+# taken conditional branch is resolved in X, so the instruction fetched in its
+# shadow must be squashed -- a one-cycle bubble. That is the classic control
+# hazard.
+#
+
+include order   # ordered abstract types
+include idcache # the reusable I/D-cache + main-memory module
+
+# Word (data / instruction), address (PC / memory), and register-index types.
+
+type word
+interpret word -> bv[16]
+type addr
+interpret addr -> bv[8]
+type reg
+interpret reg -> bv[3]
+type opc
+interpret opc -> bv[3]
+
+# The cache-line geometry (I-cache two-word lines, D-cache lines, tags) lives
+# inside the idcache module now; the CPU only needs `bit` (an idcache type
+# parameter), and idc exposes both fetch lanes for dual-issue fetch.
+type bit
+interpret bit -> bv[1]
+
+# The clock: one exported action driven by the environment.
+
+export action posedge
+
+# Initial memory contents. These are immutable, uninterpreted functions (they
+# are never assigned), so they represent an arbitrary-but-fixed initial memory
+# image. Both the implementation (cpu) and the reference model (trace.arch)
+# initialize their memories from this shared source. Sharing the source (rather
+# than having the reference read the cpu's memory at init) is what lets the two
+# start in the same state without a spurious interference: because posedge
+# writes cpu.mem, having trace's initializer observe cpu.mem would make Ivy
+# report that posedge can interfere with trace's initialization -- even though
+# initialization always completes before any posedge.
+
+function init_mem(A:addr) : word     # initial (unified) memory contents = the program
+
+# The branch predictor is an external module: the pipeline receives its
+# "predicted taken" output as an input (the `predicted_taken` wire below).
+# Correctness must hold for *any* prediction (a good predictor only affects
+# performance, not correctness), so the input is left unconstrained. Later we
+# will implement a predictor as a separate isolate driving this input.
+
+# This is the isa model. It is a specification-only isolate that
+# provides a single action `step`. It has a number of functions
+# that reflect intermediate values in the instruction execution.
+# These can be used as references in verifying implmentations
+# compositionally. The isa model is written as a module so we can
+# re-use it if needed. 
+
+module isa_model(init_mem) = {
+
+    var pc : addr                 # program counter
+    var rf(R:reg) : word          # register file
+    var mem(A:addr) : word        # unified memory (instructions and data)
+    var ddirty(A:addr) : bool     # A has been written since the last FLUSH of A
+    var error : bool              # an instruction was fetched from a dirty address
+
+    # Temporary variables computed during execution, but not holding state
+
+    var fetched : word
+
+    # ---- decode of the X-stage instruction (combinational) ----
+
+    var opcode : opc
+    var rd : reg
+    var ra : reg
+    var rb : reg
+    var target : addr            # low 8 bits: branch target or immediate
+
+    # ---- operand fetch (combinational) ----
+
+    var a_val : word
+    var b_val : word
+    var mem_addr : addr          # address for LD/ST: low 8 bits of rf[ra]
+
+    # ---- branch decision (BEQZ) ----
+
+    var take_branch : bool
+
+    # ---- ALU result (ADD/SUB/LI; 0 otherwise) ----
+    var res : word
+
+    # ---- reset ----
+
+    after init {
+        pc := 0;
+        rf(R) := 0;            # zero the register file
+        mem(A) := init_mem(A);
+        ddirty(A) := false;    # nothing has been written yet
+        error := false;
+    }
+
+    # Compute the temporary variables
+
+    action prepare = {
+        fetched := mem(pc);
+
+        # ---- decode of the X-stage instruction (combinational) ----
+
+        opcode := fetched<<15:13>>;
+        rd := fetched<<12:10>>;
+        ra := fetched<<9:7>>;
+        rb := fetched<<6:4>>;
+        target := fetched<<7:0>>;     # low 8 bits: branch target or immediate
+
+        # ---- operand fetch ----
+
+        a_val := rf(ra);
+        b_val := rf(rb);
+        mem_addr  := a_val<<7:0>>;    # address for LD/ST: low 8 bits of rf[ra]
+
+        # ---- branch decision (BEQZ) ----
+
+        take_branch := (opcode = 6) & (a_val = 0);
+
+        # ---- ALU result, recorded so the pipeline invariants can compare the
+        # latched result directly instead of recomputing a_val +/- b_val ----
+        res := (a_val + b_val if opcode = 1 else
+               (a_val - b_val if opcode = 2 else
+               ((0:addr) :: target if opcode = 3 else 0)));
+    }
+
+    # Update the architectural state. The temporary variables were computed by
+    # `prepare` in the pre-state, so unlike the earlier defined-function version
+    # this needs no `old`: `mem_addr`, `target` and `take_branch` are plain
+    # variables holding the pre-state values, unaffected by the stores below.
+
+    action step = {
+
+        # Fetch coherence: executing an instruction at an address written since
+        # its last flush reads a stale instruction. The ISA records this by
+        # entering a sticky error state (it is never cleared once set). This runs
+        # before any store below, and `pc`/`ddirty` are untouched, so it reads
+        # the pre-state dirty bit at the pre-state pc, as intended.
+        if ddirty(pc) {
+            error := true;
+        }
+
+        # Execute / write back
+        if opcode = 1 {                          # ADD
+            rf(rd) := a_val + b_val
+        } else if opcode = 2 {                   # SUB
+            rf(rd) := a_val - b_val
+        } else if opcode = 3 {                   # LI
+            rf(rd) := (0:addr) :: target
+        } else if opcode = 4 {                   # LD
+            rf(rd) := mem(mem_addr)
+        } else if opcode = 5 {                   # ST
+            mem(mem_addr) := b_val;
+            ddirty(mem_addr) := true;            # the written line is now dirty
+        } else if opcode = 7 {                   # FLUSH
+            ddirty(mem_addr) := false;           # writes to this line are now visible
+        }
+
+        # Advance the PC
+        if take_branch {
+            pc := target;          # redirect to the branch target
+        } else {
+            pc := pc + 1;
+        }
+    }
+}
+
+# The 'trace' is a reference model that stores the sequence of isa
+# states resulting from program execution. It is a specification-only
+# isolate. The trace model is a bit of boilerplate we need to write to
+# help with specificaiton and verification. Probably this can be
+# generated from the isa model using AI. 
+
+# This is the index type of the instruction sequence
+instance tag : unbounded_sequence
+
+isolate trace = {
+
+    specification {
+        
+        # This is the isa model
+
+        instance arch : isa_model(init_mem)
+
+
+        # The value type of the instruction sequence
+
+        type state_t = struct {
+
+            # The architectural state
+
+            pc : addr,                 # program counter
+            rf(R:reg) : word,          # register file
+            mem(A:addr) : word,        # unified memory (instructions and data)
+            ddirty(A:addr) : bool,     # per-address dirty bit
+            error : bool,              # sticky fetch-coherence error
+
+            # The intermediate values
+
+            fetched : word, 
+            opcode : opc,
+            rd : reg,
+            ra : reg,
+            rb : reg,
+            target : addr,            # low 8 bits: branch target or immediate
+            a_val : word,
+            b_val : word,
+            mem_addr  : addr,          # address for LD/ST: low 8 bits of rf[ra]
+            take_branch : bool,
+            res : word                 # ALU result (ADD/SUB/LI; 0 otherwise)
+        }
+            
+        var now : tag   # the current length of the trace
+        var st(T:tag) : state_t 
+
+        # This internal procedure captures the current arch state 
+
+        action current returns(res:state_t) = {
+            res.pc := arch.pc;
+            res.rf(R:reg) := arch.rf(R:reg);
+            res.mem(A:addr) := arch.mem(A:addr);
+            res.ddirty(A:addr) := arch.ddirty(A:addr);
+            res.error := arch.error;
+
+            # The intermediate values
+
+            res.fetched := arch.fetched;
+            res.opcode := arch.opcode;
+            res.rd := arch.rd;
+            res.ra := arch.ra;
+            res.rb := arch.rb;
+            res.target := arch.target;
+            res.a_val := arch.a_val;
+            res.b_val := arch.b_val;
+            res.mem_addr  := arch.mem_addr ;
+            res.take_branch := arch.take_branch;
+            res.res := arch.res;
+        }
+
+        # Initalization computes the temporary variable values in the initial ISA
+        # state and records this state in the trace.
+
+        after init {
+            now := 0;
+            arch.prepare;
+            st(now) := current;
+        }
+
+        # This externally called procedure steps the isa and records the new
+        # state. Notice that tag is an abstract sequence type that defines only
+        # zero and next, so we write `now.next` instead of `now + 1`. After
+        # stepping we compute the temporary variables in the new state, before
+        # adding it to the trace, so the temporary values in every trace entry
+        # correspond correctly to that entry's architectural state.
+
+        action step = {
+            arch.step;
+            arch.prepare;
+            now := now.next;
+            st(now) := current;
+        }
+
+        invariant st(now).pc = arch.pc
+        invariant st(now).rf(R:reg) = arch.rf(R:reg)
+        invariant st(now).mem(A:addr) = arch.mem(A:addr)
+        invariant st(now).ddirty(A:addr) = arch.ddirty(A:addr)
+        invariant st(now).error = arch.error
+
+        # The intermediate values
+        
+        invariant st(now).fetched = arch.fetched
+        invariant st(now).opcode = arch.opcode
+        invariant st(now).rd = arch.rd
+        invariant st(now).ra = arch.ra
+        invariant st(now).rb = arch.rb
+        invariant st(now).target = arch.target
+        invariant st(now).a_val = arch.a_val
+        invariant st(now).b_val = arch.b_val
+        invariant st(now).mem_addr  = arch.mem_addr
+        invariant st(now).take_branch = arch.take_branch
+        invariant st(now).res = arch.res
+
+        # The invariants above only pin the *most recent* recorded state,
+        # st(now). But the pipeline implementation compares a lagging stage
+        # against an *earlier* trace entry (st(now-1)). So we must also specify
+        # that every recorded entry is a faithful ISA state, and that
+        # consecutive entries are related by one ISA step. This is the "trace
+        # is a valid execution history" boilerplate.
+
+        # (a) Every recorded state's intermediate values are the correct decode
+        #     of its own architectural state. (For st(now) this follows from the
+        #     invariants above and arch's definitions; here we extend it to all
+        #     recorded entries, which never change once written.)
+
+        invariant T <= now -> st(T).fetched = st(T).mem(st(T).pc)
+        invariant T <= now -> st(T).opcode = (st(T).fetched)<<15:13>>
+        invariant T <= now -> st(T).rd = (st(T).fetched)<<12:10>>
+        invariant T <= now -> st(T).ra = (st(T).fetched)<<9:7>>
+        invariant T <= now -> st(T).rb = (st(T).fetched)<<6:4>>
+        invariant T <= now -> st(T).target = (st(T).fetched)<<7:0>>
+        invariant T <= now -> st(T).a_val = st(T).rf(st(T).ra)
+        invariant T <= now -> st(T).b_val = st(T).rf(st(T).rb)
+        invariant T <= now -> st(T).mem_addr = (st(T).a_val)<<7:0>>
+        invariant T <= now -> st(T).take_branch = ((st(T).opcode = 6) & (st(T).a_val = 0))
+        invariant T <= now -> st(T).res = (st(T).a_val + st(T).b_val if st(T).opcode = 1 else (st(T).a_val - st(T).b_val if st(T).opcode = 2 else ((0:addr) :: st(T).target if st(T).opcode = 3 else 0)))
+
+        # (b) Consecutive recorded states are related by one step of the ISA.
+        #     If st(T) precedes st(U) (U = T+1, U <= now), then st(U) is the
+        #     result of executing st(T)'s instruction. This mirrors arch.step.
+
+        invariant (tag.succ(T,U) & U <= now) ->
+                      st(U).pc = (st(T).target if st(T).take_branch else st(T).pc + 1)
+
+        # error is sticky, and is set when st(T)'s instruction is fetched from a
+        # dirty address (ddirty(pc) in st(T)).
+        invariant (tag.succ(T,U) & U <= now) ->
+                      st(U).error = (st(T).error | st(T).ddirty(st(T).pc))
+
+        # ddirty(A): set by a ST to A, cleared by a FLUSH of A, else unchanged.
+        invariant [tr_ddirty] (tag.succ(T,U) & U <= now) ->
+                      st(U).ddirty(A) =
+                          (true  if (st(T).opcode = 5 & A = st(T).mem_addr) else
+                          (false if (st(T).opcode = 7 & A = st(T).mem_addr) else
+                           st(T).ddirty(A)))
+        invariant (tag.succ(T,U) & U <= now) ->
+                      st(U).mem(A) = (st(T).b_val if (st(T).opcode = 5 & A = st(T).mem_addr)
+                                      else st(T).mem(A))
+        invariant (tag.succ(T,U) & U <= now) ->
+                      st(U).rf(R) = (st(T).a_val + st(T).b_val
+                                         if (st(T).opcode = 1 & R = st(T).rd) else
+                                     (st(T).a_val - st(T).b_val
+                                         if (st(T).opcode = 2 & R = st(T).rd) else
+                                     ((0:addr) :: st(T).target
+                                         if (st(T).opcode = 3 & R = st(T).rd) else
+                                     (st(T).mem(st(T).mem_addr)
+                                         if (st(T).opcode = 4 & R = st(T).rd) else
+                                     st(T).rf(R)))))
+
+    }
+}  with addr,opc, tag
+
+# ============================================================================
+# A 5-stage pipeline (IF/ID/EX/MEM/WB) with a branch predictor.
+#
+# Unlike 5stage_cpu_ref, we do NOT stall fetch on a branch. Instead we predict
+# the branch (predict(pc)) and keep fetching speculatively. A misprediction is
+# detected in EX (comparing the carried prediction against the operand-based
+# branch decision) and is repaired by redirecting the PC and squashing the
+# younger, wrong-path instructions.
+#
+# Verification uses a per-stage ghost "shadow" bit: an instruction is shadowed
+# if it was fetched behind a mispredicted (but not-yet-resolved) branch. The
+# trace steps only along the correct path -- when the IF stage detects that the
+# prediction disagrees with the true branch outcome (known from the trace at
+# tag now), it stops stepping the trace and marks subsequent fetches shadowed.
+# So the trace never needs to backtrack. The invariants require a stage's data
+# to match the trace only when the stage is NOT shadowed; correctness then
+# rests on proving that every shadowed instruction is squashed before it can
+# write the register file or memory (which holds because the branch resolves in
+# EX, before MEM and WB).
+# ============================================================================
+
+object cpu = {
+
+    specification {
+
+        # ---- reference tags (ghost) --------------------------------------
+        # As in 5stage_cpu_ref, these count non-shadowed instructions past
+        # each stage boundary. Shadowed instructions are not real (not in the
+        # trace) and do not advance the counts.
+
+        var commit  : tag
+        var mcommit : tag
+        var ecommit : tag
+        var dcommit : tag
+
+        # ---- lane-1 tags (ghost, dual-issue) -----------------------------
+        # Each boundary counter (commit/mcommit/ecommit/dcommit) is the trace
+        # tag of its stage's lane-0 instruction. A stage that holds two
+        # instructions has its lane-1 instruction one tag later; these vars name
+        # that "middle" tag, so a boundary that jumps by two (a full bundle
+        # crossing) can be written with the `succ` relation and no tag
+        # arithmetic: succ(commit,w1_tag) & succ(w1_tag,mcommit), etc.
+        var w1_tag : tag                # WB  lane-1 tag  (between commit, mcommit)
+        var m1_tag : tag                # MEM lane-1 tag  (between mcommit, ecommit)
+        var e1_tag : tag                # EX  lane-1 tag  (between ecommit, dcommit)
+        var d1_tag : tag                # ID  lane-1 tag  (between dcommit, now)
+
+        # ---- shadow bits (ghost) -----------------------------------------
+        # d_shadow etc.: lane 0 of this stage holds a wrong-path instruction.
+        # d_shadow1 etc.: lane 1 (per-lane shadow, for Step 5). Until a branch can
+        # ride in a dual bundle (Step 5b), both lanes of a bundle share a fetch
+        # path, so d_shadow1 == d_shadow (etc.) -- this step just splits the ghost
+        # bit per lane so a lane-0 branch can later shadow lane 1 alone. spec_wrong:
+        # the fetch stream is currently on a mispredicted path.
+
+        var d_shadow : bool
+        var e_shadow : bool
+        var m_shadow : bool
+        var w_shadow : bool
+        var d_shadow1 : bool
+        var e_shadow1 : bool
+        var m_shadow1 : bool
+        var w_shadow1 : bool
+        var spec_wrong : bool
+
+        after init {
+            commit := 0; mcommit := 0; ecommit := 0; dcommit := 0;
+            w1_tag := 0; m1_tag := 0; e1_tag := 0; d1_tag := 0;
+            d_shadow := false; e_shadow := false;
+            m_shadow := false; w_shadow := false;
+            d_shadow1 := false; e_shadow1 := false;
+            m_shadow1 := false; w_shadow1 := false;
+            spec_wrong := false;
+        }
+    }
+
+    # The tag-run bookkeeping below is stated in `specification`. With the memory
+    # subsystem now a black-box `idc` module, there are no cross-isolate cache
+    # invariants for the CPU to expose; idc's guarantees (fetch_output*/data_output)
+    # are supplied by the module and the CPU only relates idc's abstract mem/ddirty
+    # to the reference (in the idc↔trace invariants below).
+    specification {
+
+        # ---- the non-shadowed instructions form a contiguous tag run -----
+
+        # Each stage now holds 0, 1, or 2 non-shadowed instructions, so each
+        # boundary counter is `succ` of the previous by 0/1/2 steps. A two-step
+        # jump is expressed through the stage's lane-1 tag as the named middle
+        # (succ(lo, mid) & succ(mid, hi)). In-order issue (`*_valid1 -> *_valid`)
+        # forbids a gap. With lane 1 empty these reduce to the single-issue set.
+        # Guarded by ~error like the EX/ID counts below: once a lane-0 branch can
+        # ride a dual bundle (Step 5b), the intra-bundle squash keys on the
+        # datapath `mispredict`, which is meaningless once the pipeline has left the
+        # reference (error) -- a bogus squash then desyncs the valid bits from the
+        # tag counts. In the error-free regime the counts hold exactly.
+        invariant w_valid1 -> w_valid
+        invariant (~w_valid & ~trace.st(trace.now).error) -> mcommit = commit
+        invariant (w_valid & ~w_valid1 & ~trace.st(trace.now).error) -> commit.succ(mcommit)
+        invariant (w_valid1 & ~trace.st(trace.now).error) -> commit.succ(w1_tag)
+        invariant (w_valid1 & ~trace.st(trace.now).error) -> w1_tag.succ(mcommit)
+
+        invariant m_valid1 -> m_valid
+        invariant (~m_valid & ~trace.st(trace.now).error) -> ecommit = mcommit
+        invariant (m_valid & ~m_valid1 & ~trace.st(trace.now).error) -> mcommit.succ(ecommit)
+        invariant (m_valid1 & ~trace.st(trace.now).error) -> mcommit.succ(m1_tag)
+        invariant (m_valid1 & ~trace.st(trace.now).error) -> m1_tag.succ(ecommit)
+
+        # ---- the idcache module's ghost state tracks the reference at MEM ----
+        # idc's spec is over its own abstract mem/ddirty; we relate that ghost
+        # state to the trace at the MEM tag (mcommit). idc's memory reflects
+        # exactly the instructions that have passed MEM, so its mem/ddirty equal
+        # st(mcommit).mem/ddirty. These update in lockstep: idc.mem(A) is written
+        # on a committing store (write_req & ~data_stall, i.e. an unstalled MEM
+        # ST), exactly when mcommit steps over that ST -- and the CPU already
+        # tracks m_addr = st(mcommit).mem_addr and m_store = st(mcommit).b_val.
+        # The internal cache coherence (D-cache/I-cache present/dirty, main memory)
+        # is now idc's own concern, proved against its abstract mem/ddirty. idc's
+        # guarantees (fetch_output0/1, data_output) then supply fetch/LD coherence.
+        invariant [idc_mem_rel] ~trace.st(trace.now).error -> idc.mem(A) = trace.st(mcommit).mem(A)
+        invariant [idc_ddirty_rel] ~trace.st(trace.now).error -> idc.ddirty(A) = trace.st(mcommit).ddirty(A)
+
+        # The EX/ID and ID/IF boundary counts depend on the speculation logic
+        # (dcommit/now advance only for correct-path, non-shadowed fetches), so
+        # like the shadow facts below they are guarded by ~error. The WB/MEM/EX
+        # boundary counts above are pure validity bookkeeping and hold regardless.
+        # A lane-1 instruction is in the run only if valid AND non-shadowed; a
+        # shadowed lane-1 fall-through (e_shadow1, of a mispredicting lane-0 branch)
+        # is squashed at EX->MEM, so it does not extend the EX/ID count.
+        invariant e_valid1 -> e_valid
+        invariant (~e_valid & ~trace.st(trace.now).error) -> dcommit = ecommit
+        invariant (e_valid & (~e_valid1 | e_shadow1) & ~trace.st(trace.now).error) -> ecommit.succ(dcommit)
+        invariant (e_valid1 & ~trace.st(trace.now).error) -> ecommit.succ(e1_tag)
+        invariant (e_valid1 & ~e_shadow1 & ~trace.st(trace.now).error) -> e1_tag.succ(dcommit)
+
+        # Lane 0 uses d_shadow; lane 1's run membership uses its own d_shadow1
+        # (they diverge when a lane-0 branch shadows the lane-1 fall-through, Step 5b).
+        invariant d_valid1 -> d_valid
+        invariant ((~d_valid | d_shadow) & ~trace.st(trace.now).error) -> dcommit = trace.now
+        invariant (d_valid & ~d_shadow & (~d_valid1 | d_shadow1) & ~trace.st(trace.now).error) -> dcommit.succ(trace.now)
+        invariant [d1_full] (d_valid1 & ~d_shadow1 & ~trace.st(trace.now).error) -> dcommit.succ(d1_tag)
+        invariant (d_valid1 & ~d_shadow1 & ~trace.st(trace.now).error) -> d1_tag.succ(trace.now)
+    }
+
+    private {
+
+        # ---- shadowed instructions are squashed before EX ----------------
+        # A wrong-path instruction is squashed when the mispredicting branch
+        # resolves in EX, so it never becomes a valid EX/MEM/WB instruction.
+        # Hence only the ID stage can hold a valid shadowed instruction.
+        #
+        # NB: the speculation-tracking invariants (the mispredict/shadow/spec_wrong
+        # facts below) are guarded by ~error. They reason about the branch outcome
+        # e_pred vs trace.st(ecommit).take_branch, which is only meaningful when the
+        # in-flight instructions still match the reference -- i.e. before the trace
+        # enters its error state. Once the program has gone wrong we make no claim
+        # about the pipeline, so these become vacuous. (invar136 fails without this
+        # guard precisely in a reachable-only-with-error state; see the CTI.)
+
+        invariant ~trace.st(trace.now).error -> ~(e_valid & e_shadow)
+        invariant ~trace.st(trace.now).error -> ~(m_valid & m_shadow)
+        invariant ~trace.st(trace.now).error -> ~(w_valid & w_shadow)
+        # Lane 1, per-lane. Past EX a valid lane-1 is never shadowed: a shadowed
+        # lane-1 fall-through is squashed at EX->MEM (m_valid1 := e_valid1 &
+        # ~mispredict). But IN EX a valid lane-1 CAN be shadowed -- exactly when its
+        # bundle's lane 0 is a mispredicting branch (the "one shadowed + one
+        # unshadowed in a stage" case). So the EX fact is conditioned, not absolute.
+        invariant (e_valid1 & e_shadow1 & ~trace.st(trace.now).error) ->
+                      (e_valid & e_opcode = 6 &
+                       (e_pred ~= trace.st(ecommit).take_branch))
+        invariant ~trace.st(trace.now).error -> ~(m_valid1 & m_shadow1)
+        invariant ~trace.st(trace.now).error -> ~(w_valid1 & w_shadow1)
+        # Per-lane shadow characterization (Step 5b, per the "condition the equality
+        # on a mispredicted lane-0 branch" idea): lane 1's shadow equals lane 0's,
+        # EXCEPT when this stage's lane 0 is a mispredicting branch -- then lane 0 is
+        # correct (its shadow false) while lane 1 (the fall-through) is shadowed. In
+        # ID and EX (where a shadowed lane 1 can still be valid) this is a genuine OR;
+        # by MEM/WB the fall-through has been squashed so lane 1 shadow just tracks
+        # lane 0 (the ~(m_valid1&m_shadow1)/~(w_valid1&w_shadow1) facts above suffice).
+        invariant [shadow1_char_d] (d_valid1 & ~trace.st(trace.now).error) ->
+            (d_shadow1 = (d_shadow | (d_valid & d_opcode = 6 &
+                          (d_pred ~= trace.st(dcommit).take_branch))))
+        invariant [shadow1_char_e] (e_valid1 & ~trace.st(trace.now).error) ->
+            (e_shadow1 = (e_shadow | (e_valid & e_opcode = 6 &
+                          (e_pred ~= trace.st(ecommit).take_branch))))
+
+        # ---- while shadowed, the mispredicting branch is in EX -----------
+        # If ID holds a shadowed instruction, then EX holds the branch that
+        # shadowed it, and that branch is genuinely mispredicted (its carried
+        # prediction differs from the true outcome recorded in the trace).
+
+        invariant (d_valid & d_shadow & ~trace.st(trace.now).error) ->
+                      (e_valid & e_opcode = 6 &
+                       (e_pred ~= trace.st(ecommit).take_branch))
+
+        # Conversely, everything younger than a mispredicted branch is shadowed:
+        # if EX holds a mispredicted branch, the ID instruction behind it (which
+        # was fetched on the wrong path) is shadowed.
+
+        invariant (e_valid & e_opcode = 6 & ~trace.st(trace.now).error &
+                   (e_pred ~= trace.st(ecommit).take_branch)) ->
+                      (~d_valid | d_shadow)
+
+        # spec_wrong holds exactly when a mispredicted branch is unresolved in
+        # ID or EX.
+
+        invariant ~trace.st(trace.now).error ->
+            spec_wrong =
+            ( (d_valid & ~d_shadow & d_opcode = 6 &
+               (d_pred ~= trace.st(dcommit).take_branch))
+            | (e_valid & e_opcode = 6 &
+               (e_pred ~= trace.st(ecommit).take_branch)) )
+
+        # ---- error relaxation --------------------------------------------
+        # Once the reference has executed an instruction fetched from a dirty
+        # (stale) address, the program has "gone wrong" and we no longer require
+        # the implementation to match. `error` is sticky and `now` is the
+        # largest recorded tag, so `st(now).error` holds exactly when *some*
+        # instruction in the executed prefix has erred. We therefore guard every
+        # invariant relating implementation data to the reference by
+        # ~trace.st(trace.now).error; in the error-free regime this is vacuously
+        # true and the proof reduces to the coherent-pipeline argument.
+
+        # ---- committed architectural state matches the trace -------------
+
+        invariant [rf_track] ~trace.st(trace.now).error -> rf(R) = trace.st(commit).rf(R)
+
+        # (Write-back D-cache / main-memory coherence is now idc's internal
+        # concern, proved against idc's abstract mem/ddirty; the CPU only relates
+        # that ghost state to the reference via the two idc↔trace invariants above.)
+    }
+
+
+    private {
+
+        # ---- the PC is the (correct) fetch address unless mispredicting ---
+
+        invariant [pc_track] (~spec_wrong & ~trace.st(trace.now).error) -> pc = trace.st(trace.now).pc
+
+        # ---- non-shadowed in-flight instructions match the trace ---------
+
+        invariant [d_ir_track] (d_valid & ~d_shadow & ~trace.st(trace.now).error) -> d_ir = trace.st(dcommit).fetched
+        invariant (d_valid & ~d_shadow & ~trace.st(trace.now).error) -> d_pc = trace.st(dcommit).pc
+        invariant (e_valid & ~trace.st(trace.now).error) -> e_ir = trace.st(ecommit).fetched
+        invariant (e_valid & ~trace.st(trace.now).error) -> e_pc = trace.st(ecommit).pc
+        invariant (m_valid & ~trace.st(trace.now).error) -> m_ir = trace.st(mcommit).fetched
+        invariant (w_valid & ~trace.st(trace.now).error) -> w_ir = trace.st(commit).fetched
+
+        # ---- MEM latch computed values match the trace -------------------
+
+        invariant (m_valid & ~trace.st(trace.now).error) -> m_addr = trace.st(mcommit).mem_addr
+        invariant (m_valid & ~trace.st(trace.now).error) -> m_store = trace.st(mcommit).b_val
+        invariant (m_valid & (m_opcode = 1 | m_opcode = 2 | m_opcode = 3) & ~trace.st(trace.now).error) -> m_res = trace.st(mcommit).res
+
+        # ---- WB latch writeback value matches the trace ------------------
+
+        invariant (w_valid & (w_opcode = 1 | w_opcode = 2 | w_opcode = 3) & ~trace.st(trace.now).error) -> w_val = trace.st(commit).res
+        invariant (w_valid & w_opcode = 4 & ~trace.st(trace.now).error) -> w_val = trace.st(commit).mem(trace.st(commit).mem_addr)
+
+        # ---- lane-1 (dual-issue) trace match, at the lane-1 tags ----------
+        # In a dual bundle: LANE 0 may be a BRANCH (opcode 6) predicted not-taken
+        # (Step 5b) but never a FLUSH (opcode 7 -- issue_two splits it); LANE 1 is
+        # never a branch or a FLUSH (both split). At most one lane is a memory op
+        # (LD/ST, opcode 4/5): the single idc port serves it, in lane 0 (Step 4a) or
+        # lane 1 (Step 4b). A lane's memory op, when present, is tracked by that
+        # lane's MEM/WB invariants (opcode-guarded); its ALU result by res/val.
+        invariant d_valid1 -> (d_opcode ~= 7)
+        invariant e_valid1 -> (e_opcode ~= 7)
+        invariant m_valid1 -> (m_opcode ~= 7)
+        invariant w_valid1 -> (w_opcode ~= 7)
+        invariant d_valid1 -> (d_opcode1 ~= 6 & d_opcode1 ~= 7)
+        invariant e_valid1 -> (e_opcode1 ~= 6 & e_opcode1 ~= 7)
+        invariant m_valid1 -> (m_opcode1 ~= 6 & m_opcode1 ~= 7)
+        invariant w_valid1 -> (w_opcode1 ~= 6 & w_opcode1 ~= 7)
+        # At most one memory op (LD/ST) per dual bundle -- so the idc port has a
+        # single request (one_data_op) and, when lane 1 is the memory op, lane 0 is
+        # not a store, hence memory is unchanged between the two lane tags.
+        invariant [d_one_mem] d_valid1 -> ~((d_opcode = 4 | d_opcode = 5) & (d_opcode1 = 4 | d_opcode1 = 5))
+        invariant [e_one_mem] e_valid1 -> ~((e_opcode = 4 | e_opcode = 5) & (e_opcode1 = 4 | e_opcode1 = 5))
+        invariant [m_one_mem] m_valid1 -> ~((m_opcode = 4 | m_opcode = 5) & (m_opcode1 = 4 | m_opcode1 = 5))
+
+        invariant (d_valid1 & ~d_shadow1 & ~trace.st(trace.now).error) -> d_ir1 = trace.st(d1_tag).fetched
+        invariant (d_valid1 & ~d_shadow1 & ~trace.st(trace.now).error) -> d_pc1 = trace.st(d1_tag).pc
+        invariant (e_valid1 & ~e_shadow1 & ~trace.st(trace.now).error) -> e_ir1 = trace.st(e1_tag).fetched
+        invariant (e_valid1 & ~e_shadow1 & ~trace.st(trace.now).error) -> e_pc1 = trace.st(e1_tag).pc
+
+        # ---- EX operands track the trace operand values --------------------
+        # e_a/e_b are the register-file reads for the EX instruction; they must
+        # equal the trace's recorded a_val/b_val at the EX tag. Once these hold,
+        # the ALU-result invariants (m_res = st(mcommit).res, etc.) follow without
+        # re-deriving rf-coherence.
+        derived invariant [ea_trk]  (e_valid  & ~ex_stall & ~trace.st(trace.now).error) -> e_a  = trace.st(ecommit).a_val
+        derived invariant [eb_trk]  (e_valid  & ~ex_stall & ~trace.st(trace.now).error) -> e_b  = trace.st(ecommit).b_val
+        # lane 0's ALU result tracks the trace (from ea_trk/eb_trk + res
+        # consistency); needed so the intra-bundle bypass forwards the right value.
+        derived invariant [eres_trk] (e_valid & ~ex_stall & (e_opcode = 1 | e_opcode = 2 | e_opcode = 3) & ~trace.st(trace.now).error) -> e_res = trace.st(ecommit).res
+            with ea_trk, eb_trk
+        # lane 1's operands taken THROUGH the bypass mux (e_a1_fwd/e_b1_fwd): the
+        # forwarded case (lane 0 writes lane 1's source) = e_res = st(ecommit).res
+        # = st(e1_tag).rf(source); the register-file case (no intra-bundle writer)
+        # = st(commit).rf(source) = st(e1_tag).rf(source). With f_indep dropped
+        # (Step 3c) the bypass is live: a dependent aligned pair issues together
+        # and the mux forwards lane 0's freshly-computed result to lane 1.
+        # (Guarded by ~e_shadow1: a shadowed lane-1 fall-through of a mispredicting
+        # lane-0 branch is wrong-path, so its operands need not match the trace; it
+        # is squashed at EX->MEM and never used.)
+        derived invariant [ea1_trk] (e_valid1 & ~e_shadow1 & ~ex_stall & ~trace.st(trace.now).error) -> e_a1_fwd = trace.st(e1_tag).a_val
+            with eres_trk
+        derived invariant [eb1_trk] (e_valid1 & ~e_shadow1 & ~ex_stall & ~trace.st(trace.now).error) -> e_b1_fwd = trace.st(e1_tag).b_val
+        with eres_trk
+
+        # Load-use exclusion carried into the pipe (Step 4a): issue_two splits a
+        # bundle whose lane 0 is a LOAD (opcode 4) writing a lane-1 source register
+        # (f_ld_use), because a load result is not available in EX to forward. The
+        # bypass mux is inactive for a load (e_lane0_wr is false), so ea1_trk/eb1_trk
+        # fall to the register-file read -- correct only if lane 0 does not write
+        # that source. These invariants propagate the issue-time split to ID/EX so
+        # that holds. (Non-load lane-0 writers are ALU ops, handled by the forward.)
+        invariant [d_ld_use] d_valid1 -> ~(d_opcode = 4 & (d_rd = d_ra1 | d_rd = d_rb1))
+        invariant [e_ld_use] e_valid1 -> ~(e_opcode = 4 & (e_rd = e_ra1 | e_rd = e_rb1))
+
+        invariant (m_valid1 & ~trace.st(trace.now).error) -> m_ir1 = trace.st(m1_tag).fetched
+        invariant (w_valid1 & ~trace.st(trace.now).error) -> w_ir1 = trace.st(w1_tag).fetched
+        invariant (m_valid1 & (m_opcode1 = 1 | m_opcode1 = 2 | m_opcode1 = 3) & ~trace.st(trace.now).error) -> m_res1 = trace.st(m1_tag).res
+        invariant (w_valid1 & (w_opcode1 = 1 | w_opcode1 = 2 | w_opcode1 = 3) & ~trace.st(trace.now).error) -> w_val1 = trace.st(w1_tag).res
+
+        # ---- lane-1 MEM latch memory values (Step 4b) --------------------------
+        # A lane-1 memory op takes its address/store-data from the forwarded operands
+        # (m_addr1 := e_a1_fwd<<7:0>, m_store1 := e_b1_fwd), so they track the trace
+        # at the lane-1 tag, exactly like lane 0's m_addr/m_store (via ea1_trk/eb1_trk).
+        invariant (m_valid1 & ~trace.st(trace.now).error) -> m_addr1 = trace.st(m1_tag).mem_addr
+        invariant (m_valid1 & ~trace.st(trace.now).error) -> m_store1 = trace.st(m1_tag).b_val
+        # A lane-1 LOAD writes back the reference memory value at its address. The
+        # port returns idc.mem(m_addr1) = st(mcommit).mem(m_addr1); because at most
+        # one memory op is in the bundle (m_one_mem), lane 0 (tag mcommit) is not a
+        # store, so st(m1_tag).mem = st(mcommit).mem and this equals the lane-1 value.
+        invariant (w_valid1 & w_opcode1 = 4 & ~trace.st(trace.now).error) -> w_val1 = trace.st(w1_tag).mem(trace.st(w1_tag).mem_addr)
+
+        derived invariant [fetch0_coh]
+          fetch_active & idc.fetch_valid0 & ~trace.st(trace.now).error
+             & ~trace.st(trace.now).ddirty(pc)
+             -> idc.fetch_data0 = trace.st(trace.now).mem(pc)
+        with idc.fetch_output0
+
+        derived invariant [fetch1_coh]
+          fetch_active & idc.fetch_valid1 & ~trace.st(trace.now).error
+             & ~trace.st(trace.now).ddirty(pc+1)
+             -> idc.fetch_data1 = trace.st(trace.now).mem(pc+1)
+        with idc.fetch_output1, idc.fetch_output1_odd
+
+
+    }
+
+    specification {
+
+        # ---- ghost bookkeeping ------------------------------------------
+        # The reference tags, the shadow bits, and the trace step are all
+        # ghost state. We update them here, in the specification, rather than
+        # in the datapath `after posedge` below, so that the datapath is
+        # free of ghost state and can be translated to RTL. This monitor
+        # mirrors the datapath's stage movement, reading the pre-state of the
+        # real signals (validity bits via `old`; the combinational wires
+        # ex_stall / mispredict / f_ptaken are frozen at their pre-state
+        # values, so they need no `old`).
+
+        after posedge {
+            # Each boundary advances by the number of instructions that cross it
+            # (0/1/2). A bundle of two advances the counter twice.
+            if old w_valid1 { commit := commit.next.next }
+            else if old w_valid { commit := commit.next };
+            if dmem_stall {
+                # MEM stalls for a D-fill: WB drains (commit advanced above) and
+                # bubbles; MEM and everything behind hold, so no other tag moves
+                # and no instruction is issued to the trace.
+                w_shadow := false;
+                w_shadow1 := false
+            } else {
+            # idc handles FLUSH-based I-cache invalidation internally (driven by
+            # idc.flush_req in the wiring), so no ghost tie-in is needed here.
+            if old m_valid1 { mcommit := mcommit.next.next }
+            else if old m_valid { mcommit := mcommit.next };
+            w_shadow := m_shadow;
+            w_shadow1 := m_shadow1;
+            if ~ex_stall {
+                m_shadow := e_shadow;
+                m_shadow1 := e_shadow1;
+                # ecommit counts REAL (non-shadowed) instructions crossing EX->MEM.
+                # A shadowed lane-1 fall-through (e_shadow1, of a mispredicting lane-0
+                # branch) is squashed at EX->MEM, so it does not advance the run.
+                if old e_valid1 & ~e_shadow1 { ecommit := ecommit.next.next }
+                else if old e_valid { ecommit := ecommit.next };
+                if mispredict {
+                    spec_wrong := false
+                } else {
+                    if old d_valid1 & ~d_shadow1 { dcommit := dcommit.next.next }
+                    else if old d_valid & ~d_shadow { dcommit := dcommit.next };
+                    e_shadow := d_shadow;
+                    e_shadow1 := d_shadow1;
+                    if flush_in_pipe | ifetch_stall {
+                        # IF stalled (pending FLUSH or awaiting an I-cache fill):
+                        # a bubble enters ID, no instruction is issued to the
+                        # trace, and `now` does not advance.
+                        d_shadow := false;
+                        d_shadow1 := false
+                    } else {
+                        d_shadow := spec_wrong;   # lane 0: inherited wrong-path
+                        if ~spec_wrong {
+                            if f_ptaken ~= trace.st(trace.now).take_branch {
+                                spec_wrong := true   # lane-0 branch mispredicts
+                            };
+                            trace.step;              # step lane 0 (correct path)
+                            # Step 5b: lane 1 is the fall-through. Step it only if the
+                            # lane-0 branch did NOT just mispredict; otherwise lane 1 is
+                            # on the wrong path (shadowed) and is not a trace instruction.
+                            if issue_two & ~spec_wrong { trace.step }
+                        };
+                        # lane 1's shadow is spec_wrong AFTER the lane-0 branch check:
+                        # it diverges from d_shadow exactly when this bundle's lane-0
+                        # branch mispredicts (then lane 0 is correct, lane 1 shadowed).
+                        d_shadow1 := spec_wrong
+                    }
+                }
+            }
+            };
+            # Lane-1 tags: the middle tag of any two-instruction stage is one past
+            # that stage's lane-0 boundary. Set unconditionally (vacuous when the
+            # lane is empty); this maintains succ(boundary, lane1_tag) always, and
+            # succ(lane1_tag, next_boundary) whenever the stage holds two.
+            w1_tag := commit.next;
+            m1_tag := mcommit.next;
+            e1_tag := ecommit.next;
+            d1_tag := dcommit.next
+        }
+    }
+
+    # The branch predictor is the sub-isolate `bp`, declared further down (after
+    # the datapath signals it consumes). It drives bp.predicted_taken, which the
+    # fetch stage reads via f_ptaken. Since bp's logic is hidden in its own
+    # isolate, the CPU is verified with the prediction left arbitrary.
+
+    # ---- architectural state ----
+
+    var pc : addr
+    var rf(R:reg) : word
+
+    # ---- memory subsystem: the reusable `idcache` module ----
+    # The I-cache (dual fetch lanes), D-cache and main memory (with FLUSH-based
+    # fetch coherence and a multi-cycle fill port) are the `idc` instance. Unlike
+    # the inline caches of the earlier version, idc is a black box: its
+    # specification is stated over its OWN abstract memory `idc.mem` and dirty map
+    # `idc.ddirty`, and the CPU relates that ghost state to the reference trace at
+    # the MEM tag (mcommit) with two invariants (above). idc's guarantees
+    # (fetch_output0/1, data_output) then supply fetch/LD coherence for both lanes.
+    # The CPU discharges idc's one_data_op assumption (a MEM instruction issues at
+    # most one data request).
+    instance idc : idcache(posedge, word, addr, bit, init_mem)
+
+    # ---- pipeline latches ----
+
+    var d_ir : word                 # IF/ID
+    var d_valid : bool
+    var d_pred : bool               #   predicted-taken bit carried with the instruction
+    var d_pc : addr                 #   the instruction's own PC
+    var e_ir : word                 # ID/EX
+    var e_valid : bool
+    var e_pred : bool
+    var e_pc : addr
+    var m_ir : word                 # EX/MEM
+    var m_valid : bool
+    var m_res : word
+    var m_addr : addr
+    var m_store : word
+    var w_ir : word                 # MEM/WB
+    var w_valid : bool
+    var w_val : word
+
+    # ---- lane-1 pipeline latches (dual-issue Step 1: two-lane skeleton) ----
+    # The younger instruction of an aligned pair rides in lane 1. In Step 1 the
+    # issue width is hardwired to 1 (d_valid1 is always driven false), so every
+    # *_valid1 is provably false and lane 1 is an ever-empty bubble carried
+    # alongside lane 0. The computed lane-1 values (m_res1/w_val1) are don't-cares
+    # while the lane is empty; they get their real combinational datapath in
+    # Step 2 together with the issue logic that fills the lane.
+    var d_ir1 : word                # IF/ID   (lane 1)
+    var d_valid1 : bool
+    var d_pred1 : bool
+    var d_pc1 : addr
+    var e_ir1 : word                # ID/EX   (lane 1)
+    var e_valid1 : bool
+    var e_pred1 : bool
+    var e_pc1 : addr
+    var m_ir1 : word                # EX/MEM  (lane 1)
+    var m_valid1 : bool
+    var m_res1 : word
+    var m_addr1 : addr
+    var m_store1 : word
+    var w_ir1 : word                # MEM/WB  (lane 1)
+    var w_valid1 : bool
+    var w_val1 : word
+
+    # ---- decode wires ----
+
+    implementation {
+    wire d_opcode : opc
+    definition d_opcode = d_ir<<15:13>>
+    wire d_opcode1 : opc
+    definition d_opcode1 = d_ir1<<15:13>>
+    wire d_rd : reg
+    definition d_rd = d_ir<<12:10>>
+    wire d_ra1 : reg
+    definition d_ra1 = d_ir1<<9:7>>
+    wire d_rb1 : reg
+    definition d_rb1 = d_ir1<<6:4>>
+    wire d_rd1 : reg
+    definition d_rd1 = d_ir1<<12:10>>
+
+    wire e_opcode : opc
+    wire e_rd : reg
+    wire e_ra : reg
+    wire e_rb : reg
+    wire e_target : addr
+    definition e_opcode = e_ir<<15:13>>
+    definition e_rd = e_ir<<12:10>>
+    definition e_ra = e_ir<<9:7>>
+    definition e_rb = e_ir<<6:4>>
+    definition e_target = e_ir<<7:0>>
+
+    wire m_opcode : opc
+    wire m_rd : reg
+    definition m_opcode = m_ir<<15:13>>
+    definition m_rd = m_ir<<12:10>>
+
+    wire w_opcode : opc
+    wire w_rd : reg
+    definition w_opcode = w_ir<<15:13>>
+    definition w_rd = w_ir<<12:10>>
+
+    # ---- EX operands and the true branch decision ----
+
+    wire e_a : word
+    wire e_b : word
+    definition e_a = rf(e_ra)
+    definition e_b = rf(e_rb)
+
+    wire e_take : bool               # the true (operand-based) branch decision
+    definition e_take = (e_opcode = 6) & (e_a = 0)
+
+    # ---- lane-1 decode / operands / ALU (dual-issue) ----------------------
+    # Lane 1 carries the younger instruction of an aligned pair. In the easy
+    # case it is always "simple" (NOP/ADD/SUB/LI: opcode 0/1/2/3) -- never a
+    # branch, memory op, or FLUSH -- so it needs no branch decision and no
+    # D-cache access, only decode, operand read, and the ALU.
+    wire e_opcode1 : opc
+    wire e_rd1 : reg
+    wire e_ra1 : reg
+    wire e_rb1 : reg
+    wire e_target1 : addr
+    definition e_opcode1 = e_ir1<<15:13>>
+    definition e_rd1 = e_ir1<<12:10>>
+    definition e_ra1 = e_ir1<<9:7>>
+    definition e_rb1 = e_ir1<<6:4>>
+    definition e_target1 = e_ir1<<7:0>>
+    # lane 0's ALU result, factored out so it can also be forwarded to lane 1.
+    wire e_lane0_wr : bool           # lane 0 writes a register (ADD/SUB/LI)
+    definition e_lane0_wr = e_valid & (e_opcode = 1 | e_opcode = 2 | e_opcode = 3)
+    wire e_res : word
+    definition e_res = (e_a + e_b if e_opcode = 1 else
+                       (e_a - e_b if e_opcode = 2 else
+                       ((0:addr) :: e_target if e_opcode = 3 else 0)))
+
+    wire e_a1 : word
+    wire e_b1 : word
+    definition e_a1 = rf(e_ra1)
+    definition e_b1 = rf(e_rb1)
+    # intra-bundle RAW bypass (Step 3): forward lane 0's freshly-computed result
+    # to lane 1's operand when lane 0 writes lane 1's source register. Live as of
+    # Step 3c (issue_two no longer requires independence), so a dependent aligned
+    # pair issues together and takes the forwarded operand.
+    wire e_a1_fwd : word
+    definition e_a1_fwd = (e_res if (e_lane0_wr & e_rd = e_ra1) else e_a1)
+    wire e_b1_fwd : word
+    definition e_b1_fwd = (e_res if (e_lane0_wr & e_rd = e_rb1) else e_b1)
+    wire e_res1 : word               # lane-1 ALU result (computed in EX)
+    definition e_res1 = (e_a1_fwd + e_b1_fwd if e_opcode1 = 1 else
+                        (e_a1_fwd - e_b1_fwd if e_opcode1 = 2 else
+                        ((0:addr) :: e_target1 if e_opcode1 = 3 else 0)))
+
+    wire m_opcode1 : opc
+    wire m_rd1 : reg
+    definition m_opcode1 = m_ir1<<15:13>>
+    definition m_rd1 = m_ir1<<12:10>>
+    wire w_opcode1 : opc
+    wire w_rd1 : reg
+    definition w_opcode1 = w_ir1<<15:13>>
+    definition w_rd1 = w_ir1<<12:10>>
+
+    # ---- data-hazard stall (as in 5stage_cpu_ref) ----
+
+    # Register-file writer slots (both lanes of MEM and WB). Either lane can be a
+    # register writer: ADD/SUB/LI (1/2/3) or a LOAD (4). (Step 4b lets lane 1 be a
+    # load, so its writer slots include opcode 4, like lane 0.)
+    wire m0_wr : bool
+    definition m0_wr = m_valid & (m_opcode = 1 | m_opcode = 2 | m_opcode = 3 | m_opcode = 4)
+    wire m1_wr : bool
+    definition m1_wr = m_valid1 & (m_opcode1 = 1 | m_opcode1 = 2 | m_opcode1 = 3 | m_opcode1 = 4)
+    wire w0_wr : bool
+    definition w0_wr = w_valid & (w_opcode = 1 | w_opcode = 2 | w_opcode = 3 | w_opcode = 4)
+    wire w1_wr : bool
+    definition w1_wr = w_valid1 & (w_opcode1 = 1 | w_opcode1 = 2 | w_opcode1 = 3 | w_opcode1 = 4)
+
+    # Which MEM lane holds the bundle's (single) memory op. mem_l1 selects lane 1;
+    # otherwise the port is driven by lane 0. At most one memory op per bundle, so
+    # these are exclusive when both lanes are valid. (Step 4b: lane 1 can do memory.)
+    wire mem_l1 : bool
+    definition mem_l1 = m_valid1 & (m_opcode1 = 4 | m_opcode1 = 5)
+
+    # A source register has a pending in-flight writer (RAW; no forwarding, so
+    # the reader must stall until the writer retires). Intra-bundle dependences
+    # are prevented at issue, so only MEM/WB (older) slots appear here. One wire
+    # per source register read (both EX lanes) -- nullary so it translates to RTL
+    # (a parameterized function would not be recognized as combinational).
+    wire hz_ea : bool
+    definition hz_ea = (m0_wr & m_rd = e_ra) | (m1_wr & m_rd1 = e_ra)
+                     | (w0_wr & w_rd = e_ra) | (w1_wr & w_rd1 = e_ra)
+    wire hz_eb : bool
+    definition hz_eb = (m0_wr & m_rd = e_rb) | (m1_wr & m_rd1 = e_rb)
+                     | (w0_wr & w_rd = e_rb) | (w1_wr & w_rd1 = e_rb)
+    wire hz_ea1 : bool
+    definition hz_ea1 = (m0_wr & m_rd = e_ra1) | (m1_wr & m_rd1 = e_ra1)
+                      | (w0_wr & w_rd = e_ra1) | (w1_wr & w_rd1 = e_ra1)
+    wire hz_eb1 : bool
+    definition hz_eb1 = (m0_wr & m_rd = e_rb1) | (m1_wr & m_rd1 = e_rb1)
+                      | (w0_wr & w_rd = e_rb1) | (w1_wr & w_rd1 = e_rb1)
+
+    wire ex_stall : bool
+    definition ex_stall = (e_valid  & (hz_ea  | hz_eb))
+                        | (e_valid1 & (hz_ea1 | hz_eb1))
+
+    # ---- misprediction: the EX branch's prediction disagrees with its true
+    #      outcome. Detected only once its operand is available (~ex_stall).
+
+    wire mispredict : bool
+    definition mispredict = e_valid & ~ex_stall & (e_opcode = 6) & (e_pred ~= e_take)
+
+    }
+    # ---- the branch predictor, as a sub-isolate `bp` ----
+    # `bp` declares its own input/output wires and its logic uses only those; it
+    # never reaches into the CPU. Here, in the parent, we connect it: its inputs
+    # are driven from the CPU's fetch PC and branch resolution, and the CPU's
+    # prediction (f_ptaken, below) reads its output. Because bp's logic lives in
+    # its (hidden) implementation, Ivy verifies the CPU with bp.predicted_taken
+    # left arbitrary -- correctness holds for any prediction.
+
+    isolate bp = {
+        wire fetch_pc : addr          # input: PC being fetched (to predict)
+        wire br_valid : bool          # input: a conditional branch resolves this cycle
+        wire br_pc : addr             # input: the resolving branch's PC
+        wire br_taken : bool          # input: its true outcome
+        wire predicted_taken : bool   # output: the prediction for fetch_pc
+
+        implementation {
+            type bhtidx
+            interpret bhtidx -> bv[4]  # 16-entry branch history table
+            type ctr
+            interpret ctr -> bv[2]     # 2-bit saturating counter, states 0..3
+
+            var bht(I:bhtidx) : ctr
+
+            wire pred_idx : bhtidx
+            definition pred_idx = fetch_pc<<3:0>>
+            wire upd_idx : bhtidx
+            definition upd_idx = br_pc<<3:0>>
+
+            # predict taken when the indexed counter is in a taken state (2 or 3)
+            definition predicted_taken = (bht(pred_idx) = 2) | (bht(pred_idx) = 3)
+
+            after init {
+                bht(I) := 1            # weakly not-taken
+            }
+
+            # on a resolved branch, nudge its counter toward the outcome,
+            # saturating at 0 and 3
+            after posedge {
+                if br_valid {
+                    if br_taken {
+                        if bht(upd_idx) ~= 3 { bht(upd_idx) := bht(upd_idx) + 1 }
+                    } else {
+                        if bht(upd_idx) ~= 0 { bht(upd_idx) := bht(upd_idx) - 1 }
+                    }
+                }
+            }
+        }
+    }
+
+    # connect the predictor's inputs to the CPU (in the parent)
+    definition bp.fetch_pc = pc
+    definition bp.br_valid = e_valid & (e_opcode = 6) & ~ex_stall
+    definition bp.br_pc = e_pc
+    definition bp.br_taken = e_take
+
+
+    implementation {
+
+    # ---- fetch stall on a pending FLUSH ----
+    # While a FLUSH is in ID/EX/MEM, instruction fetch stalls so that no
+    # instruction behind the FLUSH is fetched until the FLUSH has (in MEM) made
+    # prior writes to its address visible (write-back + cache invalidation).
+
+    wire flush_in_pipe : bool
+    definition flush_in_pipe = (d_valid & d_opcode = 7)
+                             | (e_valid & e_opcode = 7)
+                             | (m_valid & m_opcode = 7)
+
+    # ---- fetch and prediction ----
+    # Instruction fetch goes through idc's I-cache, which exposes both fetch lanes:
+    # idc.fetch_data0 (the word at pc) with idc.fetch_valid0, and idc.fetch_data1
+    # (the odd sibling word, dual-issue lane 1) with idc.fetch_valid1 (only offered
+    # on an even PC). idc handles the miss/fill internally; the CPU presents the PC
+    # and reads back the words. A fetch that is not valid stalls IF (ifetch_stall).
+
+    wire fetched : word
+    definition fetched = idc.fetch_data0
+    wire fetched1 : word              # the odd sibling word (dual-issue lane 1)
+    definition fetched1 = idc.fetch_data1
+
+    wire f_is_branch : bool
+    definition f_is_branch = ((fetched<<15:13>>:opc) = 6)
+
+    wire f_ptaken : bool             # predicted-taken for the fetched instruction
+    definition f_ptaken = f_is_branch & bp.predicted_taken
+
+    wire f_target : addr
+    definition f_target = fetched<<7:0>>
+
+    wire pred_next_pc : addr         # the predicted next fetch address
+    definition pred_next_pc = (f_target if f_ptaken else pc + 1)
+
+    # ---- instruction-fetch fill stall ----
+    # IF actually attempts a fetch when it is not held for another reason:
+    wire fetch_active : bool
+    definition fetch_active = ~ex_stall & ~mispredict & ~flush_in_pipe
+    # Fetch cannot complete this cycle: idc did not return a valid lane-0 word.
+    wire ifetch_stall : bool
+    definition ifetch_stall = ~idc.fetch_valid0
+
+    # ---- MEM-stage data access (through idc) ----
+    # The MEM instruction presents its data request to idc (in the wiring below):
+    # a LD reads idc.read_data, and idc stalls MEM via idc.data_stall (a miss fill /
+    # write-back). The store/flush effects on memory and the caches happen inside
+    # idc, driven by the request signals -- the CPU no longer touches memory here.
+    wire dmem_stall : bool
+    definition dmem_stall = idc.data_stall
+
+    # ---- dual-issue decision (aligned pair; one memory op, in either lane) ----
+    # Decode both fetched words. Issue two when the pair is aligned and safe:
+    # idc.fetch_valid1 (which already implies an even PC); neither lane is a BRANCH
+    # (Step 5) or a FLUSH (a FLUSH invalidates the lane-1 fetch until it completes,
+    # so it must split); and AT MOST ONE lane is a memory op (LD/ST) -- the single
+    # idc data port serves it, in lane 0 (Step 4a) or lane 1 (Step 4b). A RAW
+    # dependence of lane 1 on lane 0's ALU result is allowed (Step 3c): the EX bypass
+    # mux (e_a1_fwd/e_b1_fwd) forwards it -- including into a lane-1 memory address or
+    # store-data operand -- and a WAW pair is handled by WB writing lane 1 second. The
+    # one exception is an UNBYPASSABLE LOAD-USE: a lane-0 load's result is not
+    # available in EX, so if lane 1 reads that destination we SPLIT (f_ld_use). The
+    # split is just "fetch as two singles", so no recirculation is needed. (Placed
+    # here so its dependencies -- dmem_stall/ifetch_stall/... -- are all in scope.)
+    wire f_op0 : opc
+    definition f_op0 = fetched<<15:13>>
+    wire f_op1 : opc
+    definition f_op1 = fetched1<<15:13>>
+    wire f_rd0 : reg                  # lane 0's destination register
+    definition f_rd0 = fetched<<12:10>>
+    wire f_ra1 : reg                  # lane 1's source registers
+    definition f_ra1 = fetched1<<9:7>>
+    wire f_rb1 : reg
+    definition f_rb1 = fetched1<<6:4>>
+    wire f_nonbranch0 : bool          # lane 0 is not a conditional branch (BEQZ)
+    definition f_nonbranch0 = (f_op0 ~= 6)
+    wire f_nonbranch1 : bool          # lane 1 is not a conditional branch (BEQZ)
+    definition f_nonbranch1 = (f_op1 ~= 6)
+    wire f_mem0 : bool                # lane 0 is a load or store
+    definition f_mem0 = (f_op0 = 4 | f_op0 = 5)
+    wire f_mem1 : bool                # lane 1 is a load or store
+    definition f_mem1 = (f_op1 = 4 | f_op1 = 5)
+    wire f_ld_use : bool              # lane 1 reads lane 0's load result (unbypassable)
+    definition f_ld_use = (f_op0 = 4) & (f_rd0 = f_ra1 | f_rd0 = f_rb1)
+    wire issue_two : bool
+    definition issue_two = ~dmem_stall & ~ex_stall & ~mispredict & ~flush_in_pipe
+                         & ~ifetch_stall & idc.fetch_valid1
+                         & ~f_ptaken & f_nonbranch1           # lane 0 not a predicted-taken
+                                                              # branch; lane 1 not a branch (Step 5b:
+                                                              # a lane-0 branch predicted NOT taken
+                                                              # dual-issues with its fall-through)
+                         & (f_op0 ~= 7) & (f_op1 ~= 7)        # neither lane a FLUSH
+                         & ~(f_mem0 & f_mem1)                 # at most one memory op
+                         & ~f_ld_use                          # unbypassable lane-0 load-use
+
+    # ---- reset ----
+
+    after init {
+        pc := 0;
+        d_valid := false;
+        e_valid := false;
+        m_valid := false;
+        w_valid := false;
+        d_valid1 := false;      # lane 1 starts empty (and stays empty in Step 1)
+        e_valid1 := false;
+        m_valid1 := false;
+        w_valid1 := false;
+        rf(R) := 0;
+        # main memory, both caches and the fill port are initialized inside idc.
+    }
+
+    # ---- clock edge ----
+
+    after posedge {
+
+        # WB: retire the WB bundle (up to two register-file writes). Lane 0 first,
+        # then lane 1, so on a same-destination pair the younger (lane 1) wins;
+        # issue forbids that case anyway, so the two writes are independent.
+        if w_valid & (w_opcode = 1 | w_opcode = 2 | w_opcode = 3 | w_opcode = 4) {
+            rf(w_rd) := w_val
+        };
+        if w_valid1 & (w_opcode1 = 1 | w_opcode1 = 2 | w_opcode1 = 3 | w_opcode1 = 4) {
+            rf(w_rd1) := w_val1
+        };
+
+        # MEM: latch the WB registers. A LD reads idc.read_data (idc serves the
+        # D-cache hit / fill-forward and stalls via data_stall); the store/flush
+        # effects on memory and the caches happen inside idc, driven by the request
+        # signals in the wiring section -- the CPU no longer touches memory here.
+        w_ir := m_ir;
+        w_valid := m_valid & ~dmem_stall;
+        w_val := (m_res if m_opcode ~= 4 else idc.read_data);
+        # lane 1: an ALU result, or (Step 4b) a load result from idc.read_data when
+        # lane 1 is the bundle's memory op. The single idc port is driven by whichever
+        # lane holds the memory op (at most one per bundle), so read_data is lane 1's
+        # loaded word exactly when lane 1 is the load.
+        w_ir1 := m_ir1;
+        w_valid1 := m_valid1 & ~dmem_stall;
+        w_val1 := (m_res1 if m_opcode1 ~= 4 else idc.read_data);
+
+        # EX: held while MEM stalls for a D-fill; bubbled on a data hazard;
+        # otherwise executes and moves to MEM.
+        if dmem_stall {
+        } else if ex_stall {
+            m_valid := false;
+            m_valid1 := false
+        } else {
+            m_ir := e_ir;
+            m_valid := e_valid;
+            m_res := e_res;
+            m_addr := e_a<<7:0>>;
+            m_store := e_b;
+            # lane 1: an ALU result, and (Step 4b) a memory address/store data taken
+            # THROUGH the bypass mux (e_a1_fwd/e_b1_fwd), so a lane-1 LD/ST whose
+            # address or data comes from lane 0's ALU result gets the forwarded value.
+            # Step 5b: when lane 0 is a mispredicted branch (mispredict), lane 1 is the
+            # branch's fall-through, which is now wrong-path -- SQUASH it here (it never
+            # reaches MEM), just as the mispredict block below squashes the younger
+            # ID/fetch instructions and redirects the PC.
+            m_ir1 := e_ir1;
+            m_valid1 := e_valid1 & ~mispredict;
+            m_res1 := e_res1;
+            m_addr1 := e_a1_fwd<<7:0>>;
+            m_store1 := e_b1_fwd
+        };
+
+        # ID -> EX and IF -> ID, unless EX or MEM is stalled (then all hold).
+        if ~dmem_stall & ~ex_stall {
+            if mispredict {
+                # Squash the younger, wrong-path instructions and redirect.
+                e_valid := false;                              # squash the ID instruction
+                d_valid := false;                              # squash the current fetch
+                e_valid1 := false;                             # lane 1 squashed too
+                d_valid1 := false;
+                pc := (e_target if e_take else e_pc + 1)       # correct next PC
+            } else {
+                # ID -> EX
+                e_ir := d_ir;
+                e_valid := d_valid;
+                e_pred := d_pred;
+                e_pc := d_pc;
+                # lane 1 (Step 1: bubble)
+                e_ir1 := d_ir1;
+                e_valid1 := d_valid1;
+                e_pred1 := d_pred1;
+                e_pc1 := d_pc1;
+
+                if flush_in_pipe | ifetch_stall {
+                    # IF stalled behind a pending FLUSH, or waiting for an I-cache
+                    # fill: insert a bubble into ID and hold the PC.
+                    d_valid := false;
+                    d_valid1 := false
+                } else {
+                    # IF -> ID: speculative fetch. idc installs the fetched line
+                    # internally (miss/fill and the sibling word); the CPU just
+                    # latches the returned lane-0 (and, on a dual issue, lane-1) word.
+                    d_ir := fetched;
+                    d_valid := true;
+                    d_pred := f_ptaken;
+                    d_pc := pc;
+                    # lane 1: issue the odd sibling of the pair when safe. Both
+                    # lanes of an issued pair are non-branch, so lane 1 carries no
+                    # prediction. On a dual issue the PC advances by two.
+                    d_ir1 := fetched1;
+                    d_valid1 := issue_two;
+                    d_pred1 := false;
+                    d_pc1 := pc + 1;
+                    pc := (pc + 2 if issue_two else pred_next_pc)
+                }
+            }
+        }
+        # (The main-memory read-fill port lives inside idc now.)
+    }
+
+    # ---- connect the idcache module (in the parent, so both the datapath and the
+    # sub-blocks see the interconnect) ----
+    # Fetch port: present the PC whenever IF is really fetching. idc returns both
+    # lanes (fetch_data0/valid0 and, on an even PC, fetch_data1/valid1).
+    definition idc.fetch_req  = fetch_active
+    definition idc.fetch_addr = pc
+    # Data port: the MEM bundle's single memory request, from whichever lane holds
+    # it (Step 4b). A bundle has at most one memory op (issue_two splits both-memory
+    # and every FLUSH), so at most one of read/write/flush is true across the two
+    # lanes -- which discharges one_data_op -- and the address/data mux selects the
+    # memory lane. mem_l1 is true exactly when lane 1 is the memory op.
+    definition idc.read_req   = (m_valid & m_opcode = 4) | (m_valid1 & m_opcode1 = 4)
+    definition idc.write_req  = (m_valid & m_opcode = 5) | (m_valid1 & m_opcode1 = 5)
+    definition idc.flush_req  = (m_valid & m_opcode = 7) | (m_valid1 & m_opcode1 = 7)
+    definition idc.data_addr  = (m_addr1  if mem_l1 else m_addr)
+    definition idc.write_data = (m_store1 if mem_l1 else m_store)
+    }
+}
+
+# The CPU discharges idc's only assumption: a MEM instruction issues at most
+# one data request per cycle (its opcode is a single value), so read/write/flush
+# are mutually exclusive.
+provide cpu.idc.one_data_op
