@@ -24,7 +24,11 @@ func Abc_NtkToDar(n *Network, exors, registers int32) *aig.Graph {
 	}
 	n.constant.Temp = int(g.Const1())
 	for _, ci := range n.cis {
-		ci.Temp = int(g.NewInput())
+		in := g.NewInput()
+		ci.Temp = int(in)
+		if ci.Level != 0 {
+			aig.Aig_ObjSetLevel(g, in, int32(ci.Level))
+		}
 	}
 	if registers != 0 {
 		var dc int
@@ -43,7 +47,9 @@ func Abc_NtkToDar(n *Network, exors, registers int32) *aig.Graph {
 		}
 	}
 	Abc_NtkIncrementTravId(n)
-	for _, co := range n.cos {
+	// Like ABC, build every AND (in DFS order from the COs) before any CO.
+	lits := make([]aig.Edge, len(n.cos))
+	for i, co := range n.cos {
 		if len(co.fanins) != 1 {
 			panic("abc: invalid output")
 		}
@@ -55,6 +61,9 @@ func Abc_NtkToDar(n *Network, exors, registers int32) *aig.Graph {
 		if registers != 0 && co.Kind == ObjectBI && len(co.fanouts) > 0 && Abc_LatchIsInit1(co.fanouts[0]) != 0 {
 			lit = lit.Not()
 		}
+		lits[i] = lit
+	}
+	for _, lit := range lits {
 		g.AddOutput(lit)
 	}
 	aig.Aig_ManSetRegNum(g, int32(len(latches)))

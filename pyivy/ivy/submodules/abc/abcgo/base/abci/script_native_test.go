@@ -79,3 +79,8 @@ func TestIfAreaMappingMatchesNative(t *testing.T) {
 func TestDarRefactorMatchesNative(t *testing.T) {
 	expectStats(t, "read ../../../i10.aig; drf; print_stats", "and =   2301  lev = 49")
 }
+
+// Native: abc -c "read i10.aig; drw; print_stats".
+func TestDarRewriteMatchesNative(t *testing.T) {
+	expectStats(t, "read ../../../i10.aig; drw; print_stats", "and =   2124  lev = 48")
+}
