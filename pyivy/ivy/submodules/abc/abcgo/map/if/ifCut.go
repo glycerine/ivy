@@ -147,8 +147,43 @@ func ifMerge(p *If_Man_t, a, b, c *If_Cut_t, ordered, permutations bool) int32 {
 func If_CutMergeOrdered_(p *If_Man_t, a, b, c *If_Cut_t) int32 {
 	return ifMerge(p, a, b, c, true, true)
 }
+// If_CutMergeOrdered merges two sorted leaf lists into c, failing if the
+// union exceeds the cut limit, as ifCut.c's does.
 func If_CutMergeOrdered(p *If_Man_t, a, b, c *If_Cut_t) int32 {
-	return ifMerge(p, a, b, c, true, false)
+	limit := int(a.nLimit)
+	x, y := ifLeaves(a), ifLeaves(b)
+	if cap(c.pLeaves) < limit {
+		c.pLeaves = make([]int32, 0, limit)
+	}
+	out := c.pLeaves[:limit]
+	i, j, n := 0, 0, 0
+	for i < len(x) && j < len(y) {
+		if n == limit {
+			return 0
+		}
+		switch xi, yj := x[i], y[j]; {
+		case xi < yj:
+			out[n] = xi
+			i++
+		case yj < xi:
+			out[n] = yj
+			j++
+		default:
+			out[n] = xi
+			i++
+			j++
+		}
+		n++
+	}
+	if n+len(x)-i+len(y)-j > limit {
+		return 0
+	}
+	n += copy(out[n:], x[i:])
+	n += copy(out[n:], y[j:])
+	c.pLeaves = out[:n]
+	c.nLeaves = uint32(n)
+	c.uSign = a.uSign | b.uSign
+	return 1
 }
 func If_CutMerge(p *If_Man_t, a, b, c *If_Cut_t) int32 { return ifMerge(p, a, b, c, false, false) }
 func ifCompare(p *If_Man_t, a, b *If_Cut_t, fields string) int32 {
