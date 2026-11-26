@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
 )
 
 func blifPortNet(port *abc.Object, input bool) *abc.Object {
@@ -46,9 +47,11 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 			directive = ".outputs"
 		}
 		out.WriteString(directive)
+		var names []string
 		for _, port := range n.ObjectsOfKind(kind) {
-			fmt.Fprint(&out, " ", blifPortName(port, kind == abc.ObjectPI))
+			names = append(names, blifPortName(port, kind == abc.ObjectPI))
 		}
+		writeBlifNames(&out, names, len(directive), 0)
 		out.WriteByte('\n')
 	}
 	if n.Function == uint8(abc.ABC_FUNC_BLACKBOX) {
@@ -92,13 +95,20 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 			return fmt.Errorf("node %d must drive one net", node.ID)
 		}
 		out.WriteString(".names")
+		var names []string
 		for _, e := range node.Fanins() {
 			if e.Complement {
 				return fmt.Errorf("complemented netlist edge requires explicit inverter")
 			}
-			fmt.Fprint(&out, " ", blifObjectName(e.Object))
+			names = append(names, blifObjectName(e.Object))
 		}
-		fmt.Fprintln(&out, " "+blifObjectName(outputs[0]))
+		length, count := writeBlifNames(&out, names, 6, 0)
+		// The output name uses a 75-column limit (Io_NtkWriteNodeFanins).
+		if name := blifObjectName(outputs[0]); count > 0 && length+len(name)+1 > 75 {
+			out.WriteString(" \\\n " + name + "\n")
+		} else {
+			out.WriteString(" " + name + "\n")
+		}
 		switch data := node.Data.(type) {
 		case string:
 			out.WriteString(strings.TrimRight(data, "\x00"))
@@ -198,7 +208,11 @@ func WriteBLIFFile(n *abc.Network, filename string, multiValued, writeLatches bo
 	if err != nil {
 		return err
 	}
-	err = WriteBLIF(f, n, multiValued, writeLatches)
+	// Io_WriteBlif starts every file with this comment.
+	err = writeText(f, fmt.Sprintf("# Benchmark \"%s\" written by ABC on %s\n", n.Name, extra.Extra_TimeStamp()))
+	if err == nil {
+		err = WriteBLIF(f, n, multiValued, writeLatches)
+	}
 	closeErr := f.Close()
 	if err != nil {
 		return err
@@ -222,8 +236,35 @@ func writeNetworkBLIF(n *abc.Network, filename string) error {
 	}
 	return Io_WriteBlif(n, filename, 1, 0, 0)
 }
+// Io_WriteBlifLogic derives the netlist first, as ABC does.
 func Io_WriteBlifLogic(n *abc.Network, filename string, writeLatches int32) error {
-	return WriteBLIFFile(n, filename, false, writeLatches != 0)
+	netlist := abc.Abc_NtkToNetlist(n)
+	if netlist == nil {
+		return fmt.Errorf("Writing BLIF has failed.")
+	}
+	defer abc.Abc_NtkDelete(netlist)
+	return Io_WriteBlif(netlist, filename, writeLatches, 0, 0)
+}
+
+// blifLineLength is IO_WRITE_LINE_LENGTH.
+const blifLineLength = 78
+
+// writeBlifNames writes " name" for each name, continuing with " \" before
+// a name that would pass ABC's line length (Io_NtkWritePis/Pos/NodeFanins).
+// length is the width already used on the line; the updated width and
+// count of names on the current line are returned.
+func writeBlifNames(out *strings.Builder, names []string, length, count int) (int, int) {
+	for _, name := range names {
+		added := len(name) + 1
+		if count > 0 && length+added+3 > blifLineLength {
+			out.WriteString(" \\\n")
+			length, count = 0, 0
+		}
+		out.WriteString(" " + name)
+		length += added
+		count++
+	}
+	return length, count
 }
 
 func blifMVTerm(term abc.MVTerm, net *abc.Object, inputs []abc.Edge) (string, error) {
