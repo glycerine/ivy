@@ -91,13 +91,15 @@ func (d *DomainSetup) ProcessDecl(decl Node) error {
 		}
 	case *ConstantDecl:
 		for _, arg := range n.DeclArgs {
-			if err := d.Individual(arg); err != nil {
+			sym, err := d.individual(arg)
+			if err != nil {
 				return err
 			}
+			d.recordStorage(sym, n.Storage)
 		}
 	case *DerivedDecl:
 		for _, arg := range n.DeclArgs {
-			if err := d.Derived(arg); err != nil {
+			if err := d.derived(arg, n.Storage); err != nil {
 				return err
 			}
 		}
@@ -691,6 +693,10 @@ func (d *DomainSetup) individual(node Node) (*Const, error) {
 // Derived processes a derived relation/function declaration.
 // Corresponds to Python IvyDomainSetup.derived.
 func (d *DomainSetup) Derived(node Node) error {
+	return d.derived(node, OrdinaryStorage)
+}
+
+func (d *DomainSetup) derived(node Node, storage StorageKind) error {
 	xtracer.Trace("compiler.DomainSetup.derived ENTER")
 	if xtracer.Enabled {
 		d.Compiler.SigCheck("DomainSetup.derived")
@@ -769,11 +775,31 @@ func (d *DomainSetup) Derived(node Node) error {
 	mod.AllRelations = append(mod.AllRelations, sym)
 	mod.Relations.Set(Key(sym), sym.CSort)
 
-	// Python: self.domain.updates.append(DerivedUpdate(df))
-	mod.Updates = append(mod.Updates,
-		NewDerivedUpdate(derivedSym, compiled))
+	if storage == OrdinaryStorage {
+		mod.Updates = append(mod.Updates, NewDerivedUpdate(derivedSym, compiled))
+	} else {
+		d.recordStorage(derivedSym, storage)
+	}
 
 	return nil
+}
+
+func (d *DomainSetup) recordStorage(sym *Const, storage StorageKind) {
+	if sym == nil || storage == OrdinaryStorage {
+		return
+	}
+	mod := d.Compiler.Module
+	if storage == RegisterStorage {
+		mod.Registers.Set(Key(sym), sym)
+		return
+	}
+	mod.Wires.Set(Key(sym), sym)
+	switch storage {
+	case InputWireStorage:
+		mod.InputWires = append(mod.InputWires, sym)
+	case OutputWireStorage:
+		mod.OutputWires = append(mod.OutputWires, sym)
+	}
 }
 
 // DefinitionDecl processes a definition declaration.
@@ -891,8 +917,10 @@ func (d *DomainSetup) registerDefinition(compiled Expr) {
 			d.Compiler.Module.SymbolOrder = append(d.Compiler.Module.SymbolOrder, cnst)
 		}
 		// Python: self.domain.updates.append(DerivedUpdate(df))
-		d.Compiler.Module.Updates = append(d.Compiler.Module.Updates,
-			NewDerivedUpdate(def.Defines(), compiled))
+		mod := d.Compiler.Module
+		if _, wire := mod.Wires.Get2(Key(def.Defines())); !wire {
+			mod.Updates = append(mod.Updates, NewDerivedUpdate(def.Defines(), compiled))
+		}
 	}
 }
 

@@ -463,8 +463,13 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 	}
 
 	// Check exported summarized actions.
+	registerNames := make(map[string]bool)
+	for _, reg := range mod.Registers.All() {
+		registerNames[reg.Name] = true
+	}
 	for _, exp := range mod.Exports {
 		calledName := CanonAct(exp.Exported())
+		isIsolateExport := mod.PublicActions.Get("ext:" + calledName)
 
 		allCalls := []string{calledName}
 		for _, m := range mixinsAutoVivify(mod, calledName) {
@@ -481,12 +486,12 @@ func CheckInterferenceFull(mod *Module, newActions *InsMap[string, ActionsAction
 				continue
 			}
 			if cmods, ok := mods[called]; ok && len(cmods) > 0 {
-				// For after-init actions, filter mods by after_init_refs
 				filteredMods := cmods
-				if allAfterInits != nil && allAfterInits[called] {
+				isAfterInit := allAfterInits[called]
+				if isAfterInit || (isIsolateExport && len(registerNames) != 0) {
 					filteredMods = make(map[string]bool)
 					for sym := range cmods {
-						if afterInitRefs[sym] {
+						if !registerNames[sym] && (!isAfterInit || afterInitRefs[sym]) {
 							filteredMods[sym] = true
 						}
 					}

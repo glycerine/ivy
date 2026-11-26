@@ -77,6 +77,11 @@ func AddMixinsExt(
 		}
 		if useMixin != nil && !useMixin(mixerName) {
 			xtracer.Trace("isolate.add_mixins_ext SKIP use_mixin=false mixer=%s", mixerName)
+			if mod.Registers.Len() != 0 && mod.Cfg.IsolateCfg.IsolateMode == "check" {
+				if regs := registerModifications(mod, mixerName); len(regs) != 0 {
+					res = ApplyMixin(summarizeRegisterAction(action1, mod.Cfg.IsolateCfg, regs), res, mx.IsAfter())
+				}
+			}
 			continue
 		}
 		if assertToAssume != nil {
@@ -98,6 +103,59 @@ func AddMixinsExt(
 		}
 	}
 	return res
+}
+
+func summarizeRegisterAction(action ActionsAction, cfg *IsolateConfig, regs []*Const) ActionsAction {
+	res := SummarizeAction(action, cfg).(*LogicSequence)
+	for _, reg := range regs {
+		res.Elems = append(res.Elems, NewHavocAction(reg))
+	}
+	return res
+}
+
+func registerModifications(mod *Module, root string) []*Const {
+	if mod.Registers.Len() == 0 || mod.Cfg.IsolateCfg.IsolateMode != "check" {
+		return nil
+	}
+	var regs []*Const
+	seen := make(map[NodeKey]bool)
+	visited := make(map[string]bool)
+	root = CanonAct(root)
+	addModified := func(action ActionsAction) {
+		for _, sym := range ModifiesSingle(action, mod.Cfg.ActCfg) {
+			if _, registered := mod.Registers.Get2(Key(sym)); registered {
+				regs = appendUniqueConst(regs, seen, sym)
+			}
+		}
+	}
+	var visit func(string)
+	visit = func(name string) {
+		name = CanonAct(name)
+		if visited[name] {
+			return
+		}
+		visited[name] = true
+		action, ok := mod.Actions.Get2(name)
+		if !ok {
+			return
+		}
+		for _, sub := range action.IterSubactions() {
+			addModified(sub)
+			if call, ok := sub.(*LogicCallAction); ok {
+				for _, target := range call.ActualReturns {
+					addModified(NewHavocAction(target))
+				}
+				visit(call.CalleeName())
+			}
+		}
+		if name != root {
+			for _, mixin := range mod.Mixins.Get(name) {
+				visit(mixin.Mixer())
+			}
+		}
+	}
+	visit(root)
+	return regs
 }
 
 // -----------------------------------------------------------------------

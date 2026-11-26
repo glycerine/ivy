@@ -1335,6 +1335,21 @@ class IvyDomainSetup(IvyDeclInterp):
 #        print "sym: {!r}".format(sym)
         self.domain.functions[sym] = len(v.args)
         return sym
+
+    def wire(self,v):
+        sym = self.derived(v,mutable=False) if isinstance(v,ivy_ast.LabeledFormula) else self.individual(v)
+        self.domain.wires[sym] = None
+        return sym
+
+    def input_wire(self,v):
+        self.domain.input_wires.append(self.wire(v))
+
+    def output_wire(self,v):
+        self.domain.output_wires.append(self.wire(v))
+
+    def register(self,v):
+        self.domain.registers.add(self.individual(v))
+
     def parameter(self,v):
         if __debug__: xtracer.trace("compiler.DomainSetup.parameter ENTER")
         if isinstance(v,ivy_ast.Definition):
@@ -1392,7 +1407,7 @@ class IvyDomainSetup(IvyDeclInterp):
         self.definition_list(ldf).append(ldf)
         self.last_fact = ldf
 
-    def derived(self,ldf):
+    def derived(self,ldf,mutable=True):
         if __debug__: xtracer.trace("compiler.DomainSetup.derived ENTER")
         if __debug__: sig_check("DomainSetup.derived")
         try:
@@ -1406,8 +1421,10 @@ class IvyDomainSetup(IvyDeclInterp):
             self.domain.all_relations.append((sym,len(lhs.args)))
             self.domain.relations[sym] = len(lhs.args)
             self.add_definition(ldf.clone([label,df]))
-            self.domain.updates.append(DerivedUpdate(df))
+            if mutable:
+                self.domain.updates.append(DerivedUpdate(df))
             self.domain.symbol_order.append(sym)
+            return df.args[0].rep
         except ValueError:
             raise IvyError(df,"definition of derived relation must be a cube")
     def definition(self,ldf):
@@ -1431,7 +1448,8 @@ class IvyDomainSetup(IvyDeclInterp):
         self.register_definition(df)
 
     def register_definition(self,df):
-        self.domain.updates.append(DerivedUpdate(df))
+        if df.defines() not in self.domain.wires:
+            self.domain.updates.append(DerivedUpdate(df))
         self.domain.symbol_order.append(df.args[0].rep)
         if not self.domain.sig.contains_symbol(df.args[0].rep):
             add_symbol(df.args[0].rep.name,df.args[0].rep.sort)

@@ -663,13 +663,40 @@ func (d *RelationDecl) Clone(args []Node) Node {
 }
 func (d *RelationDecl) String() string { return "relation" }
 
+// StorageKind records the storage or interface declared for a symbol.
+type StorageKind uint8
+
+const (
+	OrdinaryStorage StorageKind = iota
+	WireStorage
+	InputWireStorage
+	OutputWireStorage
+	RegisterStorage
+)
+
+func (s StorageKind) declarationName(ordinary string) string {
+	switch s {
+	case WireStorage:
+		return "wire"
+	case InputWireStorage:
+		return "input_wire"
+	case OutputWireStorage:
+		return "output_wire"
+	case RegisterStorage:
+		return "register"
+	default:
+		return ordinary
+	}
+}
+
 // ConstantDecl declares a constant (individual).
 type ConstantDecl struct {
 	DeclBase
 	// Fresh marks Python's FreshConstantDecl, a ConstantDecl subclass that
 	// only differs in its class: every isinstance(x, ConstantDecl) check
 	// matches it, so goivy keeps it a *ConstantDecl and flags it here.
-	Fresh bool
+	Fresh   bool
+	Storage StorageKind
 }
 
 func (cfg *AstConfig) NewConstantDecl(args ...Node) *ConstantDecl {
@@ -680,9 +707,9 @@ func (cfg *AstConfig) NewConstantDecl(args ...Node) *ConstantDecl {
 
 func (d *ConstantDecl) Clone(args []Node) Node {
 	// Python clone keeps the class (FreshConstantDecl stays fresh).
-	return &ConstantDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}, Fresh: d.Fresh}
+	return &ConstantDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}, Fresh: d.Fresh, Storage: d.Storage}
 }
-func (d *ConstantDecl) String() string { return "individual" }
+func (d *ConstantDecl) String() string { return d.Storage.declarationName("individual") }
 
 // ParameterDecl declares a parameter.
 type ParameterDecl struct {
@@ -974,6 +1001,7 @@ func (cfg *AstConfig) NewSchemaBody(elems ...Node) *SchemaBody {
 
 func (s *SchemaBody) Args() []Node           { return s.Elems }
 func (s *SchemaBody) Clone(args []Node) Node { return &SchemaBody{Base: s.Base, Elems: args} }
+
 // String is Python's SchemaBody.__str__ (ivy_ast.py): the premises and the
 // conclusion, one per line, nested schemata indented.
 func (s *SchemaBody) String() string {
@@ -1183,6 +1211,7 @@ func (d *TheoremDecl) String() string { return "theorem" }
 // DerivedDecl declares a derived relation/function.
 type DerivedDecl struct {
 	DeclBase
+	Storage StorageKind
 }
 
 func (cfg *AstConfig) NewDerivedDecl(args ...Node) *DerivedDecl {
@@ -1192,9 +1221,9 @@ func (cfg *AstConfig) NewDerivedDecl(args ...Node) *DerivedDecl {
 }
 
 func (d *DerivedDecl) Clone(args []Node) Node {
-	return &DerivedDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}}
+	return &DerivedDecl{DeclBase: DeclBase{Base: d.Base, DeclArgs: args}, Storage: d.Storage}
 }
-func (d *DerivedDecl) String() string { return "derived" }
+func (d *DerivedDecl) String() string { return d.Storage.declarationName("derived") }
 
 // Defines returns the names defined by this derived declaration.
 // Python: DerivedDecl.defines() returns [(c.formula.defines(), lineno(c.formula)) for c in self.args]
@@ -2668,7 +2697,7 @@ func (s *SumSpace) String() string {
 // DeclName returns the Python-compatible dispatch name for a declaration node.
 // Matches Python's decl.name() used in IvyDeclInterp.__call__.
 func DeclName(decl Node) string {
-	switch decl.(type) {
+	switch d := decl.(type) {
 	case *TypeDecl:
 		return "type"
 	case *AxiomDecl:
@@ -2680,9 +2709,9 @@ func DeclName(decl Node) string {
 	case *RelationDecl:
 		return "relation"
 	case *ConstantDecl:
-		return "individual"
+		return d.String()
 	case *DerivedDecl:
-		return "derived"
+		return d.String()
 	case *DefinitionDecl:
 		return "definition"
 	case *ActionDecl:

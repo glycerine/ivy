@@ -1,0 +1,16 @@
+#lang ivy1.8
+
+import wire input_value : bool
+register first : bool, second : bool
+wire split : bool
+definition split = first & second
+export wire inline : bool = first & second
+wire indexed(X:bool) : bool = X & first
+
+export action tick = {
+    if split & inline {
+        first := false;
+        second := false;
+        assert split & inline & indexed(true)
+    }
+}

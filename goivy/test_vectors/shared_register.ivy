@@ -1,0 +1,13 @@
+#lang ivy1.8
+
+register shared : bool
+export action tick
+
+object writer = {
+    action set_register = { shared := true }
+    after tick { call set_register; assume true }
+}
+
+isolate observer = {
+    before tick { assert shared | ~shared }
+}

@@ -37,6 +37,7 @@ func (m *Module) CanonizeTypes(sortRefinements []SortRefinement) {
 	// Resort symbol lists.
 	m.Params = resortSymbols(m.Params, rn)
 	m.SymbolOrder = resortSymbols(m.SymbolOrder, rn)
+	m.remapHardwareSymbols(func(sym *Const) *Const { return ResortSymbol(sym, rn) })
 
 	// Remove refined sort names from sets and lists.
 	m.GhostSorts = removeRefinedSortNames(m.GhostSorts, rn)

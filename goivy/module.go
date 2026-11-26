@@ -58,6 +58,11 @@ type Module struct {
 	Imports   []Node
 	Delegates []Delegator
 
+	Wires       *InsMap[NodeKey, *Const]
+	Registers   *InsMap[NodeKey, *Const]
+	InputWires  []*Const
+	OutputWires []*Const
+
 	// Sorts and destructors
 	DestructorSorts  map[string]Sort
 	SortDestructors  *InsMap[string, []*Const]
@@ -131,7 +136,8 @@ type Module struct {
 
 	// Theory is the cached background theory, set by UpdateTheory.
 	// Corresponds to Python's self.theory (ivy_module.py:117).
-	Theory *Clauses
+	Theory        *Clauses
+	nonWireTheory *Clauses
 
 	// TraceHook is a diagnostic hook closure propagated from a goal's
 	// LabeledFormula.TraceHook field. Mirrors Python's dynamically-attached
@@ -177,6 +183,44 @@ type Module struct {
 type z3CtxHolder struct {
 	ctx            *smt.Z3Context
 	z3CheckCounter atomic.Int64
+}
+
+func (m *Module) remapHardwareSymbols(remap func(*Const) *Const) {
+	for _, symbols := range []*InsMap[NodeKey, *Const]{m.Wires, m.Registers} {
+		if symbols.Len() == 0 {
+			continue
+		}
+		original := symbols.Clone()
+		symbols.DeleteAll()
+		for _, sym := range original.All() {
+			if mapped := remap(sym); mapped != nil {
+				symbols.Set(Key(mapped), mapped)
+			}
+		}
+	}
+	remapPorts := func(ports []*Const) []*Const {
+		var mapped []*Const
+		for _, port := range ports {
+			if sym := remap(port); sym != nil {
+				mapped = append(mapped, sym)
+			}
+		}
+		return mapped
+	}
+	m.InputWires = remapPorts(m.InputWires)
+	m.OutputWires = remapPorts(m.OutputWires)
+}
+
+func (m *Module) isWireDefinition(formula Node) bool {
+	if m.Wires.Len() == 0 {
+		return false
+	}
+	def, ok := formula.(interface{ Defines() Expr })
+	if !ok {
+		return false
+	}
+	_, wire := m.Wires.Get2(Key(def.Defines()))
+	return wire
 }
 
 // NamedAction pairs a name with an action.
@@ -280,6 +324,11 @@ func (m *Module) Clear() {
 	m.Exports = nil
 	m.Imports = nil
 	m.Delegates = nil
+	m.Wires = NewInsMap[NodeKey, *Const]()
+	m.Registers = NewInsMap[NodeKey, *Const]()
+	m.InputWires = nil
+	m.OutputWires = nil
+	m.nonWireTheory = nil
 	m.Progress = nil
 	m.Rely = nil
 	m.MixOrd = nil
@@ -374,6 +423,10 @@ func (m *Module) Copy() *Module {
 	c.Exports = append([]Exporter{}, m.Exports...)
 	c.Imports = append([]Node{}, m.Imports...)
 	c.Delegates = append([]Delegator{}, m.Delegates...)
+	c.Wires = m.Wires.Clone()
+	c.Registers = m.Registers.Clone()
+	c.InputWires = append([]*Const(nil), m.InputWires...)
+	c.OutputWires = append([]*Const(nil), m.OutputWires...)
 
 	// Copy proofs, named, subgoals (Python copies all via __dict__ iteration)
 	c.Proofs = append([]ProofEntry{}, m.Proofs...)
@@ -504,6 +557,7 @@ func (m *Module) Copy() *Module {
 	c.CompCfg = m.CompCfg
 	c.Instantiator = m.Instantiator
 	c.Theory = m.Theory
+	c.nonWireTheory = m.nonWireTheory
 	c.z3SharedCtx = m.z3SharedCtx
 
 	// Copy signature (deep)

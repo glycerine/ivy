@@ -68,6 +68,7 @@ import (
 
 // Terminal tokens — keywords (declarations, carry line number only)
 %token <tok>  PARSER_TOK_RELATION PARSER_TOK_INDIV PARSER_TOK_FUNCTION PARSER_TOK_DERIVED
+%token <tok>  PARSER_TOK_WIRE PARSER_TOK_REGISTER
 %token <tok>  PARSER_TOK_AXIOM PARSER_TOK_CONJECTURE PARSER_TOK_SCHEMA PARSER_TOK_THEOREM
 %token <tok>  PARSER_TOK_PROPERTY PARSER_TOK_DEFINITION
 %token <tok>  PARSER_TOK_TYPE PARSER_TOK_STRUCT
@@ -123,7 +124,7 @@ import (
 %type <node>  tatom
 %type <nodes> tatoms
 %type <node>  rel fun
-%type <nodes> rels funs
+%type <nodes> rels funs registers
 %type <node>  sort typesymbol
 %type <bval>  optfinite optghost
 %type <nodes> names
@@ -574,6 +575,31 @@ top:
         }
     }
     // --- Derived ---
+    | top PARSER_TOK_WIRE funs
+    {
+        $$ = $1
+        parser17DeclareWires($$, $3, WireStorage)
+    }
+    | top PARSER_TOK_IMPORT PARSER_TOK_WIRE funs
+    {
+        $$ = $1
+        parser17DeclareWires($$, $4, InputWireStorage)
+    }
+    | top PARSER_TOK_EXPORT PARSER_TOK_WIRE funs
+    {
+        $$ = $1
+        parser17DeclareWires($$, $4, OutputWireStorage)
+    }
+    | top PARSER_TOK_REGISTER registers
+    {
+        $$ = $1
+        for _, term := range $3 {
+            d := parser17Acfg(parser17lex).NewConstantDecl(term)
+            d.Storage = RegisterStorage
+            d.SetLineno(term.GetLineno())
+            $$.declare(d)
+        }
+    }
     | top PARSER_TOK_DERIVED defns
     {
         xtracer.Trace("parser.p_top_derived_defns ENTER (top)")
@@ -2491,6 +2517,17 @@ funs:
     | funs PARSER_TOK_COMMA fun
     {
         xtracer.Trace("parser.p_funs_funs_comma_fun ENTER (funs)")
+        $$ = append($1, $3)
+    }
+    ;
+
+registers:
+    typeddefn
+    {
+        $$ = []Node{$1}
+    }
+    | registers PARSER_TOK_COMMA typeddefn
+    {
         $$ = append($1, $3)
     }
     ;

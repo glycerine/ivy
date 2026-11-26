@@ -80,9 +80,12 @@ def add_mixins(mod,actname,action2,assert_to_assume=lambda m:[],use_mixin=lambda
             if __debug__: xtracer.trace("isolate.add_mixins_ext AFTER_MIXIN actname=%s mixer=%s res_nargs=%d action1_nargs=%d" % (actname, mixin_name, len(res.args), len(action1.args)))
         else:
             if __debug__: xtracer.trace("isolate.add_mixins_ext SKIP use_mixin=false mixer=%s" % mixin_name)
+            registers = register_modifications(mod,mixin_name)
+            if registers:
+                res = ia.apply_mixin(mixin,summarize_action(action1,registers),res)
     return res
 
-def summarize_action(action):
+def summarize_action(action,registers=()):
     res = ia.Sequence()
     res.lineno = action.lineno
     res.formal_params = action.formal_params
@@ -94,7 +97,33 @@ def summarize_action(action):
         for x in res.formal_returns:
             if x in res.formal_params:
                 res.args.append(ia.HavocAction(x))
+        res.args.extend(ia.HavocAction(reg) for reg in registers)
     return res
+
+def register_modifications(mod,root):
+    if not mod.registers or isolate_mode.get() != 'check':
+        return ()
+    root = canon_act(root)
+    registers = OrderedSymSet()
+    visited = set()
+
+    def visit(name):
+        name = canon_act(name)
+        if name in visited or name not in mod.actions:
+            return
+        visited.add(name)
+        for sub in mod.actions[name].iter_subactions():
+            registers.update(sym for sym in sub.modifies() if sym in mod.registers)
+            if isinstance(sub,ia.CallAction):
+                for target in sub.args[1:]:
+                    registers.update(sym for sym in ia.HavocAction(target).modifies() if sym in mod.registers)
+                visit(sub.args[0].rep)
+        if name != root:
+            for mixin in mod.mixins.get(name,()):
+                visit(mixin.mixer())
+
+    visit(root)
+    return registers
 
 # Delegation of assertions
 
@@ -451,6 +480,10 @@ def strip_isolate(mod,isolate,impl_mixins,all_after_inits,extra_strip):
         new_symbols[name] = sym
     ivy_logic.sig.symbols.clear()
     ivy_logic.sig.symbols.update(new_symbols)
+    mod.wires = dict.fromkeys(new_symbols[sym.name] for sym in mod.wires if sym.name in new_symbols)
+    mod.registers = {new_symbols[sym.name] for sym in mod.registers if sym.name in new_symbols}
+    mod.input_wires = [new_symbols[sym.name] for sym in mod.input_wires if sym.name in new_symbols]
+    mod.output_wires = [new_symbols[sym.name] for sym in mod.output_wires if sym.name in new_symbols]
     
     # strip the parameters
     old_params = list(mod.params)
@@ -684,13 +717,14 @@ def check_interference(mod,new_actions,summarized_actions,impl_mixins,check_term
 
     for e in mod.exports:
         called_name = canon_act(e.exported())
+        is_isolate_export = 'ext:' + called_name in mod.public_actions
         all_calls = ([called_name] + [m.mixer() for m in mod.mixins[called_name]]
                                    + [m.mixer() for m in impl_mixins[called_name]])
         for called in all_calls:
             if called in summarized_actions:
-                cmods = set(mods[called])
+                cmods = {sym for sym in mods[called] if not is_isolate_export or sym not in mod.registers}
                 if called in all_after_inits:
-                    cmods = set(sym for sym in cmods if sym in after_init_refs)
+                    cmods = {sym for sym in cmods if sym in after_init_refs and sym not in mod.registers}
                 if cmods:
                     things = ','.join(sorted(map(str,cmods)))
                     refs = ''.join('\n' + str(ln) + 'referenced here' for ln in find_references(mod,cmods,new_actions))
@@ -994,7 +1028,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
             implementation_map[m.mixee()] = m.mixer()
 
     new_actions = {}
-    use_mixin = lambda name: startswith_some(name,present,mod)
+    use_mixin = lambda name: startswith_eq_some(name,present,mod)
     def prefix_call_ext(name):
         return 'ext:'+name if startswith_some(name,verified,mod) else name
     mod_mixin = lambda mixin,m: m if startswith_some(mixin.mixer(),verified,mod) else m.prefix_calls(prefix_call_ext)
@@ -1089,7 +1123,7 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
             # have a call dependency on the isolated module
             if __debug__: xtracer.trace("isolate.summarizedActions_add actname=%s" % actname)
             summarized_actions.add(actname)
-            action = summarize_action(action)
+            action = summarize_action(action,register_modifications(mod,actname))
             new_actions[actname] = add_mixins(mod,actname,action,int_sum_assumes,use_mixin,ext_mod_mixin(after_mixins))
             new_actions['ext:'+actname] = add_mixins(mod,actname,action,ext_assumes_no_ver,use_mixin,ext_mod_mixin(all_mixins))
 
@@ -1129,22 +1163,33 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     explicit_exports = set(exported)
 
     with_effects = set()
+    def add_exported(name):
+        if 'ext:' + name in exported or name in with_effects:
+            return
+        if not has_side_effect(mod,new_actions,name):
+            with_effects.add(name)
+            return
+        exported['ext:' + name] = True
+        make_before_export(name)
+
+    def has_present_mixer(name):
+        return any(use_mixin(m.mixer()) for m in mod.mixins[name])
+
     for actname,action in mod.actions.items():
         if not startswith_eq_some(actname,present,mod):
             for subaction in action.iter_subactions():
                 if isinstance(subaction,ia.CallAction):
                     c = subaction.args[0].rep
-                    if (startswith_eq_some(c,present,mod)
-                        or any(startswith_some(m.mixer(),present,mod) for m in mod.mixins[c])) :
-                            if ('ext:' + c) not in explicit_exports:
-                                add_extern_precond(mod,subaction,export_preconds['ext:' + c])
-                            if ('ext:' + c) in exported or c in with_effects:
-                                continue
-                            if not has_side_effect(mod,new_actions,c):
-                                with_effects.add(c)
-                                continue
-                            exported['ext:' + c] = True
-                            make_before_export(c)
+                    if startswith_eq_some(c,present,mod):
+                        if 'ext:' + c not in explicit_exports:
+                            add_extern_precond(mod,subaction,export_preconds['ext:' + c])
+                        add_exported(c)
+                    elif has_present_mixer(c):
+                        add_exported(c)
+    for export in mod.exports:
+        name = export.exported()
+        if not export.scope() and not startswith_eq_some(name,present,mod) and has_present_mixer(name):
+            add_exported(name)
 
     for actname in export_preconds:
         pcs = export_preconds[actname]
@@ -1429,11 +1474,15 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     # allSyms2: online per-symbol tracing, matching Go execution order exactly.
     _as2_label = "isolate.allSyms2"
     all_syms = OrderedSymSet()
+    wire_defs = []
 
     # Phase A: formulas from axioms, props, inits, conjs, definitions
-    for x in [mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs,mod.definitions]:
+    for x in [mod.labeled_axioms,mod.labeled_props,mod.labeled_inits,mod.labeled_conjs,mod.definitions,mod.assumed_invariants]:
         for y in x:
             if not isinstance(y.formula,ivy_ast.SchemaBody):
+                if isinstance(y.formula,ivy_logic.Definition) and y.formula.defines() in mod.wires:
+                    wire_defs.append(y.formula)
+                    continue
                 if __debug__: xtracer.trace("%s.phaseA_fmla %s" % (_as2_label, str(y.label)))
                 _traced_add_syms(_as2_label, all_syms, lu.symbols_ilu_ast(y.formula))
 
@@ -1462,6 +1511,12 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
     if __debug__: xtracer.trace("%s.phaseF_proofs_start" % _as2_label)
     for x in mod.proofs:
         _traced_add_syms(_as2_label, all_syms, lu.symbols_ilu_ast(x[1]))
+
+    interference_refs = all_syms
+    if wire_defs:
+        interference_refs = OrderedSymSet(all_syms)
+        for formula in wire_defs:
+            _traced_add_syms(_as2_label, all_syms, lu.symbols_ilu_ast(formula))
 
     if opt_keep_destructors.get():
         for sym in list(all_syms):
@@ -1497,11 +1552,12 @@ def isolate_component(mod,isolate_name,extra_with=[],extra_strip=None,after_init
 
     if do_check_interference.get():
         interf_syms = OrderedSymSet()
-        for x in all_syms:
+        for x in interference_refs:
             if x in ivy_logic.all_symbols():
                 interf_syms.add(x)
         _trace_sym_set("isolate.interfSyms_pre_follow", interf_syms)
-        follow_definitions(orig_defs,interf_syms,label="interfSyms")
+        interference_defs = [d for d in orig_defs if d.formula.defines() not in mod.wires]
+        follow_definitions(interference_defs,interf_syms,label="interfSyms")
         _trace_sym_set("isolate.interfSyms_after_follow", interf_syms)
         if __debug__: xtracer.trace("isolate.presentAfterInits=%s" % ','.join(sorted(after_inits)))
         if __debug__: xtracer.trace("isolate.allAfterInits=%s" % ','.join(sorted(all_after_inits)))

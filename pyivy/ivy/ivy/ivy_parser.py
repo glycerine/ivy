@@ -1233,6 +1233,35 @@ def p_top_function_tapp_colon_atype(p):
     for d in p[3]:
         p[0].declare(d)
 
+if iu.get_numeric_version() > [1,6]:
+    def p_top_wires(p):
+        '''top : top WIRE funs
+               | top IMPORT WIRE funs
+               | top EXPORT WIRE funs'''
+        p[0] = p[1]
+        kinds = {
+            'wire': (WireConstantDecl, WireDerivedDecl),
+            'import': (InputWireConstantDecl, InputWireDerivedDecl),
+            'export': (OutputWireConstantDecl, OutputWireDerivedDecl),
+        }
+        constant, derived = kinds[p[2]]
+        for decl in p[len(p)-1]:
+            decl.__class__ = derived if isinstance(decl,DerivedDecl) else constant
+            p[0].declare(decl)
+
+    def p_registers(p):
+        '''registers : typeddefn
+                     | registers COMMA typeddefn'''
+        p[0] = [p[1]] if len(p) == 2 else p[1] + [p[3]]
+
+    def p_top_registers(p):
+        'top : top REGISTER registers'
+        p[0] = p[1]
+        for term in p[3]:
+            decl = RegisterConstantDecl(term)
+            decl.lineno = term.lineno
+            p[0].declare(decl)
+
 def mk_lf(x):
     if __debug__: xtracer.trace("parser.mk_lf ENTER")
     res = LabeledFormula(None,x)

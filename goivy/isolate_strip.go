@@ -1016,6 +1016,16 @@ func StripIsolate(mod *Module, stripMap StripMap, allAfterInits map[string]bool)
 				})
 			}
 		}
+		mod.remapHardwareSymbols(func(sym *Const) *Const {
+			sp := StripMapLookup(sym.Name, stripMap, mod)
+			if len(sp) != 0 {
+				sym = NewConst(sym.Name, StripSort(sym.CSort, len(sp)))
+			}
+			if mod.Sig.ContainsSymbol(sym.Name, sym.CSort) {
+				return sym
+			}
+			return nil
+		})
 	}
 
 	// Strip the module parameters.

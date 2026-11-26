@@ -1,5 +1,17 @@
 package goivy
 
+func parser17DeclareWires(top *ivyAccum, decls []Node, storage StorageKind) {
+	for _, decl := range decls {
+		switch d := decl.(type) {
+		case *ConstantDecl:
+			d.Storage = storage
+		case *DerivedDecl:
+			d.Storage = storage
+		}
+		top.declare(decl)
+	}
+}
+
 func parser17DeclareAxiom(cfg *AstConfig, top *ivyAccum, lf *LabeledFormula, explicit bool, temporal bool, loc Location) {
 	lf = parser17AddLabel(cfg, lf, "axiom")
 	if explicit {

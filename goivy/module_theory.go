@@ -115,6 +115,16 @@ func (m *Module) UpdateTheory() {
 
 	cls := NewClauses(theory, defs, nil)
 	m.Theory = cls
+	m.nonWireTheory = cls
+	if m.Wires.Len() != 0 {
+		var nonWireDefs []*IvyDefinition
+		for _, def := range defs {
+			if _, wire := m.Wires.Get2(Key(def.Defines())); !wire {
+				nonWireDefs = append(nonWireDefs, def)
+			}
+		}
+		m.nonWireTheory = NewClauses(theory, nonWireDefs, nil)
+	}
 }
 
 // GetAxioms retrieves all axioms including schema instances.

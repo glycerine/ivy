@@ -241,7 +241,11 @@ class Action(AST):
         return res
     def update(self,domain,in_scope):
         if __debug__: xtracer.trace("actions.GetUpdate ENTER type=%s" % type(self).__name__)
-        return self.hide_formals(bind_olds_action(self.int_update(domain,in_scope)))
+        updated,clauses,pre = self.hide_formals(bind_olds_action(self.int_update(domain,in_scope)))
+        if updated is not None and domain.wires:
+            modified = set(updated)
+            updated = updated + [wire for wire in domain.wires if wire not in modified]
+        return updated,clauses,pre
     def hide_formals(self,update):
         to_hide = []
         if hasattr(self,'formal_params'):
@@ -857,7 +861,7 @@ class Sequence(Action):
     def int_update(self,domain,pvars):
         if __debug__: xtracer.trace("actions.Sequence.int_update ENTER")
         update = ([],true_clauses(EmptyAnnotation()),false_clauses(EmptyAnnotation()))
-        axioms = domain.background_theory(pvars)
+        axioms = domain.non_wire_background_theory(pvars)
         for i,op in enumerate(self.args):
             thing = op.int_update(domain,pvars);
 #            if thing[1].annot is None or thing[2].annot is None:

@@ -281,6 +281,10 @@ func (l *parser17LexAdapter) Lex(lval *parser17SymType) int {
 		return PARSER_TOK_INDIV
 	case FUNCTION:
 		return PARSER_TOK_FUNCTION
+	case WIRE:
+		return PARSER_TOK_WIRE
+	case REGISTER:
+		return PARSER_TOK_REGISTER
 	case DERIVED:
 		return PARSER_TOK_DERIVED
 	case AXIOM:

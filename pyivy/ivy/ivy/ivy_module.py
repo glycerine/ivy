@@ -92,6 +92,10 @@ class Module(object):
         self.isolate_proofs = {}
         self.isolate_proof = None
         self.logics = []
+        self.wires = {}
+        self.input_wires = []
+        self.output_wires = []
+        self.registers = set()
         self.sig = il.sig.copy() # capture the current signature
 
     def __enter__(self):
@@ -119,6 +123,11 @@ class Module(object):
         if hasattr(self,"theory"):
             return self.theory
         return lu.Clauses([])
+
+    def non_wire_background_theory(self,symbols=None):
+        if self.wires and hasattr(self,"non_wire_theory"):
+            return self.non_wire_theory
+        return self.background_theory(symbols)
 
     def add_to_hierarchy(self,name):
         if iu.ivy_compose_character in name:
@@ -176,6 +185,8 @@ class Module(object):
         # exclusivity axioms for variants
         theory.extend(self.variant_axioms())
         self.theory = lu.Clauses(theory,defs)
+        if self.wires:
+            self.non_wire_theory = lu.Clauses(theory,[d for d in defs if d.defines() not in self.wires])
 
     def variant_axioms(self):
         theory = []
@@ -261,6 +272,10 @@ class Module(object):
             self.ghost_sorts = remove_refined_sortnames_from_set(self.ghost_sorts)
             self.sort_order = remove_refined_sortnames_from_list(self.sort_order)
             self.symbol_order = resort_symbols(self.symbol_order)
+            self.wires = dict.fromkeys(resort_symbols(self.wires))
+            self.input_wires = resort_symbols(self.input_wires)
+            self.output_wires = resort_symbols(self.output_wires)
+            self.registers = set(resort_symbols(self.registers))
             self.aliases = resort_aliases_map(self.aliases)
             self.before_export = resort_map_any_ast(self.before_export)
             self.ext_preconds = resort_map_any_ast(self.ext_preconds)

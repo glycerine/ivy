@@ -1338,6 +1338,9 @@ func (s *LogicSequence) IntUpdate(ctx *UpdateContext) *Update {
 		Pre:      FalseClauses(EmptyAnnotation{}),
 	}
 	axioms := ctx.BackgroundTheory()
+	if ctx.Domain != nil && ctx.Domain.Wires.Len() != 0 && ctx.Domain.nonWireTheory != nil {
+		axioms = ctx.Domain.nonWireTheory
+	}
 	for i, child := range s.Elems {
 		act := unwrapToAction(child)
 		if act == nil {
@@ -2272,6 +2275,13 @@ func GetUpdate(action ActionsAction, ctx *UpdateContext) *Update {
 	update := IntUpdate(action, ctx)
 	update = BindOldsUpdate(update)
 	update = hideFormals(action, update)
+	if ctx.Domain != nil && ctx.Domain.Wires.Len() != 0 && !update.IsModifiedAll() {
+		modified, seen := uniqueConstSet(update.Modified)
+		for _, wire := range ctx.Domain.Wires.All() {
+			modified = appendUniqueConst(modified, seen, wire)
+		}
+		update.Modified = modified
+	}
 	return update
 }
 

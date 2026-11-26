@@ -419,7 +419,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 
 	// Build action classification lambdas
 	useMixin := func(name string) bool {
-		return StartsWithSome(name, present, mod, implementationMap)
+		return StartsWithEqSome(name, present, mod, implementationMap)
 	}
 	// prefixCallExt is used within extModMixin
 	_ = func(name string) string {
@@ -618,7 +618,7 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			// Opaque: summarize
 			xtracer.Trace("isolate.summarizedActions_add actname=%s", actname)
 			summarizedActions[actname] = true
-			summarized := SummarizeAction(act, isoCfg)
+			summarized := summarizeRegisterAction(act, isoCfg, registerModifications(mod, actname))
 			newActions.Set(actname, AddMixinsExt(mod, actname, summarized,
 				intSumAssumes, useMixin, extModMixin(afterMixinsFunc)))
 			newActions.Set("ext:"+actname, AddMixinsExt(mod, actname, summarized,
@@ -697,6 +697,26 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 
 	// Discover implicit exports from call-outs
 	withEffects := make(map[string]bool)
+	addExported := func(c string) {
+		extC := "ext:" + c
+		if exported.Get(extC) || withEffects[c] {
+			return
+		}
+		if !HasSideEffectFull(mod, newActions, c) {
+			withEffects[c] = true
+			return
+		}
+		exported.Set(extC, true)
+		makeBeforeExport(c)
+	}
+	hasPresentMixer := func(action string) bool {
+		for _, mixin := range mixinsAutoVivify(mod, action) {
+			if useMixin(mixin.Mixer()) {
+				return true
+			}
+		}
+		return false
+	}
 	for actname, act := range mod.Actions.All() {
 		if StartsWithEqSome(actname, present, mod, implementationMap) {
 			continue
@@ -708,21 +728,10 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 			}
 			c := ca.CalleeName()
 			if !StartsWithEqSome(c, present, mod, implementationMap) {
-				hasMixinPresent := false
-				// Python: mod.mixins[c] — auto-vivifies
-				if mixins := mixinsAutoVivify(mod, c); len(mixins) > 0 {
-					for _, mx := range mixins {
-						if mi, ok := mx.(IsolateMixinIface); ok {
-							if StartsWithSome(mi.Mixer(), present, mod, implementationMap) {
-								hasMixinPresent = true
-								break
-							}
-						}
-					}
+				if hasPresentMixer(c) {
+					addExported(c)
 				}
-				if !hasMixinPresent {
-					continue
-				}
+				continue
 			}
 			extC := "ext:" + c
 			if !explicitExports[extC] {
@@ -743,15 +752,13 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 					exportPreconds[extC] = preconds
 				}
 			}
-			if exported.Get(extC) || withEffects[c] {
-				continue
-			}
-			if !HasSideEffectFull(mod, newActions, c) {
-				withEffects[c] = true
-				continue
-			}
-			exported.Set(extC, true)
-			makeBeforeExport(c)
+			addExported(c)
+		}
+	}
+	for _, exp := range mod.Exports {
+		c := exp.Exported()
+		if exp.Scope() == "" && !StartsWithEqSome(c, present, mod, implementationMap) && hasPresentMixer(c) {
+			addExported(c)
 		}
 	}
 
@@ -1410,16 +1417,21 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	// We match that order for identical online per-symbol traces.
 	const as2 = "isolate.allSyms2"
 	allSyms2 := NewInsMap[NodeKey, Expr]()
+	var wireDefs []*LabeledFormula
 
 	// Phase A: formulas from axioms, props, inits, conjs, definitions
 	// Python: for x in [mod.labeled_axioms,...,mod.definitions]:
 	//             asts.extend(y.formula for y in x if not isinstance(y.formula, SchemaBody))
 	for _, lfSlice := range [][]*LabeledFormula{
-		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs, mod.Definitions,
+		mod.LabeledAxioms, mod.LabeledProps, mod.LabeledInits, mod.LabeledConjs, mod.Definitions, mod.AssumedInvs,
 	} {
 		for _, lf := range lfSlice {
 			if lf.Formula != nil {
 				if _, isSchema := lf.Formula.(*SchemaBody); isSchema {
+					continue
+				}
+				if mod.isWireDefinition(lf.Formula) {
+					wireDefs = append(wireDefs, lf)
 					continue
 				}
 				if xtracer.Enabled {
@@ -1517,6 +1529,16 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 		}
 	}
 
+	// Retain dependencies of wire definitions in the signature. A wire's
+	// pre-action value does not observe changes to those dependencies in a call.
+	interferenceRefs := allSyms2
+	if len(wireDefs) != 0 {
+		interferenceRefs = allSyms2.Clone()
+		for _, lf := range wireDefs {
+			collectSymbolsInto(as2, lf.Formula.(Expr), allSyms2)
+		}
+	}
+
 	// Collect relevant destructors
 	if isoCfg.KeepDestructors {
 		namesBefore2 := allSymsNameSet(allSyms2)
@@ -1584,11 +1606,20 @@ func IsolateComponent(mod *Module, isolateName string, extraWith []string, extra
 	// --- Interference check ---
 	if isoCfg.DoCheckInterference {
 		// Python: interf_syms = set(x for x in ivy_logic.all_symbols() if x in all_syms)
-		interfSyms := filterInterfSymsForSig(allSyms2, mod.Sig)
+		interfSyms := filterInterfSymsForSig(interferenceRefs, mod.Sig)
 		if xtracer.Enabled {
 			traceSymSet("isolate.interfSyms_pre_follow", interfSyms)
 		}
-		FollowDefinitionsLabeled("interfSyms", origDefs, interfSyms)
+		interferenceDefs := origDefs
+		if mod.Wires.Len() != 0 {
+			interferenceDefs = nil
+			for _, lf := range origDefs {
+				if !mod.isWireDefinition(lf.Formula) {
+					interferenceDefs = append(interferenceDefs, lf)
+				}
+			}
+		}
+		FollowDefinitionsLabeled("interfSyms", interferenceDefs, interfSyms)
 		if xtracer.Enabled {
 			traceSymSet("isolate.interfSyms_after_follow", interfSyms)
 		}
