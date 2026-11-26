@@ -30591,7 +30591,9 @@ int Abc_CommandAbc9Put( Abc_Frame_t * pAbc, int argc, char ** argv )
         pNtk = Abc_NtkFromCellMappedGia( pAbc->pGia, fUseBuffs );
     else if ( Gia_ManHasMapping(pAbc->pGia) || pAbc->pGia->pMuxes )
         pNtk = Abc_NtkFromMappedGia( pAbc->pGia, 0, fUseBuffs );
-    else if ( Gia_ManHasDangling(pAbc->pGia) == 0 )
+    // choices stored as siblings (e.g. by &synch2) have no pReprs/pNexts,
+    // which Gia_ManToAig( p, 1 ) requires; convert without choices then
+    else if ( Gia_ManHasDangling(pAbc->pGia) == 0 || pAbc->pGia->pReprs == NULL || pAbc->pGia->pNexts == NULL )
     {
         pMan = Gia_ManToAig( pAbc->pGia, 0 );
         pNtk = Abc_NtkFromAigPhase( pMan );

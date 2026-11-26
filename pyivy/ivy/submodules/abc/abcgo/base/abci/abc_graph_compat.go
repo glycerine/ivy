@@ -1,6 +1,9 @@
 package abci
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/aig/saig"
@@ -29,8 +32,12 @@ func Gia_AigerRead(name string, simple, skip, check int32) *Gia_Man_t {
 
 // The C writer reports errors through its status/output path; the source call
 // sites intentionally discard the Go writer's error as well.
+// Gia_AigerWrite reports write failures, as the C writer does for files it
+// cannot open, instead of silently producing no file.
 func Gia_AigerWrite(p *Gia_Man_t, name string, symbols, compact, newline int32) {
-	_ = gia.Gia_AigerWrite(p, name, symbols, compact, newline)
+	if err := gia.Gia_AigerWrite(p, name, symbols, compact, newline); err != nil {
+		fmt.Fprintf(os.Stdout, "Gia_AigerWrite(): %v\n", err)
+	}
 }
 
 func Saig_ManPoNum(p *aig.Graph) int32 { return saig.Saig_ManPoNum(p) }

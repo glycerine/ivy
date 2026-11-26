@@ -27,3 +27,23 @@ and states how the Go port was verified.
 - **Go port:** already correct. `misc/extra/npn.Extra_Truth4VarNPN` assigns
   classes from canons after the loop. The test above confirms that it now agrees
   with C on all 65,536 entries.
+
+## 2. `&put` crashes on a GIA whose choices are stored as siblings
+
+- **File:** `src/base/abci/abc.c`, `Abc_CommandAbc9Put`.
+- **Found:** 2026-11-26, by differential runs of `&get; &st; &synch2; &put`.
+- **Bug:** `&synch2` (and other `Gia_ManFromAigChoices` users) store choices in
+  `pSibls`, leaving dangling choice nodes and no `pReprs`/`pNexts`. `&put` sees
+  the dangling nodes and calls `Gia_ManToAig( p, 1 )`, which asserts
+  `p->pNexts && p->pReprs`. Release builds compile the assert out and then
+  dereference NULL, so native `abc` segfaults.
+- **Fix:** take the choice conversion only when `pReprs` and `pNexts` exist;
+  otherwise convert without choices, as the no-dangling branch already does.
+- **Test:** `abcgo/base/abci/native_binary_test.go`
+  (`TestNativeSynch2PutDoesNotCrash`) runs the script through the native binary
+  named by `ABC_BINARY`. It segfaulted before the fix; native `abc` now reports
+  1,861 ANDs at level 28 on i10.
+- **Go port:** it panicked in the same place (`gia: choice export requires
+  representatives and next links`) and has the same fix
+  (`TestSynch2PutDoesNotPanic`). The Go `&synch2` result itself still differs
+  from native ABC and is being investigated separately.

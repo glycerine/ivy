@@ -29782,7 +29782,9 @@ func Abc_CommandAbc9Put(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		pNtk = Abc_NtkFromCellMappedGia(abcFrameGia(pAbc), fUseBuffs)
 	} else if (Gia_ManHasMapping(abcFrameGia(pAbc)) != 0) || (abcFrameGia(pAbc).PMuxes != nil) {
 		pNtk = Abc_NtkFromMappedGia(abcFrameGia(pAbc), 0, fUseBuffs)
-	} else if giapkg.Gia_ManHasDangling(abcFrameGia(pAbc)) == 0 {
+	} else if g := abcFrameGia(pAbc); giapkg.Gia_ManHasDangling(g) == 0 || g.PReprs == nil || g.PNexts == nil {
+		// Choices stored as siblings (e.g. by &synch2) have no reprs/nexts,
+		// which the choice conversion requires; convert without choices.
 		pMan = giapkg.Gia_ManToAig(abcFrameGia(pAbc), 0)
 		pNtk = Abc_NtkFromAigPhase(pMan)
 		pNtk.Name = Extra_UtilStrsav(pMan.Name)

@@ -127,6 +127,11 @@ func giaImportAig(p *aig.Graph, choicesFirst, allNodes, switchOutputs bool) *Gia
 		aig.Aig_ObjSetCopy(p, output, aig.Edge(id))
 	}
 	out.nRegs = aig.Aig_ManRegNum(p)
+	if choicesFirst {
+		// Like Gia_ManFromAigChoices, siblings cover every object even when
+		// the AIG has no choices.
+		out.pSibls = append(out.pSibls, make([]int32, int(out.nObjs)-len(out.pSibls))...)
+	}
 	if len(out.PNexts) > 0 {
 		if len(out.PNexts) < int(out.nObjs) {
 			out.PNexts = append(out.PNexts, make([]int32, int(out.nObjs)-len(out.PNexts))...)
