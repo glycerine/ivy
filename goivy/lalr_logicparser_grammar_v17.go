@@ -230,7 +230,7 @@ const lalr17EofCode = 1
 const lalr17ErrCode = 2
 const lalr17InitialStackSize = 16
 
-//line lalr_logicparser_grammar_v17.y:999
+//line lalr_logicparser_grammar_v17.y:1015
 
 // lalrMakeSequence wraps a list of action nodes into a single And node (sequence).
 func lalr17MakeSequence(cfg *AstConfig, stmts []Node) Node {
@@ -254,256 +254,260 @@ var lalr17Exca = [...]int8{
 
 const lalr17Private = 57344
 
-const lalr17Last = 1018
+const lalr17Last = 1006
 
 var lalr17Act = [...]int16{
-	7, 206, 88, 294, 22, 153, 157, 156, 164, 61,
-	26, 136, 163, 54, 74, 162, 89, 76, 125, 161,
-	83, 84, 79, 66, 3, 89, 85, 146, 11, 240,
-	119, 94, 95, 96, 97, 91, 99, 100, 101, 102,
-	103, 104, 105, 106, 107, 108, 109, 110, 111, 112,
-	113, 171, 23, 260, 238, 26, 26, 77, 160, 24,
-	165, 295, 296, 236, 128, 129, 61, 126, 24, 28,
-	8, 276, 55, 192, 126, 137, 81, 90, 286, 56,
-	143, 166, 167, 29, 247, 25, 263, 154, 134, 121,
-	122, 123, 26, 246, 158, 24, 187, 8, 116, 186,
-	117, 141, 165, 226, 151, 252, 80, 147, 165, 10,
-	150, 147, 46, 47, 48, 49, 89, 151, 61, 168,
-	198, 152, 73, 166, 167, 245, 138, 67, 27, 166,
-	167, 189, 194, 118, 152, 127, 114, 115, 130, 93,
-	202, 70, 71, 203, 68, 69, 210, 254, 144, 289,
-	214, 255, 254, 213, 298, 195, 196, 197, 193, 201,
-	120, 2, 29, 204, 288, 32, 33, 209, 148, 205,
-	89, 26, 26, 155, 221, 262, 186, 26, 26, 87,
-	220, 26, 26, 144, 26, 8, 149, 200, 242, 219,
-	26, 46, 47, 48, 49, 98, 223, 237, 26, 144,
-	222, 208, 145, 8, 126, 137, 305, 26, 89, 234,
-	168, 219, 250, 257, 218, 254, 258, 215, 249, 219,
-	259, 229, 211, 199, 8, 212, 92, 72, 131, 133,
-	211, 261, 139, 221, 290, 186, 266, 297, 207, 80,
-	256, 82, 267, 268, 278, 26, 270, 61, 61, 86,
-	26, 168, 224, 225, 269, 280, 207, 26, 230, 231,
-	273, 274, 232, 233, 154, 235, 80, 168, 78, 284,
-	281, 241, 275, 24, 285, 23, 80, 159, 169, 244,
-	265, 253, 279, 140, 4, 190, 135, 53, 251, 1,
-	293, 92, 227, 291, 228, 0, 0, 0, 154, 0,
-	26, 26, 302, 301, 0, 0, 0, 0, 0, 0,
-	0, 292, 216, 217, 0, 0, 0, 0, 92, 170,
-	0, 183, 0, 303, 304, 0, 271, 0, 0, 173,
-	0, 272, 0, 0, 0, 0, 181, 0, 277, 0,
-	0, 0, 0, 0, 239, 0, 0, 0, 183, 0,
-	180, 182, 0, 243, 0, 0, 173, 0, 0, 248,
-	0, 177, 0, 181, 174, 175, 176, 184, 185, 178,
-	179, 0, 172, 92, 0, 0, 0, 180, 182, 0,
-	0, 299, 300, 0, 0, 0, 0, 264, 177, 0,
-	0, 174, 175, 176, 184, 185, 178, 179, 0, 172,
-	0, 0, 0, 183, 0, 0, 0, 0, 0, 0,
-	0, 173, 0, 0, 0, 0, 282, 0, 181, 0,
-	0, 0, 0, 283, 0, 0, 0, 0, 0, 0,
-	0, 0, 180, 182, 0, 0, 0, 287, 23, 24,
-	13, 0, 0, 177, 8, 188, 174, 175, 176, 184,
-	185, 178, 179, 0, 172, 0, 16, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 21, 17, 18, 14,
-	15, 12, 0, 0, 67, 0, 19, 20, 0, 0,
-	0, 0, 57, 58, 59, 60, 0, 62, 70, 71,
-	63, 68, 69, 23, 24, 13, 0, 0, 0, 8,
-	52, 0, 65, 0, 64, 0, 0, 0, 0, 0,
-	0, 16, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 21, 17, 18, 14, 15, 12, 0, 0, 67,
-	0, 19, 20, 0, 0, 0, 0, 57, 58, 59,
-	60, 0, 62, 70, 71, 63, 68, 69, 23, 24,
-	13, 0, 0, 0, 8, 0, 0, 65, 0, 64,
-	0, 0, 0, 0, 0, 0, 16, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 21, 17, 18, 14,
-	15, 12, 0, 0, 67, 0, 19, 20, 0, 0,
-	0, 0, 57, 58, 59, 60, 0, 62, 70, 71,
-	63, 68, 69, 23, 24, 13, 0, 0, 0, 8,
-	0, 0, 65, 0, 64, 51, 29, 30, 31, 32,
-	33, 16, 0, 0, 0, 23, 24, 13, 0, 0,
+	7, 300, 90, 68, 3, 25, 212, 157, 160, 63,
+	166, 175, 168, 140, 76, 165, 28, 78, 129, 81,
+	85, 86, 23, 266, 167, 161, 56, 150, 164, 301,
+	302, 22, 246, 98, 99, 100, 101, 26, 103, 104,
+	105, 106, 107, 108, 109, 110, 111, 112, 113, 114,
+	115, 116, 117, 87, 93, 169, 79, 91, 118, 119,
+	244, 24, 95, 57, 123, 24, 132, 133, 63, 91,
+	30, 198, 169, 282, 292, 83, 170, 171, 169, 8,
+	58, 253, 252, 24, 26, 26, 193, 124, 2, 158,
+	138, 82, 145, 170, 171, 159, 130, 155, 91, 170,
+	171, 24, 155, 130, 141, 91, 232, 11, 8, 147,
+	268, 258, 154, 91, 156, 260, 27, 304, 92, 156,
+	190, 26, 63, 162, 102, 125, 126, 127, 142, 204,
+	269, 134, 131, 29, 96, 31, 122, 251, 10, 201,
+	202, 203, 260, 207, 295, 208, 148, 210, 195, 261,
+	216, 75, 148, 148, 220, 153, 149, 135, 137, 294,
+	199, 143, 152, 200, 48, 49, 50, 51, 215, 89,
+	97, 211, 225, 311, 209, 228, 230, 231, 225, 8,
+	226, 206, 236, 237, 219, 235, 238, 239, 151, 241,
+	227, 260, 151, 224, 248, 247, 243, 205, 225, 190,
+	172, 242, 26, 26, 214, 250, 221, 8, 26, 26,
+	94, 217, 26, 26, 257, 26, 196, 74, 218, 263,
+	256, 26, 264, 217, 255, 192, 265, 213, 191, 213,
+	296, 26, 303, 284, 229, 88, 287, 130, 141, 24,
+	26, 267, 272, 222, 223, 23, 271, 240, 82, 273,
+	84, 227, 277, 63, 63, 275, 82, 278, 281, 82,
+	190, 80, 163, 173, 283, 259, 286, 285, 274, 144,
+	158, 276, 4, 139, 55, 245, 1, 290, 26, 279,
+	280, 291, 0, 26, 94, 233, 249, 234, 0, 0,
+	26, 0, 254, 172, 0, 0, 0, 298, 0, 0,
+	0, 299, 0, 0, 158, 0, 308, 305, 306, 309,
+	310, 307, 0, 0, 187, 0, 0, 0, 297, 0,
+	270, 0, 177, 0, 0, 262, 0, 0, 0, 185,
+	0, 0, 0, 26, 26, 0, 172, 94, 174, 8,
+	120, 0, 121, 184, 186, 0, 0, 31, 0, 288,
+	34, 35, 172, 0, 181, 0, 289, 178, 179, 180,
+	188, 189, 182, 183, 94, 176, 0, 187, 0, 69,
+	293, 0, 0, 0, 0, 177, 48, 49, 50, 51,
+	0, 0, 185, 72, 73, 0, 70, 71, 0, 0,
+	0, 0, 0, 0, 187, 0, 184, 186, 0, 0,
+	0, 0, 177, 0, 0, 0, 0, 181, 0, 185,
+	178, 179, 180, 188, 189, 182, 183, 0, 176, 0,
+	0, 0, 0, 184, 186, 0, 23, 24, 13, 0,
+	0, 0, 8, 194, 181, 0, 0, 178, 179, 180,
+	188, 189, 182, 183, 16, 176, 0, 0, 0, 0,
+	0, 0, 0, 0, 21, 17, 18, 14, 15, 12,
+	0, 0, 69, 0, 19, 20, 0, 0, 0, 0,
+	59, 60, 61, 62, 0, 64, 72, 73, 65, 70,
+	71, 23, 24, 13, 0, 0, 0, 8, 54, 0,
+	67, 0, 66, 0, 0, 0, 0, 0, 0, 16,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 21,
+	17, 18, 14, 15, 12, 0, 0, 69, 0, 19,
+	20, 0, 0, 0, 0, 59, 60, 61, 62, 0,
+	64, 72, 73, 65, 70, 71, 23, 24, 13, 0,
+	0, 0, 8, 0, 0, 67, 0, 66, 0, 0,
+	0, 0, 0, 0, 16, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 21, 17, 18, 14, 15, 12,
+	0, 0, 69, 0, 19, 20, 0, 0, 0, 0,
+	59, 60, 61, 62, 0, 64, 72, 73, 65, 70,
+	71, 23, 24, 13, 0, 0, 0, 8, 0, 0,
+	67, 0, 66, 53, 31, 32, 33, 34, 35, 16,
+	0, 0, 0, 23, 24, 13, 0, 0, 0, 21,
+	17, 18, 14, 15, 12, 0, 0, 0, 0, 19,
+	20, 16, 0, 48, 49, 50, 51, 0, 0, 0,
 	0, 21, 17, 18, 14, 15, 12, 0, 0, 0,
-	0, 19, 20, 16, 0, 46, 47, 48, 49, 0,
+	0, 19, 20, 0, 0, 0, 6, 59, 60, 61,
+	62, 0, 64, 0, 9, 65, 0, 5, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 67, 0, 66,
+	53, 31, 32, 33, 34, 35, 37, 43, 0, 38,
+	39, 40, 41, 44, 45, 46, 47, 42, 0, 0,
+	0, 0, 0, 0, 0, 52, 36, 0, 0, 0,
+	48, 49, 50, 51, 146, 0, 0, 0, 128, 0,
+	0, 53, 31, 32, 33, 34, 35, 37, 43, 0,
+	38, 39, 40, 41, 44, 45, 46, 47, 42, 0,
+	0, 0, 0, 0, 0, 0, 52, 36, 0, 0,
+	0, 48, 49, 50, 51, 53, 31, 32, 33, 34,
+	35, 37, 43, 0, 38, 39, 40, 41, 44, 45,
+	46, 47, 42, 0, 0, 0, 0, 0, 0, 0,
+	52, 36, 0, 0, 0, 48, 49, 50, 51, 53,
+	31, 32, 33, 34, 35, 37, 43, 0, 38, 39,
+	40, 41, 44, 45, 0, 0, 42, 0, 0, 0,
+	0, 0, 0, 0, 52, 36, 0, 0, 0, 48,
+	49, 50, 51, 53, 31, 32, 33, 34, 35, 37,
+	43, 0, 38, 39, 40, 41, 44, 0, 0, 0,
+	42, 0, 0, 0, 0, 0, 0, 0, 52, 36,
+	0, 0, 0, 48, 49, 50, 51, 53, 31, 32,
+	33, 34, 35, 37, 43, 0, 38, 39, 40, 41,
+	0, 0, 0, 0, 42, 53, 31, 32, 33, 34,
+	35, 0, 52, 36, 0, 0, 0, 48, 49, 50,
+	51, 53, 31, 32, 33, 34, 35, 0, 43, 0,
+	0, 36, 23, 24, 13, 48, 49, 50, 51, 0,
+	0, 0, 0, 0, 0, 0, 197, 36, 0, 0,
+	16, 48, 49, 50, 51, 23, 24, 13, 0, 0,
+	21, 17, 18, 14, 15, 12, 0, 0, 0, 136,
+	19, 20, 0, 16, 23, 24, 13, 0, 0, 0,
 	0, 0, 0, 21, 17, 18, 14, 15, 12, 0,
-	0, 0, 0, 19, 20, 0, 0, 0, 6, 57,
-	58, 59, 60, 0, 62, 0, 9, 63, 0, 5,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 65,
-	0, 64, 51, 29, 30, 31, 32, 33, 35, 41,
-	0, 36, 37, 38, 39, 42, 43, 44, 45, 40,
-	0, 0, 0, 0, 0, 0, 0, 50, 34, 0,
-	0, 0, 46, 47, 48, 49, 142, 0, 0, 0,
-	124, 0, 0, 51, 29, 30, 31, 32, 33, 35,
-	41, 0, 36, 37, 38, 39, 42, 43, 44, 45,
-	40, 0, 0, 0, 0, 0, 0, 0, 50, 34,
-	0, 0, 0, 46, 47, 48, 49, 51, 29, 30,
-	31, 32, 33, 35, 41, 0, 36, 37, 38, 39,
-	42, 43, 44, 45, 40, 0, 0, 0, 0, 0,
-	0, 0, 50, 34, 0, 0, 0, 46, 47, 48,
-	49, 51, 29, 30, 31, 32, 33, 35, 41, 0,
-	36, 37, 38, 39, 42, 43, 0, 0, 40, 0,
-	0, 0, 0, 0, 0, 0, 50, 34, 0, 0,
-	0, 46, 47, 48, 49, 51, 29, 30, 31, 32,
-	33, 35, 41, 0, 36, 37, 38, 39, 42, 0,
-	0, 0, 40, 0, 0, 0, 0, 0, 0, 0,
-	50, 34, 0, 0, 0, 46, 47, 48, 49, 51,
-	29, 30, 31, 32, 33, 35, 41, 0, 36, 37,
-	38, 39, 0, 0, 0, 0, 40, 51, 29, 30,
-	31, 32, 33, 0, 50, 34, 0, 0, 0, 46,
-	47, 48, 49, 51, 29, 30, 31, 32, 33, 0,
-	41, 0, 0, 34, 23, 24, 13, 46, 47, 48,
-	49, 0, 0, 0, 0, 0, 0, 0, 191, 34,
-	0, 0, 16, 46, 47, 48, 49, 23, 24, 13,
+	0, 0, 16, 19, 20, 0, 23, 24, 13, 0,
 	0, 0, 21, 17, 18, 14, 15, 12, 0, 0,
-	0, 132, 19, 20, 0, 16, 23, 24, 13, 0,
-	0, 0, 0, 0, 0, 21, 17, 18, 14, 15,
-	12, 0, 0, 0, 16, 19, 20, 0, 23, 24,
-	13, 0, 0, 0, 21, 17, 18, 14, 15, 12,
-	0, 0, 0, 0, 19, 20, 16, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 75, 17, 18, 14,
-	15, 12, 0, 0, 0, 0, 19, 20,
+	0, 0, 19, 20, 16, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 77, 17, 18, 14, 15, 12,
+	0, 0, 0, 0, 19, 20,
 }
 
 var lalr17Pact = [...]int16{
-	598, -1000, -1000, -1000, -1000, 89, -3, 752, 488, 216,
-	-1000, -1000, 267, 973, -1000, -1000, 951, 261, 234, 951,
-	951, 267, 242, 164, -1000, 0, -1000, -1000, 215, 267,
-	951, 951, 951, 951, 951, 951, 951, 951, 951, 951,
-	951, 951, 951, 951, 951, 951, 951, 951, 951, 951,
-	89, 89, -1000, 86, -1000, -1000, -1000, 951, 951, 951,
-	951, 677, 62, 951, 951, 620, -1000, 932, 951, 62,
-	53, 951, 71, -1000, 718, 267, 854, 186, 270, -1000,
-	153, 170, 270, 752, 752, 88, 951, 89, 215, 267,
-	47, -1000, 307, -1000, 146, 146, 67, 67, 54, 888,
-	888, 888, 888, 888, 888, 872, 854, 820, 786, 786,
-	752, 752, 752, 752, 100, 100, -1000, 433, -1000, -1000,
-	-1000, -1000, -1000, -1000, 909, 20, 143, 267, 752, 752,
-	-1000, 213, 213, 59, 210, 174, -1000, 125, 267, 213,
-	155, 250, -1000, 101, 271, 951, 217, -1000, 267, 951,
-	209, 951, 951, 206, 752, 100, -1000, -1000, -1000, -1000,
-	-1, -1, 187, -1000, -1000, 951, 89, 89, 82, 280,
-	-1000, -1000, 89, 89, -1000, -1000, 89, 89, 951, 89,
-	-9, 270, -23, 951, -48, 89, -1000, 951, -1000, -1000,
-	-1000, -1000, 951, 89, 110, 51, 42, -1000, 951, 62,
-	53, -1000, 89, 90, -1000, -1000, 202, -1000, 135, -1000,
-	752, 270, 951, -1000, 752, 951, -1000, -1000, -1000, 951,
-	41, -1000, 270, -1000, 154, 9, 951, -1000, 362, -1000,
-	100, 100, 100, 0, 215, 100, 215, 187, 270, 215,
-	89, 100, 600, -1000, 100, 89, 543, 543, 213, 11,
-	-1000, 100, 89, 232, 264, 951, -1000, 752, 752, 752,
-	-1000, -1000, 951, 951, -1000, -1000, 215, -1000, -1000, 187,
-	36, 100, 100, -1000, -1000, -1000, 951, 100, -1000, -1000,
-	134, -1000, 226, -1000, 176, -1000, 215, 213, 250, -18,
-	230, -1000, -1000, 139, -1000, 89, 89, 951, -18, 192,
-	192, 198, -1000, -1000, -1000, -1000,
+	586, -1000, -1000, -1000, -1000, 77, 61, 740, 476, 206,
+	-1000, -1000, 233, 961, -1000, -1000, 939, 254, 243, 939,
+	939, 233, 228, 154, -1000, 41, -1000, -1000, 199, -1000,
+	95, 233, 939, 939, 939, 939, 939, 939, 939, 939,
+	939, 939, 939, 939, 939, 939, 939, 939, 939, 939,
+	939, 939, 77, 77, -1000, 328, -1000, -1000, -1000, 939,
+	939, 939, 939, 665, 59, 939, 939, 608, -1000, 920,
+	939, 59, 55, 939, 62, -1000, 706, 233, 842, 140,
+	240, -1000, 147, 139, 240, 740, 740, 81, 939, 77,
+	199, 233, 17, -1000, 326, 218, 215, -1000, 331, 331,
+	119, 119, 44, 876, 876, 876, 876, 876, 876, 860,
+	842, 808, 774, 774, 740, 740, 740, 740, 82, 82,
+	-1000, 421, -1000, -1000, -1000, -1000, -1000, -1000, 897, 18,
+	145, 233, 740, 740, -1000, 196, 196, 68, 184, 168,
+	-1000, 130, 233, 196, 157, 223, -1000, 86, 251, 939,
+	210, -1000, 233, 939, 198, 939, 939, 185, 740, 82,
+	-1000, -1000, -1000, -1000, -6, -6, 162, -1000, -1000, 939,
+	77, 77, 85, 273, -1000, -1000, 77, 77, -1000, -1000,
+	77, 77, 939, 77, 61, 240, -17, 939, -45, 77,
+	-1000, -1000, -1000, 939, -1000, -1000, -1000, -1000, 939, 77,
+	122, 40, 39, -1000, 939, 59, 55, -1000, 77, 96,
+	-1000, -1000, 178, -1000, 133, -1000, 740, 240, 939, -1000,
+	740, 939, -1000, -1000, -1000, 939, 11, -1000, 240, -1000,
+	89, 53, 939, -1000, 353, -1000, 82, 82, 82, 41,
+	199, 82, 199, 162, 240, 199, 77, 82, 588, -1000,
+	82, 77, 531, 531, 196, 13, -1000, 82, 77, 221,
+	230, 939, -1000, 740, 740, 740, -1000, -1000, 939, 939,
+	-1000, -1000, 199, -1000, -1000, 162, 32, 82, 82, -1000,
+	-1000, -1000, 939, 82, -1000, -1000, 129, -1000, 222, -1000,
+	159, -1000, 199, 196, 223, -50, 225, -1000, -1000, 102,
+	-1000, 77, 77, 939, -50, 97, 97, 165, -1000, -1000,
+	-1000, -1000,
 }
 
 var lalr17Pgo = [...]int16{
-	0, 289, 0, 160, 109, 28, 22, 85, 5, 27,
-	57, 4, 289, 13, 72, 79, 23, 30, 18, 289,
-	287, 286, 11, 284, 283, 3, 282, 281, 1, 51,
-	278, 6, 7, 2, 277, 12, 19, 15, 8,
+	0, 16, 276, 0, 87, 138, 107, 19, 5, 7,
+	27, 56, 31, 276, 26, 63, 80, 3, 64, 18,
+	276, 274, 273, 13, 272, 269, 1, 267, 265, 6,
+	11, 263, 25, 8, 2, 262, 24, 15, 10, 12,
 }
 
 var lalr17R1 = [...]int8{
-	0, 1, 1, 1, 1, 1, 11, 12, 12, 12,
-	7, 7, 7, 4, 4, 5, 5, 6, 6, 9,
-	9, 10, 10, 8, 8, 8, 2, 2, 2, 2,
-	2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-	2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-	2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-	2, 2, 2, 2, 2, 3, 17, 18, 18, 18,
-	19, 19, 22, 22, 21, 21, 16, 16, 16, 20,
-	20, 20, 13, 13, 14, 14, 14, 14, 14, 14,
-	14, 14, 14, 14, 14, 14, 15, 15, 15, 15,
-	15, 15, 15, 15, 15, 23, 24, 28, 28, 27,
-	27, 26, 26, 25, 25, 38, 37, 37, 35, 35,
-	35, 36, 36, 34, 34, 33, 33, 33, 31, 31,
-	32, 32, 30, 30, 30, 29, 29, 29, 29, 29,
-	29, 29, 29, 29, 29, 29, 29, 29, 29, 29,
+	0, 2, 2, 2, 2, 2, 1, 1, 1, 12,
+	13, 13, 13, 8, 8, 8, 5, 5, 6, 6,
+	7, 7, 10, 10, 11, 11, 9, 9, 9, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 4, 18,
+	19, 19, 19, 20, 20, 23, 23, 22, 22, 17,
+	17, 17, 21, 21, 21, 14, 14, 15, 15, 15,
+	15, 15, 15, 15, 15, 15, 15, 15, 15, 16,
+	16, 16, 16, 16, 16, 16, 16, 16, 24, 25,
+	29, 29, 28, 28, 27, 27, 26, 26, 39, 38,
+	38, 36, 36, 36, 37, 37, 35, 35, 34, 34,
+	34, 32, 32, 33, 33, 31, 31, 31, 30, 30,
+	30, 30, 30, 30, 30, 30, 30, 30, 30, 30,
+	30, 30, 30,
 }
 
 var lalr17R2 = [...]int8{
-	0, 1, 1, 1, 4, 3, 1, 1, 1, 3,
-	1, 3, 1, 1, 4, 1, 3, 1, 3, 1,
-	3, 1, 3, 0, 1, 3, 1, 1, 2, 3,
-	3, 3, 3, 3, 3, 5, 3, 3, 3, 3,
-	3, 3, 3, 1, 1, 2, 3, 3, 3, 3,
-	4, 4, 5, 5, 2, 2, 3, 3, 3, 3,
-	3, 3, 10, 4, 4, 1, 1, 1, 3, 4,
-	1, 3, 3, 4, 1, 3, 2, 3, 4, 1,
-	3, 2, 1, 1, 2, 2, 2, 2, 3, 3,
-	2, 4, 2, 2, 2, 1, 1, 3, 5, 5,
-	3, 5, 7, 3, 3, 6, 2, 1, 3, 0,
-	2, 5, 3, 3, 3, 3, 1, 3, 2, 4,
-	4, 1, 2, 1, 1, 0, 2, 4, 3, 2,
-	0, 1, 1, 3, 2, 2, 2, 1, 1, 2,
-	4, 3, 2, 3, 2, 3, 5, 3, 2, 1,
+	0, 1, 1, 1, 4, 3, 1, 3, 3, 1,
+	1, 1, 3, 1, 3, 1, 1, 4, 1, 3,
+	1, 3, 1, 3, 1, 3, 0, 1, 3, 1,
+	1, 2, 3, 3, 3, 3, 3, 3, 5, 3,
+	3, 3, 3, 3, 3, 3, 1, 1, 2, 3,
+	3, 3, 3, 4, 4, 5, 5, 2, 2, 3,
+	3, 3, 3, 3, 3, 10, 4, 4, 1, 1,
+	1, 3, 4, 1, 3, 3, 4, 1, 3, 2,
+	3, 4, 1, 3, 2, 1, 1, 2, 2, 2,
+	2, 3, 3, 2, 4, 2, 2, 2, 1, 1,
+	3, 5, 5, 3, 5, 7, 3, 3, 6, 2,
+	1, 3, 0, 2, 5, 3, 3, 3, 3, 1,
+	3, 2, 4, 4, 1, 2, 1, 1, 0, 2,
+	4, 3, 2, 0, 1, 1, 3, 2, 2, 2,
+	1, 1, 2, 4, 3, 2, 3, 2, 3, 5,
+	3, 2, 1,
 }
 
 var lalr17Chk = [...]int16{
-	-1000, -1, -3, -16, -23, 81, 70, -2, 11, 78,
-	-4, -5, 38, 7, 36, 37, 23, 34, 35, 43,
-	44, 33, -11, 5, 6, -7, -11, 39, 72, 16,
-	17, 18, 19, 20, 41, 21, 24, 25, 26, 27,
-	32, 22, 28, 29, 30, 31, 45, 46, 47, 48,
-	40, 15, 12, -20, -13, -14, -15, 49, 50, 51,
-	52, -2, 54, 57, 71, 69, -16, 41, 58, 59,
-	55, 56, 11, -4, -2, 33, -2, -10, 7, -6,
-	5, -10, 7, -2, -2, -11, 7, 15, -33, 16,
-	77, -31, 11, -4, -2, -2, -2, -2, -3, -2,
-	-2, -2, -2, -2, -2, -2, -2, -2, -2, -2,
-	-2, -2, -2, -2, -7, -7, 12, 14, -15, -17,
-	-3, -17, -17, -17, 53, -18, -11, 73, -2, -2,
-	-14, -3, 19, -3, -18, -21, -22, -11, 73, -3,
-	-24, 30, 8, -11, 13, 16, -9, -5, 15, 16,
-	-9, 16, 33, -8, -2, -7, -32, -31, -11, -34,
-	11, -36, -37, -35, -38, 61, 82, 83, -5, -30,
-	12, -29, 92, 49, 84, 85, 86, 81, 89, 90,
-	70, 56, 71, 41, 87, 88, -31, 42, 12, -13,
-	-3, 19, 53, 15, -11, -16, -16, -16, 61, 13,
-	13, -16, 15, -11, -16, 14, -28, 6, -10, -6,
-	-2, 13, 8, -11, -2, 8, -3, -3, 8, 13,
-	-36, -35, 13, -17, -7, -7, 21, 12, 14, -29,
-	-7, -7, -7, -7, -17, -7, 72, -37, 77, -3,
-	77, -7, -2, -3, -7, 15, 42, 42, -3, -18,
-	-22, -7, 15, -27, 13, 16, -5, -2, -2, -2,
-	12, -38, 21, 77, -3, -29, -33, -32, -31, -37,
-	-31, -7, -7, -13, -13, -16, 60, -7, 12, -26,
-	-28, 6, -3, -3, -8, -32, 42, -3, 30, 15,
-	8, -31, -16, -28, -25, 79, 80, 7, 15, -7,
-	-7, -8, -25, -16, -16, 8,
+	-1000, -2, -4, -17, -24, 81, 70, -3, 11, 78,
+	-5, -6, 38, 7, 36, 37, 23, 34, 35, 43,
+	44, 33, -12, 5, 6, -8, -12, 39, -1, 72,
+	9, 16, 17, 18, 19, 20, 41, 21, 24, 25,
+	26, 27, 32, 22, 28, 29, 30, 31, 45, 46,
+	47, 48, 40, 15, 12, -21, -14, -15, -16, 49,
+	50, 51, 52, -3, 54, 57, 71, 69, -17, 41,
+	58, 59, 55, 56, 11, -5, -3, 33, -3, -11,
+	7, -7, 5, -11, 7, -3, -3, -12, 7, 15,
+	-34, 16, 77, -32, 11, -12, 39, -5, -3, -3,
+	-3, -3, -4, -3, -3, -3, -3, -3, -3, -3,
+	-3, -3, -3, -3, -3, -3, -3, -3, -8, -8,
+	12, 14, -16, -18, -4, -18, -18, -18, 53, -19,
+	-12, 73, -3, -3, -15, -4, 19, -4, -19, -22,
+	-23, -12, 73, -4, -25, 30, 8, -12, 13, 16,
+	-10, -6, 15, 16, -10, 16, 33, -9, -3, -8,
+	-33, -32, -12, -35, 11, -37, -38, -36, -39, 61,
+	82, 83, -6, -31, 12, -30, 92, 49, 84, 85,
+	86, 81, 89, 90, 70, 56, 71, 41, 87, 88,
+	-32, 10, 10, 42, 12, -14, -4, 19, 53, 15,
+	-12, -17, -17, -17, 61, 13, 13, -17, 15, -12,
+	-17, 14, -29, 6, -11, -7, -3, 13, 8, -12,
+	-3, 8, -4, -4, 8, 13, -37, -36, 13, -18,
+	-8, -8, 21, 12, 14, -30, -8, -8, -8, -8,
+	-18, -8, -1, -38, 77, -4, 77, -8, -3, -4,
+	-8, 15, 42, 42, -4, -19, -23, -8, 15, -28,
+	13, 16, -6, -3, -3, -3, 12, -39, 21, 77,
+	-4, -30, -34, -33, -32, -38, -32, -8, -8, -14,
+	-14, -17, 60, -8, 12, -27, -29, 6, -4, -4,
+	-9, -33, 42, -4, 30, 15, 8, -32, -17, -29,
+	-26, 79, 80, 7, 15, -8, -8, -9, -26, -17,
+	-17, 8,
 }
 
 var lalr17Def = [...]int16{
-	0, -2, 1, 2, 3, 0, 0, 65, 0, 0,
-	26, 27, 0, 0, 43, 44, 0, 0, 0, 0,
-	0, 0, 13, 15, 6, 125, 10, 12, 0, 0,
+	0, -2, 1, 2, 3, 0, 0, 68, 0, 0,
+	29, 30, 0, 0, 46, 47, 0, 0, 0, 0,
+	0, 0, 16, 18, 9, 128, 13, 15, 0, 6,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 76, 0, 79, 82, 83, 0, 0, 0,
-	0, 95, 0, 0, 0, 0, 96, 0, 0, 0,
-	0, 0, 0, 28, 0, 0, 45, 0, 0, 21,
-	17, 0, 0, 54, 55, 0, 23, 0, 130, 0,
-	0, 5, 0, 29, 31, 32, 33, 34, 0, 36,
-	37, 38, 39, 40, 41, 42, 46, 47, 48, 49,
-	56, 57, 58, 59, 60, 61, 77, 0, 81, 84,
-	66, 85, 86, 87, 0, 90, 67, 0, 92, 93,
-	94, 0, 0, 0, 0, 0, 74, 0, 0, 0,
-	0, 0, 30, 0, 0, 0, 0, 19, 0, 0,
-	0, 0, 0, 0, 24, 16, 4, 131, 11, 126,
-	0, 123, 124, 121, 116, 0, 0, 0, 0, 0,
-	129, 132, 0, 0, 137, 138, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 149, 0, 78, 80,
-	88, 89, 0, 0, 0, 97, 0, 100, 0, 0,
-	0, 103, 0, 0, 104, 109, 106, 107, 0, 22,
-	50, 0, 0, 18, 51, 0, 63, 64, 14, 0,
-	0, 122, 0, 118, 0, 0, 0, 128, 0, 134,
-	135, 136, 139, 125, 130, 142, 0, 144, 0, 0,
-	0, 148, 35, 91, 68, 0, 0, 0, 0, 0,
-	75, 72, 0, 0, 0, 0, 20, 52, 53, 25,
-	127, 117, 0, 23, 115, 133, 130, 141, 143, 145,
-	0, 147, 69, 98, 99, 101, 0, 73, 105, 110,
-	0, 108, 0, 119, 120, 140, 0, 0, 0, 0,
-	0, 146, 102, 0, 112, 0, 0, 23, 0, 0,
-	0, 0, 111, 113, 114, 62,
+	0, 0, 0, 0, 79, 0, 82, 85, 86, 0,
+	0, 0, 0, 98, 0, 0, 0, 0, 99, 0,
+	0, 0, 0, 0, 0, 31, 0, 0, 48, 0,
+	0, 24, 20, 0, 0, 57, 58, 0, 26, 0,
+	133, 0, 0, 5, 0, 0, 0, 32, 34, 35,
+	36, 37, 0, 39, 40, 41, 42, 43, 44, 45,
+	49, 50, 51, 52, 59, 60, 61, 62, 63, 64,
+	80, 0, 84, 87, 69, 88, 89, 90, 0, 93,
+	70, 0, 95, 96, 97, 0, 0, 0, 0, 0,
+	77, 0, 0, 0, 0, 0, 33, 0, 0, 0,
+	0, 22, 0, 0, 0, 0, 0, 0, 27, 19,
+	4, 134, 14, 129, 0, 126, 127, 124, 119, 0,
+	0, 0, 0, 0, 132, 135, 0, 0, 140, 141,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	152, 7, 8, 0, 81, 83, 91, 92, 0, 0,
+	0, 100, 0, 103, 0, 0, 0, 106, 0, 0,
+	107, 112, 109, 110, 0, 25, 53, 0, 0, 21,
+	54, 0, 66, 67, 17, 0, 0, 125, 0, 121,
+	0, 0, 0, 131, 0, 137, 138, 139, 142, 128,
+	133, 145, 0, 147, 0, 0, 0, 151, 38, 94,
+	71, 0, 0, 0, 0, 0, 78, 75, 0, 0,
+	0, 0, 23, 55, 56, 28, 130, 120, 0, 26,
+	118, 136, 133, 144, 146, 148, 0, 150, 72, 101,
+	102, 104, 0, 76, 108, 113, 0, 111, 0, 122,
+	123, 143, 0, 0, 0, 0, 0, 149, 105, 0,
+	115, 0, 0, 26, 0, 0, 0, 0, 114, 116,
+	117, 65,
 }
 
 var lalr17Tok1 = [...]int8{
@@ -866,67 +870,85 @@ lalr17default:
 
 	case 1:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:130
+//line lalr_logicparser_grammar_v17.y:131
 		{
 			lalr17lex.(*lalr17LexAdapter).result = lalr17Dollar[1].node
 		}
 	case 2:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:134
+//line lalr_logicparser_grammar_v17.y:135
 		{
 			lalr17lex.(*lalr17LexAdapter).result = lalr17Dollar[1].node
 		}
 	case 3:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:138
+//line lalr_logicparser_grammar_v17.y:139
 		{
 			lalr17lex.(*lalr17LexAdapter).result = lalr17Dollar[1].node
 		}
 	case 4:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:143
+//line lalr_logicparser_grammar_v17.y:144
 		{
 			lalr17lex.(*lalr17LexAdapter).result = lalr17Acfg(lalr17lex).NewTacticTactic(lalr17Dollar[2].node, lalr17Dollar[3].node, lalr17Dollar[4].node)
 		}
 	case 5:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:148
+//line lalr_logicparser_grammar_v17.y:149
 		{
 			lalr17lex.(*lalr17LexAdapter).result = lalr17Acfg(lalr17lex).NewProofTactic(lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[2].str), lalr17Dollar[3].node)
 		}
 	case 6:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:157
+//line lalr_logicparser_grammar_v17.y:156
 		{
 			lalr17VAL.str = lalr17Dollar[1].str
 		}
 	case 7:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:164
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:160
 		{
-			lalr17VAL.str = lalr17Dollar[1].str
+			lalr17VAL.str = lalr17Dollar[2].str
 		}
 	case 8:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:168
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:164
 		{
 			lalr17VAL.str = "this"
 		}
 	case 9:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:172
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:173
 		{
-			lalr17VAL.str = lalr17Dollar[1].str + "." + lalr17Dollar[3].str
+			lalr17VAL.str = lalr17Dollar[1].str
 		}
 	case 10:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:181
+//line lalr_logicparser_grammar_v17.y:180
+		{
+			lalr17VAL.str = lalr17Dollar[1].str
+		}
+	case 11:
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:184
+		{
+			lalr17VAL.str = "this"
+		}
+	case 12:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:188
+		{
+			lalr17VAL.str = lalr17Dollar[1].str + "." + lalr17Dollar[3].str
+		}
+	case 13:
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:197
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewSymbol(lalr17Dollar[1].str, nil)
 		}
-	case 11:
+	case 14:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:185
+//line lalr_logicparser_grammar_v17.y:201
 		{
 			if _, ok := lalr17Dollar[1].node.(*This); ok {
 				lalr17VAL.node = lalr17Acfg(lalr17lex).NewSymbol(lalr17Dollar[3].str, nil)
@@ -936,114 +958,114 @@ lalr17default:
 				lalr17VAL.node = lalr17Acfg(lalr17lex).NewSymbol(lalr17Dollar[3].str, nil)
 			}
 		}
-	case 12:
+	case 15:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:195
+//line lalr_logicparser_grammar_v17.y:211
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewThis()
 		}
-	case 13:
+	case 16:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:206
+//line lalr_logicparser_grammar_v17.y:222
 		{
 			// Python: App(p[1]) — appelem produces App, not Atom.
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol(lalr17Dollar[1].str, nil))
 		}
-	case 14:
+	case 17:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:211
+//line lalr_logicparser_grammar_v17.y:227
 		{
 			// Python: App(p[1], p[3])
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol(lalr17Dollar[1].str, nil), lalr17Dollar[3].nodes...)
 		}
-	case 15:
+	case 18:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:221
+//line lalr_logicparser_grammar_v17.y:237
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewVariable(lalr17Dollar[1].str, "")
 		}
-	case 16:
+	case 19:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:225
+//line lalr_logicparser_grammar_v17.y:241
 		{
 			v := lalr17Acfg(lalr17lex).NewVariable(lalr17Dollar[1].str, lalr17AtypeToString(lalr17Dollar[3].node))
 			lalr17VAL.node = v
 		}
-	case 17:
+	case 20:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:233
+//line lalr_logicparser_grammar_v17.y:249
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewVariable(lalr17Dollar[1].str, "S")
 		}
-	case 18:
+	case 21:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:237
+//line lalr_logicparser_grammar_v17.y:253
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewVariable(lalr17Dollar[1].str, lalr17Dollar[3].str)
 		}
-	case 19:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:244
-		{
-			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
-		}
-	case 20:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:248
-		{
-			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
-		}
-	case 21:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:255
-		{
-			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
-		}
 	case 22:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:259
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:260
 		{
-			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
+			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
 		}
 	case 23:
-		lalr17Dollar = lalr17S[lalr17pt-0 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:268
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:264
 		{
-			lalr17VAL.nodes = nil
+			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
 		}
 	case 24:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:272
+//line lalr_logicparser_grammar_v17.y:271
 		{
 			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
 		}
 	case 25:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:276
+//line lalr_logicparser_grammar_v17.y:275
 		{
 			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
 		}
 	case 26:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:285
+		lalr17Dollar = lalr17S[lalr17pt-0 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:284
 		{
-			lalr17VAL.node = lalr17Dollar[1].node
+			lalr17VAL.nodes = nil
 		}
 	case 27:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:289
+//line lalr_logicparser_grammar_v17.y:288
+		{
+			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
+		}
+	case 28:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:292
+		{
+			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
+		}
+	case 29:
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:301
 		{
 			lalr17VAL.node = lalr17Dollar[1].node
 		}
-	case 28:
+	case 30:
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:305
+		{
+			lalr17VAL.node = lalr17Dollar[1].node
+		}
+	case 31:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:293
+//line lalr_logicparser_grammar_v17.y:309
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewOld(lalr17Dollar[2].node)
 		}
-	case 29:
+	case 32:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:297
+//line lalr_logicparser_grammar_v17.y:313
 		{
 			switch lhs := lalr17Dollar[1].node.(type) {
 			case *Atom:
@@ -1069,105 +1091,105 @@ lalr17default:
 				lalr17VAL.node = lalr17Acfg(lalr17lex).NewMethodCall(lalr17Dollar[1].node, lalr17Dollar[3].node)
 			}
 		}
-	case 30:
+	case 33:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:323
+//line lalr_logicparser_grammar_v17.y:339
 		{
 			lalr17VAL.node = lalr17Dollar[2].node
 		}
-	case 31:
+	case 34:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:328
+//line lalr_logicparser_grammar_v17.y:344
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("+", nil), lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 32:
+	case 35:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:332
+//line lalr_logicparser_grammar_v17.y:348
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("-", nil), lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 33:
+	case 36:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:336
+//line lalr_logicparser_grammar_v17.y:352
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("*", nil), lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 34:
+	case 37:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:340
+//line lalr_logicparser_grammar_v17.y:356
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("/", nil), lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 35:
+	case 38:
 		lalr17Dollar = lalr17S[lalr17pt-5 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:345
+//line lalr_logicparser_grammar_v17.y:361
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewIte(lalr17Dollar[3].node, lalr17Dollar[1].node, lalr17Dollar[5].node)
 		}
-	case 36:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:350
-		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("=", lalr17Dollar[1].node, lalr17Dollar[3].node)
-		}
-	case 37:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:354
-		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("<=", lalr17Dollar[1].node, lalr17Dollar[3].node)
-		}
-	case 38:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:358
-		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("<", lalr17Dollar[1].node, lalr17Dollar[3].node)
-		}
 	case 39:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:362
-		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom(">=", lalr17Dollar[1].node, lalr17Dollar[3].node)
-		}
-	case 40:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:366
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom(">", lalr17Dollar[1].node, lalr17Dollar[3].node)
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("=", lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 41:
+	case 40:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:370
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("*>", nil), lalr17Dollar[1].node, lalr17Dollar[3].node)
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("<=", lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 42:
+	case 41:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:374
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewNot(lalr17Acfg(lalr17lex).NewAtom("=", lalr17Dollar[1].node, lalr17Dollar[3].node))
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("<", lalr17Dollar[1].node, lalr17Dollar[3].node)
+		}
+	case 42:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:378
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom(">=", lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
 	case 43:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:382
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom(">", lalr17Dollar[1].node, lalr17Dollar[3].node)
+		}
+	case 44:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:386
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(lalr17Acfg(lalr17lex).NewSymbol("*>", nil), lalr17Dollar[1].node, lalr17Dollar[3].node)
+		}
+	case 45:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:390
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewNot(lalr17Acfg(lalr17lex).NewAtom("=", lalr17Dollar[1].node, lalr17Dollar[3].node))
+		}
+	case 46:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:379
+//line lalr_logicparser_grammar_v17.y:395
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAnd()
 		}
-	case 44:
+	case 47:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:383
+//line lalr_logicparser_grammar_v17.y:399
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewOr()
 		}
-	case 45:
+	case 48:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:387
+//line lalr_logicparser_grammar_v17.y:403
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewNot(lalr17Dollar[2].node)
 		}
-	case 46:
+	case 49:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:391
+//line lalr_logicparser_grammar_v17.y:407
 		{
 			// Python: if isinstance(p[1], And): p[0] = p[1]; p[0].args.append(p[3])
 			//         else: p[0] = And(p[1], p[3])
@@ -1179,9 +1201,9 @@ lalr17default:
 				lalr17VAL.node = lalr17Acfg(lalr17lex).NewAnd(lalr17Dollar[1].node, lalr17Dollar[3].node)
 			}
 		}
-	case 47:
+	case 50:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:403
+//line lalr_logicparser_grammar_v17.y:419
 		{
 			// Python: if isinstance(p[1], Or): p[0] = p[1]; p[0].args.append(p[3])
 			//         else: p[0] = Or(p[1], p[3])
@@ -1192,424 +1214,424 @@ lalr17default:
 				lalr17VAL.node = lalr17Acfg(lalr17lex).NewOr(lalr17Dollar[1].node, lalr17Dollar[3].node)
 			}
 		}
-	case 48:
+	case 51:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:414
+//line lalr_logicparser_grammar_v17.y:430
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewImplies(lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 49:
+	case 52:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:418
+//line lalr_logicparser_grammar_v17.y:434
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewIff(lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 50:
+	case 53:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:423
+//line lalr_logicparser_grammar_v17.y:439
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewForall(lalr17Dollar[2].nodes, lalr17Dollar[4].node)
 		}
-	case 51:
+	case 54:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:427
+//line lalr_logicparser_grammar_v17.y:443
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewExists(lalr17Dollar[2].nodes, lalr17Dollar[4].node)
 		}
-	case 52:
+	case 55:
 		lalr17Dollar = lalr17S[lalr17pt-5 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:431
+//line lalr_logicparser_grammar_v17.y:447
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewForall(lalr17Dollar[3].nodes, lalr17Dollar[5].node)
 		}
-	case 53:
+	case 56:
 		lalr17Dollar = lalr17S[lalr17pt-5 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:435
+//line lalr_logicparser_grammar_v17.y:451
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewExists(lalr17Dollar[3].nodes, lalr17Dollar[5].node)
 		}
-	case 54:
+	case 57:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:440
+//line lalr_logicparser_grammar_v17.y:456
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewGlobally(lalr17Dollar[2].node)
 		}
-	case 55:
+	case 58:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:444
+//line lalr_logicparser_grammar_v17.y:460
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewEventually(lalr17Dollar[2].node)
 		}
-	case 56:
+	case 59:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:448
+//line lalr_logicparser_grammar_v17.y:464
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewWhenOperator("next", lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 57:
+	case 60:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:452
+//line lalr_logicparser_grammar_v17.y:468
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewWhenOperator("prev", lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 58:
+	case 61:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:456
+//line lalr_logicparser_grammar_v17.y:472
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewWhenOperator("first", lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 59:
+	case 62:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:460
+//line lalr_logicparser_grammar_v17.y:476
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewWhenOperator("last", lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 60:
+	case 63:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:465
+//line lalr_logicparser_grammar_v17.y:481
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewIsa(lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 61:
+	case 64:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:470
+//line lalr_logicparser_grammar_v17.y:486
 		{
 			if v, ok := lalr17Dollar[1].node.(*Variable); ok {
 				v.VSort = lalr17AtypeToString(lalr17Dollar[3].node)
 			}
 			lalr17VAL.node = lalr17Dollar[1].node
 		}
-	case 62:
+	case 65:
 		lalr17Dollar = lalr17S[lalr17pt-10 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:478
+//line lalr_logicparser_grammar_v17.y:494
 		{
 			binder := lalr17Acfg(lalr17lex).NewNamedBinder(lalr17Dollar[3].str, lalr17Dollar[4].nodes, lalr17Dollar[6].node)
 			//binder.SetLineno(getLineno(lalr17lex))
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewApp(binder, lalr17Dollar[9].nodes...)
 			//$$.(*App).SetLineno(getLineno(lalr17lex))
 		}
-	case 63:
+	case 66:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:485
+//line lalr_logicparser_grammar_v17.y:501
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewNamedBinder(lalr17Dollar[2].str, nil, lalr17Dollar[4].node)
 		}
-	case 64:
+	case 67:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:489
+//line lalr_logicparser_grammar_v17.y:505
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewNamedBinder(lalr17Dollar[2].str, nil, lalr17Dollar[4].node)
 		}
-	case 65:
+	case 68:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:498
+//line lalr_logicparser_grammar_v17.y:514
 		{
 			// Python: app_to_atom(p[1]) — convert top-level App to Atom in formula position.
 			lalr17VAL.node = AppToAtom(lalr17Dollar[1].node)
 		}
-	case 66:
+	case 69:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:510
+//line lalr_logicparser_grammar_v17.y:526
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewLabeledFormula(nil, lalr17Dollar[1].node)
 		}
-	case 67:
+	case 70:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:523
+//line lalr_logicparser_grammar_v17.y:539
 		{
 			a := lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[1].str)
 			lalr17VAL.node = a
 		}
-	case 68:
+	case 71:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:528
+//line lalr_logicparser_grammar_v17.y:544
 		{
 			a := lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[1].str)
 			a.ASort = lalr17Dollar[3].node
 			lalr17VAL.node = a
 		}
-	case 69:
+	case 72:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:534
+//line lalr_logicparser_grammar_v17.y:550
 		{
 			// Ghost parameter: ^name : type
 			a := lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[2].str)
 			a.ASort = lalr17Dollar[4].node
 			lalr17VAL.node = a
 		}
-	case 70:
+	case 73:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:544
+//line lalr_logicparser_grammar_v17.y:560
 		{
 			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
 		}
-	case 71:
+	case 74:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:548
+//line lalr_logicparser_grammar_v17.y:564
 		{
 			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
 		}
-	case 72:
+	case 75:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:557
+//line lalr_logicparser_grammar_v17.y:573
 		{
 			a := lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[1].str)
 			a.ASort = lalr17Dollar[3].node
 			lalr17VAL.node = a
 		}
-	case 73:
+	case 76:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:563
+//line lalr_logicparser_grammar_v17.y:579
 		{
 			a := lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[2].str)
 			a.ASort = lalr17Dollar[4].node
 			lalr17VAL.node = a
 		}
-	case 74:
+	case 77:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:572
+//line lalr_logicparser_grammar_v17.y:588
 		{
 			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
 		}
-	case 75:
+	case 78:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:576
+//line lalr_logicparser_grammar_v17.y:592
 		{
 			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
 		}
-	case 76:
+	case 79:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:585
+//line lalr_logicparser_grammar_v17.y:601
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAnd()
 		}
-	case 77:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:589
-		{
-			lalr17VAL.node = lalr17MakeSequence(lalr17Acfg(lalr17lex), lalr17Dollar[2].nodes)
-		}
-	case 78:
-		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:593
-		{
-			lalr17VAL.node = lalr17MakeSequence(lalr17Acfg(lalr17lex), lalr17Dollar[2].nodes)
-		}
-	case 79:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:600
-		{
-			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
-		}
 	case 80:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:604
+//line lalr_logicparser_grammar_v17.y:605
 		{
-			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
+			lalr17VAL.node = lalr17MakeSequence(lalr17Acfg(lalr17lex), lalr17Dollar[2].nodes)
 		}
 	case 81:
-		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:608
+		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:609
 		{
-			// complexact after complexact (no semicolon needed)
-			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[2].node)
+			lalr17VAL.node = lalr17MakeSequence(lalr17Acfg(lalr17lex), lalr17Dollar[2].nodes)
 		}
 	case 82:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:616
 		{
-			lalr17VAL.node = lalr17Dollar[1].node
+			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
 		}
 	case 83:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:620
 		{
-			lalr17VAL.node = lalr17Dollar[1].node
+			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
 		}
 	case 84:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:629
+//line lalr_logicparser_grammar_v17.y:624
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("assume", lalr17Dollar[2].node)
+			// complexact after complexact (no semicolon needed)
+			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[2].node)
 		}
 	case 85:
-		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:633
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:632
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("assert", lalr17Dollar[2].node)
+			lalr17VAL.node = lalr17Dollar[1].node
 		}
 	case 86:
-		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:637
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:636
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("require", lalr17Dollar[2].node)
+			lalr17VAL.node = lalr17Dollar[1].node
 		}
 	case 87:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:641
-		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("ensure", lalr17Dollar[2].node)
-		}
-	case 88:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:645
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom(":=", lalr17Dollar[1].node, lalr17Dollar[3].node)
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("assume", lalr17Dollar[2].node)
 		}
-	case 89:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+	case 88:
+		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:649
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("havoc", lalr17Dollar[1].node)
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("assert", lalr17Dollar[2].node)
 		}
-	case 90:
+	case 89:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:653
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewVarAction(lalr17Dollar[2].node)
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("require", lalr17Dollar[2].node)
+		}
+	case 90:
+		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:657
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("ensure", lalr17Dollar[2].node)
 		}
 	case 91:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:661
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom(":=", lalr17Dollar[1].node, lalr17Dollar[3].node)
+		}
+	case 92:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:665
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("havoc", lalr17Dollar[1].node)
+		}
+	case 93:
+		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:669
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewVarAction(lalr17Dollar[2].node)
+		}
+	case 94:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:657
+//line lalr_logicparser_grammar_v17.y:673
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewVarAction(lalr17Dollar[2].node, lalr17Dollar[4].node)
 		}
-	case 92:
+	case 95:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:661
+//line lalr_logicparser_grammar_v17.y:677
 		{
 			// Simple call: call f(x)
 			lalr17VAL.node = lalr17Dollar[2].node
 		}
-	case 93:
+	case 96:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:666
+//line lalr_logicparser_grammar_v17.y:682
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("instantiate", lalr17Dollar[2].node)
 		}
-	case 94:
+	case 97:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:670
+//line lalr_logicparser_grammar_v17.y:686
 		{
 			// When check_unprovable is False (default), unprovable statements are no-ops
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAnd()
 		}
-	case 95:
+	case 98:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:675
+//line lalr_logicparser_grammar_v17.y:691
 		{
 			// Bare expression (procedure call)
 			lalr17VAL.node = lalr17Dollar[1].node
 		}
-	case 96:
+	case 99:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:685
+//line lalr_logicparser_grammar_v17.y:701
 		{
 			lalr17VAL.node = lalr17Dollar[1].node
 		}
-	case 97:
+	case 100:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:689
+//line lalr_logicparser_grammar_v17.y:705
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewIte(lalr17Dollar[2].node, lalr17Dollar[3].node, lalr17Acfg(lalr17lex).NewAnd())
 		}
-	case 98:
+	case 101:
 		lalr17Dollar = lalr17S[lalr17pt-5 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:693
+//line lalr_logicparser_grammar_v17.y:709
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewIte(lalr17Dollar[2].node, lalr17Dollar[3].node, lalr17Dollar[5].node)
 		}
-	case 99:
+	case 102:
 		lalr17Dollar = lalr17S[lalr17pt-5 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:697
+//line lalr_logicparser_grammar_v17.y:713
 		{
 			// ChoiceAction: if * { ... } else { ... }
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewIte(lalr17Acfg(lalr17lex).NewSymbol("*", nil), lalr17Dollar[3].node, lalr17Dollar[5].node)
 		}
-	case 100:
+	case 103:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:702
+//line lalr_logicparser_grammar_v17.y:718
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("while", lalr17Dollar[2].node, lalr17Dollar[3].node)
 		}
-	case 101:
+	case 104:
 		lalr17Dollar = lalr17S[lalr17pt-5 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:706
+//line lalr_logicparser_grammar_v17.y:722
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("while", lalr17Dollar[2].node, lalr17Dollar[5].node)
 		}
-	case 102:
+	case 105:
 		lalr17Dollar = lalr17S[lalr17pt-7 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:710
+//line lalr_logicparser_grammar_v17.y:726
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("for", lalr17Dollar[2].node, lalr17Dollar[4].node, lalr17Dollar[6].node, lalr17Dollar[7].node)
 		}
-	case 103:
+	case 106:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:714
+//line lalr_logicparser_grammar_v17.y:730
 		{
 			args := append(lalr17Dollar[2].nodes, lalr17Dollar[3].node)
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("local", args...)
 		}
-	case 104:
+	case 107:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:719
+//line lalr_logicparser_grammar_v17.y:735
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAtom("let", lalr17Dollar[2].node, lalr17Dollar[3].node)
 		}
-	case 105:
+	case 108:
 		lalr17Dollar = lalr17S[lalr17pt-6 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:730
+//line lalr_logicparser_grammar_v17.y:746
 		{
 			elems := append([]Node{lalr17Dollar[3].node}, lalr17Dollar[5].nodes...)
 			sdef := lalr17Acfg(lalr17lex).NewScenarioDef(elems)
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewScenarioDecl(sdef)
 		}
-	case 106:
+	case 109:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:739
+//line lalr_logicparser_grammar_v17.y:755
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewPlaceList(lalr17Dollar[2].nodes)
 		}
-	case 107:
+	case 110:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:746
+//line lalr_logicparser_grammar_v17.y:762
 		{
 			lalr17VAL.nodes = []Node{lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[1].str)}
 		}
-	case 108:
+	case 111:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:750
+//line lalr_logicparser_grammar_v17.y:766
 		{
 			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[3].str))
 		}
-	case 109:
+	case 112:
 		lalr17Dollar = lalr17S[lalr17pt-0 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:757
+//line lalr_logicparser_grammar_v17.y:773
 		{
 			lalr17VAL.nodes = nil
 		}
-	case 110:
+	case 113:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:761
+//line lalr_logicparser_grammar_v17.y:777
 		{
 			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[2].node)
 		}
-	case 111:
+	case 114:
 		lalr17Dollar = lalr17S[lalr17pt-5 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:768
+//line lalr_logicparser_grammar_v17.y:784
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewScenarioTransition(lalr17Acfg(lalr17lex).NewPlaceList(lalr17Dollar[1].nodes), lalr17Acfg(lalr17lex).NewPlaceList(lalr17Dollar[3].nodes), lalr17Dollar[5].node)
 		}
-	case 112:
+	case 115:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:772
+//line lalr_logicparser_grammar_v17.y:788
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewScenarioTransition(lalr17Acfg(lalr17lex).NewPlaceList(lalr17Dollar[1].nodes), lalr17Acfg(lalr17lex).NewPlaceList(nil), lalr17Dollar[3].node)
 		}
-	case 113:
+	case 116:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:779
+//line lalr_logicparser_grammar_v17.y:795
 		{
 			atom := lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[2].node.(*Symbol).Rep)
 			lalrLabelCounter++
@@ -1618,9 +1640,9 @@ lalr17default:
 			adef := lalr17Acfg(lalr17lex).NewActionDef(atom, lalr17Dollar[3].node, nil, nil)
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewScenarioBeforeMixin(mixer, adef)
 		}
-	case 114:
+	case 117:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:788
+//line lalr_logicparser_grammar_v17.y:804
 		{
 			atom := lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[2].node.(*Symbol).Rep)
 			lalrLabelCounter++
@@ -1629,213 +1651,213 @@ lalr17default:
 			adef := lalr17Acfg(lalr17lex).NewActionDef(atom, lalr17Dollar[3].node, nil, nil)
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewScenarioAfterMixin(mixer, adef)
 		}
-	case 115:
+	case 118:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:807
+//line lalr_logicparser_grammar_v17.y:823
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewDefinition(lalr17Dollar[1].node, lalr17Dollar[3].node)
 		}
-	case 116:
+	case 119:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:815
+//line lalr_logicparser_grammar_v17.y:831
 		{
 			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
 		}
-	case 117:
+	case 120:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:819
+//line lalr_logicparser_grammar_v17.y:835
 		{
 			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[3].node)
 		}
-	case 118:
+	case 121:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:827
+//line lalr_logicparser_grammar_v17.y:843
 		{
 			lalr17VAL.node = lalr17Dollar[2].node
 		}
-	case 119:
+	case 122:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:831
+//line lalr_logicparser_grammar_v17.y:847
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewDefinition(lalr17Dollar[2].node, lalr17Dollar[4].node)
 		}
-	case 120:
+	case 123:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:835
+//line lalr_logicparser_grammar_v17.y:851
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTrigger(nil, append([]Node{lalr17Dollar[2].node}, lalr17Dollar[4].nodes...)...)
-		}
-	case 121:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:843
-		{
-			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
-		}
-	case 122:
-		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:847
-		{
-			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[2].node)
-		}
-	case 123:
-		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:855
-		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticWith(lalr17Dollar[1].nodes)
 		}
 	case 124:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:859
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticLets(lalr17Dollar[1].nodes)
+			lalr17VAL.nodes = []Node{lalr17Dollar[1].node}
 		}
 	case 125:
-		lalr17Dollar = lalr17S[lalr17pt-0 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:867
+		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:863
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticWith(nil)
+			lalr17VAL.nodes = append(lalr17Dollar[1].nodes, lalr17Dollar[2].node)
 		}
 	case 126:
-		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:871
 		{
-			lalr17VAL.node = lalr17Dollar[2].node
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticWith(lalr17Dollar[1].nodes)
 		}
 	case 127:
-		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
+		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:875
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticWith(lalr17Dollar[3].nodes)
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticLets(lalr17Dollar[1].nodes)
 		}
 	case 128:
-		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+		lalr17Dollar = lalr17S[lalr17pt-0 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:883
 		{
-			lalr17VAL.node = lalr17Dollar[2].node
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticWith(nil)
 		}
 	case 129:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
 //line lalr_logicparser_grammar_v17.y:887
 		{
-			lalr17VAL.node = lalr17Acfg(lalr17lex).NewNullTactic()
+			lalr17VAL.node = lalr17Dollar[2].node
 		}
 	case 130:
+		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:891
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticWith(lalr17Dollar[3].nodes)
+		}
+	case 131:
+		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:899
+		{
+			lalr17VAL.node = lalr17Dollar[2].node
+		}
+	case 132:
+		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
+//line lalr_logicparser_grammar_v17.y:903
+		{
+			lalr17VAL.node = lalr17Acfg(lalr17lex).NewNullTactic()
+		}
+	case 133:
 		lalr17Dollar = lalr17S[lalr17pt-0 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:895
+//line lalr_logicparser_grammar_v17.y:911
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewNoneAST()
 		}
-	case 131:
+	case 134:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:899
+//line lalr_logicparser_grammar_v17.y:915
 		{
 			lalr17VAL.node = lalr17Dollar[1].node
 		}
-	case 132:
+	case 135:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:907
+//line lalr_logicparser_grammar_v17.y:923
 		{
 			lalr17VAL.node = lalr17Dollar[1].node
 		}
-	case 133:
+	case 136:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:911
+//line lalr_logicparser_grammar_v17.y:927
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewComposeTactics([]Node{lalr17Dollar[1].node, lalr17Dollar[3].node})
 		}
-	case 134:
+	case 137:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:915
+//line lalr_logicparser_grammar_v17.y:931
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewComposeTactics([]Node{lalr17Dollar[1].node, lalr17Dollar[2].node})
 		}
-	case 135:
+	case 138:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:924
+//line lalr_logicparser_grammar_v17.y:940
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewSchemaInstantiation(lalr17Dollar[2].node, lalr17Acfg(lalr17lex).NewNoneAST())
 		}
-	case 136:
+	case 139:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:929
+//line lalr_logicparser_grammar_v17.y:945
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewAssumeTactic(lalr17Dollar[2].node, lalr17Acfg(lalr17lex).NewNoneAST())
 		}
-	case 137:
+	case 140:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:934
+//line lalr_logicparser_grammar_v17.y:950
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewShowGoalsTactic()
 		}
-	case 138:
+	case 141:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:939
+//line lalr_logicparser_grammar_v17.y:955
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewDeferGoalTactic()
 		}
-	case 139:
+	case 142:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:944
+//line lalr_logicparser_grammar_v17.y:960
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewSpoilTactic(lalr17Dollar[2].node)
 		}
-	case 140:
+	case 143:
 		lalr17Dollar = lalr17S[lalr17pt-4 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:949
+//line lalr_logicparser_grammar_v17.y:965
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewTacticTactic(lalr17Dollar[2].node, lalr17Dollar[3].node, lalr17Dollar[4].node)
 		}
-	case 141:
+	case 144:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:954
+//line lalr_logicparser_grammar_v17.y:970
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewPropertyTactic(lalr17Dollar[2].node, lalr17Acfg(lalr17lex).NewNoneAST(), lalr17Dollar[3].node)
 		}
-	case 142:
+	case 145:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:959
+//line lalr_logicparser_grammar_v17.y:975
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewFunctionTactic([]Node{lalr17Dollar[2].node})
 		}
-	case 143:
+	case 146:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:964
+//line lalr_logicparser_grammar_v17.y:980
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewProofTactic(lalr17Acfg(lalr17lex).NewAtom(lalr17Dollar[2].str), lalr17Dollar[3].node)
 		}
-	case 144:
+	case 147:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:969
+//line lalr_logicparser_grammar_v17.y:985
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewLetTactic(lalr17Dollar[2].nodes)
 		}
-	case 145:
+	case 148:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:974
+//line lalr_logicparser_grammar_v17.y:990
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewWitnessTactic(lalr17Dollar[3].nodes)
 		}
-	case 146:
+	case 149:
 		lalr17Dollar = lalr17S[lalr17pt-5 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:979
+//line lalr_logicparser_grammar_v17.y:995
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewIfTactic(lalr17Dollar[2].node, lalr17Dollar[3].node, lalr17Dollar[5].node)
 		}
-	case 147:
+	case 150:
 		lalr17Dollar = lalr17S[lalr17pt-3 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:984
+//line lalr_logicparser_grammar_v17.y:1000
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewUnfoldTactic(lalr17Acfg(lalr17lex).NewNoneAST(), []Node{lalr17Dollar[3].node})
 		}
-	case 148:
+	case 151:
 		lalr17Dollar = lalr17S[lalr17pt-2 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:989
+//line lalr_logicparser_grammar_v17.y:1005
 		{
 			lalr17VAL.node = lalr17Acfg(lalr17lex).NewForgetTactic([]Node{lalr17Dollar[2].node})
 		}
-	case 149:
+	case 152:
 		lalr17Dollar = lalr17S[lalr17pt-1 : lalr17pt+1]
-//line lalr_logicparser_grammar_v17.y:994
+//line lalr_logicparser_grammar_v17.y:1010
 		{
 			lalr17VAL.node = lalr17Dollar[1].node
 		}

@@ -8,6 +8,17 @@ import (
 
 var lalrVer17 = Version{1, 7}
 
+func TestLalrProofThisLabel(t *testing.T) {
+	node, err := ParseLogicV17("proof [this] { showgoals }", lalrVer17)
+	if err != nil {
+		t.Fatal(err)
+	}
+	proof, ok := node.(*ProofTactic)
+	if !ok || labelName(proof.TLabel) != "this" {
+		t.Fatalf("expected proof labeled this, got %v", node)
+	}
+}
+
 // parsePython parses with the real Python Ivy parser via PythonOracle.
 // Returns the canonical AST shape string.
 func parsePython(t *testing.T, input string) (string, error) {

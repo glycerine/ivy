@@ -117,6 +117,35 @@ func TestAttachProofs_LabelMatchesIsolate(t *testing.T) {
 	}
 }
 
+func TestAttachProofs_ThisWithoutIsolateDeclaration(t *testing.T) {
+	mod := New()
+	proof := proofNode("whole_program_proof")
+	mod.Proofs = []ProofEntry{makeLabelOnlyProof("this", proof)}
+	if err := AttachProofs(mod); err != nil {
+		t.Fatal(err)
+	}
+	if mod.IsolateProofs["this"] != proof {
+		t.Fatal("proof was not attached to this")
+	}
+}
+
+func TestCompileProofThis(t *testing.T) {
+	for _, version := range []string{"1.6", "1.7", "1.8"} {
+		t.Run(version, func(t *testing.T) {
+			mod, err := IvyFromString("#lang ivy" + version + "\nproof [this] { tactic vcgen }\n")
+			if err != nil {
+				t.Fatal(err)
+			}
+			if mod.IsolateProofs["this"] == nil {
+				t.Fatal("proof was not attached to this")
+			}
+			if version != "1.6" && mod.IsolateProof == nil {
+				t.Fatal("proof was not loaded for the implicit isolate")
+			}
+		})
+	}
+}
+
 // Test 5: Duplicate label → error.
 func TestAttachProofs_DuplicateLabelErrors(t *testing.T) {
 	mod := New()

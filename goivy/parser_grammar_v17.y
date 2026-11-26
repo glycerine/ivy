@@ -1689,7 +1689,7 @@ labeledfmla:
     }
     ;
 
-// labelname matches Python's LABEL : LB SYMBOL RB (ivy_logic_parser.py:23-25).
+// labelname matches Python's LABEL productions for symbols and THIS.
 // The Python lexer produces LABEL as a terminal, but our lexer produces
 // separate LB, SYMBOL, RB tokens, so we combine them in the grammar.
 labelname:
@@ -1698,6 +1698,11 @@ labelname:
         xtracer.Trace("parser.p_LABEL_LB_SYMBOL_RB ENTER (LABEL)")
         // Python: all LABEL consumers strip brackets with [1:-1].
         // Strip here at the source so all consumers get the bare name.
+        $$ = TokenInfo{Val: $2.Val, Line: $1.Line}
+    }
+    | PARSER_TOK_LB PARSER_TOK_THIS PARSER_TOK_RB
+    {
+        xtracer.Trace("parser.p_LABEL_LB_THIS_RB ENTER (LABEL)")
         $$ = TokenInfo{Val: $2.Val, Line: $1.Line}
     }
     | PARSER_TOK_LABEL

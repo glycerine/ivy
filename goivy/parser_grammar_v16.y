@@ -1862,6 +1862,11 @@ labelname:
         xtracer.Trace("parser.p_LABEL_LB_SYMBOL_RB ENTER (LABEL)")
         $$ = TokenInfo{Val: $2.Val, Line: $1.Line}
     }
+    | PARSER16_TOK_LB PARSER16_TOK_THIS PARSER16_TOK_RB
+    {
+        xtracer.Trace("parser.p_LABEL_LB_THIS_RB ENTER (LABEL)")
+        $$ = TokenInfo{Val: $2.Val, Line: $1.Line}
+    }
     ;
 
 symdecl:

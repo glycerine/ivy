@@ -72,6 +72,7 @@ func lalr17AtypeToString(n Node) string {
 %token        LALR17_TOK_DEBUG LALR17_TOK_THUNK LALR17_TOK_UNPROVABLE LALR17_TOK_PROOF
 %token        LALR17_TOK_INSTANTIATE
 %token <str>  LALR17_TOK_LABEL
+%type  <str>  prooflabel
 %token        LALR17_TOK_CARET LALR17_TOK_METHOD LALR17_TOK_NULL LALR17_TOK_SET
 %token        LALR17_TOK_WITH
 // Scenario tokens
@@ -144,9 +145,24 @@ top:
         lalr17lex.(*lalr17LexAdapter).result = lalr17Acfg(lalr17lex).NewTacticTactic($2, $3, $4)
     }
     // Proof entry: proof [label] { proofseq }
-    | LALR17_TOK_PROOF LALR17_TOK_LABEL proofgroup
+    | LALR17_TOK_PROOF prooflabel proofgroup
     {
         lalr17lex.(*lalr17LexAdapter).result = lalr17Acfg(lalr17lex).NewProofTactic(lalr17Acfg(lalr17lex).NewAtom($2), $3)
+    }
+    ;
+
+prooflabel:
+    LALR17_TOK_LABEL
+    {
+        $$ = $1
+    }
+    | LALR17_TOK_LB SYMBOLx LALR17_TOK_RB
+    {
+        $$ = $2
+    }
+    | LALR17_TOK_LB LALR17_TOK_THIS LALR17_TOK_RB
+    {
+        $$ = "this"
     }
     ;
 
@@ -960,7 +976,7 @@ proofstep:
         $$ = lalr17Acfg(lalr17lex).NewFunctionTactic([]Node{$2})
     }
     // proofstep : PROOF LABEL proofgroup
-    | LALR17_TOK_PROOF LALR17_TOK_LABEL proofgroup
+    | LALR17_TOK_PROOF prooflabel proofgroup
     {
         $$ = lalr17Acfg(lalr17lex).NewProofTactic(lalr17Acfg(lalr17lex).NewAtom($2), $3)
     }

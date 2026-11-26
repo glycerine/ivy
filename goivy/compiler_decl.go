@@ -1435,11 +1435,8 @@ func (d *DomainSetup) Proof(node Node) error {
 			return err
 		}
 		acfg := d.Compiler.Module.Cfg.AstCfg
-		proofLF := acfg.NewLabeledFormula(nil, nil)
-		if lf.Label != nil {
-			label, _ := d.Compiler.Thing(lf.Label)
-			proofLF.Label = label
-		}
+		// A proof label names a declaration, not a logic symbol.
+		proofLF := acfg.NewLabeledFormula(lf.Label, nil)
 		d.Compiler.Module.Proofs = append(d.Compiler.Module.Proofs, ProofEntry{
 			Formula: proofLF,
 			Proof:   compiledProof,

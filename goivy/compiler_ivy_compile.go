@@ -1435,7 +1435,7 @@ func AttachProofs(mod *Module) error {
 				Formula: target,
 				Proof:   pf.Proof,
 			})
-		} else if _, ok := mod.Isolates.Get2(lab); ok {
+		} else if _, ok := mod.Isolates.Get2(lab); ok || lab == "this" {
 			mod.IsolateProofs[lab] = pf.Proof
 		} else {
 			xtracer.Trace("compiler.AttachProofs EXIT")

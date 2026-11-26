@@ -925,6 +925,9 @@ func (d *ProofDecl) Clone(args []Node) Node {
 }
 func (d *ProofDecl) String() string { return "proof" }
 
+// A proof refers to a label or isolate that is declared elsewhere.
+func (d *ProofDecl) Defines() []string { return nil }
+
 // NamedDecl declares a named entity.
 type NamedDecl struct {
 	DeclBase

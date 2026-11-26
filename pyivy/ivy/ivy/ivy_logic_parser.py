@@ -45,6 +45,11 @@ def p_LABEL_LB_SYMBOL_RB(p):
     if __debug__: xtracer.trace("parser.p_LABEL_LB_SYMBOL_RB ENTER (LABEL)")
     p[0] = p[1] + p[2] + p[3]
 
+def p_LABEL_LB_THIS_RB(p):
+    'LABEL : LB THIS RB'
+    if __debug__: xtracer.trace("parser.p_LABEL_LB_THIS_RB ENTER (LABEL)")
+    p[0] = p[1] + 'this' + p[3]
+
 def p_SYMsubscr_SYMBOL(p):
     'SYMsubscr : SYMBOL'
     if __debug__: xtracer.trace("parser.p_SYMsubscr_SYMBOL ENTER (SYMsubscr)")
