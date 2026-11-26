@@ -1,6 +1,7 @@
 package goivy
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -15,6 +16,14 @@ type DomainSetup struct {
 	// LastFact holds the last compiled property/axiom LabeledFormula, used by
 	// proof and named declarations. Matches Python's self.last_fact.
 	LastFact *LabeledFormula
+
+	deferDefinitionReferences bool
+	pendingDefinitions        []pendingDefinition
+}
+
+type pendingDefinition struct {
+	formula *LabeledFormula
+	missing *IvyError
 }
 
 // NewDomainSetup creates a new declaration interpreter.
@@ -25,13 +34,18 @@ func NewDomainSetup(c *Compiler) *DomainSetup {
 // ProcessDecls processes all declarations in a declaration list.
 // Each declaration is dispatched to the appropriate handler based on its type.
 func (d *DomainSetup) ProcessDecls(decls []Node) error {
+	d.deferDefinitionReferences = true
+	defer func() { d.deferDefinitionReferences = false }()
 	for _, decl := range decls {
 		if err := d.ProcessDecl(decl); err != nil {
 			// Python IvyDeclInterp.__call__: with ASTContext(decl).
 			return astContextError(decl, err)
 		}
+		if err := d.resolveDefinitions(false); err != nil {
+			return err
+		}
 	}
-	return nil
+	return d.resolveDefinitions(true)
 }
 
 // ProcessDecl dispatches a single declaration to its handler.
@@ -773,39 +787,91 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 	if !ok {
 		return nil
 	}
-	df := lf.Formula
-	// Check for DefinitionSchema first
-	var defNode *Definition
-	var isSchemaD bool
-	if ds, ok := df.(*DefinitionSchema); ok {
-		defNode = &ds.Definition
-		isSchemaD = true
-	} else if dn, ok := df.(*Definition); ok {
-		defNode = dn
-	} else {
+	compiled, astDefinition, err := d.compileDefinitionBody(lf.Formula)
+	if astDefinition == nil {
 		return nil
 	}
-	var compiled Expr
-	var err error
-	if isSchemaD {
-		compiled, err = d.Compiler.CompileDefnSchema(d.Compiler.Module.Cfg.AstCfg.NewDefinitionSchema(*defNode))
-	} else {
-		compiled, err = d.Compiler.CompileDefn(defNode)
-	}
 	if err != nil {
-		return err
+		var missing *IvyError
+		if !d.deferDefinitionReferences || !errors.As(err, &missing) || missing.unresolvedName == "" {
+			return err
+		}
+		// Reserve the declaration's position and identity so proofs can attach
+		// before its body is available.
+		placeholder := lf.Clone([]Node{lf.Label, lf.Formula}).(*LabeledFormula)
+		if err := d.AddDefinition(placeholder, astDefinition); err != nil {
+			return err
+		}
+		d.pendingDefinitions = append(d.pendingDefinitions, pendingDefinition{placeholder, missing})
+		return nil
 	}
 
-	// Python: self.add_definition(ldf.clone([label, df]))
-	// Clone the LabeledFormula with the compiled definition, preserving metadata.
-	// AddDefinition validates the compiled definition variables and routes to
-	// either NativeDefinitions or LabeledProps based on whether the AST RHS is a
-	// NativeExpr.
 	mlf := lf.Clone([]Node{lf.Label, compiled}).(*LabeledFormula)
-	if err := d.AddDefinition(mlf, defNode); err != nil {
+	if err := d.AddDefinition(mlf, astDefinition); err != nil {
 		return err
 	}
+	d.registerDefinition(compiled)
+	return nil
+}
 
+func (d *DomainSetup) compileDefinitionBody(node Node) (Expr, *Definition, error) {
+	switch def := node.(type) {
+	case *DefinitionSchema:
+		compiled, err := d.Compiler.CompileDefnSchema(def)
+		return compiled, &def.Definition, err
+	case *Definition:
+		compiled, err := d.Compiler.CompileDefn(def)
+		return compiled, def, err
+	default:
+		return nil, nil, nil
+	}
+}
+
+func (d *DomainSetup) resolveDefinitions(final bool) error {
+	for len(d.pendingDefinitions) != 0 {
+		remaining := d.pendingDefinitions[:0]
+		progress := false
+		for _, pending := range d.pendingDefinitions {
+			compiler := d.Compiler
+			name := ResolveAlias(pending.missing.unresolvedName, compiler.Module)
+			_, available := compiler.Sig.Symbols.Get2(name)
+			if pending.missing.unresolvedSort {
+				_, available = compiler.Sig.Sorts.Get2(name)
+			}
+			if !available && !final {
+				remaining = append(remaining, pending)
+				continue
+			}
+			compiled, _, err := d.compileDefinitionBody(pending.formula.Formula)
+			if err != nil {
+				var missing *IvyError
+				if !errors.As(err, &missing) || missing.unresolvedName == "" {
+					return astContextError(pending.formula, err)
+				}
+				pending.missing = missing
+				remaining = append(remaining, pending)
+				continue
+			}
+			if err := addDefinitionChecks(compiled); err != nil {
+				return astContextError(pending.formula, err)
+			}
+			pending.formula.Formula = compiled
+			d.registerDefinition(compiled)
+			progress = true
+		}
+		d.pendingDefinitions = remaining
+		if !progress {
+			if final {
+				pending := remaining[0]
+				return astContextError(pending.formula, pending.missing)
+			}
+			break
+		}
+	}
+	return nil
+}
+
+func (d *DomainSetup) registerDefinition(compiled Expr) {
 	// Add the defined symbol if not already in the signature. A
 	// DefinitionSchema is a Definition in Python, so it gets the same
 	// DerivedUpdate and symbol bookkeeping.
@@ -828,7 +894,6 @@ func (d *DomainSetup) DefinitionDecl(node Node) error {
 		d.Compiler.Module.Updates = append(d.Compiler.Module.Updates,
 			NewDerivedUpdate(def.Defines(), compiled))
 	}
-	return nil
 }
 
 // Action processes an action declaration in pass 1 (DomainSetup).

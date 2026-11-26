@@ -1,0 +1,14 @@
+#lang ivy1.7
+
+relation root_pred
+definition root_pred = middle_pred
+definition middle_pred = leaf_pred
+relation middle_pred
+relation leaf_pred
+
+relation quantified
+definition quantified = forall X:later_type. X = X
+type later_type
+
+property [agreement] root_pred <-> leaf_pred
+property [quantified_true] quantified

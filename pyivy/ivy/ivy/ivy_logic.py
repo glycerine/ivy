@@ -338,7 +338,10 @@ def _find_sort(type_name):
             if iu.get_numeric_version() <= [1,2]:
                 return default_sort()
             raise IvyError(None,"unspecified type")
-        raise IvyError(None,"unknown type: {}".format(type_name))
+        error = IvyError(None,"unknown type: {}".format(type_name))
+        error.unresolved_name = type_name
+        error.unresolved_sort = True
+        raise error
 
 def find_sort(type_name):
     res = _find_sort(type_name)
@@ -366,7 +369,9 @@ def find_symbol(symbol_name,throw=True):
         else:
             if symbol_name in sig.sorts:
                 IvyError(None,"type {} used where a function or individual symbol is expected".format(symbol_name))
-            raise IvyError(None,"unknown symbol: {}".format(symbol_name))
+            error = IvyError(None,"unknown symbol: {}".format(symbol_name))
+            error.unresolved_name = symbol_name
+            raise error
 
 def find_polymorphic_symbol(symbol_name,throw=True):
     if iu.ivy_have_polymorphism and symbol_name in polymorphic_symbols:

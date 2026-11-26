@@ -9,6 +9,9 @@ type IvyError struct {
 	Msg    string
 	Loc    Location
 	HasLoc bool
+
+	unresolvedName string
+	unresolvedSort bool
 }
 
 func (e *IvyError) Error() string {

@@ -98,7 +98,10 @@ func (c *Compiler) CompileFieldReference(symbolName string, args []Expr, lineno 
 					"type %s used where a function or individual symbol is expected",
 					cfrErr.SymbolName)}
 			}
-			return nil, &IvyError{Msg: fmt.Sprintf("unknown symbol: %s", cfrErr.SymbolName)}
+			return nil, &IvyError{
+				Msg:            fmt.Sprintf("unknown symbol: %s", cfrErr.SymbolName),
+				unresolvedName: cfrErr.SymbolName,
+			}
 		}
 		return nil, err
 	}

@@ -35,7 +35,7 @@ type Sig struct {
 	Symbols            *InsMap[string, *SymbolEntry]
 	Constructors       map[string]bool
 	Interp             *InsMap[string, interface{}] // sort name → interpretation; Python sig.interp: insertion-ordered dict
-	DefaultSort        Sort                   // nil means unset
+	DefaultSort        Sort                         // nil means unset
 	DefaultNumericSort Sort
 	AllowUnsorted      bool // when true, unknown sorts are accepted
 }
@@ -299,7 +299,11 @@ func (s *Sig) FindSort(name string, allowUnsorted bool) (Sort, error) {
 		return GetDefaultSort(s)
 	}
 	//vv("about to return unknown type: '%v', call stack is:\n%v\n", name, stack())
-	return nil, &IvyError{Msg: fmt.Sprintf("unknown type: %s", name)}
+	return nil, &IvyError{
+		Msg:            fmt.Sprintf("unknown type: %s", name),
+		unresolvedName: name,
+		unresolvedSort: true,
+	}
 }
 
 // SortListNames returns sort names from a slice (for diagnostics).

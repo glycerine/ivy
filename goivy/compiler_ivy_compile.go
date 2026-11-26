@@ -1673,7 +1673,11 @@ func CheckDefinitions(mod *Module) (err error) {
 	defProver := NewProofChecker(proofCfg, mod, mod.LabeledAxioms, nil, ModuleSchemataToAst(mod.Schemata), astCfg)
 	for _, scc := range sccs {
 		if len(scc) > 1 {
-			return &IvyError{Msg: fmt.Sprintf("these definitions form a dependency cycle: %s", strings.Join(scc, ","))}
+			names := make([]string, len(scc))
+			for i, key := range scc {
+				names[i] = defExprName(dmap[NodeKey(key)].Formula.(*LogicDefinition).Defines())
+			}
+			return &IvyError{Msg: fmt.Sprintf("these definitions form a dependency cycle: %s", strings.Join(names, ","))}
 		}
 		// Singleton SCC with self-loop: requires recursion schema (proof)
 		defKey := scc[0]

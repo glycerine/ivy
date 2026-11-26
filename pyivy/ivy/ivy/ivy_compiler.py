@@ -67,7 +67,7 @@ def sig_check(label):
     if __debug__: xtracer.trace("compiler.SigCheck@%s HASH leaf=%s canon=%s" % (label, leaf, combined))
 
 class IvyDeclInterp(object):
-    def __call__(self,ivy):
+    def __call__(self,ivy,after_decl=None):
         for decl in ivy.decls:
             with ASTContext(decl):
                 n = decl.name()
@@ -78,6 +78,8 @@ class IvyDeclInterp(object):
                 if hasattr(self,n):
                     for x in decl.args:
                         getattr(self,n)(x)
+            if after_decl is not None:
+                after_decl()
 
 from .ivy_ast import ASTContext
 
@@ -289,7 +291,9 @@ def compile_field_reference(symbol_name,args,lineno,old=False):
     except cfrfail as err:
         if symbol_name in ivy_logic.sig.sorts:
             raise IvyError(None,"type {} used where a function or individual symbol is expected".format(err.symbol_name))
-        raise IvyError(None,"unknown symbol: {}".format(err.symbol_name))
+        error = IvyError(None,"unknown symbol: {}".format(err.symbol_name))
+        error.unresolved_name = err.symbol_name
+        raise error
 
     
 def sort_infer_covariant(term,sort):
@@ -1224,6 +1228,13 @@ defined_attributes = set(["weight","test","check","mc","bmc","method","separate"
 class IvyDomainSetup(IvyDeclInterp):
     def __init__(self,domain):
         self.domain = domain
+        self.pending_definitions = []
+        self.pending_proofs = {}
+
+    def __call__(self,ivy):
+        super().__call__(ivy,self.resolve_definitions)
+        self.resolve_definitions(final=True)
+
     def alias(self,dfn):
         if __debug__: xtracer.trace("compiler.DomainSetup.alias ENTER")
         self.domain.aliases[dfn.defines()] = resolve_alias(dfn.args[1].rep)
@@ -1362,8 +1373,12 @@ class IvyDomainSetup(IvyDeclInterp):
 
 
 
-    def add_definition(self,ldf):
-        defs = self.domain.native_definitions if isinstance(ldf.formula.args[1],ivy_ast.NativeExpr) else self.domain.labeled_props
+    def definition_list(self,ldf):
+        if isinstance(ldf.formula.args[1],ivy_ast.NativeExpr):
+            return self.domain.native_definitions
+        return self.domain.labeled_props
+
+    def check_definition(self,ldf):
         lhsvs = list(lu.variables_ast(ldf.formula.args[0]))
         for idx,v in enumerate(lhsvs):
             if v in lhsvs[idx+1:]:
@@ -1371,7 +1386,10 @@ class IvyDomainSetup(IvyDeclInterp):
         for v in lu.used_variables_ast(ldf.formula.args[1]):
             if v not in lhsvs:
                 raise IvyError(ldf,"Variable {} occurs free on right-hand side of definition".format(v))
-        defs.append(ldf)
+
+    def add_definition(self,ldf):
+        self.check_definition(ldf)
+        self.definition_list(ldf).append(ldf)
         self.last_fact = ldf
 
     def derived(self,ldf):
@@ -1397,12 +1415,63 @@ class IvyDomainSetup(IvyDeclInterp):
         if __debug__: sig_check("DomainSetup.definition")
         label = ldf.label
         df = ldf.formula
-        df = compile_defn(df)
+        try:
+            with ASTContext(ldf):
+                df = compile_defn(df)
+        except IvyError as error:
+            if not getattr(error, 'unresolved_name', None):
+                raise
+            placeholder = ldf.clone([label,df])
+            self.definition_list(placeholder).append(placeholder)
+            self.last_fact = placeholder
+            self.pending_definitions.append((placeholder,error))
+            self.pending_proofs[id(placeholder)] = []
+            return
         self.add_definition(ldf.clone([label,df]))
+        self.register_definition(df)
+
+    def register_definition(self,df):
         self.domain.updates.append(DerivedUpdate(df))
         self.domain.symbol_order.append(df.args[0].rep)
         if not self.domain.sig.contains_symbol(df.args[0].rep):
             add_symbol(df.args[0].rep.name,df.args[0].rep.sort)
+
+    def resolve_definitions(self,final=False):
+        global last_fmla
+        while self.pending_definitions:
+            remaining = []
+            progress = False
+            for ldf,missing in self.pending_definitions:
+                name = resolve_alias(missing.unresolved_name)
+                table = self.domain.sig.sorts if getattr(missing,'unresolved_sort',False) else self.domain.sig.symbols
+                if name not in table and not final:
+                    remaining.append((ldf,missing))
+                    continue
+                try:
+                    with ASTContext(ldf):
+                        df = compile_defn(ldf.formula)
+                except IvyError as error:
+                    if not getattr(error,'unresolved_name',None):
+                        raise
+                    remaining.append((ldf,error))
+                    continue
+                ldf.args = (ldf.label,df)
+                self.check_definition(ldf)
+                self.register_definition(df)
+                for index,pf in self.pending_proofs.pop(id(ldf)):
+                    saved_fmla = last_fmla
+                    last_fmla = df
+                    try:
+                        with ASTContext(pf):
+                            self.domain.proofs[index] = (ldf,pf.compile())
+                    finally:
+                        last_fmla = saved_fmla
+                progress = True
+            self.pending_definitions = remaining
+            if not progress:
+                if final:
+                    raise remaining[0][1]
+                break
             
     def proof(self,pf):
         if __debug__: xtracer.trace("compiler.DomainSetup.proof ENTER")
@@ -1411,6 +1480,11 @@ class IvyDomainSetup(IvyDeclInterp):
             return
         if self.last_fact is None:
             return # this is a conjecture
+        pending = self.pending_proofs.get(id(self.last_fact))
+        if pending is not None:
+            pending.append((len(self.domain.proofs),pf))
+            self.domain.proofs.append((self.last_fact,None))
+            return
         global last_fmla
         last_fmla = self.last_fact.formula
         # tricky: if proof is of a definition, move the definition to labeled_props
@@ -2079,7 +2153,7 @@ def check_definitions(mod):
     prover = ivy_proof.ProofChecker(mod.labeled_axioms,[],mod.schemata)
     for scc in sccs:
         if len(scc) > 1:
-            raise iu.IvyError(None,'these definitions form a dependency cycle: {}'.format(','.join(scc)))
+            raise iu.IvyError(None,'these definitions form a dependency cycle: {}'.format(','.join(map(str,scc))))
         d = dmap[scc[0]]
         if d.id not in pmap:
             raise iu.IvyError(d,'definition of {} requires a recursion schema'.format(d.formula.defines()))
