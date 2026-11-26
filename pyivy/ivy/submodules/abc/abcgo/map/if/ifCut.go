@@ -81,7 +81,8 @@ func If_CutFilter(set *If_Set_t, c *If_Cut_t, saveFirst int32) int32 {
 }
 func ifMerge(p *If_Man_t, a, b, c *If_Cut_t, ordered, permutations bool) int32 {
 	limit := int(a.nLimit)
-	var leaves []int32
+	var buffer [2 * IF_MAX_LUTSIZE]int32 // merged leaves stay off the heap
+	leaves := buffer[:0]
 	var perm0, perm1, shared [IF_MAX_LUTSIZE]int32
 	sharedMask := uint32(0)
 	nShared := 0
