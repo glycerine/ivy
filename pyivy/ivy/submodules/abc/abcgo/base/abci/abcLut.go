@@ -248,7 +248,8 @@ func Abc_NodeLutMap(pManCuts *Cut_Man_t, pObj *Abc_Obj_t) {
 	var i, DelayMax int32
 	pCut = Abc_NodeGetCutsRecursive(pManCuts, pObj, 0, 0)
 	assert(pCut != nil, "pCut != nil")
-	assert(pObj.Level == 0, "pObj.Level == 0")
+	// abcLut.c asserted pObj->Level == 0, which its driver no longer
+	// ensures; the level is recomputed below (CBUGS_FIXED.md #4).
 	// go through the cuts
 	pObj.Level = LARGE_LEVEL
 	for pCut = pCut.Next; pCut != nil; pCut = pCut.Next {

@@ -82,3 +82,25 @@ and states how the Go port was verified.
   CNF (`TestTruthToCnfConstantWithFanins`) and panicked on the assert; it has
   the same fix, and `TestMfsDcsConstantNodeMatchesNative` checks that it gives
   the native result.
+
+## 4. `supercl` violates `Abc_NodeLutMap`'s assertion on every node
+
+- **File:** `src/base/abci/abcLut.c`, `Abc_NodeLutMap`.
+- **Found:** 2026-11-26, by running every command with default arguments on
+  mul8 and s27; the Go port (which keeps its assertions) panicked in `supercl`.
+- **Bug:** `Abc_NodeLutMap` asserts `pObj->Level == 0` before recomputing the
+  node's LUT level, but its driver `Abc_NtkSuperChoiceLut` clears only the CI
+  levels (its `pObj->Level = 0;` for nodes is commented out), so every node
+  still has its level from strashing. Release builds compile the assertion out;
+  any assertion-enabled build aborts on the first node.
+- **Fix:** remove the stale assertion. The function overwrites the level on the
+  next line, so release behavior is unchanged.
+- **Test:** `abcgo/base/abci/supercl_c_assert_test.go`
+  (`TestNativeSuperclAssertionsHold`) compiles `abcLut.c` from `src/` with
+  assertions enabled, links it ahead of the native library named by
+  `ABC_LIBABC`, and runs `read mul8.aig; strash; supercl`. It aborted on the
+  assertion before the fix and now reports 483 nodes, as the release build does.
+- **Go port:** it had the same assertion and the same fix. In addition, its cut
+  recursion now walks the live network as `abcCut.c` does (`supercl` creates
+  nodes after the cut manager starts). `strash; supercl` is in the native-golden
+  sweep and gives the native result on all five benchmarks.

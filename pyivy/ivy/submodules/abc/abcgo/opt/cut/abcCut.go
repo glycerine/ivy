@@ -365,3 +365,17 @@ func cutSetConstant(p *Cut_Man_t, id int32, value bool) {
 	}
 	p.newCuts[id] = c
 }
+
+// Cut_ManSetNode records node and its live fanout count. ABC computes the
+// cuts of a node from the live network, so callers that create nodes after
+// the manager started (lutpack, supercl) register them before Abc_NodeGetCuts.
+func Cut_ManSetNode(p *Cut_Man_t, node NetworkNode, fanouts int32) {
+	if p.network == nil {
+		p.network = make(map[int32]NetworkNode)
+	}
+	p.network[node.ID] = node
+	for int(node.ID) >= len(p.networkCounts) {
+		p.networkCounts = append(p.networkCounts, 0)
+	}
+	p.networkCounts[node.ID] = fanouts
+}

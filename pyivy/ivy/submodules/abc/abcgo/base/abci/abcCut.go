@@ -220,12 +220,25 @@ func Abc_NtkComputeArea(pNtk *Abc_Ntk_t, p *Cut_Man_t) int32 {
 	return area
 }
 
+// Abc_NodeGetCutsRecursive is abcCut.c's: it computes the fanins' cuts
+// first, walking the live network.
 func Abc_NodeGetCutsRecursive(p any, pObj *Abc_Obj_t, fDag int32, fTree int32) *Cut_Cut_t {
-	return cut.Abc_NodeGetCutsRecursive(p.(*Cut_Man_t), abcCutNetworkNode(pObj), fDag, fTree)
+	if list := cut.Cut_NodeReadCutsNew(p.(*Cut_Man_t), int32(pObj.ID)); list != nil {
+		return list
+	}
+	Abc_NodeGetCutsRecursive(p, abc.Abc_ObjFanin0(pObj), fDag, fTree)
+	Abc_NodeGetCutsRecursive(p, abc.Abc_ObjFanin1(pObj), fDag, fTree)
+	return Abc_NodeGetCuts(p, pObj, fDag, fTree)
 }
 
+// Abc_NodeGetCuts computes the cuts of a node from its live fanout counts
+// (and its fanins'), as abcCut.c does.
 func Abc_NodeGetCuts(p any, pObj *Abc_Obj_t, fDag int32, fTree int32) *Cut_Cut_t {
-	return cut.Abc_NodeGetCuts(p.(*Cut_Man_t), abcCutNetworkNode(pObj), fDag, fTree)
+	man := p.(*Cut_Man_t)
+	for _, o := range []*Abc_Obj_t{pObj, abc.Abc_ObjFanin0(pObj), abc.Abc_ObjFanin1(pObj)} {
+		cut.Cut_ManSetNode(man, abcCutNetworkNode(o), abc.Abc_ObjFanoutNum(o))
+	}
+	return cut.Abc_NodeGetCuts(man, abcCutNetworkNode(pObj), fDag, fTree)
 }
 
 func Abc_NodeGetCutsSeq(p any, pObj *Abc_Obj_t, fTriv int32) {

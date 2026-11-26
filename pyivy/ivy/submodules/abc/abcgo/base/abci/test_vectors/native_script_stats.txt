@@ -32,6 +32,7 @@ add32.aig|renode=i/o =   64/   33  lat =    0  nd =   188  edge =    377  aig  =
 add32.aig|renode; sop; fx=i/o =   64/   33  lat =    0  nd =   189  edge =    378  cube =   220  lev = 63
 add32.aig|rewrite -z; refactor -z=i/o =   64/   33  lat =    0  and =    220  lev = 64
 add32.aig|strash=i/o =   64/   33  lat =    0  and =    220  lev = 64
+add32.aig|strash; supercl=i/o =   64/   33  lat =    0  nd =   728  edge =   2457  cube =  3850  lev = 64
 i10.aig|&get; &b; &put=i/o =  257/  224  lat =    0  and =   2270  lev = 41
 i10.aig|&get; &dc2; &put=i/o =  257/  224  lat =    0  and =   1840  lev = 31
 i10.aig|&get; &dch; &put=i/o =  257/  224  lat =    0  and =   1803  lev = 33
@@ -65,6 +66,7 @@ i10.aig|renode=i/o =  257/  224  lat =    0  nd =  1865  edge =   3990  aig  =  
 i10.aig|renode; sop; fx=i/o =  257/  224  lat =    0  nd =  1955  edge =   3985  cube =  2142  lev = 38
 i10.aig|rewrite -z; refactor -z=i/o =  257/  224  lat =    0  and =   1979  lev = 47
 i10.aig|strash=i/o =  257/  224  lat =    0  and =   2675  lev = 50
+i10.aig|strash; supercl=i/o =  257/  224  lat =    0  nd =  4725  edge =  13224  cube =  9893  lev = 50
 mul12.aig|&get; &b; &put=i/o =   24/   24  lat =    0  and =   1154  lev = 85
 mul12.aig|&get; &dc2; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
 mul12.aig|&get; &dch; &put=i/o =   24/   24  lat =    0  and =   1020  lev = 85
@@ -98,6 +100,7 @@ mul12.aig|renode=i/o =   24/   24  lat =    0  nd =   784  edge =   1670  aig  =
 mul12.aig|renode; sop; fx=i/o =   24/   24  lat =    0  nd =   869  edge =   1806  cube =  1112  lev = 71
 mul12.aig|rewrite -z; refactor -z=i/o =   24/   24  lat =    0  and =   1019  lev = 83
 mul12.aig|strash=i/o =   24/   24  lat =    0  and =   1020  lev = 85
+mul12.aig|strash; supercl=i/o =   24/   24  lat =    0  nd =  1292  edge =   3120  cube =  2851  lev = 85
 mul8.aig|&get; &b; &put=i/o =   16/   16  lat =    0  and =    482  lev = 53
 mul8.aig|&get; &dc2; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
 mul8.aig|&get; &dch; &put=i/o =   16/   16  lat =    0  and =    424  lev = 53
@@ -131,6 +134,7 @@ mul8.aig|renode=i/o =   16/   16  lat =    0  nd =   331  edge =    726  aig  = 
 mul8.aig|renode; sop; fx=i/o =   16/   16  lat =    0  nd =   377  edge =    788  cube =   483  lev = 42
 mul8.aig|rewrite -z; refactor -z=i/o =   16/   16  lat =    0  and =    423  lev = 51
 mul8.aig|strash=i/o =   16/   16  lat =    0  and =    424  lev = 53
+mul8.aig|strash; supercl=i/o =   16/   16  lat =    0  nd =   483  edge =   1084  cube =   813  lev = 53
 sort16.aig|&get; &b; &put=i/o =   16/   16  lat =    0  and =    480  lev = 31
 sort16.aig|&get; &dc2; &put=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|&get; &dch; &put=i/o =   16/   16  lat =    0  and =    240  lev = 16
@@ -164,3 +168,4 @@ sort16.aig|renode=i/o =   16/   16  lat =    0  nd =   466  edge =    932  aig  
 sort16.aig|renode; sop; fx=i/o =   16/   16  lat =    0  nd =   466  edge =    932  cube =   466  lev = 31
 sort16.aig|rewrite -z; refactor -z=i/o =   16/   16  lat =    0  and =    466  lev = 31
 sort16.aig|strash=i/o =   16/   16  lat =    0  and =    466  lev = 31
+sort16.aig|strash; supercl=i/o =   16/   16  lat =    0  nd =   991  edge =   3028  cube =  2561  lev = 31

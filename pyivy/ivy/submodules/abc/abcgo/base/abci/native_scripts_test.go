@@ -59,6 +59,7 @@ var nativeScripts = []string{
 	"&get; &sweep; &put",
 	"&get; &fraig; &put",
 	"iresyn",
+	"strash; supercl",
 }
 
 const nativeStatsFile = "test_vectors/native_script_stats.txt"

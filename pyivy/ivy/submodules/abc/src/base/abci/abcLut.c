@@ -214,7 +214,8 @@ void Abc_NodeLutMap( Cut_Man_t * pManCuts, Abc_Obj_t * pObj )
     int i, DelayMax;
     pCut = (Cut_Cut_t *)Abc_NodeGetCutsRecursive( pManCuts, pObj, 0, 0 );
     assert( pCut != NULL );
-    assert( pObj->Level == 0 );
+    // the level is recomputed below; the driver no longer clears it, so a
+    // previously computed level (e.g. from strashing) may remain
     // go through the cuts
     pObj->Level = LARGE_LEVEL;
     for ( pCut = pCut->pNext; pCut; pCut = pCut->pNext )
