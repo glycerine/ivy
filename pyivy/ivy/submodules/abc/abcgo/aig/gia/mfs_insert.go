@@ -2,8 +2,8 @@ package gia
 
 import (
 	"github.com/glycerine/abcgo/bool/kit"
-	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/tim"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
