@@ -1,6 +1,9 @@
 package bsat
 
-import "math/bits"
+import (
+	"math/bits"
+	"unsafe"
+)
 
 // satClauseLBD preserves ABC's 32-bit decision-level signature estimate.
 func satClauseLBD(a *satAssignments, c *clause) uint8 {
@@ -44,10 +47,13 @@ func satPropagate(a *satAssignments, mem *Sat_Mem_t, watches []veci, binaryHandl
 					binary.lits[1] = falseLit
 				}
 			} else {
-				// Read literals straight from the page arena, as ABC does.
+				// Read literals straight from the page arena, as ABC does
+				// (clause_read): the header word holds the size and the
+				// literals follow it. The arena guarantees the clause lies in
+				// its page, so the slice is built without bounds checks.
 				data := pages[uint32(h)>>pageShift].data
-				offset := h & pageMask
-				lits := data[offset+1 : offset+1+data[offset]]
+				header := (*int32)(unsafe.Add(unsafe.Pointer(unsafe.SliceData(data)), uintptr(h&pageMask)*4))
+				lits := unsafe.Slice((*lit)(unsafe.Add(unsafe.Pointer(header), 4)), int(*header))
 				if len(lits) < 2 {
 					panic("watched unit clause")
 				}
