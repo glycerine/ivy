@@ -109,7 +109,8 @@ func Saig_ManInduction(p *Aig_Man_t, timeout, framesMax, conflictsMax, unique, u
 		fmt.Printf("Induction parameters: FramesMax = %5d. ConflictMax = %6d.\n", framesMax, conflictsMax)
 	}
 
-	for frame := int32(0); ; frame++ {
+	var frame int32
+	for frame = 0; ; frame++ {
 		frameStart := time.Now()
 		if len(bottom) != 0 {
 			bottom = bottom[:0]
@@ -211,7 +212,7 @@ func Saig_ManInduction(p *Aig_Man_t, timeout, framesMax, conflictsMax, unique, u
 			for i = 1; i < lastState-1; i++ {
 				constraints++
 				if veryVerbose != 0 {
-					fmt.Printf("Adding constraint for state %2d and state %2d.\n", i, lastState-1)
+					fmt.Printf("Adding constaint for state %2d and state %2d.\n", i, lastState-1)
 				}
 				if Saig_ManAddUniqueness(sat, states, registers, i, lastState-1, &nSatVarNum, &nClauses, verbose) != 0 {
 					break
@@ -260,7 +261,7 @@ func Saig_ManInduction(p *Aig_Man_t, timeout, framesMax, conflictsMax, unique, u
 					assert(bit == model.NBits, "counterexample bit count matches")
 					assert(p.SetInductionCounterexample(model) == nil, "compact induction counterexample dimensions are valid")
 				}
-				retValue = 0
+				// the step is still satisfiable: undecided, as RetValue stays -1
 				break
 			}
 			if unique != 0 {
@@ -273,7 +274,7 @@ func Saig_ManInduction(p *Aig_Man_t, timeout, framesMax, conflictsMax, unique, u
 						constraints++
 						added = true
 						if veryVerbose != 0 {
-							fmt.Printf("Adding constraint for state %2d and state %2d.\n", i, k)
+							fmt.Printf("Adding constaint for state %2d and state %2d.\n", i, k)
 						}
 						if Saig_ManAddUniqueness(sat, states, registers, i, k, &nSatVarNum, &nClauses, verbose) != 0 {
 							retValue = 1
@@ -299,13 +300,13 @@ func Saig_ManInduction(p *Aig_Man_t, timeout, framesMax, conflictsMax, unique, u
 
 	if verbose != 0 {
 		if timeout > 0 && time.Since(started) >= time.Duration(timeout)*time.Second {
-			fmt.Printf("Timeout (%d sec) was reached during induction.\n", timeout)
+			fmt.Printf("Timeout (%d sec) was reached during iteration %d.\n", timeout, frame+1)
 		} else if status == bsat.Unknown {
-			fmt.Printf("Conflict limit (%d) was reached during induction.\n", conflictsMax)
+			fmt.Printf("Conflict limit (%d) was reached during iteration %d.\n", conflictsMax, frame+1)
 		} else if unique != 0 || uniqueAll != 0 {
-			fmt.Printf("Completed induction and added %d uniqueness constraints.\n", constraints)
+			fmt.Printf("Completed %d iterations and added %d uniqueness constraints.\n", frame+1, constraints)
 		} else {
-			fmt.Println("Completed induction.")
+			fmt.Printf("Completed %d iterations.\n", frame+1)
 		}
 	}
 	vec.Vec_IntFree(states)

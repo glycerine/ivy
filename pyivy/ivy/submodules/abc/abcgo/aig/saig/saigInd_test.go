@@ -26,7 +26,9 @@ func TestInductionBoundedConstantProperties(t *testing.T) {
 		cex      bool
 	}{
 		{name: "always-false", property: 1, want: 1},
-		{name: "always-true", property: 0, want: 0, cex: true},
+		// the step stays satisfiable up to the frame limit: undecided (-1),
+		// as Saig_ManInduction leaves RetValue; the model is still derived
+		{name: "always-true", property: 0, want: -1, cex: true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			g := inductionOneRegister(tc.property, 0)
@@ -112,8 +114,9 @@ func TestInductionCounterexampleCopiesTopPrimaryInput(t *testing.T) {
 	aig.Aig_ObjCreateCo(g, aig.Aig_ManConst1(g))
 	aig.Aig_ManSetRegNum(g, 1)
 	defer aig.Aig_ManStop(g)
-	if got := Saig_ManInduction(g, 0, 1, 0, 0, 0, 1, 0, 0); got != 0 {
-		t.Fatalf("induction returned %d, want bounded SAT result 0", got)
+	// a satisfiable step at the frame limit is undecided (-1) in C
+	if got := Saig_ManInduction(g, 0, 1, 0, 0, 0, 1, 0, 0); got != -1 {
+		t.Fatalf("induction returned %d, want undecided -1", got)
 	}
 	cex := Saig_ManInductionCounterexample(g)
 	if cex == nil || cex.NBits != 1 || !util.Abc_InfoHasBit(cex.PData, 0) {
