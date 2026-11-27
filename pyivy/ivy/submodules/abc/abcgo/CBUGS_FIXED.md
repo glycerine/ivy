@@ -311,3 +311,31 @@ and states how the Go port was verified.
 - **Go port:** it panicked on the same assertion. It has the same fix
   (`TestRenodeKeepsBestCutWhenAllCutsViolateRequired`), and the full script
   above now prints native's statistics.
+
+## 16. `Str_CountBits` counts two short for words with three or more bits
+
+- **File:** `src/aig/gia/giaStr.c`, `Str_CountBits`.
+- **Found:** 2026-11-27, while bisecting why `&flow` on i10 mapped to 559
+  LUTs natively and 561 in Go. The first differing step was `&blut -a -K 6`;
+  the smallest reproducer is one 23-AND output cone of mul8, where native
+  `&blut` gave depth 7 and Go depth 6.
+- **Bug:** the function (documented "Count 1s.") returns early for 0, 1 and 2
+  bits by clearing the lowest set bit twice. For three or more bits it then
+  computes the popcount of the cleared word, without adding back the two bits
+  it removed. Three bits count as 1, four as 2, and so on, so the count is
+  not even monotonic. `Str_NtkBalanceMulti` uses it to choose which supergate
+  inputs to pair by shared-fanin affinity, so `&blut` (and `&flow`, which runs
+  it) pairs inputs by a wrong score.
+- **Fix:** return `2 + popcount` of the remaining bits. With the fix native
+  `&blut` matches the port on all four inputs tried (the mul8 cone, mul8, i10,
+  and the AIG at the diverging `&flow` step), and native `&flow` on i10 gives
+  the port's 561 LUTs, 2219 edges, level 7.
+- **Test:** `abcgo/aig/gia/str_countbits_c_oracle_test.go`
+  (`TestStrCountBitsMatchesC`) extracts `Str_CountBits` from `giaStr.c`,
+  compiles it, and compares it with a popcount and with the port on boundary
+  words. Before the fix it reported 7 -> 1 and 0xf -> 2, among others.
+- **Go port:** already correct (`math/bits.OnesCount64`). End-to-end checks:
+  `TestBalanceLutLikeNative` and `TestFlowLikeNative` in `abcgo/base/abci`.
+  The same review found that the port's `Str_ManVectorAffinity` stopped the
+  whole fanin collection at the limit, where C ends only the AND-fanin loop;
+  that is fixed under `TestStrAffinityLimitStopsOnlyFaninLoop`.

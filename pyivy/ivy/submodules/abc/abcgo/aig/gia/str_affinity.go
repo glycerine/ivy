@@ -94,19 +94,13 @@ func Str_ManVectorAffinity(p *Gia_Man_t, super, delays *Vec_Int_t, matrix []uint
 	for i := 0; i < vec.Vec_IntSize(super); i++ {
 		id := vec.Vec_IntEntry(super, i) >> 1
 		obj := Gia_ManObj(p, id)
-		var fans []int32
-		if Gia_ObjIsAnd(obj) != 0 {
-			fans = append(fans, Gia_ObjFaninId0(obj, id), Gia_ObjFaninId1(obj, id))
-		}
-		if Gia_ObjIsMux(p, obj) != 0 {
-			fans = append(fans, Gia_ObjFaninId2(p, id))
-		}
-		stop := false
-		for _, fan := range fans {
+		// collect reports false when the limit stops collection: for the AND
+		// fanins it ends only their loop, for the MUX control it ends the
+		// whole walk (C's break in each place)
+		collect := func(fan int32) bool {
 			if Gia_ObjIsTravIdCurrentId(p, fan) == 0 {
 				if vec.Vec_IntSize(super) == int(limit) {
-					stop = true
-					break
+					return false
 				}
 				Gia_ObjSetTravIdCurrentId(p, fan)
 				matrix[vec.Vec_IntSize(super)] = 0
@@ -114,8 +108,14 @@ func Str_ManVectorAffinity(p *Gia_Man_t, super, delays *Vec_Int_t, matrix []uint
 				vec.Vec_IntPush(super, 2*fan)
 			}
 			matrix[Str_ManNum(p, fan)] |= matrix[i]
+			return true
 		}
-		if stop {
+		if Gia_ObjIsAnd(obj) != 0 {
+			if collect(Gia_ObjFaninId0(obj, id)) {
+				collect(Gia_ObjFaninId1(obj, id))
+			}
+		}
+		if Gia_ObjIsMux(p, obj) != 0 && !collect(Gia_ObjFaninId2(p, id)) {
 			break
 		}
 		if previous == i {

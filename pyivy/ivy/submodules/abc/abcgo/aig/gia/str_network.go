@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
@@ -89,7 +90,8 @@ func Str_NtkCreate(objects, fanins int32) *Str_Ntk_t {
 }
 func Str_NtkDelete(p *Str_Ntk_t) { p.pObjs = nil; p.vFanins = Vec_Int_t{} }
 func Str_NtkPs(p *Str_Ntk_t, start time.Time) {
-	fmt.Printf("Network contains %d ands, %d xors, %d muxes (%d trees in %d groups). Time: %s\n", p.nObjCount[STR_AND], p.nObjCount[STR_XOR], p.nObjCount[STR_MUX], p.nTrees, p.nGroups, time.Since(start))
+	fmt.Printf("Network contains %d ands, %d xors, %d muxes (%d trees in %d groups).  ", p.nObjCount[STR_AND], p.nObjCount[STR_XOR], p.nObjCount[STR_MUX], p.nTrees, p.nGroups)
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds())
 }
 func Str_ObjReadGroup(p *Str_Ntk_t, obj *Str_Obj_t, groups, muxes *int32) {
 	*groups, *muxes = 0, 0
