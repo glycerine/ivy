@@ -10,7 +10,6 @@ import (
 	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/opt/sim"
 )
 
 func Abc_NtkSymmetries(n *Abc_Ntk_t, useBdds, naive, reorder, verbose int32) {
@@ -28,9 +27,8 @@ func Abc_NtkSymmetriesUsingSandS(n *Abc_Ntk_t, verbose int32) {
 	if abc.Abc_NtkIsStrash(n) == 0 {
 		panic("Abc_NtkSymmetriesUsingSandS requires a strashed network")
 	}
-	graph := abc.Abc_NtkStrashToGia(n)
-	count := sim.Sim_ComputeTwoVarSymms(graph, verbose != 0)
-	fmt.Printf("The total number of symmetries is %d.\n", count)
+	nSymms := Sim_ComputeTwoVarSymms(n, verbose)
+	fmt.Printf("The total number of symmetries is %d.\n", nSymms)
 }
 
 func Abc_NtkSymmetriesUsingBdds(n *Abc_Ntk_t, naive, reorder, verbose int32) {
