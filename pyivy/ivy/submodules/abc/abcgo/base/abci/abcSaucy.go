@@ -3,6 +3,7 @@ package abci
 import (
 	"fmt"
 	abcutil "github.com/glycerine/abcgo/misc/util"
+	"math"
 	"os"
 	"time"
 
@@ -1968,8 +1969,8 @@ func print_stats(f *os.File, stats saucy_stats) {
 	fmt.Fprintf(f, "nodes = %d\n", stats.nodes)
 	fmt.Fprintf(f, "generators = %d\n", stats.gens)
 	fmt.Fprintf(f, "total support = %d\n", stats.support)
-	fmt.Fprintf(f, "average support = %.2f\n", float64(stats.support)/float64(stats.gens))
-	fmt.Fprintf(f, "nodes per generator = %.2f\n", float64(stats.nodes)/float64(stats.gens))
+	fmt.Fprintf(f, "average support = %s\n", saucyCFloat2(float64(stats.support)/float64(stats.gens)))
+	fmt.Fprintf(f, "nodes per generator = %s\n", saucyCFloat2(float64(stats.nodes)/float64(stats.gens)))
 	fmt.Fprintf(f, "bad nodes = %d\n", stats.bads)
 }
 
@@ -2251,18 +2252,20 @@ func bumpActivity(s *saucy, cex *sim_result) {
 func reduceDB(s *saucy) {
 	extra := s.activityInc / float64(Vec_PtrSize(s.satCounterExamples))
 	for float64(Vec_PtrSize(s.satCounterExamples)) > 0.7*MAX_LEARNTS {
-		kept := int32(0)
+		// As abcSaucy.c: j advances only once an entry has been dropped
+		// ("else if (j < i)"), so the counter-examples kept before the
+		// first drop are overwritten by later ones (C leaks them).
+		j := int32(0)
 		for i := int32(0); i < Vec_PtrSize(s.satCounterExamples); i++ {
 			cex := Vec_PtrEntry(s.satCounterExamples, i).(*sim_result)
 			if cex.activity < extra {
 				continue
+			} else if j < i {
+				Vec_PtrWriteEntry(s.satCounterExamples, int(j), cex)
+				j++
 			}
-			if kept < i {
-				Vec_PtrWriteEntry(s.satCounterExamples, int(kept), cex)
-			}
-			kept++
 		}
-		Vec_PtrShrink(s.satCounterExamples, int(kept))
+		Vec_PtrShrink(s.satCounterExamples, int(j))
 		extra *= 2
 	}
 }
@@ -2415,3 +2418,17 @@ func saucyGateWay(orig *Abc_Ntk_t, po *Abc_Obj_t, gFile *os.File, booleanMatchin
 // activity decay threshold, and conflict database reduction order. Pointer-owned
 // C buffers are represented by Go slices and become collectible after references
 // are removed from the vector. Simulation graph e retains the C allocation count.
+
+// saucyCFloat2 formats v as glibc's "%.2f" does, including x86's 0.0/0.0
+// (-nan) and x/0.0 (inf) when saucy found no generators.
+func saucyCFloat2(v float64) string {
+	switch {
+	case math.IsNaN(v):
+		return "-nan"
+	case math.IsInf(v, 1):
+		return "inf"
+	case math.IsInf(v, -1):
+		return "-inf"
+	}
+	return fmt.Sprintf("%.2f", v)
+}

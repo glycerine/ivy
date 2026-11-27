@@ -23,7 +23,11 @@ func TestMiterSatEncodesAndAndCounterexample(t *testing.T) {
 	}
 }
 
-func TestMiterSatRejectsOppositeOutputs(t *testing.T) {
+// abcSat.c's Abc_NtkClauseTop asserts the OR of the miter outputs (SAT
+// means some output can be 1), so outputs f and !f are satisfiable; native
+// ABC answers SATISFIABLE for 'read opp.blif; strash; sat' with f = a&b,
+// g = !(a&b). The port asserted every output and reported UNSAT.
+func TestMiterSatAssertsAnyOutput(t *testing.T) {
 	n := abc.Abc_NtkAlloc(abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG, 0)
 	a, b := abc.Abc_NtkCreatePi(n), abc.Abc_NtkCreatePi(n)
 	and := n.CreateAndEdges(a.Signal(), b.Signal())
@@ -31,7 +35,7 @@ func TestMiterSatRejectsOppositeOutputs(t *testing.T) {
 		po := abc.Abc_NtkCreatePo(n)
 		abc.Abc_ObjAddFanin(po, edge)
 	}
-	if got := Abc_NtkMiterSat(n, 0, 0, 0, nil, nil); got != 1 {
-		t.Fatalf("contradictory miter status=%d, want unsatisfiable (1)", got)
+	if got := Abc_NtkMiterSat(n, 0, 0, 0, nil, nil); got != 0 {
+		t.Fatalf("miter with outputs f and !f: status=%d, want satisfiable (0)", got)
 	}
 }

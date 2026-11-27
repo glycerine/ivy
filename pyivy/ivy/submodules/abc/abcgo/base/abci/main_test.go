@@ -12,5 +12,12 @@ func TestMain(m *testing.M) {
 	if os.Getenv("GOMAXPROCS") == "" {
 		runtime.GOMAXPROCS(1)
 	}
-	os.Exit(m.Run())
+	// Abc_NtkMiterSat writes trace.cnf for BDD logic networks, as abcSat.c
+	// does; do not leave one behind in the package directory.
+	_, statErr := os.Stat("trace.cnf")
+	code := m.Run()
+	if os.IsNotExist(statErr) {
+		os.Remove("trace.cnf")
+	}
+	os.Exit(code)
 }

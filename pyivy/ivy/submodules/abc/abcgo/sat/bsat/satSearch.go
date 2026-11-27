@@ -133,14 +133,23 @@ func sat_solver_solve_internal(s *sat_solver) int32 {
 	veci_resize(&s.unit_lits, 0)
 	s.nCalls++
 	if s.verbosity >= 1 {
-		fmt.Println("==============================[MINISAT]==============================")
+		fmt.Printf("==================================[MINISAT]===================================\n")
+		fmt.Printf("| Conflicts |     ORIGINAL     |              LEARNT              | Progress |\n")
+		fmt.Printf("|           | Clauses Literals |   Limit Clauses Literals  Lit/Cl |          |\n")
+		fmt.Printf("==============================================================================\n")
 	}
 	for status == l_Undef {
+		ratio := 0.0
+		if s.stats.learnts != 0 {
+			ratio = float64(s.stats.learnts_literals) / float64(s.stats.learnts)
+		}
 		if s.runtimeExpired() {
 			break
 		}
 		if s.verbosity >= 1 {
-			fmt.Printf("conflicts=%d clauses=%d learned=%d progress=%.3f%%\n", s.stats.conflicts, s.stats.clauses, s.stats.learnts, s.progress_estimate*100)
+			fmt.Printf("| %9.0f | %7.0f %8.0f | %7.0f %7.0f %8.0f %7.1f | %6.3f %% |\n",
+				float64(s.stats.conflicts), float64(s.stats.clauses), float64(s.stats.clauses_literals),
+				float64(0), float64(s.stats.learnts), float64(s.stats.learnts_literals), ratio, s.progress_estimate*100)
 		}
 		budget := int64(100 * luby(2, restart))
 		restart++
@@ -148,6 +157,9 @@ func sat_solver_solve_internal(s *sat_solver) int32 {
 		if s.nConfLimit != 0 && s.stats.conflicts > s.nConfLimit || s.nInsLimit != 0 && s.stats.propagations > s.nInsLimit || s.runtimeExpired() || s.pFuncStop != nil && s.pFuncStop(s.RunId) != 0 {
 			break
 		}
+	}
+	if s.verbosity >= 1 {
+		fmt.Printf("==============================================================================\n")
 	}
 	sat_solver_canceluntil(s, s.root_level)
 	if status == l_True {

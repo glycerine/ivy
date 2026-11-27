@@ -25,16 +25,15 @@ func Abc_NtkMiterSat(n *Abc_Ntk_t, conflicts, inspections ABC_INT64_T, verbose i
 func Abc_NtkMiterSatCreate(n *Abc_Ntk_t, allPrimes int32) any {
 	return abc.Abc_NtkMiterSatCreate(n, allPrimes)
 }
-func Abc_NtkMiterSatCreateInt(s *bsat.Solver2, n *Abc_Ntk_t) bool {
+func Abc_NtkMiterSatCreateInt(s *bsat.Solver, n *Abc_Ntk_t) int32 {
 	return abc.Abc_NtkMiterSatCreateInt(s, n)
 }
-func Abc_NtkMiterSatCreateLogic(n *Abc_Ntk_t, allPrimes int32) any {
+func Abc_NtkMiterSatCreateLogic(n *Abc_Ntk_t, allPrimes int32) *bsat.Solver {
 	return abc.Abc_NtkMiterSatCreateLogic(n, allPrimes)
 }
 
 func Abc_NtkNodeFactor(pObj *Abc_Obj_t, nLevelMax int32) int32 {
-	assert(int32(pObj.Level) <= nLevelMax, "object level is within requested maximum")
-	return int32(100000000.0 * (1 + 0.01*float64(pObj.Level)))
+	return abc.Abc_NtkNodeFactor(pObj, nLevelMax)
 }
 
 // Abc_NtkWriteSorterCnf creates the sorter through ABC's registered command

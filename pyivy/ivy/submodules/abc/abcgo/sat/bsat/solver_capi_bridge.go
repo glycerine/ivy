@@ -125,3 +125,6 @@ func (s *sat_solver_t) StoreMarkRootsC() { sat_solver_store_mark_roots(s) }
 
 // StoreReleaseC is sat_solver_store_release.
 func (s *sat_solver_t) StoreReleaseC() *Sto_Man_t { return s.ReleaseClauseStore() }
+
+// SetVerbosityC is pSat->verbosity = verbosity.
+func (s *sat_solver_t) SetVerbosityC(verbosity int32) { s.verbosity = verbosity }
