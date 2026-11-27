@@ -1,14 +1,15 @@
 package io
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/glycerine/abcgo/base/abc"
-	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func ParseBench(name, text string, check bool) (*abc.Network, error) {
@@ -153,12 +154,21 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 			}
 		} else {
 			cover, err = benchGateCover(gate, len(inputs))
+			var unknown *benchUnknownGate
+			if errors.As(err, &unknown) {
+				return nil, blifReadErrorf("Io_ReadBenchNetwork(): Cannot determine gate type \"%s\" in line %d.", gate, line.number)
+			}
 		}
 		if err != nil {
 			return nil, blifError(name, line, "%v", err)
 		}
 
 		if _, err = m.node(append(inputs, output), cover); err != nil {
+			// ABC builds the second driver and Abc_NtkCheckRead rejects it
+			var dup *blifDuplicate
+			if errors.As(err, &dup) {
+				return nil, blifReadErrorf("NetworkCheck: Net \"%s\" has more than one driver.\nIo_ReadBench: The network check has failed.", dup.name)
+			}
 			return nil, blifError(name, line, "%v", err)
 		}
 	}
@@ -189,12 +199,9 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 			return nil, fmt.Errorf("%s: converting to SOP has failed", name)
 		}
 	}
+	// undriven signals get constant-0 drivers, with the warning
+	abc.Abc_NtkFinalizeRead(m.network)
 	if check {
-		for signal, net := range m.nets {
-			if net.FaninNum() == 0 {
-				return nil, fmt.Errorf("%s: undriven signal %s", name, signal)
-			}
-		}
 		if err = m.network.Check(); err != nil {
 			return nil, err
 		}
@@ -245,8 +252,17 @@ func benchGateCover(gate string, n int) (string, error) {
 			return out.String(), nil
 		}
 	}
-	return "", fmt.Errorf("unsupported gate %s with %d inputs", gate, n)
+	switch gate {
+	case "BUFF", "BUF", "NOT", "AND", "NAND", "OR", "NOR", "XOR", "XNOR":
+		return "", fmt.Errorf("unsupported gate %s with %d inputs", gate, n)
+	}
+	return "", &benchUnknownGate{gate}
 }
+
+// benchUnknownGate is a gate type Io_ReadBenchNetwork does not know.
+type benchUnknownGate struct{ gate string }
+
+func (e *benchUnknownGate) Error() string { return "unknown gate " + e.gate }
 func ReadBench(filename string, check bool) (*abc.Network, error) {
 	data, err := os.ReadFile(filename)
 	if err != nil {
