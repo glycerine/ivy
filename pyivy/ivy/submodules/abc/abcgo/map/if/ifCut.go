@@ -424,7 +424,7 @@ func ifCutFlow(p *If_Man_t, c *If_Cut_t, metric byte) float32 {
 	return flow
 }
 func If_CutAreaFlow(p *If_Man_t, c *If_Cut_t) float32                  { return ifCutAreaFlow(p, c) }
-func If_CutEdgeFlow(p *If_Man_t, c *If_Cut_t) float32                  { return ifCutFlow(p, c, 'e') }
+func If_CutEdgeFlow(p *If_Man_t, c *If_Cut_t) float32                  { return ifCutEdgeFlow(p, c) }
 func If_CutPowerFlow(p *If_Man_t, c *If_Cut_t, root *If_Obj_t) float32 { return ifCutFlow(p, c, 'p') }
 func If_CutAverageRefs(p *If_Man_t, c *If_Cut_t) float32 {
 	var total int32
@@ -481,14 +481,14 @@ func If_CutAreaRefed(p *If_Man_t, c *If_Cut_t) float32 {
 	}
 	return second
 }
-func If_CutEdgeRef(p *If_Man_t, c *If_Cut_t) float32   { return ifCutChangeRefs(p, c, 1, 'e') }
-func If_CutEdgeDeref(p *If_Man_t, c *If_Cut_t) float32 { return ifCutChangeRefs(p, c, -1, 'e') }
+func If_CutEdgeRef(p *If_Man_t, c *If_Cut_t) float32   { return ifCutEdgeRef(p, c) }
+func If_CutEdgeDeref(p *If_Man_t, c *If_Cut_t) float32 { return ifCutEdgeDeref(p, c) }
 func If_CutEdgeDerefed(p *If_Man_t, c *If_Cut_t) float32 {
 	if c.nLeaves < 2 {
 		return float32(c.nLeaves)
 	}
-	first := ifCutChangeRefs(p, c, 1, 'e')
-	second := ifCutChangeRefs(p, c, -1, 'e')
+	first := ifCutEdgeRef(p, c)
+	second := ifCutEdgeDeref(p, c)
 	if float32(math.Abs(float64(first-second))) > 3*p.fEpsilon {
 		panic("if: inconsistent reversible cut accounting")
 	}
@@ -498,8 +498,8 @@ func If_CutEdgeRefed(p *If_Man_t, c *If_Cut_t) float32 {
 	if c.nLeaves < 2 {
 		return float32(c.nLeaves)
 	}
-	first := ifCutChangeRefs(p, c, -1, 'e')
-	second := ifCutChangeRefs(p, c, 1, 'e')
+	first := ifCutEdgeDeref(p, c)
+	second := ifCutEdgeRef(p, c)
 	if float32(math.Abs(float64(first-second))) > 3*p.fEpsilon {
 		panic("if: inconsistent reversible cut accounting")
 	}
@@ -689,4 +689,57 @@ func ifCutAreaDeref(p *If_Man_t, c *If_Cut_t) float32 {
 		}
 	}
 	return area
+}
+
+// Edge-specialized forms (If_CutEdgeFlow, If_CutEdgeRef, If_CutEdgeDeref).
+func ifCutEdgeFlow(p *If_Man_t, c *If_Cut_t) float32 {
+	flow := float32(c.nLeaves)
+	objs := p.objs
+	for _, id := range c.pLeaves[:c.nLeaves] {
+		leaf := objs[id]
+		add := leaf.CutBest.Edge
+		if leaf.nRefs != 0 && leaf.Type != IF_CONST1 {
+			if leaf.EstRefs <= p.fEpsilon {
+				panic("if: invalid estimated fanout count")
+			}
+			add /= leaf.EstRefs
+		}
+		flow += add
+		if flow > 1e32 {
+			flow = 1e32
+		}
+	}
+	return flow
+}
+
+func ifCutEdgeRef(p *If_Man_t, c *If_Cut_t) float32 {
+	edge := float32(c.nLeaves)
+	objs := p.objs
+	for _, id := range c.pLeaves[:c.nLeaves] {
+		leaf := objs[id]
+		if leaf.nRefs < 0 {
+			panic("if: reference underflow")
+		}
+		leaf.nRefs++
+		if leaf.nRefs == 1 && leaf.Type == IF_AND {
+			edge += ifCutEdgeRef(p, &leaf.CutBest)
+		}
+	}
+	return edge
+}
+
+func ifCutEdgeDeref(p *If_Man_t, c *If_Cut_t) float32 {
+	edge := float32(c.nLeaves)
+	objs := p.objs
+	for _, id := range c.pLeaves[:c.nLeaves] {
+		leaf := objs[id]
+		if leaf.nRefs <= 0 {
+			panic("if: reference underflow")
+		}
+		leaf.nRefs--
+		if leaf.nRefs == 0 && leaf.Type == IF_AND {
+			edge += ifCutEdgeDeref(p, &leaf.CutBest)
+		}
+	}
+	return edge
 }
