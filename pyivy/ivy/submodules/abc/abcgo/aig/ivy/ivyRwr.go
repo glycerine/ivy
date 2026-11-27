@@ -186,9 +186,8 @@ func Ivy_NodeRewrite(p *Ivy_Man_t, manager *rwt.Rwt_Man_t, node *Ivy_Obj_t, upda
 	if bestGain < 0 || bestGraph == nil {
 		return -1
 	}
-	if bestGain == 0 && useZeroCost == 0 {
-		return 0
-	}
+	// As ivyRwr.c, the best cut is recorded (and its class scored) even at
+	// zero gain; the caller decides whether to rewrite.
 	// The library graphs are shared: later cuts overwrote the leaves of the
 	// best one. Copy the best cut's leaves back, as ivyRwr.c does.
 	for i, fanin := range bestFanins {

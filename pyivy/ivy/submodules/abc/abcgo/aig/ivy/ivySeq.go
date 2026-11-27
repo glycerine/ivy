@@ -154,7 +154,7 @@ func ivyNodeRewriteSeq(p *Ivy_Man_t, manager *rwt.Rwt_Man_t, root *Ivy_Obj_t, us
 		}
 		rwt.Rwt_ManAddTimeEval(manager, time.Since(evalStart))
 	}
-	if bestGain < 0 || bestGraph == nil || (bestGain == 0 && useZeroCost == 0) {
+	if bestGain < 0 || bestGraph == nil { // as ivySeq.c: zero gain is still recorded
 		return -1
 	}
 	// The subgraph is shared by a class and later cuts overwrote its leaves

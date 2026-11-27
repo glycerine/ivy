@@ -1,0 +1,16 @@
+Original:
+PI/PO = 257/224 A =    2675. L =     0. MaxID =    3156. Lev =  50.
+Balance =      sec
+PI/PO = 257/224 A =    2396. L =     0. MaxID =    2877. Lev =  37.
+Rewrite =      sec
+PI/PO = 257/224 A =    2052. L =     0. MaxID =    3629. Lev =  35.
+Balance =      sec
+PI/PO = 257/224 A =    2047. L =     0. MaxID =    2528. Lev =  32.
+Rewrite =      sec
+PI/PO = 257/224 A =    1931. L =     0. MaxID =    4753. Lev =  32.
+Balance =      sec
+PI/PO = 257/224 A =    1930. L =     0. MaxID =    2411. Lev =  32.
+Rewrite =      sec
+PI/PO = 257/224 A =    1865. L =     0. MaxID =    4204. Lev =  32.
+Balance =      sec
+PI/PO = 257/224 A =    1864. L =     0. MaxID =    2345. Lev =  32.

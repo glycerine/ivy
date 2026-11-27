@@ -1,0 +1,16 @@
+Rewriting statistics:
+Total cuts tries  =    11231.
+Bad cuts found    =        0.
+Total subgraphs   =    58591.
+Used NPN classes  =       25.
+Nodes considered  =     2660.
+Nodes rewritten   =      460.
+Calculated gain   =      524.
+Start        =      sec
+Cuts         =      sec
+Truth        =      sec
+Resynthesis  =      sec
+    Mffc     =      sec
+    Eval     =      sec
+Update       =      sec
+TOTAL        =      sec

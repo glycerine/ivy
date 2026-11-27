@@ -27,6 +27,8 @@ var nativeVerboseScripts = []string{
 	"renode; sop; fx -v",
 	"renode -v",
 	"&get; &b -v",
+	"irw -v",
+	"iresyn -v",
 	"&get; &ps; &st; &ps; &synch2; &ps; &if -K 6; &ps",
 }
 
