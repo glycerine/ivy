@@ -148,6 +148,7 @@ func ifMerge(p *If_Man_t, a, b, c *If_Cut_t, ordered, permutations bool) int32 {
 func If_CutMergeOrdered_(p *If_Man_t, a, b, c *If_Cut_t) int32 {
 	return ifMerge(p, a, b, c, true, true)
 }
+
 // If_CutMergeOrdered merges two sorted leaf lists into c, failing if the
 // union exceeds the cut limit, as ifCut.c's does.
 func If_CutMergeOrdered(p *If_Man_t, a, b, c *If_Cut_t) int32 {
@@ -216,6 +217,7 @@ func ifCompare(p *If_Man_t, a, b *If_Cut_t, fields string) int32 {
 func If_CutCompareDelay(p *If_Man_t, a, b **If_Cut_t) int32    { return ifCompare(p, *a, *b, "dna") }
 func If_CutCompareDelayOld(p *If_Man_t, a, b **If_Cut_t) int32 { return ifCompare(p, *a, *b, "dan") }
 func If_CutCompareArea(p *If_Man_t, a, b **If_Cut_t) int32     { return ifCompare(p, *a, *b, "and") }
+
 // ifCmpEps compares x and y with tolerance eps, as ifCut.c does.
 func ifCmpEps(x, y, eps float32) int32 {
 	if x < y-eps {

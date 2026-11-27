@@ -224,6 +224,8 @@ type If_Man_t_ struct {
 	pCanonPerm                                      [IF_MAX_LUTSIZE]byte
 	uCanonPhase                                     uint32
 	nCacheHits, nCacheMisses                        int32
+	ttScratch                                       [2][]uint64 // If_CutComputeTruth's projections
+	ttScratchLeaves                                 []int32
 	timeCache                                       [6]abctime
 	nBestCutSmall, nCountNonDec                     [2]int32
 	vCutData                                        *Vec_Int_t

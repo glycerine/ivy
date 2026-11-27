@@ -21,7 +21,13 @@ func ifTruthSet(table []uint64, assignment int) { table[assignment>>6] |= 1 << u
 // ifTruthProject expresses table, a function of the source leaves, over
 // the target leaves (with input phases flipped by the masks).
 func ifTruthProject(table []uint64, source, target []int32, sourceMask, targetMask uint32, complement bool) []uint64 {
-	if out := ifTruthStretch(table, source, target, sourceMask|targetMask == 0, complement); out != nil {
+	return ifTruthProjectInto(nil, table, source, target, sourceMask, targetMask, complement)
+}
+
+// ifTruthProjectInto is ifTruthProject writing into dst's storage when the
+// usual (stretch) case applies and dst is large enough.
+func ifTruthProjectInto(dst, table []uint64, source, target []int32, sourceMask, targetMask uint32, complement bool) []uint64 {
+	if out := ifTruthStretch(dst, table, source, target, sourceMask|targetMask == 0, complement); out != nil {
 		return out
 	}
 	return ifTruthProjectBits(table, source, target, sourceMask, targetMask, complement)
@@ -31,7 +37,7 @@ func ifTruthProject(table []uint64, source, target []int32, sourceMask, targetMa
 // masks and the source leaves in increasing target positions. It
 // replicates the table over the target words and moves each variable to
 // its position with adjacent swaps. It returns nil otherwise.
-func ifTruthStretch(table []uint64, source, target []int32, noMasks, complement bool) []uint64 {
+func ifTruthStretch(dst, table []uint64, source, target []int32, noMasks, complement bool) []uint64 {
 	var positions [IF_MAX_LUTSIZE]int
 	if !noMasks || len(source) > len(target) || len(target) > IF_MAX_LUTSIZE {
 		return nil
@@ -47,7 +53,12 @@ func ifTruthStretch(table []uint64, source, target []int32, noMasks, complement 
 		positions[i] = j
 		j++
 	}
-	out := make([]uint64, ifTruthWords(len(target)))
+	var out []uint64
+	if words := ifTruthWords(len(target)); cap(dst) >= words {
+		out = dst[:words]
+	} else {
+		out = make([]uint64, words)
+	}
 	sourceWords := ifTruthWords(len(source))
 	if len(table) < sourceWords {
 		return nil
@@ -235,9 +246,12 @@ func If_CutRotatePins(p *If_Man_t, c *If_Cut_t) {
 	}
 }
 func If_CutComputeTruth(p *If_Man_t, c, a, b *If_Cut_t, complementA, complementB int32) int32 {
-	leaves := append([]int32(nil), ifLeaves(c)...)
-	x := ifTruthProject(ifTruthRead(p, a, a.iCutFunc), ifLeaves(a), leaves, 0, 0, (complementA^int32(a.fCompl)^a.iCutFunc)&1 != 0)
-	y := ifTruthProject(ifTruthRead(p, b, b.iCutFunc), ifLeaves(b), leaves, 0, 0, (complementB^int32(b.fCompl)^b.iCutFunc)&1 != 0)
+	// scratch tables and leaves, as ABC's puTemp (the interned table is copied)
+	leaves := append(p.ttScratchLeaves[:0], ifLeaves(c)...)
+	p.ttScratchLeaves = leaves
+	x := ifTruthProjectInto(p.ttScratch[0], ifTruthRead(p, a, a.iCutFunc), ifLeaves(a), leaves, 0, 0, (complementA^int32(a.fCompl)^a.iCutFunc)&1 != 0)
+	y := ifTruthProjectInto(p.ttScratch[1], ifTruthRead(p, b, b.iCutFunc), ifLeaves(b), leaves, 0, 0, (complementB^int32(b.fCompl)^b.iCutFunc)&1 != 0)
+	p.ttScratch[0], p.ttScratch[1] = x, y
 	phase := uint32(x[0] & y[0] & 1)
 	for i := range x {
 		x[i] &= y[i]
