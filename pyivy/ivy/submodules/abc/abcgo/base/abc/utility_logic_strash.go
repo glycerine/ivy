@@ -42,10 +42,19 @@ func abcStrashLocal(dst *Network, node *Object) Edge {
 // RestrashHook is abci's Abc_NtkRestrash, which lives above this package.
 var RestrashHook func(src *Network, cleanup int32) *Network
 
+// StrashHook is abci's Abc_NtkStrash (abcStrash.c's Abc_NtkToAig and
+// Abc_NtkStrashPerform), which lives above this package. Callers here
+// (Abc_NtkPrepareTwoNtks among them) must build the same AIG as the strash
+// command does, or two copies of one network no longer hash together.
+var StrashHook func(src *Network, all, cleanup, record int32) *Network
+
 // Abc_NtkStrash builds a structurally hashed ABC network from local functions.
 func Abc_NtkStrash(src *Network, all, cleanup, record int32) *Network {
 	if src == nil || (Abc_NtkIsLogic(src) == 0 && Abc_NtkIsStrash(src) == 0) {
 		panic("abc: expected logic or strashed network")
+	}
+	if StrashHook != nil {
+		return StrashHook(src, all, cleanup, record)
 	}
 	if Abc_NtkIsStrash(src) != 0 {
 		// as abcStrash.c: a strashed network is restrashed

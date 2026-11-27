@@ -2,4 +2,7 @@ package abci
 
 import "github.com/glycerine/abcgo/base/abc"
 
-func init() { abc.RestrashHook = Abc_NtkRestrash }
+func init() {
+	abc.RestrashHook = Abc_NtkRestrash
+	abc.StrashHook = Abc_NtkStrash
+}

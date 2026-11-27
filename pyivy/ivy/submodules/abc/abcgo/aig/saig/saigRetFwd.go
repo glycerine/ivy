@@ -204,13 +204,20 @@ func Saig_ManRetimeDupForward(graph *aig.Graph, cut *vec.Vec_Ptr_t) *aig.Graph {
 	outputs := graph.Outputs()
 	regCount := int(aig.Aig_ManRegNum(graph))
 	poCount := int(Saig_ManPoNum(graph))
-	for _, output := range outputs[:poCount] {
-		dst.AddOutput(copyEdge(aig.Aig_ObjChild0(graph, output)))
+	// duplicate the logic above the cut for every CO (POs, then LIs) before
+	// creating the true POs, as Saig_ManRetimeDupForward does, so that the
+	// PO objects follow all of those nodes
+	poValues := make([]aig.Edge, poCount)
+	for i, output := range outputs[:poCount] {
+		poValues[i] = copyEdge(aig.Aig_ObjChild0(graph, output))
 	}
 	nextState := make([]aig.Edge, regCount)
 	for reg := 0; reg < regCount; reg++ {
 		li := Saig_ManLi(graph, int32(reg))
 		nextState[reg] = copyEdge(aig.Aig_ObjChild0(graph, li))
+	}
+	for _, value := range poValues {
+		dst.AddOutput(value)
 	}
 	for reg := 0; reg < regCount; reg++ {
 		lo := Saig_ManLo(graph, int32(reg))

@@ -12,6 +12,8 @@ func fraPrepareSAT(p *Fra_Man_t, old, new aig.Edge) {
 	if p.PSat == nil {
 		p.PSat = bsat.NewSolver()
 		p.NSatVars = 1
+		// sat_solver_setnvars( p->pSat, 1000 ), as fraSat.c does
+		p.PSat.SetNumVars(1000)
 		if !p.PSat.AddClause(bsat.Positive(0)) {
 			panic("fra: cannot initialize SAT constant")
 		}

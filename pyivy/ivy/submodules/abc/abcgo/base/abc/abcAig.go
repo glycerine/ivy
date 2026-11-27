@@ -96,6 +96,7 @@ func checkAigNodes(m *Abc_Aig_t) int32 {
 	}
 	return 1
 }
+
 // Abc_AigLevel reports the stored levels of the CO drivers.
 func Abc_AigLevel(n *Network) int32 {
 	if n.Barriers != 0 {
@@ -178,11 +179,19 @@ func Abc_AigOr(m *Abc_Aig_t, a, b any) Edge {
 }
 func Abc_AigXor(m *Abc_Aig_t, a, b any) Edge {
 	x, y := objectEdge(a), objectEdge(b)
-	return Abc_AigOr(m, Abc_AigAnd(m, x, y.Not()), Abc_AigAnd(m, x.Not(), y))
+	// abcAig.c passes both Abc_AigAnd calls as arguments of Abc_AigOr; the
+	// GCC build of ABC evaluates them right to left, so the second product
+	// is created first (the node order and IDs of every miter follow it)
+	right := Abc_AigAnd(m, x.Not(), y)
+	left := Abc_AigAnd(m, x, y.Not())
+	return Abc_AigOr(m, left, right)
 }
 func Abc_AigMux(m *Abc_Aig_t, c, t, e any) Edge {
 	control := objectEdge(c)
-	return Abc_AigOr(m, Abc_AigAnd(m, control, t), Abc_AigAnd(m, control.Not(), e))
+	// right to left, as Abc_AigXor
+	elseTerm := Abc_AigAnd(m, control.Not(), e)
+	thenTerm := Abc_AigAnd(m, control, t)
+	return Abc_AigOr(m, thenTerm, elseTerm)
 }
 func Abc_AigConst1(n *Network) Edge { return n.One() }
 func Abc_AigXorLookup(m *Abc_Aig_t, a, b any, typ *int32) Edge {
