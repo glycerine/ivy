@@ -74,7 +74,8 @@ func Abc_NtkFromGlobalBdds(n *Abc_Ntk_t, reverse int32) *Abc_Ntk_t {
 		}
 		core.Cudd_Ref(mapped)
 		Abc_NtkFreeGlobalBdds(n.Exdc, 1)
-		for _, co := range n.ObjectsOfKind(abc.ObjectPO) {
+		for i := int32(0); i < abc.Abc_NtkCoNum(n); i++ { // every CO, latch inputs too
+			co := abc.Abc_NtkCo(n, i)
 			min := Abc_ObjGlobalBdd(co)
 			if min == nil {
 				continue
@@ -113,10 +114,8 @@ func Abc_NtkFromGlobalBdds(n *Abc_Ntk_t, reverse int32) *Abc_Ntk_t {
 	if len(dd.Vars) > 0 {
 		core.Cudd_bddIthVar(newDD, len(dd.Vars)-1)
 	}
-	for i, co := range n.ObjectsOfKind(abc.ObjectPO) {
-		if i >= int(abc.Abc_NtkCoNum(n)) {
-			break
-		}
+	for i := int32(0); i < abc.Abc_NtkCoNum(n); i++ { // every CO, latch inputs too
+		co := abc.Abc_NtkCo(n, i)
 		driver := abc.Abc_ObjFanin0(co)
 		if driver.IsCI() && abc.Abc_ObjName(co) == abc.Abc_ObjName(driver) {
 			abc.Abc_ObjAddFanin(co.Copy, abc.Edge{Object: driver.Copy, Complement: co.FaninAt(int32(0)).Complement})

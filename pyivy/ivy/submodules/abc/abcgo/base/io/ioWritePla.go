@@ -1,12 +1,15 @@
 package io
 
 import (
+	"bufio"
 	"fmt"
 	stdio "io"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
 )
 
 type plaProduct struct {
@@ -14,19 +17,133 @@ type plaProduct struct {
 	outputs string
 }
 
+// writePLARegistered is Io_Write for IO_FILE_PLA: only collapsed networks,
+// converted to an SOP netlist (positive covers) and written by Io_WritePla.
 func writePLARegistered(network *abc.Network, filename string) error {
 	if network == nil {
 		return fmt.Errorf("nil network")
 	}
+	if abc.Abc_NtkLevel(network) > 1 {
+		fmt.Printf("PLA writing is available for collapsed networks.\n")
+		return nil
+	}
+	var netlist *abc.Network
+	if abc.Abc_NtkIsComb(network) != 0 {
+		netlist = abc.Abc_NtkToNetlist(network)
+	} else {
+		fmt.Printf("Latches are writen into the PLA file at PI/PO pairs.\n")
+		// as Io_Write: the copy is made combinational, but the original is
+		// converted (a netlist's latch outputs and inputs are CIs and COs)
+		copied := abc.Abc_NtkDup(network)
+		abc.Abc_NtkMakeComb(copied, 0)
+		netlist = abc.Abc_NtkToNetlist(network)
+		abc.Abc_NtkDelete(copied)
+	}
+	if netlist == nil {
+		return fmt.Errorf("io: cannot convert network to netlist")
+	}
+	defer abc.Abc_NtkDelete(netlist)
+	if abc.Abc_NtkToSop(netlist, 1, 1_000_000_000) == 0 {
+		return nil
+	}
+	return ioWritePlaNetlist(netlist, filename)
+}
+
+// ioWritePlaNetlist is Io_WritePla on an SOP netlist of one level.
+func ioWritePlaNetlist(netlist *abc.Network, filename string) error {
 	file, err := os.Create(filename)
 	if err != nil {
-		return err
+		fmt.Fprintf(os.Stdout, "Io_WritePla(): Cannot open the output file.\n")
+		return nil
 	}
 	defer file.Close()
-	if _, err = fmt.Fprintf(file, "# Benchmark %q written by ABC on %s\n", network.Name, time.Now().Format(time.RFC3339)); err != nil {
-		return err
+	w := bufio.NewWriter(file)
+	fmt.Fprintf(w, "# Benchmark \"%s\" written by ABC on %s\n", netlist.Name, extra.Extra_TimeStamp())
+	ioWritePlaOne(w, netlist)
+	if netlist.Exdc != nil {
+		fmt.Printf("Io_WritePla: EXDC is not written (warning).\n")
 	}
-	return writePLA(file, network, false, -1, 20)
+	return w.Flush()
+}
+
+// plaFanin0Ntk is Abc_ObjFanin0Ntk: through the net in a netlist.
+func plaFanin0Ntk(o *abc.Object) *abc.Object {
+	if abc.Abc_NtkIsNetlist(o.Network()) != 0 {
+		return abc.Abc_ObjFanin0(o)
+	}
+	return o
+}
+
+// ioWritePlaOne is Io_WritePlaOne: each CO's SOP cubes over the CIs, with
+// a one-hot output part.
+func ioWritePlaOne(w stdio.Writer, n *abc.Network) {
+	nInputs, nOutputs := int(abc.Abc_NtkCiNum(n)), int(abc.Abc_NtkCoNum(n))
+	cis := make(map[*abc.Object]int, nInputs)
+	nProducts := 0
+	for i := 0; i < nOutputs; i++ {
+		driver := plaFanin0Ntk(abc.Abc_ObjFanin0(abc.Abc_NtkCo(n, int32(i))))
+		switch {
+		case abc.Abc_ObjIsNode(driver) == 0:
+			nProducts++
+		case abc.Abc_NodeIsConst(driver) != 0:
+			if abc.Abc_NodeIsConst1(driver) != 0 {
+				nProducts++
+			}
+		default:
+			nProducts += int(abc.Abc_SopGetCubeNum(driver.Data.(string)))
+		}
+	}
+	cubeIn, cubeOut := []byte(strings.Repeat("-", nInputs)), []byte(strings.Repeat("0", nOutputs))
+	fmt.Fprintf(w, ".i %d\n.o %d\n.ilb", nInputs, nOutputs)
+	for i := 0; i < nInputs; i++ {
+		ci := abc.Abc_NtkCi(n, int32(i))
+		cis[ci] = i
+		fmt.Fprintf(w, " %s", abc.Abc_ObjName(abc.Abc_ObjFanout0(ci)))
+	}
+	fmt.Fprintf(w, "\n.ob")
+	for i := 0; i < nOutputs; i++ {
+		fmt.Fprintf(w, " %s", abc.Abc_ObjName(abc.Abc_ObjFanin0(abc.Abc_NtkCo(n, int32(i)))))
+	}
+	fmt.Fprintf(w, "\n.p %d\n", nProducts)
+	for i := 0; i < nOutputs; i++ {
+		co := abc.Abc_NtkCo(n, int32(i))
+		if i > 0 {
+			cubeOut[i-1] = '0'
+		}
+		cubeOut[i] = '1'
+		driver := plaFanin0Ntk(abc.Abc_ObjFanin0(co))
+		if abc.Abc_ObjIsNode(driver) == 0 {
+			k := cis[driver]
+			cubeIn[k] = byte('1' - abc.Abc_ObjFaninC0(co))
+			fmt.Fprintf(w, "%s %s\n", cubeIn, cubeOut)
+			cubeIn[k] = '-'
+			continue
+		}
+		if abc.Abc_NodeIsConst(driver) != 0 {
+			if abc.Abc_NodeIsConst1(driver) != 0 {
+				fmt.Fprintf(w, "%s %s\n", cubeIn, cubeOut)
+			}
+			continue
+		}
+		sop := driver.Data.(string)
+		nFanins := driver.FaninNum()
+		for start := 0; start+nFanins <= len(sop) && sop[start] != 0; {
+			cube := sop[start : start+nFanins]
+			for k := 0; k < nFanins; k++ {
+				cubeIn[cis[plaFanin0Ntk(driver.FaninAt(int32(k)).Object)]] = cube[k]
+			}
+			fmt.Fprintf(w, "%s %s\n", cubeIn, cubeOut)
+			next := strings.IndexByte(sop[start:], '\n')
+			if next < 0 {
+				break
+			}
+			start += next + 1
+		}
+		for k := 0; k < nFanins; k++ {
+			cubeIn[cis[plaFanin0Ntk(driver.FaninAt(int32(k)).Object)]] = '-'
+		}
+	}
+	fmt.Fprintf(w, ".e\n")
 }
 
 func writeMOPLARegistered(network *abc.Network, filename string) error {
@@ -60,7 +177,7 @@ func Io_WritePla(network *Abc_Ntk_t, filename string) int32 {
 	if network == nil || abc.Abc_NtkIsSopNetlist(network) == 0 {
 		return 0
 	}
-	if err := writePLARegistered(network, filename); err != nil {
+	if err := ioWritePlaNetlist(network, filename); err != nil {
 		fmt.Fprintf(os.Stderr, "Io_WritePla: %v\n", err)
 		return 0
 	}
