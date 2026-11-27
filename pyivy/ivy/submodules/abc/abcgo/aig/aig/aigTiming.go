@@ -114,11 +114,16 @@ func Aig_ManUpdateReverseLevel(p *Graph, e Edge) {
 	if p.reverseLevels == nil || p.fanouts == nil || e.Complemented() || !p.valid(e) || !Aig_ObjIsNode(p, e) {
 		panic("aig: incremental reverse levels require timing, fanouts and a regular logic node")
 	}
-	old := int(Aig_ObjReverseLevel(p, e))
+	if n := len(p.nodes); len(p.reverseLevels) < n {
+		p.reverseLevels = append(p.reverseLevels, make([]int32, n-len(p.reverseLevels))...)
+	}
+	levels, nodes := p.reverseLevels, p.nodes
+	old := int(levels[e.NodeID()])
 	if old == int(Aig_ObjReverseLevelNew(p, e)) {
 		return
 	}
-	// the queue keeps its buckets between calls (C's p->vLevels)
+	// the queue keeps its buckets between calls (C's p->vLevels); queued
+	// objects are live nodes, so they are read without validation
 	queue := p.levelQueue
 	for i := range queue {
 		queue[i] = queue[i][:0]
@@ -129,24 +134,33 @@ func Aig_ManUpdateReverseLevel(p *Graph, e Edge) {
 		// Appending a newly allocated fanin to this same old-level bucket is
 		// allowed. Read the live bucket length, as C's Vec_Vec iterator does.
 		for i := 0; i < len(queue[level]); i++ {
-			current := queue[level][i]
-			p.node(current).MarkA = false
-			if int(Aig_ObjReverseLevel(p, current)) != level {
+			id := queue[level][i].NodeID()
+			nd := &nodes[id]
+			nd.MarkA = false
+			if int(levels[id]) != level {
 				panic("aig: reverse timing queue has inconsistent old level")
 			}
-			nextLevel := Aig_ObjReverseLevelNew(p, current)
-			Aig_ObjSetReverseLevel(p, current, nextLevel)
+			nextLevel := Aig_ObjReverseLevelNew(p, queue[level][i])
+			levels[id] = nextLevel
 			if int(nextLevel) == level {
 				continue
 			}
-			for _, fanin := range nodeFanins(p.nodes[current.NodeID()]) {
-				fanin = Aig_Regular(fanin)
-				if fn := p.node(fanin); (fn.Kind == And || fn.Kind == ExclusiveOr) && !fn.MarkA {
-					faninLevel := int(Aig_ObjReverseLevel(p, fanin))
+			var fanins [2]Edge
+			k := 0
+			switch nd.Kind {
+			case And, ExclusiveOr:
+				fanins, k = nd.Fanins, 2
+			case Buffer, Output:
+				fanins[0], k = nd.Fanins[0], 1
+			}
+			for _, fanin := range fanins[:k] {
+				fid := fanin.NodeID()
+				if fn := &nodes[fid]; (fn.Kind == And || fn.Kind == ExclusiveOr) && !fn.MarkA {
+					faninLevel := int(levels[fid])
 					if faninLevel < level {
 						panic("aig: fanin old reverse level precedes timing queue")
 					}
-					queue.add(p, fanin, faninLevel)
+					queue.add(p, Aig_Regular(fanin), faninLevel)
 				}
 			}
 		}
@@ -165,7 +179,7 @@ func (q *timingQueue) add(p *Graph, e Edge, level int) {
 		*q = append(*q, make([][]Edge, level-len(*q)+1)...)
 	}
 	(*q)[level] = append((*q)[level], e)
-	p.node(e).MarkA = true
+	p.nodes[e.NodeID()].MarkA = true
 }
 
 // RefreshReverseLevels recomputes all reverse levels for Go graph rewrites
