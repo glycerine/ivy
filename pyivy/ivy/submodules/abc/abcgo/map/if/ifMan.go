@@ -296,7 +296,9 @@ func If_ManCreateAnd(p *If_Man_t, fan0, fan1 *If_Obj_t) *If_Obj_t {
 	if fan0 == fan1 {
 		return fan0
 	}
-	if fan0 == If_Not(fan1) {
+	// fan0 == If_Not(fan1), compared without materializing the complement
+	// proxy (C compares tagged pointers)
+	if If_Regular(fan0) == If_Regular(fan1) && If_IsComplement(fan0) != If_IsComplement(fan1) {
 		return If_Not(p.pConst1)
 	}
 	if If_Regular(fan0) == p.pConst1 {
