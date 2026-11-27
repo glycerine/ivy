@@ -5,11 +5,27 @@ import (
 	"fmt"
 	"math"
 	"math/bits"
-	"math/rand"
+	"strconv"
+	"strings"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/misc/vec"
 )
+
+// saigAtoi is C's atoi: the leading optional sign and digits, else 0.
+func saigAtoi(s string) int32 {
+	s = strings.TrimLeft(s, " \t\n\r\v\f")
+	end := 0
+	if end < len(s) && (s[end] == '-' || s[end] == '+') {
+		end++
+	}
+	for end < len(s) && s[end] >= '0' && s[end] <= '9' {
+		end++
+	}
+	v, _ := strconv.Atoi(s[:end])
+	return int32(v)
+}
 
 // Saig_SimObj_t is a compact per-node simulation record. PData stores one
 // 32-pattern simulation word, while Number accumulates ones over sampled
@@ -111,7 +127,6 @@ func Saig_ManSimulateFrames(rows []Saig_SimObj_t, frames, prefix int32) {
 	if frames <= 0 {
 		return
 	}
-	rng := rand.New(rand.NewSource(1))
 	for frame := int32(0); frame < frames; frame++ {
 		for id := 0; id < len(rows)-1; id++ {
 			entry := &rows[id]
@@ -123,7 +138,7 @@ func Saig_ManSimulateFrames(rows []Saig_SimObj_t, frames, prefix int32) {
 				entry.pData = ^uint32(0)
 			case aig.Input:
 				if !entry.isLatch {
-					entry.pData = rng.Uint32()
+					entry.pData = aig.Aig_ManRandom(0)
 				} else if frame > 0 {
 					Saig_ManSimulateOneInput(rows, id)
 				}
@@ -139,13 +154,14 @@ func Saig_ManSimulateFrames(rows []Saig_SimObj_t, frames, prefix int32) {
 	}
 }
 
+// Saig_ManComputeSwitching is 2 * nOnes * nZeros / nTotal^2, evaluated in
+// float left to right as saigSwitch.c writes it.
 func Saig_ManComputeSwitching(ones, simulationWords int32) float32 {
-	total := float32(32 * simulationWords)
+	total := 32 * simulationWords
 	if total == 0 {
 		return 0
 	}
-	p := float32(ones) / total
-	return 2 * p * (1 - p)
+	return float32(2.0) * float32(ones) / float32(total) * float32(total-ones) / float32(total)
 }
 
 func Saig_ManComputeProbOne(ones, simulationWords int32) float32 {
@@ -171,6 +187,18 @@ func Saig_ManComputeSwitchProb4s(g *aig.Graph, frames, prefix, probability int32
 		return vec.Vec_IntAlloc(0)
 	}
 	rows := Saig_ManCreateMan(g)
+	aig.Aig_ManRandom(1)
+	// the "seqsimframes" flag, when set, gives the number of frames
+	framesReal := frames
+	if flag := abcmain.Abc_FrameReadFlag("seqsimframes"); flag != "" {
+		framesReal = saigAtoi(flag)
+	}
+	if framesReal <= prefix {
+		fmt.Printf("The total number of frames (%d) should exceed prefix (%d).\n", framesReal, prefix)
+		fmt.Printf("Setting the total number of frames to be %d.\n", frames)
+		framesReal = frames
+	}
+	frames = framesReal
 	Saig_ManSimulateFrames(rows, frames, prefix)
 	result := vec.Vec_IntStart(len(rows) - 1)
 	simulatedFrames := frames - prefix

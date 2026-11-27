@@ -34,6 +34,7 @@ var nativeVerboseScripts = []string{
 	"&get; &sweep -v",
 	"ifraig -v",
 	"permute -S 3; print_io",
+	"strash; if -K 4; print_stats -p",
 	"permute -S 7 -i; print_io",
 	"&get; &dch -v",
 	"if -K 6; mfs -v",
