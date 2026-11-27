@@ -590,7 +590,8 @@ void Gia_ManPrintPackingStats( Gia_Man_t * p )
     Vec_IntForEachEntryStart( p->vPacking, Entry, i, 1 )
     {
         assert( Entry > 0 && Entry < 4 );
-        nNumStr[Entry]++;
+        if ( Entry < 5 ) // blocks of more than four LUTs (&pack -N 5) overflowed nNumStr[]
+            nNumStr[Entry]++;
         i++;
         if ( fVerbose && nEntries2 < nObjToShow ) Abc_Print( 1, "{ " );
         for ( k = 0; k < Entry; k++, i++ )

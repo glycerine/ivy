@@ -76,7 +76,10 @@ func Sle_ManComputeCuts(p *Gia_Man_t, limit, verbose int32) *Vec_Int_t {
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("Nodes = %d. Cuts = %d. Ints = %d.\n", Gia_ManAndNum(p), count, vec.Vec_IntSize(cuts))
+		fmt.Printf("Nodes = %d.  Cuts = %d.  Cuts/Node = %.2f.  Ints/Node = %.2f.  Mem = %.2f MB.\n",
+			Gia_ManAndNum(p), count, 1.0*float64(count)/float64(Gia_ManAndNum(p)),
+			1.0*float64(vec.Vec_IntSize(cuts)-int(Gia_ManObjNum(p)))/float64(Gia_ManAndNum(p)),
+			1.0*vec.Vec_IntMemory(cuts)/float64(1<<20))
 	}
 	return cuts
 }

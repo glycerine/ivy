@@ -565,6 +565,7 @@ func Gia_AigerRead(name string, fSimple, fSkip, fCheck int32) (*Gia_Man_t, error
 }
 
 func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, opts AigerReadOptions, depth int, renumbered bool) error {
+	mappingDropped := false
 	lengths := map[byte]int{'i': int(Gia_ManPiNum(p)), 'l': int(p.nRegs), 'o': ordinary, 'b': bad, 'c': constraints}
 	// Keep the symbol lines in one owned string. The caller may reuse the
 	// input bytes, and binary extension payloads can be much larger than names.
@@ -654,8 +655,14 @@ func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, 
 		}
 		if renumbered && tag == 'm' {
 			// Like Gia_AigerRead: hashing invalidated the mapping, which is
-			// dropped with a warning.
-			fmt.Println("Warning: Structural hashing enabled while reading AIGER invalidated the mapping.  Consider using \"&r -s\".")
+			// dropped with a warning after the extensions are read.
+			mappingDropped = true
+			data = data[5+int(size):]
+			continue
+		}
+		if tag == 'w' && !opts.SkipStrash {
+			// Gia_AigerRead reads the edges only with "&r -s".
+			fmt.Printf("Cannot read extension \"w\" because AIG is rehashed. Use \"&r -s <file.aig>\".\n")
 			data = data[5+int(size):]
 			continue
 		}
@@ -670,6 +677,9 @@ func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, 
 	}
 	p.aigerComment = append([]byte(nil), data...)
 	aigerInstallNames(p, ordinary, bad, constraints)
+	if mappingDropped {
+		fmt.Println("Warning: Structural hashing enabled while reading AIGER invalidated the mapping.  Consider using \"&r -s\".")
+	}
 	return nil
 }
 

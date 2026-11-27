@@ -2,38 +2,40 @@ package gia
 
 import abcutil "github.com/glycerine/abcgo/misc/util"
 
+// Gia_ManPrintPackingStats is giaIf.c's; blocks of more than four LUTs
+// (&pack -N 5) are not counted (C overflowed nNumStr[5], CBUGS_FIXED.md #30).
 func Gia_ManPrintPackingStats(p *Gia_Man_t) {
+	var nNumStr [5]int32
+	MaxSize, Count := -1, int32(0)
 	if p.VPacking == nil {
 		return
 	}
-	data := Vec_IntArray(p.VPacking)
-	if len(data) == 0 {
-		panic("gia: empty packing")
-	}
-	var counts [4]int32
-	entries := int32(0)
-	maximum := -1
-	for i := 1; i < len(data); {
-		size := int(data[i])
-		i++
-		if size < 1 || size > 3 || i+size > len(data) {
-			panic("gia: invalid packing record")
+	nEntries2 := int32(0)
+	for i := 1; i < Vec_IntSize(p.VPacking); i++ {
+		Entry := Vec_IntEntry(p.VPacking, i)
+		if Entry < 5 {
+			nNumStr[Entry]++
 		}
-		counts[size]++
-		maximum = max(maximum, size)
-		i += size
-		entries++
+		i++
+		i += int(Entry)
+		i--
+		nEntries2++
 	}
-	if entries != data[0] {
-		panic("gia: packing count mismatch")
+	if nNumStr[3] > 0 {
+		MaxSize = 3
+	} else if nNumStr[2] > 0 {
+		MaxSize = 2
+	} else if nNumStr[1] > 0 {
+		MaxSize = 1
 	}
-	abcutil.Abc_Print(1, "Packing (N=%d)  :  ", maximum)
-	var total int32
-	for size := 1; size <= maximum; size++ {
-		abcutil.Abc_Print(1, "%d x LUT = %d   ", size, counts[size])
-		total += int32(size) * counts[size]
+	abcutil.Abc_Print(1, "Packing (N=%d)  :  ", MaxSize)
+	for i := 1; i <= MaxSize; i++ {
+		abcutil.Abc_Print(1, "%d x LUT = %d   ", i, nNumStr[i])
+		Count += int32(i) * nNumStr[i]
 	}
-	abcutil.Abc_Print(1, "Total = %d   Total LUT = %d\n", entries, total)
+	abcutil.Abc_Print(1, "Total = %d   ", nEntries2)
+	abcutil.Abc_Print(1, "Total LUT = %d", Count)
+	abcutil.Abc_Print(1, "\n")
 }
 func Gia_ManPrintNodeProfile(counts []int32, sizeMax int32) {
 	if int(sizeMax) >= len(counts) {

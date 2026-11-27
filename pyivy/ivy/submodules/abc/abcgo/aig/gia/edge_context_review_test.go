@@ -112,35 +112,24 @@ func TestEdgeWindowsAndBoxesMatchOriginalABC(t *testing.T) {
 	}
 }
 
-func TestEdgeWindowRestoresAfterPanic(t *testing.T) {
-	for _, incremental := range []bool{false, true} {
-		t.Run(fmt.Sprint(incremental), func(t *testing.T) {
-			p, x, y := edgeReviewChain()
-			defer Gia_ManStop(p)
-			p.VMapping = nil
-			Gia_ManStaticFanoutStart(p)
-			Gia_ManComputeEdgeDelay(p, 1)
-			leaves, nodes, temp := Vec_IntAlloc(1), Vec_IntAlloc(1), Vec_IntAlloc(2)
-			Vec_IntPush(leaves, x)
-			Vec_IntPush(nodes, y)
-			window := Vec_WecStart(1)
-			for _, leaf := range []int32{1, 2, 1, 2, 1} {
-				Vec_WecPush(window, 0, leaf)
-			}
-			func() {
-				defer func() {
-					if got := fmt.Sprint(recover()); got != "gia: edge delay supports at most four LUT fanins" {
-						t.Fatalf("expected invalid-window panic, got %q", got)
-					}
-				}()
-				if incremental {
-					Gia_ManEvalWindowInc(p, leaves, nodes, window, temp, 1)
-				} else {
-					Gia_ManEvalWindow(p, leaves, nodes, window, temp, 1)
-				}
-			}()
-			assertIDs(t, Gia_ObjLutFanins2(p, y), x, 1)
-			assertIDs(t, Vec_WecEntry(window, 0), 1, 2, 1, 2, 1)
-		})
+// A five-fanin window record is evaluated over all its fanins (release ABC
+// compiles out the four-fanin assert) and both records are swapped back.
+func TestEdgeWindowEvaluatesWideRecordAndRestores(t *testing.T) {
+	p, x, y := edgeReviewChain()
+	defer Gia_ManStop(p)
+	p.VMapping = nil
+	Gia_ManStaticFanoutStart(p)
+	Gia_ManComputeEdgeDelay(p, 1)
+	leaves, nodes, temp := Vec_IntAlloc(1), Vec_IntAlloc(1), Vec_IntAlloc(2)
+	Vec_IntPush(leaves, x)
+	Vec_IntPush(nodes, y)
+	window := Vec_WecStart(1)
+	for _, leaf := range []int32{1, 2, 1, 2, 1} {
+		Vec_WecPush(window, 0, leaf)
 	}
+	if got := Gia_ManEvalWindow(p, leaves, nodes, window, temp, 1); got != 10 {
+		t.Fatalf("window delay %d, want 10", got)
+	}
+	assertIDs(t, Gia_ObjLutFanins2(p, y), x, 1)
+	assertIDs(t, Vec_WecEntry(window, 0), 1, 2, 1, 2, 1)
 }

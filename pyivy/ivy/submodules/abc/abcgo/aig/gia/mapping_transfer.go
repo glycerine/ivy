@@ -115,7 +115,9 @@ func Gia_ManTransferPacking(dst, src *Gia_Man_t) {
 	for i := 1; i < len(data); {
 		size := int(data[i])
 		i++
-		if size < 1 || size > 3 || i+size > len(data) {
+		// C asserts 0 < size < 4; release builds copy blocks of any size
+		// (&pack -N 5 builds larger ones).
+		if size < 1 || i+size > len(data) {
 			panic("gia: invalid packing record")
 		}
 		Vec_IntPush(result, int32(size))

@@ -691,7 +691,9 @@ func aigerValidatePacking(values []int32, nObjs int32) error {
 		}
 		n := values[cursor]
 		cursor++
-		if n < 1 || n > 3 || int(n) > len(values)-cursor {
+		// C reads and writes the "k" extension as raw ints; &pack -N 5
+		// builds blocks of more than three LUTs.
+		if n < 1 || int(n) > len(values)-cursor {
 			return fmt.Errorf("invalid packing block size")
 		}
 		for _, id := range values[cursor : cursor+int(n)] {

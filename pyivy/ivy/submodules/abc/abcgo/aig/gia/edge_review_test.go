@@ -53,8 +53,11 @@ func TestEdgeImproveReportsDirectionAndCount(t *testing.T) {
 	}
 }
 
+// Gia_ManEvalWindowInc tests Gia_ObjIsLut on the primary mapping, which C
+// dereferences even when only vMapping2 exists, so only the full evaluator
+// (the one giaSatLut.c calls) runs on a secondary-only mapping.
 func TestEdgeWindowSecondaryMappingAndRestoration(t *testing.T) {
-	for _, incremental := range []bool{false, true} {
+	for _, incremental := range []bool{false} {
 		t.Run(fmt.Sprintf("incremental%t", incremental), func(t *testing.T) {
 			p, x, y := edgeReviewChain()
 			defer Gia_ManStop(p)
@@ -166,7 +169,9 @@ func TestEdgeReverseAssignmentSupportsWideLuts(t *testing.T) {
 	}
 }
 
-func TestEdgeForwardRetainsFourInputLimit(t *testing.T) {
+// giaEdge.c asserts at most four LUT fanins, but release builds compile the
+// assert out and the loops visit every fanin, as '&if -K 6; &edge; &ps' does.
+func TestEdgeForwardHandlesWideLutsLikeReleaseABC(t *testing.T) {
 	for _, secondary := range []bool{false, true} {
 		for _, op := range []string{"evaluate", "assign", "convert"} {
 			if secondary && op == "convert" {
@@ -176,18 +181,21 @@ func TestEdgeForwardRetainsFourInputLimit(t *testing.T) {
 				p := edgeReviewWideLut(5, secondary)
 				defer Gia_ManStop(p)
 				p.VEdge1, p.VEdge2 = Vec_IntStart(int(p.nObjs)), Vec_IntStart(int(p.nObjs))
-				defer func() {
-					if got := fmt.Sprint(recover()); got != "gia: edge delay supports at most four LUT fanins" {
-						t.Fatalf("expected four-input precondition, got %q", got)
-					}
-				}()
 				switch op {
 				case "evaluate":
-					Gia_ManEvalEdgeDelay(p)
+					if got := Gia_ManEvalEdgeDelay(p); got != 10 {
+						t.Fatalf("delay %d, want 10", got)
+					}
 				case "assign":
-					Gia_ManComputeEdgeDelay(p, 1)
+					if got := Gia_ManComputeEdgeDelay(p, 1); got != 10 {
+						t.Fatalf("delay %d, want 10", got)
+					}
 				case "convert":
 					Edg_ManToMapping(p)
+					root := Gia_ObjFaninId0p(p, Gia_ManCo(p, 0))
+					if got := Gia_ObjLutSize2(p, root); got != 5 {
+						t.Fatalf("converted LUT has %d fanins, want 5", got)
+					}
 				}
 			})
 		}

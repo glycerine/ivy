@@ -19,18 +19,29 @@ func TestSblCutFeasibleAndDominance(t *testing.T) {
 	}
 }
 
+// Sbl_ManComputeCutsOne merges the cut lists of two window objects and
+// keeps the minimal feasible unions, then appends the trivial cut.
 func TestSblMergeCuts(t *testing.T) {
-	left := [4][]word{{1, 2}, {0, 0}, {0, 0}, {0, 0}}
-	right := [4][]word{{4, 6}, {0, 0}, {0, 0}, {0, 0}}
-	result := sblMergeCuts(left, right, 4)
-	got := vec.Vec_WrdArray(result[0])
-	if len(got) != 2 || got[0] != 5 || got[1] != 6 {
-		t.Fatalf("minimal merged cuts %v", got)
-	}
-	for i := 1; i < 4; i++ {
-		if vec.Vec_WrdSize(result[i]) != 2 {
-			t.Fatal("unaligned cut masks")
+	g := Gia_ManStart(8)
+	Gia_ManAppendCi(g)
+	p := Sbl_ManAlloc(g, 4)
+	defer Sbl_ManStop(p)
+	p.LutSize = 4
+	for obj, cuts := range [][]word{{1, 2}, {4, 6}} {
+		vec.Vec_IntPush(p.vCutsStart, int32(vec.Vec_WrdSize(p.vCutsI1)))
+		vec.Vec_IntPush(p.vCutsNum, int32(len(cuts)))
+		for _, c := range cuts {
+			vec.Vec_WrdPush(p.vCutsI1, c)
+			vec.Vec_WrdPush(p.vCutsI2, 0)
+			vec.Vec_WrdPush(p.vCutsN1, 0)
+			vec.Vec_WrdPush(p.vCutsN2, 0)
+			vec.Vec_IntPush(p.vCutsObj, int32(obj))
 		}
+	}
+	Sbl_ManComputeCutsOne(p, 0, 1, 2)
+	got := vec.Vec_WrdArray(p.vCutsI1)[4:]
+	if len(got) != 3 || got[0] != 5 || got[1] != 6 || got[2] != 0 || vec.Vec_WrdEntry(p.vCutsN1, 6) != 4 {
+		t.Fatalf("minimal merged cuts %v", got)
 	}
 }
 

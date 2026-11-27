@@ -661,6 +661,53 @@ and states how the Go port was verified.
   `If_ManCreateXor`/`If_ManCreateMux` and so mapped correctly, but it now
   refuses such graphs in `Abc_CommandAbc9If` as C does.
 
+## 30. `&pack -N 5` then `&edge -p` or `&ps` smashes the stack
+
+- **Files:** `src/aig/gia/giaEdge.c` (`Gia_ManConvertPackingToEdges`),
+  `src/aig/gia/giaIf.c` (`Gia_ManPrintPackingStats`).
+- **Found:** 2026-11-27, checking the fixed arrays of giaEdge.c with an ASan
+  build while porting `&edge`.
+- **Bug:** both functions assert that a packing block has one to three LUTs
+  (`assert( Entry > 0 && Entry < 4 )`), but `&pack -N num` accepts any
+  block size of at least 2 and `Gia_ManLutPacking` fills blocks up to it.
+  Release builds compile the assert out: `Gia_ManConvertPackingToEdges`
+  copies every block member into `int nNodes[4]` and `&ps` increments
+  `nNumStr[Entry]` of `int nNumStr[5]`. With `-N 5` or more both write past
+  the stack arrays (ASan: stack-buffer-overflow at giaEdge.c:135 and
+  giaIf.c:593; release `abc` aborts with "stack smashing detected" on
+  `&if -K 4; &pack -N 8; &edge -p`).
+- **Fix:** store only the first four members (`if ( k < 4 )`) and count only
+  block sizes below 5 (`if ( Entry < 5 )`). Blocks of two or three LUTs, the
+  only ones that produce edges or are printed, give the same results as before;
+  larger blocks get no edges, as blocks of four already did.
+- **Test:** `abcgo/base/abci/edge_native_test.go`: `TestNativeEdgeStaysInBounds`
+  (compiles giaEdge.c and giaSatEdge.c with ASan against `ABC_LIBABC`) and
+  `TestEdgeCrashesFixedLikeNative` (`&pack -N 5/8`, `&if -K 6; &pack -N 6`,
+  on three designs, through `ABC_BINARY`); both failed before the fix.
+- **Go port:** `Gia_ManConvertPackingToEdges`, `Gia_ManPrintPackingStats`,
+  `Gia_ManTransferPacking` and the AIGER "k" writer panicked or refused blocks
+  of more than three LUTs; they now follow the fixed C. `Gia_ManLutPacking`
+  (giaPack.c) was ported line by line too (its stable sort of fanin delays
+  differed from C's selection sort, so `&pack` built other blocks).
+
+## 31. `&edge -D` below the feasible delay segfaults
+
+- **File:** `src/aig/gia/giaSatEdge.c` (`Seg_ManComputeDelay`).
+- **Found:** 2026-11-27, comparing `&edge` options with the port.
+- **Bug:** the SAT search starts at the delay limit `-D`; when that limit is
+  below the smallest delay achievable with edges, the first call is UNSAT and
+  no assignment is saved. `Gia_ManEdgeFromArray( p->pGia, vEdges2 )` is then
+  called with `vEdges2 == NULL` and dereferences it, so
+  `&if -K 4; &edge -D 5` segfaults on i10.
+- **Fix:** call `Gia_ManEdgeFromArray` only when an assignment was found; the
+  network keeps the edges it had (`-v` already reports "Proved UNSAT for
+  delay N").
+- **Test:** `abcgo/base/abci/edge_native_test.go`
+  (`TestEdgeCrashesFixedLikeNative`, `TestEdgeOptionsLikeNative` with `-D 9`,
+  `TestNativeEdgeStaysInBounds`); native `abc` segfaulted before the fix.
+- **Go port:** `Seg_ManComputeDelay` (now a line-by-line port of giaSatEdge.c)
+  has the same guard.
+
 ## 32. `&acec -m` reads past `vXorRoots` when the adder trees form no chain
 
 - **File:** `src/proof/acec/acecXor.c` (`Acec_OrderTreeRoots`,

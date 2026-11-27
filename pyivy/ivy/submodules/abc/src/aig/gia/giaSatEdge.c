@@ -522,7 +522,8 @@ void Seg_ManComputeDelay( Gia_Man_t * pGia, int DelayInit, int nFanouts, int fTw
             break;
         }
     }
-    Gia_ManEdgeFromArray( p->pGia, vEdges2 );
+    if ( vEdges2 ) // no solution when the delay limit (-D) is below the feasible delay
+        Gia_ManEdgeFromArray( p->pGia, vEdges2 );
     Vec_IntFreeP( &vEdges2 );
     Seg_ManStop( p );
 }

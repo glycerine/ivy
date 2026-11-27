@@ -132,7 +132,8 @@ void Gia_ManConvertPackingToEdges( Gia_Man_t * p )
         assert( Entry > 0 && Entry < 4 );
         i++;
         for ( k = 0; k < Entry; k++, i++ )
-            nNodes[k] = Vec_IntEntry(p->vPacking, i);
+            if ( k < 4 ) // blocks of more than four LUTs (&pack -N 5) overflowed nNodes[]; they get no edges
+                nNodes[k] = Vec_IntEntry(p->vPacking, i);
         i--;
         nEntries2++;
         // create edges
