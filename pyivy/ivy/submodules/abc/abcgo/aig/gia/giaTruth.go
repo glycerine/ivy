@@ -410,8 +410,13 @@ func Gia_ObjCollectInternalCut_rec(p *Gia_Man_t, id int32) {
 	if Gia_ObjIsCi(o) != 0 {
 		panic("cut does not cover CI")
 	}
-	for _, f := range giaObjectFanins(p, o) {
-		Gia_ObjCollectInternalCut_rec(p, f)
+	// fanins as giaObjectFanins, without allocating
+	Gia_ObjCollectInternalCut_rec(p, Gia_ObjFaninId0(o, id))
+	if Gia_ObjIsCo(o) == 0 && Gia_ObjIsBuf(o) == 0 {
+		Gia_ObjCollectInternalCut_rec(p, Gia_ObjFaninId1(o, id))
+	}
+	if int(id) < len(p.PMuxes) && p.PMuxes[id] != 0 {
+		Gia_ObjCollectInternalCut_rec(p, int32(p.PMuxes[id]>>1))
 	}
 	vec.Vec_IntWriteEntry(p.vTtNums, int(id), int32(vec.Vec_IntSize(p.vTtNodes)))
 	vec.Vec_IntPush(p.vTtNodes, id)
@@ -482,20 +487,102 @@ func Gia_ObjComputeTruthTable(p *Gia_Man_t, o *Gia_Obj_t) []word {
 	r := giaTruthSave(p, e, o.id, false)
 	return r
 }
-func Gia_ObjComputeTruthTableCut(p *Gia_Man_t, o *Gia_Obj_t, leaves *Vec_Int_t) []word {
-	if p.vTtMemory == nil || vec.Vec_IntSize(leaves) > int(p.nTtVars) {
+
+// giaTruthCutGate computes a buffer, XOR or MUX node's table (fanin
+// complements applied as masks).
+func giaTruthCutGate(p *Gia_Man_t, o *Gia_Obj_t, id int32, dst, t0 []word, operand func(int32) []word, nums []int32, nWords int) {
+	m0 := -word(Gia_ObjFaninC0(o))
+	if Gia_ObjIsCo(o) != 0 || Gia_ObjIsBuf(o) != 0 {
+		for w := range dst {
+			dst[w] = t0[w] ^ m0
+		}
+		return
+	}
+	t1 := operand(nums[Gia_ObjFaninId1(o, id)])[:nWords]
+	m1 := -word(Gia_ObjFaninC1(o))
+	if int(id) < len(p.PMuxes) && p.PMuxes[id] != 0 {
+		c := int32(p.PMuxes[id])
+		tc := operand(nums[c>>1])[:nWords]
+		mc := -word(c & 1)
+		for w := range dst {
+			cw := tc[w] ^ mc
+			dst[w] = cw&(t1[w]^m1) | ^cw&(t0[w]^m0)
+		}
+		return
+	}
+	for w := range dst {
+		dst[w] = t0[w] ^ m0 ^ t1[w] ^ m1
+	}
+}
+
+// Gia_ObjComputeTruthTableCut is giaTruth.c's: the cut's internal nodes are
+// numbered (leaves -i, nodes 1..), their tables are computed in place in
+// vTtMemory, and only the numbered entries are reset afterwards.
+func Gia_ObjComputeTruthTableCut(p *Gia_Man_t, pRoot *Gia_Obj_t, vLeaves *Vec_Int_t) []word {
+	if p.vTtMemory == nil || vec.Vec_IntSize(vLeaves) > int(p.nTtVars) {
 		panic("invalid truth workspace or cut width")
 	}
-	for _, l := range vec.Vec_IntArray(leaves) {
-		if l == o.id {
-			panic("cut root is also a leaf")
+	// extend ID numbers
+	if vec.Vec_IntSize(p.vTtNums) < int(p.nObjs) {
+		vec.Vec_IntFillExtra(p.vTtNums, int(p.nObjs), giaTruthUnnumbered)
+	}
+	// collect internal nodes
+	Gia_ObjCollectInternalCut(p, pRoot.id, vLeaves)
+	nWords := int(p.nTtWords)
+	// extend TT storage
+	if need := nWords * (vec.Vec_IntSize(p.vTtNodes) + 2); vec.Vec_WrdSize(p.vTtMemory) < need {
+		vec.Vec_WrdFillExtra(p.vTtMemory, need, 0)
+	}
+	nums := vec.Vec_IntArray(p.vTtNums)
+	mem := vec.Vec_WrdArray(p.vTtMemory)
+	operand := func(id int32) []word {
+		if id > 0 {
+			return mem[int(id)*nWords : int(id+1)*nWords]
+		}
+		return Gla_ObjTruthElem(p, -id)
+	}
+	// compute the truth table for internal nodes
+	nodes := vec.Vec_IntArray(p.vTtNodes)
+	for i := 1; i < len(nodes); i++ {
+		iObj := nodes[i]
+		pTemp := p.pObjs[iObj]
+		pTruth := mem[i*nWords : (i+1)*nWords]
+		pTruth0 := operand(nums[Gia_ObjFaninId0(pTemp, iObj)])[:nWords]
+		if Gia_ObjIsCo(pTemp) != 0 || Gia_ObjIsBuf(pTemp) != 0 || Gia_ObjIsXor(pTemp) != 0 || int(iObj) < len(p.PMuxes) && p.PMuxes[iObj] != 0 {
+			// the port's GIAs may hold buffers, XORs and MUXes (C's
+			// version handles AND nodes only)
+			giaTruthCutGate(p, pTemp, iObj, pTruth, pTruth0, operand, nums, nWords)
+			continue
+		}
+		pTruth1 := operand(nums[Gia_ObjFaninId1(pTemp, iObj)])[:nWords]
+		switch {
+		case Gia_ObjFaninC0(pTemp) != 0 && Gia_ObjFaninC1(pTemp) != 0:
+			for w := range pTruth {
+				pTruth[w] = ^pTruth0[w] & ^pTruth1[w]
+			}
+		case Gia_ObjFaninC0(pTemp) != 0:
+			for w := range pTruth {
+				pTruth[w] = ^pTruth0[w] & pTruth1[w]
+			}
+		case Gia_ObjFaninC1(pTemp) != 0:
+			for w := range pTruth {
+				pTruth[w] = pTruth0[w] & ^pTruth1[w]
+			}
+		default:
+			for w := range pTruth {
+				pTruth[w] = pTruth0[w] & pTruth1[w]
+			}
 		}
 	}
-	e := giaNewTruthEval(p, p.nTtVars, vec.Vec_IntArray(leaves))
-	e.node(o.id)
-	r := giaTruthSave(p, e, o.id, true)
-	vec.Vec_IntFill(p.vTtNums, vec.Vec_IntSize(p.vTtNums), giaTruthUnnumbered)
-	return r
+	pTruth := Gla_ObjTruthNode(p, pRoot)
+	// unmark leaves marked by Gia_ObjCollectInternal()
+	for _, iObj := range vec.Vec_IntArray(vLeaves) {
+		nums[iObj] = giaTruthUnnumbered
+	}
+	for _, iObj := range nodes[1:] {
+		nums[iObj] = giaTruthUnnumbered
+	}
+	return pTruth
 }
 func Gia_ObjComputeTruthTableTest(p *Gia_Man_t) {
 	start := time.Now()
