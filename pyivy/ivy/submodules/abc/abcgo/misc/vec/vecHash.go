@@ -136,10 +136,14 @@ func hashIntLive(p *Hash_IntMan_t) {
 // Lookup returns the actual bucket/chain link. Zero denotes absence; the link
 // remains valid until table resize or manager release (as in the C API).
 func Hash_Int2ManLookup(p *Hash_IntMan_t, a, b int32) *int32 {
-	hashIntLive(p)
-	place := Vec_IntEntryP(p.vTable, Hash_Int2ManHash(a, b, Vec_IntSize(p.vTable)))
-	for *place != 0 {
-		o := Hash_IntObj(p, *place)
+	if p.nRefs <= 0 {
+		panic("use of released integer hash")
+	}
+	table, objs := p.vTable.data, p.objects
+	// Hash_Int2ManHash on the table's (prime, non-zero) size
+	place := &table[(uint32(4177)*uint32(a)+uint32(7873)*uint32(b))%uint32(len(table))]
+	for id := *place; id != 0; id = *place {
+		o := &objs[id]
 		if o.iData0 == a && o.iData1 == b {
 			return place
 		}
@@ -184,10 +188,11 @@ func Hash_Int2ManInsert(p *Hash_IntMan_t, a, b, data int32) int32 {
 	hashIntResize(p, 2)
 	// walk the chain by index: appending may move the entries, so the link
 	// is set after the append (the new entry ends the chain, as in C)
-	h := Hash_Int2ManHash(a, b, Vec_IntSize(p.vTable))
+	table, objs := p.vTable.data, p.objects
+	h := (uint32(4177)*uint32(a) + uint32(7873)*uint32(b)) % uint32(len(table))
 	prev := int32(0)
-	for cur := Vec_IntEntry(p.vTable, h); cur != 0; cur = p.objects[cur].iNext {
-		if o := &p.objects[cur]; o.iData0 == a && o.iData1 == b {
+	for cur := table[h]; cur != 0; cur = objs[cur].iNext {
+		if o := &objs[cur]; o.iData0 == a && o.iData1 == b {
 			return cur
 		}
 		prev = cur
@@ -198,7 +203,7 @@ func Hash_Int2ManInsert(p *Hash_IntMan_t, a, b, data int32) int32 {
 	id := int32(len(p.objects))
 	p.objects = append(p.objects, Hash_IntObj_t{iData0: a, iData1: b, iData2: data})
 	if prev == 0 {
-		Vec_IntWriteEntry(p.vTable, h, id)
+		table[h] = id
 	} else {
 		p.objects[prev].iNext = id
 	}
