@@ -202,7 +202,7 @@ build: # grammer_gen
 	go install  -tags xtrace_off ./cmd/whatwasm
 	go install  -tags xtrace_off ./cmd/ivy2cpp
 	go install  -tags xtrace_off ./cmd/ivy2golang
-	go install  -tags xtrace_off ./cmd/ivy_to_rtl
+	go install  -tags xtrace_off ./cmd/ivy2rtl
 	go install  -tags xtrace_off ./cmd/rtlil_eqv
 
 grammar_gen: # be sure .y -> .go up to date
