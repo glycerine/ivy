@@ -1,0 +1,16 @@
+Resynthesis for 4 4-LUTs with 3 non-MFFC LUTs, 0 crossbars, and 13-input cuts.
+Node gain =     0. (0.00 %)  Edge gain =     0. (0.00 %)  Muxes =    0. Dsds =    0.
+Nodes =   608 (  0)  Cuts =   780 (  24)  Changes =     0  Iter =  1  Benefit = 0.
+Non-DSD: 4=2 5=4 6=3 7=3 8=4 9=4 10=4 11=2
+Cuts   =      sec (%)
+Truth  =      sec (%)
+CSupps =      sec (%)
+Eval   =      sec (%)
+ MuxAn =      sec (%)
+ MuxSp =      sec (%)
+ DsdAn =      sec (%)
+ DsdSp =      sec (%)
+ Other =      sec (%)
+Map    =      sec (%)
+Other  =      sec (%)
+TOTAL  =      sec (%)

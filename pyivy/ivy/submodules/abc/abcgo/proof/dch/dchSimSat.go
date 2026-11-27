@@ -130,6 +130,7 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 		visited, inputIndex := m.cexVisited, m.inputIndex
 		clear(visited)
 		values[0], visited[0] = true, true
+		coneThis := 0
 		var simulate func(aig.Edge, bool) bool
 		simulate = func(edge aig.Edge, solved bool) bool {
 			id := edge.NodeID()
@@ -146,12 +147,19 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 					a := simulate(n.Fanins[0], solved)
 					b := simulate(n.Fanins[1], solved)
 					values[id] = a && b
+					// count the cone size (nodes whose fraig has a SAT variable)
+					if solved {
+						if fr := m.mapped[id]; fr != aig.InvalidEdge && m.variables[fr.NodeID()] > 0 {
+							coneThis++
+						}
+					}
 				}
 			}
 			return values[id] != edge.Complemented()
 		}
 		simulate(target[0], true)
 		simulate(target[1], true)
+		m.coneMax = max(m.coneMax, coneThis)
 		var roots, classes []int
 		for _, group := range m.classes.groups {
 			head := group[0].NodeID()

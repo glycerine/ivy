@@ -29,15 +29,23 @@ var nativeVerboseScripts = []string{
 	"&get; &b -v",
 	"irw -v",
 	"iresyn -v",
+	"dch -v",
+	"&get; &dch -v",
+	"if -K 6; mfs -v",
+	"if -K 6; lutpack -v",
 	"&get; &ps; &st; &ps; &synch2; &ps; &if -K 6; &ps",
 }
 
-var verboseTimes = regexp.MustCompile(`[0-9.]* sec`)
+var (
+	verboseTimes   = regexp.MustCompile(`[0-9.]* sec`)
+	verbosePercent = regexp.MustCompile(`sec \( *[0-9.]+ %\)`)
+)
 
 func normalizeVerbose(out string) string {
 	var kept []string
 	for _, line := range strings.Split(out, "\n") {
-		line = strings.TrimRight(verboseTimes.ReplaceAllString(line, " sec"), " ")
+		line = verboseTimes.ReplaceAllString(line, " sec")
+		line = strings.TrimRight(verbosePercent.ReplaceAllString(line, "sec (%)"), " ")
 		if line == "" || strings.Contains(line, "ABC command line") {
 			continue
 		}

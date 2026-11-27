@@ -22,6 +22,7 @@ type Manager struct {
 	variables  map[int]int32
 	nextVar    int32
 	callsSince int
+	coneMax    int // nConeMax: the largest solved cone resimulated
 	proven     map[int]aig.Edge
 	blocked    map[int]bool
 	fanouts    map[int][]int

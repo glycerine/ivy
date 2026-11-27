@@ -1,0 +1,11 @@
+Nodes = 611. Try = 687. Resub = 121. Div = 50295. SAT calls = 4086. Timeouts = 0. MaxDivs = 4.
+Attempts :   Remove     93 out of   2692 (  3.45 %)   Resub      28 out of    264 ( 10.61 %)
+Reduction:   Nodes      35 out of    611 (  5.73 %)   Edges     244 out of   2674 (  9.12 %)
+Win =      sec (%)
+Div =      sec (%)
+Aig =      sec (%)
+Gia =      sec (%)
+Cnf =      sec (%)
+Sat =      sec (%)
+Int =      sec (%)
+ALL =      sec (%)
