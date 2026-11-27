@@ -764,7 +764,15 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 	graph := p.pAig
 	outputs := graph.TruePoCount()
 	inputs := graph.TruePiCount()
-	started := util.Abc_Clock()
+	nOutDigits := int(util.Abc_Base10Log(uint32(outputs)))
+	clkStart := util.Abc_Clock()
+	var clkOne abctime
+	var pCube *Pdr_Set_t
+	var RetValue int32 = -1
+	gapExpired := func() bool {
+		return pars.NTimeOutGap != 0 && pars.timeLastSolved != 0 && pdrNow(p) > pars.timeLastSolved+int64(pars.NTimeOutGap)*int64(time.Second)
+	}
+	progress := func(fClose int32) { Pdr_ManPrintProgress(p, fClose, util.Abc_Clock()-clkStart) }
 	if pars.NTimeOut != 0 {
 		p.timeToStop = pdrNow(p) + int64(pars.NTimeOut)*int64(time.Second)
 	} else {
@@ -774,10 +782,11 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 		panic("pdr: solver already initialized")
 	}
 	outputEdges := graph.Outputs()[:outputs]
+	// in the multi-output mode, mark trivial POs (those fed by const0) as solved
 	if pars.FSolveAll != 0 {
 		for i, output := range outputEdges {
 			if aig.Aig_ObjChild0(graph, output) == graph.Const0() {
-				vec.Vec_IntWriteEntry(pars.VOutMap, i, 1)
+				vec.Vec_IntWriteEntry(pars.VOutMap, i, 1) // unsat
 				pars.NProveOuts++
 				if pars.FUseBridge != 0 {
 					util.Gia_ManToBridgeResult(os.Stdout, 1, nil, int32(i))
@@ -785,180 +794,213 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 			}
 		}
 	}
+	// create the first timeframe
 	pars.timeLastSolved = pdrNow(p)
-	frame := int32(0)
-	Pdr_ManCreateSolver(p, frame)
+	iFrame := int32(0)
+	Pdr_ManCreateSolver(p, iFrame)
 	for {
-		refined := false
-		if pars.FUseAbs != 0 && p.vAbsFlops == nil && frame == 1 {
+		fRefined := false
+		if pars.FUseAbs != 0 && p.vAbsFlops == nil && iFrame == 1 {
 			regs := int(aig.Aig_ManRegNum(graph))
 			p.vAbsFlops = vec.Vec_IntStart(regs)
 			p.vMapFf2Ppi = vec.Vec_IntStartFull(regs)
 			p.vMapPpi2Ff = vec.Vec_IntAlloc(100)
 		}
-		p.nFrames = frame
-		p.iUseFrame = max(frame, 1)
+		p.nFrames = iFrame
+		if int(iFrame) != len(p.vSolvers)-1 {
+			panic("pdr: frame and solver count disagree")
+		}
+		p.iUseFrame = max(iFrame, 1)
 		for index, output := range outputEdges {
 			p.iOutCur = int32(index)
+			// skip disproved outputs
 			if p.vCexes != nil && vec.Vec_PtrEntry(p.vCexes, index) != nil {
 				continue
 			}
+			// skip output whose time has run out
 			if p.pTime4Outs != nil && p.pTime4Outs[index] == 0 {
 				continue
 			}
+			// check if the output is trivially solved
 			driver := aig.Aig_ObjChild0(graph, output)
 			if driver == graph.Const0() {
 				continue
 			}
+			// check if the output is trivially solved
 			if driver == graph.Const1() {
-				var witness *util.Abc_Cex_t
-				if pars.FSolveAll == 0 || pars.FUseBridge != 0 || pars.FStoreCex != 0 {
-					witness = util.Abc_CexMakeTriv(aig.Aig_ManRegNum(graph), inputs, outputs, frame*outputs+int32(index))
-				}
 				if pars.FSolveAll == 0 {
-					if err := graph.SetSequentialCounterexample(witness); err != nil {
+					pCexNew := util.Abc_CexMakeTriv(aig.Aig_ManRegNum(graph), inputs, outputs, iFrame*outputs+int32(index))
+					if err := graph.SetSequentialCounterexample(pCexNew); err != nil {
 						panic(err)
 					}
-					return 0
+					return 0 // SAT
+				}
+				var pCexNew *util.Abc_Cex_t
+				if pars.FUseBridge != 0 || pars.FStoreCex != 0 {
+					pCexNew = util.Abc_CexMakeTriv(aig.Aig_ManRegNum(graph), inputs, outputs, iFrame*outputs+int32(index))
 				}
 				pars.NFailOuts++
 				if pars.VOutMap != nil {
 					vec.Vec_IntWriteEntry(pars.VOutMap, index, 0)
 				}
 				if pars.FNotVerbose == 0 {
-					fmt.Printf("Output %d was trivially asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.NFailOuts, outputs)
+					util.Abc_Print(1, "Output %*d was trivially asserted in frame %2d (solved %*d out of %*d outputs).\n",
+						nOutDigits, index, iFrame, nOutDigits, pars.NFailOuts, nOutDigits, outputs)
 				}
 				if pars.FUseBridge != 0 {
-					util.Gia_ManToBridgeResult(os.Stdout, 0, witness, int32(index))
+					util.Gia_ManToBridgeResult(os.Stdout, 0, pCexNew, pCexNew.IPo)
 				}
-				var stored any = witness
-				if witness == nil {
-					stored = pdrNoCounterexample{}
-				}
-				vec.Vec_PtrWriteEntry(p.vCexes, index, stored)
-				if pars.pFuncOnFail != nil {
-					callbackWitness := witness
-					if pars.FStoreCex == 0 {
-						callbackWitness = nil
+				pdrStoreCex(p, index, pCexNew)
+				if pdrCallOnFail(p, index, pCexNew) {
+					if pars.FVerbose != 0 {
+						progress(1)
 					}
-					if pars.pFuncOnFail(int32(index), callbackWitness) != 0 {
-						pars.IFrame = frame
-						return -1
+					if pars.FSilent == 0 {
+						util.Abc_Print(1, "Quitting due to callback on fail in frame %d.\n", iFrame)
 					}
+					pars.IFrame = iFrame
+					return -1
 				}
 				if pars.NFailOuts+pars.NDropOuts == outputs {
 					if pars.NFailOuts != 0 {
-						return 0
+						return 0 // SAT
 					}
-					return -1
+					return -1 // UNDEC
 				}
 				pars.timeLastSolved = pdrNow(p)
 				continue
 			}
-			oneStarted := int64(0)
+			// try to solve this output
 			if p.pTime4Outs != nil {
-				oneStarted = pdrNow(p)
-				p.timeToStopOne = oneStarted + p.pTime4Outs[index]
+				if p.pTime4Outs[index] <= 0 {
+					panic("pdr: output time budget exhausted")
+				}
+				clkOne = pdrNow(p)
+				p.timeToStopOne = p.pTime4Outs[index] + clkOne
 			}
 			for {
-				if pars.NTimeOutGap != 0 && pars.timeLastSolved != 0 && pdrNow(p) > pars.timeLastSolved+int64(pars.NTimeOutGap)*int64(time.Second) {
-					pars.IFrame = frame
+				if gapExpired() {
+					if pars.FVerbose != 0 {
+						progress(1)
+					}
+					if pars.FSilent == 0 {
+						util.Abc_Print(1, "Reached gap timeout (%d seconds) in frame %d.\n", pars.NTimeOutGap, iFrame)
+					}
+					pars.IFrame = iFrame
 					return -1
 				}
-				var cube *Pdr_Set_t
-				status := Pdr_ManCheckCube(p, frame, nil, &cube, pars.NConfLimit, 0, 1)
-				if status == 1 {
+				RetValue = Pdr_ManCheckCube(p, iFrame, nil, &pCube, pars.NConfLimit, 0, 1)
+				if RetValue == 1 {
 					break
 				}
-				if status == 0 {
-					status = Pdr_ManBlockCube(p, cube)
-				}
-				if status == -1 {
-					if pdrOnlyOutputTimedOut(p, pdrNow(p)) {
-						Pdr_QueueClean(p)
-						break
+				if RetValue == -1 {
+					if pars.FVerbose != 0 {
+						progress(1)
 					}
-					pars.IFrame = frame
+					if pdrReportStop(p, iFrame) {
+						pCube = nil
+						break // keep solving
+					}
+					pars.IFrame = iFrame
 					return -1
 				}
-				if status == 0 {
-					pars.IFrame = frame
-					if pars.FSolveAll == 0 {
-						before := util.Abc_Clock()
-						witness := Pdr_ManDeriveCexAbs(p)
-						p.tAbs += util.Abc_Clock() - before
-						if witness == nil {
-							Pdr_QueueClean(p)
-							refined = true
-							break
+				if RetValue == 0 {
+					RetValue = Pdr_ManBlockCube(p, pCube)
+					if RetValue == -1 {
+						if pars.FVerbose != 0 {
+							progress(1)
 						}
-						if err := graph.SetSequentialCounterexample(witness); err != nil {
-							panic(err)
+						if pdrReportStop(p, iFrame) {
+							pCube = nil
+							break // keep solving
 						}
-						return 0
+						pars.IFrame = iFrame
+						return -1
 					}
-					pars.NFailOuts++
-					var witness *util.Abc_Cex_t
-					if pars.FUseBridge != 0 || pars.FStoreCex != 0 {
-						witness = Pdr_ManDeriveCex(p)
-					}
-					if pars.VOutMap != nil {
-						vec.Vec_IntWriteEntry(pars.VOutMap, index, 0)
-					}
-					if pars.FUseBridge != 0 {
-						util.Gia_ManToBridgeResult(os.Stdout, 0, witness, int32(index))
-					}
-					var stored any = witness
-					if witness == nil {
-						stored = pdrNoCounterexample{}
-					}
-					vec.Vec_PtrWriteEntry(p.vCexes, index, stored)
-					if pars.pFuncOnFail != nil {
-						callbackWitness := witness
-						if pars.FStoreCex == 0 {
-							callbackWitness = nil
+					if RetValue == 0 {
+						if pars.FVerbose != 0 && pars.FUseAbs == 0 {
+							progress(pdrBool(pars.FSolveAll == 0))
 						}
-						if pars.pFuncOnFail(int32(index), callbackWitness) != 0 {
-							pars.IFrame = frame
+						pars.IFrame = iFrame
+						if pars.FSolveAll == 0 {
+							clk := util.Abc_Clock()
+							pCex := Pdr_ManDeriveCexAbs(p)
+							p.tAbs += util.Abc_Clock() - clk
+							if pCex == nil {
+								if pars.FUseAbs == 0 {
+									panic("pdr: no counterexample without abstraction")
+								}
+								Pdr_QueueClean(p)
+								pCube = nil
+								fRefined = true
+								break // keep solving
+							}
+							if err := graph.SetSequentialCounterexample(pCex); err != nil {
+								panic(err)
+							}
+							return 0 // SAT
+						}
+						pars.NFailOuts++
+						var pCexNew *util.Abc_Cex_t
+						if pars.FUseBridge != 0 || pars.FStoreCex != 0 {
+							pCexNew = Pdr_ManDeriveCex(p)
+						}
+						if pars.VOutMap != nil {
+							vec.Vec_IntWriteEntry(pars.VOutMap, index, 0)
+						}
+						if pars.FUseBridge != 0 {
+							util.Gia_ManToBridgeResult(os.Stdout, 0, pCexNew, pCexNew.IPo)
+						}
+						pdrStoreCex(p, index, pCexNew)
+						if pdrCallOnFail(p, index, pCexNew) {
+							if pars.FVerbose != 0 {
+								progress(1)
+							}
+							if pars.FSilent == 0 {
+								util.Abc_Print(1, "Quitting due to callback on fail in frame %d.\n", iFrame)
+							}
+							pars.IFrame = iFrame
 							return -1
 						}
+						if pars.FNotVerbose == 0 {
+							util.Abc_Print(1, "Output %*d was asserted in frame %2d (%2d) (solved %*d out of %*d outputs).\n",
+								nOutDigits, index, iFrame, iFrame, nOutDigits, pars.NFailOuts, nOutDigits, outputs)
+						}
+						if pars.NFailOuts == outputs {
+							return 0 // all SAT
+						}
+						Pdr_QueueClean(p)
+						pCube = nil
+						break // keep solving
 					}
-					if pars.FNotVerbose == 0 {
-						fmt.Printf("Output %d was asserted in frame %d (solved %d out of %d outputs).\n", index, frame, pars.NFailOuts, outputs)
+					if pars.FVerbose != 0 {
+						progress(0)
 					}
-					if pars.NFailOuts == outputs {
-						return 0
-					}
-					Pdr_QueueClean(p)
-					break
-				}
-				if pars.FVerbose != 0 {
-					Pdr_ManPrintProgress(p, 0, util.Abc_Clock()-started)
 				}
 			}
-			if refined {
+			if fRefined {
 				break
 			}
 			if p.pTime4Outs != nil {
-				elapsed := pdrNow(p) - oneStarted
-				if p.pTime4Outs[index] > elapsed {
-					p.pTime4Outs[index] -= elapsed
+				timeSince := pdrNow(p) - clkOne
+				if p.pTime4Outs[index] > timeSince {
+					p.pTime4Outs[index] -= timeSince
 				} else {
 					p.pTime4Outs[index] = 0
 				}
-				if p.pTime4Outs[index] == 0 && vec.Vec_PtrEntry(p.vCexes, index) == nil {
+				if p.pTime4Outs[index] == 0 && vec.Vec_PtrEntry(p.vCexes, index) == nil { // undecided
 					pars.NDropOuts++
 					if pars.VOutMap != nil {
 						vec.Vec_IntWriteEntry(pars.VOutMap, index, -1)
 					}
 					if pars.FNotVerbose == 0 {
-						fmt.Printf("Timing out on output %d in frame %d.\n", index, frame)
+						util.Abc_Print(1, "Timing out on output %*d in frame %d.\n", nOutDigits, index, iFrame)
 					}
 				}
 				p.timeToStopOne = 0
 			}
 		}
-		if pars.FUseAbs != 0 && p.vAbsFlops != nil && !refined {
+		if pars.FUseAbs != 0 && p.vAbsFlops != nil && !fRefined {
 			for i, used := range vec.Vec_IntArray(p.vAbsFlops) {
 				if used != 0 && vec.Vec_IntEntry(p.vPrio, i)>>p.nPrioShift == 0 {
 					vec.Vec_IntWriteEntry(p.vAbsFlops, i, 0)
@@ -966,38 +1008,53 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 			}
 		}
 		if pars.FVerbose != 0 {
-			var closeLine int32 = 1
-			if refined {
-				closeLine = 0
-			}
-			Pdr_ManPrintProgress(p, closeLine, util.Abc_Clock()-started)
+			progress(pdrBool(!fRefined))
 		}
-		if refined {
+		if fRefined {
 			continue
 		}
+		// open a new timeframe
 		p.nQueLim = pars.NRestLimit
-		Pdr_ManSetPropertyOutput(p, frame)
-		frame++
-		Pdr_ManCreateSolver(p, frame)
-		status := Pdr_ManPushClauses(p)
-		if status == -1 {
-			pars.IFrame = frame
+		if pCube != nil {
+			panic("pdr: pending cube when opening a frame")
+		}
+		Pdr_ManSetPropertyOutput(p, iFrame)
+		iFrame++
+		Pdr_ManCreateSolver(p, iFrame)
+		// push clauses into this timeframe
+		RetValue = Pdr_ManPushClauses(p)
+		if RetValue == -1 {
+			if pars.FVerbose != 0 {
+				progress(1)
+			}
+			if pars.FSilent == 0 {
+				if p.timeToStop != 0 && pdrNow(p) > p.timeToStop {
+					util.Abc_Print(1, "Reached timeout (%d seconds) in frame %d.\n", pars.NTimeOut, iFrame)
+				} else {
+					util.Abc_Print(1, "Reached conflict limit (%d) in frame %d.\n", pars.NConfLimit, iFrame)
+				}
+			}
+			pars.IFrame = iFrame
 			return -1
 		}
-		if status != 0 {
+		if RetValue != 0 {
 			if pars.FVerbose != 0 {
-				Pdr_ManPrintProgress(p, 1, util.Abc_Clock()-started)
+				progress(1)
 			}
 			if pars.FSilent == 0 {
 				Pdr_ManReportInvariant(p)
+			}
+			if pars.FSilent == 0 {
 				Pdr_ManVerifyInvariant(p)
 			}
-			pars.IFrame = frame
+			pars.IFrame = iFrame
+			// count the number of UNSAT outputs
 			pars.NProveOuts = outputs - pars.NFailOuts - pars.NDropOuts
+			// convert previously 'unknown' into 'unsat'
 			if pars.VOutMap != nil {
 				for i := int32(0); i < outputs; i++ {
-					if vec.Vec_IntEntry(pars.VOutMap, int(i)) == -2 {
-						vec.Vec_IntWriteEntry(pars.VOutMap, int(i), 1)
+					if vec.Vec_IntEntry(pars.VOutMap, int(i)) == -2 { // unknown
+						vec.Vec_IntWriteEntry(pars.VOutMap, int(i), 1) // unsat
 						if pars.FUseBridge != 0 {
 							util.Gia_ManToBridgeResult(os.Stdout, 1, nil, i)
 						}
@@ -1005,22 +1062,98 @@ func Pdr_ManSolveInt(p *Pdr_Man_t) int32 {
 				}
 			}
 			if pars.NProveOuts == outputs {
-				return 1
+				return 1 // UNSAT
 			}
 			if pars.NFailOuts > 0 {
-				return 0
+				return 0 // SAT
 			}
 			return -1
 		}
 		if pars.FVerbose != 0 {
-			Pdr_ManPrintProgress(p, 0, util.Abc_Clock()-started)
+			progress(0)
 		}
-		now := pdrNow(p)
-		if pars.pFuncStop != nil && pars.pFuncStop(pars.RunId) != 0 || p.timeToStop != 0 && now > p.timeToStop || pars.NTimeOutGap != 0 && pars.timeLastSolved != 0 && now > pars.timeLastSolved+int64(pars.NTimeOutGap)*int64(time.Second) || pars.NFrameMax != 0 && frame >= pars.NFrameMax {
-			pars.IFrame = frame
+		// check termination
+		if pars.pFuncStop != nil && pars.pFuncStop(pars.RunId) != 0 {
+			pars.IFrame = iFrame
+			return -1
+		}
+		if p.timeToStop != 0 && pdrNow(p) > p.timeToStop {
+			if pars.FVerbose != 0 {
+				progress(1)
+			}
+			if pars.FSilent == 0 {
+				util.Abc_Print(1, "Reached timeout (%d seconds) in frame %d.\n", pars.NTimeOut, iFrame)
+			}
+			pars.IFrame = iFrame
+			return -1
+		}
+		if gapExpired() {
+			if pars.FVerbose != 0 {
+				progress(1)
+			}
+			if pars.FSilent == 0 {
+				util.Abc_Print(1, "Reached gap timeout (%d seconds) in frame %d.\n", pars.NTimeOutGap, iFrame)
+			}
+			pars.IFrame = iFrame
+			return -1
+		}
+		if pars.NFrameMax != 0 && iFrame >= pars.NFrameMax {
+			if pars.FVerbose != 0 {
+				progress(1)
+			}
+			if pars.FSilent == 0 {
+				util.Abc_Print(1, "Reached limit on the number of timeframes (%d).\n", pars.NFrameMax)
+			}
+			pars.IFrame = iFrame
 			return -1
 		}
 	}
+}
+
+// pdrReportStop prints why Pdr_ManCheckCube or Pdr_ManBlockCube gave up, in
+// the order of Pdr_ManSolveInt; it returns true (after cleaning the queue)
+// when only the current output's time ran out, so solving continues.
+func pdrReportStop(p *Pdr_Man_t, iFrame int32) bool {
+	pars := p.pPars
+	now := pdrNow(p)
+	switch {
+	case p.timeToStop != 0 && now > p.timeToStop:
+		util.Abc_Print(1, "Reached timeout (%d seconds) in frame %d.\n", pars.NTimeOut, iFrame)
+	case pars.NTimeOutGap != 0 && pars.timeLastSolved != 0 && now > pars.timeLastSolved+int64(pars.NTimeOutGap)*int64(time.Second):
+		util.Abc_Print(1, "Reached gap timeout (%d seconds) in frame %d.\n", pars.NTimeOutGap, iFrame)
+	case p.timeToStopOne != 0 && now > p.timeToStopOne:
+		Pdr_QueueClean(p)
+		return true
+	case pars.NConfLimit != 0:
+		util.Abc_Print(1, "Reached conflict limit (%d) in frame %d.\n", pars.NConfLimit, iFrame)
+	case pars.FVerbose != 0:
+		util.Abc_Print(1, "Computation cancelled by the callback in frame %d.\n", iFrame)
+	}
+	return false
+}
+
+// pdrStoreCex records a failed output; a nil witness (not requested) is
+// stored as pdrNoCounterexample, C's (Abc_Cex_t *)1.
+func pdrStoreCex(p *Pdr_Man_t, index int, witness *util.Abc_Cex_t) {
+	if vec.Vec_PtrEntry(p.vCexes, index) != nil {
+		panic("pdr: output already has a counterexample")
+	}
+	var stored any = witness
+	if witness == nil {
+		stored = pdrNoCounterexample{}
+	}
+	vec.Vec_PtrWriteEntry(p.vCexes, index, stored)
+}
+
+// pdrCallOnFail runs pFuncOnFail, passing the witness only with fStoreCex.
+func pdrCallOnFail(p *Pdr_Man_t, index int, witness *util.Abc_Cex_t) bool {
+	if p.pPars.pFuncOnFail == nil {
+		return false
+	}
+	if p.pPars.FStoreCex == 0 {
+		witness = nil
+	}
+	return p.pPars.pFuncOnFail(int32(index), witness) != 0
 }
 
 // Distinguishes a failed output whose witness was not requested from an unsolved output.
@@ -1040,7 +1173,7 @@ func Pdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 		pars.NTimeOut = (pars.NTimeOutOne*outputs + 999) / 1000
 	}
 	if pars.FVerbose != 0 {
-		fmt.Printf("VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. MonoCNF = %t. SkipGen = %t. SolveAll = %t.\n", pars.NRecycle, pars.NFrameMax, pars.NRestLimit, pars.NTimeOut, pars.FMonoCnf != 0, pars.FSkipGeneral != 0, pars.FSolveAll != 0)
+		fmt.Printf("VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. MonoCNF = %s. SkipGen = %s. SolveAll = %s.\n", pars.NRecycle, pars.NFrameMax, pars.NRestLimit, pars.NTimeOut, pdrYesNo(pars.FMonoCnf), pdrYesNo(pars.FSkipGeneral), pdrYesNo(pars.FSolveAll))
 	}
 	graph.ClearSequentialCounterexample()
 	p := Pdr_ManStart(graph, pars, nil)
@@ -1092,3 +1225,10 @@ func Pdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 ////////////////////////////////////////////////////////////////////////
 
 //ABC_NAMESPACE_IMPL_END
+
+func pdrYesNo(flag int32) string {
+	if flag != 0 {
+		return "yes"
+	}
+	return "no"
+}

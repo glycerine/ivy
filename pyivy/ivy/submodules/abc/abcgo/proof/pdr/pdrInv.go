@@ -8,6 +8,7 @@ import (
 	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/base/abc"
 	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"time"
@@ -71,26 +72,32 @@ func Pdr_ManPrintProgress(p *Pdr_Man_t, closeLine int32, elapsed abctime) {
 	if abcmain.Abc_FrameIsBatchMode() != 0 && closeLine == 0 {
 		return
 	}
-	sizes := make([]string, vec.Vec_VecSize(p.vClauses))
-	length := 0
-	for i := range sizes {
-		sizes[i] = fmt.Sprintf(" %d", vec.Vec_PtrSize(vec.Vec_VecEntry(p.vClauses, i)))
-		length += len(sizes[i])
+	// count the total length of the printout
+	levels := vec.Vec_VecSize(p.vClauses)
+	sizeLen := func(i int) int {
+		return 1 + int(util.Abc_Base10Log(uint32(vec.Vec_PtrSize(vec.Vec_VecEntry(p.vClauses, i))+1)))
 	}
-	skip := max(0, length-60)
+	length := 0
+	for i := 0; i < levels; i++ {
+		length += sizeLen(i)
+	}
+	// determine the starting point
+	lengthStart := max(0, length-60)
 	fmt.Printf("%3d :", len(p.vSolvers)-1)
-	width, seen := 5, 0
-	if skip > 0 {
+	width := 5
+	if lengthStart > 0 {
 		fmt.Print(" ...")
 		width += 4
 	}
-	for _, size := range sizes {
-		if seen < skip {
-			seen += len(size)
+	length = 0
+	for i := 0; i < levels; i++ {
+		if length < lengthStart {
+			length += sizeLen(i)
 			continue
 		}
-		fmt.Print(size)
-		width += len(size)
+		fmt.Printf(" %d", vec.Vec_PtrSize(vec.Vec_VecEntry(p.vClauses, i)))
+		length += sizeLen(i)
+		width += sizeLen(i)
 	}
 	for ; width < 70; width++ {
 		fmt.Print(" ")
@@ -386,11 +393,11 @@ func Pdr_ManDumpString(p *Pdr_Man_t) *Vec_Str_t {
 func Pdr_ManReportInvariant(p *Pdr_Man_t) {
 	start := Pdr_ManFindInvariantStart(p)
 	cubes := Pdr_ManCollectCubes(p, start)
-	average := float64(0)
+	average := "-nan" // C's 1.0 * 0 / 0
 	if p.nXsimRuns != 0 {
-		average = float64(p.nXsimLits) / float64(p.nXsimRuns)
+		average = fmt.Sprintf("%.2f", float64(p.nXsimLits)/float64(p.nXsimRuns))
 	}
-	fmt.Printf("Invariant F[%d] : %d clauses with %d flops (out of %d) (cex = %d, ave = %.2f)\n", start, vec.Vec_PtrSize(cubes), Pdr_ManCountVariables(p, start), aig.Aig_ManRegNum(p.pAig), p.nCexesTotal, average)
+	util.Abc_Print(1, "Invariant F[%d] : %d clauses with %d flops (out of %d) (cex = %d, ave = %s)\n", start, vec.Vec_PtrSize(cubes), Pdr_ManCountVariables(p, start), aig.Aig_ManRegNum(p.pAig), p.nCexesTotal, average)
 }
 
 /*
@@ -407,7 +414,7 @@ func Pdr_ManReportInvariant(p *Pdr_Man_t) {
 **********************************************************************
 */
 func Pdr_ManVerifyInvariant(p *Pdr_Man_t) {
-	started := time.Now()
+	started := util.Abc_Clock()
 	cubes := Pdr_ManCollectCubes(p, Pdr_ManFindInvariantStart(p))
 	frame := int32(len(p.vSolvers))
 	solver := Pdr_ManCreateSolver(p, frame)
@@ -432,7 +439,8 @@ func Pdr_ManVerifyInvariant(p *Pdr_Man_t) {
 	if failures != 0 {
 		fmt.Printf("Verification of %d clauses has failed.\n", failures)
 	} else {
-		fmt.Printf("Verification of invariant with %d clauses was successful. Time = %.2f sec\n", vec.Vec_PtrSize(cubes), time.Since(started).Seconds())
+		util.Abc_Print(1, "Verification of invariant with %d clauses was successful.  ", vec.Vec_PtrSize(cubes))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
 	}
 }
 

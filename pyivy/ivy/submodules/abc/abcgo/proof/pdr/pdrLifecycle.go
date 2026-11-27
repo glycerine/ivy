@@ -68,6 +68,9 @@ func Pdr_ManStop(p *Pdr_Man_t) {
 	if p.pAig != nil {
 		aig.Aig_ManCleanMarkAB(p.pAig)
 	}
+	if p.pPars != nil && p.pPars.FVerbose != 0 {
+		Pdr_ManPrintStats(p)
+	}
 	if p.vClauses != nil {
 		for i := 0; i < vec.Vec_VecSize(p.vClauses); i++ {
 			for _, item := range vec.Vec_PtrArray(vec.Vec_VecEntry(p.vClauses, i)) {
@@ -110,4 +113,24 @@ func Pdr_ManDeriveCex(p *Pdr_Man_t) *util.Abc_Cex_t {
 		fmt.Printf("CEX for output %d is not valid.\n", p.iOutCur)
 	}
 	return cex
+}
+
+// Pdr_ManPrintStats is the verbose report of Pdr_ManStop.
+func Pdr_ManPrintStats(p *Pdr_Man_t) {
+	satShare := "-nan" // C's 100.0 * 0 / 0
+	if p.nCalls != 0 {
+		satShare = fmt.Sprintf("%.1f", 100.0*float64(p.nCallsS)/float64(p.nCalls))
+	}
+	util.Abc_Print(1, "Block =%5d  Oblig =%6d  Clause =%6d  Call =%6d (sat=%s%%)  Cex =%4d  Start =%4d\n",
+		p.nBlocks, p.nObligs, p.nCubes, p.nCalls, satShare, p.nCexesTotal, p.nStarts)
+	util.Abc_PrintTimeP(1, "SAT solving", p.tSat, p.tTotal)
+	util.Abc_PrintTimeP(1, "  unsat    ", p.tSatUnsat, p.tTotal)
+	util.Abc_PrintTimeP(1, "  sat      ", p.tSatSat, p.tTotal)
+	util.Abc_PrintTimeP(1, "Generalize ", p.tGeneral, p.tTotal)
+	util.Abc_PrintTimeP(1, "Push clause", p.tPush, p.tTotal)
+	util.Abc_PrintTimeP(1, "Ternary sim", p.tTsim, p.tTotal)
+	util.Abc_PrintTimeP(1, "Containment", p.tContain, p.tTotal)
+	util.Abc_PrintTimeP(1, "CNF compute", p.tCnf, p.tTotal)
+	util.Abc_PrintTimeP(1, "Refinement ", p.tAbs, p.tTotal)
+	util.Abc_PrintTimeP(1, "TOTAL      ", p.tTotal, p.tTotal)
 }

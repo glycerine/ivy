@@ -122,8 +122,11 @@ func pdrLiterals(v *vec.Vec_Int_t) []bsat.Literal {
 	return vec.Vec_IntArray(v)
 }
 
-// Prepare values for the structural cone, including gates absorbed into
-// mapped cuts. Allocating new SAT variables after Solve invalidates the model.
+// Test helper: gives every object of the structural cone, including gates
+// absorbed into mapped cuts, a SAT variable. Pdr_ManCheckCube does not call
+// it: as in C, Pdr_ManCollectValues reads objects first allocated after the
+// solve as 0 (sat_solver_var_value), and preallocating changes the variable
+// order and hence the SAT models and counterexamples.
 func pdrPrepareModel(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) {
 	if p.pPars.FMonoCnf != 0 {
 		return
@@ -169,11 +172,7 @@ func Pdr_ManCollectValues(p *Pdr_Man_t, k int32, objects, values *vec.Vec_Int_t)
 	solver := Pdr_ManSolver(p, k)
 	for _, id := range vec.Vec_IntArray(objects) {
 		variable := Pdr_ObjSatVar(p, k, 3, aig.Edge(uint32(id)<<1))
-		value, ok := solver.Value(variable)
-		if !ok {
-			panic("pdr: SAT model unavailable")
-		}
-		vec.Vec_IntPush(values, pdrBool(value))
+		vec.Vec_IntPush(values, pdrBool(solver.VarValue(variable)))
 	}
 }
 
@@ -210,9 +209,6 @@ func Pdr_ManCheckCubeCs(p *Pdr_Man_t, k int32, cube *Pdr_Set_t) int32 {
 func Pdr_ManCheckCube(p *Pdr_Man_t, k int32, cube *Pdr_Set_t, predecessor **Pdr_Set_t, conflictLimit, tryConf, useLit int32) int32 {
 	p.nCalls++
 	solver := Pdr_ManFetchSolver(p, k)
-	if predecessor != nil {
-		pdrPrepareModel(p, k, cube)
-	}
 	var assumptions []bsat.Literal
 	limit := conflictLimit
 	if cube == nil {

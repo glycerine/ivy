@@ -109,6 +109,7 @@ func (s *sat_solver_t) SolveWithResourceLimits(assumptions []Literal, conflicts,
 	s.lastStatus = Status(sat_solver_solve(s, assumptions, conflicts, propagations, globalConflicts, globalPropagations))
 	return s.lastStatus
 }
+
 // AssignedValue is sat_solver_get_var_value: the variable's current
 // assignment (after Simplify, the root-level one), not the last model.
 func (s *sat_solver_t) AssignedValue(variable int32) (value, assigned bool) {
@@ -128,6 +129,13 @@ func (s *sat_solver_t) Value(variable int32) (bool, bool) {
 		return false, false
 	}
 	return s.model[variable] == l_True, true
+}
+
+// VarValue is sat_solver_var_value: the variable's value in the last model,
+// kept when clauses or variables are added afterwards (variables added
+// since then read false).
+func (s *sat_solver_t) VarValue(variable int32) bool {
+	return sat_solver_var_value(s, variable) != 0
 }
 func (s *sat_solver_t) Model() []bool {
 	if s.lastStatus != Satisfiable {

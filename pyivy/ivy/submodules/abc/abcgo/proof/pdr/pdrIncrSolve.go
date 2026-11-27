@@ -314,7 +314,7 @@ func IPdr_ManSolve(graph *aig.Graph, pars *Pdr_Par_t) int32 {
 		pars.NTimeOut = (pars.NTimeOutOne*outputs + 999) / 1000
 	}
 	if pars.FVerbose != 0 {
-		fmt.Printf("VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. MonoCNF = %t. SkipGen = %t. SolveAll = %t.\n", pars.NRecycle, pars.NFrameMax, pars.NRestLimit, pars.NTimeOut, pars.FMonoCnf != 0, pars.FSkipGeneral != 0, pars.FSolveAll != 0)
+		fmt.Printf("VarMax = %d. FrameMax = %d. QueMax = %d. TimeMax = %d. MonoCNF = %s. SkipGen = %s. SolveAll = %s.\n", pars.NRecycle, pars.NFrameMax, pars.NRestLimit, pars.NTimeOut, pdrYesNo(pars.FMonoCnf), pdrYesNo(pars.FSkipGeneral), pdrYesNo(pars.FSolveAll))
 	}
 	graph.ClearSequentialCounterexample()
 	p := Pdr_ManStart(graph, pars, nil)
