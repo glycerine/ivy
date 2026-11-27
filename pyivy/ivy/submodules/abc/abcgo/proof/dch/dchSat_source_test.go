@@ -111,7 +111,7 @@ func TestDchSourceCNFTruthTables(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !mux && len(m.variables) != 6 {
+			if !mux && m.variables.len() != 6 {
 				t.Fatalf("supergate introduced interior SAT variables: %v", m.variables)
 			}
 			for bits := 0; bits < 16; bits++ {
@@ -122,7 +122,7 @@ func TestDchSourceCNFTruthTables(t *testing.T) {
 				}
 				assumptions := make([]int32, 0, 5)
 				for i, edge := range g.Inputs() {
-					if _, used := m.variables[edge.NodeID()]; !used {
+					if _, used := m.variables.get(edge.NodeID()); !used {
 						continue
 					}
 					lit, err := m.satLiteral(edge)

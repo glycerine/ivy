@@ -21,7 +21,7 @@ type Manager struct {
 	order      []aig.Edge
 	classes    *Classes
 	solver     *bsat.Solver
-	variables  map[int]int32
+	variables  satVars
 	nextVar    int32
 	callsSince int
 	coneMax    int // nConeMax: the largest solved cone resimulated

@@ -67,7 +67,7 @@ func TestCNFMuxOverlappingControlsAndBranches(t *testing.T) {
 				}
 				assumptions := []int32{}
 				for i, in := range g.Inputs() {
-					if _, used := m.variables[in.NodeID()]; !used {
+					if _, used := m.variables.get(in.NodeID()); !used {
 						continue
 					}
 					v, err := m.satLiteral(in)

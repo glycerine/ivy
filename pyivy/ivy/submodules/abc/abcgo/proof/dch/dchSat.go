@@ -65,7 +65,7 @@ func (m *Manager) provePair(representative, node aig.Edge) (proofResult, []bool,
 		case bsat.Satisfiable:
 			assignment := make([]bool, m.graph.InputCount())
 			for i, input := range m.satGraph.Inputs() {
-				if variable, ok := m.variables[input.NodeID()]; ok {
+				if variable, ok := m.variables.get(input.NodeID()); ok {
 					assignment[i], _ = m.solver.Value(variable)
 				}
 			}

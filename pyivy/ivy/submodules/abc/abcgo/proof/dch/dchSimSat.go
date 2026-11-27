@@ -149,7 +149,7 @@ func (m *Manager) refineCounterexample(inputs []bool, target ...aig.Edge) {
 					values[id] = a && b
 					// count the cone size (nodes whose fraig has a SAT variable)
 					if solved {
-						if fr := m.mapped[id]; fr != aig.InvalidEdge && m.variables[fr.NodeID()] > 0 {
+						if fr := m.mapped[id]; fr != aig.InvalidEdge && m.variables.at(fr.NodeID()) > 0 {
 							coneThis++
 						}
 					}

@@ -61,7 +61,8 @@ func (m *Manager) recycleSolver() {
 		m.solver.NewVariable()
 	}
 	m.nextVar = 2
-	m.variables = map[int]int32{0: 1}
+	m.variables = satVars{}
+	m.variables.set(0, 1)
 	constant := int32(2)
 	if m.params.PolarFlip {
 		constant ^= 1
