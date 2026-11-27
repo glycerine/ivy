@@ -4,7 +4,9 @@ package io
 
 import (
 	"fmt"
+	"maps"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -407,7 +409,8 @@ func ParseEDIF(filename, text string, check bool) (*abc.Network, error) {
 				return nil, err
 			}
 			if cell.model.network.Function != uint8(abc.ABC_FUNC_BLACKBOX) {
-				for name, net := range cell.model.nets {
+				for _, name := range slices.Sorted(maps.Keys(cell.model.nets)) {
+					net := cell.model.nets[name]
 					if net.FanoutCount() > 0 && net.FaninNum() == 0 {
 						return nil, fmt.Errorf("%s: cell %s: undriven net %s", filename, cell.key, name)
 					}

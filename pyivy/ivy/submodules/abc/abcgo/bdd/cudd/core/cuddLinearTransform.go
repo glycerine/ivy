@@ -1,5 +1,7 @@
 package core
 
+import "slices"
+
 // Cudd_bddLinearTransform returns f with variable x replaced by XNOR(x,y).
 // The result is rebuilt through the manager's canonical ITE constructor, so
 // arbitrary variable orders and complemented edges are handled exactly.
@@ -89,8 +91,15 @@ func Cudd_bddLinearTransformInPlace(dd *DdManager, x, y int) bool {
 			node.inverse.Index = node.Index
 		}
 	}
-	nextUnique := uniqueTable{}
+	// Insert in node-ID order: the open-addressed table's layout, and so the
+	// order later walks see, must not depend on map iteration.
+	nextNodes := make([]*DdNode, 0, len(remap))
 	for _, node := range remap {
+		nextNodes = append(nextNodes, node)
+	}
+	slices.SortFunc(nextNodes, compareNodeIDs)
+	nextUnique := uniqueTable{}
+	for _, node := range nextNodes {
 		if Cudd_IsConstant(node) {
 			continue
 		}

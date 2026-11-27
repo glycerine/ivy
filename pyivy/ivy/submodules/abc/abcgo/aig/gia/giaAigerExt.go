@@ -6,7 +6,9 @@ import (
 	"fmt"
 	timpkg "github.com/glycerine/abcgo/misc/tim"
 	"github.com/glycerine/abcgo/misc/vec"
+	"maps"
 	"math"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -725,7 +727,7 @@ func aigerWireMetadata(p *Gia_Man_t, wire *aigerWireModel) (*Gia_Man_t, error) {
 	if identity {
 		return p, nil
 	}
-	for tag := range p.aigerExtensions {
+	for _, tag := range slices.Sorted(maps.Keys(p.aigerExtensions)) {
 		if !aigerKnownTag(tag) {
 			return nil, fmt.Errorf("gia: cannot renumber opaque extension %q", tag)
 		}

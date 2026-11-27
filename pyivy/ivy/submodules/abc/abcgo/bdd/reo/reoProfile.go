@@ -63,7 +63,14 @@ func profileRoots(roots []*DdNode, slots []int) Profile {
 		}
 		nodes = append(nodes, node)
 	}
-	sort.Slice(nodes, func(i, j int) bool { return nodeLevel(nodes[i]) < nodeLevel(nodes[j]) })
+	// Node IDs break level ties so the floating-point weight propagation below
+	// runs in the same order every time (top was filled in map order).
+	sort.Slice(nodes, func(i, j int) bool {
+		if li, lj := nodeLevel(nodes[i]), nodeLevel(nodes[j]); li != lj {
+			return li < lj
+		}
+		return nodes[i].ID < nodes[j].ID
+	})
 	weights := map[*DdNode]float64{}
 	for _, root := range roots {
 		weights[cudd.Cudd_Regular(root)]++

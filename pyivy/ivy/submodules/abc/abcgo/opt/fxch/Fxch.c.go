@@ -4,6 +4,8 @@ package fxch
 import (
 	"fmt"
 	"io"
+	"maps"
+	"slices"
 	"sort"
 )
 
@@ -169,7 +171,7 @@ func validateDAG(c Cubes) error {
 		state[id] = 2
 		return nil
 	}
-	for id := range edges {
+	for _, id := range slices.Sorted(maps.Keys(edges)) {
 		if err := visit(id); err != nil {
 			return err
 		}

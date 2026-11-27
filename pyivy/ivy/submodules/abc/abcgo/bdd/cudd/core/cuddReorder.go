@@ -1,9 +1,11 @@
 package core
 
 import (
+	"cmp"
 	"fmt"
 	"math"
 	"math/rand"
+	"slices"
 	"sort"
 	"time"
 )
@@ -139,6 +141,19 @@ func reorderBuild(dd *DdManager, roots reorderRoots, order []int) *reorderHeap {
 // CUDD's sifting objective is keys-isolated: constants are outside the BDD
 // unique-table key count, and a projection with no external or parent refs is
 // counted as an isolated key and removed from the objective.
+// nodeKeysByID returns the keys of m ordered by node ID (unique within one
+// manager), giving loops over node sets a fixed order.
+func nodeKeysByID[V any](m map[*DdNode]V) []*DdNode {
+	keys := make([]*DdNode, 0, len(m))
+	for n := range m {
+		keys = append(keys, n)
+	}
+	slices.SortFunc(keys, compareNodeIDs)
+	return keys
+}
+
+func compareNodeIDs(a, b *DdNode) int { return cmp.Compare(a.ID, b.ID) }
+
 func reorderIsIsolatedProjection(h *reorderHeap, node *DdNode) bool {
 	index := int(node.Index)
 	return index >= 0 && index < len(h.dd.Vars) && h.dd.Vars[index] == node &&
@@ -165,7 +180,11 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 	dd.peakLive = max(dd.peakLive, dd.liveBDDKeys())
 	mapped := map[*DdNode]*DdNode{}
 	usedOld := map[*DdNode]bool{}
-	for node := range h.nodes {
+	// Walk the scratch nodes in scratch-ID order: new handles take IDs from
+	// dd.nextID and are inserted into open-addressed tables, so map order
+	// here would renumber the diagram and reshuffle the unique tables.
+	freshNodes := nodeKeysByID(h.nodes)
+	for _, node := range freshNodes {
 		if Cudd_IsConstant(node) {
 			mapped[node] = dd.constant(node.Value)
 		}
@@ -190,7 +209,7 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 		}
 	}
 	// Assign handles first, so child wiring is independent of traversal order.
-	for fresh := range h.nodes {
+	for _, fresh := range freshNodes {
 		if mapped[fresh] != nil {
 			continue
 		}
@@ -208,7 +227,8 @@ func reorderCommit(dd *DdManager, roots reorderRoots, h *reorderHeap, order []in
 	oldBDD, oldADD, oldConstants := dd.unique, dd.addUnique, dd.constants
 	nextBDD, nextADD := uniqueTable{}, uniqueTable{}
 	nextConstants := map[uint64]*DdNode{}
-	for fresh, node := range mapped {
+	for _, fresh := range nodeKeysByID(mapped) {
+		node := mapped[fresh]
 		if Cudd_IsConstant(fresh) {
 			nextConstants[math.Float64bits(fresh.Value)] = node
 			continue

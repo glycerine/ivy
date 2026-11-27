@@ -2,6 +2,11 @@
 // Original algorithm and licensing: src/opt/fxu; see repository copyright notice.
 package fxu
 
+import (
+	"cmp"
+	"slices"
+)
+
 const MAX_SIZE_LOOKAHEAD = 20
 
 func Fxu_MatrixFindComplement(p *Fxu_Matrix, column int32) int32 { return column ^ 1 }
@@ -93,10 +98,33 @@ func Fxu_Select(p *Fxu_Matrix, single **Fxu_Single, double **Fxu_Double) int32 {
 	}
 	return best
 }
+
+// Fxu_SelectSCD visits the pairs as fxuSelect.c does: by first variable,
+// then second variables in the order the first one's cubes reach them; the
+// first pair of the best weight wins. (Ranging over the count map would let
+// Go's map order pick among equal weights.)
 func Fxu_SelectSCD(p *Fxu_Matrix, limit int32, a, b **Fxu_Var) int32 {
+	counts := collectSingleCounts(p)
+	var pairs [][2]int32
+	seen := make(map[[2]int32]bool, len(counts))
+	for _, c := range p.Cubes {
+		if c.deleted {
+			continue
+		}
+		columns := c.columns()
+		for i, x := range columns {
+			for _, y := range columns[i+1:] {
+				if key := [2]int32{x, y}; !seen[key] {
+					seen[key] = true
+					pairs = append(pairs, key)
+				}
+			}
+		}
+	}
+	slices.SortStableFunc(pairs, func(x, y [2]int32) int { return cmp.Compare(x[0], y[0]) })
 	best := int32(-10)
-	for key, count := range collectSingleCounts(p) {
-		weight := count - 2
+	for _, key := range pairs {
+		weight := counts[key] - 2
 		if weight > best {
 			best = weight
 			*a = p.Vars[key[0]]

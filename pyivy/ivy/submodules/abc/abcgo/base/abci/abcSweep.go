@@ -3,6 +3,7 @@ package abci
 import (
 	"fmt"
 	"os"
+	"slices"
 	"sort"
 
 	"github.com/glycerine/abcgo/aig/hop"
@@ -100,9 +101,14 @@ func Abc_NtkFraigSweepUsingExdc(manager *Fraig_Man_t, network *Abc_Ntk_t) {
 
 // Abc_NtkFraigEquiv forms one class per regular FRAIG function. Phases remain
 // attached to members so the merge routines can distinguish complemented
-// representatives exactly as ABC does.
+// representatives exactly as ABC does. Members are kept in network order;
+// ABC prepends to its chains, so -w prints them last-first as ABC does.
+// ABC walks its classes in pointer-hash (stmm) order, which is not even
+// reproducible across native runs; here classes come in the order of their
+// first node, so the listing and the merge order are fixed.
 func Abc_NtkFraigEquiv(network *Abc_Ntk_t, useInv, verbose, veryVerbose int32) [][]*Abc_Obj_t {
 	byFunction := make(map[*Fraig_Node_t][]*Abc_Obj_t)
+	var functions []*Fraig_Node_t
 	functionCount := 0
 	for _, node := range abc.Abc_NtkNodes(network) {
 		if node.FaninNum() == 0 || abc.Abc_NodeFindCoFanout(node) != nil {
@@ -120,13 +126,15 @@ func Abc_NtkFraigEquiv(network *Abc_Ntk_t, useInv, verbose, veryVerbose int32) [
 		regular := fraig.Fraig_Regular(function)
 		if _, exists := byFunction[regular]; !exists {
 			functionCount++
+			functions = append(functions, regular)
 		}
 		node.Phase = fraig.Fraig_IsComplement(function)
 		byFunction[regular] = append(byFunction[regular], node)
 	}
 	var classes [][]*Abc_Obj_t
 	var members int
-	for _, group := range byFunction {
+	for _, function := range functions {
+		group := byFunction[function]
 		if len(group) < 2 {
 			continue
 		}
@@ -134,7 +142,7 @@ func Abc_NtkFraigEquiv(network *Abc_Ntk_t, useInv, verbose, veryVerbose int32) [
 		members += len(group)
 		if veryVerbose != 0 {
 			fmt.Printf("Class %2d : {", len(classes)-1)
-			for _, node := range group {
+			for _, node := range slices.Backward(group) {
 				fmt.Printf(" %s(%c)(%d)", abc.Abc_ObjName(node), phaseSign(node.Phase), node.Level)
 				node.Copy = nil
 			}
@@ -218,8 +226,10 @@ func Abc_NtkFraigMergeClass(network *Abc_Ntk_t, chain []*Abc_Obj_t, _, _ int32) 
 	if len(chain) < 2 {
 		return
 	}
-	best := chain[0]
-	for _, node := range chain[1:] {
+	// ABC's chain runs last node first, so on ties it keeps the last node.
+	best := chain[len(chain)-1]
+	for i := len(chain) - 2; i >= 0; i-- {
+		node := chain[i]
 		if best.Level > node.Level || (best.Level == node.Level && Abc_NodeDroppingCost(best) < Abc_NodeDroppingCost(node)) {
 			best = node
 		}

@@ -5,7 +5,9 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"maps"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -513,7 +515,8 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 				return nil, blifError(name, line, "%v", err)
 			}
 		}
-		for signal, domain := range m.domains {
+		for _, signal := range slices.Sorted(maps.Keys(m.domains)) {
+			domain := m.domains[signal]
 			if err := abc.SetMVVariable(m.net(signal), domain); err != nil {
 				return nil, err
 			}
@@ -525,7 +528,8 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 		}
 		// multi-valued nets get no constant driver here: reject them
 		if check && multiValued {
-			for signal, net := range m.nets {
+			for _, signal := range slices.Sorted(maps.Keys(m.nets)) {
+				net := m.nets[signal]
 				if net.FaninNum() == 0 && m.network.Function != uint8(abc.ABC_FUNC_BLACKBOX) {
 					return nil, fmt.Errorf("%s: model %s signal %s has no driver", name, m.network.Name, signal)
 				}

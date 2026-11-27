@@ -1,0 +1,39 @@
+.model eq
+.inputs a b c d
+.outputs o1 o2 o3 o4 o5 o6 o7 o8
+.names a b n1
+11 1
+.names b a n2
+11 1
+.names c d m1
+1- 1
+-1 1
+.names c d m2
+00 0
+.names a c k1
+10 1
+01 1
+.names c a k2
+10 1
+01 1
+.names b d p1
+11 1
+.names d b p2
+11 1
+.names n1 o1
+1 1
+.names n2 o2
+1 1
+.names m1 o3
+1 1
+.names m2 o4
+1 1
+.names k1 o5
+1 1
+.names k2 o6
+1 1
+.names p1 o7
+1 1
+.names p2 o8
+1 1
+.end

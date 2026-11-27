@@ -54,6 +54,7 @@ func Mf_ManTruthCollect(limit int32) *Vec_Wrd_t {
 	perm, comp := extra.Extra_PermSchedule(6), extra.Extra_GreyCodeSchedule(6)
 	originals := 0
 	seen := make(map[uint64]struct{})
+	var order []uint64 // seen's keys in first-occurrence order
 	for _, class := range mfTruthClasses {
 		if class.clauses > limit {
 			continue
@@ -69,7 +70,10 @@ func Mf_ManTruthCollect(limit int32) *Vec_Wrd_t {
 				old := current
 				for _, flip := range comp {
 					current = util.Abc_Tt6Flip(current, flip)
-					seen[current] = struct{}{}
+					if _, ok := seen[current]; !ok {
+						seen[current] = struct{}{}
+						order = append(order, current)
+					}
 				}
 				if old != current {
 					panic("gia: invalid Gray schedule")
@@ -81,14 +85,15 @@ func Mf_ManTruthCollect(limit int32) *Vec_Wrd_t {
 			}
 		}
 	}
+	// Vec_WrdUniqifyHash keeps first occurrences in order; so does this.
 	canonical := make(map[uint64]struct{}, len(seen))
-	for truth := range seen {
+	result := vec.Vec_WrdAlloc(len(seen))
+	for _, truth := range order {
 		Mf_ManTruthCanonicize(&truth, 6)
-		canonical[truth] = struct{}{}
-	}
-	result := vec.Vec_WrdAlloc(len(canonical))
-	for truth := range canonical {
-		vec.Vec_WrdPush(result, truth)
+		if _, ok := canonical[truth]; !ok {
+			canonical[truth] = struct{}{}
+			vec.Vec_WrdPush(result, truth)
+		}
 	}
 	fmt.Printf("Original = %d.  Total = %d.  Unique = %d.  Unique = %d.  \n", originals, originals*2*720*64, len(seen), len(canonical))
 	return result

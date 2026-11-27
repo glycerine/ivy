@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"maps"
 	"os"
 	"reflect"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -108,9 +110,11 @@ func (f *Frame) Close() error {
 	networks := append([]networkEntry{f.current}, f.backups...)
 	f.current = networkEntry{}
 	f.backups = nil
+	// Release resources in name order, not map order, so close side effects
+	// and the joined error come out the same every time.
 	resources := make([]any, 0, len(f.resources))
-	for _, value := range f.resources {
-		resources = append(resources, value)
+	for _, name := range slices.Sorted(maps.Keys(f.resources)) {
+		resources = append(resources, f.resources[name])
 	}
 	f.resources = map[string]any{}
 	manager := f.manDec

@@ -22,6 +22,8 @@ package dau
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -376,7 +378,7 @@ func MergeDSD(a string, permA []int32, b string, permB []int32, complA, complB, 
 	for v := range right {
 		all[v] = true
 	}
-	for v := range all {
+	for _, v := range slices.Sorted(maps.Keys(all)) {
 		if v < 0 || v >= nVars {
 			return "", fmt.Errorf("DSD merge variable %d outside %d-variable domain", v, nVars)
 		}

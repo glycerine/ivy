@@ -101,7 +101,10 @@ func Rwt_Man5ExplorePrint() {
 	}
 	fmt.Printf("Number of cuts considered       = %8d.\nClasses occurring at least once = %8d.\nThe largest number of occurence = %8d.\n", total, len(p.tTableNN), maxCount)
 	distribution, representative := make([]int, maxCount+1), make([]uint32, maxCount+1)
-	for truth, n := range p.tTableNN {
+	// The last class seen becomes the representative; walk the classes in
+	// truth order (ABC walks its stmm table), not Go's map order.
+	for _, truth := range rwrSortedTruths(p.tTableNN) {
+		n := p.tTableNN[truth]
 		distribution[n]++
 		representative[n] = truth
 	}

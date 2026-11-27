@@ -1,8 +1,10 @@
 package abc
 
 import (
+	"cmp"
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
+	"maps"
 	"slices"
 )
 
@@ -279,7 +281,16 @@ func Abc_AigRehash(m *Abc_Aig_t) {
 		}
 	}
 	// The C rehash prepends each entry while walking the old bucket head first.
-	for _, group := range old {
+	// Walk the groups in key order: a group whose members' fanins changed can
+	// land on another group's key, and the last registration wins there.
+	keys := slices.SortedFunc(maps.Keys(old), func(a, b [2]int) int {
+		if c := cmp.Compare(a[0], b[0]); c != 0 {
+			return c
+		}
+		return cmp.Compare(a[1], b[1])
+	})
+	for _, key := range keys {
+		group := old[key]
 		for i := len(group) - 1; i >= 0; i-- {
 			o := group[i]
 			if n.contains(o) && aigNode(o) && !m.excluded[o] {

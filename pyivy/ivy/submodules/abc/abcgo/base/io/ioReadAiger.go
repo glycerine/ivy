@@ -289,7 +289,10 @@ func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
 			return nil, err
 		}
 	}
-	for symbol, name := range model.Symbols {
+	// ABC names objects while reading the symbol table, so with duplicate
+	// names the first symbol in the file anchors the name.
+	for _, symbol := range model.OrderedSymbols() {
+		name := model.Symbols[symbol]
 		if name == "" {
 			continue
 		}

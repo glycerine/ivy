@@ -65,7 +65,8 @@ func Scl_CommandBuffer(f *abcmain.Frame, argc int32, argv []string) int32 {
 		return sclCommandError(f, fmt.Errorf("library delay info is not available"))
 	}
 	pars := SC_BusPars{GainRatio: 300, Slew: int(Abc_SclComputeAverageSlew(lib)), Degree: 10, SizeOnly: o.flags['s'], AddBuffers: !o.flags['b'], BufferPIs: o.flags['p'], UseWireLoads: o.flags['c'], Verbose: o.flags['v'], VeryVerbose: o.flags['w']}
-	for key, dst := range map[byte]*int{'G': &pars.GainRatio, 'S': &pars.Slew, 'N': &pars.Degree} {
+	for _, flag := range []sclIntFlag{{'G', &pars.GainRatio}, {'S', &pars.Slew}, {'N', &pars.Degree}} {
+		key, dst := flag.key, flag.dst
 		if v, ok := o.numbers[key]; ok {
 			if v != float32(int(v)) {
 				return sclCommandError(f, fmt.Errorf("-%c requires an integer", key))
@@ -101,7 +102,8 @@ func Scl_CommandBufferOld(f *abcmain.Frame, argc int32, argv []string) int32 {
 		return sclCommandError(f, fmt.Errorf("library delay info is not available"))
 	}
 	minimum, maximum, root := 6, 14, 0
-	for key, dst := range map[byte]*int{'N': &minimum, 'M': &maximum, 'R': &root} {
+	for _, flag := range []sclIntFlag{{'N', &minimum}, {'M', &maximum}, {'R', &root}} {
+		key, dst := flag.key, flag.dst
 		if v, ok := o.numbers[key]; ok {
 			if v != float32(int(v)) {
 				return sclCommandError(f, fmt.Errorf("-%c requires an integer", key))
@@ -128,4 +130,12 @@ func Scl_CommandBufferOld(f *abcmain.Frame, argc int32, argv []string) int32 {
 	}
 	f.ReplaceCurrentNetwork(result)
 	return 0
+}
+
+// sclIntFlag pairs an integer option letter with its destination. The
+// commands check a slice of them in a fixed order, so with several bad
+// values the same option is reported every time.
+type sclIntFlag struct {
+	key byte
+	dst *int
 }

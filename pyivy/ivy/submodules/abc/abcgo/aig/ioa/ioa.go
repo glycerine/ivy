@@ -3,7 +3,10 @@
 package ioa
 
 import (
+	"cmp"
 	"fmt"
+	"maps"
+	"slices"
 	"strings"
 )
 
@@ -27,6 +30,37 @@ type Model struct {
 	Name                       string
 	Comment                    []byte // Payload after the marker line, excluding its newline.
 }
+
+// symbolKindOrder ranks symbol kinds in the order AIGER lists their sections.
+const symbolKindOrder = "ilobcjf"
+
+// OrderedSymbols returns the keys of m.Symbols by kind, in AIGER section
+// order (i, l, o, b, c, j, f), then index: the order writers emit and
+// readers such as ABC's meet them. Ranging over Symbols directly would
+// follow Go's randomized map order.
+func OrderedSymbols(symbols map[Symbol]string) []Symbol {
+	return slices.SortedFunc(maps.Keys(symbols), func(a, b Symbol) int {
+		ra, rb := symbolKindRank(a.Kind), symbolKindRank(b.Kind)
+		if ra != rb {
+			return cmp.Compare(ra, rb)
+		}
+		if a.Kind != b.Kind {
+			return cmp.Compare(a.Kind, b.Kind)
+		}
+		return cmp.Compare(a.Index, b.Index)
+	})
+}
+
+// symbolKindRank places unknown kinds after the AIGER sections.
+func symbolKindRank(kind byte) int {
+	if r := strings.IndexByte(symbolKindOrder, kind); r >= 0 {
+		return r
+	}
+	return len(symbolKindOrder)
+}
+
+// OrderedSymbols is OrderedSymbols(m.Symbols).
+func (m *Model) OrderedSymbols() []Symbol { return OrderedSymbols(m.Symbols) }
 
 // AigerProvider breaks the dependency cycle between graph managers and I/O.
 // A manager exports a snapshot; IOA never imports its implementation package.
@@ -69,7 +103,8 @@ func (m *Model) check(dense bool) error {
 	} else if err := m.checkUnorderedStructure(); err != nil {
 		return err
 	}
-	for symbol, name := range m.Symbols {
+	for _, symbol := range m.OrderedSymbols() {
+		name := m.Symbols[symbol]
 		if len(name) == 0 {
 			return fmt.Errorf("empty symbol name")
 		}
@@ -227,7 +262,8 @@ func (m *Model) checkUnorderedStructure() error {
 		state[v] = 2
 		return nil
 	}
-	for v := range gates {
+	// Visit in variable order so a cyclic model always reports the same cycle.
+	for _, v := range slices.Sorted(maps.Keys(gates)) {
 		if err := visit(v); err != nil {
 			return err
 		}

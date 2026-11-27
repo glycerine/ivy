@@ -1072,11 +1072,17 @@ func (dd *DdManager) constant(value float64) *DdNode {
 		reclaimNode(n)
 		return n
 	}
+	// Several constants may lie within epsilon of value; take the earliest
+	// created one so the answer does not depend on map iteration order.
+	var match *DdNode
 	for _, n := range dd.constants {
-		if n.Value == value || math.Abs(n.Value-value) < dd.epsilon {
-			reclaimNode(n)
-			return n
+		if (n.Value == value || math.Abs(n.Value-value) < dd.epsilon) && (match == nil || n.ID < match.ID) {
+			match = n
 		}
+	}
+	if match != nil {
+		reclaimNode(match)
+		return match
 	}
 	n := dd.newNodePair(bddConstantIndex)
 	n.Value = value

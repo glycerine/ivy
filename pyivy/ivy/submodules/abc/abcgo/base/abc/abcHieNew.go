@@ -654,7 +654,13 @@ func ParseCBlif(reader io.Reader, name string) (root *Au_Ntk_t, err error) {
 	scanner.Buffer(make([]byte, 4096), 16<<20)
 	var n *Au_Ntk_t
 	var ids []int
-	unresolved := map[*Au_Obj_t]string{}
+	// Boxes awaiting their model, in file order (a map would report a
+	// different undefined model from run to run).
+	type pendingBox struct {
+		box   *Au_Obj_t
+		model string
+	}
+	var unresolved []pendingBox
 	fail := func(message string) { panic(fmt.Sprintf("line %d: %s", line, message)) }
 	integer := func(s string) int {
 		v, e := strconv.Atoi(s)
@@ -737,7 +743,7 @@ func ParseCBlif(reader io.Reader, name string) (root *Au_Ntk_t, err error) {
 			}
 			id := Au_NtkCreateBox(n, fanins, integer(args[2]), 1)
 			box := n.Objects[id]
-			unresolved[box] = args[0]
+			unresolved = append(unresolved, pendingBox{box, args[0]})
 			ids = append(ids, box.fanouts...)
 		case ".end":
 			if len(args) != 0 {
@@ -754,7 +760,8 @@ func ParseCBlif(reader io.Reader, name string) (root *Au_Ntk_t, err error) {
 	if root == nil {
 		return nil, fmt.Errorf("empty CBLIF design")
 	}
-	for box, model := range unresolved {
+	for _, pending := range unresolved {
+		box, model := pending.box, pending.model
 		found := Au_ManFindNtk(m, model)
 		if found < 0 {
 			return nil, fmt.Errorf("undefined model %q", model)

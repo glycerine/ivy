@@ -341,7 +341,13 @@ func readBLIF(r io.Reader) (*aig.Graph, error) {
 	if int32(p.OutputCount()) != int32(len(poNames)+len(latches)) {
 		return nil, fmt.Errorf("saig: parsed %d outputs, expected %d primary and latch outputs", p.OutputCount(), len(poNames)+len(latches))
 	}
-	for name := range outputNames {
+	// Check in declaration order (outputs, then latch inputs), as the names
+	// were read, so the first missing definition is the one reported.
+	declared := append([]string(nil), poNames...)
+	for _, latch := range latches {
+		declared = append(declared, latch.input)
+	}
+	for _, name := range declared {
 		edge, ok := values[name]
 		if !ok || !aig.Aig_ObjIsCo(p, edge) {
 			return nil, fmt.Errorf("saig: declared output %q has no .names definition", name)

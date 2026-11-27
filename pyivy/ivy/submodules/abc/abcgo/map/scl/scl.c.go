@@ -438,7 +438,8 @@ func Scl_CommandDnsize(f *abcmain.Frame, argc int32, argv []string) int32 {
 		return sclCommandError(f, fmt.Errorf("usage: dnsize [-IJNDGTX num] [-csdvwh]"))
 	}
 	pars := SC_SizePars{Iterations: 5, IterationsNoChange: 50, Notches: 1000, DelayGap: 1000, UseDepartures: !o.flags['s'], UseWireLoads: o.flags['c'], DumpStats: o.flags['d'], Verbose: o.flags['v'], VeryVerbose: o.flags['w']}
-	for key, dst := range map[byte]*int{'I': &pars.Iterations, 'J': &pars.IterationsNoChange, 'N': &pars.Notches, 'D': &pars.DelayUser, 'G': &pars.DelayGap, 'T': &pars.Timeout, 'X': &pars.BufferTreeEstimate} {
+	for _, flag := range []sclIntFlag{{'I', &pars.Iterations}, {'J', &pars.IterationsNoChange}, {'N', &pars.Notches}, {'D', &pars.DelayUser}, {'G', &pars.DelayGap}, {'T', &pars.Timeout}, {'X', &pars.BufferTreeEstimate}} {
+		key, dst := flag.key, flag.dst
 		if v, ok := o.numbers[key]; ok {
 			if v != float32(int(v)) {
 				return sclCommandError(f, fmt.Errorf("-%c requires an integer", key))
@@ -468,7 +469,8 @@ func Scl_CommandUpsize(f *abcmain.Frame, argc int32, argv []string) int32 {
 		return sclCommandError(f, fmt.Errorf("usage: upsize [-IJWRNDGTXB num] [-csdvwh]"))
 	}
 	pars := SC_SizePars{Iterations: 1000, IterationsNoChange: 50, Window: 1, Ratio: 10, Notches: 1000, UseDepartures: !o.flags['s'], UseWireLoads: o.flags['c'], DumpStats: o.flags['d'], Verbose: o.flags['v'], VeryVerbose: o.flags['w']}
-	for key, dst := range map[byte]*int{'I': &pars.Iterations, 'J': &pars.IterationsNoChange, 'W': &pars.Window, 'R': &pars.Ratio, 'N': &pars.Notches, 'D': &pars.DelayUser, 'G': &pars.DelayGap, 'T': &pars.Timeout, 'X': &pars.BufferTreeEstimate, 'B': &pars.BypassFrequency} {
+	for _, flag := range []sclIntFlag{{'I', &pars.Iterations}, {'J', &pars.IterationsNoChange}, {'W', &pars.Window}, {'R', &pars.Ratio}, {'N', &pars.Notches}, {'D', &pars.DelayUser}, {'G', &pars.DelayGap}, {'T', &pars.Timeout}, {'X', &pars.BufferTreeEstimate}, {'B', &pars.BypassFrequency}} {
+		key, dst := flag.key, flag.dst
 		if v, ok := o.numbers[key]; ok {
 			if v != float32(int(v)) {
 				return sclCommandError(f, fmt.Errorf("-%c requires an integer", key))
