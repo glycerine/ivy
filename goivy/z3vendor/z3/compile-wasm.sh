@@ -40,7 +40,7 @@ cp -p wasm.build/z3-api.wasm wasm.build/z3-api.pre-exnref.wasm
 cp -p wasm.build/z3-api.exnref.wasm wasm.build/z3-471-api.wasm
 
 # save them above in case we rebuild native and wipe them out by accident.
-for i in z3-api.js z3-api.wasm z3.wasm libz3.a libz3.wasm libz3.dylib; do 
+for i in z3-api.js z3-api.wasm z3.wasm libz3.a libz3.wasm libz3.dylib z3-471-api.wasm; do 
   cp -p wasm.build/$i ../wasm_lib/; 
 done
 
