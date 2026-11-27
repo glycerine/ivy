@@ -2,6 +2,7 @@ package cec
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
@@ -51,6 +52,11 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 		original.ClearCombinationalCounterexample()
 	}
 	started := now()
+	clkTotal := util.Abc_Clock()
+	verbose := pars.FVerbose != 0
+	if verbose {
+		fmt.Printf("Simulating %d words for %d rounds. SAT solving with %d conflicts.\n", pars.NWords, pars.NRounds, pars.NBTLimit)
+	}
 	gia.Gia_ManRandom(1)
 	initial := gia.Gia_ManDup(graph)
 	if pars.fUseOrigIds != 0 {
@@ -96,34 +102,52 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 	pat := Cec_ManPatStart()
 	defer Cec_ManPatStop(pat)
 	failure := false
+	clk := util.Abc_Clock()
 	if !initial.HasRepresentatives() {
 		failure = Cec_ManSimClassesPrepare(sim, -1) != 0
 		if !failure && graph.SimulationWordCount() == 0 {
 			failure = Cec_ManSimClassesRefine(sim) != 0
 		}
 	}
+	fra.timeSim += util.Abc_Clock() - clk
 	for i := int32(1); !failure && i <= pars.NItersMax; i++ {
+		clk2 := util.Abc_Clock()
+		nMatches := int32(0)
 		if pars.FDualOut != 0 {
-			gia.Gia_ManEquivSetColors(fra.pAig, pars.FVeryVerbose)
+			nMatches = gia.Gia_ManEquivSetColors(fra.pAig, pars.FVeryVerbose)
 		}
 		queries := Cec_ManFraSpecReduction(fra)
+		if pars.FVeryVerbose != 0 {
+			gia.Gia_ManPrintStats(queries, nil)
+		}
 		if gia.Gia_ManCoNum(queries) == 0 {
 			gia.Gia_ManStop(queries)
+			if verbose {
+				fmt.Printf("Considered all available candidate equivalences.\n")
+			}
 			if pars.FDualOut != 0 && gia.Gia_ManAndNum(fra.pAig) > 0 {
 				if pars.fColorDiff != 0 {
+					if verbose {
+						fmt.Printf("Switching into reduced mode.\n")
+					}
 					pars.fColorDiff = 0
 				} else {
+					if verbose {
+						fmt.Printf("Switching into normal mode.\n")
+					}
 					pars.FDualOut = 0
 				}
 				continue
 			}
 			break
 		}
+		clk = util.Abc_Clock()
 		if pars.FRunCSat != 0 {
 			Cec_ManSatSolveCSat(pat, queries, &satPars)
 		} else {
 			Cec_ManSatSolve(pat, queries, &satPars, gia.Gia_ManOrigIds(fra.pAig), fra.vXorNodes, candidates, 0)
 		}
+		fra.timeSat += util.Abc_Clock() - clk
 		failure = Cec_ManFraClassesUpdate(fra, sim, pat, queries) != 0
 		gia.Gia_ManStop(queries)
 		if failure {
@@ -136,7 +160,14 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 		}
 		fra.pAig, sim.pAig = reduced, reduced
 		gia.Gia_ManStop(old)
+		if verbose {
+			fmt.Printf("%3d : P =%7d. D =%7d. F =%6d. M = %7d. And =%8d. ", i, fra.nAllProved, fra.nAllDisproved, fra.nAllFailed, nMatches, gia.Gia_ManAndNum(reduced))
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk2)
+		}
 		if gia.Gia_ManAndNum(reduced) == 0 {
+			if verbose {
+				fmt.Printf("Network after reduction is empty.\n")
+			}
 			break
 		}
 		// C checks elapsed whole seconds only after reduction, before adapting
@@ -145,16 +176,48 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 			break
 		}
 		if fra.nAllFailed > fra.nAllProved+fra.nAllDisproved {
-			if satPars.NBTLimit >= 10001 || pars.fSatSweeping != 0 {
+			if satPars.NBTLimit >= 10001 {
+				break
+			}
+			if pars.fSatSweeping != 0 {
+				if verbose {
+					fmt.Printf("Exceeded the limit on the number of conflicts (%d).\n", satPars.NBTLimit)
+				}
 				break
 			}
 			satPars.NBTLimit *= 10
+			if verbose {
+				fmt.Printf("Increasing conflict limit to %d.\n", satPars.NBTLimit)
+			}
 		}
 		if pars.FDualOut != 0 && pars.fColorDiff != 0 && (gia.Gia_ManAndNum(reduced) < 100000 || fra.nAllProved+fra.nAllDisproved < 10) {
+			if verbose {
+				fmt.Printf("Switching into reduced mode.\n")
+			}
 			pars.fColorDiff = 0
 		} else if pars.FDualOut != 0 && (gia.Gia_ManAndNum(reduced) < 20000 || fra.nAllProved+fra.nAllDisproved < 10) {
+			if verbose {
+				fmt.Printf("Switching into normal mode.\n")
+			}
 			pars.fColorDiff, pars.FDualOut = 0, 0
 		}
+	}
+	// finalize (cecCore.c): the summary; the size line only when the
+	// sweep did not stop on a counter-example
+	if verbose {
+		fmt.Printf("Performed %d SAT calls: P = %d  D = %d  F = %d\n",
+			fra.nAllProvedS+fra.nAllDisprovedS+fra.nAllFailedS, fra.nAllProvedS, fra.nAllDisprovedS, fra.nAllFailedS)
+	}
+	if verbose && !failure && fra.pAig != nil {
+		nBeg, nEnd := gia.Gia_ManAndNum(graph), gia.Gia_ManAndNum(fra.pAig)
+		rBeg, rEnd := gia.Gia_ManRegNum(graph), gia.Gia_ManRegNum(fra.pAig)
+		fmt.Printf("NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\n",
+			nBeg, nEnd, 100.0*float64(nBeg-nEnd)/float64(max(nBeg, 1)), rBeg, rEnd, 100.0*float64(rBeg-rEnd)/float64(max(rBeg, 1)))
+		total := util.Abc_Clock() - clkTotal
+		util.Abc_PrintTimeP(1, "Sim ", fra.timeSim, total)
+		util.Abc_PrintTimeP(1, "Sat ", fra.timeSat-pat.timeTotalSave, total)
+		util.Abc_PrintTimeP(1, "Pat ", fra.timePat+pat.timeTotalSave, total)
+		util.Abc_PrintTime(1, "Time", total)
 	}
 	if candidates != nil {
 		vec.Vec_IntAppend(gia.Gia_ManOrigEquivPairs(original), candidates)

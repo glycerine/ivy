@@ -3,7 +3,6 @@ package cec
 // Equivalence-class refinement and recyclable word-parallel simulation from
 // cecClass.c. A simulation record holds its reference count followed by words.
 import (
-	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -336,17 +335,9 @@ func cecSimRefs(p *Gia_Man_t) {
 		}
 	}
 }
+// cecSimClassPrint is cecClass.c's Gia_ManEquivPrintClasses( p->pAig, 0, Cec_MemUsage(p) ).
 func cecSimClassPrint(p *Cec_ManSim_t) {
-	constants, classes := 0, 0
-	for i := int32(1); i < gia.Gia_ManObjNum(p.pAig); i++ {
-		if gia.Gia_ObjRepr(p.pAig, i) == 0 {
-			constants++
-		}
-		if cecHead(p.pAig, i) {
-			classes++
-		}
-	}
-	fmt.Printf("Constant candidates = %d. Classes = %d. Memory = %.2f MB\n", constants, classes, Cec_MemUsage(p))
+	gia.Gia_ManEquivPrintClasses(p.pAig, 0, float32(Cec_MemUsage(p)))
 }
 
 func Cec_ManSimSimulateRound(p *Cec_ManSim_t, infoCis, infoCos *Vec_Ptr_t) int32 {
