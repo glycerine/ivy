@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 func TestCheckedActionNamesKeepInternalCallDistinct(t *testing.T) {
@@ -27,6 +29,42 @@ func TestCheckedActionNamesKeepInternalCallDistinct(t *testing.T) {
 	}
 	if call := mod.Actions.Get("helper").(*LogicCallAction); ExprName(call.Callee) != "int$step" {
 		t.Fatalf("internal call resolved to %s", call.Callee)
+	}
+}
+
+func TestCheckedActionNamesPreserveCodegenInitializers(t *testing.T) {
+	mod := New()
+	mod.SetAction("step", NewSequence())
+	mod.SetAction("ext:step", NewSequence())
+	mod.PublicActions.Set("ext:step", true)
+	checkedCall := NewCallActionOn(mod.Cfg.ActCfg, NewConst("ext:step", TopS))
+	mod.Initializers = []NamedAction{{Name: "init", Action: checkedCall}}
+	codegenCall := NewCallActionOn(mod.Cfg.ActCfg, NewConst("step", TopS))
+	codegenInit := NewSequence(codegenCall)
+	mod.InitialActions = []Action{codegenInit}
+	before := mod.Cfg.ActCfg.IuCfg.CallActionCtr
+
+	trace := captureStdout(t, func() { normalizeCheckedActionNames(mod) })
+	if got := mod.Initializers[0].Action.IterCalls(); len(got) != 1 || got[0] != "step" {
+		t.Errorf("checked initializer calls = %v, want [step]", got)
+	}
+	if mod.InitialActions[0] != codegenInit || codegenCall.CalleeName() != "step" {
+		t.Errorf("code-generation initializer changed to %v", mod.InitialActions[0])
+	}
+	if got := mod.Cfg.ActCfg.IuCfg.CallActionCtr - before; got != 1 {
+		t.Errorf("created %d call actions, want 1 for the checked initializer", got)
+	}
+	if xtracer.Enabled {
+		const event = "XTRACE: isolate.normalizeCheckedActionNames initial_action type="
+		var visits []string
+		for _, line := range strings.Split(trace, "\n") {
+			if kind, ok := strings.CutPrefix(line, event); ok {
+				visits = append(visits, kind)
+			}
+		}
+		if got := strings.Join(visits, ","); got != "Sequence,CallAction" {
+			t.Errorf("traced code-generation initializer nodes = %q, want Sequence,CallAction", got)
+		}
 	}
 }
 

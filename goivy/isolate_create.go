@@ -555,8 +555,15 @@ func normalizeCheckedActionNames(mod *Module) {
 	for i, init := range mod.Initializers {
 		mod.Initializers[i].Action = fixAction(init.Action)
 	}
-	for i, init := range mod.InitialActions {
-		mod.InitialActions[i] = fixAction(init)
+	if xtracer.Enabled && !xtracer.Suppressed {
+		for _, init := range mod.InitialActions {
+			if init == nil {
+				continue
+			}
+			for _, subaction := range init.IterSubactions() {
+				xtracer.Trace("isolate.normalizeCheckedActionNames initial_action type=%s", ShortTypeName(subaction))
+			}
+		}
 	}
 	posts := make(map[string][]*LabeledFormula, len(mod.Postconds))
 	for name, post := range mod.Postconds {

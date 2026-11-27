@@ -2121,6 +2121,10 @@ def normalize_checked_action_names(mod):
     mod.public_actions.clear()
     mod.public_actions.update(public)
     mod.initializers = [(name,fix_action(action)) for name,action in mod.initializers]
+    if __debug__ and xtracer.enabled:
+        for action in mod.initial_actions:
+            for subaction in action.iter_subactions():
+                xtracer.trace("isolate.normalizeCheckedActionNames initial_action type=%s" % type(subaction).__name__)
     mod.postconds = {rename(name): value for name,value in mod.postconds.items()}
 
 

@@ -1,5 +1,13 @@
 # AGENTS.md instructions for /Users/jaten/go/src/github.com/glycerine/ivy/goivy
 
+## Python Ivy conformance
+
+- Treat upstream Python Ivy as the source of truth for language and checker
+  behavior. Fix semantic divergences in GoIvy.
+- Limit Python Ivy source edits for golden parity to read-only XTrace
+  instrumentation. Preserve Go's trace coverage and add corresponding Python
+  events that observe the same state without changing it.
+
 ## Ivy language-version parser invariants
 
 - Treat the full-file Ivy parsers as thin syntax adapters. A parser for Ivy
