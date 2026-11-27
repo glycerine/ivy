@@ -339,3 +339,32 @@ and states how the Go port was verified.
   The same review found that the port's `Str_ManVectorAffinity` stopped the
   whole fanin collection at the limit, where C ends only the AND-fanin loop;
   that is fixed under `TestStrAffinityLimitStopsOnlyFaninLoop`.
+
+## 17. `Io_ReadAiger` drops the names of bad-state and constraint outputs
+
+- **File:** `src/base/io/ioReadAiger.c`, `Io_ReadAiger` (symbol table).
+- **Found:** 2026-11-27, comparing `write_blif` after reading
+  `abcgo/base/io/test_vectors/aiger_binary_extended.aig` (header
+  `aig 3 1 1 1 1 1 1`, symbols `o0 out`, `b0 bad`, `c0 constraint`): native
+  named the POs `out n3 n4`, the port `out bad constraint`.
+- **Bug:** two faults in reading the symbol table.
+  1. AIGER numbers `b`, `c`, `j` and `f` symbols within their own sections,
+     but the reader used the number as an index into the whole PO list.
+     `b0` therefore named PO 0, which `o0` had already named, and the bad
+     output kept a default name.
+  2. The symbol loop stopped at the first line starting with `c`, which is
+     the comment section but also every constraint symbol (`c0 ...`). So no
+     constraint name was ever read.
+- **Fix:** offset `b`/`c`/`j`/`f` indices by the sizes of the sections
+  before them (outputs, bad, constraints, justice), and end the symbol table
+  only at a `c` that is not followed by a digit.
+- **Test:** `abcgo/base/abci/aiger_constraint_native_test.go`
+  (`TestNativeAigerSectionSymbolsLikePort`, needs `ABC_BINARY`). It reads the
+  vector with native and with the port and requires
+  `.outputs out bad constraint`. Before the fix native printed
+  `.outputs out n3 n4`; after the first fix alone, `out bad n4`.
+- **Go port:** already numbered the sections correctly (`ioa` keeps the
+  symbol kinds). The same review found that the port did not name latch
+  boxes `<name>L` and latch inputs `<name>_in` as the reader does; that is
+  fixed under `TestAigerLatchNamesLikeNative`, and the vector's whole BLIF
+  now equals native's.

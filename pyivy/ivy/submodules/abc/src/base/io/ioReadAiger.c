@@ -476,11 +476,14 @@ Abc_Ntk_t * Io_ReadAiger( char * pFileName, int fCheck )
     }
  
     // read the names if present
+    // the comment section starts with 'c' not followed by a digit; "c<n>"
+    // is a constraint symbol
+#define IO_AIGER_SYMBOL(p) ( *(p) != 'c' || ((p)+1 < pContents + nFileSize && (p)[1] >= '0' && (p)[1] <= '9') )
     pCur = pSymbols;
-    if ( pCur < pContents + nFileSize && *pCur != 'c' )
+    if ( pCur < pContents + nFileSize && IO_AIGER_SYMBOL(pCur) )
     {
         int Counter = 0;
-        while ( pCur < pContents + nFileSize && *pCur != 'c' )
+        while ( pCur < pContents + nFileSize && IO_AIGER_SYMBOL(pCur) )
         {
             // get the terminal type
             pType = pCur;
@@ -497,6 +500,16 @@ Abc_Ntk_t * Io_ReadAiger( char * pFileName, int fCheck )
             }
             // get the terminal number
             iTerm = atoi( ++pCur );  while ( *pCur++ != ' ' );
+            // the b, c, j and f symbols are numbered within their own sections,
+            // which follow the outputs in this order among the POs
+            if ( *pType == 'b' )
+                iTerm += nOutputs - nBad - nConstr - nJust - nFair;
+            else if ( *pType == 'c' )
+                iTerm += nOutputs - nConstr - nJust - nFair;
+            else if ( *pType == 'j' )
+                iTerm += nOutputs - nJust - nFair;
+            else if ( *pType == 'f' )
+                iTerm += nOutputs - nFair;
             // get the node
             if ( iTerm >= Vec_PtrSize(vTerms) )
             {

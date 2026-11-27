@@ -49,3 +49,36 @@ func TestAigerConstraintsWriteLikeNative(t *testing.T) {
 		t.Errorf("canonical write = %q", aigerPrefix(t, unique, 40))
 	}
 }
+
+// TestAigerLatchNamesLikeNative: Io_ReadAiger names a latch's output by its
+// symbol, the latch box name+"L" and the latch input name+"_in".
+func TestAigerLatchNamesLikeNative(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "ext.blif")
+	runScript(t, "read ../io/test_vectors/aiger_binary_extended.aig; write_blif "+path)
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(data), ".latch   state_in      state  0\n") || !strings.Contains(string(data), ".names state_in out\n") {
+		t.Fatalf("latch input not named state_in:\n%s", data)
+	}
+}
+
+// TestNativeAigerSectionSymbolsLikePort: AIGER numbers the b, c, j and f
+// symbols within their own sections. Io_ReadAiger indexed them into the PO
+// list from 0, so "b0" landed on the first output (already named "out") and
+// the bad and constraint POs kept default names (CBUGS_FIXED.md). Native
+// and the port must both name them.
+func TestNativeAigerSectionSymbolsLikePort(t *testing.T) {
+	for _, run := range []func(*testing.T, string) string{runScript, runNativeABC} {
+		path := filepath.Join(t.TempDir(), "ext.blif")
+		run(t, "read ../io/test_vectors/aiger_binary_extended.aig; write_blif "+path)
+		data, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(string(data), ".outputs out bad constraint\n") {
+			t.Fatalf("bad/constraint symbols not applied:\n%s", data)
+		}
+	}
+}

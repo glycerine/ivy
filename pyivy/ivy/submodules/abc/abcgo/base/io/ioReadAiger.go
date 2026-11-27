@@ -297,14 +297,39 @@ func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
 		case 'i':
 			inputObjects[symbol.Index].SetName(name)
 		case 'l':
-			latchBoxes[symbol.Index].SetName(name)
+			// the latch output takes the name, the box name+"L", the
+			// latch input name+"_in" (Io_ReadAiger)
 			latchOutputs[symbol.Index].SetName(name)
+			abc.Abc_ObjAssignName(latchBoxes[symbol.Index], name, "L")
+			abc.Abc_ObjAssignName(latchInputs[symbol.Index], name, "_in")
 		case 'o':
 			outputObjects[symbol.Index].SetName(name)
 		case 'b':
 			outputObjects[len(model.Outputs)+int(symbol.Index)].SetName(name)
 		case 'c':
 			outputObjects[len(model.Outputs)+len(model.Bad)+int(symbol.Index)].SetName(name)
+		}
+	}
+	// with a symbol table, the remaining PIs, latches and POs get their
+	// default names, latches with the box and input suffixes too
+	if len(model.Symbols) != 0 {
+		for _, pi := range inputObjects {
+			if pi.Name() == "" {
+				abc.Abc_ObjAssignName(pi, abc.Abc_ObjName(pi), "")
+			}
+		}
+		for i, bo := range latchOutputs {
+			if bo.Name() == "" {
+				name := abc.Abc_ObjName(bo)
+				abc.Abc_ObjAssignName(bo, name, "")
+				abc.Abc_ObjAssignName(latchBoxes[i], name, "L")
+				abc.Abc_ObjAssignName(latchInputs[i], name, "_in")
+			}
+		}
+		for _, po := range outputObjects {
+			if po.Name() == "" {
+				abc.Abc_ObjAssignName(po, abc.Abc_ObjName(po), "")
+			}
 		}
 	}
 	// as Io_ReadAiger: ABC keeps constraints inverted relative to the file
