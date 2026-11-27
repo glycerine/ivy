@@ -240,17 +240,20 @@ type If_Man_t_ struct {
 }
 
 type If_Cut_t_ struct {
-	Area, Edge, Power, Delay                                float32
-	iCutFunc, uMaskFunc                                     int32
-	uSign                                                   uint32
-	Cost, fCompl, fUser, fUseless, fAndCut, nLimit, nLeaves uint32
-	pLeaves                                                 []int32
+	// the fields read for every cut pair come first (signature, size,
+	// costs, leaves), so merging and filtering touch as few lines as ABC
+	uSign                                  uint32
+	nLeaves, nLimit                        uint32
+	Delay, Area, Edge, Power               float32
+	fUseless, fAndCut, fUser, fCompl, Cost uint32
+	iCutFunc, uMaskFunc                    int32
+	pLeaves                                []int32
 	// leafBuf keeps up to ifInlineLeaves leaves next to the cut header, as
 	// ABC stores them after the record; pLeaves points into it when it fits.
-	leafBuf                                                 [ifInlineLeaves]int32
-	permutation                                             []byte
-	data                                                    any
-	dataInt                                                 int32
+	leafBuf     [ifInlineLeaves]int32
+	permutation []byte
+	data        any
+	dataInt     int32
 }
 
 type If_Set_t_ struct {
@@ -433,6 +436,7 @@ func If_CutPerm(pCut *If_Cut_t) []byte {
 	}
 	return pCut.permutation
 }
+
 // If_CutCopy copies src into dst's own leaf storage (ABC memcpy's the
 // record with its leaves).
 func If_CutCopy(_ *If_Man_t, dst, src *If_Cut_t) {
