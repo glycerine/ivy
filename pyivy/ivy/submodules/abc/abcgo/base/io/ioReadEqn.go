@@ -8,81 +8,8 @@ import (
 	"github.com/glycerine/abcgo/aig/hop"
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/extra"
-	"github.com/glycerine/abcgo/map/amap/formula"
 )
 
-// addEquation lowers the actual expression DAG into small SOP nodes, avoiding
-// exponential truth-table enumeration for equations with many inputs.
-func addEquation(m *blifModel, output, expression string) error {
-	expr, err := formula.Parse(expression)
-	if err != nil {
-		return err
-	}
-	manager := hop.Hop_ManStart()
-	defer hop.Hop_ManStop(manager)
-	variables := map[string]*hop.Hop_Obj_t{}
-	names := map[*hop.Hop_Obj_t]string{}
-	for i, name := range expr.Variables() {
-		v := hop.Hop_IthVar(manager, int32(i))
-		variables[name] = v
-		names[v] = name
-		m.net(name)
-	}
-	root, err := expr.ToHop(manager, variables)
-	if err != nil {
-		return err
-	}
-	var lower func(*hop.Hop_Obj_t) (string, error)
-	lower = func(edge *hop.Hop_Obj_t) (string, error) {
-		if name := names[edge]; name != "" {
-			return name, nil
-		}
-		regular := hop.Hop_Regular(edge)
-		var name string
-		if hop.Hop_IsComplement(edge) != 0 {
-			input, err := lower(regular)
-			if err != nil {
-				return "", err
-			}
-			name = m.uniqueNetName("__eqn_inv")
-			if _, err = m.node([]string{input, name}, "0 1\n"); err != nil {
-				return "", err
-			}
-		} else if hop.Hop_ObjIsConst1(regular) != 0 {
-			name = m.uniqueNetName("__eqn_one")
-			if _, err = m.node([]string{name}, " 1\n"); err != nil {
-				return "", err
-			}
-		} else if hop.Hop_ObjIsNode(regular) != 0 {
-			left, err := lower(hop.Hop_NotCond(hop.Hop_ObjFanin0(regular), hop.Hop_ObjFaninC0(regular)))
-			if err != nil {
-				return "", err
-			}
-			right, err := lower(hop.Hop_NotCond(hop.Hop_ObjFanin1(regular), hop.Hop_ObjFaninC1(regular)))
-			if err != nil {
-				return "", err
-			}
-			name = m.uniqueNetName("__eqn_gate")
-			cover := "11 1\n"
-			if hop.Hop_ObjIsExor(regular) != 0 {
-				cover = "01 1\n10 1\n"
-			}
-			if _, err = m.node([]string{left, right, name}, cover); err != nil {
-				return "", err
-			}
-		} else {
-			return "", fmt.Errorf("unbound expression input")
-		}
-		names[edge] = name
-		return name, nil
-	}
-	signal, err := lower(root)
-	if err != nil {
-		return err
-	}
-	_, err = m.node([]string{signal, output}, "1 1\n")
-	return err
-}
 // ParseEqn reads EQN text as Io_ReadEqn does: statements end at ';', '#'
 // starts a comment, and each "name = formula" becomes one node of an AIG
 // netlist whose fanins are the formula's distinct names in order of
