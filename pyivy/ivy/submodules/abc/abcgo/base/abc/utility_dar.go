@@ -57,7 +57,12 @@ func Abc_NtkToDar(n *Network, exors, registers int32) *aig.Graph {
 			panic("abc: invalid output")
 		}
 		edge := co.fanins[0]
-		lit := Abc_NtkClpOneGia_rec(g, edge.Object)
+		var lit aig.Edge
+		if exors != 0 {
+			lit = abcNtkToDarExor_rec(g, edge.Object)
+		} else {
+			lit = Abc_NtkClpOneGia_rec(g, edge.Object)
+		}
 		if edge.Complement {
 			lit = lit.Not()
 		}
@@ -71,6 +76,11 @@ func Abc_NtkToDar(n *Network, exors, registers int32) *aig.Graph {
 	}
 	aig.Aig_ManSetRegNum(g, int32(len(latches)))
 	aig.Aig_ManSetConstrNum(g, n.Constraints) // pMan->nConstrs (set once the COs exist)
+	// remove dangling nodes: only a captured EXOR (pMan->fCatchExor) leaves
+	// its two ANDs dangling, as the Go conversion visits only CO cones
+	if exors != 0 && Abc_NtkGetChoiceNum(n) == 0 {
+		aig.Aig_ManCleanup(g)
+	}
 	if registers != 0 {
 		g.FlopNumbers = make([]int32, len(latches))
 		for i := range g.FlopNumbers {
@@ -224,4 +234,27 @@ func Abc_NtkFromDarSeqSweep(old *Network, g *aig.Graph) *Network {
 		Abc_NtkAddDummyBoxNames(dst)
 	}
 	return dst
+}
+
+// abcNtkToDarExor_rec builds a node's cone as Abc_NtkToDar does with
+// fExors: pMan->fCatchExor makes Aig_And capture EXOR objects.
+func abcNtkToDarExor_rec(g *aig.Graph, node *Object) aig.Edge {
+	if Abc_NodeIsTravIdCurrent(node) != 0 || len(node.fanins) == 0 || node.IsCI() {
+		return aig.Edge(node.Temp)
+	}
+	if node.Kind != ObjectNode || len(node.fanins) != 2 {
+		panic("abc: expected strashed AND node")
+	}
+	Abc_NodeSetTravIdCurrent(node)
+	a := abcNtkToDarExor_rec(g, node.fanins[0].Object)
+	b := abcNtkToDarExor_rec(g, node.fanins[1].Object)
+	if node.fanins[0].Complement {
+		a = a.Not()
+	}
+	if node.fanins[1].Complement {
+		b = b.Not()
+	}
+	result := aig.Aig_AndCatchExor(g, a, b)
+	node.Temp = int(result)
+	return result
 }

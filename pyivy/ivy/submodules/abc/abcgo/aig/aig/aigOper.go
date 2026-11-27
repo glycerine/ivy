@@ -14,8 +14,9 @@ func Aig_IthVar(p *Graph, i int32) Edge {
 	}
 	return p.inputs[i]
 }
-func Aig_And(p *Graph, a, b Edge) Edge        { return p.AND(a, b) }
-func Aig_Or(p *Graph, a, b Edge) Edge         { return p.OR(a, b) }
+func Aig_And(p *Graph, a, b Edge) Edge { return p.AND(a, b) }
+func Aig_Or(p *Graph, a, b Edge) Edge  { return p.OR(a, b) }
+
 // Aig_Exor follows aigOper.c (without fCatchExor). The native binary is
 // compiled by GCC, which evaluates the arguments of
 // Aig_Or( p, Aig_And(p, p0, Aig_Not(p1)), Aig_And(p, Aig_Not(p0), p1) )
@@ -37,6 +38,48 @@ func Aig_Exor(p *Graph, p0, p1 Edge) Edge {
 	n1 := p.AND(p0.Not(), p1)
 	n0 := p.AND(p0, p1.Not())
 	return p.OR(n0, n1)
+}
+
+// Aig_AndCatchExor is aigOper.c's Aig_And in a manager with fCatchExor set
+// (and fAddStrash clear): after the trivial cases, the AND of two
+// complemented ANDs over the same fanins with opposite phases is captured
+// as an EXOR object (Aig_ObjIsExorType).
+func Aig_AndCatchExor(p *Graph, p0, p1 Edge) Edge {
+	var pFan0, pFan1 Edge
+	// check trivial cases
+	if p0 == p1 || p0 == p1.Not() || Aig_Regular(p0) == p.Const1() || Aig_Regular(p1) == p.Const1() {
+		return p.AND(p0, p1)
+	}
+	// check if it can be an EXOR gate
+	if Aig_ObjIsExorType(p, p0, p1, &pFan0, &pFan1) {
+		return Aig_ExorCatch(p, pFan0, pFan1)
+	}
+	return p.AND(p0, p1)
+}
+
+// Aig_ExorCatch is aigOper.c's Aig_Exor in a manager with fCatchExor set:
+// the fanins are made regular, the complement moves to the output, and the
+// EXOR object is shared through the table.
+func Aig_ExorCatch(p *Graph, p0, p1 Edge) Edge {
+	// check trivial cases
+	if p0 == p1 {
+		return p.Const0()
+	}
+	if p0 == p1.Not() {
+		return p.Const1()
+	}
+	if Aig_Regular(p0) == p.Const1() {
+		return p1 ^ Edge(p0&1^1)
+	}
+	if Aig_Regular(p1) == p.Const1() {
+		return p0 ^ Edge(p1&1^1)
+	}
+	// canonicize
+	fCompl := (p0 ^ p1) & 1
+	p0 = Aig_Regular(p0)
+	p1 = Aig_Regular(p1)
+	// Aig_ObjCreate checks the table before creating the object.
+	return Aig_ObjCreate(p, &Node{Kind: ExclusiveOr, Fanins: [2]Edge{p0, p1}}) ^ fCompl
 }
 func Aig_Mux2(p *Graph, c, yes, no Edge) Edge { return p.Mux(c, yes, no) }
 func Aig_Mux(p *Graph, c, yes, no Edge) Edge  { return p.Mux(c, yes, no) }

@@ -148,12 +148,54 @@ func Dar_ManBalanceXor(g *aig.Graph, exor, updateLevel, verbose bool) *aig.Graph
 	}
 	return Dar_ManBalance(g, updateLevel)
 }
-func Dar_BalancePrintStats(w io.Writer, g *aig.Graph) error {
-	count := 0
-	for _, e := range g.LiveEdges() {
-		if g.Node(e).Kind == aig.ExclusiveOr {
-			count++
-		}
+
+// Dar_BalancePrintStats is darBalance.c's: for each EXOR that is not the
+// single-fanout fanin of another EXOR, it prints the size of its EXOR
+// supergate (Dar_BalanceCone_rec) and the levels of the leaves.
+func Dar_BalancePrintStats(w io.Writer, p *aig.Graph) error {
+	if aig.Aig_ManExorNum(p) == 0 {
+		return writeProgress(w, "There is no EXOR gates.\n")
 	}
-	return writeProgress(w, "XOR gates: %d\n", count)
+	markA := make([]bool, p.NodeSlots())
+	var exors []aig.Edge
+	for _, e := range p.LiveEdges() {
+		n := p.Node(e)
+		if n.Kind != aig.ExclusiveOr {
+			continue
+		}
+		exors = append(exors, e)
+		markA[n.Fanins[0].NodeID()] = true
+		markA[n.Fanins[1].NodeID()] = true
+		assert(!n.Fanins[0].Complemented(), "!Aig_ObjFaninC0(pObj)")
+		assert(!n.Fanins[1].Complemented(), "!Aig_ObjFaninC1(pObj)")
+	}
+	var text []byte
+	for _, pObj := range exors {
+		if markA[pObj.NodeID()] && p.Node(pObj).Refs == 1 {
+			continue
+		}
+		vSuper := darBalanceCone_rec(p, pObj, pObj, nil)
+		if len(vSuper) < 3 {
+			continue
+		}
+		text = fmt.Appendf(text, "  %d(", len(vSuper))
+		for _, pTemp := range vSuper {
+			text = fmt.Appendf(text, " %d", p.Node(pTemp).Level)
+		}
+		text = append(text, " )"...)
+	}
+	text = append(text, '\n')
+	return writeProgress(w, "%s", text)
+}
+
+// darBalanceCone_rec is darBalance.c's Dar_BalanceCone_rec: it collects
+// the leaves of pRoot's supergate (nodes of the root's type with one
+// fanout, looking through buffers), stopping after 10000 leaves.
+func darBalanceCone_rec(p *aig.Graph, pRoot, pObj aig.Edge, vSuper []aig.Edge) []aig.Edge {
+	if pObj != pRoot && (pObj.Complemented() || p.Node(pObj).Kind != p.Node(pRoot).Kind || p.Node(pObj).Refs > 1 || len(vSuper) > 10000) {
+		return append(vSuper, pObj)
+	}
+	n := p.Node(pObj)
+	vSuper = darBalanceCone_rec(p, pRoot, aig.Aig_ObjReal_rec(p, n.Fanins[0]), vSuper)
+	return darBalanceCone_rec(p, pRoot, aig.Aig_ObjReal_rec(p, n.Fanins[1]), vSuper)
 }

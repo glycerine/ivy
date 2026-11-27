@@ -292,23 +292,43 @@ func Aig_ManDupTrim(src *Graph) *Graph {
 	Aig_ManCleanup(dst)
 	return dst
 }
+
+// Aig_ManDupExor is aigDup.c's: the new manager has fCatchExor set, so
+// each AND is rebuilt with Aig_And's EXOR capture (Aig_AndCatchExor) and
+// each EXOR with the capturing Aig_Exor; the ANDs left dangling by a
+// captured EXOR are removed by Aig_ManCleanup.
 func Aig_ManDupExor(src *Graph) *Graph {
+	// create the new manager and the PIs
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
-	for id, n := range src.nodes {
-		if src.isDeleted(id) || (n.Kind != And && n.Kind != ExclusiveOr && n.Kind != Buffer) {
-			continue
+	child := func(e Edge) Edge {
+		c, ok := src.copies[e.NodeID()]
+		if !ok {
+			panic("aig: Aig_ManDupExor fanin not duplicated")
 		}
-		if n.Kind == And && n.Fanins[0].Complemented() && n.Fanins[1].Complemented() {
-			a, b := src.node(n.Fanins[0]), src.node(n.Fanins[1])
-			if a.Kind == And && b.Kind == And && ((a.Fanins[0] == b.Fanins[0].Not() && a.Fanins[1] == b.Fanins[1].Not()) || (a.Fanins[0] == b.Fanins[1].Not() && a.Fanins[1] == b.Fanins[0].Not())) {
-				src.copies[id] = dst.NewXor(dupEdge(dst, src, a.Fanins[0]), dupEdge(dst, src, a.Fanins[1]))
-				continue
-			}
-		}
-		dupEdge(dst, src, Edge(id)<<1)
+		return dupPhase(c, e.Complemented())
 	}
-	dupOutputs(dst, src, src.outputs, false, false)
+	// duplicate internal nodes (Aig_ManForEachObj in topological order)
+	for _, e := range src.TopologicalObjects() {
+		id := e.NodeID()
+		n := src.nodes[id]
+		switch n.Kind {
+		case Buffer:
+			src.copies[id] = child(n.Fanins[0])
+		case And:
+			src.copies[id] = Aig_AndCatchExor(dst, child(n.Fanins[0]), child(n.Fanins[1]))
+		case ExclusiveOr:
+			src.copies[id] = Aig_ExorCatch(dst, child(n.Fanins[0]), child(n.Fanins[1]))
+		}
+	}
+	for _, e := range src.outputs {
+		result := child(dupOutputDriver(src, e))
+		if src.node(e).Kind == Output {
+			src.copies[e.NodeID()] = Aig_ObjCreateCo(dst, result)
+		} else {
+			dst.AddOutput(result)
+		}
+	}
 	Aig_ManCleanup(dst)
 	return dst
 }
