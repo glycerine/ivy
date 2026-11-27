@@ -68,3 +68,29 @@ func TestSynchronizeIdenticalDesigns(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// TestSynchSequenceDrawsAigManRandom: Saig_SynchSequence resets
+// Aig_ManRandom(1) and draws its PI words from ABC's stream, so the draw
+// after it does not depend on how many numbers were drawn before.
+func TestSynchSequenceDrawsAigManRandom(t *testing.T) {
+	g := aig.NewGraph()
+	pi, lo := g.NewInput(), g.NewInput()
+	g.AddOutput(lo)
+	g.AddOutput(pi.Not())
+	aig.Aig_ManSetRegNum(g, 1)
+	nextAfter := func(before int) uint32 {
+		aig.Aig_ManRandom(1)
+		for i := 0; i < before; i++ {
+			aig.Aig_ManRandom(0)
+		}
+		Saig_SynchSequence(g, 2)
+		return aig.Aig_ManRandom(0)
+	}
+	if x, y := nextAfter(7), nextAfter(3); x != y {
+		t.Fatalf("draw after Saig_SynchSequence depends on earlier draws (%#x vs %#x): no Aig_ManRandom(1) reset", x, y)
+	}
+	aig.Aig_ManRandom(1)
+	if first := aig.Aig_ManRandom(0); nextAfter(0) == first {
+		t.Fatal("Saig_SynchSequence did not draw from Aig_ManRandom")
+	}
+}

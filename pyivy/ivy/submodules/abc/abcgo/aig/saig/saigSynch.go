@@ -57,6 +57,7 @@ func Saig_SynchSequence(g *aig.Graph, nWords int32) *vec.Vec_Str_t {
 	if g == nil || Saig_ManRegNum(g) == 0 || Saig_ManPiNum(g) == 0 || nWords <= 0 {
 		return nil
 	}
+	aig.Aig_ManRandom(1) // reset random numbers
 	s := newSynchState(g, int(nWords))
 	s.initRegisters(true)
 	sequence := vec.Vec_StrAlloc(20 * int(Saig_ManRegNum(g)))

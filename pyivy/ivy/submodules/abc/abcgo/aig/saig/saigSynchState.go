@@ -1,24 +1,21 @@
 package saig
 
 import (
-	"math/rand"
-
 	"github.com/glycerine/abcgo/aig/aig"
 )
 
 // synchState simulates 16 independent ternary patterns per word. Each pair of
 // bits encodes zero as 00, one as 01, and unknown as 11.
 type synchState struct {
-	graph  *aig.Graph
-	words  [][]uint32
-	random *rand.Rand
+	graph *aig.Graph
+	words [][]uint32
 }
 
 func newSynchState(g *aig.Graph, nwords int) *synchState {
 	if g == nil || nwords <= 0 {
 		panic("saig: invalid synchronizer simulation")
 	}
-	s := &synchState{graph: g, words: make([][]uint32, g.NodeSlots()), random: rand.New(rand.NewSource(1))}
+	s := &synchState{graph: g, words: make([][]uint32, g.NodeSlots())}
 	for i := range s.words {
 		s.words[i] = make([]uint32, nwords)
 	}
@@ -63,7 +60,7 @@ func (s *synchState) randomInputs() {
 	for i := int32(0); i < Saig_ManPiNum(s.graph); i++ {
 		e := aig.Aig_ManCi(s.graph, i)
 		for w := range s.words[e.NodeID()] {
-			s.words[e.NodeID()][w] = s.random.Uint32() & 0x55555555
+			s.words[e.NodeID()][w] = aig.Aig_ManRandom(0) & 0x55555555 // Saig_SynchRandomBinary
 		}
 	}
 }
