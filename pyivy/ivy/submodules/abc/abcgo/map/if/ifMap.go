@@ -777,7 +777,7 @@ func ifMapPlain(p *If_Man_t) bool {
 	pp := p.pPars
 	return pp.FTruth == 0 && pp.FUseTtPerm == 0 && pp.pFuncCost == nil && pp.FDelayOpt == 0 &&
 		pp.FDsdBalance == 0 && pp.FUserRecLib == 0 && pp.FUserSesLib == 0 && pp.FDelayOptLut == 0 &&
-		pp.NGateSize <= 0 && pp.FPower == 0 && pp.PLutLib == nil && pp.fLiftLeaves == 0 &&
+		pp.NGateSize <= 0 && pp.FPower == 0 && (pp.PLutLib == nil || pp.PLutLib.fVarPinDelays == 0) && pp.fLiftLeaves == 0 &&
 		pp.fSkipCutFilter == 0 && pp.NAndDelay <= 0 && pp.NAndArea <= 0
 }
 
@@ -789,6 +789,7 @@ func ifObjMergeCutsPlain(p *If_Man_t, pObj *If_Obj_t, pCutSet *If_Set_t, Mode, f
 	spec := pObj.fSpec != 0
 	required := pObj.Required + p.fEpsilon
 	objs := p.objs
+	lib := p.pPars.PLutLib
 	for _, pCut0 := range cuts0 {
 		for _, pCut1 := range cuts1 {
 			pCut := pCutSet.ppCuts[pCutSet.nCuts]
@@ -812,10 +813,18 @@ func ifObjMergeCutsPlain(p *If_Man_t, pObj *If_Obj_t, pCutSet *If_Set_t, Mode, f
 			pCut.fCompl = 0
 			pCut.fUser = 0
 			pCut.Cost = 0
-			// If_CutDelay: unit delay over the leaves
+			// If_CutDelay: unit delay over the leaves, or the library's
+			// delay for this cut size (no per-pin delays)
+			lutDelay := float32(1)
+			if lib != nil {
+				if pCut.nLeaves > uint32(lib.LutMax) {
+					panic("cut exceeds LUT library")
+				}
+				lutDelay = lib.pLutDelays[pCut.nLeaves][0]
+			}
 			delay := float32(-IF_FLOAT_LARGE)
 			for _, id := range pCut.pLeaves[:pCut.nLeaves] {
-				delay = ifMax(delay, objs[id].CutBest.Delay+1)
+				delay = ifMax(delay, objs[id].CutBest.Delay+lutDelay)
 			}
 			pCut.Delay = delay
 			if delay == -1 || Mode != 0 && delay > required {

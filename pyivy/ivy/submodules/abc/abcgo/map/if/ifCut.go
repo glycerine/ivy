@@ -270,6 +270,19 @@ func If_ManSortCompare(p *If_Man_t, a, b *If_Cut_t) int32 {
 				}
 			}
 			return r
+		case 2: // delay, useless, area, edge, power, leaves
+			if r = ifCmpEps(a.Delay, b.Delay, e); r == 0 {
+				if r = ifCmpInt(uint32(a.fUseless), uint32(b.fUseless)); r == 0 {
+					if r = ifCmpEps(a.Area, b.Area, e); r == 0 {
+						if r = ifCmpEps(a.Edge, b.Edge, e); r == 0 {
+							if r = ifCmpEps(a.Power, b.Power, e); r == 0 {
+								r = ifCmpInt(a.nLeaves, b.nLeaves)
+							}
+						}
+					}
+				}
+			}
+			return r
 		}
 	}
 	fields := ""
