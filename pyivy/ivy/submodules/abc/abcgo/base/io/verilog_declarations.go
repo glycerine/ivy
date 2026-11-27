@@ -57,8 +57,8 @@ func verilogInternalNets(n *abc.Network) []*abc.Object {
 	isOutput := func(net *abc.Object) bool {
 		return abc.Abc_ObjFanoutNum(net) > 0 && abc.Abc_ObjIsCo(abc.Abc_ObjFanout0(net)) != 0
 	}
-	for i, node := range n.ObjectsOfKind(abc.ObjectNode) {
-		if i == 0 {
+	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
+		if abc.Abc_ObjId(node) == 0 { // Abc_NtkForEachNode skips object 0
 			continue
 		}
 		net := abc.Abc_ObjFanout0(node)

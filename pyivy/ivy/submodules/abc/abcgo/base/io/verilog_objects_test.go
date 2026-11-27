@@ -24,7 +24,7 @@ func TestVerilogAigObjects(t *testing.T) {
 	abc.Abc_ObjAddFanin(out, node)
 	var buf bytes.Buffer
 	Io_WriteVerilogObjects(&buf, n, 0)
-	if got := buf.String(); got != "  assign out = (a & ~\\b[0] );\n" {
+	if got := buf.String(); got != "  assign out = a & ~\\b[0] ;\n" {
 		t.Fatalf("unexpected assignment %q", got)
 	}
 	if hop.Hop_ObjData(hop.Hop_IthVar(manager, 0)) != nil {

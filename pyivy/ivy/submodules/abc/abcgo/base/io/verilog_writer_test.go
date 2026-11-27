@@ -36,7 +36,7 @@ func TestWriteVerilogAigModule(t *testing.T) {
 	if err := WriteVerilog(&buf, n, 0); err != nil {
 		t.Fatal(err)
 	}
-	for _, fragment := range []string{"module top", "input  a, b;", "output y;", "assign y = (a & b);", "endmodule"} {
+	for _, fragment := range []string{"module top", "input  a, b;", "output y;", "assign y = a & b;", "endmodule"} {
 		if !strings.Contains(buf.String(), fragment) {
 			t.Fatalf("missing %q in %q", fragment, buf.String())
 		}

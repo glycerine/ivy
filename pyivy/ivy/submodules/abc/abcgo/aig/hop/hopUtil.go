@@ -61,35 +61,58 @@ func Hop_ObjCollectMulti(root *Hop_Obj_t, v *Vec_Ptr_t) {
 	}
 	Hop_ObjCollectMulti_rec(root, root, v)
 }
-func hopMuxInputs(o *Hop_Obj_t) (*Hop_Obj_t, *Hop_Obj_t, *Hop_Obj_t, bool) {
-	if o == nil || o.Type != AIG_AND || Hop_ObjFaninC0(o) == 0 || Hop_ObjFaninC1(o) == 0 {
-		return nil, nil, nil, false
+func Hop_ObjIsMuxType(o *Hop_Obj_t) int32 {
+	if Hop_ObjIsAnd(o) == 0 || Hop_ObjFaninC0(o) == 0 || Hop_ObjFaninC1(o) == 0 {
+		return 0
 	}
-	a, b := Hop_ObjFanin0(o), Hop_ObjFanin1(o)
-	if a.Type != AIG_AND || b.Type != AIG_AND {
-		return nil, nil, nil, false
+	n0, n1 := Hop_ObjFanin0(o), Hop_ObjFanin1(o)
+	if Hop_ObjIsAnd(n0) == 0 || Hop_ObjIsAnd(n1) == 0 {
+		return 0
 	}
-	aa, bb := []*Hop_Obj_t{a.pFanin0, a.pFanin1}, []*Hop_Obj_t{b.pFanin0, b.pFanin1}
-	for i, x := range aa {
-		for j, y := range bb {
-			if x == Hop_Not(y) {
-				if Hop_IsComplement(x) == 0 {
-					return x, Hop_Not(aa[1-i]), Hop_Not(bb[1-j]), true
-				}
-				return y, Hop_Not(bb[1-j]), Hop_Not(aa[1-i]), true
-			}
-		}
-	}
-	return nil, nil, nil, false
+	return hopBool((Hop_ObjFanin0(n0) == Hop_ObjFanin0(n1) && Hop_ObjFaninC0(n0)^Hop_ObjFaninC0(n1) != 0) ||
+		(Hop_ObjFanin0(n0) == Hop_ObjFanin1(n1) && Hop_ObjFaninC0(n0)^Hop_ObjFaninC1(n1) != 0) ||
+		(Hop_ObjFanin1(n0) == Hop_ObjFanin0(n1) && Hop_ObjFaninC1(n0)^Hop_ObjFaninC0(n1) != 0) ||
+		(Hop_ObjFanin1(n0) == Hop_ObjFanin1(n1) && Hop_ObjFaninC1(n0)^Hop_ObjFaninC1(n1) != 0))
 }
-func Hop_ObjIsMuxType(o *Hop_Obj_t) int32 { _, _, _, ok := hopMuxInputs(o); return hopBool(ok) }
+
+// Hop_ObjRecognizeMux returns the (never complemented) control of a MUX and
+// sets T and E, checking the fanin pairs in hopUtil.c's order.
 func Hop_ObjRecognizeMux(o *Hop_Obj_t, t, e **Hop_Obj_t) *Hop_Obj_t {
-	c, a, b, ok := hopMuxInputs(o)
-	if !ok {
+	if Hop_ObjIsMuxType(o) == 0 {
 		panic("not a mux")
 	}
-	*t, *e = a, b
-	return c
+	n0, n1 := Hop_ObjFanin0(o), Hop_ObjFanin1(o)
+	switch {
+	case Hop_ObjFanin1(n0) == Hop_ObjFanin1(n1) && Hop_ObjFaninC1(n0)^Hop_ObjFaninC1(n1) != 0:
+		if Hop_ObjFaninC1(n0) != 0 {
+			*t, *e = Hop_Not(Hop_ObjChild0(n1)), Hop_Not(Hop_ObjChild0(n0))
+			return Hop_ObjChild1(n1)
+		}
+		*t, *e = Hop_Not(Hop_ObjChild0(n0)), Hop_Not(Hop_ObjChild0(n1))
+		return Hop_ObjChild1(n0)
+	case Hop_ObjFanin0(n0) == Hop_ObjFanin0(n1) && Hop_ObjFaninC0(n0)^Hop_ObjFaninC0(n1) != 0:
+		if Hop_ObjFaninC0(n0) != 0 {
+			*t, *e = Hop_Not(Hop_ObjChild1(n1)), Hop_Not(Hop_ObjChild1(n0))
+			return Hop_ObjChild0(n1)
+		}
+		*t, *e = Hop_Not(Hop_ObjChild1(n0)), Hop_Not(Hop_ObjChild1(n1))
+		return Hop_ObjChild0(n0)
+	case Hop_ObjFanin0(n0) == Hop_ObjFanin1(n1) && Hop_ObjFaninC0(n0)^Hop_ObjFaninC1(n1) != 0:
+		if Hop_ObjFaninC0(n0) != 0 {
+			*t, *e = Hop_Not(Hop_ObjChild0(n1)), Hop_Not(Hop_ObjChild1(n0))
+			return Hop_ObjChild1(n1)
+		}
+		*t, *e = Hop_Not(Hop_ObjChild1(n0)), Hop_Not(Hop_ObjChild0(n1))
+		return Hop_ObjChild0(n0)
+	case Hop_ObjFanin1(n0) == Hop_ObjFanin0(n1) && Hop_ObjFaninC1(n0)^Hop_ObjFaninC0(n1) != 0:
+		if Hop_ObjFaninC1(n0) != 0 {
+			*t, *e = Hop_Not(Hop_ObjChild1(n1)), Hop_Not(Hop_ObjChild0(n0))
+			return Hop_ObjChild0(n1)
+		}
+		*t, *e = Hop_Not(Hop_ObjChild0(n0)), Hop_Not(Hop_ObjChild1(n1))
+		return Hop_ObjChild1(n0)
+	}
+	panic("not a mux")
 }
 func Hop_ObjRecognizeExor(o *Hop_Obj_t, a, b **Hop_Obj_t) int32 {
 	if o.Type == AIG_EXOR {
@@ -147,11 +170,123 @@ func hopFormula(edge *Hop_Obj_t, verilog bool) string {
 	}
 	return value
 }
-func Hop_ObjPrintEqn(w io.Writer, o *Hop_Obj_t, levels *Vec_Vec_t, level int32) {
-	fmt.Fprint(w, hopFormula(o, false))
+func hopPrintLevel(levels *Vec_Vec_t, level int32) *Vec_Ptr_t {
+	Vec_VecExpand(levels, level)
+	return Vec_VecEntry(levels, level)
 }
+func hopPiName(o *Hop_Obj_t) string {
+	name, _ := o.pData.(string)
+	return name
+}
+
+// Hop_ObjPrintEqn prints the formula rooted at o (hopUtil.c); PIs carry
+// their names in pData.
+func Hop_ObjPrintEqn(w io.Writer, o *Hop_Obj_t, levels *Vec_Vec_t, level int32) {
+	if levels == nil {
+		levels = Vec_VecAlloc(10)
+	}
+	compl := Hop_IsComplement(o) != 0
+	o = Hop_Regular(o)
+	if Hop_ObjIsConst1(o) != 0 {
+		fmt.Fprintf(w, "%d", hopBool(!compl))
+		return
+	}
+	if Hop_ObjIsPi(o) != 0 {
+		if compl {
+			fmt.Fprint(w, "!")
+		}
+		fmt.Fprint(w, hopPiName(o))
+		return
+	}
+	super := hopPrintLevel(levels, level)
+	Hop_ObjCollectMulti(o, super)
+	if level != 0 {
+		fmt.Fprint(w, "(")
+	}
+	op := " * "
+	if compl {
+		op = " + "
+	}
+	for i, n := int32(0), Vec_PtrSize(super); i < n; i++ {
+		Hop_ObjPrintEqn(w, Hop_NotCond(Vec_PtrEntry(super, i).(*Hop_Obj_t), hopBool(compl)), levels, level+1)
+		if i < n-1 {
+			fmt.Fprint(w, op)
+		}
+	}
+	if level != 0 {
+		fmt.Fprint(w, ")")
+	}
+}
+
+// Hop_ObjPrintVerilog prints the Verilog formula rooted at o (hopUtil.c).
 func Hop_ObjPrintVerilog(w io.Writer, o *Hop_Obj_t, levels *Vec_Vec_t, level, onlyAnds int32) {
-	fmt.Fprint(w, hopFormula(o, true))
+	if levels == nil {
+		levels = Vec_VecAlloc(10)
+	}
+	compl := Hop_IsComplement(o) != 0
+	o = Hop_Regular(o)
+	if Hop_ObjIsConst1(o) != 0 {
+		fmt.Fprintf(w, "1'b%d", hopBool(!compl))
+		return
+	}
+	if Hop_ObjIsPi(o) != 0 {
+		if compl {
+			fmt.Fprint(w, "~")
+		}
+		fmt.Fprint(w, hopPiName(o))
+		return
+	}
+	open, closeParen := "", ""
+	if level != 0 {
+		open, closeParen = "(", ")"
+	}
+	if onlyAnds == 0 && Hop_ObjIsExor(o) != 0 {
+		super := hopPrintLevel(levels, level)
+		Hop_ObjCollectMulti(o, super)
+		fmt.Fprint(w, open)
+		for i, n := int32(0), Vec_PtrSize(super); i < n; i++ {
+			Hop_ObjPrintVerilog(w, Hop_NotCond(Vec_PtrEntry(super, i).(*Hop_Obj_t), hopBool(compl && i == 0)), levels, level+1, onlyAnds)
+			if i < n-1 {
+				fmt.Fprint(w, " ^ ")
+			}
+		}
+		fmt.Fprint(w, closeParen)
+		return
+	}
+	if onlyAnds == 0 && Hop_ObjIsMuxType(o) != 0 {
+		var f0, f1 *Hop_Obj_t
+		if Hop_ObjRecognizeExor(o, &f0, &f1) != 0 {
+			fmt.Fprint(w, open)
+			Hop_ObjPrintVerilog(w, Hop_NotCond(f0, hopBool(compl)), levels, level+1, onlyAnds)
+			fmt.Fprint(w, " ^ ")
+			Hop_ObjPrintVerilog(w, f1, levels, level+1, onlyAnds)
+			fmt.Fprint(w, closeParen)
+		} else {
+			c := Hop_ObjRecognizeMux(o, &f1, &f0)
+			fmt.Fprint(w, open)
+			Hop_ObjPrintVerilog(w, c, levels, level+1, onlyAnds)
+			fmt.Fprint(w, " ? ")
+			Hop_ObjPrintVerilog(w, Hop_NotCond(f1, hopBool(compl)), levels, level+1, onlyAnds)
+			fmt.Fprint(w, " : ")
+			Hop_ObjPrintVerilog(w, Hop_NotCond(f0, hopBool(compl)), levels, level+1, onlyAnds)
+			fmt.Fprint(w, closeParen)
+		}
+		return
+	}
+	super := hopPrintLevel(levels, level)
+	Hop_ObjCollectMulti(o, super)
+	fmt.Fprint(w, open)
+	op := " & "
+	if compl {
+		op = " | "
+	}
+	for i, n := int32(0), Vec_PtrSize(super); i < n; i++ {
+		Hop_ObjPrintVerilog(w, Hop_NotCond(Vec_PtrEntry(super, i).(*Hop_Obj_t), hopBool(compl)), levels, level+1, onlyAnds)
+		if i < n-1 {
+			fmt.Fprint(w, op)
+		}
+	}
+	fmt.Fprint(w, closeParen)
 }
 func Hop_ObjPrintVerbose(o *Hop_Obj_t, haig int32) {
 	fmt.Printf("Node %p : type %d (refs = %3d)", o, o.Type, o.nRefs)
