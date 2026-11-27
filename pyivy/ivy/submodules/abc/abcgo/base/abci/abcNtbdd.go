@@ -120,6 +120,10 @@ func Abc_NtkBuildGlobalBdds(n *Abc_Ntk_t, sizeMax, dropInternal, reorder, revers
 	}
 	progress := extra.Extra_ProgressBarStart(nil, abc.Abc_NtkNodeNum(n))
 	counter := int32(0)
+	// this construction references every BDD it keeps, as the C does, so
+	// automatic reordering may run inside it
+	core.Cudd_AutodynSafeBegin(d)
+	defer core.Cudd_AutodynSafeEnd(d)
 	for _, co := range n.Objects() {
 		if !co.IsCO() {
 			continue

@@ -87,5 +87,6 @@ func Cudd_EndBDDReordering(dd *DdManager, started time.Time, success bool) bool 
 		success = dd.runHooks(CUDD_POST_REORDERING_HOOK, "BDD", started.UnixNano())
 	}
 	dd.reorderingTime += time.Since(started)
+	dd.updateNextDyn()
 	return success
 }

@@ -431,6 +431,32 @@ func Cudd_ReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) int
 		reorderCommit(dd, roots, heap, order)
 		return boolToInt(Cudd_EndBDDReordering(dd, started, true))
 	}
+	// CUDD's sifting runs on a mutable copy of the heap (cuddSwapInPlace,
+	// ddSiftingAux, ddSymmSiftingAux); only the final order is committed.
+	if method == CUDD_REORDER_SIFT || method == CUDD_REORDER_SIFT_CONVERGE || method == CUDD_REORDER_SYMM_SIFT {
+		if sh := newSiftHeap(heap); sh != nil {
+			switch method {
+			case CUDD_REORDER_SIFT:
+				sh.sifting(0, sh.n-1, dd)
+			case CUDD_REORDER_SIFT_CONVERGE:
+				for {
+					initial := sh.cost()
+					sh.sifting(0, sh.n-1, dd)
+					if initial <= sh.cost() {
+						break
+					}
+				}
+			case CUDD_REORDER_SYMM_SIFT:
+				sh.symmSifting(0, sh.n-1, dd)
+			}
+			final := append([]int(nil), sh.invperm...)
+			reorderCommit(dd, roots, reorderBuild(dd, roots, final), final)
+			if method == CUDD_REORDER_SYMM_SIFT {
+				dd.symmetryGroups = sh.symmGroups()
+			}
+			return boolToInt(Cudd_EndBDDReordering(dd, started, true))
+		}
+	}
 	groups := make([][]int, len(order))
 	for i, v := range order {
 		groups[i] = []int{v}

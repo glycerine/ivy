@@ -89,6 +89,9 @@ type DdManager struct {
 	allocationAttempt                 *bddAllocationAttempt
 	reorderMethod                     Cudd_ReorderingType
 	autoDyn, autoDynZdd               bool
+	autoGuard                         int  // nesting of guarded BDD operations
+	autoDynSafe                       int  // nesting of reference-safe regions
+	inAutoReorder                     bool // an automatic reordering is running
 	autoMethod, autoMethodZdd         Cudd_ReorderingType
 	realignBdd, realignZdd            bool
 	minHit, maxGrowthAlt              float64
@@ -262,7 +265,7 @@ func newEmptyManager() *DdManager {
 		epsilon:    1e-12,
 		cacheSlots: CUDD_CACHE_SLOTS, maxCacheHard: defaultDataLimit / (nativeCacheBytes * DD_MAX_CACHE_FRACTION),
 		maxLive: ^uint32(0), maxMemory: uint64(^uint(0)), reorderMethod: CUDD_REORDER_SIFT,
-		maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, siftMaxVar: 1000, siftMaxSwap: 2000000,
+		maxGrowth: 1.1, maxGrowthAlt: 2.2, minHit: 30.0 / 70.0, siftMaxVar: 1000, siftMaxSwap: 2000000, nextDyn: DD_FIRST_REORDER,
 		stdout: os.Stdout, stderr: os.Stderr,
 	}
 	dd.groupcheck = CUDD_GROUP_CHECK7
@@ -541,6 +544,7 @@ func (dd *DdManager) node(index uint32, t, e *DdNode) *DdNode {
 }
 
 func (dd *DdManager) insertBDDPair(key bddUniqueKey, entry *uniqueEntry, pair *[2]DdNode) *DdNode {
+	dd.autoReorderCheck()
 	if dd.allocationLimited && dd.unique.count >= dd.allocationCeiling {
 		panic(bddAllocationLimit{})
 	}

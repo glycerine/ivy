@@ -78,28 +78,28 @@ func Cudd_bddIte(dd *DdManager, f, g, h *DdNode) *DdNode {
 	if !dd.valid(f, g, h) {
 		return nil
 	}
-	return dd.ite(f, g, h)
+	return dd.withAutoReorder(func() *DdNode { return dd.ite(f, g, h) })
 }
 
 func Cudd_bddAnd(dd *DdManager, f, g *DdNode) *DdNode {
 	if !dd.valid(f, g) {
 		return nil
 	}
-	return cuddBddAndRecur(dd, f, g)
+	return dd.withAutoReorder(func() *DdNode { return cuddBddAndRecur(dd, f, g) })
 }
 
 func Cudd_bddOr(dd *DdManager, f, g *DdNode) *DdNode {
 	if !dd.valid(f, g) {
 		return nil
 	}
-	return Cudd_Not(cuddBddAndRecur(dd, Cudd_Not(f), Cudd_Not(g)))
+	return Cudd_Not(dd.withAutoReorder(func() *DdNode { return cuddBddAndRecur(dd, Cudd_Not(f), Cudd_Not(g)) }))
 }
 
 func Cudd_bddXor(dd *DdManager, f, g *DdNode) *DdNode {
 	if !dd.valid(f, g) {
 		return nil
 	}
-	return dd.ite(f, Cudd_Not(g), g)
+	return dd.withAutoReorder(func() *DdNode { return dd.ite(f, Cudd_Not(g), g) })
 }
 
 func Cudd_bddXnor(dd *DdManager, f, g *DdNode) *DdNode { return Cudd_Not(Cudd_bddXor(dd, f, g)) }
