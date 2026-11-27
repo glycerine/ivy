@@ -78,7 +78,7 @@ func Gia_ManPerformMappingInt(src *Gia_Man_t, pars *If_Par_t) *Gia_Man_t {
 	if attrs != nil {
 		assert(len(attrs) == int(If_ManCoNum(manager)), "CO attributes match interface")
 		for i, value := range attrs {
-			If_ObjFanin0(If_ManCo(manager, int32(i))).fSpec = uint32(ifTuneBoolInt(value != 0))
+			If_ObjFanin0(If_ManCo(manager, int32(i))).fSpec = uint8(ifTuneBoolInt(value != 0))
 		}
 	}
 	if If_ManPerformMapping(manager) == 0 {

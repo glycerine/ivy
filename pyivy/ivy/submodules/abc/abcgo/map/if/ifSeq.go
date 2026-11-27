@@ -53,7 +53,7 @@ func If_ManPrepareMappingSeq(p *If_Man_t) {
 		pObjLi = If_ManLi(p, i)
 		pObjLo = If_ManLo(p, i)
 		pObjLo.pFanin0 = If_ObjFanin0(pObjLi)
-		pObjLo.fCompl0 = uint32(If_ObjFaninC0(pObjLi))
+		pObjLo.fCompl0 = uint8(If_ObjFaninC0(pObjLi))
 	}
 }
 

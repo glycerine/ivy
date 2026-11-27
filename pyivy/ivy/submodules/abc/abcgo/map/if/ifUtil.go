@@ -272,9 +272,9 @@ func If_ObjPrint(obj *If_Obj_t) {
 	case IF_CI:
 		fmt.Print("PI")
 	case IF_CO:
-		fmt.Printf("PO( %4d%s )", If_ObjId(obj.pFanin0), complementSuffix(obj.fCompl0))
+		fmt.Printf("PO( %4d%s )", If_ObjId(obj.pFanin0), complementSuffix(uint32(obj.fCompl0)))
 	default:
-		fmt.Printf("AND( %4d%s, %4d%s )", If_ObjId(obj.pFanin0), complementSuffix(obj.fCompl0), If_ObjId(obj.pFanin1), complementSuffix(obj.fCompl1))
+		fmt.Printf("AND( %4d%s, %4d%s )", If_ObjId(obj.pFanin0), complementSuffix(uint32(obj.fCompl0)), If_ObjId(obj.pFanin1), complementSuffix(uint32(obj.fCompl1)))
 	}
 	fmt.Printf(" (refs = %3d)\n", obj.nVisitsCopy)
 }

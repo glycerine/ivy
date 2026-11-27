@@ -278,7 +278,7 @@ func If_ManCreateCo(p *If_Man_t, driver *If_Obj_t) *If_Obj_t {
 	obj.IdPio = int32(vec.Vec_PtrSize(p.vCos))
 	vec.Vec_PtrPush(p.vCos, obj)
 	obj.Type = IF_CO
-	obj.fCompl0 = uint32(If_IsComplement(driver))
+	obj.fCompl0 = uint8(If_IsComplement(driver))
 	driver = If_Regular(driver)
 	obj.pFanin0 = driver
 	driver.nRefs++
@@ -313,8 +313,8 @@ func If_ManCreateAnd(p *If_Man_t, fan0, fan1 *If_Obj_t) *If_Obj_t {
 	}
 	obj := If_ManSetupObj(p)
 	obj.Type = IF_AND
-	obj.fCompl0 = uint32(If_IsComplement(fan0))
-	obj.fCompl1 = uint32(If_IsComplement(fan1))
+	obj.fCompl0 = uint8(If_IsComplement(fan0))
+	obj.fCompl1 = uint8(If_IsComplement(fan1))
 	fan0, fan1 = If_Regular(fan0), If_Regular(fan1)
 	obj.pFanin0, obj.pFanin1 = fan0, fan1
 	for _, fanin := range []*If_Obj_t{fan0, fan1} {
@@ -394,7 +394,13 @@ func If_ManSetupCutTriv(p *If_Man_t, cut *If_Cut_t, objID int32) {
 }
 
 func If_ManSetupObj(p *If_Man_t) *If_Obj_t {
-	obj := &If_Obj_t_{}
+	// objects come from slabs, so consecutive ids are adjacent in memory
+	// as in ABC's object pool
+	if len(p.objSlab) == 0 {
+		p.objSlab = make([]If_Obj_t_, 1024)
+	}
+	obj := &p.objSlab[0]
+	p.objSlab = p.objSlab[1:]
 	If_CutSetup(p, &obj.CutBest)
 	obj.Id = int32(vec.Vec_PtrSize(p.vObjs))
 	obj.Required = IF_FLOAT_LARGE

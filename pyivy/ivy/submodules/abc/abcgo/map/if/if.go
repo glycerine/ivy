@@ -176,6 +176,7 @@ type If_LibLut_t_ struct {
 }
 
 type If_Man_t_ struct {
+	objSlab                                         []If_Obj_t_ // unused tail of the current object slab
 	pName                                           string
 	pPars                                           *If_Par_t
 	pConst1                                         *If_Obj_t
@@ -286,16 +287,21 @@ type If_Set_t_ struct {
 }
 
 type If_Obj_t_ struct {
+	// Cut evaluation reads these of every leaf (best cut's delay and area,
+	// type, references, estimated references); they come first so a leaf
+	// costs one cache line (offsets 0-40). The rest follows ABC's If_Obj_t.
 	Type                                                                     If_Type_t
-	fCompl0, fCompl1, fPhase, fRepr, fMark, fVisit, fSpec, fDriver, fSkipCut uint32
+	nRefs                                                                    int32
+	EstRefs, Required                                                        float32
+	CutBest                                                                  If_Cut_t
+	fCompl0, fCompl1, fPhase, fRepr, fMark, fVisit, fSpec, fDriver, fSkipCut uint8
 	Level                                                                    uint32
-	Id, IdPio, nRefs, nVisits, nVisitsCopy                                   int32
+	Id, IdPio, nVisits, nVisitsCopy                                          int32
 	pFanin0, pFanin1, pEquiv                                                 *If_Obj_t
-	EstRefs, Required, LValue                                                float32
+	LValue                                                                   float32
 	pCopy                                                                    any
 	iCopy                                                                    int32
 	pCutSet                                                                  *If_Set_t
-	CutBest                                                                  If_Cut_t
 	regular                                                                  *If_Obj_t
 	complement                                                               bool
 	complemented                                                             *If_Obj_t

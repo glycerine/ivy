@@ -634,7 +634,7 @@ func If_ObjPerformMappingChoice(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPrepro
 				continue
 			}
 			// set the phase attribute
-			pCut.fCompl = pObj.fPhase ^ pTemp.fPhase
+			pCut.fCompl = uint32(pObj.fPhase ^ pTemp.fPhase)
 			// compute area of the cut (this area may depend on the application specific cost)
 			if Mode == 2 {
 				pCut.Area = If_CutAreaDerefed(p, pCut)
