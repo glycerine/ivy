@@ -54,6 +54,7 @@ func Abc_NtkRestrash(pNtk *Abc_Ntk_t, fCleanup int32) *Abc_Ntk_t {
 		fmt.Println("Warning: The choice nodes in the original AIG are removed by strashing.")
 	}
 	pNtkAig := abc.Abc_NtkStartFrom(pNtk, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
+	pNtkAig.ReserveAnds(int(abc.Abc_NtkNodeNum(pNtk)))
 	for _, node := range abc.Abc_NtkDfs(pNtk, 0) {
 		strashNodeCopy(pNtkAig, node)
 	}
@@ -278,13 +279,55 @@ func Abc_NtkAppend(pNtk1, pNtk2 *Abc_Ntk_t, fAddPos int32) int32 {
 func Abc_NtkStrashPerform(pNtkOld, pNtkNew *Abc_Ntk_t, fAllNodes, fRecord int32) {
 	assert(abc.Abc_NtkIsLogic(pNtkOld) != 0, "Abc_NtkIsLogic(pNtkOld)")
 	assert(abc.Abc_NtkIsStrash(pNtkNew) != 0, "Abc_NtkIsStrash(pNtkNew)")
+	var copies []abc.Edge // ABC edge of each Hop object, by Hop id
 	for _, node := range abc.Abc_NtkDfsIter(pNtkOld, fAllNodes) {
 		if abc.Abc_ObjIsBarBuf(node) != 0 {
 			strashSetCopy(node, strashCopyChild(node, 0))
 		} else {
-			strashSetCopy(node, Abc_NodeStrash(pNtkNew, node, fRecord))
+			strashSetCopy(node, abcNodeStrash(pNtkNew, node, &copies))
 		}
 	}
+}
+
+// abcNodeStrash is Abc_NodeStrash with the Hop-to-ABC copies kept in a
+// slice indexed by Hop id (C keeps them in pData; boxing an edge into
+// Hop's data field allocated once per node).
+func abcNodeStrash(pNtkNew *Abc_Ntk_t, pNodeOld *Abc_Obj_t, copies *[]abc.Edge) abc.Edge {
+	pMan := pNodeOld.Network().FunctionManager.(*hop.Hop_Man_t)
+	pRoot := pNodeOld.Data.(*Hop_Obj_t)
+	if abc.Abc_NodeIsConst(pNodeOld) != 0 || hop.Hop_Regular(pRoot) == hop.Hop_ManConst1(pMan) {
+		return abc.Abc_ObjNotCond(abc.Abc_AigConst1(pNtkNew), hop.Hop_IsComplement(pRoot))
+	}
+	set := func(o *Hop_Obj_t, e abc.Edge) {
+		if int(o.Id) >= len(*copies) {
+			grown := make([]abc.Edge, 2*int(o.Id)+64)
+			copy(grown, *copies)
+			*copies = grown
+		}
+		(*copies)[o.Id] = e
+	}
+	for i := int32(0); i < abc.Abc_ObjFaninNum(pNodeOld); i++ {
+		fanin := abc.Abc_ObjFanin(pNodeOld, i)
+		set(hop.Hop_IthVar(pMan, i), abc.Abc_ObjNotCond(abc.Abc_ObjCopyEdge(fanin), abc.Abc_ObjFaninC(pNodeOld, i)))
+	}
+	set(hop.Hop_ManConst1(pMan), abc.Abc_AigConst1(pNtkNew))
+	root := hop.Hop_Regular(pRoot)
+	aig := strashAig(pNtkNew)
+	var rec func(o *Hop_Obj_t)
+	rec = func(o *Hop_Obj_t) {
+		if hop.Hop_ObjIsNode(o) == 0 || hop.Hop_ObjIsMarkA(o) != 0 {
+			return
+		}
+		rec(hop.Hop_ObjFanin0(o))
+		rec(hop.Hop_ObjFanin1(o))
+		a := abc.Abc_ObjNotCond((*copies)[hop.Hop_ObjFanin0(o).Id], hop.Hop_ObjFaninC0(o))
+		b := abc.Abc_ObjNotCond((*copies)[hop.Hop_ObjFanin1(o).Id], hop.Hop_ObjFaninC1(o))
+		set(o, abc.Abc_AigAnd(aig, a, b))
+		hop.Hop_ObjSetMarkA(o)
+	}
+	rec(root)
+	hop.Hop_ConeUnmark_rec(root)
+	return abc.Abc_ObjNotCond((*copies)[root.Id], hop.Hop_IsComplement(pRoot))
 }
 
 func Abc_NodeStrash_rec(pMan *abc.Abc_Aig_t, pObj *Hop_Obj_t) {

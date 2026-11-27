@@ -250,6 +250,20 @@ func NewAIGNetworkWithCapacity(name string, inputs, latches, outputs, ands int) 
 	return n
 }
 
+// ReserveAnds sizes the structural hash table and the object arrays for up
+// to ands gates, for callers that know an upper bound (restrashing an AIG
+// can only fold gates away).
+func (n *Network) ReserveAnds(ands int) {
+	if ands <= 0 {
+		return
+	}
+	if len(n.hashed) == 0 {
+		n.hashed = make(map[[2]int]*Object, ands)
+	}
+	n.objects = slices.Grow(n.objects, ands)
+	n.kindOrder[ObjectNode] = slices.Grow(n.kindOrder[ObjectNode], ands)
+}
+
 // ReserveAIG reserves room for the specified additional terminals and gates.
 // Bound speculative gate storage because structural hashing can fold gates away.
 func (n *Network) ReserveAIG(inputs, latches, outputs, ands int) {
