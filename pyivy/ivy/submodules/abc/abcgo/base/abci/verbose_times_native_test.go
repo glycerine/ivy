@@ -6,8 +6,11 @@ import (
 	"testing"
 )
 
-// memory figures depend on the allocator
-var mbTimes = regexp.MustCompile(`[0-9]+\.[0-9]+ MB`)
+// memory figures depend on the allocator, and every "N.NN sec" is a time
+var (
+	mbTimes  = regexp.MustCompile(`[0-9]+\.[0-9]+ MB`)
+	secTimes = regexp.MustCompile(`[0-9]+\.[0-9]+ sec`)
+)
 
 // Times are printed with Abc_PrintTime ("Time =%9.2f sec"); several ports
 // printed a Go duration ("Time = 7.92ms", "Time: 1.2s") and omitted lines
@@ -27,7 +30,7 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 			t.Errorf("%s: Go duration in output:\n%s", script, port)
 		}
 		native := bmc3Normalize(runNativeABC(t, script))
-		clean := func(s string) string { return mbTimes.ReplaceAllString(s, "M MB") }
+		clean := func(s string) string { return secTimes.ReplaceAllString(mbTimes.ReplaceAllString(s, "M MB"), "T sec") }
 		if clean(native) != clean(port) {
 			t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
 		}
