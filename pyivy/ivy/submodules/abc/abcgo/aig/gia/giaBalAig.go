@@ -354,7 +354,24 @@ func Dam_ManCreatePairs(p *Dam_Man_t, verbose int32) {
 	hash := vec.Hash_IntManStart(int(p.pGia.nObjs) / 2)
 	reverse := make([]int32, 1)
 	type occurrence struct{ divisor, node int32 }
-	var occurrences []occurrence
+	// count the pairs first: on large designs there are millions, and C's
+	// realloc grows its arrays without copying where append cannot
+	nOccur := 0
+	for _, obj := range p.pGia.pObjs {
+		set := Dam_ObjSet(p, obj.id)
+		if set == nil {
+			continue
+		}
+		xor := Gia_ObjIsXor(obj) != 0
+		c := 0
+		for _, lit := range set[1 : 1+set[0]] {
+			if xor && Vec_IntEntry(xorRefs, int(lit>>1)) > 1 || !xor && Vec_IntEntry(andRefs, int(lit)) > 1 {
+				c++
+			}
+		}
+		nOccur += c * (c - 1) / 2
+	}
+	occurrences := make([]occurrence, 0, nOccur)
 	var candidates []int32
 	var pairsAll, pairsTried, pairsUsed, pairsXor, divsXor int
 	for _, obj := range p.pGia.pObjs {
@@ -385,7 +402,15 @@ func Dam_ManCreatePairs(p *Dam_Man_t, verbose int32) {
 	p.vHash = vec.Hash_IntManStart(vec.Hash_IntManEntryNum(hash))
 	p.vCounts = []float32{float32(util.ABC_INFINITY)}
 	p.vDiv2Nod = []int32{util.ABC_INFINITY}
-	p.vNodStore = []int32{-1}
+	nStore := 1
+	for id := 1; id <= vec.Hash_IntManEntryNum(hash); id++ {
+		if refs := vec.Hash_IntObjData2(hash, int32(id)); refs >= 2 {
+			nStore += int(refs) + 1
+		}
+	}
+	// Dam_ManUpdate appends the new divisors' node sets (about as many again)
+	p.vNodStore = make([]int32, 1, 2*nStore)
+	p.vNodStore[0] = -1
 	p.vQue = vec.Vec_QueAlloc(vec.Hash_IntManEntryNum(hash))
 	vec.Vec_QueSetPriority(p.vQue, &p.vCounts)
 	remap := make([]int32, vec.Hash_IntManEntryNum(hash)+1)
