@@ -3,6 +3,7 @@ package abc
 import (
 	"bytes"
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -534,10 +535,12 @@ func abcNodeSortCubesFast(o *Object, store *[]byte, weight int32) bool {
 		order[i] = int32(i)
 	}
 	cube := func(r int32) string { return text[int(r)*width : int(r)*width+nVars] }
+	// rows with equal keys are equal text, so the order among them is not
+	// observable (C's qsort is not stable either)
 	if weight != 0 {
-		sort.Slice(order, func(i, j int) bool { return Abc_NodeCompareCubes2(cube(order[i]), cube(order[j])) < 0 })
+		slices.SortFunc(order, func(a, b int32) int { return int(Abc_NodeCompareCubes2(cube(a), cube(b))) })
 	} else {
-		sort.Slice(order, func(i, j int) bool { return cube(order[i]) < cube(order[j]) })
+		slices.SortFunc(order, func(a, b int32) int { return strings.Compare(cube(a), cube(b)) })
 	}
 	buf := (*store)[:0]
 	for _, r := range order {
