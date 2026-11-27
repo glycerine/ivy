@@ -34,7 +34,7 @@ func IoCommandReadBlif(frame *abcmain.Frame, args []string) int32 {
 		}
 	}
 	if err != nil {
-		fmt.Fprintln(frame.Err, err)
+		printReadError(frame, err)
 		return 1
 	}
 	if network == nil {

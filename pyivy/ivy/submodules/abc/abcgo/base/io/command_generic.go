@@ -1,6 +1,7 @@
 package io
 
 import (
+	"errors"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -48,7 +49,7 @@ func IoCommandRead(frame *abcmain.Frame, args []string) int32 {
 	if flatten {
 		n, err := ReadNetwork(filename, Io_ReadFileType(filename), check)
 		if err != nil {
-			fmt.Fprintln(frame.Err, err)
+			printReadError(frame, err)
 			return 0
 		}
 		graph := abc.Abc_NtkFlattenHierarchyGia(n, nil, 0)
@@ -62,7 +63,7 @@ func IoCommandRead(frame *abcmain.Frame, args []string) int32 {
 	}
 	n, err := ReadLogic(filename, Io_ReadFileType(filename), check, barriers)
 	if err != nil {
-		fmt.Fprintln(frame.Err, err)
+		printReadError(frame, err)
 		return 0
 	}
 	if abc.Abc_NtkPiNum(n) == 0 {
@@ -94,4 +95,16 @@ func IoCommandWrite(frame *abcmain.Frame, args []string) int32 {
 		fmt.Fprintln(frame.Err, err)
 	}
 	return 0
+}
+
+// printReadError reports a reader failure: a reader's own message
+// (Io_ReadBlifMv's sError) is printed with Io_Read's "Reading network from
+// file has failed." on stdout, as ABC does; others go to the error stream.
+func printReadError(frame *abcmain.Frame, err error) {
+	var read *BlifReadError
+	if errors.As(err, &read) {
+		fmt.Fprintf(frame.Out, "%s\nReading network from file has failed.\n", read.Message)
+		return
+	}
+	fmt.Fprintln(frame.Err, err)
 }

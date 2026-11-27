@@ -3,6 +3,7 @@ package io
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -63,6 +64,23 @@ func blifLines(name, text string) ([]blifLine, error) {
 func blifError(name string, line blifLine, format string, args ...any) error {
 	return fmt.Errorf("%s:%d: %s", name, line.number, fmt.Sprintf(format, args...))
 }
+
+// BlifReadError is a failure Io_ReadBlifMv reports in its own words
+// (pMan->sError, "Line N: ..."); read prints it and then
+// "Reading network from file has failed."
+type BlifReadError struct{ Message string }
+
+func (e *BlifReadError) Error() string { return e.Message }
+
+func blifReadErrorf(format string, args ...any) error {
+	return &BlifReadError{Message: fmt.Sprintf(format, args...)}
+}
+
+// blifDuplicate is a second driver of a signal; the directive loop words it
+// with the line of the definition.
+type blifDuplicate struct{ name string }
+
+func (e *blifDuplicate) Error() string { return "duplicate driver for " + e.name }
 func (m *blifModel) net(name string) *abc.Object {
 	if o := m.nets[name]; o != nil {
 		return o
@@ -76,7 +94,7 @@ func (m *blifModel) connect(out, in *abc.Object) error { return m.network.AddFan
 func (m *blifModel) input(name string) error {
 	net := m.net(name)
 	if net.FaninNum() > 0 {
-		return fmt.Errorf("duplicate driver for %s", name)
+		return &blifDuplicate{name}
 	}
 	pi := m.network.NewObject(abc.ObjectPI)
 	pi.SetName(name)
@@ -100,7 +118,7 @@ func (m *blifModel) node(names []string, data any) (*abc.Object, error) {
 	}
 	output := m.net(names[len(names)-1])
 	if output.FaninNum() > 0 {
-		return nil, fmt.Errorf("duplicate driver for %s", output.Name())
+		return nil, &blifDuplicate{output.Name()}
 	}
 	node := m.network.NewObject(abc.ObjectNode)
 	node.Data = data
@@ -383,9 +401,8 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 			current.lines = append(current.lines, line)
 		}
 	}
-	if current != nil {
-		return nil, fmt.Errorf("%s: model %s has no .end", name, current.network.Name)
-	}
+	// Io_MvLoadFile appends a spare ".end", so the last model may omit it
+	current = nil
 	if len(models) == 0 {
 		return nil, fmt.Errorf("%s: no models", name)
 	}
@@ -485,6 +502,14 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 				err = fmt.Errorf("unsupported BLIF directive %s", f[0])
 			}
 			if err != nil {
+				var dup *blifDuplicate
+				var read *BlifReadError
+				switch {
+				case errors.As(err, &read):
+					return nil, err
+				case errors.As(err, &dup):
+					return nil, blifReadErrorf("Line %d: Signal \"%s\" is defined more than once.", line.number, dup.name)
+				}
 				return nil, blifError(name, line, "%v", err)
 			}
 		}
@@ -493,12 +518,20 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 				return nil, err
 			}
 		}
-		if check {
+		// Abc_NtkFinalizeRead: undriven nets get constant-0 drivers, with
+		// its warning (blackboxes are finished elsewhere)
+		if !multiValued && m.network.Function != uint8(abc.ABC_FUNC_BLACKBOX) {
+			abc.Abc_NtkFinalizeRead(m.network)
+		}
+		// multi-valued nets get no constant driver here: reject them
+		if check && multiValued {
 			for signal, net := range m.nets {
 				if net.FaninNum() == 0 && m.network.Function != uint8(abc.ABC_FUNC_BLACKBOX) {
 					return nil, fmt.Errorf("%s: model %s signal %s has no driver", name, m.network.Name, signal)
 				}
 			}
+		}
+		if check {
 			if err := m.network.Check(); err != nil {
 				return nil, err
 			}
@@ -545,33 +578,65 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 	}
 	return design.Tops[0], nil
 }
+
+// binaryBlifCover is Io_MvParseTableBlif: the table's tokens, across its
+// lines, are product/output pairs; outputs are 0, 1, x (as 1) or n (as 0),
+// all of the first one's polarity.
 func binaryBlifCover(inputs int, rows []blifLine) (string, error) {
-	if len(rows) == 0 {
+	type token struct {
+		text string
+		line int
+	}
+	var tokens []token
+	for _, row := range rows {
+		for _, field := range strings.Fields(row.text) {
+			tokens = append(tokens, token{field, row.number})
+		}
+	}
+	if len(tokens) == 0 {
 		return " 0\n", nil
 	}
+	validOutput := func(v string) bool { return len(v) == 1 && strings.Contains("01xn", v) }
+	if len(tokens) == 1 {
+		output := tokens[0]
+		if !validOutput(output.text) {
+			return "", blifReadErrorf("Line %d: Constant table has wrong output value \"%s\".", output.line, output.text)
+		}
+		if output.text == "0" {
+			return " 0\n", nil
+		}
+		return " 1\n", nil
+	}
+	if len(tokens)%2 == 1 {
+		return "", blifReadErrorf("Line %d: Table has odd number of tokens (%d).", tokens[0].line, len(tokens))
+	}
 	var cover strings.Builder
-	polarity := ""
-	for _, row := range rows {
-		f := strings.Fields(row.text)
-		pattern, value := "", ""
-		if inputs == 0 && len(f) == 1 {
-			value = f[0]
-		} else if len(f) == 2 {
-			pattern, value = f[0], f[1]
-		} else {
-			return "", fmt.Errorf("invalid binary cube %s", row.text)
+	polarity := -1
+	for i := 0; i < len(tokens); i += 2 {
+		product, output := tokens[i], tokens[i+1]
+		if len(product.text) != inputs {
+			return "", blifReadErrorf("Line %d: Cube \"%s\" has size different from the fanin count (%d).", product.line, product.text, inputs)
 		}
-		if len(pattern) != inputs || strings.Trim(pattern, "01-") != "" || (value != "0" && value != "1") {
-			return "", fmt.Errorf("invalid binary cube %s", row.text)
+		if !validOutput(output.text) {
+			return "", blifReadErrorf("Line %d: Output value \"%s\" is incorrect.", product.line, output.text)
 		}
-		if polarity != "" && polarity != value {
-			return "", fmt.Errorf("mixed output polarities in binary cover")
+		value := 0
+		if output.text == "1" || output.text == "x" {
+			value = 1
 		}
-		polarity = value
-		fmt.Fprintf(&cover, "%s %s\n", pattern, value)
+		if polarity == -1 {
+			polarity = value
+		} else if polarity != value {
+			return "", blifReadErrorf("Line %d: Output value \"%s\" differs from the value in the first line of the table (%d).", product.line, output.text, polarity)
+		}
+		if strings.Trim(product.text, "01-") != "" {
+			return "", fmt.Errorf("invalid binary cube %s", product.text)
+		}
+		fmt.Fprintf(&cover, "%s %d\n", product.text, value)
 	}
 	return cover.String(), nil
 }
+
 func blifLatch(m *blifModel, f []string) error {
 	if len(f) < 2 || len(f) > 5 {
 		return fmt.Errorf("invalid .latch")
