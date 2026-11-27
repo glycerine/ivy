@@ -190,6 +190,10 @@ cd z3vendor/z3
 cd ../.. # so you should be in ivy/goivy now, using the goivy/Makefile to:
 make z3-build
 make build
+
+# done! to run the test suite:
+make test
+make test-web
 ~~~
 
 binaries built:
