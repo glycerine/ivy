@@ -130,6 +130,8 @@ func TestAigerFileCompressionAndMalformedInput(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// Io_WriteAiger writes an extended header's POs as bad states (the file's
+	// O/B split is not kept), so a written file reads back to the same network
 	for _, suffix := range []string{".aig.gz", ".aig.bz2"} {
 		path := filepath.Join(t.TempDir(), "roundtrip"+suffix)
 		if err = WriteAigerWithOptions(network, path, ioa.WriteOptions{Symbols: true}); err != nil {
@@ -139,8 +141,16 @@ func TestAigerFileCompressionAndMalformedInput(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		before, _ := aigerModelFromNetwork(network)
-		after, _ := aigerModelFromNetwork(decoded)
+		again := filepath.Join(t.TempDir(), "again"+suffix)
+		if err = WriteAigerWithOptions(decoded, again, ioa.WriteOptions{Symbols: true}); err != nil {
+			t.Fatal(err)
+		}
+		redecoded, err := ReadAiger(again, true)
+		if err != nil {
+			t.Fatal(err)
+		}
+		before, _ := aigerModelFromNetwork(decoded)
+		after, _ := aigerModelFromNetwork(redecoded)
 		if !reflect.DeepEqual(before, after) {
 			t.Fatalf("compressed roundtrip differs for %s", suffix)
 		}
@@ -171,7 +181,9 @@ func TestAigerNativeDispatchAndCounterexampleTrace(t *testing.T) {
 	if err = WriteAigerCounterexample(cex, network, nil, trace); err != nil {
 		t.Fatal(err)
 	}
-	if data, readErr := os.ReadFile(trace); readErr != nil || string(data) != "1\n0 1 000 1\n1 1 110 0\n" {
+	// Io_WriteAigerCex prints the POs with ABC's polarity, where the
+	// constraint (the third output) is the complement of the file's literal
+	if data, readErr := os.ReadFile(trace); readErr != nil || string(data) != "1\n0 1 001 1\n1 1 111 0\n" {
 		t.Fatalf("counterexample trace = %q, err=%v", data, readErr)
 	}
 }

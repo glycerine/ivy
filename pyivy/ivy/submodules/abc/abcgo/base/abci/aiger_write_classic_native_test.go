@@ -29,9 +29,7 @@ func TestWriteAigerLikeNative(t *testing.T) {
 		} else if !abcStamp.Match(got) || !bytes.HasSuffix(got, []byte("refer to http://fmv.jku.at/aiger\n")) {
 			t.Fatalf("%s: written AIG lacks ABC's trailer", cmd)
 		}
-		// write_aiger -u: Saig_ManDupIsoCanonical's order still differs
-		// from native (task: canonical form), so only the trailer is checked.
-		if os.Getenv("ABC_BINARY") == "" || cmd == "write_aiger -u" {
+		if os.Getenv("ABC_BINARY") == "" {
 			continue
 		}
 		nativeFile := filepath.Join(dir, "native.aig")

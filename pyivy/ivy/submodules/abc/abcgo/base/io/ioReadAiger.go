@@ -307,6 +307,10 @@ func networkFromCheckedAigerModel(model *ioa.Model) (*abc.Network, error) {
 			outputObjects[len(model.Outputs)+len(model.Bad)+int(symbol.Index)].SetName(name)
 		}
 	}
+	// as Io_ReadAiger: ABC keeps constraints inverted relative to the file
+	if len(model.Bad) != 0 || len(model.Constraints) != 0 || len(model.Justice) != 0 || len(model.Fairness) != 0 {
+		abc.Abc_NtkInvertConstraints(network)
+	}
 	if err := network.Check(); err != nil {
 		return nil, fmt.Errorf("invalid ABC network after AIGER read: %w", err)
 	}

@@ -103,6 +103,9 @@ func writeAiger(network *abc.Network, filename string, options ioa.WriteOptions,
 	if err != nil {
 		return err
 	}
+	if err = ioAigerOutputsLikeABC(network, model, options.Compact); err != nil {
+		return err
+	}
 	data, err := ioa.Marshal(model, options)
 	if err != nil {
 		return err
@@ -513,4 +516,58 @@ func ioAigerTrailer(network *Abc_Ntk_t, unique bool) []byte {
 	trailer = fmt.Appendf(trailer, "\nThis file was written by ABC on %s\n", extra.Extra_TimeStamp())
 	trailer = fmt.Appendf(trailer, "For information about AIGER format, refer to %s\n", "http://fmv.jku.at/aiger")
 	return trailer
+}
+
+// ioAigerOutputsLikeABC applies Io_WriteAiger's output rules to model: the
+// header is extended when the network has constraints, or (unless compact,
+// where they are an error) latches not initialized to 0. An extended header
+// has no outputs: the POs before the constraints are written as bad states
+// and the constraints inverted back to the file's polarity
+// (Abc_NtkInvertConstraints; the reader inverted them). Otherwise all POs
+// are outputs.
+func ioAigerOutputsLikeABC(network *abc.Network, model *ioa.Model, compact bool) error {
+	extended := network.Constraints > 0
+	for _, latch := range network.ObjectsOfKind(abc.ObjectLatch) {
+		if latch.Data != abc.ABC_INIT_ZERO {
+			if compact {
+				return fmt.Errorf("Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \"zero\".")
+			}
+			extended = true
+			break
+		}
+	}
+	all := make([]uint32, 0, len(model.Outputs)+len(model.Bad)+len(model.Constraints))
+	all = append(append(append(all, model.Outputs...), model.Bad...), model.Constraints...)
+	pos := network.ObjectsOfKind(abc.ObjectPO)
+	if len(all) != len(pos) || int(network.Constraints) > len(pos) {
+		return fmt.Errorf("AIGER outputs do not match the network's POs")
+	}
+	for symbol := range model.Symbols {
+		if symbol.Kind == 'o' || symbol.Kind == 'b' || symbol.Kind == 'c' {
+			delete(model.Symbols, symbol)
+		}
+	}
+	model.Outputs, model.Bad, model.Constraints = nil, nil, nil
+	nBad := len(pos) - int(network.Constraints)
+	for i, po := range pos {
+		name := po.Name()
+		switch {
+		case !extended:
+			model.Outputs = append(model.Outputs, all[i])
+			if name != "" {
+				model.Symbols[ioa.Symbol{Kind: 'o', Index: uint32(i)}] = name
+			}
+		case i < nBad:
+			model.Bad = append(model.Bad, all[i])
+			if name != "" {
+				model.Symbols[ioa.Symbol{Kind: 'b', Index: uint32(i)}] = name
+			}
+		default:
+			model.Constraints = append(model.Constraints, all[i]^1)
+			if name != "" {
+				model.Symbols[ioa.Symbol{Kind: 'c', Index: uint32(i - nBad)}] = name
+			}
+		}
+	}
+	return nil
 }
