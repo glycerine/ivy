@@ -2,9 +2,9 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math"
-	"math/rand"
 )
 
 // Gia_ManAutomSimulate prints the outputs for a sequence of alphabet symbols.
@@ -74,7 +74,7 @@ func Gia_ManAutomWalkOne(p *Gia_Man_t, steps int32, states *Vec_Wrd_t, counts *V
 			if idx >= 0 {
 				count = vec.Vec_IntEntry(counts, idx)
 			}
-			if best > count || (best != math.MaxInt32 && count != 0 && float64(best)/float64(count) > rand.Float64()) {
+			if best > count || (best != math.MaxInt32 && count != 0 && float32(best)/float32(count) > float32(util.C_Rand())/float32(util.C_RAND_MAX)) {
 				selected, index, best = int(k), idx, count
 			}
 			if best == 0 {
@@ -127,7 +127,7 @@ func Gia_ManAutomWalk(p *Gia_Man_t, steps, walks, verbose int32) {
 	}
 	if verbose != 0 {
 		for i, state := range vec.Vec_WrdArray(states) {
-			fmt.Printf("%3d : %064b %d\n", i, state^initial, vec.Vec_IntEntry(counts, i))
+			fmt.Printf("%3d : %064b %d  \n", i, state^initial, vec.Vec_IntEntry(counts, i))
 		}
 		fmt.Println()
 	}

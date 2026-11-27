@@ -74,3 +74,6 @@ func C_Rand() uint32 {
 func Sim_RandomUnsigned() uint32 {
 	return (C_Rand() << 24) ^ (C_Rand() << 12) ^ C_Rand()
 }
+
+// C_RAND_MAX is glibc's RAND_MAX.
+const C_RAND_MAX = 2147483647
