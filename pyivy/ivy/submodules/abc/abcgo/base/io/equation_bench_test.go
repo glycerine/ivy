@@ -2,7 +2,6 @@ package io
 
 import (
 	"bytes"
-	"strings"
 	"testing"
 
 	"github.com/glycerine/abcgo/base/abc"
@@ -96,9 +95,13 @@ func TestBenchArbitrarySOPAndConstant(t *testing.T) {
 		t.Fatal(err)
 	}
 	checkBooleanNetwork(t, copy, func(a []bool) bool { return a[0] != a[1] })
-	if _, err = ParseEqn("bad.eqn", "INORDER=a;OUTORDER=y;y=missing;", true); err == nil || !strings.Contains(err.Error(), "missing") {
+	// ABC reads an undriven name: Abc_NtkFinalizeRead drives it with
+	// constant 0 (and warns), so y is constant 0.
+	undriven, err := ParseEqn("bad.eqn", "INORDER=a;OUTORDER=y;y=missing;", true)
+	if err != nil {
 		t.Fatal(err)
 	}
+	checkBooleanNetwork(t, undriven, func(a []bool) bool { return false })
 }
 
 func TestEquationWriterPreservesComplementedCover(t *testing.T) {

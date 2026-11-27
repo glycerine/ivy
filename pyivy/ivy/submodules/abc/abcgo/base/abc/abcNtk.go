@@ -376,11 +376,25 @@ func Abc_NtkFixNonDrivenNets(n *Network) {
 	for _, net := range n.kindOrder[ObjectNet] {
 		if len(net.fanins) == 0 {
 			Abc_ObjAddFanin(net, Abc_NtkCreateNodeConst0(n))
-			fixed = append(fixed, net.Name())
+			fixed = append(fixed, Abc_ObjName(net))
 		}
 	}
 	if len(fixed) > 0 {
-		fmt.Printf("Warning: Constant-0 drivers added to %d non-driven nets in network %q\n", len(fixed), n.Name)
+		// Abc_NtkFinalizeRead's warning: up to four names, then " ..."
+		fmt.Printf("Warning: Constant-0 drivers added to %d non-driven nets in network \"%s\":\n", len(fixed), n.Name)
+		for i, name := range fixed {
+			if i > 0 {
+				fmt.Print(", ")
+			}
+			fmt.Print(name)
+			if i == 3 {
+				if len(fixed) > 3 {
+					fmt.Print(" ...")
+				}
+				break
+			}
+		}
+		fmt.Print("\n")
 	}
 }
 func ntkChangeKind(o *Object, kind ObjectKind) {

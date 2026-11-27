@@ -112,3 +112,12 @@ func TestWriteBenchLikeNative(t *testing.T) {
 		})
 	}
 }
+
+// TestReadEqnLikeNative: an EQN file (written by ABC from mapped i10) reads
+// back into the same AIG as native's (one AIG node per equation,
+// Parse_FormulaParserEqn's structure).
+func TestReadEqnLikeNative(t *testing.T) {
+	eqn := filepath.Join(t.TempDir(), "i10.eqn")
+	runScript(t, "read ../../../i10.aig; strash; short_names; if -K 4; write_eqn "+eqn)
+	nativeWriterCase(t, "read "+eqn+"; strash; write_aiger %F", "aig", regexp.MustCompile(`This file was written by ABC on [^\n]*\n`), nil)
+}
