@@ -360,12 +360,12 @@ func Abc_NtkPrintIo(pFile *os.File, pNtk *Abc_Ntk_t, fPrintFlops int32) {
 	pos := pNtk.ObjectsOfKind(baseabc.ObjectPO)
 	fmt.Fprintf(pFile, "Primary inputs (%d): ", len(pis))
 	for i, obj := range pis {
-		fmt.Fprintf(pFile, " %d=%s", i, obj.Name())
+		fmt.Fprintf(pFile, " %d=%s", i, baseabc.Abc_ObjName(obj))
 	}
 	fmt.Fprintln(pFile)
 	fmt.Fprintf(pFile, "Primary outputs (%d):", len(pos))
 	for i, obj := range pos {
-		fmt.Fprintf(pFile, " %d=%s", i, obj.Name())
+		fmt.Fprintf(pFile, " %d=%s", i, baseabc.Abc_ObjName(obj))
 	}
 	fmt.Fprintln(pFile)
 	if fPrintFlops == 0 {
@@ -374,7 +374,7 @@ func Abc_NtkPrintIo(pFile *os.File, pNtk *Abc_Ntk_t, fPrintFlops int32) {
 	latches := pNtk.ObjectsOfKind(baseabc.ObjectLatch)
 	fmt.Fprintf(pFile, "Latches (%d):  ", len(latches))
 	for _, latch := range latches {
-		fmt.Fprintf(pFile, " %s(%s=%s)", latch.Name(), baseabc.Abc_ObjFanout0(latch).Name(), baseabc.Abc_ObjFanin0(latch).Name())
+		fmt.Fprintf(pFile, " %s(%s=%s)", baseabc.Abc_ObjName(latch), baseabc.Abc_ObjName(baseabc.Abc_ObjFanout0(latch)), baseabc.Abc_ObjName(baseabc.Abc_ObjFanin0(latch)))
 	}
 	fmt.Fprintln(pFile)
 }
@@ -860,15 +860,15 @@ func Abc_NodePrintFanio(pFile *os.File, pNode *Abc_Obj_t) {
 	if baseabc.Abc_ObjIsPo(pNode) != 0 {
 		pNode = baseabc.Abc_ObjFanin0(pNode)
 	}
-	fmt.Fprintf(pFile, "Node %s\n", pNode.Name())
+	fmt.Fprintf(pFile, "Node %s\n", baseabc.Abc_ObjName(pNode))
 	fmt.Fprintf(pFile, "Fanins (%d): ", baseabc.Abc_ObjFaninNum(pNode))
 	for _, edge := range pNode.Fanins() {
-		fmt.Fprintf(pFile, " %s", edge.Object.Name())
+		fmt.Fprintf(pFile, " %s", baseabc.Abc_ObjName(edge.Object))
 	}
 	fmt.Fprintln(pFile)
 	fmt.Fprintf(pFile, "Fanouts (%d): ", baseabc.Abc_ObjFanoutNum(pNode))
 	for _, obj := range pNode.Fanouts() {
-		fmt.Fprintf(pFile, " %s", obj.Name())
+		fmt.Fprintf(pFile, " %s", baseabc.Abc_ObjName(obj))
 	}
 	fmt.Fprintln(pFile)
 }
@@ -975,7 +975,7 @@ func Abc_NtkPrintLevel(pFile *os.File, pNtk *Abc_Ntk_t, fProfile, fListNodes, fV
 			fmt.Printf("%2d : ", level)
 			for _, node := range pNtk.ObjectsOfKind(baseabc.ObjectNode) {
 				if int32(node.Level) == level {
-					fmt.Printf(" %s", node.Name())
+					fmt.Printf(" %s", baseabc.Abc_ObjName(node))
 				}
 			}
 			fmt.Printf("\n")
@@ -1055,7 +1055,7 @@ func Abc_NtkPrintLevel(pFile *os.File, pNtk *Abc_Ntk_t, fProfile, fListNodes, fV
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCoNum(pNtk); i++ {
 		co := baseabc.Abc_NtkCo(pNtk, i)
-		fmt.Fprintf(pFile, "CO %4d :  %*s    ", i, length, co.Name())
+		fmt.Fprintf(pFile, "CO %4d :  %*s    ", i, length, baseabc.Abc_ObjName(co))
 		Abc_NodePrintLevel(pFile, co)
 	}
 }
@@ -1341,7 +1341,7 @@ func Abc_NtkPrintStrSupports(pNtk *Abc_Ntk_t, fMatrix int32) {
 				pis++
 			}
 		}
-		fmt.Printf("%5d  %20s :  Cone = %5d.  Supp = %5d. (PIs = %5d. FFs = %5d.)\n", i, co.Name(), len(nodes), len(supp), pis, int32(len(supp))-pis)
+		fmt.Printf("%5d  %20s :  Cone = %5d.  Supp = %5d. (PIs = %5d. FFs = %5d.)\n", i, baseabc.Abc_ObjName(co), len(nodes), len(supp), pis, int32(len(supp))-pis)
 	}
 	if fMatrix == 0 {
 		baseabc.Abc_NtkCleanMarkA(pNtk)
@@ -1442,7 +1442,7 @@ func Abc_NtkPrintMiter(pNtk *Abc_Ntk_t) {
 	fmt.Printf(" %7.2f sec\n", float64(util.Abc_Clock()-start)/float64(time.Second))
 	if first >= 0 {
 		po := baseabc.Abc_NtkPo(pNtk, int32(first))
-		fmt.Printf("The first satisfiable output is number %d (%s).\n", first, po.Name())
+		fmt.Printf("The first satisfiable output is number %d (%s).\n", first, baseabc.Abc_ObjName(po))
 	}
 }
 

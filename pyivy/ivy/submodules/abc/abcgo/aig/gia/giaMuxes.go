@@ -15,9 +15,9 @@ import (
 func Gia_ManDupMuxesTest(p *Gia_Man_t) *Gia_Man_t {
 	coarse := Gia_ManDupMuxes(p, 2)
 	result := Gia_ManDupNoMuxes(coarse, 0)
-	Gia_ManPrintMuxStats(p)
-	Gia_ManPrintMuxStats(coarse)
-	Gia_ManPrintMuxStats(result)
+	Gia_ManPrintStats(p, nil)
+	Gia_ManPrintStats(coarse, nil)
+	Gia_ManPrintStats(result, nil)
 	Gia_ManStop(coarse)
 	return result
 }

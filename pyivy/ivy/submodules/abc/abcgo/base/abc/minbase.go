@@ -461,7 +461,7 @@ func Abc_NtkBddReorder(n *Network, verbose int32) {
 			continue
 		}
 		if verbose != 0 {
-			fmt.Printf("%10s: ", node.Name())
+			fmt.Printf("%10s: ", Abc_ObjName(node))
 		}
 		Abc_NodeBddReorder(reorder, node)
 	}

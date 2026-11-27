@@ -87,6 +87,13 @@ func Saig_ManPrintConeOne(p *aig.Graph, output aig.Edge) {
 // Saig_ManPrintCones reports the sequential support frontier of every primary
 // output. Register outputs are excluded from the primary-output prefix.
 func Saig_ManPrintCones(p *aig.Graph) {
+	fmt.Printf("The format of this print-out: For each PO, x:a b=c+d+e, where \n")
+	fmt.Printf("- x is the time-frame counting back from the PO\n")
+	fmt.Printf("- a is the total number of registers in the COI of the PO so far\n")
+	fmt.Printf("- b is the number of registers in the COI of the PO in this time-frame\n")
+	fmt.Printf("- c is the number of registers in b that are new (appear for the first time)\n")
+	fmt.Printf("- d is the number of registers in b in common with the previous time-frame\n")
+	fmt.Printf("- e is the number of registers in b in common with other time-frames\n")
 	nPos := int32(p.OutputCount()) - aig.Aig_ManRegNum(p)
 	for i := int32(0); i < nPos; i++ {
 		Saig_ManPrintConeOne(p, aig.Aig_ManCo(p, i))

@@ -29,5 +29,10 @@ func Gia_ManPrintMuxStats(p *Gia_Man_t) {
 		ands = total - 3*muxes - 3*xors
 	}
 	denominator := float64(max(total, 1))
-	fmt.Printf("stats: xor=%8d %.2f %% mux=%8d %.2f %% and=%8d %.2f %% obj=%8d\n", xors, 300*float64(xors)/denominator, muxes, 300*float64(muxes)/denominator, ands, 100*float64(ands)/denominator, Gia_ManAndNotBufNum(p))
+	// giaMuxes.c's fields; the line continues in Gia_ManPrintStats
+	fmt.Printf("stats:  ")
+	fmt.Printf("xor =%8d %6.2f %%   ", xors, 300*float64(xors)/denominator)
+	fmt.Printf("mux =%8d %6.2f %%   ", muxes, 300*float64(muxes)/denominator)
+	fmt.Printf("and =%8d %6.2f %%   ", ands, 100*float64(ands)/denominator)
+	fmt.Printf("obj =%8d  ", Gia_ManAndNotBufNum(p))
 }

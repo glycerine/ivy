@@ -129,9 +129,9 @@ func Abc_NodeMffcConeSuppPrint(o *Object) {
 	Abc_NodeDeref_rec(o)
 	Abc_NodeMffcConeSupp(o, &cone, &support)
 	Abc_NodeRef_rec(o)
-	fmt.Printf("Node = %6s : Supp = %3d  Cone = %3d  (", o.Name(), len(support), len(cone))
+	fmt.Printf("Node = %6s : Supp = %3d  Cone = %3d  (", Abc_ObjName(o), len(support), len(cone))
 	for _, inside := range cone {
-		fmt.Printf(" %s", inside.Name())
+		fmt.Printf(" %s", Abc_ObjName(inside))
 	}
 	fmt.Println(" )")
 }

@@ -32,7 +32,7 @@ func Abc_NtkBddReorder(network *Abc_Ntk_t, verbose int32) {
 		}
 		before := 0
 		if verbose != 0 {
-			fmt.Printf("%10s: ", node.Name())
+			fmt.Printf("%10s: ", abc.Abc_ObjName(node))
 			before = core.Cudd_DagSize(node.Data.(*core.DdNode))
 			fmt.Printf("Before = %5d  BDD nodes.  ", before)
 		}

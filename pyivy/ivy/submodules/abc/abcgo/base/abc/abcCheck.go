@@ -325,7 +325,7 @@ func compareNamedObjects(a, b []*Object, count, kind string) int32 {
 	}
 	for i, o := range a {
 		if o.Name() != b[i].Name() {
-			fmt.Printf("%s #%d is different in network 1 ( \"%s\") and in network 2 (\"%s\").\n", kind, i, o.Name(), b[i].Name())
+			fmt.Printf("%s #%d is different in network 1 ( \"%s\") and in network 2 (\"%s\").\n", kind, i, Abc_ObjName(o), Abc_ObjName(b[i]))
 			return 0
 		}
 	}
@@ -351,7 +351,7 @@ func Abc_NtkCompareBoxes(a, b *Network, combinational int32) int32 {
 			return 0
 		}
 		if o.fanouts[0].Name() != bs[i].fanouts[0].Name() {
-			fmt.Printf("Box #%d is different in network 1 ( \"%s\") and in network 2 (\"%s\").\n", i, o.fanouts[0].Name(), bs[i].fanouts[0].Name())
+			fmt.Printf("Box #%d is different in network 1 ( \"%s\") and in network 2 (\"%s\").\n", i, Abc_ObjName(o.fanouts[0]), Abc_ObjName(bs[i].fanouts[0]))
 			return 0
 		}
 	}

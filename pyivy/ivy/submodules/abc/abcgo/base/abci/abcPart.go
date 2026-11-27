@@ -580,7 +580,7 @@ func Abc_NtkPartStitchChoices(network *Abc_Ntk_t, parts *Vec_Ptr_t) *Abc_Ntk_t {
 				}
 			}
 			if target == nil {
-				fmt.Printf("Cannot find CI node %s in the original network.\n", ci.Name())
+				fmt.Printf("Cannot find CI node %s in the original network.\n", abc.Abc_ObjName(ci))
 				abc.Abc_NtkDelete(stitched)
 				return nil
 			}
@@ -606,7 +606,7 @@ func Abc_NtkPartStitchChoices(network *Abc_Ntk_t, parts *Vec_Ptr_t) *Abc_Ntk_t {
 				}
 			}
 			if target == nil {
-				fmt.Printf("Cannot find CO node %s in the original network.\n", co.Name())
+				fmt.Printf("Cannot find CO node %s in the original network.\n", abc.Abc_ObjName(co))
 				abc.Abc_NtkDelete(stitched)
 				return nil
 			}
