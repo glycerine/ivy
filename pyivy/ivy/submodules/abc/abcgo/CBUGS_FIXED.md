@@ -521,3 +521,95 @@ and states how the Go port was verified.
   segfaulted; now they fail with the messages above.
 - **Go port:** its formula parsers reject the missing operand ("expected an
   operand"); they word their errors differently.
+
+## 25. `&mfsd -K 5` and `-K 6` smash the stack
+
+- **File:** `src/opt/sbd/sbdLut.c` (`Sbd_ProblemAddClauses`).
+- **Found:** 2026-11-27 while porting `&mfsd` line by line:
+  `&r i10_native_demo.aig; &mfsd -K 5` (and `-K 6`) aborted with
+  "*** stack smashing detected ***", although the help allows
+  `2 <= K <= 6`. ASan: stack-buffer-overflow at sbdLut.c:74.
+- **Bug:** the clause for one minterm of a LUT structure holds the
+  `nVarIns` input literals, the parameter and the output, but the buffer was
+  `pLits[SBD_SIZE_MAX+2]` = 6 entries. `Sbd_ManExploreCut` builds LUTs with
+  `nVarIns = nLutSize`, so 5- and 6-input LUTs wrote one and two literals
+  past it.
+- **Fix:** size the buffer `SBD_DIV_MAX+2` (LUTs have at most 6 inputs,
+  selectors use 3 literals).
+- **Tests:** `abcgo/base/abci/mfsd_native_test.go`:
+  `TestMfsdLutSizesLikeNative` (needs `ABC_BINARY`; native aborted, now its
+  &ps, `-v` report and &w output equal the port's for `-K 5`, `-K 6`,
+  `-K 5 -c`, `&if -K 6; &mfsd -K 6 -p`) and `TestNativeMfsdStaysInBounds`
+  (needs `ABC_LIBABC`; compiles sbdWin.c, sbdLut.c and sbdCore.c with
+  AddressSanitizer and runs `&mfsd` with every LUT size).
+- **Go port:** `Sbd_ProblemAddClauses` (`opt/sbd/sbdLut.go`) uses the same
+  `SBD_DIV_MAX+2` buffer; a smaller one panics on the index.
+
+## 26. `&mfsd` reads past `s_Truths6` in `Sbd_ManSolve`
+
+- **File:** `src/opt/sbd/sbdWin.c` (`Sbd_ManSolve`).
+- **Found:** 2026-11-27 with an ASan build: plain `&mfsd` on
+  i10_native_demo.aig, and `&if -K 6; &mfsd`, report a
+  global-buffer-overflow reading `s_Truths6` at sbdWin.c:222, called from
+  `Sbd_ManExploreCut` (sbdCore.c:1308).
+- **Bug:** `Sbd_ManSolve` ORs a cube into the truth table for each conflict,
+  using `s_Truths6[iVar]` for every divisor in the final conflict.
+  `Sbd_ManExploreCut` calls it with up to `nCutSize-1` = 9 divisors while it
+  tries to drop cut leaves, so `iVar` reaches 8. The truth table is only
+  meaningful for at most six divisors; for more, the caller only tests the
+  result against `SBD_SAT_SAT`/`SBD_SAT_UNDEC`.
+- **Fix:** add a divisor's literal to the cube only when `iVar < 6`. The
+  clause added to the solver, and so the search, are unchanged; outputs of
+  the release binary do not change.
+- **Tests:** `TestNativeMfsdStaysInBounds` (ASan report before the fix) and
+  `abcgo/opt/sbd/sbdWin_test.go` (`TestSbdManSolveMoreThanSixDivisors`: the
+  port without the guard panics with "index out of range [7]").
+- **Go port:** `Sbd_ManSolve` (`opt/sbd/sbdWin.go`) has the same guard.
+
+## 27. `&mfsd -K 2` segfaults: 3-LUT structures with too many cut leaves
+
+- **File:** `src/opt/sbd/sbdCore.c` (`Sbd_ManExploreCut`).
+- **Found:** 2026-11-27 while comparing the port with native ABC:
+  `&r i10_c_rw.aig; &mfsd -K 2` (and i10_native_demo.aig) segfaulted in
+  `sat_solver_addclause` called from `Sbd_ProblemSolve`; `-K 3` ran but
+  violated the same function's assertions.
+- **Bug:** the cut size defaults to `(4-1)*3+1 = 10` and does not follow
+  `-K`. The LUT(LUT,LUT) and LUT(LUT(LUT)) structures assume at most
+  `3*nLutSize-2` cut leaves (10 for `K = 4`); with more, moving the surplus
+  bottom leaves to the top LUT leaves it more than `nLutSize-2` inputs, so
+  `nNodesDiff` becomes negative and `Sbd_ProblemSolve` gets fewer than
+  three (even zero or negatively many) structures. It then reads
+  `pVarsQbf[nVars]`, which was never set, and adds clauses on a garbage
+  variable. (ASan does not see the uninitialized read; the release binary
+  crashed.)
+- **Fix:** `Sbd_ManExploreCut` returns 0 before the three-LUT structures
+  when the cut has more than `3*nLutSize-2` leaves. For `K >= 4` the cut
+  size is at most 10, so nothing changes there; `-K 2` and `-K 3` now run
+  (on these designs their results equal the unfixed `-K 3` and the ASan
+  build's `-K 2`).
+- **Tests:** `TestMfsdLutSizesLikeNative` (`-K 2` on i10_c_rw segfaulted;
+  `-K 3`) and `TestNativeMfsdStaysInBounds`.
+- **Go port:** the same check in `Sbd_ManExploreCut`
+  (`opt/sbd/sbdCore.go`); the port had failed the C assertions there.
+
+## 28. `&mfsd` silently breaks AND/XOR/MUX graphs
+
+- **File:** `src/base/abci/abc.c` (`Abc_CommandAbc9Mfsd`).
+- **Found:** 2026-11-27 while checking `&mfsd` on the graphs `&st -m`
+  makes: `&r native_mul8_canon.aig; &st -m; &mfsd -m -M 1; &st` (which
+  resynthesizes nothing) fails `&cec` against the input ("Output 3
+  trivially differs"); so do i10_c_rw and i10_native_demo.
+- **Bug:** `Sbd_NtkPerform` handles AND and XOR nodes only. A MUX node is
+  treated as the AND of its first two fanins: cut merging only asserts
+  `!Gia_ObjIsMux` (compiled out in release builds), windows and SAT clauses
+  ignore the control fanin, and `Sbd_ManDerive` rebuilds it with
+  `Gia_ManHashAnd`, so the result loses every MUX.
+- **Fix:** the command refuses a GIA with MUXes
+  ("Abc_CommandAbc9Mfsd(): This command does not work with MUXes."), as it
+  already does for barrier buffers. (`&st` turns the graph back into an
+  AIG.)
+- **Test:** `abcgo/base/abci/mfsd_native_test.go` (`TestMfsdRejectsMuxes`;
+  native and port print the error; the port without the check fails the
+  `!Gia_ObjIsMux` assertion). The non-equivalence was confirmed with
+  a native build of abc.c without the check.
+- **Go port:** the same check in `Abc_CommandAbc9Mfsd` (`base/abci/abc.go`).

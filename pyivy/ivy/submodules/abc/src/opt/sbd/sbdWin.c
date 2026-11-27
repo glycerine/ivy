@@ -219,7 +219,8 @@ word Sbd_ManSolve( sat_solver * pSat, int PivotVar, int FreeVar, Vec_Int_t * vDi
                 continue;
             Vec_IntPush( vTemp, pFinal[i] );
             iVar = Vec_IntFind( vDivSet, Abc_Lit2Var(pFinal[i]) );   assert( iVar >= 0 );
-            uCube &= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];
+            if ( iVar < 6 ) // the truth table is only meaningful for up to 6 divisors
+                uCube &= Abc_LitIsCompl(pFinal[i]) ? s_Truths6[iVar] : ~s_Truths6[iVar];
         }
         uTruth |= uCube;
         status = sat_solver_addclause( pSat, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + Vec_IntSize(vTemp) );

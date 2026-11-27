@@ -1,7 +1,5 @@
 package sbd
 
-import "github.com/glycerine/abcgo/misc/vec"
-
 /**CFile****************************************************************
 
   FileName    [rsbInt.h]
@@ -68,8 +66,10 @@ type Sbd_Str_t struct {
 	fLut    int32              // LUT or SEL
 	nVarIns int32              // input count
 	VarIns  [SBD_DIV_MAX]int32 // input vars
-	Res     uint64             // result of solving
+	Res     word               // result of solving
 }
+
+type word = uint64
 
 ////////////////////////////////////////////////////////////////////////
 ///                      MACRO DEFINITIONS                           ///
@@ -136,11 +136,3 @@ type Sbd_Str_t struct {
 ////////////////////////////////////////////////////////////////////////
 ///                       END OF FILE                                ///
 ////////////////////////////////////////////////////////////////////////
-
-func sbdVector(values ...int32) *vec.Vec_Int_t {
-	p := vec.Vec_IntAlloc(len(values))
-	for _, v := range values {
-		vec.Vec_IntPush(p, v)
-	}
-	return p
-}

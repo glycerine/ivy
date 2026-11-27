@@ -45210,9 +45210,9 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-K\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.LUTSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.LUTSize < 0 {
+			if pPars.NLutSize < 0 {
 				goto usage
 			}
 			break
@@ -45221,9 +45221,9 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-S\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.LUTCount = abcAtoi(argv[globalUtilOptind])
+			pPars.NLutNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.LUTCount < 0 {
+			if pPars.NLutNum < 0 {
 				goto usage
 			}
 			break
@@ -45232,9 +45232,9 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-N\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.CutSize = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutSize = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.CutSize < 0 {
+			if pPars.NCutSize < 0 {
 				goto usage
 			}
 			break
@@ -45243,9 +45243,9 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-P\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.CutCount = abcAtoi(argv[globalUtilOptind])
+			pPars.NCutNum = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.CutCount < 0 {
+			if pPars.NCutNum < 0 {
 				goto usage
 			}
 			break
@@ -45254,9 +45254,9 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-W\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.TFOLevels = abcAtoi(argv[globalUtilOptind])
+			pPars.NTfoLevels = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.TFOLevels < 0 {
+			if pPars.NTfoLevels < 0 {
 				goto usage
 			}
 			break
@@ -45265,9 +45265,9 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-F\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.TFOFanoutMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NTfoFanMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.TFOFanoutMax < 0 {
+			if pPars.NTfoFanMax < 0 {
 				goto usage
 			}
 			break
@@ -45276,9 +45276,9 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-M\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.WindowSizeMax = abcAtoi(argv[globalUtilOptind])
+			pPars.NWinSizeMax = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.WindowSizeMax < 0 {
+			if pPars.NWinSizeMax < 0 {
 				goto usage
 			}
 			break
@@ -45287,29 +45287,29 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 				Abc_Print(-1, "Command line switch \"-C\" should be followed by an integer.\n")
 				goto usage
 			}
-			pPars.ConflictLimit = abcAtoi(argv[globalUtilOptind])
+			pPars.NBTLimit = abcAtoi(argv[globalUtilOptind])
 			globalUtilOptind++
-			if pPars.ConflictLimit < 0 {
+			if pPars.NBTLimit < 0 {
 				goto usage
 			}
 			break
 		case 'm':
-			pPars.Mapping = !pPars.Mapping
+			pPars.FMapping ^= 1
 			break
 		case 'c':
-			pPars.MoreCuts = !pPars.MoreCuts
+			pPars.FMoreCuts ^= 1
 			break
 		case 'd':
-			pPars.FindDivisors = !pPars.FindDivisors
+			pPars.FFindDivs ^= 1
 			break
 		case 'p':
-			pPars.CriticalPathOnly = !pPars.CriticalPathOnly
+			pPars.FUsePath ^= 1
 			break
 		case 'v':
-			pPars.Verbose = !pPars.Verbose
+			pPars.FVerbose ^= 1
 			break
 		case 'w':
-			pPars.VeryVerbose = !pPars.VeryVerbose
+			pPars.FVeryVerbose ^= 1
 			break
 		case 'h':
 			goto usage
@@ -45323,6 +45323,12 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if Gia_ManBufNum(abcFrameGia(pAbc)) != 0 {
 		Abc_Print(-1, "Abc_CommandAbc9Mfsd(): This command does not work with barrier buffers.\n")
+		return 1
+	}
+	// &mfsd would treat a MUX as the AND of its first two fanins
+	// (CBUGS_FIXED.md #28).
+	if abcGiaMuxNum(abcFrameGia(pAbc)) != 0 {
+		Abc_Print(-1, "Abc_CommandAbc9Mfsd(): This command does not work with MUXes.\n")
 		return 1
 	}
 	if Gia_ManHasMapping(abcFrameGia(pAbc)) != 0 {
@@ -45339,20 +45345,20 @@ func Abc_CommandAbc9Mfsd(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 usage:
 	Abc_Print(-2, "usage: &mfsd [-KSNPWFMC <num>] [-mcdpvwh]\n")
 	Abc_Print(-2, "\t           performs SAT-based delay-oriented AIG optimization\n")
-	Abc_Print(-2, "\t-K <num> : the LUT size for delay minimization (2 <= num <= 6) [default = %d]\n", pPars.LUTSize)
-	Abc_Print(-2, "\t-S <num> : the LUT structure size (1 <= num <= 2) [default = %d]\n", pPars.LUTCount)
-	Abc_Print(-2, "\t-N <num> : the cut size considered for optimization (2 <= num <= 10) [default = %d]\n", pPars.CutSize)
-	Abc_Print(-2, "\t-P <num> : the number of cuts computed at a node (1 <= num <= 500) [default = %d]\n", pPars.CutCount)
-	Abc_Print(-2, "\t-W <num> : the number of levels in the TFO cone (0 <= num) [default = %d]\n", pPars.TFOLevels)
-	Abc_Print(-2, "\t-F <num> : the max number of fanouts to skip (1 <= num) [default = %d]\n", pPars.TFOFanoutMax)
-	Abc_Print(-2, "\t-M <num> : the max node count of windows to consider (0 = no limit) [default = %d]\n", pPars.WindowSizeMax)
-	Abc_Print(-2, "\t-C <num> : the max number of conflicts in one SAT run (0 = no limit) [default = %d]\n", pPars.ConflictLimit)
-	Abc_Print(-2, "\t-m       : toggle generating delay-oriented mapping [default = %s]\n", abcSelectIf(pPars.Mapping, "yes", "no"))
-	Abc_Print(-2, "\t-c       : toggle using several cuts at each node [default = %s]\n", abcSelectIf(pPars.MoreCuts, "yes", "no"))
-	Abc_Print(-2, "\t-d       : toggle additional search for good divisors [default = %s]\n", abcSelectIf(pPars.FindDivisors, "yes", "no"))
-	Abc_Print(-2, "\t-p       : toggle optimizing critical path only [default = %s]\n", abcSelectIf(pPars.CriticalPathOnly, "yes", "no"))
-	Abc_Print(-2, "\t-v       : toggle printing optimization summary [default = %s]\n", abcSelectIf(pPars.Verbose, "yes", "no"))
-	Abc_Print(-2, "\t-w       : toggle printing detailed stats for each node [default = %s]\n", abcSelectIf(pPars.VeryVerbose, "yes", "no"))
+	Abc_Print(-2, "\t-K <num> : the LUT size for delay minimization (2 <= num <= 6) [default = %d]\n", pPars.NLutSize)
+	Abc_Print(-2, "\t-S <num> : the LUT structure size (1 <= num <= 2) [default = %d]\n", pPars.NLutNum)
+	Abc_Print(-2, "\t-N <num> : the cut size considered for optimization (2 <= num <= 10) [default = %d]\n", pPars.NCutSize)
+	Abc_Print(-2, "\t-P <num> : the number of cuts computed at a node (1 <= num <= 500) [default = %d]\n", pPars.NCutNum)
+	Abc_Print(-2, "\t-W <num> : the number of levels in the TFO cone (0 <= num) [default = %d]\n", pPars.NTfoLevels)
+	Abc_Print(-2, "\t-F <num> : the max number of fanouts to skip (1 <= num) [default = %d]\n", pPars.NTfoFanMax)
+	Abc_Print(-2, "\t-M <num> : the max node count of windows to consider (0 = no limit) [default = %d]\n", pPars.NWinSizeMax)
+	Abc_Print(-2, "\t-C <num> : the max number of conflicts in one SAT run (0 = no limit) [default = %d]\n", pPars.NBTLimit)
+	Abc_Print(-2, "\t-m       : toggle generating delay-oriented mapping [default = %s]\n", abcSelectIf(pPars.FMapping != 0, "yes", "no"))
+	Abc_Print(-2, "\t-c       : toggle using several cuts at each node [default = %s]\n", abcSelectIf(pPars.FMoreCuts != 0, "yes", "no"))
+	Abc_Print(-2, "\t-d       : toggle additional search for good divisors [default = %s]\n", abcSelectIf(pPars.FFindDivs != 0, "yes", "no"))
+	Abc_Print(-2, "\t-p       : toggle optimizing critical path only [default = %s]\n", abcSelectIf(pPars.FUsePath != 0, "yes", "no"))
+	Abc_Print(-2, "\t-v       : toggle printing optimization summary [default = %s]\n", abcSelectIf(pPars.FVerbose != 0, "yes", "no"))
+	Abc_Print(-2, "\t-w       : toggle printing detailed stats for each node [default = %s]\n", abcSelectIf(pPars.FVeryVerbose != 0, "yes", "no"))
 	Abc_Print(-2, "\t-h       : print the command usage\n")
 	return 1
 }

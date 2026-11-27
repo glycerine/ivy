@@ -1,234 +1,241 @@
 package sbd
 
+// Port of src/opt/sbd/sbdLut.c: QBF-based synthesis of LUT structures.
+
 import (
 	"fmt"
 
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-func NewLUTStructure(inputs []int32) Sbd_Str_t {
-	if len(inputs) > 6 {
-		panic("LUT structure exceeds six inputs")
-	}
-	s := Sbd_Str_t{fLut: 1, nVarIns: int32(len(inputs))}
-	copy(s.VarIns[:], inputs)
-	return s
-}
-func NewSelectorStructure(inputs []int32) Sbd_Str_t {
-	if len(inputs) < 1 || len(inputs) > SBD_DIV_MAX {
-		panic("selector structure requires 1..10 inputs")
-	}
-	s := Sbd_Str_t{nVarIns: int32(len(inputs))}
-	copy(s.VarIns[:], inputs)
-	return s
-}
-func sbdStructureParams(s *Sbd_Str_t) int32 {
-	if s.fLut != 0 {
-		if s.nVarIns < 0 || s.nVarIns > 6 {
-			panic("invalid LUT structure")
+// count the number of parameter variables in the structure
+func Sbd_ProblemCountParams(nStrs int32, pStr0 []Sbd_Str_t) int32 {
+	nPars := int32(0)
+	for i := int32(0); i < nStrs; i++ {
+		pStr := &pStr0[i]
+		if pStr.fLut != 0 {
+			nPars += 1 << uint(pStr.nVarIns)
+		} else {
+			nPars += pStr.nVarIns
 		}
-		return 1 << s.nVarIns
 	}
-	if s.nVarIns < 1 || s.nVarIns > SBD_DIV_MAX {
-		panic("invalid selector structure")
-	}
-	return s.nVarIns
+	return nPars
 }
-func Sbd_ProblemCountParams(count int32, structures []Sbd_Str_t) int32 {
-	var result int32
-	for i := range structures[:count] {
-		result += sbdStructureParams(&structures[i])
-	}
-	return result
-}
-func Sbd_ProblemAddClauses(solver *bsat.Solver, vars, count int32, mapping []int32, structures []Sbd_Str_t) int32 {
-	output, parameter := vars, vars+count
-	lit := func(index, sign int32) bsat.Literal {
-		if index < 0 || int(index) >= len(mapping) || mapping[index] < 0 {
-			panic("invalid structure variable mapping")
-		}
-		return bsat.Literal(2*mapping[index] + sign)
-	}
-	for _, s := range structures[:count] {
-		size := sbdStructureParams(&s)
-		if s.fLut != 0 {
-			for m := int32(0); m < size; m++ {
-				clause := make([]bsat.Literal, s.nVarIns+2)
-				for k := int32(0); k < s.nVarIns; k++ {
-					clause[k] = lit(s.VarIns[k], m>>k&1)
+
+// add clauses for the structure
+func Sbd_ProblemAddClauses(pSat *sat_solver, nVars, nStrs int32, pVars []int32, pStr0 []Sbd_Str_t) int32 {
+	// variable order:  inputs, structure outputs, parameters
+	VarOut := nVars
+	VarPar := nVars + nStrs
+	// C sized this SBD_SIZE_MAX+2, too small for LUTs of 5 and 6 inputs
+	// (see CBUGS_FIXED.md); the fixed source uses SBD_DIV_MAX+2.
+	var pLits [SBD_DIV_MAX + 2]int32
+	for s := int32(0); s < nStrs; s, VarOut = s+1, VarOut+1 {
+		pStr := &pStr0[s]
+		if pStr.fLut != 0 {
+			nMints := int32(1) << uint(pStr.nVarIns)
+			assert(pStr.nVarIns <= 6, "pStr->nVarIns <= 6")
+			for m := int32(0); m < nMints; m, VarPar = m+1, VarPar+1 {
+				for k := int32(0); k < pStr.nVarIns; k++ {
+					pLits[k] = Abc_Var2Lit(pVars[pStr.VarIns[k]], (m>>uint(k))&1)
 				}
-				for polarity := int32(0); polarity < 2; polarity++ {
-					clause[s.nVarIns] = lit(parameter, polarity)
-					clause[s.nVarIns+1] = lit(output, 1-polarity)
-					if !solver.AddClause(clause...) {
+				for n := int32(0); n < 2; n++ {
+					pLits[pStr.nVarIns] = Abc_Var2Lit(pVars[VarPar], n)
+					pLits[pStr.nVarIns+1] = Abc_Var2Lit(pVars[VarOut], 1-n)
+					status := sat_solver_addclause(pSat, pLits[:pStr.nVarIns+2])
+					if status == 0 {
 						return 0
 					}
 				}
-				parameter++
 			}
 		} else {
-			for k := int32(0); k < s.nVarIns; k++ {
-				for polarity := int32(0); polarity < 2; polarity++ {
-					if !solver.AddClause(lit(parameter, 1), lit(output, polarity), lit(s.VarIns[k], 1-polarity)) {
+			assert(pStr.nVarIns <= SBD_DIV_MAX, "pStr->nVarIns <= SBD_DIV_MAX")
+			for k := int32(0); k < pStr.nVarIns; k, VarPar = k+1, VarPar+1 {
+				for n := int32(0); n < 2; n++ {
+					pLits[0] = Abc_Var2Lit(pVars[VarPar], 1)
+					pLits[1] = Abc_Var2Lit(pVars[VarOut], n)
+					pLits[2] = Abc_Var2Lit(pVars[pStr.VarIns[k]], 1-n)
+					status := sat_solver_addclause(pSat, pLits[:3])
+					if status == 0 {
 						return 0
 					}
 				}
-				parameter++
 			}
 		}
-		output++
 	}
 	return 1
 }
-func Sbd_ProblemAddClausesInit(solver *bsat.Solver, vars, count int32, mapping []int32, structures []Sbd_Str_t) {
-	parameter := vars + count
-	for _, s := range structures[:count] {
-		size := sbdStructureParams(&s)
-		if s.fLut == 0 {
-			clause := make([]bsat.Literal, s.nVarIns)
-			for k := range clause {
-				clause[k] = bsat.Positive(mapping[int(parameter)+k])
+func Sbd_ProblemAddClausesInit(pSat *sat_solver, nVars, nStrs int32, pVars []int32, pStr0 []Sbd_Str_t) {
+	VarPar := nVars + nStrs
+	var pLits [SBD_DIV_MAX]int32
+	// make sure selector parameters are mutually exclusive
+	for s := int32(0); s < nStrs; s++ {
+		pStr := &pStr0[s]
+		if pStr.fLut == 0 {
+			// one variable should be selected
+			assert(pStr.nVarIns <= SBD_DIV_MAX, "pStr->nVarIns <= SBD_DIV_MAX")
+			for m := int32(0); m < pStr.nVarIns; m++ {
+				pLits[m] = Abc_Var2Lit(pVars[VarPar+m], 0)
 			}
-			if !solver.AddClause(clause...) {
-				panic("inconsistent selector initialization")
-			}
-			for a := int32(0); a < s.nVarIns; a++ {
-				for b := a + 1; b < s.nVarIns; b++ {
-					if !solver.AddClause(bsat.Negative(mapping[parameter+a]), bsat.Negative(mapping[parameter+b])) {
-						panic("inconsistent selector exclusivity")
-					}
+			status := sat_solver_addclause(pSat, pLits[:pStr.nVarIns])
+			assert(status != 0, "status")
+			// two variables cannot be selected
+			for m := int32(0); m < pStr.nVarIns; m++ {
+				for m2 := m + 1; m2 < pStr.nVarIns; m2++ {
+					pLits[0] = Abc_Var2Lit(pVars[VarPar+m], 1)
+					pLits[1] = Abc_Var2Lit(pVars[VarPar+m2], 1)
+					status = sat_solver_addclause(pSat, pLits[:2])
+					assert(status != 0, "status")
 				}
 			}
 		}
-		parameter += size
+		if pStr.fLut != 0 {
+			VarPar += 1 << uint(pStr.nVarIns)
+		} else {
+			VarPar += pStr.nVarIns
+		}
 	}
 }
-func Sbd_ProblemPrintSolution(count int32, structures []Sbd_Str_t, literals *vec.Vec_Int_t) {
-	fmt.Println("Solution found:")
-	at := 0
-	for i, s := range structures[:count] {
-		kind := "SEL"
-		if s.fLut != 0 {
-			kind = "LUT"
+func Sbd_ProblemPrintSolution(nStrs int32, pStr0 []Sbd_Str_t, vLits *Vec_Int_t) {
+	iLit := 0
+	fmt.Printf("Solution found:\n")
+	for s := int32(0); s < nStrs; s++ {
+		pStr := &pStr0[s]
+		nIters := pStr.nVarIns
+		name := "SEL"
+		if pStr.fLut != 0 {
+			nIters = 1 << uint(pStr.nVarIns)
+			name = "LUT"
 		}
-		fmt.Printf("%s%d : ", kind, i)
-		for m := int32(0); m < sbdStructureParams(&s); m++ {
-			fmt.Printf("%d", 1-(vec.Vec_IntEntry(literals, at)&1))
-			at++
+		fmt.Printf("%s%d : ", name, s)
+		for m := int32(0); m < nIters; m, iLit = m+1, iLit+1 {
+			fmt.Printf("%d", 1-Abc_LitIsCompl(vec.Vec_IntEntry(vLits, iLit)))
 		}
-		fmt.Printf("    {%v}\n", s.VarIns[:s.nVarIns])
+		fmt.Printf("    {")
+		for m := int32(0); m < pStr.nVarIns; m++ {
+			fmt.Printf(" %d", pStr.VarIns[m])
+		}
+		fmt.Printf(" }\n")
 	}
-	if at != vec.Vec_IntSize(literals) {
-		panic("solution parameter count mismatch")
-	}
+	assert(iLit == vec.Vec_IntSize(vLits), "iLit == Vec_IntSize(vLits)")
 }
-func Sbd_ProblemCollectSolution(count int32, structures []Sbd_Str_t, literals *vec.Vec_Int_t) {
-	at := 0
-	for i := range structures[:count] {
-		s := &structures[i]
-		s.Res = 0
-		selected := 0
-		for m := int32(0); m < sbdStructureParams(s); m++ {
-			value := vec.Vec_IntEntry(literals, at)&1 == 0
-			at++
-			if value {
-				if s.fLut != 0 {
-					s.Res |= uint64(1) << m
-				} else {
-					s.Res = uint64(s.VarIns[m])
-					selected++
+func Sbd_ProblemCollectSolution(nStrs int32, pStr0 []Sbd_Str_t, vLits *Vec_Int_t) {
+	iLit := 0
+	for s := int32(0); s < nStrs; s++ {
+		pStr := &pStr0[s]
+		pStr.Res = 0
+		if pStr.fLut != 0 {
+			nIters := int32(1) << uint(pStr.nVarIns)
+			for m := int32(0); m < nIters; m, iLit = m+1, iLit+1 {
+				if Abc_LitIsCompl(vec.Vec_IntEntry(vLits, iLit)) == 0 {
+					pStr.Res |= word(1) << uint(m)
 				}
 			}
-		}
-		if s.fLut != 0 {
-			s.Res = util.Abc_Tt6Stretch(s.Res, s.nVarIns)
-		} else if selected != 1 {
-			panic("selector solution is not one-hot")
+			pStr.Res = util.Abc_Tt6Stretch(pStr.Res, pStr.nVarIns)
+		} else {
+			nIters := 0
+			for m := int32(0); m < pStr.nVarIns; m, iLit = m+1, iLit+1 {
+				if Abc_LitIsCompl(vec.Vec_IntEntry(vLits, iLit)) == 0 {
+					pStr.Res = word(pStr.VarIns[m])
+					nIters++
+				}
+			}
+			assert(nIters == 1, "nIters == 1")
 		}
 	}
-	if at != vec.Vec_IntSize(literals) {
-		panic("solution parameter count mismatch")
-	}
+	assert(iLit == vec.Vec_IntSize(vLits), "iLit == Vec_IntSize(vLits)")
 }
-func Sbd_ProblemSolve(network *Network, mirrors *vec.Vec_Int_t, pivot int32, window, objToVar, tfo, roots, divSet *vec.Vec_Int_t, count int32, structures []Sbd_Str_t) int32 {
-	cec := Sbd_ManSatSolver(nil, network, mirrors, pivot, window, objToVar, tfo, roots, 1)
-	if cec == nil {
-		return 0
+
+// Sbd_ProblemSolve solves QBF problem for the given window.
+func Sbd_ProblemSolve(p *Gia_Man_t, vMirrors *Vec_Int_t,
+	Pivot int32, vWinObjs, vObj2Var *Vec_Int_t,
+	vTfo, vRoots *Vec_Int_t,
+	vDivSet *Vec_Int_t, nStrs int32, pStr0 []Sbd_Str_t) int32 { // divisors, structures
+	vLits := vec.Vec_IntAlloc(100)
+	pSatCec := Sbd_ManSatSolver(nil, p, vMirrors, Pivot, vWinObjs, vObj2Var, vTfo, vRoots, 1)
+	pSatQbf := sat_solver_new()
+	nVars := int32(vec.Vec_IntSize(vDivSet))
+	nPars := Sbd_ProblemCountParams(nStrs, pStr0)
+	VarCecOut := int32(vec.Vec_IntSize(vWinObjs) + vec.Vec_IntSize(vTfo) + vec.Vec_IntSize(vRoots))
+	VarCecPar := VarCecOut + nStrs
+	VarQbfPar := int32(0)
+	VarQbfFree := nPars
+	var pVarsCec [256]int32
+	var pVarsQbf [256]int32
+	RetValue := int32(0)
+	assert(vec.Vec_IntSize(vDivSet) <= SBD_DIV_MAX, "Vec_IntSize(vDivSet) <= SBD_DIV_MAX")
+	assert(nVars+nStrs+nPars <= 256, "nVars + nStrs + nPars <= 256")
+	// collect CEC variables
+	for i, iVar := range vec.Vec_IntArray(vDivSet) {
+		pVarsCec[i] = iVar
 	}
-	qbf := bsat.NewSolver()
-	vars := int32(vec.Vec_IntSize(divSet))
-	params := Sbd_ProblemCountParams(count, structures)
-	if vars > SBD_DIV_MAX || vars+count+params > 256 {
-		panic("SBD synthesis structure exceeds bounds")
+	for i := int32(0); i < nStrs; i++ {
+		pVarsCec[nVars+i] = VarCecOut + i
 	}
-	cecOutput := int32(vec.Vec_IntSize(window) + vec.Vec_IntSize(tfo) + vec.Vec_IntSize(roots))
-	cecParameter := cecOutput + count
-	qbfFree := params
-	cecVars, qbfVars := make([]int32, vars+count+params), make([]int32, vars+count+params)
-	copy(cecVars, vec.Vec_IntArray(divSet))
-	for i := int32(0); i < count; i++ {
-		cecVars[vars+i] = cecOutput + i
+	for i := int32(0); i < nPars; i++ {
+		pVarsCec[nVars+nStrs+i] = VarCecPar + i
 	}
-	for i := int32(0); i < params; i++ {
-		cecVars[vars+count+i] = cecParameter + i
-		qbfVars[vars+count+i] = i
+	// collect QBF variables
+	for i := int32(0); i < nVars+nStrs; i++ {
+		pVarsQbf[i] = -1
 	}
-	for i := int32(0); i < vars+count; i++ {
-		qbfVars[i] = -1
+	for i := int32(0); i < nPars; i++ {
+		pVarsQbf[nVars+nStrs+i] = VarQbfPar + i
 	}
-	if Sbd_ProblemAddClauses(cec, vars, count, cecVars, structures) == 0 {
-		return 0
+	// add clauses to the CEC problem
+	Sbd_ProblemAddClauses(pSatCec, nVars, nStrs, pVarsCec[:], pStr0)
+	// create QBF solver
+	sat_solver_setnvars(pSatQbf, 1000)
+	Sbd_ProblemAddClausesInit(pSatQbf, nVars, nStrs, pVarsQbf[:], pStr0)
+	// assume all parameter variables are 0
+	vec.Vec_IntClear(vLits)
+	for i := int32(0); i < nPars; i++ {
+		vec.Vec_IntPush(vLits, Abc_Var2Lit(VarCecPar+i, 1))
 	}
-	sbdEnsureVariables(qbf, params)
-	Sbd_ProblemAddClausesInit(qbf, vars, count, qbfVars, structures)
-	parameters := make([]bsat.Literal, params)
-	for i := range parameters {
-		parameters[i] = bsat.Negative(cecParameter + int32(i))
-	}
-	for iteration := 0; iteration < 1<<vars; iteration++ {
-		status := cec.Solve(parameters...)
-		if status == bsat.Unknown {
-			return 0
-		}
-		if status == bsat.Unsatisfiable {
+	for nIters := int32(0); nIters < (1 << uint(nVars)); nIters++ {
+		// check if these parameters solve the problem
+		status := sat_solver_solve(pSatCec, vec.Vec_IntArray(vLits), 0, 0, 0, 0)
+		if status == l_False { // solution found
 			break
 		}
-		parameters = nil
-		for i := int32(0); i < vars+count; i++ {
-			qbfVars[i] = qbfFree
-			qbfFree++
-			sbdEnsureVariables(qbf, qbfFree)
+		assert(status == l_True, "status == l_True")
+		vec.Vec_IntClear(vLits)
+		// create new QBF variables
+		for i := int32(0); i < nVars+nStrs; i++ {
+			pVarsQbf[i] = VarQbfFree
+			VarQbfFree++
 		}
-		for i, v := range vec.Vec_IntArray(divSet) {
-			literal := bsat.Literal(2*qbfVars[i] + 1 - sbdModelValue(cec, v))
-			if !qbf.AddClause(literal) {
-				return 0
-			}
+		// set their values
+		for i, iVar := range vec.Vec_IntArray(vDivSet) {
+			iLit := Abc_Var2Lit(pVarsQbf[i], 1-sat_solver_var_value(pSatCec, iVar))
+			status = sat_solver_addclause(pSatQbf, []int32{iLit})
+			assert(status != 0, "status")
 		}
-		desired := bsat.Literal(2*qbfVars[vars] + sbdModelValue(cec, cecOutput))
-		if !qbf.AddClause(desired) {
-			return 0
+		iLit := Abc_Var2Lit(pVarsQbf[nVars], sat_solver_var_value(pSatCec, VarCecOut))
+		status = sat_solver_addclause(pSatQbf, []int32{iLit})
+		assert(status != 0, "status")
+		// add clauses to the QBF problem
+		if Sbd_ProblemAddClauses(pSatQbf, nVars, nStrs, pVarsQbf[:], pStr0) == 0 {
+			break // solution does not exist
 		}
-		if Sbd_ProblemAddClauses(qbf, vars, count, qbfVars, structures) == 0 {
-			return 0
+		// check if solution still exists
+		status = sat_solver_solve(pSatQbf, nil, 0, 0, 0, 0)
+		if status == l_False { // solution does not exist
+			break
 		}
-		if qbf.Solve() != bsat.Satisfiable {
-			return 0
-		}
-		parameters = make([]bsat.Literal, params)
-		for i := range parameters {
-			parameters[i] = bsat.Literal(2*(cecParameter+int32(i)) + 1 - sbdModelValue(qbf, int32(i)))
+		assert(status == l_True, "status == l_True")
+		// find the new values of parameters
+		assert(vec.Vec_IntSize(vLits) == 0, "Vec_IntSize(vLits) == 0")
+		for i := int32(0); i < nPars; i++ {
+			vec.Vec_IntPush(vLits, Abc_Var2Lit(VarCecPar+i, 1-sat_solver_var_value(pSatQbf, VarQbfPar+i)))
 		}
 	}
-	if len(parameters) == 0 {
-		return 0
+	if vec.Vec_IntSize(vLits) > 0 {
+		Sbd_ProblemCollectSolution(nStrs, pStr0, vLits)
+		RetValue = 1
 	}
-	literals := vec.Vec_IntAlloc(len(parameters))
-	for _, literal := range parameters {
-		vec.Vec_IntPush(literals, int32(literal))
-	}
-	Sbd_ProblemCollectSolution(count, structures, literals)
-	return 1
+	sat_solver_delete(pSatCec)
+	sat_solver_delete(pSatQbf)
+	return RetValue
 }

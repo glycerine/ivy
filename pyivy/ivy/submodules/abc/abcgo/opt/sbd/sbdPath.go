@@ -1,137 +1,154 @@
 package sbd
 
+// Port of src/opt/sbd/sbdPath.c: critical path of a LUT mapping.
+
 import (
 	"fmt"
 
-	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/tim"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
-func sbcAddInternal(p *Network, id int32, path *vec.Vec_Bit_t, seen map[int32]bool) int32 {
-	if seen[id] {
-		return int32(vec.Vec_BitEntry(path, int(id)))
+func Sbc_ManAddInternalToPath_rec(p *Gia_Man_t, iObj int32, vPath *Vec_Bit_t) int32 {
+	Value := int32(0)
+	if Gia_ObjIsTravIdCurrentId(p, iObj) {
+		return int32(vec.Vec_BitEntry(vPath, int(iObj)))
 	}
-	seen[id] = true
-	node := p.object(id)
-	if node.Kind == aig.Buffer {
-		value := sbcAddInternal(p, int32(node.Fanins[0].NodeID()), path, seen)
-		if value != 0 {
-			vec.Vec_BitWriteEntry(path, int(id), 1)
-		}
-		return value
+	Gia_ObjSetTravIdCurrentId(p, iObj)
+	pObj := Gia_ManObj(p, iObj)
+	if Gia_ObjIsCi(pObj) {
+		return int32(vec.Vec_BitEntry(vPath, int(iObj)))
 	}
-	if node.Kind == aig.Input {
-		return int32(vec.Vec_BitEntry(path, int(id)))
+	assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)")
+	for _, iFan := range gia.Gia_ObjLutFanins(p, iObj) {
+		Value |= Sbc_ManAddInternalToPath_rec(p, iFan, vPath)
 	}
-	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
-		panic("critical LUT path contains non-gate")
+	if Value != 0 {
+		vec.Vec_BitWriteEntry(vPath, int(iObj), 1)
 	}
-	value := int32(0)
-	for _, fanin := range p.cut(id) {
-		value |= sbcAddInternal(p, fanin, path, seen)
-	}
-	if value != 0 {
-		vec.Vec_BitWriteEntry(path, int(id), 1)
-	}
-	return value
+	return Value
 }
-func Sbc_ManAddInternalToPath_rec(p *Network, id int32, path *vec.Vec_Bit_t) int32 {
-	return sbcAddInternal(p, id, path, map[int32]bool{})
-}
-func Sbc_ManAddInternalToPath(p *Network, path *vec.Vec_Bit_t) {
-	for _, edge := range p.Graph.LiveEdges() {
-		id := int32(edge.NodeID())
-		if _, ok := p.LUTs[id]; !ok || vec.Vec_BitEntry(path, int(id)) == 0 {
+func Sbc_ManAddInternalToPath(p *Gia_Man_t, vPath *Vec_Bit_t) {
+	for iObj := int32(1); iObj < Gia_ManObjNum(p); iObj++ {
+		if gia.Gia_ObjIsLut(p, iObj) == 0 {
 			continue
 		}
-		seen := map[int32]bool{}
-		for _, fanin := range p.cut(id) {
-			seen[fanin] = true
+		if vec.Vec_BitEntry(vPath, int(iObj)) == 0 {
+			continue
 		}
-		sbcAddInternal(p, id, path, seen)
+		Gia_ManIncrementTravId(p)
+		for _, iFan := range gia.Gia_ObjLutFanins(p, iObj) {
+			Gia_ObjSetTravIdCurrentId(p, iFan)
+		}
+		Sbc_ManAddInternalToPath_rec(p, iObj, vPath)
 	}
 }
-func sbcCriticalPath(p *Network, levels []int32, id, levelFan int32, path *vec.Vec_Bit_t, slack int32, seen map[int32]bool) {
-	if seen[id] {
+
+func Sbc_ManCriticalPath_rec(p *Gia_Man_t, pLevels []int32, iObj, LevelFan int32, vPath *Vec_Bit_t, Slack int32) {
+	if Gia_ObjIsTravIdCurrentId(p, iObj) {
 		return
 	}
-	seen[id] = true
-	vec.Vec_BitWriteEntry(path, int(id), 1)
-	node := p.object(id)
-	if node.Kind == aig.Buffer {
-		sbcCriticalPath(p, levels, int32(node.Fanins[0].NodeID()), levelFan, path, slack, seen)
-		return
-	}
-	if node.Kind == aig.Input {
-		for _, co := range p.BoxInputs[id] {
-			driver := p.outputDriver(co)
-			if driver != 0 && levels[driver]+slack >= levelFan-1 {
-				sbcCriticalPath(p, levels, driver, levels[driver], path, max(0, levels[driver]+slack-(levelFan-1)), seen)
+	Gia_ObjSetTravIdCurrentId(p, iObj)
+	pObj := Gia_ManObj(p, iObj)
+	vec.Vec_BitWriteEntry(vPath, int(iObj), 1)
+	if Gia_ObjIsCi(pObj) {
+		pManTime, _ := p.BoxTiming()
+		iBox := -1
+		if pManTime != nil {
+			iBox = tim.Tim_ManBoxForCi(pManTime, int(Gia_ObjCioId(pObj)))
+		}
+		if iBox >= 0 {
+			curCo := int32(tim.Tim_ManBoxInputFirst(pManTime, iBox))
+			nBoxInputs := int32(tim.Tim_ManBoxInputNum(pManTime, iBox))
+			for k := int32(0); k < nBoxInputs; k++ {
+				pCo := Gia_ManCo(p, curCo+k)
+				iDriver := Gia_ObjFaninId0p(p, pCo)
+				if (pLevels[iDriver]+Slack >= LevelFan-1) && iDriver != 0 {
+					Sbc_ManCriticalPath_rec(p, pLevels, iDriver, pLevels[iDriver], vPath, max(0, pLevels[iDriver]+Slack-(LevelFan-1)))
+				}
 			}
 		}
 		return
 	}
-	if node.Kind != aig.And && node.Kind != aig.ExclusiveOr {
-		panic("critical path contains non-LUT gate")
-	}
-	for _, fanin := range p.cut(id) {
-		if levels[fanin]+slack >= levelFan-1 {
-			sbcCriticalPath(p, levels, fanin, levels[fanin], path, max(0, levels[fanin]+slack-(levelFan-1)), seen)
+	assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)")
+	for _, iFan := range gia.Gia_ObjLutFanins(p, iObj) {
+		if pLevels[iFan]+Slack >= LevelFan-1 {
+			Sbc_ManCriticalPath_rec(p, pLevels, iFan, pLevels[iFan], vPath, max(0, pLevels[iFan]+Slack-(LevelFan-1)))
 		}
 	}
 }
-func Sbc_ManCriticalPath_rec(p *Network, levels []int32, id, level int32, path *vec.Vec_Bit_t, slack int32) {
-	sbcCriticalPath(p, levels, id, level, path, slack, map[int32]bool{})
-}
-func Sbc_ManCriticalPath(p *Network) *vec.Vec_Bit_t {
-	maximum := p.deriveLevels()
-	path := vec.Vec_BitStart(p.Graph.NodeSlots())
-	seen := map[int32]bool{}
-	for _, co := range p.Graph.Outputs() {
-		driver := p.outputDriver(int32(co.NodeID()))
-		if driver != 0 && p.Levels[driver] == maximum {
-			sbcCriticalPath(p, p.Levels, driver, p.Levels[driver], path, 1, seen)
+func Sbc_ManCriticalPath(p *Gia_Man_t) *Vec_Bit_t {
+	var pLevels []int32
+	Slack := int32(1)
+	pManTime, _ := p.BoxTiming()
+	var nLevels int32
+	if pManTime != nil {
+		nLevels = gia.Gia_ManLutLevelWithBoxes(p)
+	} else {
+		nLevels = gia.Gia_ManLutLevel(p, &pLevels)
+	}
+	vPath := vec.Vec_BitStart(int(Gia_ManObjNum(p)))
+	if pManTime != nil {
+		pLevels = make([]int32, Gia_ManObjNum(p))
+		for i := range pLevels {
+			pLevels[i] = Gia_ObjLevelId(p, int32(i))
 		}
 	}
-	Sbc_ManAddInternalToPath(p, path)
-	return path
+	Gia_ManIncrementTravId(p)
+	for _, iDriver := range giaCoDriverIds(p) {
+		if (pLevels[iDriver] == nLevels) && iDriver != 0 {
+			Sbc_ManCriticalPath_rec(p, pLevels, iDriver, pLevels[iDriver], vPath, Slack)
+		}
+	}
+	Sbc_ManAddInternalToPath(p, vPath)
+	return vPath
 }
-func Sbc_ManDelayTrace(p *Network) {
-	if len(p.LUTs) == 0 {
-		fmt.Println("No mapping is available.")
+
+func Sbc_ManDelayTrace(p *Gia_Man_t) {
+	vPath := vec.Vec_BitStart(int(Gia_ManObjNum(p)))
+	var pLevels []int32
+	nLuts, nNodes, nEdges, nEdgesAll := 0, 0, 0, 0
+	if gia.Gia_ManHasMapping(p) == 0 {
+		fmt.Printf("No mapping is available.\n")
 		return
 	}
-	maximum := p.deriveLevels()
-	path := vec.Vec_BitStart(p.Graph.NodeSlots())
-	for _, co := range p.Graph.Outputs() {
-		driver := p.outputDriver(int32(co.NodeID()))
-		if p.Levels[driver] == maximum {
-			vec.Vec_BitWriteEntry(path, int(driver), 1)
+	// set critical CO drivers
+	nLevels := gia.Gia_ManLutLevel(p, &pLevels)
+	for _, iFan := range giaCoDriverIds(p) {
+		if pLevels[iFan] == nLevels {
+			vec.Vec_BitWriteEntry(vPath, int(iFan), 1)
 		}
 	}
-	gates := p.Graph.LiveEdges()
-	nodes, edges, all := 0, 0, 0
-	for i := len(gates) - 1; i >= 0; i-- {
-		id := int32(gates[i].NodeID())
-		cut, ok := p.LUTs[id]
-		if !ok || vec.Vec_BitEntry(path, int(id)) == 0 {
+	// set critical internal nodes
+	for i := Gia_ManObjNum(p) - 1; i > 0; i-- {
+		if gia.Gia_ObjIsLut(p, i) == 0 {
 			continue
 		}
-		nodes++
-		for _, fanin := range cut.Leaves {
-			if p.Levels[fanin]+1 < p.Levels[id] {
+		nLuts++
+		if vec.Vec_BitEntry(vPath, int(i)) == 0 {
+			continue
+		}
+		nNodes++
+		for _, iFan := range gia.Gia_ObjLutFanins(p, i) {
+			if pLevels[iFan]+1 < pLevels[i] {
 				continue
 			}
-			vec.Vec_BitWriteEntry(path, int(fanin), 1)
-			edges++
+			assert(pLevels[iFan]+1 == pLevels[i], "pLevels[iFan] + 1 == pLevels[i]")
+			vec.Vec_BitWriteEntry(vPath, int(iFan), 1)
+			nEdges++
 		}
 	}
-	for id, cut := range p.LUTs {
-		for _, fanin := range cut.Leaves {
-			if vec.Vec_BitEntry(path, int(id)) != 0 && vec.Vec_BitEntry(path, int(fanin)) != 0 {
-				all++
+	for i := int32(1); i < Gia_ManObjNum(p); i++ {
+		if gia.Gia_ObjIsLut(p, i) == 0 {
+			continue
+		}
+		for _, iFan := range gia.Gia_ObjLutFanins(p, i) {
+			if vec.Vec_BitEntry(vPath, int(i)) != 0 && vec.Vec_BitEntry(vPath, int(iFan)) != 0 {
+				nEdgesAll++
 			}
 		}
 	}
-	fmt.Printf("AIG = %d. LUT = %d. Lev = %d. Path nodes = %d. Path edges = %d. (%d.)\n", len(p.LUTs), len(p.LUTs), maximum, nodes, edges, all)
+	fmt.Printf("AIG = %d. LUT = %d. Lev = %d.   Path nodes = %d.  Path edges = %d. (%d.)\n",
+		gia.Gia_ManAndNum(p), nLuts, nLevels, nNodes, nEdges, nEdgesAll)
 }

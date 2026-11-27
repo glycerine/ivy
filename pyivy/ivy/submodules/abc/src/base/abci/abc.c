@@ -46495,6 +46495,11 @@ int Abc_CommandAbc9Mfsd( Abc_Frame_t * pAbc, int argc, char ** argv )
         Abc_Print( -1, "Abc_CommandAbc9Mfsd(): This command does not work with barrier buffers.\n" );
         return 1;
     }
+    if ( Gia_ManMuxNum(pAbc->pGia) )
+    {
+        Abc_Print( -1, "Abc_CommandAbc9Mfsd(): This command does not work with MUXes.\n" );
+        return 1;
+    }
     if ( Gia_ManHasMapping(pAbc->pGia) )
         Abc_Print( 1, "The current AIG has mapping, which can be used to determine critical path if \"-p\" is selected.\n" );
     pTemp = Sbd_NtkPerform( pAbc->pGia, pPars );

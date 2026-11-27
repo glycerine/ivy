@@ -1432,6 +1432,12 @@ int Sbd_ManExploreCut( Sbd_Man_t * p, int Pivot, int nLeaves, int * pLeaves, int
         return 0;
     if ( Vec_IntSize(p->vDivSet) < 2*p->pPars->nLutSize-1 )
         return 0;
+    // the three-LUT structures below fit at most 3*nLutSize-2 cut leaves
+    // (the default cut size for nLutSize = 4); larger cuts, which happen
+    // with -K 2 and -K 3, broke their invariants and built structures with
+    // too few or negatively many components
+    if ( Vec_IntSize(p->vDivSet) > 3*p->pPars->nLutSize-2 )
+        return 0;
 
     // try 444 -- LUT(LUT, LUT)
     if ( nNodesTop <= p->pPars->nLutSize-2 )

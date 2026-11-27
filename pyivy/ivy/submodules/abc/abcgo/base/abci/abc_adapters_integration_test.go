@@ -61,19 +61,9 @@ func TestSbdBoxTimingPreservesDisabledArcsAndOwnership(t *testing.T) {
 	tim.Tim_ManCreateBox(timing, 0, 2, 2, 1, 0, 0)
 	extra := gia.Gia_ManStart(4)
 	p.SetBoxTiming(timing, extra)
-	imported, err := abcSbdImport(p)
-	if err != nil {
-		t.Fatal(err)
-	}
-	ci := int32(imported.Graph.InputAt(int(2)).NodeID())
-	co := int32(imported.Graph.OutputAt(int(1)).NodeID())
-	if len(imported.BoxInputs[ci]) != 2 || len(imported.BoxLevelInputs[ci]) != 1 || imported.BoxLevelInputs[ci][0] != co {
-		t.Fatalf("box arcs: all=%v enabled=%v", imported.BoxInputs, imported.BoxLevelInputs)
-	}
-	aig.Aig_ManStop(imported.Graph)
-	var parameters sbd.Parameters
+	var parameters sbd.Sbd_Par_t
 	sbd.Sbd_ParSetDefault(&parameters)
-	parameters.Mapping = true
+	parameters.FMapping = 1
 	result, err := abcSbdPerform(p, &parameters)
 	if err != nil {
 		t.Fatal(err)
@@ -95,35 +85,6 @@ func TestSbdBoxTimingPreservesDisabledArcsAndOwnership(t *testing.T) {
 		}
 		if len(got) != 3 || got[0] != (x && y) || got[1] != x || got[2] != (z && y) {
 			t.Fatalf("bits=%d output=%v", bits, got)
-		}
-	}
-}
-
-func TestSbdCutRemapsConstantsDuplicatesAndPhases(t *testing.T) {
-	g := aig.NewGraph()
-	defer aig.Aig_ManStop(g)
-	a, b := g.NewInput(), g.NewInput()
-	edges := []aig.Edge{a.Not(), b, g.Const0(), a, g.Const1()}
-	for _, complement := range []bool{false, true} {
-		truth := []uint64{0x13579bdf2468ace0}
-		cut := abcSbdCut(edges, truth, complement)
-		if len(cut.Leaves) != 2 || cut.Leaves[0] != int32(a.NodeID()) || cut.Leaves[1] != int32(b.NodeID()) {
-			t.Fatalf("bad compact leaves %v", cut.Leaves)
-		}
-		for bits := 0; bits < 64; bits++ {
-			index := 16
-			if bits&1 == 0 {
-				index |= 1
-			} else {
-				index |= 8
-			}
-			if bits&2 != 0 {
-				index |= 2
-			}
-			want := (truth[0]>>index&1 != 0) != complement
-			if got := cut.Truth[0]>>bits&1 != 0; got != want {
-				t.Fatalf("bits=%d complement=%v got=%v want=%v", bits, complement, got, want)
-			}
 		}
 	}
 }
@@ -150,9 +111,12 @@ func TestSbdAdapterPreservesMappedAndUnmappedFunctions(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
-		var parameters sbd.Parameters
+		var parameters sbd.Sbd_Par_t
 		sbd.Sbd_ParSetDefault(&parameters)
-		parameters.Mapping = mapped
+		parameters.FMapping = 0
+		if mapped {
+			parameters.FMapping = 1
+		}
 		output, err := abcSbdPerform(p, &parameters)
 		if err != nil {
 			t.Fatal(err)

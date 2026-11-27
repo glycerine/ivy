@@ -556,3 +556,19 @@ func Sbd_SolverFuncTest() {
 		fmt.Printf("0\n")
 	}
 }
+
+func sbdEnsureVariables(solver *bsat.Solver, count int32) {
+	for solver.NumVars() < count {
+		solver.NewVariable()
+	}
+}
+func sbdModelValue(solver *bsat.Solver, variable int32) int32 {
+	value, ok := solver.Value(variable)
+	if !ok {
+		panic("SAT model value unavailable")
+	}
+	if value {
+		return 1
+	}
+	return 0
+}
