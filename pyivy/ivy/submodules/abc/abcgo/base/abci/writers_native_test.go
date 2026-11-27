@@ -141,3 +141,9 @@ func TestWriteBafLikeNative(t *testing.T) {
 		return ""
 	})
 }
+
+// TestSimGenLikeNative: &sim_gen draws Vec_WrdStartRandom's Abc_RandomW
+// stream, so the written patterns equal native's.
+func TestSimGenLikeNative(t *testing.T) {
+	nativeWriterCase(t, "&r ../../../i10.aig; &sim_gen -W 2; &sim_write %F", "sim", nil, nil)
+}

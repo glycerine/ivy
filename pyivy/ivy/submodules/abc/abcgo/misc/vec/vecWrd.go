@@ -24,8 +24,8 @@ import (
 	"bufio"
 	"encoding/binary"
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"io"
-	"math/rand/v2"
 	"os"
 	"sort"
 	"unsafe"
@@ -288,7 +288,7 @@ func Vec_WrdStartNatural(n int) *Vec_Wrd_t {
 func Vec_WrdStartRandom(n int) *Vec_Wrd_t {
 	p := Vec_WrdStart(n)
 	for i := range n {
-		p.storage()[i] = rand.Uint64()
+		p.storage()[i] = util.Abc_RandomW(0) // as vecWrd.h
 	}
 	return p
 }
