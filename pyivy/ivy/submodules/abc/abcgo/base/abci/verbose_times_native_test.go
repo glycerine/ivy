@@ -28,6 +28,8 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 		"read test_vectors/seq/s713.blif; strash; scorr -v; print_stats",
 		"read test_vectors/seq/s713.blif; strash; lcorr -v; print_stats",
 		"read test_vectors/seq/s1494.blif; strash; lcorr -v; print_stats",
+		"read test_vectors/seq/s713.blif; strash; dsec -v; print_status",
+		"read test_vectors/native_s27_drw.blif; strash; dsec -v; print_status",
 	} {
 		port := bmc3Normalize(runScript(t, script))
 		if strings.Contains(port, "ms\n") || strings.Contains(port, "Time: ") {
@@ -48,6 +50,23 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 func TestDrwsatVerboseStages(t *testing.T) {
 	out := runScript(t, "read ../../../i10.aig; drwsat -v; print_stats")
 	for _, want := range []string{"Starting:  ../../../i10", "Rewrite:   ../../../i10", "Refactor:  ../../../i10", "NodesBeg =     2123."} {
+		if !strings.Contains(out, want) {
+			t.Errorf("missing %q:\n%s", want, out)
+		}
+	}
+}
+
+// dsec -v prints Fra_FraigSec's stage lines; the port printed only the
+// verdict.
+func TestDsecVerboseStages(t *testing.T) {
+	out := runScript(t, "read test_vectors/seq/s713.blif; strash; dsec -v; print_status")
+	for _, want := range []string{
+		"Original miter:       Latches =    38. Nodes =    376.\n",
+		"Sequential cleanup:   Latches =    28. Nodes =    281. Time =",
+		"Forward retiming:     Latches =    28. Nodes =    281. Time =",
+		"Latch-corr (I=  1):   Latches =     0. Nodes =      0. Time =",
+		"Fraiging:             Latches =     0. Nodes =      0. Time =",
+	} {
 		if !strings.Contains(out, want) {
 			t.Errorf("missing %q:\n%s", want, out)
 		}

@@ -128,6 +128,14 @@ func Fra_FraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph) int3
 	return fraFraigSec(original, pars, result, nil)
 }
 
+// secStage prints one of fraSec.c's verbose stage lines with its time.
+func secStage(pars *Fra_Sec_t, label string, g *aig.Graph, clk int64) {
+	if pars.FVerbose != 0 {
+		fmt.Printf("%sLatches = %5d. Nodes = %6d. ", label, g.RegisterCount(), aig.Aig_ManNodeNum(g))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk) // ABC_PRT
+	}
+}
+
 func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verifiedCex **util.Abc_Cex_t) int32 {
 	if original == nil || pars == nil {
 		panic("invalid sequential equivalence arguments")
@@ -193,24 +201,34 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 	if status >= 0 {
 		return finish()
 	}
+	if pars.FVerbose != 0 {
+		fmt.Printf("Original miter:       Latches = %5d. Nodes = %6d.\n", graph.RegisterCount(), aig.Aig_ManNodeNum(graph))
+	}
+	clk := util.Abc_Clock()
 	if graph.RegisterCount() > 0 {
 		graph = aig.Aig_ManReduceLaches(graph, 0)
 	}
 	if graph.RegisterCount() > 0 {
 		graph = aig.Aig_ManConstReduce(graph, 0, -1, -1, 0, 0)
 	}
+	secStage(pars, "Sequential cleanup:   ", graph, clk)
 	status = Fra_FraigMiterStatus(graph)
 	if status >= 0 {
 		return finish()
 	}
+	clk = util.Abc_Clock()
 	if pars.FPhaseAbstract != 0 {
 		secRefreshTrueCounts(graph)
 		graph = saig.Saig_ManPhaseAbstractAuto(graph, 0)
+		secStage(pars, "Phase abstraction:    ", graph, clk)
 	}
 	if pars.FRetimeFirst != 0 && graph.RegisterCount() > 0 {
+		clk = util.Abc_Clock()
 		graph = saig.Saig_ManRetimeForward(graph, 100, 0)
+		secStage(pars, "Forward retiming:     ", graph, clk)
 	}
 	var sw ssw.Ssw_Pars_t
+	clk = util.Abc_Clock()
 	if graph.RegisterCount() > 0 {
 		graph = aig.Aig_ManDupOrdered(graph)
 		ssw.Ssw_ManSetDefaultParamsLcorr(&sw)
@@ -226,10 +244,13 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 			timedOut = true
 			return finish()
 		}
+		secStage(pars, fmt.Sprintf("Latch-corr (I=%3d):   ", ssw.Ssw_ParsIterations(&sw)), graph, clk)
 	}
 	ssw.Ssw_ManSetDefaultParams(&sw)
 	if pars.FFraiging != 0 {
+		clk = util.Abc_Clock()
 		graph = Fra_FraigEquivence(graph, 100, 0)
+		secStage(pars, "Fraiging:             ", graph, clk)
 	}
 	if graph.RegisterCount() == 0 {
 		Fra_FraigCec(&graph, 100000, 0)
@@ -239,9 +260,11 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 		return finish()
 	}
 	if pars.FRetimeRegs != 0 && graph.RegisterCount() > 0 {
+		clk = util.Abc_Clock()
 		secRefreshTrueCounts(graph)
 		graph = saig.Saig_ManRetimeMinArea(graph, 1000, 0, 0, 1, 0)
 		graph = aig.Aig_ManDupOrdered(graph)
+		secStage(pars, "Min-reg retiming:     ", graph, clk)
 	}
 	status = Fra_FraigMiterStatus(graph)
 	if status == -1 && pars.FInduction != 0 {
@@ -249,7 +272,11 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 			ssw.Ssw_ParsSetFramesK(&sw, frames)
 			ssw.Ssw_ParsSetBTLimit(&sw, pars.NBTLimit)
 			ssw.Ssw_ParsSetBTLimitGlobal(&sw, pars.NBTLimitGlobal)
+			clk = util.Abc_Clock()
 			if ssw.Ssw_ParsConflicts(&sw) > pars.NBTLimitGlobal {
+				if pars.fSilent == 0 {
+					fmt.Printf("Global conflict limit (%d) exceeded.\n", pars.NBTLimitGlobal)
+				}
 				timedOut = true
 				break
 			}
@@ -266,26 +293,33 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 				break
 			}
 			status = Fra_FraigMiterStatus(graph)
+			secStage(pars, fmt.Sprintf("K-step (K=%2d,I=%3d):  ", frames, ssw.Ssw_ParsIterations(&sw)), graph, clk)
 			if status != -1 {
 				break
 			}
 			if graph.RegisterCount() > 0 {
+				clk = util.Abc_Clock()
 				secRefreshTrueCounts(graph)
 				graph = saig.Saig_ManRetimeMinArea(graph, 1000, 0, 0, 1, 0)
 				graph = aig.Aig_ManDupOrdered(graph)
+				secStage(pars, "Min-reg retiming:     ", graph, clk)
 			}
 			if graph.RegisterCount() > 0 {
 				graph = aig.Aig_ManConstReduce(graph, 0, -1, -1, 0, 0)
 			}
 			var err error
+			clk = util.Abc_Clock()
 			graph, err = dar.Dar_ManCompress2(aig.Aig_ManDupOrdered(graph), true, false, true, false, false)
 			if err != nil || graph == nil {
 				graph = previous
 				timedOut = true
 				break
 			}
+			secStage(pars, "Rewriting:            ", graph, clk)
 			if graph.RegisterCount() > 0 {
+				clk = util.Abc_Clock()
 				sim := Fra_SmlSimulateSeq(graph, 0, 128*frames, 1+16/(1+aig.Aig_ManNodeNum(graph)/1000), 1)
+				secStage(pars, "Seq simulation  :     ", graph, clk)
 				if sim.NonconstantOutput {
 					if cex := Fra_SmlGetCounterExample(sim); cex != nil {
 						_ = graph.SetSequentialCounterexample(cex)
