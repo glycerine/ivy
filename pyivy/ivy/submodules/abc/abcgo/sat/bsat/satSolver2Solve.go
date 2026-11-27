@@ -78,3 +78,92 @@ func sat_solver2_solve(s *sat_solver2, assumptions []lit, conflicts, propagation
 	return int32(status)
 }
 func sat_solver2_simplify(s *sat_solver2) int32 { return solver2Bool(solver2_propagate(s) == nil) }
+
+// sat_solver2_solve_c is satSolver2.c's sat_solver2_solve line by line:
+// pending root-level implications are propagated under the first
+// assumption's level, learned clauses are reduced between restarts, and
+// there is no "solved" state. sat_solver2_solve above keeps the Solver2
+// wrappers' stronger contract; Sat_solver2_solve exports this one.
+func sat_solver2_solve_c(s *sat_solver2, assumptions []lit, nConfLimit, nInsLimit, nConfLimitGlobal, nInsLimitGlobal int64) int32 {
+	restart_iter := int32(0)
+	var nof_conflicts int64
+	status := lbool(l_Undef)
+	var proof_id int32
+
+	s.hLearntLast = -1
+	s.hProofLast = -1
+
+	// set the external limits
+	s.nConfLimit = 0
+	s.nInsLimit = 0
+	if nConfLimit != 0 {
+		s.nConfLimit = s.stats.conflicts + nConfLimit
+	}
+	if nInsLimit != 0 {
+		s.nInsLimit = s.stats.propagations + nInsLimit
+	}
+	if nConfLimitGlobal != 0 && (s.nConfLimit == 0 || s.nConfLimit > nConfLimitGlobal) {
+		s.nConfLimit = nConfLimitGlobal
+	}
+	if nInsLimitGlobal != 0 && (s.nInsLimit == 0 || s.nInsLimit > nInsLimitGlobal) {
+		s.nInsLimit = nInsLimitGlobal
+	}
+
+	// Perform assumptions:
+	s.root_level = int32(len(assumptions))
+	for _, p := range assumptions {
+		if lit_check(p, s.size) == 0 {
+			panic("solver2 assumption outside solver")
+		}
+		veci_push(&s.trail_lim, s.qtail)
+		if solver2_enqueue(s, p, 0) == 0 {
+			r := clause2_read(s, s.reasons[lit_var(p)])
+			if r != nil {
+				confl := r
+				proof_id = solver2_analyze_final(s, confl, 1)
+				veci_push(&s.conf_final, lit_neg(p))
+			} else {
+				proof_id = -1 // the only case when ProofId is not assigned (conflicting assumptions)
+				veci_resize(&s.conf_final, 0)
+				veci_push(&s.conf_final, lit_neg(p))
+				if s.levels[lit_var(p)] > 0 {
+					veci_push(&s.conf_final, p)
+				}
+			}
+			s.hProofLast = proof_id
+			solver2_canceluntil(s, 0)
+			return l_False
+		} else {
+			confl := solver2_propagate(s)
+			if confl != nil {
+				proof_id = solver2_analyze_final(s, confl, 0)
+				s.hProofLast = proof_id
+				solver2_canceluntil(s, 0)
+				return l_False
+			}
+		}
+	}
+
+	for status == l_Undef {
+		if s.nRuntimeLimit != 0 && s.runtimeExpired() {
+			break
+		}
+		// reduce the set of learnt clauses
+		if s.nLearntMax != 0 && s.act_clas.size >= s.nLearntMax && s.pPrf2 == nil {
+			sat_solver2_reducedb(s)
+		}
+		// perform next run
+		nof_conflicts = int64(100 * luby2(2, restart_iter))
+		restart_iter++
+		status = solver2_search(s, nof_conflicts)
+		// quit the loop if reached an external limit
+		if s.nConfLimit != 0 && s.stats.conflicts > s.nConfLimit {
+			break
+		}
+		if s.nInsLimit != 0 && s.stats.propagations > s.nInsLimit {
+			break
+		}
+	}
+	solver2_canceluntil(s, 0)
+	return int32(status)
+}

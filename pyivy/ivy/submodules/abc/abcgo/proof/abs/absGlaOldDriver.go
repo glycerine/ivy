@@ -2,251 +2,321 @@ package abs
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
 	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
-// Gia_ManPerformGlaOld performs ABC's earlier gate-level abstraction loop.
-func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32) int32 {
-	if graph != nil && glaOldHasSpecialGates(graph) {
-		return glaOldPerformLowered(graph, pars, startVta)
+// Gia_ManPerformGlaOld performs gate-level abstraction with the earlier
+// Gla_Man_t engine (absGlaOld.c; &gla -n).
+func Gia_ManPerformGlaOld(pAig *gia.Gia_Man_t, pPars *Abs_Par_t, fStartVta int32) int32 {
+	// Go-only: XOR/MUX nodes are lowered to ANDs first (Gia_ManToAigSimple
+	// in Gla_ManStart treats them as ANDs)
+	if glaOldHasSpecialGates(pAig) {
+		return glaOldPerformLowered(pAig, pPars, fStartVta)
 	}
-	start := util.Abc_Clock()
-	if graph == nil || pars == nil || gia.Gia_ManPoNum(graph) != 1 || pars.NFramesMax != 0 && pars.NFramesStart > pars.NFramesMax {
-		panic("invalid old GLA arguments")
-	}
-	if pars.NTimeOut != 0 {
+	var p *Gla_Man_t
+	var vPPis, vCore *vec.Vec_Int_t
+	var pCex *util.Abc_Cex_t
+	var f, i, iPrev, nConfls, Status, nVarsOld, nCoreSize, RetValue int32
+	fOneIsSent := false
+	RetValue = -1
+	var clk2 int64
+	clk := util.Abc_Clock()
+	if pPars.NTimeOut != 0 {
 		defer absPinClockThread()()
 	}
-	// A previous result must not survive a new verification run.
-	graph.ClearSequentialCounterexample()
-	po := gia.Gia_ManPo(graph, 0)
-	if gia.Gia_ObjIsConst0(gia.Gia_ObjFanin0(po)) != 0 {
-		if gia.Gia_ObjFaninC0(po) == 0 {
-			fmt.Println("Sequential miter is trivially UNSAT.")
+	// preconditions
+	assert(gia.Gia_ManPoNum(pAig) == 1, "Gia_ManPoNum(pAig) == 1")
+	assert(pPars.NFramesMax == 0 || pPars.NFramesStart <= pPars.NFramesMax, "pPars->nFramesMax == 0 || pPars->nFramesStart <= pPars->nFramesMax")
+	if gia.Gia_ObjIsConst0(gia.Gia_ObjFanin0(gia.Gia_ManPo(pAig, 0))) != 0 {
+		if gia.Gia_ObjFaninC0(gia.Gia_ManPo(pAig, 0)) == 0 {
+			fmt.Printf("Sequential miter is trivially UNSAT.\n")
 			return 1
 		}
-		cex := util.Abc_CexAlloc(gia.Gia_ManRegNum(graph), gia.Gia_ManPiNum(graph), 1)
-		if err := graph.SetSequentialCounterexample(cex); err != nil {
+		pAig.ClearSequentialCounterexample()
+		if err := pAig.SetSequentialCounterexample(util.Abc_CexMakeTriv(gia.Gia_ManRegNum(pAig), gia.Gia_ManPiNum(pAig), 1, 0)); err != nil {
 			panic(err)
 		}
-		fmt.Println("Sequential miter is trivially SAT.")
+		fmt.Printf("Sequential miter is trivially SAT.\n")
 		return 0
 	}
-	// A direct PI output has a concrete frame-zero counterexample and no
-	// internal node whose clauses can be added to the abstraction.
-	driver := gia.Gia_ObjFanin0(po)
-	if gia.Gia_ObjIsPi(graph, driver) != 0 {
-		cex := util.Abc_CexAlloc(gia.Gia_ManRegNum(graph), gia.Gia_ManPiNum(graph), 1)
-		if gia.Gia_ObjFaninC0(po) == 0 {
-			util.Abc_InfoSetBit(cex.PData, cex.NRegs+gia.Gia_ObjCioId(driver))
+	// an output driven by a primary input has no SAT variable
+	// (Gla_ManGetOutLit would read an empty vFrames; CBUGS_FIXED.md #33)
+	if gia.Gia_ObjIsPi(pAig, gia.Gia_ObjFanin0(gia.Gia_ManPo(pAig, 0))) != 0 {
+		pAig.ClearSequentialCounterexample()
+		pCex := util.Abc_CexAlloc(gia.Gia_ManRegNum(pAig), gia.Gia_ManPiNum(pAig), 1)
+		if gia.Gia_ObjFaninC0(gia.Gia_ManPo(pAig, 0)) == 0 {
+			util.Abc_InfoSetBit(pCex.PData, pCex.NRegs+gia.Gia_ObjCioId(gia.Gia_ObjFanin0(gia.Gia_ManPo(pAig, 0))))
 		}
-		if err := graph.SetSequentialCounterexample(cex); err != nil {
+		if err := pAig.SetSequentialCounterexample(pCex); err != nil {
 			panic(err)
 		}
+		fmt.Printf("Sequential miter is trivially SAT.\n")
 		return 0
 	}
-	ret := int32(-1)
-	if gia.Gia_ManGateClasses(graph) == nil {
-		if startVta != 0 {
-			oldMax, oldStart, oldTimeout, oldDump := pars.NFramesMax, pars.NFramesStart, pars.NTimeOut, pars.FDumpVabs
-			pars.NFramesMax = pars.NFramesStart
-			pars.NFramesStart = min(pars.NFramesStart/2+1, 3)
-			pars.NTimeOut = 20
-			pars.FDumpVabs = 0
-			ret = Gia_VtaPerformInt(graph, pars)
-			pars.NFramesMax, pars.NFramesStart, pars.NTimeOut, pars.FDumpVabs = oldMax, oldStart, oldTimeout, oldDump
-			gia.Gia_ManSetGateClasses(graph, nil)
-			if classes := gia.Gia_ManObjClasses(graph); classes != nil {
-				gia.Gia_ManSetGateClasses(graph, Gia_VtaConvertToGla(graph, classes))
+
+	// compute intial abstraction
+	if gia.Gia_ManGateClasses(pAig) == nil {
+		if fStartVta != 0 {
+			nFramesMaxOld := pPars.NFramesMax
+			nFramesStartOld := pPars.NFramesStart
+			nTimeOutOld := pPars.NTimeOut
+			nDumpOld := pPars.FDumpVabs
+			pPars.NFramesMax = pPars.NFramesStart
+			pPars.NFramesStart = min(pPars.NFramesStart/2+1, 3)
+			pPars.NTimeOut = 20
+			pPars.FDumpVabs = 0
+			RetValue = Gia_VtaPerformInt(pAig, pPars)
+			pPars.NFramesMax = nFramesMaxOld
+			pPars.NFramesStart = nFramesStartOld
+			pPars.NTimeOut = nTimeOutOld
+			pPars.FDumpVabs = nDumpOld
+			// create gate classes
+			gia.Gia_ManSetGateClasses(pAig, nil)
+			if classes := gia.Gia_ManObjClasses(pAig); classes != nil {
+				gia.Gia_ManSetGateClasses(pAig, Gia_VtaConvertToGla(pAig, classes))
 			}
-			gia.Gia_ManSetObjClasses(graph, nil)
-			if ret == 0 || gia.Gia_ManGateClasses(graph) == nil {
-				return ret
+			gia.Gia_ManSetObjClasses(pAig, nil)
+			// return if VTA solve the problem if could not start
+			if RetValue == 0 || gia.Gia_ManGateClasses(pAig) == nil {
+				return RetValue
 			}
 		} else {
-			classes := vec.Vec_IntStart(int(gia.Gia_ManObjNum(graph)))
+			classes := vec.Vec_IntStart(int(gia.Gia_ManObjNum(pAig)))
 			vec.Vec_IntWriteEntry(classes, 0, 1)
-			vec.Vec_IntWriteEntry(classes, int(gia.Gia_ObjId(graph, gia.Gia_ObjFanin0(po))), 1)
-			gia.Gia_ManSetGateClasses(graph, classes)
+			vec.Vec_IntWriteEntry(classes, int(gia.Gia_ObjFaninId0p(pAig, gia.Gia_ManPo(pAig, 0))), 1)
+			gia.Gia_ManSetGateClasses(pAig, classes)
 		}
 	}
-	p := Gla_ManStart(graph, pars)
-	defer p.pSat.StopIncrementalProof()
-	p.timeInit = util.Abc_Clock() - start
-	var deadline int64
-	if pars.NTimeOut != 0 {
-		deadline = absCPUClock() + int64(pars.NTimeOut)*int64(time.Second)
-		p.pSat.SetRuntimeDeadline(absCPUClock, deadline)
+	// start the manager
+	p = Gla_ManStart(pAig, pPars)
+	p.timeInit = util.Abc_Clock() - clk
+	// set runtime limit
+	if p.pPars.NTimeOut != 0 {
+		bsat.Sat_solver2_set_runtime_limit(p.pSat, absCPUClock, int64(p.pPars.NTimeOut)*util.CLOCKS_PER_SEC+absCPUClock())
 	}
-	if pars.FVerbose != 0 {
-		fmt.Printf("Running gate-level abstraction (GLA) with the following parameters:\n")
-		fmt.Printf("FrameMax = %d  ConfMax = %d  Timeout = %d  RatioMin = %d %%.\n", pars.NFramesMax, pars.NConfLimit, pars.NTimeOut, pars.NRatioMin)
-		fmt.Printf("LearnStart = %d  LearnDelta = %d  LearnRatio = %d %%.\n", pars.NLearnedStart, pars.NLearnedDelta, pars.NLearnedPerce)
-		fmt.Printf(" Frame   %%   Abs  PPI   FF   LUT   Confl  Cex   Vars   Clas   Lrns     Time        Mem\n")
+	// perform initial abstraction
+	if p.pPars.FVerbose != 0 {
+		util.Abc_Print(1, "Running gate-level abstraction (GLA) with the following parameters:\n")
+		util.Abc_Print(1, "FrameMax = %d  ConfMax = %d  Timeout = %d  RatioMin = %d %%.\n",
+			pPars.NFramesMax, pPars.NConfLimit, pPars.NTimeOut, pPars.NRatioMin)
+		util.Abc_Print(1, "LearnStart = %d  LearnDelta = %d  LearnRatio = %d %%.\n",
+			pPars.NLearnedStart, pPars.NLearnedDelta, pPars.NLearnedPerce)
+		util.Abc_Print(1, " Frame   %%   Abs  PPI   FF   LUT   Confl  Cex   Vars   Clas   Lrns     Time        Mem\n")
 	}
-	var witness *util.Abc_Cex_t
-	var frame, i, previous, status int32
-	var sent bool
-	stopped := false
-	for frame = 0; pars.NFramesMax == 0 || frame < pars.NFramesMax; frame++ {
-		conflictStart := p.pSat.Statistics().Conflicts
-		pars.IFrame = frame
-		Gia_GlaAddTimeFrame(p, frame)
-		var core *vec.Vec_Int_t
-		var savedVars, conflicts int32
+	for f, i, iPrev = 0, 0, 0; p.pPars.NFramesMax == 0 || f < p.pPars.NFramesMax; f, iPrev = f+1, i {
+		nConflsBeg := bsat.Sat_solver2_nconflicts(p.pSat)
+		p.pPars.IFrame = f
+
+		// load timeframe
+		Gia_GlaAddTimeFrame(p, f)
+
+		// iterate as long as there are counter-examples
 		for i = 0; ; i++ {
-			clock := util.Abc_Clock()
-			core = Gla_ManUnsatCore(p, frame, p.pSat, pars.NConfLimit, pars.FVerbose, &status, &conflicts)
-			if status == -1 || deadline != 0 && absCPUClock() > deadline {
-				p.pSat.StopIncrementalProof()
-				stopped = true
+			clk2 = util.Abc_Clock()
+			vCore = Gla_ManUnsatCore(p, f, p.pSat, pPars.NConfLimit, pPars.FVerbose, &Status, &nConfls)
+			if Status == -1 || (bsat.Sat_solver2_RuntimeLimit(p.pSat) != 0 && absCPUClock() > bsat.Sat_solver2_RuntimeLimit(p.pSat)) { // resource limit is reached
+				bsat.Sat_solver2_StopPrf2(p.pSat)
+				goto finish
+			}
+			if Status == 1 {
+				bsat.Sat_solver2_StopPrf2(p.pSat)
+				p.timeUnsat += util.Abc_Clock() - clk2
 				break
 			}
-			if status == 1 {
-				p.pSat.StopIncrementalProof()
-				p.timeUnsat += util.Abc_Clock() - clock
-				break
-			}
-			p.timeSat += util.Abc_Clock() - clock
+			p.timeSat += util.Abc_Clock() - clk2
+			assert(Status == 0, "Status == 0")
 			p.nCexes++
-			if abcmain.Abc_FrameIsBridgeMode() != 0 && sent {
-				Gia_GlaSendCancel(p, pars.FVerbose)
-				sent = false
+
+			// cancel old one if it was sent
+			if abcmain.Abc_FrameIsBridgeMode() != 0 && fOneIsSent {
+				Gia_GlaSendCancel(p, pPars.FVerbose)
+				fOneIsSent = false
 			}
-			clock = util.Abc_Clock()
-			var ppis *vec.Vec_Int_t
-			if pars.FAddLayer != 0 {
-				ppis = Gla_ManCollectPPis(p, nil)
-			} else {
-				ppis = Gla_ManRefinement(p)
+
+			// perform the refinement
+			clk2 = util.Abc_Clock()
+			vPPis = nil
+			if pPars.FAddLayer != 0 {
+				vPPis = Gla_ManCollectPPis(p, nil)
+				// if all pseudo-PIs are PIs, the abstraction is complete: check
+				// the CEX below (CBUGS_FIXED.md #35)
+				if vec.Vec_IntSize(vPPis) == 0 {
+					vPPis = nil
+				}
 			}
-			if ppis == nil {
-				p.pSat.StopIncrementalProof()
-				witness = p.pGia.TakeSequentialCounterexample()
-				break
+			if vPPis == nil {
+				vPPis = Gla_ManRefinement(p)
+				if vPPis == nil {
+					bsat.Sat_solver2_StopPrf2(p.pSat)
+					pCex = p.pGia.TakeSequentialCounterexample()
+					break
+				}
 			}
-			p.timeCex += util.Abc_Clock() - clock
+			assert(pCex == nil, "pCex == NULL")
+
+			// start proof logging
 			if i == 0 {
-				p.pSat.Bookmark()
+				// create bookmark to be used for rollback
+				bsat.Sat_solver2_bookmark(p.pSat)
 				vec.Vec_IntClear(p.vAddedNew)
 				p.nAbsOld = int32(vec.Vec_IntSize(p.vAbs))
-				savedVars = p.nSatVars
-				if pars.FUseFullProof == 0 {
-					p.pSat.StartIncrementalProof(p.nObjs, int32(vec.Vec_IntSize(ppis)))
+				nVarsOld = p.nSatVars
+
+				// start incremental proof manager
+				assert(bsat.Sat_solver2_Prf2(p.pSat) == nil, "p->pSat->pPrf2 == NULL")
+				if !bsat.Sat_solver2_HasPrf1(p.pSat) {
+					bsat.Sat_solver2_SetPrf2(p.pSat, bsat.Prf_ManAlloc())
 				}
-			} else if p.pSat.IncrementalProofActive() {
-				p.pSat.GrowIncrementalProof(int32(vec.Vec_IntSize(ppis)))
+				if bsat.Sat_solver2_Prf2(p.pSat) != nil {
+					p.nProofIds = 0
+					n := int(gia.Gia_ManObjNum(p.pGia))
+					p.vProofIds = make([]int32, n)
+					for k := range p.vProofIds {
+						p.vProofIds[k] = -1
+					}
+					bsat.Prf_ManRestart(bsat.Sat_solver2_Prf2(p.pSat), &p.vProofIds, bsat.Sat_solver2_nlearnts(p.pSat), int32(vec.Vec_IntSize(vPPis)))
+				}
+			} else {
+				// resize the proof logger
+				if bsat.Sat_solver2_Prf2(p.pSat) != nil {
+					bsat.Prf_ManGrow(bsat.Sat_solver2_Prf2(p.pSat), p.nProofIds+int32(vec.Vec_IntSize(vPPis)))
+				}
 			}
-			Gia_GlaAddToAbs(p, ppis, 1)
-			Gia_GlaAddOneSlice(p, frame, ppis)
-			if pars.FVerbose != 0 {
-				Gla_ManAbsPrintFrame(p, -1, frame+1, int32(p.pSat.Statistics().Conflicts-conflictStart), i, util.Abc_Clock()-start)
+
+			Gia_GlaAddToAbs(p, vPPis, 1)
+			Gia_GlaAddOneSlice(p, f, vPPis)
+
+			// print the result (do not count it towards change)
+			if p.pPars.FVerbose != 0 {
+				Gla_ManAbsPrintFrame(p, -1, f+1, bsat.Sat_solver2_nconflicts(p.pSat)-nConflsBeg, i, util.Abc_Clock()-clk)
 			}
 		}
-		if stopped || witness != nil {
+		if pCex != nil {
 			break
 		}
-		if status != 1 {
-			panic("old GLA expected an UNSAT frame")
-		}
-		coreSize := int32(1)
-		if core != nil {
-			coreSize += int32(vec.Vec_IntSize(core))
-			Gia_GlaAddToCounters(p, core)
+		assert(Status == 1, "Status == 1")
+
+		// valid core is obtained
+		nCoreSize = 1
+		if vCore != nil {
+			nCoreSize += int32(vec.Vec_IntSize(vCore))
+			Gia_GlaAddToCounters(p, vCore)
 		}
 		if i == 0 {
-			pars.nFramesNoChange++
+			p.pPars.nFramesNoChange++
+			vCore = nil
 		} else {
-			pars.nFramesNoChange = 0
-			p.pSat.Rollback()
+			p.pPars.nFramesNoChange = 0
+			// update the SAT solver
+			bsat.Sat_solver2_rollback(p.pSat)
+			// update storage
 			Gla_ManRollBack(p)
-			p.nSatVars = savedVars
-			Gia_GlaAddToAbs(p, core, 0)
-			Gia_GlaAddOneSlice(p, frame, core)
-			clock := util.Abc_Clock()
-			Gla_ManUnsatCore(p, frame, p.pSat, pars.NConfLimit, pars.FVerbose, &status, &conflicts)
-			p.timeUnsat += util.Abc_Clock() - clock
-			if status == -1 {
-				stopped = true
+			p.nSatVars = nVarsOld
+			// load this timeframe
+			Gia_GlaAddToAbs(p, vCore, 0)
+			Gia_GlaAddOneSlice(p, f, vCore)
+			// run SAT solver
+			clk2 = util.Abc_Clock()
+			vCore = Gla_ManUnsatCore(p, f, p.pSat, pPars.NConfLimit, p.pPars.FVerbose, &Status, &nConfls)
+			p.timeUnsat += util.Abc_Clock() - clk2
+			vCore = nil
+			if Status == -1 { // resource limit is reached
 				break
 			}
-			if status == 0 {
-				panic("old GLA proof core did not retain UNSAT")
+			if Status == 0 {
+				break
 			}
 		}
-		if pars.FVerbose != 0 {
-			Gla_ManAbsPrintFrame(p, coreSize, frame+1, int32(p.pSat.Statistics().Conflicts-conflictStart), i, util.Abc_Clock()-start)
+		// print the result
+		if p.pPars.FVerbose != 0 {
+			Gla_ManAbsPrintFrame(p, nCoreSize, f+1, bsat.Sat_solver2_nconflicts(p.pSat)-nConflsBeg, i, util.Abc_Clock()-clk)
 		}
-		if frame > 2 && previous > 0 && i == 0 {
+
+		if f > 2 && iPrev > 0 && i == 0 { // change has happened
 			if abcmain.Abc_FrameIsBridgeMode() != 0 {
-				if sent {
-					Gia_GlaSendCancel(p, pars.FVerbose)
+				// cancel old one if it was sent
+				if fOneIsSent {
+					Gia_GlaSendCancel(p, pPars.FVerbose)
 				}
-				Gia_GlaSendAbsracted(p, pars.FVerbose)
-				sent = true
+				// send new one
+				Gia_GlaSendAbsracted(p, pPars.FVerbose)
+				fOneIsSent = true
 			}
-			if pars.FDumpVabs != 0 {
+
+			// dump the model into file
+			if p.pPars.FDumpVabs != 0 {
 				abcmain.Abc_FrameSetStatus(-1)
 				abcmain.Abc_FrameSetCex(nil)
-				abcmain.Abc_FrameSetNFrames(frame + 1)
-				name := pars.PFileVabs
+				abcmain.Abc_FrameSetNFrames(f + 1)
+				name := p.pPars.PFileVabs
 				if name == "" {
 					name = "glabs.aig"
 				}
 				abcmain.Cmd_CommandExecute(abcmain.Abc_FrameGetGlobalFrame(), fmt.Sprintf("write_status %s", extra.Extra_FileNameGenericAppend(name, ".status")))
-				Gia_GlaDumpAbsracted(p, pars.FVerbose)
+				Gia_GlaDumpAbsracted(p, pPars.FVerbose)
 			}
 		}
-		previous = i
-		if Gia_GlaAbsCount(p, 0, 0) >= (p.nObjs-1)*(100-pars.NRatioMin)/100 {
-			status = -1
-			stopped = true
+
+		// check if the number of objects is below limit
+		if Gia_GlaAbsCount(p, 0, 0) >= (p.nObjs-1)*(100-pPars.NRatioMin)/100 {
+			Status = -1
 			break
 		}
 	}
-	if witness == nil {
-		if pars.FVerbose != 0 && status == -1 {
+finish:
+	// analize the results
+	if pCex == nil {
+		if p.pPars.FVerbose != 0 && Status == -1 {
 			fmt.Printf("\n")
 		}
-		gia.Gia_ManSetGateClasses(graph, Gla_ManTranslate(p))
-		if status == -1 || stopped {
-			fmt.Printf("Abstraction stopped in frame %d with a %d-stable abstraction.  ", frame, pars.nFramesNoChange)
+		gia.Gia_ManSetGateClasses(pAig, Gla_ManTranslate(p))
+		if Status == -1 {
+			if p.pPars.NTimeOut != 0 && absCPUClock() >= bsat.Sat_solver2_RuntimeLimit(p.pSat) {
+				util.Abc_Print(1, "Timeout %d sec in frame %d with a %d-stable abstraction.    ", p.pPars.NTimeOut, f, p.pPars.nFramesNoChange)
+			} else if pPars.NConfLimit != 0 && bsat.Sat_solver2_nconflicts(p.pSat) >= pPars.NConfLimit {
+				util.Abc_Print(1, "Exceeded %d conflicts in frame %d with a %d-stable abstraction.  ", pPars.NConfLimit, f, p.pPars.nFramesNoChange)
+			} else if Gia_GlaAbsCount(p, 0, 0) >= (p.nObjs-1)*(100-pPars.NRatioMin)/100 {
+				util.Abc_Print(1, "The ratio of abstracted objects is less than %d %% in frame %d.  ", pPars.NRatioMin, f)
+			} else {
+				util.Abc_Print(1, "Abstraction stopped for unknown reason in frame %d.  ", f)
+			}
 		} else {
-			pars.IFrame++
-			fmt.Printf("GLA completed %d frames with a %d-stable abstraction.  ", frame, pars.nFramesNoChange)
+			p.pPars.IFrame++
+			util.Abc_Print(1, "GLA completed %d frames with a %d-stable abstraction.  ", f, p.pPars.nFramesNoChange)
 		}
 	} else {
-		if pars.FVerbose != 0 {
+		if p.pPars.FVerbose != 0 {
 			fmt.Printf("\n")
 		}
-		if err := graph.SetSequentialCounterexample(witness); err != nil {
+		pAig.ClearSequentialCounterexample()
+		if err := pAig.SetSequentialCounterexample(pCex); err != nil {
 			panic(err)
 		}
-		if gia.Gia_ManVerifyCex(graph, witness, 0) == 0 {
-			fmt.Println("    Gia_ManPerformGlaOld(): CEX verification has failed!")
+		if gia.Gia_ManVerifyCex(pAig, pCex, 0) == 0 {
+			util.Abc_Print(1, "    Gia_ManPerformGlaOld(): CEX verification has failed!\n")
 		}
-		fmt.Printf("Counter-example detected in frame %d.  ", frame)
-		pars.IFrame = witness.IFrame - 1
-		gia.Gia_ManSetGateClasses(graph, nil)
-		ret = 0
+		util.Abc_Print(1, "Counter-example detected in frame %d.  ", f)
+		p.pPars.IFrame = pCex.IFrame - 1
+		gia.Gia_ManSetGateClasses(pAig, nil)
+		RetValue = 0
 	}
-	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
-	if pars.FVerbose != 0 {
-		p.timeOther = (util.Abc_Clock() - start) - p.timeUnsat - p.timeSat - p.timeCex - p.timeInit
-		util.Abc_PrintTimeP(1, "Runtime: Initializing", p.timeInit, util.Abc_Clock()-start)
-		util.Abc_PrintTimeP(1, "Runtime: Solver UNSAT", p.timeUnsat, util.Abc_Clock()-start)
-		util.Abc_PrintTimeP(1, "Runtime: Solver SAT  ", p.timeSat, util.Abc_Clock()-start)
-		util.Abc_PrintTimeP(1, "Runtime: Refinement  ", p.timeCex, util.Abc_Clock()-start)
-		util.Abc_PrintTimeP(1, "Runtime: Other       ", p.timeOther, util.Abc_Clock()-start)
-		util.Abc_PrintTimeP(1, "Runtime: TOTAL       ", util.Abc_Clock()-start, util.Abc_Clock()-start)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	if p.pPars.FVerbose != 0 {
+		p.timeOther = (util.Abc_Clock() - clk) - p.timeUnsat - p.timeSat - p.timeCex - p.timeInit
+		util.Abc_PrintTimeP(1, "Runtime: Initializing", p.timeInit, util.Abc_Clock()-clk)
+		util.Abc_PrintTimeP(1, "Runtime: Solver UNSAT", p.timeUnsat, util.Abc_Clock()-clk)
+		util.Abc_PrintTimeP(1, "Runtime: Solver SAT  ", p.timeSat, util.Abc_Clock()-clk)
+		util.Abc_PrintTimeP(1, "Runtime: Refinement  ", p.timeCex, util.Abc_Clock()-clk)
+		util.Abc_PrintTimeP(1, "Runtime: Other       ", p.timeOther, util.Abc_Clock()-clk)
+		util.Abc_PrintTimeP(1, "Runtime: TOTAL       ", util.Abc_Clock()-clk, util.Abc_Clock()-clk)
 		Gla_ManReportMemory(p)
 	}
 	Gla_ManStop(p)
-	return ret
+	return RetValue
 }

@@ -17,7 +17,7 @@ func Ga2_ManCnfAddDynamic(p *Ga2_Man_t, truth int32, lits []int32, out, proofID 
 			if polarity == 1 {
 				output ^= 1
 			}
-			clause := []bsat.Literal{bsat.Literal(output)}
+			clause := []int32{output}
 			cube := int(encoded)
 			for b := 3; b >= 0; b-- {
 				digit := cube % 3
@@ -32,9 +32,9 @@ func Ga2_ManCnfAddDynamic(p *Ga2_Man_t, truth int32, lits []int32, out, proofID 
 				if digit == 1 {
 					lit ^= 1
 				}
-				clause = append(clause, bsat.Literal(lit))
+				clause = append(clause, lit)
 			}
-			p.pSat.AddClause(proofID, clause...)
+			bsat.Sat_solver2_addclause(p.pSat, clause, proofID)
 		}
 	}
 }

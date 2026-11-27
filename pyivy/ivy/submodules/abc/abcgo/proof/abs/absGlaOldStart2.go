@@ -90,7 +90,7 @@ func Gla_ManStart2(g *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 			vec.Vec_IntPush(p.vAbs, i)
 		}
 	}
-	p.pSat = bsat.NewLabeledSolver2ProofMode(false)
+	p.pSat = bsat.Sat_solver2_new()
 	p.nSatVars = 1
 	return p
 }

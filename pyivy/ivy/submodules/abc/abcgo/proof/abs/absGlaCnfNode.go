@@ -21,7 +21,7 @@ func Ga2_ManAddToAbsOneStatic(p *Ga2_Man_t, obj *gia.Gia_Obj_t, frame, useID int
 		proofID = gia.Gia_ObjId(p.pGia, obj)
 	}
 	if isConst || frame == 0 && isRo {
-		p.pSat.AddClause(proofID, bsat.Literal(out^1))
+		bsat.Sat_solver2_addclause(p.pSat, []int32{out ^ 1}, proofID)
 		return
 	}
 	vec.Vec_IntClear(p.vLits)

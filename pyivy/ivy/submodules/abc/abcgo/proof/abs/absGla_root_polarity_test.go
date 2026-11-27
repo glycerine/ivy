@@ -65,20 +65,20 @@ func TestGlaPositiveRootAssignmentReachableAfterRefinement(t *testing.T) {
 	vec.Vec_IntFillExtra(Ga2_MapFrameMap(p, 0), vec.Vec_IntSize(p.vValues), -1)
 	Ga2_ManAddAbsClauses(p, 0)
 	lit := Ga2_ObjFindLit(p, gia.Gia_ManObj(g, root>>1), 0)
-	for p.pSat.NumVars() < p.nSatVars {
-		p.pSat.NewVariable()
+	for bsat.Sat_solver2_nvars(p.pSat) < p.nSatVars {
+		ga2NewVar(p.pSat)
 	}
-	if p.pSat.Solve(bsat.Literal(lit)) != bsat.Satisfiable {
+	if ga2Solve(p.pSat, bsat.Literal(lit)) != bsat.Satisfiable {
 		t.Fatal("initial abstraction not SAT")
 	}
 	add := Ga2_ManRefine(p)
 	if lit != 3 || !reflect.DeepEqual(vec.Vec_IntArray(add), []int32{int32(q >> 1)}) {
 		t.Fatalf("lit=%d refinements=%v", lit, vec.Vec_IntArray(add))
 	}
-	p.pSat.Simplify()
-	p.pSat.Bookmark()
+	bsat.Sat_solver2_simplify(p.pSat)
+	bsat.Sat_solver2_bookmark(p.pSat)
 	Ga2_ManAddToAbs(p, add)
-	value, assigned := p.pSat.RootValue(lit >> 1)
+	value, assigned := bsat.Sat_solver2_root_value(p.pSat, lit>>1)
 	if !assigned || value || lit&1 != 1 {
 		t.Fatalf("expected root-true complemented literal: assigned=%v value=%v lit=%d", assigned, value, lit)
 	}

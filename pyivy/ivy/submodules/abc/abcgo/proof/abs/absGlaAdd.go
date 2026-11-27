@@ -3,6 +3,7 @@ package abs
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 // Ga2_ManAddToAbs adds selected cuts and their input nodes to every frame.
@@ -11,8 +12,8 @@ func Ga2_ManAddToAbs(p *Ga2_Man_t, add *vec.Vec_Int_t) {
 		id := vec.Vec_IntEntry(add, i)
 		obj := gia.Gia_ManObj(p.pGia, id)
 		Ga2_ManSetupNode(p, obj, 1)
-		if p.proofActive {
-			vec.Vec_IntWriteEntry(p.vProofIds, int(id), p.nProofIds)
+		if bsat.Sat_solver2_Prf2(p.pSat) != nil {
+			p.vProofIds[id] = p.nProofIds
 			p.nProofIds++
 		}
 	}

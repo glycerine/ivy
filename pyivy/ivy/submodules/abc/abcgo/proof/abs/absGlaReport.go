@@ -24,9 +24,9 @@ func Ga2_ManComputeTest(p *gia.Gia_Man_t) {
 	util.Abc_Print(1, "Marked AND nodes = %6d.  ", count)
 	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 }
-func Ga2_ManDumpStats(g *gia.Gia_Man_t, pars *Abs_Par_t, solver *bsat.LabeledSolver2, frame, useN int32) {
+func Ga2_ManDumpStats(g *gia.Gia_Man_t, pars *Abs_Par_t, pSat *bsat.Sat_solver2, iFrame, fUseN int32) {
 	name := "stats_gla"
-	if useN != 0 {
+	if fUseN != 0 {
 		name += "n"
 	}
 	if pars.FUseFullProof != 0 {
@@ -35,48 +35,56 @@ func Ga2_ManDumpStats(g *gia.Gia_Man_t, pars *Abs_Par_t, solver *bsat.LabeledSol
 	name += ".txt"
 	f, err := os.OpenFile(name, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o666)
 	if err != nil {
-		fmt.Printf("Cannot open %s: %v\n", name, err)
 		return
 	}
 	defer f.Close()
-	_, proof := solver.Memory(true)
-	fmt.Fprintf(f, "%s pi=%d ff=%d and=%d mem=%d bmc=%d", gia.Gia_ManName(g), gia.Gia_ManPiNum(g), gia.Gia_ManRegNum(g), gia.Gia_ManAndNum(g), int(1+proof/(1<<20)), frame)
+	fmt.Fprintf(f, "%s pi=%d ff=%d and=%d mem=%d bmc=%d", gia.Gia_ManName(g), gia.Gia_ManPiNum(g), gia.Gia_ManRegNum(g), gia.Gia_ManAndNum(g), int(1+bsat.Sat_solver2_memory_proof(pSat)/(1<<20)), iFrame)
 	if classes := gia.Gia_ManGateClasses(g); classes != nil {
 		fmt.Fprintf(f, " ff=%d and=%d", Gia_GlaCountFlops(g, classes), Gia_GlaCountNodes(g, classes))
 	}
-	fmt.Fprintln(f)
+	fmt.Fprintf(f, "\n")
 }
-func Ga2_ManReportMemory(p *Ga2_Man_t) {
-	aig := gia.Gia_ManMemory(p.pGia) + vec.Vec_IntMemory(gia.Gia_ManMapping(p.pGia))
-	sat, proof := p.pSat.Memory(true)
-	var mappings, other float64
-	for _, v := range p.vId2Lit {
-		if v != nil {
-			mappings += vec.Vec_IntMemory(v)
-		}
+
+// abcPRMP is abc_global.h's ABC_PRMP.
+func abcPRMP(a string, f, F float64) {
+	util.Abc_Print(1, "%s =", a)
+	percent := 0.0
+	if F != 0 {
+		percent = 100.0 * f / F
 	}
+	util.Abc_Print(1, "%10.3f MB (%6.2f %%)\n", f/(1<<20), percent)
+}
+
+func Ga2_ManReportMemory(p *Ga2_Man_t) {
+	memAig := gia.Gia_ManMemory(p.pGia) + vec.Vec_IntMemory(gia.Gia_ManMapping(p.pGia))
+	memSat := bsat.Sat_solver2_memory(p.pSat, 1)
+	memPro := bsat.Sat_solver2_memory_proof(p.pSat)
+	var memMap, memOth float64
+	for _, v := range p.vId2Lit {
+		memMap += vec.Vec_IntMemory(v)
+	}
+	memRef := Rnm_ManMemoryUsage(p.pRnm)
+	memHash := float64(4 * 6 * int(p.nTable))
+	memOth = float64(unsafe.Sizeof(*p))
 	for _, v := range p.vCnfs {
 		if v != nil {
-			other += vec.Vec_IntMemory(v)
+			memOth += vec.Vec_IntMemory(v)
 		}
 	}
-	for _, v := range []*vec.Vec_Int_t{p.vIds, p.vProofIds, p.vAbs, p.vValues, p.vLits, p.vIsopMem} {
-		if v != nil {
-			other += vec.Vec_IntMemory(v)
-		}
-	}
-	other += float64(unsafe.Sizeof(*p)) + 336450 + float64(1+unsafe.Sizeof(uintptr(0)))*65536
-	refine := Rnm_ManMemoryUsage(p.pRnm)
-	hash := float64(len(p.pTable) * 4)
-	total := aig + sat + proof + mappings + refine + hash + other
-	for _, row := range []struct {
-		name  string
-		value float64
-	}{{"AIG", aig}, {"SAT", sat}, {"Proof", proof}, {"Map", mappings}, {"Refine", refine}, {"Hash", hash}, {"Other", other}, {"TOTAL", total}} {
-		percent := float64(0)
-		if total != 0 {
-			percent = 100 * row.value / total
-		}
-		fmt.Printf("Memory: %-8s %10.2f MB (%5.1f%%)\n", row.name, row.value/(1<<20), percent)
-	}
+	memOth += vec.Vec_IntMemory(p.vIds)
+	memOth += float64(4 * cap(p.vProofIds))
+	memOth += vec.Vec_IntMemory(p.vAbs)
+	memOth += vec.Vec_IntMemory(p.vValues)
+	memOth += vec.Vec_IntMemory(p.vLits)
+	memOth += vec.Vec_IntMemory(p.vIsopMem)
+	memOth += 336450 + float64(1+unsafe.Sizeof(uintptr(0)))*65536
+	memTot := memAig + memSat + memPro + memMap + memRef + memHash + memOth
+	abcPRMP("Memory: AIG      ", memAig, memTot)
+	abcPRMP("Memory: SAT      ", memSat, memTot)
+	abcPRMP("Memory: Proof    ", memPro, memTot)
+	abcPRMP("Memory: Map      ", memMap, memTot)
+	abcPRMP("Memory: Refine   ", memRef, memTot)
+	abcPRMP("Memory: Hash     ", memHash, memTot)
+	abcPRMP("Memory: Other    ", memOth, memTot)
+	abcPRMP("Memory: TOTAL    ", memTot, memTot)
 }

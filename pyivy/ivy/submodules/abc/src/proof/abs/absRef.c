@@ -716,7 +716,8 @@ Vec_Int_t * Rnm_ManRefine( Rnm_Man_t * p, Abc_Cex_t * pCex, Vec_Int_t * vMap, in
     }
 
     // at this point array vGoodPPis contains the set of important PPIs
-    if ( Vec_IntSize(vGoodPPis) > 0 ) // spurious CEX resulting in a non-trivial refinement 
+    // (the filters read the Ga2 cut mapping, which &gla -n's Gla_Man_t does not create)
+    if ( Vec_IntSize(vGoodPPis) > 0 && p->pGia->vMapping ) // spurious CEX resulting in a non-trivial refinement 
     {
         // filter selected set
         if ( !fNewRefinement )  // default 

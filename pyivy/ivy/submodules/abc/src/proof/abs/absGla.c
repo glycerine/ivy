@@ -1299,8 +1299,13 @@ Vec_Int_t * Ga2_ManRefine( Ga2_Man_t * p )
                 continue;
             Vec_IntPush( vVec, Gia_ObjId(p->pGia, pObj) );
         }
-        p->nObjAdded += Vec_IntSize(vVec);
-        return vVec;
+        // if all pseudo-PIs are PIs, the abstraction is complete: check the CEX below
+        if ( Vec_IntSize(vVec) > 0 )
+        {
+            p->nObjAdded += Vec_IntSize(vVec);
+            return vVec;
+        }
+        Vec_IntFree( vVec );
     }
     Ga2_GlaPrepareCexAndMap( p, &pCex, &vMap );
  //    Rf2_ManRefine( p->pRf2, pCex, vMap, p->pPars->fPropFanout, 1 );
@@ -1517,6 +1522,15 @@ int Gia_ManPerformGla( Gia_Man_t * pAig, Abs_Par_t * pPars )
             return 1;
         }
         pAig->pCexSeq = Abc_CexMakeTriv( Gia_ManRegNum(pAig), Gia_ManPiNum(pAig), 1, 0 );
+        Abc_Print( 1, "Sequential miter is trivially SAT.\n" );
+        return 0;
+    }
+    // an output driven by a primary input has no abstraction ID (Ga2_ObjFindLit would read vIds[-1])
+    if ( Gia_ObjIsPi(pAig, Gia_ObjFanin0(Gia_ManPo(pAig,0))) )
+    {
+        pAig->pCexSeq = Abc_CexAlloc( Gia_ManRegNum(pAig), Gia_ManPiNum(pAig), 1 );
+        if ( !Gia_ObjFaninC0(Gia_ManPo(pAig,0)) )
+            Abc_InfoSetBit( pAig->pCexSeq->pData, pAig->pCexSeq->nRegs + Gia_ObjCioId(Gia_ObjFanin0(Gia_ManPo(pAig,0))) );
         Abc_Print( 1, "Sequential miter is trivially SAT.\n" );
         return 0;
     }

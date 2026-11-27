@@ -12,16 +12,16 @@ func TestOldGlaTernaryVerificationClearsMarks(t *testing.T) {
 	x, y := gia.Gia_ManAppendCi(g), gia.Gia_ManAppendCi(g)
 	and := gia.Gia_ManAppendAnd(g, x, y)
 	out := gia.Gia_ManAppendCo(g, and)
-	p := &Gla_Man_t{pGia: g, pPars: &Abs_Par_t{}, pObjs: make([]Gla_Obj_t, 3), nObjs: 3, pObj2Obj: make([]uint32, gia.Gia_ManObjNum(g)), pSat: bsat.NewLabeledSolver2()}
+	p := &Gla_Man_t{pGia: g, pPars: &Abs_Par_t{}, pObjs: make([]Gla_Obj_t, 3), nObjs: 3, pObj2Obj: make([]uint32, gia.Gia_ManObjNum(g)), pSat: bsat.Sat_solver2_new()}
 	p.pObjs[1].id = 1
 	p.pObjs[2].id = 2
 	p.pObj2Obj[x>>1] = 1
 	p.pObj2Obj[y>>1] = 2
-	p.pSat.NewVariable()
-	vx, vy := p.pSat.NewVariable(), p.pSat.NewVariable()
+	ga2NewVar(p.pSat)
+	vx, vy := ga2NewVar(p.pSat), ga2NewVar(p.pSat)
 	vec.Vec_IntSetEntry(&p.pObjs[1].vFrames, 0, vx)
 	vec.Vec_IntSetEntry(&p.pObjs[2].vFrames, 0, vy)
-	if p.pSat.Solve(bsat.Positive(vx), bsat.Positive(vy)) != bsat.Satisfiable {
+	if ga2Solve(p.pSat, bsat.Positive(vx), bsat.Positive(vy)) != bsat.Satisfiable {
 		t.Fatal("SAT setup")
 	}
 	v := func(ids ...int32) *vec.Vec_Int_t { return vec.Vec_IntAllocArrayCopy(ids, len(ids)) }

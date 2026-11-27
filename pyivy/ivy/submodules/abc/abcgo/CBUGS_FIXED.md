@@ -732,3 +732,66 @@ and states how the Go port was verified.
 - **Go port:** it panicked ("acec: root ordering requires an XOR chain") at
   the same point; it now returns nil and no box as C does. Four Go tests that
   expected the panic now expect no box / the CEC fallback.
+
+## 33. `&gla` and `&gla -n` on an output driven by a primary input
+
+- **Files:** `src/proof/abs/absGla.c` (`Gia_ManPerformGla`),
+  `src/proof/abs/absGlaOld.c` (`Gia_ManPerformGlaOld`).
+- **Found:** 2026-11-27, porting absGla.c: s713 has an output that is a
+  primary input, and `&gla` runs per output.
+- **Bug:** the initial abstraction holds the output's driver, but only flops
+  and AND nodes get abstraction IDs. `Gia_ManPerformGla` then reads the
+  output literal with `Ga2_ObjFindLit`, i.e. `vIds[-1]` and the frame map
+  at that index (release builds; the `assert` is compiled out), and prints
+  whatever follows ("GLA finished 10 frames and produced a 6-stable
+  abstraction." for an output that fails in frame 0).
+  `Gia_ManPerformGlaOld` reads the PI's empty `vFrames` in
+  `Gla_ManGetOutLit` and segfaults.
+- **Fix:** both procedures treat an output driven by a PI as they treat a
+  constant-1 output: a frame-0 counter-example (the PI set to 1 unless the
+  output is complemented) and "Sequential miter is trivially SAT.".
+- **Test:** `abcgo/base/abci/gla_native_test.go`
+  (`TestGlaPrimaryInputOutputLikeNative`; `TestGlaOldLikeNative` on s713);
+  red before: native printed "GLA finished ..." or segfaulted, the port
+  panicked ("abs: invalid abstraction ID").
+- **Go port:** the same checks in `Gia_ManPerformGla` and
+  `Gia_ManPerformGlaOld` (the port's earlier PI shortcut printed nothing).
+
+## 34. `&gla -n` segfaults in `Rnm_ManFilterSelected`
+
+- **File:** `src/proof/abs/absRef.c` (`Rnm_ManRefine`).
+- **Found:** 2026-11-27, comparing `&gla -n` with the port: native abc
+  segfaulted on s27, s713 and s1494 whenever a refinement was not empty.
+- **Bug:** `Rnm_ManRefine` filters the selected pseudo-PIs with
+  `Rnm_ManFilterSelected` (or `...New` under `-r`), which reads the cut
+  leaves through `Ga2_ObjLeaves`, i.e. the GIA's `vMapping` built by
+  `Ga2_ManMarkup` for the new engine. The old engine's working GIA
+  (`Gla_ManStart`, `Gia_ManDupMapped`) has no `vMapping`, so
+  `Vec_IntEntry(NULL, ...)` crashes.
+- **Fix:** filter only when the GIA has a mapping; the old engine uses the
+  justified pseudo-PIs as they are.
+- **Test:** `abcgo/base/abci/gla_native_test.go` (`TestGlaOldLikeNative`);
+  red before: native segfault.
+- **Go port:** it had built a Ga2-style mapping on the old engine's GIA
+  just for the filter; that is removed and `Rnm_ManRefine` has the same
+  guard.
+
+## 35. `&gla -a` divides by zero when every pseudo-PI is a PI
+
+- **Files:** `src/proof/abs/absGla.c` (`Ga2_ManRefine`),
+  `src/proof/abs/absGlaOld.c` (`Gia_ManPerformGlaOld`).
+- **Found:** 2026-11-27, `read_truth 8; strash; &get; &gla -a -F 1` (and
+  `&gla -n -a`) on a combinational AND: native SIGFPE.
+- **Bug:** with `-a` the refinement is "all pseudo-PIs that are not PIs".
+  When the abstraction is complete that set is empty, but it is still used
+  as a refinement: the proof logger is restarted with width 0
+  (`Prf_BitWordNum(0) == 0`) and `Prf_ManSize` divides by `nWords`. With
+  `-p` (old engine, full proofs) the same SAT query repeats until `-T`.
+- **Fix:** when the layer is empty the counter-example is checked as
+  without `-a` (`Rnm_ManRefine`, which reports it as a true
+  counter-example).
+- **Test:** `abcgo/base/abci/gla_native_test.go`
+  (`TestGlaAddLayerAllPisLikeNative`), `abcgo/proof/abs/absGlaOldLayer_test.go`
+  (`TestOldGlaEmptyLayerChecksCounterexample`, which previously asserted the
+  wait-for-timeout behavior); red before: native SIGFPE.
+- **Go port:** same change in `Ga2_ManRefine` and `Gia_ManPerformGlaOld`.

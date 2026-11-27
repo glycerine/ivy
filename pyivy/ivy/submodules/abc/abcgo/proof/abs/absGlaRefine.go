@@ -46,8 +46,12 @@ func Ga2_ManRefine(p *Ga2_Man_t) *vec.Vec_Int_t {
 				vec.Vec_IntPush(result, gia.Gia_ObjId(p.pGia, obj))
 			}
 		}
-		p.nObjAdded += int32(vec.Vec_IntSize(result))
-		return result
+		// if all pseudo-PIs are PIs, the abstraction is complete: check the
+		// CEX below (CBUGS_FIXED.md #35)
+		if vec.Vec_IntSize(result) > 0 {
+			p.nObjAdded += int32(vec.Vec_IntSize(result))
+			return result
+		}
 	}
 	var cex *util.Abc_Cex_t
 	var mapping *vec.Vec_Int_t

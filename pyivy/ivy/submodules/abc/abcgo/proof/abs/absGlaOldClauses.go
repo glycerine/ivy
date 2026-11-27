@@ -11,20 +11,18 @@ func Gla_ManAddClauses(p *Gla_Man_t, id, frame int32, lits *vec.Vec_Int_t) {
 	switch {
 	case obj.fConst != 0:
 		v := Gla_ManGetVar(p, id, frame)
-		p.pSat.AddClause(id, bsat.Literal(v*2+1))
+		bsat.Sat_solver2_add_const(p.pSat, v, 1, 0, id)
 	case obj.fRo != 0:
 		if obj.nFanins != 1 {
 			panic("old GLA register must have one fanin")
 		}
 		v := Gla_ManGetVar(p, id, frame)
 		if frame == 0 {
-			p.pSat.AddClause(id, bsat.Literal(v*2+1))
+			bsat.Sat_solver2_add_const(p.pSat, v, 1, 0, id)
 			return
 		}
 		fanin := Gla_ManGetVar(p, obj.Fanins[0], frame-1)
-		complement := int32(obj.fCompl0)
-		p.pSat.AddClause(id, bsat.Literal(v*2), bsat.Literal(fanin*2+1-complement))
-		p.pSat.AddClause(id, bsat.Literal(v*2+1), bsat.Literal(fanin*2+complement))
+		bsat.Sat_solver2_add_buffer(p.pSat, v, fanin, int32(obj.fCompl0), 0, id)
 	case obj.fAnd != 0:
 		if p.pCnf == nil || int(obj.iGiaObj) >= len(p.pCnf.Obj2Count) {
 			panic("missing old GLA cut CNF")
@@ -39,13 +37,10 @@ func Gla_ManAddClauses(p *Gla_Man_t, id, frame int32, lits *vec.Vec_Int_t) {
 				v := Gla_ManGetVar(p, literal>>1, frame)
 				vec.Vec_IntPush(lits, v*2+literal&1)
 			}
-			encoded := make([]bsat.Literal, vec.Vec_IntSize(lits))
-			for i, literal := range vec.Vec_IntArray(lits) {
-				encoded[i] = bsat.Literal(literal)
-			}
-			p.pSat.AddClause(id, encoded...)
+			bsat.Sat_solver2_addclause(p.pSat, vec.Vec_IntArray(lits), id)
 		}
 	default:
-		panic("invalid old GLA clause object")
+		// assert( 0 ) in absGlaOld.c, compiled out in release builds: an
+		// abstracted PI (an output driven by a PI) gets no clauses
 	}
 }

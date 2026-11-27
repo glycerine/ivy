@@ -41,7 +41,7 @@ func Gla_ManStart(original *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 	if pars.FPropFanout != 0 {
 		gia.Gia_ManStaticFanoutStart(work)
 	}
-	p := &Gla_Man_t{pGia0: original, pGia: work, pPars: pars, vAbs: vec.Vec_IntAlloc(100), vTemp: vec.Vec_IntAlloc(100), vAddedNew: vec.Vec_IntAlloc(100), vObjCounts: vec.Vec_IntAlloc(100), vCoreCounts: vec.Vec_IntStart(int(gia.Gia_ManObjNum(work))), vProofIds: vec.Vec_IntAlloc(0)}
+	p := &Gla_Man_t{pGia0: original, pGia: work, pPars: pars, vAbs: vec.Vec_IntAlloc(100), vTemp: vec.Vec_IntAlloc(100), vAddedNew: vec.Vec_IntAlloc(100), vObjCounts: vec.Vec_IntAlloc(100), vCoreCounts: vec.Vec_IntStart(int(gia.Gia_ManObjNum(work))), vProofIds: []int32{}}
 	n := int(gia.Gia_ManObjNum(work))
 	workClasses := vec.Vec_IntStart(n)
 	gia.Gia_ManSetGateClasses(work, workClasses)
@@ -86,38 +86,6 @@ func Gla_ManStart(original *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 			}
 		}
 	}
-	// Refinement's cut filter reads GIA mapping records (count, leaves,
-	// truth, reference count), while CNF uses truth followed by four leaves.
-	// Derive both views from the same selected cuts.
-	cutRecords := vec.Vec_IntStart(n)
-	for id := 0; id < n; id++ {
-		vec.Vec_IntWriteEntry(cutRecords, id, int32(vec.Vec_IntSize(cutRecords)))
-		off := vec.Vec_IntEntry(mapped, id)
-		count := int32(0)
-		if off != 0 {
-			for k := 1; k <= 4; k++ {
-				if vec.Vec_IntEntry(mapped, int(off)+k) >= 0 {
-					count++
-				}
-			}
-		}
-		vec.Vec_IntPush(cutRecords, count)
-		if off != 0 {
-			for k := 1; k <= 4; k++ {
-				leaf := vec.Vec_IntEntry(mapped, int(off)+k)
-				if leaf >= 0 {
-					vec.Vec_IntPush(cutRecords, leaf)
-				}
-			}
-		}
-		truth := int32(0)
-		if off != 0 {
-			truth = vec.Vec_IntEntry(mapped, int(off))
-		}
-		vec.Vec_IntPush(cutRecords, truth)
-		vec.Vec_IntPush(cutRecords, 0)
-	}
-	gia.Gia_ManSetMapping(work, cutRecords)
 	p.nObjs = 1
 	for i := int32(0); i < gia.Gia_ManObjNum(work); i++ {
 		obj := gia.Gia_ManObj(work, i)
@@ -204,8 +172,11 @@ func Gla_ManStart(original *gia.Gia_Man_t, pars *Abs_Par_t) *Gla_Man_t {
 			vec.Vec_IntPush(p.vAbs, i)
 		}
 	}
-	p.pSat = bsat.NewLabeledSolver2ProofMode(pars.FUseFullProof != 0)
-	p.pSat.SetLearnedPolicy(pars.NLearnedStart, pars.NLearnedDelta, pars.NLearnedPerce)
+	p.pSat = bsat.Sat_solver2_new()
+	if pars.FUseFullProof != 0 {
+		bsat.Sat_solver2_StartPrf1(p.pSat)
+	}
+	bsat.Sat_solver2_SetLearntLimits(p.pSat, p.pPars.NLearnedStart, p.pPars.NLearnedDelta, p.pPars.NLearnedPerce)
 	p.nSatVars = 1
 	p.pRnm = Rnm_ManStart(work)
 	return p

@@ -1,18 +1,17 @@
 package abs
 
 import (
-	"os"
-	"os/exec"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/gia"
 )
 
-// The C layer strategy repeats a SAT query when no pseudo-input remains;
-// it neither performs counterexample refinement nor makes further progress.
-func TestOldGlaEmptyLayerWaitsForTimeout(t *testing.T) {
+// With -a and every pseudo-input a PI, the C layer strategy added an empty
+// set: with incremental proofs it divided by zero in Prf_ManSize, with full
+// proofs (-p) it repeated the SAT query until the timeout. After the fix
+// (CBUGS_FIXED.md #35) the counter-example is checked as without -a.
+func TestOldGlaEmptyLayerChecksCounterexample(t *testing.T) {
 	for _, full := range []int32{0, 1} {
 		t.Run(strconv.Itoa(int(full)), func(t *testing.T) {
 			g := gia.Gia_ManStart(100)
@@ -34,14 +33,8 @@ func TestOldGlaEmptyLayerWaitsForTimeout(t *testing.T) {
 			p.NRatioMin = 0
 			p.NRatioMin2 = 0
 			got := Gia_ManPerformGlaOld(g, &p, 0)
-			if got != -1 || g.SequentialCounterexample() != nil {
-				t.Fatalf("result=%d cex=%v, want source unknown without witness", got, g.SequentialCounterexample())
-			}
-			if binary := os.Getenv("ABS_OLD_EMPTY_LAYER_ORACLE"); binary != "" {
-				out, err := exec.Command(binary, strconv.Itoa(int(full))).CombinedOutput()
-				if err != nil || !strings.Contains(string(out), "SOURCE_STATUS=-1 CEX=0") {
-					t.Fatalf("C oracle err=%v output=%s", err, out)
-				}
+			if got != 0 || g.SequentialCounterexample() == nil || gia.Gia_ManVerifyCex(g, g.SequentialCounterexample(), 0) == 0 {
+				t.Fatalf("result=%d cex=%v, want a verified witness", got, g.SequentialCounterexample())
 			}
 		})
 	}

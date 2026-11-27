@@ -7,8 +7,8 @@ import (
 	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 	"os"
-	"time"
 )
 
 func Ga2_ManAbsPrintFrame(p *Ga2_Man_t, frames, conflicts, cexes int32, elapsed int64, final int32) {
@@ -20,22 +20,18 @@ func Ga2_ManAbsPrintFrame(p *Ga2_Man_t, frames, conflicts, cexes int32, elapsed 
 	if newline {
 		p.fUseNewLine = 1
 	}
-	percent := int32(0)
-	if p.nMarked > 0 {
-		percent = min(100, 100*int32(vec.Vec_IntSize(p.vAbs))/p.nMarked)
-	}
-	stats := p.pSat.Statistics()
-	memory, proof := p.pSat.Memory(false)
+	percent := min(100, 100*int32(vec.Vec_IntSize(p.vAbs))/p.nMarked)
 	fmt.Printf("%4d :%4d%6d%5d%5d%6d%8d", frames, percent, vec.Vec_IntSize(p.vAbs), vec.Vec_IntSize(p.vValues)-vec.Vec_IntSize(p.vAbs)-1, Ga2_GlaAbsCount(p, 1, 0), Ga2_GlaAbsCount(p, 0, 1), conflicts)
 	if cexes == 0 {
 		fmt.Printf("%5c", '-')
 	} else {
 		fmt.Printf("%5d", cexes)
 	}
-	util.Abc_PrintInt(stats.Variables)
-	util.Abc_PrintInt(int32(stats.Clauses))
-	util.Abc_PrintInt(int32(stats.Learned))
-	fmt.Printf("%9.2f sec%5.0f MB", float64(elapsed)/float64(time.Second), (memory+proof)/(1<<20))
+	util.Abc_PrintInt(bsat.Sat_solver2_nvars(p.pSat))
+	util.Abc_PrintInt(bsat.Sat_solver2_nclauses(p.pSat))
+	util.Abc_PrintInt(bsat.Sat_solver2_nlearnts(p.pSat))
+	fmt.Printf("%9.2f sec", float64(elapsed)/float64(util.CLOCKS_PER_SEC))
+	fmt.Printf("%5.0f MB", (bsat.Sat_solver2_memory_proof(p.pSat)+bsat.Sat_solver2_memory(p.pSat, 0))/(1<<20))
 	if newline {
 		fmt.Print("\n")
 	} else {

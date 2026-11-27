@@ -85,7 +85,9 @@ func Rnm_ManRefine(p *Rnm_Man_t, cex *util.Abc_Cex_t, mapping *vec.Vec_Int_t, pr
 	clock = time.Now()
 	Rnm_ManVerifyUsingTerSim(p.pGia, cex, mapping, p.vObjs, good)
 	p.timeVer += time.Since(clock)
-	if vec.Vec_IntSize(good) > 0 {
+	// the filters read the Ga2 cut mapping, which &gla -n's Gla_Man_t does
+	// not create (CBUGS_FIXED.md #34)
+	if vec.Vec_IntSize(good) > 0 && gia.Gia_ManMapping(p.pGia) != nil {
 		var refined *vec.Vec_Int_t
 		if newRefinement == 0 {
 			refined = Rnm_ManFilterSelected(p, good)

@@ -1659,6 +1659,16 @@ int Gia_ManPerformGlaOld( Gia_Man_t * pAig, Abs_Par_t * pPars, int fStartVta )
         printf( "Sequential miter is trivially SAT.\n" );
         return 0;
     }
+    // an output driven by a primary input has no SAT variable (Gla_ManGetOutLit would read an empty vFrames)
+    if ( Gia_ObjIsPi(pAig, Gia_ObjFanin0(Gia_ManPo(pAig,0))) )
+    {
+        ABC_FREE( pAig->pCexSeq );
+        pAig->pCexSeq = Abc_CexAlloc( Gia_ManRegNum(pAig), Gia_ManPiNum(pAig), 1 );
+        if ( !Gia_ObjFaninC0(Gia_ManPo(pAig,0)) )
+            Abc_InfoSetBit( pAig->pCexSeq->pData, pAig->pCexSeq->nRegs + Gia_ObjCioId(Gia_ObjFanin0(Gia_ManPo(pAig,0))) );
+        printf( "Sequential miter is trivially SAT.\n" );
+        return 0;
+    }
 
     // compute intial abstraction
     if ( pAig->vGateClasses == NULL )
@@ -1750,12 +1760,16 @@ int Gia_ManPerformGlaOld( Gia_Man_t * pAig, Abs_Par_t * pPars, int fStartVta )
 
             // perform the refinement
             clk2 = Abc_Clock();
+            vPPis = NULL;
             if ( pPars->fAddLayer )
             {
                 vPPis = Gla_ManCollectPPis( p, NULL );
 //                Gla_ManExplorePPis( p, vPPis );
+                // if all pseudo-PIs are PIs, the abstraction is complete: check the CEX below
+                if ( Vec_IntSize(vPPis) == 0 )
+                    Vec_IntFreeP( &vPPis );
             }
-            else
+            if ( vPPis == NULL )
             {
                 vPPis = Gla_ManRefinement( p );
                 if ( vPPis == NULL )

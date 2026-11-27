@@ -39,7 +39,7 @@ func TestOldGlaStart2InterleavedInputs(t *testing.T) {
 			}
 			assumptions = append(assumptions, bsat.Literal(lit))
 		}
-		got := p.pSat.Solve(assumptions...)
+		got := ga2Solve(p.pSat, assumptions...)
 		if (got == bsat.Satisfiable) != (bits == 7) {
 			t.Fatalf("bits=%d status=%v", bits, got)
 		}

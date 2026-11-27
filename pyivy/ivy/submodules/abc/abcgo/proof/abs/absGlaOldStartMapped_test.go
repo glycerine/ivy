@@ -39,7 +39,7 @@ func TestOldGlaStartMappedMultilevelCut(t *testing.T) {
 			}
 			assumptions = append(assumptions, bsat.Literal(lit))
 		}
-		got := p.pSat.Solve(assumptions...)
+		got := ga2Solve(p.pSat, assumptions...)
 		want := bits&3 == 3 && bits&4 == 0
 		if (got == bsat.Satisfiable) != want {
 			t.Fatalf("bits=%d status=%v wantSAT=%v", bits, got, want)

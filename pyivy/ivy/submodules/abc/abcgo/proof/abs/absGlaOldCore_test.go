@@ -2,14 +2,13 @@ package abs
 
 import (
 	"testing"
-	"time"
 
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 func TestOldGlaUnsatCoreForConstant(t *testing.T) {
-	p := &Gla_Man_t{nObjs: 3, pObjs: make([]Gla_Obj_t, 3), nSatVars: 1, vAddedNew: vec.Vec_IntAlloc(0), vAbs: vec.Vec_IntAlloc(1), vTemp: vec.Vec_IntAlloc(3), pSat: bsat.NewLabeledSolver2()}
+	p := &Gla_Man_t{nObjs: 3, pObjs: make([]Gla_Obj_t, 3), nSatVars: 1, vAddedNew: vec.Vec_IntAlloc(0), vAbs: vec.Vec_IntAlloc(1), vTemp: vec.Vec_IntAlloc(3), pSat: bsat.Sat_solver2_new()}
 	for i := range p.pObjs {
 		p.pObjs[i].id = int32(i)
 	}
@@ -22,13 +21,15 @@ func TestOldGlaUnsatCoreForConstant(t *testing.T) {
 	Gia_GlaAddTimeFrame(p, 0)
 	var status int32
 	core := Gla_ManUnsatCore(p, 0, p.pSat, 0, 0, &status, nil)
-	if status != 1 || core == nil || vec.Vec_IntSize(core) != 1 || vec.Vec_IntEntry(core, 0) != 1 {
+	// The assumption contradicts a root unit with no reason clause, so, as in
+	// satSolver2.c, no proof (and no core) is produced; only UNSAT is reported.
+	if status != 1 || core != nil {
 		t.Fatalf("status=%d core=%v", status, vec.Vec_IntArray(core))
 	}
 }
 
 func TestOldGlaUnsatCoreDeadlineAndRetry(t *testing.T) {
-	p := &Gla_Man_t{nObjs: 3, pObjs: make([]Gla_Obj_t, 3), pSat: bsat.NewLabeledSolver2()}
+	p := &Gla_Man_t{nObjs: 3, pObjs: make([]Gla_Obj_t, 3), pSat: bsat.Sat_solver2_new()}
 	for i := range p.pObjs {
 		p.pObjs[i].id = int32(i)
 	}
@@ -36,14 +37,14 @@ func TestOldGlaUnsatCoreDeadlineAndRetry(t *testing.T) {
 	p.pObjs[2].Fanins[0] = 1
 	p.pObjRoot = &p.pObjs[2]
 	vec.Vec_IntPush(&p.pObjs[1].vFrames, 1)
-	p.pSat.NewVariable()
-	p.pSat.NewVariable()
-	p.pSat.SetDeadline(time.Unix(0, 1))
+	ga2NewVar(p.pSat)
+	ga2NewVar(p.pSat)
+	bsat.Sat_solver2_set_runtime_limit(p.pSat, nil, 1)
 	var status, conflicts int32
 	if core := Gla_ManUnsatCore(p, 0, p.pSat, 0, 0, &status, &conflicts); status != -1 || core != nil {
 		t.Fatalf("expired deadline: status=%d core=%v", status, core)
 	}
-	p.pSat.SetDeadline(time.Time{})
+	bsat.Sat_solver2_set_runtime_limit(p.pSat, nil, 0)
 	if core := Gla_ManUnsatCore(p, 0, p.pSat, 0, 0, &status, &conflicts); status != 0 || core != nil {
 		t.Fatalf("retry: status=%d core=%v", status, core)
 	}

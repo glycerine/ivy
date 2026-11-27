@@ -23,7 +23,7 @@ func TestGlaRestartRebuildsAbstraction(t *testing.T) {
 	defer Ga2_ManStop(p)
 	p.pTable[0] = 99
 	Ga2_ManRestart(p)
-	if p.LimAbs != 2 || p.LimPpi != 4 || p.pTable[0] != 0 || p.pSat.Solve(bsat.Literal(0)) != bsat.Unsatisfiable {
+	if p.LimAbs != 2 || p.LimPpi != 4 || p.pTable[0] != 0 || ga2Solve(p.pSat, bsat.Literal(0)) != bsat.Unsatisfiable {
 		t.Fatal("restart state incorrect")
 	}
 }

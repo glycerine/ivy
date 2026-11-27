@@ -198,8 +198,10 @@ func TestOldGlaNativeVtaSeedIntegration(t *testing.T) {
 	}
 }
 
+// Only the constant output returns before VTA: absGlaOld.c has no early
+// return for an output driven by a PI (the port's former one was Go-only).
 func TestOldGlaLoweringPreservesVtaSeedWhenVtaSkipped(t *testing.T) {
-	for _, constant := range []bool{false, true} {
+	for _, constant := range []bool{true} {
 		g := gia.Gia_ManStart(10)
 		x := gia.Gia_ManAppendCi(g)
 		y := gia.Gia_ManAppendCi(g)

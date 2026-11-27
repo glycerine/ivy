@@ -49,7 +49,8 @@ func sat_solver2_reducedb(s *sat_solver2) {
 			s.stats.learnts_literals -= int64(clause_size(c))
 			continue
 		}
-		s.act_clas.ptr[write] = s.act_clas.ptr[id]
+		// satSolver2.c moves pSortValues and claProofs here but not
+		// act_clas: kept clauses inherit the activities at their new IDs.
 		if s.claProofs.size != 0 {
 			s.claProofs.ptr[write] = s.claProofs.ptr[id]
 		}

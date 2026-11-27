@@ -17,14 +17,14 @@ func TestGlaCexDerivesInputFromSolver(t *testing.T) {
 	pars.IFrame = 0
 	p := Ga2_ManStart(g, pars)
 	defer Ga2_ManStop(p)
-	p.pSat = bsat.NewLabeledSolver2()
+	p.pSat = bsat.Sat_solver2_new()
 	p.nSatVars = 1
 	obj := gia.Gia_ManObj(g, a>>1)
 	Ga2_ManSetupNode(p, obj, 0)
 	p.vId2Lit = append(p.vId2Lit, vec.Vec_IntStartFull(vec.Vec_IntSize(p.vValues)))
 	lit := Ga2_ObjFindOrAddLit(p, obj, 0)
-	p.pSat.AddClause(-1, bsat.Literal(lit))
-	if p.pSat.Solve() != bsat.Satisfiable {
+	bsat.Sat_solver2_addclause(p.pSat, []int32{lit}, -1)
+	if ga2Solve(p.pSat) != bsat.Satisfiable {
 		t.Fatal("missing SAT model")
 	}
 	pis := vec.Vec_IntAlloc(1)

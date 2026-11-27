@@ -10,7 +10,7 @@ import (
 
 func TestOldGlaCutClauses(t *testing.T) {
 	for assignment := 0; assignment < 8; assignment++ {
-		p := &Gla_Man_t{nObjs: 4, pObjs: make([]Gla_Obj_t, 4), nSatVars: 1, vAddedNew: vec.Vec_IntAlloc(0), pSat: bsat.NewLabeledSolver2()}
+		p := &Gla_Man_t{nObjs: 4, pObjs: make([]Gla_Obj_t, 4), nSatVars: 1, vAddedNew: vec.Vec_IntAlloc(0), pSat: bsat.Sat_solver2_new()}
 		for i := range p.pObjs {
 			p.pObjs[i].id = int32(i)
 		}
@@ -29,7 +29,7 @@ func TestOldGlaCutClauses(t *testing.T) {
 			}
 			assumptions = append(assumptions, bsat.Literal(lit))
 		}
-		got := p.pSat.Solve(assumptions...)
+		got := ga2Solve(p.pSat, assumptions...)
 		want := (assignment&4 != 0) == (assignment&3 == 3)
 		if (got == bsat.Satisfiable) != want {
 			t.Fatalf("assignment=%d status=%v want sat=%v", assignment, got, want)
@@ -37,7 +37,7 @@ func TestOldGlaCutClauses(t *testing.T) {
 	}
 }
 func TestOldGlaRegisterInitialAndNextFrame(t *testing.T) {
-	p := &Gla_Man_t{nObjs: 3, pObjs: make([]Gla_Obj_t, 3), nSatVars: 1, vAddedNew: vec.Vec_IntAlloc(0), pSat: bsat.NewLabeledSolver2()}
+	p := &Gla_Man_t{nObjs: 3, pObjs: make([]Gla_Obj_t, 3), nSatVars: 1, vAddedNew: vec.Vec_IntAlloc(0), pSat: bsat.Sat_solver2_new()}
 	for i := range p.pObjs {
 		p.pObjs[i].id = int32(i)
 	}
@@ -49,10 +49,10 @@ func TestOldGlaRegisterInitialAndNextFrame(t *testing.T) {
 	Gla_ManAddClauses(p, 2, 0, vec.Vec_IntAlloc(0))
 	Gla_ManAddClauses(p, 2, 1, vec.Vec_IntAlloc(0))
 	q0, q1, pi := Gla_ManGetVar(p, 2, 0), Gla_ManGetVar(p, 2, 1), Gla_ManGetVar(p, 1, 0)
-	if p.pSat.Solve(bsat.Literal(q0*2)) != bsat.Unsatisfiable {
+	if ga2Solve(p.pSat, bsat.Literal(q0*2)) != bsat.Unsatisfiable {
 		t.Fatal("initial flop can be one")
 	}
-	if p.pSat.Solve(bsat.Literal(pi*2+1), bsat.Literal(q1*2+1)) != bsat.Unsatisfiable {
+	if ga2Solve(p.pSat, bsat.Literal(pi*2+1), bsat.Literal(q1*2+1)) != bsat.Unsatisfiable {
 		t.Fatal("inverted next state incorrect")
 	}
 }

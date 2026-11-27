@@ -13,12 +13,12 @@ type Ga2_Man_t struct {
 	pGia                                                        *gia.Gia_Man_t
 	pPars                                                       *Abs_Par_t
 	vCnfs                                                       []*vec.Vec_Int_t
-	vIds, vProofIds, vAbs, vValues                              *vec.Vec_Int_t
+	vIds, vAbs, vValues                                         *vec.Vec_Int_t
+	vProofIds                                                   []int32 // borrowed by pSat->pPrf2
 	nProofIds, LimAbs, LimPpi, nMarked, fUseNewLine             int32
 	pRnm                                                        *Rnm_Man_t
 	vId2Lit                                                     []*vec.Vec_Int_t
-	pSat                                                        *bsat.LabeledSolver2
-	proofActive                                                 bool
+	pSat                                                        *bsat.Sat_solver2
 	nSatVars, nCexes, nObjAdded, nPdrCalls                      int32
 	pTable                                                      []int32
 	nTable, nHashHit, nHashMiss, nHashOver                      int32
@@ -26,7 +26,7 @@ type Ga2_Man_t struct {
 	pSopSizes                                                   []byte
 	pSops                                                       [][]byte
 	timeStart, timeInit, timeSat, timeUnsat, timeCex, timeOther int64
-	cpuDeadline                                                 int64
+	cpuStart                                                    int64 // Abc_Clock() for nRuntimeLimit
 }
 
 func Ga2_ObjId(p *Ga2_Man_t, o *gia.Gia_Obj_t) int32 {

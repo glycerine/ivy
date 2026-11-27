@@ -1,7 +1,9 @@
 package abs
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"strings"
 	"testing"
 )
 
@@ -99,7 +101,7 @@ func TestGlaDriverConstantTrueAtLaterFrameSourceAssertion(t *testing.T) {
 	pars.NRatioMin2 = 0
 	pars.NFramesNoChangeLim = 100
 	defer func() {
-		if got := recover(); got != "abs: GLA target literal must exceed one" {
+		if got := recover(); !strings.Contains(fmt.Sprint(got), "Lit > 1") {
 			t.Fatalf("panic=%v, want source literal assertion", got)
 		}
 	}()
@@ -123,6 +125,9 @@ func TestGlaDriverLayerModeTerminatesWithRealWitness(t *testing.T) {
 	}
 }
 
+// absGla.c skips a frame whose target literal is constant 0 before it
+// looks at the runtime limit, so with no frame bound a constant-false
+// property is unrolled forever even under -T (as in C); bound the frames.
 func TestGlaDriverTimesOutOnConstantFalseFrames(t *testing.T) {
 	g := gia.Gia_ManStart(6)
 	q := gia.Gia_ManAppendCi(g)
@@ -131,7 +136,7 @@ func TestGlaDriverTimesOutOnConstantFalseFrames(t *testing.T) {
 	gia.Gia_ManSetRegNum(g, 1)
 	pars := &Abs_Par_t{}
 	Abs_ParSetDefaults(pars)
-	pars.NFramesMax = 0
+	pars.NFramesMax = 5
 	pars.NTimeOut = 1
 	pars.NRatioMin = 0
 	pars.NRatioMin2 = 0

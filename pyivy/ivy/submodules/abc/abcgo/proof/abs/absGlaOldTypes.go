@@ -16,22 +16,23 @@ type Gla_Obj_t struct {
 	vFrames                                                         vec.Vec_Int_t
 }
 type Gla_Man_t struct {
-	pGia0, pGia                                          *gia.Gia_Man_t
-	pPars                                                *Abs_Par_t
-	vAbs                                                 *vec.Vec_Int_t
-	pObjRoot                                             *Gla_Obj_t
-	pObjs                                                []Gla_Obj_t
-	pObj2Obj                                             []uint32
-	nObjs, nAbsOld, nCexes, nObjAdded, nSatVars          int32
-	pCnf                                                 *cnf.Cnf_Dat_t
-	pSat                                                 *bsat.LabeledSolver2
-	vTemp, vAddedNew, vObjCounts, vCoreCounts, vProofIds *vec.Vec_Int_t
-	nProofIds                                            int32
-	refSign                                              uint32
-	pvRefis                                              [][]Rfn_Obj_t
-	pGia2                                                *gia.Gia_Man_t
-	pRnm                                                 *Rnm_Man_t
-	timeInit, timeSat, timeUnsat, timeCex, timeOther     int64 // abctime
+	pGia0, pGia                                      *gia.Gia_Man_t
+	pPars                                            *Abs_Par_t
+	vAbs                                             *vec.Vec_Int_t
+	pObjRoot                                         *Gla_Obj_t
+	pObjs                                            []Gla_Obj_t
+	pObj2Obj                                         []uint32
+	nObjs, nAbsOld, nCexes, nObjAdded, nSatVars      int32
+	pCnf                                             *cnf.Cnf_Dat_t
+	pSat                                             *bsat.Sat_solver2
+	vTemp, vAddedNew, vObjCounts, vCoreCounts        *vec.Vec_Int_t
+	vProofIds                                        []int32 // borrowed by pSat->pPrf2
+	nProofIds                                        int32
+	refSign                                          uint32
+	pvRefis                                          [][]Rfn_Obj_t
+	pGia2                                            *gia.Gia_Man_t
+	pRnm                                             *Rnm_Man_t
+	timeInit, timeSat, timeUnsat, timeCex, timeOther int64 // abctime
 }
 
 func Gla_ObjId(p *Gla_Man_t, obj *Gla_Obj_t) int32 {
@@ -57,11 +58,7 @@ func Gla_ObjSatValue(p *Gla_Man_t, id, frame int32) int32 {
 	if Gla_ManCheckVar(p, obj, frame) == 0 {
 		return 0
 	}
-	value, _ := p.pSat.Value(Gla_ManGetVar(p, obj, frame))
-	if value {
-		return 1
-	}
-	return 0
+	return bsat.Sat_solver2_var_value(p.pSat, Gla_ManGetVar(p, obj, frame))
 }
 func Gla_ObjRef(p *Gla_Man_t, obj *gia.Gia_Obj_t, frame int32) *Rfn_Obj_t {
 	id := gia.Gia_ObjId(p.pGia, obj)

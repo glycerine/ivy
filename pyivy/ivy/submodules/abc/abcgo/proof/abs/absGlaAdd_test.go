@@ -18,7 +18,7 @@ func TestGlaAddToAbsCreatesFrameClauses(t *testing.T) {
 	pars.IFrame = 0
 	p := Ga2_ManStart(g, pars)
 	defer Ga2_ManStop(p)
-	p.pSat = bsat.NewLabeledSolver2()
+	p.pSat = bsat.Sat_solver2_new()
 	p.nSatVars = 1
 	p.vId2Lit = append(p.vId2Lit, vec.Vec_IntStartFull(1))
 	add := vec.Vec_IntAlloc(1)
@@ -31,7 +31,7 @@ func TestGlaAddToAbsCreatesFrameClauses(t *testing.T) {
 	x := Ga2_ObjFindLit(p, gia.Gia_ManObj(g, a>>1), 0)
 	y := Ga2_ObjFindLit(p, gia.Gia_ManObj(g, b>>1), 0)
 	z := Ga2_ObjFindLit(p, obj, 0)
-	if p.pSat.Solve(bsat.Literal(x), bsat.Literal(y), bsat.Literal(z^1)) != bsat.Unsatisfiable {
+	if ga2Solve(p.pSat, bsat.Literal(x), bsat.Literal(y), bsat.Literal(z^1)) != bsat.Unsatisfiable {
 		t.Fatal("cut clauses allow invalid AND output")
 	}
 }

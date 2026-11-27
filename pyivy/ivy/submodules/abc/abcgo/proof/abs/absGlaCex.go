@@ -4,6 +4,7 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 func Ga2_ObjSatValue(p *Ga2_Man_t, obj *gia.Gia_Obj_t, frame int32) int32 {
@@ -11,18 +12,13 @@ func Ga2_ObjSatValue(p *Ga2_Man_t, obj *gia.Gia_Obj_t, frame int32) int32 {
 		panic("abs: constant has no SAT model value")
 	}
 	lit := Ga2_ObjFindLit(p, obj, frame)
-	if lit < 0 || lit>>1 >= p.pSat.NumVars() {
+	if lit == -1 {
 		return 0
 	}
-	value, ok := p.pSat.Value(lit >> 1)
-	if !ok {
-		panic("abs: SAT model is unavailable")
+	if lit>>1 >= bsat.Sat_solver2_Size(p.pSat) {
+		return 0
 	}
-	result := lit & 1
-	if value {
-		result ^= 1
-	}
-	return result
+	return (lit & 1) ^ bsat.Sat_solver2_var_value(p.pSat, lit>>1)
 }
 func Ga2_ManDeriveCex(p *Ga2_Man_t, pis *vec.Vec_Int_t) *util.Abc_Cex_t {
 	c := util.Abc_CexAlloc(gia.Gia_ManRegNum(p.pGia), gia.Gia_ManPiNum(p.pGia), p.pPars.IFrame+1)
