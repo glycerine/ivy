@@ -309,6 +309,21 @@ func ZDDCoverCofactors(dd *DdManager, f *DdNode, index int) (positive, negative,
 	positive, negative, absent = dd.coverCofactors(f, index)
 	return positive, negative, absent, true
 }
+// ZDDCoverValid validates a cover once, as ZDDCoverCofactors does on every
+// call (a whole-diagram traversal).
+func ZDDCoverValid(dd *DdManager, f *DdNode) bool { return dd.coverDomain(false, f) }
+
+// ZDDCoverCofactorsTrusted is ZDDCoverCofactors for a cover already
+// validated with ZDDCoverValid, or a cofactor of one: like ABC's
+// cuddZddGetCofactors3 it skips the whole-diagram check, which made
+// recursive cover walks quadratic.
+func ZDDCoverCofactorsTrusted(dd *DdManager, f *DdNode, index int) (positive, negative, absent *DdNode, ok bool) {
+	if index < 0 || uint64(index|1) >= uint64(CUDD_MAXINDEX-1) || !dd.ensureZddVar(index|1) || !dd.literalPairOrder(index, false) {
+		return nil, nil, nil, false
+	}
+	positive, negative, absent = dd.coverCofactors(f, index)
+	return positive, negative, absent, true
+}
 func ZDDCofactors(dd *DdManager, f *DdNode, index int) (positive, negative *DdNode, ok bool) {
 	if !dd.validZdd(f) {
 		return nil, nil, false

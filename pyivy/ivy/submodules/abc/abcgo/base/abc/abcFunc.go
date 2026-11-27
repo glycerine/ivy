@@ -151,7 +151,7 @@ func Abc_ConvertZddToSop_rec(dd *core.DdManager, cover *core.DdNode, text *[]byt
 		*count++
 		return
 	}
-	positive, negative, absent, ok := core.ZDDCoverCofactors(dd, cover, int(cover.Index&^1))
+	positive, negative, absent, ok := core.ZDDCoverCofactorsTrusted(dd, cover, int(cover.Index&^1))
 	if !ok {
 		panic("invalid paired ZDD cover")
 	}
