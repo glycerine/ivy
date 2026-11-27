@@ -229,6 +229,9 @@ func Abc_NodeCompareCubes2(first, second string) int32 {
 	return Abc_NodeCompareCubes1(first, second)
 }
 func Abc_NodeSortCubes(o *Object, cubes *[]string, store *[]byte, weight int32) {
+	if abcNodeSortCubesFast(o, store, weight) {
+		return
+	}
 	rows := fanNodeRows(o)
 	sort.SliceStable(rows, func(i, j int) bool {
 		if weight != 0 {
@@ -379,4 +382,51 @@ func Abc_NtkMakeLegit(n *Network) int32 {
 		fmt.Printf("%d nodes were made dist1-cube-free and/or single-cube-containment-free.\n", count)
 	}
 	return 1
+}
+
+// abcNodeSortCubesFast sorts the cubes of a well-formed SOP (rows of
+// fanins + 3 bytes: literals, ' ', output, '\n') by row offset and writes
+// them into one buffer, as abcFanOrder.c sorts in place. It reports false
+// for anything else, which the general path validates.
+func abcNodeSortCubesFast(o *Object, store *[]byte, weight int32) bool {
+	text, ok := o.Data.(string)
+	if !ok {
+		return false
+	}
+	if index := strings.IndexByte(text, 0); index >= 0 {
+		text = text[:index]
+	}
+	nVars := len(o.fanins)
+	width := nVars + 3
+	if len(text) == 0 || len(text)%width != 0 {
+		return false
+	}
+	rows := len(text) / width
+	output := text[nVars+1]
+	for r := 0; r < rows; r++ {
+		line := text[r*width : (r+1)*width]
+		if line[nVars] != ' ' || line[nVars+1] != output || line[nVars+2] != '\n' {
+			return false
+		}
+	}
+	if output != '0' && output != '1' && output != 'x' && output != 'n' {
+		return false
+	}
+	order := make([]int32, rows)
+	for i := range order {
+		order[i] = int32(i)
+	}
+	cube := func(r int32) string { return text[int(r)*width : int(r)*width+nVars] }
+	if weight != 0 {
+		sort.Slice(order, func(i, j int) bool { return Abc_NodeCompareCubes2(cube(order[i]), cube(order[j])) < 0 })
+	} else {
+		sort.Slice(order, func(i, j int) bool { return cube(order[i]) < cube(order[j]) })
+	}
+	buf := (*store)[:0]
+	for _, r := range order {
+		buf = append(buf, text[int(r)*width:(int(r)+1)*width]...)
+	}
+	*store = buf
+	o.Data = string(buf)
+	return true
 }
