@@ -16,7 +16,10 @@ func deepReviewFrame(t *testing.T) *abcmain.Frame {
 	f := abcmain.NewFrame()
 	abcmain.Abc_FrameSetGlobalFrame(f)
 	t.Cleanup(func() { f.Close(); abcmain.Abc_FrameSetGlobalFrame(old) })
-	f.Err = &bytes.Buffer{}
+	// a failed script is reported on stdout (Abc_Print( 1, ... )), a missing
+	// graph on the error stream: capture both
+	reports := &bytes.Buffer{}
+	f.Out, f.Err = reports, reports
 	return f
 }
 
@@ -152,7 +155,7 @@ func TestDeepSynthesisFailureAndMissingGraphs(t *testing.T) {
 				if kind == "outer" && Gia_ManAndNum(result) > ands {
 					t.Fatal("failure did not keep the best graph")
 				}
-				if f.Err.(*bytes.Buffer).Len() == 0 {
+				if f.Out.(*bytes.Buffer).Len() == 0 {
 					t.Fatal("missing error report")
 				}
 				switch kind {

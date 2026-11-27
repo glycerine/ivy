@@ -38,8 +38,9 @@ func TestDeepSynthesisFrameAndFailure(t *testing.T) {
 	abcmain.Abc_FrameSetGlobalFrame(f)
 	defer abcmain.Abc_FrameSetGlobalFrame(old)
 	defer f.Close()
+	// the report goes to stdout (Abc_Print( 1, ... ))
 	var errors bytes.Buffer
-	f.Err = &errors
+	f.Out = &errors
 	p := Gia_ManStart(8)
 	a, b := Gia_ManAppendCi(p), Gia_ManAppendCi(p)
 	Gia_ManAppendCo(p, Gia_ManAppendAnd(p, a, b))

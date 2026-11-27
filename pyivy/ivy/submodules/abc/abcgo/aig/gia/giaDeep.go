@@ -57,7 +57,7 @@ func giaManDeepSynOne(noImprovement, timeout, goal, seed, useTwo, verbose int32,
 		command := fmt.Sprintf("&dch%s; &if -a -K %d; &mfs -e -W 20 -L 20%s%s", optionDch, lut, optionFx, compress)
 		status := giaDeepExecute(frame, command)
 		if status != 0 {
-			fmt.Fprintf(frame.Err, "Something did not work out with the command %q.\n", command)
+			fmt.Fprintf(frame.Out, "Something did not work out with the command \"%s\".\n", command) // Abc_Print( 1, ... ): stdout
 			Gia_ManStop(best)
 			return nil
 		}

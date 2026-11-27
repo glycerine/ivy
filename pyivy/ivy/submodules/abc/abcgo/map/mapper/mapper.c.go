@@ -57,9 +57,9 @@ func Map_CommandReadLibrary(frame *abcmain.Frame, _ int32, args []string) int32 
 
 	f, err := os.Open(path)
 	if err != nil {
-		fmt.Fprintf(frame.Err, "Cannot open input file %q. ", path)
+		fmt.Fprintf(frame.Err, "Cannot open input file \"%s\". ", path)
 		if guess := extra.Extra_FileGetSimilarName(path, ".genlib", ".lib", ".gen", ".g", ""); guess != "" {
-			fmt.Fprintf(frame.Err, "Did you mean %q?", guess)
+			fmt.Fprintf(frame.Err, "Did you mean \"%s\"?", guess)
 		}
 		fmt.Fprintln(frame.Err)
 		return 1
