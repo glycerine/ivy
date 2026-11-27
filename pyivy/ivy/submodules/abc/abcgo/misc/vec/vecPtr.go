@@ -142,6 +142,24 @@ func ptrAddress(x any) uintptr {
 	}
 	panic("pointer ordering requires pointers or uintptr")
 }
+// livePointer reports whether x is a non-nil pointer, for which interface
+// == agrees with ptrEqual and cannot panic (pointer types are comparable).
+func livePointer(x any) bool {
+	if x == nil {
+		return false
+	}
+	v := reflect.ValueOf(x)
+	return v.Kind() == reflect.Pointer && !v.IsNil()
+}
+
+// ptrMatcher returns an equality test against x equivalent to ptrEqual.
+func ptrMatcher(x any) func(any) bool {
+	if livePointer(x) {
+		return func(e any) bool { return e == x }
+	}
+	return func(e any) bool { return ptrEqual(e, x) }
+}
+
 func ptrEqual(a, b any) bool {
 	if ptrNil(a) || ptrNil(b) {
 		return ptrNil(a) && ptrNil(b)
@@ -247,6 +265,14 @@ func Vec_PtrPushUnique(p *Vec_Ptr_t, x any) int {
 	return 0
 }
 func Vec_PtrFind(p *Vec_Ptr_t, x any) int {
+	if livePointer(x) {
+		for i, v := range Vec_PtrArray(p) {
+			if v == x {
+				return i
+			}
+		}
+		return -1
+	}
 	for i, v := range Vec_PtrArray(p) {
 		if ptrEqual(v, x) {
 			return i
@@ -263,8 +289,9 @@ func Vec_PtrFindStr(p *Vec_Ptr_t, x string) int {
 	return -1
 }
 func Vec_PtrRemove(p *Vec_Ptr_t, x any) {
+	fast := livePointer(x)
 	for i := len(p.data) - 1; i >= 0; i-- {
-		if ptrEqual(p.storage()[i], x) {
+		if e := p.storage()[i]; fast && e == x || !fast && ptrEqual(e, x) {
 			Vec_PtrDrop(p, i)
 			return
 		}

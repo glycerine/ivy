@@ -158,7 +158,10 @@ func Abc_ManResubCollectDivs(p *Abc_ManRes_t, root *Abc_Obj_t, leaves *Vec_Ptr_t
 		if abc.Abc_ObjFanoutNum(node) > 100 {
 			continue
 		}
-		for _, fanout := range node.Fanouts() {
+		// the loop adds divisors to vDivs only; node's fanouts stay as they
+		// are, so they are read in place (Abc_ObjForEachFanout)
+		for k := 0; k < node.FanoutCount(); k++ {
+			fanout := node.FanoutAt(int32(k))
 			if abc.Abc_NodeIsTravIdCurrent(fanout) != 0 || abc.Abc_ObjIsCo(fanout) != 0 || int32(fanout.Level) > required {
 				continue
 			}

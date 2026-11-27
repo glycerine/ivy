@@ -166,8 +166,8 @@ func Abc_NodeBuildCutLevelOne_int(visited, leaves *Vec_Ptr_t, sizeLimit, faninLi
 	}
 	n := vec.Vec_PtrEntry(leaves, best).(*Abc_Obj_t)
 	assert(abc.Abc_ObjIsNode(n) != 0, "selected cut leaf is not a node")
-	vec.Vec_PtrRemove(leaves, n)
-	for _, child := range []*Abc_Obj_t{abc.Abc_ObjFanin0(n), abc.Abc_ObjFanin1(n)} {
+	vec.Vec_PtrDrop(leaves, best) // Vec_PtrRemove of n: leaves are distinct
+	for _, child := range [2]*Abc_Obj_t{abc.Abc_ObjFanin0(n), abc.Abc_ObjFanin1(n)} {
 		if !child.MarkB {
 			child.MarkB = true
 			vec.Vec_PtrPush(leaves, child)
