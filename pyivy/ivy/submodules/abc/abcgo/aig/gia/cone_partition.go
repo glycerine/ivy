@@ -185,8 +185,19 @@ func Gia_ManFindPivots(p *Gia_Man_t, shift, onlyCis, verbose int32) *Vec_Int_t {
 		j := int(Gia_ManRandom(0)>>1) % len(pivots)
 		pivots[i], pivots[j] = pivots[j], pivots[i]
 	}
+	// sort as giaCone.c: Abc_QuickSortCost (not stable) by decreasing
+	// weight when the seed is 0, the identity permutation otherwise
+	perm := make([]int32, len(pivots))
 	if shift == 0 {
-		sort.SliceStable(pivots, func(i, j int) bool { return pivots[i].weight > pivots[j].weight })
+		weights := make([]int32, len(pivots))
+		for i, v := range pivots {
+			weights[i] = v.weight
+		}
+		perm = util.Abc_QuickSortCost(weights, int32(len(weights)), 1)
+	} else {
+		for i := range perm {
+			perm[i] = int32(i)
+		}
 	}
 	result := vec.Vec_IntAlloc(min(64, len(pivots)))
 	for i := 0; i < min(64, len(pivots)); i++ {
@@ -194,7 +205,7 @@ func Gia_ManFindPivots(p *Gia_Man_t, shift, onlyCis, verbose int32) *Vec_Int_t {
 		if j < 0 {
 			j += int64(len(pivots))
 		}
-		v := pivots[j]
+		v := pivots[perm[j]]
 		if verbose != 0 {
 			fmt.Printf("%2d : Pivot =%7d  Fanout =%7d\n", j, v.id, v.weight)
 		}
