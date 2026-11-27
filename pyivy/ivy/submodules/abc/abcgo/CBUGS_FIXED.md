@@ -968,3 +968,24 @@ and states how the Go port was verified.
   (`TestMatchLikeNative`, the script `miter s713.blif; match -m`); red
   before (native abc failed: segmentation fault).
 - **Go port:** `base/abci/abcDar.go` (`Abc_NtkDarMatch`), the same change.
+
+## 45. `print_box` crashes when no box library was read
+
+- **File:** `src/map/if/ifCom.c` (`If_CommandPrintBox`).
+- **Found:** 2026-11-27, native crash sweep (every command with default
+  arguments on s27): `print_box` without a preceding `read_box` dumped core
+  in `If_LibBoxPrint` (ASan: SEGV reading `p->vBoxes` of a NULL library).
+- **Bug:** the command passes `Abc_FrameReadLibBox()` to `If_LibBoxPrint`
+  without checking it; there is no box library until `read_box`.
+- **Fix:** print "Box library is not available." and return 1 when the
+  library is NULL.
+- **Test:** `abcgo/base/abci/print_box_native_test.go`
+  (`TestPrintBoxLikeNative`, red before: segmentation fault; also compares
+  the printed library after `read_box test_vectors/box/two.box`).
+- **Go port:** printed nothing without a library and its own format with
+  one; `If_CommandPrintBox` now reports the missing library and prints
+  `If_LibBoxPrint`'s format (`ifLibBoxPrintNative`).
+- **Note:** `If_LibBoxPrint` writes each delay row's newline with `printf`
+  (to stdout) rather than to `pFile`, so `If_LibBoxWrite` would write rows
+  without line breaks; no command calls `If_LibBoxWrite`, so it is left as
+  is.

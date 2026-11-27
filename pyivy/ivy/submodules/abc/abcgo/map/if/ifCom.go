@@ -9,6 +9,7 @@ import (
 
 	abccmd "github.com/glycerine/abcgo/base/cmd"
 	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/misc/extra"
 )
 
 /**CFile****************************************************************
@@ -355,8 +356,13 @@ func If_CommandPrintBox(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		goto usage
 	}
 
-	// set the new network
-	If_LibBoxPrint(os.Stdout, Abc_FrameReadLibBox())
+	// there is no box library unless read_box loaded one (C bug 45)
+	if lib := Abc_FrameReadLibBox(); lib == nil {
+		fmt.Printf("Box library is not available.\n")
+		return 1
+	} else {
+		ifLibBoxPrintNative(os.Stdout, lib)
+	}
 	return 0
 
 usage:
@@ -448,3 +454,27 @@ func Abc_FrameReadLibBox() *If_LibBox_t {
 	return value
 }
 func Abc_FrameSetLibBox(value *If_LibBox_t) { abcmain.Abc_FrameSetLibBox(value) }
+
+// ifLibBoxPrintNative is If_LibBoxPrint (ifLibBox.c) as print_box shows it:
+// the time-stamped header and each box's delay rows ("%5d " or "    - ").
+func ifLibBoxPrintNative(w io.Writer, p *If_LibBox_t) {
+	fmt.Fprintf(w, "# Box library written by ABC on %s.\n", extra.Extra_TimeStamp())
+	fmt.Fprintf(w, "# <Name> <ID> <Type> <I> <O>\n")
+	for _, box := range p.Boxes() {
+		black := int32(0)
+		if box.fBlack == 0 {
+			black = 1
+		}
+		fmt.Fprintf(w, "%s %d %d %d %d\n", box.pName, box.Id, black, box.nPis, box.nPos)
+		for j := int32(0); j < box.nPos; j++ {
+			for k := int32(0); k < box.nPis; k++ {
+				if d := box.pDelays[j*box.nPis+k]; d == BoxNoArc {
+					fmt.Fprintf(w, "    - ")
+				} else {
+					fmt.Fprintf(w, "%5d ", d)
+				}
+			}
+			fmt.Fprintf(w, "\n")
+		}
+	}
+}

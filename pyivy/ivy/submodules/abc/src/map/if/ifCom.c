@@ -350,6 +350,12 @@ int If_CommandPrintBox( Abc_Frame_t * pAbc, int argc, char **argv )
     if ( argc != globalUtilOptind )
         goto usage;
 
+    // there is no box library unless read_box loaded one
+    if ( Abc_FrameReadLibBox() == NULL )
+    {
+        printf( "Box library is not available.\n" );
+        return 1;
+    }
     // set the new network
     If_LibBoxPrint( stdout, (If_LibBox_t *)Abc_FrameReadLibBox() );
     return 0;
