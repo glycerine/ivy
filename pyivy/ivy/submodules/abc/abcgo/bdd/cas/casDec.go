@@ -2,6 +2,7 @@
 package cas
 
 import (
+	"errors"
 	"fmt"
 	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	extra "github.com/glycerine/abcgo/bdd/extrab/cascade"
@@ -56,14 +57,14 @@ func Decompose(dd *DdManager, f *DdNode, nNames, lutSize int) (luts []*LUT, code
 			p.nIns = lutSize
 			consumed := lutSize - previous
 			if consumed <= 0 {
-				return nil, nil, fmt.Errorf("cas: LUT size is too small")
+				return nil, nil, errLutTooSmall
 			}
 			remaining -= consumed
 			p.nCols = profile[nNames-remaining]
 			p.nMulti = bits.Len(uint(p.nCols - 1))
 		}
 		if p.nMulti >= lutSize {
-			return nil, nil, fmt.Errorf("cas: LUT size is too small")
+			return nil, nil, errLutTooSmall
 		}
 		previous = p.nMulti
 		luts = append(luts, p)
@@ -173,11 +174,18 @@ func WriteLUTSintoBLIFfile(w io.Writer, dd *DdManager, luts []*LUT, nLuts int, c
 		}
 	}
 }
+
+var errLutTooSmall = errors.New("cas: LUT size is too small")
+
 func CreateDecomposedNetwork(dd *DdManager, f *DdNode, names []string, nNames int, fileName string, lutSize int, check, verbose bool) int {
 	if nNames < 0 || nNames > len(names) {
 		return 0
 	}
 	luts, codes, err := Decompose(dd, f, nNames, lutSize)
+	if err == errLutTooSmall {
+		fmt.Printf("The LUT size is too small\n") // as casDec.c, always
+		return 0
+	}
 	if err != nil {
 		if verbose {
 			fmt.Println(err)

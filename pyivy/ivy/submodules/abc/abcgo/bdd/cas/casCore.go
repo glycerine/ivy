@@ -10,6 +10,7 @@ import (
 	"math/bits"
 	"os"
 	"sort"
+	"time"
 )
 
 type DdManager = cudd.DdManager
@@ -214,11 +215,19 @@ func Abc_CascadeExperiment(base string, dd *DdManager, outputs []*DdNode, nInput
 		return 0
 	}
 	cudd.Cudd_Ref(f)
-	defer cudd.Cudd_RecursiveDeref(dd, f)
+	start := time.Now()
 	cudd.Cudd_ReduceHeap(dd, cudd.CUDD_REORDER_SYMM_SIFT, 1)
 	cudd.Cudd_ReduceHeap(dd, cudd.CUDD_REORDER_SYMM_SIFT, 1)
+	if verbose {
+		fmt.Printf("MTBDD reordered = %6d nodes\n", cudd.Cudd_DagSize(f))
+		fmt.Printf("Variable reordering time = %.2f sec\n", float32(time.Since(start).Seconds()))
+	}
 	if check {
 		WriteSingleOutputFunctionBlif(dd, f, names, len(names), base+"_ENC.blif")
 	}
-	return CreateDecomposedNetwork(dd, f, names, len(names), base+"_LUT.blif", nLutSize, check, verbose)
+	if CreateDecomposedNetwork(dd, f, names, len(names), base+"_LUT.blif", nLutSize, check, verbose) == 0 {
+		return 0 // casCore.c returns here without releasing the MTBDD
+	}
+	cudd.Cudd_RecursiveDeref(dd, f)
+	return 1
 }

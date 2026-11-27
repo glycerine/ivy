@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/bdd/extrab"
 	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -63,7 +64,7 @@ func Abc_NtkBuildGlobalBdds(n *Abc_Ntk_t, sizeMax, dropInternal, reorder, revers
 	att := vec.Vec_AttAlloc(int(abc.Abc_NtkObjNumMax(n))+1, d,
 		func(v any) {
 			if m, ok := v.(*core.DdManager); ok {
-				core.Cudd_Quit(m)
+				extrab.Extra_StopManager(m) // as Abc_NtkBuildGlobalBdds's attribute
 			}
 		}, nil,
 		func(m, v any) {

@@ -2,6 +2,9 @@ package abci
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/bdd/cas"
@@ -13,81 +16,33 @@ import (
 // Abc_NtkCascade decomposes the shared output BDDs into a LUT cascade.
 // As in ABC's original implementation, this currently returns a checked copy
 // of the input network; the experiment emits the cascade files as a side effect.
+// Abc_NtkCascade is abcCas.c's: global BDDs (500000-node limit, dynamic
+// reordering), the cascade experiment, and a copy of the network whatever
+// the experiment found.
 func Abc_NtkCascade(pNtk *Abc_Ntk_t, nLutSize, fCheck, fVerbose int32) *Abc_Ntk_t {
 	if pNtk == nil || abc.Abc_NtkIsStrash(pNtk) == 0 {
 		return nil
 	}
-
-	inputs := pNtk.Inputs()
-	outputs := pNtk.Outputs()
-
-	// Build the same global BDD representation used by the other ABC BDD
-	// commands. The 500000-node guard and dynamic reordering match abcCas.c.
-	dd := core.Cudd_Init(uint32(len(inputs)), 0, core.CUDD_UNIQUE_SLOTS, core.CUDD_CACHE_SLOTS, 0)
-	if dd == nil {
+	start := time.Now()
+	if Abc_NtkBuildGlobalBdds(pNtk, 500000, 1, 1, 0, fVerbose) == nil {
 		return nil
 	}
-	defer core.Cudd_Quit(dd)
-	cudd.Cudd_AutodynEnable(dd, cudd.CUDD_REORDER_SYMM_SIFT)
-
-	values := make(map[*abc.Object]*cudd.DdNode, len(pNtk.Objects()))
-	for i, input := range inputs {
-		values[input] = cudd.Cudd_bddIthVar(dd, int32(i))
-	}
-	objects, err := pNtk.Topological(outputs)
-	if err != nil {
-		return nil
-	}
-	one := cudd.Cudd_ReadOne(dd)
-	for _, object := range objects {
-		if object.Kind == abc.ObjectConst1 {
-			values[object] = one
-			continue
-		}
-		if object.IsCI() {
-			continue
-		}
-		fanins := object.Fanins()
-		if object.IsCO() {
-			if len(fanins) != 1 {
-				return nil
-			}
-			values[object] = bddEdgeValue(values, fanins[0], one)
-			continue
-		}
-		if len(fanins) == 0 {
-			values[object] = one
-			continue
-		}
-		value := one
-		for _, fanin := range fanins {
-			value = core.Cudd_bddAnd(dd, value, bddEdgeValue(values, fanin, one))
-			if value == nil {
-				return nil
-			}
-		}
-		values[object] = value
-		if cudd.Cudd_ReadKeys(dd)-cudd.Cudd_ReadDead(dd) > 500000 {
-			return nil
-		}
-	}
-
-	globalOutputs := make([]*cudd.DdNode, len(outputs))
-	for i, output := range outputs {
-		value, ok := values[output]
-		if !ok || value == nil {
-			return nil
-		}
-		globalOutputs[i] = value
-	}
+	dd := Abc_NtkGlobalBddMan(pNtk)
 	if fVerbose != 0 {
-		fmt.Printf("Shared BDD size = %6d nodes.\n", cudd.Cudd_ReadKeys(dd)-cudd.Cudd_ReadDead(dd))
+		fmt.Printf("Shared BDD size = %6d nodes.  ", cudd.Cudd_ReadKeys(dd)-cudd.Cudd_ReadDead(dd))
+		util.Abc_PrintTime(1, "BDD construction time", time.Since(start).Nanoseconds())
+	}
+	cos := make([]*cudd.DdNode, 0, abc.Abc_NtkCoNum(pNtk))
+	for i := int32(0); i < abc.Abc_NtkCoNum(pNtk); i++ {
+		cos = append(cos, Abc_ObjGlobalBdd(abc.Abc_NtkCo(pNtk, i)))
 	}
 	base := extra.Extra_FileNameGeneric(pNtk.Spec)
-	cas.Abc_CascadeExperiment(base, dd, globalOutputs, len(inputs), len(outputs), int(nLutSize), fCheck != 0, fVerbose != 0)
-
+	// a zero result means the LUT size is too small; the network is kept
+	cas.Abc_CascadeExperiment(base, dd, cos, int(abc.Abc_NtkCiNum(pNtk)), int(abc.Abc_NtkCoNum(pNtk)), int(nLutSize), fCheck != 0, fVerbose != 0)
 	result := abc.Abc_NtkDup(pNtk)
-	if result == nil || result.Check() != nil {
+	Abc_NtkFreeGlobalBdds(pNtk, 1)
+	if abc.Abc_NtkCheck(result) == 0 {
+		fmt.Printf("Abc_NtkCollapse: The network check has failed.\n")
 		return nil
 	}
 	return result

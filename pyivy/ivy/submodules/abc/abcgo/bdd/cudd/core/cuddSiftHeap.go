@@ -338,16 +338,24 @@ func newSiftHeap(h *reorderHeap) *siftHeap {
 	ids := map[*DdNode]int32{scratch.One: 0}
 	s.nodes = append(s.nodes, siftNode{index: -1, alive: true})
 	order := make([]*DdNode, 0, len(h.nodes))
+	var constants []*DdNode
 	for node := range h.nodes {
 		if Cudd_IsConstant(node) {
-			continue // One, or ADD constants that BDD nodes never reference
-		}
-		if node.family != 0 {
-			return nil
+			if node != scratch.One {
+				constants = append(constants, node)
+			}
+			continue
 		}
 		order = append(order, node)
 	}
 	sort.Slice(order, func(a, b int) bool { return order[a].ID < order[b].ID })
+	// ADD constants are leaves like One (variable index -1); ADD nodes,
+	// which have no complemented edges, swap as BDD nodes do in CUDD
+	sort.Slice(constants, func(a, b int) bool { return constants[a].ID < constants[b].ID })
+	for _, c := range constants {
+		ids[c] = int32(len(s.nodes))
+		s.nodes = append(s.nodes, siftNode{index: -1, alive: true})
+	}
 	for _, node := range order {
 		ids[node] = int32(len(s.nodes))
 		s.nodes = append(s.nodes, siftNode{index: int32(node.Index), alive: true})
@@ -392,7 +400,7 @@ func newSiftHeap(h *reorderHeap) *siftHeap {
 	supp := make([][]uint64, len(s.nodes))
 	var support func(id int32) []uint64
 	support = func(id int32) []uint64 {
-		if id == 0 {
+		if s.nodes[id].index < 0 { // a constant
 			return nil
 		}
 		if supp[id] != nil {

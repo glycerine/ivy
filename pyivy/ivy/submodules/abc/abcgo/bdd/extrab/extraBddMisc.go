@@ -93,10 +93,16 @@ func extraBddMove(dd *DdManager, f, flag *DdNode) *DdNode {
 	}
 	return Extra_bddMove(dd, f, distance)
 }
+// Extra_StopManager reports nodes still referenced (more than 10) and
+// quits the manager.
 func Extra_StopManager(dd *DdManager) {
-	if dd != nil {
-		cudd.Cudd_Quit(dd)
+	if dd == nil {
+		return
 	}
+	if n := cudd.Cudd_CheckZeroRef(dd); n > 10 {
+		fmt.Printf("\nThe number of referenced nodes = %d\n\n", n)
+	}
+	cudd.Cudd_Quit(dd)
 }
 func Extra_bddFormat(dd *DdManager, f *DdNode) string {
 	if f == nil {
