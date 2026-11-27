@@ -14,6 +14,9 @@ const (
 	cacheADDPlus
 	cacheBDDExist
 	cacheBDDAndAbstract
+	cacheZddIsopBDD // cuddZddIsop's BDD result
+	cacheZddIsopZDD // Cudd_zddIsop's ZDD cover
+	cacheBddIsop    // cuddBddIsop
 )
 
 type computedKey struct {

@@ -1,12 +1,15 @@
 package abc
 
 import (
+	"fmt"
+
 	aig "github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/hop"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/bdd/extrab/primes"
 	"github.com/glycerine/abcgo/bool/dec"
 	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/misc/util"
 	"strings"
 )
 
@@ -234,22 +237,45 @@ func Abc_ConvertBddToSop(_ any, dd *core.DdManager, on, onDC *core.DdNode, fanin
 	} else {
 		cover = coverFor(on, onDC)
 	}
-	if cover == nil || Abc_CountZddCubes(dd, cover) > ABC_MAX_CUBES {
+	if cover == nil {
+		return ""
+	}
+	if Abc_CountZddCubes(dd, cover) > ABC_MAX_CUBES {
+		fmt.Printf("The number of cubes exceeded the predefined limit (%d).\n", ABC_MAX_CUBES)
 		return ""
 	}
 	var text []byte
 	Abc_ConvertZddToSop(dd, cover, &text, fanins, cube, phase)
 	return string(text)
 }
+
+// Abc_NtkBddToSop is abcFunc.c's: under a cube limit, Extra_bddCountCubes
+// first counts both phases' ISOPs of every node to choose its phase (and
+// fails past the limit); then each node's cover is built in that phase.
 func Abc_NtkBddToSop(n *Network, mode, cubeLimit int32) int32 {
 	dd, ok := n.FunctionManager.(*core.DdManager)
 	if !ok {
 		return 0
 	}
-	converted := make(map[*Object]string)
+	nodes := n.ObjectsOfKind(ObjectNode)
+	guide := make([]int, len(nodes))
+	for i := range guide {
+		guide[i] = int(mode)
+	}
+	if cubeLimit < util.ABC_INFINITY {
+		funcs := make([]*core.DdNode, len(nodes))
+		for i, o := range nodes {
+			if !o.Barrier {
+				funcs[i], _ = o.Data.(*core.DdNode)
+			}
+		}
+		if core.ExtraBddCountCubes(dd, funcs, int(mode), int(cubeLimit), guide) == -1 {
+			return 0
+		}
+	}
+	converted := make([]string, len(nodes))
 	var cube []byte
-	total := 0
-	for _, o := range n.ObjectsOfKind(ObjectNode) {
+	for i, o := range nodes {
 		if o.Barrier {
 			continue
 		}
@@ -257,21 +283,20 @@ func Abc_NtkBddToSop(n *Network, mode, cubeLimit int32) int32 {
 		if !ok {
 			return 0
 		}
-		text := Abc_ConvertBddToSop(nil, dd, root, root, int32(len(o.fanins)), 0, &cube, mode)
+		text := Abc_ConvertBddToSop(nil, dd, root, root, int32(len(o.fanins)), 0, &cube, int32(guide[i]))
 		if text == "" {
 			return 0
 		}
-		total += strings.Count(text, "\n")
-		if cubeLimit >= 0 && total > int(cubeLimit) {
-			return 0
-		}
-		converted[o] = text
+		converted[i] = text
 	}
-	for o, text := range converted {
-		if funcSopVariables(text) == 0 {
+	for i, o := range nodes {
+		if o.Barrier {
+			continue
+		}
+		if funcSopVariables(converted[i]) == 0 {
 			Abc_ObjRemoveFanins(o)
 		}
-		o.Data = text
+		o.Data = converted[i]
 	}
 	n.FunctionManager = nil
 	n.Function = uint8(ABC_FUNC_SOP)

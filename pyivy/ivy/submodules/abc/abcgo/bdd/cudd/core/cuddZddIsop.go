@@ -160,17 +160,196 @@ func Cudd_zddIsop(dd *DdManager, lower, upper *DdNode, cover **DdNode) *DdNode {
 	if cover == nil || !dd.valid(lower, upper) || !Cudd_bddLeq(dd, lower, upper) {
 		return nil
 	}
-	result := dd.isop(lower, upper, true)
-	if result.function != nil {
-		*cover = result.cover
+	var z *DdNode
+	r := dd.withAutoReorder(func() *DdNode {
+		var r *DdNode
+		r, z = dd.zddIsopRecur(lower, upper)
+		return r
+	})
+	if r != nil {
+		*cover = z
 	}
-	return result.function
+	return r
 }
 func Cudd_bddIsop(dd *DdManager, lower, upper *DdNode) *DdNode {
 	if !dd.valid(lower, upper) || !Cudd_bddLeq(dd, lower, upper) {
 		return nil
 	}
-	return dd.isop(lower, upper, false).function
+	return dd.withAutoReorder(func() *DdNode { return dd.bddIsopRecur(lower, upper) })
+}
+
+// isopCofactors are cuddZddIsop's: the cofactors of L and U by the top
+// variable of the pair, and that variable's index.
+func (dd *DdManager) isopCofactors(L, U *DdNode) (index uint32, Lv, Lnv, Uv, Unv *DdNode) {
+	lr, ur := Cudd_Regular(L), Cudd_Regular(U)
+	topL, topU := dd.level(L), dd.level(U)
+	v := min(topL, topU)
+	if topL == v {
+		index = lr.Index
+		Lv, Lnv = lr.T, lr.E
+		if L != lr {
+			Lv, Lnv = Cudd_Not(Lv), Cudd_Not(Lnv)
+		}
+	} else {
+		index = ur.Index
+		Lv, Lnv = L, L
+	}
+	if topU == v {
+		Uv, Unv = ur.T, ur.E
+		if U != ur {
+			Uv, Unv = Cudd_Not(Uv), Cudd_Not(Unv)
+		}
+	} else {
+		Uv, Unv = U, U
+	}
+	return
+}
+
+// zddIsopRecur is cuddZddIsop: Minato's ISOP of the interval [L, U] as a
+// BDD and as a ZDD cover, both kept in the computed cache.
+func (dd *DdManager) zddIsopRecur(L, U *DdNode) (*DdNode, *DdNode) {
+	if L == dd.LogicZero {
+		return dd.LogicZero, dd.Zero
+	}
+	if U == dd.One {
+		return dd.One, dd.One
+	}
+	if U == dd.LogicZero || L == dd.One {
+		return nil, nil // not an interval
+	}
+	keyR := computedKey{f: L, g: U, kind: cacheZddIsopBDD}
+	hashR := keyR.hash()
+	keyZ := computedKey{f: L, g: U, kind: cacheZddIsopZDD}
+	hashZ := keyZ.hash()
+	if r := dd.cacheLookup(keyR, hashR, true); r != nil {
+		if z := dd.cacheLookup(keyZ, hashZ, true); z != nil {
+			return r, z
+		}
+	}
+	index, Lv, Lnv, Uv, Unv := dd.isopCofactors(L, U)
+
+	Lsub0 := cuddBddAndRecur(dd, Lnv, Cudd_Not(Uv))
+	Lsub1 := cuddBddAndRecur(dd, Lv, Cudd_Not(Unv))
+	if Lsub0 == nil || Lsub1 == nil {
+		return nil, nil
+	}
+	Isub0, zIsub0 := dd.zddIsopRecur(Lsub0, Unv)
+	if Isub0 == nil {
+		return nil, nil
+	}
+	Isub1, zIsub1 := dd.zddIsopRecur(Lsub1, Uv)
+	if Isub1 == nil {
+		return nil, nil
+	}
+	Lsuper0 := cuddBddAndRecur(dd, Lnv, Cudd_Not(Isub0))
+	Lsuper1 := cuddBddAndRecur(dd, Lv, Cudd_Not(Isub1))
+	if Lsuper0 == nil || Lsuper1 == nil {
+		return nil, nil
+	}
+	Ld := cuddBddAndRecur(dd, Cudd_Not(Lsuper0), Cudd_Not(Lsuper1))
+	Ud := cuddBddAndRecur(dd, Unv, Uv)
+	if Ld == nil || Ud == nil {
+		return nil, nil
+	}
+	Id, zId := dd.zddIsopRecur(Cudd_Not(Ld), Ud)
+	if Id == nil {
+		return nil, nil
+	}
+	x := dd.Vars[index]
+	term0 := cuddBddAndRecur(dd, Cudd_Not(x), Isub0)
+	term1 := cuddBddAndRecur(dd, x, Isub1)
+	if term0 == nil || term1 == nil {
+		return nil, nil
+	}
+	sum := cuddBddAndRecur(dd, Cudd_Not(term0), Cudd_Not(term1))
+	if sum == nil {
+		return nil, nil
+	}
+	r := cuddBddAndRecur(dd, sum, Cudd_Not(Id))
+	if r == nil {
+		return nil, nil
+	}
+	r = Cudd_Not(r)
+
+	// the ZDD cover: x_i Isub1 + x_i' Isub0 + Id (cuddZddGetNodeIVO);
+	// the children carry no literal of this variable, so Change adds it
+	z := zId
+	if zIsub0 != dd.Zero || zIsub1 != dd.Zero {
+		if uint64(index)*2+1 >= uint64(CUDD_MAXINDEX-1) || !dd.ensureZddVar(int(index)*2+1) || !dd.literalPairOrder(int(index)*2, false) {
+			return nil, nil
+		}
+	}
+	if zIsub1 != dd.Zero {
+		z = Cudd_zddUnion(dd, Cudd_zddChange(dd, zIsub1, int(index)*2), z)
+	}
+	if zIsub0 != dd.Zero {
+		z = Cudd_zddUnion(dd, Cudd_zddChange(dd, zIsub0, int(index)*2+1), z)
+	}
+	if z == nil {
+		return nil, nil
+	}
+	dd.cacheInsert(keyR, r, hashR)
+	dd.cacheInsert(keyZ, z, hashZ)
+	return r, z
+}
+
+// bddIsopRecur is cuddBddIsop: the BDD of the ISOP, without the cover.
+func (dd *DdManager) bddIsopRecur(L, U *DdNode) *DdNode {
+	if L == dd.LogicZero {
+		return dd.LogicZero
+	}
+	if U == dd.One {
+		return dd.One
+	}
+	if U == dd.LogicZero || L == dd.One {
+		return nil
+	}
+	key := computedKey{f: L, g: U, kind: cacheBddIsop}
+	hash := key.hash()
+	if r := dd.cacheLookup(key, hash, true); r != nil {
+		return r
+	}
+	index, Lv, Lnv, Uv, Unv := dd.isopCofactors(L, U)
+	Lsub0 := cuddBddAndRecur(dd, Lnv, Cudd_Not(Uv))
+	Lsub1 := cuddBddAndRecur(dd, Lv, Cudd_Not(Unv))
+	if Lsub0 == nil || Lsub1 == nil {
+		return nil
+	}
+	Isub0 := dd.bddIsopRecur(Lsub0, Unv)
+	if Isub0 == nil {
+		return nil
+	}
+	Isub1 := dd.bddIsopRecur(Lsub1, Uv)
+	if Isub1 == nil {
+		return nil
+	}
+	Lsuper0 := cuddBddAndRecur(dd, Lnv, Cudd_Not(Isub0))
+	Lsuper1 := cuddBddAndRecur(dd, Lv, Cudd_Not(Isub1))
+	if Lsuper0 == nil || Lsuper1 == nil {
+		return nil
+	}
+	Ld := cuddBddAndRecur(dd, Cudd_Not(Lsuper0), Cudd_Not(Lsuper1))
+	Ud := cuddBddAndRecur(dd, Unv, Uv)
+	if Ld == nil || Ud == nil {
+		return nil
+	}
+	Id := dd.bddIsopRecur(Cudd_Not(Ld), Ud)
+	if Id == nil {
+		return nil
+	}
+	// x ? Isub1 : Isub0, or Id (cuddBddIsop's cuddBddIteRecur)
+	x := dd.Vars[index]
+	r := dd.ite(x, Isub1, Isub0)
+	if r == nil {
+		return nil
+	}
+	r = cuddBddAndRecur(dd, Cudd_Not(r), Cudd_Not(Id))
+	if r == nil {
+		return nil
+	}
+	r = Cudd_Not(r)
+	dd.cacheInsert(key, r, hash)
+	return r
 }
 func Cudd_MakeBddFromZddCover(dd *DdManager, cover *DdNode) *DdNode {
 	if !dd.coverDomain(false, cover) {

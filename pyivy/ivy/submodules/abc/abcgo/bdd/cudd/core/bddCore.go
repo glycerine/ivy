@@ -549,6 +549,13 @@ func (dd *DdManager) insertBDDPair(key bddUniqueKey, entry *uniqueEntry, pair *[
 	if dd.allocationLimited && dd.unique.count >= dd.allocationCeiling {
 		panic(bddAllocationLimit{})
 	}
+	// cuddAllocNode's maxLive check; the failure unwinds to the active
+	// allocation attempt (an operation without one keeps CUDD's default,
+	// unlimited maxLive)
+	if dd.maxLive != ^uint32(0) && dd.allocationAttempt != nil && uint64(dd.liveBDDKeys()+dd.liveZDDKeys()) > uint64(dd.maxLive) {
+		dd.errorCode = CUDD_TOO_MANY_NODES
+		panic(bddAllocationLimit{})
+	}
 	if dd.checkNodeDensity(key, false) {
 		entry = dd.unique.find(key)
 		if entry != nil && entry.node != nil {

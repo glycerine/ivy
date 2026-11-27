@@ -93,6 +93,7 @@ func extraBddMove(dd *DdManager, f, flag *DdNode) *DdNode {
 	}
 	return Extra_bddMove(dd, f, distance)
 }
+
 // Extra_StopManager reports nodes still referenced (more than 10) and
 // quits the manager.
 func Extra_StopManager(dd *DdManager) {
@@ -496,51 +497,12 @@ func Extra_bddCountCubes(dd *DdManager, functions []*DdNode, n, mode, limit int,
 	if dd == nil || n < 0 || n > len(functions) || n > len(guide) || (mode != -1 && mode != 0 && mode != 1) || limit < 0 {
 		return -1
 	}
-	baseline := cudd.Cudd_ReadNodeCount(dd)
-	total := 0
-	count := func(f *DdNode, bound int) (int, bool) {
-		remaining := 1000000 - (cudd.Cudd_ReadNodeCount(dd) - baseline)
-		if remaining < 0 {
-			return -1, false
+	for _, f := range functions[:n] {
+		if f != nil && !extraValidBDD(dd, f) {
+			return -1
 		}
-		result, nCubes := cudd.CountISOPBounded(dd, f, f, bound, remaining)
-		return nCubes, result != nil
 	}
-	for i, f := range functions[:n] {
-		if f == nil {
-			continue
-		}
-		if !extraValidBDD(dd, f) {
-			return -1
-		}
-		pos, neg := 0, 0
-		posOK, negOK := false, false
-		if mode != 0 {
-			pos, posOK = count(f, limit)
-		}
-		if mode != 1 {
-			bound := limit
-			if posOK {
-				bound = pos
-			}
-			neg, negOK = count(cudd.Cudd_Not(f), bound)
-		}
-		chosen := 0
-		if posOK && (!negOK || pos <= neg) {
-			guide[i] = 1
-			chosen = pos
-		} else if negOK {
-			guide[i] = 0
-			chosen = neg
-		} else {
-			return -1
-		}
-		if chosen > int(^uint(0)>>1)-total {
-			return -1
-		}
-		total += chosen
-	}
-	return total
+	return cudd.ExtraBddCountCubes(dd, functions[:n], mode, limit, guide)
 }
 func Extra_bddTuples(dd *DdManager, k int, vars *DdNode) *DdNode {
 	indices, valid := extraPositiveCube(dd, vars)

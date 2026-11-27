@@ -143,8 +143,13 @@ func TestMiscISOPLimitsAndRepeatedCalls(t *testing.T) {
 	if dd.ZddSize != 0 {
 		t.Fatal("count materialized a ZDD cover")
 	}
-	if Extra_bddCountCubes(dd, []*DdNode{f}, 1, 1, 1, []int{9}) != -1 || Extra_bddCountCubes(dd, []*DdNode{dd.One}, 1, 1, 0, []int{9}) != -1 {
+	if Extra_bddCountCubes(dd, []*DdNode{f}, 1, 1, 1, []int{9}) != -1 {
 		t.Fatal("cube limit ignored")
+	}
+	// extraBddCountCubes returns the constant 1 (one cube) before any limit
+	// check, so a constant function is counted whatever the limit
+	if Extra_bddCountCubes(dd, []*DdNode{dd.One}, 1, 1, 0, []int{9}) != 1 {
+		t.Fatal("constant one is one cube")
 	}
 	guide := []int{9, 9}
 	if Extra_bddCountCubes(dd, []*DdNode{nil, dd.LogicZero}, 2, -1, 100, guide) != 0 || guide[0] != 9 || guide[1] != 1 {
