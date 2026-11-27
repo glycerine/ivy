@@ -1232,7 +1232,8 @@ func MakeVCWithModule(mod *Module, action ActionsAction, precond []*Clauses,
 	if action == nil {
 		action = NewSequence()
 	}
-	postState, err := ag.executeStateOnly(traceCheckPrecondFalse, action.Name(), action, preState, nil)
+	// The proof action builds a post-state and history without a named model transition.
+	postState, err := ag.execute(traceCheckPrecondFalse, action, preState, nil, "", true)
 	if err != nil {
 		panic(fmt.Sprintf("MakeVC: Execute failed: %v", err))
 	}

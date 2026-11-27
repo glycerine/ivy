@@ -807,12 +807,19 @@ func (ag *AnalysisGraph) LastState() *State {
 // computes the post-state, and adds it to the graph.
 // Returns an error if the action's precondition fails (when checkPrecond is true).
 func (ag *AnalysisGraph) Execute(checkPrecond bool, op ActionsAction, prestate *State, abstractor Abstractor, label string) (*State, error) {
+	return ag.execute(checkPrecond, op, prestate, abstractor, label, false)
+}
+
+func (ag *AnalysisGraph) execute(checkPrecond bool, op ActionsAction, prestate *State, abstractor Abstractor, label string, stateOnly bool) (*State, error) {
 	xtracer.Trace("art.Execute ENTER")
 	if prestate == nil {
 		prestate = ag.LastState()
 	}
 	if prestate == nil {
 		return nil, nil
+	}
+	if stateOnly {
+		return ag.executeStateOnly(checkPrecond, op.Name(), op, prestate, abstractor)
 	}
 	rawLabel := strings.TrimSpace(label)
 	actionName := ""

@@ -300,6 +300,37 @@ func TestVcgenEmpty(t *testing.T) {
 	}
 }
 
+func TestVcgenUsesExecutionTraceAndModuleFormulaIDs(t *testing.T) {
+	const source = `#lang ivy1.7
+var p : bool
+after init { p := true }
+export action a(q:bool) = { p := p & q }
+invariant p
+proof [this] { tactic vcgen }
+`
+	cfg := NewConfig()
+	cfg.Isolate = "this"
+	var err error
+	out := captureStdout(t, func() { err = StartSourceWithConfig("vcgen.ivy", source, cfg) })
+	if err == nil || err.Error() != "failed checks: 1" {
+		t.Fatalf("check result = %v, want one failed consecution check", err)
+	}
+	if got := cfg.AstCfg.LfCounter; got != 13 {
+		t.Errorf("next formula ID = %d, want 13 after checking both subgoals", got)
+	}
+	if xtracer.Enabled {
+		const entry = "XTRACE: art.Execute ENTER\n"
+		if got := strings.Count(out, entry); got != 2 {
+			t.Errorf("execution entry trace count = %d, want 2", got)
+		}
+		for _, action := range []string{"Sequence", "EnvAction"} {
+			if !strings.Contains(out, entry+"XTRACE: art.PostState ENTER opName="+action+"\n") {
+				t.Errorf("missing execution entry before %s post-state computation", action)
+			}
+		}
+	}
+}
+
 // ---------- Tempind ----------
 
 func TestTempindNonTemporalError(t *testing.T) {

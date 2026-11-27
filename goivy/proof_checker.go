@@ -36,13 +36,13 @@ func NewProofChecker(cfg *ProofConfig, mod *Module, axioms, definitions []*Label
 	if cfg == nil {
 		cfg = TacticNewConfig()
 	}
-	// Use the caller's AstConfig if provided (shares LF counter with module),
-	// otherwise create a private one.
-	// Python uses a single global lf_counter, so all ProofChecker normalization
-	// advances the same counter as the compiler. We match this by sharing AstCfg.
+	// The compiler and proof checker share formula IDs within a module.
+	// An explicit AST config takes precedence for callers that supply one.
 	var acfg *AstConfig
 	if len(astCfgs) > 0 && astCfgs[0] != nil {
 		acfg = astCfgs[0]
+	} else if mod != nil && mod.Cfg != nil && mod.Cfg.AstCfg != nil {
+		acfg = mod.Cfg.AstCfg
 	} else {
 		acfg = NewAstConfig()
 	}
