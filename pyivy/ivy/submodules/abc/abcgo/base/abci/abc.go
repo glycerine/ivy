@@ -37461,6 +37461,12 @@ func Abc_CommandAbc9If(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Current AIG has mapping. Run \"&st\".\n")
 		return 1
 	}
+	// Gia_ManToIf maps one GIA object to one mapper AND, so XOR and MUX
+	// objects would be mapped as ANDs (C bug 29)
+	if gia := abcFrameGia(pAbc); giapkg.Gia_ManXorNum(gia) != 0 || giapkg.Gia_ManMuxNum(gia) != 0 {
+		Abc_Print(-1, "This command does not work with XORs or MUXes. Run \"&st\".\n")
+		return 1
+	}
 
 	if pPars.NLutSize == -1 {
 		if pPars.PLutLib == nil {

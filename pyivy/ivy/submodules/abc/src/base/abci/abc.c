@@ -38479,6 +38479,11 @@ int Abc_CommandAbc9If( Abc_Frame_t * pAbc, int argc, char ** argv )
         Abc_Print( -1, "Current AIG has mapping. Run \"&st\".\n" );
         return 1;
     }
+    if ( Gia_ManXorNum(pAbc->pGia) || Gia_ManMuxNum(pAbc->pGia) )
+    {
+        Abc_Print( -1, "This command does not work with XORs or MUXes. Run \"&st\".\n" );
+        return 1;
+    }
 
     if ( pPars->nLutSize == -1 )
     {

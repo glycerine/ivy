@@ -636,3 +636,27 @@ and states how the Go port was verified.
   `!Gia_ObjIsMux` assertion). The non-equivalence was confirmed with
   a native build of abc.c without the check.
 - **Go port:** the same check in `Abc_CommandAbc9Mfsd` (`base/abci/abc.go`).
+
+## 29. `&if` maps XOR and MUX nodes as ANDs
+
+- **File:** `src/base/abci/abc.c` (`Abc_CommandAbc9If`).
+- **Found:** 2026-11-27: `&r native_mul4_gen.aig; &st -m; &if -K 4; &put;
+  cec -n native_mul4_gen.aig` reports "Networks are NOT EQUIVALENT" (also
+  with `-K 6`, with `&st -L 1 -m`, and on native_mul8_canon.aig), while
+  `&st -m; &put` alone is equivalent.
+- **Bug:** `Gia_ManToIf` (`src/aig/gia/giaIf.c`) creates exactly one mapper
+  object per GIA object (`assert( i == If_ObjId(pIfObj) )`) and builds every
+  internal node with `If_ManCreateAnd` from its first two fanins. An XOR
+  node of a `&st -m` graph becomes the AND of its fanins and a MUX loses its
+  control input, so the mapping (and the AIG derived from it) computes a
+  different function. The command checks for barrier buffers and existing
+  mappings but not for XORs or MUXes.
+- **Fix:** the command refuses a GIA with XORs or MUXes ("This command does
+  not work with XORs or MUXes. Run "&st"."), as `&mfsd` now does for MUXes
+  (bug 28).
+- **Test:** `abcgo/base/abci/if_muxes_native_test.go`
+  (`TestIfRejectsMuxGraphsLikeNative`; red before: native `cec` reported
+  NOT EQUIVALENT for all six flows; now native and port print the error).
+- **Go port:** its `Gia_ManToIf` builds XORs and MUXes with
+  `If_ManCreateXor`/`If_ManCreateMux` and so mapped correctly, but it now
+  refuses such graphs in `Abc_CommandAbc9If` as C does.
