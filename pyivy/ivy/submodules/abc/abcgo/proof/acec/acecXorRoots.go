@@ -53,7 +53,9 @@ func Acec_OrderTreeRoots(p *Gia_Man_t, adds, roots, ranks *Vec_Int_t) *Vec_Int_t
 		}
 	}
 	if start < 0 {
-		panic("acec: root ordering requires an XOR chain")
+		// the XOR trees do not form a chain: no box (C bug 32; C read
+		// past vXorRoots here)
+		return nil
 	}
 	for i := start; ; {
 		vec.Vec_IntPush(order, vec.Vec_IntEntry(roots, i))

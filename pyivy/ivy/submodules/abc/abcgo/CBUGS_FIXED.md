@@ -660,3 +660,28 @@ and states how the Go port was verified.
 - **Go port:** its `Gia_ManToIf` builds XORs and MUXes with
   `If_ManCreateXor`/`If_ManCreateMux` and so mapped correctly, but it now
   refuses such graphs in `Abc_CommandAbc9If` as C does.
+
+## 32. `&acec -m` reads past `vXorRoots` when the adder trees form no chain
+
+- **File:** `src/proof/acec/acecXor.c` (`Acec_OrderTreeRoots`,
+  `Acec_ProduceBox`).
+- **Found:** 2026-11-27: `&r mul4; &miter cec_mul4_syn2.aig` gives a
+  dual-output miter of two independent multipliers; `&acec -m` on it
+  segfaults (in `Acec_RankTrees`, then, with only the read fixed, in
+  `Acec_FindBox`).
+- **Bug:** `Acec_OrderTreeRoots` looks for the XOR tree that no other tree
+  feeds. When there is none it relies on `assert( i < Vec_IntSize(vMove) )`,
+  compiled out in release builds, and reads `vXorRoots[i]` one past the end;
+  `Acec_RankTrees` then writes through that garbage root. The rest of
+  `Acec_ProduceBox` also assumes a chain.
+- **Fix:** `Acec_OrderTreeRoots` returns NULL when the trees form no chain,
+  and `Acec_ProduceBox` then returns no box, so `Acec_Solve` prints "Cannot
+  find arithmetic boxes in both LHS and RHS. Trying regular CEC." and
+  verifies the miter normally (here: "Networks are equivalent.").
+- **Test:** `abcgo/base/abci/acec_order_roots_native_test.go`
+  (`TestAcecOrderRootsWithoutChainLikeNative`, vector
+  `test_vectors/acec_mul4_dual_miter.aig`; red before: native segfault, port
+  panic).
+- **Go port:** it panicked ("acec: root ordering requires an XOR chain") at
+  the same point; it now returns nil and no box as C does. Four Go tests that
+  expected the panic now expect no box / the CEC fallback.

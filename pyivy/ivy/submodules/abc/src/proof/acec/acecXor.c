@@ -98,7 +98,12 @@ Vec_Int_t * Acec_OrderTreeRoots( Gia_Man_t * p, Vec_Int_t * vAdds, Vec_Int_t * v
     Vec_IntForEachEntry( vMove, Entry, i )
         if ( Entry == -1 && Vec_IntFind(vMove, i) >= 0 )
             break;
-    assert( i < Vec_IntSize(vMove) );
+    if ( i == Vec_IntSize(vMove) ) // the XOR trees do not form a chain
+    {
+        Vec_IntFree( vMove );
+        Vec_IntFree( vOrder );
+        return NULL;
+    }
     while ( 1 )
     {
         Vec_IntPush( vOrder, Vec_IntEntry(vXorRoots, i) );
@@ -395,6 +400,12 @@ Acec_Box_t * Acec_ProduceBox( Gia_Man_t * p, int fVerbose )
     vXorRoots = Acec_OrderTreeRoots( p, vAdds, vTemp = vXorRoots, vRanks );
     Vec_IntFree( vTemp );
     Vec_IntFree( vRanks );
+    if ( vXorRoots == NULL ) // no chain of adder trees: no box
+    {
+        Vec_IntFree( vXors );
+        Vec_IntFree( vAdds );
+        return NULL;
+    }
 
     vRanks = Acec_RankTrees( p, vXors, vXorRoots ); 
     vXorLeaves = Acec_FindXorLeaves( p, vXors, vAdds, vXorRoots, vRanks, &vAddBoxes ); 

@@ -149,6 +149,9 @@ func Acec_ProduceBox(p *Gia_Man_t, verbose int32) *Acec_Box_t {
 		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	}
 	roots = Acec_OrderTreeRoots(p, adds, roots, ranks)
+	if roots == nil { // no chain of adder trees: no box (C bug 32)
+		return nil
+	}
 	ranks = Acec_RankTrees(p, xors, roots)
 	var boxes *Vec_Wec_t
 	leaves := Acec_FindXorLeaves(p, xors, adds, roots, ranks, &boxes)

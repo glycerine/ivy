@@ -18,14 +18,14 @@ func nativeMuxFixture(invert bool) *Gia_Man_t {
 	gia.Gia_ManAppendCo(p, m)
 	return p
 }
-func TestSolveNativeMuxWithoutXorRootsViolatesSourcePrecondition(t *testing.T) {
+
+// Without XOR roots there is no adder-tree chain, so no box is found and
+// Acec_Solve falls back to regular CEC (C bug 32: C read past vXorRoots).
+func TestSolveNativeMuxWithoutXorRootsFallsBackToCec(t *testing.T) {
 	a, b := nativeMuxFixture(false), nativeMuxFixture(true)
 	var pars Acec_ParCec_t
 	Acec_ManCecSetDefaultParams(&pars)
-	defer func() {
-		if recover() == nil {
-			t.Fatal("missing source root-ordering assertion")
-		}
-	}()
-	Acec_Solve(a, b, &pars)
+	if status := Acec_Solve(a, b, &pars); status != 0 && status != 1 {
+		t.Fatalf("status %d", status)
+	}
 }

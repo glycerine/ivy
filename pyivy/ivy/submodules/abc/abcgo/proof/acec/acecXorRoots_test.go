@@ -27,14 +27,10 @@ func TestXorRootRankingAndSmallOrders(t *testing.T) {
 	}
 	adds := vec.Vec_IntAlloc(0)
 	for _, r := range []*Vec_Int_t{roots, vec.Vec_IntAlloc(0)} {
-		func() {
-			defer func() {
-				if got := recover(); got != "acec: root ordering requires an XOR chain" {
-					t.Errorf("root-chain panic = %v", got)
-				}
-			}()
-			Acec_OrderTreeRoots(p, adds, r, ranks)
-		}()
+		// without a chain of trees there is no order (C bug 32)
+		if order := Acec_OrderTreeRoots(p, adds, r, ranks); order != nil {
+			t.Errorf("order %v without a chain", vec.Vec_IntArray(order))
+		}
 	}
 }
 
