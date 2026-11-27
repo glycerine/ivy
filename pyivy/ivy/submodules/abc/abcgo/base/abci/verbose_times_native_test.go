@@ -28,6 +28,7 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 		"read test_vectors/seq/s713.blif; strash; scorr -v; print_stats",
 		"read test_vectors/seq/s713.blif; strash; lcorr -v; print_stats",
 		"read test_vectors/seq/s1494.blif; strash; lcorr -v; print_stats",
+		"read test_vectors/seq/s1494.blif; strash; scorr -v; print_stats",
 		"read test_vectors/seq/s713.blif; strash; dsec -v; print_status",
 		"read test_vectors/native_s27_drw.blif; strash; dsec -v; print_status",
 	} {
@@ -70,5 +71,16 @@ func TestDsecVerboseStages(t *testing.T) {
 		if !strings.Contains(out, want) {
 			t.Errorf("missing %q:\n%s", want, out)
 		}
+	}
+}
+
+// Ssw_SatStart allocates 1000 SAT variables and Ssw_CnfNodeAddToSolver
+// grows them by hundreds (sat_solver_setnvars), which fixes the decision
+// order; the port added them one at a time, so its counterexamples and
+// refinement differed (scorr on s1494 took 7 iterations to ABC's 6).
+func TestScorrIterationsLikeABC(t *testing.T) {
+	out := runScript(t, "read test_vectors/seq/s1494.blif; strash; scorr -v; print_stats")
+	if !strings.Contains(out, "  1 : C =     10. Cl =     34. LR =    73.") || strings.Contains(out, "  6 : C =") {
+		t.Fatalf("scorr -v:\n%s", out)
 	}
 }

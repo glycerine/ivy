@@ -9,6 +9,9 @@ import (
 
 func Ssw_SatStart(fPolarFlip int32) *Ssw_Sat_t {
 	p := &Ssw_Sat_t{fPolarFlip: fPolarFlip, vSatVars: vec.Vec_IntStart(10000), vFanins: vec.Vec_PtrAlloc(100), vUsedPis: vec.Vec_PtrAlloc(100), pSat: bsat.NewSolver(), nSatVars: 2}
+	// sat_solver_setnvars( p->pSat, 1000 ): the variables, and so the
+	// decision order, exist before any clause, as in sswCnf.c
+	p.pSat.SetNumVars(1000)
 	lit := int32(2)
 	if fPolarFlip != 0 {
 		lit ^= 1
@@ -90,9 +93,8 @@ func Ssw_ObjAddToFrontier(p *Ssw_Sat_t, obj aig.Edge, frontier *vec.Vec_Ptr_t) {
 	}
 	Ssw_ObjSetSatNum(p, obj, p.nSatVars)
 	p.nSatVars++
-	for p.pSat.NumVars() < p.nSatVars {
-		p.pSat.NewVariable()
-	}
+	// sat_solver_setnvars( p->pSat, 100 * (1 + p->nSatVars / 100) )
+	p.pSat.SetNumVars(100 * (1 + p.nSatVars/100))
 	if aig.Aig_ObjIsNode(p.pAig, obj) || aig.Aig_ObjIsBuf(p.pAig, obj) {
 		vec.Vec_PtrPush(frontier, obj)
 	}
