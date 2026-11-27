@@ -62,46 +62,72 @@ func Dau_DecCheckSetTop5(p []uint64, n, free, bound, shared, mask int32, schedul
 	if free > 5 {
 		panic("DAU small cofactor exceeds five variables")
 	}
+	// The shift amounts and table indices below are masked to their ranges
+	// (free <= 5, shared <= 6, bound <= 15), which they never leave, so the
+	// compiler emits plain shifts and drops bounds checks; values are as in
+	// dauNonDsd.c.
 	var cofs [2][64]uint64
-	for s := 0; s < 1<<uint(shared); s++ {
-		cofs[0][s] = ^uint64(0)
-		cofs[1][s] = ^uint64(0)
+	nMintsS := int32(1) << uint(shared&7)
+	for s := int32(0); s < nMintsS; s++ {
+		cofs[0][s&63] = ^uint64(0)
+		cofs[1][s&63] = ^uint64(0)
 	}
-	uPos, sPos := dauDecBoundMap(bound, shared, mask)
-	shift := 6 - free
-	wordMask := int32(1<<uint(shift)) - 1
-	truthMask := (uint64(1) << uint(1<<uint(free))) - 1
+	// collect bound/shared variable positions (Dau_DecCheckSetTop5's loop)
+	var uPos, sPos [16]int32
+	{
+		s, b := int32(0), int32(0)
+		for v := int32(0); v < bound; v++ {
+			if mask&(1<<uint(v&31)) != 0 {
+				uPos[v&15], sPos[v&15] = -1, s
+				s++
+			} else {
+				sPos[v&15], uPos[v&15] = -1, b
+				b++
+			}
+		}
+		if s != shared {
+			panic("DAU shared-set mask count mismatch")
+		}
+	}
+	shift := uint(6-free) & 63
+	freeShift := uint(free) & 63
+	wordMask := int32(1)<<shift - 1
+	truthMask := uint64(1)<<(uint(1)<<freeShift&63) - 1
+	nMints := 1 << uint(bound&31)
+	nMintsB := int32(1) << uint((bound-shared)&31)
+	schedule = schedule[:nMints]
 	mint, b, s := int32(0), int32(0), int32(0)
-	for m := 0; m < 1<<uint(bound); m++ {
-		value := (p[mint>>uint(shift)] >> uint((mint&wordMask)<<uint(free))) & truthMask
-		if cofs[0][s] == ^uint64(0) || cofs[0][s] == value {
-			cofs[0][s] = value
-		} else if cofs[1][s] == ^uint64(0) || cofs[1][s] == value {
-			cofs[1][s] = value
+	for m := 0; m < nMints; m++ {
+		value := (p[mint>>shift] >> (uint((mint&wordMask)<<freeShift) & 63)) & truthMask
+		c0, c1 := &cofs[0][s&63], &cofs[1][s&63]
+		if *c0 == ^uint64(0) || *c0 == value {
+			*c0 = value
+		} else if *c1 == ^uint64(0) || *c1 == value {
+			*c1 = value
 			if dec != nil {
-				index := s*(1<<uint(bound-shared)) + b
+				index := s*nMintsB + b
 				dec[index>>6] |= 1 << uint(index&63)
 			}
 		} else {
 			return 0
 		}
-		v := schedule[m]
+		v := schedule[m] & 15
 		mint ^= 1 << uint(v)
 		if mask&(1<<uint(v)) != 0 {
-			s ^= 1 << uint(sPos[v])
+			s ^= 1 << uint(sPos[v]&31)
 		} else {
-			b ^= 1 << uint(uPos[v])
+			b ^= 1 << uint(uPos[v]&31)
 		}
 	}
 	if comp != nil {
-		for s := int32(0); s < 1<<uint(shared); s++ {
-			comp[s>>uint(shift)] |= cofs[0][s] << uint((s&wordMask)<<uint(free))
-			other := cofs[1][s]
+		for s := int32(0); s < nMintsS; s++ {
+			comp[s>>shift] |= cofs[0][s&63] << (uint((s&wordMask)<<freeShift) & 63)
+			other := cofs[1][s&63]
 			if other == ^uint64(0) {
-				other = cofs[0][s]
+				other = cofs[0][s&63]
 			}
-			index := s + (1 << uint(shared))
-			comp[index>>uint(shift)] |= other << uint((index&wordMask)<<uint(free))
+			index := s + nMintsS
+			comp[index>>shift] |= other << (uint((index&wordMask)<<freeShift) & 63)
 		}
 		if free+shared+1 < 6 {
 			comp[0] = dauDecStretch(comp[0], free+shared+1)
