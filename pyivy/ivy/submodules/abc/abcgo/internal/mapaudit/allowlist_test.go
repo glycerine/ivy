@@ -43,7 +43,6 @@ var allowlist = map[string]allowed{
 	"aig/gia/giaAigerExt.go:aigerEncodeExtensions":                        {2, "builds a map; the leftover tags are sorted"},
 	"aig/gia/giaAigerExt.go:aigerWireMetadata":                            {3, "groups are sorted before use and each writes only its own nodes"},
 	"aig/gia/giaAigerExt.go:Gia_WriteEquivClassesInt":                     {1, sortedAfter},
-	"aig/gia/giaAiger.go:aigerWriteSymbols":                               {1, perKey},
 	"aig/gia/giaUtil.go:Gia_ManDupWithMuxPos":                             {1, sortedAfter},
 	"aig/gia/jf_result.go:Jf_ManDeriveMappingGia":                         {1, perKey},
 	"aig/gia/man_abstraction.go:Gia_GlaCollectAssigned":                   {1, sortedAfter},

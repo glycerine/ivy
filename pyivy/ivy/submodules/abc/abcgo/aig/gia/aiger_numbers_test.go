@@ -70,9 +70,10 @@ func TestAigerNamesCoverRegisterInputsAndKeepPOIds(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	names := Vec_PtrArray(p.VNamesOut)
-	if len(names) != int(Gia_ManCoNum(p)) || names[0] != "out" || names[1] != "@o7" || names[2] != "assume" || names[3] != nil {
-		t.Fatalf("output names %v do not cover the four COs", names)
+	// Gia_AigerRead keeps only the '@'-tagged user IDs; ordinary names are
+	// dropped, so the manager has no name vectors
+	if p.VNamesIn != nil || p.VNamesOut != nil {
+		t.Fatalf("names kept: %v %v", p.VNamesIn, p.VNamesOut)
 	}
 	ids := Vec_IntArray(p.vUserPoIds)
 	if len(ids) != 3 || ids[0] != -1 || ids[1] != 7 || ids[2] != -1 {

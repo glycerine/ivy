@@ -447,10 +447,17 @@ func Abc_NtkFromAigPhase(pMan *Aig_Man_t) *Abc_Ntk_t {
 	valid := make([]bool, len(copies))
 	copies[0], valid[0] = pNtkNew.One(), true
 	inputs := pMan.Inputs()
+	// as in abcDar.c: latch, BI, BO, unnamed (Abc_NtkAddDummyBoxNames
+	// names them below); the BIs are the latch-input COs filled in later
 	for i := 0; i < int(pMan.RegisterCount()); i++ {
-		latchOutput := abc.Abc_NtkAddLatch(pNtkNew, nil, abc.ABC_INIT_ZERO)
+		latch := abc.Abc_NtkCreateLatch(pNtkNew)
+		bi := abc.Abc_NtkCreateBi(pNtkNew)
+		bo := abc.Abc_NtkCreateBo(pNtkNew)
+		abc.Abc_ObjAddFanin(latch, bi)
+		abc.Abc_ObjAddFanin(bo, latch)
+		abc.Abc_LatchSetInit0(latch)
 		id := inputs[pis+i].NodeID()
-		copies[id], valid[id] = latchOutput.Signal(), true
+		copies[id], valid[id] = bo.Signal(), true
 	}
 	for i := 0; i < pis; i++ {
 		id := inputs[i].NodeID()

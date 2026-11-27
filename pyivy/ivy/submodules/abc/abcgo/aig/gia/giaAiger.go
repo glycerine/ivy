@@ -672,6 +672,10 @@ func aigerReadFooter(p *Gia_Man_t, data []byte, ordinary, bad, constraints int, 
 	aigerInstallNames(p, ordinary, bad, constraints)
 	return nil
 }
+
+// aigerInstallNames keeps what Gia_AigerRead takes from the symbol table:
+// the '@'-tagged user IDs. Ordinary names are dropped, as in C, so '&w'
+// writes no symbols and '&put' gives default names.
 func aigerInstallNames(p *Gia_Man_t, ordinary, bad, constraints int) {
 	if len(p.aigerSymbols) == 0 {
 		return
@@ -689,36 +693,19 @@ func aigerInstallNames(p *Gia_Man_t, ordinary, bad, constraints int) {
 		}
 		vec.Vec_IntWriteEntry(*ids, index, int32(id))
 	}
-	inputs := make([]any, Gia_ManCiNum(p))
-	anyInput := false
 	for i, name := range p.aigerSymbols['i'] {
-		inputs[i] = name
-		anyInput = anyInput || name != ""
 		installID(&p.vUserPiIds, int(Gia_ManPiNum(p)), i, name, 'i')
 	}
 	for i, name := range p.aigerSymbols['l'] {
-		inputs[int(Gia_ManPiNum(p))+i] = name
-		anyInput = anyInput || name != ""
 		installID(&p.vUserFfIds, int(p.nRegs), i, name, 'l')
 	}
-	if anyInput {
-		p.VNamesIn = vec.Vec_PtrAllocArray(inputs, len(inputs))
-	}
-	outputs := make([]any, Gia_ManCoNum(p))
-	anyOutput := false
 	for _, part := range []struct {
 		kind  byte
 		start int
 	}{{'o', 0}, {'b', ordinary}, {'c', ordinary + bad}} {
 		for i, name := range p.aigerSymbols[part.kind] {
-			index := part.start + i
-			outputs[index] = name
-			anyOutput = anyOutput || name != ""
-			installID(&p.vUserPoIds, ordinary+bad+constraints, index, name, 'o')
+			installID(&p.vUserPoIds, ordinary+bad+constraints, part.start+i, name, 'o')
 		}
-	}
-	if anyOutput {
-		p.VNamesOut = vec.Vec_PtrAllocArray(outputs, len(outputs))
 	}
 }
 
@@ -925,90 +912,41 @@ func aigerMarshalWire(p *Gia_Man_t, model *aigerWireModel, opts AigerWriteOption
 	}
 	return out.Bytes(), nil
 }
+
+// aigerWriteSymbols writes the symbol table as Gia_AigerWrite does: only
+// when the manager has both input and output names, the PI, latch and PO
+// names from vNamesIn/vNamesOut.
 func aigerWriteSymbols(out *bytes.Buffer, p *Gia_Man_t, model *aigerWireModel) error {
-	lengths := map[byte]int{'i': model.inputs, 'l': model.latches, 'o': model.ordinary, 'b': model.bad, 'c': model.constraints}
-	names := map[byte][]string{}
-	for tag, n := range lengths {
-		names[tag] = make([]string, n)
-		copy(names[tag], p.aigerSymbols[tag])
+	if p.VNamesIn == nil || p.VNamesOut == nil {
+		return nil
 	}
-	if p.VNamesIn != nil {
-		raw := vec.Vec_PtrArray(p.VNamesIn)
-		if len(raw) != model.inputs+model.latches {
-			return fmt.Errorf("gia: input name count mismatch")
-		}
-		for i, value := range raw {
-			if name, ok := value.(string); ok && name != "" {
-				if i < model.inputs {
-					names['i'][i] = name
-				} else {
-					names['l'][i-model.inputs] = name
-				}
-			}
-		}
+	in, outNames := vec.Vec_PtrArray(p.VNamesIn), vec.Vec_PtrArray(p.VNamesOut)
+	if len(in) != model.inputs+model.latches || len(outNames) < model.ordinary+model.bad+model.constraints {
+		return fmt.Errorf("gia: name count mismatch")
 	}
-	if p.VNamesOut != nil {
-		raw := vec.Vec_PtrArray(p.VNamesOut)
-		if len(raw) < model.ordinary+model.bad+model.constraints {
-			return fmt.Errorf("gia: output name count mismatch")
+	write := func(tag byte, i int, value any) error {
+		name, _ := value.(string)
+		if strings.ContainsAny(name, "\r\n\x00") {
+			return fmt.Errorf("gia: invalid symbol name")
 		}
-		for i, value := range raw[:model.ordinary+model.bad+model.constraints] {
-			name, ok := value.(string)
-			if !ok || name == "" {
-				continue
-			}
-			switch {
-			case i < model.ordinary:
-				names['o'][i] = name
-			case i < model.ordinary+model.bad:
-				names['b'][i-model.ordinary] = name
-			default:
-				names['c'][i-model.ordinary-model.bad] = name
-			}
+		fmt.Fprintf(out, "%c%d %s\n", tag, i, name)
+		return nil
+	}
+	for i := 0; i < model.inputs; i++ {
+		if err := write('i', i, in[i]); err != nil {
+			return err
 		}
 	}
-	for _, part := range []struct {
-		kind byte
-		ids  *Vec_Int_t
-	}{{'i', p.vUserPiIds}, {'l', p.vUserFfIds}} {
-		if part.ids == nil {
-			continue
-		}
-		values := vec.Vec_IntArray(part.ids)
-		if len(values) != len(names[part.kind]) {
-			return fmt.Errorf("gia: custom symbol ID count mismatch")
-		}
-		for i, id := range values {
-			if id >= 0 && names[part.kind][i] == "" {
-				names[part.kind][i] = fmt.Sprintf("@%c%d", part.kind, id)
-			}
+	for i := 0; i < model.latches; i++ {
+		if err := write('l', i, in[model.inputs+i]); err != nil {
+			return err
 		}
 	}
-	if p.vUserPoIds != nil {
-		values := vec.Vec_IntArray(p.vUserPoIds)
-		if len(values) != model.ordinary+model.bad+model.constraints {
-			return fmt.Errorf("gia: custom output ID count mismatch")
-		}
-		for i, id := range values {
-			tag, index := byte('o'), i
-			if i >= model.ordinary+model.bad {
-				tag, index = 'c', i-model.ordinary-model.bad
-			} else if i >= model.ordinary {
-				tag, index = 'b', i-model.ordinary
-			}
-			if id >= 0 && names[tag][index] == "" {
-				names[tag][index] = fmt.Sprintf("@o%d", id)
-			}
-		}
-	}
-	for _, tag := range []byte{'i', 'l', 'o', 'b', 'c'} {
-		for i, name := range names[tag] {
-			if strings.ContainsAny(name, "\r\n\x00") {
-				return fmt.Errorf("gia: invalid symbol name")
-			}
-			if name != "" {
-				fmt.Fprintf(out, "%c%d %s\n", tag, i, name)
-			}
+	// Gia_ManForEachPo covers every combinational output that is not a latch
+	// input, bad and constraint outputs included
+	for i := 0; i < model.ordinary+model.bad+model.constraints; i++ {
+		if err := write('o', i, outNames[i]); err != nil {
+			return err
 		}
 	}
 	return nil

@@ -65,7 +65,7 @@ func TestAigerStandardCompactRoundTrip(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%v: %q", err, data)
 			}
-			if q.nRegs != 1 || q.nConstrs != 1 || q.aigerBadOutputs != 1 || q.pName != p.pName || q.aigerSymbols['c'][0] != "assume" {
+			if q.nRegs != 1 || q.nConstrs != 1 || q.aigerBadOutputs != 1 || q.pName != p.pName { // symbols: Gia_AigerWrite writes only vNamesIn/vNamesOut
 				t.Fatal("metadata roundtrip", q.nRegs, q.nConstrs, q.pName, q.aigerSymbols)
 			}
 			for input := 0; input < 4; input++ {
