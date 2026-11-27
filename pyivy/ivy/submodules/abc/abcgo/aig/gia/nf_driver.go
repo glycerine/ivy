@@ -1,5 +1,7 @@
 package gia
 
+import "fmt"
+
 // nfDefaultParameters follows the standard-cell mapper defaults.
 func nfDefaultParameters(p *Jf_Par_t) {
 	*p = Jf_Par_t{NLutSize: 6, NCutNum: 16, NRounds: 4, NRoundsEla: 2, NCoarseLimit: 3, NVerbLimit: 5, DelayTarget: -1, FOptEdge: 1, FCutMin: 1, NLutSizeMax: NF_LEAF_MAX, NCutNumMax: NF_CUT_MAX}
@@ -15,7 +17,15 @@ func nfMap(g *Gia_Man_t, pars *Jf_Par_t, library *nfLibrary) *Gia_Man_t {
 		pars.FCoarsen = 0
 	}
 	if pars.FCoarsen != 0 {
+		initial := g
 		g = Gia_ManDupMuxes(g, pars.NCoarseLimit)
+		if pars.FVerbose != 0 {
+			fmt.Print("Initial ")
+			Gia_ManPrintMuxStats(initial)
+			fmt.Print("\nDerived ")
+			Gia_ManPrintMuxStats(g)
+			fmt.Println()
+		}
 	}
 	g.Refs = nil
 	g.VCellMapping = nil

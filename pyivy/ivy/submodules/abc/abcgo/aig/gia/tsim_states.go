@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"slices"
 	"time"
 )
@@ -102,7 +103,8 @@ func Gia_ManTerSimulate(graph *Gia_Man_t, verbose int32) *Gia_ManTer_t {
 			graph.nTerStates = int32(Vec_PtrSize(p.vStates))
 			graph.nTerLoop = int32(Vec_PtrFind(p.vStates, loop))
 			if verbose != 0 {
-				fmt.Printf("Ternary simulation saturated after %d iterations. Time: %s\n", i+1, time.Since(start))
+				fmt.Printf("Ternary simulation saturated after %d iterations. ", i+1)
+				util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds()) // ABC_PRT
 			}
 			break
 		}

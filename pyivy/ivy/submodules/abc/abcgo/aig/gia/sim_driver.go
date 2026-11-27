@@ -62,11 +62,11 @@ func giaSimSimulate(g *Gia_Man_t, pars *Gia_ParSim_t, equiv func(*Gia_Man_t, *Gi
 			Gia_ManResetRandom(pars)
 			pars.iOutFail = output
 			g.pCexSeq = Gia_ManGenerateCounter(g, frame, output, sim.nWords, pattern, sim.vCis2Ids)
-			fmt.Printf("Output %d of miter %q was asserted in frame %d.  ", output, g.pName, frame)
+			fmt.Printf("Output %d of miter \"%s\" was asserted in frame %d.  ", output, g.pName, frame)
 			if Gia_ManVerifyCex(g, g.pCexSeq, 0) == 0 {
 				fmt.Print("\nGenerated counter-example is INVALID.                    ")
 			}
-			fmt.Printf("Time: %s\n", time.Since(started))
+			util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds())
 			return 1
 		}
 		if pars.TimeLimit > 0 && time.Since(started) >= time.Duration(pars.TimeLimit)*time.Second {
@@ -77,7 +77,8 @@ func giaSimSimulate(g *Gia_Man_t, pars *Gia_ParSim_t, equiv func(*Gia_Man_t, *Gi
 			Gia_ManSimInfoTransfer(sim)
 		}
 	}
-	fmt.Printf("No bug detected after simulating %d frames with %d words.  Time: %s\n", frame, pars.NWords, time.Since(started))
+	fmt.Printf("No bug detected after simulating %d frames with %d words.  ", frame, pars.NWords)
+	util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds())
 	return 0
 }
 

@@ -52,7 +52,7 @@ func Gia_ManSimSimulateEquiv(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
 			if Gia_ManVerifyCex(g, g.pCexSeq, 0) == 0 {
 				fmt.Print("\nGenerated counter-example is INVALID.                    ")
 			}
-			fmt.Printf("Time: %s\n", time.Since(started))
+			util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds())
 			return 1
 		}
 		Gia_Sim2InfoRefineEquivs(p)
@@ -64,6 +64,7 @@ func Gia_ManSimSimulateEquiv(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
 			Gia_Sim2InfoTransfer(p)
 		}
 	}
-	fmt.Printf("No bug detected after simulating %d frames with %d words.  Time: %s\n", frame, pars.NWords, time.Since(started))
+	fmt.Printf("No bug detected after simulating %d frames with %d words.  ", frame, pars.NWords)
+	util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds())
 	return 0
 }

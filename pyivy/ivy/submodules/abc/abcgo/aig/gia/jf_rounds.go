@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math"
 	"time"
@@ -14,6 +15,7 @@ func Jf_ObjPropagateBuf(p *Jf_Man_t, obj *Gia_Obj_t, reverse int32) {
 func Jf_ManComputeCuts(p *Jf_Man_t, edge int32) {
 	if p.pPars.FVerbose != 0 {
 		fmt.Printf("Aig: CI = %d  CO = %d  AND = %d    LutSize = %d  CutMax = %d  Rounds = %d\n", Gia_ManCiNum(p.pGia), Gia_ManCoNum(p.pGia), Gia_ManAndNum(p.pGia), p.pPars.NLutSize, p.pPars.NCutNum, p.pPars.NRounds)
+		fmt.Printf("Computing cuts...\r")
 	}
 	for _, obj := range p.pGia.pObjs {
 		if Gia_ObjIsCi(obj) != 0 || Gia_ObjIsBuf(obj) != 0 {
@@ -26,7 +28,13 @@ func Jf_ManComputeCuts(p *Jf_Man_t, edge int32) {
 		}
 	}
 	if p.pPars.FVerbose != 0 {
-		fmt.Printf("CutPair = %d  Merge = %d  Eval = %d  Cut = %d  Time = %s  Cuts = %.2f MB\n", p.CutCount[0], p.CutCount[1], p.CutCount[2], p.CutCount[3], time.Since(p.clkStart), p.pMem.memory()/(1<<20))
+		fmt.Printf("CutPair = %d  Merge = %d  Eval = %d  Cut = %d  ", p.CutCount[0], p.CutCount[1], p.CutCount[2], p.CutCount[3])
+		util.Abc_PrintTime(1, "Time", time.Since(p.clkStart).Nanoseconds())
+		fmt.Printf("Memory:  Gia = %.2f MB  Man = %.2f MB  Cuts = %.2f MB", Gia_ManMemory(p.pGia)/(1<<20), 6.0*4*float64(Gia_ManObjNum(p.pGia))/(1<<20), p.pMem.memory()/(1<<20))
+		if p.nCoarse != 0 {
+			fmt.Printf("   Coarse = %d (%.1f %%)", p.nCoarse, 100.0*float64(p.nCoarse)/float64(Gia_ManObjNum(p.pGia)))
+		}
+		fmt.Printf("\n")
 	}
 }
 func Jf_ManComputeDelay(p *Jf_Man_t, evaluate int32) int32 {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/bool/kit"
 	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/cnf"
 	"time"
@@ -167,7 +168,8 @@ func Jf_ManDumpCnf(p *Gia_Man_t, filename string, verbose int32) {
 	for _, clause := range data.Clauses {
 		count += len(clause)
 	}
-	fmt.Printf("CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. Time = %s\n", data.Variables, len(data.Clauses), count, time.Since(start))
+	fmt.Printf("CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. ", data.Variables, len(data.Clauses), count)
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds())
 	cnf.Cnf_DataFree(data)
 	Gia_ManStop(result)
 }

@@ -113,11 +113,17 @@ func Kf_ManComputeCuts(p *Kf_Man_t) {
 }
 func Kf_ManPrintStats(p *Kf_Man_t, title string) {
 	if p.pPars.FVerbose != 0 {
-		fmt.Printf("%s : Level =%6d   Area =%9d   Edge =%9d   Time = %s\n", title, p.pPars.Delay, p.pPars.Area, p.pPars.Edge, time.Since(p.clkStart))
+		fmt.Printf("%s :  Level =%6d   Area =%9d   Edge =%9d   ", title, p.pPars.Delay, p.pPars.Area, p.pPars.Edge)
+		util.Abc_PrintTime(1, "Time", time.Since(p.clkStart).Nanoseconds())
 	}
 }
 func Kf_ManComputeMapping(p *Kf_Man_t) {
 	g := p.pGia
+	if p.pPars.FVerbose != 0 {
+		fmt.Printf("Aig: CI = %d  CO = %d  AND = %d    ", Gia_ManCiNum(g), Gia_ManCoNum(g), Gia_ManAndNum(g))
+		fmt.Printf("LutSize = %d  CutMax = %d  Threads = %d\n", p.pPars.NLutSize, p.pPars.NCutNum, p.pPars.NProcNum)
+		fmt.Printf("Computing cuts...\r")
+	}
 	for _, id := range vec.Vec_IntArray(g.vCis) {
 		Kf_ManStoreStart(p.vTemp, 0)
 		Kf_ManStoreAddUnit(p.vTemp, id, 0, 0)
@@ -144,7 +150,14 @@ func Kf_ManComputeMapping(p *Kf_Man_t) {
 		}
 	}
 	Kf_ManComputeRefs(p)
-	Kf_ManPrintStats(p, "Start")
+	if p.pPars.FVerbose != 0 {
+		// the counts of the first cut set, the one the serial pass uses
+		fmt.Printf("CutPair = %d  Merge = %d  Eval = %d  Cut = %d  ", p.pSett[0].CutCount[0], p.pSett[0].CutCount[1], p.pSett[0].CutCount[2], p.pSett[0].CutCount[3])
+		util.Abc_PrintTime(1, "Time", time.Since(p.clkStart).Nanoseconds())
+		fmt.Printf("Memory:  Gia = %.2f MB  Man = %.2f MB  Cuts = %.2f MB  Set = %.2f KB  \n",
+			Gia_ManMemory(g)/(1<<20), 4.0*4*float64(Gia_ManObjNum(g))/(1<<20), p.pMem.memory()/(1<<20), float64(kfSetSize)/(1<<10))
+		Kf_ManPrintStats(p, "Start")
+	}
 }
 func Kf_ManDerive(p *Kf_Man_t) *Gia_Man_t {
 	if p.pPars.FCutMin != 0 {
@@ -176,3 +189,7 @@ func Kf_ManPerformMapping(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	Kf_ManComputeMapping(p)
 	return Kf_ManDerive(p)
 }
+
+// kfSetSize is sizeof(Kf_Set_t) in giaKf.c on LP64 (with KF_LOG_TABLE,
+// KF_LEAF_MAX and KF_CUT_MAX as there), which &kf -v reports as "Set = KB".
+const kfSetSize = 106960

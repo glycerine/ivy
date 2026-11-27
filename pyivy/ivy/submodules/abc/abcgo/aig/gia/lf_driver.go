@@ -74,6 +74,13 @@ func Lf_ManPerformMappingInt(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 		g.PManTime = nil
 	}
 	p := Lf_ManAlloc(coarse, pars)
+	if pars.FVerbose != 0 && pars.FCoarsen != 0 {
+		fmt.Print("Initial ")
+		Gia_ManPrintMuxStats(g)
+		fmt.Print("\nDerived ")
+		Gia_ManPrintMuxStats(coarse)
+		fmt.Println()
+	}
 	Lf_ManPrintInit(p)
 	for p.Iter = 0; p.Iter < pars.NRounds; p.Iter++ {
 		Lf_ManComputeMapping(p)

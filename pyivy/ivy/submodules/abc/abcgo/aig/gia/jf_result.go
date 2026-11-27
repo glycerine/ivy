@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/bool/kit"
 	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
@@ -39,7 +40,7 @@ func Jf_ManPrintStats(p *Jf_Man_t, title string) {
 	if p.pPars.FGenCnf != 0 {
 		fmt.Printf("Cnf =%9d   ", p.pPars.Clause)
 	}
-	fmt.Printf("Time = %s\n", time.Since(p.clkStart))
+	util.Abc_PrintTime(1, "Time", time.Since(p.clkStart).Nanoseconds())
 }
 
 // Jf_ManDeriveMappingGia rebuilds the mapped network from minimized cuts.

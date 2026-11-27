@@ -2,6 +2,7 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"time"
 
 	"github.com/glycerine/abcgo/misc/extra"
@@ -107,7 +108,8 @@ func Jf_ManFree(p *Jf_Man_t) {
 		extra.Sdm_ManPrintDsdStats(p.pDsd, 0)
 	}
 	if p.pPars.FVerbose != 0 && p.vTtMem != nil {
-		fmt.Printf("Unique truth tables = %d. Memory = %.2f MB   Time = %s\n", vec.Vec_MemEntryNum(p.vTtMem), vec.Vec_MemMemory(p.vTtMem)/(1<<20), time.Since(p.clkStart))
+		fmt.Printf("Unique truth tables = %d. Memory = %.2f MB   ", vec.Vec_MemEntryNum(p.vTtMem), vec.Vec_MemMemory(p.vTtMem)/(1<<20))
+		util.Abc_PrintTime(1, "Time", time.Since(p.clkStart).Nanoseconds())
 	}
 	if p.pPars.FVeryVerbose != 0 && p.pPars.FCutMin != 0 && p.pPars.FFuncDsd != 0 {
 		Jf_ManProfileClasses(p)
