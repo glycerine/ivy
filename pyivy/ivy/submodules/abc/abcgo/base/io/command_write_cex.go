@@ -205,7 +205,8 @@ func IoCommandWriteCex(frame *abcmain.Frame, args []string) int32 {
 			}
 		} else {
 			for i, value := range multiple {
-				if value == nil {
+				// (Abc_Cex_t *)1 marks a failed output whose CEX was not stored
+				if value == nil || value == util.AbcCexSentinel {
 					continue
 				}
 				cex, ok := value.(*util.Abc_Cex_t)

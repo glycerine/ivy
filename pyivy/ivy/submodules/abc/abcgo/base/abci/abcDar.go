@@ -168,89 +168,99 @@ func Abc_NtkToDarBmc(pNtk *Abc_Ntk_t, pvMap **Vec_Int_t) *Aig_Man_t {
 	if pNtk == nil || abc.Abc_NtkIsStrash(pNtk) == 0 {
 		return nil
 	}
-	for _, latch := range pNtk.ObjectsOfKind(abc.ObjectLatch) {
+	latches := pNtk.ObjectsOfKind(abc.ObjectLatch)
+	// print warning about initial values
+	nDontCares := 0
+	for _, latch := range latches {
 		if abc.Abc_LatchIsInitDc(latch) != 0 {
 			abc.Abc_LatchSetInit0(latch)
-			fmt.Println("Warning: don't-care latch initialization is assumed to be 0.")
+			nDontCares++
 		}
 	}
-
-	// Build the ordinary AIG first. Its Temp map identifies the AIG literal
-	// for each source object and its output tail contains latch inputs.
-	source := abc.Abc_NtkToDar(pNtk, 0, 1)
-	if source == nil {
-		return nil
+	if nDontCares != 0 {
+		Abc_Print(1, "Warning: %d registers in this network have don't-care init values.\n", nDontCares)
+		Abc_Print(1, "The don't-care are assumed to be 0. The result may not verify.\n")
+		Abc_Print(1, "Use command \"print_latch\" to see the init values of registers.\n")
+		Abc_Print(1, "Use command \"zero\" to convert or \"init\" to change the values.\n")
 	}
-	defer aiggraph.Aig_ManStop(source)
-	result := aiggraph.Aig_ManDupWithoutPos(source)
-	result.Name, result.Spec = source.Name, source.Spec
-	result.BarrierBuffers = source.BarrierBuffers
-	result.Assertions = source.Assertions
-	aiggraph.Aig_ManSetConstrNum(result, pNtk.Constraints)
-
-	var mapping *Vec_Int_t
+	// collect the drivers
+	var vDrivers []abc.Edge
 	if pvMap != nil {
-		mapping = Vec_IntAlloc(100)
-		*pvMap = mapping
+		*pvMap = Vec_IntAlloc(100)
 	}
 	for i := int32(0); i < abc.Abc_NtkPoNum(pNtk); i++ {
-		po := abc.Abc_NtkPo(pNtk, i)
-		if po == nil || po.FaninNum() != 1 {
-			return nil
-		}
-		driver := po.FaninAt(int32(0))
-		terms := make([]abc.Edge, 0, 2)
+		pObj := abc.Abc_NtkPo(pNtk, i)
 		if pNtk.Constraints != 0 && i >= pNtk.Constraints {
-			terms = append(terms, driver.Not())
-		} else {
-			vSuper := Vec_PtrAlloc(4)
-			Abc_CollectTopOr(driver, vSuper)
-			for _, item := range giapkg.Vec_PtrArray(vSuper) {
-				e, ok := item.(abc.Edge)
-				if !ok {
-					Vec_PtrFree(vSuper)
-					return nil
-				}
-				terms = append(terms, e)
+			vDrivers = append(vDrivers, pObj.FaninAt(0).Not())
+			if pvMap != nil {
+				Vec_IntPush(*pvMap, i)
 			}
-			Vec_PtrFree(vSuper)
+			continue
 		}
-		for _, term := range terms {
-			lit, ok := Abc_NtkDarObjLit(term.Object)
-			if !ok {
-				return nil
-			}
-			// Abc_ObjNotCond(Abc_ObjRegular(pTemp)->pCopy, !Abc_ObjIsComplement(pTemp))
-			if !term.Complement {
-				lit = lit.Not()
-			}
-			lit = aiggraph.Aig_ObjRealCopy(source, lit)
-			result.AddOutput(lit)
-			if mapping != nil {
-				Vec_IntPush(mapping, i)
+		vSuper := Vec_PtrAlloc(4)
+		Abc_CollectTopOr(pObj.FaninAt(0), vSuper)
+		for _, item := range giapkg.Vec_PtrArray(vSuper) {
+			vDrivers = append(vDrivers, item.(abc.Edge))
+			if pvMap != nil {
+				Vec_IntPush(*pvMap, i)
 			}
 		}
+		Vec_PtrFree(vSuper)
 	}
-
-	// Preserve the source's latch-input CO order after expanded POs.
-	outputs := source.Outputs()
-	poCount := int(abc.Abc_NtkPoNum(pNtk))
-	regCount := int(abc.Abc_NtkLatchNum(pNtk))
-	if len(outputs) < poCount+regCount {
+	// create network
+	pMan := aiggraph.NewGraph()
+	aiggraph.Aig_ManSetConstrNum(pMan, pNtk.Constraints)
+	pMan.BarrierBuffers = int32(pNtk.Barriers)
+	pMan.Name, pMan.Spec = pNtk.Name, pNtk.Spec
+	copyOf := func(e abc.Edge) aiggraph.Edge {
+		lit := aiggraph.Edge(e.Object.Temp)
+		if e.Complement {
+			lit = lit.Not()
+		}
+		return lit
+	}
+	// transfer the pointers to the basic nodes
+	abc.Abc_AigConst1(pNtk).Object.Temp = int(pMan.Const1())
+	for i := int32(0); i < abc.Abc_NtkCiNum(pNtk); i++ {
+		abc.Abc_NtkCi(pNtk, i).Temp = int(pMan.NewInput())
+	}
+	// create flops
+	for _, latch := range latches {
+		if abc.Abc_LatchIsInit1(latch) != 0 {
+			abc.Abc_ObjFanout0(latch).Temp ^= 1
+		}
+	}
+	// copy internal nodes
+	for _, pObj := range pNtk.Objects() {
+		if pObj.Kind == abc.ObjectNode {
+			pObj.Temp = int(pMan.AND(copyOf(pObj.FaninAt(0)), copyOf(pObj.FaninAt(1))))
+		}
+	}
+	// create the POs
+	for _, pTemp := range vDrivers {
+		lit := aiggraph.Edge(pTemp.Object.Temp)
+		if !pTemp.Complement {
+			lit = lit.Not()
+		}
+		pMan.AddOutput(lit)
+	}
+	// create flops
+	for _, latch := range latches {
+		lit := copyOf(abc.Abc_ObjFanin0(latch).FaninAt(0))
+		if abc.Abc_LatchIsInit1(latch) != 0 {
+			lit = lit.Not()
+		}
+		pMan.AddOutput(lit)
+	}
+	// remove dangling nodes
+	aiggraph.Aig_ManSetRegNum(pMan, int32(len(latches)))
+	aiggraph.Aig_ManCleanup(pMan)
+	if err := pMan.Check(); err != nil {
+		Abc_Print(1, "Abc_NtkToDarBmc: AIG check has failed.\n")
+		aiggraph.Aig_ManStop(pMan)
 		return nil
 	}
-	for _, output := range outputs[len(outputs)-regCount:] {
-		driver := source.Node(output).Fanins[0]
-		result.AddOutput(aiggraph.Aig_ObjRealCopy(source, driver))
-	}
-	aiggraph.Aig_ManSetRegNum(result, int32(regCount))
-	aiggraph.Aig_ManCleanup(result)
-	if err := result.Check(); err != nil {
-		fmt.Printf("Abc_NtkToDarBmc: AIG check has failed: %v\n", err)
-		aiggraph.Aig_ManStop(result)
-		return nil
-	}
-	return result
+	return pMan
 }
 
 /*

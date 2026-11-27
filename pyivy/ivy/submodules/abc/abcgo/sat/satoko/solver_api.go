@@ -471,3 +471,12 @@ func (s *Solver) FreeVariableCount() int {
 	}
 	return n
 }
+
+// VarPolarityCexValue is C's satoko_read_cex_varvalue: it reads the saved
+// polarity of the variable, not the last model (which bmc3 relies on).
+func (s *Solver) VarPolarityCexValue(v int) int32 {
+	if satoko_var_polarity(s, uint32(v)) == SATOKO_LIT_TRUE {
+		return 1
+	}
+	return 0
+}

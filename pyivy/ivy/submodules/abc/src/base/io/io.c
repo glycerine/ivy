@@ -2693,7 +2693,8 @@ int IoCommandWriteCex( Abc_Frame_t * pAbc, int argc, char **argv )
         {
             Vec_PtrForEachEntry( Abc_Cex_t *, pAbc->vCexVec, pCex, i )
             {
-                if ( pCex == NULL )
+                // (Abc_Cex_t *)1 marks a failed output whose CEX was not stored
+                if ( pCex == NULL || pCex == (Abc_Cex_t *)(ABC_PTRINT_T)1 )
                     continue;
                 fprintf( pFile, "#\n#\n# CEX for output %d\n#\n", i ); 
                 Abc_NtkDumpOneCex( pFile, pNtk, pCex, 

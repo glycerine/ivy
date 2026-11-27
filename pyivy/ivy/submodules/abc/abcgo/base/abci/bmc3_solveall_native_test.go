@@ -18,9 +18,8 @@ var bmc3Timing = regexp.MustCompile(`Time =\s+[0-9.]+ sec`)
 var bmc3Asserted = regexp.MustCompile(`^Output +(\d+) was asserted in frame +(\d+) \(solved +\d+ out of +\d+ outputs\)\.$`)
 
 // bmc3Normalize drops timing, and reduces the "asserted" lines to the sorted
-// set of failing outputs and frames: which outputs one SAT model fails, and
-// so their order, depends on the solver run (the port's bmc3 engine is not a
-// line-for-line port, task #40).
+// set of failing outputs and frames. bmc3 itself is now a line-by-line port
+// whose order equals C's (bmc3Exact); other commands' tests still use this.
 func bmc3Normalize(out string) string {
 	var lines, asserted []string
 	for _, line := range strings.Split(bmc3Timing.ReplaceAllString(out, "Time = T"), "\n") {
@@ -45,8 +44,8 @@ func TestNativeBmc3SolveAllDoesNotCrash(t *testing.T) {
 }
 
 func TestBmc3SolveAllLikeNative(t *testing.T) {
-	native := bmc3Normalize(runNativeABC(t, bmc3SolveAllScript))
-	port := bmc3Normalize(runScript(t, bmc3SolveAllScript))
+	native := bmc3Exact(runNativeABC(t, bmc3SolveAllScript))
+	port := bmc3Exact(runScript(t, bmc3SolveAllScript))
 	if native != port {
 		t.Fatalf("native:\n%s\nport:\n%s", native, port)
 	}

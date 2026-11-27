@@ -1,15 +1,11 @@
 package bmc
 
 import (
-	"reflect"
 	"testing"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/sat/bsat"
-	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 func TestScalableBMCFindsOneFrameCounterexample(t *testing.T) {
@@ -105,63 +101,6 @@ func TestScalableBMCStartAndWitnessReplacement(t *testing.T) {
 	}
 	if !util.Abc_InfoHasBit(cex.PData, 2) {
 		t.Fatalf("frame-1 PI absent from witness bits %v", cex.PData)
-	}
-}
-
-func TestBmcIncrementalFrameExtensionKeepsOldCNFPrefix(t *testing.T) {
-	g := aig.NewGraph()
-	pi, state := g.NewInput(), g.NewInput()
-	g.AddOutput(g.AND(pi, state))
-	g.AddOutput(g.OR(pi, state))
-	aig.Aig_ManSetRegNum(g, 1)
-	u := newBmcIncrementalUnroller(g, 1, 1, 1)
-	if err := u.addFrame(); err != nil {
-		t.Fatal(err)
-	}
-	first, err := cnf.EncodeAIG(u.graph, 0)
-	if err != nil {
-		t.Fatal(err)
-	}
-	firstNodes := u.graph.NodeCount()
-	firstOutputs := append([]aig.Edge(nil), u.outputs...)
-	if err := u.addFrame(); err != nil {
-		t.Fatal(err)
-	}
-	second, err := cnf.EncodeAIG(u.graph, 0)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if u.graph.NodeCount() <= firstNodes || len(u.outputs) != 2 || u.outputs[0] != firstOutputs[0] {
-		t.Fatalf("frame extension did not preserve prior frame objects: nodes %d->%d outputs=%v", firstNodes, u.graph.NodeCount(), u.outputs)
-	}
-	if len(second.Clauses) < len(first.Clauses) {
-		t.Fatal("CNF shrank after frame extension")
-	}
-	for i := range first.Clauses {
-		if !reflect.DeepEqual(first.Clauses[i], second.Clauses[i]) {
-			t.Fatalf("old clause %d changed: %v -> %v", i, first.Clauses[i], second.Clauses[i])
-		}
-	}
-	solver := bsat.NewSolver()
-	for solver.NumVars() < int32(first.Variables) {
-		solver.NewVariable()
-	}
-	for _, c := range first.Clauses {
-		if !solver.AddClause(c...) {
-			t.Fatal("unexpected first-frame contradiction")
-		}
-	}
-	oldVars, oldClauses := solver.NumVars(), len(first.Clauses)
-	for solver.NumVars() < int32(second.Variables) {
-		solver.NewVariable()
-	}
-	for _, c := range second.Clauses[oldClauses:] {
-		if !solver.AddClause(c...) {
-			t.Fatal("unexpected incremental contradiction")
-		}
-	}
-	if solver.NumVars() <= oldVars {
-		t.Fatalf("solver did not gain frame variables: %d", oldVars)
 	}
 }
 
@@ -268,32 +207,5 @@ func TestScalableBMCSolveAllCallbackRespectsCEXStorageOption(t *testing.T) {
 	v := g.SequentialCounterexamples()
 	if v == nil || vec.Vec_PtrSize(v) != 1 || vec.Vec_PtrEntry(v, 0) != util.AbcCexSentinel {
 		t.Fatalf("CEX vector = %v, want the sentinel for output 0", v)
-	}
-}
-
-func TestBmcSolveDeadlineUsesEarliestLimit(t *testing.T) {
-	now := time.Unix(100, 0)
-	global := now.Add(10 * time.Second)
-	for _, tc := range []struct {
-		global time.Time
-		per    time.Duration
-		want   time.Time
-	}{
-		{time.Time{}, 0, time.Time{}}, {global, 0, global}, {time.Time{}, 500 * time.Millisecond, now.Add(500 * time.Millisecond)},
-		{global, 500 * time.Millisecond, now.Add(500 * time.Millisecond)}, {global, 20 * time.Second, global},
-	} {
-		if got := bmcSolveDeadline(tc.global, now, tc.per); !got.Equal(tc.want) {
-			t.Errorf("global=%v per=%d got=%v want=%v", tc.global, tc.per, got, tc.want)
-		}
-	}
-}
-
-func TestBmcSolveDeadlineComposesGapAndOutputBudgets(t *testing.T) {
-	now := time.Unix(200, 0)
-	gapDeadline := now.Add(250 * time.Millisecond)
-	outputBudget := 3 * time.Second
-	got := bmcSolveDeadline(gapDeadline, now, outputBudget)
-	if want := gapDeadline; !got.Equal(want) {
-		t.Fatalf("gap deadline=%v, output budget=%s, got=%v want earliest=%v", gapDeadline, outputBudget, got, want)
 	}
 }

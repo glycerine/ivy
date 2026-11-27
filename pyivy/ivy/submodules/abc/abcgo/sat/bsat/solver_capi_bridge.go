@@ -65,3 +65,38 @@ func (s *sat_solver_t) RollbackC() {
 	s.lastStatus = Unknown
 	sat_solver_rollback(s)
 }
+
+// SetnvarsC is sat_solver_setnvars.
+func (s *sat_solver_t) SetnvarsC(n int32) { sat_solver_setnvars(s, n) }
+
+// NVarsC is sat_solver_nvars.
+func (s *sat_solver_t) NVarsC() int32 { return sat_solver_nvars(s) }
+
+// SolveC is sat_solver_solve with C's limits.
+func (s *sat_solver_t) SolveC(assumptions []Literal, nConfLimit, nInsLimit, nConfLimitGlobal, nInsLimitGlobal int64) int32 {
+	status := sat_solver_solve(s, assumptions, nConfLimit, nInsLimit, nConfLimitGlobal, nInsLimitGlobal)
+	s.lastStatus = Status(status)
+	return status
+}
+
+// CompressC is sat_solver_compress.
+func (s *sat_solver_t) CompressC() { sat_solver_compress(s) }
+
+// VarValueC is sat_solver_var_value.
+func (s *sat_solver_t) VarValueC(v int32) int32 { return sat_solver_var_value(s, v) }
+
+// MemoryC is sat_solver_memory.
+func (s *sat_solver_t) MemoryC() float64 { return sat_solver_memory(s) }
+
+// CountUsedVarsC is sat_solver_count_usedvars.
+func (s *sat_solver_t) CountUsedVarsC() int32 { return sat_solver_count_usedvars(s) }
+
+// StatsC reads s->stats.clauses, s->stats.conflicts and s->stats.learnts.
+func (s *sat_solver_t) StatsC() (clauses, conflicts, learnts float64) {
+	return float64(s.stats.clauses), float64(s.stats.conflicts), float64(s.stats.learnts)
+}
+
+// LearntLimitsC reads nLearntStart, nLearntDelta, nLearntRatio and nDBreduces.
+func (s *sat_solver_t) LearntLimitsC() (start, delta, ratio, reduces int32) {
+	return s.nLearntStart, s.nLearntDelta, s.nLearntRatio, s.nDBreduces
+}

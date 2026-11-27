@@ -795,3 +795,56 @@ and states how the Go port was verified.
   (`TestOldGlaEmptyLayerChecksCounterexample`, which previously asserted the
   wait-for-timeout behavior); red before: native SIGFPE.
 - **Go port:** same change in `Ga2_ManRefine` and `Gia_ManPerformGlaOld`.
+
+## 36. `write_cex` after `bmc3 -a` (without `-x`) segfaults
+
+- **File:** `src/base/io/io.c` (`IoCommandWriteCex`).
+- **Found:** 2026-11-27, comparing `bmc3 -a; write_cex` with the port on
+  s27, s713 and s1494: native segfaulted.
+- **Bug:** when solving all outputs without storing CEXes, `bmc3` (and
+  other solve-all engines) record a failed output as the sentinel
+  `(Abc_Cex_t *)1` in the CEX vector. `write_cex` skips only `NULL` entries
+  and passes the sentinel to `Abc_NtkDumpOneCex`, which dereferences it.
+- **Fix:** skip the sentinel like a missing CEX; the file then holds only
+  `# DONE`.
+- **Test:** `abcgo/base/abci/bmc3_native_test.go`
+  (`TestBmc3WriteCexLikeNative`); red before: native segfault.
+- **Go port:** it printed the "CEX for output" header and then failed with
+  "counterexample dimensions do not match network"; it now skips the
+  sentinel too.
+
+## 37. `bmc3 -a` reads a missing SAT model when an output is constant 1
+
+- **File:** `src/sat/bmc/bmcBmc3.c` (`Saig_ManBmcScalable`,
+  `Saig_ManGenerateCex`).
+- **Found:** 2026-11-27, `read s713.blif; strash; bmc3 -a -g -F 8`: native
+  segfault in `glucose_solver_read_cex_varvalue` (ASan: NULL read).
+- **Bug:** when ternary simulation proves an output constant 1 in a frame,
+  `Saig_ManCallSolver` returns `l_True` without calling the solver
+  (`Lit == 1`). The SAT branch then derives the CEX from, and tests every
+  other output against, the solver's model, which belongs to no solve:
+  glucose has an empty model (NULL dereference), `sat_solver` returns
+  uninitialized (`ABC_REALLOC`ed) or stale values from an earlier frame, so
+  other outputs were declared failed by a meaningless assignment.
+- **Fix:** with `Lit == 1` the CEX keeps all PI bits 0 (any assignment
+  fails a constant-1 output) and the other outputs are not tested against a
+  model; each is solved in its own turn.
+- **Test:** `abcgo/base/abci/bmc3_native_test.go`
+  (`TestBmc3SolveAllConstantOutputLikeNative`); red before: native segfault.
+  On s713 and s1494 the default engine's `bmc3 -a` report is unchanged
+  (the real solves find the same outputs); `TestBmc3LikeNative` and
+  `TestBmc3SolveAllLikeNative` cover it.
+- **Go port:** the same `fModel` guard in `sat/bmc/bmcBmc3.go`.
+
+## 38. `bmc3 -W file` segfaults unless `-a -H` is given
+
+- **File:** `src/sat/bmc/bmcBmc3.c` (`Saig_ManBmcScalable`).
+- **Found:** 2026-11-27, `bmc3 -F 3 -W log` on the s1494 miter: native
+  segfault.
+- **Bug:** the per-output log line reads `p->pTime4Outs[i]` for every
+  solved output, but that array is allocated only for `-H` with `-a`
+  (`nTimeOutOne` is reset otherwise), so it is `NULL`.
+- **Fix:** print 0 for the remaining-time column without `pTime4Outs`.
+- **Test:** `abcgo/base/abci/bmc3_native_test.go`
+  (`TestBmc3LogFileLikeNative`); red before: native segfault.
+- **Go port:** same guard.

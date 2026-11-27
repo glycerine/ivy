@@ -1390,11 +1390,14 @@ abctime Saig_ManBmcTimeToStop( Saig_ParBmc_t * pPars, abctime nTimeToStopNG )
   SeeAlso     []
 
 ***********************************************************************/
-Abc_Cex_t * Saig_ManGenerateCex( Gia_ManBmc_t * p, int f, int i )
+Abc_Cex_t * Saig_ManGenerateCex( Gia_ManBmc_t * p, int f, int i, int fModel )
 {
     Aig_Obj_t * pObjPi;
     Abc_Cex_t * pCex = Abc_CexMakeTriv( Aig_ManRegNum(p->pAig), Saig_ManPiNum(p->pAig), Saig_ManPoNum(p->pAig), f*Saig_ManPoNum(p->pAig)+i );
     int j, k, iBit = Saig_ManRegNum(p->pAig);
+    // without a SAT call (the output is constant 1) there is no model to read
+    if ( !fModel )
+        return pCex;
     for ( j = 0; j <= f; j++, iBit += Saig_ManPiNum(p->pAig) )
         Saig_ManForEachPi( p->pAig, pObjPi, k )
         {
@@ -1467,7 +1470,7 @@ int Saig_ManBmcScalable( Aig_Man_t * pAig, Saig_ParBmc_t * pPars )
     unsigned * pInfo;
     int RetValue = -1, fFirst = 1, nJumpFrame = 0, fUnfinished = 0;
     int nOutDigits = Abc_Base10Log( Saig_ManPoNum(pAig) );
-    int i, f, k, Lit, status;
+    int i, f, k, Lit, status, fModel;
     abctime clk, clk2, clkSatRun, clkOther = 0, clkTotal = Abc_Clock();
     abctime nTimeUnsat = 0, nTimeSat = 0, nTimeUndec = 0, clkOne = 0;
     abctime nTimeToStopNG, nTimeToStop;
@@ -1662,7 +1665,7 @@ clkSatRun = Abc_Clock() - clk2;
             if ( pLogFile )
                 fprintf( pLogFile, "Frame %5d  Output %5d  Time(ms) %8d %8d\n", f, i, 
                     Lit < 2 ? 0 : (int)(clkSatRun * 1000 / CLOCKS_PER_SEC),
-                    Lit < 2 ? 0 : Abc_MaxInt(0, Abc_MinInt(pPars->nTimeOutOne, pPars->nTimeOutOne - (int)((p->pTime4Outs[i] - clkSatRun) * 1000 / CLOCKS_PER_SEC))) );
+                    (Lit < 2 || p->pTime4Outs == NULL) ? 0 : Abc_MaxInt(0, Abc_MinInt(pPars->nTimeOutOne, pPars->nTimeOutOne - (int)((p->pTime4Outs[i] - clkSatRun) * 1000 / CLOCKS_PER_SEC))) );
             if ( p->pTime4Outs )
             {
                 abctime timeSince = Abc_Clock() - clkOne;
@@ -1706,6 +1709,7 @@ nTimeUnsat += clkSatRun;
             {
 nTimeSat += clkSatRun;
                 RetValue = 0;
+                fModel = (Lit > 1); // the solver ran: a constant-1 output has no model
                 fFirst = 0;
                 if ( !pPars->fSolveAll )
                 {
@@ -1731,7 +1735,7 @@ nTimeSat += clkSatRun;
                         fflush( stdout );
                     }
                     ABC_FREE( pAig->pSeqModel );
-                    pAig->pSeqModel = Saig_ManGenerateCex( p, f, i );
+                    pAig->pSeqModel = Saig_ManGenerateCex( p, f, i, fModel );
                     goto finish;
                 }
                 pPars->nFailOuts++;
@@ -1740,7 +1744,7 @@ nTimeSat += clkSatRun;
                         nOutDigits, i, f, nOutDigits, pPars->nFailOuts, nOutDigits, Saig_ManPoNum(pAig) );
                 if ( p->vCexes == NULL )
                     p->vCexes = Vec_PtrStart( Saig_ManPoNum(pAig) );
-                pCexNew = (p->pPars->fUseBridge || pPars->fStoreCex) ? Saig_ManGenerateCex( p, f, i ) : (Abc_Cex_t *)(ABC_PTRINT_T)1;
+                pCexNew = (p->pPars->fUseBridge || pPars->fStoreCex) ? Saig_ManGenerateCex( p, f, i, fModel ) : (Abc_Cex_t *)(ABC_PTRINT_T)1;
                 pCexNew0 = NULL;
                 if ( p->pPars->fUseBridge )
                 {
@@ -1770,6 +1774,8 @@ nTimeSat += clkSatRun;
                 }
 
                 // check if other outputs failed under the same counter-example
+                // (only when the solver produced one)
+                if ( fModel )
                 Saig_ManForEachPo( pAig, pObj, k )
                 {
                     Abc_Cex_t * pCexDup;
