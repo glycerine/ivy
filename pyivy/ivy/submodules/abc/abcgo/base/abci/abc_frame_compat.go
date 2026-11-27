@@ -1,6 +1,9 @@
 package abci
 
 import (
+	"fmt"
+	"strings"
+
 	aigpkg "github.com/glycerine/abcgo/aig/aig"
 	giapkg "github.com/glycerine/abcgo/aig/gia"
 	baseabc "github.com/glycerine/abcgo/base/abc"
@@ -88,7 +91,36 @@ func Abc_CommandAbcLivenessToSafetyWithLTL(frame *Abc_Frame_t, argc int32, argv 
 	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandAbcLivenessToSafetyWithLTL)
 }
 func Abc_CommandCS_kLiveness(frame *Abc_Frame_t, argc int32, argv []string) int32 {
+	// as kliveness.c: after the options, note a non-strashed network, then
+	// require a csLiveTarget_ output (C bug 47: collectCSSignals asserted
+	// one and the release build crashed without it)
+	if ntk := Abc_FrameReadNtk(frame); ntk != nil && kcsOptionsValid(argv) {
+		if Abc_NtkIsStrash(ntk) == 0 {
+			fmt.Printf("The input network was not strashed, strashing....\n")
+		}
+		target := false
+		for i := int32(0); i < Abc_NtkPoNum(ntk); i++ {
+			if strings.Contains(Abc_ObjName(Abc_NtkPo(ntk, i)), "csLiveTarget_") {
+				target = true
+			}
+		}
+		if !target {
+			fmt.Printf("The network has no liveness target output (named \"csLiveTarget_...\").\n")
+			return 1
+		}
+	}
 	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandCS_kLiveness)
+}
+
+// kcsOptionsValid reports whether argv holds only kcs's -c -m -C -g flags
+// (anything else, -h included, goes to the usage path).
+func kcsOptionsValid(argv []string) bool {
+	for _, arg := range argv[1:] {
+		if len(arg) < 2 || arg[0] != '-' || strings.Trim(arg[1:], "cmCg") != "" {
+			return false
+		}
+	}
+	return true
 }
 func Abc_CommandNChooseK(frame *Abc_Frame_t, argc int32, argv []string) int32 {
 	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandNChooseK)

@@ -598,6 +598,22 @@ int Abc_CommandCS_kLiveness( Abc_Frame_t * pAbc, int argc, char ** argv )
         pNtkTemp = pNtk;
     }
 
+    // collectCSSignals needs a "csLiveTarget_" output (it asserts one)
+    {
+        Abc_Obj_t * pPo; int i, fTarget = 0;
+        Abc_NtkForEachPo( pNtk, pPo, i )
+            if ( strstr( Abc_ObjName(pPo), "csLiveTarget_" ) != NULL )
+                fTarget = 1;
+        if ( !fTarget )
+        {
+            printf( "The network has no liveness target output (named \"csLiveTarget_...\").\n" );
+            Aig_ManStop( pAig );
+            if ( pNtkTemp != pNtk )
+                Abc_NtkDelete( pNtkTemp );
+            return 1;
+        }
+    }
+
     if( directive == kCS_WITH_SAFETY_INVARIANTS )
     {
         safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            

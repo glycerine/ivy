@@ -1008,3 +1008,22 @@ and states how the Go port was verified.
   s27, s713, i10: output and written AIG equal native); red before (native
   abort).
 - **Go port:** `proof/ssc` keeps a per-CI stride; its results equal C's.
+
+## 47. `kcs` crashes on a network without a `csLiveTarget_` output
+
+- **File:** `src/proof/live/kliveness.c` (`Abc_CommandCS_kLiveness`).
+- **Found:** 2026-11-27, native crash sweep: `read s27; strash; kcs` (and
+  `-c`, `-m`, `-C`, `-g`; also on a logic network) dumped core in
+  `createConstrained0LiveCone` (kLiveConstraints.c, ASan SEGV reading the
+  NULL consequent).
+- **Bug:** `collectCSSignals` takes the liveness target from an output named
+  `csLiveTarget_*` and only `assert`s that one exists; the release build
+  continues with a NULL consequent and dereferences it.
+- **Fix:** the command checks for a `csLiveTarget_` output after building the
+  AIG and otherwise prints "The network has no liveness target output
+  (named "csLiveTarget_...")." and returns 1.
+- **Test:** `abcgo/base/abci/kcs_native_test.go`
+  (`TestKcsWithoutTargetLikeNative`; red before: segmentation fault).
+- **Go port:** printed its own error ("live: csLiveTarget_ output missing")
+  and skipped the check for `-m`; `Abc_CommandCS_kLiveness` (base/abci) now
+  prints C's note for non-strashed input and C's message, for every flag.
