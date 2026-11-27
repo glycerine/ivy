@@ -7,6 +7,9 @@ package core
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/bool/kit"
@@ -199,6 +202,9 @@ func Dar_ManRefactor(g *aig.Graph, params *RefactorParams) error {
 		aig.Aig_ManStartReverseLevels(g, 0)
 	}
 	var cut, cut2 []aig.Edge
+	var st refactorStats // Ref_Man_t's counters for Dar_ManRefPrintStats
+	clkStart := time.Now()
+	st.nodesInit = int(aig.Aig_ManNodeNum(g))
 	nNodesOld := aig.Aig_ManObjNumMax(g)
 	for i := int32(0); i < aig.Aig_ManObjNumMax(g); i++ {
 		obj := aig.Edge(i) << 1
@@ -218,11 +224,14 @@ func Dar_ManRefactor(g *aig.Graph, params *RefactorParams) error {
 			}
 		}
 		cut, cut2 = cut[:0], cut2[:0]
+		clk := time.Now()
 		levelMin := max(0, g.Node(obj).Level-10)
 		saved := aig.Aig_NodeMffcSupp(g, obj, int32(levelMin), &cut)
 		if int(saved) < p.MffcMin {
+			st.timeCuts += time.Since(clk)
 			continue
 		}
+		st.nodesTried++
 		if len(cut) > p.LeafMax {
 			var visited []aig.Edge
 			aig.Aig_ManFindCut(g, obj, &cut, &visited, int32(p.LeafMax), 50)
@@ -235,23 +244,53 @@ func Dar_ManRefactor(g *aig.Graph, params *RefactorParams) error {
 				if len(cut2) > p.LeafMax {
 					cut2 = cut2[:0]
 				}
+				if len(cut2) > 0 {
+					st.nodesExten++
+				}
+			} else {
+				st.nodesBelow++
 			}
 		}
+		st.timeCuts += time.Since(clk)
+		clk = time.Now()
 		required := int32(darInfinity)
 		if p.UpdateLevel {
 			required = aig.Aig_ObjRequiredLevel(g, obj)
 		}
 		r.darManRefactorTryCuts(obj, [][]aig.Edge{cut, cut2}, saved, required)
+		st.timeEval += time.Since(clk)
 		if !(r.gainBest > 0 || r.gainBest == 0 && p.UseZeros) {
 			continue
 		}
 		repl := darRefactBuildGraph(g, r.leavesBest, r.graphBest)
 		aig.Aig_ObjReplace(g, obj, repl, btoi32(p.UpdateLevel))
+		st.cutsUsed++
 	}
+	st.timeTotal = time.Since(clkStart)
 	aig.Aig_ManFanoutStop(g)
 	if p.UpdateLevel {
 		aig.Aig_ManStopReverseLevels(g)
 	}
+	if p.Verbose { // Dar_ManRefStop
+		st.print(g)
+	}
 	aig.Aig_ManCleanup(g)
 	return g.Check()
+}
+
+type refactorStats struct {
+	nodesInit, nodesTried, nodesBelow, nodesExten, cutsUsed int
+	timeCuts, timeEval, timeTotal                           time.Duration
+}
+
+// print is Dar_ManRefPrintStats.
+func (st *refactorStats) print(g *aig.Graph) {
+	nodes := int(aig.Aig_ManNodeNum(g))
+	gain := st.nodesInit - nodes
+	fmt.Printf("NodesBeg = %8d. NodesEnd = %8d. Gain = %6d. (%6.2f %%).\n", st.nodesInit, nodes, gain, 100.0*float64(gain)/float64(st.nodesInit))
+	fmt.Printf("Tried = %6d. Below = %5d. Extended = %5d.  Used = %5d.  Levels = %4d.\n", st.nodesTried, st.nodesBelow, st.nodesExten, st.cutsUsed, aig.Aig_ManLevels(g))
+	util.Abc_PrintTime(1, "Cuts  ", st.timeCuts.Nanoseconds())
+	util.Abc_PrintTime(1, "Eval  ", st.timeEval.Nanoseconds())
+	util.Abc_PrintTime(1, "Other ", (st.timeTotal - st.timeCuts - st.timeEval).Nanoseconds())
+	util.Abc_PrintTime(1, "TOTAL ", st.timeTotal.Nanoseconds())
 }

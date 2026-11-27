@@ -272,6 +272,7 @@ func (p *Graph) real(e Edge) Edge {
 	return e
 }
 func Aig_NodeFixBufferFanins(p *Graph, e Edge, updateLevel int32) {
+	p.nBufFixes++
 	n := *p.node(e)
 	if n.Kind == Output {
 		Aig_ObjPatchFanin0(p, e, p.real(n.Fanins[0]))
@@ -326,6 +327,7 @@ func Aig_ManPropagateBuffers(p *Graph, updateLevel int32) int32 {
 	p.refreshFanouts()
 	return changed
 }
+
 // Aig_ObjReplace follows aigObj.c: the old object keeps its ID and fanouts.
 // It becomes a buffer when the replacement is complemented, referenced or not
 // a logic node; otherwise it absorbs the replacement's fanins. With fanouts
@@ -356,6 +358,7 @@ func Aig_ObjReplace(p *Graph, old, replacement Edge, updateLevel int32) {
 		n.Kind = Buffer
 		n.Fanins = [2]Edge{InvalidEdge, InvalidEdge}
 		Aig_ObjConnect(p, old, replacement, InvalidEdge)
+		p.nBufReplaces++
 	} else {
 		kind, fanins, levelOld := r.Kind, r.Fanins, n.Level
 		Aig_ObjDisconnect(p, newR)
@@ -375,6 +378,7 @@ func Aig_ObjReplace(p *Graph, old, replacement Edge, updateLevel int32) {
 	}
 	if p.fanouts != nil && p.node(old).Kind == Buffer {
 		p.bufs = append(p.bufs, old)
+		p.nBufMax = max(p.nBufMax, int32(len(p.bufs)))
 		Aig_ManPropagateBuffers(p, updateLevel)
 	}
 	if p.fanouts == nil {
@@ -383,6 +387,7 @@ func Aig_ObjReplace(p *Graph, old, replacement Edge, updateLevel int32) {
 		p.recomputeLevels()
 	}
 }
+
 // propagateBufferList is aigObj.c's Aig_ManPropagateBuffers: repeatedly
 // take the last pending buffer, walk first fanouts to a non-buffer consumer
 // and rebuild that consumer on the buffers' real drivers.
@@ -485,6 +490,7 @@ func (p *Graph) recomputeLevels() {
 		}
 	}
 }
+
 // Fanouts are maintained incrementally, as in ABC: every connection appends
 // its fanout at the tail of the driver's list. Tests set verifyFanouts to
 // compare the index against a full rebuild after each edit.
@@ -618,3 +624,9 @@ func (p *Graph) phaseNew(n Node) bool {
 	}
 	return phase
 }
+
+// Aig_ManBufMax, Aig_ManBufReplaces and Aig_ManBufFixes are the manager's
+// nBufMax, nBufReplaces and nBufFixes.
+func Aig_ManBufMax(p *Graph) int32      { return p.nBufMax }
+func Aig_ManBufReplaces(p *Graph) int32 { return p.nBufReplaces }
+func Aig_ManBufFixes(p *Graph) int32    { return p.nBufFixes }

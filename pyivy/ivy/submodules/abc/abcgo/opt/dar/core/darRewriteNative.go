@@ -10,6 +10,7 @@ package core
 import (
 	"math/bits"
 	"sync"
+	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 )
@@ -213,7 +214,7 @@ func (r *darRewriter) darCutFindValue(c *darCut) int32 {
 		if !r.g.ValidEdge(aig.Edge(id) << 1) {
 			return 0
 		}
-		refs := aig.Aig_ObjRefs(r.g, aig.Edge(id) << 1)
+		refs := aig.Aig_ObjRefs(r.g, aig.Edge(id)<<1)
 		value += refs
 		if refs == 1 {
 			ones++
@@ -541,6 +542,7 @@ func (r *darRewriter) darObjComputeCuts(id int32) []darCut {
 			if !c1.used {
 				continue
 			}
+			r.m.Stats.CutsAll++
 			if bits.OnesCount32(c0.sign|c1.sign) > 4 {
 				continue
 			}
@@ -548,6 +550,7 @@ func (r *darRewriter) darObjComputeCuts(id int32) []darCut {
 			if !darCutMerge(c, c0, c1) {
 				continue
 			}
+			r.m.Stats.CutsTried++
 			if darCutFilter(cutSet, c) {
 				continue
 			}
@@ -557,12 +560,20 @@ func (r *darRewriter) darObjComputeCuts(id int32) []darCut {
 			}
 			c.value = r.darCutFindValue(c)
 			if c.value == 0 {
+				r.m.Stats.CutsSkipped++
 				c.used = false
 			} else if c.nLeaves < 2 {
 				return cutSet
 			}
 		}
 	}
+	// count the nontrivial cuts (the trivial one is discounted)
+	for k := range cutSet {
+		if cutSet[k].used {
+			r.m.Stats.CutsUsed++
+		}
+	}
+	r.m.Stats.CutsUsed--
 	return cutSet
 }
 
@@ -815,6 +826,12 @@ func (m *Manager) rewriteNative() error {
 	// Dar_ManStart prepares the constant's cuts through Dar_ManCutsRestart
 	// only when recycling; ABC computes them on demand otherwise. Neither
 	// case reaches the constant in a strashed AIG.
+	clkStart := time.Now()
+	defer func() {
+		m.Stats.TimeTotal = time.Since(clkStart)
+		m.Stats.CutMemUsed = max(m.Stats.CutMemUsed, len(r.cutMem)*24>>20) // sizeof(Dar_Cut_t) = 24
+	}()
+	m.Stats.NodesInit = int(aig.Aig_ManNodeNum(g))
 	nNodesOld := int32(aig.Aig_ManObjNumMax(g))
 	counter := 0
 	for i := int32(0); i < int32(aig.Aig_ManObjNumMax(g)); i++ {
@@ -835,8 +852,11 @@ func (m *Manager) rewriteNative() error {
 			r.darManCutsRestart()
 		}
 		m.Stats.Roots++
+		m.Stats.NodesTried++
+		clk := time.Now()
 		r.setNoCuts(i)
 		r.darObjComputeCutsRec(root)
+		m.Stats.TimeCuts += time.Since(clk)
 		cuts := r.cutsOf(i)
 		var trivial *darCut
 		for k := range cuts {
@@ -873,6 +893,7 @@ func (m *Manager) rewriteNative() error {
 		if m.Params.UpdateLevel {
 			required = aig.Aig_ObjRequiredLevel(g, root)
 		}
+		clk = time.Now()
 		for k := range cuts {
 			c := &cuts[k]
 			if !c.used {
@@ -886,6 +907,7 @@ func (m *Manager) rewriteNative() error {
 			r.darLibEval(root, c, required)
 			c.nLeaves = nLeavesOld
 		}
+		m.Stats.TimeEval += time.Since(clk)
 		if !(r.gainBest > 0 || r.gainBest == 0 && m.Params.UseZeros) {
 			continue
 		}
