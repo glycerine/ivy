@@ -1080,3 +1080,26 @@ and states how the Go port was verified.
   (`TestBmSequentialLikeNative`; s27 and mul4 x bm, bm -P, bm2); red before
   (native segmentation fault).
 - **Go port:** panicked the same way; both commands now check, as C.
+
+## 51. `cascade` overflows two buffers (stack value and file names)
+
+- **Files:** `src/bdd/extrab/extraBddCas.c` (`Extra_ProfileWidth`),
+  `src/bdd/cas/casCore.c` (`Abc_CascadeExperiment`, `Abc_CascadeExperiment2`
+  file names).
+- **Found:** 2026-11-27, native crash sweep: `read <absolute path>/s27.blif;
+  strash; cascade` aborted ("buffer overflow detected"); under ASan also a
+  stack-buffer-overflow in `st__gen` from `Extra_ProfileWidth`.
+- **Bug 1:** `st__foreach_item( tNodeTopRef, gen, ..., (char**)&LevelStart )`
+  stores the pointer-sized record into `int LevelStart`, overwriting the
+  stack on 64-bit hosts (silently in the release build here).
+- **Bug 2:** the encoded and LUT file names are built with `strcpy`/`strcat`
+  of the design's generic name into `char FileNameIni[100]`/`FileNameFin[100]`;
+  a long path overflows them (fortified release build: abort).
+- **Fix:** read the record into a `char *` and convert it to `int`; build the
+  file names with `snprintf( ..., sizeof(...), "%s_ENC.blif", ... )`.
+- **Test:** `abcgo/base/abci/cascade_native_test.go` (`TestCascadeLikeNative`;
+  s27, mul4 and s27 by absolute path, `cascade` and `cascade -v`: output and
+  BLIF equal native); red before (native abort on the long path).
+- **Go port:** no overflow (Go strings and maps); `cascade -v` was missing
+  C's "(%) Memory" suffix and the decomposition/encoding time lines, now
+  printed (`bdd/cas/casDec.go`).

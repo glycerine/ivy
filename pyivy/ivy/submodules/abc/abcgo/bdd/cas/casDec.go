@@ -9,6 +9,7 @@ import (
 	"io"
 	"math/bits"
 	"os"
+	"time"
 )
 
 // LUT records the source algorithm's input split, column multiplicity and
@@ -181,7 +182,9 @@ func CreateDecomposedNetwork(dd *DdManager, f *DdNode, names []string, nNames in
 	if nNames < 0 || nNames > len(names) {
 		return 0
 	}
+	start := time.Now()
 	luts, codes, err := Decompose(dd, f, nNames, lutSize)
+	decomposition := time.Since(start)
 	if err == errLutTooSmall {
 		fmt.Printf("The LUT size is too small\n") // as casDec.c, always
 		return 0
@@ -214,7 +217,14 @@ func CreateDecomposedNetwork(dd *DdManager, f *DdNode, names []string, nNames in
 			simple += p.nSimple
 			fmt.Printf("Stage %3d: In = %3d  InP = %3d  Cols = %5d  Multi = %2d  Simple = %2d  Level = %3d\n", i+1, p.nIns, p.nInsP, p.nCols, p.nMulti, p.nSimple, p.Level)
 		}
-		fmt.Printf("LUTs: Total = %5d. Final = %5d. Simple = %5d.\n", outputs, outputs-simple, simple)
+		// as casDec.c: Total = nLutsTotal, Final = nLutOutputs
+		final := outputs - simple
+		fmt.Printf("LUTs: Total = %5d. Final = %5d. Simple = %5d. (%6.2f %%)  ", outputs, final, simple, 100.0*float64(simple)/float64(outputs))
+		fmt.Printf("Memory = %6.2f MB\n", float64(final)*float64(int(1)<<uint(lutSize))/float64(1<<20))
+		// Decompose does not time its encoding step separately (C's
+		// s_EncodingTime), so all of it is reported as decomposition
+		fmt.Printf("Pure decomposition time   = %.2f sec\n", decomposition.Seconds())
+		fmt.Printf("Encoding time             = %.2f sec\n", 0.0)
 	}
 	return 1
 }

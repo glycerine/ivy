@@ -524,6 +524,7 @@ int Extra_ProfileWidth( DdManager * dd, DdNode * Func, int * pProfile, int CutLe
     DdNode * node;
     DdNode * nodeR;
     int LevelStart, Limit;
+    char * pLevelStart;
     int i, size;
     int WidthMax;
   
@@ -554,8 +555,9 @@ int Extra_ProfileWidth( DdManager * dd, DdNode * Func, int * pProfile, int CutLe
         pProfile[i] = 0;
 
     // create the profile
-    st__foreach_item( tNodeTopRef, gen, (const char**)&node, (char**)&LevelStart )
+    st__foreach_item( tNodeTopRef, gen, (const char**)&node, (char**)&pLevelStart )
     {
+        LevelStart = (int)(ABC_PTRINT_T)pLevelStart; // the record is pointer-sized
         nodeR = Cudd_Regular(node);
         Limit = (cuddIsConstant(nodeR))? dd->size: dd->perm[nodeR->index];
         for ( i = LevelStart; i <= Limit; i++ )

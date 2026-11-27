@@ -91,8 +91,8 @@ int Abc_CascadeExperiment( char * pFileGeneric, DdManager * dd, DdNode ** pOutpu
 
     DdNode * aFunc;                 // the encoded 0-1 BDD containing all the outputs
 
-    char FileNameIni[100];
-    char FileNameFin[100];
+    char FileNameIni[1000];
+    char FileNameFin[1000];
     char Buffer[100];
 
     
@@ -103,11 +103,10 @@ int Abc_CascadeExperiment( char * pFileGeneric, DdManager * dd, DdNode ** pOutpu
 
 
     // assign the file names
-    strcpy( FileNameIni, pFileGeneric );
-    strcat( FileNameIni, "_ENC.blif" );
+    // the generic name may be a long path: bound it to the buffers
+    snprintf( FileNameIni, sizeof(FileNameIni), "%s_ENC.blif", pFileGeneric );
 
-    strcpy( FileNameFin, pFileGeneric );
-    strcat( FileNameFin, "_LUT.blif" );
+    snprintf( FileNameFin, sizeof(FileNameFin), "%s_LUT.blif", pFileGeneric );
 
 
     // create the variables to encode the outputs
@@ -305,8 +304,8 @@ void Experiment2( BFunc * pFunc )
 
     DdNode * aFunc;                 // the encoded 0-1 BDD containing all the outputs
 
-    char FileNameIni[100];
-    char FileNameFin[100];
+    char FileNameIni[1000];
+    char FileNameFin[1000];
     char Buffer[100];
 
     DdManager * DdNew;
@@ -318,11 +317,10 @@ void Experiment2( BFunc * pFunc )
 
 
     // assign the file names
-    strcpy( FileNameIni, pFunc->FileGeneric );
-    strcat( FileNameIni, "_ENC.blif" );
+    // the generic name may be a long path: bound it to the buffers
+    snprintf( FileNameIni, sizeof(FileNameIni), "%s_ENC.blif", pFunc->FileGeneric );
 
-    strcpy( FileNameFin, pFunc->FileGeneric );
-    strcat( FileNameFin, "_LUT.blif" );
+    snprintf( FileNameFin, sizeof(FileNameFin), "%s_LUT.blif", pFunc->FileGeneric );
 
     // derive the single-output function IN THE NEW MANAGER
     clk1 = Abc_Clock();

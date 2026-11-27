@@ -1,32 +1,37 @@
 package abci
 
 import (
-	"strings"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
-// TestCascadeKeepsNetworkLikeNative: Abc_NtkCascade builds the global BDDs
-// with Abc_NtkBuildGlobalBdds (500000-node limit, reordering), runs the
-// cascade experiment and returns a copy of the network whatever it found.
-// The port built its own BDDs without reordering, blew the limit on i10
-// and failed the command.
-func TestCascadeKeepsNetworkLikeNative(t *testing.T) {
-	out, status := runScriptStatus(t, "read ../../../i10.aig; strash; if -K 6; cascade; print_stats")
-	if status != 0 || !strings.Contains(out, "and =   2675") {
-		t.Fatalf("cascade failed (status %d):\n%s", status, out)
+// Extra_ProfileWidth (extraBddCas.c) read the pointer-sized records of its
+// st table through (char**)&LevelStart, an int on the stack: on 64-bit hosts
+// the write overflowed it and 'cascade' aborted ("stack smashing detected")
+// (CBUGS_FIXED.md #51); and Abc_CascadeExperiment (casCore.c) copied the
+// design's name into 100-byte file-name buffers, so a long path aborted it. With the fix Go and C produce the same cascade.
+func TestCascadeLikeNative(t *testing.T) {
+	dir := t.TempDir()
+	// a long (absolute) path overflowed casCore.c's 100-byte file names
+	long, err := filepath.Abs("test_vectors/native_s27_drw.blif")
+	if err != nil {
+		t.Fatal(err)
 	}
-}
-
-// TestCascadeVerboseLikeNative: Abc_CascadeExperiment prints the reordered
-// MTBDD size and reordering time; the decomposer reports "The LUT size is
-// too small". (C then leaks the MTBDD and Extra_StopManager reports
-// "The number of referenced nodes = 12556"; Go's Cudd_CheckZeroRef counts
-// only externally referenced nodes, so that report is not compared.)
-func TestCascadeVerboseLikeNative(t *testing.T) {
-	out := runScript(t, "read test_vectors/native_mul8_if6.blif; strash; cascade -v")
-	for _, want := range []string{"MTBDD           =  13434 nodes\nMTBDD reordered =  12556 nodes\nVariable reordering time = ", "\nThe LUT size is too small\n"} {
-		if !strings.Contains(out, want) {
-			t.Errorf("missing %q in\n%s", want, out)
+	for _, design := range []string{"test_vectors/native_s27_drw.blif", "test_vectors/native_mul4_gen.aig", long} {
+		for _, cmd := range []string{"cascade", "cascade -v"} {
+			goFile, nativeFile := filepath.Join(dir, "go.blif"), filepath.Join(dir, "native.blif")
+			script := "read " + design + "; strash; " + cmd + "; print_stats; write_blif "
+			native := printSymmNormalize(runNativeABC(t, script+nativeFile))
+			port := printSymmNormalize(runScript(t, script+goFile))
+			if native != port {
+				t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
+			}
+			g, _ := os.ReadFile(goFile)
+			n, _ := os.ReadFile(nativeFile)
+			if blifStamp.ReplaceAllString(string(g), "") != blifStamp.ReplaceAllString(string(n), "") {
+				t.Errorf("%s: written network differs from native", script)
+			}
 		}
 	}
 }
