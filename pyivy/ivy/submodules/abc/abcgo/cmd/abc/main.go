@@ -17,6 +17,7 @@ import (
 	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/base/pla"
 	"github.com/glycerine/abcgo/base/test"
+	_ "github.com/glycerine/abcgo/base/ver" // registers the Verilog parser for read
 	"github.com/glycerine/abcgo/base/wlc"
 	abcif "github.com/glycerine/abcgo/map/if"
 	"github.com/glycerine/abcgo/map/mapper"
