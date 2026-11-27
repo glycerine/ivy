@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math"
+	"unsafe"
 )
 
 func ifLeaves(c *If_Cut_t) []int32 {
@@ -770,4 +771,80 @@ func ifCutEdgeDeref(p *If_Man_t, c *If_Cut_t) float32 {
 		}
 	}
 	return edge
+}
+
+// ifInline reports whether c's leaves live in its inline buffer (always, for
+// the plain mapping with K <= ifInlineLeaves).
+func ifInline(c *If_Cut_t) bool {
+	return cap(c.pLeaves) == ifInlineLeaves && unsafe.SliceData(c.pLeaves) == &c.leafBuf[0]
+}
+
+// ifCutMergeOrderedInline is If_CutMergeOrdered for cuts whose leaves are
+// inline (see ifInline), written as ifCut.c's: the leaf indices are masked to
+// the buffer, so the loop carries no bounds checks.
+func ifCutMergeOrderedInline(a, b, c *If_Cut_t) int32 {
+	const m = ifInlineLeaves - 1
+	x, y, z := &a.leafBuf, &b.leafBuf, &c.leafBuf
+	n0, n1, limit := int(a.nLeaves), int(b.nLeaves), int(a.nLimit)
+	// both cuts are the largest
+	if n0 == limit && n1 == limit {
+		for i := 0; i < n0; i++ {
+			if x[i&m] != y[i&m] {
+				return 0
+			}
+			z[i&m] = x[i&m]
+		}
+		c.nLeaves = uint32(limit)
+		c.pLeaves = c.pLeaves[:limit]
+		c.uSign = a.uSign | b.uSign
+		return 1
+	}
+	i, k, n := 0, 0, 0
+	if n0 != 0 && n1 != 0 {
+		for {
+			if n == limit {
+				return 0
+			}
+			xi, yk := x[i&m], y[k&m]
+			if xi < yk {
+				z[n&m] = xi
+				n++
+				i++
+				if i == n0 {
+					break
+				}
+			} else if xi > yk {
+				z[n&m] = yk
+				n++
+				k++
+				if k == n1 {
+					break
+				}
+			} else {
+				z[n&m] = xi
+				n++
+				i++
+				k++
+				if i == n0 || k == n1 {
+					break
+				}
+			}
+		}
+	}
+	// flush the rest of whichever cut is left
+	if n+(n0-i)+(n1-k) > limit {
+		return 0
+	}
+	for ; i < n0; i++ {
+		z[n&m] = x[i&m]
+		n++
+	}
+	for ; k < n1; k++ {
+		z[n&m] = y[k&m]
+		n++
+	}
+	c.nLeaves = uint32(n)
+	c.pLeaves = c.pLeaves[:n]
+	c.uSign = a.uSign | b.uSign
+	return 1
 }

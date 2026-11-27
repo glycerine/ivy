@@ -804,7 +804,13 @@ func ifObjMergeCutsPlain(p *If_Man_t, pObj *If_Obj_t, pCutSet *If_Set_t, Mode, f
 			if If_WordCountOnes(pCut0.uSign|pCut1.uSign) > lutSize {
 				continue
 			}
-			if If_CutMergeOrdered(p, pCut0, pCut1, pCut) == 0 {
+			var merged int32
+			if ifInline(pCut0) && ifInline(pCut1) && ifInline(pCut) {
+				merged = ifCutMergeOrderedInline(pCut0, pCut1, pCut)
+			} else {
+				merged = If_CutMergeOrdered(p, pCut0, pCut1, pCut)
+			}
+			if merged == 0 {
 				continue
 			}
 			if spec && pCut.nLeaves == uint32(lutSize) {
