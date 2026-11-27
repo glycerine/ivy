@@ -5,7 +5,6 @@ import base_abc "github.com/glycerine/abcgo/base/abc"
 import (
 	"fmt"
 	"math"
-	"os"
 
 	"github.com/glycerine/abcgo/proof/fraig"
 )
@@ -60,7 +59,6 @@ func Abc_NtkMiterProve(ppNtk **Abc_Ntk_t, p *Prove_Params_t) int32 {
 	for iter := int32(0); iter < p.nItersMax; iter++ {
 		if p.fVerbose != 0 {
 			fmt.Printf("ITERATION %2d : Confs = %6d. FraigBTL = %3d. \n", iter+1, int32(float64(p.nMiteringLimitStart)*math.Pow(float64(p.nMiteringLimitMulti), float64(iter))), int32(float64(p.nFraigingLimitStart)*math.Pow(float64(p.nFraigingLimitMulti), float64(iter))))
-			_, _ = fmt.Fprintln(os.Stdout)
 		}
 		clk := Abc_Clock()
 		inspectLimit = 0

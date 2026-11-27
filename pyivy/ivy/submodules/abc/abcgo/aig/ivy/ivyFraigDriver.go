@@ -272,44 +272,86 @@ func Ivy_FraigProve(graph **Ivy_Man_t, params *Prove_Params_t) int32 {
 	options.FProve = 1
 	current := *graph
 	replace := func(next *Ivy_Man_t) { Ivy_ManStop(current); current = next; *graph = current }
+	// C divides by Ivy_ManPoNum directly; a miter always has outputs
 	divide := func(limit int32) int32 { return limit / max(int32(1), Ivy_ManPoNum(current)) }
+	if params.fVerbose != 0 {
+		fmt.Printf("RESOURCE LIMITS: Iterations = %d. Rewriting = %s. Fraiging = %s.\n",
+			params.nItersMax, ivyYesNo(params.fUseRewriting), ivyYesNo(params.fUseFraiging))
+		fmt.Printf("Miter = %d (%3.1f).  Rwr = %d (%3.1f).  Fraig = %d (%3.1f).  Last = %d.\n",
+			params.nMiteringLimitStart, params.nMiteringLimitMulti,
+			params.nRewritingLimitStart, params.nRewritingLimitMulti,
+			params.nFraigingLimitStart, params.nFraigingLimitMulti, params.nMiteringLimitLast)
+	}
+	// if SAT only, solve without iteration
 	if params.fUseRewriting == 0 && params.fUseFraiging == 0 {
+		clk := util.Abc_Clock()
 		options.NBTLimitMiter = divide(params.nMiteringLimitLast)
 		replace(Ivy_FraigMiter(current, &options))
-		return Ivy_FraigMiterStatus(current)
+		status := Ivy_FraigMiterStatus(current)
+		Ivy_FraigMiterPrint(current, "SAT solving", clk, params.fVerbose)
+		return status
 	}
 	if Ivy_ManNodeNum(current) < 500 {
+		// run the first mitering
+		clk := util.Abc_Clock()
 		options.NBTLimitMiter = divide(params.nMiteringLimitStart)
 		replace(Ivy_FraigMiter(current, &options))
-		if status := Ivy_FraigMiterStatus(current); status >= 0 {
+		status := Ivy_FraigMiterStatus(current)
+		Ivy_FraigMiterPrint(current, "SAT solving", clk, params.fVerbose)
+		if status >= 0 {
 			return status
 		}
 	}
+	// check the current resource limits
 	status := int32(-1)
+	var conflicts, inspections int64
 	for iteration := int32(0); iteration < params.nItersMax; iteration++ {
-		// Rewriting is disabled in the original active C driver as well.
+		if params.fVerbose != 0 {
+			fmt.Printf("ITERATION %2d : Confs = %6d. FraigBTL = %3d. \n", iteration+1,
+				int32(float64(params.nMiteringLimitStart)*math.Pow(float64(params.nMiteringLimitMulti), float64(iteration))),
+				int32(float64(params.nFraigingLimitStart)*math.Pow(float64(params.nFraigingLimitMulti), float64(iteration))))
+		}
+		// rewriting is commented out in ivyFraig.c (bug in Ivy_NodeFindCutsAll)
+		if status >= 0 {
+			break
+		}
+		// catch the situation when ref pattern detects the bug
 		status = Ivy_FraigMiterStatus(current)
 		if status >= 0 {
 			break
 		}
+		// try fraiging followed by mitering
 		if params.fUseFraiging != 0 {
+			clk := util.Abc_Clock()
 			options.NBTLimitNode = int32(float64(params.nFraigingLimitStart) * math.Pow(float64(params.nFraigingLimitMulti), float64(iteration)))
 			options.NBTLimitMiter = 1 + divide(int32(float64(params.nMiteringLimitStart)*math.Pow(float64(params.nMiteringLimitMulti), float64(iteration))))
-			var conflicts, inspections int64
 			replace(Ivy_FraigPerform_int(current, &options, params.nTotalBacktrackLimit, params.nTotalInspectLimit, &conflicts, &inspections))
 			status = Ivy_FraigMiterStatus(current)
-			if status >= 0 {
-				break
-			}
-			params.nTotalBacktracksMade += conflicts
-			params.nTotalInspectsMade += inspections
+			Ivy_FraigMiterPrint(current, "Fraiging   ", clk, params.fVerbose)
 		}
-		if params.nTotalBacktrackLimit > 0 && params.nTotalBacktracksMade >= params.nTotalBacktrackLimit || params.nTotalInspectLimit > 0 && params.nTotalInspectsMade >= params.nTotalInspectLimit {
+		if status >= 0 {
+			break
+		}
+		// add to the number of backtracks and inspects
+		params.nTotalBacktracksMade += conflicts
+		params.nTotalInspectsMade += inspections
+		// check if global resource limit is reached
+		if params.nTotalBacktrackLimit != 0 && params.nTotalBacktracksMade >= params.nTotalBacktrackLimit ||
+			params.nTotalInspectLimit != 0 && params.nTotalInspectsMade >= params.nTotalInspectLimit {
+			fmt.Printf("Reached global limit on conflicts/inspects. Quitting.\n")
 			return -1
 		}
 	}
+	// assign the model if it was proved by rewriting (const 1 miter)
 	if status == 0 && current.pData == nil {
 		current.pData = make([]int32, len(current.vPis))
 	}
 	return status
+}
+
+func ivyYesNo(v int32) string {
+	if v != 0 {
+		return "yes"
+	}
+	return "no"
 }
