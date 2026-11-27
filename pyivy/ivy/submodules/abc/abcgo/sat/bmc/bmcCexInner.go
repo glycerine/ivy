@@ -1,6 +1,7 @@
 package bmc
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 )
@@ -85,9 +86,12 @@ func Bmc_CexInnerStates(p *gia.Gia_Man_t, cex *util.Abc_Cex_t, implied **util.Ab
 			state[i] = values[gia.Gia_ObjId(p, gia.Gia_ManRi(p, i))]
 		}
 	}
+	fmt.Printf("Inner states: ")
+	Bmc_CexPrint(states, gia.Gia_ManPiNum(p), verbose)
+	fmt.Printf("Implications: ")
+	Bmc_CexPrint(marks, gia.Gia_ManPiNum(p), verbose)
 	if implied != nil {
 		*implied = marks
 	}
-	_ = verbose
 	return states
 }

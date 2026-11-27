@@ -120,25 +120,59 @@ func Abc_CexMerge(p, part *Abc_Cex_t, beg, end int32) *Abc_Cex_t {
 }
 func Abc_CexPrintStats(p *Abc_Cex_t) {
 	if p == nil {
-		fmt.Println("Counter-example is not given.")
+		fmt.Printf("The counter example is NULL.\n")
 		return
 	}
-	fmt.Printf("CEX: PO = %d. Frame = %d. FFs = %d. PIs = %d. Bits = %d. Ones = %d.\n", p.IPo, p.IFrame, p.NRegs, p.NPis, p.NBits, Abc_CexCountOnes(p))
-}
-func Abc_CexPrintStatsInputs(p *Abc_Cex_t, realPis int32) {
-	if p == nil {
+	if p == AbcCexSentinel {
+		fmt.Printf("The counter example is present but not available (pointer has value \"1\").\n")
 		return
 	}
-	assert(realPis >= 0 && realPis <= p.NPis, "real input count")
-	var count int32
-	for f := int32(0); f <= p.IFrame; f++ {
-		for i := int32(0); i < realPis; i++ {
-			if Abc_InfoHasBit(p.PData, p.NRegs+f*p.NPis+i) {
-				count++
-			}
+	var counter int32
+	for k := int32(0); k < p.NBits; k++ {
+		if Abc_InfoHasBit(p.PData, k) {
+			counter++
 		}
 	}
-	fmt.Printf("CEX real input ones = %d.\n", count)
+	fmt.Printf("CEX: Po =%4d  Frame =%4d  FF = %d  PI = %d  Bit =%8d  1s =%8d (%5.2f %%)\n",
+		p.IPo, p.IFrame, p.NRegs, p.NPis, p.NBits, counter, 100.0*float64(counter)/float64(p.NBits-p.NRegs))
+}
+
+// Abc_CexPrintStatsInputs is utilCex.c's, separating the 1s of the real
+// and pseudo inputs.
+func Abc_CexPrintStatsInputs(p *Abc_Cex_t, nRealPis int32) {
+	if p == nil {
+		fmt.Printf("The counter example is NULL.\n")
+		return
+	}
+	if p == AbcCexSentinel {
+		fmt.Printf("The counter example is present but not available (pointer has value \"1\").\n")
+		return
+	}
+	assert(nRealPis <= p.NPis, "real input count")
+	var counter, counterPi, counterPpi int32
+	for k := int32(0); k < p.NBits; k++ {
+		v := int32(0)
+		if Abc_InfoHasBit(p.PData, k) {
+			v = 1
+		}
+		counter += v
+		if nRealPis == p.NPis {
+			continue
+		}
+		if (k-p.NRegs)%p.NPis < nRealPis {
+			counterPi += v
+		} else {
+			counterPpi += v
+		}
+	}
+	fmt.Printf("CEX: Po =%4d  Fr =%4d  FF = %d  PI = %d  Bit =%7d  1 =%8d (%5.2f %%)",
+		p.IPo, p.IFrame, p.NRegs, p.NPis, p.NBits, counter, 100.0*float64(counter)/float64((p.IFrame+1)*p.NPis))
+	if nRealPis < p.NPis {
+		fmt.Printf(" 1pi =%8d (%5.2f %%) 1ppi =%8d (%5.2f %%)",
+			counterPi, 100.0*float64(counterPi)/float64((p.IFrame+1)*nRealPis),
+			counterPpi, 100.0*float64(counterPpi)/float64((p.IFrame+1)*(p.NPis-nRealPis)))
+	}
+	fmt.Printf("\n")
 }
 func Abc_CexPrint(p *Abc_Cex_t) {
 	if p == nil {

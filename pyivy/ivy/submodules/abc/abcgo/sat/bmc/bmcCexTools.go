@@ -43,28 +43,41 @@ func Bmc_CexBitCount(c *util.Abc_Cex_t, inputs int32) int32 {
 	}
 	return count
 }
+
+// Bmc_CexPrint is bmcCexTools.c's: the statistics, and with verbose each
+// frame's real and pseudo inputs with their counts of 1s.
 func Bmc_CexPrint(c *util.Abc_Cex_t, realPis, verbose int32) {
-	if c == nil {
-		fmt.Println("The counterexample is nil.")
-		return
-	}
 	util.Abc_CexPrintStatsInputs(c, realPis)
 	if verbose == 0 {
 		return
 	}
+	bit := c.NRegs
 	for f := int32(0); f <= c.IFrame; f++ {
 		fmt.Printf("%3d : ", f)
-		for i := int32(0); i < c.NPis; i++ {
-			if i == realPis {
-				fmt.Print(" ")
-			}
-			if util.Abc_InfoHasBit(c.PData, c.NRegs+f*c.NPis+i) {
-				fmt.Print("1")
+		count, k := 0, int32(0)
+		for ; k < realPis; k++ {
+			v := util.Abc_InfoHasBit(c.PData, bit)
+			bit++
+			if v {
+				count++
+				fmt.Printf("1")
 			} else {
-				fmt.Print("0")
+				fmt.Printf("0")
 			}
 		}
-		fmt.Println()
+		fmt.Printf(" %3d ", count)
+		count = 0
+		for ; k < c.NPis; k++ {
+			v := util.Abc_InfoHasBit(c.PData, bit)
+			bit++
+			if v {
+				count++
+				fmt.Printf("1")
+			} else {
+				fmt.Printf("0")
+			}
+		}
+		fmt.Printf(" %3d\n", count)
 	}
 }
 func Bmc_CexDumpStats(p *gia.Gia_Man_t, c, care, essential, minimum *util.Abc_Cex_t, elapsed time.Duration) {
@@ -109,6 +122,7 @@ func Bmc_CexBuildNetworkTest(p *gia.Gia_Man_t, c *util.Abc_Cex_t) {
 	}
 }
 func Bmc_CexTest(p *gia.Gia_Man_t, c *util.Abc_Cex_t, verbose int32) {
+	start := time.Now()
 	var implied *util.Abc_Cex_t
 	states := Bmc_CexInnerStates(p, c, &implied, verbose)
 	care := Bmc_CexCareBits(p, states, implied, nil, 1, verbose)
@@ -120,4 +134,5 @@ func Bmc_CexTest(p *gia.Gia_Man_t, c *util.Abc_Cex_t, verbose int32) {
 	if Bmc_CexVerify(p, c, minimum) == 0 {
 		fmt.Println("Counter-example min-set verification has failed.")
 	}
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds())
 }

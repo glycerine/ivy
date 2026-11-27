@@ -1,6 +1,7 @@
 package bmc
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 )
@@ -112,6 +113,11 @@ func Bmc_CexCareBits(p *gia.Gia_Man_t, states, implied, essential *util.Abc_Cex_
 			}
 		}
 	}
-	_ = verbose
+	if essential != nil {
+		fmt.Printf("Minimized:    ")
+	} else {
+		fmt.Printf("Care bits:    ")
+	}
+	Bmc_CexPrint(care, gia.Gia_ManPiNum(p), verbose)
 	return care
 }

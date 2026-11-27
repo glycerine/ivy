@@ -401,7 +401,7 @@ func ABC_PRTP(name string, t, total int64) {
 	if total != 0 {
 		percent = 100 * float64(t) / float64(total)
 	}
-	fmt.Printf("%s = %9.2f sec (%6.2f %%)\n", name, float64(t)/1e9, percent)
+	fmt.Printf("%s =%9.2f sec (%6.2f %%)\n", name, float64(t)/1e9, percent)
 }
 func Abc_Clock() int64                                   { return util.Abc_Clock() }
 func Abc_PrintTime(level int32, s string, elapsed int64) { util.Abc_PrintTime(level, s, elapsed) }

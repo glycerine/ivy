@@ -42,7 +42,7 @@ func ABC_PRTP(name string, elapsed, total int64) {
 	if total != 0 {
 		percent = 100 * float64(elapsed) / float64(total)
 	}
-	fmt.Printf("%s = %9.2f sec (%6.2f %%)\n", name, float64(elapsed)/1e9, percent)
+	fmt.Printf("%s =%9.2f sec (%6.2f %%)\n", name, float64(elapsed)/1e9, percent)
 }
 
 /**CFile****************************************************************

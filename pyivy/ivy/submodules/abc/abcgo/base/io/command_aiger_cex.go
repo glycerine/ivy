@@ -34,8 +34,8 @@ func IoCommandWriteAigerCex(frame *abcmain.Frame, args []string) int32 {
 		fmt.Fprintln(frame.Err, "usage: write_aiger_cex [-h] <file>")
 		return 1
 	}
-	_, _, snapshot := frame.VerificationResult()
-	if snapshot == nil {
+	cex, err := frameCurrentCex(frame)
+	if cex == nil && err == nil {
 		fmt.Fprintln(frame.Out, "There is no current CEX.")
 		return 0
 	}
@@ -43,7 +43,6 @@ func IoCommandWriteAigerCex(frame *abcmain.Frame, args []string) int32 {
 		fmt.Fprintln(frame.Err, "usage: write_aiger_cex [-h] <file>")
 		return 1
 	}
-	cex, err := frameCounterexample(snapshot)
 	if err != nil {
 		fmt.Fprintln(frame.Err, err)
 		return 0
@@ -53,4 +52,16 @@ func IoCommandWriteAigerCex(frame *abcmain.Frame, args []string) int32 {
 		fmt.Fprintln(frame.Err, err)
 	}
 	return 0
+}
+
+// frameCurrentCex is pAbc->pCex: the counterexample commands keep in the
+// ABC frame state, or the frame's verification snapshot; nil if neither.
+func frameCurrentCex(frame *abcmain.Frame) (*util.Abc_Cex_t, error) {
+	if c, ok := abcmain.ReadABCFrameState(frame).Cex().(*util.Abc_Cex_t); ok && c != nil {
+		return c, nil
+	}
+	if _, _, snapshot := frame.VerificationResult(); snapshot != nil {
+		return frameCounterexample(snapshot)
+	}
+	return nil, nil
 }

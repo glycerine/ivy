@@ -36,5 +36,5 @@ func Vec_PtrShrink(v *Vec_Ptr_t, size int) { vec.Vec_PtrShrink(v, size) }
 
 // ABC_PRT reports elapsed clock time using ABC's CLOCKS_PER_SEC conversion.
 func ABC_PRT(label string, elapsed int64) {
-	fmt.Printf("%s = %7.2f sec\n", label, float64(elapsed)/float64(util.CLOCKS_PER_SEC))
+	fmt.Printf("%s =%9.2f sec\n", label, float64(elapsed)/float64(util.CLOCKS_PER_SEC)) // C: "%s =" then "%9.2f sec"
 }

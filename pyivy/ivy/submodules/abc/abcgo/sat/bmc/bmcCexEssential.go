@@ -1,6 +1,7 @@
 package bmc
 
 import (
+	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 )
@@ -110,6 +111,7 @@ func Bmc_CexEssentialBits(p *gia.Gia_Man_t, states, care *util.Abc_Cex_t, verbos
 			util.Abc_InfoSetBit(result.PData, bit)
 		}
 	}
-	_ = verbose
+	fmt.Printf("Essentials:   ")
+	Bmc_CexPrint(result, gia.Gia_ManPiNum(p), verbose)
 	return result
 }
