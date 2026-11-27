@@ -14,6 +14,7 @@ type Mvc_Cube_t struct {
 	Unused, Ones int
 	Prime, Essen bool
 	Data         []uint32
+	inline       [2]uint32 // Data for covers of up to 64 bits, in the same allocation
 }
 type Mvc_List_t struct {
 	Head, Tail *Mvc_Cube_t

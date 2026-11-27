@@ -1,7 +1,14 @@
 package mvc
 
 func Mvc_CubeAlloc(c *Mvc_Cover_t) *Mvc_Cube_t {
-	return &Mvc_Cube_t{Data: make([]uint32, max(1, Mvc_CoverReadWordNum(c))), Unused: (32 - c.NBits%32) % 32}
+	words := max(1, Mvc_CoverReadWordNum(c))
+	r := &Mvc_Cube_t{Unused: (32 - c.NBits%32) % 32}
+	if words <= len(r.inline) {
+		r.Data = r.inline[:words:words]
+	} else {
+		r.Data = make([]uint32, words)
+	}
+	return r
 }
 func Mvc_CubeDup(c *Mvc_Cover_t, x *Mvc_Cube_t) *Mvc_Cube_t {
 	r := Mvc_CubeAlloc(c)
