@@ -44,7 +44,12 @@ func ifDelayCover(p *If_Man_t, c *If_Cut_t) (*Vec_Int_t, bool) {
 	return vec.Vec_WecEntry(levels, id), phase
 }
 func ifDelayTimes(p *If_Man_t, c *If_Cut_t) []int32 {
-	times := make([]int32, c.nLeaves)
+	return ifDelayTimesInto(make([]int32, c.nLeaves), p, c)
+}
+
+// ifDelayTimesInto fills times (of length nLeaves) with the leaf arrival
+// times, letting callers keep the array on the stack.
+func ifDelayTimesInto(times []int32, p *If_Man_t, c *If_Cut_t) []int32 {
 	for pin := range times {
 		times[pin] = int32(If_ObjCutBest(If_CutLeaf(p, c, int32(pin))).Delay)
 	}

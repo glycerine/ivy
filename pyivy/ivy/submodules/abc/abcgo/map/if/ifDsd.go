@@ -397,7 +397,8 @@ func If_CutDsdBalanceEval(p *If_Man_t, cut *If_Cut_t, aig *Vec_Int_t) float32 {
 		cut.Cost = 0
 		return If_ObjCutBest(If_CutLeaf(p, cut, 0)).Delay
 	}
-	times := ifDelayTimes(p, cut)
+	var timesBuf [IF_MAX_LUTSIZE]int32
+	times := ifDelayTimesInto(timesBuf[:cut.nLeaves], p, cut)
 	var area int32
 	delay := If_CutDsdBalanceEvalInt(p.pIfDsdMan, lit^int32(cut.fCompl), times, aig, &area, If_CutDsdPerm(p, cut))
 	cut.Cost = uint32(area)

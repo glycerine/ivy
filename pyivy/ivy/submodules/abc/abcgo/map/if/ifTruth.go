@@ -126,7 +126,20 @@ func ifTruthProjectBits(table []uint64, source, target []int32, sourceMask, targ
 	}
 	return out
 }
+// ifTruthMinimize drops the variables the table does not depend on,
+// moving the rest down in order, as Abc_TtMinBase does in ifTruth.c.
 func ifTruthMinimize(table []uint64, leaves []int32) ([]uint64, []int32) {
+	n := len(leaves)
+	words := ifTruthWords(n)
+	out := append([]uint64(nil), table[:words]...)
+	outLeaves := append([]int32(nil), leaves...)
+	var size int32
+	util.Abc_TtMinimumBase(out, outLeaves, int32(n), &size)
+	return out[:ifTruthWords(int(size))], outLeaves[:size]
+}
+
+// ifTruthMinimizeBits is the bit-level reference for ifTruthMinimize.
+func ifTruthMinimizeBits(table []uint64, leaves []int32) ([]uint64, []int32) {
 	n := len(leaves)
 	var support []int
 	for v := 0; v < n; v++ {
