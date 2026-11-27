@@ -157,7 +157,8 @@ func If_CutMergeOrdered(p *If_Man_t, a, b, c *If_Cut_t) int32 {
 	if cap(c.pLeaves) < limit {
 		c.pLeaves = ifCutLeafStorage(c, limit)
 	}
-	out := c.pLeaves[:limit]
+	c.pLeaves = c.pLeaves[:limit] // self-reslice: length only, no barrier
+	out := c.pLeaves
 	i, j, n := 0, 0, 0
 	for i < len(x) && j < len(y) {
 		if n == limit {
@@ -180,9 +181,15 @@ func If_CutMergeOrdered(p *If_Man_t, a, b, c *If_Cut_t) int32 {
 	if n+len(x)-i+len(y)-j > limit {
 		return 0
 	}
-	n += copy(out[n:], x[i:])
-	n += copy(out[n:], y[j:])
-	c.pLeaves = out[:n]
+	for ; i < len(x); i++ { // a few leaves: plain loops beat memmove
+		out[n] = x[i]
+		n++
+	}
+	for ; j < len(y); j++ {
+		out[n] = y[j]
+		n++
+	}
+	c.pLeaves = c.pLeaves[:n]
 	c.nLeaves = uint32(n)
 	c.uSign = a.uSign | b.uSign
 	return 1
