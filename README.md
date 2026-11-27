@@ -209,9 +209,9 @@ ivy2golang
 
 ----
 
-GoIvy author: Jason E. Aten, Ph.D.
+This project (GoIvy) author: Jason E. Aten, Ph.D.
 
-License: Gnu Affero General Public License, version 3 (See https://www.gnu.org/licenses/agpl-3.0.html or the enclosed LICENSE file)
+License: MIT. See the enclosed LICENSE file.
 
 -------
 original Ivy:
