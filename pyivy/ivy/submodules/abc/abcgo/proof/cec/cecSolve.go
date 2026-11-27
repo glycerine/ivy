@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/proof/cec/core"
 )
 
 func cecResetPatterns(p *Cec_ManPat_t) {
@@ -41,12 +40,13 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 		pars = new(Cec_ParSat_t)
 		Cec_ManSatSetDefaultParams(pars)
 	}
-	sat := &Cec_ManSat_t{pAig: graph, pPars: pars}
-	model, err := core.NewModel(graph)
-	if err != nil {
-		panic(err)
+	// Cec_ManSatCreate: queries go through Cec_ManSatCheckNode, the
+	// frontier/supergate/MUX CNF of cecSolve.c, whose SAT models become the
+	// counterexample patterns
+	sat := Cec_ManSatCreate(graph, pars)
+	if sat.Error != nil {
+		panic(sat.Error)
 	}
-	classic := newCecClassicSolver(graph, pars)
 	var models []*util.Abc_Cex_t
 	if pars.FSaveCexes != 0 {
 		models = make([]*util.Abc_Cex_t, int(gia.Gia_ManCoNum(graph)))
@@ -59,13 +59,9 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 		} else if lit == 1 {
 			status = 0
 		} else {
-			status = classic.check(lit)
-			if status == 0 {
-				var err error
-				sat.values, err = model.Values(classic.inputs())
-				if err != nil {
-					panic(err)
-				}
+			status = Cec_ManSatCheckNode(sat, gia.Gia_ObjChild0(output))
+			if sat.Error != nil {
+				panic(sat.Error)
 			}
 		}
 		cecSetOutputStatus(output, status)
@@ -111,7 +107,7 @@ func Cec_ManSatSolve(patterns *Cec_ManPat_t, graph *Gia_Man_t, pars *Cec_ParSat_
 		}
 	}
 	if pars.FVerbose != 0 {
-		classic.printStats()
+		Cec_ManSatPrintStats(sat)
 	}
 }
 

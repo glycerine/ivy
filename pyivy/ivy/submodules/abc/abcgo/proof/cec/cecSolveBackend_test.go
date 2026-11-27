@@ -40,7 +40,8 @@ func TestClassicAndGeneralBackendsAgainstTruthTables(t *testing.T) {
 	}
 	for mode := int32(-1); mode <= 2; mode++ {
 		pars := &Cec_ParSat_t{SolverType: mode, NBTLimit: 1000}
-		classic := newCecClassicSolver(g, pars)
+		// the default solver (-1) is Cec_ManSatCheckNode's source CNF
+		classic := Cec_ManSatCreate(g, pars)
 		var general *cecGeneralSolver
 		if mode >= 0 {
 			general = newCecGeneralSolver(g, pars)
@@ -48,7 +49,7 @@ func TestClassicAndGeneralBackendsAgainstTruthTables(t *testing.T) {
 		for i, lit := range edges {
 			var result int32
 			if general == nil {
-				result = classic.check(lit)
+				result = classic.query(lit, nil)
 			} else {
 				result = general.check(lit)
 			}
