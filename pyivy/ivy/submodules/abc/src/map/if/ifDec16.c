@@ -2019,7 +2019,8 @@ If_Grp_t If_CluCheck3( If_Man_t * p, word * pTruth0, int nVars, int nLutLeaf, in
     }
 
     // the new variable is at the bottom - skip it (iVarStart = 1)
-    if ( p->pPars->nStructType == 0 ) // allowed
+    // (p is NULL when called from If_CluCheckExt3, e.g. by write_blif -S)
+    if ( p == NULL || p->pPars->nStructType == 0 ) // allowed
         G2 = If_CluCheck( p, pLeftOver, R2.nVars, 0, 0, nLutLeaf2, nLutRoot, &R, &Func0, &Func2, NULL, 0 );
     else if ( p->pPars->nStructType == 1 ) // not allowed
         G2 = If_CluCheck( p, pLeftOver, R2.nVars, 1, 0, nLutLeaf2, nLutRoot, &R, &Func0, &Func2, NULL, 0 );

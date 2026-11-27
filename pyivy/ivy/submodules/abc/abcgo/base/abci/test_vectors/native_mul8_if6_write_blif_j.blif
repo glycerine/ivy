@@ -1,0 +1,1031 @@
+.model test_vectors/bench/mul8
+.inputs pi00 pi01 pi02 pi03 pi04 pi05 pi06 pi07 pi08 pi09 pi10 pi11 pi12 \
+ pi13 pi14 pi15
+.outputs po00 po01 po02 po03 po04 po05 po06 po07 po08 po09 po10 po11 po12 \
+ po13 po14 po15
+
+.names pi00 pi08 po00
+11 1
+
+.names pi00 pi09 pi01 pi08 po01
+-011 1
+0-11 1
+11-0 1
+110- 1
+
+
+.names pi00 po03_cascade0 po03_cascade1 po03
+1-1 1
+01- 1
+.names new_n38_ new_n39_ new_n40_ po03_cascade0
+000 1
+110 1
+101 1
+011 1
+.names pi11 new_n38_ new_n39_ new_n40_ po03_cascade1
+0000 1
+1100 1
+1010 1
+0110 1
+1001 1
+0101 1
+0011 1
+1111 1
+
+.names pi09 pi03 new_n38__cascade pi08 new_n38_
+1-10 0
+-101 0
+01-1 0
+101- 0
+.names pi02 pi01 pi00 pi08 new_n38__cascade
+1--0 1
+0111 1
+10-- 1
+
+.names pi01 pi10 new_n39_
+11 1
+
+.names pi08 new_n40__cascade0 new_n40__cascade1 new_n40_
+1-1 1
+01- 1
+.names pi01 pi09 pi00 pi10 new_n40__cascade0
+1111 1
+.names pi02 pi00 pi10 new_n40__cascade1
+111 1
+
+.names pi00 po04_cascade0 po04_cascade1 po04
+1-1 1
+01- 1
+.names new_n42_ new_n46_ new_n47_ po04_cascade0
+000 1
+110 1
+101 1
+011 1
+.names pi12 new_n42_ new_n46_ new_n47_ po04_cascade1
+0000 1
+1100 1
+1010 1
+0110 1
+1001 1
+0101 1
+0011 1
+1111 1
+
+.names new_n43_ new_n44_ new_n42__cascade new_n42_
+100 1
+010 1
+001 1
+111 1
+.names new_n40_ new_n45_ new_n39_ new_n38_ new_n42__cascade
+-010 1
+10-0 1
+-101 1
+01-1 1
+010- 1
+101- 1
+
+.names pi03 pi09 pi04 pi08 new_n43_
+-011 0
+0-11 0
+11-0 0
+110- 0
+
+.names pi02 pi10 new_n44_
+11 1
+
+.names pi08 pi09 new_n45__cascade new_n45_
+111 1
+.names pi03 pi01 pi02 pi00 new_n45__cascade
+11-1 1
+-11- 1
+1-1- 1
+
+.names pi00 new_n46__cascade0 new_n46__cascade1 new_n46_
+1-1 1
+01- 1
+.names new_n46__cascade0
+ 0
+.names new_n38_ new_n39_ new_n40_ pi11 new_n46__cascade1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names pi01 pi11 new_n47_
+11 1
+
+.names pi00 pi13 po05_cascade po05
+-00 1
+0-0 1
+111 1
+.names pi01 pi12 new_n49_ new_n55_ po05_cascade
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+
+.names new_n50_ new_n53_ new_n49__cascade new_n49_
+100 1
+010 1
+001 1
+111 1
+.names new_n47_ new_n54_ new_n46_ new_n42_ new_n49__cascade
+-010 1
+10-0 1
+-101 1
+01-1 1
+010- 1
+101- 1
+
+.names pi10 new_n52_ new_n50__cascade pi03 new_n50_
+-100 1
+-010 1
+1001 1
+1111 1
+010- 1
+001- 1
+.names new_n45_ new_n51_ pi09 pi03 new_n50__cascade
+-111 1
+1-11 1
+11-- 1
+
+.names pi04 pi08 new_n51_
+11 1
+
+.names pi04 pi09 pi05 pi08 new_n52_
+-011 0
+0-11 0
+11-0 0
+110- 0
+
+.names new_n44_ new_n43_ new_n53__cascade new_n45_ new_n53_
+-010 1
+10-0 1
+-111 1
+11-1 1
+1-1- 1
+.names new_n40_ new_n39_ new_n38_ new_n53__cascade
+-10 1
+1-0 1
+11- 1
+
+.names pi02 pi11 new_n54_
+11 1
+
+.names pi00 new_n55__cascade0 new_n55__cascade1 new_n55_
+1-1 1
+01- 1
+.names new_n55__cascade0
+ 0
+.names new_n42_ new_n46_ new_n47_ pi12 new_n55__cascade1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names pi01 pi13 po06_cascade po06
+-00 1
+0-0 1
+111 1
+.names new_n57_ new_n67_ new_n68_ new_n69_ po06_cascade
+1000 1
+0100 1
+0010 1
+1110 1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names pi02 pi12 new_n58_ new_n66_ new_n57_
+-001 1
+-010 1
+0-01 1
+0-10 1
+1100 1
+1111 1
+
+.names new_n59_ new_n58__cascade0 new_n58__cascade1 new_n58_
+1-1 1
+01- 1
+.names new_n63_ new_n60_ new_n64_ new_n65_ new_n58__cascade0
+1000 1
+0100 1
+0010 1
+1110 1
+0001 1
+1101 1
+1011 1
+0111 1
+.names new_n60_ new_n64_ new_n65_ new_n58__cascade1
+000 1
+110 1
+101 1
+011 1
+
+.names new_n50_ new_n53_ new_n59_
+01 1
+
+.names new_n61_ new_n62_ new_n60__cascade new_n60_
+-10 1
+1-1 1
+.names pi05 pi09 pi06 pi08 new_n60__cascade
+11-0 1
+-011 1
+0-11 1
+110- 1
+
+
+
+.names pi03 pi10 new_n63__cascade new_n63_
+110 1
+.names new_n52_ pi09 new_n45_ new_n51_ new_n63__cascade
+1-00 1
+10-0 1
+0-11 1
+01-1 1
+100- 1
+011- 1
+
+.names pi04 pi10 new_n64_
+11 1
+
+.names pi03 pi11 new_n65_
+11 1
+
+.names new_n54_ new_n53_ new_n66__cascade new_n50_ new_n66_
+-010 1
+10-0 1
+-111 1
+11-1 1
+1-1- 1
+.names new_n47_ new_n46_ new_n42_ new_n66__cascade
+-10 1
+1-0 1
+11- 1
+
+.names pi00 pi13 new_n67__cascade new_n67_
+110 1
+.names new_n55_ new_n49_ pi12 pi01 new_n67__cascade
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+
+.names new_n49_ new_n55_ pi01 pi12 new_n68_
+-111 1
+0-11 1
+01-- 1
+
+.names pi00 pi14 new_n69_
+11 1
+
+.names pi01 pi14 po07_cascade po07
+110 1
+-01 1
+0-1 1
+.names new_n71_ new_n83_ new_n84_ new_n85_ po07_cascade
+1000 1
+0100 1
+0010 1
+1110 1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names pi02 new_n71__cascade0 new_n71__cascade1 new_n71_
+1-1 1
+01- 1
+.names new_n72_ new_n73_ new_n82_ new_n71__cascade0
+100 1
+010 1
+001 1
+111 1
+.names pi13 new_n72_ new_n73_ new_n82_ new_n71__cascade1
+1000 1
+0100 1
+0010 1
+1110 1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names pi02 new_n72__cascade0 new_n72__cascade1 new_n72_
+1-1 1
+01- 1
+.names new_n68_ new_n58_ new_n66_ new_n72__cascade0
+100 1
+111 1
+.names new_n68_ pi12 new_n58_ new_n66_ new_n72__cascade1
+-100 1
+1-00 1
+-111 1
+1-11 1
+11-- 1
+
+.names new_n74_ new_n79_ new_n73__cascade new_n73_
+100 1
+010 1
+001 1
+111 1
+.names new_n65_ new_n81_ new_n66_ new_n80_ new_n73__cascade
+-010 1
+10-0 1
+-101 1
+01-1 1
+010- 1
+101- 1
+
+.names new_n75_ new_n78_ new_n76_ new_n77_ new_n74_
+-100 1
+-111 1
+0001 1
+0010 1
+1-00 1
+1-11 1
+
+.names new_n62_ new_n75__cascade0 new_n75__cascade1 new_n75_
+1-1 1
+01- 1
+.names pi05 pi09 pi06 pi08 new_n75__cascade0
+11-0 1
+-011 1
+0-11 1
+110- 1
+.names new_n75__cascade1
+ 0
+
+.names pi06 pi09 pi07 pi08 new_n76_
+-011 0
+0-11 0
+11-0 0
+110- 0
+
+.names pi05 pi10 new_n77_
+11 1
+
+.names pi05 pi06 pi08 pi09 new_n78_
+1111 1
+
+.names new_n60_ new_n64_ new_n63_ new_n59_ new_n79_
+-000 0
+1-00 0
+10-- 0
+
+.names new_n59_ new_n63_ new_n60_ new_n64_ new_n80_
+-100 1
+-111 1
+0001 1
+0010 1
+1-00 1
+1-11 1
+
+.names pi04 pi11 new_n81_
+11 1
+
+.names pi03 pi12 new_n82_
+11 1
+
+.names new_n57_ new_n69_ new_n83__cascade new_n83_
+010 1
+111 1
+.names new_n68_ new_n67_ pi13 pi01 new_n83__cascade
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+
+.names pi01 new_n84__cascade0 new_n84__cascade1 new_n84_
+1-1 1
+01- 1
+.names new_n67_ new_n57_ new_n68_ new_n84__cascade0
+100 0
+111 0
+.names new_n67_ pi13 new_n57_ new_n68_ new_n84__cascade1
+-010 1
+0-10 1
+-001 1
+0-01 1
+00-- 1
+
+.names pi00 pi15 new_n85_
+11 1
+
+.names pi01 pi15 po08_cascade po08
+110 1
+-01 1
+0-1 1
+.names new_n87_ new_n88_ new_n89_ new_n102_ po08_cascade
+1000 1
+0100 1
+0010 1
+1110 1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names new_n71_ new_n85_ new_n87__cascade new_n87_
+110 1
+011 1
+.names new_n84_ new_n83_ pi14 pi01 new_n87__cascade
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+
+.names pi01 new_n88__cascade0 new_n88__cascade1 new_n88_
+1-1 1
+01- 1
+.names new_n83_ new_n71_ new_n84_ new_n88__cascade0
+110 0
+101 0
+.names new_n83_ pi14 new_n71_ new_n84_ new_n88__cascade1
+-000 1
+0-00 1
+-011 1
+0-11 1
+00-- 1
+
+.names new_n90_ new_n100_ new_n89__cascade new_n89_
+000 1
+110 1
+101 1
+011 1
+.names new_n99_ new_n101_ new_n84_ new_n71_ new_n89__cascade
+-100 1
+00-1 1
+001- 1
+11-- 1
+
+.names new_n91_ new_n93_ new_n98_ new_n90_
+001 1
+010 1
+100 1
+111 1
+
+.names new_n92_ new_n81_ new_n74_ new_n79_ new_n91_
+-100 1
+-111 1
+1-00 1
+1-11 1
+11-- 1
+
+.names new_n66_ new_n65_ new_n92__cascade new_n92_
+-10 1
+1-0 1
+11- 1
+.names new_n59_ new_n63_ new_n60_ new_n64_ new_n92__cascade
+-100 1
+1-00 1
+0010 1
+0001 1
+-111 1
+1-11 1
+
+.names new_n95_ new_n96_ new_n93__cascade new_n93_
+100 1
+010 1
+001 1
+111 1
+.names new_n77_ new_n97_ new_n94_ new_n79_ new_n93__cascade
+-110 1
+01-0 1
+-001 1
+10-1 1
+100- 1
+011- 1
+
+.names new_n75_ new_n78_ new_n76_ new_n94_
+-10 1
+001 1
+1-0 1
+
+
+.names pi06 pi10 new_n96_
+11 1
+
+.names pi05 pi11 new_n97_
+11 1
+
+.names pi04 pi12 new_n98_
+11 1
+
+.names pi02 new_n99__cascade0 new_n99__cascade1 new_n99_
+1-1 1
+01- 1
+.names new_n99__cascade0
+ 0
+.names new_n72_ new_n73_ new_n82_ pi13 new_n99__cascade1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names new_n72_ new_n73_ new_n82_ new_n100_
+-01 1
+1-1 1
+10- 1
+
+.names pi03 pi13 new_n101_
+11 1
+
+.names pi02 pi14 new_n102_
+11 1
+
+.names new_n104_ new_n105_ new_n117_ po09
+000 1
+011 1
+101 1
+110 1
+
+.names new_n87_ pi01 new_n104__cascade pi15 new_n104_
+-111 1
+11-1 1
+1-1- 1
+.names new_n88_ new_n89_ new_n102_ new_n104__cascade
+100 1
+010 1
+001 1
+111 1
+
+.names new_n106_ new_n115_ new_n105__cascade new_n105_
+000 1
+110 1
+101 1
+011 1
+.names new_n102_ new_n116_ new_n89_ new_n88_ new_n105__cascade
+-100 1
+11-0 1
+-011 1
+00-1 1
+110- 1
+001- 1
+
+.names pi04 new_n106__cascade0 new_n106__cascade1 new_n106_
+1-1 1
+01- 1
+.names new_n107_ new_n108_ new_n114_ new_n106__cascade0
+100 1
+010 1
+001 1
+111 1
+.names pi13 new_n107_ new_n108_ new_n114_ new_n106__cascade1
+1000 1
+0100 1
+0010 1
+1110 1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names new_n98_ new_n93_ new_n107__cascade new_n91_ new_n107_
+-010 1
+10-0 1
+-111 1
+11-1 1
+1-1- 1
+.names new_n82_ new_n73_ new_n72_ new_n107__cascade
+-01 1
+1-1 1
+10- 1
+
+.names pi06 new_n110_ new_n108__cascade pi11 new_n108_
+-100 1
+-010 1
+1001 1
+1111 1
+010- 1
+001- 1
+.names new_n109_ new_n91_ pi05 pi11 new_n108__cascade
+-111 1
+0-11 1
+01-- 1
+
+.names pi06 new_n95_ new_n109__cascade pi10 new_n109_
+-100 1
+-010 1
+1001 1
+1111 1
+010- 1
+001- 1
+.names new_n94_ new_n79_ pi05 pi10 new_n109__cascade
+-111 1
+0-11 1
+01-- 1
+
+.names new_n95_ new_n96_ new_n110__cascade new_n111_ new_n110_
+-110 1
+0-10 1
+01-0 1
+-001 1
+1-01 1
+10-1 1
+.names new_n94_ new_n79_ new_n77_ new_n110__cascade
+-11 1
+0-1 1
+01- 1
+
+.names pi07 new_n111__cascade0 new_n111__cascade1 new_n111_
+1-1 1
+01- 1
+.names new_n111__cascade0
+ 1
+.names new_n112_ pi09 new_n113_ pi10 new_n111__cascade1
+01-0 0
+--01 0
+
+
+.names pi07 pi09 new_n113__cascade new_n113_
+111 1
+.names pi05 pi08 new_n62_ pi06 new_n113__cascade
+1-01 1
+-1-1 1
+110- 1
+
+.names pi05 pi12 new_n114_
+11 1
+
+.names new_n101_ new_n100_ new_n115__cascade new_n90_ new_n115_
+-000 1
+10-0 1
+-101 1
+11-1 1
+1-0- 1
+.names new_n71_ new_n84_ new_n99_ new_n115__cascade
+--1 0
+00- 0
+
+.names pi03 pi14 new_n116_
+11 1
+
+.names pi02 pi15 new_n117_
+11 1
+
+.names new_n119_ new_n129_ po10_cascade po10
+000 1
+110 1
+101 1
+011 1
+.names new_n117_ new_n130_ new_n105_ new_n104_ po10_cascade
+-110 1
+01-0 1
+-001 1
+10-1 1
+100- 1
+011- 1
+
+.names new_n120_ new_n121_ new_n119__cascade new_n119_
+-10 1
+1-0 1
+001 1
+.names pi05 pi13 new_n122_ new_n128_ new_n119__cascade
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+
+.names new_n106_ new_n115_ new_n120_
+01 1
+
+.names pi04 new_n121__cascade0 new_n121__cascade1 new_n121_
+1-1 1
+01- 1
+.names new_n121__cascade0
+ 0
+.names new_n107_ new_n108_ new_n114_ pi13 new_n121__cascade1
+0001 1
+1101 1
+1011 1
+0111 1
+
+.names new_n123_ new_n126_ new_n122__cascade new_n122_
+000 1
+110 1
+101 1
+011 1
+.names new_n114_ new_n127_ new_n108_ new_n107_ new_n122__cascade
+-110 1
+01-0 1
+-001 1
+10-1 1
+100- 1
+011- 1
+
+.names pi07 new_n123__cascade0 new_n123__cascade1 new_n123_
+1-1 1
+01- 1
+.names new_n124_ new_n125_ new_n123__cascade0
+01 0
+.names pi10 new_n124_ new_n125_ pi11 new_n123__cascade1
+-100 1
+0-00 1
+01-0 1
+-011 1
+1-11 1
+10-1 1
+
+.names new_n95_ pi06 new_n124__cascade pi10 new_n124_
+-111 0
+01-1 0
+0-1- 0
+.names new_n94_ new_n79_ pi05 pi10 new_n124__cascade
+-111 1
+0-11 1
+01-- 1
+
+.names pi07 pi09 new_n125__cascade new_n125_
+111 1
+.names pi05 pi08 new_n62_ pi06 new_n125__cascade
+1-01 1
+-1-1 1
+110- 1
+
+.names new_n110_ pi06 new_n126__cascade pi11 new_n126_
+-111 0
+01-1 0
+0-1- 0
+.names new_n109_ new_n91_ pi05 pi11 new_n126__cascade
+-111 1
+0-11 1
+01-- 1
+
+.names pi06 pi12 new_n127_
+11 1
+
+.names pi04 pi14 new_n128_
+11 1
+
+.names new_n116_ new_n115_ new_n129__cascade new_n106_ new_n129_
+-000 1
+10-0 1
+-101 1
+11-1 1
+1-0- 1
+.names new_n102_ new_n89_ new_n88_ new_n129__cascade
+-11 1
+0-1 1
+01- 1
+
+.names pi03 pi15 new_n130_
+11 1
+
+.names new_n132_ new_n133_ new_n140_ po11
+000 1
+011 1
+101 1
+110 1
+
+.names new_n130_ new_n129_ new_n132__cascade new_n119_ new_n132_
+-010 1
+10-0 1
+-111 1
+11-1 1
+1-1- 1
+.names new_n117_ new_n105_ new_n104_ new_n132__cascade
+-01 1
+1-1 1
+10- 1
+
+.names new_n135_ new_n138_ new_n133__cascade new_n133_
+100 1
+010 1
+001 1
+111 1
+.names new_n128_ new_n139_ new_n129_ new_n134_ new_n133__cascade
+-010 1
+10-0 1
+-101 1
+01-1 1
+010- 1
+101- 1
+
+.names new_n120_ new_n134__cascade0 new_n134__cascade1 new_n134_
+1-1 1
+01- 1
+.names new_n121_ pi05 pi13 new_n122_ new_n134__cascade0
+1-00 1
+0110 1
+10-0 1
+0-01 1
+1111 1
+00-1 1
+.names pi05 pi13 new_n122_ new_n134__cascade1
+-00 1
+0-0 1
+111 1
+
+.names pi06 pi13 new_n135__cascade new_n135_
+110 1
+-01 1
+0-1 1
+.names pi07 pi12 new_n136_ new_n137_ new_n135__cascade
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+
+.names new_n127_ new_n123_ new_n136__cascade new_n126_ new_n136_
+-110 1
+11-0 1
+-011 1
+10-1 1
+1-1- 1
+.names new_n114_ new_n108_ new_n107_ new_n136__cascade
+-01 1
+1-1 1
+10- 1
+
+.names new_n126_ pi11 new_n137__cascade pi07 new_n137_
+-111 0
+01-1 0
+0-1- 0
+.names pi10 new_n125_ new_n124_ pi07 new_n137__cascade
+1-01 1
+11-1 1
+-10- 1
+
+.names new_n122_ pi05 new_n138__cascade pi13 new_n138_
+-111 1
+01-1 1
+0-1- 1
+.names new_n115_ new_n106_ new_n121_ new_n138__cascade
+--1 1
+10- 1
+
+.names pi05 pi14 new_n139_
+11 1
+
+.names pi04 pi15 new_n140_
+11 1
+
+.names new_n142_ new_n146_ po12_cascade po12
+000 1
+110 1
+101 1
+011 1
+.names new_n140_ new_n147_ new_n133_ new_n132_ po12_cascade
+-110 1
+01-0 1
+-001 1
+10-1 1
+100- 1
+011- 1
+
+.names new_n143_ new_n142__cascade0 new_n142__cascade1 new_n142_
+1-1 1
+01- 1
+.names new_n144_ pi06 pi14 new_n145_ new_n142__cascade0
+1-00 1
+0110 1
+10-0 1
+0-01 1
+1111 1
+00-1 1
+.names pi06 pi14 new_n145_ new_n142__cascade1
+-00 1
+0-0 1
+111 1
+
+.names new_n135_ new_n138_ new_n143_
+01 1
+
+.names pi06 pi13 new_n144__cascade new_n144_
+110 1
+.names new_n137_ new_n136_ pi12 pi07 new_n144__cascade
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+
+.names pi07 new_n145__cascade0 new_n145__cascade1 new_n145_
+1-1 1
+01- 1
+.names new_n136_ new_n137_ new_n145__cascade0
+10 0
+.names pi12 new_n136_ new_n137_ pi13 new_n145__cascade1
+-010 1
+0-10 1
+00-0 1
+-101 1
+1-01 1
+11-1 1
+
+.names new_n139_ new_n138_ new_n146__cascade new_n135_ new_n146_
+-010 1
+10-0 1
+-111 1
+11-1 1
+1-1- 1
+.names new_n128_ new_n129_ new_n134_ new_n146__cascade
+-10 1
+1-0 1
+11- 1
+
+.names pi05 pi15 new_n147_
+11 1
+
+.names pi06 pi15 new_n149_ new_n150_ po13
+-000 1
+-011 1
+0-00 1
+0-11 1
+1101 1
+1110 1
+
+.names new_n147_ new_n146_ new_n149__cascade new_n142_ new_n149_
+-010 1
+10-0 1
+-111 1
+11-1 1
+1-1- 1
+.names new_n140_ new_n133_ new_n132_ new_n149__cascade
+-01 1
+1-1 1
+10- 1
+
+.names pi07 new_n152_ new_n150__cascade pi14 new_n150_
+-000 1
+-110 1
+1101 1
+1011 1
+000- 1
+011- 1
+.names new_n146_ new_n151_ pi06 pi14 new_n150__cascade
+-011 1
+1-11 1
+10-- 1
+
+.names new_n143_ new_n144_ new_n145_ new_n151_
+-10 1
+001 1
+1-0 1
+
+
+.names pi07 new_n153__cascade0 new_n153__cascade1 new_n153_
+1-1 1
+01- 1
+.names new_n153__cascade0
+ 0
+.names pi12 pi06 new_n138_ pi13 new_n153__cascade1
+---0 0
+000- 0
+
+.names pi06 new_n154__cascade0 new_n154__cascade1 new_n154_
+1-1 1
+01- 1
+.names new_n138_ pi12 pi07 new_n154__cascade0
+111 1
+.names new_n138_ pi13 pi12 pi07 new_n154__cascade1
+-111 1
+1-11 1
+11-- 1
+
+.names pi07 new_n156_ po14_cascade pi15 po14
+-000 1
+-110 1
+1101 1
+1011 1
+000- 1
+011- 1
+.names new_n150_ new_n149_ pi06 pi15 po14_cascade
+-111 1
+0-11 1
+01-- 1
+
+.names new_n152_ pi07 new_n156__cascade pi14 new_n156_
+-111 0
+11-1 0
+1-1- 0
+.names new_n151_ pi06 new_n146_ pi14 new_n156__cascade
+-111 1
+01-1 1
+0-1- 1
+
+.names new_n156_ pi07 po15_cascade pi15 po15
+-111 1
+01-1 1
+0-1- 1
+.names new_n150_ new_n149_ pi06 pi15 po15_cascade
+-111 1
+0-11 1
+01-- 1
+.end
+

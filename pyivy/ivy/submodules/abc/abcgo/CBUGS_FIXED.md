@@ -368,3 +368,24 @@ and states how the Go port was verified.
   boxes `<name>L` and latch inputs `<name>_in` as the reader does; that is
   fixed under `TestAigerLatchNamesLikeNative`, and the vector's whole BLIF
   now equals native's.
+
+## 18. `write_blif -S` with a three-LUT structure crashes in `If_CluCheck3`
+
+- **File:** `src/map/if/ifDec16.c`, `If_CluCheck3`.
+- **Found:** 2026-11-27, porting `Io_WriteBlifSpecial` and comparing
+  `read base/abci/test_vectors/native_mul8_if6.blif; strash; if -S 444 -K 9;
+  write_blif -S 444 out.blif`: native died with a segmentation fault and an
+  empty file.
+- **Bug:** `Io_NtkWriteNodeIntStruct` calls `If_CluCheckExt3( NULL, ... )`,
+  which passes the NULL manager to `If_CluCheck3`. That function guards `p`
+  for its hash table, but when the first two-LUT split leaves too many
+  variables for the root it reads `p->pPars->nStructType`, so any node that
+  needs the second leaf LUT crashes the writer.
+- **Fix:** without a manager there is no structure restriction: test
+  `p == NULL || p->pPars->nStructType == 0` for the "allowed" case.
+- **Test:** `abcgo/base/abci/write_blif_special_native_test.go`
+  (`TestWriteBlifSpecialLikeNative`, needs `ABC_BINARY`). It failed with
+  "signal: segmentation fault"; now native's file and messages (nine nodes
+  "not decomposable") equal the port's.
+- **Go port:** `If_CluCheck3` already treated a nil manager as structure
+  type 0.

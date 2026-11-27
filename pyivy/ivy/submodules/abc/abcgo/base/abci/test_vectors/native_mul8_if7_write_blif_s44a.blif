@@ -1,0 +1,1670 @@
+.model test_vectors/bench/mul8
+.inputs pi00 pi01 pi02 pi03 pi04 pi05 pi06 pi07 pi08 pi09 pi10 pi11 pi12 \
+ pi13 pi14 pi15
+.outputs po00 po01 po02 po03 po04 po05 po06 po07 po08 po09 po10 po11 po12 \
+ po13 po14 po15
+
+.subckt m49 a=pi00 b=pi08 o=po00
+.subckt m50 a=pi00 b=pi09 c=pi01 d=pi08 o=po01
+.subckt m51 a=new_n37_ b=new_n38_ c=new_n39_ o=po02
+.subckt m52 a=pi09 b=pi01 c=pi08 d=pi10 e=pi02 f=pi00 o=new_n37_
+.subckt m53 a=pi10 b=pi01 c=pi09 d=pi02 e=pi00 f=pi08 o=new_n38_
+.subckt m54 a=pi02 b=pi00 c=pi10 d=pi09 e=pi01 f=pi08 o=new_n39_
+.subckt m55 a=pi00 b=pi11 c=new_n41_ d=new_n42_ e=new_n43_ o=po03
+.subckt m56 a=pi00 b=pi01 c=pi09 d=pi08 e=pi02 f=pi03 o=new_n41_
+.subckt m57 a=pi01 b=pi10 o=new_n42_
+.subckt m58 a=pi01 b=pi09 c=pi02 d=pi08 e=pi00 f=pi10 o=new_n43_
+.subckt m59 a=pi00 b=pi12 c=new_n45_ d=new_n49_ e=new_n50_ o=po04
+.subckt m60 a=new_n41_ b=new_n42_ c=new_n43_ d=new_n46_ e=new_n47_ f=new_n48_ \
+ o=new_n45_
+.subckt m61 a=pi03 b=pi09 c=pi04 d=pi08 o=new_n46_
+.subckt m62 a=pi02 b=pi10 o=new_n47_
+.subckt m63 a=pi00 b=pi02 c=pi01 d=pi03 e=pi08 f=pi09 o=new_n48_
+.subckt m64 a=pi01 b=pi11 o=new_n49_
+.subckt m65 a=new_n41_ b=new_n42_ c=new_n43_ d=pi11 e=pi00 o=new_n50_
+.subckt m66 a=pi00 b=pi13 c=pi01 d=pi12 e=new_n52_ f=new_n58_ o=po05
+.subckt m67 a=new_n45_ b=new_n49_ c=new_n50_ d=new_n53_ e=new_n56_ f=new_n57_ \
+ o=new_n52_
+.subckt m68 a=pi09 b=pi03 c=new_n54_ d=new_n48_ e=pi10 f=new_n55_ o=new_n53_
+.subckt m69 a=pi04 b=pi08 o=new_n54_
+.subckt m70 a=pi04 b=pi09 c=pi05 d=pi08 o=new_n55_
+.subckt m71 a=pi02 b=pi11 o=new_n56_
+.subckt m72 a=new_n47_ b=new_n41_ c=new_n42_ d=new_n43_ e=new_n46_ f=new_n48_ \
+ o=new_n57_
+.subckt m73 a=new_n45_ b=new_n49_ c=new_n50_ d=pi12 e=pi00 o=new_n58_
+.subckt m74 a=pi00 b=pi14 c=pi01 d=pi13 e=new_n60_ f=new_n71_ g=new_n72_ o=po06
+.subckt m75 a=new_n61_ b=new_n62_ c=new_n70_ o=new_n60_
+.subckt m76 a=new_n56_ b=new_n45_ c=new_n49_ d=new_n50_ e=new_n53_ f=new_n57_ \
+ o=new_n61_
+.subckt m77 a=new_n53_ b=new_n57_ c=pi04 d=pi10 e=new_n64_ f=new_n63_ g=new_n65_ \
+ o=new_n62_
+.subckt m78 a=pi03 b=pi11 o=new_n63_
+.subckt m79 a=pi09 b=new_n54_ c=new_n48_ d=new_n55_ e=pi10 f=pi03 o=new_n64_
+.subckt m80 a=new_n54_ b=new_n67_ c=new_n68_ d=new_n66_ e=new_n48_ f=new_n69_ \
+ o=new_n65_
+.subckt m81 a=pi03 b=pi09 o=new_n66_
+.subckt m82 a=pi05 b=pi08 o=new_n67_
+.subckt m83 a=pi04 b=pi09 o=new_n68_
+.subckt m84 a=pi05 b=pi09 c=pi06 d=pi08 o=new_n69_
+.subckt m85 a=pi02 b=pi12 o=new_n70_
+.subckt m86 a=pi01 b=pi12 c=new_n52_ d=new_n58_ e=pi00 f=pi13 o=new_n71_
+.subckt m87 a=new_n52_ b=new_n58_ c=pi01 d=pi12 o=new_n72_
+.subckt m88 a=pi00 b=pi15 c=pi01 d=pi14 e=new_n74_ f=new_n90_ g=new_n91_ o=po07
+.subckt m89 a=pi02 b=pi13 c=pi03 d=pi12 e=new_n75_ f=new_n76_ o=new_n74_
+.subckt m90 a=new_n70_ b=new_n52_ c=new_n58_ d=pi12 e=pi01 f=new_n62_ g=new_n61_ \
+ o=new_n75_
+.subckt m91 a=new_n61_ b=new_n63_ c=new_n89_ d=new_n77_ e=new_n87_ f=new_n88_ \
+ o=new_n76_
+.subckt m92 a=new_n84_ b=new_n82_ c=new_n83_ d=new_n78_ e=new_n81_ o=new_n77_
+.subckt m93 a=new_n79_ b=new_n80_ o=new_n78_
+.subckt m94 a=pi07 b=pi08 o=new_n79_
+.subckt m95 a=pi06 b=pi09 o=new_n80_
+.subckt m96 a=pi05 b=pi10 o=new_n81_
+.subckt m97 a=new_n54_ b=new_n67_ c=new_n68_ d=new_n66_ e=new_n48_ f=new_n69_ \
+ o=new_n82_
+.subckt m98 a=pi05 b=pi06 c=pi08 d=pi09 o=new_n83_
+.subckt m99 a=new_n85_ b=new_n69_ c=new_n54_ d=new_n66_ e=new_n48_ f=new_n86_ \
+ g=new_n83_ o=new_n84_
+.subckt m100 a=pi08 b=pi05 c=pi04 d=pi09 o=new_n85_
+.subckt m101 a=pi04 b=pi05 c=pi08 d=pi09 o=new_n86_
+.subckt m102 a=pi04 b=pi11 o=new_n87_
+.subckt m103 a=new_n64_ b=new_n53_ c=new_n57_ d=new_n65_ e=pi04 f=pi10 o=new_n88_
+.subckt m104 a=new_n53_ b=new_n57_ c=pi04 d=pi10 e=new_n64_ f=new_n65_ o=new_n89_
+.subckt m105 a=pi01 b=pi13 c=new_n60_ d=new_n71_ e=new_n72_ f=pi14 g=pi00 \
+ o=new_n90_
+.subckt m106 a=new_n71_ b=pi13 c=pi01 d=new_n60_ e=new_n72_ o=new_n91_
+.subckt m107 a=pi01 b=pi15 c=new_n93_ d=new_n94_ e=new_n95_ f=new_n96_ o=po08
+.subckt m108 a=pi02 b=pi14 o=new_n93_
+.subckt m109 a=pi01 b=pi14 c=new_n74_ d=new_n90_ e=new_n91_ f=pi15 g=pi00 \
+ o=new_n94_
+.subckt m110 a=new_n90_ b=pi14 c=pi01 d=new_n74_ e=new_n91_ o=new_n95_
+.subckt m111 a=new_n74_ b=new_n91_ c=new_n108_ d=new_n97_ e=new_n107_ f=new_n109_ \
+ o=new_n96_
+.subckt m112 a=new_n98_ b=new_n99_ c=new_n106_ o=new_n97_
+.subckt m113 a=new_n87_ b=new_n61_ c=new_n89_ d=new_n63_ e=new_n88_ f=new_n77_ \
+ o=new_n98_
+.subckt m114 a=new_n81_ b=new_n88_ c=new_n105_ d=pi05 e=pi11 f=new_n100_ \
+ g=new_n101_ o=new_n99_
+.subckt m115 a=pi06 b=pi10 o=new_n100_
+.subckt m116 a=new_n103_ b=new_n84_ c=new_n79_ d=new_n80_ e=new_n102_ o=new_n101_
+.subckt m117 a=pi07 b=pi09 o=new_n102_
+.subckt m118 a=new_n85_ b=new_n69_ c=new_n54_ d=new_n66_ e=new_n48_ f=new_n86_ \
+ g=new_n104_ o=new_n103_
+.subckt m119 a=pi07 b=pi05 c=pi06 d=pi08 e=pi09 o=new_n104_
+.subckt m120 a=new_n82_ b=new_n83_ c=new_n84_ d=new_n78_ o=new_n105_
+.subckt m121 a=pi04 b=pi12 o=new_n106_
+.subckt m122 a=pi03 b=pi13 o=new_n107_
+.subckt m123 a=pi03 b=pi12 c=new_n75_ d=new_n76_ e=pi02 f=pi13 o=new_n108_
+.subckt m124 a=new_n75_ b=new_n76_ c=pi03 d=pi12 o=new_n109_
+.subckt m125 a=new_n111_ b=new_n112_ c=new_n121_ o=po09
+.subckt m126 a=new_n94_ b=pi15 c=pi01 d=new_n93_ e=new_n95_ f=new_n96_ \
+ o=new_n111_
+.subckt m127 a=new_n93_ b=new_n95_ c=new_n96_ d=pi03 e=pi14 f=new_n113_ \
+ g=new_n120_ o=new_n112_
+.subckt m128 a=pi04 b=pi13 c=new_n114_ d=new_n115_ e=new_n119_ o=new_n113_
+.subckt m129 a=new_n106_ b=new_n75_ c=new_n76_ d=pi12 e=pi03 f=new_n99_ \
+ g=new_n98_ o=new_n114_
+.subckt m130 a=pi05 b=pi11 c=new_n98_ d=new_n116_ e=pi06 f=new_n117_ o=new_n115_
+.subckt m131 a=pi05 b=pi10 c=new_n88_ d=new_n105_ e=pi06 f=new_n101_ o=new_n116_
+.subckt m132 a=new_n81_ b=new_n100_ c=new_n88_ d=new_n101_ e=new_n105_ \
+ f=new_n118_ o=new_n117_
+.subckt m133 a=pi06 b=pi08 c=new_n82_ d=pi09 e=pi10 f=pi07 o=new_n118_
+.subckt m134 a=pi05 b=pi12 o=new_n119_
+.subckt m135 a=new_n108_ b=new_n91_ c=new_n74_ d=new_n107_ e=new_n97_ f=new_n109_ \
+ o=new_n120_
+.subckt m136 a=pi02 b=pi15 o=new_n121_
+.subckt m137 a=new_n111_ b=new_n112_ c=new_n121_ d=pi03 e=pi15 f=new_n123_ \
+ g=new_n133_ o=po10
+.subckt m138 a=new_n125_ b=new_n126_ c=pi05 d=pi13 e=new_n124_ f=new_n127_ \
+ o=new_n123_
+.subckt m139 a=pi04 b=pi14 o=new_n124_
+.subckt m140 a=new_n114_ b=new_n115_ c=new_n119_ d=pi13 e=pi04 o=new_n125_
+.subckt m141 a=new_n113_ b=new_n120_ o=new_n126_
+.subckt m142 a=new_n114_ b=new_n115_ c=new_n119_ d=pi06 e=pi12 f=new_n128_ \
+ g=new_n132_ o=new_n127_
+.subckt m143 a=pi11 b=new_n131_ c=pi07 d=new_n129_ e=new_n130_ o=new_n128_
+.subckt m144 a=new_n101_ b=pi05 c=new_n105_ d=pi06 e=new_n88_ f=pi10 o=new_n129_
+.subckt m145 a=new_n79_ b=new_n84_ c=new_n80_ d=new_n102_ o=new_n130_
+.subckt m146 a=pi10 b=new_n130_ c=new_n129_ d=pi11 o=new_n131_
+.subckt m147 a=new_n117_ b=pi05 c=new_n116_ d=pi06 e=new_n98_ f=pi11 o=new_n132_
+.subckt m148 a=new_n134_ b=pi14 c=pi03 d=new_n120_ e=new_n113_ o=new_n133_
+.subckt m149 a=new_n93_ b=new_n95_ c=new_n96_ o=new_n134_
+.subckt m150 a=new_n136_ b=new_n138_ c=new_n147_ o=po11
+.subckt m151 a=new_n137_ b=pi15 c=pi03 d=new_n133_ e=new_n123_ o=new_n136_
+.subckt m152 a=new_n111_ b=new_n112_ c=new_n121_ o=new_n137_
+.subckt m153 a=new_n124_ b=new_n133_ c=new_n146_ d=pi05 e=pi14 f=new_n139_ \
+ g=new_n145_ o=new_n138_
+.subckt m154 a=pi06 b=pi13 c=new_n140_ d=new_n141_ e=new_n143_ o=new_n139_
+.subckt m155 a=pi07 b=pi12 o=new_n140_
+.subckt m156 a=new_n142_ b=pi12 c=pi06 d=new_n128_ e=new_n132_ o=new_n141_
+.subckt m157 a=new_n114_ b=new_n115_ c=new_n119_ o=new_n142_
+.subckt m158 a=new_n144_ b=pi10 c=new_n129_ d=new_n130_ e=pi11 f=pi07 o=new_n143_
+.subckt m159 a=pi11 b=new_n129_ c=new_n130_ d=pi10 e=pi07 f=new_n132_ o=new_n144_
+.subckt m160 a=new_n125_ b=new_n126_ c=new_n127_ d=pi13 e=pi05 o=new_n145_
+.subckt m161 a=new_n125_ b=new_n126_ c=pi05 d=pi13 e=new_n127_ o=new_n146_
+.subckt m162 a=pi04 b=pi15 o=new_n147_
+.subckt m163 a=new_n136_ b=new_n138_ c=new_n147_ d=pi05 e=pi15 f=new_n149_ \
+ g=new_n154_ o=po12
+.subckt m164 a=new_n150_ b=new_n151_ c=pi06 d=pi14 e=new_n152_ o=new_n149_
+.subckt m165 a=new_n140_ b=new_n141_ c=new_n143_ d=pi13 e=pi06 o=new_n150_
+.subckt m166 a=new_n139_ b=new_n145_ o=new_n151_
+.subckt m167 a=new_n140_ b=new_n141_ c=new_n143_ d=new_n153_ o=new_n152_
+.subckt m168 a=pi07 b=pi13 o=new_n153_
+.subckt m169 a=new_n155_ b=pi14 c=pi05 d=new_n145_ e=new_n139_ o=new_n154_
+.subckt m170 a=new_n124_ b=new_n146_ c=new_n133_ o=new_n155_
+.subckt m171 a=pi06 b=pi15 c=new_n157_ d=new_n159_ o=po13
+.subckt m172 a=new_n158_ b=pi15 c=pi05 d=new_n154_ e=new_n149_ o=new_n157_
+.subckt m173 a=new_n136_ b=new_n138_ c=new_n147_ o=new_n158_
+.subckt m174 a=pi06 b=pi14 c=new_n160_ d=new_n154_ e=pi07 f=new_n161_ o=new_n159_
+.subckt m175 a=new_n150_ b=new_n151_ c=new_n152_ o=new_n160_
+.subckt m176 a=new_n143_ b=new_n141_ c=new_n162_ d=new_n163_ o=new_n161_
+.subckt m177 a=new_n145_ b=pi12 c=pi06 d=pi13 e=pi07 o=new_n162_
+.subckt m178 a=new_n141_ b=new_n143_ c=new_n153_ d=new_n140_ e=new_n145_ f=pi13 \
+ g=pi06 o=new_n163_
+.subckt m179 a=pi06 b=pi15 c=new_n157_ d=new_n159_ e=pi07 f=new_n165_ o=po14
+.subckt m180 a=new_n161_ b=pi06 c=new_n160_ d=pi07 e=new_n154_ f=pi14 o=new_n165_
+.subckt m181 a=new_n165_ b=pi06 c=new_n159_ d=pi07 e=new_n157_ f=pi15 o=po15
+.end
+
+
+.model m49
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m50
+.inputs a b c d
+.outputs o
+.names a b c d o
+-011 1
+0-11 1
+11-0 1
+110- 1
+.end
+
+.model m51
+.inputs a b c
+.outputs o
+.names a b c o
+001 0
+.end
+
+.model m52
+.inputs a b c d e f
+.outputs o
+.names c d e f lut1
+--10 1
+1101 1
+.names lut1 a b f o
+0110 1
+1--1 1
+.end
+
+.model m53
+.inputs a b c d e f
+.outputs o
+.names a f d e lut1
+-110 1
+10-1 1
+.names lut1 b c o
+-11 0
+0-- 0
+.end
+
+.model m54
+.inputs a b c d e f
+.outputs o
+.names b c d f lut1
+--00 0
+0--1 0
+11-- 0
+.names lut1 a e f o
+1-10 0
+11-1 0
+.end
+
+.model m55
+.inputs a b c d e
+.outputs o
+.names c d e b lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b o
+0-0 1
+111 1
+00- 1
+.end
+
+.model m56
+.inputs a b c d e f
+.outputs o
+.names e a b d lut1
+1--0 1
+0111 1
+1-0- 1
+.names lut1 c f d o
+11-0 0
+-011 0
+0-11 0
+110- 0
+.end
+
+.model m57
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m58
+.inputs a b c d e f
+.outputs o
+.names a b c d lut1
+11-0 1
+--11 1
+.names lut1 e f o
+111 1
+.end
+
+.model m59
+.inputs a b c d e
+.outputs o
+.names c d e b lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b o
+0-0 1
+111 1
+00- 1
+.end
+
+.model m60
+.inputs a b c d e f
+.outputs o
+.names d e f c lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b c o
+1-00 1
+11-0 1
+0-11 1
+00-1 1
+110- 1
+001- 1
+.end
+
+.model m61
+.inputs a b c d
+.outputs o
+.names a b c d o
+-011 0
+0-11 0
+11-0 0
+110- 0
+.end
+
+.model m62
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m63
+.inputs a b c d e f
+.outputs o
+.names a b c d lut1
+1-11 1
+-1-1 1
+-11- 1
+.names lut1 e f o
+111 1
+.end
+
+.model m64
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m65
+.inputs a b c d e
+.outputs o
+.names a b c d lut1
+0001 1
+1101 1
+1011 1
+0111 1
+.names lut1 e o
+11 1
+.end
+
+.model m66
+.inputs a b c d e f
+.outputs o
+.names c d e f lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b o
+0-0 1
+111 1
+00- 1
+.end
+
+.model m67
+.inputs a b c d e f
+.outputs o
+.names d e f c lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b c o
+1-00 1
+11-0 1
+0-11 1
+00-1 1
+110- 1
+001- 1
+.end
+
+.model m68
+.inputs a b c d e f
+.outputs o
+.names a c d b lut1
+1-11 1
+11-1 1
+-11- 1
+.names lut1 f e b o
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+.end
+
+.model m69
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m70
+.inputs a b c d
+.outputs o
+.names a b c d o
+-011 0
+0-11 0
+11-0 0
+110- 0
+.end
+
+.model m71
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m72
+.inputs a b c d e f
+.outputs o
+.names b c d a lut1
+-11- 1
+0-1- 1
+01-- 1
+.names lut1 f e a o
+-001 1
+-111 1
+1--1 1
+100- 1
+111- 1
+.end
+
+.model m73
+.inputs a b c d e
+.outputs o
+.names a b c d lut1
+0001 1
+1101 1
+1011 1
+0111 1
+.names lut1 e o
+11 1
+.end
+
+.model m74
+.inputs a b c d e f g
+.outputs o
+.names c d e f lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 b a g o
+0-00 1
+1110 1
+00-0 1
+1-01 1
+0111 1
+10-1 1
+.end
+
+.model m75
+.inputs a b c
+.outputs o
+.names a b c o
+001 1
+010 1
+100 1
+111 1
+.end
+
+.model m76
+.inputs a b c d e f
+.outputs o
+.names b c d a lut1
+-11- 1
+0-1- 1
+01-- 1
+.names lut1 f e a o
+-001 1
+-111 1
+1--1 1
+100- 1
+111- 1
+.end
+
+.model m77
+.inputs a b c d e f g
+.outputs o
+.names c d g f lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 b a e o
+1-10 1
+10-0 1
+0--1 1
+010- 1
+.end
+
+.model m78
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m79
+.inputs a b c d e f
+.outputs o
+.names a b c d lut1
+-110 1
+1-10 1
+11-0 1
+-001 1
+0-01 1
+00-1 1
+.names lut1 e f o
+011 1
+.end
+
+.model m80
+.inputs a b c d e f
+.outputs o
+.names a d e c lut1
+-11- 1
+1-1- 1
+11-- 1
+.names lut1 b f c o
+-010 1
+0-10 1
+-101 1
+1-01 1
+110- 1
+001- 1
+.end
+
+.model m81
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m82
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m83
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m84
+.inputs a b c d
+.outputs o
+.names a b c d o
+-011 0
+0-11 0
+11-0 0
+110- 0
+.end
+
+.model m85
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m86
+.inputs a b c d e f
+.outputs o
+.names a b c d lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 e f o
+011 1
+.end
+
+.model m87
+.inputs a b c d
+.outputs o
+.names a b c d o
+-111 1
+0-11 1
+01-- 1
+.end
+
+.model m88
+.inputs a b c d e f g
+.outputs o
+.names c d e f lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 b a g o
+1-00 1
+0110 1
+10-0 1
+0-01 1
+1111 1
+00-1 1
+.end
+
+.model m89
+.inputs a b c d e f
+.outputs o
+.names c d e f lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b o
+1-0 1
+011 1
+10- 1
+.end
+
+.model m90
+.inputs a b c d e f g
+.outputs o
+.names e d b c lut1
+--01 1
+11-1 1
+110- 1
+.names lut1 g f a o
+-001 1
+-111 1
+1--1 1
+100- 1
+111- 1
+.end
+
+.model m91
+.inputs a b c d e f
+.outputs o
+.names d e f c lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b c o
+0-10 1
+01-0 1
+1-01 1
+10-1 1
+100- 1
+011- 1
+.end
+
+.model m92
+.inputs a b c d e
+.outputs o
+.names d e a lut1
+10- 1
+01- 1
+.names lut1 b c a o
+1--0 0
+000- 0
+.end
+
+.model m93
+.inputs a b
+.outputs o
+.names a b o
+00 1
+11 1
+.end
+
+.model m94
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m95
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m96
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m97
+.inputs a b c d e f
+.outputs o
+.names a d e c lut1
+-11- 1
+1-1- 1
+11-- 1
+.names lut1 b f c o
+-101 1
+1-01 1
+110- 1
+.end
+
+.model m98
+.inputs a b c d
+.outputs o
+.names a b c d o
+1111 1
+.end
+
+.model m99
+.inputs a b c d e f g
+.outputs o
+.names a c d e lut1
+0-11 1
+01-1 1
+011- 1
+.names lut1 b f g o
+0-00 1
+-1-0 1
+.end
+
+.model m100
+.inputs a b c d
+.outputs o
+.names a b c d o
+--11 0
+11-- 0
+.end
+
+.model m101
+.inputs a b c d
+.outputs o
+.names a b c d o
+1111 1
+.end
+
+.model m102
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m103
+.inputs a b c d e f
+.outputs o
+.names a b c e lut1
+-01- 1
+1--- 1
+.names lut1 d f e o
+-011 1
+1-11 1
+10-- 1
+.end
+
+.model m104
+.inputs a b c d e f
+.outputs o
+.names c d f e lut1
+110- 1
+-01- 1
+0-1- 1
+.names lut1 a b e o
+1-00 1
+11-0 1
+0--1 1
+001- 1
+.end
+
+.model m105
+.inputs a b c d e f g
+.outputs o
+.names d e b a lut1
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+.names lut1 c f g o
+0011 1
+1111 1
+.end
+
+.model m106
+.inputs a b c d e
+.outputs o
+.names d e a lut1
+10- 1
+01- 1
+.names lut1 b c a o
+-111 0
+0--1 0
+011- 0
+.end
+
+.model m107
+.inputs a b c d e f
+.outputs o
+.names c d e f lut1
+1000 1
+0100 1
+0010 1
+1110 1
+0001 1
+1101 1
+1011 1
+0111 1
+.names lut1 a b o
+1-0 1
+011 1
+10- 1
+.end
+
+.model m108
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m109
+.inputs a b c d e f g
+.outputs o
+.names d e b a lut1
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+.names lut1 c f g o
+1011 1
+0111 1
+.end
+
+.model m110
+.inputs a b c d e
+.outputs o
+.names d e a lut1
+10- 1
+01- 1
+.names lut1 b c a o
+-111 0
+1--1 0
+111- 0
+.end
+
+.model m111
+.inputs a b c d e f
+.outputs o
+.names d e f c lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b c o
+1-10 1
+11-0 1
+0--1 1
+000- 1
+.end
+
+.model m112
+.inputs a b c
+.outputs o
+.names a b c o
+001 1
+010 1
+100 1
+111 1
+.end
+
+.model m113
+.inputs a b c d e f
+.outputs o
+.names b c d a lut1
+-01- 1
+1-1- 1
+10-- 1
+.names lut1 f e a o
+-001 1
+-111 1
+1--1 1
+100- 1
+111- 1
+.end
+
+.model m114
+.inputs a b c d e f g
+.outputs o
+.names d e f g lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b c o
+0-10 1
+01-0 1
+1-01 1
+10-1 1
+100- 1
+011- 1
+.end
+
+.model m115
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m116
+.inputs a b c d e
+.outputs o
+.names b c d e lut1
+1-00 0
+10-0 0
+-00- 0
+.names lut1 a e o
+0-0 1
+101 1
+.end
+
+.model m117
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m118
+.inputs a b c d e f g
+.outputs o
+.names a c d e lut1
+0-11 1
+01-1 1
+011- 1
+.names lut1 b f g o
+0-01 1
+-1-1 1
+.end
+
+.model m119
+.inputs a b c d e
+.outputs o
+.names a b c d lut1
+-111 1
+1-11 1
+.names lut1 e o
+11 0
+.end
+
+.model m120
+.inputs a b c d
+.outputs o
+.names a b c d o
+--01 0
+00-0 0
+.end
+
+.model m121
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m122
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m123
+.inputs a b c d e f
+.outputs o
+.names a b c d lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 e f o
+011 1
+.end
+
+.model m124
+.inputs a b c d
+.outputs o
+.names a b c d o
+-011 1
+1-11 1
+10-- 1
+.end
+
+.model m125
+.inputs a b c
+.outputs o
+.names a b c o
+000 1
+011 1
+101 1
+110 1
+.end
+
+.model m126
+.inputs a b c d e f
+.outputs o
+.names d e f c lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b c o
+-111 1
+1-11 1
+11-- 1
+.end
+
+.model m127
+.inputs a b c d e f g
+.outputs o
+.names d e f g lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b c o
+0-00 1
+01-0 1
+1-11 1
+10-1 1
+010- 1
+101- 1
+.end
+
+.model m128
+.inputs a b c d e
+.outputs o
+.names c d e b lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b o
+1-0 1
+011 1
+10- 1
+.end
+
+.model m129
+.inputs a b c d e f g
+.outputs o
+.names e d b c lut1
+--10 1
+11-0 1
+111- 1
+.names lut1 g f a o
+-001 1
+-111 1
+1--1 1
+100- 1
+111- 1
+.end
+
+.model m130
+.inputs a b c d e f
+.outputs o
+.names a c d b lut1
+1-01 1
+11-1 1
+-10- 1
+.names lut1 f e b o
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+.end
+
+.model m131
+.inputs a b c d e f
+.outputs o
+.names a c d b lut1
+1-01 1
+11-1 1
+-10- 1
+.names lut1 f e b o
+10-0 1
+01-0 1
+0011 1
+1111 1
+100- 1
+010- 1
+.end
+
+.model m132
+.inputs a b c d e f
+.outputs o
+.names a c e d lut1
+-10- 1
+1-0- 1
+11-- 1
+.names lut1 b f d o
+-100 1
+1-00 1
+-011 1
+0-11 1
+110- 1
+001- 1
+.end
+
+.model m133
+.inputs a b c d e f
+.outputs o
+.names b a c d lut1
+-111 1
+1-11 1
+11-1 1
+.names lut1 f e o
+110 0
+011 0
+.end
+
+.model m134
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m135
+.inputs a b c d e f
+.outputs o
+.names a b c e lut1
+-00- 0
+1--- 0
+.names lut1 d f e o
+-100 1
+0-00 1
+-111 1
+0-11 1
+01-- 1
+.end
+
+.model m136
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m137
+.inputs a b c d e f g
+.outputs o
+.names d e f g lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b c o
+0-10 1
+00-0 1
+1-01 1
+11-1 1
+110- 1
+001- 1
+.end
+
+.model m138
+.inputs a b c d e f
+.outputs o
+.names c d e f lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b o
+100 1
+0-1 1
+01- 1
+.end
+
+.model m139
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m140
+.inputs a b c d e
+.outputs o
+.names a b c d lut1
+0001 1
+1101 1
+1011 1
+0111 1
+.names lut1 e o
+11 1
+.end
+
+.model m141
+.inputs a b
+.outputs o
+.names a b o
+01 1
+.end
+
+.model m142
+.inputs a b c d e f g
+.outputs o
+.names d e f g lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b c o
+0-10 1
+00-0 1
+1-01 1
+11-1 1
+110- 1
+001- 1
+.end
+
+.model m143
+.inputs a b c d e
+.outputs o
+.names a c b lut1
+0-1 0
+-0- 0
+.names lut1 d e b o
+1--0 0
+001- 0
+.end
+
+.model m144
+.inputs a b c d e f
+.outputs o
+
+.model m145
+.inputs a b c d
+.outputs o
+.names a b c d o
+-011 1
+1-11 1
+10-1 1
+.end
+
+.model m146
+.inputs a b c d
+.outputs o
+.names a b c d o
+-010 1
+-101 1
+0--0 1
+1-01 1
+11-1 1
+.end
+
+.model m147
+.inputs a b c d e f
+.outputs o
+
+.model m148
+.inputs a b c d e
+.outputs o
+.names d e a lut1
+10- 1
+01- 1
+.names lut1 b c a o
+-111 1
+0--1 1
+011- 1
+.end
+
+.model m149
+.inputs a b c
+.outputs o
+.names a b c o
+-00 1
+1-0 1
+10- 1
+.end
+
+.model m150
+.inputs a b c
+.outputs o
+.names a b c o
+000 1
+011 1
+101 1
+110 1
+.end
+
+.model m151
+.inputs a b c d e
+.outputs o
+.names d e a lut1
+10- 1
+01- 1
+.names lut1 b c a o
+-111 1
+0--1 1
+011- 1
+.end
+
+.model m152
+.inputs a b c
+.outputs o
+.names a b c o
+-01 1
+1-1 1
+10- 1
+.end
+
+.model m153
+.inputs a b c d e f g
+.outputs o
+.names d e f g lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b c o
+0-10 1
+01-0 1
+1-01 1
+10-1 1
+100- 1
+011- 1
+.end
+
+.model m154
+.inputs a b c d e
+.outputs o
+.names c d e b lut1
+100- 1
+010- 1
+001- 1
+111- 1
+.names lut1 a b o
+1-0 1
+011 1
+10- 1
+.end
+
+.model m155
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m156
+.inputs a b c d e
+.outputs o
+.names d e a lut1
+10- 1
+01- 1
+.names lut1 b c a o
+-111 1
+1--1 1
+111- 1
+.end
+
+.model m157
+.inputs a b c
+.outputs o
+.names a b c o
+-01 1
+1-1 1
+10- 1
+.end
+
+.model m158
+.inputs a b c d e f
+.outputs o
+.names b c d e lut1
+-011 1
+1-11 1
+10-1 1
+.names lut1 a f o
+1-1 0
+-1- 0
+.end
+
+.model m159
+.inputs a b c d e f
+.outputs o
+
+.model m160
+.inputs a b c d e
+.outputs o
+.names a b c lut1
+00- 0
+.names lut1 d e c o
+-110 1
+1--0 1
+111- 1
+.end
+
+.model m161
+.inputs a b c d e
+.outputs o
+.names c d e b lut1
+110- 1
+-01- 1
+0-1- 1
+.names lut1 a b o
+100 1
+0-1 1
+01- 1
+.end
+
+.model m162
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m163
+.inputs a b c d e f g
+.outputs o
+.names d e f g lut1
+1100 1
+-010 1
+0-10 1
+-001 1
+0-01 1
+1111 1
+.names lut1 a b c o
+0-10 1
+00-0 1
+1-01 1
+11-1 1
+110- 1
+001- 1
+.end
+
+.model m164
+.inputs a b c d e
+.outputs o
+.names c d e b lut1
+110- 1
+-01- 1
+0-1- 1
+.names lut1 a b o
+100 1
+0-1 1
+01- 1
+.end
+
+.model m165
+.inputs a b c d e
+.outputs o
+.names a b c d lut1
+0001 1
+1101 1
+1011 1
+0111 1
+.names lut1 e o
+11 1
+.end
+
+.model m166
+.inputs a b
+.outputs o
+.names a b o
+01 1
+.end
+
+.model m167
+.inputs a b c d
+.outputs o
+.names a b c d o
+-010 1
+-101 1
+0-10 1
+00-0 1
+1-01 1
+11-1 1
+.end
+
+.model m168
+.inputs a b
+.outputs o
+.names a b o
+11 1
+.end
+
+.model m169
+.inputs a b c d e
+.outputs o
+.names d e a lut1
+10- 1
+01- 1
+.names lut1 b c a o
+-111 1
+0--1 1
+011- 1
+.end
+
+.model m170
+.inputs a b c
+.outputs o
+.names a b c o
+-01 1
+1-1 1
+10- 1
+.end
+
+.model m171
+.inputs a b c d
+.outputs o
+.names a b c d o
+-000 1
+-011 1
+0-00 1
+0-11 1
+1101 1
+1110 1
+.end
+
+.model m172
+.inputs a b c d e
+.outputs o
+.names d e a lut1
+10- 1
+01- 1
+.names lut1 b c a o
+-111 1
+0--1 1
+011- 1
+.end
+
+.model m173
+.inputs a b c
+.outputs o
+.names a b c o
+-01 1
+1-1 1
+10- 1
+.end
+
+.model m174
+.inputs a b c d e f
+.outputs o
+.names a c d b lut1
+1-11 1
+10-1 1
+-01- 1
+.names lut1 f e b o
+00-0 1
+11-0 1
+1011 1
+0111 1
+000- 1
+110- 1
+.end
+
+.model m175
+.inputs a b c
+.outputs o
+.names a b c o
+-10 1
+001 1
+1-0 1
+.end
+
+.model m176
+.inputs a b c d
+.outputs o
+.names a b c d o
+--11 1
+01-1 1
+.end
+
+.model m177
+.inputs a b c d e
+.outputs o
+.names a b c d lut1
+---0 0
+000- 0
+.names lut1 e o
+11 1
+.end
+
+.model m178
+.inputs a b c d e f g
+.outputs o
+.names d e f g lut1
+-111 1
+1-11 1
+11-- 1
+.names lut1 a b c o
+-010 0
+0--0 0
+001- 0
+.end
+
+.model m179
+.inputs a b c d e f
+.outputs o
+.names a c d b lut1
+1-01 1
+11-1 1
+-10- 1
+.names lut1 f e b o
+00-0 1
+11-0 1
+1011 1
+0111 1
+000- 1
+110- 1
+.end
+
+.model m180
+.inputs a b c d e f
+.outputs o
+
+.model m181
+.inputs a b c d e f
+.outputs o
+

@@ -40,7 +40,19 @@ func blifPortName(port *abc.Object, input bool) string {
 }
 func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) error {
 	var out strings.Builder
-	fmt.Fprintln(&out, ".model", n.Name)
+	if done, err := writeBLIFHead(&out, n, mv, writeLatches); err != nil || done {
+		if err != nil {
+			return err
+		}
+		return writeText(w, out.String())
+	}
+	return writeBLIFBody(w, &out, n, mv)
+}
+
+// writeBLIFHead writes the model, I/O and latch lines; done reports a
+// black box, which has nothing more.
+func writeBLIFHead(out *strings.Builder, n *abc.Network, mv bool, writeLatches bool) (done bool, err error) {
+	fmt.Fprintln(out, ".model", n.Name)
 	for _, kind := range []abc.ObjectKind{abc.ObjectPI, abc.ObjectPO} {
 		directive := ".inputs"
 		if kind == abc.ObjectPO {
@@ -51,19 +63,19 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 		for _, port := range n.ObjectsOfKind(kind) {
 			names = append(names, blifPortName(port, kind == abc.ObjectPI))
 		}
-		writeBlifNames(&out, names, len(directive), 0)
+		writeBlifNames(out, names, len(directive), 0)
 		out.WriteByte('\n')
 	}
 	if n.Function == uint8(abc.ABC_FUNC_BLACKBOX) {
 		out.WriteString(".blackbox\n.end\n")
-		return writeText(w, out.String())
+		return true, nil
 	}
 	if mv {
 		for _, net := range n.ObjectsOfKind(abc.ObjectNet) {
 			if variable := abc.Abc_ObjMvVar(net); variable != nil {
-				fmt.Fprintf(&out, ".mv %s %d", blifObjectName(net), variable.Values)
+				fmt.Fprintf(out, ".mv %s %d", blifObjectName(net), variable.Values)
 				for _, label := range variable.Names {
-					fmt.Fprint(&out, " ", label)
+					fmt.Fprint(out, " ", label)
 				}
 				out.WriteByte('\n')
 			}
@@ -78,11 +90,11 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 			fans := latch.Fanins()
 			outs := latch.Fanouts()
 			if len(fans) != 1 || len(outs) != 1 {
-				return fmt.Errorf("malformed latch %d", latch.ID)
+				return false, fmt.Errorf("malformed latch %d", latch.ID)
 			}
 			input, output := blifPortNet(fans[0].Object, false), blifPortNet(outs[0], true)
 			if input == nil || output == nil {
-				return fmt.Errorf("latch is not connected through nets")
+				return false, fmt.Errorf("latch is not connected through nets")
 			}
 			// Io_NtkWriteLatch writes the reset value minus one.
 			init := -1
@@ -94,12 +106,16 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 			case abc.Abc_LatchIsInitDc(latch) != 0:
 				init = 2
 			}
-			fmt.Fprintf(&out, ".latch %10s %10s  %d\n", blifObjectName(input), blifObjectName(output), init)
+			fmt.Fprintf(out, ".latch %10s %10s  %d\n", blifObjectName(input), blifObjectName(output), init)
 		}
 		if len(latches) > 0 {
 			out.WriteString("\n")
 		}
 	}
+	return false, nil
+}
+
+func writeBLIFBody(w stdio.Writer, out *strings.Builder, n *abc.Network, mv bool) error {
 	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
 		outputs := node.Fanouts()
 		if len(outputs) != 1 {
@@ -113,7 +129,7 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 			}
 			names = append(names, blifObjectName(e.Object))
 		}
-		length, count := writeBlifNames(&out, names, 6, 0)
+		length, count := writeBlifNames(out, names, 6, 0)
 		// The output name uses a 75-column limit (Io_NtkWriteNodeFanins).
 		if name := blifObjectName(outputs[0]); count > 0 && length+len(name)+1 > 75 {
 			out.WriteString(" \\\n " + name + "\n")
@@ -135,7 +151,7 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 				if err != nil {
 					return err
 				}
-				fmt.Fprintln(&out, ".default", term)
+				fmt.Fprintln(out, ".default", term)
 			}
 			for _, cube := range data.Cubes {
 				if len(cube.Inputs) != node.FaninNum() {
@@ -146,13 +162,13 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 					if err != nil {
 						return err
 					}
-					fmt.Fprint(&out, term, " ")
+					fmt.Fprint(out, term, " ")
 				}
 				term, err := blifMVTerm(cube.Output, outputs[0], node.Fanins())
 				if err != nil {
 					return err
 				}
-				fmt.Fprintln(&out, term)
+				fmt.Fprintln(out, term)
 			}
 
 		default:
@@ -167,9 +183,9 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 		if !ok || model == nil {
 			return fmt.Errorf("box %d has no model", box.ID)
 		}
-		fmt.Fprint(&out, ".subckt ", model.Name)
+		fmt.Fprint(out, ".subckt ", model.Name)
 		if mv {
-			fmt.Fprint(&out, " ", blifObjectName(box))
+			fmt.Fprint(out, " ", blifObjectName(box))
 		}
 		inputs, outputs := model.ObjectsOfKind(abc.ObjectPI), model.ObjectsOfKind(abc.ObjectPO)
 		fans, outs := box.Fanins(), box.Fanouts()
@@ -181,14 +197,14 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 			if net == nil {
 				return fmt.Errorf("box input has no net")
 			}
-			fmt.Fprintf(&out, " %s=%s", blifPortName(port, true), blifObjectName(net))
+			fmt.Fprintf(out, " %s=%s", blifPortName(port, true), blifObjectName(net))
 		}
 		for i, port := range outputs {
 			net := blifPortNet(outs[i], true)
 			if net == nil {
 				return fmt.Errorf("box output has no net")
 			}
-			fmt.Fprintf(&out, " %s=%s", blifPortName(port, false), blifObjectName(net))
+			fmt.Fprintf(out, " %s=%s", blifPortName(port, false), blifObjectName(net))
 		}
 		out.WriteByte('\n')
 	}
@@ -310,4 +326,17 @@ func blifMVTerm(term abc.MVTerm, net *abc.Object, inputs []abc.Edge) (string, er
 		return values[0], nil
 	}
 	return "(" + strings.Join(values, ",") + ")", nil
+}
+
+// WriteBLIFSpecialFile writes Io_WriteBlifInt's file: the comment, model,
+// I/O and latch lines of netlist n, then the node section that body writes
+// (name is Abc_ObjName of a net).
+func WriteBLIFSpecialFile(n *abc.Network, filename string, body func(out *strings.Builder, name func(*abc.Object) string)) error {
+	var out strings.Builder
+	fmt.Fprintf(&out, "# Benchmark \"%s\" written by ABC on %s\n", n.Name, extra.Extra_TimeStamp())
+	if _, err := writeBLIFHead(&out, n, false, true); err != nil {
+		return err
+	}
+	body(&out, blifObjectName)
+	return os.WriteFile(filename, []byte(out.String()), 0o644)
 }
