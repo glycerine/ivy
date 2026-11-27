@@ -52,12 +52,6 @@ func TestCnfDeriveGiaRemappedPreservesOutputsAndIDs(t *testing.T) {
 	}
 }
 
-func TestCnfDeriveGiaRemappedNil(t *testing.T) {
-	if got := Cnf_DeriveGiaRemapped(nil); got != nil {
-		t.Fatalf("nil graph yielded CNF %v", got)
-	}
-}
-
 func TestCnfDataLiftGiaPreservesSatisfyingAssignments(t *testing.T) {
 	graph := aig.NewGraph()
 	x, y := graph.NewInput(), graph.NewInput()

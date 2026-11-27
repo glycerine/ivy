@@ -1640,8 +1640,8 @@ void Gia_ManFaultTest( Gia_Man_t * p, Gia_Man_t * pG, Bmc_ParFf_t * pPars )
                     Vec_IntPush( vPars, pCnf->pVarNums[Gia_ObjId(pM, pObj)] );
             assert( Vec_IntSize(vPars) == Gia_ManPiNum(pM) - nFuncVars );
         }
-        // derive unit parameter variables
-        if ( Iter && pPars->nIterCheck && (Iter % pPars->nIterCheck) == 0 )
+        // derive unit parameter variables (only fault models with a fault map have them)
+        if ( Iter && pPars->nIterCheck && (Iter % pPars->nIterCheck) == 0 && Vec_IntSize(vMap) > 0 )
         {
             Gia_ManFaultAnalyze( pSat, vPars, vMap, vLits, Iter );
             // cleanup

@@ -522,6 +522,29 @@ and states how the Go port was verified.
 - **Go port:** its formula parsers reject the missing operand ("expected an
   operand"); they word their errors differently.
 
+## 24. `&fftest -N` segfaults with the formula and delay fault models
+
+- **File:** `src/sat/bmc/bmcFault.c` (`Gia_ManFaultTest`).
+- **Found:** 2026-11-27 while porting `&fftest` line by line:
+  `&r native_mul4_gen.aig; &fftest -A 0 -S ((a&b)^p) -N 2` and
+  `read native_s27_drw.blif; strash; &get; &fftest -A 1 -N 2` dumped core.
+- **Bug:** every `-N` iterations `Gia_ManFaultTest` calls
+  `Gia_ManFaultAnalyze` to find fault parameters that can be fixed to 0 and
+  removes them from the fault map `vMap`. Only the stuck-at, complement and
+  functionally-observable models (`-A 2..4`) have a fault map; for `-A 0`
+  (formula) and `-A 1` (delay) `vMap` is empty, so the
+  `assert( Vec_IntSize(vPars) == Vec_IntSize(vMap) )` fails, and in a
+  release build the loop reads `vLits`/`vMap` (copies of the empty map)
+  past their end.
+- **Fix:** run the parameter analysis (and the miter recomputation that
+  follows it) only when `Vec_IntSize(vMap) > 0`, so `-N` has no effect
+  for the models without a fault map.
+- **Test:** `abcgo/base/abci/fftest_native_test.go`
+  (`TestNativeFftestIterCheckWithoutFaultMap`, needs `ABC_BINARY`): native
+  segfaulted; now its output equals the run without `-N`, and the port's.
+- **Go port:** the same condition in `Gia_ManFaultTest`
+  (`sat/bmc/bmcFault.go`); the port had panicked on the assertion.
+
 ## 25. `&mfsd -K 5` and `-K 6` smash the stack
 
 - **File:** `src/opt/sbd/sbdLut.c` (`Sbd_ProblemAddClauses`).

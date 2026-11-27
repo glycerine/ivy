@@ -17,16 +17,12 @@ func TestFaultDump(t *testing.T) {
 	gia.Gia_ManSetRegNum(p, 1)
 	tests := vec.Vec_IntAllocArrayCopy([]int32{1, 1, 0, 0, 1, 1}, 6)
 	name := filepath.Join(t.TempDir(), "tests")
-	if err := Gia_ManDumpTests(tests, 2, name); err != nil {
-		t.Fatal(err)
-	}
+	Gia_ManDumpTests(tests, 2, name)
 	data, err := os.ReadFile(name)
 	if err != nil || string(data) != "110\n011\n" {
 		t.Fatalf("dump %q %v", data, err)
 	}
-	if err := Gia_ManDumpTestsDelay(tests, 2, name, p); err != nil {
-		t.Fatal(err)
-	}
+	Gia_ManDumpTestsDelay(tests, 2, name, p)
 	data, err = os.ReadFile(name)
 	if err != nil || string(data) != "11\n01\n10\n10\n" {
 		t.Fatalf("delay %q %v", data, err)

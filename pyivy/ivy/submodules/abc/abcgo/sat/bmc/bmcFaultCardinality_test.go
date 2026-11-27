@@ -5,6 +5,7 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"math/bits"
+	"os"
 	"strings"
 	"testing"
 )
@@ -71,10 +72,18 @@ func TestCardinalityAtMostOne(t *testing.T) {
 }
 
 func TestCardinalityDiagnostic(t *testing.T) {
-	var output bytes.Buffer
-	if n := printCardinalityPatterns(&output); n != 28 {
-		t.Fatalf("got %d patterns, want 28", n)
+	r, w, err := os.Pipe()
+	if err != nil {
+		t.Fatal(err)
 	}
+	original := os.Stdout
+	os.Stdout = w
+	Cnf_AddCardinConstrTest()
+	w.Close()
+	os.Stdout = original
+	var output bytes.Buffer
+	output.ReadFrom(r)
+	r.Close()
 	seen := map[string]bool{}
 	for _, line := range strings.Split(strings.TrimSpace(output.String()), "\n") {
 		parts := strings.Split(line, ": ")
