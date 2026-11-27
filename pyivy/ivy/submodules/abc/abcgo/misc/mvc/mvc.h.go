@@ -28,7 +28,11 @@ type Mvc_Cover_t struct {
 	Mask  *Mvc_Cube_t
 	Mem   *Mvc_Manager_t
 }
-type Mvc_Manager_t struct{}
+// Mvc_Manager_t hands out cubes from slabs, as ABC's fixed-size cube
+// memory does (one manager per factored function).
+type Mvc_Manager_t struct {
+	cubes []Mvc_Cube_t
+}
 type Mvc_Data_t struct {
 	Man     *Mvc_Manager_t
 	BinVars int
