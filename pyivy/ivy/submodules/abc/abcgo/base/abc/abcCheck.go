@@ -1,6 +1,7 @@
 package abc
 
 import (
+	"fmt"
 	"sort"
 	"strings"
 )
@@ -314,22 +315,27 @@ func Abc_NtkCheckLatch(n *Network, o *Object) int32 {
 	input, output := o.fanins[0].Object, o.fanouts[0]
 	return abcBool(n.contains(input) && n.contains(output) && input.Kind == ObjectBI && output.Kind == ObjectBO && len(input.fanins) == 1 && len(input.fanouts) == 1 && len(output.fanins) == 1)
 }
-func compareNamedObjects(a, b []*Object) int32 {
+
+// compareNamedObjects is the loop of Abc_NtkComparePis/Pos: the same count,
+// and the same name at each position, reporting the first difference.
+func compareNamedObjects(a, b []*Object, count, kind string) int32 {
 	if len(a) != len(b) {
+		fmt.Printf("Networks have different number of %s.\n", count)
 		return 0
 	}
 	for i, o := range a {
 		if o.Name() != b[i].Name() {
+			fmt.Printf("%s #%d is different in network 1 ( \"%s\") and in network 2 (\"%s\").\n", kind, i, o.Name(), b[i].Name())
 			return 0
 		}
 	}
 	return 1
 }
 func Abc_NtkComparePis(a, b *Network, _ int32) int32 {
-	return compareNamedObjects(a.ObjectsOfKind(ObjectPI), b.ObjectsOfKind(ObjectPI))
+	return compareNamedObjects(a.ObjectsOfKind(ObjectPI), b.ObjectsOfKind(ObjectPI), "primary inputs", "Primary input")
 }
 func Abc_NtkComparePos(a, b *Network, _ int32) int32 {
-	return compareNamedObjects(a.ObjectsOfKind(ObjectPO), b.ObjectsOfKind(ObjectPO))
+	return compareNamedObjects(a.ObjectsOfKind(ObjectPO), b.ObjectsOfKind(ObjectPO), "primary outputs", "Primary output")
 }
 func Abc_NtkCompareBoxes(a, b *Network, combinational int32) int32 {
 	if combinational == 0 {
@@ -337,10 +343,15 @@ func Abc_NtkCompareBoxes(a, b *Network, combinational int32) int32 {
 	}
 	as, bs := a.Boxes(), b.Boxes()
 	if len(as) != len(bs) {
+		fmt.Printf("Networks have different number of latches.\n")
 		return 0
 	}
 	for i, o := range as {
-		if o.Kind != ObjectLatch || bs[i].Kind != ObjectLatch || len(o.fanouts) != 1 || len(bs[i].fanouts) != 1 || o.fanouts[0].Name() != bs[i].fanouts[0].Name() {
+		if o.Kind != ObjectLatch || bs[i].Kind != ObjectLatch || len(o.fanouts) != 1 || len(bs[i].fanouts) != 1 {
+			return 0
+		}
+		if o.fanouts[0].Name() != bs[i].fanouts[0].Name() {
+			fmt.Printf("Box #%d is different in network 1 ( \"%s\") and in network 2 (\"%s\").\n", i, o.fanouts[0].Name(), bs[i].fanouts[0].Name())
 			return 0
 		}
 	}
