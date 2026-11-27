@@ -35,7 +35,9 @@ func TestSimulationSequentialReportSourceDimensions(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(string(out), "random simulation of 0 frames with 3 words.\n") {
+	// rounds, frames and words each in their place (CBUGS_FIXED.md #22; the
+	// source reported the rounds as frames and the frames as words)
+	if !strings.Contains(string(out), "Performing 0 rounds of random simulation of 3 frames with 7 words.\n") {
 		t.Fatalf("source report: %s", out)
 	}
 }

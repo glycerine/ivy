@@ -293,7 +293,7 @@ void Cec_ManSimulation( Gia_Man_t * pAig, Cec_ParSim_t * pPars )
     int r, nLitsOld, nLitsNew, nCountNoRef = 0, fStop = 0;
     Gia_ManRandom( 1 );
     if ( pPars->fSeqSimulate )
-        Abc_Print( 1, "Performing rounds of random simulation of %d frames with %d words.\n", 
+        Abc_Print( 1, "Performing %d rounds of random simulation of %d frames with %d words.\n", 
             pPars->nRounds, pPars->nFrames, pPars->nWords );
     nLitsOld = Gia_ManEquivCountLits( pAig );
     for ( r = 0; r < pPars->nRounds; r++ )

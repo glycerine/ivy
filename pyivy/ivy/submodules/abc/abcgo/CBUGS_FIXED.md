@@ -459,3 +459,39 @@ and states how the Go port was verified.
   `Output 0 of miter "s27.bench" was asserted in frame 0.` from &reachm,
   &reachn and &reachy.
 - **Go port:** the &reach* commands are not registered yet (task #39).
+
+## 22. `Abc_Print`/`printf` reports with missing, extra or misplaced arguments
+
+- **Files:** `src/base/abci/abc.c` (`powerdown` usage),
+  `src/proof/cec/cecCore.c` (`Cec_ManSimulation`),
+  `src/base/abci/abcNpnSave.c` (`Npn_ManRead`), `src/aig/gia/giaGiarf.c`
+  (`Gia_ComputeEquivalences`), `src/sat/proof/pr.c` (`Pr_ManProofTraceOne`
+  resolvent message), `src/proof/pdr/pdrIncr.c` (`IPdr_ManSolveInt`).
+- **Found:** 2026-11-27, after bug 21, by compiling every C file with
+  `-include` of an `Abc_Print` prototype carrying
+  `__attribute__((format(printf,2,3)))` (ABC declares none, so gcc never
+  checked these calls) and `-Wformat`.
+- **Bugs:**
+  - `powerdown -h`: "5% means" in a format string; `% m` is a directive, so
+    native printed "(e.g. 5No such file or directoryeans hot wires ...".
+  - `&equiv -s`: "Performing rounds of random simulation of %d frames with
+    %d words." was passed rounds, frames and words, so it reported 20 frames
+    and 100 words for 20 rounds of 100 frames with 31 words.
+  - `npnload`: "Skipping token %s ..." had no argument (it printed the
+    right token only because the pointer was still in the argument
+    register).
+  - `Gia_ComputeEquivalences`: "Iters = %3d" had no argument.
+  - pr.c: the argument was inside the string literal (`"...\n, pFinal->Id"`).
+  - `IPdr_ManSolveInt`: "Reached conflict limit (%d) in frame." dropped the
+    frame it was passed.
+- **Fix:** match each format to its arguments ("5%%", "Performing %d rounds
+  ...", pass `pToken`, `nIters`, `pFinal->Id`, "in frame %d").
+- **Tests:** `abcgo/base/abci/printf_format_native_test.go`:
+  `TestNativeAbcPrintFormatsMatchArguments` (the gcc check over these files,
+  red before), `TestNativePowerdownUsageText`, `TestEquivSeqSimulationReport`
+  (native and port).
+- **Go port:** copied the `&equiv -s` report (fixed); the others were
+  already right. Not fixed here: pr.c keeps writing the resolvent after
+  reporting that it ran out of space (no test reaches it), and several
+  `%d` are given a `long`/`size_t`, which prints correctly for small values
+  on LP64.

@@ -6513,7 +6513,7 @@ usage:
     Abc_Print( -2, "\t           transforms LUT-mapped network into an AIG with choices;\n" );
     Abc_Print( -2, "\t           the choices are added to power down the next round of mapping\n" );
     Abc_Print( -2, "\t-P <num> : switching propability delta defining power critical edges [default = %d%%]\n", Percentage );
-    Abc_Print( -2, "\t           (e.g. 5% means hot wires switch with probability: 0.45 <= p <= 0.50 (max)\n" );
+    Abc_Print( -2, "\t           (e.g. 5%% means hot wires switch with probability: 0.45 <= p <= 0.50 (max)\n" );
     Abc_Print( -2, "\t-N <num> : the max critical path degree for resynthesis (0 < num < 6) [default = %d]\n", Degree );
 //    Abc_Print( -2, "\t-l       : toggle using unit- or LUT-library-delay model [default = %s]\n", fUseLutLib? "lib" : "unit" );
     Abc_Print( -2, "\t-v       : toggle printing optimization summary [default = %s]\n", fVerbose? "yes": "no" );

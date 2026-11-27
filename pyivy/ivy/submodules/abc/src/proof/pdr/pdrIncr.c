@@ -696,7 +696,7 @@ int IPdr_ManSolveInt( Pdr_Man_t * p, int fCheckClauses, int fPushClauses )
                 if ( p->timeToStop && Abc_Clock() > p->timeToStop )
                     Abc_Print( 1, "Reached timeout (%d seconds) in frame %d.\n",  p->pPars->nTimeOut, iFrame );
                 else
-                    Abc_Print( 1, "Reached conflict limit (%d) in frame.\n",  p->pPars->nConfLimit, iFrame );
+                    Abc_Print( 1, "Reached conflict limit (%d) in frame %d.\n",  p->pPars->nConfLimit, iFrame );
             }
             p->pPars->iFrame = iFrame;
             return -1;

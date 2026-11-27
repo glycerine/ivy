@@ -1062,7 +1062,7 @@ void Gia_ComputeEquivalences( Gia_Man_t * pGia, int nBTLimit, int fUseMiniSat, i
         nIters = Gia_ComputeEquivalencesLevel( p, pGiaLev, vRoots, Lev, fUseMiniSat );
         Gia_ManStop( pGiaLev );
         Vec_PtrFree( vRoots );
-        printf( "Iters = %3d   " );
+        printf( "Iters = %3d   ", nIters );
         ABC_PRT( "Time", clock() - clk );
     }
     Gia_GiarfPrintClasses( pGia );

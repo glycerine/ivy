@@ -760,7 +760,7 @@ int Pr_ManProofTraceOne( Pr_Man_t * p, Pr_Cls_t * pConflict, Pr_Cls_t * pFinal )
                 if ( v1 == p->nResLits ) 
                 {
                     if ( p->nResLits == p->nResLitsAlloc )
-                        printf( "Recording clause %d: Ran out of space for intermediate resolvent.\n, pFinal->Id" );
+                        printf( "Recording clause %d: Ran out of space for intermediate resolvent.\n", pFinal->Id );
                     p->pResLits[ p->nResLits++ ] = pReason->pLits[v2];
                     continue;
                 }

@@ -502,7 +502,7 @@ void Npn_ManRead( Npn_Man_t * p, char * pFileName )
             continue;
         if ( strlen(pToken) != 16 )
         {
-            Abc_Print( 0, "Skipping token %s that does not look like a 16-digit hex number.\n" );
+            Abc_Print( 0, "Skipping token %s that does not look like a 16-digit hex number.\n", pToken );
             continue;
         }
         // extract truth table
