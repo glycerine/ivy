@@ -3,6 +3,7 @@ package gia
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/tim"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
@@ -25,8 +26,38 @@ func Lf_ManPrintQuit(p *Lf_Man_t, result *Gia_Man_t) {
 		}
 		return
 	}
-	fmt.Printf("CutPair = %.0f  Merge = %.0f  Eval = %.0f  Cut = %.0f\n", p.CutCount[0], p.CutCount[1], p.CutCount[2], p.CutCount[3])
-	fmt.Printf("CoDrvs = %d  CoInvs = %d  Front = %d  TimeFails = %d   Time = %s\n", p.nCoDrivers, p.nInverters, p.nFrontMax, p.nTimeFails, time.Since(p.clkStart))
+	// Lf_ManPrintQuit, with ABC's record sizes (sizeof(Lf_Bst_t) = 32)
+	memGia := float32(Gia_ManMemory(p.pGia) / (1 << 20))
+	memMan := float32(4.0 * float64(2*Gia_ManObjNum(p.pGia)+3*Gia_ManAndNotBufNum(p.pGia)) / (1 << 20))
+	memCutsB := float32(float64(p.vStoreOld.MaskPage+1)*float64(vec.Vec_PtrSize(&p.vFreePages)+vec.Vec_PtrSize(&p.vStoreOld.vPages))/(1<<20) + 32.0*float64(Gia_ManAndNotBufNum(p.pGia))/(1<<20))
+	memCutsF := float32(8.0 * float64(p.nSetWords) * float64(int(1)<<LF_LOG_PAGE) * float64(vec.Vec_PtrSize(&p.vMemSets)) / (1 << 20))
+	var memTt float32
+	if p.vTtMem != nil {
+		memTt = float32(vec.Vec_MemMemory(p.vTtMem) / (1 << 20))
+	}
+	memMap := float32(vec.Vec_IntMemory(result.VMapping) / (1 << 20))
+	fmt.Printf("CutPair = %.0f  ", p.CutCount[0])
+	fmt.Printf("Merge = %.0f (%.2f %%)  ", p.CutCount[1], 100.0*p.CutCount[1]/p.CutCount[0])
+	fmt.Printf("Eval = %.0f (%.2f %%)  ", p.CutCount[2], 100.0*p.CutCount[2]/p.CutCount[0])
+	fmt.Printf("Cut = %.0f (%.2f %%)  \n", p.CutCount[3], 100.0*p.CutCount[3]/p.CutCount[0])
+	fmt.Printf("Gia = %.2f MB  Man = %.2f MB  Best = %.2f MB  Front = %.2f MB   Map = %.2f MB  TT = %.2f MB  Total = %.2f MB\n",
+		memGia, memMan, memCutsB, memCutsF, memMap, memTt, memGia+memMan+memCutsB+memCutsF+memMap+memTt)
+	for i := int32(0); i <= p.pPars.NLutSize; i++ {
+		fmt.Printf("%d:%d  ", i, p.nCutCounts[i])
+	}
+	fmt.Printf("Equal = %d (%.0f %%) ", p.nCutEqual, 100.0*float64(p.nCutEqual)/float64(p.Iter)/float64(Gia_ManAndNotBufNum(p.pGia)))
+	if p.vTtMem != nil {
+		fmt.Printf("TT = %d (%.2f %%)  ", vec.Vec_MemEntryNum(p.vTtMem), 100.0*float64(vec.Vec_MemEntryNum(p.vTtMem))/p.CutCount[2])
+	}
+	if p.pGia.PMuxes != nil && p.nCutMux != 0 {
+		fmt.Printf("MuxTT = %d (%.0f %%) ", p.nCutMux, 100.0*float64(p.nCutMux)/float64(p.Iter)/float64(Gia_ManMuxNum(p.pGia)))
+	}
+	fmt.Printf("\n")
+	fmt.Printf("CoDrvs = %d (%.2f %%)  ", p.nCoDrivers, 100.0*float64(p.nCoDrivers)/float64(Gia_ManCoNum(p.pGia)))
+	fmt.Printf("CoInvs = %d (%.2f %%)  ", p.nInverters, 100.0*float64(p.nInverters)/float64(Gia_ManCoNum(p.pGia)))
+	fmt.Printf("Front = %d (%.2f %%)  ", p.nFrontMax, 100.0*float64(p.nFrontMax)/float64(Gia_ManAndNum(p.pGia)))
+	fmt.Printf("TimeFails = %d   ", p.nTimeFails)
+	util.Abc_PrintTime(1, "Time", time.Since(p.clkStart).Nanoseconds())
 }
 func Lf_ManPerformMappingInt(g *Gia_Man_t, pars *Jf_Par_t) *Gia_Man_t {
 	if pars.FUseMux7 != 0 {

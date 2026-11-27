@@ -41,7 +41,12 @@ type AigerReadOptions struct {
 	Simple, SkipStrash, Check bool
 	MaxObjects                int
 }
-type AigerWriteOptions struct{ Compact, OmitSymbols, OmitExtensions, CommentNewline bool }
+type AigerWriteOptions struct {
+	Compact, OmitSymbols, OmitExtensions, CommentNewline bool
+	// FileTrailer ends the data as Gia_AigerWrite's files do (an optional
+	// "c\n", then ABC's production stamp) instead of the input's comment.
+	FileTrailer bool
+}
 
 // AigerTimingData preserves serialized hierarchy/timing data without claiming
 // to provide a timing-manager implementation. Native timing managers may expose
@@ -909,7 +914,15 @@ func aigerMarshalWire(p *Gia_Man_t, model *aigerWireModel, opts AigerWriteOption
 			out.Write(extension.data)
 		}
 	}
-	out.Write(p.aigerComment)
+	if opts.FileTrailer {
+		if opts.CommentNewline {
+			out.WriteString("c\n")
+		}
+		fmt.Fprintf(&out, "\nThis file was produced by the GIA package in ABC on %s\n", Gia_TimeStamp())
+		fmt.Fprintf(&out, "For information about AIGER format, refer to %s\n", "http://fmv.jku.at/aiger")
+	} else {
+		out.Write(p.aigerComment)
+	}
 	return out.Bytes(), nil
 }
 func aigerWriteSymbols(out *bytes.Buffer, p *Gia_Man_t, model *aigerWireModel) error {
@@ -1041,7 +1054,7 @@ func Gia_AigerWrite(p *Gia_Man_t, name string, symbols, compact, newline int32) 
 	if p == nil || Gia_ManCoNum(p) == 0 {
 		return fmt.Errorf("gia: cannot write AIG without outputs")
 	}
-	data, err := MarshalAiger(p, AigerWriteOptions{Compact: compact != 0, CommentNewline: newline != 0})
+	data, err := MarshalAiger(p, AigerWriteOptions{Compact: compact != 0, CommentNewline: newline != 0, FileTrailer: true})
 	if err != nil {
 		return err
 	}

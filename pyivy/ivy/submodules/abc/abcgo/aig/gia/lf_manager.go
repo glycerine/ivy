@@ -106,19 +106,29 @@ func Lf_ManPrintStats(p *Lf_Man_t, title string) {
 	if p.pPars.FVerbose == 0 {
 		return
 	}
-	fmt.Printf("%s : Level =%6d   Area =%9d   Edge =%9d   LUT =%9d  ", title, p.pPars.Delay, p.pPars.Area, p.pPars.Edge, p.pPars.Area+word(p.nInverters))
+	fmt.Printf("%s :  Level =%6d   Area =%9d   Edge =%9d   LUT =%9d  ", title, p.pPars.Delay, p.pPars.Area, p.pPars.Edge, p.pPars.Area+word(p.nInverters))
 	if vec.Vec_FltSize(&p.vSwitches) > 0 {
 		fmt.Printf("Swt =%8.1f  ", p.Switches)
 	}
 	if p.pPars.FUseMux7 != 0 {
 		fmt.Printf("Mux7 =%7d  ", p.pPars.Mux7)
 	}
-	fmt.Printf("Time = %s\n", time.Since(p.clkStart))
+	util.Abc_PrintTime(1, "Time", time.Since(p.clkStart).Nanoseconds())
 }
 func Lf_ManPrintInit(p *Lf_Man_t) {
-	if p.pPars.FVerbose != 0 {
-		fmt.Printf("LutSize = %d  CutNum = %d  Iter = %d  Edge = %d  CutMin = %d  Coarse = %d  Cut/Set = %d/%d Bytes\n", p.pPars.NLutSize, p.pPars.NCutNum, p.pPars.NRounds+p.pPars.NRoundsEla, p.pPars.FOptEdge, p.pPars.FCutMin, p.pPars.FCoarsen, 8*p.nCutWords, 8*p.nSetWords)
+	if p.pPars.FVerbose == 0 {
+		return
 	}
+	fmt.Printf("LutSize = %d  CutNum = %d  Iter = %d  ", p.pPars.NLutSize, p.pPars.NCutNum, p.pPars.NRounds+p.pPars.NRoundsEla)
+	if p.pPars.NRelaxRatio != 0 {
+		fmt.Printf("Ratio = %d  ", p.pPars.NRelaxRatio)
+	}
+	fmt.Printf("Edge = %d  ", p.pPars.FOptEdge)
+	if p.pPars.DelayTarget != -1 {
+		fmt.Printf("Delay = %d  ", p.pPars.DelayTarget)
+	}
+	fmt.Printf("CutMin = %d  Coarse = %d  Cut/Set = %d/%d Bytes\n", p.pPars.FCutMin, p.pPars.FCoarsen, 8*p.nCutWords, 8*p.nSetWords)
+	fmt.Printf("Computing cuts...\r")
 }
 func Lf_ManComputeMapping(p *Lf_Man_t) {
 	if p.vStoreNew.iCur != 0 {
