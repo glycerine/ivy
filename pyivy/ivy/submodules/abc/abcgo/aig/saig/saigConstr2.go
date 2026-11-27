@@ -2,7 +2,10 @@ package saig
 
 import (
 	"fmt"
-	"math/rand"
+	"math/bits"
+	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 
 	"github.com/glycerine/abcgo/aig/aig"
 )
@@ -78,48 +81,125 @@ func Saig_ManDupFoldConstrsFunc(src *aig.Graph, complemented, verbose int32) *ai
 	return graph
 }
 
-// Ssw_ManProfileConstraints samples sequential traces and reports output-one
-// rates. It returns one when the requested simulation completes.
+// Ssw_ManProfileConstraints simulates nWords random words for nFrames
+// frames from the all-zero state (saigConstr2.c): POs report failing
+// patterns not blocked by constraints, and with fVerbose each PO prints its
+// probability of one, of one under a failing PO, and its phase.
 func Ssw_ManProfileConstraints(src *aig.Graph, words, frames, verbose int32) int32 {
 	if src == nil || words <= 0 || frames <= 0 {
 		return 0
 	}
-	inputs, outputs := src.Inputs(), src.Outputs()
+	start := time.Now()
+	nodes, inputs, outputs := src.Nodes(), src.Inputs(), src.Outputs()
 	regs := int(aig.Aig_ManRegNum(src))
-	piCount := len(inputs) - regs
-	poCount := len(outputs) - regs
-	if regs < 0 || piCount < 0 || poCount < 0 {
-		return 0
+	piCount, poCount := len(inputs)-regs, len(outputs)-regs
+	constrs := int(Saig_ManConstrNum(src))
+	if verbose != 0 {
+		fmt.Printf("Simulating %d nodes and %d flops for %d frames with %d words... ", aig.Aig_ManNodeNum(src), regs, frames, words)
 	}
-	rng := rand.New(rand.NewSource(1))
-	counts := make([]int64, poCount)
-	samples := int64(words) * 32 * int64(frames)
-	state := make([]bool, regs)
-	values := make([]bool, len(inputs))
-	for sample := 0; sample < int(words)*32; sample++ {
-		for i := range state {
-			state[i] = rng.Intn(2) != 0
+	aig.Aig_ManRandom(1)
+	info := make([][]uint32, len(nodes))
+	for id := range info {
+		info[id] = make([]uint32, words)
+	}
+	probs, probs2 := make([]int32, poCount), make([]int32, poCount)
+	for id, n := range nodes {
+		if n.Kind == aig.Constant {
+			for w := range info[id] {
+				info[id][w] = ^uint32(0)
+			}
 		}
-		for frame := int32(0); frame < frames; frame++ {
-			for i := 0; i < piCount; i++ {
-				values[i] = rng.Intn(2) != 0
+	}
+	mask, mask2 := make([]uint32, words), make([]uint32, words)
+	child := func(e aig.Edge) []uint32 { return info[e.NodeID()] }
+	for f := int32(0); f < frames; f++ {
+		for _, pi := range inputs[:piCount] {
+			for w := range info[pi.NodeID()] {
+				info[pi.NodeID()][w] = aig.Aig_ManRandom(0)
 			}
-			copy(values[piCount:], state)
-			result, err := src.Evaluate(values)
-			if err != nil {
-				return 0
+		}
+		for i := 0; i < regs; i++ {
+			copy(info[inputs[piCount+i].NodeID()], info[outputs[poCount+i].NodeID()])
+		}
+		for id, n := range nodes {
+			if !src.ValidEdge(aig.Edge(id)<<1) || n.Kind != aig.And && n.Kind != aig.ExclusiveOr {
+				continue
 			}
-			for i := 0; i < poCount; i++ {
-				if result[i] {
-					counts[i]++
+			a, b := child(n.Fanins[0]), child(n.Fanins[1])
+			ca, cb := n.Fanins[0].Complemented(), n.Fanins[1].Complemented()
+			for w := range info[id] {
+				x, y := a[w], b[w]
+				if ca {
+					x = ^x
+				}
+				if cb {
+					y = ^y
+				}
+				info[id][w] = x & y
+			}
+		}
+		for w := range mask {
+			mask[w], mask2[w] = 0, 0
+		}
+		for i, co := range outputs {
+			out, in := info[co.NodeID()], child(aig.Aig_ObjChild0(src, co))
+			compl := aig.Aig_ObjChild0(src, co).Complemented()
+			constraint := i >= poCount-constrs && i < poCount
+			for w := range out {
+				v := in[w]
+				if compl {
+					v = ^v
+				}
+				if constraint {
+					out[w] |= v
+				} else {
+					out[w] = v
 				}
 			}
-			copy(state, result[poCount:])
+			for w := range out {
+				if i < poCount-constrs {
+					mask[w] |= out[w]
+				} else if i < poCount {
+					mask2[w] |= out[w]
+				}
+			}
+		}
+		for i := 0; i < poCount; i++ {
+			out := info[outputs[i].NodeID()]
+			for w := range out {
+				probs[i] += int32(bits.OnesCount32(out[w]))
+			}
+			if i < poCount-constrs {
+				blocked := true
+				for w := range out {
+					if out[w]&^mask2[w] != 0 {
+						blocked = false
+						break
+					}
+				}
+				if !blocked {
+					fmt.Printf("Primary output %d fails on some input patterns.\n", i)
+				}
+			} else {
+				for w := range out {
+					probs2[i] += int32(bits.OnesCount32(out[w] & mask[w]))
+				}
+			}
 		}
 	}
 	if verbose != 0 {
-		for i, count := range counts {
-			fmt.Printf("Output %d ProbOne = %.6f\n", i, float64(count)/float64(samples))
+		util.Abc_PrintTime(1, "T", time.Since(start).Nanoseconds())
+		total := 32 * words * frames
+		for i := 0; i < poCount; i++ {
+			if i < poCount-constrs {
+				fmt.Printf("Primary output :  ")
+			} else {
+				fmt.Printf("Constraint %3d :  ", i-(poCount-constrs))
+			}
+			fmt.Printf("ProbOne = %f  ", float32(probs[i])/float32(total))
+			fmt.Printf("ProbOneC = %f  ", float32(probs2[i])/float32(total))
+			fmt.Printf("AllZeroValue = %d ", boolToInt(aig.Aig_ObjPhase(src, outputs[i])))
+			fmt.Printf("\n")
 		}
 	}
 	return 1

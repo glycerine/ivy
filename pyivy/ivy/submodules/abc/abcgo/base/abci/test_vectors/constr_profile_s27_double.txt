@@ -1,0 +1,10 @@
+Primary output 0 fails on some input patterns.
+Primary output 0 fails on some input patterns.
+Primary output 0 fails on some input patterns.
+Primary output 0 fails on some input patterns.
+Primary output 0 fails on some input patterns.
+Primary output 0 fails on some input patterns.
+Primary output 0 fails on some input patterns.
+Primary output :  ProbOne = 0.838928  ProbOneC = 0.000000  AllZeroValue = 1 
+Constraint   0 :  ProbOne = 0.990143  ProbOneC = 0.831238  AllZeroValue = 1 
+TwoFrameSatValue = 0.
