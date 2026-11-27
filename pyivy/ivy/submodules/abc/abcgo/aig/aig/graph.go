@@ -92,7 +92,7 @@ type Graph struct {
 	ghost                                       Node
 	copies, reprs, next                         map[int]Edge
 	equivs                                      *edgeTable
-	deleted                                     []bool
+	deleted                                     []uint64 // bitset by node ID
 	nDeleted                                    int
 }
 
@@ -118,14 +118,20 @@ func (g *Graph) OutputAt(i int) Edge { return g.outputs[i] }
 func (g *Graph) NodeCount() int      { return len(g.nodes) - g.nDeleted }
 
 // isDeleted reports whether object id was removed. Deletion is permanent.
-func (g *Graph) isDeleted(id int) bool { return id < len(g.deleted) && g.deleted[id] }
+// The flags are a bitset: every node access checks them, and a dense
+// bitset stays in cache where a []bool of the same nodes does not.
+func (g *Graph) isDeleted(id int) bool {
+	w := id >> 6
+	return w < len(g.deleted) && g.deleted[w]&(1<<(uint(id)&63)) != 0
+}
 
 func (g *Graph) markDeleted(id int) {
-	if id >= len(g.deleted) {
-		g.deleted = append(g.deleted, make([]bool, max(id+1, len(g.nodes))-len(g.deleted))...)
+	w := id >> 6
+	if w >= len(g.deleted) {
+		g.deleted = append(g.deleted, make([]uint64, max(w+1, (len(g.nodes)+63)>>6)-len(g.deleted))...)
 	}
-	if !g.deleted[id] {
-		g.deleted[id] = true
+	if bit := uint64(1) << (uint(id) & 63); g.deleted[w]&bit == 0 {
+		g.deleted[w] |= bit
 		g.nDeleted++
 	}
 }

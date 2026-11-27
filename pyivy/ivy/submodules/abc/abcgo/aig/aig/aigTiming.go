@@ -139,9 +139,9 @@ func Aig_ManUpdateReverseLevel(p *Graph, e Edge) {
 			if int(nextLevel) == level {
 				continue
 			}
-			for _, fanin := range nodeFanins(*p.node(current)) {
+			for _, fanin := range nodeFanins(p.nodes[current.NodeID()]) {
 				fanin = Aig_Regular(fanin)
-				if Aig_ObjIsNode(p, fanin) && !p.node(fanin).MarkA {
+				if fn := p.node(fanin); (fn.Kind == And || fn.Kind == ExclusiveOr) && !fn.MarkA {
 					faninLevel := int(Aig_ObjReverseLevel(p, fanin))
 					if faninLevel < level {
 						panic("aig: fanin old reverse level precedes timing queue")
