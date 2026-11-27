@@ -151,21 +151,21 @@ void Gia_ManDumpFiles( Gia_Man_t * p, int nCexesT, int nCexesV, int Seed, char *
 {
     int n, nSize[2] = {nCexesT*64, nCexesV*64};
 
-    char pFileNameOutTX[100];
-    char pFileNameOutTY[100];
-    char pFileNameOutVX[100];
-    char pFileNameOutVY[100];
-    char pFileNameOut[100];
+    char pFileNameOutTX[1000];
+    char pFileNameOutTY[1000];
+    char pFileNameOutVX[1000];
+    char pFileNameOutVY[1000];
+    char pFileNameOut[1000];
     
     //sprintf( pFileNameOutTX, "train_%s_%d_%d.data", pFileName ? pFileName : Gia_ManName(p), nSize[0], Gia_ManCiNum(p) );
     //sprintf( pFileNameOutTY, "train_%s_%d_%d.data", pFileName ? pFileName : Gia_ManName(p), nSize[0], Gia_ManCoNum(p) );
     //sprintf( pFileNameOutVX, "test_%s_%d_%d.data",  pFileName ? pFileName : Gia_ManName(p), nSize[1], Gia_ManCiNum(p) );
     //sprintf( pFileNameOutVY, "test_%s_%d_%d.data",  pFileName ? pFileName : Gia_ManName(p), nSize[1], Gia_ManCoNum(p) );
     
-    sprintf( pFileNameOutTX, "%s_x.train.data", pFileName ? pFileName : Gia_ManName(p) );
-    sprintf( pFileNameOutTY, "%s_y.train.data", pFileName ? pFileName : Gia_ManName(p) );
-    sprintf( pFileNameOutVX, "%s_x.test.data",  pFileName ? pFileName : Gia_ManName(p) );
-    sprintf( pFileNameOutVY, "%s_y.test.data",  pFileName ? pFileName : Gia_ManName(p) );
+    snprintf( pFileNameOutTX, sizeof(pFileNameOutTX), "%s_x.train.data", pFileName ? pFileName : Gia_ManName(p) );
+    snprintf( pFileNameOutTY, sizeof(pFileNameOutTY), "%s_y.train.data", pFileName ? pFileName : Gia_ManName(p) );
+    snprintf( pFileNameOutVX, sizeof(pFileNameOutVX), "%s_x.test.data",  pFileName ? pFileName : Gia_ManName(p) );
+    snprintf( pFileNameOutVY, sizeof(pFileNameOutVY), "%s_y.test.data",  pFileName ? pFileName : Gia_ManName(p) );
 
     Gia_ManRandomW( 1 );
     for ( n = 0; n < Seed; n++ )
@@ -228,7 +228,7 @@ void Gia_ManDumpFiles( Gia_Man_t * p, int nCexesT, int nCexesV, int Seed, char *
     printf( "Finished dumping files \"%s\" and \"%s\".\n", pFileNameOutTX, pFileNameOutTY );
     printf( "Finished dumping files \"%s\" and \"%s\".\n", pFileNameOutVX, pFileNameOutVY );
 
-    sprintf( pFileNameOut, "%s.flist", pFileName ? pFileName : Gia_ManName(p) );
+    snprintf( pFileNameOut, sizeof(pFileNameOut), "%s.flist", pFileName ? pFileName : Gia_ManName(p) );
     {
         FILE * pFile = fopen( pFileNameOut, "wb" );
         fprintf( pFile, "%s\n", pFileNameOutTX );
@@ -255,11 +255,11 @@ void Gia_ManDumpPlaFiles( Gia_Man_t * p, int nCexesT, int nCexesV, int Seed, cha
 {
     int n, nSize[3] = {nCexesT, nCexesV, nCexesV};
 
-    char pFileNameOut[3][100];
+    char pFileNameOut[3][1000];
     
-    sprintf( pFileNameOut[0], "%s.train.pla", pFileName ? pFileName : Gia_ManName(p) );
-    sprintf( pFileNameOut[1], "%s.valid.pla", pFileName ? pFileName : Gia_ManName(p) );
-    sprintf( pFileNameOut[2], "%s.test.pla",  pFileName ? pFileName : Gia_ManName(p) );
+    snprintf( pFileNameOut[0], sizeof(pFileNameOut[0]), "%s.train.pla", pFileName ? pFileName : Gia_ManName(p) );
+    snprintf( pFileNameOut[1], sizeof(pFileNameOut[1]), "%s.valid.pla", pFileName ? pFileName : Gia_ManName(p) );
+    snprintf( pFileNameOut[2], sizeof(pFileNameOut[2]), "%s.test.pla",  pFileName ? pFileName : Gia_ManName(p) );
 
     Gia_ManRandomW( 1 );
     for ( n = 0; n < Seed; n++ )

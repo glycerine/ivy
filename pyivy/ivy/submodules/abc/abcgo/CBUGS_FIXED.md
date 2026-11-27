@@ -1103,3 +1103,41 @@ and states how the Go port was verified.
 - **Go port:** no overflow (Go strings and maps); `cascade -v` was missing
   C's "(%) Memory" suffix and the decomposition/encoding time lines, now
   printed (`bdd/cas/casDec.go`).
+
+## 52. `absec`, `simsec`, `rec_add3`, `kcs` and `nck` crash without a network
+
+- **Files:** `src/base/abci/abc.c` (`Abc_CommandAbSec`, `Abc_CommandSimSec`,
+  `Abc_CommandRecAdd3`), `src/proof/live/kliveness.c`
+  (`Abc_CommandCS_kLiveness`, `Abc_CommandNChooseK`).
+- **Found:** 2026-11-27, native crash sweep with no network read: each
+  dumped core in `Abc_NtkIsStrash(NULL)`.
+- **Bug:** they test the current network's type without checking that one
+  exists (most commands print "Empty network.").
+- **Fix:** "Empty network." and return 1 when `pNtk == NULL`.
+- **Test:** `abcgo/base/abci/no_network_native_test.go`
+  (`TestNoNetworkCommandsLikeNative`); red before (segmentation faults).
+- **Go port:** `absec`, `simsec` and `rec_add3` panicked, `kcs` printed its own
+  error and `nck` nothing; all five now print C's message.
+
+## 53. `&splitprove` (use after free), `l2ssim` without registers, `&mlgen` with a long path
+
+- **Files:** `src/proof/cec/cecSplit.c` (`Cec_GiaSplitTest`),
+  `src/proof/live/liveness_sim.c` (`LivenessToSafetyTransformationSim`),
+  `src/aig/gia/giaGen.c` (file names).
+- **Found:** 2026-11-27, native crash sweep on mul4 (`&get`, read by absolute
+  path).
+- **Bugs:** `Cec_GiaSplitTest` called `Gia_ManStop( pOne )` and then took
+  `pOne->pCexComb` (heap use-after-free, glibc abort); `l2ssim` ANDs the
+  register-equality accumulator, which stays NULL when there are no
+  registers (`liveness.c` starts it at constant 1); `&mlgen` built its output
+  names with `sprintf` into `char[100]` (a long design path aborted the
+  fortified build).
+- **Fix:** collect the CEX before stopping the manager; start from constant 1
+  when no register was folded in; `char[1000]` buffers filled with
+  `snprintf` (likewise `casCore.c`, #51).
+- **Test:** `abcgo/base/abci/mul4_crash_native_test.go`
+  (`TestMul4CrashesLikeNative`: &splitprove and &mlgen equal native, l2ssim
+  native no longer crashes); red before (native aborts/segfault).
+- **Go port:** no use after free or fixed buffers; &splitprove and &mlgen
+  print the same as C. Go's `l2ssim` (proof/live) is not yet a faithful port
+  (prints nothing here).

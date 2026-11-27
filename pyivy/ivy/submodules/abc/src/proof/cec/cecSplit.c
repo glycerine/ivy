@@ -750,14 +750,14 @@ int Cec_GiaSplitTest( Gia_Man_t * p, int nProcs, int nTimeOut, int nIterMax, int
         if ( fVerbose )
             printf( "\nSolving output %d:\n", i );
         RetValue1 = Cec_GiaSplitTestInt( pOne, nProcs, nTimeOut, nIterMax, LookAhead,  fVerbose, fVeryVerbose, fSilent );
-        Gia_ManStop( pOne );
-        // collect the result
+        // collect the result (before pOne is freed: its CEX is taken over)
         if ( RetValue1 == 0 && RetValue == -1 )
         {
             pCex = pOne->pCexComb; pOne->pCexComb = NULL;
             pCex->iPo = i;
             RetValue = 0;
         }
+        Gia_ManStop( pOne );
         if ( RetValue1 == -1 )
             fOneUndef = 1;
     }

@@ -17450,6 +17450,11 @@ int Abc_CommandRecAdd3( Abc_Frame_t * pAbc, int argc, char ** argv )
             goto usage;
         }
     }
+    if ( pNtk == NULL )
+    {
+        Abc_Print( -1, "Empty network.\n" );
+        return 1;
+    }
     if ( !Abc_NtkIsStrash(pNtk) )
     {
         Abc_Print( -1, "This command works for AIGs.\n" );
@@ -24884,6 +24889,11 @@ int Abc_CommandAbSec( Abc_Frame_t * pAbc, int argc, char ** argv )
             Abc_Print( -1, "The miter cannot be given on the command line. Use \"read\".\n" );
             return 0;
         }
+        if ( pNtk == NULL )
+        {
+            Abc_Print( -1, "Empty network.\n" );
+            return 1;
+        }
         if ( !Abc_NtkIsStrash(pNtk) )
         {
             Abc_Print( -1, "The miter should be structurally hashed. Use \"st\"\n" );
@@ -25005,6 +25015,11 @@ int Abc_CommandSimSec( Abc_Frame_t * pAbc, int argc, char ** argv )
     if ( fMiter )
     {
 //        Abc_Ntk_t * pNtkA, * pNtkB;
+        if ( pNtk == NULL )
+        {
+            Abc_Print( -1, "Empty network.\n" );
+            return 1;
+        }
         if ( !Abc_NtkIsStrash(pNtk) )
         {
             Abc_Print( -1, "This command works only for structrally hashed networks. Run \"st\".\n" );

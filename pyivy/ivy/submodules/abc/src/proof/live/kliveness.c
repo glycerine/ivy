@@ -586,6 +586,16 @@ int Abc_CommandCS_kLiveness( Abc_Frame_t * pAbc, int argc, char ** argv )
     Extraction of Command Line Argument Ends    
     *************************************************/
 
+    if ( pNtk == NULL )
+
+    {
+
+        Abc_Print( -1, "Empty network.\n" );
+
+        return 1;
+
+    }
+
     if( !Abc_NtkIsStrash( pNtk ) )
     {
         printf("The input network was not strashed, strashing....\n");
@@ -780,6 +790,16 @@ int Abc_CommandNChooseK( Abc_Frame_t * pAbc, int argc, char ** argv )
     /*************************************************
     Extraction of Command Line Argument Ends    
     *************************************************/
+
+    if ( pNtk == NULL )
+
+    {
+
+        Abc_Print( -1, "Empty network.\n" );
+
+        return 1;
+
+    }
 
     if( !Abc_NtkIsStrash( pNtk ) )
     {

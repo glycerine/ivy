@@ -17195,6 +17195,10 @@ func Abc_CommandRecAdd3(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
+	if pNtk == nil { // C bug 52
+		Abc_Print(-1, "Empty network.\n")
+		return 1
+	}
 	if Abc_NtkIsStrash(pNtk) == 0 {
 		Abc_Print(-1, "This command works for AIGs.\n")
 		return 0
@@ -24140,6 +24144,10 @@ func Abc_CommandAbSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "The miter cannot be given on the command line. Use \"read\".\n")
 			return 0
 		}
+		if pNtk == nil { // C bug 52
+			Abc_Print(-1, "Empty network.\n")
+			return 1
+		}
 		if Abc_NtkIsStrash(pNtk) == 0 {
 			Abc_Print(-1, "The miter should be structurally hashed. Use \"st\"\n")
 			return 0
@@ -24266,6 +24274,10 @@ func Abc_CommandSimSec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 
 	if fMiter != 0 {
 		//        Abc_Ntk_t * pNtkA, * pNtkB;
+		if pNtk == nil { // C bug 52
+			Abc_Print(-1, "Empty network.\n")
+			return 1
+		}
 		if Abc_NtkIsStrash(pNtk) == 0 {
 			Abc_Print(-1, "This command works only for structrally hashed networks. Run \"st\".\n")
 			return 0

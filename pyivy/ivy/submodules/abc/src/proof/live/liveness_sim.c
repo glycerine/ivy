@@ -366,6 +366,9 @@ static Aig_Man_t * LivenessToSafetyTransformationSim( Abc_Ntk_t * pNtk, Aig_Man_
         }
     }
 
+    // with no registers the equality holds trivially (as in liveness.c)
+    if ( pObjAndAcc == NULL )
+        pObjAndAcc = Aig_ManConst1( pNew );
     // create the AND gate whose output will be the signal "looped"
     pObjSavedLoAndEquality = Aig_And( pNew, pObjSavedLo, pObjAndAcc );
     

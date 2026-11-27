@@ -94,6 +94,10 @@ func Abc_CommandCS_kLiveness(frame *Abc_Frame_t, argc int32, argv []string) int3
 	// as kliveness.c: after the options, note a non-strashed network, then
 	// require a csLiveTarget_ output (C bug 47: collectCSSignals asserted
 	// one and the release build crashed without it)
+	if Abc_FrameReadNtk(frame) == nil && kcsOptionsValid(argv) { // C bug 52
+		Abc_Print(-1, "Empty network.\n")
+		return 1
+	}
 	if ntk := Abc_FrameReadNtk(frame); ntk != nil && kcsOptionsValid(argv) {
 		if Abc_NtkIsStrash(ntk) == 0 {
 			fmt.Printf("The input network was not strashed, strashing....\n")
@@ -123,6 +127,10 @@ func kcsOptionsValid(argv []string) bool {
 	return true
 }
 func Abc_CommandNChooseK(frame *Abc_Frame_t, argc int32, argv []string) int32 {
+	if Abc_FrameReadNtk(frame) == nil && len(argv) <= 1 { // C bug 52
+		Abc_Print(-1, "Empty network.\n")
+		return 1
+	}
 	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandNChooseK)
 }
 
