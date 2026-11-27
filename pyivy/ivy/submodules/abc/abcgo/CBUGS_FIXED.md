@@ -495,3 +495,29 @@ and states how the Go port was verified.
   reporting that it ran out of space (no test reaches it), and several
   `%d` are given a `long`/`size_t`, which prints correctly for small values
   on LP64.
+
+## 23. A formula ending in an operator crashes the EQN and genlib readers
+
+- **Files:** `src/misc/parse/parseEqn.c` and `src/misc/parse/parseCore.c`
+  (`Parse_ParserPerformTopOp`), `src/map/mio/mioParse.c`
+  (`Mio_ParseFormulaOper`), `src/map/mio/mioFunc.c` (`Mio_GateParseFormula`).
+- **Found:** 2026-11-27 by a malformed-input sweep of the readers:
+  `read` of an EQN file with `y = a * ;` and `read_genlib` of a gate with
+  `O=a*;` dumped core.
+- **Bug:** at the closing parenthesis the parsers apply the pending binary
+  operator to the top two entries of the function stack, but a formula
+  ending in an operator leaves only one there. parseEqn/parseCore pop a NULL
+  (after "Trying to extract data from the empty stack!") and pass it to
+  `Hop_And`/`Cudd_bddAnd`; mioParse pops past the stack (ASan:
+  heap-buffer-overflow in `Vec_PtrPop`). And `Mio_GateParseFormula` used the
+  NULL expression a failed parse returns.
+- **Fix:** `Parse_ParserPerformTopOp` and `Mio_ParseFormulaOper` return NULL
+  when an operand is missing, which their callers already report as
+  "Unknown operation" before failing the read; `Mio_GateParseFormula`
+  returns 1 for a NULL expression, as its earlier BDD version did, so
+  `read_genlib` reports "Mio_LibraryRead: Had problems parsing formulas.".
+- **Test:** `abcgo/base/abci/parse_operand_native_test.go`
+  (`TestNativeParserMissingOperandFails`, needs `ABC_BINARY`): both reads
+  segfaulted; now they fail with the messages above.
+- **Go port:** its formula parsers reject the missing operand ("expected an
+  operand"); they word their errors differently.

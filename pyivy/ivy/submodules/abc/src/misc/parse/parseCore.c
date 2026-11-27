@@ -507,6 +507,10 @@ DdNode * Parse_ParserPerformTopOp( DdManager * dd, Parse_StackFn_t * pStackFn, i
     // perform the given operation
     bArg2 = (DdNode *)Parse_StackFnPop( pStackFn );
     bArg1 = (DdNode *)Parse_StackFnPop( pStackFn );
+    // an operator without two operands ("a*"): report it as the callers
+    // do for an unknown operation instead of combining a NULL argument
+    if ( bArg1 == NULL || bArg2 == NULL )
+        return NULL;
     if ( Oper == PARSE_OPER_AND )
         bFunc = Cudd_bddAnd( dd, bArg1, bArg2 );
     else if ( Oper == PARSE_OPER_XOR )

@@ -339,6 +339,10 @@ Hop_Obj_t * Parse_ParserPerformTopOp( Hop_Man_t * pMan, Parse_StackFn_t * pStack
     // perform the given operation
     gArg2 = (Hop_Obj_t *)Parse_StackFnPop( pStackFn );
     gArg1 = (Hop_Obj_t *)Parse_StackFnPop( pStackFn );
+    // an operator without two operands ("a * "): report it as the callers
+    // do for an unknown operation instead of combining a NULL argument
+    if ( gArg1 == NULL || gArg2 == NULL )
+        return NULL;
     if ( Oper == PARSE_EQN_OPER_AND )
         gFunc = Hop_And( pMan, gArg1, gArg2 );
     else if ( Oper == PARSE_EQN_OPER_OR )

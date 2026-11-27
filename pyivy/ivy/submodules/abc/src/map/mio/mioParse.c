@@ -70,6 +70,10 @@ ABC_NAMESPACE_IMPL_START
 Vec_Int_t * Mio_ParseFormulaOper( int * pMan, int nVars, Vec_Ptr_t * pStackFn, int Oper )
 {
     Vec_Int_t * gArg1, * gArg2, * gFunc;
+    // an operator without two operands ("a*"): report it as the callers do
+    // for an unknown operation instead of popping past the stack
+    if ( Vec_PtrSize(pStackFn) < 2 )
+        return NULL;
     // perform the given operation
     gArg2 = (Vec_Int_t *)Vec_PtrPop( pStackFn );
     gArg1 = (Vec_Int_t *)Vec_PtrPop( pStackFn );

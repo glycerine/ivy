@@ -261,6 +261,8 @@ int Mio_GateParseFormula( Mio_Gate_t * pGate )
 
     // derive expression 
     pGate->vExpr = Mio_ParseFormula( pGate->pForm, (char **)pPinNames, nPins );
+    if ( pGate->vExpr == NULL ) // the formula did not parse (the message is printed)
+        return 1;
 //    Mio_ParseFormulaTruthTest( pGate->pForm, (char **)pPinNames, nPins );
     // derive cover
     pGate->pSop = Mio_LibDeriveSop( nPins, pGate->vExpr, pGate->pLib->vCube );
