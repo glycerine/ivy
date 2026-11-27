@@ -1,5 +1,7 @@
 package kit
 
+import "math/bits"
+
 // Covers use one bit per literal (two bits per variable). Scratch memory is a
 // Go slice arena: callers may retain sub-slices because Go keeps old backing
 // arrays alive when the arena grows.
@@ -58,6 +60,9 @@ func Kit_SopDivideByCube(sop, div, quo, rem *Kit_Sop_t, memory *[]uint32) {
 		}
 	}
 }
+
+// Kit_SopDivideInternal is kitSop.c's: cubes of sop taken by the quotient
+// are marked in place (bit 31) and unmarked when the remainder is built.
 func Kit_SopDivideInternal(sop, div, quo, rem *Kit_Sop_t, memory *[]uint32) {
 	if div.cubeNum() == 1 {
 		Kit_SopDivideByCube(sop, div, quo, rem, memory)
@@ -67,55 +72,54 @@ func Kit_SopDivideInternal(sop, div, quo, rem *Kit_Sop_t, memory *[]uint32) {
 		panic("kit: invalid algebraic divisor")
 	}
 	kitSopReset(quo, int(sop.cubeNum()/div.cubeNum()), memory)
-	used := make([]bool, sop.cubeNum())
-	for i, c := range sop.pCubes[:sop.cubeNum()] {
-		if used[i] {
+	cubes, divs := sop.pCubes[:sop.cubeNum()], div.pCubes[:div.cubeNum()]
+	// findPartner is the index of an unmarked cube c with c ⊇ d and
+	// c # d == q, or -1
+	findPartner := func(d, q uint32) int {
+		for j, c := range cubes {
+			if c&(1<<31) == 0 && c&d == d && c&^d == q {
+				return j
+			}
+		}
+		return -1
+	}
+	for i := range cubes {
+		c := cubes[i]
+		if c&(1<<31) != 0 {
 			continue
 		}
-		divisorIndex := -1
-		for k, d := range div.pCubes[:div.cubeNum()] {
-			if c&d == d {
-				divisorIndex = k
+		k := 0
+		for k < len(divs) && c&divs[k] != divs[k] {
+			k++
+		}
+		if k == len(divs) {
+			continue
+		}
+		q := c &^ divs[k]
+		k2 := 0
+		for ; k2 < len(divs); k2++ {
+			if k2 != k && findPartner(divs[k2], q) < 0 {
 				break
 			}
 		}
-		if divisorIndex < 0 {
-			continue
-		}
-		q := c &^ div.pCubes[divisorIndex]
-		indices := make([]int, div.cubeNum())
-		indices[divisorIndex] = i
-		found := true
-		for k, d := range div.pCubes[:div.cubeNum()] {
-			if k == divisorIndex {
-				continue
-			}
-			index := -1
-			for j, candidate := range sop.pCubes[:sop.cubeNum()] {
-				if !used[j] && candidate&d == d && candidate&^d == q {
-					index = j
-					break
-				}
-			}
-			if index < 0 {
-				found = false
-				break
-			}
-			indices[k] = index
-		}
-		if !found {
+		if k2 != len(divs) {
 			continue
 		}
 		Kit_SopPushCube(quo, q)
-		for _, j := range indices {
-			used[j] = true
+		cubes[i] = c | 1<<31
+		for k2, d := range divs {
+			if k2 != k {
+				cubes[findPartner(d, q)] |= 1 << 31
+			}
 		}
 	}
-	kitSopReset(rem, int(sop.cubeNum()), memory)
-	for i, c := range sop.pCubes[:sop.cubeNum()] {
-		if !used[i] {
+	kitSopReset(rem, int(sop.cubeNum()-quo.cubeNum()*div.cubeNum()), memory)
+	for i, c := range cubes {
+		if c&(1<<31) == 0 {
 			Kit_SopPushCube(rem, c)
+			continue
 		}
+		cubes[i] = c &^ (1 << 31)
 	}
 }
 func Kit_SopCommonCube(sop *Kit_Sop_t) uint32 {
@@ -153,32 +157,44 @@ func kitLiteralCount(sop *Kit_Sop_t, lit int32) int32 {
 	}
 	return count
 }
+
+// kitLiteralCounts counts every literal's cubes in one pass over the cubes'
+// set bits (the C functions count one literal per pass; the counts agree).
+func kitLiteralCounts(sop *Kit_Sop_t) (counts [32]int32) {
+	for _, c := range sop.pCubes[:sop.cubeNum()] {
+		for ; c != 0; c &= c - 1 {
+			counts[bits.TrailingZeros32(c)]++
+		}
+	}
+	return
+}
 func Kit_SopAnyLiteral(sop *Kit_Sop_t, nLits int32) int32 {
+	counts := kitLiteralCounts(sop)
 	for lit := int32(0); lit < nLits; lit++ {
-		if kitLiteralCount(sop, lit) > 1 {
+		if counts[lit] > 1 {
 			return lit
 		}
 	}
 	return -1
 }
 func Kit_SopWorstLiteral(sop *Kit_Sop_t, nLits int32) int32 {
+	counts := kitLiteralCounts(sop)
 	index, best := int32(-1), int32(1000000)
 	for lit := int32(0); lit < nLits; lit++ {
-		n := kitLiteralCount(sop, lit)
-		if n >= 2 && n < best {
+		if n := counts[lit]; n >= 2 && n < best {
 			index, best = lit, n
 		}
 	}
 	return index
 }
 func Kit_SopBestLiteral(sop *Kit_Sop_t, nLits int32, mask uint32) int32 {
+	counts := kitLiteralCounts(sop)
 	index, best := int32(-1), int32(-1)
 	for lit := int32(0); lit < nLits; lit++ {
 		if mask&(1<<uint(lit)) == 0 {
 			continue
 		}
-		n := kitLiteralCount(sop, lit)
-		if n >= 2 && n > best {
+		if n := counts[lit]; n >= 2 && n > best {
 			index, best = lit, n
 		}
 	}
