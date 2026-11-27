@@ -28,10 +28,7 @@ func Extra_Reorder(p *Manager, dd *DdManager, root *DdNode, order []int) *DdNode
 		return nil
 	}
 	if order != nil {
-		if len(order) < len(permutation) {
-			panic("reo: short permutation output")
-		}
-		copy(order, permutation)
+		p.writeOrder(order, permutation)
 	}
 	return result[0]
 }
@@ -44,10 +41,7 @@ func Extra_ReorderArray(p *Manager, dd *DdManager, roots, result []*DdNode, n in
 		panic(err)
 	}
 	if order != nil {
-		if len(order) < len(permutation) {
-			panic("reo: short permutation output")
-		}
-		copy(order, permutation)
+		p.writeOrder(order, permutation)
 	}
 	copy(result, reordered)
 	for _, root := range reordered {
@@ -56,4 +50,17 @@ func Extra_ReorderArray(p *Manager, dd *DdManager, roots, result []*DdNode, n in
 }
 func reoReorderArray(p *Manager, dd *DdManager, roots, result []*DdNode, n int, order []int) {
 	Extra_ReorderArray(p, dd, roots, result, n, order)
+}
+
+// writeOrder fills order as reoReorderArray fills pOrder: only the support's
+// entries, order[final variable] = original variable; other entries keep
+// the caller's values.
+func (p *Manager) writeOrder(order, permutation []int) {
+	for level := range p.order {
+		slot := p.slots[level]
+		if slot >= len(order) {
+			panic("reo: short permutation output")
+		}
+		order[slot] = permutation[slot]
+	}
 }

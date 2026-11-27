@@ -54,3 +54,15 @@ func TestRenodeKeepsBestCutWhenAllCutsViolateRequired(t *testing.T) {
 		t.Fatalf("renode result differs from fixed native:\n%s", out)
 	}
 }
+
+// TestRenodeBddCompletes: renode -b scores cuts with Extra_Reorder, which
+// fills pOrder only for the support's variables (the cut can be smaller
+// than the manager); the port copied a whole-manager permutation into the
+// cut's order and panicked. (The result still differs from native's
+// nd = 657: the reo package is not yet a port of reoCore/reoSwap.)
+func TestRenodeBddCompletes(t *testing.T) {
+	out := runScript(t, "read test_vectors/native_mul8_if6.blif; strash; renode -b; print_stats")
+	if !strings.Contains(out, "nd =") {
+		t.Fatalf("renode -b failed:\n%s", out)
+	}
+}
