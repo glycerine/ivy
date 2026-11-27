@@ -9,7 +9,6 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 	"math"
 	"math/bits"
-	"math/rand"
 	"time"
 )
 
@@ -812,18 +811,20 @@ outer:
 **********************************************************************
 */
 func Ssw_RarRandomPermFlop(flops, unused int32) *vec.Vec_Int_t {
-	rng := rand.New(rand.NewSource(1))
-	v := vec.Vec_IntStartNatural(int(flops))
 	if flops == 0 && unused > 0 {
 		panic("ssw: cannot add gaps without flops")
 	}
+	util.C_Srand(1) // srand( 1 ), then rand() as sswRarity.c
+	fmt.Printf("Generating random permutation of %d flops.\n", flops)
+	v := vec.Vec_IntStartNatural(int(flops))
 	for i := int32(0); i < flops; i++ {
-		k := rng.Intn(int(flops))
+		k := int32(util.C_Rand()) % flops
 		a := vec.Vec_IntArray(v)
 		a[i], a[k] = a[k], a[i]
 	}
+	fmt.Printf("Randomly adding %d unused flops.\n", unused)
 	for i := int32(0); i < unused; i++ {
-		k := rng.Intn(vec.Vec_IntSize(v))
+		k := int(util.C_Rand()) % vec.Vec_IntSize(v)
 		vec.Vec_IntPush(v, -1)
 		a := vec.Vec_IntArray(v)
 		a[len(a)-1], a[k] = a[k], a[len(a)-1]
