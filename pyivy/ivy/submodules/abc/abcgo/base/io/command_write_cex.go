@@ -11,6 +11,7 @@ import (
 	"github.com/glycerine/abcgo/base/abc"
 	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 )
 
 type CexServices struct {
@@ -26,6 +27,14 @@ var cexServices struct {
 func RegisterCexServices(value CexServices) {
 	cexServices.Lock()
 	cexServices.value = value
+	cexServices.Unlock()
+}
+
+// RegisterCexMinimizer installs write_cex -m's minimizer independently of
+// other services.
+func RegisterCexMinimizer(minimize func(*aig.Graph, *util.Abc_Cex_t, bool, bool, bool, bool, bool) *util.Abc_Cex_t) {
+	cexServices.Lock()
+	cexServices.value.Minimize = minimize
 	cexServices.Unlock()
 }
 
@@ -159,7 +168,17 @@ func IoCommandWriteCex(frame *abcmain.Frame, args []string) int32 {
 	}
 	_, _, snapshot := frame.VerificationResult()
 	multiple := abcmain.Abc_FrameReadCexVec(frame)
-	if n.Model == nil && snapshot == nil && multiple == nil {
+	// commands store pAbc->pCex/vCexVec in the ABC frame state
+	var stateCex *util.Abc_Cex_t
+	if snapshot == nil && multiple == nil {
+		state := abcmain.ReadABCFrameState(frame)
+		if c, ok := state.Cex().(*util.Abc_Cex_t); ok && c != nil {
+			stateCex = c
+		} else if v, ok := state.CexVec().(*vec.Vec_Ptr_t); ok && v != nil {
+			multiple = append([]any(nil), vec.Vec_PtrArray(v)...)
+		}
+	}
+	if n.Model == nil && snapshot == nil && stateCex == nil && multiple == nil {
 		fmt.Fprintln(frame.Out, "Counter-example is not available.")
 		return 0
 	}
@@ -169,8 +188,13 @@ func IoCommandWriteCex(frame *abcmain.Frame, args []string) int32 {
 		return 1
 	}
 	defer f.Close()
-	if snapshot != nil || multiple != nil {
-		if snapshot != nil {
+	if snapshot != nil || stateCex != nil || multiple != nil {
+		if stateCex != nil {
+			if e := writeOneCex(f, n, stateCex, flags); e != nil {
+				fmt.Fprintln(frame.Err, e)
+				return 1
+			}
+		} else if snapshot != nil {
 			cex, e := frameCounterexample(snapshot)
 			if e == nil {
 				e = writeOneCex(f, n, cex, flags)
