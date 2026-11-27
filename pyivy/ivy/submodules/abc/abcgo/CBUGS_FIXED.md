@@ -929,3 +929,42 @@ and states how the Go port was verified.
   (`TestNativeIntBackwardProves`; test vector
   `base/abci/test_vectors/seq/int_backward_safe.blif`); red before.
 - **Go port:** `proof/int/intCore.go`, the same change.
+
+## 43. `dsd` crashes on every design (pointers truncated to `int`)
+
+- **Files:** `src/bdd/dsd/dsdInt.h`, `dsd.h`, `dsdApi.c` (the `Mark` field
+  and `Dsd_NodeReadMark`/`Dsd_NodeSetMark`), `src/base/abci/abcDsd.c`.
+- **Found:** 2026-11-27: `read s27; strash; dsd` (and mul4, mul8, i10;
+  with `-r`, `-g`) dumped core in `Abc_ObjAddFanin` (ASan: SEGV, called
+  from `Abc_NtkDsdConstructNode`).
+- **Bug:** `Abc_NtkDsdConstruct`/`Abc_NtkDsdConstructNode` store the new
+  network's `Abc_Obj_t *` in each DSD node's `int Mark`
+  (`Dsd_NodeSetMark( pNodeDsd, (int)(ABC_PTRINT_T)pNodeNew )`) and read it
+  back as a pointer. On 64-bit hosts the upper 32 bits are lost, so the
+  fanin pointers are garbage.
+- **Fix:** `Mark` and its accessors are `ABC_PTRINT_T` (pointer-sized); the
+  `(int)` casts in `abcDsd.c` are dropped. The other user (`giaClp.c`)
+  stores literals, unaffected.
+- **Test:** `abcgo/base/abci/dsd_native_test.go`
+  (`TestNativeDsdDoesNotCrash`); red before (segmentation fault).
+- **Go port:** keeps the objects themselves (no truncation). Its `dsd`
+  output differed from C's (to be ported; `dsd_like_native_test.go`).
+
+## 44. `match -m` crashes when the miter cannot be demitered
+
+- **Files:** `src/base/abci/abcDar.c` (`Abc_NtkDarMatch`).
+- **Found:** 2026-11-27: `read s713.blif; strash; dc2; miter s713.blif;
+  match -m` dumped core (segmentation fault) after printing the miter's
+  statistics (the single-output miter of `miter` has no output pairs to
+  demiter).
+- **Bug:** `Abc_NtkDarMatch` declares `Aig_Man_t * pManRes` uninitialized
+  and passes `&pManRes` to `Saig_StrSimPerformMatching`, which returns
+  `NULL` without setting it when `Saig_ManDemiterSimpleDiff` fails
+  ("Demitering has failed."); `Abc_NtkFromAigPhase( pManRes )` then reads
+  a garbage pointer.
+- **Fix:** `pManRes = NULL`; when it stays `NULL`, the managers are freed
+  and `NULL` is returned, so the command reports "Matching has failed."
+- **Test:** `abcgo/base/abci/match_native_test.go`
+  (`TestMatchLikeNative`, the script `miter s713.blif; match -m`); red
+  before (native abc failed: segmentation fault).
+- **Go port:** `base/abci/abcDar.go` (`Abc_NtkDarMatch`), the same change.
