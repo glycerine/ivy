@@ -635,7 +635,7 @@ static inline void         Gia_ObjSetTimeArrivalObj( Gia_Man_t * p, Gia_Obj_t * 
 static inline void         Gia_ObjSetTimeRequiredObj( Gia_Man_t * p, Gia_Obj_t * pObj, float t ) { Gia_ObjSetTimeRequired( p, Gia_ObjId(p, pObj), t );                              }
 static inline void         Gia_ObjSetTimeSlackObj( Gia_Man_t * p, Gia_Obj_t * pObj, float t )    { Gia_ObjSetTimeSlack( p, Gia_ObjId(p, pObj), t );                                 }
 
-static inline int          Gia_ObjSimWords( Gia_Man_t * p )                    { return Vec_WrdSize( p->vSimsPi ) / Gia_ManPiNum( p );          }
+static inline int          Gia_ObjSimWords( Gia_Man_t * p )                    { return Vec_WrdSize( p->vSimsPi ) / Gia_ManCiNum( p );          }
 static inline word *       Gia_ObjSimPi( Gia_Man_t * p, int PiId )             { return Vec_WrdEntryP( p->vSimsPi, PiId * Gia_ObjSimWords(p) ); }
 static inline word *       Gia_ObjSim( Gia_Man_t * p, int Id )                 { return Vec_WrdEntryP( p->vSims, Id * Gia_ObjSimWords(p) );     }
 static inline word *       Gia_ObjSimObj( Gia_Man_t * p, Gia_Obj_t * pObj )    { return Gia_ObjSim( p, Gia_ObjId(p, pObj) );                    }

@@ -989,3 +989,22 @@ and states how the Go port was verified.
   (to stdout) rather than to `pFile`, so `If_LibBoxWrite` would write rows
   without line breaks; no command calls `If_LibBoxWrite`, so it is left as
   is.
+
+## 46. `&cfraig` overflows the heap on sequential AIGs
+
+- **File:** `src/aig/gia/gia.h` (`Gia_ObjSimWords`).
+- **Found:** 2026-11-27, native crash sweep: `read s27; strash; &get;
+  &cfraig` aborted (s713 too); ASan: heap-buffer-overflow WRITE in
+  `Ssc_GiaTransferPiPattern` (sscSim.c), from `Ssc_PerformSweepingInt`.
+- **Bug:** `Ssc_GiaResetPiPattern` sizes `vSimsPi` as `nWords *
+  Gia_ManCiNum(p)` and every ssc user indexes it by CI (`Gia_ManForEachCi`,
+  `Vec_WrdDoubleSimInfo(..., Gia_ManCiNum)`), but `Gia_ObjSimWords` divided
+  the size by `Gia_ManPiNum`. With latches (CIs > PIs) the per-CI stride was
+  too large (s27: 35 words / 4 PIs = 8 instead of 5), so `Gia_ObjSimPi(p, i)`
+  for later CIs pointed past the array. Combinational AIGs were unaffected.
+- **Fix:** `Gia_ObjSimWords` divides by `Gia_ManCiNum` (its only users are
+  in `proof/ssc`).
+- **Test:** `abcgo/base/abci/cfraig_native_test.go` (`TestCFraigLikeNative`;
+  s27, s713, i10: output and written AIG equal native); red before (native
+  abort).
+- **Go port:** `proof/ssc` keeps a per-CI stride; its results equal C's.
