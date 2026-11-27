@@ -75,6 +75,7 @@ func Dch_ObjCheckTfi(g *aig.Graph, node, representative aig.Edge) bool {
 // nodes as they are added (sync) and choices as they are linked (link).
 type tfiScratch struct {
 	nodes []tfiNode
+	stack []int32
 	gen   uint32
 }
 
@@ -130,21 +131,34 @@ func (s *tfiScratch) check(g *aig.Graph, node, representative aig.Edge) bool {
 }
 
 // reaches is Dch_ObjCheckTfi_rec: whether the fanin cone of node id,
-// through choice alternatives, reaches a marked representative.
+// through choice alternatives, reaches a marked representative. The
+// recursion (fanin0, fanin1, then the choice link, depth up to the AIG's
+// depth) runs on an explicit stack in the same visiting order.
 func (s *tfiScratch) reaches(id int32) bool {
-	n := &s.nodes[id]
-	if n.target == s.gen {
-		return true
+	stack := append(s.stack[:0], id)
+	defer func() { s.stack = stack[:0] }()
+	for len(stack) > 0 {
+		id = stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		n := &s.nodes[id]
+		if n.target == s.gen {
+			return true
+		}
+		if n.seen == s.gen {
+			continue
+		}
+		n.seen = s.gen
+		if n.equiv >= 0 {
+			stack = append(stack, n.equiv)
+		}
+		if n.fanin1 >= 0 {
+			stack = append(stack, n.fanin1)
+		}
+		if n.fanin0 >= 0 {
+			stack = append(stack, n.fanin0)
+		}
 	}
-	if n.seen == s.gen {
-		return false
-	}
-	n.seen = s.gen
-	if n.fanin0 >= 0 && s.reaches(n.fanin0) || n.fanin1 >= 0 && s.reaches(n.fanin1) {
-		return true
-	}
-	n = &s.nodes[id] // (the slice does not move during a check)
-	return n.equiv >= 0 && s.reaches(n.equiv)
+	return false
 }
 
 // DeriveChoiceAig replaces proved constants/CI aliases and redirects fanins
