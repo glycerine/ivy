@@ -13,9 +13,11 @@ func ivyFraigSolver(p *Ivy_FraigMan_t) {
 	if p.pSat != nil {
 		return
 	}
+	// as ivyFraig.c: room for 1000 variables up front; variable 0 is
+	// reserved for the constant node but left unconstrained (ABC's unit
+	// clause for it is commented out)
 	p.pSat = bsat.NewSolver()
-	p.pSat.NewVariable()
-	p.pSat.AddClause(bsat.Positive(0))
+	p.pSat.SetNumVars(1000)
 	p.nSatVars = 1
 }
 func ivyFraigLiteral(n *Ivy_Obj_t) bsat.Literal {
@@ -51,9 +53,12 @@ func Ivy_FraigObjAddToFrontier(p *Ivy_FraigMan_t, n *Ivy_Obj_t, front *[]*Ivy_Ob
 	if n == p.pManFraig.pConst1 || Ivy_ObjSatNum(n) != 0 {
 		return
 	}
-	variable := p.pSat.NewVariable()
+	variable := p.nSatVars // Ivy_ObjSetSatNum( pObj, p->nSatVars++ )
+	p.nSatVars++
+	if variable >= p.pSat.NumVars() {
+		p.pSat.SetNumVars(variable + 1)
+	}
 	Ivy_ObjSetSatNum(n, variable)
-	p.nSatVars = p.pSat.NumVars()
 	if Ivy_ObjIsNode(n) != 0 {
 		*front = append(*front, n)
 	} else if Ivy_ObjIsPi(n) != 0 {
@@ -102,10 +107,10 @@ func Ivy_FraigNodeAddToSolver(p *Ivy_FraigMan_t, old, next *Ivy_Obj_t) {
 		case n.Type == IVY_EXOR:
 			fanins = []*Ivy_Obj_t{n.pFanin0, n.pFanin1}
 		case Ivy_ObjIsMuxType(n) != 0:
-			var then, otherwise *Ivy_Obj_t
-			control := Ivy_ObjRecognizeMux(n, &then, &otherwise)
-			for _, edge := range []*Ivy_Obj_t{control, then, otherwise} {
-				ivyCutPushUnique(&fanins, Ivy_Regular(edge))
+			// ivyFraig.c's order: the four grand-fanins, without duplicates
+			f0, f1 := Ivy_ObjFanin0(n), Ivy_ObjFanin1(n)
+			for _, edge := range []*Ivy_Obj_t{Ivy_ObjFanin0(f0), Ivy_ObjFanin0(f1), Ivy_ObjFanin1(f0), Ivy_ObjFanin1(f1)} {
+				ivyCutPushUnique(&fanins, edge)
 			}
 		default:
 			fanins = Ivy_FraigCollectSuper(n, 1)
@@ -127,6 +132,7 @@ func Ivy_FraigNodeAddToSolver(p *Ivy_FraigMan_t, old, next *Ivy_Obj_t) {
 		}
 		Ivy_ObjSetFaninVec(n, fanins)
 	}
+	p.pSat.Simplify() // sat_solver_simplify
 }
 func Ivy_FraigSetActivityFactors_rec(p *Ivy_FraigMan_t, n *Ivy_Obj_t, minimum, maximum int32) int32 {
 	if Ivy_ObjIsTravIdCurrent(p.pManFraig, n) != 0 {
@@ -179,9 +185,8 @@ func Ivy_FraigPrintActivity(p *Ivy_FraigMan_t) {
 func Ivy_FraigCreateModel(p *Ivy_FraigMan_t) []int32 {
 	model := make([]int32, len(p.pManFraig.vPis))
 	for i, n := range p.pManFraig.vPis {
-		if Ivy_ObjSatNum(n) == 0 {
-			continue
-		}
+		// as ivyFraig.c: model[Ivy_ObjSatNum(pObj)], so a PI outside the
+		// SAT problem reads variable 0 (reserved, unconstrained)
 		value, known := p.pSat.Value(Ivy_ObjSatNum(n))
 		if known && value {
 			model[i] = 1
@@ -200,7 +205,7 @@ func Ivy_FraigSavePattern(p *Ivy_FraigMan_t) {
 func Ivy_FraigSavePattern2(p *Ivy_FraigMan_t) { Ivy_FraigSavePattern(p) }
 func Ivy_FraigSavePattern3(p *Ivy_FraigMan_t) {
 	for i := range p.pPatWords {
-		p.pPatWords[i] = p.rng.Uint32()
+		p.pPatWords[i] = Ivy_ObjRandomSim()
 	}
 	for _, n := range p.vPiVars {
 		value, known := p.pSat.Value(Ivy_ObjSatNum(n))

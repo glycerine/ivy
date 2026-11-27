@@ -1,0 +1,15 @@
+SimWords = 32. Rounds = 28. Mem = 0.39 MB.  Classes: Beg = 337. End = 313.
+Proof = 341. Counter-example = 19. Fail = 0. FailReal = 0. Zero = 21.
+Final = 2249. Miter = 2641. Total = 2675. Mux = 0. (Exor = 0.) SatVars = 1404.
+starts        :               44
+conflicts     :               93
+decisions     :             7001
+propagations  :            68735
+AIG simulation   =      sec
+AIG traversal    =      sec
+SAT solving      =      sec
+    Unsat        =      sec
+    Sat          =      sec
+    Fail         =      sec
+Class refining   =      sec
+TOTAL RUNTIME    =      sec

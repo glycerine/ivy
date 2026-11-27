@@ -4,7 +4,11 @@ package ivy
 import (
 	"fmt"
 	"math"
+	"os"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/sat/bsat"
 )
 
 func Ivy_FraigStart(source *Ivy_Man_t, params *Ivy_FraigParams_t) *Ivy_FraigMan_t {
@@ -39,8 +43,27 @@ func Ivy_FraigStop(p *Ivy_FraigMan_t) {
 	p.pSat = nil
 	p.vPiVars = nil
 }
+// Ivy_FraigPrint is ivyFraig.c's.
 func Ivy_FraigPrint(p *Ivy_FraigMan_t) {
-	fmt.Printf("FRAIG: nodes %d -> %d, SAT calls %d, proved %d, counterexamples %d, undecided %d; simulation %s, SAT %s, total %s\n", Ivy_ManNodeNum(p.pManAig), Ivy_ManNodeNum(p.pManFraig), p.nSatCalls, p.nSatProof, p.nSatCallsSat, p.nSatFailsReal, p.timeSim, p.timeSat, p.timeTotal)
+	memory := float64(Ivy_ManObjNum(p.pManAig)) * float64(p.nSimWords) * 4 / (1 << 20)
+	fmt.Printf("SimWords = %d. Rounds = %d. Mem = %0.2f MB.  ", p.nSimWords, p.nSimRounds, memory)
+	fmt.Printf("Classes: Beg = %d. End = %d.\n", p.nClassesBeg, p.nClassesEnd)
+	fmt.Printf("Proof = %d. Counter-example = %d. Fail = %d. FailReal = %d. Zero = %d.\n",
+		p.nSatProof, p.nSatCallsSat, p.nSatFails, p.nSatFailsReal, p.nClassesZero)
+	fmt.Printf("Final = %d. Miter = %d. Total = %d. Mux = %d. (Exor = %d.) SatVars = %d.\n",
+		Ivy_ManNodeNum(p.pManFraig), p.nNodesMiter, Ivy_ManNodeNum(p.pManAig), 0, 0, p.nSatVars)
+	if p.pSat != nil {
+		bsat.Sat_SolverPrintStats(os.Stdout, p.pSat)
+	}
+	for _, row := range []struct {
+		name string
+		d    time.Duration
+	}{{"AIG simulation  ", p.timeSim}, {"AIG traversal   ", p.timeTrav}, {"SAT solving     ", p.timeSat}, {"    Unsat       ", p.timeSatUnsat}, {"    Sat         ", p.timeSatSat}, {"    Fail        ", p.timeSatFail}, {"Class refining  ", p.timeRef}, {"TOTAL RUNTIME   ", p.timeTotal}} {
+		util.Abc_PrintTime(1, row.name, row.d.Nanoseconds()) // ABC_PRT
+	}
+	if p.time1 != 0 {
+		util.Abc_PrintTime(1, "time1           ", p.time1.Nanoseconds())
+	}
 }
 func Ivy_FraigAnd(p *Ivy_FraigMan_t, old *Ivy_Obj_t) *Ivy_Obj_t {
 	candidate := Ivy_Oper(p.pManFraig, Ivy_ObjChild0Equiv(old), Ivy_ObjChild1Equiv(old), old.Type)

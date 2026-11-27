@@ -3,9 +3,9 @@ package ivy
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"math/bits"
-	"math/rand/v2"
 	"slices"
 	"time"
 )
@@ -42,7 +42,6 @@ type Ivy_FraigMan_t struct {
 	lClasses, lCand                                                                   Ivy_FraigList_t
 	nPairs, nSimRounds                                                                int32
 	timeSim, timeRef                                                                  time.Duration
-	rng                                                                               *rand.Rand
 }
 
 func ivyFraigState(n *Ivy_Obj_t) *ivyFraigNodeState {
@@ -75,7 +74,12 @@ func Ivy_ObjSetEquivListPrev(n, v *Ivy_Obj_t)         { ivyFraigState(n).listPre
 func Ivy_ObjSetFraig(n, v *Ivy_Obj_t)                 { ivyFraigState(n).mapped = v }
 func Ivy_ObjSetSatNum(n *Ivy_Obj_t, v int32)          { ivyFraigState(n).satNum = v }
 func Ivy_ObjSetFaninVec(n *Ivy_Obj_t, v []*Ivy_Obj_t) { ivyFraigState(n).fanins = v }
-func Ivy_ObjRandomSim() uint32                        { return rand.Uint32() }
+
+// Ivy_ObjRandomSim is ivyFraig.c's (rand() << 24) ^ (rand() << 12) ^ rand(),
+// on ABC's process-wide rand() stream.
+func Ivy_ObjRandomSim() uint32 {
+	return (util.C_Rand() << 24) ^ (util.C_Rand() << 12) ^ util.C_Rand()
+}
 func Ivy_FraigParamsDefault(params *Ivy_FraigParams_t) {
 	*params = Ivy_FraigParams_t{nSimWords: 32, dSimSatur: 0.005, MaxScore: 25, FDoSparse: 1, dActConeRatio: 0.3, dActConeBumpMax: 10, NBTLimitNode: 100, NBTLimitMiter: 500000}
 }
@@ -103,7 +107,7 @@ func ivyFraigStartSimulation(source *Ivy_Man_t, params *Ivy_FraigParams_t) *Ivy_
 			panic("ivy: fraig state already in use")
 		}
 	}
-	p := &Ivy_FraigMan_t{pParams: params, pManAig: source, pManFraig: Ivy_ManStartFrom(source), nSimWords: params.nSimWords, rng: rand.New(rand.NewPCG(0xabcabc, 0xabcabc))}
+	p := &Ivy_FraigMan_t{pParams: params, pManAig: source, pManFraig: Ivy_ManStartFrom(source), nSimWords: params.nSimWords}
 	for _, n := range source.vObjs {
 		if n != nil {
 			if n.fraig != nil {
@@ -127,6 +131,7 @@ func ivyFraigStartSimulation(source *Ivy_Man_t, params *Ivy_FraigParams_t) *Ivy_
 	}
 	p.pPatWords = make([]uint32, (len(source.vPis)+31)/32)
 	p.pPatScores = make([]int32, 32*params.nSimWords)
+	util.C_Srand(0xABCABC) // set random number generator, as Ivy_FraigStart
 	return p
 }
 func ivyFraigStopSimulation(p *Ivy_FraigMan_t) {
@@ -147,7 +152,7 @@ func Ivy_NodeAssignRandom(p *Ivy_FraigMan_t, n *Ivy_Obj_t) {
 	}
 	words := p.simWords(n)
 	for i := range words {
-		words[i] = p.rng.Uint32()
+		words[i] = Ivy_ObjRandomSim()
 	}
 }
 func Ivy_NodeAssignConst(p *Ivy_FraigMan_t, n *Ivy_Obj_t, value int32) {
