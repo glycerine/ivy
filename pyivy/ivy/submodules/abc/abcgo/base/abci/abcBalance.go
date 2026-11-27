@@ -21,6 +21,7 @@ func Abc_NtkBalance(n *Abc_Ntk_t, duplicate, selective, updateLevel int32) *Abc_
 		Abc_NtkMarkCriticalNodes(n)
 	}
 	balanced := abc.Abc_NtkStartFrom(n, abc.ABC_NTK_STRASH, abc.ABC_FUNC_AIG)
+	balanced.ReserveAnds(int(abc.Abc_NtkNodeNum(n))) // a size hint: balancing keeps about as many ANDs
 	balanced.ReserveAIG(0, 0, 0, int(abc.Abc_NtkNodeNum(n)))
 	Abc_NtkBalancePerform(n, balanced, duplicate, selective, updateLevel)
 	abc.Abc_NtkFinalize(n, balanced)
