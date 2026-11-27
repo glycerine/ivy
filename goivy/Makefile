@@ -402,3 +402,10 @@ ivy2golang-check:
 	@file tmp-ivy2golang-check/pingpong
 	@echo "run with:"
 	@echo "tmp-ivy2golang-check/pingpong"
+
+release: build
+	rm -rf release
+	mkdir release
+	for i in ivy-repl ivyweb goivy_check whatwasm ivy2cpp ivy2golang ivy2rtl rtlil_eqv abc aigtoaig; do cp -p $$GOPATH/bin/$$i release/; done
+	for i in z3-471-api.js z3-471-api.wasm z3-api.js z3-api.wasm; do cp -p z3vendor/wasm_lib/$$i release/; done
+	cp -p z3vendor/native_lib/* release/
