@@ -19,6 +19,8 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 		"read ../../../i10.aig; &get; &lf -v; &ps",
 		"read test_vectors/native_s27_drw.blif; strash; &get; &sim",
 		"read test_vectors/seq/s713.blif; strash; &get; &sim -F 4",
+		"read ../../../i10.aig; drwsat -v; print_stats",
+		"read ../../../i10.aig; drwsat -v -b; print_stats",
 	} {
 		port := bmc3Normalize(runScript(t, script))
 		if strings.Contains(port, "ms\n") || strings.Contains(port, "Time: ") {
@@ -28,6 +30,17 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 		clean := func(s string) string { return mbTimes.ReplaceAllString(s, "M MB") }
 		if clean(native) != clean(port) {
 			t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
+		}
+	}
+}
+
+// drwsat -v labels its stages as Dar_ManRwsat does and prints the rewrite
+// and refactor statistics; the port printed "Starting: 3157 nodes".
+func TestDrwsatVerboseStages(t *testing.T) {
+	out := runScript(t, "read ../../../i10.aig; drwsat -v; print_stats")
+	for _, want := range []string{"Starting:  ../../../i10", "Rewrite:   ../../../i10", "Refactor:  ../../../i10", "NodesBeg =     2123."} {
+		if !strings.Contains(out, want) {
+			t.Errorf("missing %q:\n%s", want, out)
 		}
 	}
 }

@@ -31,9 +31,11 @@ func RewriteForSAT(ctx context.Context, g *aig.Graph, balance bool, progress io.
 		return nil, err
 	}
 	result := aig.Aig_ManDupDfs(g)
+	// darScript.c's stage labels and Aig_ManPrintStats lines
+	labels := map[string]string{"Starting": "Starting:  ", "Balance": "Balance:   ", "Rewrite": "Rewrite:   ", "Refactor": "Refactor:  "}
 	report := func(stage string) error {
 		if progress != nil {
-			if err := writeProgress(progress, "%s: %d nodes\n", stage, result.NodeCount()); err != nil {
+			if err := writeProgress(progress, "%s%s", labels[stage], aig.Aig_ManStatsLine(result)); err != nil {
 				return err
 			}
 		}
@@ -48,9 +50,11 @@ func RewriteForSAT(ctx context.Context, g *aig.Graph, balance bool, progress io.
 	rwr := DefaultRewriteParams()
 	rwr.Context = ctx
 	rwr.UpdateLevel = false
+	rwr.Verbose = progress != nil // pParsRwr->fVerbose = fVerbose
 	ref := DefaultRefactorParams()
 	ref.Context = ctx
 	ref.UpdateLevel = false
+	ref.Verbose = progress != nil
 	if balance {
 		var err error
 		result, err = Balance(ctx, result, false)
