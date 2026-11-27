@@ -22,13 +22,13 @@ func TestObjectWriteDataDoesNotClearStructuralHash(t *testing.T) {
 	network := NewNetwork("hash")
 	object := network.NewObject(ObjectNode)
 	key := andHashKey([2]Edge{{Object: object}, {Object: network.constant}})
-	network.hashed[key] = object
+	network.hashed.set(key, object)
 	data := &struct{ value int }{value: 11}
 	Abc_ObjWriteData(object, data)
 	if Abc_ObjReadData(object) != data {
 		t.Fatal("object data accessor changed the opaque payload")
 	}
-	if network.hashed[key] != object {
+	if network.hashed.get(key) != object {
 		t.Fatal("raw object data write cleared structural hash state")
 	}
 }

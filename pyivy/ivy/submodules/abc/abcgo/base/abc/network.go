@@ -226,7 +226,7 @@ type Network struct {
 	Name, Spec          string
 	objects             []*Object
 	names               *nm.Manager
-	hashed              map[[2]int]*Object
+	hashed              andTable
 	duplicateAnds       map[[2]int][]*Object
 	extraAnds           int
 	constant            *Object
@@ -235,7 +235,7 @@ type Network struct {
 }
 
 func NewNetwork(name string) *Network {
-	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, Name: name, names: nm.Nm_ManCreate(16), hashed: make(map[[2]int]*Object)}
+	n := &Network{Step: -1, DTemp: -1, travID: 1, Type: 3, Function: 3, Name: name, names: nm.Nm_ManCreate(16)}
 	n.constant = n.NewObject(ObjectConst1)
 	n.constant.Phase = true
 	return n
@@ -257,8 +257,8 @@ func (n *Network) ReserveAnds(ands int) {
 	if ands <= 0 {
 		return
 	}
-	if len(n.hashed) == 0 {
-		n.hashed = make(map[[2]int]*Object, ands)
+	if n.hashed.len() == 0 {
+		n.hashed.reserve(ands)
 	}
 	n.objects = slices.Grow(n.objects, ands)
 	n.kindOrder[ObjectNode] = slices.Grow(n.kindOrder[ObjectNode], ands)
@@ -271,8 +271,8 @@ func (n *Network) ReserveAIG(inputs, latches, outputs, ands int) {
 		panic("negative AIG capacity")
 	}
 	gates := min(ands, 4096)
-	if gates > cap(n.kindOrder[ObjectNode])-len(n.kindOrder[ObjectNode]) && len(n.hashed) == 0 {
-		n.hashed = make(map[[2]int]*Object, gates)
+	if gates > cap(n.kindOrder[ObjectNode])-len(n.kindOrder[ObjectNode]) && n.hashed.len() == 0 {
+		n.hashed.reserve(gates)
 	}
 	n.objects = slices.Grow(n.objects, inputs+3*latches+outputs+gates)
 	n.kindOrder[ObjectNode] = slices.Grow(n.kindOrder[ObjectNode], gates)

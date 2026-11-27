@@ -270,7 +270,7 @@ func TestReassignIDsRekeysDuplicateAndsAndAllPhases(t *testing.T) {
 		Abc_ObjAddFanin(n.NewObject(ObjectPO), last[phase])
 	}
 	Abc_NtkReassignIds(n)
-	if original == a.Object.ID || len(n.hashed) != 4 || n.extraAnds != 4 {
+	if original == a.Object.ID || n.hashed.len() != 4 || n.extraAnds != 4 {
 		t.Fatal("reassignment did not move inputs or rebuild all entries")
 	}
 	for phase := range first {

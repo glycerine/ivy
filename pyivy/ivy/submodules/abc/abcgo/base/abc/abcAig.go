@@ -45,7 +45,7 @@ func Abc_AigFree(m *Abc_Aig_t) {
 	m.updated = nil
 	m.replacementMarks = faninMarks{}
 	m.tracking = false
-	clear(m.Network.hashed)
+	m.Network.hashed.clear()
 	clear(m.Network.duplicateAnds)
 	m.Network.extraAnds = 0
 }
@@ -86,7 +86,7 @@ func checkAigNodes(m *Abc_Aig_t) int32 {
 		if a.Object == b.Object || a.Object == m.Network.constant || b.Object == m.Network.constant || Abc_ObjFanoutNum(a.Object) == 0 || Abc_ObjFanoutNum(b.Object) == 0 {
 			return 0
 		}
-		if m.Network.hashed[andHashKey(edgePair(a, b))] == o {
+		if m.Network.hashed.get(andHashKey(edgePair(a, b))) == o {
 			continue
 		}
 		e, ok := m.Network.lookupAnd(a, b)
@@ -130,7 +130,7 @@ func Abc_AigAndCreate(m *Abc_Aig_t, a, b any) Edge {
 func (m *Abc_Aig_t) createAndEdges(x, y Edge) Edge {
 	n := m.Network
 	n.checkAndInputs(x, y)
-	if len(n.hashed)+n.extraAnds > 2*m.bins {
+	if n.hashed.len()+n.extraAnds > 2*m.bins {
 		Abc_AigResize(m)
 	}
 	o := n.newAndObject()
@@ -241,7 +241,7 @@ func Abc_AigResize(m *Abc_Aig_t) {
 	m.bins = int(util.Abc_PrimeCudd(uint32(3 * m.bins)))
 	for key, group := range m.Network.duplicateAnds {
 		slices.Reverse(group)
-		m.Network.hashed[key] = group[len(group)-1]
+		m.Network.hashed.set(key, group[len(group)-1])
 	}
 }
 
@@ -259,7 +259,7 @@ func Abc_AigRehash(m *Abc_Aig_t) {
 	}
 	n.duplicateAnds = nil
 	n.extraAnds = 0
-	clear(n.hashed)
+	n.hashed.clear()
 	for o := range n.logicNodes {
 		if aigNode(o) && !m.excluded[o] {
 			pair := edgePair(o.fanins[0], o.fanins[1])

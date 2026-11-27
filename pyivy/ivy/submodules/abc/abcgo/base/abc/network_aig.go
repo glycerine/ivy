@@ -57,14 +57,14 @@ func (n *Network) lookupAndAllowed(a, b Edge, excluded map[*Object]bool) (Edge, 
 		return o.Signal(), true
 	}
 	if found := findAndFanout(pair, excluded); found != nil {
-		n.hashed[key] = found
+		n.hashed.set(key, found)
 		return found.Signal(), true
 	}
 	return Edge{}, false
 }
 
 func (n *Network) cachedAnd(pair [2]Edge, key [2]int) *Object {
-	for o := n.hashed[key]; o != nil; o = n.hashed[key] {
+	for o := n.hashed.get(key); o != nil; o = n.hashed.get(key) {
 		if n.contains(o) && aigNode(o) && edgePair(o.fanins[0], o.fanins[1]) == pair {
 			return o
 		}
@@ -106,12 +106,12 @@ func (n *Network) registerAnd(o *Object) {
 		n.duplicateAnds[key] = append(group, o)
 		n.extraAnds++
 	}
-	n.hashed[key] = o
+	n.hashed.set(key, o)
 }
 
 // Remove the object from its old key before editing its fanins or function.
 func (n *Network) detachAnd(o *Object) {
-	if len(n.hashed) == 0 || o.Kind != ObjectNode || len(o.fanins) != 2 {
+	if n.hashed.len() == 0 || o.Kind != ObjectNode || len(o.fanins) != 2 {
 		return
 	}
 	n.removeAndKey(andHashKey(edgePair(o.fanins[0], o.fanins[1])), o)
@@ -128,20 +128,20 @@ func (n *Network) removeAndKey(key [2]int, o *Object) {
 				n.duplicateAnds[key] = group
 			}
 		}
-		n.hashed[key] = group[len(group)-1]
-	} else if n.hashed[key] == o {
-		delete(n.hashed, key)
+		n.hashed.set(key, group[len(group)-1])
+	} else if n.hashed.get(key) == o {
+		n.hashed.del(key)
 	}
 }
 
 // An edited raw node can precede an already cached fanout in object-ID order.
 func (n *Network) changedAnd(o *Object) {
-	if len(n.hashed) == 0 || o.ID == len(n.objects)-1 || !aigNode(o) {
+	if n.hashed.len() == 0 || o.ID == len(n.objects)-1 || !aigNode(o) {
 		return
 	}
 	key := andHashKey(edgePair(o.fanins[0], o.fanins[1]))
-	if head := n.hashed[key]; head != nil && head.ID > o.ID && len(n.duplicateAnds[key]) == 0 {
-		delete(n.hashed, key)
+	if head := n.hashed.get(key); head != nil && head.ID > o.ID && len(n.duplicateAnds[key]) == 0 {
+		n.hashed.del(key)
 	}
 }
 
@@ -179,7 +179,7 @@ func (n *Network) AndEdges(a, b Edge) Edge {
 		return e
 	}
 	e := n.CreateAndEdges(a, b)
-	n.hashed[andHashKey(edgePair(a, b))] = e.Object
+	n.hashed.set(andHashKey(edgePair(a, b)), e.Object)
 	return e
 }
 
