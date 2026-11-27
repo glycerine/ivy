@@ -96,21 +96,32 @@ func Kit_SopDivideInternal(sop, div, quo, rem *Kit_Sop_t, memory *[]uint32) {
 			continue
 		}
 		q := c &^ divs[k]
+		// C searches the partners again after marking cube i; distinct
+		// divisor cubes have distinct partners for one quotient, so the
+		// partners found here are the ones the second search would find
+		var found [64]int
+		partners := found[:0]
+		if len(divs) > len(found) {
+			partners = make([]int, 0, len(divs))
+		}
 		k2 := 0
 		for ; k2 < len(divs); k2++ {
-			if k2 != k && findPartner(divs[k2], q) < 0 {
+			if k2 == k {
+				continue
+			}
+			j := findPartner(divs[k2], q)
+			if j < 0 {
 				break
 			}
+			partners = append(partners, j)
 		}
 		if k2 != len(divs) {
 			continue
 		}
 		Kit_SopPushCube(quo, q)
 		cubes[i] = c | 1<<31
-		for k2, d := range divs {
-			if k2 != k {
-				cubes[findPartner(d, q)] |= 1 << 31
-			}
+		for _, j := range partners {
+			cubes[j] |= 1 << 31
 		}
 	}
 	kitSopReset(rem, int(sop.cubeNum()-quo.cubeNum()*div.cubeNum()), memory)
