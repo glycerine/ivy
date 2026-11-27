@@ -2,6 +2,7 @@ package gia
 
 import (
 	"github.com/glycerine/abcgo/misc/vec"
+	"regexp"
 	"testing"
 )
 
@@ -66,7 +67,13 @@ func TestUnmapRepeatedDecomposablePairs(t *testing.T) {
 	if vec.Vec_IntSize(decomp) != 6 {
 		t.Fatalf("expected two decomposable pairs, got %v", vec.Vec_IntArray(decomp))
 	}
-	if result := Unm_ManTest(g); result != nil {
+	var result *Gia_Man_t
+	out := captureGiaStdout(t, func() { result = Unm_ManTest(g) })
+	if result != nil {
 		t.Fatal("experimental analysis should not return a graph")
+	}
+	// Unm_ManTest ends with Abc_PrintTime( 1, "Time", ... )
+	if !regexp.MustCompile(`\nTime = +[0-9]+\.[0-9]{2} sec\n$`).MatchString(out) {
+		t.Errorf("Unm_ManTest output:\n%s", out)
 	}
 }

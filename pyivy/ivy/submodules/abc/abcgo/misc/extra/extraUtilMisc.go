@@ -13,7 +13,6 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/glycerine/abcgo/misc/extra/npn"
 	"github.com/glycerine/abcgo/misc/util"
@@ -630,7 +629,7 @@ func Extra_NpnTest2() {
 	fmt.Printf("%016x\n%016x\n", truth, best)
 }
 func Extra_NpnTest() error {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	truths, err := Extra_NpnRead(`C:\_projects\abc\_TEST\allan\test.txt`, 10)
 	if err != nil {
 		return err
@@ -642,7 +641,7 @@ func Extra_NpnTest() error {
 	for i, t := range truths {
 		fmt.Printf("Line %d : %016x\n", i, t)
 	}
-	fmt.Printf("Time = %v\n", time.Since(started))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	return nil
 }
 func Extra_NtkPrintBin(t []uint64, n int32) {

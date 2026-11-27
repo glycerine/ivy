@@ -6,7 +6,6 @@ import (
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"math/bits"
-	"time"
 )
 
 const MAJ3_OBJS = 32
@@ -302,40 +301,62 @@ func Maj3_ManAlloc(nVars, nNodes int32, levels *vec.Vec_Int_t) *Maj3_Man_t {
 }
 func Maj3_ManFree(p *Maj3_Man_t) {}
 func Maj3_ManExactSynthesis(nVars, nNodes, verbose int32, levels *vec.Vec_Int_t) int32 {
-	start := time.Now()
+	clkTotal := util.Abc_Clock()
+	fmt.Printf("Running exact synthesis for %d-input majority with %d MAJ3 gates...\n", nVars, nNodes)
 	p := Maj3_ManAlloc(nVars, nNodes, levels)
 	if p == nil {
 		return 0
 	}
-	mint := int32(0)
-	iteration := 0
-	for mint >= 0 {
+	mint, lazyAll := int32(0), int32(0)
+	for i := int32(0); mint != -1; i++ {
+		clk := util.Abc_Clock()
 		if Maj3_ManAddCnf(p, mint) == 0 {
-			return 0
+			break
 		}
+		var status bsat.Status
 		for {
-			status := p.pSat.Solve()
+			status = p.pSat.Solve()
 			if status != bsat.Satisfiable {
-				return 0
+				break
 			}
 			p.model = p.pSat.Model()
 			lazy := Maj3_ManAddConstraintsLazy(p)
-			if lazy < 0 {
-				return 0
+			if lazy == -1 {
+				fmt.Printf("Became UNSAT after adding lazy constraints.\n")
+				status = bsat.Unsatisfiable
+				break
 			}
 			if lazy == 0 {
 				break
 			}
+			lazyAll += lazy
+		}
+		if verbose != 0 {
+			stats := p.pSat.Statistics()
+			fmt.Printf("Iter %3d : ", i)
+			for k := p.nVars - 1; k >= 0; k-- {
+				fmt.Printf("%d", mint>>uint(k)&1)
+			}
+			fmt.Printf("  Var =%5d  ", p.iVar)
+			fmt.Printf("Cla =%6d  ", stats.Clauses)
+			fmt.Printf("Conf =%9d  ", stats.Conflicts)
+			fmt.Printf("Lazy =%9d  ", lazyAll)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+		}
+		if status != bsat.Satisfiable {
+			fmt.Printf("The problem has no solution.\n")
+			break
 		}
 		mint = Maj3_ManEval(p)
-		iteration++
-		if verbose != 0 {
-			fmt.Printf("Iteration %d: mismatch %d\n", iteration, mint)
-		}
 	}
-	Maj3_ManPrintSolution(p)
-	fmt.Printf("Total runtime: %s\n", time.Since(start))
-	return 1
+	if mint == -1 {
+		Maj3_ManPrintSolution(p)
+	}
+	util.Abc_PrintTime(1, "Total runtime", util.Abc_Clock()-clkTotal)
+	if mint == -1 {
+		return 1
+	}
+	return 0
 }
 func Maj3_ManTest() int32 {
 	levels := vec.Vec_IntAllocArrayCopy([]int32{1, 2, 2, 2}, 4)

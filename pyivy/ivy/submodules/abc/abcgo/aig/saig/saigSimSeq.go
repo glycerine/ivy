@@ -336,7 +336,11 @@ func Raig_ManSimulate(graph *aig.Graph, words, iterations, timeLimit, miter, ver
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("Simulation finished: max live blocks %d, elapsed %s\n", p.maxLive, time.Since(started))
+		fmt.Printf("Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  ",
+			p.maxLive,
+			float64(len(p.objects)*16)/(1<<20),
+			float64(p.maxLive*4*int(words+1))/(1<<20))
+		util.Abc_PrintTime(1, "Total time", time.Since(started).Nanoseconds())
 	}
 	return 0
 }

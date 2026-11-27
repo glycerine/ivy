@@ -3,17 +3,17 @@ package abs
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"os"
-	"time"
 	"unsafe"
 )
 
 func Ga2_ManComputeTest(p *gia.Gia_Man_t) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	Ga2_ManMarkup(p, 5, 0)
-	fmt.Printf("Time: %v\n", time.Since(start))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	var count int
 	for id := int32(0); id < gia.Gia_ManObjNum(p); id++ {
 		o := gia.Gia_ManObj(p, id)
@@ -21,7 +21,8 @@ func Ga2_ManComputeTest(p *gia.Gia_Man_t) {
 			count++
 		}
 	}
-	fmt.Printf("Marked AND nodes = %6d.  Time: %v\n", count, time.Since(start))
+	util.Abc_Print(1, "Marked AND nodes = %6d.  ", count)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 }
 func Ga2_ManDumpStats(g *gia.Gia_Man_t, pars *Abs_Par_t, solver *bsat.LabeledSolver2, frame, useN int32) {
 	name := "stats_gla"

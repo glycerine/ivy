@@ -32,6 +32,7 @@ import (
 
 	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/bdd/extrab/cascade"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func Extra_TransferPermute(source, destination *DdManager, f *DdNode, permutation []int) *DdNode {
@@ -687,12 +688,21 @@ func Extra_TestAndPerm(dd *DdManager, f, g *DdNode) {
 	cudd.Cudd_Ref(transferred)
 	defer cudd.Cudd_RecursiveDeref(other, transferred)
 	cudd.Cudd_ReduceHeap(other, cudd.CUDD_REORDER_SYMM_SIFT, 1)
-	start := time.Now()
+	clk := util.Abc_Clock()
 	want := cudd.Cudd_bddAnd(dd, f, g)
-	fmt.Printf("Runtime of Cudd_bddAnd: %s\n", time.Since(start))
-	start = time.Now()
+	util.Abc_PrintTime(1, "Runtime of Cudd_bddAnd  ", util.Abc_Clock()-clk)
+	clk = util.Abc_Clock()
 	got := Extra_bddAndPermute(dd, f, other, transferred, nil)
-	fmt.Printf("Runtime of fused transfer/conjunction: %s\nResult verified: %t\n", time.Since(start), got == want)
+	util.Abc_PrintTime(1, "Runtime of new procedure", util.Abc_Clock()-clk)
+	// C also prints "Recursive calls = %d" from Extra_bddAndPermute's
+	// global counter, which this recursion does not keep.
+	sizeF, sizeG, sizeH := cudd.Cudd_DagSize(f), cudd.Cudd_DagSize(g), cudd.Cudd_DagSize(got)
+	fmt.Printf("|F| =%6d  |G| =%6d  |H| =%6d  |F|*|G| =%9d  ", sizeF, sizeG, sizeH, sizeF*sizeG)
+	if got == want {
+		fmt.Printf("Result verified.\n\n")
+	} else {
+		fmt.Printf("Result is incorrect.\n\n")
+	}
 }
 func Extra_GraphExperiment() {
 	dd := cudd.NewBDDManager(0)

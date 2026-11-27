@@ -6,7 +6,8 @@ import (
 	"math/bits"
 	"slices"
 	"sort"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 // Bit cuts are slices into Go-owned arena blocks. Arena growth cannot invalidate
@@ -258,7 +259,7 @@ func Ivy_ManTestCutsTravAll(p *Ivy_Man_t) {
 	var nodes, front []*Ivy_Obj_t
 	var arena []uint32
 	var cuts [][][]uint32
-	start := time.Now()
+	clk := util.Abc_Clock()
 	total, count, saturated := int32(0), int32(0), int32(0)
 	for _, n := range p.vObjs {
 		if n == nil || Ivy_ObjIsNode(n) == 0 {
@@ -269,5 +270,6 @@ func Ivy_ManTestCutsTravAll(p *Ivy_Man_t) {
 		count++
 		saturated += ivyBool(store.nCuts == IVY_CUT_LIMIT)
 	}
-	fmt.Printf("Total cuts = %6d. Trivial = %6d.   Nodes = %6d. Satur = %6d. Time = %s\n", total, Ivy_ManPiNum(p)+Ivy_ManNodeNum(p), count, saturated, time.Since(start))
+	fmt.Printf("Total cuts = %6d. Trivial = %6d.   Nodes = %6d. Satur = %6d.  ", total, Ivy_ManPiNum(p)+Ivy_ManNodeNum(p), count, saturated)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 }

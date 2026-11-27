@@ -227,15 +227,17 @@ func Abc_PrintInt(i int32) {
 		Abc_Print(1, "%4.0fm", v6)
 	}
 }
+
+// Abc_PrintTime is ABC_PRT: like C, it ignores level and prints at level 1.
 func Abc_PrintTime(level int32, s string, t int64) {
-	Abc_Print(level, "%s =%9.2f sec\n", s, float64(t)/float64(time.Second))
+	Abc_Print(1, "%s =%9.2f sec\n", s, float64(t)/float64(time.Second))
 }
 func Abc_PrintTimeP(level int32, s string, t, total int64) {
 	var percent float64
 	if total != 0 {
 		percent = 100 * float64(t) / float64(total)
 	}
-	Abc_Print(level, "%s =%9.2f sec (%6.2f %%)\n", s, float64(t)/float64(time.Second), percent)
+	Abc_Print(1, "%s =%9.2f sec (%6.2f %%)\n", s, float64(t)/float64(time.Second), percent) // ABC_PRTP ignores level
 }
 func Abc_PrintMemoryP(level int32, s string, mem, total int32) {
 	var percent float64

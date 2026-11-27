@@ -38,17 +38,24 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 		"read test_vectors/seq/s713.blif; strash; dsec -v; print_status",
 		"read test_vectors/native_s27_drw.blif; strash; dsec -v; print_status",
 	} {
-		port := bmc3Normalize(runScript(t, script))
-		if strings.Contains(port, "ms\n") || strings.Contains(port, "Time: ") {
-			t.Errorf("%s: Go duration in output:\n%s", script, port)
-		}
-		native := bmc3Normalize(runNativeABC(t, script))
-		clean := func(s string) string {
-			return percents.ReplaceAllString(secTimes.ReplaceAllString(mbTimes.ReplaceAllString(s, "M MB"), "T sec"), "(P %)")
-		}
-		if clean(native) != clean(port) {
-			t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
-		}
+		compareTimesWithNative(t, script)
+	}
+}
+
+// compareTimesWithNative runs script in the port and in native ABC and
+// requires equal output once times, memory and percentages are masked.
+func compareTimesWithNative(t *testing.T, script string) {
+	t.Helper()
+	port := bmc3Normalize(runScript(t, script))
+	if strings.Contains(port, "ms\n") || strings.Contains(port, "Time: ") {
+		t.Errorf("%s: Go duration in output:\n%s", script, port)
+	}
+	native := bmc3Normalize(runNativeABC(t, script))
+	clean := func(s string) string {
+		return percents.ReplaceAllString(secTimes.ReplaceAllString(mbTimes.ReplaceAllString(s, "M MB"), "T sec"), "(P %)")
+	}
+	if clean(native) != clean(port) {
+		t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
 	}
 }
 

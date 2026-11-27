@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"slices"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func Ivy_NodeCutHashValue(id int32) int32 { return int32(uint32(1) << uint32(id%31)) }
@@ -409,7 +410,7 @@ func Ivy_NodeFindCutsAll(p *Ivy_Man_t, root *Ivy_Obj_t, leaves int32) *Ivy_Store
 	return store
 }
 func Ivy_ManTestCutsAll(p *Ivy_Man_t) {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	total, nodes, saturated := int32(0), int32(0), int32(0)
 	for _, n := range p.vObjs {
 		if n != nil && Ivy_ObjIsNode(n) != 0 {
@@ -419,5 +420,6 @@ func Ivy_ManTestCutsAll(p *Ivy_Man_t) {
 			saturated += ivyBool(count == IVY_CUT_LIMIT)
 		}
 	}
-	fmt.Printf("Total cuts = %6d. Trivial = %6d.   Nodes = %6d. Satur = %6d. Time = %s\n", total, Ivy_ManPiNum(p)+Ivy_ManNodeNum(p), nodes, saturated, time.Since(start))
+	fmt.Printf("Total cuts = %6d. Trivial = %6d.   Nodes = %6d. Satur = %6d.  ", total, Ivy_ManPiNum(p)+Ivy_ManNodeNum(p), nodes, saturated)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 }

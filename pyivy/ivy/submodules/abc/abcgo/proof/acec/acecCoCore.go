@@ -4,8 +4,8 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Gia_PolynCoreOrderArray(p *Gia_Man_t, adds, boxes *Vec_Int_t) *Vec_Wec_t {
@@ -116,12 +116,13 @@ func Gia_PolynCoreDupTree(p *Gia_Man_t, extra, leaves, nodes *Vec_Int_t, cones i
 	return dst
 }
 func Gia_PolynCoreDetectTest_int(p *Gia_Man_t, extra *Vec_Int_t, cones, verbose int32) *Gia_Man_t {
-	start := time.Now()
+	start := util.Abc_Clock()
 	adds := Ree_ManComputeCuts(p, nil, 1)
 	var leaves, roots *Vec_Int_t
 	order := Gia_PolynCoreOrder(p, adds, extra, &leaves, &roots)
 	nodes := Gia_PolynCoreCollect(p, adds, order)
-	fmt.Printf("Detected %d FAs/HAs. Roots = %d. Leaves = %d. Nodes = %d. Adds = %d. Time = %v\n", vec.Vec_IntSize(adds)/6, vec.Vec_IntSize(leaves), vec.Vec_IntSize(roots), vec.Vec_IntSize(nodes), vec.Vec_IntSize(order), time.Since(start))
+	fmt.Printf("Detected %d FAs/HAs. Roots = %d. Leaves = %d. Nodes = %d. Adds = %d. ", vec.Vec_IntSize(adds)/6, vec.Vec_IntSize(leaves), vec.Vec_IntSize(roots), vec.Vec_IntSize(nodes), vec.Vec_IntSize(order))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	Gia_PolynCorePrintCones(p, leaves, verbose)
 	return Gia_PolynCoreDupTree(p, extra, leaves, nodes, cones)
 }

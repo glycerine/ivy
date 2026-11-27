@@ -1,8 +1,8 @@
 package aiginterp
 
 import (
-	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/opt/dar"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
@@ -159,6 +159,6 @@ func Aig_ManInterRepar(graph *aig.Graph, verbose int32) *aig.Graph {
 		aig.Aig_ManStop(interpolant)
 		globals[k], globals[nOuts+k] = globals[nOuts+k], globals[k]
 	}
-	fmt.Printf("Reparameterization time = %7.2f sec\n", time.Since(start).Seconds())
+	util.Abc_PrintTime(1, "Reparameterization time", time.Since(start).Nanoseconds())
 	return base
 }

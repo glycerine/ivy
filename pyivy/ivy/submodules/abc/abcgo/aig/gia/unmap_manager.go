@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 type Unm_Man_t struct {
@@ -13,11 +13,11 @@ type Unm_Man_t struct {
 	vUsed, vId2Used *Vec_Int_t
 	vTruths         *Vec_Wrd_t
 	vLeaves         *Vec_Int_t
-	clkStart        time.Time
+	clkStart        int64
 }
 
 func Unm_ManAlloc(g *Gia_Man_t) *Unm_Man_t {
-	p := &Unm_Man_t{pGia: g, nNewSize: 3 * g.nObjs / 2, clkStart: time.Now(), pHash: vec.Hash_IntManStart(1000), vLeaves: vec.Vec_IntStart(10)}
+	p := &Unm_Man_t{pGia: g, nNewSize: 3 * g.nObjs / 2, clkStart: util.Abc_Clock(), pHash: vec.Hash_IntManStart(1000), vLeaves: vec.Vec_IntStart(10)}
 	p.pNew = Gia_ManStart(p.nNewSize)
 	p.pNew.pName, p.pNew.PSpec = g.pName, g.PSpec
 	Gia_ManHashStart(p.pNew)
@@ -91,6 +91,6 @@ func Unm_ManWork(p *Unm_Man_t) {
 func Unm_ManTest(g *Gia_Man_t) *Gia_Man_t {
 	p := Unm_ManAlloc(g)
 	Unm_ManWork(p)
-	fmt.Printf("Time: %s\n", time.Since(p.clkStart))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-p.clkStart)
 	return Unm_ManFree(p)
 }

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/tim"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Gia_ManIllustrateBoxes(p *Gia_Man_t) {
@@ -133,7 +133,7 @@ func Gia_ManDupWithFaddBoxes_rec(dst, p *Gia_Man_t, o *Gia_Obj_t, adds, m *Vec_I
 	o.Value = uint32(acecCopyLogic(dst, p, o))
 }
 func Gia_ManDupWithNaturalBoxes(p *Gia_Man_t, min, verbose int32) *Gia_Man_t {
-	start := time.Now()
+	start := util.Abc_Clock()
 	if gia.Gia_ManBoxNum(p) > 0 {
 		fmt.Println("Currently natural carry-chains cannot be detected when boxes are present.")
 		return nil
@@ -151,9 +151,9 @@ func Gia_ManDupWithNaturalBoxes(p *Gia_Man_t, min, verbose int32) *Gia_Man_t {
 	mapChain := Gia_ManFindMapping(p, adds, m, chains)
 	truths := Gia_ManCollectTruthTables(p, adds)
 	if verbose != 0 {
-		fmt.Printf("Carry-chain detection time = %v\n", time.Since(start))
+		util.Abc_PrintTime(1, "Carry-chain detection time", util.Abc_Clock()-start)
 	}
-	start = time.Now()
+	start = util.Abc_Clock()
 	gia.Gia_ManFillValue(p)
 	dst := gia.Gia_ManStart(gia.Gia_ManObjNum(p))
 	dst.CopyIdentityFrom(p)
@@ -182,7 +182,7 @@ func Gia_ManDupWithNaturalBoxes(p *Gia_Man_t, min, verbose int32) *Gia_Man_t {
 	}
 	dst.SetBoxTiming(Gia_ManGenerateTim(gia.Gia_ManCiNum(p), gia.Gia_ManCoNum(p), n, 3, 2), Gia_ManGenerateExtraAig(n, 3, 2))
 	if verbose != 0 {
-		fmt.Printf("AIG with boxes construction time = %v\n", time.Since(start))
+		util.Abc_PrintTime(1, "AIG with boxes construction time", util.Abc_Clock()-start)
 	}
 	return dst
 }

@@ -16,7 +16,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 	if graph != nil && glaOldHasSpecialGates(graph) {
 		return glaOldPerformLowered(graph, pars, startVta)
 	}
-	start := time.Now()
+	start := util.Abc_Clock()
 	if graph == nil || pars == nil || gia.Gia_ManPoNum(graph) != 1 || pars.NFramesMax != 0 && pars.NFramesStart > pars.NFramesMax {
 		panic("invalid old GLA arguments")
 	}
@@ -78,14 +78,17 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 	}
 	p := Gla_ManStart(graph, pars)
 	defer p.pSat.StopIncrementalProof()
-	p.timeInit = time.Since(start)
+	p.timeInit = util.Abc_Clock() - start
 	var deadline int64
 	if pars.NTimeOut != 0 {
 		deadline = absCPUClock() + int64(pars.NTimeOut)*int64(time.Second)
 		p.pSat.SetRuntimeDeadline(absCPUClock, deadline)
 	}
 	if pars.FVerbose != 0 {
-		fmt.Printf("Running gate-level abstraction: FrameMax = %d ConfMax = %d Timeout = %d RatioMin = %d%%.\n", pars.NFramesMax, pars.NConfLimit, pars.NTimeOut, pars.NRatioMin)
+		fmt.Printf("Running gate-level abstraction (GLA) with the following parameters:\n")
+		fmt.Printf("FrameMax = %d  ConfMax = %d  Timeout = %d  RatioMin = %d %%.\n", pars.NFramesMax, pars.NConfLimit, pars.NTimeOut, pars.NRatioMin)
+		fmt.Printf("LearnStart = %d  LearnDelta = %d  LearnRatio = %d %%.\n", pars.NLearnedStart, pars.NLearnedDelta, pars.NLearnedPerce)
+		fmt.Printf(" Frame   %%   Abs  PPI   FF   LUT   Confl  Cex   Vars   Clas   Lrns     Time        Mem\n")
 	}
 	var witness *util.Abc_Cex_t
 	var frame, i, previous, status int32
@@ -98,7 +101,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 		var core *vec.Vec_Int_t
 		var savedVars, conflicts int32
 		for i = 0; ; i++ {
-			clock := time.Now()
+			clock := util.Abc_Clock()
 			core = Gla_ManUnsatCore(p, frame, p.pSat, pars.NConfLimit, pars.FVerbose, &status, &conflicts)
 			if status == -1 || deadline != 0 && absCPUClock() > deadline {
 				p.pSat.StopIncrementalProof()
@@ -107,16 +110,16 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			}
 			if status == 1 {
 				p.pSat.StopIncrementalProof()
-				p.timeUnsat += time.Since(clock)
+				p.timeUnsat += util.Abc_Clock() - clock
 				break
 			}
-			p.timeSat += time.Since(clock)
+			p.timeSat += util.Abc_Clock() - clock
 			p.nCexes++
 			if abcmain.Abc_FrameIsBridgeMode() != 0 && sent {
 				Gia_GlaSendCancel(p, pars.FVerbose)
 				sent = false
 			}
-			clock = time.Now()
+			clock = util.Abc_Clock()
 			var ppis *vec.Vec_Int_t
 			if pars.FAddLayer != 0 {
 				ppis = Gla_ManCollectPPis(p, nil)
@@ -128,7 +131,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 				witness = p.pGia.TakeSequentialCounterexample()
 				break
 			}
-			p.timeCex += time.Since(clock)
+			p.timeCex += util.Abc_Clock() - clock
 			if i == 0 {
 				p.pSat.Bookmark()
 				vec.Vec_IntClear(p.vAddedNew)
@@ -143,7 +146,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			Gia_GlaAddToAbs(p, ppis, 1)
 			Gia_GlaAddOneSlice(p, frame, ppis)
 			if pars.FVerbose != 0 {
-				Gla_ManAbsPrintFrame(p, -1, frame+1, int32(p.pSat.Statistics().Conflicts-conflictStart), i, time.Since(start))
+				Gla_ManAbsPrintFrame(p, -1, frame+1, int32(p.pSat.Statistics().Conflicts-conflictStart), i, util.Abc_Clock()-start)
 			}
 		}
 		if stopped || witness != nil {
@@ -166,9 +169,9 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			p.nSatVars = savedVars
 			Gia_GlaAddToAbs(p, core, 0)
 			Gia_GlaAddOneSlice(p, frame, core)
-			clock := time.Now()
+			clock := util.Abc_Clock()
 			Gla_ManUnsatCore(p, frame, p.pSat, pars.NConfLimit, pars.FVerbose, &status, &conflicts)
-			p.timeUnsat += time.Since(clock)
+			p.timeUnsat += util.Abc_Clock() - clock
 			if status == -1 {
 				stopped = true
 				break
@@ -178,7 +181,7 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			}
 		}
 		if pars.FVerbose != 0 {
-			Gla_ManAbsPrintFrame(p, coreSize, frame+1, int32(p.pSat.Statistics().Conflicts-conflictStart), i, time.Since(start))
+			Gla_ManAbsPrintFrame(p, coreSize, frame+1, int32(p.pSat.Statistics().Conflicts-conflictStart), i, util.Abc_Clock()-start)
 		}
 		if frame > 2 && previous > 0 && i == 0 {
 			if abcmain.Abc_FrameIsBridgeMode() != 0 {
@@ -208,6 +211,9 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 		}
 	}
 	if witness == nil {
+		if pars.FVerbose != 0 && status == -1 {
+			fmt.Printf("\n")
+		}
 		gia.Gia_ManSetGateClasses(graph, Gla_ManTranslate(p))
 		if status == -1 || stopped {
 			fmt.Printf("Abstraction stopped in frame %d with a %d-stable abstraction.  ", frame, pars.nFramesNoChange)
@@ -216,20 +222,29 @@ func Gia_ManPerformGlaOld(graph *gia.Gia_Man_t, pars *Abs_Par_t, startVta int32)
 			fmt.Printf("GLA completed %d frames with a %d-stable abstraction.  ", frame, pars.nFramesNoChange)
 		}
 	} else {
+		if pars.FVerbose != 0 {
+			fmt.Printf("\n")
+		}
 		if err := graph.SetSequentialCounterexample(witness); err != nil {
 			panic(err)
 		}
 		if gia.Gia_ManVerifyCex(graph, witness, 0) == 0 {
-			fmt.Println("Gia_ManPerformGlaOld(): CEX verification has failed!")
+			fmt.Println("    Gia_ManPerformGlaOld(): CEX verification has failed!")
 		}
 		fmt.Printf("Counter-example detected in frame %d.  ", frame)
 		pars.IFrame = witness.IFrame - 1
 		gia.Gia_ManSetGateClasses(graph, nil)
 		ret = 0
 	}
-	fmt.Printf("Time: %v\n", time.Since(start))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	if pars.FVerbose != 0 {
-		p.timeOther = time.Since(start) - p.timeUnsat - p.timeSat - p.timeCex - p.timeInit
+		p.timeOther = (util.Abc_Clock() - start) - p.timeUnsat - p.timeSat - p.timeCex - p.timeInit
+		util.Abc_PrintTimeP(1, "Runtime: Initializing", p.timeInit, util.Abc_Clock()-start)
+		util.Abc_PrintTimeP(1, "Runtime: Solver UNSAT", p.timeUnsat, util.Abc_Clock()-start)
+		util.Abc_PrintTimeP(1, "Runtime: Solver SAT  ", p.timeSat, util.Abc_Clock()-start)
+		util.Abc_PrintTimeP(1, "Runtime: Refinement  ", p.timeCex, util.Abc_Clock()-start)
+		util.Abc_PrintTimeP(1, "Runtime: Other       ", p.timeOther, util.Abc_Clock()-start)
+		util.Abc_PrintTimeP(1, "Runtime: TOTAL       ", util.Abc_Clock()-start, util.Abc_Clock()-start)
 		Gla_ManReportMemory(p)
 	}
 	Gla_ManStop(p)

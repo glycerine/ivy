@@ -2,9 +2,9 @@ package bmc
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
@@ -31,15 +31,32 @@ func Bmc_LoadTest(graph *gia.Gia_Man_t, fLoadCnf, verbose int32) {
 		}
 		return
 	}
-	start := time.Now()
+	clk := util.Abc_Clock()
 	for output, edge := range native.Outputs() {
+		if output >= int(gia.Gia_ManPoNum(graph)) {
+			break // Gia_ManForEachPo: register inputs are not checked
+		}
+		if verbose != 0 {
+			fmt.Printf("Frame%4d :  ", output)
+			fmt.Printf("Vars = %6d  ", solver.NumVars())
+			fmt.Printf("Clas = %6d  ", solver.Statistics().Clauses)
+		}
 		variable := data.VarNums[edge.NodeID()]
 		status := bsat.Unknown
 		if variable >= 0 {
 			status = solver.Solve(bsat.Positive(variable))
 		}
 		if verbose != 0 {
-			fmt.Printf("Output %d: %s (%s)\n", output, bmcStatusName(status), time.Since(start).Round(time.Millisecond))
+			fmt.Printf("Conf = %6d  ", solver.Statistics().Conflicts)
+			switch status {
+			case bsat.Unsatisfiable:
+				fmt.Printf("UNSAT  ")
+			case bsat.Satisfiable:
+				fmt.Printf("SAT    ")
+			default:
+				fmt.Printf("UNDEC  ")
+			}
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		}
 	}
 	_ = fLoadCnf

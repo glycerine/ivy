@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"math"
 	"strconv"
-	"time"
 
 	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func Gia_ManSwiComputeSwitching(ones, words int32) float32 {
@@ -24,9 +24,19 @@ func Gia_ManSwiSimulate(graph *Gia_Man_t, pars *Gia_ParSwi_t) *Vec_Int_t {
 	if pars.fProbOne != 0 && pars.fProbTrans != 0 {
 		fmt.Println("Conflict of options: Can either compute probability of 1, or probability of switching by observing transitions.")
 	}
-	start := time.Now()
+	clkTotal := util.Abc_Clock()
+	clk := util.Abc_Clock()
 	p := Gia_ManSwiCreate(graph, pars)
 	defer Gia_ManSwiDelete(p)
+	if pars.fVerbose != 0 {
+		fmt.Printf("Obj = %8d (%8d). F = %6d. ",
+			graph.nObjs, Gia_ManCiNum(graph)+Gia_ManAndNum(graph), p.pAig.nFront)
+		fmt.Printf("AIG = %7.2f MB. F-mem = %7.2f MB. Other = %7.2f MB.  ",
+			12.0*float64(Gia_ManObjNum(p.pAig))/(1<<20),
+			4.0*float64(p.nWords)*float64(p.pAig.nFront)/(1<<20),
+			4.0*float64(p.nWords)*float64(Gia_ManCiNum(p.pAig)+Gia_ManCoNum(p.pAig))/(1<<20))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	}
 	Gia_ManRandom(1)
 	Gia_ManSwiSimInfoInit(p)
 	for i := int32(0); i < pars.nIters; i++ {
@@ -41,7 +51,8 @@ func Gia_ManSwiSimulate(graph *Gia_Man_t, pars *Gia_ParSwi_t) *Vec_Int_t {
 		}
 	}
 	if pars.fVerbose != 0 {
-		fmt.Printf("Simulated %d frames with %d words in %s.\n", pars.nIters, pars.nWords, time.Since(start))
+		fmt.Printf("Simulated %d frames with %d words. ", pars.nIters, pars.nWords)
+		util.Abc_PrintTime(1, "Simulation time", util.Abc_Clock()-clkTotal)
 	}
 	result := Vec_IntStart(int(Gia_ManObjNum(graph)))
 	words := pars.nWords * (pars.nIters - pars.nPref)

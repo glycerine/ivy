@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"time"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -14,16 +14,16 @@ func Gia_ManSimTest(g *Gia_Man_t) {
 	previous := g.VSimsPi
 	g.VSimsPi = vec.Vec_WrdStartRandom(int(Gia_ManCiNum(g)) * words)
 	defer func() { g.VSimsPi = previous }()
-	start := time.Now()
+	clk := util.Abc_Clock()
 	for i := 0; i < 20; i++ {
 		Gia_ManSimPatSim(g)
 	}
-	fmt.Printf("Time1: %s\n", time.Since(start))
-	start = time.Now()
+	util.Abc_PrintTime(1, "Time1", util.Abc_Clock()-clk)
+	clk = util.Abc_Clock()
 	for i := 0; i < 20; i++ {
 		Gia_ManSimPatSim2(g)
 	}
-	fmt.Printf("Time2: %s\n", time.Since(start))
+	util.Abc_PrintTime(1, "Time2", util.Abc_Clock()-clk)
 }
 
 // giaWriteCompiledSimulation generates a self-contained Go benchmark.

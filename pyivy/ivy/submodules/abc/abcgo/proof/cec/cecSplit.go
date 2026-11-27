@@ -105,10 +105,10 @@ func splitRun(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, v
 	return splitRunMode(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, workers != 1, solve)
 }
 func splitRunMode(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, parallel bool, solve func(splitPart, int32) splitResult) (int32, []bool) {
-	started := time.Now()
+	started := util.Abc_Clock()
 	initial := solve(splitPart{graph: p}, timeout)
 	if verbose != 0 && (!parallel || initial.status != -1) {
-		Cec_GiaSplitPrint(0, 0, initial.vars, initial.conflicts, initial.status, 0, time.Since(started))
+		Cec_GiaSplitPrint(0, 0, initial.vars, initial.conflicts, initial.status, 0, util.Abc_Clock()-started)
 	}
 	if initial.status != -1 {
 		if silent == 0 {
@@ -125,7 +125,7 @@ func splitRunMode(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbos
 	}
 	return splitParallel(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, started, solve)
 }
-func splitFinish(ret int32, iter int32, started time.Time, silent int32) {
+func splitFinish(ret int32, iter int32, started int64, silent int32) {
 	if silent != 0 {
 		return
 	}
@@ -135,11 +135,13 @@ func splitFinish(ret int32, iter int32, started time.Time, silent int32) {
 	} else if ret == 1 {
 		name = "UNSAT"
 	}
-	fmt.Printf("Problem is %s after %d case-splits. Time: %.2f sec\n", name, iter, time.Since(started).Seconds())
+	fmt.Printf("Problem is %s ", name)
+	fmt.Printf("after %d case-splits.  ", iter)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
 }
 
 // splitSerial follows source depth-first order, including its empty-stack bug.
-func splitSerial(p *gia.Gia_Man_t, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started time.Time, solve func(splitPart, int32) splitResult) (int32, []bool) {
+func splitSerial(p *gia.Gia_Man_t, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started int64, solve func(splitPart, int32) splitResult) (int32, []bool) {
 	stack := []splitPart{{graph: gia.Gia_ManDup(p)}}
 	ret := int32(-1)
 	var model []bool
@@ -164,7 +166,7 @@ func splitSerial(p *gia.Gia_Man_t, timeout, maxIter, lookAhead, verbose, veryVer
 				progress += math.Ldexp(1, -len(child.fixes))
 			}
 			if verbose != 0 {
-				Cec_GiaSplitPrint(iter, int32(len(child.fixes)), result.vars, result.conflicts, result.status, progress, time.Since(started))
+				Cec_GiaSplitPrint(iter, int32(len(child.fixes)), result.vars, result.conflicts, result.status, progress, util.Abc_Clock()-started)
 			}
 			if result.status == 0 {
 				ret = 0
@@ -201,12 +203,12 @@ type splitSlot struct {
 	done chan splitResult
 }
 
-func splitParallel(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started time.Time, solve func(splitPart, int32) splitResult) (int32, []bool) {
+func splitParallel(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started int64, solve func(splitPart, int32) splitResult) (int32, []bool) {
 	return splitParallelWithScanHook(p, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent, started, solve, nil)
 }
 
 // The hook permits tests to synchronize worker completion at a scan boundary.
-func splitParallelWithScanHook(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started time.Time, solve func(splitPart, int32) splitResult, beforeScan func([]splitSlot)) (int32, []bool) {
+func splitParallelWithScanHook(p *gia.Gia_Man_t, workers, timeout, maxIter, lookAhead, verbose, veryVerbose, silent int32, started int64, solve func(splitPart, int32) splitResult, beforeScan func([]splitSlot)) (int32, []bool) {
 	if workers < 1 || workers > 100 {
 		panic("cec: invalid split worker count")
 	}
@@ -231,7 +233,7 @@ func splitParallelWithScanHook(p *gia.Gia_Man_t, workers, timeout, maxIter, look
 					slot.part = nil
 					slot.done = nil
 					if verbose != 0 {
-						Cec_GiaSplitPrint(int32(i+1), int32(len(part.fixes)), result.vars, result.conflicts, result.status, progress, time.Since(started))
+						Cec_GiaSplitPrint(int32(i+1), int32(len(part.fixes)), result.vars, result.conflicts, result.status, progress, util.Abc_Clock()-started)
 					}
 					if result.status == 0 {
 						ret = 0
@@ -319,6 +321,10 @@ func Cec_GiaSplitTestInt(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, v
 		fmt.Println(err)
 		return -1
 	}
+	if verbose != 0 {
+		fmt.Printf("Solving CEC problem by cofactoring with the following parameters:\n")
+		fmt.Printf("Processes = %d   TimeOut = %d sec   MaxIter = %d   LookAhead = %d   Verbose = %d.\n", procs, timeout, maxIter, lookAhead, verbose)
+	}
 	if procs == 1 {
 		return Cec_GiaSplitTest2(p, procs, timeout, maxIter, lookAhead, verbose, veryVerbose, silent)
 	}
@@ -391,15 +397,21 @@ func Cec_GiaSplitTest(p *gia.Gia_Man_t, procs, timeout, maxIter, lookAhead, verb
 	}
 	return result
 }
-func Cec_GiaSplitPrint(iter, depth, vars int32, conflicts int64, status int32, progress float64, elapsed time.Duration) {
+func Cec_GiaSplitPrint(iter, depth, vars int32, conflicts int64, status int32, progress float64, elapsed int64) {
 	label := "UNDECIDED"
 	if status == 0 {
-		label = "SAT"
+		label = "SAT      "
 	}
 	if status == 1 {
-		label = "UNSAT"
+		label = "UNSAT    "
 	}
-	fmt.Printf("%4d : Depth =%3d SatVar =%7d SatConf =%7d %s Solved %8.4f %% Time: %s\n", iter, depth, vars, conflicts, label, 100*progress, elapsed)
+	fmt.Printf("%4d : ", iter)
+	fmt.Printf("Depth =%3d  ", depth)
+	fmt.Printf("SatVar =%7d  ", vars)
+	fmt.Printf("SatConf =%7d   ", conflicts)
+	fmt.Printf("%s   ", label)
+	fmt.Printf("Solved %8.4f %%   ", 100*progress)
+	util.Abc_PrintTime(1, "Time", elapsed)
 }
 func Cec_GiaSplitPrintRefs(p *gia.Gia_Man_t) {
 	if p.Refs == nil {

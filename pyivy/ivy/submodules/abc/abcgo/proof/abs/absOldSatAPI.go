@@ -6,17 +6,17 @@ import (
 	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
-func printOldRefinementStats(p *Saig_RefMan_t, reasons, inputs *vec.Vec_Int_t, started time.Time) {
-	fmt.Printf("Frame PIs = %4d (essential = %4d)   AIG PIs = %4d (essential = %4d)   Time = %s\n", p.pFrames.InputCount(), vec.Vec_IntSize(reasons), saig.Saig_ManPiNum(p.pAig)-p.nInputs, vec.Vec_IntSize(inputs), time.Since(started))
+func printOldRefinementStats(p *Saig_RefMan_t, reasons, inputs *vec.Vec_Int_t, started int64) {
+	fmt.Printf("Frame PIs = %4d (essential = %4d)   AIG PIs = %4d (essential = %4d)   ", p.pFrames.InputCount(), vec.Vec_IntSize(reasons), saig.Saig_ManPiNum(p.pAig)-p.nInputs, vec.Vec_IntSize(inputs))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
 }
 
 // Saig_ManFindCexCareBits computes a sufficient set of care bits by
 // tracing controlling values in the unrolled graph, as in ABC's old flow.
 func Saig_ManFindCexCareBits(g *aig.Graph, cex *util.Abc_Cex_t, nInputs, newOrder, verbose int32) *util.Abc_Cex_t {
-	started := time.Now()
+	started := util.Abc_Clock()
 	p := Saig_RefManStart(g, cex, nInputs, verbose)
 	reasons := Saig_RefManFindReason(p)
 	inputs := Saig_RefManReason2Inputs(p, reasons)
@@ -31,7 +31,7 @@ func Saig_ManExtendCounterExampleTest3(g *aig.Graph, firstFlopPI int32, cex *uti
 		fmt.Printf("Saig_ManExtendCounterExampleTest3(): The PI count of AIG (%d) does not match that of cex (%d).\n", g.InputCount(), cex.NPis)
 		return nil
 	}
-	started := time.Now()
+	started := util.Abc_Clock()
 	p := Saig_RefManStart(g, cex, firstFlopPI, verbose)
 	reasons := Saig_RefManFindReason(p)
 	inputs := Saig_RefManReason2Inputs(p, reasons)

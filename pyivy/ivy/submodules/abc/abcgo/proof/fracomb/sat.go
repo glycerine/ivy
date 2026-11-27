@@ -5,6 +5,7 @@ package fracomb
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 	"time"
@@ -99,7 +100,12 @@ func fraFraigSat(graph *aig.Graph, conflictLimit, propagationLimit int64, learne
 	}
 	status := solver.SolveWithSourceLimits(nil, conflictLimit, propagationLimit, 0, 0)
 	if verbose != 0 {
-		fmt.Printf("CNF stats: Vars = %6d. Clauses = %7d. Time = %9.2f sec\n", formula.Variables, len(formula.Clauses), time.Since(started).Seconds())
+		literals := 0
+		for _, clause := range formula.Clauses {
+			literals += len(clause)
+		}
+		fmt.Printf("CNF stats: Vars = %6d. Clauses = %7d. Literals = %8d. ", formula.Variables, len(formula.Clauses), literals)
+		util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds())
 	}
 	switch status {
 	case bsat.Satisfiable:

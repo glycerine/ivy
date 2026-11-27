@@ -34,14 +34,14 @@ func Cec_ManPatPrintStats(p *Cec_ManPat_t) {
 		}
 		return float64(l) / float64(n)
 	}
-	fmt.Printf("Latest: P = %8d. L = %10d. Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\n", p.nPats, p.nPatLits, p.nPatLitsMin, ave(p.nPatLitsMin, p.nPats), float64(vec.Vec_StrSize(p.vStorage)-int(p.iStart))/(1<<20))
-	fmt.Printf("Total: P = %8d. L = %10d. Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\n", p.nPatsAll, p.nPatLitsAll, p.nPatLitsMinAll, ave(p.nPatLitsMinAll, p.nPatsAll), float64(vec.Vec_StrSize(p.vStorage))/(1<<20))
-	for _, s := range []struct {
-		name string
-		ns   int64
-	}{{"Finding", p.timeFind}, {"Shrinking", p.timeShrink}, {"Verifying", p.timeVerify}, {"Sorting", p.timeSort}, {"Packing", p.timePack}, {"TOTAL", p.timeTotal}} {
-		fmt.Printf("%s = %.2f sec\n", s.name, float64(s.ns)/1e9)
-	}
+	fmt.Printf("Latest: P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\n", p.nPats, p.nPatLits, p.nPatLitsMin, ave(p.nPatLitsMin, p.nPats), float64(vec.Vec_StrSize(p.vStorage)-int(p.iStart))/(1<<20))
+	fmt.Printf("Total:  P = %8d.  L = %10d.  Lm = %10d. Ave = %6.1f. MEM =%6.2f MB\n", p.nPatsAll, p.nPatLitsAll, p.nPatLitsMinAll, ave(p.nPatLitsMinAll, p.nPatsAll), float64(vec.Vec_StrSize(p.vStorage))/(1<<20))
+	util.Abc_PrintTimeP(1, "Finding  ", p.timeFind, p.timeTotal)
+	util.Abc_PrintTimeP(1, "Shrinking", p.timeShrink, p.timeTotal)
+	util.Abc_PrintTimeP(1, "Verifying", p.timeVerify, p.timeTotal)
+	util.Abc_PrintTimeP(1, "Sorting  ", p.timeSort, p.timeTotal)
+	util.Abc_PrintTimeP(1, "Packing  ", p.timePack, p.timeTotal)
+	util.Abc_PrintTime(1, "TOTAL    ", p.timeTotal)
 }
 func Cec_ManPatStoreNum(p *Cec_ManPat_t, num int32) {
 	if num < 0 {

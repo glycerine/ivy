@@ -3,8 +3,8 @@ package aigpartsat
 import (
 	"errors"
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"os"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/opt/dar"
@@ -60,6 +60,7 @@ func PartitionedSAT(g *aig.Graph, options PartSATOptions) (int32, error) {
 		return -1, errors.New("aig: negative SAT conflict limit")
 	}
 	var labels []int32
+	clk := util.Abc_Clock()
 	switch options.Algorithm {
 	case 0:
 		labels = aig.Aig_ManPartitionMonolithic(g)
@@ -79,8 +80,19 @@ func PartitionedSAT(g *aig.Graph, options PartSATOptions) (int32, error) {
 	default:
 		return -1, errors.New("aig: unknown partitioning algorithm")
 	}
-	started := time.Now()
+	if options.Verbose {
+		nParts := int32(-1)
+		for _, label := range labels {
+			nParts = max(nParts, label)
+		}
+		fmt.Printf("Partitioning derived %d partitions. ", nParts+1)
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	}
 	parts, pio, outputs := aig.Aig_ManPartSplit(g, labels)
+	if options.Verbose {
+		fmt.Printf("Partions were transformed into AIGs. ")
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	}
 	for i, part := range parts {
 		var err error
 		parts[i], err = normalizePart(part)
@@ -138,7 +150,9 @@ func PartitionedSAT(g *aig.Graph, options PartSATOptions) (int32, error) {
 	}
 	remaining := options.TotalConflictLimit
 	finalStatus := int32(-1)
+	nNodes := int32(0)
 	for i, part := range parts {
+		clk = util.Abc_Clock()
 		if options.AlignPolarity {
 			aig.Aig_ManPartSetNodePolarity(g, part, pio[i])
 		} else {
@@ -155,7 +169,10 @@ func PartitionedSAT(g *aig.Graph, options PartSATOptions) (int32, error) {
 		status := solver.SolveWithResourceLimits(nil, budget, 0, 0, 0)
 		used := solver.Statistics().Conflicts - before
 		if options.Verbose {
-			fmt.Printf("Partition %d/%d: vars=%d conflicts=%d elapsed=%s\n", i+1, len(parts), solver.NumVars(), used, time.Since(started))
+			nNodes += aig.Aig_ManNodeNum(part)
+			stats := solver.Statistics()
+			fmt.Printf("%4d : Aig = %6d. Vs = %7d. RootCs = %7d. LearnCs = %6d. ", i, nNodes, solver.NumVars(), int32(stats.Clauses), int32(stats.Learned))
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		}
 		if status == bsat.Unsatisfiable {
 			return 1, nil

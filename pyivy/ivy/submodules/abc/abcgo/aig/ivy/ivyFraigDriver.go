@@ -43,6 +43,7 @@ func Ivy_FraigStop(p *Ivy_FraigMan_t) {
 	p.pSat = nil
 	p.vPiVars = nil
 }
+
 // Ivy_FraigPrint is ivyFraig.c's.
 func Ivy_FraigPrint(p *Ivy_FraigMan_t) {
 	memory := float64(Ivy_ManObjNum(p.pManAig)) * float64(p.nSimWords) * 4 / (1 << 20)
@@ -212,9 +213,10 @@ func Ivy_FraigMiter(source *Ivy_Man_t, params *Ivy_FraigParams_t) *Ivy_Man_t {
 	Ivy_FraigStop(p)
 	return result
 }
-func Ivy_FraigMiterPrint(p *Ivy_Man_t, label string, start time.Time, verbose int32) {
+func Ivy_FraigMiterPrint(p *Ivy_Man_t, label string, clk int64, verbose int32) {
 	if verbose != 0 {
-		fmt.Printf("Nodes = %7d. Levels = %4d. %s %s\n", Ivy_ManNodeNum(p), Ivy_ManLevels(p), label, time.Since(start))
+		fmt.Printf("Nodes = %7d.  Levels = %4d.  ", Ivy_ManNodeNum(p), Ivy_ManLevels(p))
+		util.Abc_PrintTime(1, label, util.Abc_Clock()-clk)
 	}
 }
 

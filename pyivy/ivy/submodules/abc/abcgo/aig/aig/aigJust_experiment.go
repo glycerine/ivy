@@ -2,13 +2,14 @@ package aig
 
 import (
 	"fmt"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 // Aig_ManJustExperiment exercises rare-value justification and packs resulting
 // support assignments into the simulation patterns used by ABC's experiment.
 func Aig_ManJustExperiment(p *Graph) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	pack := Aig_ManPackStart(p)
 	nodes := Aig_ManPackConstNodes(pack)
 	var support []int32
@@ -44,5 +45,6 @@ func Aig_ManJustExperiment(p *Graph) {
 	if successes > 0 {
 		average = float64(literals) / float64(successes)
 	}
-	fmt.Printf("PO =%6d. C0 =%6d. C0f =%6d. C1 =%6d. C1f =%6d. (%6.2f %%) Ave =%4.1f T=%s\n", len(p.outputs), counts[0], failed[0], counts[1], failed[1], percent, average, time.Since(start))
+	fmt.Printf("PO =%6d. C0 =%6d. C0f =%6d. C1 =%6d. C1f =%6d. (%6.2f %%) Ave =%4.1f ", len(p.outputs), counts[0], failed[0], counts[1], failed[1], percent, average)
+	util.Abc_PrintTime(1, "T", util.Abc_Clock()-start)
 }

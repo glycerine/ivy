@@ -4,8 +4,8 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Pas_ManVerifyPhaseOne_rec(p *Gia_Man_t, o *Gia_Obj_t) int32 {
@@ -157,13 +157,15 @@ func Pas_ManComputeCuts(p *Gia_Man_t, adds, order, ins, outs *Vec_Int_t) int32 {
 	return int32(vec.Vec_IntSize(roots))
 }
 func Pas_ManComputeCutsTest(p *Gia_Man_t) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	adds := Ree_ManComputeCuts(p, nil, 1)
 	var ins, outs *Vec_Int_t
 	order := Gia_PolynCoreOrder(p, adds, nil, &ins, &outs)
 	n := Ree_ManCountFadds(adds)
-	fmt.Printf("Detected %d FAs and %d HAs.  Collected %d adders.  Time = %v\n", n, int32(vec.Vec_IntSize(adds)/6)-n, vec.Vec_IntSize(order), time.Since(start))
-	start = time.Now()
+	fmt.Printf("Detected %d FAs and %d HAs.  Collected %d adders.  ", n, int32(vec.Vec_IntSize(adds)/6)-n, vec.Vec_IntSize(order))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+	start = util.Abc_Clock()
 	trees := Pas_ManComputeCuts(p, adds, order, ins, outs)
-	fmt.Printf("Detected %d adder trees. Time = %v\n", trees, time.Since(start))
+	fmt.Printf("Detected %d adder trees. ", trees)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 }

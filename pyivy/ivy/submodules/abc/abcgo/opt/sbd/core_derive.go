@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"math"
 	"slices"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dau"
 )
@@ -137,7 +137,9 @@ func sbdExtendImplementation(p *Sbd_Man_t, previous int, pivot int32) {
 		Sbd_StoRefObj(p.pSto, int32(id), mirror)
 	}
 	for id := previous; id < count; id++ {
+		clk := util.Abc_Clock()
 		delay := Sbd_StoComputeCutsNode(p.pSto, int32(id))
+		p.timeCut += util.Abc_Clock() - clk
 		vec.Vec_IntPush(p.vLutLevs, delay)
 		vec.Vec_IntPush(p.vObj2Var, 0)
 		for i := int32(0); i < p.pPars.LUTSize+1; i++ {
@@ -478,8 +480,23 @@ func Sbd_NtkPerform(network *Network, parameters *Parameters) *Network {
 			Sbd_StoComputeCutsObj(p.pSto, id, level, level)
 		}
 	}
+	p.timeTotal = util.Abc_Clock() - p.timeTotal
 	if parameters.Verbose {
-		fmt.Printf("K=%d S=%d N=%d P=%d Try=%d Use=%d C=%d 1=%d 2=%d 3a=%d 3b=%d Lev=%d Time=%v\n", parameters.LUTSize, parameters.LUTCount, parameters.CutSize, parameters.CutCount, p.nTried, p.nUsed, p.nLuts[0], p.nLuts[1], p.nLuts[2], p.nLuts[3], p.nLuts[4], Sbd_ManDelay(p), time.Since(p.started))
+		fmt.Printf("K = %d. S = %d. N = %d. P = %d.  ", parameters.LUTSize, parameters.LUTCount, parameters.CutSize, parameters.CutCount)
+		fmt.Printf("Try = %d. Use = %d.  C = %d. 1 = %d. 2 = %d. 3a = %d. 3b = %d.  Lev = %d.  ", p.nTried, p.nUsed, p.nLuts[0], p.nLuts[1], p.nLuts[2], p.nLuts[3], p.nLuts[4], Sbd_ManDelay(p))
+		util.Abc_PrintTime(1, "Time", p.timeTotal)
 	}
-	return Sbd_ManDerive(p, network, p.vMirrors)
+	result := Sbd_ManDerive(p, network, p.vMirrors)
+	p.timeOther = p.timeTotal - p.timeWin - p.timeCut - p.timeCov - p.timeCnf - p.timeSat - p.timeQbf
+	if parameters.Verbose {
+		util.Abc_PrintTimeP(1, "Win", p.timeWin, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Cut", p.timeCut, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Cov", p.timeCov, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Cnf", p.timeCnf, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Sat", p.timeSat, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Qbf", p.timeQbf, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Oth", p.timeOther, p.timeTotal)
+		util.Abc_PrintTimeP(1, "ALL", p.timeTotal, p.timeTotal)
+	}
+	return result
 }

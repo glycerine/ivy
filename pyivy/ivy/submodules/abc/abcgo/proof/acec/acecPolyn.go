@@ -3,8 +3,8 @@ package acec
 // Priority-ordered polynomial expansion from acecPolyn.c.
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"sort"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -241,7 +241,7 @@ func Gia_PolynBuildOne(p *Pln_Man_t, mono int32) {
 	}
 }
 func Gia_PolynBuild(graph *gia.Gia_Man_t, order *vec.Vec_Int_t, signed, verbose, veryVerbose int32) {
-	started := time.Now()
+	started := util.Abc_Clock()
 	p := Pln_ManAlloc(graph, order)
 	defer Pln_ManStop(p)
 	for i := gia.Gia_ManCoNum(graph) - 1; i >= 0; i-- {
@@ -267,7 +267,7 @@ func Gia_PolynBuild(graph *gia.Gia_Man_t, order *vec.Vec_Int_t, signed, verbose,
 		Gia_PolynBuildOne(p, int32(mono))
 	}
 	Pln_ManPrintFinal(p, verbose, veryVerbose)
-	fmt.Printf("Time = %.2f sec\n", time.Since(started).Seconds())
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
 }
 
 // Gia_PolynBuild2 is empty in the original source apart from allocating and

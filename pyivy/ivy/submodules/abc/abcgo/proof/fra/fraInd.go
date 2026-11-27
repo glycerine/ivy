@@ -3,6 +3,7 @@ package fra
 // Sequential SAT sweeping from ABC's fraInd.c.
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"os"
 	"time"
 
@@ -48,7 +49,7 @@ func Fra_FraigInductionPart(g *aig.Graph, pars *Fra_Ssw_t) *aig.Graph {
 	result := aig.Aig_ManDupRepr(g, 0)
 	aig.Aig_ManSeqCleanup(result)
 	if verbose != 0 {
-		fmt.Printf("Total time = %.2f sec\n", time.Since(started).Seconds())
+		util.Abc_PrintTime(1, "Total time", time.Since(started).Nanoseconds())
 	}
 	return result
 }

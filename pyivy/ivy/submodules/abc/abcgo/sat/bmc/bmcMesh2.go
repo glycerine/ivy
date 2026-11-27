@@ -2,7 +2,7 @@ package bmc
 
 import (
 	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/misc/util"
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/sat/bsat"
@@ -53,7 +53,7 @@ func Bmc_MeshTest2(p *gia.Gia_Man_t, X, Y, T, verbose int32) {
 	if p == nil || X < 3 || Y < 3 || T < 1 || X > 100 || Y > 100 || T > 100 {
 		panic("bmc: invalid mesh dimensions")
 	}
-	start := time.Now()
+	clk := util.Abc_Clock()
 	inputs := p.InputLiterals()
 	I := int32(len(inputs))
 	type fanins struct{ a, b int32 }
@@ -170,18 +170,21 @@ func Bmc_MeshTest2(p *gia.Gia_Man_t, X, Y, T, verbose int32) {
 		}
 	}
 	if !clause(bsat.Positive(gv(1, 1) + G - 1)) {
-		fmt.Println("Problem has no solution.")
+		fmt.Printf("Problem has no solution. ")
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		return
 	}
 	var model []bool
 	for {
 		status := s.Solve()
 		if status == bsat.Unsatisfiable {
-			fmt.Printf("Problem has no solution. Time: %s\n", time.Since(start))
+			fmt.Printf("Problem has no solution. ")
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 			return
 		}
 		if status != bsat.Satisfiable {
-			fmt.Printf("Computation timed out. Time: %s\n", time.Since(start))
+			fmt.Printf("Computation timed out. ")
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 			return
 		}
 		model = s.Model()
@@ -204,7 +207,8 @@ func Bmc_MeshTest2(p *gia.Gia_Man_t, X, Y, T, verbose int32) {
 			fmt.Printf("Adding %d one-hotness clauses.\n", added)
 		}
 	}
-	fmt.Printf("Satisfying solution found. Time: %s\n", time.Since(start))
+	fmt.Printf("Satisfying solution found. ")
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	var buffers, nodesCount int32
 	for y := int32(1); y < Y-1; y++ {
 		for x := int32(1); x < X-1; x++ {

@@ -3,7 +3,7 @@ package fra
 // Support-overlap diagnostics from ABC's fraPart.c.
 import (
 	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/misc/util"
 
 	"github.com/glycerine/abcgo/aig/aig"
 )
@@ -39,10 +39,10 @@ func fraSupportOverlap(a, b []int) int {
 }
 
 func Fra_ManPartitionTest(graph *aig.Graph, commonLimit int32) {
-	started := time.Now()
+	started := util.Abc_Clock()
 	supports := fraOutputSupports(graph)
-	fmt.Printf("Supports = %.2f sec\n", time.Since(started).Seconds())
-	started = time.Now()
+	util.Abc_PrintTime(1, "Supports", util.Abc_Clock()-started)
+	started = util.Abc_Clock()
 	total, totalNew, largest := 0, 0, 0
 	ratio := 0.0
 	for i, support := range supports {
@@ -80,16 +80,16 @@ func Fra_ManPartitionTest(graph *aig.Graph, commonLimit int32) {
 			fmt.Printf("%6d : S = %5d. SNew = %5d. R = %7.2f. Over = %5d. Quant = %5d. \n", i, len(support), size, r, over, quant)
 		}
 	}
-	fmt.Printf("Scanning = %.2f sec\n", time.Since(started).Seconds())
+	util.Abc_PrintTime(1, "Scanning", util.Abc_Clock()-started)
 	outputs := len(supports)
 	fmt.Printf("PIs = %6d. POs = %6d. Lim = %3d.   AveS = %3d. SN = %3d. R = %4.2f Max = %5d.\n", graph.InputCount(), outputs, commonLimit, total/outputs, totalNew/outputs, ratio/float64(outputs), largest)
 }
 
 func Fra_ManPartitionTest2(graph *aig.Graph) {
-	started := time.Now()
+	started := util.Abc_Clock()
 	supports := fraOutputSupports(graph)
-	fmt.Printf("Supports = %.2f sec\n", time.Since(started).Seconds())
-	started = time.Now()
+	util.Abc_PrintTime(1, "Supports", util.Abc_Clock()-started)
+	started = util.Abc_Clock()
 	inverse := make([][]int, graph.InputCount())
 	for i, support := range supports {
 		if i >= int(graph.Assertions) {
@@ -99,8 +99,8 @@ func Fra_ManPartitionTest2(graph *aig.Graph) {
 			inverse[id] = append(inverse[id], i)
 		}
 	}
-	fmt.Printf("Inverse = %.2f sec\n", time.Since(started).Seconds())
-	started = time.Now()
+	util.Abc_PrintTime(1, "Inverse ", util.Abc_Clock()-started)
+	started = util.Abc_Clock()
 	for i, support := range supports {
 		if i%50 != 0 {
 			continue
@@ -116,5 +116,6 @@ func Fra_ManPartitionTest2(graph *aig.Graph) {
 		}
 		fmt.Printf("%d(%d) ", len(support), len(extension))
 	}
-	fmt.Printf("\nExtension = %.2f sec\n", time.Since(started).Seconds())
+	fmt.Printf("\n")
+	util.Abc_PrintTime(1, "Extension ", util.Abc_Clock()-started)
 }

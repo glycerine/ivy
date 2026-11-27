@@ -2,9 +2,9 @@ package bmc
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"math/bits"
-	"time"
 )
 
 const MAJ_NOBJS = 32
@@ -260,29 +260,43 @@ func Maj_ManAddCnf(p *Maj_Man_t, mint int32) int32 {
 	return 1
 }
 func Maj_ManExactSynthesis(vars, nodes, useConst, useLine, verbose int32) int32 {
-	start := time.Now()
+	clkTotal := util.Abc_Clock()
 	p := Maj_ManAlloc(vars, nodes, useConst, useLine)
 	defer Maj_ManFree(p)
 	if Maj_ManAddCnfStart(p) == 0 {
 		return 0
 	}
 	fmt.Printf("Running exact synthesis for %d-input majority with %d MAJ3 gates...\n", vars, nodes)
-	for iteration, mint := int32(0), int32(0); ; iteration++ {
+	mint := int32(0)
+	for i := int32(0); mint != -1; i++ {
+		clk := util.Abc_Clock()
 		if Maj_ManAddCnf(p, mint) == 0 {
-			return 0
+			break
 		}
 		status := p.pSat.Solve()
 		if verbose != 0 {
-			fmt.Printf("Iter %d : minterm %d, variables %d\n", iteration, mint, p.iVar)
+			stats := p.pSat.Statistics()
+			fmt.Printf("Iter %3d : ", i)
+			for k := p.nVars - 1; k >= 0; k-- {
+				fmt.Printf("%d", mint>>uint(k)&1)
+			}
+			fmt.Printf("  Var =%5d  ", p.iVar)
+			fmt.Printf("Cla =%6d  ", stats.Clauses)
+			fmt.Printf("Conf =%9d  ", stats.Conflicts)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		}
 		if status != bsat.Satisfiable {
-			return 0
+			fmt.Printf("The problem has no solution.\n")
+			break
 		}
 		mint = Maj_ManEval(p)
-		if mint < 0 {
-			Maj_ManPrintSolution(p)
-			fmt.Printf("Total runtime: %s\n", time.Since(start))
-			return 1
-		}
 	}
+	if mint == -1 {
+		Maj_ManPrintSolution(p)
+	}
+	util.Abc_PrintTime(1, "Total runtime", util.Abc_Clock()-clkTotal)
+	if mint == -1 {
+		return 1
+	}
+	return 0
 }

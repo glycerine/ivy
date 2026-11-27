@@ -5,15 +5,14 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dau"
-	"time"
 )
 
 func Gia_ManResubTest(p *Gia_Man_t) {
-	start := time.Now()
 	q := Gia_ManDupMuxes(p, 2)
+	clkStart := util.Abc_Clock()
 	mffcs := Gia_ManComputeMffcs(q, 4, 100, 8, 100)
 	Gia_ManAddDivisors(q, mffcs)
-	fmt.Printf("Time = %s\n", time.Since(start).Round(time.Millisecond))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clkStart)
 	Gia_ManStop(q)
 }
 func Gia_ManResubTest3() {
@@ -93,7 +92,7 @@ func resubSimulate(p *Gia_Man_t) ([][]word, int) {
 	return data, words
 }
 func Gia_ManTryResub(p *Gia_Man_t) {
-	start := time.Now()
+	clkStart := util.Abc_Clock()
 	sims, nWords := resubSimulate(p)
 	Gia_ManLevelNum(p)
 	Gia_ManCreateRefs(p)
@@ -102,7 +101,7 @@ func Gia_ManTryResub(p *Gia_Man_t) {
 	Abc_ResubPrepareManager(int32(nWords))
 	defer Abc_ResubPrepareManager(0)
 	total, unrealizable := int32(0), int32(0)
-	var resubTime time.Duration
+	var clkResub int64
 	for _, obj := range p.pObjs {
 		if Gia_ObjIsAnd(obj) == 0 {
 			continue
@@ -124,14 +123,16 @@ func Gia_ManTryResub(p *Gia_Man_t) {
 				divs = append(divs, sims[candidate.id])
 			}
 		}
-		t := time.Now()
+		clk := util.Abc_Clock()
 		gates := Abc_ResubComputeFunction(divs, int32(nWords), min(size-1, 20), 200, 0, 1, 1, 0)
-		resubTime += time.Since(t)
+		clkResub += util.Abc_Clock() - clk
 		if len(gates) > 0 {
 			total += size - int32(len(gates)/2)
 		} else {
 			unrealizable++
 		}
 	}
-	fmt.Printf("Total nodes = %5d.  Non-realizable = %5d.  Gain = %6d.  Time = %s  Pure resub time = %s\n", Gia_ManAndNum(p), unrealizable, total, time.Since(start).Round(time.Millisecond), resubTime.Round(time.Millisecond))
+	fmt.Printf("Total nodes = %5d.  Non-realizable = %5d.  Gain = %6d.  ", Gia_ManAndNum(p), unrealizable, total)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clkStart)
+	util.Abc_PrintTime(1, "Pure resub time", clkResub)
 }

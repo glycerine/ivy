@@ -103,7 +103,7 @@ func Inter_ManGetCounterExampleConstrained(src *aig.Graph, nFrames, verbose int3
 }
 
 func interManGetConstrainedCounterExample(src *aig.Graph, nFrames, verbose int32, deadline int64) *util.Abc_Cex_t {
-	started := time.Now()
+	started := util.Abc_Clock()
 	frames := interManFramesBmc(src, nFrames, deadline)
 	if frames == nil || deadline != 0 && util.Abc_Clock() >= deadline {
 		return nil
@@ -149,7 +149,7 @@ func interManGetConstrainedCounterExample(src *aig.Graph, nFrames, verbose int32
 		return nil
 	}
 	if verbose != 0 {
-		fmt.Printf("Counterexample generation: %s\n", time.Since(started))
+		util.Abc_PrintTime(1, "Total ctrex generation time", util.Abc_Clock()-started)
 	}
 	return result
 }

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -189,6 +190,7 @@ func Bmc_ManBCoreCollect(p *gia.Gia_Man_t, frame, output int32, solver *bsat.Sol
 // Bmc_ManBCorePerform computes and writes a learned-clause BMC proof core.
 func Bmc_ManBCorePerform(p *gia.Gia_Man_t, params *Bmc_BCorePar_t) {
 	start := time.Now()
+	clk := util.Abc_Clock()
 	solver := bsat.NewSolver()
 	solver.EnableClauseStore()
 	if params.NTimeOut > 0 {
@@ -210,14 +212,20 @@ func Bmc_ManBCorePerform(p *gia.Gia_Man_t, params *Bmc_BCorePar_t) {
 		return
 	}
 	if params.FVerbose != 0 {
-		fmt.Printf("SAT solver returned UNSAT after %7d conflicts. Time %s\n", solver.Statistics().Conflicts, time.Since(start))
+		fmt.Printf("SAT solver returned UNSAT after %7d conflicts.      ", int32(solver.Statistics().Conflicts))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	}
 	store := solver.ReleaseClauseStore()
+	clk = util.Abc_Clock()
 	proof := bsat.Intp_ManAlloc()
 	core := bsat.Intp_ManUnsatCore(proof, store, 1, params.FVerbose)
 	if err := bsat.Intp_ManError(proof); err != nil {
 		fmt.Printf("Cannot derive BMC proof: %v\n", err)
 		return
+	}
+	if params.FVerbose != 0 {
+		fmt.Printf("UNSAT core contains %d (out of %d) learned clauses.   ", len(core), int32(solver.Statistics().Conflicts))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	}
 	sort.Slice(core, func(i, j int) bool { return core[i] < core[j] })
 	file := os.Stdout

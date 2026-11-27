@@ -5,6 +5,7 @@ import (
 	"math/bits"
 	"slices"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -168,13 +169,18 @@ func sbdRefineCover(p *Sbd_Man_t, pivot int32, columns []uint64, rows int32, tru
 	free := int32(vec.Vec_IntSize(p.vWinObjs) + vec.Vec_IntSize(p.vTfo) + vec.Vec_IntSize(p.vRoots))
 	pivotVar := vec.Vec_IntEntry(p.vObj2Var, int(pivot))
 	for iteration := int32(0); iteration < 32 && rows < 64; iteration++ {
-		if Sbd_ManFindCands(p, columns, divs) == 0 {
+		clk := util.Abc_Clock()
+		found := Sbd_ManFindCands(p, columns, divs)
+		p.timeCov += util.Abc_Clock() - clk
+		if found == 0 {
 			return 0
 		}
 		for i, index := range vec.Vec_IntArray(p.vDivSet) {
 			vec.Vec_IntWriteEntry(p.vDivSet, i, vec.Vec_IntEntry(p.vDivVars, int(index)))
 		}
+		clk = util.Abc_Clock()
 		*truth = Sbd_ManSolve(p.pSat, pivotVar, free+iteration, p.vDivSet, p.vDivVars, p.vDivValues, p.vLits)
+		p.timeSat += util.Abc_Clock() - clk
 		switch *truth {
 		case SBD_SAT_UNDEC:
 			return 0
@@ -241,7 +247,9 @@ func Sbd_ManExplore(p *Sbd_Man_t, pivot int32, truth *uint64) int32 {
 	return sbdRefineCover(p, pivot, columns[:], rows, truth)
 }
 func Sbd_ManExplore2(p *Sbd_Man_t, pivot int32, truth *uint64) int32 {
+	clk := util.Abc_Clock()
 	p.pSat = Sbd_ManSatSolver(p.pSat, p.pGia, p.vMirrors, pivot, p.vWinObjs, p.vObj2Var, p.vTfo, p.vRoots, 0)
+	p.timeCnf += util.Abc_Clock() - clk
 	if p.pSat == nil {
 		*truth = 0
 		vec.Vec_IntClear(p.vDivSet)
@@ -249,7 +257,9 @@ func Sbd_ManExplore2(p *Sbd_Man_t, pivot int32, truth *uint64) int32 {
 	}
 	p.pSat.SetLimits(int64(p.pPars.ConflictLimit), 0)
 	var onset, offset [64]uint64
+	clk = util.Abc_Clock()
 	status := Sbd_ManCollectConstantsNew(p.pSat, p.vDivVars, 4, vec.Vec_IntEntry(p.vObj2Var, int(pivot)), onset[:], offset[:])
+	p.timeSat += util.Abc_Clock() - clk
 	if status >= 0 {
 		if status == 0 {
 			*truth = 0
@@ -305,7 +315,9 @@ func Sbd_ManExploreCut(p *Sbd_Man_t, pivot, count int32, leaves []int32, structu
 				vec.Vec_IntPush(p.vDivSet, vec.Vec_IntEntry(p.vObj2Var, int(leaf)))
 			}
 		}
+		clk := util.Abc_Clock()
 		result := sbdSolveSupport(p, pivotVar, *free)
+		p.timeSat += util.Abc_Clock() - clk
 		*free++
 		if result == SBD_SAT_UNDEC {
 			continue
@@ -328,7 +340,9 @@ func Sbd_ManExploreCut(p *Sbd_Man_t, pivot, count int32, leaves []int32, structu
 		for i, id := range vec.Vec_IntArray(p.vDivSet) {
 			vec.Vec_IntWriteEntry(p.vDivSet, i, vec.Vec_IntEntry(p.vObj2Var, int(id)))
 		}
+		clk := util.Abc_Clock()
 		truth := Sbd_ManSolve(p.pSat, pivotVar, *free, p.vDivSet, p.vDivVars, p.vDivValues, p.vLits)
+		p.timeSat += util.Abc_Clock() - clk
 		*free++
 		if truth == SBD_SAT_SAT || truth == SBD_SAT_UNDEC {
 			return 0
@@ -375,7 +389,10 @@ func Sbd_ManExploreCut(p *Sbd_Man_t, pivot, count int32, leaves []int32, structu
 	solve := func(items []Sbd_Str_t, stat int) bool {
 		copy(structures, items)
 		*structureCount = int32(len(items))
-		if Sbd_ProblemSolve(p.pGia, p.vMirrors, pivot, p.vWinObjs, p.vObj2Var, p.vTfo, p.vRoots, p.vDivSet, *structureCount, structures) != 0 {
+		clk := util.Abc_Clock()
+		solved := Sbd_ProblemSolve(p.pGia, p.vMirrors, pivot, p.vWinObjs, p.vObj2Var, p.vTfo, p.vRoots, p.vDivSet, *structureCount, structures)
+		p.timeQbf += util.Abc_Clock() - clk
+		if solved != 0 {
 			p.nLuts[stat]++
 			return true
 		}
@@ -451,7 +468,9 @@ func Sbd_ManExploreCut(p *Sbd_Man_t, pivot, count int32, leaves []int32, structu
 	return 0
 }
 func Sbd_ManExplore3(p *Sbd_Man_t, pivot int32, count *int32, structures []Sbd_Str_t) int32 {
+	clk := util.Abc_Clock()
 	p.pSat = Sbd_ManSatSolver(p.pSat, p.pGia, p.vMirrors, pivot, p.vWinObjs, p.vObj2Var, p.vTfo, p.vRoots, 0)
+	p.timeCnf += util.Abc_Clock() - clk
 	if p.pSat == nil {
 		return 0
 	}

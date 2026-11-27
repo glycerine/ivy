@@ -450,7 +450,7 @@ func (p *zyxSynthesis) writeSolution(net *zyxNetwork, first bool) error {
 
 // Zyx_ManExactSynthesis synthesizes a network of k-input LUTs or majority gates.
 func Zyx_ManExactSynthesis(pars *Bmc_EsPar_t) {
-	start := time.Now()
+	clkTotal := util.Abc_Clock()
 	p, err := newZyxSynthesis(pars)
 	if err != nil {
 		fmt.Printf("Exact synthesis: %v.\n", err)
@@ -508,5 +508,5 @@ func Zyx_ManExactSynthesis(pars *Bmc_EsPar_t) {
 	if pars.FEnumSols != 0 {
 		fmt.Printf("Finished enumerating %d solutions.\n", count)
 	}
-	fmt.Printf("Total runtime: %s\n", time.Since(start))
+	util.Abc_PrintTime(1, "Total runtime", util.Abc_Clock()-clkTotal)
 }

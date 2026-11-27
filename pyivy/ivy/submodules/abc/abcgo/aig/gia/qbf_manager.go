@@ -2,9 +2,9 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/satoko"
-	"time"
 )
 
 type Qbf_Man_t struct {
@@ -13,7 +13,7 @@ type Qbf_Man_t struct {
 	verbose                 int32
 	verification, synthesis *satoko.Solver
 	parameterMap            []int32
-	started                 time.Time
+	clkStart                int64
 }
 
 func Gia_QbfAlloc(g *Gia_Man_t, nPars, glucose, verbose int32) *Qbf_Man_t {
@@ -36,7 +36,7 @@ func Gia_QbfAlloc(g *Gia_Man_t, nPars, glucose, verbose int32) *Qbf_Man_t {
 	for i := range mapping {
 		mapping[i] = -1
 	}
-	return &Qbf_Man_t{graph: g, nPars: nPars, nVars: n - nPars, verbose: verbose, verification: ver, synthesis: syn, parameterMap: mapping, started: time.Now()}
+	return &Qbf_Man_t{graph: g, nPars: nPars, nVars: n - nPars, verbose: verbose, verification: ver, synthesis: syn, parameterMap: mapping, clkStart: util.Abc_Clock()}
 }
 func Gia_QbfFree(p *Qbf_Man_t) {
 	if p != nil {
@@ -89,7 +89,11 @@ func Gia_QbfPrint(p *Qbf_Man_t, values *Vec_Int_t, iteration int32) {
 	for _, v := range vec.Vec_IntArray(values) {
 		fmt.Printf("%d", v)
 	}
-	fmt.Printf("  Var =%7d  Cla =%7d  Time = %s\n", p.synthesis.VariableCount(), p.synthesis.ClauseCount(), time.Since(p.started).Round(time.Millisecond))
+	fmt.Printf("  ")
+	fmt.Printf("Var =%7d  ", p.synthesis.VariableCount())
+	fmt.Printf("Cla =%7d  ", p.synthesis.ClauseCount())
+	fmt.Printf("Conf =%9d  ", p.synthesis.Stats().AllConflicts)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-p.clkStart)
 }
 func Gia_QbfAddSpecialConstr(p *Qbf_Man_t) {
 	if p.nPars < 44 {

@@ -2,7 +2,8 @@ package gia
 
 import (
 	"fmt"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 // Gia_ComputeEquivalencesLevel resolves constant and equivalence candidates
@@ -11,14 +12,17 @@ func Gia_ComputeEquivalencesLevel(p *Hcd_Man_t, reduced *Gia_Man_t, roots *Vec_P
 	if Vec_PtrSize(roots) == 0 {
 		return 0
 	}
-	start := time.Now()
+	timeTotal := util.Abc_Clock()
+	var timeSolve, timeSim int64
 	solver := newGiarfSolver(reduced, p.nBTLimit, useMiniSat != 0)
 	defer solver.close()
 	Vec_PtrCleanSimInfo(p.vSimPres, 0, 1)
 	var saved, records, undecided, refinements, queries int32
 	check := func(a int32, b *int32) (int32, *Vec_Int_t) {
 		queries++
+		clk := util.Abc_Clock()
 		status, cex, err := solver.check(a, b)
+		timeSolve += util.Abc_Clock() - clk
 		if err != nil {
 			panic(fmt.Sprintf("gia: equivalence SAT: %v", err))
 		}
@@ -102,7 +106,9 @@ func Gia_ComputeEquivalencesLevel(p *Hcd_Man_t, reduced *Gia_Man_t, roots *Vec_P
 						Vec_PtrPush(next, member)
 					}
 				}
+				clk := util.Abc_Clock()
 				Gia_ResimulateAndRefine(p, reprID)
+				timeSim += util.Abc_Clock() - clk
 			} else if !pending {
 				for k := 0; k < Vec_PtrSize(members); k++ {
 					Gia_ObjSetProved(g, Vec_PtrEntry(members, k).(*Gia_Obj_t).id)
@@ -115,7 +121,20 @@ func Gia_ComputeEquivalencesLevel(p *Hcd_Man_t, reduced *Gia_Man_t, roots *Vec_P
 		}
 		iterations++
 	}
-	fmt.Printf("nSaved = %d   nRecords = %d   nUndec = %d   nClassRefs = %d   queries = %d   time = %s\n", saved, records, undecided, refinements, queries, time.Since(start))
+	// C counts and times MiniSat or Tas calls by the solver in use.
+	var nMiniSat, nTsat int32
+	var timeMiniSat, timeTsat int64
+	if useMiniSat != 0 {
+		nMiniSat, timeMiniSat = queries, timeSolve
+	} else {
+		nTsat, timeTsat = queries, timeSolve
+	}
+	fmt.Printf("nSaved = %d   nRecords = %d   nUndec = %d   nClassRefs = %d   nMiniSat = %d   nTas = %d\n",
+		saved, records, undecided, refinements, nMiniSat, nTsat)
+	util.Abc_PrintTime(1, "Tas    ", timeTsat)
+	util.Abc_PrintTime(1, "MiniSat", timeMiniSat)
+	util.Abc_PrintTime(1, "Sim    ", timeSim)
+	util.Abc_PrintTime(1, "Total  ", util.Abc_Clock()-timeTotal)
 	Hcd_ManSimulateSimple(p)
 	Hcd_ManClassesRefine(p)
 	return iterations
@@ -130,19 +149,25 @@ func Gia_ComputeEquivalences(g *Gia_Man_t, limit, useMiniSat, verbose int32) {
 	defer Gia_ManEquivStop(p)
 	Hcd_ManClassesCreate(p)
 	for i := 0; i < 3; i++ {
+		clk := util.Abc_Clock()
 		Hcd_ManSimulationInit(p)
 		Hcd_ManSimulateSimple(p)
+		util.Abc_PrintTime(1, "Sim", util.Abc_Clock()-clk)
+		clk = util.Abc_Clock()
 		Hcd_ManClassesRefine(p)
+		util.Abc_PrintTime(1, "Ref", util.Abc_Clock()-clk)
 	}
 	// The source's strict bound skips the deepest gates, leaving simulation
 	// candidates there unverified before they are used to rewrite the graph.
 	for level := int32(1); level <= levels; level++ {
-		start := time.Now()
+		clk := util.Abc_Clock()
+		fmt.Printf("LEVEL %3d  (out of %3d)   ", level, levels)
 		var roots *Vec_Ptr_t
 		reduced := Gia_GenerateReducedLevel(g, level, &roots)
 		iterations := Gia_ComputeEquivalencesLevel(p, reduced, roots, level, useMiniSat)
 		Gia_ManStop(reduced)
-		fmt.Printf("LEVEL %3d (out of %3d) Iters = %3d Time = %s\n", level, levels, iterations, time.Since(start))
+		fmt.Printf("Iters = %3d   ", iterations)
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	}
 	giaDropUnprovedEquivalences(g)
 	Gia_GiarfPrintClasses(g)

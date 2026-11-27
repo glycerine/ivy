@@ -6,12 +6,11 @@ import (
 	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 // Saig_ManCexRefineStep adds registers needed by an abstract counterexample.
 func Saig_ManCexRefineStep(g *aig.Graph, flops, classes *vec.Vec_Int_t, cex *util.Abc_Cex_t, limit, tryFour, sensePath, verbose int32) int32 {
-	started := time.Now()
+	started := util.Abc_Clock()
 	abstract := saig.Saig_ManDupAbstraction(g, flops)
 	first := Saig_ManCexFirstFlopPi(g, abstract)
 	var selected *vec.Vec_Int_t
@@ -35,7 +34,8 @@ func Saig_ManCexRefineStep(g *aig.Graph, flops, classes *vec.Vec_Int_t, cex *uti
 		return 0
 	}
 	if verbose != 0 {
-		fmt.Printf("Adding %d registers to the abstraction (total = %d). Time = %s\n", vec.Vec_IntSize(selected), int(saig.Saig_ManRegNum(g))+vec.Vec_IntSize(selected), time.Since(started))
+		fmt.Printf("Adding %d registers to the abstraction (total = %d).  ", vec.Vec_IntSize(selected), int(saig.Saig_ManRegNum(g))+vec.Vec_IntSize(selected))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
 	}
 	piCount := saig.Saig_ManPiNum(g)
 	if limit > 0 && vec.Vec_IntSize(selected) > int(limit) {

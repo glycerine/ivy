@@ -3,8 +3,8 @@ package bmc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/satoko"
-	"time"
 )
 
 const NCPARS = 16
@@ -55,7 +55,7 @@ func Bmc_MeshAddOneHotness(s *satoko.Solver, first, last int32) int32 {
 
 // Bmc_MeshTest maps a combinational AND graph to a time-stepped LUT mesh.
 func Bmc_MeshTest(p *gia.Gia_Man_t, X, Y, T, verbose int32) {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	if p == nil || X < 3 || Y < 3 || T < 2 || X > 100 || Y > 100 || T > 100 {
 		panic("bmc: invalid mesh dimensions")
 	}
@@ -195,7 +195,8 @@ func Bmc_MeshTest(p *gia.Gia_Man_t, X, Y, T, verbose int32) {
 		}
 	}
 	if !add(pos(Bmc_MeshGVar(me[:], 1, 1) + G - 1)) {
-		fmt.Println("Problem has no solution.")
+		fmt.Printf("Problem has no solution. ")
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		return
 	}
 	if verbose != 0 {
@@ -205,11 +206,13 @@ func Bmc_MeshTest(p *gia.Gia_Man_t, X, Y, T, verbose int32) {
 	for {
 		status := s.Solve()
 		if status == satoko.SATOKO_UNSAT {
-			fmt.Printf("Problem has no solution. Time %s\n", time.Since(start))
+			fmt.Printf("Problem has no solution. ")
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 			return
 		}
 		if status != satoko.SATOKO_SAT {
-			fmt.Printf("Computation timed out. Time %s\n", time.Since(start))
+			fmt.Printf("Computation timed out. ")
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 			return
 		}
 		model = make([]bool, nvars)
@@ -239,7 +242,8 @@ func Bmc_MeshTest(p *gia.Gia_Man_t, X, Y, T, verbose int32) {
 			}
 		}
 	}
-	fmt.Printf("Satisfying solution found. Time %s\n", time.Since(start))
+	fmt.Printf("Satisfying solution found. ")
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	var buffers, active int32
 	for y := int32(1); y < Y-1; y++ {
 		for x := int32(1); x < X-1; x++ {

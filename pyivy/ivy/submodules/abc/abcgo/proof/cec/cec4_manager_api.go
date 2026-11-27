@@ -3,6 +3,7 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/glucose2"
 	"sync"
@@ -110,7 +111,8 @@ func Cec4_ManPrintStats(g *Gia_Man_t, pars *Cec_ParFra_t, p *Cec4_Man_t, simulat
 		fmt.Printf("SAT %4d : %6.2f %%  ", p.nItersSim+p.nItersSat, 100*float64(p.nAndNodes)/float64(gia.Gia_ManAndNum(g)))
 		p.nItersSat++
 	}
-	fmt.Printf("P =%7d  D =%7d  F =%8d  cst =%9d  cls =%8d  lit =%9d   Time = %6.2f sec\n", p.nSatUnsat, p.nSatSat, p.nSatUndec, constants, heads, literals, elapsed.Seconds())
+	fmt.Printf("P =%7d  D =%7d  F =%8d  cst =%9d  cls =%8d  lit =%9d   ", p.nSatUnsat, p.nSatSat, p.nSatUndec, constants, heads, literals)
+	util.Abc_PrintTime(1, "Time", elapsed.Nanoseconds())
 }
 func Cec4_ManPrintTfiConeStats(g *Gia_Man_t) {
 	roots, nodes := vec.Vec_IntAlloc(100), vec.Vec_IntAlloc(100)

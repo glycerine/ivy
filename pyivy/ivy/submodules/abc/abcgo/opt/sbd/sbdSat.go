@@ -3,7 +3,6 @@ package sbd
 import (
 	"fmt"
 	"slices"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -543,7 +542,17 @@ func Sbd_SolverFuncTest() {
 	}
 	truth := []uint64{0x0000080000020000, 0x0000000000020000, 0, 0x0000000000020000}
 	values := make([]int32, 7*3)
-	started := time.Now()
-	phase := Sbd_SolverFunc(8, 7, 2, &luts, truth, values)
-	fmt.Printf("Result (compl=%d): %v Time=%v\n", phase, values, time.Since(started))
+	const n, lutPars = 7, (1 << 2) - 1
+	phase := Sbd_SolverFunc(8, n, 2, &luts, truth, values)
+	if phase == -1 {
+		fmt.Printf("Solution does not exist.\n")
+		return
+	}
+	fmt.Printf("Result (compl = %d):\n", phase)
+	for i := 0; i < n; i++ {
+		for k := lutPars - 1; k >= 0; k-- {
+			fmt.Printf("%d", values[i*lutPars+k])
+		}
+		fmt.Printf("0\n")
+	}
 }

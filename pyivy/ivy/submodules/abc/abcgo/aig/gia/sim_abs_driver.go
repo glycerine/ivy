@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Gia_SimAbsInit(p *Gia_SimAbsMan_t) {
@@ -77,7 +76,7 @@ func Gia_SimAbsCheckSolution(p *Gia_SimAbsMan_t) {
 	}
 }
 func Gia_SimAbsPerformOne(g *Gia_Man_t, off, on []uint64, sims *Vec_Wrd_t, words, verbose int32) *Vec_Int_t {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	result := vec.Vec_IntAlloc(10)
 	p := Gia_SimAbsAlloc(g, off, on, sims, words, result, verbose)
 	defer Gia_SimAbsFree(p)
@@ -88,6 +87,6 @@ func Gia_SimAbsPerformOne(g *Gia_Man_t, off, on []uint64, sims *Vec_Wrd_t, words
 			break
 		}
 	}
-	fmt.Printf("Resubstitution time: %s\n", time.Since(start))
+	util.Abc_PrintTime(1, "Resubstitution time", util.Abc_Clock()-clk)
 	return result
 }

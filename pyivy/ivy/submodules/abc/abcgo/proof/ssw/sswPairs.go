@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
@@ -80,11 +81,11 @@ func sswReportPairResult(graph *aig.Graph, total int32, start time.Time) int32 {
 	case 1:
 		fmt.Print("Verification successful.  ")
 	case 0:
-		fmt.Print("Verification failed with a counter-example.  ")
+		fmt.Print("Verification failed with the counter-example.  ")
 	default:
-		fmt.Printf("Verification UNDECIDED. The number of remaining regs = %d (total = %d).  ", aig.Aig_ManRegNum(graph), total)
+		fmt.Printf("Verification UNDECIDED. Remaining registers %d (total %d).  ", aig.Aig_ManRegNum(graph), total)
 	}
-	fmt.Printf("Time = %.2f sec\n", time.Since(start).Seconds())
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds())
 	return result
 }
 func Ssw_SecWithPairs(first, second *aig.Graph, ids1, ids2 *vec.Vec_Int_t, pars *Ssw_Pars_t) int32 {

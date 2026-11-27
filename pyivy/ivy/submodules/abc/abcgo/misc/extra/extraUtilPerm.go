@@ -3,7 +3,8 @@ package extra
 import (
 	"fmt"
 	"slices"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 /**CFile****************************************************************
@@ -681,9 +682,9 @@ func Abc_ZddPermTest() {
 
 var zddCubeTurns = [3][9][2]int32{{{3, 5}, {3, 17}, {3, 15}, {1, 6}, {1, 16}, {1, 14}, {2, 4}, {2, 18}, {2, 13}}, {{2, 14}, {2, 24}, {2, 12}, {3, 13}, {3, 23}, {3, 10}, {1, 15}, {1, 22}, {1, 11}}, {{1, 10}, {1, 7}, {1, 4}, {3, 12}, {3, 9}, {3, 6}, {2, 11}, {2, 8}, {2, 5}}}
 
-func zddCubeStates(rounds int32) (*Abc_ZddMan, int32) {
-	p := Abc_ZddManAlloc(276, 1<<27)
-	Abc_ZddManCreatePerms(p, 24)
+// zddCubeTurns1 is the union of the quarter, half and three-quarter
+// turns of the three faces, as Abc_EnumerateCubeStatesZdd builds ZddTurns.
+func zddCubeTurns1(p *Abc_ZddMan) int32 {
 	turns := int32(1)
 	for _, swaps := range zddCubeTurns {
 		perm := make([]int32, 24)
@@ -705,6 +706,12 @@ func zddCubeStates(rounds int32) (*Abc_ZddMan, int32) {
 		three := Abc_ZddPermProduct(p, two, one)
 		turns = Abc_ZddUnion(p, turns, Abc_ZddUnion(p, one, Abc_ZddUnion(p, two, three)))
 	}
+	return turns
+}
+func zddCubeStates(rounds int32) (*Abc_ZddMan, int32) {
+	p := Abc_ZddManAlloc(276, 1<<27)
+	Abc_ZddManCreatePerms(p, 24)
+	turns := zddCubeTurns1(p)
 	all := int32(1)
 	for round := int32(0); round < rounds; round++ {
 		next := Abc_ZddPermProduct(p, all, turns)
@@ -716,8 +723,24 @@ func zddCubeStates(rounds int32) (*Abc_ZddMan, int32) {
 	return p, all
 }
 func Abc_EnumerateCubeStatesZdd() {
-	started := time.Now()
-	p, all := zddCubeStates(100)
+	clk := util.Abc_Clock()
+	fmt.Printf("Enumerating states of 2x2x2 cube.\n")
+	p := Abc_ZddManAlloc(24*23/2, 1<<27)
 	defer Abc_ZddManFree(p)
-	fmt.Printf("Enumerating states of 2x2x2 cube. Paths = %d. Nodes = %d. Time = %v\n", Abc_ZddCountPaths(p, all), Abc_ZddCountNodes(p, all), time.Since(started))
+	Abc_ZddManCreatePerms(p, 24)
+	fmt.Printf("Iter %2d -> %8d  Nodes = %7d  Used = %10d  ", 0, 1, 0, 2)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	turns := zddCubeTurns1(p)
+	fmt.Printf("Iter %2d -> %8d  Nodes = %7d  Used = %10d  ", 1, Abc_ZddCountPaths(p, turns), Abc_ZddCountNodes(p, turns), p.nObjs)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	all := turns
+	for i := 2; i <= 100; i++ {
+		prev := all
+		all = Abc_ZddPermProduct(p, all, turns)
+		fmt.Printf("Iter %2d -> %8d  Nodes = %7d  Used = %10d  ", i, Abc_ZddCountPaths(p, all), Abc_ZddCountNodes(p, all), p.nObjs)
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+		if prev == all {
+			break
+		}
+	}
 }

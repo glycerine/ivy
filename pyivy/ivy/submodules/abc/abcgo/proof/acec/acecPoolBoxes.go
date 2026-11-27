@@ -4,9 +4,9 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"sort"
-	"time"
 )
 
 func Acec_ManCompareTwo(a, b []int32) int32 {
@@ -133,14 +133,16 @@ func Acec_ManPrintRanks(pairs *Vec_Int_t) {
 	fmt.Println()
 }
 func Acec_ManProfile(p *Gia_Man_t, verbose int32) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	var xors *Vec_Int_t
 	adds := Ree_ManComputeCuts(p, &xors, verbose)
 	n := Ree_ManCountFadds(adds)
-	fmt.Printf("Detected %d full-adders and %d half-adders. Found %d XOR-cuts. Time = %v\n", n, int32(vec.Vec_IntSize(adds)/6)-n, vec.Vec_IntSize(xors)/4, time.Since(start))
-	start = time.Now()
+	fmt.Printf("Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  ", n, int32(vec.Vec_IntSize(adds)/6)-n, vec.Vec_IntSize(xors)/4)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+	start = util.Abc_Clock()
 	sets := Acec_ManCollectBoxSets(p, adds, xors)
-	fmt.Printf("Detected %d adder-trees. Time = %v\n", vec.Vec_WecSize(sets)/5, time.Since(start))
+	fmt.Printf("Detected %d adder-tree%s.  ", vec.Vec_WecSize(sets)/5, acecPluralS(vec.Vec_WecSize(sets)/5))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	if verbose != 0 {
 		for i := 0; 5*i < vec.Vec_WecSize(sets); i++ {
 			fmt.Printf("Tree %3d : Xor = %4d Root = %4d Adder = %4d In = %4d Out = %4d\n", i, vec.Vec_IntSize(vec.Vec_WecEntry(sets, 5*i)), vec.Vec_IntSize(vec.Vec_WecEntry(sets, 5*i+1)), vec.Vec_IntSize(vec.Vec_WecEntry(sets, 5*i+2)), vec.Vec_IntSize(vec.Vec_WecEntry(sets, 5*i+3))/2, vec.Vec_IntSize(vec.Vec_WecEntry(sets, 5*i+4))/2)
@@ -150,14 +152,28 @@ func Acec_ManProfile(p *Gia_Man_t, verbose int32) {
 	}
 }
 func Acec_ManPool(p *Gia_Man_t) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	adds := Ree_ManComputeCuts(p, nil, 1)
 	n := Ree_ManCountFadds(adds)
-	fmt.Printf("Detected %d FAs and %d HAs. Time = %v\n", n, int32(vec.Vec_IntSize(adds)/6)-n, time.Since(start))
+	fmt.Printf("Detected %d FAs and %d HAs.  ", n, int32(vec.Vec_IntSize(adds)/6)-n)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+	// C recounts and prints the same line again with a fresh clock.
+	start = util.Abc_Clock()
+	n = Ree_ManCountFadds(adds)
+	fmt.Printf("Detected %d FAs and %d HAs.  ", n, int32(vec.Vec_IntSize(adds)/6)-n)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	tops := Acec_ManPoolTopMost(p, adds)
-	fmt.Printf("Detected %d topmost adders.\n", vec.Vec_IntSize(tops))
+	fmt.Printf("Detected %d topmost adder%s.\n", vec.Vec_IntSize(tops), acecPluralS(vec.Vec_IntSize(tops)))
 	trees := Gia_PolynCoreOrderArray(p, adds, tops)
 	for i := 0; i < vec.Vec_WecSize(trees); i++ {
 		fmt.Printf("Adder %5d : Tree with %5d nodes.\n", vec.Vec_IntEntry(tops, i), vec.Vec_IntSize(vec.Vec_WecEntry(trees, i)))
 	}
+}
+
+// acecPluralS is C's `n > 1 ? "s":""`.
+func acecPluralS(n int) string {
+	if n > 1 {
+		return "s"
+	}
+	return ""
 }

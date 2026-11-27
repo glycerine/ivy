@@ -4,8 +4,8 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/proof/cec"
-	"time"
 )
 
 func Acec_ComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t) {
@@ -14,7 +14,7 @@ func Acec_ComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t) {
 
 // acecComputeEquivClasses allows the SAT sweep to be exercised in tests.
 func acecComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t, compute func(*gia.Gia_Man_t, int32, int32) *gia.Gia_Man_t) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	base := Acec_CommonStart(nil, a)
 	defer gia.Gia_ManStop(base)
 	Acec_CommonStart(base, b)
@@ -26,10 +26,11 @@ func acecComputeEquivClasses(a, b *Gia_Man_t, mapA, mapB **Vec_Int_t, compute fu
 		panic("acec: equivalence sweep returned nil")
 	}
 	defer gia.Gia_ManStop(repr)
-	fmt.Printf("Finished computing equivalent nodes. Time = %v\n", time.Since(start))
+	fmt.Printf("Finished computing equivalent nodes.  ")
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 }
 func Acec_Solve(a, b *Gia_Man_t, pars *Acec_ParCec_t) int32 {
-	start := time.Now()
+	start := util.Abc_Clock()
 	left, right := a, b
 	boxA, boxB := Acec_ProduceBox(a, pars.FVerbose), Acec_ProduceBox(b, pars.FVerbose)
 	if boxA == nil || boxB == nil {
@@ -38,7 +39,8 @@ func Acec_Solve(a, b *Gia_Man_t, pars *Acec_ParCec_t) int32 {
 		fmt.Println("Cannot match arithmetic boxes in LHS and RHS. Trying regular CEC.")
 	} else {
 		left, right = Acec_InsertBox(boxA, 0), Acec_InsertBox(boxB, 0)
-		fmt.Printf("Matching of adder trees in LHS and RHS succeeded. Time = %v\n", time.Since(start))
+		fmt.Printf("Matching of adder trees in LHS and RHS succeeded.  ")
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 		for i := int32(1); i <= 2; i++ {
 			gia.Gia_ManPatchCoDriver(left, gia.Gia_ManCoNum(left)-i, 0)
 			gia.Gia_ManPatchCoDriver(right, gia.Gia_ManCoNum(right)-i, 0)

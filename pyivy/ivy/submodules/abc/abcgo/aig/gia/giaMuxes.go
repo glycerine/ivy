@@ -4,12 +4,12 @@ import (
 	"encoding/binary"
 	"fmt"
 	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/bits"
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func Gia_ManDupMuxesTest(p *Gia_Man_t) *Gia_Man_t {
@@ -190,10 +190,13 @@ type Mux_Man_t struct {
 	names []string
 	ids   map[string]int
 	tops  [][]int32
+	// pNames mirrors the C name manager (Abc_NamStart(10000, 50)) so
+	// that the profile reports its memory as Abc_NamMemUsed does.
+	pNames *util.Abc_Nam_t
 }
 
 func Mux_ManAlloc(p *Gia_Man_t) *Mux_Man_t {
-	return &Mux_Man_t{pGia: p, names: []string{""}, ids: make(map[string]int), tops: [][]int32{nil}}
+	return &Mux_Man_t{pGia: p, names: []string{""}, ids: make(map[string]int), tops: [][]int32{nil}, pNames: util.Abc_NamStart(10000, 50)}
 }
 func Mux_ManFree(p *Mux_Man_t) {
 	if p != nil {
@@ -205,27 +208,54 @@ func Gia_ManMuxProfile(p *Mux_Man_t, width int32) int32 {
 	for i := 1; i < len(p.tops); i++ {
 		value := len(p.tops[i])
 		if width == 0 {
-			value, _ = strconv.Atoi(strings.Fields(p.names[i])[0])
+			value = muxAtoi(p.names[i])
 		}
 		counts[min(value, 999)]++
 	}
 	var distinct, total, maximum int
-	for value, count := range counts {
-		if count != 0 {
+	for _, count := range counts {
+		if count > 0 {
 			distinct++
-			total += count
-			maximum = max(maximum, count)
-			fmt.Printf(" %d=%d", value, count)
 		}
+		total += count
+		maximum = max(maximum, count)
 	}
 	if distinct == 0 {
 		return 0
 	}
-	fmt.Printf("\nSummary: Max=%d Ave=%.2f\n", maximum, float64(total)/float64(distinct))
+	kind := "sizes"
+	if width != 0 {
+		kind = "widths"
+	}
+	fmt.Printf("The distribution of MUX tree %s:\n", kind)
+	counter := 0
+	for value, count := range counts {
+		if count == 0 {
+			continue
+		}
+		if counter++; counter == 12 {
+			fmt.Printf("\n")
+			counter = 0
+		}
+		fmt.Printf("  %d=%d", value, count)
+	}
+	fmt.Printf("\nSummary: ")
+	fmt.Printf("Max = %d  ", maximum)
+	fmt.Printf("Ave = %.2f", float64(total)/float64(distinct))
+	fmt.Printf("\n")
 	return 1
 }
+
+// muxAtoi is C atoi on a structure name: its leading MUX count.
+func muxAtoi(s string) int {
+	n := 0
+	for i := 0; i < len(s) && s[i] >= '0' && s[i] <= '9'; i++ {
+		n = 10*n + int(s[i]-'0')
+	}
+	return n
+}
 func Gia_ManMuxProfiling(src *Gia_Man_t) {
-	started := time.Now()
+	started := util.Abc_Clock()
 	p := Gia_ManDupMuxes(src, 2)
 	defer Gia_ManStop(p)
 	manager := Mux_ManAlloc(p)
@@ -248,6 +278,8 @@ func Gia_ManMuxProfiling(src *Gia_Man_t) {
 			continue
 		}
 		key := strings.TrimSuffix(string(vec.Vec_StrArray(text)), "\x00")
+		var inNames int32
+		util.Abc_NamStrFindOrAdd(manager.pNames, key, &inNames)
 		index, found := manager.ids[key]
 		if !found {
 			index = len(manager.names)
@@ -261,13 +293,37 @@ func Gia_ManMuxProfiling(src *Gia_Man_t) {
 	for _, top := range manager.tops {
 		total += len(top)
 	}
-	fmt.Printf("MUX structure profile for AIG \"%s\": Total MUXes=%d Total trees=%d Unique trees=%d Time=%s\n", src.pName, Gia_ManMuxNum(p), total, len(manager.tops)-1, time.Since(started))
+	fmt.Printf("MUX structure profile for AIG \"%s\":\n", src.pName)
+	fmt.Printf("Total MUXes = %d.  Total trees = %d.  Unique trees = %d.  Memory = %.2f MB   ",
+		Gia_ManMuxNum(p), total, len(manager.tops)-1, float64(util.Abc_NamMemUsed(manager.pNames))/(1<<20))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-started)
 	if Gia_ManMuxProfile(manager, 0) != 0 {
 		Gia_ManMuxProfile(manager, 1)
+		// show the first ones
+		fmt.Printf("The first %d structures: \n", 10)
 		for i := 1; i < min(len(manager.tops), 10); i++ {
-			fmt.Printf("%5d: Occur=%4d %s\n", i, len(manager.tops[i]), manager.names[i])
+			name := manager.names[i]
+			fmt.Printf("%5d : ", i)
+			fmt.Printf("Occur = %4d   ", len(manager.tops[i]))
+			fmt.Printf("Size = %4d   ", muxAtoi(name))
+			fmt.Printf("%s\n", name)
+		}
+		// print trees for the first ones
+		counter := 0
+		for i := 1; i < len(manager.tops); i++ {
+			name := manager.names[i]
+			if len(manager.tops[i]) > 5 && muxAtoi(name) > 5 {
+				fmt.Printf("For example, structure %d has %d MUXes and bit-width %d:\n", i, muxAtoi(name), len(manager.tops[i]))
+				for _, id := range manager.tops[i] {
+					Gia_MuxStructPrint(p, id)
+				}
+				if counter++; counter == 5 {
+					break
+				}
+			}
 		}
 	}
+	util.Abc_NamStop(manager.pNames)
 }
 
 // Object, incoming-edge and outgoing-edge classes used by the source's

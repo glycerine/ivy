@@ -3,6 +3,7 @@ package aiginterp
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 	"os"
@@ -77,6 +78,6 @@ func Aig_ManInterTest(graph *aig.Graph, verbose int32) error {
 		return fmt.Errorf("equal circuit copies did not refute unequal outputs")
 	}
 	solver.PrintStatistics(os.Stdout)
-	fmt.Printf("Total interpolation time = %7.2f sec\n", time.Since(start).Seconds())
+	util.Abc_PrintTime(1, "Total interpolation time", time.Since(start).Nanoseconds())
 	return nil
 }

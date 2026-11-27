@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"time"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
 // Gia_RsbEnumerateWindows constructs and optimizes reconvergent windows.
 func Gia_RsbEnumerateWindows(p *Gia_Man_t, maxInputs, maxLevels int32) {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	levels := vec.Vec_WecStart(int(Gia_ManLevelNum(p) + 1))
 	paths := vec.Vec_IntStart(int(p.nObjs))
 	refs := vec.Vec_IntStart(int(p.nObjs))
@@ -40,7 +40,10 @@ func Gia_RsbEnumerateWindows(p *Gia_Man_t, maxInputs, maxLevels int32) {
 		gain += Gia_ManAndNum(before) - Gia_ManAndNum(after)
 	}
 	denominator := float64(max(1, count))
-	fmt.Printf("Computed windows for %d nodes (out of %d). Ave inputs = %.2f. Ave outputs = %.2f. Ave volume = %.2f. Gain = %d. Time = %s\n", count, Gia_ManAndNum(p), float64(totalIns)/denominator, float64(totalOut)/denominator, float64(totalWin)/denominator, gain, time.Since(start))
+	// C keeps fUseHash = 0, so its window hash stays empty: "Unique = 0".
+	fmt.Printf("Computed windows for %d nodes (out of %d). Unique = %d. Ave inputs = %.2f. Ave outputs = %.2f. Ave volume = %.2f.  Gain = %d. ",
+		count, Gia_ManAndNum(p), 0, float64(totalIns)/denominator, float64(totalOut)/denominator, float64(totalWin)/denominator, gain)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 }
 
 func Gia_RsbTryOneWindow(p *Gia_Man_t) *Gia_Man_t { return Gia_ManResub2Test(p) }

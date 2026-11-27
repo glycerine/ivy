@@ -3,6 +3,7 @@ package framgr
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/bits"
 	"time"
@@ -110,5 +111,7 @@ func Fra_OneHotEstimateCoverage(p *Fra_Man_t, clauses *vec.Vec_Int_t) {
 	for _, word := range violations {
 		covered += bits.OnesCount32(word)
 	}
-	fmt.Printf("Care states ratio = %f. (%d out of %d patterns)  Time = %.2f sec\n", float64(words*32-covered)/float64(words*32), words*32-covered, words*32, time.Since(started).Seconds())
+	fmt.Printf("Care states ratio = %f. ", float64(words*32-covered)/float64(words*32))
+	fmt.Printf("(%d out of %d patterns)  ", words*32-covered, words*32)
+	util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds())
 }

@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 	"sort"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 // Gia_SortGetTest returns a deterministic integer input for sort benchmarks.
@@ -40,10 +41,23 @@ func minisat_sort2(values []int32, size int32) {
 }
 func Gia_SortTest() {
 	const size = 100000000
+	fmt.Printf("Sorting %d integers\n", size)
 	values := Gia_SortGetTest(size)
-	started := time.Now()
+	clk := util.Abc_Clock()
+	sort.Slice(values, func(i, j int) bool { return values[i] < values[j] })
+	util.Abc_PrintTime(1, "qsort  ", util.Abc_Clock()-clk)
+	Gia_SortVerifySorted(values, size)
+
+	values = Gia_SortGetTest(size)
+	clk = util.Abc_Clock()
+	minisat_sort(values, size, func(a, b int32) bool { return a < b })
+	util.Abc_PrintTime(1, "minisat", util.Abc_Clock()-clk)
+	Gia_SortVerifySorted(values, size)
+
+	values = Gia_SortGetTest(size)
+	clk = util.Abc_Clock()
 	minisat_sort2(values, size)
-	fmt.Printf("Go sort: %s\n", time.Since(started))
+	util.Abc_PrintTime(1, "minisat with inlined comparison", util.Abc_Clock()-clk)
 	Gia_SortVerifySorted(values, size)
 }
 

@@ -7,8 +7,9 @@ import (
 	"io"
 	"os"
 	"strconv"
-	"time"
 	"unsafe"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 const TESTCUDD_VERSION = "TestCudd Version #1.0, Release date 3/17/01"
@@ -80,6 +81,13 @@ func (b *boolFlag) Set(value string) error {
 func (b *boolFlag) String() string   { return strconv.Itoa(int(*b)) }
 func (b *boolFlag) IsBoolFlag() bool { return true }
 
+// util_cpu_time and util_print_time are CUDD's util.h timers: CPU
+// milliseconds, printed as "%ld.%02ld sec".
+func util_cpu_time() int64 { return util.Abc_Clock() / (util.CLOCKS_PER_SEC / 1000) }
+func util_print_time(t int64) string {
+	return fmt.Sprintf("%d.%02d sec", t/1000, (t%1000)/10)
+}
+
 func main() { os.Exit(runTestCudd(os.Args[1:], os.Stdout, os.Stderr)) }
 
 func testCuddUsage(out io.Writer) {
@@ -110,7 +118,7 @@ func testCuddUsage(out io.Writer) {
 }
 
 func runTestCudd(args []string, stdout, stderr *os.File) int {
-	started := time.Now()
+	startTime := util_cpu_time()
 	o, err := parseTestCuddArgs(args, stderr)
 	if err != nil {
 		if errors.Is(err, flag.ErrHelp) {
@@ -178,7 +186,7 @@ func runTestCudd(args []string, stdout, stderr *os.File) int {
 	}
 	Cudd_Quit(dd)
 	if o.pr > 0 {
-		fmt.Fprintf(stdout, "total time = %s\n", time.Since(started))
+		fmt.Fprintf(stdout, "total time = %s\n", util_print_time(util_cpu_time()-startTime))
 	}
 	if leaks != 0 {
 		return 1
@@ -265,7 +273,7 @@ func forEachHarwellMatrix(input io.Reader, dd *DdManager, o testCuddOptions, std
 
 func runMatrix(dd *DdManager, M *DdNode, x, y, xn, yn []*DdNode, nx, ny int32, o testCuddOptions, dump *os.File, stdout, stderr io.Writer) int {
 	defer Cudd_RecursiveDeref(dd, M)
-	start := time.Now()
+	lapTime := util_cpu_time()
 	maxny := ny
 	ycube := Cudd_ReadOne(dd)
 	Cudd_Ref(ycube)
@@ -297,7 +305,7 @@ func runMatrix(dd *DdManager, M *DdNode, x, y, xn, yn []*DdNode, nx, ny int32, o
 		Cudd_PrintDebug(dd, M, nx+ny, int32(o.pr))
 	}
 	if o.pr > 0 {
-		fmt.Fprintf(stdout, ":2: time to read the matrix = %s\n", time.Since(start))
+		fmt.Fprintf(stdout, ":2: time to read the matrix = %s\n", util_print_time(util_cpu_time()-lapTime))
 	}
 	C := Cudd_addBddPattern(dd, M)
 	if C == nil {

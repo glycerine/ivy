@@ -5,7 +5,6 @@ import (
 	"math/bits"
 	"os"
 	"slices"
-	"time"
 
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -30,7 +29,7 @@ func Abc_GenCountDump(primes *vec.Vec_Int_t, n int32, name string) error {
 	return file.Close()
 }
 func Abc_GenCountHits1(composite *vec.Vec_Bit_t, primes *vec.Vec_Int_t, n int32) {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	count := int64(0)
 	for _, prime := range vec.Vec_IntArray(primes) {
 		for k := int32(0); k < n; k++ {
@@ -39,7 +38,8 @@ func Abc_GenCountHits1(composite *vec.Vec_Bit_t, primes *vec.Vec_Int_t, n int32)
 			}
 		}
 	}
-	fmt.Printf("Dist1 pairs = %d. Time = %v\n", count/2, time.Since(started))
+	fmt.Printf("Dist1 pairs = %d. ", count/2)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 }
 func primeSieve(n int32) (*vec.Vec_Bit_t, *vec.Vec_Int_t) {
 	if n < 1 || n > 30 {
@@ -338,10 +338,12 @@ func Tab_ManCollectDist1(p *Tab_Man_t, distance2 int32) *vec.Vec_Int_t {
 	return result
 }
 func Tab_DecomposeTest() {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	primes := Abc_GenPrimes(20)
 	p := Tab_ManAlloc(20, int32(vec.Vec_IntSize(primes)))
 	Tab_ManStart(p, primes)
+	fmt.Printf("Created %d cubes dependent on %d variables.\n", p.nCubes, p.nVars)
 	pairs := Tab_ManCollectDist1(p, 0)
-	fmt.Printf("Created %d cubes dependent on %d variables.\nCollected %d pairs.\nTime = %v\n", p.nCubes, p.nVars, vec.Vec_IntSize(pairs)/2, time.Since(started))
+	fmt.Printf("Collected %d pairs.\n", vec.Vec_IntSize(pairs)/2)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 }

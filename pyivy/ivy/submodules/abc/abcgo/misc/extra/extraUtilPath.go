@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"math"
 	"slices"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -354,13 +354,17 @@ func graphBuildFrontier(edges, life *vec.Vec_Int_t, fronts *vec.Vec_Wec_t, verbo
 	return nodes, counts
 }
 func Abc_GraphBuildFrontier(size int32, edges, life *vec.Vec_Int_t, fronts *vec.Vec_Wec_t, verbose int32) error {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	nodes, counts := graphBuildFrontier(edges, life, fronts, verbose)
 	total := int64(0)
 	for _, c := range counts {
 		total += int64(c)
 	}
-	fmt.Printf("States = %8d   Paths = %24.0f  Time = %v\n", total, Abc_GraphCountPaths(nodes, edges), time.Since(started))
+	fmt.Printf("States = %8d   Paths = %24.0f  ", total, Abc_GraphCountPaths(nodes, edges))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	if verbose != 0 {
+		vec.Vec_IntPrint(vec.Vec_IntAllocArray(counts, len(counts)))
+	}
 	return Abc_GraphDeriveGiaDump(nodes, edges, size)
 }
 func Abc_EnumerateFrontierTest(size int32) error {

@@ -3,14 +3,14 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 // Cec_SequentialSynthesisPart computes equivalences independently for each
 // clock-domain partition and transfers them back to the original graph.
 func Cec_SequentialSynthesisPart(p *gia.Gia_Man_t, pars *Cec_ParSeq_t) int32 {
-	start := time.Now()
+	start := util.Abc_Clock()
 	domains := p.ClockDomains()
 	if domains == nil {
 		panic("cec: missing clock-domain partitions")
@@ -57,7 +57,7 @@ func Cec_SequentialSynthesisPart(p *gia.Gia_Man_t, pars *Cec_ParSeq_t) int32 {
 	}
 	Gia_ManNormalizeEquivalences(p, reprs)
 	if pars.fVerbose != 0 {
-		fmt.Printf("Total time: %s\n", time.Since(start))
+		util.Abc_PrintTime(1, "Total time", util.Abc_Clock()-start)
 	}
 	return 1
 }

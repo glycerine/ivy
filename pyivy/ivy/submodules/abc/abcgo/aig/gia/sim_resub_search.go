@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Gia_ObjSimCollect(p *Gia_SimRsbMan_t) {
@@ -88,7 +88,7 @@ func Gia_ObjSimRsb(p *Gia_SimRsbMan_t, id, limit, verbose int32, buffers, invert
 	return found
 }
 func Gia_ManSimRsb(g *Gia_Man_t, limit, verbose int32) int32 {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	p := Gia_SimRsbAlloc(g)
 	defer Gia_SimRsbFree(p)
 	Gia_ManLevelNum(g)
@@ -102,6 +102,7 @@ func Gia_ManSimRsb(g *Gia_Man_t, limit, verbose int32) int32 {
 	if Gia_ManAndNum(g) != 0 {
 		percentage = 100 * float64(count) / float64(Gia_ManAndNum(g))
 	}
-	fmt.Printf("Can resubstitute %d nodes (%.2f %% out of %d) (Bufs = %d Invs = %d)  Time: %s\n", count, percentage, Gia_ManAndNum(g), buffers, inverters, time.Since(start))
+	fmt.Printf("Can resubstitute %d nodes (%.2f %% out of %d) (Bufs = %d Invs = %d)  ", count, percentage, Gia_ManAndNum(g), buffers, inverters)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	return count
 }

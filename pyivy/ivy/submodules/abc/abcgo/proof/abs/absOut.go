@@ -2,7 +2,6 @@ package abs
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
@@ -12,7 +11,7 @@ import (
 
 // Gia_ManGlaRefine grows a gate abstraction by one layer or records a real CEX.
 func Gia_ManGlaRefine(p *gia.Gia_Man_t, cex *util.Abc_Cex_t, minCut, verbose int32) int32 {
-	start := time.Now()
+	start := util.Abc_Clock()
 	classes := gia.Gia_ManGateClasses(p)
 	if classes == nil {
 		fmt.Println("Gia_ManGlaRefine(): Abstraction gate map is missing.")
@@ -88,7 +87,8 @@ func Gia_ManGlaRefine(p *gia.Gia_Man_t, cex *util.Abc_Cex_t, minCut, verbose int
 		vec.Vec_IntWriteEntry(classes, int(id), 1)
 	}
 	if verbose != 0 {
-		fmt.Printf("Additional objects = %d.  Time: %v\n", vec.Vec_IntSize(ppis), time.Since(start))
+		util.Abc_Print(1, "Additional objects = %d.  ", vec.Vec_IntSize(ppis))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	}
 	if minCut != 0 {
 		nwk.Nwk_ManDeriveMinCut(p, verbose)

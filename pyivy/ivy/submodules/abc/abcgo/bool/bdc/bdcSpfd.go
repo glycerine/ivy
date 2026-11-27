@@ -9,7 +9,8 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 var spfdTruths = [6]uint64{0xaaaaaaaaaaaaaaaa, 0xcccccccccccccccc, 0xf0f0f0f0f0f0f0f0, 0xff00ff00ff00ff00, 0xffff0000ffff0000, 0xffffffff00000000}
@@ -475,7 +476,9 @@ func SPFDSubsetBenchmark(out io.Writer, large, small int, seed int64) error {
 	for i := range b {
 		b[i] = rng.Uint64()
 	}
-	start := time.Now()
+	// Bdc_SpfdDecomposeTest: printf( "Total = %8d.  " ) then
+	// Abc_PrintTime( 1, "Time", ... ), written to out
+	clk := util.Abc_Clock()
 	var count int
 	for _, x := range a {
 		for _, y := range b {
@@ -484,10 +487,10 @@ func SPFDSubsetBenchmark(out io.Writer, large, small int, seed int64) error {
 			}
 		}
 	}
-	if _, err := fmt.Fprintf(out, "Total = %d. Time = %s\n", count, time.Since(start)); err != nil {
+	if _, err := fmt.Fprintf(out, "Total = %8d.  Time =%9.2f sec\n", count, float64(util.Abc_Clock()-clk)/float64(util.CLOCKS_PER_SEC)); err != nil {
 		return err
 	}
-	start = time.Now()
+	clk = util.Abc_Clock()
 	count = 0
 	for _, y := range b {
 		for _, x := range a {
@@ -496,7 +499,7 @@ func SPFDSubsetBenchmark(out io.Writer, large, small int, seed int64) error {
 			}
 		}
 	}
-	_, err := fmt.Fprintf(out, "Total = %d. Time = %s\n", count, time.Since(start))
+	_, err := fmt.Fprintf(out, "Total = %8d.  Time =%9.2f sec\n", count, float64(util.Abc_Clock()-clk)/float64(util.CLOCKS_PER_SEC))
 	return err
 }
 func Bdc_SpfdDecomposeTest3() {

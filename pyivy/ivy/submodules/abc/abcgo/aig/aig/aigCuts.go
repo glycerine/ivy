@@ -3,7 +3,8 @@ package aig
 import (
 	"fmt"
 	"math/bits"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 /**CFile****************************************************************
@@ -439,7 +440,7 @@ func Aig_ComputeCuts(g *Graph, nCutsMax, nLeafMax, fTruth, fVerbose int32) *Aig_
 	if g.cutManager != nil {
 		panic("aig: graph already owns a cut manager")
 	}
-	start := time.Now()
+	start := util.Abc_Clock()
 	p := Aig_ManCutStart(g, nCutsMax, nLeafMax, fTruth, fVerbose)
 	roots := make([]Edge, 0, len(g.nodes))
 	for id := range g.nodes {
@@ -461,7 +462,9 @@ func Aig_ComputeCuts(g *Graph, nCutsMax, nLeafMax, fTruth, fVerbose int32) *Aig_
 	if fVerbose != 0 {
 		var full int32
 		total := Aig_ManCutCount(p, &full)
-		fmt.Printf("Nodes = %6d. Total cuts = %6d. %d-input cuts = %6d. Runtime = %s\n", len(roots), total, nLeafMax, full, time.Since(start))
+		fmt.Printf("Nodes = %6d. Total cuts = %6d. %d-input cuts = %6d.\n", len(roots), total, nLeafMax, full)
+		fmt.Printf("Cut size = %2d. Truth size = %2d. Total mem = %5.2f MB  ", p.nCutSize, 4*p.nTruthWords, float64(aigCutsMemUsage(g, p))/(1<<20))
+		util.Abc_PrintTime(1, "Runtime", util.Abc_Clock()-start)
 	}
 	g.cutManager = p
 	return p
@@ -483,3 +486,20 @@ func (c *Aig_Cut_t) Truth() []uint32 { return append([]uint32(nil), c.truth...) 
 
 // Valid distinguishes a computed zero-support constant cut from an unused slot.
 func (c *Aig_Cut_t) Valid() bool { return cutLive(c) }
+
+// aigCutsMemUsage is Aig_MmFixedReadMemUsage of the C cut memory: one
+// entry of nCutSize*nCutsMax bytes per CI and AND node, allocated in
+// chunks of 64 entries (Aig_MmFixedStart(..., 512)).
+func aigCutsMemUsage(g *Graph, p *Aig_ManCut_t) int64 {
+	var entries int64
+	for id := range g.nodes {
+		if g.isDeleted(id) {
+			continue
+		}
+		if kind := g.nodes[id].Kind; kind != Constant && kind != Output {
+			entries++
+		}
+	}
+	chunks := (entries + 63) / 64
+	return chunks * 64 * int64(p.nCutSize) * int64(p.nCutsMax)
+}

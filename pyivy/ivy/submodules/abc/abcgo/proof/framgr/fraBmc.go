@@ -3,7 +3,6 @@ package framgr
 // Bounded model checking of initialized frames, ported from fraBmc.c.
 import (
 	"fmt"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/util"
@@ -136,7 +135,7 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	if p.PBmc != nil {
 		panic("fra: BMC already in progress")
 	}
-	start := time.Now()
+	start := util.Abc_Clock()
 	b := Fra_BmcStart(p.PManAig, prefix, depth)
 	p.PBmc = b
 	defer func() { Fra_BmcStop(b); p.PBmc = nil }()
@@ -153,7 +152,14 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 		panic("fra: BMC frame FRAIG failed")
 	}
 	if p.PPars.FVerbose != 0 {
-		fmt.Printf("Original AIG = %d. Init %d frames = %d. Fraig = %d. Time = %s.\nBefore BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", aig.Aig_ManNodeNum(b.PAig), b.NFramesAll, aig.Aig_ManNodeNum(b.PAigFrames), aig.Aig_ManNodeNum(b.PAigFraig), time.Since(start), len(p.PCla.Constants), len(p.PCla.Classes), Fra_ClassesCountLits(p.PCla), oldImps)
+		fmt.Printf("Original AIG = %d. Init %d frames = %d. Fraig = %d.  ", aig.Aig_ManNodeNum(b.PAig), b.NFramesAll, aig.Aig_ManNodeNum(b.PAigFrames), aig.Aig_ManNodeNum(b.PAigFraig))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+		fmt.Printf("Before BMC: ")
+		fmt.Printf("Const = %5d. Class = %5d. Lit = %5d. ", len(p.PCla.Constants), len(p.PCla.Classes), Fra_ClassesCountLits(p.PCla))
+		if p.PCla.VImps != nil {
+			fmt.Printf("Imp = %5d. ", oldImps)
+		}
+		fmt.Printf("\n")
 	}
 	p.PCla.NodeIsConst = func(id int) bool { return Fra_BmcNodeIsConst(p, aig.Edge(id<<1)) != 0 }
 	p.PCla.NodesEqual = func(a, b int) bool { return Fra_BmcNodesAreEqual(p, aig.Edge(a<<1), aig.Edge(b<<1)) != 0 }
@@ -162,28 +168,37 @@ func Fra_BmcPerform(p *Fra_Man_t, prefix, depth int32) {
 	// Nil selects the ordinary simulation callbacks, as the C driver does.
 	p.PCla.NodeIsConst, p.PCla.NodesEqual = nil, nil
 	if p.PPars.FVerbose != 0 {
-		n := 0
-		if b.VImps != nil {
-			n = vec.Vec_IntSize(b.VImps)
+		fmt.Printf("After  BMC: ")
+		fmt.Printf("Const = %5d. Class = %5d. Lit = %5d. ", len(p.PCla.Constants), len(p.PCla.Classes), Fra_ClassesCountLits(p.PCla))
+		if p.PCla.VImps != nil {
+			fmt.Printf("Imp = %5d. ", vec.Vec_IntSize(p.PCla.VImps))
 		}
-		fmt.Printf("After BMC: Const = %d. Class = %d. Lit = %d. Imp = %d.\n", len(p.PCla.Constants), len(p.PCla.Classes), Fra_ClassesCountLits(p.PCla), n)
+		fmt.Printf("\n")
 	}
 }
 func Fra_BmcPerformSimple(g *aig.Graph, frames, limit, rewrite, verbose int32) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	b := Fra_BmcStart(g, 0, frames)
 	defer Fra_BmcStop(b)
 	b.PAigFrames = Fra_BmcFrames(b, 1)
 	if verbose != 0 {
-		fmt.Printf("AIG: PI/PO/Reg = %d/%d/%d. Node = %d.\nTime-frames (%d): PI/PO = %d/%d. Node = %d. Time = %s.\n", g.InputCount()-int(g.RegisterCount()), g.OutputCount()-int(g.RegisterCount()), g.RegisterCount(), aig.Aig_ManNodeNum(g), frames, b.PAigFrames.InputCount(), b.PAigFrames.OutputCount(), aig.Aig_ManNodeNum(b.PAigFrames), time.Since(start))
+		fmt.Printf("AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\n", g.InputCount()-int(g.RegisterCount()), g.OutputCount()-int(g.RegisterCount()), g.RegisterCount(), aig.Aig_ManNodeNum(g), aig.Aig_ManLevelNum(g))
+		fmt.Printf("Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  ", frames, b.PAigFrames.InputCount(), b.PAigFrames.OutputCount(), aig.Aig_ManNodeNum(b.PAigFrames), aig.Aig_ManLevelNum(b.PAigFrames))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	}
 	if rewrite != 0 {
+		start = util.Abc_Clock()
 		rewritten, err := dar.Dar_ManRwsat(b.PAigFrames, true, false)
 		if err != nil {
 			panic(err)
 		}
 		b.PAigFrames = rewritten
+		if verbose != 0 {
+			fmt.Printf("Time-frames after rewriting:  Node = %6d. Lev = %5d.  ", aig.Aig_ManNodeNum(b.PAigFrames), aig.Aig_ManLevelNum(b.PAigFrames))
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+		}
 	}
+	start = util.Abc_Clock()
 	output := Fra_FraigMiterAssertedOutput(b.PAigFrames)
 	var cex *util.Abc_Cex_t
 	if output >= 0 {
@@ -207,6 +222,11 @@ func Fra_BmcPerformSimple(g *aig.Graph, frames, limit, rewrite, verbose int32) {
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("Fraiged init frames: Time = %s.\n", time.Since(start))
+		nodes, levels := int32(-1), int32(-1)
+		if b.PAigFraig != nil {
+			nodes, levels = aig.Aig_ManNodeNum(b.PAigFraig), aig.Aig_ManLevelNum(b.PAigFraig)
+		}
+		fmt.Printf("Fraiged init frames: Node = %6d. Lev = %5d.  ", nodes, levels)
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	}
 }

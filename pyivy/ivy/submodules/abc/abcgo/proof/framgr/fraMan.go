@@ -3,6 +3,7 @@ package framgr
 // FRAIG manager setup and teardown, ported from ABC's fraMan.c.
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"os"
 	"time"
 
@@ -105,7 +106,9 @@ func Fra_ManPrint(p *Fra_Man_t) {
 	if p.PPars.FUse1Hot != 0 {
 		Fra_OneHotEstimateCoverage(p, p.VOneHots)
 	}
-	printTime := func(name string, elapsed time.Duration) { fmt.Printf("%-16s = %.2f sec\n", name, elapsed.Seconds()) }
+	printTime := func(name string, elapsed time.Duration) {
+		util.Abc_PrintTime(1, fmt.Sprintf("%-16s", name), elapsed.Nanoseconds())
+	}
 	printTime("AIG simulation", p.TimeSim)
 	printTime("AIG traversal", p.TimeTrav)
 	if p.TimeRwr != 0 {

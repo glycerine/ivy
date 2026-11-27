@@ -7,7 +7,6 @@ import (
 	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"time"
 )
 
 func Ssw_BmcUnroll_rec(p *Ssw_Frm_t, obj aig.Edge, frame int32) aig.Edge {
@@ -81,7 +80,7 @@ func Ssw_BmcDynamic(graph *aig.Graph, maxFrames, confLimit, verbose int32, lastF
 	}
 	result := int32(-1)
 	for frame := int32(0); frame < maxFrames; frame++ {
-		started := time.Now()
+		started := util.Abc_Clock()
 		for i, obj := range graph.Outputs()[:saig.Saig_ManPoNum(graph)] {
 			mapped := Ssw_BmcUnroll_rec(frm, obj, frame)
 			Ssw_CnfNodeAddToSolver(sat, aig.Aig_Regular(mapped))
@@ -91,6 +90,9 @@ func Ssw_BmcDynamic(graph *aig.Graph, maxFrames, confLimit, verbose int32, lastF
 			lit := Ssw_ObjSatNum(sat, mapped) << 1
 			if mapped.Complemented() {
 				lit |= 1
+			}
+			if verbose != 0 {
+				util.Abc_Print(1, "Solving output %2d of frame %3d ... \r", int32(i)%saig.Saig_ManPoNum(graph), int32(i)/saig.Saig_ManPoNum(graph))
 			}
 			status := sat.pSat.SolveWithSourceLimits([]bsat.Literal{lit}, int64(confLimit), 0, 0, 0)
 			if status == bsat.Unsatisfiable {
@@ -112,7 +114,9 @@ func Ssw_BmcDynamic(graph *aig.Graph, maxFrames, confLimit, verbose int32, lastF
 			break
 		}
 		if verbose != 0 {
-			fmt.Printf("Solved %2d outputs of frame %3d. Var = %8d. AIG = %9d. T = %s\n", saig.Saig_ManPoNum(graph), frame, sat.nSatVars, aig.Aig_ManNodeNum(frm.pFrames), time.Since(started))
+			util.Abc_Print(1, "Solved %2d outputs of frame %3d.  ", saig.Saig_ManPoNum(graph), frame)
+			util.Abc_Print(1, "Conf =%8.0f. Var =%8d. AIG=%9d. ", float64(sat.pSat.Statistics().Conflicts), sat.nSatVars, aig.Aig_ManNodeNum(frm.pFrames))
+			util.Abc_PrintTime(1, "T", util.Abc_Clock()-started)
 		}
 		if result != 1 {
 			break

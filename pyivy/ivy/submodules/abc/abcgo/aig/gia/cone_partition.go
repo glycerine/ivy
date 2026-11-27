@@ -2,9 +2,9 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"sort"
-	"time"
 )
 
 type Opa_Man_t struct {
@@ -280,7 +280,7 @@ func Gia_ManHashOutputs(p *Gia_Man_t, signs *Vec_Wrd_t, verbose int32) *Vec_Ptr_
 	return bins
 }
 func Gia_ManFindPoPartition(p *Gia_Man_t, shift, onlyCis, largest, verbose int32, parts **Vec_Ptr_t) *Gia_Man_t {
-	start := time.Now()
+	start := util.Abc_Clock()
 	pivots := Gia_ManFindPivots(p, shift, onlyCis, verbose)
 	signs := Gia_ManDeriveSigns(p, pivots, verbose)
 	bins := Gia_ManHashOutputs(p, signs, verbose)
@@ -290,7 +290,8 @@ func Gia_ManFindPoPartition(p *Gia_Man_t, shift, onlyCis, largest, verbose int32
 	}
 	if parts != nil {
 		*parts = bins
-		fmt.Printf("The algorithm divided %d POs into %d partitions. Time: %s\n", Gia_ManPoNum(p), vec.Vec_PtrSize(bins), time.Since(start))
+		fmt.Printf("The algorithm divided %d POs into %d partitions.   ", Gia_ManPoNum(p), vec.Vec_PtrSize(bins))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	}
 	return result
 }

@@ -4,7 +4,7 @@ package abs
 // UC Berkeley (2005). The source graph's marks and values are scratch state.
 import (
 	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/misc/util"
 
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -46,7 +46,7 @@ func Gia_ManComputeDoms(p *gia.Gia_Man_t) {
 }
 
 func Gia_ManCreateSupps(p *gia.Gia_Man_t, verbose int32) *vec.Vec_Wec_t {
-	start := time.Now()
+	start := util.Abc_Clock()
 	supports := vec.Vec_WecStart(int(gia.Gia_ManObjNum(p)))
 	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
 		id := gia.Gia_ObjId(p, gia.Gia_ManCi(p, i))
@@ -69,7 +69,7 @@ func Gia_ManCreateSupps(p *gia.Gia_Man_t, verbose int32) *vec.Vec_Wec_t {
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("Support computation: %v\n", time.Since(start))
+		util.Abc_PrintTime(1, "Support computation", util.Abc_Clock()-start)
 	}
 	return supports
 }
@@ -110,9 +110,9 @@ func Gia_ManDomTest(p *gia.Gia_Man_t) {
 }
 
 func Gia_ManTestDoms2(p *gia.Gia_Man_t) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	Gia_ManComputeDoms(p)
-	fmt.Printf("Time: %v\n", time.Since(start))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	gia.Gia_ManCleanMark1(p)
 	for i := int32(0); i < gia.Gia_ManPiNum(p); i++ {
 		gia.Gia_ObjSetMark1(gia.Gia_ManPi(p, i), 1)

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -179,16 +179,24 @@ func Abc_SuppMinimize(matrix []uint64, p *vec.Vec_Wrd_t, n, verbose int32) int32
 	return row
 }
 func Abc_SuppTest(ones, n, simple, check, verbose int32) {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	vectors := Abc_SuppGen(ones, n)
-	pairs := Abc_SuppGenPairs(vectors, n)
+	var pairs *vec.Vec_Wrd_t
 	if simple != 0 {
 		pairs = Abc_SuppGenPairs2(ones, n)
+	} else {
+		pairs = Abc_SuppGenPairs(vectors, n)
 	}
-	fmt.Printf("M = %2d N = %2d K = %6d Distinct = %8d Time = %v\n", ones, n, vec.Vec_WrdSize(vectors), vec.Vec_WrdSize(pairs), time.Since(started))
+	fmt.Printf("M = %2d  N = %2d : ", ones, n)
+	fmt.Printf("K = %6d   ", vec.Vec_WrdSize(vectors))
+	fmt.Printf("Total = %12.0f  ", 0.5*float64(vec.Vec_WrdSize(vectors))*float64(vec.Vec_WrdSize(vectors)-1))
+	fmt.Printf("Distinct = %8d  ", vec.Vec_WrdSize(pairs))
+	util.Abc_PrintTime(1, "Reduction time", util.Abc_Clock()-clk)
+	clk = util.Abc_Clock()
 	var matrix [64]uint64
 	rows := Abc_SuppMinimize(matrix[:], pairs, n, verbose)
-	fmt.Printf("Solution with %d variables found.\n", rows)
+	fmt.Printf("Solution with %d variables found.  ", rows)
+	util.Abc_PrintTime(1, "Covering time", util.Abc_Clock()-clk)
 	if check != 0 {
 		Abc_SuppVerify(vectors, matrix[:], n, rows)
 	}

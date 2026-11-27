@@ -2,6 +2,7 @@ package fra
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -90,6 +91,7 @@ func Fra_InvariantVerify(graph *aig.Graph, frames int32, ends, literals *vec.Vec
 	if baseFailures != 0 || indFailures != 0 {
 		return 0
 	}
-	fmt.Printf("Invariant verification: %d clauses verified correctly.  Time = %.2f sec\n", vec.Vec_IntSize(ends), time.Since(start).Seconds())
+	fmt.Printf("Invariant verification: %d clauses verified correctly.  ", vec.Vec_IntSize(ends))
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds())
 	return 1
 }

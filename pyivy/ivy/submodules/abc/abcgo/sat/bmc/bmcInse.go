@@ -3,8 +3,8 @@ package bmc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 // inseState packs ternary simulations into separate known-zero and known-one
@@ -193,29 +193,43 @@ func Gia_ManInsePerform(p *gia.Gia_Man_t, initial *vec.Vec_Int_t, nFrames, nWord
 		panic("bmc: invalid initial-state search")
 	}
 	nreg, npi := int(gia.Gia_ManRegNum(p)), int(gia.Gia_ManPiNum(p))
+	clkTotal := util.Abc_Clock()
+	if verbose != 0 {
+		given := "no "
+		if initial != nil {
+			given = ""
+		}
+		fmt.Printf("Running with %d frames, %d words, and %sgiven init state.\n", nFrames, nWords, given)
+	}
 	if initial == nil {
 		initial = vec.Vec_IntStart(nreg)
 	}
-	start := time.Now()
 	gia.Gia_ManRandomW(1)
 	init := vec.Vec_IntAlloc(nreg)
 	vec.Vec_IntFill(init, nreg, 2)
 	inputs := vec.Vec_IntAlloc(npi * int(nFrames))
 	state := newInseState(p, int(nWords))
 	state.init(vec.Vec_IntArray(init))
-	cost := int32(nreg)
+	cost0 := int32(nreg)
+	if verbose != 0 {
+		fmt.Printf("Frame =%6d : Values =%6d (out of %6d)\n", 0, cost0, cost0)
+	}
+	cost := cost0
 	for f := int32(0); f < nFrames; f++ {
+		clk := util.Abc_Clock()
 		state.simulate()
 		pat, c := state.best()
 		cost = c
 		state.extract(pat, init, inputs)
 		state.init(vec.Vec_IntArray(init))
 		if verbose != 0 {
-			fmt.Printf("Frame =%6d : Values =%6d (out of %6d)\n", f+1, cost, nreg)
+			fmt.Printf("Frame =%6d : Values =%6d (out of %6d)   ", f+1, cost, cost0)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		}
 	}
 	result := Gia_ManInseSimulate(p, initial, inputs, init)
-	fmt.Printf("After %d frames, found a sequence to produce %d x-values (out of %d). Total runtime: %s\n", nFrames, cost, nreg, time.Since(start))
+	fmt.Printf("After %d frames, found a sequence to produce %d x-values (out of %d).  ", nFrames, cost, nreg)
+	util.Abc_PrintTime(1, "Total runtime", util.Abc_Clock()-clkTotal)
 	return result
 }
 func Gia_ManInseTest(p *gia.Gia_Man_t, initial *vec.Vec_Int_t, nFrames, nWords, nTimeOut, fSim, verbose int32) *vec.Vec_Int_t {

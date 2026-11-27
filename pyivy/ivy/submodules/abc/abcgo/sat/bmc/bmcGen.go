@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"time"
 )
 
 // Gia_ManMoObj returns the packed simulation words for one object.
@@ -27,7 +26,7 @@ func Gia_ManTestSatEnum(p *gia.Gia_Man_t) int32 {
 	if p == nil || gia.Gia_ManCoNum(p) == 0 {
 		return 0
 	}
-	start := time.Now()
+	clk := util.Abc_Clock()
 	data, err := gia.Mf_ManGenerateCnfResult(p, 8, true, false, false)
 	if err != nil {
 		fmt.Printf("Cannot generate CNF: %v\n", err)
@@ -53,11 +52,11 @@ func Gia_ManTestSatEnum(p *gia.Gia_Man_t) int32 {
 	}
 	fmt.Println()
 	count := 0
-	var satTime time.Duration
+	var clkTotal int64
 	for i := int32(0); i < 64; i++ {
-		before := time.Now()
+		clk2 := util.Abc_Clock()
 		status := s.Solve()
-		satTime += time.Since(before)
+		clkTotal += util.Abc_Clock() - clk2
 		if status == bsat.Satisfiable {
 			fmt.Print("+")
 			count++
@@ -65,6 +64,9 @@ func Gia_ManTestSatEnum(p *gia.Gia_Man_t) int32 {
 			fmt.Print("-")
 		}
 	}
-	fmt.Printf("\nFinished generating %d assignments.  Time = %s. SAT solver time = %s.\n", count, time.Since(start), satTime)
+	fmt.Printf("\n")
+	fmt.Printf("Finished generating %d assignments.  ", count)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	util.Abc_PrintTime(1, "SAT solver time", clkTotal)
 	return 1
 }

@@ -1,8 +1,6 @@
 package abs
 
 import (
-	"time"
-
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
@@ -33,7 +31,7 @@ type Gla_Man_t struct {
 	pvRefis                                              [][]Rfn_Obj_t
 	pGia2                                                *gia.Gia_Man_t
 	pRnm                                                 *Rnm_Man_t
-	timeInit, timeSat, timeUnsat, timeCex, timeOther     time.Duration
+	timeInit, timeSat, timeUnsat, timeCex, timeOther     int64 // abctime
 }
 
 func Gla_ObjId(p *Gla_Man_t, obj *Gla_Obj_t) int32 {

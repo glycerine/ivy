@@ -3,10 +3,10 @@ package aig
 
 import (
 	"fmt"
-	"time"
 
 	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/bdd/extrab/cascade"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func Aig_NodeBddToMuxes_rec(dd *cudd.DdManager, function *cudd.DdNode, destination *Graph, mapping map[*cudd.DdNode]Edge) Edge {
@@ -158,7 +158,7 @@ func Aig_ManVecRandSubset(values []Edge, count int32) []Edge {
 }
 
 func Aig_ManSplit(p *Graph, variables, verbose int32) *Graph {
-	start := time.Now()
+	start := util.Abc_Clock()
 	if len(p.outputs)-int(p.nRegs) != 1 {
 		fmt.Println("Currently works only for one primary output.")
 		return nil
@@ -200,7 +200,8 @@ func Aig_ManSplit(p *Graph, variables, verbose int32) *Graph {
 	}()
 	result := Aig_ManConvertBddsToAigs(p, dd, cofactors)
 	if verbose != 0 {
-		fmt.Printf("Created %d cofactors (out of %d).  Time=%s\n", len(result.outputs)-int(result.nRegs), len(cofactors), time.Since(start))
+		fmt.Printf("Created %d cofactors (out of %d).  ", len(result.outputs)-int(result.nRegs), len(cofactors))
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	}
 	return result
 }

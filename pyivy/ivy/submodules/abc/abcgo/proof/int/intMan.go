@@ -3,7 +3,7 @@ package int
 // Interpolation manager lifecycle from proof/int/intMan.c.
 import (
 	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/misc/util"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/ioa"
@@ -76,7 +76,14 @@ func Inter_ManStop(p *Inter_Man_t, proved int32) {
 	}
 	if p.fVerbose != 0 {
 		p.timeOther = p.timeTotal - p.timeRwr - p.timeCnf - p.timeSat - p.timeInt - p.timeEqu
-		fmt.Printf("Runtime statistics: total %s (rewriting %s, CNF %s, SAT %s, interpolation %s, containment %s, other %s)\n", time.Duration(p.timeTotal), time.Duration(p.timeRwr), time.Duration(p.timeCnf), time.Duration(p.timeSat), time.Duration(p.timeInt), time.Duration(p.timeEqu), time.Duration(p.timeOther))
+		fmt.Printf("Runtime statistics:\n")
+		util.Abc_PrintTimeP(1, "Rewriting  ", p.timeRwr, p.timeTotal)
+		util.Abc_PrintTimeP(1, "CNF mapping", p.timeCnf, p.timeTotal)
+		util.Abc_PrintTimeP(1, "SAT solving", p.timeSat, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Interpol   ", p.timeInt, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Containment", p.timeEqu, p.timeTotal)
+		util.Abc_PrintTimeP(1, "Other      ", p.timeOther, p.timeTotal)
+		util.Abc_PrintTimeP(1, "TOTAL      ", p.timeTotal, p.timeTotal)
 	}
 	if p.vInters != nil {
 		Inter_ManInterDump(p, proved)

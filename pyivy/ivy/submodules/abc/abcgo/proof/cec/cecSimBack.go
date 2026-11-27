@@ -146,5 +146,6 @@ func Cec_ManSimBack(p *Gia_Man_t) {
 			count++
 		}
 	}
-	fmt.Printf("Obj = %6d. SAT = %6d. Time = %.2f sec\n", total, count, float64(util.Abc_Clock()-start)/1e9)
+	fmt.Printf("Obj = %6d.  SAT = %6d.  ", total, count)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 }

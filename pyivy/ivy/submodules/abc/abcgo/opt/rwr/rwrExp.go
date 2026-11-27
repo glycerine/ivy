@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"os"
 	"sort"
-	"time"
 
 	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/extra/npn"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 type Rwr_Man4_t struct {
@@ -116,11 +116,12 @@ func Rwt_Man5ExplorePrint() {
 	nn := rwrSortedTruths(p.tTableNN)
 	rwrWriteTruthCounts("nnclass_stats5.txt", nn, p.tTableNN)
 	fmt.Printf("%d classes written into file \"%s\".\n", len(nn), "nnclass_stats5.txt")
-	started := time.Now()
+	clk := util.Abc_Clock()
 	for _, truth := range nn {
 		p.tTableNPN[extra.Extra_TruthCanonNPN(truth, 5)] += p.tTableNN[truth]
 	}
-	fmt.Printf("The numbe of NPN classes = %d.\nComputing NPN classes: %v\n", len(p.tTableNPN), time.Since(started))
+	fmt.Printf("The numbe of NPN classes = %d.\n", len(p.tTableNPN))
+	util.Abc_PrintTime(1, "Computing NPN classes", util.Abc_Clock()-clk)
 	canonical := rwrSortedTruths(p.tTableNPN)
 	rwrWriteTruthCounts("npnclass_stats5.txt", canonical, p.tTableNPN)
 	fmt.Printf("%d classes written into file \"%s\".\n", len(canonical), "npnclass_stats5.txt")

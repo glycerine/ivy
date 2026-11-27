@@ -209,6 +209,7 @@ func RunSimulation(g *aig.Graph, parameters *Fsim_ParSim_t) (*SimulationResult, 
 	randomInputs()
 	result := &SimulationResult{}
 	start := time.Now()
+	clkTotal := util.Abc_Clock()
 	for frame := 0; frame < pars.Iterations; frame++ {
 		outputs, err := p.Round(cis)
 		if err != nil {
@@ -238,7 +239,14 @@ func RunSimulation(g *aig.Graph, parameters *Fsim_ParSim_t) (*SimulationResult, 
 		randomInputs()
 	}
 	if pars.Verbose {
-		fmt.Printf("FSIM: frames=%d frontier=%d objects=%d failed=%t elapsed=%s\n", result.Frames, p.Frontier, len(p.ops), result.Found, time.Since(start))
+		// Fsim_ManSimulate's closing report: the AIG program takes 12 bytes
+		// per object uncompressed, or its encoded size
+		aigMem := 12.0 * float64(len(p.ops)) / (1 << 20)
+		if p.compressed {
+			aigMem = float64(len(p.encoded)) / (1 << 20)
+		}
+		fmt.Printf("Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  ", p.CrossCut, aigMem, 4.0*float64(pars.Words*(p.Frontier+p.CIs+p.COs))/(1<<20))
+		util.Abc_PrintTime(1, "Sim time", util.Abc_Clock()-clkTotal)
 	}
 	return result, nil
 }

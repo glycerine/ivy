@@ -3,9 +3,9 @@ package sbd
 import (
 	"fmt"
 	"slices"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -30,7 +30,8 @@ type Sbd_Man_t struct {
 	seen, marks, cutBoundary, reached                               map[int32]bool
 	copies                                                          map[int32]int32
 	random                                                          *aig.AigRandomSource
-	started                                                         time.Time
+	// Abc_Clock ticks accumulated per stage, as in sbdCore.c's Sbd_Man_t
+	timeWin, timeCut, timeCov, timeCnf, timeSat, timeQbf, timeOther, timeTotal int64
 }
 
 func Sbd_ParSetDefault(p *Parameters) {
@@ -153,7 +154,7 @@ func Sbd_ManStart(network *Network, parameters *Parameters) *Sbd_Man_t {
 		panic("invalid SBD parameters")
 	}
 	count := network.Graph.NodeSlots()
-	p := &Sbd_Man_t{pPars: parameters, pGia: network, vTfos: Sbd_ManWindowRoots(network, parameters.TFOLevels, parameters.TFOFanoutMax), vLutLevs: vec.Vec_IntStart(count), vLutCuts: vec.Vec_IntStart(count * int(parameters.LUTSize+1)), vMirrors: vec.Vec_IntStartFull(count), vCover: sbdVector(), vLits: sbdVector(), vLits2: sbdVector(), vRoots: sbdVector(), vWinObjs: sbdVector(), vObj2Var: vec.Vec_IntStart(count), vDivSet: sbdVector(), vDivVars: sbdVector(), vDivValues: sbdVector(), vDivLevels: vec.Vec_WecAlloc(100), vMatrix: vec.Vec_WrdAlloc(100), random: aig.NewAigRandomSource(), started: time.Now()}
+	p := &Sbd_Man_t{pPars: parameters, pGia: network, vTfos: Sbd_ManWindowRoots(network, parameters.TFOLevels, parameters.TFOFanoutMax), vLutLevs: vec.Vec_IntStart(count), vLutCuts: vec.Vec_IntStart(count * int(parameters.LUTSize+1)), vMirrors: vec.Vec_IntStartFull(count), vCover: sbdVector(), vLits: sbdVector(), vLits2: sbdVector(), vRoots: sbdVector(), vWinObjs: sbdVector(), vObj2Var: vec.Vec_IntStart(count), vDivSet: sbdVector(), vDivVars: sbdVector(), vDivValues: sbdVector(), vDivLevels: vec.Vec_WecAlloc(100), vMatrix: vec.Vec_WrdAlloc(100), random: aig.NewAigRandomSource(), timeTotal: util.Abc_Clock()}
 	for i := range p.vSims {
 		p.vSims[i] = vec.Vec_WrdStart(count * int(parameters.SimulationWords))
 	}
@@ -204,6 +205,8 @@ func Sbd_ManPropagateControlOne(p *Sbd_Man_t, id int32) {
 	}
 }
 func Sbd_ManPropagateControl(p *Sbd_Man_t, pivot int32) {
+	clk := util.Abc_Clock()
+	defer func() { p.timeWin += util.Abc_Clock() - clk }()
 	copy(Sbd_ObjSim3(p, pivot), Sbd_ObjSim2(p, pivot))
 	position := vec.Vec_IntEntry(p.vObj2Var, int(pivot))
 	for _, id := range vec.Vec_IntArray(p.vWinObjs)[:position] {
@@ -321,6 +324,7 @@ func Sbd_ManWindowSim_rec(p *Sbd_Man_t, initial int32) {
 	}
 }
 func Sbd_ManWindow(p *Sbd_Man_t, pivot int32) int32 {
+	clk := util.Abc_Clock()
 	p.Pivot = pivot
 	p.vTfo = vec.Vec_WecEntry(p.vTfos, int(pivot))
 	vec.Vec_IntClear(p.vWinObjs)
@@ -330,6 +334,7 @@ func Sbd_ManWindow(p *Sbd_Man_t, pivot int32) int32 {
 	p.marks = map[int32]bool{}
 	Sbd_ManWindowSim_rec(p, pivot)
 	if p.pPars.WindowSizeMax != 0 && vec.Vec_IntSize(p.vWinObjs) > int(p.pPars.WindowSizeMax) {
+		p.timeWin += util.Abc_Clock() - clk
 		return 0
 	}
 	Sbd_ManUpdateOrder(p, pivot)
@@ -355,6 +360,7 @@ func Sbd_ManWindow(p *Sbd_Man_t, pivot int32) int32 {
 		vec.Vec_IntPush(p.vWinObjs, id)
 	}
 	if p.pPars.WindowSizeMax != 0 && vec.Vec_IntSize(p.vWinObjs) > int(p.pPars.WindowSizeMax) {
+		p.timeWin += util.Abc_Clock() - clk
 		return 0
 	}
 	for w := range Sbd_ObjSim2(p, pivot) {
@@ -371,11 +377,14 @@ func Sbd_ManWindow(p *Sbd_Man_t, pivot int32) int32 {
 			}
 		}
 	}
+	p.timeWin += util.Abc_Clock() - clk
 	Sbd_ManPropagateControl(p, pivot)
 	return 1
 }
 func Sbd_ManCheckConst(p *Sbd_Man_t, pivot int32) int32 {
+	clk := util.Abc_Clock()
 	p.pSat = Sbd_ManSatSolver(p.pSat, p.pGia, p.vMirrors, pivot, p.vWinObjs, p.vObj2Var, p.vTfo, p.vRoots, 0)
+	p.timeCnf += util.Abc_Clock() - clk
 	if p.pSat != nil {
 		p.pSat.SetLimits(int64(p.pPars.ConflictLimit), 0)
 	}

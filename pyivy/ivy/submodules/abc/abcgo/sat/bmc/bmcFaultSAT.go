@@ -3,6 +3,7 @@ package bmc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
@@ -166,8 +167,9 @@ func Gia_ManFaultDumpNewFaults(m *gia.Gia_Man_t, nFuncVars int32, tests, newTest
 			return 0
 		}
 	}
-	start := time.Now()
+	clk := util.Abc_Clock()
 	count := Gia_ManDumpUntests(baseGraph, base, s, nFuncVars, "newfaults.txt", params.FVerbose)
-	fmt.Printf("Dumped %d new multiple faults into file \"%s\". Time = %s\n", count, "newfaults.txt", time.Since(start))
+	fmt.Printf("Dumped %d new multiple faults into file \"%s\".  ", count, "newfaults.txt")
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	return 1
 }

@@ -4,8 +4,8 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Acec_PrintAdders(boxes *Vec_Wec_t, adds *Vec_Int_t) {
@@ -105,13 +105,15 @@ func Acec_CreateBox(p *Gia_Man_t, adds, tree *Vec_Int_t) *Acec_Box_t {
 	return box
 }
 func Acec_CreateBoxTest(p *Gia_Man_t) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	adds := Ree_ManComputeCuts(p, nil, 1)
 	n := Ree_ManCountFadds(adds)
-	fmt.Printf("Detected %d adders (%d FAs and %d HAs). Time = %v\n", vec.Vec_IntSize(adds)/6, n, int32(vec.Vec_IntSize(adds)/6)-n, time.Since(start))
-	start = time.Now()
+	fmt.Printf("Detected %d adders (%d FAs and %d HAs).  ", vec.Vec_IntSize(adds)/6, n, int32(vec.Vec_IntSize(adds)/6)-n)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+	start = util.Abc_Clock()
 	trees := Acec_TreeFindTrees(p, adds, nil, 0, 0)
-	fmt.Printf("Collected %d trees with %d adders in them. Time = %v\n", vec.Vec_WecSize(trees), vec.Vec_WecSizeSize(trees)/2, time.Since(start))
+	fmt.Printf("Collected %d trees with %d adders in them.  ", vec.Vec_WecSize(trees), vec.Vec_WecSizeSize(trees)/2)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	for i := 0; i < vec.Vec_WecSize(trees); i++ {
 		box := Acec_CreateBox(p, adds, vec.Vec_WecEntry(trees, i))
 		fmt.Printf("Processing tree %d: Ranks = %d. Adders = %d. Leaves = %d. Roots = %d.\n", i, vec.Vec_WecSize(box.vAdds), vec.Vec_WecSizeSize(box.vAdds), vec.Vec_WecSizeSize(box.vLeafLits), vec.Vec_WecSizeSize(box.vRootLits))

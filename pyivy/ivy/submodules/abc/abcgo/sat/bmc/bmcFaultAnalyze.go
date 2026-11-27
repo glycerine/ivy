@@ -2,9 +2,9 @@ package bmc
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"time"
 )
 
 // Gia_ManFaultAnalyze disables fault parameters proven impossible by SAT.
@@ -22,7 +22,7 @@ func Gia_ManFaultAnalyze(s *bsat.Solver, params, enabled, scratch *vec.Vec_Int_t
 		vec.Vec_IntPush(scratch, v)
 	}
 	pending := vec.Vec_IntArray(scratch)
-	start := time.Now()
+	clk := util.Abc_Clock()
 	runs, unsat := 0, int32(0)
 	conflicts, propagations := s.Limits()
 	s.SetLimits(100, 0)
@@ -54,6 +54,7 @@ func Gia_ManFaultAnalyze(s *bsat.Solver, params, enabled, scratch *vec.Vec_Int_t
 			disabled++
 		}
 	}
-	fmt.Printf("Iteration %3d has determined %5d (out of %5d) parameters after %6d SAT calls.  Time = %s\n", iteration, disabled, len(p), runs, time.Since(start))
+	fmt.Printf("Iteration %3d has determined %5d (out of %5d) parameters after %6d SAT calls.  ", iteration, disabled, len(p), runs)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	return unsat
 }

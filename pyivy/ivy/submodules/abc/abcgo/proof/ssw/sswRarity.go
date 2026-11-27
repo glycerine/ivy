@@ -164,16 +164,16 @@ func Ssw_RarDeriveCex(p *Ssw_RarMan_t, frame, po, pattern, verbose int32) *util.
 func TransposeTest() {
 	var a, b [64]word
 	a[0] = ^word(0)
-	start := time.Now()
+	start := util.Abc_Clock()
 	for i := 0; i < 100001; i++ {
 		transpose64Simple(a[:], b[:])
 	}
-	fmt.Printf("Time %s\n", time.Since(start))
-	start = time.Now()
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
+	start = util.Abc_Clock()
 	for i := 0; i < 100001; i++ {
 		transpose64(a[:])
 	}
-	fmt.Printf("Time %s\n", time.Since(start))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	for i := range a {
 		if a[i] != b[i] {
 			fmt.Println("Mismatch")
@@ -390,7 +390,7 @@ func Ssw_RarManObjWhichOne(p *Ssw_RarMan_t, obj aig.Edge) int32 {
 
 **********************************************************************
 */
-func Ssw_RarManCheckNonConstOutputs(p *Ssw_RarMan_t, frame int32, elapsed time.Duration) int32 {
+func Ssw_RarManCheckNonConstOutputs(p *Ssw_RarMan_t, frame int32, elapsed int64) int32 {
 	p.iFailPo = -1
 	p.iFailPat = -1
 	g := p.pAig
@@ -416,7 +416,9 @@ func Ssw_RarManCheckNonConstOutputs(p *Ssw_RarMan_t, frame int32, elapsed time.D
 			return 2
 		}
 		if p.pPars.FNotVerbose == 0 {
-			fmt.Printf("Output %d was asserted in frame %d (solved %d out of %d outputs). Time %s\n", i, frame, p.pPars.nSolved, saig.Saig_ManPoNum(g), elapsed)
+			digits := int(util.Abc_Base10Log(uint32(saig.Saig_ManPoNum(g))))
+			util.Abc_Print(1, "Output %*d was asserted in frame %4d (solved %*d out of %*d outputs).  ", digits, p.iFailPo, frame, digits, p.pPars.nSolved, digits, saig.Saig_ManPoNum(g))
+			util.Abc_PrintTime(1, "Time", elapsed)
 		}
 	}
 	if p.iFailPo >= 0 {
@@ -753,7 +755,7 @@ outer:
 				init = p.vInits
 			}
 			Ssw_RarManSimulate(p, init, 0, 0)
-			status := Ssw_RarManCheckNonConstOutputs(p, r*pars.NFrames+f, time.Since(start))
+			status := Ssw_RarManCheckNonConstOutputs(p, r*pars.NFrames+f, time.Since(start).Nanoseconds())
 			if status == 2 {
 				break outer
 			}

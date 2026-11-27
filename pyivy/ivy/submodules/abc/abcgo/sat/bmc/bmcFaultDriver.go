@@ -3,6 +3,7 @@ package bmc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
@@ -24,7 +25,7 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 		fmt.Printf("Unrecognized algorithm (%d).\n", opts.Algo)
 		return
 	}
-	start := time.Now()
+	clkTotal := util.Abc_Clock()
 	nfunc := gia.Gia_ManCiNum(p)
 	if opts.Algo == 1 {
 		nfunc = gia.Gia_ManRegNum(p) + 2*gia.Gia_ManPiNum(p)
@@ -70,8 +71,18 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 			}
 		}
 		status := solver.Solve()
-		if status != bsat.Satisfiable {
-			fmt.Printf("Fault test stopped after %d iterations (status %v).\n", iteration, status)
+		if status != bsat.Satisfiable && status != bsat.Unsatisfiable {
+			if opts.FVerbose != 0 {
+				fmt.Printf("\n")
+			}
+			fmt.Printf("Timeout reached after %d seconds and %d iterations.\n", opts.NTimeOut, iteration)
+			break
+		}
+		if status == bsat.Unsatisfiable {
+			if opts.FVerbose != 0 {
+				fmt.Printf("\n")
+			}
+			fmt.Printf("The problem is UNSAT after %d iterations.  ", iteration)
 			break
 		}
 		vec.Vec_IntClear(scratch)
@@ -101,7 +112,7 @@ func Gia_ManFaultTest(p, golden *gia.Gia_Man_t, opts *Bmc_ParFf_t) {
 		}
 	}
 	count := int32(vec.Vec_IntSize(tests)) / nfunc
-	fmt.Printf("Testing runtime: %s; %d test patterns.\n", time.Since(start), count)
+	util.Abc_PrintTime(1, "Testing runtime", util.Abc_Clock()-clkTotal)
 	if opts.FDump != 0 && count > 0 {
 		var err error
 		if opts.FDumpDelay != 0 && opts.Algo == 1 {

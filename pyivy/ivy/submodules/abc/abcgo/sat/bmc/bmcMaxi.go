@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 )
@@ -95,7 +96,8 @@ func Gia_ManMaxiPerform(p *gia.Gia_Man_t, initial *vec.Vec_Int_t, frames, timeou
 	if p == nil || gia.Gia_ManRegNum(p) == 0 || initial == nil || vec.Vec_IntSize(initial) != int(gia.Gia_ManRegNum(p)) {
 		panic("bmc: invalid maximal initialization input")
 	}
-	start := time.Now()
+	clkTotal := util.Abc_Clock()
+	var clkSat int64
 	a := Gia_ManMaxiUnfold(p, frames, 0, initial)
 	b := Gia_ManMaxiUnfold(p, frames, 1, initial)
 	m := gia.Gia_ManMiter(a, b, 0, 0, 0, 0, 0)
@@ -105,6 +107,9 @@ func Gia_ManMaxiPerform(p *gia.Gia_Man_t, initial *vec.Vec_Int_t, frames, timeou
 	enc, err := gia.Mf_ManGenerateCnfResult(m, 6, true, false, false)
 	if err != nil {
 		panic(err)
+	}
+	if verbose != 0 {
+		fmt.Printf("Running with %d frames and given init state.\n", frames)
 	}
 	solver := bsat.NewSolver()
 	for solver.NumVars() < int32(enc.Variables) {
@@ -134,23 +139,36 @@ func Gia_ManMaxiPerform(p *gia.Gia_Man_t, initial *vec.Vec_Int_t, frames, timeou
 			assumptions = append(assumptions, bsat.Negative(vars[i]))
 		}
 	}
+	printIter := func(iteration, subset int) {
+		stats := solver.Statistics()
+		fmt.Printf("Iter%6d : ", iteration)
+		fmt.Printf("Var =%10d  ", solver.NumVars())
+		fmt.Printf("Clause =%10d  ", stats.Clauses)
+		fmt.Printf("Conflict =%10d  ", stats.Conflicts)
+		fmt.Printf("Subset =%6d  ", subset)
+		util.Abc_PrintTime(1, "Time", clkSat)
+	}
+	if verbose != 0 {
+		printIter(0, len(assumptions))
+	}
 	for iteration := 0; iteration < 1000000; iteration++ {
+		clk := util.Abc_Clock()
 		status := solver.Solve(assumptions...)
+		clkSat += util.Abc_Clock() - clk
 		if status == bsat.Unknown {
-			fmt.Printf("Timeout reached after %d seconds and %d iterations.\n", timeout, iteration)
+			fmt.Printf("Timeout reached after %d seconds and %d iterations.  ", timeout, iteration)
 			break
 		}
 		if status == bsat.Satisfiable {
-			if verbose != 0 {
-				fmt.Printf("The problem is SAT after %d iterations.\n", iteration)
-			}
+			fmt.Printf("The problem is SAT after %d iterations.  ", iteration)
 			break
 		}
 		core := solver.UnsatCore()
 		if verbose != 0 {
-			fmt.Printf("Iter %d: subset = %d\n", iteration+1, len(core))
+			printIter(iteration+1, len(core))
 		}
 		if len(core) == len(assumptions) {
+			fmt.Printf("Reached fixed point with %d entries after %d iterations.  ", len(assumptions), iteration+1)
 			break
 		}
 		assumptions = assumptions[:0]
@@ -169,9 +187,7 @@ func Gia_ManMaxiPerform(p *gia.Gia_Man_t, initial *vec.Vec_Int_t, frames, timeou
 		}
 		vec.Vec_IntPush(result, v)
 	}
-	if verbose != 0 {
-		fmt.Printf("Total runtime: %s\n", time.Since(start))
-	}
+	util.Abc_PrintTime(1, "Total runtime", util.Abc_Clock()-clkTotal)
 	return result
 }
 

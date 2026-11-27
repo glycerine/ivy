@@ -5,7 +5,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"os"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func rwrForestEntry(node *Rwr_Node_t) (uint32, uint32) {
@@ -26,7 +27,7 @@ func rwrLoadEntry(p *Rwr_Man_t, first, second uint32) {
 	Rwr_ManAddNode(p, Rwr_NotCond(Rwr_NodeRef{node: a}, int32(first&1)), Rwr_NotCond(Rwr_NodeRef{node: b}, int32(second&1)), xor, level, volume+xor)
 }
 func Rwr_ManLoadFromArray(p *Rwr_Man_t, verbose int32) {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	i := 0
 	for ; ; i++ {
 		a, b := s_RwtAigSubgraphs[2*i], s_RwtAigSubgraphs[2*i+1]
@@ -36,11 +37,13 @@ func Rwr_ManLoadFromArray(p *Rwr_Man_t, verbose int32) {
 		rwrLoadEntry(p, uint32(a), uint32(b))
 	}
 	if verbose != 0 {
-		fmt.Printf("The number of classes = %d. Canonical nodes = %d.\nThe number of nodes loaded = %d.  Loading: %v\n", p.nClasses, p.nAdded, i-1, time.Since(started))
+		fmt.Printf("The number of classes = %d. Canonical nodes = %d.\n", p.nClasses, p.nAdded)
+		fmt.Printf("The number of nodes loaded = %d.  ", i-1)
+		util.Abc_PrintTime(1, "Loading", util.Abc_Clock()-clk)
 	}
 }
 func Rwr_ManWriteToArray(p *Rwr_Man_t) {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	f, err := os.Create("npn4_aig_array.txt")
 	if err != nil {
 		panic(err)
@@ -61,10 +64,11 @@ func Rwr_ManWriteToArray(p *Rwr_Man_t) {
 	if err = f.Close(); err != nil {
 		panic(err)
 	}
-	fmt.Printf("The number of nodes saved = %d.   Saving: %v\n", count, time.Since(started))
+	fmt.Printf("The number of nodes saved = %d.   ", count)
+	util.Abc_PrintTime(1, "Saving", util.Abc_Clock()-clk)
 }
 func Rwr_ManWriteToFile(p *Rwr_Man_t, path string) {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	f, err := os.Create(path)
 	if err != nil {
 		panic(err)
@@ -84,10 +88,11 @@ func Rwr_ManWriteToFile(p *Rwr_Man_t, path string) {
 	if err = f.Close(); err != nil {
 		panic(err)
 	}
-	fmt.Printf("The number of nodes saved = %d.   Saving: %v\n", count, time.Since(started))
+	fmt.Printf("The number of nodes saved = %d.   ", count)
+	util.Abc_PrintTime(1, "Saving", util.Abc_Clock()-clk)
 }
 func Rwr_ManLoadFromFile(p *Rwr_Man_t, path string) {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	f, err := os.Open(path)
 	if err != nil {
 		fmt.Printf("Rwr_ManLoadFromFile: Cannot open file \"%s\".\n", path)
@@ -105,7 +110,9 @@ func Rwr_ManLoadFromFile(p *Rwr_Man_t, path string) {
 	for i := uint32(0); i < count; i++ {
 		rwrLoadEntry(p, read(), read())
 	}
-	fmt.Printf("The number of classes = %d. Canonical nodes = %d.\nThe number of nodes loaded = %d.   Loading: %v\n", p.nClasses, p.nAdded, count, time.Since(started))
+	fmt.Printf("The number of classes = %d. Canonical nodes = %d.\n", p.nClasses, p.nAdded)
+	fmt.Printf("The number of nodes loaded = %d.   ", count)
+	util.Abc_PrintTime(1, "Loading", util.Abc_Clock()-clk)
 }
 func Rwr_ListAddToTail(head **Rwr_Node_t, node *Rwr_Node_t) { rwrAddTail(head, node) }
 func Rwr_ManGetPractical(p *Rwr_Man_t) []bool {

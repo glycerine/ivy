@@ -1,10 +1,9 @@
 package gia
 
 import (
-	"fmt"
 	"sort"
-	"time"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -58,7 +57,7 @@ func giaAllSupports(p *Gia_Man_t) [][]int32 {
 	return supports
 }
 func Gia_ManCreateNodeSupps(p *Gia_Man_t, nodes *Vec_Int_t, verbose int32) *Vec_Wec_t {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	all := giaAllSupports(p)
 	result := vec.Vec_WecStart(vec.Vec_IntSize(nodes))
 	for i, id := range vec.Vec_IntArray(nodes) {
@@ -70,7 +69,7 @@ func Gia_ManCreateNodeSupps(p *Gia_Man_t, nodes *Vec_Int_t, verbose int32) *Vec_
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("Support computation: %s\n", time.Since(start))
+		util.Abc_PrintTime(1, "Support computation", util.Abc_Clock()-clk)
 	}
 	return result
 }

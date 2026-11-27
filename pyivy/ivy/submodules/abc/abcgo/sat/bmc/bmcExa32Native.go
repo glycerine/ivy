@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"time"
 )
 
 type Exa3_Man_tV2 struct {
@@ -326,7 +325,7 @@ func Exa3_ManExactSynthesisV2(pars *Bmc_EsPar_t) {
 		fmt.Println("Invalid synthesis parameters.")
 		return
 	}
-	start := time.Now()
+	clkTotal := util.Abc_Clock()
 	truth := make([]uint64, util.Abc_TtWordNum(pars.NVars))
 	util.Abc_TtReadHex(truth, pars.PTtStr)
 	complement := int32(0)
@@ -342,20 +341,32 @@ func Exa3_ManExactSynthesisV2(pars *Bmc_EsPar_t) {
 		return
 	}
 	fmt.Printf("Running exact synthesis for %d-input function with %d %d-input LUTs...\n", p.nVars, p.nNodes, p.nLutSize)
-	for mint := int32(1); mint >= 0; {
+	mint := int32(1)
+	for i := int32(0); mint != -1; i++ {
+		clk := util.Abc_Clock()
 		if Exa3_ManAddCnfV2(p, mint) == 0 {
-			fmt.Println("The problem has no solution.")
 			break
 		}
 		status := p.pSat.Solve()
+		if pars.FVerbose != 0 {
+			stats := p.pSat.Statistics()
+			fmt.Printf("Iter %3d : ", i)
+			for k := p.nVars - 1; k >= 0; k-- {
+				fmt.Printf("%d", uint32(mint)>>uint(k)&1)
+			}
+			fmt.Printf("  Var =%5d  ", p.iVar)
+			fmt.Printf("Cla =%6d  ", stats.Clauses)
+			fmt.Printf("Conf =%9d  ", stats.Conflicts)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+		}
 		if status != bsat.Satisfiable {
-			fmt.Println("The problem has no solution.")
+			fmt.Printf("The problem has no solution.\n")
 			break
 		}
 		mint = Exa3_ManEvalV2(p)
-		if mint < 0 {
-			Exa3_ManPrintSolutionV2(p, complement)
-		}
 	}
-	fmt.Printf("Total runtime: %s\n", time.Since(start))
+	if mint == -1 {
+		Exa3_ManPrintSolutionV2(p, complement)
+	}
+	util.Abc_PrintTime(1, "Total runtime", util.Abc_Clock()-clkTotal)
 }

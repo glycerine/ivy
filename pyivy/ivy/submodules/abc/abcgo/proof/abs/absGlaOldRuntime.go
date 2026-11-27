@@ -3,7 +3,6 @@ package abs
 import (
 	"fmt"
 	"os"
-	"time"
 	"unsafe"
 
 	"github.com/glycerine/abcgo/aig/gia"
@@ -18,7 +17,7 @@ func Gla_ManStop(p *Gla_Man_t) {
 	}
 	if p.pPars.FVerbose != 0 && p.pSat != nil {
 		s := p.pSat.Statistics()
-		fmt.Printf("SAT solver: Var = %d Cla = %d Conf = %d Lrn = %d Reduce = %d Cex = %d Objs+ = %d\n", s.Variables, s.Clauses, s.Conflicts, s.Learned, p.pSat.Reductions(), p.nCexes, p.nObjAdded)
+		fmt.Printf("SAT solver:  Var = %d  Cla = %d  Conf = %d  Lrn = %d  Reduce = %d  Cex = %d  Objs+ = %d\n", s.Variables, s.Clauses, s.Conflicts, s.Learned, p.pSat.Reductions(), p.nCexes, p.nObjAdded)
 	}
 	Rnm_ManStop(p.pRnm, 0)
 	if p.pGia0 != nil {
@@ -31,7 +30,7 @@ func Gla_ManStop(p *Gla_Man_t) {
 	p.pCnf = nil
 	p.vAbs, p.vTemp, p.vAddedNew, p.vObjCounts, p.vCoreCounts, p.vProofIds = nil, nil, nil, nil, nil, nil
 }
-func Gla_ManAbsPrintFrame(p *Gla_Man_t, coreSize, frames, conflicts, cexes int32, elapsed time.Duration) {
+func Gla_ManAbsPrintFrame(p *Gla_Man_t, coreSize, frames, conflicts, cexes int32, elapsed int64) {
 	if abcmain.Abc_FrameIsBatchMode() != 0 && coreSize <= 0 {
 		return
 	}
@@ -44,7 +43,11 @@ func Gla_ManAbsPrintFrame(p *Gla_Man_t, coreSize, frames, conflicts, cexes int32
 	} else {
 		fmt.Printf("%5d", cexes)
 	}
-	fmt.Printf(" %d %d %d %9.2f sec%5.0f MB", s.Variables, s.Clauses, s.Learned, elapsed.Seconds(), (memory+proof)/(1<<20))
+	util.Abc_PrintInt(int32(s.Variables))
+	util.Abc_PrintInt(int32(s.Clauses))
+	util.Abc_PrintInt(int32(s.Learned))
+	fmt.Printf("%9.2f sec", float64(elapsed)/float64(util.CLOCKS_PER_SEC))
+	fmt.Printf("%5.0f MB", (memory+proof)/(1<<20))
 	if coreSize > 0 && cexes > 0 {
 		fmt.Println()
 	} else {
@@ -74,7 +77,7 @@ func Gla_ManReportMemory(p *Gla_Man_t) {
 		if total != 0 {
 			pct = 100 * x.value / total
 		}
-		fmt.Printf("Memory: %-9s = %10.3f MB (%6.2f %%)\n", x.name, x.value/(1<<20), pct)
+		fmt.Printf("Memory: %-9s =%10.3f MB (%6.2f %%)\n", x.name, x.value/(1<<20), pct)
 	}
 }
 func Gia_GlaSendAbsracted(p *Gla_Man_t, verbose int32) {

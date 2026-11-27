@@ -4,6 +4,7 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"time"
 )
@@ -59,7 +60,9 @@ func Sdb_StoComputeCutsDetect(g *Gia_Man_t) *Vec_Int_t {
 	}
 	if p.fVerbose != 0 {
 		fmt.Printf("Running cut computation with CutSize = %d  CutNum = %d:\n", p.nCutSize, p.nCutNum)
-		fmt.Printf("CutPair = %.0f  Merge = %.0f (%.2f %%)  Eval = %.0f (%.2f %%)  Cut = %.0f (%.2f %%)  Cut/Node = %.2f\nOver = %4d  Time = %v\n", p.CutCount[0], p.CutCount[1], 100*p.CutCount[1]/p.CutCount[0], p.CutCount[2], 100*p.CutCount[2]/p.CutCount[0], p.CutCount[3], 100*p.CutCount[3]/p.CutCount[0], p.CutCount[3]/float64(gia.Gia_ManAndNum(g)), p.nCutsOver, time.Since(p.clkStart))
+		fmt.Printf("CutPair = %.0f  Merge = %.0f (%.2f %%)  Eval = %.0f (%.2f %%)  Cut = %.0f (%.2f %%)  Cut/Node = %.2f  \nOver = %4d  ", p.CutCount[0], p.CutCount[1], 100*p.CutCount[1]/p.CutCount[0], p.CutCount[2], 100*p.CutCount[2]/p.CutCount[0], p.CutCount[3], 100*p.CutCount[3]/p.CutCount[0], p.CutCount[3]/float64(gia.Gia_ManAndNum(g)), p.nCutsOver)
+		// C: Abc_PrintTime( 0, "Time", ... ); its level is ignored (ABC_PRT prints at level 1)
+		util.Abc_PrintTime(1, "Time", time.Since(p.clkStart).Nanoseconds())
 	}
 	result := Sdb_StoIterCuts(p)
 	Sdb_StoFree(p)

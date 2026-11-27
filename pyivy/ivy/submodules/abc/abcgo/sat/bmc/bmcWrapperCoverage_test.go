@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 	"reflect"
-	"strings"
+	"regexp"
 	"testing"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -74,7 +74,9 @@ func TestLoadTestGIAOutputs(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if !strings.Contains(string(output), "Output 0: SAT") || !strings.Contains(string(output), "Output 1: UNSAT") {
+		// bmcLoad.c: "Frame%4d :  Vars = %6d  Clas = %6d  Conf = %6d  SAT    " then Abc_PrintTime
+		if !regexp.MustCompile(`(?m)^Frame   0 :  Vars = +[0-9]+  Clas = +[0-9]+  Conf = +[0-9]+  SAT    Time = +[0-9]+\.[0-9]{2} sec$`).Match(output) ||
+			!regexp.MustCompile(`(?m)^Frame   1 :  .*  UNSAT  Time = +[0-9]+\.[0-9]{2} sec$`).Match(output) {
 			t.Fatalf("mode=%d output=%q", mode, output)
 		}
 	}

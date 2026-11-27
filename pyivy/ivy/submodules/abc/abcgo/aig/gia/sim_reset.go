@@ -3,8 +3,8 @@ package gia
 import (
 	"fmt"
 	"slices"
-	"time"
 
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -33,7 +33,7 @@ func Gia_ManSimCollect(p *Gia_Man_t, obj *Gia_Obj_t, result *Vec_Int_t) {
 
 // Gia_ManSimDeriveResets counts repeated implications on register inputs.
 func Gia_ManSimDeriveResets(p *Gia_Man_t) *Vec_Int_t {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	counts := make([]int32, 2*p.nObjs)
 	super := vec.Vec_IntAlloc(1000)
 	for i := int32(0); i < Gia_ManRegNum(p); i++ {
@@ -69,7 +69,8 @@ func Gia_ManSimDeriveResets(p *Gia_Man_t) *Vec_Int_t {
 			piOnes += isPi
 		}
 	}
-	fmt.Printf("Logic0 = %d (%d). Logic1 = %d (%d). Time: %s\n", zeros, piZeros, ones, piOnes, time.Since(started))
+	fmt.Printf("Logic0 = %d (%d). Logic1 = %d (%d). ", zeros, piZeros, ones, piOnes)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	return result
 }
 

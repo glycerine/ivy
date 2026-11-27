@@ -2,15 +2,15 @@ package gia
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	dar "github.com/glycerine/abcgo/opt/dar/core"
 )
 
 type Hcd_Pars_t struct {
 	nWords, nBTLimit, nSatVarMax, fSynthesis, fPolarFlip, fSimulateTfo, fPower, fUseGia, fUseCSat, fVerbose int32
-	timeSynth                                                                                               time.Duration
+	timeSynth                                                                                               int64
 	nNodesAhead, nCallsRecycle                                                                              int32
 }
 
@@ -90,11 +90,15 @@ func Hcd_ChoiceSynthesis(g *aig.Graph, balance, update, power, verbose int32) *V
 	return result
 }
 func Hcd_ComputeChoices(g *aig.Graph, limit, synthesis, mini, verbose int32) *aig.Graph {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	snapshots := int32(1)
 	var miter *Gia_Man_t
 	if synthesis != 0 {
 		networks := Hcd_ChoiceSynthesis(aig.Aig_ManDupDfs(g), 1, 1, 0, 0)
+		if verbose != 0 {
+			util.Abc_PrintTime(1, "Synthesis time", util.Abc_Clock()-clk)
+		}
+		clk = util.Abc_Clock()
 		snapshots = int32(Vec_PtrSize(networks))
 		miter = Hcd_ManChoiceMiter(networks)
 	} else {
@@ -104,9 +108,22 @@ func Hcd_ComputeChoices(g *aig.Graph, limit, synthesis, mini, verbose int32) *ai
 	choices := Hcd_ManEquivToChoices(miter, snapshots)
 	Gia_ManSetRegNum(choices, aig.Aig_ManRegNum(g))
 	if verbose != 0 {
-		fmt.Printf("Choicing time: %s\n", time.Since(start))
+		util.Abc_PrintTime(1, "Choicing time", util.Abc_Clock()-clk)
 	}
-	return Gia_ManToAig(choices, 1)
+	result := Gia_ManToAig(choices, 1)
+	if verbose != 0 {
+		var reprs, equivs int
+		for _, edge := range result.LiveEdges() {
+			if aig.Aig_ObjRepr(result, edge) != aig.InvalidEdge {
+				reprs++
+			}
+			if aig.Aig_ObjEquiv(result, edge) != aig.InvalidEdge {
+				equivs++
+			}
+		}
+		fmt.Printf("Choices   : Reprs = %5d. Equivs = %5d. Choices = %5d.\n", reprs, equivs, aig.Aig_ManChoiceNum(result))
+	}
+	return result
 }
 func Hcd_ComputeChoicesTest(g *Gia_Man_t, limit, synthesis, mini, verbose int32) {
 	Hcd_ComputeChoices(Gia_ManToAig(g, 0), limit, synthesis, mini, verbose)

@@ -5,7 +5,6 @@ import (
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/bits"
-	"time"
 )
 
 type Gia_SimAbsMan_t struct {
@@ -49,7 +48,7 @@ func Gia_SimAbsFree(p *Gia_SimAbsMan_t) {
 	p.pTableTemp = nil
 }
 func Gia_SimAbsSolve(p *Gia_SimAbsMan_t) {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	pairs := vec.Vec_IntArray(p.vPatPairs)
 	if len(pairs)%2 != 0 {
 		panic("gia: invalid pattern pairs")
@@ -104,7 +103,17 @@ func Gia_SimAbsSolve(p *Gia_SimAbsMan_t) {
 		}
 	}
 	if p.fVerbose != 0 {
-		fmt.Printf("Solution %2d for covering problem [%5d x %5d]: %v   Time: %s\n", vec.Vec_IntSize(p.vResub), len(pairs)/2, p.nCands, vec.Vec_IntArray(p.vResub), time.Since(start))
+		fmt.Printf("Solution %2d for covering problem [%5d x %5d]: ", vec.Vec_IntSize(p.vResub), len(pairs)/2, p.nCands)
+		i := 0
+		for _, pat := range vec.Vec_IntArray(p.vResub) {
+			fmt.Printf("%6d ", pat)
+			i++
+		}
+		for ; i < 12; i++ {
+			fmt.Printf("       ")
+		}
+		fmt.Printf("   ")
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	}
 }
 func Gia_SimAbsRefine(p *Gia_SimAbsMan_t) int32 {

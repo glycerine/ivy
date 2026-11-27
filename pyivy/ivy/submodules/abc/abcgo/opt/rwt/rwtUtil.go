@@ -2,7 +2,8 @@ package rwt
 
 import (
 	"fmt"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func Rwt_ListAddToTail(list **Rwt_Node_t, node *Rwt_Node_t) {
@@ -103,7 +104,7 @@ func Rwt_ManNodeVolume(p *Rwt_Man_t, p0, p1 *Rwt_Node_t) int32 {
 }
 
 func Rwt_ManLoadFromArray(p *Rwt_Man_t, verbose int32) {
-	start := time.Now()
+	clk := util.Abc_Clock()
 	entries := 0
 	for i := 0; i+1 < len(rwtSubgraphs); i += 2 {
 		entry0, entry1 := uint32(rwtSubgraphs[i]), uint32(rwtSubgraphs[i+1])
@@ -126,7 +127,8 @@ func Rwt_ManLoadFromArray(p *Rwt_Man_t, verbose int32) {
 	}
 	if verbose != 0 {
 		fmt.Printf("The number of classes = %d. Canonical nodes = %d.\n", p.nClasses, p.nAdded)
-		fmt.Printf("The number of nodes loaded = %d. Loading = %s\n", entries, time.Since(start))
+		fmt.Printf("The number of nodes loaded = %d.  ", entries-1) // C: nEntries = i - 1
+		util.Abc_PrintTime(1, "Loading", util.Abc_Clock()-clk)
 	}
 }
 

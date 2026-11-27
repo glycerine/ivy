@@ -2,7 +2,8 @@ package exor
 
 import (
 	"fmt"
-	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func GetQCost(vars, negative int) int {
@@ -110,7 +111,15 @@ func CountQCost(m *Manager) int {
 func ReduceEsopCover(m *Manager) int {
 	before := len(m.Cubes)
 	m.Normalize()
+	iterations := 0
 	for {
+		// as C's ReduceEsopCover, one mark per pass over the cover
+		if m.Options.Verbosity == 2 {
+			iterations++
+			fmt.Printf("\nITERATION #%d\n\n", iterations)
+		} else if m.Options.Verbosity == 1 {
+			fmt.Printf(".")
+		}
 		gain := 0
 		for distance := 2; distance <= 4; distance++ {
 			gain += m.applyDistance(distance)
@@ -180,24 +189,57 @@ func Exorcism(rows [][]int32, nIns, nOuts int, path string) (*Manager, error) {
 	return Abc_ExorcismMain(rows, nIns, nOuts, path, 1, 0, 0, false)
 }
 func Abc_ExorcismMain(rows [][]int32, nIns, nOuts int, path string, quality, verbosity, maxCubes int, useQCost bool) (*Manager, error) {
+	if verbosity != 0 {
+		fmt.Printf("\nEXORCISM, Ver.4.7: Exclusive Sum-of-Product Minimizer\n")
+		fmt.Printf("by Alan Mishchenko, Portland State University, July-September 2000\n\n")
+		fmt.Printf("Incoming ESOP has %d inputs, %d outputs, and %d cubes.\n", nIns, nOuts, len(rows))
+	}
 	m, err := NewManager(nIns, nOuts, Options{quality, verbosity, maxCubes, useQCost})
 	if err != nil {
 		return nil, err
 	}
+	clk := util.Abc_Clock()
 	if err = AddCubesToStartingCover(m, rows); err != nil {
 		return nil, err
 	}
-	start := time.Now()
+	if verbosity != 0 {
+		fmt.Printf("Starting cover generation time is %.2f sec\n", ticksToSeconds(util.Abc_Clock()-clk))
+		fmt.Printf("The number of cubes in the starting cover is %d\n", len(rows))
+		fmt.Printf("Dynamically allocated memory is %dK\n", exorcismMemory(nIns, nOuts, len(rows))/1000)
+		fmt.Printf("Generating the starting cover...\n")
+		fmt.Printf("Performing minimization...\n")
+	}
+	clk = util.Abc_Clock()
 	if err = m.Minimize(); err != nil {
 		return nil, err
+	}
+	if verbosity != 0 {
+		fmt.Printf("\nMinimization time is %.2f sec\n", ticksToSeconds(util.Abc_Clock()-clk))
+		fmt.Printf("\nThe number of cubes after minimization is %d\n", len(m.Cubes))
 	}
 	if path != "" {
 		if err = WriteResultIntoFile(m, path); err != nil {
 			return nil, err
 		}
-	}
-	if verbosity != 0 {
-		fmt.Printf("EXORCISM: %d → %d cubes, %d → %d literals (%s)\n", m.Stats.CubesBefore, m.Stats.CubesAfter, m.Stats.LiteralsBefore, m.Stats.LiteralsAfter, time.Since(start))
+		if verbosity != 0 {
+			fmt.Printf("Minimized cover has been written into file <%s>\n", path)
+		}
 	}
 	return m, nil
+}
+
+// ticksToSeconds is exor.h's TICKS_TO_SECONDS: a float of Abc_Clock ticks.
+func ticksToSeconds(t int64) float32 { return float32(t) / float32(util.CLOCKS_PER_SEC) }
+
+// exorcismMemory is the byte count Exorcism() reports as "Dynamically
+// allocated memory": AllocateCover (a pointer array plus 40-byte Cube
+// records with their bit strings), AllocateCubeSets (4) and AllocateQueques
+// (two pointers and two ID bytes per place), for C's 64-bit layout.
+func exorcismMemory(nIns, nOuts, nCubes int) int {
+	wordsIn := (nIns*2 + 31) / 32
+	wordsOut := (nOuts + 31) / 32
+	alloc := nCubes + ADDITIONAL_CUBES
+	oneCube := 40 + (wordsIn+wordsOut)*4
+	places := alloc * alloc / CUBE_PAIR_FACTOR
+	return alloc*8 + alloc*oneCube + 4 + places*18
 }

@@ -382,7 +382,14 @@ func Exa3_ManPrintSolution(p *Exa3_Man_t, complement int32) {
 }
 func Exa3_ManPrint(p *Exa3_Man_t, iteration, mint int32, elapsed int64) {
 	stats := p.pSat.Statistics()
-	fmt.Printf("Iter%6d : %0*b Var =%5d Cla =%6d Conf =%9d Time = %.2f sec\n", iteration, p.nVars, mint, stats.Variables, stats.Clauses, stats.Conflicts, time.Duration(elapsed).Seconds())
+	fmt.Printf("Iter%6d : ", iteration)
+	for k := p.nVars - 1; k >= 0; k-- {
+		fmt.Printf("%d", uint32(mint)>>uint(k)&1)
+	}
+	fmt.Printf("  Var =%5d  ", stats.Variables)
+	fmt.Printf("Cla =%6d  ", stats.Clauses)
+	fmt.Printf("Conf =%9d  ", stats.Conflicts)
+	util.Abc_PrintTime(1, "Time", elapsed)
 }
 func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
 	if params == nil || params.NVars < 1 || params.NVars > 10 {
@@ -400,7 +407,7 @@ func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
 	}
 	p := Exa3_ManAlloc(params, truth)
 	defer Exa3_ManFree(p)
-	start := time.Now()
+	clkTotal := util.Abc_Clock()
 	if Exa3_ManAddCnfStart(p, params.FOnlyAnd) == 0 {
 		fmt.Println("The problem has no solution.")
 		return
@@ -432,12 +439,15 @@ func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
 		}
 		status = p.pSat.Solve()
 		if params.FVerbose != 0 && (params.FUseIncr == 0 || iteration%100 == 0) {
-			Exa3_ManPrint(p, iteration, mint, int64(time.Since(start)))
+			Exa3_ManPrint(p, iteration, mint, util.Abc_Clock()-clkTotal)
 		}
 		if status != bsat.Satisfiable {
 			break
 		}
 		mint = Exa3_ManEval(p)
+	}
+	if params.FVerbose != 0 && status != bsat.Unknown {
+		Exa3_ManPrint(p, iteration, mint, util.Abc_Clock()-clkTotal)
 	}
 	if mint == -1 {
 		Exa3_ManPrintSolution(p, complement)
@@ -446,5 +456,6 @@ func Exa3_ManExactSynthesis(params *Bmc_EsPar_t) {
 	} else {
 		fmt.Println("The problem has no solution.")
 	}
-	fmt.Printf("Added = %d. Tried = %d. Total runtime: %s\n", p.nUsed[1], p.nUsed[0], time.Since(start))
+	fmt.Printf("Added = %d.  Tried = %d.  ", p.nUsed[1], p.nUsed[0])
+	util.Abc_PrintTime(1, "Total runtime", util.Abc_Clock()-clkTotal)
 }

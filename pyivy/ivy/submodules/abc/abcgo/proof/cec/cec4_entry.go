@@ -2,7 +2,7 @@ package cec
 
 import (
 	"fmt"
-	"time"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 // Cec4_ManPerformSweeping simulates candidates and optionally performs the
@@ -51,7 +51,7 @@ func Cec4_ManSimulateTest2(graph *Gia_Man_t, verbose int32) {
 	Cec4_ManPerformSweeping(graph, &pars, nil, 0)
 	pars.FVerbose = verbose
 	if verbose != 0 {
-		fmt.Printf("New choice computation time: %s\n", time.Duration(cecCPUClock()-start))
+		util.Abc_PrintTime(1, "New choice computation time", cecCPUClock()-start)
 	}
 }
 func Cec4_ManSimulateTest3(graph *Gia_Man_t, limit, verbose int32) *Gia_Man_t {

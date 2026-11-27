@@ -4,8 +4,8 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Acec_FindXorLeaves(p *Gia_Man_t, xors, adds, roots, ranks *Vec_Int_t, outBoxes **Vec_Wec_t) *Vec_Wec_t {
@@ -137,7 +137,7 @@ func Acec_FindBox(p *Gia_Man_t, adds *Vec_Int_t, boxes, leaves *Vec_Wec_t, xorRo
 	return box
 }
 func Acec_ProduceBox(p *Gia_Man_t, verbose int32) *Acec_Box_t {
-	start := time.Now()
+	start := util.Abc_Clock()
 	var xors *Vec_Int_t
 	adds := Ree_ManComputeCuts(p, &xors, 0)
 	roots := Acec_FindXorRoots(p, xors)
@@ -145,7 +145,8 @@ func Acec_ProduceBox(p *Gia_Man_t, verbose int32) *Acec_Box_t {
 	gia.Gia_ManLevelNum(p)
 	if verbose != 0 {
 		n := Ree_ManCountFadds(adds)
-		fmt.Printf("Detected %d full-adders and %d half-adders. Found %d XOR-cuts. Time = %v\n", n, int32(vec.Vec_IntSize(adds)/6)-n, vec.Vec_IntSize(xors)/4, time.Since(start))
+		fmt.Printf("Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  ", n, int32(vec.Vec_IntSize(adds)/6)-n, vec.Vec_IntSize(xors)/4)
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	}
 	roots = Acec_OrderTreeRoots(p, adds, roots, ranks)
 	ranks = Acec_RankTrees(p, xors, roots)

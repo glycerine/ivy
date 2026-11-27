@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"os"
 	"slices"
-	"time"
 
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/opt/dau/canon"
@@ -255,13 +254,14 @@ func Gem_FuncReduce(p *Gem_Man_t, f, i, j int32) int32 {
 	return 0
 }
 func gemEnumerate(p *Gem_Man_t, progress bool) {
-	started := time.Now()
+	clk := util.Abc_Clock()
 	stop := int32(1)
 	for v := int32(1); v <= p.nVars-2; v++ {
 		previous := stop
 		stop = p.nObjs
 		if progress {
-			fmt.Printf("Expanding  var %2d (functions = %10d)  Time = %v\n", v, p.nObjs, time.Since(started))
+			fmt.Printf("Expanding  var %2d (functions = %10d)  ", v, p.nObjs)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk) // C: Abc_PrintTime( 0, ...), which prints at level 1
 		}
 		for f := int32(0); f < stop; f++ {
 			obj := p.pObjs[f]
@@ -274,7 +274,8 @@ func gemEnumerate(p *Gem_Man_t, progress bool) {
 			}
 		}
 		if progress {
-			fmt.Printf("Connecting var %2d (functions = %10d)  Time = %v\n", v, p.nObjs, time.Since(started))
+			fmt.Printf("Connecting var %2d (functions = %10d)  ", v, p.nObjs)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk) // C: Abc_PrintTime( 0, ...), which prints at level 1
 		}
 		for f := stop; f < p.nObjs; f++ {
 			obj := p.pObjs[f]
@@ -291,7 +292,8 @@ func gemEnumerate(p *Gem_Man_t, progress bool) {
 		}
 	}
 	if progress {
-		fmt.Printf("Finished          (functions = %10d)  Time = %v\n", p.nObjs, time.Since(started))
+		fmt.Printf("Finished          (functions = %10d)  ", p.nObjs)
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	}
 }
 func Gem_Enumerate(nVars, dump, verbose int32) int32 {

@@ -3,8 +3,8 @@ package extra
 import (
 	"encoding/binary"
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 /**CFile****************************************************************
@@ -144,10 +144,11 @@ func cubeEnumerate(rounds, limit int, signature, verbose bool) (counts []int, co
 	counts = []int{1}
 	beg, end := 0, 1
 	moves := cubeQuarterMoves()
-	started := time.Now()
+	clk := util.Abc_Clock()
 	if verbose {
 		fmt.Println("Enumerating states of 2x2x2 cube.")
-		fmt.Printf("Iter %2d -> %8d   Time = %v\n", 0, 1, time.Since(started))
+		fmt.Printf("Iter %2d -> %8d   ", 0, 1)
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 	}
 	for round := 1; round <= rounds; round++ {
 		if beg == end {
@@ -172,7 +173,8 @@ func cubeEnumerate(rounds, limit int, signature, verbose bool) (counts []int, co
 		beg, end = end, len(states)
 		counts = append(counts, end)
 		if verbose {
-			fmt.Printf("Iter %2d -> %8d   Time = %v\n", round, end, time.Since(started))
+			fmt.Printf("Iter %2d -> %8d   ", round, end)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		}
 	}
 	return counts, beg == end

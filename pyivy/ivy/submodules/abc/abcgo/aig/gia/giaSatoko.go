@@ -8,6 +8,8 @@ import (
 	"github.com/glycerine/abcgo/sat/satoko"
 	"os"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 type satoko_opts_t = satoko.Options
@@ -50,7 +52,7 @@ func Gia_ManSatokoReport(output, status int32, elapsed time.Duration) {
 	default:
 		fmt.Print("UNSATISFIABLE  ")
 	}
-	fmt.Printf("Time = %.2f sec\n", elapsed.Seconds())
+	util.Abc_PrintTime(1, "Time", elapsed.Nanoseconds())
 }
 func giaSatokoOptions(options *satoko.Options) satoko.Options {
 	if options == nil {
@@ -167,5 +169,5 @@ func Gia_ManSatokoCall(p *Gia_Man_t, options *satoko_opts_t, split, incremental 
 		Gia_ManSatokoCallOne(p, options, -1)
 		return
 	}
-	fmt.Printf("Total time = %.2f sec\n", time.Since(start).Seconds())
+	util.Abc_PrintTime(1, "Total time", time.Since(start).Nanoseconds())
 }

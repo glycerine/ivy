@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Gia_SimQualityPatternsMax(p *Gia_Man_t, pattern *Vec_Int_t, iteration, verbose int32, stats *Vec_Int_t) int32 {
@@ -42,7 +41,7 @@ func Gia_ManPatDistImprove(p *Gia_Man_t, verbose int32) {
 	util.Abc_Random(1)
 	var initialTotal, finalTotal float64
 	for n := int32(0); n < 64*words; n++ {
-		start := time.Now()
+		clk := util.Abc_Clock()
 		pattern := Gia_ManPatCollectOne(p, patterns, n, words)
 		initial := Gia_SimComputeScore(p, stats, Gia_SimQualityOne(p, pattern, 0))
 		initialTotal += initial
@@ -58,7 +57,8 @@ func Gia_ManPatDistImprove(p *Gia_Man_t, verbose int32) {
 		final := Gia_SimComputeScore(p, stats, Gia_SimQualityOne(p, pattern, 0))
 		finalTotal += final
 		if verbose != 0 {
-			fmt.Printf("Pat %5d : Tries = %5d  InitValue = %6.3f  FinalValue = %6.3f  Ratio = %4.2f  Time: %s\n", n, k, initial, final, final/initial, time.Since(start))
+			fmt.Printf("Pat %5d : Tries = %5d  InitValue = %6.3f  FinalValue = %6.3f  Ratio = %4.2f  ", n, k, initial, final, final/initial)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		}
 		Gia_ManPatUpdateOne(p, patterns, n, words, pattern)
 	}

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"time"
 
 	"github.com/glycerine/abcgo/bool/kit"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -158,7 +158,7 @@ func enumFunctions(variables, targets []uint32, maxGates int, verbose bool) enum
 		}
 	}
 	result.gateCounts[1] = len(variables)
-	started := time.Now()
+	clk := util.Abc_Clock()
 	for cost := 1; cost <= maxGates && (len(targets) == 0 || done < len(targets)); cost++ {
 		for a := 0; a < cost; a++ {
 			b := cost - 1 - a
@@ -201,7 +201,8 @@ func enumFunctions(variables, targets []uint32, maxGates int, verbose bool) enum
 		}
 		result.gateCounts[cost+1] = len(result.truths)
 		if verbose {
-			fmt.Printf("Finished %d gates. Truths = %10d. Time = %v\n", cost, len(result.truths), time.Since(started))
+			fmt.Printf("Finished %d gates.  Truths = %10d.  ", cost, len(result.truths))
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		}
 	}
 	return result
@@ -430,7 +431,8 @@ func Abc_EnumerateFuncs(vars, gates, verbose int32) {
 		fmt.Printf("The gate count %d is not enough to have functions with %d inputs.\n", gates, vars)
 		return
 	}
-	started := time.Now()
+	clk := util.Abc_Clock()
 	p := enumAigGraphs(vars, gates, verbose)
-	fmt.Printf("Vars = %d. Gates = %d. Tries = %d. Builds = %d. Finished = %d. Time = %v\n", vars, gates, p.nTries, p.nBuilds, p.nFinished, time.Since(started))
+	fmt.Printf("Vars = %d.  Gates = %d.  Tries = %d. Builds = %d.  Finished = %d. ", vars, gates, uint32(p.nTries), uint32(p.nBuilds), uint32(p.nFinished))
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 }

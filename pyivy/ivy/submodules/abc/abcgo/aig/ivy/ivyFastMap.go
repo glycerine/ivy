@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"slices"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 const IVY_INFINITY int32 = 10000
@@ -97,17 +99,17 @@ func Ivy_FastMapPerform(p *Ivy_Man_t, limit, recovery, verbose int32) {
 		Ivy_ObjSuppStart(p, n)
 	}
 	nodes := ivyFastMapOrder(p)
-	phase := time.Now()
+	phase := util.Abc_Clock()
 	for _, n := range nodes {
 		Ivy_FastMapNode(p, n, limit)
 	}
 	delay, area := Ivy_FastMapDelay(p), Ivy_FastMapArea(p)
 	if verbose != 0 {
-		Ivy_FastMapPrint(p, delay, area, time.Since(phase), "Delay oriented mapping")
+		Ivy_FastMapPrint(p, delay, area, util.Abc_Clock()-phase, "Delay oriented mapping: ")
 	}
 	if recovery != 0 {
 		for pass := 0; pass < 3; pass++ {
-			phase = time.Now()
+			phase = util.Abc_Clock()
 			Ivy_FastMapRequired(p, delay, 0)
 			if pass == 1 {
 				for _, n := range nodes {
@@ -118,7 +120,11 @@ func Ivy_FastMapPerform(p *Ivy_Man_t, limit, recovery, verbose int32) {
 			}
 			delay, area = Ivy_FastMapDelay(p), Ivy_FastMapArea(p)
 			if verbose != 0 {
-				Ivy_FastMapPrint(p, delay, area, time.Since(phase), fmt.Sprintf("Area recovery %d", pass+1))
+				label := "Area recovery 2       : "
+				if pass == 1 {
+					label = "Area recovery 1       : "
+				}
+				Ivy_FastMapPrint(p, delay, area, util.Abc_Clock()-phase, label)
 			}
 		}
 	}
@@ -131,8 +137,9 @@ func Ivy_FastMapStop(p *Ivy_Man_t) {
 	ivySupportManager(p)
 	p.pData = nil
 }
-func Ivy_FastMapPrint(p *Ivy_Man_t, delay, area int32, elapsed time.Duration, label string) {
-	fmt.Printf("%s : Delay = %3d. Area = %6d. Time = %s\n", label, delay, area, elapsed)
+func Ivy_FastMapPrint(p *Ivy_Man_t, delay, area int32, elapsed int64, label string) {
+	fmt.Printf("%s : Delay = %3d. Area = %6d. ", label, delay, area)
+	util.Abc_PrintTime(1, "Time", elapsed)
 }
 func Ivy_FastMapDelay(p *Ivy_Man_t) int32 {
 	var delay int32

@@ -2,6 +2,7 @@ package cec
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"runtime"
 	"sync/atomic"
 	"testing"
@@ -39,7 +40,7 @@ func TestSplitParallelSimultaneousReadySlots(t *testing.T) {
 		}
 		synchronized = true
 	}
-	status, model := splitParallelWithScanHook(g, 2, 0, 0, 1, 0, 0, 1, time.Now(), solve, hook)
+	status, model := splitParallelWithScanHook(g, 2, 0, 0, 1, 0, 0, 1, util.Abc_Clock(), solve, hook)
 	if !synchronized || status != 0 || len(model) != 1 || !model[0] {
 		t.Fatalf("synchronized=%v status=%d model=%v", synchronized, status, model)
 	}
@@ -76,7 +77,7 @@ func TestSplitParallelMaxIterChecksAfterReadyPass(t *testing.T) {
 		}
 		synchronized = true
 	}
-	status, _ := splitParallelWithScanHook(g, 2, 0, 2, 1, 0, 0, 1, time.Now(), solve, hook)
+	status, _ := splitParallelWithScanHook(g, 2, 0, 2, 1, 0, 0, 1, util.Abc_Clock(), solve, hook)
 	if !synchronized || status != -1 || deeper.Load() != 2 {
 		t.Fatalf("synchronized=%v status=%d deeper=%d", synchronized, status, deeper.Load())
 	}

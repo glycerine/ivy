@@ -4,7 +4,7 @@ package ssw
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
-	"time"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func Ssw_SignalCorrespondencePart(g *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
@@ -12,7 +12,7 @@ func Ssw_SignalCorrespondencePart(g *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 		fmt.Println("Cannot use partitioned computation with constraints.")
 		return nil
 	}
-	started := time.Now()
+	started := util.Abc_Clock()
 	partSize, verbose := pars.NPartSize, pars.FVerbose
 	pars.NPartSize = 0
 	pars.FVerbose = 0
@@ -50,7 +50,7 @@ func Ssw_SignalCorrespondencePart(g *aig.Graph, pars *Ssw_Pars_t) *aig.Graph {
 	result := aig.Aig_ManDupRepr(g, 0)
 	aig.Aig_ManSeqCleanup(result)
 	if verbose != 0 {
-		fmt.Printf("Total time: %s\n", time.Since(started))
+		util.Abc_PrintTime(1, "Total time", util.Abc_Clock()-started)
 	}
 	return result
 }

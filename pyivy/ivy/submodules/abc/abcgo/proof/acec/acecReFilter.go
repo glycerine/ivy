@@ -4,8 +4,8 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Ree_CollectInsiders_rec(p *Gia_Man_t, id int32, visited, insiders *Vec_Bit_t) {
@@ -84,9 +84,10 @@ func Ree_ManPrintAdders(adds *Vec_Int_t, verbose int32) {
 	}
 }
 func Ree_ManComputeCutsTest(p *Gia_Man_t) {
-	start := time.Now()
+	start := util.Abc_Clock()
 	adds := Ree_ManComputeCuts(p, nil, 1)
 	n := Ree_ManCountFadds(adds)
 	Ree_ManPrintAdders(adds, 1)
-	fmt.Printf("Detected %d FAs and %d HAs. Time = %v\n", n, int32(vec.Vec_IntSize(adds)/6)-n, time.Since(start))
+	fmt.Printf("Detected %d FAs and %d HAs.  ", n, int32(vec.Vec_IntSize(adds)/6)-n)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 }

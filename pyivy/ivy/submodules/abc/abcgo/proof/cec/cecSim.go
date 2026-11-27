@@ -263,6 +263,9 @@ func Cec_ManSRunTest(aig *Gia_Man_t) {
 			}
 		}
 	}
-	fmt.Printf("Detected %d CEXes. Time = %.2f sec. Sat = %.2f sec. Unsat = %.2f sec.\n", p.nCexes, float64(util.Abc_Clock()-start)/1e9, float64(p.clkSat)/1e9, float64(p.clkUnsat)/1e9)
+	fmt.Printf("Detected %d CEXes.  ", p.nCexes)
+	util.Abc_PrintTime(1, "Time ", util.Abc_Clock()-start)
+	util.Abc_PrintTime(1, "Sat  ", p.clkSat)
+	util.Abc_PrintTime(1, "Unsat", p.clkUnsat)
 	Cec_ManSStop(p)
 }

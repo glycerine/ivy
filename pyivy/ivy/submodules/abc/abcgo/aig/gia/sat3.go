@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"time"
+
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 // Gia_ManSat3Init imports ABC-encoded CNF clauses into solver 3.
@@ -33,7 +35,7 @@ func Gia_ManSat3Report(output int32, status bsat.Status, elapsed time.Duration) 
 	default:
 		fmt.Print("UNSATISFIABLE  ")
 	}
-	fmt.Printf("Time = %.2f sec\n", elapsed.Seconds())
+	util.Abc_PrintTime(1, "Time", elapsed.Nanoseconds())
 }
 func Gia_ManSat3Create(p *Gia_Man_t) *bsat.Solver {
 	return Gia_ManSat3Init(Mf_ManGenerateCnf(p, 8, 0, 1, 0, 0))
@@ -59,5 +61,5 @@ func Gia_ManSat3Call(p *Gia_Man_t, split int32) {
 	for i := int32(0); i < Gia_ManCoNum(p); i++ {
 		Gia_ManSat3CallOne(Gia_ManDupDfsCone(p, Gia_ManCo(p, i)), i)
 	}
-	fmt.Printf("Total time = %.2f sec\n", time.Since(started).Seconds())
+	util.Abc_PrintTime(1, "Total time", time.Since(started).Nanoseconds())
 }

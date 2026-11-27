@@ -3,6 +3,7 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 	"time"
@@ -87,7 +88,8 @@ func Cec_ManVerifyNaive(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
 		}
 		unsat++
 	}
-	fmt.Printf("UNSAT = %6d.  SAT = %6d.   UNDEC = %6d.  Trivial = %6d.  Time = %8.2f sec\n", unsat, sat, undec, trivial, time.Since(started).Seconds())
+	fmt.Printf("UNSAT = %6d.  SAT = %6d.   UNDEC = %6d.  Trivial = %6d.  ", unsat, sat, undec, trivial)
+	util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds())
 	if sat > 0 {
 		return 0
 	}

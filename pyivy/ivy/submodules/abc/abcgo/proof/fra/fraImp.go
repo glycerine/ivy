@@ -5,6 +5,7 @@ package fra
 // fraImpSimulation.go.
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"math/bits"
 	"sort"
 	"time"
@@ -156,7 +157,8 @@ func Fra_ImpDerive(p *Fra_Man_t, maxLimit, useLimit, latchCorr int32) *vec.Vec_I
 	sort.SliceStable(values, func(i, j int) bool { return fraImpMaxID(values[i]) < fraImpMaxID(values[j]) })
 	if p.PPars.FVerbose != 0 {
 		fmt.Printf("Implications: All = %d. Try = %d. NonSeq = %d. Comb = %d. Res = %d.\n", total, tried, nonSeq, combTrue, collected)
-		fmt.Printf("Implication weight: Min = %d. Pivot = %d. Max = %d. Time = %.2f sec\n", minCost, pivot, maxCost, time.Since(started).Seconds())
+		fmt.Printf("Implication weight: Min = %d. Pivot = %d. Max = %d.   ", minCost, pivot, maxCost)
+		util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds())
 	}
 	return imps
 }

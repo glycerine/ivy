@@ -4,8 +4,8 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"time"
 )
 
 func Acec_DetectXorBuildNew(p *Gia_Man_t, roots *Vec_Int_t) *Gia_Man_t {
@@ -29,7 +29,7 @@ func Acec_DetectXorBuildNew(p *Gia_Man_t, roots *Vec_Int_t) *Gia_Man_t {
 }
 
 func Acec_DetectAdditional(p *Gia_Man_t, verbose int32) *Gia_Man_t {
-	start := time.Now()
+	start := util.Abc_Clock()
 	roots := Acec_CollectXorTops(p)
 	var dst *Gia_Man_t
 	count := 0
@@ -40,6 +40,7 @@ func Acec_DetectAdditional(p *Gia_Man_t, verbose int32) *Gia_Man_t {
 	} else {
 		dst = gia.Gia_ManDup(p)
 	}
-	fmt.Printf("Detected %d top XORs.  Time = %v\n", count, time.Since(start))
+	fmt.Printf("Detected %d top XORs.  ", count)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-start)
 	return dst
 }
