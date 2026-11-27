@@ -129,3 +129,15 @@ func TestReadBenchLutsLikeNative(t *testing.T) {
 	runScript(t, "read ../../../i10.aig; strash; short_names; if -K 6; write_bench "+bench)
 	nativeWriterCase(t, "read "+bench+"; strash; write_aiger %F", "aig", regexp.MustCompile(`This file was written by ABC on [^\n]*\n`), nil)
 }
+
+// TestWriteBafLikeNative: Io_WriteBaf writes a dated comment, the counts
+// and names, then the ANDs (CIs numbered from 1, then ANDs in id order,
+// fanins in stored order) and the COs with latch init bits.
+func TestWriteBafLikeNative(t *testing.T) {
+	nativeWriterCase(t, "read ../../../i10.aig; strash; write_baf %F", "baf", regexp.MustCompile(`# BAF \(Binary Aig Format\) for [^\n]*\n`), func(b []byte) string {
+		if !bytes.HasPrefix(b, []byte("# BAF (Binary Aig Format) for \"")) {
+			return "missing ABC's BAF comment"
+		}
+		return ""
+	})
+}
