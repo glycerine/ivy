@@ -18,7 +18,22 @@ type bddAutoReorder struct{}
 // autoReorderCheck is called when a BDD node is created.
 func (dd *DdManager) autoReorderCheck() {
 	if dd.autoDyn && dd.autoGuard > 0 && dd.autoDynSafe > 0 && !dd.inAutoReorder &&
-		dd.unique.count+dd.addUnique.count-dd.dead >= int(dd.nextDyn) {
+		dd.liveBDDKeys() >= int(dd.nextDyn) {
+		// reorder here, with the recursion's pending results referenced as
+		// in C, then unwind and restart the operation
+		pending := append([]*DdNode(nil), dd.inflight...)
+		for _, n := range pending {
+			Cudd_Ref(n)
+		}
+		dd.inAutoReorder = true
+		Cudd_ReduceHeap(dd, dd.autoMethod, 10)
+		dd.inAutoReorder = false
+		for _, n := range pending {
+			Cudd_RecursiveDeref(dd, n)
+		}
+		if dd.liveBDDKeys() >= int(dd.nextDyn) {
+			dd.updateNextDyn() // a skipped reordering must not loop
+		}
 		panic(bddAutoReorder{})
 	}
 }
@@ -30,17 +45,10 @@ func (dd *DdManager) withAutoReorder(op func() *DdNode) *DdNode {
 		return op()
 	}
 	for {
+		dd.inflight = dd.inflight[:0]
 		r, restart := dd.guardedOp(op)
 		if !restart {
 			return r
-		}
-		dd.inAutoReorder = true
-		Cudd_ReduceHeap(dd, dd.autoMethod, 10)
-		dd.inAutoReorder = false
-		// a reordering skipped below minsize leaves the threshold; raise it
-		// so the restarted operation does not trigger again at once
-		if dd.unique.count+dd.addUnique.count-dd.dead >= int(dd.nextDyn) {
-			dd.updateNextDyn()
 		}
 	}
 }
@@ -62,7 +70,8 @@ func (dd *DdManager) guardedOp(op func() *DdNode) (r *DdNode, restart bool) {
 
 // updateNextDyn is Cudd_ReduceHeap's threshold update after a reordering.
 func (dd *DdManager) updateNextDyn() {
-	next := uint32((dd.unique.count + dd.addUnique.count + 1) * DD_DYN_RATIO)
+	// nextDyn = (keys - constants.keys + 1) * DD_DYN_RATIO + constants.keys
+	next := uint32((dd.unique.count+dd.addUnique.count+1)*DD_DYN_RATIO + len(dd.constants))
 	if dd.reorderings < 20 || next > dd.nextDyn {
 		dd.nextDyn = next
 	} else {

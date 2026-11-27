@@ -89,9 +89,10 @@ type DdManager struct {
 	allocationAttempt                 *bddAllocationAttempt
 	reorderMethod                     Cudd_ReorderingType
 	autoDyn, autoDynZdd               bool
-	autoGuard                         int  // nesting of guarded BDD operations
-	autoDynSafe                       int  // nesting of reference-safe regions
-	inAutoReorder                     bool // an automatic reordering is running
+	autoGuard                         int       // nesting of guarded BDD operations
+	autoDynSafe                       int       // nesting of reference-safe regions
+	inflight                          []*DdNode // cofactor results C keeps referenced in its recursions
+	inAutoReorder                     bool      // an automatic reordering is running
 	autoMethod, autoMethodZdd         Cudd_ReorderingType
 	realignBdd, realignZdd            bool
 	minHit, maxGrowthAlt              float64
@@ -675,11 +676,21 @@ func (dd *DdManager) iteChecked(f, g, h *DdNode, check func() bool) *DdNode {
 	if t == nil {
 		return nil
 	}
+	track := dd.autoDynSafe > 0 // cuddRef(t), cuddRef(e) as cuddBddIteRecur
+	if track {
+		dd.inflight = append(dd.inflight, t)
+	}
 	e := dd.iteChecked(fe, ge, he, check)
 	if e == nil {
 		return nil
 	}
+	if track {
+		dd.inflight = append(dd.inflight, e)
+	}
 	n := dd.node(uint32(dd.InvPerm[level]), t, e)
+	if track {
+		dd.inflight = dd.inflight[:len(dd.inflight)-2]
+	}
 	dd.cacheInsert(key, n, hash)
 	return Cudd_NotCond(n, invert)
 }

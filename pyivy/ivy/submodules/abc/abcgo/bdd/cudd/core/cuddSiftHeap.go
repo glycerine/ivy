@@ -21,6 +21,7 @@ type siftHeap struct {
 	swaps    int     // ddTotalNumberSwapping
 	roots    []siftEdge
 	next     []int // symmetry groups by level (symmetric sifting)
+	consts   int   // constants.keys: C's keys (and objective) include them
 }
 
 // siftEdge is a node id shifted left once, with the complement in bit 0.
@@ -58,7 +59,7 @@ func (h *siftHeap) dec(e siftEdge) {
 
 func (h *siftHeap) indexOf(e siftEdge) int32 { return h.nodes[siftReg(e)].index }
 
-func (h *siftHeap) cost() int { return h.keys - h.isolated }
+func (h *siftHeap) cost() int { return h.keys + h.consts - h.isolated }
 
 // newSiftNode adds a node with one reference (cuddDynamicAllocNode).
 func (h *siftHeap) newSiftNode(index int32, t, e siftEdge) int32 {
@@ -318,7 +319,7 @@ func (h *siftHeap) sifting(lower, upper int, dd *DdManager) {
 func newSiftHeap(h *reorderHeap) *siftHeap {
 	scratch := h.dd
 	n := len(scratch.Vars)
-	s := &siftHeap{n: n, perm: append([]int(nil), scratch.Perm[:n]...), invperm: append([]int(nil), scratch.InvPerm[:n]...)}
+	s := &siftHeap{consts: h.liveConstants, n: n, perm: append([]int(nil), scratch.Perm[:n]...), invperm: append([]int(nil), scratch.InvPerm[:n]...)}
 	s.levels = make([]siftLevel, n)
 	for l := range s.levels {
 		s.levels[l].uniq = map[[2]siftEdge]int32{}

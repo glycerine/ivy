@@ -26,6 +26,9 @@ type reorderHeap struct {
 	incoming     map[*DdNode]int
 	levels       []int
 	cost         int
+	// liveConstants are the live manager's constants (CUDD's
+	// constants.keys, part of table->keys)
+	liveConstants int
 }
 
 func (dd *DdManager) liveReorderRoots() reorderRoots {
@@ -419,6 +422,7 @@ func Cudd_ReduceHeap(dd *DdManager, method Cudd_ReorderingType, minsize int) int
 	roots := dd.liveReorderRoots()
 	order := append([]int(nil), dd.InvPerm...)
 	heap := reorderBuild(dd, roots, order)
+	heap.liveConstants = len(dd.constants)
 	if len(heap.nodes) < minsize {
 		return 1
 	}

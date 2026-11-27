@@ -255,11 +255,21 @@ func (dd *DdManager) andChecked(f, g *DdNode, check func() bool) *DdNode {
 	if t == nil {
 		return nil
 	}
+	track := dd.autoDynSafe > 0 // cuddRef(t), cuddRef(e) as cuddBddAndRecur
+	if track {
+		dd.inflight = append(dd.inflight, t)
+	}
 	e := dd.andChecked(fe, ge, check)
 	if e == nil {
 		return nil
 	}
+	if track {
+		dd.inflight = append(dd.inflight, e)
+	}
 	r := dd.node(index, t, e)
+	if track {
+		dd.inflight = dd.inflight[:len(dd.inflight)-2]
+	}
 	if !dd.singleBDDRef(fr) || !dd.singleBDDRef(gr) {
 		dd.cacheInsert(key, r, hash)
 	}
