@@ -25,7 +25,6 @@ import (
 	"reflect"
 	"sort"
 	"strings"
-	"unsafe"
 )
 
 type Vec_Ptr_t struct{ data []any }
@@ -175,7 +174,7 @@ func Vec_PtrMemory(p *Vec_Ptr_t) float64 {
 	if p == nil {
 		return 0
 	}
-	return float64(cap(p.data)*int(unsafe.Sizeof(uintptr(0))) + int(unsafe.Sizeof(*p)))
+	return float64(8*cap(p.data) + 16) // vecPtr.h: sizeof(void *)*nCap + sizeof(Vec_Ptr_t)
 }
 func Vec_PtrCountZero(p *Vec_Ptr_t) int {
 	n := 0

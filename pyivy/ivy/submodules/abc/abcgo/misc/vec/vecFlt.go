@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math"
 	"sort"
-	"unsafe"
 )
 
 // Vec_Flt_t stores its live entries in one slice; capacity is derived.
@@ -60,7 +59,7 @@ func Vec_FltMemory(p *Vec_Flt_t) float64 {
 	if p == nil {
 		return 0
 	}
-	return float64(4*cap(p.data) + int(unsafe.Sizeof(*p)))
+	return float64(4*cap(p.data) + 16) // vecFlt.h: sizeof(float)*nCap + sizeof(Vec_Flt_t)
 }
 func Vec_FltEntry(p *Vec_Flt_t, i int) float32         { return p.data[i] }
 func Vec_FltEntryP(p *Vec_Flt_t, i int) *float32       { return &p.data[i] }

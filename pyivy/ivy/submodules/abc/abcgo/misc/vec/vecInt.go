@@ -84,7 +84,7 @@ func Vec_IntMemory(p *Vec_Int_t) float64 {
 	if p == nil {
 		return 0
 	}
-	return float64(4*cap(p.data) + int(unsafe.Sizeof(*p)))
+	return float64(4*cap(p.data) + 16) // vecInt.h: sizeof(int)*nCap + sizeof(Vec_Int_t)
 }
 func Vec_IntEntry(p *Vec_Int_t, i int) int32         { return p.data[i] }
 func Vec_IntEntryP(p *Vec_Int_t, i int) *int32       { return &p.data[i] }

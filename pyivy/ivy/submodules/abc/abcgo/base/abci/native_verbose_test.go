@@ -26,6 +26,8 @@ var nativeVerboseScripts = []string{
 	"logic; sweep -v",
 	"renode; sop; fx -v",
 	"renode -v",
+	"&get; &b -v",
+	"&get; &ps; &st; &ps; &synch2; &ps; &if -K 6; &ps",
 }
 
 var verboseTimes = regexp.MustCompile(`[0-9.]* sec`)
