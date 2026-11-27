@@ -364,8 +364,10 @@ func If_ManSetupSet(p *If_Man_t, set *If_Set_t) {
 	set.nCuts = 0
 	set.nCutsMax = int16(p.pPars.NCutsMax)
 	set.ppCuts = make([]*If_Cut_t, int(set.nCutsMax)+1)
+	// one block of records per set, as ABC lays a set out in memory
+	cuts := make([]If_Cut_t_, len(set.ppCuts))
 	for i := range set.ppCuts {
-		cut := &If_Cut_t_{}
+		cut := &cuts[i]
 		If_CutSetup(p, cut)
 		set.ppCuts[i] = cut
 	}
