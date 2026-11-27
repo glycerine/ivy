@@ -86,8 +86,11 @@ func parsePLADocument(filename, text string) (*plaDocument, error) {
 			doc.outputNames = append([]string(nil), fields[1:]...)
 			continue
 		}
+		if len(fields) == 1 {
+			return nil, blifReadErrorf("%s (line %d): Wrong number of token.", filename, line.number)
+		}
 		if len(fields) != 2 {
-			return nil, blifError(filename, line, "expected input and output cubes")
+			return nil, blifReadErrorf("%s (line %d): Input and output cubes are not specified.", filename, line.number)
 		}
 		doc.rows = append(doc.rows, plaRow{inputs: fields[0], outputs: fields[1], line: line})
 	}
@@ -102,10 +105,10 @@ func parsePLADocument(filename, text string) (*plaDocument, error) {
 	}
 	for _, row := range doc.rows {
 		if len(row.inputs) != doc.nInputs {
-			return nil, blifError(filename, row.line, "input cube length %d differs from .i count %d", len(row.inputs), doc.nInputs)
+			return nil, blifReadErrorf("%s (line %d): Input cube length (%d) differs from the number of inputs (%d).", filename, row.line.number, len(row.inputs), doc.nInputs)
 		}
 		if len(row.outputs) != doc.nOutputs {
-			return nil, blifError(filename, row.line, "output cube length %d differs from .o count %d", len(row.outputs), doc.nOutputs)
+			return nil, blifReadErrorf("%s (line %d): Output cube length (%d) differs from the number of outputs (%d).", filename, row.line.number, len(row.outputs), doc.nOutputs)
 		}
 		for i, c := range row.inputs {
 			if c != '0' && c != '1' && c != '-' {
