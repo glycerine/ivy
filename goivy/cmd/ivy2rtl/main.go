@@ -27,7 +27,7 @@ func main() {
 		target = strings.TrimSuffix(source, filepath.Ext(source)) + ".il"
 	}
 	if err := goivy.WriteRTLIL(source, target); err != nil {
-		fmt.Fprintf(os.Stderr, "ivy_to_rtl: %v\n", err)
+		fmt.Fprintf(os.Stderr, "ivy2rtl: %v\n", err)
 		os.Exit(1)
 	}
 	fmt.Fprintf(os.Stderr, "wrote %s\n", target)
