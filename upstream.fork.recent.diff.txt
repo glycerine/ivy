@@ -11,6 +11,11 @@ Date:   Fri Oct 30 05:03:35 2026 -0500
     Add comment
 ~~~
 
+for details, see these two files:
+NEW_STUFF_PORTPLAN.md
+NEW_STUFF_PYIVY.md
+
+
 analysis date: 2026 Sept 25
 ===========================
 
