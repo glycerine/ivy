@@ -14,8 +14,9 @@ func TestGiaCutConeChoiceAndCleanup(t *testing.T) {
 	root := If_ManCreateAnd(p, a, c)
 	alternative := If_ManCreateAnd(p, a, If_Not(b))
 	root.pEquiv = alternative
-	root.CutBest = If_Cut_t{nLeaves: 2, pLeaves: []int32{a.Id, b.Id}, dataInt: 97}
-	a.CutBest.dataInt, b.CutBest.dataInt = 42, 43
+	root.CutBest = If_Cut_t{nLeaves: 2, pLeaves: []int32{a.Id, b.Id}, ext: &ifCutExt{dataInt: 97}}
+	If_CutSetDataInt(&a.CutBest, 42)
+	If_CutSetDataInt(&b.CutBest, 43)
 	dst := Gia_ManStart(12)
 	leaves := Vec_IntAlloc(2)
 	Vec_IntPush(leaves, Gia_ManAppendCi(dst))
@@ -53,7 +54,7 @@ func TestGiaCutConeChoiceAndCleanup(t *testing.T) {
 			Gia_ManHashStop(dst)
 		}
 	}
-	if root.CutBest.dataInt != 97 || a.CutBest.dataInt != 42 || b.CutBest.dataInt != 43 {
+	if If_CutDataInt(&root.CutBest) != 97 || If_CutDataInt(&a.CutBest) != 42 || If_CutDataInt(&b.CutBest) != 43 {
 		t.Fatal("cut scratch data changed")
 	}
 	root.pEquiv = nil

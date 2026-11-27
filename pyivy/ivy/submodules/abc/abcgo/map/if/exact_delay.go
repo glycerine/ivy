@@ -40,7 +40,7 @@ func ifCutExactDelay(p *If_Man_t, obj *If_Obj_t, cut *If_Cut_t) float32 {
 	delay := evaluate(If_CutTruthW(p, cut), int32(cut.nLeaves), If_CutArrTimeProfile(p, cut), If_CutPerm(cut), &cost, If_ManCutAigDelay(p, obj, cut))
 	if cost == abcutil.ABC_INFINITY {
 		for pin := range If_CutPerm(cut)[:cut.nLeaves] {
-			cut.permutation[pin] = IF_BIG_CHAR
+			cut.ext.permutation[pin] = IF_BIG_CHAR
 		}
 		cut.Cost, cut.fUseless = IF_COST_MAX, 1
 	}

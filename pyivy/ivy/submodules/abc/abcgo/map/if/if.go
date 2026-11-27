@@ -252,10 +252,31 @@ type If_Cut_t_ struct {
 	pLeaves                                []int32
 	// leafBuf keeps up to ifInlineLeaves leaves next to the cut header, as
 	// ABC stores them after the record; pLeaves points into it when it fits.
-	leafBuf     [ifInlineLeaves]int32
+	leafBuf [ifInlineLeaves]int32
+	// ext holds the fields few mappings use (pin-delay permutation, user
+	// data), keeping the record merging and filtering touch small
+	ext *ifCutExt
+}
+
+type ifCutExt struct {
 	permutation []byte
 	data        any
 	dataInt     int32
+}
+
+func (c *If_Cut_t) extension() *ifCutExt {
+	if c.ext == nil {
+		c.ext = &ifCutExt{}
+	}
+	return c.ext
+}
+
+// perm is the cut's pin-delay permutation (nil when none was made).
+func (c *If_Cut_t) perm() []byte {
+	if c.ext == nil {
+		return nil
+	}
+	return c.ext.permutation
 }
 
 type If_Set_t_ struct {
@@ -433,10 +454,11 @@ func If_CutLeafBit(pCut *If_Cut_t, i int32) int32 { return int32((pCut.uMaskFunc
 // If_CutPerm exposes the source cut's writable pin-delay bytes. Allocate this
 // separate Go storage only for callers that use it, rather than for every cut.
 func If_CutPerm(pCut *If_Cut_t) []byte {
-	if len(pCut.permutation) < int(pCut.nLeaves) {
-		pCut.permutation = append(pCut.permutation, make([]byte, int(pCut.nLeaves)-len(pCut.permutation))...)
+	if len(pCut.perm()) < int(pCut.nLeaves) {
+		e := pCut.extension()
+		e.permutation = append(e.permutation, make([]byte, int(pCut.nLeaves)-len(e.permutation))...)
 	}
-	return pCut.permutation
+	return pCut.perm()
 }
 
 // If_CutCopy copies src into dst's own leaf storage (ABC memcpy's the
@@ -447,13 +469,18 @@ func If_CutCopy(_ *If_Man_t, dst, src *If_Cut_t) {
 	}
 	leaves := ifCutLeafStorage(dst, len(src.pLeaves))
 	leaves = append(leaves, src.pLeaves...)
-	permutation := append([]byte(nil), src.permutation...)
+	var ext *ifCutExt
+	if src.ext != nil {
+		e := *src.ext
+		e.permutation = append([]byte(nil), e.permutation...)
+		ext = &e
+	}
 	*dst = *src
 	if cap(leaves) <= ifInlineLeaves && len(leaves) <= ifInlineLeaves {
 		leaves = dst.leafBuf[:len(leaves):ifInlineLeaves]
 		copy(leaves, src.pLeaves)
 	}
-	dst.pLeaves, dst.permutation = leaves, permutation
+	dst.pLeaves, dst.ext = leaves, ext
 }
 
 const ifInlineLeaves = 8
@@ -491,10 +518,20 @@ func If_ObjSetArrTime(pObj *If_Obj_t, ArrTime float32) { If_ObjCutBest(pObj).Del
 func If_ObjLValue(pObj *If_Obj_t) float32           { return pObj.LValue }
 func If_ObjSetLValue(pObj *If_Obj_t, value float32) { pObj.LValue = value }
 
-func If_CutData(pCut *If_Cut_t) any               { return pCut.data }
-func If_CutSetData(pCut *If_Cut_t, data any)      { pCut.data = data }
-func If_CutDataInt(pCut *If_Cut_t) int32          { return pCut.dataInt }
-func If_CutSetDataInt(pCut *If_Cut_t, data int32) { pCut.dataInt = data }
+func If_CutData(pCut *If_Cut_t) any {
+	if pCut.ext == nil {
+		return nil
+	}
+	return pCut.ext.data
+}
+func If_CutSetData(pCut *If_Cut_t, data any) { pCut.extension().data = data }
+func If_CutDataInt(pCut *If_Cut_t) int32 {
+	if pCut.ext == nil {
+		return 0
+	}
+	return pCut.ext.dataInt
+}
+func If_CutSetDataInt(pCut *If_Cut_t, data int32) { pCut.extension().dataInt = data }
 
 func If_CutTruthLit(pCut *If_Cut_t) int32 {
 	assert(pCut.iCutFunc >= 0, "pCut.iCutFunc >= 0")

@@ -1252,11 +1252,11 @@ func If_CutDelayLutStruct(p *If_Man_t, c *If_Cut_t, structure string, wireDelay 
 		delays[i] = If_ManObj(p, id).CutBest.Delay
 	}
 	if n <= max(sizes[0], sizes[1]) {
-		c.permutation = make([]byte, n)
+		c.extension().permutation = make([]byte, n)
 		g := If_Grp_t{nVars: n}
 		for i := int32(0); i < n; i++ {
 			g.pVars[i] = i
-			c.permutation[i] = 1
+			c.ext.permutation[i] = 1
 		}
 		return 1 + If_CluDelayMax(&g, delays)
 	}

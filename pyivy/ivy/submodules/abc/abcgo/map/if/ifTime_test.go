@@ -76,7 +76,7 @@ func TestCutAndUserAndLiftedTiming(t *testing.T) {
 	}
 	c.fAndCut = 0
 	c.fUser = 1
-	c.permutation = []byte{3, 1, 2}
+	c.extension().permutation = []byte{3, 1, 2}
 	if If_CutDelay(p, nil, c) != 8 {
 		t.Fatal("user pin delay")
 	}

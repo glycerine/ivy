@@ -139,7 +139,7 @@ func TestSopDelayManagerMetadataAndSingleLut(t *testing.T) {
 	if If_CutSopBalancePinDelays(p, c, permutation) != delay {
 		t.Fatal("manager pin profiles")
 	}
-	if sop := If_CutDelaySop(p, c); sop < 0 || len(c.permutation) != 3 || c.Cost != 3 {
+	if sop := If_CutDelaySop(p, c); sop < 0 || len(c.perm()) != 3 || c.Cost != 3 {
 		t.Fatal("gate-level SOP cost", sop, c.Cost)
 	}
 	if lut := If_CutLutBalanceEval(p, c); lut != times[2]+1 || c.Cost != 1 {

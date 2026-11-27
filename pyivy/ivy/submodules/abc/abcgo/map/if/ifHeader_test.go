@@ -22,17 +22,17 @@ func TestComplementProxyIsInvolutiveAndStable(t *testing.T) {
 func TestCutCopyOwnsVariableLengthStorage(t *testing.T) {
 	source := &If_Cut_t_{
 		nLimit: 6, nLeaves: 3, pLeaves: []int32{2, 5, 8},
-		permutation: []byte{1, 0, 2}, data: "source", dataInt: 9,
+		ext: &ifCutExt{permutation: []byte{1, 0, 2}, data: "source", dataInt: 9},
 	}
 	var dest If_Cut_t_
 	If_CutCopy(nil, &dest, source)
 	dest.pLeaves[0] = 99
-	dest.permutation[0] = 99
-	dest.data = "destination"
-	if source.pLeaves[0] != 2 || source.permutation[0] != 1 || source.data != "source" {
+	dest.ext.permutation[0] = 99
+	dest.ext.data = "destination"
+	if source.pLeaves[0] != 2 || source.ext.permutation[0] != 1 || source.ext.data != "source" {
 		t.Fatal("cut copy aliases source storage")
 	}
-	if dest.dataInt != 9 || dest.nLeaves != 3 || dest.nLimit != 6 {
+	if If_CutDataInt(&dest) != 9 || dest.nLeaves != 3 || dest.nLimit != 6 {
 		t.Fatalf("cut metadata changed during copy: %+v", dest)
 	}
 }

@@ -166,7 +166,7 @@ func TestClusteringNativeCacheAndStructDelay(t *testing.T) {
 	if delay := If_CutDelayLutStruct(p, cut, "44", 0); delay != 5 {
 		t.Fatal("single LUT delay", delay)
 	}
-	if len(cut.permutation) != 4 {
+	if len(cut.perm()) != 4 {
 		t.Fatal("delay profile not stored")
 	}
 	if If_CutPerformCheck16(p, []uint32{0x88888888, 0x88888888}, 6, 2, "33") != 1 {

@@ -57,7 +57,7 @@ func TestGiaCutConeEquivalentChoicesAndPhases(t *testing.T) {
 					snapshot := make([]int32, If_ManObjNum(p))
 					for id := range snapshot {
 						snapshot[id] = int32(100 + id)
-						If_ManObj(p, int32(id)).CutBest.dataInt = snapshot[id]
+						If_CutSetDataInt(&If_ManObj(p, int32(id)).CutBest, snapshot[id])
 					}
 					dst := gia.Gia_ManStart(24)
 					defer gia.Gia_ManStop(dst)
@@ -74,7 +74,7 @@ func TestGiaCutConeEquivalentChoicesAndPhases(t *testing.T) {
 							t.Fatal("valid equivalent alternative was not found")
 						}
 						for id, want := range snapshot {
-							if If_ManObj(p, int32(id)).CutBest.dataInt != want {
+							if If_CutDataInt(&If_ManObj(p, int32(id)).CutBest) != want {
 								t.Fatalf("cut scratch%d changed", id)
 							}
 						}
@@ -105,7 +105,7 @@ func TestGiaCutConeFailureDoesNotPoisonLaterSearch(t *testing.T) {
 	a, b, c := If_ManCreateCi(p), If_ManCreateCi(p), If_ManCreateCi(p)
 	partial := If_ManCreateAnd(p, a, b)
 	root := If_ManCreateAnd(p, a, cutConeReviewConsensus(p, b, c))
-	root.CutBest = If_Cut_t{nLeaves: 2, pLeaves: []int32{a.Id, b.Id}, dataInt: 77}
+	root.CutBest = If_Cut_t{nLeaves: 2, pLeaves: []int32{a.Id, b.Id}, ext: &ifCutExt{dataInt: 77}}
 	dst := gia.Gia_ManStart(16)
 	defer gia.Gia_ManStop(dst)
 	leaves := vec.Vec_IntAllocArrayCopy([]int32{gia.Gia_ManAppendCi(dst), gia.Gia_ManAppendCi(dst)}, 2)
@@ -115,7 +115,7 @@ func TestGiaCutConeFailureDoesNotPoisonLaterSearch(t *testing.T) {
 			t.Fatalf("unsupported cone returned%d", got)
 		}
 	})
-	if out != "Gia_ManNodeIfToGia(): Computing local AIG has failed.\n" || root.CutBest.dataInt != 77 {
+	if out != "Gia_ManNodeIfToGia(): Computing local AIG has failed.\n" || If_CutDataInt(&root.CutBest) != 77 {
 		t.Fatal("failure diagnostic or scratch preservation changed")
 	}
 	root.pEquiv = partial

@@ -94,7 +94,7 @@ func TestRecordedPinStorageDoesNotSlowOrdinaryTiming(t *testing.T) {
 	defer If_ManStop(p)
 	var delay float32
 	allocations := testing.AllocsPerRun(20, func() {
-		cut.permutation = nil
+		cut.ext = nil
 		delay = If_CutDelay(p, nil, cut)
 	})
 	if delay != 8 || allocations != 0 {

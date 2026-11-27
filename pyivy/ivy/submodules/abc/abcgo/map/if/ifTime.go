@@ -21,7 +21,7 @@ func If_CutSortInputPins(p *If_Man_t, c *If_Cut_t, permutation []int32, delays [
 }
 func ifTimingPinDelays(p *If_Man_t, c *If_Cut_t, reconstruct bool) []byte {
 	if !reconstruct {
-		return c.permutation
+		return c.perm()
 	}
 	var function func(*If_Man_t, *If_Cut_t, []byte) int32
 	switch {
@@ -32,7 +32,7 @@ func ifTimingPinDelays(p *If_Man_t, c *If_Cut_t, reconstruct bool) []byte {
 	case p.pPars.FDsdBalance != 0:
 		function = If_CutDsdBalancePinDelays
 	default:
-		return c.permutation
+		return c.perm()
 	}
 	permutation := make([]byte, c.nLeaves)
 	delay := function(p, c, permutation)
@@ -84,7 +84,7 @@ func If_CutDelay(p *If_Man_t, _ *If_Obj_t, c *If_Cut_t) float32 {
 		return maximum
 	}
 	// Timing reads an existing profile; ordinary cuts need no pin storage.
-	permutation := c.permutation
+	permutation := c.perm()
 	for pin := int32(0); pin < int32(c.nLeaves); pin++ {
 		arrival := If_ObjCutBest(If_CutLeaf(p, c, pin)).Delay
 		delay := float32(1)
