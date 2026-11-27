@@ -33,6 +33,8 @@ var nativeVerboseScripts = []string{
 	"fraig -v",
 	"&get; &sweep -v",
 	"ifraig -v",
+	"permute -S 3; print_io",
+	"permute -S 7 -i; print_io",
 	"&get; &dch -v",
 	"if -K 6; mfs -v",
 	"if -K 6; lutpack -v",

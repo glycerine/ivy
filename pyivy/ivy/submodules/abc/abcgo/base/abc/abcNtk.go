@@ -1,9 +1,9 @@
 package abc
 
 import (
+	"github.com/glycerine/abcgo/misc/util"
 	"bufio"
 	"fmt"
-	"math/rand"
 	"os"
 	"sort"
 	"strconv"
@@ -589,7 +589,7 @@ func Abc_NtkPermute(n *Network, inputs, outputs, flops int32, file string) {
 		}
 		if flags[group] != 0 {
 			for i := range order {
-				k := rand.Intn(len(order))
+				k := int(util.C_Rand() % uint32(len(order))) // rand() % n
 				order[i], order[k] = order[k], order[i]
 				perm[i], perm[k] = perm[k], perm[i]
 			}

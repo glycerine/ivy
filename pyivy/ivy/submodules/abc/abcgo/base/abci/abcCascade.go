@@ -4,6 +4,7 @@ package abci
 // src/base/abci/abcCascade.c. The four pure partition primitives live in
 // cascade_partition.go and are shared with their source-derived tests.
 import (
+	"github.com/glycerine/abcgo/misc/util"
 	"fmt"
 	"math/bits"
 	"sync"
@@ -57,11 +58,8 @@ func (rng *cascadeCRand) next() uint32 {
 	return value >> 1
 }
 
-func cascadeRandN(n int) int {
-	cascadeRandState.Lock()
-	defer cascadeRandState.Unlock()
-	return int(cascadeRandState.rng.next() % uint32(n))
-}
+// cascadeRandN is rand() % n on ABC's process-wide rand() stream.
+func cascadeRandN(n int) int { return int(util.C_Rand() % uint32(n)) }
 
 func Abc_ResBuildBdd(n *Abc_Ntk_t, dd *core.DdManager) *core.DdNode {
 	if n == nil || dd == nil || abc.Abc_NtkIsSopLogic(n) == 0 || abc.Abc_NtkCoNum(n) > 3 {

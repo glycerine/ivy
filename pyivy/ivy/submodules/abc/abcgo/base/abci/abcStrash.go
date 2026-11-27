@@ -1,6 +1,7 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/misc/util"
 	"fmt"
 	"io"
 	"os"
@@ -30,11 +31,8 @@ func strashNodeCopy(n *abc.Network, o *abc.Object) {
 	strashSetCopy(o, abc.Abc_AigAnd(strashAig(n), strashCopyChild(o, 0), strashCopyChild(o, 1)))
 }
 
-func abcStrashRandBit() uint32 {
-	cascadeRandState.Lock()
-	defer cascadeRandState.Unlock()
-	return cascadeRandState.rng.next() & 1
-}
+// abcStrashRandBit is rand() & 1 on ABC's process-wide rand() stream.
+func abcStrashRandBit() uint32 { return util.C_Rand() & 1 }
 
 func abcHopChildCopy(node *Hop_Obj_t, index int) abc.Edge {
 	var child *Hop_Obj_t

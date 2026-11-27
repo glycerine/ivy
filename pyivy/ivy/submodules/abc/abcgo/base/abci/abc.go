@@ -74,7 +74,6 @@ import (
 	xsat "github.com/glycerine/abcgo/sat/xsat"
 	"io"
 	"math"
-	"math/rand"
 	"strconv"
 	"strings"
 	"time"
@@ -19548,11 +19547,11 @@ func Abc_CommandInit(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 
 	} else if fRandom != 0 {
-		rand.Seed(time.Now().Unix())
+		util.C_Srand(uint32(time.Now().Unix())) // srand( time(NULL) )
 		for i := int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 			pObj = Abc_NtkObj(pNtk, i)
 			if pObj != nil && baseabc.Abc_ObjIsLatch(pObj) != 0 {
-				if rand.Intn(2) != 0 {
+				if util.C_Rand()&1 != 0 {
 					baseabc.Abc_LatchSetInit1(pObj)
 				} else {
 					baseabc.Abc_LatchSetInit0(pObj)
@@ -23014,7 +23013,7 @@ func Abc_CommandPermute(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		}
 	}
 	if Seed >= 0 {
-		rand.Seed(int64(Seed))
+		util.C_Srand(uint32(Seed)) // srand( (unsigned)Seed )
 	}
 	if pNtk == nil {
 		Abc_Print(-1, "Empty network.\n")

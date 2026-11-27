@@ -2,8 +2,8 @@ package sim
 
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"math/bits"
-	"math/rand/v2"
 )
 
 func Sim_UtilInfoAlloc(size, words int, _ bool) Info {
@@ -56,7 +56,7 @@ func Sim_UtilCountOnesArray(p Info, n int) []int {
 }
 func Sim_UtilSetRandom(p []uint32, n int) {
 	for i := range p[:n] {
-		p[i] = rand.Uint32()
+		p[i] = (util.C_Rand() << 24) ^ (util.C_Rand() << 12) ^ util.C_Rand() // SIM_RANDOM_UNSIGNED
 	}
 }
 func Sim_UtilSetCompl(p []uint32, n int) {
