@@ -1,6 +1,7 @@
 package abc
 
 import (
+	"bytes"
 	"fmt"
 	"sort"
 	"strings"
@@ -140,11 +141,127 @@ func Vec_StrSelectSortCost2(columns []string, count int32, counts []int32, permu
 		*permutation = append(*permutation, int32(index))
 	}
 }
+
+// fanOrderScratch holds orderFanColumnsFast's reusable buffers.
+type fanOrderScratch struct {
+	columns []byte
+	counts  []int
+	last    []int
+	text    []byte
+}
+
+// orderFanColumnsFast is orderFanColumns on the SOP bytes of one node in
+// ABC's layout (nVars literals, a space, the output, a newline per cube):
+// no per-row or per-column strings, and the text and fanins are rewritten
+// only when the order changes. It reports false (doing nothing) for any
+// other layout, which the general path then handles.
+func orderFanColumnsFast(o *Object, mode int, sc *fanOrderScratch) bool {
+	text, ok := o.Data.(string)
+	if !ok {
+		return false
+	}
+	if i := strings.IndexByte(text, 0); i >= 0 {
+		text = text[:i]
+	}
+	vars := len(o.fanins)
+	width := vars + 3
+	if vars == 0 || len(text) == 0 || len(text)%width != 0 {
+		return false
+	}
+	cubes := len(text) / width
+	polarity := text[vars+1]
+	for c := 0; c < cubes; c++ {
+		row := text[c*width : (c+1)*width]
+		if row[vars] != ' ' || row[vars+1] != polarity || row[vars+2] != '\n' {
+			return false
+		}
+		if out := row[vars+1]; out != '0' && out != '1' && out != 'x' && out != 'n' {
+			return false
+		}
+		for _, ch := range []byte(row[:vars]) {
+			if ch != '-' && ch != '0' && ch != '1' {
+				return false
+			}
+		}
+	}
+	sc.columns = append(sc.columns[:0], make([]byte, vars*cubes)...)
+	sc.counts = append(sc.counts[:0], make([]int, vars)...)
+	sc.last = append(sc.last[:0], make([]int, vars)...)
+	columns, counts, last := sc.columns, sc.counts, sc.last
+	for v := 0; v < vars; v++ {
+		col := columns[v*cubes : (v+1)*cubes]
+		for c := 0; c < cubes; c++ {
+			ch := text[c*width+v]
+			col[c] = ch
+			if ch != '-' {
+				counts[v]++
+				last[v] = c
+			}
+		}
+	}
+	if mode == 2 {
+		for v := range counts {
+			if counts[v] == 1 {
+				counts[v] = last[v]
+			} else {
+				counts[v] = int(^uint(0) >> 1)
+			}
+		}
+	}
+	column := func(v int) []byte { return columns[v*cubes : (v+1)*cubes] }
+	order := fanPermutation(vars, func(a, b int) bool {
+		if mode == 2 {
+			return counts[a] < counts[b]
+		}
+		if mode == 1 && counts[a] != counts[b] {
+			return counts[a] < counts[b]
+		}
+		return bytes.Compare(column(a), column(b)) < 0
+	})
+	identity := true
+	for i, v := range order {
+		if i != v {
+			identity = false
+			break
+		}
+	}
+	if identity {
+		o.Data = text // as the general path, without anything past a NUL
+		return true
+	}
+	o.network.detachAnd(o)
+	ordered := make([]Edge, vars)
+	for i, index := range order {
+		ordered[i] = o.fanins[index]
+	}
+	o.replaceFanins(ordered)
+	sc.text = append(sc.text[:0], text...)
+	for c := 0; c < cubes; c++ {
+		row := sc.text[c*width:]
+		src := text[c*width:]
+		for i, index := range order {
+			row[i] = src[index]
+		}
+	}
+	o.Data = string(sc.text)
+	return true
+}
+
 func orderFanColumns(n *Network, mode int) {
+	var sc fanOrderScratch
 	for _, o := range n.ObjectsOfKind(ObjectNode) {
 		if o.Barrier {
 			continue
 		}
+		if !orderFanColumnsFast(o, mode, &sc) {
+			orderFanColumnsNode(o, mode)
+		}
+	}
+}
+
+// orderFanColumnsNode is the general path for one node.
+func orderFanColumnsNode(o *Object, mode int) {
+	{
 		rows := fanNodeRows(o)
 		variables := len(o.fanins)
 		columns := make([]string, variables)
