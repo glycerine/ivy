@@ -117,16 +117,7 @@ are so many bugs left un-addressed after many years in the original python Ivy
 bothering to report further fixes. See [the end of this
 README.md for a couple of notable (critical) bugs](#bug-fixes-of-interest-to-python-ivy).
 
-The file https://github.com/glycerine/ivy/blob/master/goivy/UPSTREAM_FIXES.md
-summarizes the current differences of GoIvy from the upstream python Ivy.
-
-In short, we try to make GoIvy as correct as possible while omitting
-upstream features that are under active research development.
-We thus avoid moving targets that detract from making the Ivy language
-and approach more broadly usable. Hence we have not yet added ivy_to_vmt,
-hardware register/wire syntax, trace replay, dervied invariants, 
-and using/patdef. The upstream python Ivy is open source and you
-will need to use it to experiment with those features.
+In short, we try to make GoIvy as correct as possible.
 
 GoIvy installation steps:
 
