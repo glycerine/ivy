@@ -8,7 +8,6 @@ import (
 
 	baseabc "github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/vec"
-	"github.com/glycerine/abcgo/opt/sim"
 )
 
 /**CFile****************************************************************
@@ -2011,18 +2010,22 @@ func saucyFindTopologicalOrder(pNtk *Abc_Ntk_t) []*Vec_Ptr_t {
 	return nodes
 }
 
+// saucyGetDependencies is getDependencies (abcSaucy.c): each output's
+// input dependencies are its functional support from Sim_ComputeFunSupp.
 func saucyGetDependencies(pNtk *Abc_Ntk_t, iDep, oDep []*Vec_Int_t) {
-	supports := sim.Sim_ComputeFunSuppSource(baseabc.Abc_NtkStrashToGia(pNtk), false)
-	for output := range supports {
-		for input := 0; input < int(baseabc.Abc_NtkPiNum(pNtk)); input++ {
-			if sim.Sim_HasBit(supports[output], input) {
-				Vec_IntPushOrder(oDep[output], int32(input))
+	supports := Sim_ComputeFunSupp(pNtk, 0)
+	nPis, nPos := baseabc.Abc_NtkPiNum(pNtk), baseabc.Abc_NtkPoNum(pNtk)
+	for output := int32(0); output < nPos; output++ {
+		bits := Vec_PtrEntry(supports, output).([]uint32)
+		for input := int32(0); input < nPis; input++ {
+			if symHasBit(bits, input) {
+				Vec_IntPushOrder(oDep[output], input)
 			}
 		}
 	}
-	for output := range supports {
+	for output := int32(0); output < nPos; output++ {
 		for j := int32(0); j < Vec_IntSize(oDep[output]); j++ {
-			Vec_IntPush(iDep[Vec_IntEntry(oDep[output], j)], int32(output))
+			Vec_IntPush(iDep[Vec_IntEntry(oDep[output], j)], output)
 		}
 	}
 }
