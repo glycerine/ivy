@@ -1,0 +1,15 @@
+Words: Random = 64. Dynamic = 64. Used = 0. Memory = 2.02 MB.
+Proof = 328. Counter-example = 24. Fail = 0. FailReal = 0. Zero = 31.
+Nodes: Final = 2506. Total = 2899. Mux = 242. (Exor = 139.) ClaVars = 1218.
+C solver (2843 vars; 5468 clauses; 82 learned):
+starts        : 49
+conflicts     : 107
+decisions     : 546
+propagations  : 9695
+inspects      : 46081
+AIG simulation   =    sec
+AIG traversal    =    sec
+Solver feedback  =    sec
+SAT solving      =    sec
+Network update   =    sec
+TOTAL RUNTIME    =    sec

@@ -69,7 +69,9 @@ func Msat_ClauseCreate(p *Msat_Solver_t, v *Msat_IntVec_t, learnt int, out **Msa
 		}
 		c.lits[1], c.lits[best] = c.lits[best], c.lits[1]
 		Msat_SolverClaBumpActivity(p, c)
-		for _, lit := range lits {
+		// msatClause.c bumps the caller's literals (pLits), in their order;
+		// the clause's own copy has the second watch swapped in.
+		for _, lit := range v.data {
 			Msat_SolverVarBumpActivity(p, lit)
 		}
 	}

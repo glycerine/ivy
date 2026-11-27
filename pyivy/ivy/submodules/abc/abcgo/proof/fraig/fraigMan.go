@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"unsafe"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/sat/msat"
@@ -166,19 +165,21 @@ func Fraig_ManCreateSolver(p *Fraig_Man_t) {
 	p.vVarsUsed = msat.Msat_SolverReadVarsUsed(p.pSat)
 }
 func Fraig_ManPrintStats(p *Fraig_Man_t) {
-	memory := float64(Fraig_NodeVecReadSize(p.vInputs)+Fraig_NodeVecReadSize(p.vNodes)) * float64(unsafe.Sizeof(Fraig_Node_t{})+uintptr(4*(p.nWordsRand+p.nWordsDyna))) / (1 << 20)
+	// ABC's x86-64 sizeof(Fraig_Node_t) is 160
+	memory := float64(Fraig_NodeVecReadSize(p.vInputs)+Fraig_NodeVecReadSize(p.vNodes)) * float64(160+4*(p.nWordsRand+p.nWordsDyna)) / (1 << 20)
 	fmt.Printf("Words: Random = %d. Dynamic = %d. Used = %d. Memory = %0.2f MB.\n", p.nWordsRand, p.nWordsDyna, p.iWordPerm, memory)
 	fmt.Printf("Proof = %d. Counter-example = %d. Fail = %d. FailReal = %d. Zero = %d.\n", p.nSatProof, p.nSatCounter, p.nSatFails, p.nSatFailsReal, p.nSatZeros)
 	fmt.Printf("Nodes: Final = %d. Total = %d. Mux = %d. (Exor = %d.) ClaVars = %d.\n", Fraig_CountNodes(p, 0), Fraig_NodeVecReadSize(p.vNodes), Fraig_ManCountMuxes(p), Fraig_ManCountExors(p), p.nVarsClauses)
 	if p.pSat != nil {
 		msat.Msat_SolverPrintStats(p.pSat)
 	}
-	for _, item := range []struct {
+	// Fraig_PrintTime: "%s = " then "%6.2f sec"; time1..time4 only when set
+	for i, item := range []struct {
 		name  string
 		value int64
-	}{{"AIG simulation", p.timeSims}, {"AIG traversal", p.timeTrav}, {"Solver feedback", p.timeFeed}, {"SAT solving", p.timeSat}, {"Network update", p.timeToNet}, {"TOTAL RUNTIME", p.timeTotal}, {"time1", p.time1}, {"time2", p.time2}, {"time3", p.time3}, {"time4", p.time4}} {
-		if item.value != 0 {
-			fmt.Printf("%s: %.2f sec\n", item.name, float64(item.value)/1e9)
+	}{{"AIG simulation  ", p.timeSims}, {"AIG traversal   ", p.timeTrav}, {"Solver feedback ", p.timeFeed}, {"SAT solving     ", p.timeSat}, {"Network update  ", p.timeToNet}, {"TOTAL RUNTIME   ", p.timeTotal}, {"time1", p.time1}, {"time2", p.time2}, {"time3", p.time3}, {"time4", p.time4}} {
+		if i < 6 || item.value > 0 {
+			fmt.Printf("%s = %6.2f sec\n", item.name, float64(item.value)/1e9)
 		}
 	}
 }

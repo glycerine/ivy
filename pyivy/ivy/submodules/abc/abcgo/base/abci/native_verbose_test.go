@@ -30,6 +30,7 @@ var nativeVerboseScripts = []string{
 	"irw -v",
 	"iresyn -v",
 	"dch -v",
+	"fraig -v",
 	"&get; &dch -v",
 	"if -K 6; mfs -v",
 	"if -K 6; lutpack -v",
