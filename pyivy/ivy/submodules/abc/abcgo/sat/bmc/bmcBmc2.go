@@ -2,6 +2,7 @@ package bmc
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/misc/vec"
@@ -148,25 +149,65 @@ func Saig_BmcPerform(graph *aig.Graph, start, framesMax, nodesMax, timeout, conf
 	if graph == nil {
 		return -1
 	}
+	begin := time.Now()
+	if verbose != 0 {
+		fmt.Printf("Running \"bmc2\". AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\n",
+			graph.TruePiCount(), graph.TruePoCount(), aig.Aig_ManRegNum(graph),
+			aig.Aig_ManNodeNum(graph), aig.Aig_ManLevelNum(graph))
+		fmt.Printf("Params: FramesMax = %d. NodesDelta = %d. ConfMaxOne = %d. ConfMaxAll = %d.\n",
+			framesMax, nodesMax, conflictsOne, conflictsAll)
+	}
 	params := Saig_ParBmc_t{
 		NStart:      start,
 		NFramesMax:  framesMax,
 		NConfLimit:  conflictsOne,
 		NTimeOut:    timeout,
-		FVerbose:    verbose,
-		FNotVerbose: silent,
+		FNotVerbose: 1,
 	}
 	status := Saig_ManBmcScalable(graph, &params)
-	if failedFrame != nil {
-		// C reports iFrameLast-1: the last frame explored without a failure,
-		// which is the engine's iFrame
-		*failedFrame = params.IFrame
+	cex := graph.SequentialCounterexample()
+	failed := status == 0 && cex != nil
+	// the reports and frame values of bmcBmc2.c's Saig_BmcPerform
+	// frames done without a failure (iFramePrev-1); a start frame does not
+	// stop bmc2 counting them as bmc3's iFrame does
+	explored := max(params.IFrame, params.lastFrame)
+	if failed {
+		if silent == 0 {
+			fmt.Printf("Output %d of miter \"%s\" was asserted in frame %d. ", cex.IPo, graph.Name, cex.IFrame)
+		}
+		if failedFrame != nil {
+			*failedFrame = cex.IFrame - 1
+		}
+	} else {
+		if silent == 0 {
+			fmt.Printf("No output failed in %d frames.  ", max(explored, 0))
+		}
+		if failedFrame != nil {
+			*failedFrame = explored
+		}
+	}
+	if silent == 0 {
+		elapsed := float64(time.Since(begin).Nanoseconds()) / 1e9
+		if overwrite != 0 {
+			fmt.Printf("%s =%9.2f sec\r", "Time", elapsed)
+		} else {
+			fmt.Printf("%s =%9.2f sec\n", "Time", elapsed)
+		}
+		if !failed {
+			switch {
+			case framesMax > 0 && explored+1 >= framesMax:
+				fmt.Printf("Reached limit on the number of timeframes (%d).\n", framesMax)
+			case timeout > 0 && time.Since(begin) >= time.Duration(timeout)*time.Second:
+				fmt.Printf("Reached timeout (%d seconds).\n", timeout)
+			default:
+				fmt.Printf("Reached local conflict limit (%d).\n", conflictsOne)
+			}
+		}
 	}
 	_ = nodesMax
 	_ = conflictsAll
-	_ = overwrite
 	_ = useSatoko
-	if status == 0 {
+	if failed {
 		return 0
 	}
 	// The C entry point used -1 for a bounded-safe run and for early stop.

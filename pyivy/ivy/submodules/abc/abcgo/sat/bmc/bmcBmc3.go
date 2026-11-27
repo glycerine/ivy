@@ -41,6 +41,7 @@ type Saig_ParBmc_t struct {
 	PLogFileName   string
 	FSilent        int32
 	IFrame         int32
+	lastFrame      int32 // last frame the loop finished, whatever the start (bmc2's report)
 	NFailOuts      int32
 	NDropOuts      int32
 	timeLastSolved int64
@@ -112,6 +113,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 	var found bool
 	failed := make([]bool, pos)
 	spent := make([]time.Duration, pos)
+	params.lastFrame = -1
 	var curFrame int32 // the frame being solved, for reports
 	// solving all outputs records each failed one (p->vCexes, handed to
 	// vSeqModelVec): its counterexample with -x, else the sentinel
@@ -363,6 +365,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 		}
 	}
 	// all frames done: as after C's loop, f == nFramesMax
+	params.lastFrame = maxFrames - 1
 	if jumpFrame != 0 && params.NStart == 0 {
 		params.IFrame = jumpFrame - params.NFramesJump
 	} else if !found && params.NStart == 0 {
