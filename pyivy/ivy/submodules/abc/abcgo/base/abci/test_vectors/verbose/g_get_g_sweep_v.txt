@@ -1,0 +1,15 @@
+Parameters: Sim words = 8. Conf limit = 1000. SAT var max = 5000.
+AIG nodes : Total =   2675. Dangling =   1784. Main =    891. ( 33.31 %)
+SAT solver: Vars = 1596. Max cone = 599. Recycles = 1.
+SAT calls : All =    522. Unsat =    341. Sat =    181. Fail =      0.
+Choices   : Lits =    386. Reprs =     0. Equivs =     0. Choices =     0.
+Choicing runtime statistics:
+Sim init    =      sec (%)
+Sim SAT     =      sec (%)
+SAT solving =      sec (%)
+  sat       =      sec (%)
+  unsat     =      sec (%)
+  undecided =      sec (%)
+Choice      =      sec (%)
+Other       =      sec (%)
+TOTAL       =      sec (%)

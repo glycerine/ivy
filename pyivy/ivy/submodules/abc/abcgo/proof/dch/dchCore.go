@@ -31,12 +31,20 @@ func (m *Manager) computeEquivalences() error {
 	m.stats.Total = time.Since(started)
 	return nil
 }
+// ComputeEquivalences is Dch_ComputeEquivs: Dch_ManStop prints the
+// statistics when verbose.
 func ComputeEquivalences(g *aig.Graph, p *Params) error {
 	manager, err := newManager(g, p)
 	if err != nil {
 		return err
 	}
-	return manager.computeEquivalences()
+	if err = manager.computeEquivalences(); err != nil {
+		return err
+	}
+	if manager.params.Verbose {
+		manager.printStats()
+	}
+	return nil
 }
 func ComputeChoices(g *aig.Graph, p *Params) (*aig.Graph, error) {
 	result, _, err := ComputeChoicesWithStats(g, p)
