@@ -4,6 +4,11 @@ func Mvc_CoverAlloc(mem *Mvc_Manager_t, bits int) *Mvc_Cover_t {
 	if bits < 0 {
 		panic("mvc: negative bit count")
 	}
+	if mem != nil {
+		c := mem.newCover()
+		c.NBits, c.Mem = bits, mem
+		return c
+	}
 	return &Mvc_Cover_t{NBits: bits, Mem: mem}
 }
 func Mvc_CoverClone(c *Mvc_Cover_t) *Mvc_Cover_t { return Mvc_CoverAlloc(c.Mem, c.NBits) }
@@ -36,9 +41,21 @@ func Mvc_CoverAllocateMask(c *Mvc_Cover_t) {
 }
 func Mvc_CoverAllocateArrayLits(c *Mvc_Cover_t) {
 	if len(c.Lits) != c.NBits {
-		c.Lits = make([]int, c.NBits)
+		if cap(c.Lits) >= c.NBits {
+			c.Lits = c.Lits[:c.NBits]
+			clear(c.Lits)
+		} else {
+			c.Lits = make([]int, c.NBits)
+		}
 	}
 }
-func Mvc_CoverAllocateArrayCubes(c *Mvc_Cover_t)  { c.Array = make([]*Mvc_Cube_t, c.Cubes.Items) }
+func Mvc_CoverAllocateArrayCubes(c *Mvc_Cover_t) {
+	if cap(c.Array) >= c.Cubes.Items {
+		c.Array = c.Array[:c.Cubes.Items]
+		clear(c.Array)
+		return
+	}
+	c.Array = make([]*Mvc_Cube_t, c.Cubes.Items)
+}
 func Mvc_CoverDeallocateMask(c *Mvc_Cover_t)      { c.Mask = nil }
 func Mvc_CoverDeallocateArrayLits(c *Mvc_Cover_t) { c.Lits = nil }

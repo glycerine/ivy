@@ -28,10 +28,17 @@ type Mvc_Cover_t struct {
 	Mask  *Mvc_Cube_t
 	Mem   *Mvc_Manager_t
 }
-// Mvc_Manager_t hands out cubes from slabs, as ABC's fixed-size cube
-// memory does (one manager per factored function).
+
+// Mvc_Manager_t hands out cubes and covers from slabs, as ABC's
+// fixed-size memory does. Mvc_ManagerStop releases everything at once and
+// keeps the slabs for the next function factored.
 type Mvc_Manager_t struct {
-	cubes []Mvc_Cube_t
+	cubes      []Mvc_Cube_t   // unused tail of the current cube slab
+	cubeSlabs  [][]Mvc_Cube_t // all cube slabs, reused after a stop
+	cubeSlab   int            // slabs in use
+	covers     []Mvc_Cover_t
+	coverSlabs [][]Mvc_Cover_t
+	coverSlab  int
 }
 type Mvc_Data_t struct {
 	Man     *Mvc_Manager_t

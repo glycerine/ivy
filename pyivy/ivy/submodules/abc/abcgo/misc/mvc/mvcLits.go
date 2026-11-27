@@ -1,7 +1,14 @@
 package mvc
 
-func literalCounts(c *Mvc_Cover_t) []int {
-	counts := make([]int, c.NBits)
+// literalCounts counts each literal's cubes into buf (resized to NBits).
+func literalCounts(c *Mvc_Cover_t, buf []int) []int {
+	var counts []int
+	if cap(buf) >= c.NBits {
+		counts = buf[:c.NBits]
+		clear(counts)
+	} else {
+		counts = make([]int, c.NBits)
+	}
 	for x := c.Cubes.Head; x != nil; x = x.Next {
 		for i := range counts {
 			if Mvc_CubeBitValue(x, i) {
@@ -12,7 +19,8 @@ func literalCounts(c *Mvc_Cover_t) []int {
 	return counts
 }
 func Mvc_CoverAnyLiteral(c *Mvc_Cover_t, m *Mvc_Cube_t) int {
-	counts := literalCounts(c)
+	var buf [64]int
+	counts := literalCounts(c, buf[:0])
 	for i := len(counts) - 1; i >= 0; i-- {
 		if counts[i] > 1 && (m == nil || Mvc_CubeBitValue(m, i)) {
 			return i
@@ -22,7 +30,8 @@ func Mvc_CoverAnyLiteral(c *Mvc_Cover_t, m *Mvc_Cube_t) int {
 }
 func Mvc_CoverBestLiteral(c *Mvc_Cover_t, m *Mvc_Cube_t) int {
 	best, n := -1, 1
-	for i, k := range literalCounts(c) {
+	var buf [64]int
+	for i, k := range literalCounts(c, buf[:0]) {
 		if k > n && (m == nil || Mvc_CubeBitValue(m, i)) {
 			best, n = i, k
 		}
@@ -31,7 +40,8 @@ func Mvc_CoverBestLiteral(c *Mvc_Cover_t, m *Mvc_Cube_t) int {
 }
 func Mvc_CoverWorstLiteral(c *Mvc_Cover_t, m *Mvc_Cube_t) int {
 	best, n := -1, int(^uint(0)>>1)
-	for i, k := range literalCounts(c) {
+	var buf [64]int
+	for i, k := range literalCounts(c, buf[:0]) {
 		if k >= 2 && k < n && (m == nil || Mvc_CubeBitValue(m, i)) {
 			best, n = i, k
 		}
@@ -64,7 +74,8 @@ func Mvc_CoverFirstCubeFirstLit(c *Mvc_Cover_t) int {
 }
 func Mvc_CoverCountLiterals(c *Mvc_Cover_t) int {
 	n := 0
-	for _, k := range literalCounts(c) {
+	var buf [64]int
+	for _, k := range literalCounts(c, buf[:0]) {
 		n += k
 	}
 	return n

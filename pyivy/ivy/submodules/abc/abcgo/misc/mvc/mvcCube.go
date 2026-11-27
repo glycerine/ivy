@@ -4,11 +4,7 @@ func Mvc_CubeAlloc(c *Mvc_Cover_t) *Mvc_Cube_t {
 	words := max(1, Mvc_CoverReadWordNum(c))
 	var r *Mvc_Cube_t
 	if m := c.Mem; m != nil {
-		if len(m.cubes) == 0 {
-			m.cubes = make([]Mvc_Cube_t, 64)
-		}
-		r = &m.cubes[0]
-		m.cubes = m.cubes[1:]
+		r = m.newCube()
 		r.Unused = (32 - c.NBits%32) % 32
 	} else {
 		r = &Mvc_Cube_t{Unused: (32 - c.NBits%32) % 32}

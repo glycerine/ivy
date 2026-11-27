@@ -6,12 +6,34 @@ import (
 	"github.com/glycerine/abcgo/misc/mvc"
 )
 
+// sopFields appends line's whitespace-separated fields to buf, stopping
+// after cap(buf) of them (strings.Fields without the allocation).
+func sopFields(line string, buf []string) []string {
+	for len(line) > 0 && len(buf) < cap(buf) {
+		line = strings.TrimLeft(line, " \t\r\v\f")
+		if line == "" {
+			break
+		}
+		end := strings.IndexAny(line, " \t\r\v\f")
+		if end < 0 {
+			end = len(line)
+		}
+		buf = append(buf, line[:end])
+		line = line[end:]
+	}
+	return buf
+}
+
 func sopRows(sop string) ([]string, int, bool) {
 	var cubes []string
 	n := -1
 	complement := false
-	for _, line := range strings.Split(strings.TrimSpace(sop), "\n") {
-		fields := strings.Fields(line)
+	rest := strings.TrimSpace(sop)
+	for len(rest) > 0 {
+		var line string
+		line, rest, _ = strings.Cut(rest, "\n")
+		var fieldBuf [3]string // a row has at most two fields; a third is an error
+		fields := sopFields(line, fieldBuf[:0])
 		if len(fields) == 0 {
 			continue
 		}
@@ -66,11 +88,13 @@ func Dec_Factor(sop string) *Dec_Graph_t {
 			return Dec_GraphCreateConst1()
 		}
 	}
-	cover := Dec_ConvertSopToMvc(sop)
+	cover := decRowsToMvc(rows, n)
 	mvc.Mvc_CoverContain(cover)
 	mvc.Mvc_CoverInverse(cover)
 	g := Dec_GraphCreate(int32(n))
 	g.eRoot = Dec_Factor_rec(g, cover)
+	// the graph keeps no cube or cover: release them all (Mvc_ManagerFree)
+	mvc.Mvc_ManagerStop(cover.Mem)
 	if compl {
 		Dec_GraphComplement(g)
 	}
@@ -143,6 +167,11 @@ func Dec_FactorTrivialTree_rec(g *Dec_Graph_t, edges []Dec_Edge_t, count, or int
 }
 func Dec_ConvertSopToMvc(sop string) *mvc.Mvc_Cover_t {
 	rows, n, _ := sopRows(sop)
+	return decRowsToMvc(rows, n)
+}
+
+// decRowsToMvc is Dec_ConvertSopToMvc on rows sopRows has parsed.
+func decRowsToMvc(rows []string, n int) *mvc.Mvc_Cover_t {
 	cover := mvc.Mvc_CoverAlloc(mvc.Mvc_ManagerStart(), n*2)
 	for _, row := range rows {
 		cube := mvc.Mvc_CubeAlloc(cover)

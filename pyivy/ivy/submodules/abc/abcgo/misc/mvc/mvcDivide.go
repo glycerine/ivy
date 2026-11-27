@@ -20,19 +20,31 @@ func Mvc_CoverDivideInternal(c, d *Mvc_Cover_t) (q, r *Mvc_Cover_t) {
 	Mvc_CoverSort(d, nil, Mvc_CubeCompareInt)
 	Mvc_CoverSort(c, mask, Mvc_CubeCompareIntOutsideAndUnderMask)
 	Mvc_CoverList2Array(c)
-	seen := make([]bool, len(c.Array))
+	// small covers keep the scratch on the stack
+	var seenBuf, usedBuf [64]bool
+	var groupBuf [64]*Mvc_Cube_t
+	seen := seenBuf[:0]
+	if len(c.Array) > len(seenBuf) {
+		seen = make([]bool, 0, len(c.Array))
+	}
+	seen = seen[:len(c.Array)]
 	for i, first := range c.Array {
 		if seen[i] {
 			continue
 		}
-		var group []*Mvc_Cube_t
+		group := groupBuf[:0]
 		for j, x := range c.Array {
 			if !seen[j] && Mvc_CubeBitEqualOutsideMask(first, x, mask) {
 				seen[j] = true
 				group = append(group, x)
 			}
 		}
-		used := make([]bool, len(group))
+		used := usedBuf[:0]
+		if len(group) > len(usedBuf) {
+			used = make([]bool, 0, len(group))
+		}
+		used = used[:len(group)]
+		clear(used)
 		success := true
 		for div := d.Cubes.Head; div != nil; div = div.Next {
 			match := -1
