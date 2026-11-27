@@ -413,3 +413,30 @@ and states how the Go port was verified.
   `iFrame`. Fixed under `TestBmc3SolveAllLikeNative` and
   `TestBmc3FramesLikeNative`; `print_status` now recognizes the sentinel in
   both of its Go forms.
+
+## 20. `&bmc` corrupts the heap writing Mf's CNF for an unminimized buffer cut
+
+- **File:** `src/aig/gia/giaMf.c`, `Mf_ManDeriveCnf`.
+- **Found:** 2026-11-27 by a differential sweep: `read
+  base/abci/test_vectors/seq/s1494.blif; strash; &get; &bmc -F 4` aborted
+  native with "malloc(): invalid size (unsorted)". An ASan build reported a
+  heap-buffer-overflow writing `pCnf->pClauses[0]` at giaMf.c:446; with
+  assertions on, `assert( Mf_CubeLit(pCubes[c], k) )` failed.
+- **Bug:** each function's CNF is derived once and cached by truth-table id
+  (`Mf_ManDeriveCnfs`); functions 0 and 1 (constant, buffer) are derived for
+  0 and 1 variables. The writer then puts the output literal at position
+  `Mf_CutSize(pCut)`. A cut that is not support-minimized (here a 4-leaf cut
+  whose function is the buffer of its first leaf) therefore reads the output
+  literal from an empty field: the clause loses its output, the cube's fields
+  are misread, and the literals written exceed the counted `nLits`. The
+  constant case had already been special-cased ("bug fix" comment); the
+  buffer, and any function seen first with a different cut size, was not.
+- **Fix:** take the output position from the cached CNF itself (the top
+  field of every cube) and place the node's variable there; input literals
+  are read up to that position.
+- **Test:** `abcgo/base/abci/bmc_and_native_test.go`
+  (`TestNativeAbc9BmcDoesNotCorruptHeap`, needs `ABC_BINARY`): failed with
+  "signal: aborted"; now native reports output 0 asserted in frame 0, as the
+  other engines do, and the ASan build is clean.
+- **Go port:** unaffected: `mf.DeriveCNF` decodes each cover's output at the
+  width the cover was derived for and sizes clauses from the cover.

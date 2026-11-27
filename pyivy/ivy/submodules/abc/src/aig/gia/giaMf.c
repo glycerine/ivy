@@ -342,7 +342,7 @@ Cnf_Dat_t * Mf_ManDeriveCnf( Mf_Man_t * p, int fCnfObjIds, int fAddOrCla )
     Vec_Int_t * vCnfs = Mf_ManDeriveCnfs( p, &nVars, &nClas, &nLits );
     Vec_Int_t * vCnfIds = Vec_IntStartFull( Gia_ManObjNum(p->pGia) );
     int pFanins[16], * pCut, * pCnfIds = Vec_IntArray( vCnfIds );
-    int i, k, c, iFunc, nCubes, * pCubes, fComplLast;
+    int i, k, c, iFunc, nCubes, nCnfVars, * pCubes, fComplLast;
     nVars++;  // zero-ID to remain unused
     if ( fAddOrCla )
     {
@@ -429,19 +429,26 @@ Cnf_Dat_t * Mf_ManDeriveCnf( Mf_Man_t * p, int fCnfObjIds, int fAddOrCla )
             assert( pCnf->vMapping == NULL ); // bug fix does not handle generated mapping
             continue;
         }
-        for ( k = 0; k < Mf_CutSize(pCut); k++ )
-            pFanins[k] = pCnfIds[pCut[k+1]];
-        pFanins[k++] = pCnfIds[Id];
         // get clauses
         pCubes = Vec_IntEntryP( vCnfs, Vec_IntEntry(vCnfs, iFunc) );
         nCubes = *pCubes++;
+        // the CNF of a function is derived once, for the cut size first seen
+        // with it (one variable for the buffer), but a cut that is not
+        // support-minimized can have more leaves: the output literal is the
+        // top field of every cube, so take its position from the CNF itself
+        assert( nCubes > 0 && pCubes[0] > 0 );
+        nCnfVars = (Abc_Base2Log(pCubes[0] + 1) - 1) / 2;
+        assert( nCnfVars <= p->pPars->nLutSize );
+        for ( k = 0; k < Mf_CutSize(pCut); k++ )
+            pFanins[k] = pCnfIds[pCut[k+1]];
+        pFanins[nCnfVars] = pCnfIds[Id];
         for ( c = 0; c < nCubes; c++ )
         {
             pCnf->pClauses[iCla++] = pCnf->pClauses[0] + iLit;
-            k = Mf_CutSize(pCut);
+            k = nCnfVars;
             assert( Mf_CubeLit(pCubes[c], k) );
             pCnf->pClauses[0][iLit++] = Abc_Var2Lit( pFanins[k], (Mf_CubeLit(pCubes[c], k) == 2) ^ fComplLast );
-            for ( k = 0; k < Mf_CutSize(pCut); k++ )
+            for ( k = 0; k < nCnfVars; k++ )
                 if ( Mf_CubeLit(pCubes[c], k) )
                     pCnf->pClauses[0][iLit++] = Abc_Var2Lit( pFanins[k], Mf_CubeLit(pCubes[c], k) == 2 );
         }
