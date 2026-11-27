@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"math/rand"
 	"time"
 )
 
@@ -31,7 +31,7 @@ func Gia_ManPatRareImprove(p *Gia_Man_t, limit, verbose int32) {
 			fmt.Printf("Pat %5d : Rare = %4d  Cands = %3d  Value = %8.3f  Change = %8.3f  Time: %s\n", n, vec.Vec_IntSize(rare)/2, count, Gia_ManPatGetOneQuo(p, limit, patterns, words, n), change, time.Since(frameStart))
 		}
 		if best != nil {
-			id := vec.Vec_IntEntry(best, rand.Intn(vec.Vec_IntSize(best)))
+			id := vec.Vec_IntEntry(best, int(util.C_Rand())%vec.Vec_IntSize(best)) // rand() % Vec_IntSize(vBest)
 			data := vec.Vec_WrdArray(patterns)
 			giaSimFlip(data[id*words:(id+1)*words], n)
 			changes++

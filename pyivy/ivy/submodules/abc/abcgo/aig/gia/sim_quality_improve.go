@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
-	"math/rand"
 	"time"
 )
 
@@ -27,7 +26,7 @@ func Gia_SimQualityPatternsMax(p *Gia_Man_t, pattern *Vec_Int_t, iteration, verb
 	}
 	selected := int32(-1)
 	if len(tries) != 0 {
-		selected = tries[rand.Intn(len(tries))]
+		selected = tries[int(util.C_Rand())%len(tries)] // rand() % Vec_IntSize(vTries)
 	}
 	if verbose != 0 {
 		fmt.Printf("Iter %5d : Init = %6.3f  Final = %6.3f  Ratio = %4.2f  Tries = %5d  Choosing %5d\r", iteration, initial, best, best/initial, len(tries), selected)
