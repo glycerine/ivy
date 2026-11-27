@@ -220,7 +220,8 @@ func Abc_NtkToDarBmc(pNtk *Abc_Ntk_t, pvMap **Vec_Int_t) *Aig_Man_t {
 			if !ok {
 				return nil
 			}
-			if term.Complement {
+			// Abc_ObjNotCond(Abc_ObjRegular(pTemp)->pCopy, !Abc_ObjIsComplement(pTemp))
+			if !term.Complement {
 				lit = lit.Not()
 			}
 			lit = aiggraph.Aig_ObjRealCopy(source, lit)
