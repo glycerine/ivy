@@ -2,11 +2,12 @@ package abc
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/bdd/cudd/core"
-	"github.com/glycerine/abcgo/map/mio"
 	stdio "io"
-	"strconv"
 	"strings"
+
+	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/misc/extra"
+	"github.com/glycerine/abcgo/misc/util"
 )
 
 func dotExportName(o *Object) string {
@@ -28,107 +29,11 @@ func Abc_NtkCountLogicNodes(nodes []*Object) int32 {
 	}
 	return count
 }
-func dotFunction(o *Object, gateNames bool) (string, error) {
-	if Abc_NtkIsStrash(o.Network()) != 0 {
-		return "", nil
-	}
-	switch f := o.Data.(type) {
-	case string:
-		return strings.TrimSuffix(f, "\n"), nil
-	case *mio.Mio_Gate_t:
-		if gateNames {
-			return mio.Mio_GateReadName(f), nil
-		}
-		return strings.TrimSuffix(mio.Mio_GateReadSop(f), "\n"), nil
-	case *core.DdNode:
-		dd, ok := o.Network().FunctionManager.(*core.DdManager)
-		if !ok {
-			return "", fmt.Errorf("BDD node has no manager")
-		}
-		var cube []byte
-		return strings.TrimSuffix(Abc_ConvertBddToSop(nil, dd, f, f, int32(o.FaninNum()), 0, &cube, -1), "\n"), nil
-	case nil:
-		return "", nil
-	default:
-		return "", fmt.Errorf("unsupported DOT function type %T", f)
-	}
-}
-func dotLevels(n *Network, reverse bool) (map[*Object]int, error) {
-	levels := make(map[*Object]int)
-	active := map[*Object]bool{}
-	var visit func(*Object) (int, error)
-	visit = func(o *Object) (int, error) {
-		if l, ok := levels[o]; ok {
-			return l, nil
-		}
-		if active[o] {
-			return 0, fmt.Errorf("combinational cycle at %s", dotExportName(o))
-		}
-		if o.IsCI() || o.Kind == ObjectLatch || o.Kind == ObjectConst1 {
-			levels[o] = 0
-			return 0, nil
-		}
-		active[o] = true
-		l := 0
-		for _, e := range o.Fanins() {
-			x, err := visit(e.Object)
-			if err != nil {
-				return 0, err
-			}
-			l = max(l, x)
-		}
-		if o.Kind == ObjectNode {
-			l++
-		}
-		active[o] = false
-		levels[o] = l
-		return l, nil
-	}
-	maximum := 0
-	for _, o := range n.Objects() {
-		l, e := visit(o)
-		if e != nil {
-			return nil, e
-		}
-		maximum = max(maximum, l)
-	}
-	if reverse {
-		depth := map[*Object]int{}
-		var distance func(*Object) int
-		distance = func(o *Object) int {
-			if d, ok := depth[o]; ok {
-				return d
-			}
-			d := 0
-			for _, out := range o.Fanouts() {
-				if out.IsCI() || out.Kind == ObjectLatch {
-					continue
-				}
-				step := 0
-				if out.Kind == ObjectNode {
-					step = 1
-				}
-				d = max(d, step+distance(out))
-			}
-			depth[o] = d
-			return d
-		}
-		for _, o := range n.Objects() {
-			if o.Kind == ObjectNode {
-				levels[o] = maximum - distance(o)
-			}
-		}
-	}
-	for _, o := range n.Objects() {
-		if o.IsCO() {
-			levels[o] = maximum + 1
-		}
-	}
-	return levels, nil
-}
 
-// WriteDOT renders a selected combinational or sequential view without borrowing
-// object marks, changing node levels, or converting the source function manager.
+// WriteDOT is Io_WriteDotNtk (sequential: Io_WriteDotSeq) of ioWriteDot.c.
+// nodes nil means all objects (Io_WriteDot's Abc_NtkCollectObjects). As in
+// C it sets the objects' levels (COs on the level above the top) and
+// converts a BDD network to SOPs for the labels and back.
 func WriteDOT(w stdio.Writer, n *Network, nodes, highlight []*Object, gateNames, reverse, sequential bool) error {
 	if n == nil {
 		return fmt.Errorf("nil network")
@@ -140,152 +45,235 @@ func WriteDOT(w stdio.Writer, n *Network, nodes, highlight []*Object, gateNames,
 	if sequential {
 		limit = 300
 	}
-	if len(nodes) == 0 || len(nodes) > limit {
-		return fmt.Errorf("DOT needs 1..%d selected objects", limit)
+	if len(nodes) < 1 {
+		fmt.Printf("The set has no nodes. DOT file is not written.\n")
+		return nil
 	}
-	selected := map[*Object]bool{}
-	shown := map[*Object]bool{}
+	if len(nodes) > limit {
+		fmt.Printf("The set has more than %d nodes. DOT file is not written.\n", limit)
+		return nil
+	}
+	hasBdds := Abc_NtkIsBddLogic(n) != 0
+	if hasBdds && Abc_NtkBddToSop(n, -1, util.ABC_INFINITY) == 0 {
+		fmt.Printf("Io_WriteDotNtk(): Converting to SOPs has failed.\n")
+		return nil
+	}
+	inSet := make(map[*Object]bool, len(nodes))
 	for _, o := range nodes {
-		if o == nil || o.Network() != n {
-			return fmt.Errorf("DOT selection contains foreign object")
-		}
-		selected[o] = true
+		inSet[o] = true
 	}
+	shown := make(map[*Object]bool, len(highlight))
 	for _, o := range highlight {
-		if o == nil || o.Network() != n {
-			return fmt.Errorf("DOT highlight contains foreign object")
-		}
 		shown[o] = true
 	}
-	levels, e := dotLevels(n, reverse)
-	if e != nil {
-		return e
+	levelMax := int(Abc_NtkLevel(n))
+	if reverse {
+		if levelMin := int(Abc_NtkLevelReverse(n)); levelMin != levelMax {
+			panic("io: forward and reverse levels disagree")
+		}
+		for _, o := range nodes {
+			if o.Kind == ObjectNode {
+				o.Level = levelMax - o.Level + 1
+			}
+		}
 	}
-	low, high := int(^uint(0)>>1), 0
+	levelMin, levelMax, hasCos := 10000, -1, false
 	for _, o := range nodes {
-		if sequential && (o.Kind == ObjectBI || o.Kind == ObjectBO) {
+		if o.IsCO() {
+			hasCos = true
 			continue
 		}
-		low = min(low, levels[o])
-		high = max(high, levels[o])
+		levelMin, levelMax = min(levelMin, o.Level), max(levelMax, o.Level)
 	}
-	if low > high {
-		low = 0
+	if hasCos {
+		levelMax++
+		for _, o := range nodes {
+			if o.IsCO() {
+				o.Level = levelMax
+			}
+		}
+	}
+	filled := func(o *Object) string {
+		if shown[o] {
+			return ", style = filled"
+		}
+		return ""
 	}
 	var b strings.Builder
-	b.WriteString("# Network structure generated by ABC\n\ndigraph network {\nsize = \"7.5,10\";\ncenter = true;\nedge [dir = back];\n\n{\n  node [shape = plaintext];\n  edge [style = invis];\n  LevelTitle1 [label=\"\"];\n  LevelTitle2 [label=\"\"];\n")
-	for level := high; level >= low; level-- {
-		fmt.Fprintf(&b, "  Level%d [label = \"\"];\n", level)
+	p := func(format string, args ...any) { fmt.Fprintf(&b, format, args...) }
+	p("# %s\n\ndigraph network {\nsize = \"7.5,10\";\ncenter = true;\nedge [dir = back];\n\n", "Network structure generated by ABC")
+	p("{\n  node [shape = plaintext];\n  edge [style = invis];\n  LevelTitle1 [label=\"\"];\n  LevelTitle2 [label=\"\"];\n")
+	for level := levelMax; level >= levelMin; level-- {
+		p("  Level%d [label = \"\"];\n", level)
 	}
-	b.WriteString("  LevelTitle1 -> LevelTitle2")
-	for level := high; level >= low; level-- {
-		fmt.Fprintf(&b, " -> Level%d", level)
+	p("  LevelTitle1 ->  LevelTitle2 ->")
+	for level := levelMax; level >= levelMin; level-- {
+		p("  Level%d", level)
+		if level != levelMin {
+			p(" ->")
+		} else {
+			p(";")
+		}
 	}
-	b.WriteString(";\n}\n{ rank = same; LevelTitle1;\n")
-	fmt.Fprintf(&b, "title1 [shape=plaintext, fontsize=20, fontname=\"Times-Roman\", label=%s];\n}\n", strconv.Quote("Network structure visualized by ABC\nBenchmark \""+n.Name+"\"."))
-	fmt.Fprintf(&b, "{ rank = same; LevelTitle2; title2 [shape=plaintext, label=%s]; }\n", strconv.Quote(fmt.Sprintf("The set contains %d logic nodes and %d latches.", Abc_NtkCountLogicNodes(nodes), len(n.ObjectsOfKind(ObjectLatch)))))
-	for level := high; level >= low; level-- {
-		fmt.Fprintf(&b, "{ rank = same; Level%d;\n", level)
+	p("\n}\n\n")
+	p("{\n  rank = same;\n  LevelTitle1;\n  title1 [shape=plaintext,\n          fontsize=20,\n          fontname = \"Times-Roman\",\n          label=\"")
+	p("%s\\nBenchmark \\\"%s\\\". Time was %s. \"\n         ];\n}\n\n", "Network structure visualized by ABC", n.Name, extra.Extra_TimeStamp())
+	p("{\n  rank = same;\n  LevelTitle2;\n  title2 [shape=plaintext,\n          fontsize=18,\n          fontname = \"Times-Roman\",\n          label=\"")
+	if int(Abc_NtkObjNum(n)) == len(nodes) {
+		p("The network contains %d logic nodes and %d latches.", Abc_NtkNodeNum(n), len(n.ObjectsOfKind(ObjectLatch)))
+	} else {
+		p("The set contains %d logic nodes and spans %d levels.", Abc_NtkCountLogicNodes(nodes), levelMax-levelMin+1)
+	}
+	p("\\n\"\n         ];\n}\n\n")
+	if hasCos {
+		p("{\n  rank = same;\n  Level%d;\n", levelMax)
 		for _, o := range nodes {
-			if levels[o] != level {
-				continue
-			}
-			if o.Kind == ObjectLatch && !sequential || sequential && (o.Kind == ObjectBI || o.Kind == ObjectBO) {
-				continue
-			}
-			label, shape, color := dotExportName(o), "ellipse", false
-			switch o.Kind {
-			case ObjectPI:
-				shape, color = "triangle", true
-			case ObjectPO:
-				shape, color = "invtriangle", true
-			case ObjectBI:
-				shape, color = "box", true
-				if o.FanoutCount() > 0 {
-					label = dotExportName(o.FanoutAt(int32(0))) + "_in"
-				}
-			case ObjectBO:
-				shape, color = "box", true
-				if o.FaninNum() > 0 {
-					label = dotExportName(o.FaninAt(int32(0)).Object)
-				}
-			case ObjectLatch:
-				shape, color = "box", true
-			case ObjectConst1:
-				if o.FanoutCount() == 0 {
+			if sequential {
+				if Abc_ObjIsPo(o) == 0 {
 					continue
 				}
-				label, color = "Const1", true
-			case ObjectNode:
-				if o.FaninNum() == 0 {
-					if o.FanoutCount() == 0 {
-						continue
-					}
-					value := "0"
-					if text, ok := o.Data.(string); ok && Abc_SopIsConst1(text) != 0 {
-						value = "1"
-					}
-					label, color = "Const"+value, true
+				p("  Node%d [label = \"%s\", shape = invtriangle", o.ID, Abc_ObjName(o))
+			} else {
+				if !o.IsCO() {
+					continue
+				}
+				if Abc_ObjIsBi(o) != 0 {
+					p("  Node%d [label = \"%s_in\", shape = box", o.ID, Abc_ObjName(Abc_ObjFanout0(o)))
 				} else {
-					function, err := dotFunction(o, gateNames)
-					if err != nil {
-						return err
-					}
-					label = fmt.Sprintf("%d\n%s", o.ID, function)
+					p("  Node%d [label = \"%s\", shape = invtriangle", o.ID, Abc_ObjName(o))
 				}
 			}
-			fmt.Fprintf(&b, "Node%d [label = %s, shape = %s", o.ID, strconv.Quote(label), shape)
-			if shown[o] {
-				b.WriteString(", style = filled")
-			}
-			if color {
-				b.WriteString(", color = coral, fillcolor = coral")
-			}
-			b.WriteString("];\n")
+			p("%s, color = coral, fillcolor = coral];\n", filled(o))
 		}
-		b.WriteString("}\n")
+		p("}\n\n")
 	}
-	b.WriteString("title1 -> title2 [style = invis];\n")
-	previous := -1
-	for _, o := range nodes {
-		if o.Kind != ObjectPO {
-			continue
+	strash := Abc_NtkIsStrash(n) != 0
+	for level := levelMax - b2i(hasCos); level >= levelMin && level > 0; level-- {
+		p("{\n  rank = same;\n  Level%d;\n", level)
+		candidates := nodes
+		if sequential {
+			candidates = n.ObjectsOfKind(ObjectNode) // Abc_NtkForEachNode
 		}
-		fmt.Fprintf(&b, "title2 -> Node%d [style = invis];\n", o.ID)
-		if previous >= 0 {
-			fmt.Fprintf(&b, "Node%d -> Node%d [style = invis];\n", previous, o.ID)
+		for _, o := range candidates {
+			if o.Level != level || !sequential && o.FaninNum() == 0 {
+				continue
+			}
+			label := ""
+			switch {
+			case strash:
+			case Abc_NtkHasMapping(n) != 0 && gateNames:
+				label = mio.Mio_GateReadName(o.Data.(*mio.Mio_Gate_t))
+			case Abc_NtkHasMapping(n) != 0:
+				label = Abc_NtkPrintSop(mio.Mio_GateReadSop(o.Data.(*mio.Mio_Gate_t)))
+			default:
+				sop, _ := o.Data.(string)
+				label = Abc_NtkPrintSop(sop)
+			}
+			p("  Node%d [label = \"%d\\n%s\", shape = ellipse%s];\n", o.ID, o.ID, label, filled(o))
 		}
-		previous = o.ID
+		p("}\n\n")
 	}
-	for _, o := range nodes {
-		if !sequential && o.Kind == ObjectLatch || sequential && (o.Kind == ObjectBI || o.Kind == ObjectBO) {
-			continue
-		}
-		for _, edge := range o.Fanins() {
-			fanin, complement := edge.Object, edge.Complement
+	if levelMin == 0 {
+		p("{\n  rank = same;\n  Level%d;\n", levelMin)
+		for _, o := range nodes {
+			if sequential && o.Level > 0 {
+				continue
+			}
+			isCi := o.IsCI()
 			if sequential {
-				for i := 0; i < 2 && (fanin.Kind == ObjectBI || fanin.Kind == ObjectBO); i++ {
-					inputs := fanin.Fanins()
-					if len(inputs) != 1 {
-						return fmt.Errorf("sequential terminal %s lacks driver", dotExportName(fanin))
+				isCi = Abc_ObjIsPi(o) != 0
+			}
+			if !isCi {
+				if o.FaninNum() == 0 && o.FanoutCount() > 0 {
+					constant := 1
+					if !sequential && !strash && Abc_NodeIsConst1(o) == 0 {
+						constant = 0
 					}
-					complement = complement != inputs[0].Complement
-					fanin = inputs[0].Object
+					p("  Node%d [label = \"Const%d\", shape = ellipse%s, color = coral, fillcolor = coral];\n", o.ID, constant, filled(o))
 				}
-			} else if fanin.Kind == ObjectLatch {
 				continue
 			}
-			if !selected[fanin] {
-				continue
+			if !sequential && Abc_ObjIsBo(o) != 0 {
+				p("  Node%d [label = \"%s\", shape = box", o.ID, Abc_ObjName(Abc_ObjFanin0(o)))
+			} else {
+				p("  Node%d [label = \"%s\", shape = triangle", o.ID, Abc_ObjName(o))
+			}
+			p("%s, color = coral, fillcolor = coral];\n", filled(o))
+		}
+		p("}\n\n")
+	}
+	if sequential {
+		for _, o := range nodes {
+			if o.Kind == ObjectLatch {
+				p("Node%d [label = \"%s\", shape = box%s, color = coral, fillcolor = coral];\n", o.ID, Abc_ObjName(o), filled(o))
+			}
+		}
+		p("\n")
+	}
+	p("title1 -> title2 [style = invis];\n")
+	for _, o := range nodes {
+		if o.Level == levelMax && (!sequential || Abc_ObjIsPo(o) != 0) {
+			p("title2 -> Node%d [style = invis];\n", o.ID)
+		}
+	}
+	prev := -1
+	for _, o := range nodes {
+		if o.Level != levelMax || Abc_ObjIsPo(o) == 0 {
+			continue
+		}
+		if prev >= 0 {
+			p("Node%d -> Node%d [style = invis];\n", prev, o.ID)
+		}
+		prev = o.ID
+	}
+	for _, o := range nodes {
+		if !sequential && o.Kind == ObjectLatch || sequential && (Abc_ObjIsBi(o) != 0 || Abc_ObjIsBo(o) != 0) {
+			continue
+		}
+		for k := 0; k < o.FaninNum(); k++ {
+			fanin := o.FaninAt(int32(k)).Object
+			compl := false
+			if sequential {
+				if strash {
+					if Abc_ObjIsBi(fanin) != 0 {
+						// Abc_ObjFaninC(pFanin, k), as C (a BI has one fanin)
+						compl = k < fanin.FaninNum() && fanin.FaninAt(int32(k)).Complement
+					} else {
+						compl = o.FaninAt(int32(k)).Complement
+					}
+				}
+				for step := 0; step < 2; step++ {
+					if Abc_ObjIsBi(fanin) != 0 || Abc_ObjIsBo(fanin) != 0 {
+						fanin = Abc_ObjFanin0(fanin)
+					}
+				}
+				if !inSet[fanin] {
+					continue
+				}
+			} else {
+				if fanin.Kind == ObjectLatch {
+					continue
+				}
+				compl = strash && o.FaninAt(int32(k)).Complement
 			}
 			style := "solid"
-			if complement {
+			if compl {
 				style = "dotted"
 			}
-			fmt.Fprintf(&b, "Node%d -> Node%d [style = %s];\n", o.ID, fanin.ID, style)
+			p("Node%d -> Node%d [style = %s];\n", o.ID, fanin.ID, style)
 		}
 	}
-	b.WriteString("}\n\n")
+	p("}\n\n")
+	if hasBdds {
+		Abc_NtkSopToBdd(n)
+	}
 	_, err := stdio.WriteString(w, b.String())
 	return err
+}
+
+func b2i(v bool) int {
+	if v {
+		return 1
+	}
+	return 0
 }

@@ -43,6 +43,7 @@ func TestAddBuffersPreservesLogicAndAlignsLevels(t *testing.T) {
 				}
 			}
 		}
+		Abc_NtkLevel(buffered) // buffers are created without levels, as in ABC
 		for _, node := range buffered.ObjectsOfKind(ObjectNode) {
 			for _, edge := range node.fanins {
 				if node.Level != edge.Object.Level+1 {

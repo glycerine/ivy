@@ -64,6 +64,9 @@ func TestGraphGMLListAndDOT(t *testing.T) {
 		}
 	}
 }
+// TestDOTSelectionReverseAndLimits: Io_WriteDotNtk draws a selected node's
+// edges to all its fanins (only Io_WriteDotSeq keeps edges inside the
+// selection) and writes nothing for an empty selection.
 func TestDOTSelectionReverseAndLimits(t *testing.T) {
 	n := exportFixture()
 	o := n.ObjectsOfKind(abc.ObjectNode)[0]
@@ -71,15 +74,12 @@ func TestDOTSelectionReverseAndLimits(t *testing.T) {
 	if e := WriteDOT(&b, n, []*abc.Object{o}, nil, false, true, false); e != nil {
 		t.Fatal(e)
 	}
-	if strings.Contains(b.String(), " [style = solid]") || strings.Contains(b.String(), " [style = dotted]") {
-		t.Fatal("selected graph leaked foreign endpoint")
+	if !strings.Contains(b.String(), fmt.Sprintf("Node%d -> Node%d [style = solid];", o.ID, o.FaninAt(0).Object.ID)) {
+		t.Fatalf("edge to the fanin missing:\n%s", b.String())
 	}
-	foreign := abc.NewNetwork("other")
-	if WriteDOT(&b, n, foreign.Objects(), nil, false, false, false) == nil {
-		t.Fatal("foreign selection")
-	}
-	if WriteDOT(&b, n, []*abc.Object{}, nil, false, false, false) == nil {
-		t.Fatal("empty selection accepted")
+	b.Reset()
+	if WriteDOT(&b, n, []*abc.Object{}, nil, false, false, false) != nil || b.Len() != 0 {
+		t.Fatal("empty selection written")
 	}
 }
 func TestBookshelfFilesAndDisconnectedPads(t *testing.T) {
@@ -227,12 +227,17 @@ func TestGraphBDDLabelsAndBookConversion(t *testing.T) {
 	if err := WriteDOT(&b, n, nil, nil, false, false, false); err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(b.String(), "10 1") {
+	// Io_WriteDotNtk labels with the SOPs of Abc_NtkBddToSop (fanins sorted
+	// by Abc_NtkSortSops: b, a) and converts the network back to BDDs
+	if !strings.Contains(b.String(), `\n01 1"`) {
 		t.Fatalf("BDD label %s", b.String())
 	}
-	if node.Data != f || n.FunctionManager != dd || n.Function != uint8(abc.ABC_FUNC_BDD) {
-		t.Fatal("DOT changed BDD representation")
+	if n.Function != uint8(abc.ABC_FUNC_BDD) {
+		t.Fatal("DOT left the network in SOP form")
 	}
+	node = n.ObjectsOfKind(abc.ObjectNode)[0]
+	f = node.Data.(*core.DdNode)
+	dd = n.FunctionManager.(*core.DdManager)
 	if err := Io_WriteBookLogic(n, filepath.Join(t.TempDir(), "bdd")); err != nil {
 		t.Fatal(err)
 	}

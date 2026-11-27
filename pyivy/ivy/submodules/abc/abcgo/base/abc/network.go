@@ -470,9 +470,6 @@ func (n *Network) AddFanin(o *Object, e Edge) error {
 	}
 	n.changedAnd(o)
 	e.Object.addFanout(o)
-	if !o.IsCI() && e.Object.Level+1 > o.Level {
-		o.Level = e.Object.Level + 1
-	}
 	return nil
 }
 func (n *Network) DeleteFanin(o *Object, index int) error {
