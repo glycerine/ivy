@@ -121,9 +121,9 @@ In short, we try to make GoIvy as correct as possible.
 
 GoIvy installation steps:
 
-# binary installation (pre-built for amd64)
+# binary installation (pre-built for darwin/arm64 and linux/amd64)
 
-download a macOS (Sonoma 14.0/amd64) or Linux (Ubuntu 24.04/amd64) release 
+download a macOS (Apple Silicon ARM64) or Linux (Ubuntu 24.04/amd64) release 
 from the releases page https://github.com/glycerine/ivy/releases
 
 # building from source
@@ -185,6 +185,8 @@ cd z3vendor/z3
 ./compile.sh # build libz3.a; takes 2-10 minutes.
 
 ./compile-wasm.sh # build wasm version of Z3
+# ignore copy errors like: "cp: wasm.build/z3.wasm: No such file or directory"
+
 cd ../.. # so you should be in ivy/goivy now, using the goivy/Makefile to:
 make z3-build
 make build
