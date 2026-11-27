@@ -464,8 +464,7 @@ func usedSymbolExprs(node Expr) *InsMap[NodeKey, Expr] {
 	return syms
 }
 
-// usedSymbolNames returns a list of plain symbol names (no sort info)
-// from the given expression. Used by FindReferences and other name-based lookups.
+// isolateUsedSymbolNames returns the distinct plain symbol names in an expression.
 func isolateUsedSymbolNames(node Expr) []string {
 	exprs := usedSymbolExprs(node)
 	result := make([]string, 0, exprs.Len())
@@ -1194,9 +1193,9 @@ func FindReferences(mod *Module, syms map[string]bool, newActions *InsMap[string
 		if !ok {
 			continue
 		}
-		fSyms := isolateUsedSymbolNames(fmla)
-		for _, s := range fSyms {
-			if syms[s] {
+		// Python find_references traces symbols only when scanning actions.
+		for sym := range SymbolsIluAst(fmla) {
+			if c, ok := sym.(*Const); ok && syms[c.Name] {
 				add(lf.Base.Loc)
 				break
 			}

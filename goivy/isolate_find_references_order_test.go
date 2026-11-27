@@ -1,6 +1,11 @@
 package goivy
 
-import "testing"
+import (
+	"slices"
+	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
+)
 
 // Python find_references (ivy_isolate.py) collects lineno -> None in an
 // insertion-ordered dict (it was a set): formulas first, then actions, in
@@ -37,5 +42,37 @@ func TestFindReferencesOrderAndFullLocation(t *testing.T) {
 		if got[i] != want[i] {
 			t.Fatalf("got %q, want %q", got, want)
 		}
+	}
+}
+
+func TestFindReferencesTracesOnlyActionSymbols(t *testing.T) {
+	m := mkModuleWithSig()
+	acfg := NewAstConfig()
+	state := NewConst("state", Boolean)
+	formulaLoc := Location{Filename: "example.ivy", Line: 3}
+	lf := acfg.NewLabeledFormula(acfg.NewAtom("fact"), state)
+	lf.Base.Loc = formulaLoc
+	m.LabeledAxioms = []*LabeledFormula{lf}
+
+	actionLoc := Location{Filename: "example.ivy", Line: 7}
+	action := NewSequence(NewAssumeAction(NewConst("guard", Boolean)), NewAssumeAction(state))
+	action.SetLineno(actionLoc)
+	actions := NewInsMap[string, ActionsAction]()
+	actions.Set("check", action)
+
+	var got []Location
+	trace := captureStdout(t, func() {
+		for _, loc := range FindReferences(m, map[string]bool{"state": true}, actions).All() {
+			got = append(got, loc)
+		}
+	})
+	if want := []Location{formulaLoc, actionLoc}; !slices.Equal(got, want) {
+		t.Errorf("locations = %v, want %v", got, want)
+	}
+	const wantTrace = "XTRACE: isolate.collectActionSymNames.add guard\n" +
+		"XTRACE: isolate.collectActionSymNames.add state\n" +
+		"XTRACE: isolate.FindReferences n_syms=1 n_refs=2\n"
+	if xtracer.Enabled && trace != wantTrace {
+		t.Errorf("trace:\n%s\nwant:\n%s", trace, wantTrace)
 	}
 }

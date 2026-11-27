@@ -1,4 +1,18 @@
-analysis date: 2026 Sept 25:
+analysis date: 2026 November 26
+================================
+
+We brought the Go port up to date with the latest python Ivy (as of this commit):
+
+~~~
+commit 257e3da96557df04303ccb38e80b5da1cd16cbae (HEAD -> master, origin/master, origin/HEAD)
+Author: antd6@protonmail.com <antd6@protonmail.com>
+Date:   Fri Oct 30 05:03:35 2026 -0500
+
+    Add comment
+~~~
+
+analysis date: 2026 Sept 25
+===========================
 
 subject: compare the upstream
 
