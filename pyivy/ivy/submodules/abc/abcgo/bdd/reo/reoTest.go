@@ -1,45 +1,35 @@
 package reo
 
-// Verification entry points historically located in reoTest.c. These use the
-// Go manager and canonical inverse-permutation equality, avoiding C random and
-// static process-global managers. Reordering behavior lives in the main engine.
+// Port of src/bdd/reo/reoTest.c: testing the reordering against CUDD.
 import (
 	"fmt"
 	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 	"time"
 )
 
-func Extra_ReorderTest(dd *DdManager, root *DdNode) {
-	p := New(100, 100)
-	defer p.Close()
-	temporary := Extra_Reorder(p, dd, root, make([]int, len(dd.Vars)))
-	if temporary == nil {
-		panic("reo: reordering failed")
-	}
-	cudd.Cudd_Ref(temporary)
-	defer cudd.Cudd_RecursiveDeref(dd, temporary)
-	classical := Extra_ReorderCudd(dd, root, nil)
-	if classical == nil {
-		panic("reo: CUDD comparison failed")
-	}
-	cudd.Cudd_Ref(classical)
-	defer cudd.Cudd_RecursiveDeref(dd, classical)
-	fmt.Printf("Initial = %d. Final = %d. Cudd = %d.\n", cudd.Cudd_DagSize(root), cudd.Cudd_DagSize(temporary), cudd.Cudd_DagSize(classical))
+func Extra_ReorderTest(dd *DdManager, Func *DdNode) {
+	var pOrder [1000]int
+	pReo := Extra_ReorderInit(100, 100)
+	Temp := Extra_Reorder(pReo, dd, Func, pOrder[:])
+	cudd.Cudd_Ref(Temp)
+	Temp1 := Extra_ReorderCudd(dd, Func, nil)
+	cudd.Cudd_Ref(Temp1)
+	fmt.Printf("Initial = %d. Final = %d. Cudd = %d.\n", cudd.Cudd_DagSize(Func), cudd.Cudd_DagSize(Temp), cudd.Cudd_DagSize(Temp1))
+	cudd.Cudd_RecursiveDeref(dd, Temp1)
+	cudd.Cudd_RecursiveDeref(dd, Temp)
+	Extra_ReorderQuit(pReo)
 }
-func Extra_ReorderTestArray(dd *DdManager, roots []*DdNode, n int) {
-	if n < 0 || n > len(roots) {
-		panic("reo: invalid root count")
+
+func Extra_ReorderTestArray(dd *DdManager, Funcs []*DdNode, nFuncs int) {
+	var FuncsRes [1000]*DdNode
+	var pOrder [1000]int
+	pReo := Extra_ReorderInit(100, 100)
+	Extra_ReorderArray(pReo, dd, Funcs, FuncsRes[:], nFuncs, pOrder[:])
+	Extra_ReorderQuit(pReo)
+	fmt.Printf("Initial = %d. Final = %d.\n", sharingSize(Funcs[:nFuncs]), sharingSize(FuncsRes[:nFuncs]))
+	for i := 0; i < nFuncs; i++ {
+		cudd.Cudd_RecursiveDeref(dd, FuncsRes[i])
 	}
-	p := New(100, 100)
-	defer p.Close()
-	result := make([]*DdNode, n)
-	Extra_ReorderArray(p, dd, roots, result, n, make([]int, len(dd.Vars)))
-	defer func() {
-		for _, root := range result {
-			cudd.Cudd_RecursiveDeref(dd, root)
-		}
-	}()
-	fmt.Printf("Initial = %d. Final = %d.\n", profileRoots(roots[:n], p.slots).Nodes, profileRoots(result, p.slots).Nodes)
 }
 
 // Extra_ReorderCudd performs the original independent-manager comparison using
@@ -146,4 +136,35 @@ func Extra_addReorderTest(dd *DdManager, root *DdNode) int {
 	fmt.Printf("Classical reordering of ADDs: Before = %d. After = %d.\n", before, after)
 	fmt.Printf("Classical variable reordering time = %.2f sec\n", time.Since(started).Seconds())
 	return after
+}
+
+func identity(n int) []int {
+	p := make([]int, n)
+	for i := range p {
+		p[i] = i
+	}
+	return p
+}
+
+// sharingSize is Cudd_SharingSize.
+func sharingSize(Funcs []*DdNode) int {
+	var s nodeSet
+	s.clear()
+	count := 0
+	var visit func(n *DdNode)
+	visit = func(n *DdNode) {
+		n = cudd.Cudd_Regular(n)
+		if !s.insert(n) {
+			return
+		}
+		count++
+		if !cudd.Cudd_IsConstant(n) {
+			visit(n.T)
+			visit(n.E)
+		}
+	}
+	for _, f := range Funcs {
+		visit(f)
+	}
+	return count
 }

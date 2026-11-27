@@ -58,8 +58,8 @@ func TestRenodeKeepsBestCutWhenAllCutsViolateRequired(t *testing.T) {
 // TestRenodeBddCompletes: renode -b scores cuts with Extra_Reorder, which
 // fills pOrder only for the support's variables (the cut can be smaller
 // than the manager); the port copied a whole-manager permutation into the
-// cut's order and panicked. (The result still differs from native's
-// nd = 657: the reo package is not yet a port of reoCore/reoSwap.)
+// cut's order and panicked. (reo_native_test.go compares the results
+// with native ABC.)
 func TestRenodeBddCompletes(t *testing.T) {
 	out := runScript(t, "read test_vectors/native_s27_drw.blif; strash; renode -b; print_stats")
 	if !strings.Contains(out, "nd =") {

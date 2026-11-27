@@ -6,6 +6,10 @@ import (
 	"runtime"
 )
 
+// reoDebug enables the checks that C runs only in debug builds (the
+// native ABC is built with -DNDEBUG, which compiles its assertions out).
+const reoDebug = false
+
 // assert is small enough to inline into hot code; the failure path is not.
 func assert(x bool, message string) {
 	if !x {

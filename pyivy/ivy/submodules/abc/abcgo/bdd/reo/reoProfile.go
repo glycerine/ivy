@@ -1,103 +1,243 @@
 package reo
 
+// Port of src/bdd/reo/reoProfile.c: procedures which determine the level
+// profiles (nodes, width, APL).
+
 import (
 	"fmt"
-	"sort"
-
-	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
 )
 
-func cloneProfile(p Profile) Profile {
-	p.LevelNodes = append([]int(nil), p.LevelNodes...)
-	p.LevelWidth = append([]int(nil), p.LevelWidth...)
-	p.LevelAPL = append([]float64(nil), p.LevelAPL...)
-	return p
-}
-func cloneStatistics(s Statistics) Statistics {
-	s.Before = cloneProfile(s.Before)
-	s.After = cloneProfile(s.After)
-	return s
-}
-func profileRoots(roots []*DdNode, slots []int) Profile {
-	n := len(slots)
-	result := Profile{LevelNodes: make([]int, n+1), LevelWidth: make([]int, n+1), LevelAPL: make([]float64, n+1)}
-	levels := map[int]int{}
-	for i, v := range slots {
-		levels[v] = i
+// reoProfileNodesStart starts the profile for the BDD nodes.
+func reoProfileNodesStart(p *reo_man) {
+	Total := 0
+	for i := 0; i <= p.nSupp; i++ {
+		p.pPlanes[i].statsCost = float64(p.pPlanes[i].statsNodes)
+		Total += p.pPlanes[i].statsNodes
 	}
-	nodeLevel := func(node *DdNode) int {
-		if cudd.Cudd_IsConstant(node) {
-			return n
+	assert(Total == p.nNodesCur, "Total == p->nNodesCur")
+	p.nNodesBeg = p.nNodesCur
+}
+
+// reoProfileAplStart starts the profile for the APL: the probability of
+// traversing each node (pUnit->Weight), and the total path length.
+func reoProfileAplStart(p *reo_man) {
+	var pER, pTR *reo_unit
+	var Res, Half float64
+
+	// clean the weights of all nodes
+	for i := 0; i < p.nSupp; i++ {
+		for pUnit := p.pPlanes[i].pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+			p.U(pUnit).Weight = 0.0
 		}
-		return levels[int(node.Index)]
 	}
-	top := map[*DdNode]int{}
-	var visit func(*DdNode, int)
-	visit = func(edge *DdNode, start int) {
-		node := cudd.Cudd_Regular(edge)
-		old, seen := top[node]
-		if seen {
-			if start < old {
-				top[node] = start
+	// to assign the node weights (the probability of visiting each node)
+	// we visit the node after visiting its predecessors
+
+	// set the probability of visits to the top nodes
+	for i := 0; i < p.nTops; i++ {
+		p.U(p.pTops[i]).Weight += 1.0
+	}
+
+	// to compute the path length (the sum of products of edge weight by edge length)
+	// we visit the nodes in any order (the above order will do)
+	Res = 0.0
+	for i := 0; i < p.nSupp; i++ {
+		p.pPlanes[i].statsCost = 0.0
+		for pUnit := p.pPlanes[i].pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+			u := p.U(pUnit)
+			pER = p.U(u.pE)
+			pTR = p.U(u.pT)
+			Half = 0.5 * u.Weight
+			pER.Weight += Half
+			pTR.Weight += Half
+			// add to the path length
+			p.pPlanes[i].statsCost += u.Weight
+		}
+		Res += p.pPlanes[i].statsCost
+	}
+	p.pPlanes[p.nSupp].statsCost = 0.0
+	p.nAplBeg = Res
+	p.nAplCur = Res
+}
+
+// reoProfileWidthStart starts the profile for the BDD width. Complexity of
+// the algorithm is O(N + n). TopRef is the first level, on which the given
+// node counts towards the width of the BDDs.
+func reoProfileWidthStart(p *reo_man) {
+	// allocate and clean the storage for starting and stopping levels
+	pWidthStart := make([]int, p.nSupp+1)
+	pWidthStop := make([]int, p.nSupp+1)
+
+	// go through the non-constant nodes and set the topmost level of their cofactors
+	for v := 0; v <= p.nSupp; v++ {
+		for pUnit := p.pPlanes[v].pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+			u := p.U(pUnit)
+			u.TopRef = REO_TOPREF_UNDEF
+			u.Sign = 0
+		}
+	}
+
+	// add the topmost level of the width profile
+	for v := 0; v < p.nTops; v++ {
+		u := p.U(p.pTops[v])
+		if u.TopRef == REO_TOPREF_UNDEF {
+			// set the starting level
+			u.TopRef = 0
+			pWidthStart[u.TopRef]++
+			// set the stopping level
+			if u.lev != REO_CONST_LEVEL {
+				pWidthStop[u.lev+1]++
 			}
-			return
-		}
-		top[node] = start
-		if !cudd.Cudd_IsConstant(node) {
-			level := nodeLevel(node)
-			visit(node.E, level+1)
-			visit(node.T, level+1)
 		}
 	}
-	for _, root := range roots {
-		visit(root, 0)
-	}
-	nodes := make([]*DdNode, 0, len(top))
-	for node, first := range top {
-		level := nodeLevel(node)
-		result.LevelNodes[level]++
-		result.Nodes++
-		for i := first; i <= level; i++ {
-			result.LevelWidth[i]++
-			result.Width++
+
+	for v := 0; v < p.nSupp; v++ {
+		for pUnit := p.pPlanes[v].pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+			u := p.U(pUnit)
+			e := p.U(u.pE)
+			if e.TopRef == REO_TOPREF_UNDEF {
+				// set the starting level
+				e.TopRef = u.lev + 1
+				pWidthStart[e.TopRef]++
+				// set the stopping level
+				if e.lev != REO_CONST_LEVEL {
+					pWidthStop[e.lev+1]++
+				}
+			}
+			t := p.U(u.pT)
+			if t.TopRef == REO_TOPREF_UNDEF {
+				// set the starting level
+				t.TopRef = u.lev + 1
+				pWidthStart[t.TopRef]++
+				// set the stopping level
+				if t.lev != REO_CONST_LEVEL {
+					pWidthStop[t.lev+1]++
+				}
+			}
 		}
-		nodes = append(nodes, node)
 	}
-	// Node IDs break level ties so the floating-point weight propagation below
-	// runs in the same order every time (top was filled in map order).
-	sort.Slice(nodes, func(i, j int) bool {
-		if li, lj := nodeLevel(nodes[i]), nodeLevel(nodes[j]); li != lj {
-			return li < lj
+
+	// verify the top reference
+	for v := 0; v < p.nSupp; v++ {
+		reoProfileWidthVerifyLevel(p, &p.pPlanes[v], v)
+	}
+
+	// derive the profile
+	p.nWidthCur = 0
+	for v := 0; v <= p.nSupp; v++ {
+		if v == 0 {
+			p.pPlanes[v].statsWidth = pWidthStart[v] - pWidthStop[v]
+		} else {
+			p.pPlanes[v].statsWidth = p.pPlanes[v-1].statsWidth + pWidthStart[v] - pWidthStop[v]
 		}
-		return nodes[i].ID < nodes[j].ID
-	})
-	weights := map[*DdNode]float64{}
-	for _, root := range roots {
-		weights[cudd.Cudd_Regular(root)]++
+		p.pPlanes[v].statsCost = float64(p.pPlanes[v].statsWidth)
+		p.nWidthCur += p.pPlanes[v].statsWidth
+		fmt.Printf("Level %2d: Width = %5d.\n", v, p.pPlanes[v].statsWidth)
 	}
-	for _, node := range nodes {
-		if cudd.Cudd_IsConstant(node) {
-			continue
-		}
-		weight := weights[node]
-		result.APL += weight
-		result.LevelAPL[nodeLevel(node)] += weight
-		weights[cudd.Cudd_Regular(node.E)] += weight / 2
-		weights[cudd.Cudd_Regular(node.T)] += weight / 2
-	}
-	return result
+	p.nWidthBeg = p.nWidthCur
 }
-func reoProfileNodesStart(p *Manager)  { p.current = profileRoots(p.roots, p.slots) }
-func reoProfileAplStart(p *Manager)    { reoProfileNodesStart(p) }
-func reoProfileWidthStart(p *Manager)  { reoProfileNodesStart(p) }
-func reoProfileWidthStart2(p *Manager) { reoProfileNodesStart(p) }
-func reoProfileAplPrint(p *Manager)    { p.printProfile("APL", p.current) }
-func reoProfileNodesPrint(p *Manager)  { p.printProfile("NODES", p.current) }
-func reoProfileWidthPrint(p *Manager)  { p.printProfile("WIDTH", p.current) }
-func reoProfileWidthVerifyLevel(plane *reo_plane, level int) {
-	for u := plane.pHead; u != nil; u = u.Next {
-		if int(u.TopRef) > level {
-			panic(fmt.Sprintf("reo: invalid top reference at level %d", level))
+
+// reoProfileWidthStart2 starts the profile for the BDD width. Complexity of
+// the algorithm is O(N * n).
+func reoProfileWidthStart2(p *reo_man) {
+	// clean the profile
+	for i := 0; i <= p.nSupp; i++ {
+		p.pPlanes[i].statsWidth = 0
+	}
+
+	// clean the node structures
+	for v := 0; v <= p.nSupp; v++ {
+		for pUnit := p.pPlanes[v].pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+			u := p.U(pUnit)
+			u.TopRef = REO_TOPREF_UNDEF
+			u.Sign = 0
 		}
+	}
+
+	// set the topref to the topmost nodes
+	for i := 0; i < p.nTops; i++ {
+		p.U(p.pTops[i]).TopRef = 0
+	}
+
+	// go through the non-constant nodes and set the topmost level of their cofactors
+	for i := 0; i < p.nSupp; i++ {
+		for pUnit := p.pPlanes[i].pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+			u := p.U(pUnit)
+			if e := p.U(u.pE); int(e.TopRef) > i+1 {
+				e.TopRef = int16(i + 1)
+			}
+			if t := p.U(u.pT); int(t.TopRef) > i+1 {
+				t.TopRef = int16(i + 1)
+			}
+		}
+	}
+
+	// verify the top reference
+	for i := 0; i < p.nSupp; i++ {
+		reoProfileWidthVerifyLevel(p, &p.pPlanes[i], i)
+	}
+
+	// compute the profile for the internal nodes
+	for i := 0; i < p.nSupp; i++ {
+		for pUnit := p.pPlanes[i].pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+			u := p.U(pUnit)
+			for v := int(u.TopRef); v <= int(u.lev); v++ {
+				p.pPlanes[v].statsWidth++
+			}
+		}
+	}
+
+	// compute the profile for the constant nodes
+	for pUnit := p.pPlanes[p.nSupp].pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+		for v := int(p.U(pUnit).TopRef); v <= p.nSupp; v++ {
+			p.pPlanes[v].statsWidth++
+		}
+	}
+
+	// get the width cost
+	p.nWidthCur = 0
+	for i := 0; i <= p.nSupp; i++ {
+		p.pPlanes[i].statsCost = float64(p.pPlanes[i].statsWidth)
+		p.nWidthCur += p.pPlanes[i].statsWidth
+	}
+	p.nWidthBeg = p.nWidthCur
+}
+
+func reoProfileNodesPrint(p *reo_man) {
+	fmt.Printf("NODES: Total = %6d. Average = %6.2f.\n", p.nNodesCur, float32(p.nNodesCur)/float32(p.nSupp))
+}
+
+func reoProfileAplPrint(p *reo_man) {
+	fmt.Printf("APL: Total = %8.2f. Average =%6.2f.\n", p.nAplCur, p.nAplCur/float64(float32(p.nSupp)))
+}
+
+func reoProfileWidthPrint(p *reo_man) {
+	WidthMax := 0
+	TotalWidth := 0
+	for i := 0; i <= p.nSupp; i++ {
+		fmt.Printf("Level = %2d. Width = %3d.\n", i, p.pPlanes[i].statsWidth)
+		if WidthMax < p.pPlanes[i].statsWidth {
+			WidthMax = p.pPlanes[i].statsWidth
+		}
+		TotalWidth += p.pPlanes[i].statsWidth
+	}
+	assert(p.nWidthCur == TotalWidth, "p->nWidthCur == TotalWidth")
+	fmt.Printf("WIDTH: ")
+	fmt.Printf("Maximum = %5d.  ", WidthMax)
+	fmt.Printf("Total = %7d.  ", p.nWidthCur)
+	fmt.Printf("Average = %6.2f.\n", float32(TotalWidth)/float32(p.nSupp))
+}
+
+// reoProfileWidthVerifyLevel checks the top references of one plane. Its
+// body is assertions only, compiled out of the native (-DNDEBUG) build.
+func reoProfileWidthVerifyLevel(p *reo_man, pPlane *reo_plane, Level int) {
+	if !reoDebug {
+		return
+	}
+	for pUnit := pPlane.pHead; pUnit != 0; pUnit = p.U(pUnit).Next {
+		u := p.U(pUnit)
+		assert(int(u.TopRef) <= Level, "pUnit->TopRef <= Level")
+		assert(int(p.U(u.pE).TopRef) <= Level+1, "pUnit->pE->TopRef <= Level + 1")
+		assert(int(p.U(u.pT).TopRef) <= Level+1, "pUnit->pT->TopRef <= Level + 1")
 	}
 }

@@ -119,26 +119,96 @@ func renodeCostAig(p *ifpkg.If_Man_t, cut *ifpkg.If_Cut_t) int32 {
 	return nodes
 }
 
+// renodeTruthToBDD is Kit_TruthToBdd( dd, pTruth, nVars, 0 ) (kitBdd.c):
+// the least significant variable of the table is the topmost one.
 func renodeTruthToBDD(dd *core.DdManager, truth []uint32, n int32) *core.DdNode {
 	if dd == nil || n < 0 || n > int32(len(dd.Vars)) {
 		return nil
 	}
+	if renodeIdentityOrder(dd, n) {
+		return renodeTruthToBDDTopDown(dd, truth, n)
+	}
 	var build func(int32, int32) *core.DdNode
 	build = func(bit, vars int32) *core.DdNode {
-		if vars == 0 {
-			if kit.Kit_TruthHasBit(truth, bit) != 0 {
+		if vars <= 5 {
+			mask := ^uint32(0) >> (32 - (1 << vars))
+			t := (truth[bit>>5] >> (bit & 31)) & mask
+			if t == 0 {
+				return dd.LogicZero
+			}
+			if t == mask {
+				return dd.One
+			}
+		}
+		lo := build(bit, vars-1)
+		if lo == nil {
+			return nil
+		}
+		core.Cudd_Ref(lo)
+		hi := build(bit+(1<<uint(vars-1)), vars-1)
+		if hi == nil {
+			core.Cudd_RecursiveDeref(dd, lo)
+			return nil
+		}
+		core.Cudd_Ref(hi)
+		f := core.Cudd_bddIte(dd, dd.Vars[vars-1], hi, lo)
+		if f != nil {
+			core.Cudd_Ref(f)
+		}
+		core.Cudd_RecursiveDeref(dd, lo)
+		core.Cudd_RecursiveDeref(dd, hi)
+		if f != nil {
+			core.Cudd_Deref(f)
+		}
+		return f
+	}
+	return build(0, n)
+}
+
+func renodeIdentityOrder(dd *core.DdManager, n int32) bool {
+	for i := int32(0); i < n; i++ {
+		if dd.Perm[i] != int(i) {
+			return false
+		}
+	}
+	return true
+}
+
+// renodeTruthToBDDTopDown builds the same (canonical) BDD as
+// Kit_TruthToBdd when variable i is on level i: node by node from the top
+// variable down, instead of by ITEs from the bottom variable up. The
+// subfunction under the assignment a of the variables above level v is
+// made of the table bits a + k*2^v.
+func renodeTruthToBDDTopDown(dd *core.DdManager, truth []uint32, n int32) *core.DdNode {
+	bitAt := func(i int32) bool { return truth[i>>5]>>(i&31)&1 != 0 }
+	var build func(v, a int32) *core.DdNode
+	build = func(v, a int32) *core.DdNode {
+		// constant subfunction?
+		first := bitAt(a)
+		constant := true
+		for i := a + (1 << v); i < 1<<n; i += 1 << v {
+			if bitAt(i) != first {
+				constant = false
+				break
+			}
+		}
+		if constant {
+			if first {
 				return dd.One
 			}
 			return dd.LogicZero
 		}
-		lo := build(bit, vars-1)
-		hi := build(bit+(1<<uint(vars-1)), vars-1)
-		if lo == nil || hi == nil {
-			return nil
-		}
-		return core.Cudd_bddIte(dd, dd.Vars[vars-1], hi, lo)
+		lo := build(v+1, a)
+		core.Cudd_Ref(lo)
+		hi := build(v+1, a|1<<v)
+		core.Cudd_Ref(hi)
+		f := core.Cudd_UniqueInter(dd, int(v), hi, lo)
+		// f holds lo and hi: dropping these references frees nothing
+		core.Cudd_Deref(lo)
+		core.Cudd_Deref(hi)
+		return f
 	}
-	return build(0, n)
+	return build(0, 0)
 }
 
 func renodeCostBdd(p *ifpkg.If_Man_t, cut *ifpkg.If_Cut_t) int32 {

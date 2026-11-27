@@ -591,6 +591,22 @@ func Cudd_BddNode(dd *DdManager, index int, t, e *DdNode) *DdNode {
 	return dd.node(uint32(index), t, e)
 }
 
+// Cudd_UniqueInter is cuddUniqueInter for callers that assemble diagrams
+// node by node (the REO engine): it returns the node (index, T, E) of the
+// family of the children, ADD when either child is an ADD node or an ADD
+// constant other than one, BDD otherwise. The level of index must be above
+// the levels of T and E, and T must be regular for BDDs.
+func Cudd_UniqueInter(dd *DdManager, index int, T, E *DdNode) *DdNode {
+	if dd.addChild(T) || dd.addChild(E) {
+		return dd.addNode(uint32(index), T, E)
+	}
+	return dd.node(uint32(index), T, E)
+}
+
+func (dd *DdManager) addChild(n *DdNode) bool {
+	return !n.complemented && (n.family == 2 || (n.Index == bddConstantIndex && n != dd.One))
+}
+
 func Cudd_bddIthVar(dd *DdManager, index int) *DdNode {
 	if !dd.valid() || index < 0 || uint64(index) >= uint64(bddConstantIndex) {
 		return nil

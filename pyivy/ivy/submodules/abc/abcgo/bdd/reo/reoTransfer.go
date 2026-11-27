@@ -1,109 +1,152 @@
 package reo
 
-import cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+// Port of src/bdd/reo/reoTransfer.c: transferring the DDs between CUDD and REO.
 
-// Units represent complemented edges with wrappers. No integer/pointer casts
-// are needed; Regular-unit identity remains stable for unique-table caching.
-func unitRegular(u *reo_unit) *reo_unit {
-	if u != nil && u.regular != nil {
-		return u.regular
-	}
-	return u
-}
-func unitComplement(u *reo_unit) bool { return u != nil && u.regular != nil }
-func unitNot(u *reo_unit) *reo_unit {
-	if u == nil {
-		return nil
-	}
-	if u.regular != nil {
-		return u.regular
-	}
-	if u.inverse == nil {
-		u.inverse = &reo_unit{regular: u}
-	}
-	return u.inverse
-}
-func unitNotCond(u *reo_unit, complement bool) *reo_unit {
-	if complement {
-		return unitNot(u)
-	}
-	return u
-}
+import (
+	cudd "github.com/glycerine/abcgo/bdd/cudd/core"
+)
 
-func reoTransferNodesToUnits_rec(p *Manager, edge *DdNode) *reo_unit {
-	if edge == nil {
-		panic("reo: nil transfer root")
+// reoTransferNodesToUnits_rec transfers the DD into the internal reordering
+// data structure. It is important that the hash table is lossless.
+//
+// C skips the hash table for nodes with one reference (F->ref == 1), which
+// are visited only once; Go hashes every node, which gives the same units
+// without depending on the reference counts of the Go CUDD port.
+func reoTransferNodesToUnits_rec(p *reo_man, F *DdNode) uref {
+	dd := p.dd
+	var pUnit uref
+	var HKey int
+
+	fComp := cudd.Cudd_IsComplement(F)
+	F = cudd.Cudd_Regular(F)
+
+	// check the hash-table
+	// search cache - use linear probing
+	for HKey = hashKey2(uint64(p.Signature), F.ID, p.tableShift); p.HTable[HKey].Sign == p.Signature; HKey = (HKey + 1) & p.tableMask {
+		if p.HTable[HKey].Node == F {
+			pUnit = p.HTable[HKey].Arg2
+			assert(pUnit != 0, "pUnit")
+			// increment the edge counter
+			p.U(pUnit).n++
+			return Unit_NotCond(pUnit, fComp)
+		}
 	}
-	if p.units == nil {
-		p.units = map[*DdNode]*reo_unit{}
-	}
-	node := cudd.Cudd_Regular(edge)
-	if old := p.units[node]; old != nil {
-		old.n++
-		return unitNotCond(old, cudd.Cudd_IsComplement(edge))
-	}
-	if p.nMemChunksAlloc <= p.nMemChunks {
-		p.nMemChunksAlloc = p.nMemChunks + 1
-	}
-	u := p.get()
-	*u = reo_unit{n: 1, origin: node, add: cudd.Cudd_IsAdd(node)}
-	p.units[node] = u
-	if cudd.Cudd_IsConstant(node) {
+	// the entry in not found in the cache
+
+	// create a new entry
+	pUnit = reoUnitsGetNextUnit(p)
+	u := p.U(pUnit)
+	u.n = 1
+	if cudd.Cudd_IsConstant(F) {
 		u.lev = REO_CONST_LEVEL
-		u.value = node.Value
+		u.value = int32(int64(F.Value))
+		u.pE = 0
+		u.pT = 0
+		// check if the diagram that is being reordering has complement edges
+		if F != dd.One {
+			p.fThisIsAdd = 1
+		}
+		// insert the unit into the corresponding plane
+		reoUnitsAddUnitToPlane(p, &p.pPlanes[p.nSupp], pUnit) // increments the unit counter
 	} else {
-		level := -1
-		for i, v := range p.slots {
-			if v == int(node.Index) {
-				level = i
-				break
+		u.lev = int16(p.pMapToPlanes[F.Index])
+		pE := reoTransferNodesToUnits_rec(p, F.E)
+		pT := reoTransferNodesToUnits_rec(p, F.T)
+		u = p.U(pUnit)
+		u.pE = pE
+		u.pT = pT
+		// insert the unit into the corresponding plane
+		reoUnitsAddUnitToPlane(p, &p.pPlanes[u.lev], pUnit) // increments the unit counter
+	}
+
+	// add to the hash table
+	// the next free entry is already found - it is pointed to by HKey
+	// while we traversed the diagram, the hash entry to which HKey points,
+	// might have been used. Make sure that its signature is different.
+	for ; p.HTable[HKey].Sign == p.Signature; HKey = (HKey + 1) & p.tableMask {
+	}
+	p.HTable[HKey].Sign = p.Signature
+	p.HTable[HKey].Node = F
+	p.HTable[HKey].Arg2 = pUnit
+
+	// increment the counter of nodes
+	p.nNodesCur++
+	return Unit_NotCond(pUnit, fComp)
+}
+
+// reoTransferUnitsToNodes_rec creates the DD from the internal reordering
+// data structure. It is important that the hash table is lossless.
+func reoTransferUnitsToNodes_rec(p *reo_man, pUnitC uref) *DdNode {
+	dd := p.dd
+	var bRes, E, T *DdNode
+	HKey := -1
+
+	fComp := Unit_IsComplement(pUnitC)
+	pUnitR := Unit_Regular(pUnitC)
+	pUnit := p.U(pUnitR)
+
+	// check the hash-table
+	if pUnit.n != 1 {
+		for HKey = hashKey2(uint64(p.Signature), uint64(pUnitR), p.tableShift); p.HTable[HKey].Sign == p.Signature; HKey = (HKey + 1) & p.tableMask {
+			if p.HTable[HKey].Arg1 == pUnitR {
+				bRes = p.HTable[HKey].Node
+				assert(bRes != nil, "bRes")
+				return cudd.Cudd_NotCond(bRes, fComp)
 			}
 		}
-		if level < 0 || level >= REO_CONST_LEVEL {
-			panic("reo: transfer variable outside support")
-		}
-		u.lev = int16(level)
-		u.pE = reoTransferNodesToUnits_rec(p, node.E)
-		u.pT = reoTransferNodesToUnits_rec(p, node.T)
 	}
-	level := int(u.lev)
-	if level == REO_CONST_LEVEL {
-		level = len(p.slots)
-	}
-	if len(p.planes) != len(p.slots)+1 {
-		p.planes = make([]reo_plane, len(p.slots)+1)
-	}
-	addUnitToPlane(&p.planes[level], u)
-	return unitNotCond(u, cudd.Cudd_IsComplement(edge))
-}
-
-func reoTransferUnitsToNodes_rec(p *Manager, edge *reo_unit) *DdNode {
-	if edge == nil {
-		return nil
-	}
-	if p.nodes == nil {
-		p.nodes = map[*reo_unit]*DdNode{}
-	}
-	u := unitRegular(edge)
-	if old := p.nodes[u]; old != nil {
-		return cudd.Cudd_NotCond(old, unitComplement(edge))
-	}
-	var root *DdNode
-	if u.lev == REO_CONST_LEVEL {
-		root = u.origin
+	// treat the case of constants
+	if Unit_IsConstant(pUnit) {
+		bRes = cudd.Cudd_addConst(dd, float64(pUnit.value))
+		cudd.Cudd_Ref(bRes)
 	} else {
-		level := int(u.lev)
-		if level < 0 || level >= len(p.slots) {
-			panic("reo: invalid transfer level")
+		// split and recur on children of this node
+		E = reoTransferUnitsToNodes_rec(p, pUnit.pE)
+		if E == nil {
+			return nil
 		}
-		e := reoTransferUnitsToNodes_rec(p, u.pE)
-		t := reoTransferUnitsToNodes_rec(p, u.pT)
-		if u.add {
-			root = cudd.Cudd_addIte(p.dd, cudd.Cudd_addIthVar(p.dd, p.slots[level]), t, e)
-		} else {
-			root = cudd.Cudd_bddIte(p.dd, cudd.Cudd_bddIthVar(p.dd, p.slots[level]), t, e)
+		cudd.Cudd_Ref(E)
+		T = reoTransferUnitsToNodes_rec(p, pUnit.pT)
+		if T == nil {
+			cudd.Cudd_RecursiveDeref(dd, E)
+			return nil
 		}
+		cudd.Cudd_Ref(T)
+
+		// consider the case when Res0 and Res1 are the same node
+		assert(E != T, "E != T")
+		assert(!cudd.Cudd_IsComplement(T), "!Cudd_IsComplement(T)")
+
+		bRes = cudd.Cudd_UniqueInter(dd, p.pMapToDdVarsFinal[pUnit.lev], T, E)
+		if bRes == nil {
+			cudd.Cudd_RecursiveDeref(dd, E)
+			cudd.Cudd_RecursiveDeref(dd, T)
+			return nil
+		}
+		cudd.Cudd_Ref(bRes)
+		cudd.Cudd_Deref(E)
+		cudd.Cudd_Deref(T)
 	}
-	p.nodes[u] = root
-	return cudd.Cudd_NotCond(root, unitComplement(edge))
+
+	// do not keep the result if the ref count is only 1, since it will not be visited again
+	if pUnit.n != 1 {
+		// while we traversed the diagram, the hash entry to which HKey points,
+		// might have been used. Make sure that its signature is different.
+		for ; p.HTable[HKey].Sign == p.Signature; HKey = (HKey + 1) & p.tableMask {
+		}
+		p.HTable[HKey].Sign = p.Signature
+		p.HTable[HKey].Arg1 = pUnitR
+		p.HTable[HKey].Node = bRes
+
+		// add the DD to the referenced DD list in order to be able to store it in cache
+		p.pRefNodes[p.nRefNodes] = bRes
+		p.nRefNodes++
+		cudd.Cudd_Ref(bRes)
+		// no need to do this, because the garbage collection will not take bRes away
+		// it is held by the diagram in the making
+	}
+	// increment the counter of nodes
+	p.nNodesCur++
+	cudd.Cudd_Deref(bRes)
+	return cudd.Cudd_NotCond(bRes, fComp)
 }

@@ -123,8 +123,6 @@ var allowlist = map[string]allowed{
 	"bdd/extrab/extraBddMisc.go:Extra_bddFormat":                          {1, sortedAfter},
 	"bdd/extrab/extraBddMisc.go:extraPlaValid":                            {2, check},
 	"bdd/llb/llb4Map.go:Llb_AigMap":                                       {1, buildSet},
-	"bdd/reo/reoCore.go:Manager.Reorder":                                  {1, sortedAfter},
-	"bdd/reo/reoProfile.go:profileRoots":                                  {1, "counts, then nodes sorted by level and ID"},
 	"map/cov/covBuild.go:deriveAIGToSOP":                                  {1, sortedAfter},
 	"map/cov/minimize/minimize.go:Minimize":                               {7, "sets built then sorted with a total key; per-minterm lists follow prime order; pivot is a min with a total tie-break"},
 	"map/if/ifDec16.go:If_CluHashFindMedian":                              {1, sortedAfter},

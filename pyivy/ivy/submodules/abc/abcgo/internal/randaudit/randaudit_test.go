@@ -26,6 +26,7 @@ var auditedFiles = []string{
 	"../../base/abci/abcStrash.go",
 	"../../opt/sim/simUtils.go",
 	"../../aig/gia/rex_walk.go",
+	"../../bdd/reo/reoShuffle.go",
 	"../../aig/saig/saigStrSim.go",
 }
 

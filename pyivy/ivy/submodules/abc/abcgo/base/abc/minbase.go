@@ -421,30 +421,25 @@ func Abc_NtkEliminate1(n *Network, limit, maxSize, iterations, reverse, verbose 
 	return 1
 }
 
-// Abc_NodeBddReorder minimizes a local BDD and applies the resulting input order.
+// Abc_NodeBddReorder reorders the BDD of the local function of the node
+// (abcReorder.c) and permutes the fanins to match.
 func Abc_NodeBddReorder(reorder *reo.Manager, node *Object) {
 	dd := node.network.FunctionManager.(*core.DdManager)
-	roots, order, err := reorder.Reorder(dd, []*core.DdNode{node.Data.(*core.DdNode)})
-	if err != nil {
-		panic(err)
+	// create the temporary array for the variable order
+	order := make([]int, len(node.fanins))
+	for i := range order {
+		order[i] = -1
 	}
+	// reorder the BDD
+	function := reo.Extra_Reorder(reorder, dd, node.Data.(*core.DdNode), order)
+	core.Cudd_Ref(function)
+	core.Cudd_RecursiveDeref(dd, node.Data.(*core.DdNode))
+	node.Data = function
+	// update the fanin order
 	oldInputs := append([]Edge(nil), node.fanins...)
-	if len(order) < len(oldInputs) {
-		panic("BDD reorder returned short input order")
+	for i := range order {
+		node.fanins[i] = oldInputs[order[i]]
 	}
-	seen := make([]bool, len(oldInputs))
-	for i := range oldInputs {
-		index := order[i]
-		if index < 0 || index >= len(oldInputs) || seen[index] {
-			panic("BDD reorder returned invalid input order")
-		}
-		seen[index] = true
-		node.fanins[i] = oldInputs[index]
-	}
-	old := node.Data.(*core.DdNode)
-	core.Cudd_Ref(roots[0])
-	node.Data = roots[0]
-	core.Cudd_RecursiveDeref(dd, old)
 }
 
 func Abc_NtkBddReorder(n *Network, verbose int32) {
@@ -462,8 +457,12 @@ func Abc_NtkBddReorder(n *Network, verbose int32) {
 		}
 		if verbose != 0 {
 			fmt.Printf("%10s: ", Abc_ObjName(node))
+			fmt.Printf("Before = %5d  BDD nodes.  ", core.Cudd_DagSize(node.Data.(*core.DdNode)))
 		}
 		Abc_NodeBddReorder(reorder, node)
+		if verbose != 0 {
+			fmt.Printf("After = %5d  BDD nodes.\n", core.Cudd_DagSize(node.Data.(*core.DdNode)))
+		}
 	}
 }
 
