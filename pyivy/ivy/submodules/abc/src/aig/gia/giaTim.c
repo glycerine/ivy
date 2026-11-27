@@ -969,6 +969,11 @@ int Gia_ManVerifyWithBoxes( Gia_Man_t * pGia, int nBTLimit, int nTimeLim, int fS
     }
     // read original AIG
     pSpec = Gia_AigerRead( pFileSpec ? pFileSpec : pGia->pSpec, 0, 0, 0 );
+    if ( pSpec == NULL )
+    {
+        printf( "Cannot read spec AIG \"%s\".\n", pFileSpec ? pFileSpec : pGia->pSpec );
+        return Status;
+    }
     if ( Gia_ManBoxNum(pSpec) && pSpec->pAigExtra == NULL )
     {
         Gia_ManStop( pSpec );

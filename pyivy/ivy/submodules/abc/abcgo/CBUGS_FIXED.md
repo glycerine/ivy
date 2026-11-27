@@ -1027,3 +1027,56 @@ and states how the Go port was verified.
 - **Go port:** printed its own error ("live: csLiveTarget_ output missing")
   and skipped the check for `-m`; `Abc_CommandCS_kLiveness` (base/abci) now
   prints C's note for non-strashed input and C's message, for every flag.
+
+## 48. `&acec`, `&verify` and `&test` crash when no AIG is loaded
+
+- **File:** `src/base/abci/abc.c` (`Abc_CommandAbc9Acec`,
+  `Abc_CommandAbc9Verify`, `Abc_CommandAbc9Test`).
+- **Found:** 2026-11-27, native crash sweep: `read s27; strash; &acec`
+  (also `&verify`, `&test`) without `&get` dumped core reading
+  `pAbc->pGia->pSpec` / `Gia_ManLevelNum(NULL)`.
+- **Bug:** `&acec` checks `pAbc->pGia` only in its `-m` branch, `&verify`
+  not at all, and `&test` has the check commented out.
+- **Fix:** each prints "Abc_CommandAbc9...(): There is no AIG." and returns 1.
+- **Test:** `abcgo/base/abci/no_aig_native_test.go`
+  (`TestNoAigCommandsLikeNative`); red before (segmentation fault).
+- **Go port:** panicked the same way; the three commands now check, as C.
+
+## 49. `&verify` crashes when the spec cannot be read
+
+- **Files:** `src/aig/gia/giaAiger.c` (`Gia_AigerRead`), `src/aig/gia/giaTim.c`
+  (`Gia_ManVerifyWithBoxes`).
+- **Found:** 2026-11-27, after #48: `read s27.blif; strash; &get; &verify`
+  (the default spec is `pGia->pSpec`, the BLIF file) and
+  `&verify /nonexistent.aig` dumped core.
+- **Bug:** `Gia_AigerRead` calls `fread`/`fclose` on the result of `fopen`
+  without checking it (a missing file crashes in `fclose(NULL)`, after
+  `Gia_FileSize` has already reported the file unavailable), and
+  `Gia_ManVerifyWithBoxes` uses the spec without checking for NULL (a non-AIGER
+  file: "The parameter line is in a wrong format.", then a NULL dereference).
+- **Fix:** `Gia_AigerRead` returns NULL when the file cannot be opened;
+  `Gia_ManVerifyWithBoxes` prints `Cannot read spec AIG "<file>".` and
+  returns when the spec is NULL.
+- **Test:** `abcgo/base/abci/no_aig_native_test.go`
+  (`TestVerifyUnreadableSpecLikeNative`); red before (segmentation faults).
+- **Go port:** reported its own error texts ("Boxed verification: ...",
+  "Gia_AigerRead(): gia: invalid AIGER header"); the reader's header error is
+  now `gia.ErrAigerParamLine` and callers print C's messages
+  (`gia.GiaAigerReadMessage`), and `&verify` prints `giaTim.c`'s messages.
+
+## 50. `bm` and `bm2` crash on sequential networks
+
+- **File:** `src/base/abci/abc.c` (`Abc_CommandBm`, `Abc_CommandBm2`).
+- **Found:** 2026-11-27, native crash sweep: `read s27; strash; bm` (heap
+  overflow in `getDependencies`, abcBm.c) and `bm2` (crash in
+  `saucyGateWay`/`Abc_NtkDup`).
+- **Bug:** Boolean matching is combinational, but neither command rejects
+  latches. On s27 the functional supports from `Sim_ComputeFunSupp` include
+  the latch outputs (CIs), which `getDependencies` uses as indices into the
+  per-PI `iDep` array.
+- **Fix:** both commands print "Boolean matching works only for combinational
+  networks (use "comb")." and return 1 when either network has latches.
+- **Test:** `abcgo/base/abci/bm_native_test.go`
+  (`TestBmSequentialLikeNative`; s27 and mul4 x bm, bm -P, bm2); red before
+  (native segmentation fault).
+- **Go port:** panicked the same way; both commands now check, as C.

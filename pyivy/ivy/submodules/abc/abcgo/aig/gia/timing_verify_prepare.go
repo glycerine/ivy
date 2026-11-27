@@ -1,6 +1,7 @@
 package gia
 
 import (
+	"errors"
 	"fmt"
 	"github.com/glycerine/abcgo/misc/tim"
 )
@@ -12,28 +13,28 @@ func giaPrepareBoxVerification(impl *Gia_Man_t, path string, sequential int32) (
 		path = impl.PSpec
 	}
 	if path == "" {
-		return nil, nil, fmt.Errorf("specification file is not given")
+		return nil, nil, errors.New("Spec file is not given. Use standard flow.")
 	}
 	if Gia_ManBoxNum(impl) > 0 && impl.PAigExtra == nil {
-		return nil, nil, fmt.Errorf("design has no box logic")
+		return nil, nil, errors.New("Design has no box logic. Use standard flow.")
 	}
 	spec, err := Gia_AigerRead(path, 0, 0, 0)
-	if err != nil {
-		return nil, nil, err
+	if err != nil { // C printed nothing here and crashed (C bug 48)
+		return nil, nil, fmt.Errorf("%s\nCannot read spec AIG \"%s\".", GiaAigerReadMessage(err), path)
 	}
 	defer Gia_ManStop(spec)
 	if Gia_ManBoxNum(spec) > 0 && spec.PAigExtra == nil {
-		return nil, nil, fmt.Errorf("specification has no box logic")
+		return nil, nil, errors.New("Spec has no box logic. Use standard flow.")
 	}
 	var present *Vec_Int_t
 	if spec.PManTime != nil && tim.Tim_ManBlackBoxNum(spec.PManTime.(*tim.Tim_Man_t)) > 0 && Gia_ManBoxNum(impl) > 0 {
 		if Gia_ManBoxNum(spec) < Gia_ManBoxNum(impl) {
-			return nil, nil, fmt.Errorf("specification has fewer boxes than implementation")
+			return nil, nil, errors.New("Spec has less boxes than the design. Cannot proceed.")
 		}
 		if Gia_ManBoxNum(spec) > Gia_ManBoxNum(impl) {
 			mask := tim.Tim_ManAlignTwo(spec.PManTime.(*tim.Tim_Man_t), impl.PManTime.(*tim.Tim_Man_t))
 			if mask == nil {
-				return nil, nil, fmt.Errorf("specification and implementation boxes cannot be aligned")
+				return nil, nil, errors.New("Boxes of spec and design cannot be aligned. Cannot proceed.")
 			}
 			present = Vec_IntAlloc(len(mask))
 			for _, v := range mask {

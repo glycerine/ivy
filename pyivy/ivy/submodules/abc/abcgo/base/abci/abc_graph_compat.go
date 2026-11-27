@@ -30,7 +30,7 @@ func Gia_ManToAigSimple(p *Gia_Man_t) *aig.Graph   { return gia.Gia_ManToAigSimp
 func Gia_AigerRead(name string, simple, skip, check int32) *Gia_Man_t {
 	p, err := gia.Gia_AigerRead(name, simple, skip, check)
 	if err != nil {
-		fmt.Fprintf(os.Stdout, "Gia_AigerRead(): %v\n", err)
+		fmt.Fprintln(os.Stdout, gia.GiaAigerReadMessage(err))
 	}
 	return p
 }

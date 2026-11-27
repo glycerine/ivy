@@ -27457,6 +27457,16 @@ func Abc_CommandBm(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if baseabc.Abc_NtkPrepareTwoNtks(pErr, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
 		return 1
 	}
+	if baseabc.Abc_NtkLatchNum(pNtk1) != 0 || baseabc.Abc_NtkLatchNum(pNtk2) != 0 { // C bug 50
+		Abc_Print(-1, "Boolean matching works only for combinational networks (use \"comb\").\n")
+		if fDelete1 != 0 {
+			Abc_NtkDelete(pNtk1)
+		}
+		if fDelete2 != 0 {
+			Abc_NtkDelete(pNtk2)
+		}
+		return 1
+	}
 
 	if uint32(Abc_NtkPiNum(pNtk1)) != uint32(Abc_NtkPiNum(pNtk2)) || uint32(Abc_NtkPoNum(pNtk1)) != uint32(Abc_NtkPoNum(pNtk2)) {
 		Abc_Print(-2, "Mismatch in the number of inputs or outputs\n")
@@ -27540,6 +27550,16 @@ func Abc_CommandBm2(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	pArgvNew = argv[globalUtilOptind:]
 	nArgcNew = argc - globalUtilOptind
 	if baseabc.Abc_NtkPrepareTwoNtks(pErr, pNtk, pArgvNew, nArgcNew, &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1) == 0 {
+		return 1
+	}
+	if baseabc.Abc_NtkLatchNum(pNtk1) != 0 || baseabc.Abc_NtkLatchNum(pNtk2) != 0 { // C bug 50
+		Abc_Print(-1, "Boolean matching works only for combinational networks (use \"comb\").\n")
+		if fDelete1 != 0 {
+			Abc_NtkDelete(pNtk1)
+		}
+		if fDelete2 != 0 {
+			Abc_NtkDelete(pNtk2)
+		}
 		return 1
 	}
 
@@ -36426,6 +36446,10 @@ func Abc_CommandAbc9Verify(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
+	if abcFrameGia(pAbc) == nil { // C bug 48
+		Abc_Print(-1, "Abc_CommandAbc9Verify(): There is no AIG.\n")
+		return 1
+	}
 	if argc == globalUtilOptind+1 {
 		pFileSpec = argv[globalUtilOptind]
 		misc_extra.Extra_FileNameCorrectPath(pFileSpec)
@@ -44639,6 +44663,10 @@ func Abc_CommandAbc9Acec(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	if nArgcNew == 0 || nArgcNew == 1 {
 		var pSecond *Gia_Man_t
 		var FileName string
+		if abcFrameGia(pAbc) == nil { // C bug 48
+			Abc_Print(-1, "Abc_CommandAbc9Acec(): There is no AIG.\n")
+			return 1
+		}
 		if nArgcNew == 0 {
 			FileName = abcFrameGia(pAbc).PSpec
 			if FileName == "" {
@@ -47144,11 +47172,10 @@ func Abc_CommandAbc9Test(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			goto usage
 		}
 	}
-	//    if ( pAbc->pGia == NULL )
-	//    {
-	//        Abc_Print( -1, "Abc_CommandAbc9Test(): There is no AIG.\n" );
-	//        return 1;
-	//    }
+	if abcFrameGia(pAbc) == nil { // C bug 48
+		Abc_Print(-1, "Abc_CommandAbc9Test(): There is no AIG.\n")
+		return 1
+	}
 	//    Abc_FrameUpdateGia( pAbc, Abc_Procedure(pAbc->pGia) );
 	//    Gia_ManTryResub( pAbc->pGia );
 	giapkg.Gia_RsbEnumerateWindows(abcFrameGia(pAbc), 6, 5)

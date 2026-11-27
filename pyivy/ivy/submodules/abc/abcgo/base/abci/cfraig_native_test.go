@@ -27,7 +27,7 @@ func TestCFraigLikeNative(t *testing.T) {
 			}
 			g, _ := os.ReadFile(goFile)
 			n, _ := os.ReadFile(nativeFile)
-			if string(g) != string(n) {
+			if aigerStamp.ReplaceAllString(string(g), "") != aigerStamp.ReplaceAllString(string(n), "") {
 				t.Errorf("%s: written AIG differs from native", script)
 			}
 		}

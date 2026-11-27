@@ -893,6 +893,8 @@ Gia_Man_t * Gia_AigerRead( char * pFileName, int fGiaSimple, int fSkipStrash, in
     Gia_FileFixName( pFileName );
     nFileSize = Gia_FileSize( pFileName );
     pFile = fopen( pFileName, "rb" );
+    if ( pFile == NULL ) // Gia_FileSize() reported it
+        return NULL;
     pContents = ABC_ALLOC( char, nFileSize );
     RetValue = fread( pContents, nFileSize, 1, pFile );
     fclose( pFile );

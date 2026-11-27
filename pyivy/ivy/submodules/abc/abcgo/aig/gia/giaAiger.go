@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"compress/gzip"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"github.com/glycerine/abcgo/misc/vec"
 	"io"
+	"io/fs"
 	"math"
 	"os"
 	"path/filepath"
@@ -194,6 +196,23 @@ func Gia_AigerWriteLiterals(lits *Vec_Int_t) (*Vec_Str_t, error) {
 	return aigerVecBytes(out), nil
 }
 
+// ErrAigerParamLine is the header failure C's Gia_AigerReadFromMemory
+// reports as "The parameter line is in a wrong format.".
+var ErrAigerParamLine = errors.New("The parameter line is in a wrong format.")
+
+// GiaAigerReadMessage is what C's Gia_AigerRead prints for a read failure:
+// Gia_FileSize's message for a missing file, the parameter-line message for
+// a bad header.
+func GiaAigerReadMessage(err error) string {
+	switch {
+	case errors.Is(err, ErrAigerParamLine):
+		return ErrAigerParamLine.Error()
+	case errors.Is(err, fs.ErrNotExist):
+		return "Gia_FileSize(): The file is unavailable (absent or open)."
+	}
+	return "Gia_AigerRead(): " + err.Error()
+}
+
 func ParseAiger(contents []byte, opts AigerReadOptions) (*Gia_Man_t, error) {
 	return parseAiger(contents, opts, 0)
 }
@@ -208,7 +227,7 @@ func parseAiger(contents []byte, opts AigerReadOptions, depth int) (*Gia_Man_t, 
 	}
 	fields := strings.Fields(string(header))
 	if len(fields) < 6 || len(fields) > 10 || fields[0] != "aig" && fields[0] != "aig2" && fields[0] != "aag" {
-		return nil, fmt.Errorf("gia: invalid AIGER header")
+		return nil, ErrAigerParamLine
 	}
 	var counts [9]uint32
 	for i, field := range fields[1:] {

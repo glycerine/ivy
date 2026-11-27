@@ -16,7 +16,7 @@ func Gia_ManVerifyWithBoxes(impl *Gia_Man_t, conflicts, seconds, sequential, dum
 	}
 	spec, design, err := giaPrepareBoxVerification(impl, specPath, sequential)
 	if err != nil {
-		fmt.Printf("Boxed verification: %v.\n", err)
+		fmt.Println(err) // the messages of Gia_ManVerifyWithBoxes (giaTim.c)
 		return -1
 	}
 	defer Gia_ManStop(spec)

@@ -28260,6 +28260,13 @@ int Abc_CommandBm( Abc_Frame_t * pAbc, int argc, char ** argv )
     nArgcNew = argc - globalUtilOptind;
     if ( !Abc_NtkPrepareTwoNtks( pErr, pNtk, pArgvNew, nArgcNew , &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1 ) )
         return 1;
+    if ( Abc_NtkLatchNum(pNtk1) || Abc_NtkLatchNum(pNtk2) )
+    {
+        Abc_Print( -1, "Boolean matching works only for combinational networks (use \"comb\").\n" );
+        if ( fDelete1 ) Abc_NtkDelete( pNtk1 );
+        if ( fDelete2 ) Abc_NtkDelete( pNtk2 );
+        return 1;
+    }
 
     if( (unsigned)Abc_NtkPiNum(pNtk1) != (unsigned)Abc_NtkPiNum(pNtk2) || (unsigned)Abc_NtkPoNum(pNtk1) != (unsigned)Abc_NtkPoNum(pNtk2) )
     {
@@ -28339,6 +28346,13 @@ int Abc_CommandBm2( Abc_Frame_t * pAbc, int argc, char ** argv )
     nArgcNew = argc - globalUtilOptind;
     if ( !Abc_NtkPrepareTwoNtks( pErr, pNtk, pArgvNew, nArgcNew , &pNtk1, &pNtk2, &fDelete1, &fDelete2, 1 ) )
         return 1;
+    if ( Abc_NtkLatchNum(pNtk1) || Abc_NtkLatchNum(pNtk2) )
+    {
+        Abc_Print( -1, "Boolean matching works only for combinational networks (use \"comb\").\n" );
+        if ( fDelete1 ) Abc_NtkDelete( pNtk1 );
+        if ( fDelete2 ) Abc_NtkDelete( pNtk2 );
+        return 1;
+    }
 
     if( (unsigned)Abc_NtkPiNum(pNtk1) != (unsigned)Abc_NtkPiNum(pNtk2) ||
         (unsigned)Abc_NtkPoNum(pNtk1) != (unsigned)Abc_NtkPoNum(pNtk2) )
@@ -37427,6 +37441,11 @@ int Abc_CommandAbc9Verify( Abc_Frame_t * pAbc, int argc, char ** argv )
             goto usage;
         }
     }
+    if ( pAbc->pGia == NULL )
+    {
+        Abc_Print( -1, "Abc_CommandAbc9Verify(): There is no AIG.\n" );
+        return 1;
+    }
     if ( argc == globalUtilOptind + 1 )
     {
         pFileSpec = argv[globalUtilOptind];
@@ -45786,6 +45805,11 @@ int Abc_CommandAbc9Acec( Abc_Frame_t * pAbc, int argc, char ** argv )
     {
         Gia_Man_t * pSecond;
         char * pTemp, * FileName = NULL;
+        if ( pAbc->pGia == NULL )
+        {
+            Abc_Print( -1, "Abc_CommandAbc9Acec(): There is no AIG.\n" );
+            return 1;
+        }
         if ( nArgcNew == 0 )
         {
             FileName = pAbc->pGia->pSpec;
@@ -48365,11 +48389,11 @@ int Abc_CommandAbc9Test( Abc_Frame_t * pAbc, int argc, char ** argv )
             goto usage;
         }
     }
-//    if ( pAbc->pGia == NULL )
-//    {
-//        Abc_Print( -1, "Abc_CommandAbc9Test(): There is no AIG.\n" );
-//        return 1;
-//    }
+    if ( pAbc->pGia == NULL )
+    {
+        Abc_Print( -1, "Abc_CommandAbc9Test(): There is no AIG.\n" );
+        return 1;
+    }
 //    Abc_FrameUpdateGia( pAbc, Abc_Procedure(pAbc->pGia) );
 //    Gia_ManTryResub( pAbc->pGia );
     Gia_RsbEnumerateWindows( pAbc->pGia, 6, 5 );
