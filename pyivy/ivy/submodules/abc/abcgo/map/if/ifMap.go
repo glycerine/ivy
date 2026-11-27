@@ -268,6 +268,10 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 	}
 
 	// generate cuts
+	if ifMapPlain(p) {
+		ifObjMergeCutsPlain(p, pObj, pCutSet, Mode, fSave0)
+		goto cutsDone
+	}
 	// inlining of macro If_ObjForEachCut
 	for i = 0; i < int32(pObj.pFanin0.pCutSet.nCuts); i++ {
 		pCut0 = pObj.pFanin0.pCutSet.ppCuts[i]
@@ -519,6 +523,7 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 			//        If_CutTraverse( p, pObj, pCut );
 		}
 	}
+cutsDone:
 	assert(pCutSet.nCuts > 0, "pCutSet.nCuts > 0")
 	//    If_CutVerifyCuts( pCutSet, !p->pPars->fUseTtPerm );
 
@@ -763,3 +768,72 @@ func If_ManPerformMappingRound(p *If_Man_t, nCutsUsed, mode, preprocess, first i
 ////////////////////////////////////////////////////////////////////////
 
 //ABC_NAMESPACE_IMPL_END
+
+// ifMapPlain reports the default configuration, in which the cut loop of
+// If_ObjPerformMappingAnd reduces to merging, filtering, unit delay, area
+// (and edge) evaluation and sorting; ifObjMergeCutsPlain runs that loop
+// without testing the other options for every cut pair.
+func ifMapPlain(p *If_Man_t) bool {
+	pp := p.pPars
+	return pp.FTruth == 0 && pp.FUseTtPerm == 0 && pp.pFuncCost == nil && pp.FDelayOpt == 0 &&
+		pp.FDsdBalance == 0 && pp.FUserRecLib == 0 && pp.FUserSesLib == 0 && pp.FDelayOptLut == 0 &&
+		pp.NGateSize <= 0 && pp.FPower == 0 && pp.PLutLib == nil && pp.fLiftLeaves == 0 &&
+		pp.fSkipCutFilter == 0 && pp.NAndDelay <= 0 && pp.NAndArea <= 0
+}
+
+func ifObjMergeCutsPlain(p *If_Man_t, pObj *If_Obj_t, pCutSet *If_Set_t, Mode, fSave0 int32) {
+	set0, set1 := pObj.pFanin0.pCutSet, pObj.pFanin1.pCutSet
+	cuts0, cuts1 := set0.ppCuts[:set0.nCuts], set1.ppCuts[:set1.nCuts]
+	lutSize := p.pPars.NLutSize
+	edge := p.pPars.FEdge != 0
+	spec := pObj.fSpec != 0
+	required := pObj.Required + p.fEpsilon
+	objs := p.objs
+	for _, pCut0 := range cuts0 {
+		for _, pCut1 := range cuts1 {
+			pCut := pCutSet.ppCuts[pCutSet.nCuts]
+			// make sure K-feasible cut exists
+			if If_WordCountOnes(pCut0.uSign|pCut1.uSign) > lutSize {
+				continue
+			}
+			if If_CutMergeOrdered(p, pCut0, pCut1, pCut) == 0 {
+				continue
+			}
+			if spec && pCut.nLeaves == uint32(lutSize) {
+				continue
+			}
+			p.nCutsMerged++
+			p.nCutsTotal++
+			if If_CutFilter(pCutSet, pCut, fSave0) != 0 {
+				continue
+			}
+			pCut.fAndCut = 0
+			pCut.iCutFunc = -1
+			pCut.fCompl = 0
+			pCut.fUser = 0
+			pCut.Cost = 0
+			// If_CutDelay: unit delay over the leaves
+			delay := float32(-IF_FLOAT_LARGE)
+			for _, id := range pCut.pLeaves[:pCut.nLeaves] {
+				delay = ifMax(delay, objs[id].CutBest.Delay+1)
+			}
+			pCut.Delay = delay
+			if delay == -1 || Mode != 0 && delay > required {
+				continue
+			}
+			if Mode == 2 {
+				pCut.Area = If_CutAreaDerefed(p, pCut)
+			} else {
+				pCut.Area = ifCutAreaFlow(p, pCut)
+			}
+			if edge {
+				if Mode == 2 {
+					pCut.Edge = If_CutEdgeDerefed(p, pCut)
+				} else {
+					pCut.Edge = If_CutEdgeFlow(p, pCut)
+				}
+			}
+			If_CutSort(p, pCutSet, pCut)
+		}
+	}
+}

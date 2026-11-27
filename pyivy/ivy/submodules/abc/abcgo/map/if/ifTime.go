@@ -59,7 +59,7 @@ func If_CutDelay(p *If_Man_t, _ *If_Obj_t, c *If_Cut_t) float32 {
 	maximum := float32(-IF_FLOAT_LARGE)
 	if c.fAndCut != 0 {
 		for pin := int32(0); pin < int32(c.nLeaves); pin++ {
-			maximum = max(maximum, If_ObjCutBest(If_CutLeaf(p, c, pin)).Delay+float32(p.pPars.NAndDelay))
+			maximum = ifMax(maximum, If_ObjCutBest(If_CutLeaf(p, c, pin)).Delay+float32(p.pPars.NAndDelay))
 		}
 		return maximum
 	}
@@ -74,11 +74,11 @@ func If_CutDelay(p *If_Man_t, _ *If_Obj_t, c *If_Cut_t) float32 {
 			permutation, delays := make([]int32, c.nLeaves), make([]float32, c.nLeaves)
 			If_CutSortInputPins(p, c, permutation, delays)
 			for pin, index := range permutation {
-				maximum = max(maximum, delays[index]+library.pLutDelays[c.nLeaves][pin])
+				maximum = ifMax(maximum, delays[index]+library.pLutDelays[c.nLeaves][pin])
 			}
 		} else {
 			for pin := int32(0); pin < int32(c.nLeaves); pin++ {
-				maximum = max(maximum, If_ObjCutBest(If_CutLeaf(p, c, pin)).Delay+library.pLutDelays[c.nLeaves][0])
+				maximum = ifMax(maximum, If_ObjCutBest(If_CutLeaf(p, c, pin)).Delay+library.pLutDelays[c.nLeaves][0])
 			}
 		}
 		return maximum
@@ -96,7 +96,7 @@ func If_CutDelay(p *If_Man_t, _ *If_Obj_t, c *If_Cut_t) float32 {
 		} else if p.pPars.fLiftLeaves != 0 {
 			arrival -= float32(c.pLeaves[pin]&255) * float32(p.Period)
 		}
-		maximum = max(maximum, arrival+delay)
+		maximum = ifMax(maximum, arrival+delay)
 	}
 	return maximum
 }
@@ -171,7 +171,7 @@ func If_ManDelayMax(p *If_Man_t, sequential int32) float32 {
 	}
 	maximum := float32(-IF_FLOAT_LARGE)
 	for _, output := range ifTimingOutputs(p, sequential != 0, sequential == 0 && p.pPars.FLatchPaths != 0) {
-		maximum = max(maximum, If_ObjArrTime(If_ObjFanin0(output)))
+		maximum = ifMax(maximum, If_ObjArrTime(If_ObjFanin0(output)))
 	}
 	return maximum
 }
@@ -305,4 +305,13 @@ func If_ManComputeRequired(p *If_Man_t) {
 			panic("unknown timing object type")
 		}
 	}
+}
+
+// ifMax is IF_MAX: ((a) > (b) ? (a) : (b)), cheaper than the builtin max,
+// which orders NaNs and signed zeros.
+func ifMax(a, b float32) float32 {
+	if a > b {
+		return a
+	}
+	return b
 }

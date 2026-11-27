@@ -14,14 +14,15 @@ func ifLeaves(c *If_Cut_t) []int32 {
 	return c.pLeaves[:c.nLeaves]
 }
 func If_CutVerifyCut(base, c *If_Cut_t) int32 {
+	others := ifLeaves(base)
+next:
 	for _, leaf := range ifLeaves(c) {
-		found := false
-		for _, other := range ifLeaves(base) {
-			found = found || leaf == other
+		for _, other := range others {
+			if leaf == other {
+				continue next
+			}
 		}
-		if !found {
-			return 0
-		}
+		return 0 // leaf is not contained in base
 	}
 	return 1
 }
@@ -422,7 +423,7 @@ func ifCutFlow(p *If_Man_t, c *If_Cut_t, metric byte) float32 {
 	}
 	return flow
 }
-func If_CutAreaFlow(p *If_Man_t, c *If_Cut_t) float32                  { return ifCutFlow(p, c, 'a') }
+func If_CutAreaFlow(p *If_Man_t, c *If_Cut_t) float32                  { return ifCutAreaFlow(p, c) }
 func If_CutEdgeFlow(p *If_Man_t, c *If_Cut_t) float32                  { return ifCutFlow(p, c, 'e') }
 func If_CutPowerFlow(p *If_Man_t, c *If_Cut_t, root *If_Obj_t) float32 { return ifCutFlow(p, c, 'p') }
 func If_CutAverageRefs(p *If_Man_t, c *If_Cut_t) float32 {
@@ -456,14 +457,14 @@ func ifCutChangeRefs(p *If_Man_t, c *If_Cut_t, delta int32, metric byte) float32
 	}
 	return cost
 }
-func If_CutAreaRef(p *If_Man_t, c *If_Cut_t) float32   { return ifCutChangeRefs(p, c, 1, 'a') }
-func If_CutAreaDeref(p *If_Man_t, c *If_Cut_t) float32 { return ifCutChangeRefs(p, c, -1, 'a') }
+func If_CutAreaRef(p *If_Man_t, c *If_Cut_t) float32   { return ifCutAreaRef(p, c) }
+func If_CutAreaDeref(p *If_Man_t, c *If_Cut_t) float32 { return ifCutAreaDeref(p, c) }
 func If_CutAreaDerefed(p *If_Man_t, c *If_Cut_t) float32 {
 	if c.nLeaves < 2 {
 		return 0
 	}
-	first := ifCutChangeRefs(p, c, 1, 'a')
-	second := ifCutChangeRefs(p, c, -1, 'a')
+	first := ifCutAreaRef(p, c)
+	second := ifCutAreaDeref(p, c)
 	if float32(math.Abs(float64(first-second))) > 3*p.fEpsilon {
 		panic("if: inconsistent reversible cut accounting")
 	}
@@ -633,4 +634,59 @@ func If_CutCountTotalFanins(p *If_Man_t) int32 {
 	}
 	fmt.Printf("Total cut inputs = %d. Total fanins incremental = %d.\n", total, incremental)
 	return 1
+}
+
+// Area-specialized forms of ifCutFlow and ifCutChangeRefs (If_CutAreaFlow,
+// If_CutAreaRef and If_CutAreaDeref), the mapper's hottest helpers; the
+// generic forms dispatch on the metric for every leaf.
+func ifCutAreaFlow(p *If_Man_t, c *If_Cut_t) float32 {
+	flow := If_CutLutArea(p, c)
+	objs := p.objs
+	for _, id := range c.pLeaves[:c.nLeaves] {
+		leaf := objs[id]
+		add := leaf.CutBest.Area
+		if leaf.nRefs != 0 && leaf.Type != IF_CONST1 {
+			if leaf.EstRefs <= p.fEpsilon {
+				panic("if: invalid estimated fanout count")
+			}
+			add /= leaf.EstRefs
+		}
+		flow += add
+		if flow > 1e32 {
+			flow = 1e32
+		}
+	}
+	return flow
+}
+
+func ifCutAreaRef(p *If_Man_t, c *If_Cut_t) float32 {
+	area := If_CutLutArea(p, c)
+	objs := p.objs
+	for _, id := range c.pLeaves[:c.nLeaves] {
+		leaf := objs[id]
+		if leaf.nRefs < 0 {
+			panic("if: reference underflow")
+		}
+		leaf.nRefs++
+		if leaf.nRefs == 1 && leaf.Type == IF_AND {
+			area += ifCutAreaRef(p, &leaf.CutBest)
+		}
+	}
+	return area
+}
+
+func ifCutAreaDeref(p *If_Man_t, c *If_Cut_t) float32 {
+	area := If_CutLutArea(p, c)
+	objs := p.objs
+	for _, id := range c.pLeaves[:c.nLeaves] {
+		leaf := objs[id]
+		if leaf.nRefs <= 0 {
+			panic("if: reference underflow")
+		}
+		leaf.nRefs--
+		if leaf.nRefs == 0 && leaf.Type == IF_AND {
+			area += ifCutAreaDeref(p, &leaf.CutBest)
+		}
+	}
+	return area
 }
