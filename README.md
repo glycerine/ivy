@@ -198,6 +198,22 @@ ivy2cpp
 ivy2golang
 ~~~
 
+To run the web app: launch the ivyweb binary from the command line. Then open your web browser and point it at http://localhost:8080
+
+~~~
+$ ivyweb
+IVy: Go backend
+Listening on http://localhost:8080
+2026/11/27 09:48:05 webui: listening on :8080
+~~~
+
+The port's `goivy_check` in Go is a drop in replacement for the original `ivy_check` in python.
+
+~~~
+$ goivy_check
+usage: goivy_check [key=value ...] file.ivy
+~~~
+
 ----
 
 This project (GoIvy) author: Jason E. Aten, Ph.D.
