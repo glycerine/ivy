@@ -1126,10 +1126,10 @@ void Gia_ShowProcess( Gia_Man_t * p, char * pFileName, Vec_Int_t * vBold, Vec_In
 void Gia_ManShow( Gia_Man_t * pMan, Vec_Int_t * vBold, int fAdders, int fFadds, int fPath )
 {
     extern void Abc_ShowFile( char * FileNameDot );
-    char FileNameDot[200];
+    char FileNameDot[ABC_SHOW_NAME_MAX];
     FILE * pFile;
     Vec_Int_t * vXors = NULL, * vAdds = fAdders ? Ree_ManComputeCuts( pMan, &vXors, 0 ) : NULL;
-    sprintf( FileNameDot, "%s", Extra_FileNameGenericAppend(pMan->pName, ".dot") );
+    snprintf( FileNameDot, sizeof(FileNameDot), "%s", Extra_FileNameGenericAppend(pMan->pName, ".dot") );
     // check that the file can be opened
     if ( (pFile = fopen( FileNameDot, "w" )) == NULL )
     {

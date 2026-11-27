@@ -248,6 +248,8 @@ typedef ABC_INT64_T iword;
 ////////////////////////////////////////////////////////////////////////
 
 #define ABC_INFINITY    (1000000000)
+// the longest file name the show commands build (a design path plus a suffix)
+#define ABC_SHOW_NAME_MAX 1000
 
 #define ABC_SWAP(Type, a, b)  { Type t = a; a = b; b = t; }
 

@@ -89,7 +89,7 @@ void Abc_NodeShowBdd( Abc_Obj_t * pNode, int fCompl )
 {
     FILE * pFile;
     Vec_Ptr_t * vNamesIn;
-    char FileNameDot[200];
+    char FileNameDot[ABC_SHOW_NAME_MAX];
     char * pNameOut;
     DdManager * dd = (DdManager *)pNode->pNtk->pManFunc;
 
@@ -123,7 +123,7 @@ void Abc_NodeShowBdd( Abc_Obj_t * pNode, int fCompl )
 }
 void Abc_NtkShowBdd( Abc_Ntk_t * pNtk, int fCompl )
 {
-    char FileNameDot[200];
+    char FileNameDot[ABC_SHOW_NAME_MAX];
     char ** ppNamesIn, ** ppNamesOut;
     DdManager * dd; DdNode * bFunc;
     Vec_Ptr_t * vFuncsGlob;
@@ -203,7 +203,7 @@ void Abc_NtkShowBdd( Abc_Ntk_t * pNtk, int fCompl ) {}
 void Abc_NodeShowCut( Abc_Obj_t * pNode, int nNodeSizeMax, int nConeSizeMax )
 {
     FILE * pFile;
-    char FileNameDot[200];
+    char FileNameDot[ABC_SHOW_NAME_MAX];
     Abc_ManCut_t * p;
     Vec_Ptr_t * vCutSmall;
     Vec_Ptr_t * vCutLarge;
@@ -267,7 +267,7 @@ void Abc_NtkShow( Abc_Ntk_t * pNtk0, int fGateNames, int fSeq, int fUseReverse )
     Abc_Obj_t * pNode;
     Vec_Ptr_t * vNodes;
     int nBarBufs;
-    char FileNameDot[200];
+    char FileNameDot[ABC_SHOW_NAME_MAX];
     int i;
 
     assert( Abc_NtkIsStrash(pNtk0) || Abc_NtkIsLogic(pNtk0) );
@@ -327,8 +327,8 @@ void Abc_ShowFile( char * FileNameDot )
 {
     FILE * pFile;
     char * FileGeneric;
-    char FileNamePs[200];
-    char CommandDot[1000];
+    char FileNamePs[ABC_SHOW_NAME_MAX];
+    char CommandDot[3*ABC_SHOW_NAME_MAX];
     char * pDotName;
     char * pDotNameWin = "dot.exe";
     char * pDotNameUnix = "dot";
@@ -358,11 +358,11 @@ void Abc_ShowFile( char * FileNameDot )
 
     // create the PostScript file name
     FileGeneric = Extra_FileNameGeneric( FileNameDot );
-    sprintf( FileNamePs,  "%s.ps",  FileGeneric ); 
+    snprintf( FileNamePs, sizeof(FileNamePs), "%s.ps",  FileGeneric ); 
     ABC_FREE( FileGeneric );
 
     // generate the PostScript file using DOT
-    sprintf( CommandDot,  "%s -Tps -o %s %s", pDotName, FileNamePs, FileNameDot ); 
+    snprintf( CommandDot, sizeof(CommandDot), "%s -Tps -o %s %s", pDotName, FileNamePs, FileNameDot ); 
     RetValue = system( CommandDot );
     if ( RetValue == -1 )
     {
@@ -425,7 +425,7 @@ void Abc_ShowGetFileName( char * pName, char * pBuffer )
 {
     char * pCur;
     // creat the file name
-    sprintf( pBuffer, "%s.dot", pName );
+    snprintf( pBuffer, ABC_SHOW_NAME_MAX, "%s.dot", pName ); // pBuffer has ABC_SHOW_NAME_MAX bytes
     // get rid of not-alpha-numeric characters
     for ( pCur = pBuffer; *pCur; pCur++ )
         if ( !((*pCur >= '0' && *pCur <= '9') || (*pCur >= 'a' && *pCur <= 'z') || 
@@ -502,7 +502,7 @@ void Abc_NtkWriteFlopDependency( Abc_Ntk_t * pNtk, char * pFileName )
 void Abc_NtkShowFlopDependency( Abc_Ntk_t * pNtk )
 {
     FILE * pFile;
-    char FileNameDot[200];
+    char FileNameDot[ABC_SHOW_NAME_MAX];
     assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk) );
     // create the file name
     Abc_ShowGetFileName( pNtk->pName, FileNameDot );

@@ -48,11 +48,11 @@ void Ivy_ManShow( Ivy_Man_t * pMan, int fHaig, Vec_Ptr_t * vBold )
 {
     extern void Abc_ShowFile( char * FileNameDot );
     static int Counter = 0;
-    char FileNameDot[200];
+    char FileNameDot[ABC_SHOW_NAME_MAX];
     FILE * pFile;
     // create the file name
 //    Ivy_ShowGetFileName( pMan->pName, FileNameDot );
-    sprintf( FileNameDot, "temp%02d.dot", Counter++ );
+    snprintf( FileNameDot, sizeof(FileNameDot), "temp%02d.dot", Counter++ );
     // check that the file can be opened
     if ( (pFile = fopen( FileNameDot, "w" )) == NULL )
     {

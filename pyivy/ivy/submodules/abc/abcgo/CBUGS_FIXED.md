@@ -1141,3 +1141,22 @@ and states how the Go port was verified.
 - **Go port:** no use after free or fixed buffers; &splitprove and &mlgen
   print the same as C. Go's `l2ssim` (proof/live) is not yet a faithful port
   (prints nothing here).
+
+## 54. `show` aborts on a design path longer than 200 bytes
+
+- **Files:** `src/base/abc/abcShow.c`, `src/aig/aig/aigShow.c`,
+  `src/aig/ivy/ivyShow.c`, `src/aig/gia/giaShow.c`,
+  `src/misc/util/abc_global.h` (`ABC_SHOW_NAME_MAX`).
+- **Found:** 2026-11-27, crash sweep with a design read from a directory over
+  250 bytes deep: `read <path>/mul4.aig; strash; show` aborted ("buffer
+  overflow detected" in `Abc_ShowGetFileName`'s `sprintf`).
+- **Bug:** the `.dot`/`.ps` file names (the design name with `/` turned into
+  `_`, plus a suffix) and the `dot` command line were built with `sprintf`
+  into `char[200]`/`char[1000]`.
+- **Fix:** the buffers have `ABC_SHOW_NAME_MAX` (1000) bytes (the command line
+  three times that) and are filled with `snprintf`. A name this long is not a
+  valid file name; `show` now reports that it cannot open the intermediate
+  file, as the Go port did.
+- **Test:** `abcgo/base/abci/show_native_test.go`
+  (`TestShowLongPathLikeNative`); red before (native abort).
+- **Go port:** no fixed buffers; output equal to the fixed C.
