@@ -1289,7 +1289,11 @@ func (s *Solver) GetSmallModelWithCond(
 				defer release()
 			}
 		}
-		for _, fc := range finalCond {
+		// Only the g3 batch supplies a pre-push proof operation. Once it needs
+		// concrete search, sibling equalities can share one refutation.
+		groupEqualities := proveGoal != nil && !s.showVCsEnabled()
+		nextGroup, provenThrough := 0, 0
+		for index, fc := range finalCond {
 			// NON-INCREMENTAL: create a fresh solver before each final
 			// condition, replaying prior assumptions.
 			// Python (ivy_solver.py:1226-1230):
@@ -1339,6 +1343,11 @@ func (s *Solver) GetSmallModelWithCond(
 					continue
 				}
 				s.showVCsFinalCond("assert", cond)
+				if index < provenThrough {
+					overallResult = smt.Unsat
+					fc.Unsat()
+					continue
+				}
 				zCond, err := s.ClausesToZ3(cond)
 				if err != nil {
 					continue
@@ -1356,6 +1365,16 @@ func (s *Solver) GetSmallModelWithCond(
 				}
 				if !xtracer.Enabled || xtracer.Suppressed {
 					zCond = z3solver.SimplifyVerificationCondition(zCond)
+				}
+				if groupEqualities && index >= nextGroup && len(finalCond)-index >= 3 {
+					count := guardedEqualityCount(finalCond[index:])
+					nextGroup = index + count
+					if count >= 3 && s.proveGuardedEqualities(z3solver, zCond, finalCond[index+1:nextGroup]) {
+						provenThrough = nextGroup
+						overallResult = smt.Unsat
+						fc.Unsat()
+						continue
+					}
 				}
 				if s.opts.Incremental {
 					z3solver.Push()
