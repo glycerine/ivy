@@ -205,8 +205,9 @@ func TestGraphExportsRegisterAndFailures(t *testing.T) {
 	if e := WriteGML(&b, n); e != nil {
 		t.Fatal(e)
 	}
-	if !strings.Contains(b.String(), "&quot;") || !strings.Contains(b.String(), "&amp;") || !strings.Contains(b.String(), "&#10;") {
-		t.Fatal("GML label escaping")
+	// Io_WriteGml prints labels verbatim, as ABC does.
+	if !strings.Contains(b.String(), "label \"quote\" & name\nline\"") {
+		t.Fatal("GML label not written as ABC writes it")
 	}
 	if _, e := makeBook(n); e == nil {
 		t.Fatal("Bookshelf whitespace names accepted")

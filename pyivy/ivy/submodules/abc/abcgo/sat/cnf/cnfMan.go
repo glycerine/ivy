@@ -1,6 +1,7 @@
 package cnf
 
 import (
+	"bufio"
 	"compress/gzip"
 	"fmt"
 	"io"
@@ -247,19 +248,36 @@ func Cnf_DataWriteIntoFile(cnf *Cnf_Dat_t, filename string, readable int32, fora
 	}
 	file, err := os.Create(filename)
 	if err != nil {
+		fmt.Printf("Cnf_WriteIntoFile(): Output file cannot be opened.\n")
 		return
 	}
 	defer file.Close()
-	_ = writeCNF(file, cnf, readable != 0, forall, exists)
+	writer := bufio.NewWriter(file)
+	_ = writeCNFFile(writer, cnf, readable, forall, exists)
+	_ = writer.Flush()
+}
+
+// writeCNFFile is the body of Cnf_DataWriteIntoFile(Gz): ABC's comment
+// line, the clauses, then an empty line.
+func writeCNFFile(w io.Writer, cnf *Cnf_Dat_t, readable int32, forall, exists *Vec_Int_t) error {
+	if _, err := fmt.Fprintf(w, "c Result of efficient AIG-to-CNF conversion using package CNF\n"); err != nil {
+		return err
+	}
+	if err := writeCNF(w, cnf, readable != 0, forall, exists); err != nil {
+		return err
+	}
+	_, err := fmt.Fprintf(w, "\n")
+	return err
 }
 func Cnf_DataWriteIntoFileGz(cnf *Cnf_Dat_t, filename string, readable int32, forall, exists *Vec_Int_t) {
 	file, err := os.Create(filename)
 	if err != nil {
+		fmt.Printf("Cnf_WriteIntoFile(): Output file cannot be opened.\n")
 		return
 	}
 	defer file.Close()
 	writer := gzip.NewWriter(file)
-	_ = writeCNF(writer, cnf, readable != 0, forall, exists)
+	_ = writeCNFFile(writer, cnf, readable, forall, exists)
 	_ = writer.Close()
 }
 

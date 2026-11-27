@@ -3,6 +3,7 @@ package io
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
 	stdio "io"
 	"os"
 	"strconv"
@@ -23,35 +24,49 @@ func exportFile(filename string, write func(stdio.Writer) error) error {
 	return os.WriteFile(filename, []byte(b.String()), 0644)
 }
 func exportQuoted(s string) string { return strconv.Quote(s) }
-func gmlQuoted(s string) string {
-	return `"` + strings.NewReplacer("&", "&amp;", "\"", "&quot;", "\n", "&#10;", "\r", "&#13;").Replace(s) + `"`
-}
+
+// WriteGML follows Io_WriteGml: POs, PIs, latches and nodes (each section
+// after an empty line), then one edge per fanin.
 func WriteGML(w stdio.Writer, n *abc.Network) error {
 	if n == nil {
 		return fmt.Errorf("nil network")
 	}
 	var b strings.Builder
-	fmt.Fprintf(&b, "# GML for %s written by ABC\ngraph [\n", exportQuoted(n.Name))
-	for _, kind := range []abc.ObjectKind{abc.ObjectPO, abc.ObjectPI, abc.ObjectLatch, abc.ObjectNode, abc.ObjectConst1, abc.ObjectBI, abc.ObjectBO, abc.ObjectNet, abc.ObjectBlackbox, abc.ObjectWhitebox} {
-		for _, o := range n.ObjectsOfKind(kind) {
-			if kind == abc.ObjectConst1 && o.FanoutCount() == 0 {
-				continue
-			}
-			shape, color := "ellipse", "#CCCCFF"
-			switch kind {
-			case abc.ObjectPO:
-				shape, color = "triangle", "#00FFFF"
-			case abc.ObjectPI:
-				shape, color = "triangle", "#00FF00"
-			case abc.ObjectLatch:
-				shape, color = "rectangle", "#FF0000"
-			}
-			fmt.Fprintf(&b, "    node [ id %5d label %s\n        graphics [ type %s fill %s ]\n    ]\n", o.ID, gmlQuoted(exportName(o)), gmlQuoted(shape), gmlQuoted(color))
+	fmt.Fprintf(&b, "# GML for \"%s\" written by ABC on %s\n", n.Name, extra.Extra_TimeStamp())
+	b.WriteString("graph [\n")
+	node := func(o *abc.Object, shape, color string) {
+		fmt.Fprintf(&b, "    node [ id %5d label \"%s\"\n", o.ID, abc.Abc_ObjName(o))
+		fmt.Fprintf(&b, "        graphics [ type \"%s\" fill \"%s\" ]\n", shape, color)
+		b.WriteString("    ]\n")
+	}
+	b.WriteString("\n")
+	for i := int32(0); i < abc.Abc_NtkPoNum(n); i++ {
+		node(abc.Abc_NtkPo(n, i), "triangle", "#00FFFF")
+	}
+	b.WriteString("\n")
+	for i := int32(0); i < abc.Abc_NtkPiNum(n); i++ {
+		node(abc.Abc_NtkPi(n, i), "triangle", "#00FF00")
+	}
+	b.WriteString("\n")
+	for _, latch := range n.ObjectsOfKind(abc.ObjectLatch) {
+		node(latch, "rectangle", "#FF0000")
+	}
+	b.WriteString("\n")
+	for i := int32(0); i < abc.Abc_NtkObjNumMax(n); i++ {
+		if o := abc.Abc_NtkObj(n, i); o != nil && abc.Abc_ObjIsNode(o) != 0 {
+			node(o, "ellipse", "#CCCCFF")
 		}
 	}
-	for _, o := range n.Objects() {
+	b.WriteString("\n")
+	for i := int32(0); i < abc.Abc_NtkObjNumMax(n); i++ {
+		o := abc.Abc_NtkObj(n, i)
+		if o == nil {
+			continue
+		}
 		for _, e := range o.Fanins() {
-			fmt.Fprintf(&b, "    edge [ source %5d   target %5d\n        graphics [ type \"line\" arrow \"first\" ]\n    ]\n", o.ID, e.Object.ID)
+			fmt.Fprintf(&b, "    edge [ source %5d   target %5d\n", o.ID, e.Object.ID)
+			b.WriteString("        graphics [ type \"line\" arrow \"first\" ]\n")
+			b.WriteString("    ]\n")
 		}
 	}
 	b.WriteString("]\n\n")
