@@ -203,7 +203,10 @@ func balanceRecursiveBuild(g *aig.Graph, work []aig.Edge, kind aig.NodeKind, upd
 		work = work[:len(work)-2]
 		var value aig.Edge
 		if kind == aig.ExclusiveOr {
-			value = g.NewXor(one, two)
+			// darBalance.c builds with Aig_Oper(pNew, ..., AIG_OBJ_EXOR); the new
+			// manager from Aig_ManStart has fCatchExor == 0, so Aig_Exor
+			// expands every XOR into three ANDs instead of an EXOR object.
+			value = aig.Aig_Exor(g, one, two)
 		} else {
 			value = g.AND(one, two)
 		}

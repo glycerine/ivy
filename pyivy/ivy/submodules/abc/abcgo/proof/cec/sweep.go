@@ -161,12 +161,12 @@ func Cec_ManSatSweeping(graph *Gia_Man_t, params *Cec_ParFra_t, silent int32) *G
 		params = new(Cec_ParFra_t)
 		Cec_ManFraSetDefaultParams(params)
 	}
-	result, err := cecOriginalSweep(graph, params)
+	// cecCore.c: the closing "Disproved ..." and "Timed out ..." messages
+	// are printed by the sweep body under fSilent.
+	result, err := cecOriginalSweepMappedSilent(graph, graph, nil, nil, params, silent)
 	params.Error = err
 	if err != nil && silent == 0 {
 		fmt.Printf("CEC sweeping: %v\n", err)
-	} else if err == nil && result == nil && params.iOutFail >= 0 && silent == 0 {
-		fmt.Printf("Disproved at least one output of the miter (zero-based number %d).\n", params.iOutFail)
 	}
 	return result
 }

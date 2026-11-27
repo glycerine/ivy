@@ -3,8 +3,14 @@ package fracomb
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	dar "github.com/glycerine/abcgo/opt/dar/core"
 )
+
+// fraPRT is C's ABC_PRT: "%s =" then "%9.2f sec\n".
+func fraPRT(label string, elapsed int64) {
+	fmt.Printf("%s =%9.2f sec\n", label, float64(elapsed)/float64(util.CLOCKS_PER_SEC))
+}
 
 // Sweep supplies the original FRAIG manager to the combinational CEC driver.
 // It must return a new graph; the driver stops its input after the call.
@@ -75,39 +81,65 @@ func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) 
 		miter.Data = make([]int32, miter.InputCount())
 		return 0
 	}
+	// if SAT only, solve without iteration
+	clk := util.Abc_Clock()
 	status = Fra_FraigSat(miter, 600, 0, 0, 0, 0, 1, 0, 0, 0)
+	if verbose != 0 {
+		fmt.Printf("Initial SAT:      Nodes = %6d.  ", aig.Aig_ManNodeNum(miter))
+		fraPRT("Time", util.Abc_Clock()-clk)
+	}
 	if status >= 0 {
 		return status
 	}
 	var err error
+	clk = util.Abc_Clock()
 	previous := miter
 	miter, err = dar.Dar_ManRwsat(previous, true, false)
 	aig.Aig_ManStop(previous)
 	if err != nil || miter == nil {
 		panic("fra: source dereferences failed SAT rewrite")
 	}
+	if verbose != 0 {
+		fmt.Printf("Rewriting:        Nodes = %6d.  ", aig.Aig_ManNodeNum(miter))
+		fraPRT("Time", util.Abc_Clock()-clk)
+	}
 	nodeLimit, miterLimit := int32(2), int32(300)
 	for i := 0; i < 6; i++ {
 		if Aig_ManCountXors(miter)*30 > aig.Aig_ManNodeNum(miter)+300 {
+			clk = util.Abc_Clock()
 			previous = miter
 			miter = dar.Dar_ManBalanceXor(previous, true, false, false)
 			aig.Aig_ManStop(previous)
+			if verbose != 0 {
+				fmt.Printf("Balance-X:        Nodes = %6d.  ", aig.Aig_ManNodeNum(miter))
+				fraPRT("Time", util.Abc_Clock()-clk)
+			}
 		}
+		clk = util.Abc_Clock()
 		previous = miter
 		miter = sweep(previous, nodeLimit, miterLimit)
 		aig.Aig_ManStop(previous)
 		if miter == nil {
 			panic("fra: source dereferences failed FRAIG sweep")
 		}
+		if verbose != 0 {
+			fmt.Printf("Fraiging (i=%d):   Nodes = %6d.  ", i+1, aig.Aig_ManNodeNum(miter))
+			fraPRT("Time", util.Abc_Clock()-clk)
+		}
 		status = Fra_FraigMiterStatus(miter)
 		if status >= 0 {
 			break
 		}
+		clk = util.Abc_Clock()
 		previous = miter
 		miter, err = dar.Dar_ManRewriteDefault(previous)
 		aig.Aig_ManStop(previous)
 		if err != nil || miter == nil {
 			panic("fra: source dereferences failed rewrite")
+		}
+		if verbose != 0 {
+			fmt.Printf("Rewriting:        Nodes = %6d.  ", aig.Aig_ManNodeNum(miter))
+			fraPRT("Time", util.Abc_Clock()-clk)
 		}
 		status = Fra_FraigMiterStatus(miter)
 		if status >= 0 {
@@ -117,7 +149,12 @@ func Fra_FraigCec(graph **aig.Graph, conflictLimit, verbose int32, sweep Sweep) 
 		miterLimit *= 2
 	}
 	if status == -1 {
+		clk = util.Abc_Clock()
 		status = Fra_FraigSat(miter, int64(conflictLimit), 0, 0, 0, 0, 1, 0, 0, 0)
+		if verbose != 0 {
+			fmt.Printf("Final SAT:        Nodes = %6d.  ", aig.Aig_ManNodeNum(miter))
+			fraPRT("Time", util.Abc_Clock()-clk)
+		}
 	}
 	*graph = miter
 	return status

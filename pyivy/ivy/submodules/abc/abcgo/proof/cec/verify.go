@@ -1,158 +1,304 @@
 package cec
 
+// Verification entry points ported line by line from ABC's
+// src/proof/cec/cecCec.c (Alan Mishchenko, UC Berkeley).
+
 import (
 	"fmt"
+
+	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
-	"github.com/glycerine/abcgo/proof/cec/core"
-	"time"
+	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
+	"github.com/glycerine/abcgo/proof/fracomb"
+	"github.com/glycerine/abcgo/proof/framgr"
 )
 
-func cecVerifyOptions(p *Cec_ParCec_t) core.Options {
-	options := core.DefaultCECOptions()
-	options.ConflictLimit = int64(p.NBTLimit)
-	if p.TimeLimit > 0 {
-		options.Deadline = time.Now().Add(time.Duration(p.TimeLimit) * time.Second)
+// Cec_ManTransformPattern saves the input pattern with the given number.
+// A nil vector means the all-zero pattern.
+func Cec_ManTransformPattern(p *Gia_Man_t, iOut int32, pValues []int32) {
+	if p.PCexComb != nil {
+		panic("cec: Cec_ManTransformPattern: p->pCexComb == NULL")
 	}
-	return options
-}
-func cecRecordResult(graph *Gia_Man_t, params *Cec_ParCec_t, result core.Result, err error) int32 {
-	params.Error = err
-	params.iOutFail = -1
-	if err != nil {
-		return -1
-	}
-	if result.Counterexample != nil {
-		cex := result.Counterexample
-		params.iOutFail = int32(cex.Output)
-		if params.Error = graph.SetCombinationalCounterexample(cex.Inputs, cex.Output); params.Error != nil {
-			return -1
+	p.PCexComb = util.Abc_CexAlloc(0, gia.Gia_ManCiNum(p), 1)
+	p.PCexComb.IPo = iOut
+	for i := int32(0); i < gia.Gia_ManCiNum(p); i++ {
+		if pValues != nil && pValues[i] != 0 {
+			util.Abc_InfoSetBit(p.PCexComb.PData, i)
 		}
 	}
-	return int32(result.Status)
 }
 
-func Cec_ManVerify(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
-	if params == nil {
-		params = new(Cec_ParCec_t)
-		Cec_ManCecSetDefaultParams(params)
+// Cec_ManVerifyOld is the interface to the old CEC engine.
+func Cec_ManVerifyOld(pMiter *Gia_Man_t, fVerbose int32, piOutFail *int32, clkTotal abctime, fSilent int32) int32 {
+	pTemp := gia.Gia_ManTransformMiter(pMiter)
+	pMiterCec := gia.Gia_ManToAig(pTemp, 0)
+	var iOut, nOuts int32
+	if piOutFail != nil {
+		*piOutFail = -1
 	}
-	// ABC handles phase and simple-input cases before selecting either SAT path.
-	if status := Cec_ManHandleSpecialCases(graph, params); status != -1 {
-		return status
-	}
-	if params.Error != nil {
-		return -1
-	}
-	return cecVerifyPipeline(graph, params, cecOriginalSweep, cecVerifyFra)
-}
-func Cec_ManVerifySimple(graph *Gia_Man_t) int32 {
-	params := new(Cec_ParCec_t)
-	Cec_ManCecSetDefaultParams(params)
-	params.FSilent = 1
-	if graph.RegisterCount() != 0 || len(graph.OutputLiterals()) != 2 {
-		return -1
-	}
-	return Cec_ManVerify(graph, params)
-}
-func Cec_ManVerifyTwo(left, right *Gia_Man_t, verbose int32) int32 {
-	if left == nil || right == nil || cecRequireAIG(left) != nil || cecRequireAIG(right) != nil {
-		return -1
-	}
-	miter := gia.Gia_ManMiter(left, right, 0, 1, 0, 0, verbose)
-	if miter == nil {
-		return -1
-	}
-	defer gia.Gia_ManStop(miter)
-	var params Cec_ParCec_t
-	Cec_ManCecSetDefaultParams(&params)
-	params.FVerbose = verbose
-	status := Cec_ManVerify(miter, &params)
-	// C transfers the miter witness slot even when it is nil.
-	gia.SwapCombinationalCounterexamples(left, miter)
-	return status
-}
-
-// Cec_ManTransformPattern copies a source-style 0/1 input vector into the
-// manager's counterexample. A nil vector means the all-zero pattern.
-func Cec_ManTransformPattern(graph *Gia_Man_t, output int32, values []int32) {
-	inputs := make([]bool, len(graph.InputLiterals()))
-	if values != nil && len(values) != len(inputs) {
-		panic("cec: invalid pattern dimensions")
-	}
-	for i, v := range values {
-		inputs[i] = v != 0
-	}
-	if err := graph.SetCombinationalCounterexample(inputs, int(output)); err != nil {
-		panic(err)
-	}
-}
-
-func Cec_ManVerifyOld(graph *Gia_Man_t, verbose int32, failed *int32, started abctime, silent int32) int32 {
-	status, output, err := cecVerifyFra(graph, verbose)
-	if failed != nil {
-		*failed = output
-	}
-	if err != nil {
-		status = -1
-	}
-	if silent == 0 {
-		fmt.Printf("CEC status: %d\n", status)
-	}
-	return status
-}
-
-// Cec_ManHandleSpecialCases checks zero-input phases and primary-input-only
-// differences without invoking SAT. -1 means that a nontrivial proof remains.
-func Cec_ManHandleSpecialCases(graph *Gia_Man_t, params *Cec_ParCec_t) int32 {
-	params.Error = nil
-	if graph == nil {
-		params.Error = fmt.Errorf("cec: nil network")
-		return -1
-	}
-	gia.Gia_ManSetPhase(graph)
-	model, err := core.NewModel(graph)
-	if err != nil {
-		params.Error = err
-		return -1
-	}
-	outputs := graph.OutputLiterals()
-	if len(outputs)%2 != 0 {
-		params.Error = fmt.Errorf("cec: odd dual-output miter size")
-		return -1
-	}
-	inputs := make([]bool, len(graph.InputLiterals()))
-	values, err := model.Evaluate(inputs)
-	if err != nil {
-		params.Error = err
-		return -1
-	}
-	inputIndex := make(map[int32]int, len(inputs))
-	for i, lit := range graph.InputLiterals() {
-		inputIndex[lit>>1] = i
-	}
-	for i := 0; i < len(outputs); i += 2 {
-		mismatch := values[i] != values[i+1]
-		a, aInput := inputIndex[outputs[i]>>1]
-		_, bInput := inputIndex[outputs[i+1]>>1]
-		if !mismatch && outputs[i]>>1 != outputs[i+1]>>1 && (aInput || bInput) && (aInput || outputs[i]>>1 == 0) && (bInput || outputs[i+1]>>1 == 0) {
-			if aInput {
-				inputs[a] = true
+	gia.Gia_ManStop(pTemp)
+	// run CEC on this miter
+	RetValue := fracomb.Fra_FraigCec(&pMiterCec, 10000000, fVerbose, framgr.SweepForCEC)
+	// report the miter
+	if RetValue == 1 {
+		if fSilent == 0 {
+			util.Abc_Print(1, "Networks are equivalent.  ")
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clkTotal)
+		}
+	} else if RetValue == 0 {
+		if fSilent == 0 {
+			util.Abc_Print(1, "Networks are NOT EQUIVALENT.  ")
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clkTotal)
+		}
+		pData, _ := pMiterCec.Data.([]int32)
+		if pData == nil {
+			util.Abc_Print(1, "Counter-example is not available.\n")
+		} else {
+			iOut = saig.Ssw_SecCexResimulate(pMiterCec, pData, &nOuts)
+			if iOut == -1 {
+				util.Abc_Print(1, "Counter-example verification has failed.\n")
 			} else {
-				inputs[inputIndex[outputs[i+1]>>1]] = true
+				if fSilent == 0 {
+					util.Abc_Print(1, "Primary output %d has failed", iOut)
+					if nOuts-1 >= 0 {
+						util.Abc_Print(1, ", along with other %d incorrect outputs", nOuts-1)
+					}
+					util.Abc_Print(1, ".\n")
+				}
+				if piOutFail != nil {
+					*piOutFail = iOut
+				}
 			}
-			mismatch = true
+			Cec_ManTransformPattern(pMiter, iOut, pData)
 		}
-		if mismatch {
-			params.iOutFail = int32(i / 2)
-			params.Error = graph.SetCombinationalCounterexample(inputs, i/2)
-			if params.Error != nil {
-				return -1
+	} else if fSilent == 0 {
+		util.Abc_Print(1, "Networks are UNDECIDED.  ")
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clkTotal)
+	}
+	aig.Aig_ManStop(pMiterCec)
+	return RetValue
+}
+
+// Cec_ManHandleSpecialCases resolves the trivial pair cases:
+// 1) (SAT) a pair of POs have different value under all-0 pattern
+// 2) (SAT) a pair of POs has different PI/Const drivers
+// 3) (UNSAT) 1-2 do not hold and there is no nodes
+// It returns -1 when a nontrivial proof remains.
+func Cec_ManHandleSpecialCases(p *Gia_Man_t, pPars *Cec_ParCec_t) int32 {
+	clk := util.Abc_Clock()
+	gia.Gia_ManSetPhase(p)
+	for i := int32(0); i < gia.Gia_ManPoNum(p); i++ {
+		pObj1 := gia.Gia_ManPo(p, i)
+		i++
+		pObj2 := gia.Gia_ManPo(p, i)
+		// check if they different on all-0 pattern
+		// (for example, when they have the same driver but complemented)
+		if gia.Gia_ObjPhase(pObj1) != gia.Gia_ObjPhase(pObj2) {
+			if pPars.FSilent == 0 {
+				util.Abc_Print(1, "Networks are NOT EQUIVALENT. Output %d trivially differs (different phase).  ", i/2)
+				util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+			}
+			pPars.iOutFail = i / 2
+			Cec_ManTransformPattern(p, i/2, nil)
+			return 0
+		}
+		// get the drivers
+		pDri1 := gia.Gia_ObjFanin0(pObj1)
+		pDri2 := gia.Gia_ObjFanin0(pObj2)
+		// drivers are different PIs
+		if gia.Gia_ObjIsPi(p, pDri1) != 0 && gia.Gia_ObjIsPi(p, pDri2) != 0 && pDri1 != pDri2 {
+			if pPars.FSilent == 0 {
+				util.Abc_Print(1, "Networks are NOT EQUIVALENT. Output %d trivially differs (different PIs).  ", i/2)
+				util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+			}
+			pPars.iOutFail = i / 2
+			Cec_ManTransformPattern(p, i/2, nil)
+			// if their compl attributes are the same - one should be complemented
+			if gia.Gia_ObjFaninC0(pObj1) != gia.Gia_ObjFaninC0(pObj2) {
+				panic("cec: Cec_ManHandleSpecialCases: Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2)")
+			}
+			util.Abc_InfoSetBit(p.PCexComb.PData, gia.Gia_ObjCioId(pDri1))
+			return 0
+		}
+		// one of the drivers is a PI; another is a constant 0
+		if (gia.Gia_ObjIsPi(p, pDri1) != 0 && gia.Gia_ObjIsConst0(pDri2) != 0) ||
+			(gia.Gia_ObjIsPi(p, pDri2) != 0 && gia.Gia_ObjIsConst0(pDri1) != 0) {
+			if pPars.FSilent == 0 {
+				util.Abc_Print(1, "Networks are NOT EQUIVALENT. Output %d trivially differs (PI vs. constant).  ", i/2)
+				util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+			}
+			pPars.iOutFail = i / 2
+			Cec_ManTransformPattern(p, i/2, nil)
+			// the compl attributes are the same - the PI should be complemented
+			if gia.Gia_ObjFaninC0(pObj1) != gia.Gia_ObjFaninC0(pObj2) {
+				panic("cec: Cec_ManHandleSpecialCases: Gia_ObjFaninC0(pObj1) == Gia_ObjFaninC0(pObj2)")
+			}
+			if gia.Gia_ObjIsPi(p, pDri1) != 0 {
+				util.Abc_InfoSetBit(p.PCexComb.PData, gia.Gia_ObjCioId(pDri1))
+			} else {
+				util.Abc_InfoSetBit(p.PCexComb.PData, gia.Gia_ObjCioId(pDri2))
 			}
 			return 0
 		}
 	}
-	if gia.Gia_ManAndNum(graph) == 0 {
+	if gia.Gia_ManAndNum(p) == 0 {
+		if pPars.FSilent == 0 {
+			util.Abc_Print(1, "Networks are equivalent.  ")
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+		}
 		return 1
 	}
 	return -1
+}
+
+// Cec_ManVerify is the new CEC engine.
+func Cec_ManVerify(pInit *Gia_Man_t, pPars *Cec_ParCec_t) int32 {
+	if pPars == nil {
+		pPars = new(Cec_ParCec_t)
+		Cec_ManCecSetDefaultParams(pPars)
+	}
+	pPars.Error = nil
+	var ParsFra Cec_ParFra_t
+	pParsFra := &ParsFra
+	var p, pNew *Gia_Man_t
+	var RetValue int32
+	clk := util.Abc_Clock()
+	clkTotal := util.Abc_Clock()
+	// consider special cases:
+	// 1) (SAT) a pair of POs have different value under all-0 pattern
+	// 2) (SAT) a pair of POs has different PI/Const drivers
+	// 3) (UNSAT) 1-2 do not hold and there is no nodes
+	RetValue = Cec_ManHandleSpecialCases(pInit, pPars)
+	if RetValue == 0 || RetValue == 1 {
+		return RetValue
+	}
+	// preprocess
+	p = gia.Gia_ManDup(pInit)
+	gia.Gia_ManEquivFixOutputPairs(p)
+	pNew = p
+	p = gia.Gia_ManCleanup(pNew)
+	gia.Gia_ManStop(pNew)
+	if pPars.FNaive != 0 {
+		RetValue = Cec_ManVerifyNaive(p, pPars)
+		gia.Gia_ManStop(p)
+		return RetValue
+	}
+	if pInit.VSimsPi != nil {
+		p.VSimsPi = vec.Vec_WrdDup(pInit.VSimsPi)
+		p.NSimWords = pInit.NSimWords
+	}
+	// sweep for equivalences
+	Cec_ManFraSetDefaultParams(pParsFra)
+	pParsFra.NItersMax = 1000
+	pParsFra.NBTLimit = pPars.NBTLimit
+	pParsFra.TimeLimit = pPars.TimeLimit
+	pParsFra.FVerbose = pPars.FVerbose
+	pParsFra.FVeryVerbose = pPars.FVeryVerbose
+	pParsFra.FCheckMiter = 1
+	pParsFra.FDualOut = 1
+	pNew = Cec_ManSatSweeping(p, pParsFra, pPars.FSilent)
+	if pParsFra.Error != nil {
+		// Go-only: the sweep rejected its input (no C counterpart).
+		pPars.Error = pParsFra.Error
+		gia.Gia_ManStop(p)
+		return -1
+	}
+	pPars.iOutFail = pParsFra.iOutFail
+	// update
+	pInit.PCexComb = p.PCexComb
+	p.PCexComb = nil
+	gia.Gia_ManStop(p)
+	p = pInit
+	// continue
+	if pNew == nil {
+		if p.PCexComb != nil {
+			if p.PCexComb != nil && gia.Gia_ManVerifyCex(p, p.PCexComb, 1) == 0 {
+				util.Abc_Print(1, "Counter-example simulation has failed.\n")
+			}
+			if pPars.FSilent == 0 {
+				util.Abc_Print(1, "Networks are NOT EQUIVALENT.  ")
+				util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+			}
+			return 0
+		}
+		p = gia.Gia_ManDup(pInit)
+		gia.Gia_ManEquivFixOutputPairs(p)
+		pNew = p
+		p = gia.Gia_ManCleanup(pNew)
+		gia.Gia_ManStop(pNew)
+		pNew = p
+	}
+	if pPars.FVerbose != 0 {
+		util.Abc_Print(1, "Networks are UNDECIDED after the new CEC engine.  ")
+		util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	}
+	// fDumpUndecided is 0 in the C source
+	if pPars.TimeLimit != 0 && (util.Abc_Clock()-clkTotal)/util.CLOCKS_PER_SEC >= int64(pPars.TimeLimit) {
+		gia.Gia_ManStop(pNew)
+		return -1
+	}
+	// call other solver
+	if pPars.FVerbose != 0 {
+		util.Abc_Print(1, "Calling the old CEC engine.\n")
+	}
+	RetValue = Cec_ManVerifyOld(pNew, pPars.FVerbose, &pPars.iOutFail, clkTotal, pPars.FSilent)
+	p.PCexComb = pNew.PCexComb
+	pNew.PCexComb = nil
+	if p.PCexComb != nil && gia.Gia_ManVerifyCex(p, p.PCexComb, 1) == 0 {
+		util.Abc_Print(1, "Counter-example simulation has failed.\n")
+	}
+	gia.Gia_ManStop(pNew)
+	return RetValue
+}
+
+// Cec_ManVerifySimple is a simple SAT run to check equivalence.
+func Cec_ManVerifySimple(p *Gia_Man_t) int32 {
+	var ParsCec Cec_ParCec_t
+	pPars := &ParsCec
+	Cec_ManCecSetDefaultParams(pPars)
+	pPars.FSilent = 1
+	if gia.Gia_ManCoNum(p) != 2 {
+		panic("cec: Cec_ManVerifySimple: Gia_ManCoNum(p) == 2")
+	}
+	if gia.Gia_ManRegNum(p) != 0 {
+		panic("cec: Cec_ManVerifySimple: Gia_ManRegNum(p) == 0")
+	}
+	return Cec_ManVerify(p, pPars)
+}
+
+// Cec_ManVerifyTwo applies the new CEC engine to two circuits.
+func Cec_ManVerifyTwo(p0, p1 *Gia_Man_t, fVerbose int32) int32 {
+	if p0 == nil || p1 == nil {
+		return -1 // Go-only guard: C dereferences both managers
+	}
+	var ParsCec Cec_ParCec_t
+	pPars := &ParsCec
+	Cec_ManCecSetDefaultParams(pPars)
+	pPars.FVerbose = fVerbose
+	pMiter := gia.Gia_ManMiter(p0, p1, 0, 1, 0, 0, pPars.FVerbose)
+	if pMiter == nil {
+		return -1
+	}
+	RetValue := Cec_ManVerify(pMiter, pPars)
+	p0.PCexComb = pMiter.PCexComb
+	pMiter.PCexComb = nil
+	gia.Gia_ManStop(pMiter)
+	return RetValue
+}
+
+// cecRequireAIG rejects native nodes that the source pipeline does not
+// preserve and that the current sweep port cannot process faithfully.
+func cecRequireAIG(graph *Gia_Man_t) error {
+	if graph == nil {
+		return fmt.Errorf("cec: nil graph")
+	}
+	for id := int32(0); int(id) < graph.ObjectCount(); id++ {
+		_, _, _, kind := graph.Gate(id)
+		if kind == 3 || kind == 4 || kind == 5 {
+			return fmt.Errorf("cec: unsupported native gate kind %d at object %d", kind, id)
+		}
+	}
+	return nil
 }

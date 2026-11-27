@@ -15,6 +15,10 @@ func cecOriginalSweep(graph *Gia_Man_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) 
 }
 
 func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, aliases *Vec_Int_t, pars *Cec_ParFra_t) (*Gia_Man_t, error) {
+	return cecOriginalSweepMappedSilent(graph, original, sourceIDs, aliases, pars, 1)
+}
+
+func cecOriginalSweepMappedSilent(graph, original *Gia_Man_t, sourceIDs []int32, aliases *Vec_Int_t, pars *Cec_ParFra_t, fSilent int32) (*Gia_Man_t, error) {
 	now, release := cecSweepSourceClock()
 	defer release()
 	if now == nil {
@@ -24,11 +28,17 @@ func cecOriginalSweepMapped(graph, original *Gia_Man_t, sourceIDs []int32, alias
 		// Untimed sweeps never inspect the reading after initialization.
 		now = func() time.Time { return time.Time{} }
 	}
-	return cecOriginalSweepMappedClock(graph, original, sourceIDs, aliases, pars, now)
+	return cecOriginalSweepMappedClockSilent(graph, original, sourceIDs, aliases, pars, now, fSilent)
 }
 
 // now is injectable so the source's iteration-boundary timeout is testable.
 func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, aliases *Vec_Int_t, pars *Cec_ParFra_t, now func() time.Time) (*Gia_Man_t, error) {
+	return cecOriginalSweepMappedClockSilent(graph, original, sourceIDs, aliases, pars, now, 1)
+}
+
+// cecOriginalSweepMappedClockSilent is the body of Cec_ManSatSweeping;
+// fSilent controls its closing "Disproved ..."/"Timed out ..." messages.
+func cecOriginalSweepMappedClockSilent(graph, original *Gia_Man_t, sourceIDs []int32, aliases *Vec_Int_t, pars *Cec_ParFra_t, now func() time.Time, fSilent int32) (*Gia_Man_t, error) {
 	if graph == nil {
 		return nil, fmt.Errorf("cec: nil sweep graph")
 	}
@@ -102,6 +112,7 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 	pat := Cec_ManPatStart()
 	defer Cec_ManPatStop(pat)
 	failure := false
+	fTimeOut := false
 	clk := util.Abc_Clock()
 	if !initial.HasRepresentatives() {
 		failure = Cec_ManSimClassesPrepare(sim, -1) != 0
@@ -173,6 +184,7 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 		// C checks elapsed whole seconds only after reduction, before adapting
 		// the conflict limit or dual-output mode.
 		if pars.TimeLimit > 0 && now().Sub(started)/time.Second >= time.Duration(pars.TimeLimit) {
+			fTimeOut = true
 			break
 		}
 		if fra.nAllFailed > fra.nAllProved+fra.nAllDisproved {
@@ -221,6 +233,16 @@ func cecOriginalSweepMappedClock(graph, original *Gia_Man_t, sourceIDs []int32, 
 	}
 	if candidates != nil {
 		vec.Vec_IntAppend(gia.Gia_ManOrigEquivPairs(original), candidates)
+	}
+	if failure && sim.iOut >= 0 {
+		if fSilent == 0 {
+			util.Abc_Print(1, "Disproved at least one output of the miter (zero-based number %d).\n", sim.iOut)
+		}
+	} else if sim.pCexes != nil && fSilent == 0 {
+		util.Abc_Print(1, "Disproved %d outputs of the miter.\n", sim.nOuts)
+	}
+	if fTimeOut && fSilent == 0 {
+		util.Abc_Print(1, "Timed out after %d seconds.\n", int32((util.Abc_Clock()-clkTotal)/util.CLOCKS_PER_SEC))
 	}
 	if failure {
 		if sim.pCexComb == nil || sim.iOut < 0 {

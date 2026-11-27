@@ -82,8 +82,10 @@ func TestVerifyTwoNativeGatesAndAigBridge(t *testing.T) {
 		if flip {
 			want = 0
 		}
-		if status := Cec_ManVerifyTwo(left, right, 0); status != -1 {
-			t.Fatalf("native input should be rejected, got %d", status)
+		// cecCec.c has no native-gate rejection: Gia_ManMiter strashes the
+		// two networks into an AIG miter before Cec_ManVerify runs.
+		if status := Cec_ManVerifyTwo(left, right, 0); status != want {
+			t.Fatalf("flip %v GIA status %d", flip, status)
 		}
 		la, ra := gia.Gia_ManToAig(left, 0), gia.Gia_ManToAig(right, 0)
 		if status := Cec_ManVerifyTwoAigs(la, ra, 0); status != want {
