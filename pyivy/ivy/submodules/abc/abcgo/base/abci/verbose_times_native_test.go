@@ -29,6 +29,7 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 		"read test_vectors/seq/s713.blif; strash; lcorr -v; print_stats",
 		"read test_vectors/seq/s1494.blif; strash; lcorr -v; print_stats",
 		"read test_vectors/seq/s1494.blif; strash; scorr -v; print_stats",
+		"miter test_vectors/seq/s1494.blif test_vectors/seq/s1494.blif; dretime -m -v; print_stats",
 		"read test_vectors/seq/s713.blif; strash; dsec -v; print_status",
 		"read test_vectors/native_s27_drw.blif; strash; dsec -v; print_status",
 	} {

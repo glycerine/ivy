@@ -2,9 +2,9 @@ package saig
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -251,7 +251,7 @@ func Saig_ManRetimeForward(graph *aig.Graph, maxIterations, verbose int32) *aig.
 	result := graph
 	moves := int32(1)
 	for iteration := int32(0); iteration < maxIterations && moves > 0; iteration++ {
-		started := time.Now()
+		clk := util.Abc_Clock()
 		previous := result
 		fixed := int32(0)
 		result = Saig_ManRetimeForwardOne(previous, &fixed, &moves)
@@ -259,8 +259,14 @@ func Saig_ManRetimeForward(graph *aig.Graph, maxIterations, verbose int32) *aig.
 			return nil
 		}
 		if verbose != 0 {
-			fmt.Printf("%2d : And = %6d. Reg = %5d. Unret = %5d. Move = %6d. elapsed %s\n", iteration+1, aig.Aig_ManNodeNum(previous), aig.Aig_ManRegNum(previous), fixed, moves, time.Since(started).Round(time.Millisecond))
+			fmt.Printf("%2d : And = %6d. Reg = %5d. Unret = %5d. Move = %6d. ", iteration+1, aig.Aig_ManNodeNum(previous), aig.Aig_ManRegNum(previous), fixed, moves)
+			util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
 		}
 	}
-	return aig.Aig_ManReduceLaches(result, verbose)
+	clk := util.Abc_Clock()
+	result = aig.Aig_ManReduceLaches(result, verbose)
+	if verbose != 0 {
+		util.Abc_PrintTime(1, "Register sharing time", util.Abc_Clock()-clk)
+	}
+	return result
 }
