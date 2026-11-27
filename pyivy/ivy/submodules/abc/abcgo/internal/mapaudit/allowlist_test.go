@@ -114,7 +114,6 @@ var allowlist = map[string]allowed{
 	"bdd/cudd/cuddLCache.go:cuddLocalCacheClearDead":                      {1, deletes},
 	"bdd/cudd/cuddMatMult.go:cuddAddMMRecur":                              {1, "doubles a float per index: exact in any order"},
 	"bdd/cudd/cuddMatMult.go:cuddMatScale":                                {1, "doubles a float per index: exact in any order"},
-	"bdd/dsd/dsdMan.go:Dsd_ManagerStop":                                   {1, release},
 	"bdd/extrab/cascade/encoding.go:Extra_ProfileWidth":                   {1, count},
 	"bdd/extrab/extraBddImage.go:Extra_bddImageStartLimited":              {8, "builds and prunes membership sets; costs are sums of integer-valued floats (exact); part ids are ordered before use"},
 	"bdd/extrab/extraBddImage.go:imageCombine":                            {2, buildSet},

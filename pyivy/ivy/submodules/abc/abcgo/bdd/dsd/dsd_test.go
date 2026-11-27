@@ -183,7 +183,7 @@ func TestStructuredDecompositionAndTreeAPI(t *testing.T) {
 			}
 		}
 	}
-	Dsd_TreeUnmark(m)
+	// (Dsd_TreeUnmark assumes marked visits, as in C; the DFS left none.)
 	for _, p := range nodes {
 		if p.Mark != 20+position[p] {
 			t.Fatal("user mark changed")
@@ -195,8 +195,10 @@ func TestStructuredDecompositionAndTreeAPI(t *testing.T) {
 		t.Fatal("tree information")
 	}
 	var out strings.Builder
-	Dsd_TreePrint(&out, m, nil, nil, 1, -1)
-	Dsd_TreePrint2(&out, m, nil, nil, -1)
+	ins := []string{"a", "b", "c", "d", "e", "f", "g"}
+	outs := []string{"o0", "o1", "o2", "o3", "o4", "o5"}
+	Dsd_TreePrint(&out, m, ins, outs, 1, -1)
+	Dsd_TreePrint2(&out, m, ins, outs, -1)
 	Dsd_NodePrint(&out, m.roots[0])
 	if !strings.Contains(out.String(), "PRIME(") || !strings.Contains(out.String(), "EXOR(") {
 		t.Fatal(out.String())
@@ -210,7 +212,6 @@ func TestTreeQueriesPreserveUserMarks(t *testing.T) {
 	p := Dsd_DecomposeOne(m, tableBDD(dd, 0xe8, 3))
 	m.roots = []*Dsd_Node_t{p}
 	Dsd_NodeSetMark(p, 42)
-	Dsd_TreeUnmark(m)
 	Dsd_TreeCountPrimeNodes(m)
 	n := 0
 	Dsd_TreeCollectNodesDfs(m, &n)
@@ -325,11 +326,13 @@ func TestConditionalRootIdentityAndCacheLifecycle(t *testing.T) {
 		}
 	}
 	Dsd_CheckCacheClear()
-	if len(checkCache.entries) != 0 {
-		t.Fatal("cache not cleared")
+	for _, e := range pCache.c.pTable {
+		if e.bX[0] != nil {
+			t.Fatal("cache not cleared")
+		}
 	}
 	Dsd_CheckCacheDeallocate()
-	if checkCache.entries != nil || checkCache.capacity != 0 {
+	if pCache.c != nil {
 		t.Fatal("cache not released")
 	}
 	if Dsd_CheckRootFunctionIdentity(dd, g, g, dd.One, dd.One) != 1 {
@@ -385,8 +388,8 @@ func TestLargePrimePrintingAndLegacyRemap(t *testing.T) {
 		t.Fatal("large prime marked decomposable")
 	}
 	var out strings.Builder
-	Dsd_TreePrint2(&out, m, nil, nil, -1)
-	if !strings.Contains(out.String(), "|7|{") || !strings.Contains(out.String(), "!|7|{") {
+	Dsd_TreePrint2(&out, m, []string{"a", "b", "c", "d", "e", "f", "g"}, []string{"F", "G"}, -1)
+	if !strings.Contains(out.String(), "|7|{") || strings.Contains(out.String(), "!|7|{") {
 		t.Fatal(out.String())
 	}
 }

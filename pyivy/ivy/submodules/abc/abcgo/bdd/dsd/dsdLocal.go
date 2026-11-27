@@ -2,115 +2,172 @@ package dsd
 
 import bdd "github.com/glycerine/abcgo/bdd/cudd/core"
 
-// oneCube chooses the low nonzero branch, as Extra_bddGetOneCube does.
-func oneCube(dd *DdManager, f *DdNode) *DdNode {
-	if f == dd.LogicZero {
-		panic("dsd: no cube in the false function")
+// dsdLocal.c: deriving the local function of the DSD node.
+
+// Dsd_TreeGetPrimeFunction returns the local function of the DSD node.
+// The local function is computed using the global function of the node and
+// the global functions of the formal inputs. The resulting local function is
+// mapped using the topmost N variables of the manager. The number of
+// variables N is equal to the number of formal inputs.
+func Dsd_TreeGetPrimeFunction(dd *DdManager, pNode *Dsd_Node_t) *DdNode {
+	var iVar, iLev int
+	var bFunc, bRes, bTemp *DdNode
+
+	pNode = Dsd_Regular(pNode)
+	size := len(dd.Vars)
+	pPermute := make([]int, size)  // C leaves the entries off the support unset
+	pVar2Form := make([]int, size) // the mapping of each var into its formal inputs
+	pForm2Var := make([]int, size) // the mapping of each formal input into its first var
+	for i := range pPermute {
+		pPermute[i] = i
 	}
-	if f == dd.One {
-		return dd.One
+
+	nDecs := len(pNode.pDecs)
+	pbCube0 := make([]*DdNode, nDecs)
+	pbCube1 := make([]*DdNode, nDecs)
+
+	// remap the global function in such a way that
+	// the support variables of each formal input are adjacent
+	iLev = 0
+	for i := 0; i < nDecs; i++ {
+		pForm2Var[i] = dd.InvPerm[i]
+		for bTemp = pNode.pDecs[i].S; bTemp != dd.One; bTemp = bTemp.T {
+			iVar = dd.InvPerm[iLev]
+			pPermute[bTemp.Index] = iVar
+			pVar2Form[iVar] = i
+			iLev++
+		}
+
+		// collect the cubes representing each assignment
+		pbCube0[i] = extraBddGetOneCube(dd, bdd.Cudd_Not(pNode.pDecs[i].G))
+		bdd.Cudd_Ref(pbCube0[i])
+		pbCube1[i] = extraBddGetOneCube(dd, pNode.pDecs[i].G)
+		bdd.Cudd_Ref(pbCube1[i])
 	}
-	r := bdd.Cudd_Regular(f)
-	lo, hi := split(dd, f, level(dd, f))
-	v := dd.Vars[r.Index]
-	if lo != dd.LogicZero {
-		return bdd.Cudd_bddAnd(dd, bdd.Cudd_Not(v), oneCube(dd, lo))
+
+	// remap the function
+	bFunc = bdd.Cudd_bddPermute(dd, pNode.G, pPermute)
+	bdd.Cudd_Ref(bFunc)
+	// remap the cube
+	for i := 0; i < nDecs; i++ {
+		bTemp = pbCube0[i]
+		pbCube0[i] = bdd.Cudd_bddPermute(dd, bTemp, pPermute)
+		bdd.Cudd_Ref(pbCube0[i])
+		bdd.Cudd_RecursiveDeref(dd, bTemp)
+		bTemp = pbCube1[i]
+		pbCube1[i] = bdd.Cudd_bddPermute(dd, bTemp, pPermute)
+		bdd.Cudd_Ref(pbCube1[i])
+		bdd.Cudd_RecursiveDeref(dd, bTemp)
 	}
-	return bdd.Cudd_bddAnd(dd, v, oneCube(dd, hi))
+
+	// remap the function
+	pCache := make(map[*DdNode]*DdNode)
+	bRes = extraDsdRemap(dd, bFunc, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1)
+	bdd.Cudd_Ref(bRes)
+
+	bdd.Cudd_RecursiveDeref(dd, bFunc)
+	for i := 0; i < nDecs; i++ {
+		bdd.Cudd_RecursiveDeref(dd, pbCube0[i])
+		bdd.Cudd_RecursiveDeref(dd, pbCube1[i])
+	}
+
+	bdd.Cudd_Deref(bRes)
+	return bRes
 }
 
-// Extra_bddNodePointedByCube restricts f along a satisfying cube. Unlike the C
-// pointer walk, it also handles a constant f and cubes omitting variables of f.
-func Extra_bddNodePointedByCube(dd *DdManager, f, cube *DdNode) *DdNode {
-	result := bdd.Cudd_Cofactor(dd, f, cube)
-	if result == nil {
-		panic("dsd: invalid restriction cube")
+// extraDsdRemap is Extra_dsdRemap. C caches only nodes whose reference
+// count differs from one; caching every node gives the same result.
+func extraDsdRemap(dd *DdManager, bF *DdNode, pCache map[*DdNode]*DdNode, pVar2Form, pForm2Var []int, pbCube0, pbCube1 []*DdNode) *DdNode {
+	var bF0, bF1, bRes0, bRes1, bRes *DdNode
+
+	bFR := bdd.Cudd_Regular(bF)
+	if bdd.Cudd_IsConstant(bFR) {
+		return bF
 	}
-	return result
+
+	// check the hash-table
+	if r, ok := pCache[bF]; ok {
+		return r
+	}
+
+	// get the formal input
+	iForm := pVar2Form[bFR.Index]
+
+	// get the nodes pointed to by the cube
+	bF0 = extraBddNodePointedByCube(dd, bF, pbCube0[iForm])
+	bF1 = extraBddNodePointedByCube(dd, bF, pbCube1[iForm])
+
+	// call recursively for these nodes
+	bRes0 = extraDsdRemap(dd, bF0, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1)
+	bdd.Cudd_Ref(bRes0)
+	bRes1 = extraDsdRemap(dd, bF1, pCache, pVar2Form, pForm2Var, pbCube0, pbCube1)
+	bdd.Cudd_Ref(bRes1)
+
+	// derive the result using ITE
+	bRes = bdd.Cudd_bddIte(dd, dd.Vars[pForm2Var[iForm]], bRes1, bRes0)
+	bdd.Cudd_Ref(bRes)
+	bdd.Cudd_RecursiveDeref(dd, bRes0)
+	bdd.Cudd_RecursiveDeref(dd, bRes1)
+
+	// add to the hash table
+	pCache[bF] = bRes
+	bdd.Cudd_Deref(bRes)
+	return bRes
 }
 
-// Dsd_TreeGetPrimeFunction returns the local function on the first nDecs BDD
-// levels. Grouping each component's support into adjacent levels lets the
-// recursive remapping skip a whole component with one representative cube.
-func Dsd_TreeGetPrimeFunction(dd *DdManager, p *Dsd_Node_t) *DdNode {
-	p = Dsd_Regular(p)
-	n := len(p.pDecs)
-	if p.Type != DSD_NODE_PRIME {
-		panic("dsd: expected prime node")
-	}
-	permutation := make([]int, len(dd.Vars))
-	for i := range permutation {
-		permutation[i] = -1
-	}
-	variableToFormal := make([]int, len(dd.Vars))
-	for i := range variableToFormal {
-		variableToFormal[i] = -1
-	}
-	cubes0, cubes1 := make([]*DdNode, n), make([]*DdNode, n)
-	next := 0
-	for i, child := range p.pDecs {
-		r := Dsd_Regular(child)
-		for s := r.S; s != dd.One; s = s.T {
-			old := int(s.Index)
-			if permutation[old] >= 0 {
-				panic("dsd: overlapping prime component supports")
+// extraBddNodePointedByCube is Extra_bddNodePointedByCube: the node of bF
+// reached by walking along the cube bC.
+func extraBddNodePointedByCube(dd *DdManager, bF, bC *DdNode) *DdNode {
+	var bF0, bF1, bC0, bC1 *DdNode
+
+	for {
+		if bC == dd.LogicZero {
+			panic("dsd: Extra_bddNodePointedByCube: bC != b0")
+		}
+		if bC == dd.One {
+			return bF
+		}
+
+		bFR := bdd.Cudd_Regular(bF)
+		bCR := bdd.Cudd_Regular(bC)
+		if bdd.Cudd_IsConstant(bFR) {
+			panic("dsd: Extra_bddNodePointedByCube: !cuddIsConstant( bFR )")
+		}
+
+		LevelF := dd.Perm[bFR.Index]
+		LevelC := dd.Perm[bCR.Index]
+
+		if LevelF <= LevelC {
+			if bFR != bF {
+				bF0 = bdd.Cudd_Not(bFR.E)
+				bF1 = bdd.Cudd_Not(bFR.T)
+			} else {
+				bF0 = bFR.E
+				bF1 = bFR.T
 			}
-			index := dd.InvPerm[next]
-			permutation[old] = index
-			variableToFormal[index] = i
-			next++
+		} else {
+			bF0, bF1 = bF, bF
 		}
-		cubes0[i] = oneCube(dd, bdd.Cudd_Not(function(child)))
-		cubes1[i] = oneCube(dd, function(child))
-	}
-	for _, old := range dd.InvPerm {
-		if permutation[old] < 0 {
-			permutation[old] = dd.InvPerm[next]
-			next++
-		}
-	}
-	f := bdd.Cudd_bddPermute(dd, p.G, permutation)
-	for i := range cubes0 {
-		cubes0[i] = bdd.Cudd_bddPermute(dd, cubes0[i], permutation)
-		cubes1[i] = bdd.Cudd_bddPermute(dd, cubes1[i], permutation)
-	}
-	memo := map[*DdNode]*DdNode{}
-	var remap func(*DdNode) *DdNode
-	remap = func(f *DdNode) *DdNode {
-		if bdd.Cudd_IsConstant(f) {
-			return f
-		}
-		if result := memo[f]; result != nil {
-			return result
-		}
-		i := variableToFormal[bdd.Cudd_Regular(f).Index]
-		if i < 0 {
-			panic("dsd: prime function exceeds component support")
-		}
-		lo := remap(Extra_bddNodePointedByCube(dd, f, cubes0[i]))
-		hi := remap(Extra_bddNodePointedByCube(dd, f, cubes1[i]))
-		result := bdd.Cudd_bddIte(dd, dd.Vars[dd.InvPerm[i]], hi, lo)
-		memo[f] = result
-		return result
-	}
-	return remap(f)
-}
 
-// The legacy routine optionally maps formal inputs to variable indices rather
-// than levels. Without remapping it uses each component's first support index.
-func Dsd_TreeGetPrimeFunctionOld(dd *DdManager, p *Dsd_Node_t, fRemap int) *DdNode {
-	p = Dsd_Regular(p)
-	local := Dsd_TreeGetPrimeFunction(dd, p)
-	permutation := make([]int, len(dd.Vars))
-	for i := range permutation {
-		permutation[i] = i
-	}
-	for i, c := range p.pDecs {
-		index := int(Dsd_Regular(c).S.Index)
-		if fRemap != 0 {
-			index = i
+		if LevelC <= LevelF {
+			if bCR != bC {
+				bC0 = bdd.Cudd_Not(bCR.E)
+				bC1 = bdd.Cudd_Not(bCR.T)
+			} else {
+				bC0 = bCR.E
+				bC1 = bCR.T
+			}
+		} else {
+			bC0, bC1 = bC, bC
 		}
-		permutation[dd.InvPerm[i]] = index
+
+		if bC0 != dd.LogicZero && bC1 != dd.LogicZero {
+			panic("dsd: Extra_bddNodePointedByCube: bC0 == b0 || bC1 == b0")
+		}
+		if bC0 == dd.LogicZero {
+			bF, bC = bF1, bC1
+		} else {
+			bF, bC = bF0, bC0
+		}
 	}
-	return bdd.Cudd_bddPermute(dd, local, permutation)
 }
