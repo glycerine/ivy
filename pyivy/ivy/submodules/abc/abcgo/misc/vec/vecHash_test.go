@@ -43,7 +43,10 @@ func TestHashIntPairResizeStableObjects(t *testing.T) {
 	p := Hash_IntManStart(0)
 	defer Hash_IntManStop(p)
 	id := Hash_Int2ManInsert(p, -1, -2, -3)
-	saved := Hash_IntObj(p, id)
+	// entries live contiguously, as in hashInt.h's Vec_Int storage: an entry
+	// pointer is valid only until the next insertion, but its contents and
+	// id survive resizing
+	saved := *Hash_IntObj(p, id)
 	const count = 20000
 	for i := int32(0); i < count; i++ {
 		got := Hash_Int2ManInsert(p, i*12345, -i, i)
@@ -51,8 +54,8 @@ func TestHashIntPairResizeStableObjects(t *testing.T) {
 			t.Fatal(got, i)
 		}
 	}
-	if Hash_IntObj(p, id) != saved {
-		t.Fatal("object pointer changed on resize")
+	if got := *Hash_IntObj(p, id); got.iData0 != saved.iData0 || got.iData1 != saved.iData1 || got.iData2 != saved.iData2 {
+		t.Fatal("object contents changed on resize", got, saved)
 	}
 	if Vec_IntSize(p.vTable) < count {
 		t.Fatal("table did not resize")

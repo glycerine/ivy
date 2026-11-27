@@ -25,9 +25,12 @@ import "fmt"
 // Hash_IntObj_t holds one stable object. Entry zero is the absent sentinel.
 // Pair tables use iData2 as mutable payload; triple tables include it in the key.
 type Hash_IntObj_t struct{ iData0, iData1, iData2, iNext int32 }
+
+// Hash_IntMan_t keeps its entries contiguously, as hashInt.h's Vec_Int
+// storage does; entry pointers are valid until the next insertion.
 type Hash_IntMan_t struct {
 	vTable  *Vec_Int_t
-	objects []*Hash_IntObj_t
+	objects []Hash_IntObj_t
 	nRefs   int
 }
 
@@ -35,7 +38,7 @@ func Hash_IntObj(p *Hash_IntMan_t, i int32) *Hash_IntObj_t {
 	if i == 0 {
 		return nil
 	}
-	return p.objects[int(i)]
+	return &p.objects[int(i)]
 }
 func Hash_IntObjData0(p *Hash_IntMan_t, i int32) int32 { return Hash_IntObj(p, i).iData0 }
 func Hash_IntObjData1(p *Hash_IntMan_t, i int32) int32 { return Hash_IntObj(p, i).iData1 }
@@ -59,7 +62,7 @@ func Hash_IntManStart(n int) *Hash_IntMan_t {
 		panic("invalid integer hash capacity")
 	}
 	n += 100
-	return &Hash_IntMan_t{vTable: Vec_IntStart(hashIntPrime(n)), objects: make([]*Hash_IntObj_t, 1, n), nRefs: 1}
+	return &Hash_IntMan_t{vTable: Vec_IntStart(hashIntPrime(n)), objects: make([]Hash_IntObj_t, 1, n), nRefs: 1}
 }
 func Hash_IntManStop(p *Hash_IntMan_t) {
 	if p == nil {
@@ -162,7 +165,7 @@ func hashIntResize(p *Hash_IntMan_t, mode int) {
 	}
 	Vec_IntFill(p.vTable, hashIntPrime(2*Vec_IntSize(p.vTable)), 0)
 	for i := 1; i < len(p.objects); i++ {
-		o := p.objects[i]
+		o := &p.objects[i]
 		o.iNext = 0
 		var place *int32
 		if mode == 2 {
@@ -179,31 +182,49 @@ func hashIntResize(p *Hash_IntMan_t, mode int) {
 func Hash_Int2ManInsert(p *Hash_IntMan_t, a, b, data int32) int32 {
 	hashIntLive(p)
 	hashIntResize(p, 2)
-	place := Hash_Int2ManLookup(p, a, b)
-	if *place != 0 {
-		return *place
+	// walk the chain by index: appending may move the entries, so the link
+	// is set after the append (the new entry ends the chain, as in C)
+	h := Hash_Int2ManHash(a, b, Vec_IntSize(p.vTable))
+	prev := int32(0)
+	for cur := Vec_IntEntry(p.vTable, h); cur != 0; cur = p.objects[cur].iNext {
+		if o := &p.objects[cur]; o.iData0 == a && o.iData1 == b {
+			return cur
+		}
+		prev = cur
 	}
 	if len(p.objects) > int(^uint32(0)>>1) {
 		panic("integer hash id overflow")
 	}
 	id := int32(len(p.objects))
-	p.objects = append(p.objects, &Hash_IntObj_t{iData0: a, iData1: b, iData2: data})
-	*place = id
+	p.objects = append(p.objects, Hash_IntObj_t{iData0: a, iData1: b, iData2: data})
+	if prev == 0 {
+		Vec_IntWriteEntry(p.vTable, h, id)
+	} else {
+		p.objects[prev].iNext = id
+	}
 	return id
 }
 func Hsh_Int3ManInsert(p *Hash_IntMan_t, a, b, c int32) int32 {
 	hashIntLive(p)
 	hashIntResize(p, 3)
-	place := Hsh_Int3ManLookup(p, a, b, c)
-	if *place != 0 {
-		return *place
+	h := Hsh_Int3ManHash(a, b, c, Vec_IntSize(p.vTable))
+	prev := int32(0)
+	for cur := Vec_IntEntry(p.vTable, h); cur != 0; cur = p.objects[cur].iNext {
+		if o := &p.objects[cur]; o.iData0 == a && o.iData1 == b && o.iData2 == c {
+			return cur
+		}
+		prev = cur
 	}
 	if len(p.objects) > int(^uint32(0)>>1) {
 		panic("integer hash id overflow")
 	}
 	id := int32(len(p.objects))
-	p.objects = append(p.objects, &Hash_IntObj_t{iData0: a, iData1: b, iData2: c})
-	*place = id
+	p.objects = append(p.objects, Hash_IntObj_t{iData0: a, iData1: b, iData2: c})
+	if prev == 0 {
+		Vec_IntWriteEntry(p.vTable, h, id)
+	} else {
+		p.objects[prev].iNext = id
+	}
 	return id
 }
 func Hash_IntManHashArrayTest() {
