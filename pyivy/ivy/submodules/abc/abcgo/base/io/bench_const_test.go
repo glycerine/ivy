@@ -20,3 +20,24 @@ func TestBenchReadsGndVddGatesAsConstants(t *testing.T) {
 	}
 	checkBooleanNetwork(t, n, func(a []bool) bool { return a[0] })
 }
+
+// TestReadersNameNetworkLikeAbcNtkStartRead: bench, eqn and pla readers
+// name the network Extra_FileNameGeneric(file) and keep the file as spec.
+func TestReadersNameNetworkLikeAbcNtkStartRead(t *testing.T) {
+	b, err := ParseBench("dir/x.bench", "INPUT(a)\nOUTPUT(z)\nz = NOT(a)\n", true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	e, err := ParseEqn("dir/y.eqn", "INORDER = a; OUTORDER = z; z = !a;", true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, c := range []struct {
+		n          *abc.Network
+		name, spec string
+	}{{b, "dir/x", "dir/x.bench"}, {e, "dir/y", "dir/y.eqn"}} {
+		if c.n.Name != c.name || c.n.Spec != c.spec {
+			t.Errorf("name %q spec %q, want %q %q", c.n.Name, c.n.Spec, c.name, c.spec)
+		}
+	}
+}

@@ -17,7 +17,7 @@ type plaRow struct {
 }
 
 type plaDocument struct {
-	name        string
+	name, file  string // file: the path read (Abc_NtkStartRead)
 	nInputs     int
 	nOutputs    int
 	nProducts   int
@@ -40,7 +40,7 @@ func parsePLADocument(filename, text string) (*plaDocument, error) {
 	if err != nil {
 		return nil, err
 	}
-	doc := &plaDocument{name: filename, nInputs: -1, nOutputs: -1, nProducts: -1}
+	doc := &plaDocument{name: filename, file: filename, nInputs: -1, nOutputs: -1, nProducts: -1}
 	ended := false
 	for _, line := range lines {
 		if ended {
@@ -169,8 +169,11 @@ func plaDocumentNetwork(doc *plaDocument, fZeros, fBoth, fOnDc int32, skipPrepro
 			outputNames = append(outputNames, fmt.Sprintf("z%0*d", width, i))
 		}
 	}
-	network := abc.Abc_NtkStartRead(doc.name)
-	network.Name = doc.name
+	// Abc_NtkStartRead(file); a .model line renames the network
+	network := abc.Abc_NtkStartRead(doc.file)
+	if doc.name != doc.file {
+		network.Name = doc.name
+	}
 	builder := ioBuilder(network)
 	for _, name := range inputNames {
 		if err := builder.input(name); err != nil {

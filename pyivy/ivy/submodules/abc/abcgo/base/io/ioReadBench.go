@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
 )
 
 func ParseBench(name, text string, check bool) (*abc.Network, error) {
@@ -15,6 +16,8 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 		return nil, err
 	}
 	m := &blifModel{network: abc.NewNetwork(name), nets: map[string]*abc.Object{}, domains: map[string]*abc.MVVariable{}}
+	// Abc_NtkStartRead: the name drops the extension, the spec keeps the file
+	m.network.Name, m.network.Spec = extra.Extra_FileNameGeneric(name), name
 	m.network.Type = uint8(abc.ABC_NTK_NETLIST)
 	m.network.Function = uint8(abc.ABC_FUNC_SOP)
 	for _, line := range lines {
