@@ -10,7 +10,12 @@ import (
 	"strings"
 )
 
-type WriteOptions struct{ ASCII, Compact, Symbols bool }
+type WriteOptions struct {
+	ASCII, Compact, Symbols bool
+	// Trailer, when non-nil, is written after the symbols in place of the
+	// model's name and comment (Io_WriteAiger's "c" section).
+	Trailer []byte
+}
 
 func Ioa_ObjMakeLit(variable, complement int32) uint32 {
 	return uint32(variable)<<1 | uint32(complement)&1
@@ -339,6 +344,9 @@ func Marshal(provider AigerProvider, options WriteOptions) ([]byte, error) {
 				writeSymbol(key, m.Symbols[key])
 			}
 		}
+	}
+	if options.Trailer != nil {
+		return append(data, options.Trailer...), nil
 	}
 	if m.Name != "" || len(m.Comment) > 0 {
 		data = append(data, 'c')

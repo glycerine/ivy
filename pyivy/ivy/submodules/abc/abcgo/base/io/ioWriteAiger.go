@@ -12,6 +12,7 @@ import (
 	"github.com/glycerine/abcgo/aig/ioa"
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/bzlib"
+	"github.com/glycerine/abcgo/misc/extra"
 	"github.com/glycerine/abcgo/misc/util"
 )
 
@@ -134,6 +135,7 @@ func Io_WriteAiger(network *Abc_Ntk_t, filename string, writeSymbols, compact, u
 	if unique != 0 {
 		options.Symbols, options.Compact = false, false
 	}
+	options.Trailer = ioAigerTrailer(network, unique != 0)
 	if err := writeAiger(network, filename, options, aigerCompression(filename)); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
@@ -494,4 +496,21 @@ func bitChar(value bool) string {
 		return "1"
 	}
 	return "0"
+}
+
+// ioAigerTrailer is Io_WriteAiger's comment section: "c", then (unless the
+// file is to be unique) the network name and ABC's production stamp.
+func ioAigerTrailer(network *Abc_Ntk_t, unique bool) []byte {
+	trailer := []byte("c")
+	if unique {
+		return trailer
+	}
+	if network != nil && network.Name != "" {
+		trailer = append(trailer, '\n')
+		trailer = append(trailer, network.Name...)
+		trailer = append(trailer, 0)
+	}
+	trailer = fmt.Appendf(trailer, "\nThis file was written by ABC on %s\n", extra.Extra_TimeStamp())
+	trailer = fmt.Appendf(trailer, "For information about AIGER format, refer to %s\n", "http://fmv.jku.at/aiger")
+	return trailer
 }

@@ -71,6 +71,7 @@ func IoCommandWriteAiger(frame *abcmain.Frame, args []string) int32 {
 		defer abc.Abc_NtkDelete(n)
 		options.Symbols, options.Compact = false, false
 	}
+	options.Trailer = ioAigerTrailer(n, flags['u'])
 	if err := WriteAigerWithOptions(n, filename, options); err != nil {
 		fmt.Fprintln(frame.Err, err)
 	}

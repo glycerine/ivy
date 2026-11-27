@@ -1,8 +1,8 @@
 package abci
 
 import (
-	"github.com/glycerine/abcgo/misc/util"
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"io"
 	"os"
 

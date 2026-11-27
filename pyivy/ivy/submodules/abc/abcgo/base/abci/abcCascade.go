@@ -4,8 +4,8 @@ package abci
 // src/base/abci/abcCascade.c. The four pure partition primitives live in
 // cascade_partition.go and are shared with their source-derived tests.
 import (
-	"github.com/glycerine/abcgo/misc/util"
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"math/bits"
 	"sync"
 
