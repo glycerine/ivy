@@ -2,6 +2,7 @@ package if_
 
 import (
 	"fmt"
+	"maps"
 	"math/bits"
 	"slices"
 	"sort"
@@ -430,9 +431,10 @@ func If_CluHashLookup(p *If_Man_t, table []uint64, t int32) *uint32 {
 	return &entry.Group
 }
 func If_CluHashPrintStats(p *If_Man_t, t int32) {
-	for key, raw := range p.pHashTable[t] {
+	// bins in ascending order, as ifDec16.c walks its table
+	for _, key := range slices.Sorted(maps.Keys(p.pHashTable[t])) {
 		count := 0
-		for entry := raw.(*If_Hte_t); entry != nil; entry = entry.pNext {
+		for entry := p.pHashTable[t][key].(*If_Hte_t); entry != nil; entry = entry.pNext {
 			count++
 		}
 		if count >= 10 {

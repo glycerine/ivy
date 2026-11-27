@@ -134,7 +134,6 @@ var allowlist = map[string]allowed{
 	"map/cov/covBuild.go:deriveAIGToSOP":                                  {1, sortedAfter},
 	"map/cov/minimize/minimize.go:Minimize":                               {7, "sets built then sorted with a total key; per-minterm lists follow prime order; pivot is a min with a total tie-break"},
 	"map/if/ifDec16.go:If_CluHashFindMedian":                              {1, sortedAfter},
-	"map/if/ifDec16.go:If_CluHashPrintStats":                              {1, "ORDER-SENSITIVE, not fixed: prints busy hash buckets in map order (debug statistics); map/if is owned elsewhere, iterate sorted keys"},
 	"map/if/ifDec16.go:If_CluHashTableCheck":                              {1, check},
 	"map/mapper/mapperTree.go:Map_LibraryReadTree":                        {1, buildSet},
 	"map/mio/mio.c.go:Mio_Init":                                           {1, "registers commands in the frame's map"},
