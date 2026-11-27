@@ -39,7 +39,16 @@ func (m *Manager) provePair(representative, node aig.Edge) (proofResult, []bool,
 	started := time.Now()
 	defer func() { m.stats.Solving += time.Since(started) }()
 	for direction, assumptions := range [][]int32{{a, b ^ 1}, {a ^ 1, b}} {
+		solveStart := time.Now()
 		status := m.solver.SolveWithSourceLimits(assumptions, int64(m.params.ConflictLimit), 0, 0, 0)
+		switch elapsed := time.Since(solveStart); status {
+		case bsat.Unsatisfiable:
+			m.stats.SolvingUnsat += elapsed
+		case bsat.Satisfiable:
+			m.stats.SolvingSat += elapsed
+		case bsat.Unknown:
+			m.stats.SolvingUndecided += elapsed
+		}
 		switch status {
 		case bsat.Unsatisfiable:
 			// The failed conjunction implies the opposite binary clause.

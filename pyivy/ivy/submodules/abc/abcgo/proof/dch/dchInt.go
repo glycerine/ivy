@@ -10,6 +10,8 @@ import (
 type Statistics struct {
 	Candidates, Proofs, SATCalls, Counterexamples, Unknown, Recycles, Blocked int
 	Simulation, Solving, Total                                                time.Duration
+	// Solving split by outcome (timeSatSat, timeSatUnsat, timeSatUndec)
+	SolvingSat, SolvingUnsat, SolvingUndecided time.Duration
 }
 type Manager struct {
 	graph      *aig.Graph
