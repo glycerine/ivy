@@ -378,7 +378,7 @@ func If_ManSetupCutTriv(p *If_Man_t, cut *If_Cut_t, objID int32) {
 	if p.pPars.fLiftLeaves != 0 {
 		objID <<= 8
 	}
-	cut.pLeaves = []int32{objID}
+	cut.pLeaves = append(ifCutLeafStorage(cut, 1), objID)
 	cut.uSign = If_ObjCutSign(uint32(objID))
 	if p.pPars.FUseTtPerm != 0 {
 		cut.iCutFunc = 3

@@ -154,7 +154,7 @@ func If_CutMergeOrdered(p *If_Man_t, a, b, c *If_Cut_t) int32 {
 	limit := int(a.nLimit)
 	x, y := ifLeaves(a), ifLeaves(b)
 	if cap(c.pLeaves) < limit {
-		c.pLeaves = make([]int32, 0, limit)
+		c.pLeaves = ifCutLeafStorage(c, limit)
 	}
 	out := c.pLeaves[:limit]
 	i, j, n := 0, 0, 0

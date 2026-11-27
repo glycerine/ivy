@@ -245,6 +245,9 @@ type If_Cut_t_ struct {
 	uSign                                                   uint32
 	Cost, fCompl, fUser, fUseless, fAndCut, nLimit, nLeaves uint32
 	pLeaves                                                 []int32
+	// leafBuf keeps up to ifInlineLeaves leaves next to the cut header, as
+	// ABC stores them after the record; pLeaves points into it when it fits.
+	leafBuf                                                 [ifInlineLeaves]int32
 	permutation                                             []byte
 	data                                                    any
 	dataInt                                                 int32
@@ -430,15 +433,40 @@ func If_CutPerm(pCut *If_Cut_t) []byte {
 	}
 	return pCut.permutation
 }
+// If_CutCopy copies src into dst's own leaf storage (ABC memcpy's the
+// record with its leaves).
 func If_CutCopy(_ *If_Man_t, dst, src *If_Cut_t) {
-	leaves := append([]int32(nil), src.pLeaves...)
+	if dst == src {
+		return
+	}
+	leaves := ifCutLeafStorage(dst, len(src.pLeaves))
+	leaves = append(leaves, src.pLeaves...)
 	permutation := append([]byte(nil), src.permutation...)
 	*dst = *src
+	if cap(leaves) <= ifInlineLeaves && len(leaves) <= ifInlineLeaves {
+		leaves = dst.leafBuf[:len(leaves):ifInlineLeaves]
+		copy(leaves, src.pLeaves)
+	}
 	dst.pLeaves, dst.permutation = leaves, permutation
+}
+
+const ifInlineLeaves = 8
+
+// ifCutLeafStorage returns empty storage for at least n leaves owned by c:
+// its inline buffer when n fits, else its own heap array.
+func ifCutLeafStorage(c *If_Cut_t, n int) []int32 {
+	if n <= ifInlineLeaves {
+		return c.leafBuf[:0:ifInlineLeaves]
+	}
+	if cap(c.pLeaves) >= n && &c.pLeaves[:1][0] != &c.leafBuf[0] {
+		return c.pLeaves[:0]
+	}
+	return make([]int32, 0, n)
 }
 func If_CutSetup(p *If_Man_t, cut *If_Cut_t) {
 	limit := uint32(p.pPars.NLutSize)
 	*cut = If_Cut_t_{nLimit: limit}
+	cut.pLeaves = ifCutLeafStorage(cut, int(limit))
 }
 
 func If_ObjCutBest(pObj *If_Obj_t) *If_Cut_t { return &pObj.CutBest }
