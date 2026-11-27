@@ -3,6 +3,8 @@ package goivy
 import (
 	"strings"
 	"testing"
+
+	"github.com/glycerine/ivy/goivy/xtracer"
 )
 
 // helper: make a label-only proof entry (formula field is nil, label is set).
@@ -143,6 +145,26 @@ func TestCompileProofThis(t *testing.T) {
 				t.Fatal("proof was not loaded for the implicit isolate")
 			}
 		})
+	}
+}
+
+func TestCompileLabeledProofCreatesPlaceholderBeforeCompilingTactics(t *testing.T) {
+	if !xtracer.Enabled {
+		t.Skip("XTrace is compiled out")
+	}
+	mod := New()
+	cfg := mod.Cfg.AstCfg
+	setup := NewDomainSetup(NewCompiler(mod.Sig, mod))
+	proof := cfg.NewLabeledFormula(cfg.NewAtom("claim"), cfg.NewComposeTactics(nil))
+	var err error
+	out := captureStdout(t, func() { err = setup.Proof(proof) })
+	if err != nil {
+		t.Fatal(err)
+	}
+	placeholder := strings.Index(out, "XTRACE: ast.LF.__init__")
+	tactics := strings.Index(out, "XTRACE: compiler.Thing ENTER type=ComposeTactics")
+	if placeholder < 0 || tactics < 0 || placeholder >= tactics {
+		t.Fatalf("expected proof placeholder allocation before tactic compilation:\n%s", out)
 	}
 }
 

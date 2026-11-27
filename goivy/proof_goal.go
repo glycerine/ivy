@@ -691,12 +691,16 @@ func CompileWithGoalVocab(expr Node, goal *LabeledFormula, mod *Module) Expr {
 // CompileDefinitionGoalVocab compiles a definition and adds it to the goal
 // as new premises (a ConstantDecl and a LabeledFormula stating the definition).
 // Returns the modified goal.
-// Corresponds to Python compile_definition_goal_vocab (ivy_proof.py:1477-1506).
+// Corresponds to Python compile_definition_goal_vocab in ivy_proof.py.
 //
 // Accepts either a *ast.LabeledFormula (containing the equation directly) or
 // a *ast.DerivedDecl (whose first arg is the LabeledFormula). Python's
 // `lf = df.args[0]` (line 1480) extracts the inner LF from a DerivedDecl.
 func CompileDefinitionGoalVocab(cfg *AstConfig, df Node, goal *LabeledFormula, mod *Module) (*LabeledFormula, error) {
+	return compileDefinitionGoalVocab(cfg, df, goal, mod, true)
+}
+
+func compileDefinitionGoalVocab(cfg *AstConfig, df Node, goal *LabeledFormula, mod *Module, normalizeBody bool) (*LabeledFormula, error) {
 	// Python: vocab = goal_vocab(goal); free = goal_free(goal)
 	vocab := GoalVocab(goal)
 	free := GoalFree(goal)
@@ -783,19 +787,16 @@ func CompileDefinitionGoalVocab(cfg *AstConfig, df Node, goal *LabeledFormula, m
 		thing = compiledFormula
 	}
 
-	// Python line 1491: thing = il.normalize_ops(thing)
-	thing = NormalizeOps(thing)
-
-	// Python line 1493: lf = lf.clone([lf.label, lf.formula.clone([thing]) if vars else thing])
-	// → LF.clone PRESERVE #3
-	var newFormula Node
-	if hasVars {
-		// Clone the ForAll with normalized body: lf.formula.clone([thing])
-		newFormula = compiledFormula.(Node).Clone([]Node{thing})
-	} else {
-		newFormula = thing
+	lf := compiledLF
+	if normalizeBody {
+		// The shared definition helper normalizes the body for ranking and liveness tactics.
+		thing = NormalizeOps(thing)
+		var newFormula Node = thing
+		if hasVars {
+			newFormula = compiledFormula.Clone([]Node{thing})
+		}
+		lf = compiledLF.Clone([]Node{compiledLF.Label, newFormula}).(*LabeledFormula)
 	}
-	lf := compiledLF.Clone([]Node{compiledLF.Label, newFormula}).(*LabeledFormula)
 
 	// Python line 1494: sym = thing.args[0].rep
 	// thing is the body (an equality). Get the LHS symbol.

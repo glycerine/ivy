@@ -1872,31 +1872,22 @@ func TarjanArcs(arcs [][2]string) [][]string {
 	return result
 }
 
-// PropToDef converts a labeled property to a definition.
-// Corresponds to Python's prop_to_def(lf) (ivy_compiler.py:1828-1829).
-//
-// Python:
-//
-//	def prop_to_def(lf):
-//	    return lf.clone([lf.label,ivy_logic.LogicDefinition(*lf.formula.args[0].args)])
-func PropToDef(lf Node, mod *Module) Node {
-	cfg := mod.Cfg.AstCfg
-	if labeled, ok := lf.(*LabeledFormula); ok {
-		formula := labeled.Formula
-		// Get formula, drop universals to get to the inner part,
-		// then extract args[0].args to build a Definition.
-		if formula != nil {
-			fArgs := formula.Args()
-			if len(fArgs) > 0 {
-				innerArgs := fArgs[0].Args()
-				if len(innerArgs) >= 2 {
-					def := cfg.NewDefinition(innerArgs[0], innerArgs[1])
-					return labeled.Clone([]Node{labeled.Label, def})
-				}
-			}
-		}
+// PropToDef converts a compiled property to a logic definition.
+// Corresponds to Python's prop_to_def in ivy_compiler.py.
+func PropToDef(lf Node, _ *Module) Node {
+	labeled, ok := lf.(*LabeledFormula)
+	if !ok {
+		return lf
 	}
-	return lf
+	formula, ok := labeled.Formula.(Expr)
+	if !ok {
+		return lf
+	}
+	eq, ok := IvyDropUniversals(formula).(*Eq)
+	if !ok {
+		return lf
+	}
+	return labeled.Clone([]Node{labeled.Label, NewDefinition(eq.T1, eq.T2)})
 }
 
 // ReorderProps reorders properties so that specification properties

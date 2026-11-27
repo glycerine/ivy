@@ -676,7 +676,7 @@ func (pc *ProofChecker) propertyTactic(decls []*LabeledFormula, proof *PropertyT
 }
 
 // functionTactic introduces a function definition in a proof.
-// Corresponds to Python ProofChecker.function_tactic (ivy_proof.py:282-312).
+// Corresponds to Python ProofChecker.function_tactic in ivy_proof.py.
 //
 // Python:
 //
@@ -699,12 +699,9 @@ func (pc *ProofChecker) functionTactic(decls []*LabeledFormula, proof *FunctionT
 			xtracer.Trace("proof.functionTactic EXIT err=unexpectedConstantDecl")
 			return nil, &ProofError{Msg: "function tactic: unexpected ConstantDecl element"}
 		}
-		// Python else: compile definition and add ConstantDecl + LF as premises.
-		// CompileDefinitionGoalVocab implements Python compile_definition_goal_vocab
-		// (ivy_proof.py:1477-1506), which is the factored-out version of the
-		// inline code in function_tactic.
+		// Python's function tactic uses the compiled formula directly.
 		var err error
-		goal, err = CompileDefinitionGoalVocab(pc.astCfg(), df, goal, pc.Mod)
+		goal, err = compileDefinitionGoalVocab(pc.astCfg(), df, goal, pc.Mod, false)
 		if err != nil {
 			xtracer.Trace("proof.functionTactic EXIT err=%v", err)
 			return nil, err

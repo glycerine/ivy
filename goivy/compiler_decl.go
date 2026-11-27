@@ -1578,14 +1578,13 @@ func (d *DomainSetup) Proof(node Node) error {
 	xtracer.Trace("compiler.DomainSetup.proof ENTER")
 	// If the proof is a labeled formula, it has its own label.
 	if lf, ok := node.(*LabeledFormula); ok {
+		// Python creates the label-only placeholder before compiling the tactics.
+		proofLF := d.Compiler.Module.Cfg.AstCfg.NewLabeledFormula(lf.Label, nil)
 		// Compile the proof body as a tactic (not as a logic node).
 		compiledProof, err := d.Compiler.CompileTactic(lf.Formula)
 		if err != nil {
 			return err
 		}
-		acfg := d.Compiler.Module.Cfg.AstCfg
-		// A proof label names a declaration, not a logic symbol.
-		proofLF := acfg.NewLabeledFormula(lf.Label, nil)
 		d.Compiler.Module.Proofs = append(d.Compiler.Module.Proofs, ProofEntry{
 			Formula: proofLF,
 			Proof:   compiledProof,

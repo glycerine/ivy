@@ -189,14 +189,12 @@ func TestTheoremToProperty_BothSortAndSymbolRename(t *testing.T) {
 	}
 }
 
-// TestTheoremToProperty_DefinitionPremise verifies definition premises are
-// appended to mod.Definitions, not included in prems.
+// TestTheoremToProperty_DefinitionPremise verifies that a definition premise
+// is appended to mod.Definitions as a compiled definition.
 func TestTheoremToProperty_DefinitionPremise(t *testing.T) {
 	cfg := NewAstConfig()
 	mod := makeT2PMod()
 
-	// Build a definition premise: labeled formula with IsDefinition = true
-	// The formula needs args[0].args structure for PropToDef
 	lhs := NewConst("mydef", Boolean)
 	rhs := True
 	eq, _ := NewEq(lhs, rhs)
@@ -212,10 +210,40 @@ func TestTheoremToProperty_DefinitionPremise(t *testing.T) {
 		t.Fatal("expected non-nil result")
 	}
 
-	// Definitions should have grown (PropToDef may produce the original if structure doesn't match,
-	// but the append should still happen)
-	if len(mod.Definitions) <= beforeDefs {
-		t.Error("expected definition premise to be appended to mod.Definitions")
+	if len(mod.Definitions) != beforeDefs+1 {
+		t.Fatal("expected definition premise to be appended to mod.Definitions")
+	}
+	if def, ok := mod.Definitions[beforeDefs].Formula.(*LogicDefinition); !ok || def.Lhs != lhs || def.Rhs != rhs {
+		t.Fatalf("definition premise was not compiled: %v", mod.Definitions[beforeDefs])
+	}
+}
+
+func TestProofLocalFunctionBecomesCompiledDefinition(t *testing.T) {
+	const source = `#lang ivy1.7
+type t
+relation p(X:t)
+relation q(X:t)
+relation r(X:t)
+theorem [goal] { property true }
+proof { function local_inv(X:t) = p(X) & q(X) & r(X) }
+`
+	mod := New()
+	if err := SourceString("local_function.ivy", source, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		t.Fatal(err)
+	}
+	if len(mod.Definitions) != 1 {
+		t.Fatalf("got %d definitions, want 1", len(mod.Definitions))
+	}
+	formula := mod.Definitions[0].Formula
+	if _, ok := formula.(*LogicDefinition); !ok {
+		t.Errorf("definition has type %T, want *LogicDefinition", formula)
+	}
+	args := formula.Args()
+	if len(args) != 2 {
+		t.Fatalf("definition has %d arguments, want 2", len(args))
+	}
+	if and, ok := args[1].(*LogicAnd); !ok || len(and.Terms) != 3 {
+		t.Errorf("definition body = %s, want a single three-term conjunction", args[1].Canon())
 	}
 }
 
