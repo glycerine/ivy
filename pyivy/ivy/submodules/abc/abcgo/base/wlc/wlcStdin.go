@@ -69,7 +69,7 @@ func Wlc_NtkReport(p *Wlc_Ntk_t, pCex *Abc_Cex_t, pName string, radix int32) {
 	}
 	nameID := Abc_NamStrFind(p.pManName, pName)
 	if nameID <= 0 {
-		fmt.Printf("Cannot find %q among nodes of the network.\n", pName)
+		fmt.Printf("Cannot find \"%s\" among nodes of the network.\n", pName)
 		return
 	}
 	var start, bits int32
@@ -81,7 +81,7 @@ func Wlc_NtkReport(p *Wlc_Ntk_t, pCex *Abc_Cex_t, pName string, radix int32) {
 		}
 	}
 	if !found {
-		fmt.Printf("Cannot find %q among primary inputs of the network.\n", pName)
+		fmt.Printf("Cannot find \"%s\" among primary inputs of the network.\n", pName)
 		return
 	}
 	assert(radix == 2 || radix == 10 || radix == 16, "radix is supported")
@@ -160,7 +160,7 @@ func Wlc_StdinProcessSmt(pAbc *Abc_Frame_t, pCmd string) int32 {
 	Vec_StrFree(input)
 	Wlc_SetNtk(pAbc, pNtk)
 	if Cmd_CommandExecute(pAbc, pCmd) != 0 {
-		Abc_Print(1, "Something did not work out with the command %q.\n", pCmd)
+		Abc_Print(1, "Something did not work out with the command \"%s\".\n", pCmd)
 		return 0
 	}
 	status := Abc_FrameReadProbStatus(pAbc)

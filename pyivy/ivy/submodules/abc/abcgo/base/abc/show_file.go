@@ -73,7 +73,7 @@ func Abc_NtkShowFlopDependency(n *Network) {
 	filename := Abc_ShowGetFileName(n.Name)
 	file, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open the intermediate file %q.\n", filename)
+		fmt.Printf("Cannot open the intermediate file \"%s\".\n", filename)
 		return
 	}
 	if err = WriteFlopDependency(file, n); err == nil {
@@ -82,7 +82,7 @@ func Abc_NtkShowFlopDependency(n *Network) {
 		file.Close()
 	}
 	if err != nil {
-		fmt.Printf("Cannot write intermediate file %q: %v\n", filename, err)
+		fmt.Printf("Cannot write intermediate file \"%s\": %v\n", filename, err)
 		return
 	}
 	Abc_ShowFile(filename)
@@ -109,7 +109,7 @@ func Abc_NtkShow(n *Network, gateNames, sequential, reverse int32) {
 	filename := Abc_ShowGetFileName(n.Name)
 	file, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open the intermediate file %q.\n", filename)
+		fmt.Printf("Cannot open the intermediate file \"%s\".\n", filename)
 		return
 	}
 	if err = WriteNetworkVisualization(file, n, gateNames != 0, sequential != 0, reverse != 0); err == nil {
@@ -118,7 +118,7 @@ func Abc_NtkShow(n *Network, gateNames, sequential, reverse int32) {
 		file.Close()
 	}
 	if err != nil {
-		fmt.Printf("Cannot write intermediate file %q: %v\n", filename, err)
+		fmt.Printf("Cannot write intermediate file \"%s\": %v\n", filename, err)
 		return
 	}
 	Abc_ShowFile(filename)
@@ -155,7 +155,7 @@ func Abc_NodeShowCut(root *Object, nodeLimit, coneLimit int32) {
 	filename := Abc_ShowGetFileName(Abc_ObjName(root))
 	file, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open the intermediate file %q.\n", filename)
+		fmt.Printf("Cannot open the intermediate file \"%s\".\n", filename)
 		return
 	}
 	if err = WriteCutVisualization(file, root, nodeLimit, coneLimit); err == nil {
@@ -164,7 +164,7 @@ func Abc_NodeShowCut(root *Object, nodeLimit, coneLimit int32) {
 		file.Close()
 	}
 	if err != nil {
-		fmt.Printf("Cannot write intermediate file %q: %v\n", filename, err)
+		fmt.Printf("Cannot write intermediate file \"%s\": %v\n", filename, err)
 		return
 	}
 	Abc_ShowFile(filename)

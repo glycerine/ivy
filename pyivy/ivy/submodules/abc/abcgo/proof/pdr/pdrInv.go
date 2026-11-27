@@ -284,7 +284,7 @@ func Pdr_ManDumpAig(p *aig.Graph, cubes *Vec_Ptr_t) {
 func Pdr_ManDumpClauses(p *Pdr_Man_t, fileName string, proved int32) {
 	file, err := os.Create(fileName)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for writing invariant: %v\n", fileName, err)
+		fmt.Printf("Cannot open file \"%s\" for writing invariant: %v\n", fileName, err)
 		return
 	}
 	defer file.Close()
@@ -347,9 +347,9 @@ func Pdr_ManDumpClauses(p *Pdr_Man_t, fileName string, proved int32) {
 	}
 	fmt.Fprint(file, ".e\n\n")
 	if proved != 0 {
-		fmt.Printf("Inductive invariant was written into file %q.\n", fileName)
+		fmt.Printf("Inductive invariant was written into file \"%s\".\n", fileName)
 	} else {
-		fmt.Printf("Clauses of the last timeframe were written into file %q.\n", fileName)
+		fmt.Printf("Clauses of the last timeframe were written into file \"%s\".\n", fileName)
 	}
 }
 

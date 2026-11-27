@@ -142,9 +142,9 @@ func Gia_ManCombSpecReduceTest(p *Gia_Man_t, filename string) {
 		filename = "test.aig"
 	}
 	if err := Gia_AigerWrite(q, filename, 0, 0, 0); err != nil {
-		fmt.Printf("Cannot write %q: %v\n", filename, err)
+		fmt.Printf("Cannot write \"%s\": %v\n", filename, err)
 	} else {
-		fmt.Printf("Speculatively reduced model was written into file %q.\n", filename)
+		fmt.Printf("Speculatively reduced model was written into file \"%s\".\n", filename)
 	}
 	Gia_ManStop(q)
 }

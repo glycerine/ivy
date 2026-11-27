@@ -225,7 +225,7 @@ func Gia_ManArePerform(g *Gia_Man_t, maxStates, miter, verbose int32) int32 {
 	}
 	fmt.Printf("%s after finding %d state cubes (%d not contained) with depth %d.  Time =%9.2f sec\n", status, p.nStas, Gia_ManAreListCountUsed(p), depth, time.Since(start).Seconds())
 	if cex := g.pCexSeq; cex != nil {
-		fmt.Printf("Output %d of miter %q was asserted in frame %d.\n", cex.IPo, g.pName, cex.IFrame)
+		fmt.Printf("Output %d of miter \"%s\" was asserted in frame %d.\n", cex.IPo, g.pName, cex.IFrame)
 	}
 	if verbose != 0 {
 		giaArePrintTiming(p, start)

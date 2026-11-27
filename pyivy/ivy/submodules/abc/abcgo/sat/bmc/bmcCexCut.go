@@ -39,7 +39,7 @@ func Bmc_AigTargetStates(p *aig.Graph, cex *util.Abc_Cex_t, begin, end, combOnly
 	g := gia.Gia_ManFromAigSimple(p)
 	if gia.Gia_ManVerifyCex(g, cex, 0) == 0 {
 		if verbose != 0 {
-			fmt.Printf("Current CEX does not fail AIG %q.\n", p.Name)
+			fmt.Printf("Current CEX does not fail AIG \"%s\".\n", p.Name)
 		}
 		return nil
 	}

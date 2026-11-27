@@ -29,7 +29,7 @@ type Ver_Stream_t_ struct {
 func Ver_StreamAlloc(name string) *Ver_Stream_t {
 	file, err := os.Open(name)
 	if err != nil {
-		fmt.Printf("Ver_StreamAlloc(): Cannot open input file %q.\n", name)
+		fmt.Printf("Ver_StreamAlloc(): Cannot open input file \"%s\".\n", name)
 		return nil
 	}
 	info, err := file.Stat()
@@ -128,9 +128,9 @@ func (p *Ver_Stream_t_) skip(chars string, skipMembers bool) {
 		return
 	}
 	if skipMembers {
-		fmt.Printf("Ver_StreamSkipSymbol() failed to parse the file %q.\n", p.pFileName)
+		fmt.Printf("Ver_StreamSkipSymbol() failed to parse the file \"%s\".\n", p.pFileName)
 	} else {
-		fmt.Printf("Ver_StreamSkipToSymbol() failed to parse the file %q.\n", p.pFileName)
+		fmt.Printf("Ver_StreamSkipToSymbol() failed to parse the file \"%s\".\n", p.pFileName)
 	}
 }
 
@@ -166,7 +166,7 @@ func Ver_StreamGetWord(p *Ver_Stream_t, stops string) *string {
 		word := string(p.chars[:p.nChars])
 		return &word
 	}
-	fmt.Printf("Ver_StreamGetWord() failed to parse the file %q.\n", p.pFileName)
+	fmt.Printf("Ver_StreamGetWord() failed to parse the file \"%s\".\n", p.pFileName)
 	return nil
 }
 func Ver_StreamMove(p *Ver_Stream_t) {

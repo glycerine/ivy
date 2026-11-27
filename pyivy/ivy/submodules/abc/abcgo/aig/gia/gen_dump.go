@@ -71,9 +71,9 @@ func Gia_ManDumpFiles(p *Gia_Man_t, train, test, seed int32, name string) {
 		}
 	}
 	giaWriteDump(base+".flist", []byte(strings.Join(files, "\n")+"\n"))
-	fmt.Printf("Finished dumping files %q and %q.\n", files[0], files[1])
-	fmt.Printf("Finished dumping files %q and %q.\n", files[2], files[3])
-	fmt.Printf("Finished dumping file list %q.\n", base+".flist")
+	fmt.Printf("Finished dumping files \"%s\" and \"%s\".\n", files[0], files[1])
+	fmt.Printf("Finished dumping files \"%s\" and \"%s\".\n", files[2], files[3])
+	fmt.Printf("Finished dumping file list \"%s\".\n", base+".flist")
 }
 
 // Gia_ManDumpPlaFiles writes randomly simulated training, validation, and test covers.
@@ -90,7 +90,7 @@ func Gia_ManDumpPlaFiles(p *Gia_Man_t, train, valid, seed int32, name string) {
 			panic(fmt.Sprintf("gia: write %q: %v", path, err))
 		}
 	}
-	fmt.Printf("Finished dumping files: %q.\n", base+".{train, valid, test}.pla")
+	fmt.Printf("Finished dumping files: \"%s\".\n", base+".{train, valid, test}.pla")
 }
 
 // Stream each partition through one buffered file rather than retaining a

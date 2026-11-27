@@ -66,7 +66,7 @@ func Gia_ManGroupProve(initial *Gia_Man_t, command string, groupSize, verbose in
 	frame := abcmain.Abc_FrameGetGlobalFrame()
 	p := Gia_ManDup(initial)
 	defer Gia_ManStop(p)
-	fmt.Printf("RUNNING MultiProve: Group size = %d. Command line = %q.\n", groupSize, command)
+	fmt.Printf("RUNNING MultiProve: Group size = %d. Command line = \"%s\".\n", groupSize, command)
 	start := time.Now()
 	var commandTime time.Duration
 	outputs := Vec_IntArray(Vec_IntStartNatural(int(Gia_ManPoNum(p))))

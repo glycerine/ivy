@@ -524,6 +524,6 @@ func Abc_NtkUpdateNameIds(n *Network) {
 	if err := file.Close(); err != nil {
 		panic(err)
 	}
-	fmt.Printf("Saved %d names into file %q.\n", len(starts)-1, path)
+	fmt.Printf("Saved %d names into file \"%s\".\n", len(starts)-1, path)
 	n.NameIDs = nil
 }

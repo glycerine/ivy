@@ -72,7 +72,7 @@ func Gia_SweeperLogicDump(p *Gia_Man_t, probes *Vec_Int_t, dumpConditions int32,
 	if err := Gia_AigerWrite(out, path, 0, 0, 0); err != nil {
 		fmt.Printf(" failed: %v\n", err)
 	} else {
-		fmt.Printf(" into file %q.\n", path)
+		fmt.Printf(" into file \"%s\".\n", path)
 	}
 	Gia_ManStop(out)
 }

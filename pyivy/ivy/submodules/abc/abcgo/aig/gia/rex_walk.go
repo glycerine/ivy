@@ -12,7 +12,7 @@ func Gia_ManAutomSimulate(p *Gia_Man_t, alpha *Vec_Int_t, sequence string) {
 	if Gia_ManPiNum(p) != int32(vec.Vec_IntSize(alpha)) || Gia_ManPoNum(p) < 1 {
 		panic("gia: incompatible automaton alphabet")
 	}
-	fmt.Printf("Simulating string %q:\n", sequence)
+	fmt.Printf("Simulating string \"%s\":\n", sequence)
 	state := make([]bool, Gia_ManRegNum(p))
 	input := make([]bool, Gia_ManCiNum(p))
 	for frame, c := range []byte(sequence) {

@@ -26,6 +26,6 @@ func Saig_ManCexRemap(g, abstraction *aig.Graph, cex *util.Abc_Cex_t) *util.Abc_
 		fmt.Println("Saig_ManCexRemap(): Counter-example is invalid.")
 		return nil
 	}
-	fmt.Printf("Counter-example verification is successful.\nOutput %d of miter %q was asserted in frame %d.\n", result.IPo, g.Name, result.IFrame)
+	fmt.Printf("Counter-example verification is successful.\nOutput %d of miter \"%s\" was asserted in frame %d.\n", result.IPo, g.Name, result.IFrame)
 	return result
 }

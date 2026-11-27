@@ -496,7 +496,7 @@ func Abc_NtkCheckRecursive(n *Network) int32 {
 	var visit func(*Network) bool
 	visit = func(model *Network) bool {
 		if state[model] == 1 {
-			fmt.Printf("WARNING: Model %q contains a recursive definition.\n", model.Name)
+			fmt.Printf("WARNING: Model \"%s\" contains a recursive definition.\n", model.Name)
 			return true
 		}
 		if state[model] == 2 {

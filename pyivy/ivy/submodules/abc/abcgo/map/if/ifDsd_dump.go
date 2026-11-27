@@ -31,7 +31,7 @@ func If_DsdManDumpDsd(p *If_DsdMan_t, support int32) {
 	const name = "tts_nondsd.txt"
 	out, err := os.Create(name)
 	if err != nil {
-		fmt.Printf("Cannot open file %q.\n", name)
+		fmt.Printf("Cannot open file \"%s\".\n", name)
 		return
 	}
 	defer out.Close()
@@ -62,7 +62,7 @@ func If_DsdManDumpAll(p *If_DsdMan_t, support int32) {
 	const name = "tts_all.txt"
 	out, err := os.Create(name)
 	if err != nil {
-		fmt.Printf("Cannot open file %q.\n", name)
+		fmt.Printf("Cannot open file \"%s\".\n", name)
 		return
 	}
 	defer out.Close()

@@ -66,7 +66,7 @@ func Rwt_Man4ExplorePrint() {
 	if err = f.Close(); err != nil {
 		panic(err)
 	}
-	fmt.Printf("%d classes written into file %q.\n", written, "npnclass_stats4.txt")
+	fmt.Printf("%d classes written into file \"%s\".\n", written, "npnclass_stats4.txt")
 }
 func Rwt_Man5ExploreStart() {
 	s_pManRwrExp5 = &Rwr_Man5_t{tTableNN: make(map[uint32]int), tTableNPN: make(map[uint32]int)}
@@ -112,7 +112,7 @@ func Rwt_Man5ExplorePrint() {
 	}
 	nn := rwrSortedTruths(p.tTableNN)
 	rwrWriteTruthCounts("nnclass_stats5.txt", nn, p.tTableNN)
-	fmt.Printf("%d classes written into file %q.\n", len(nn), "nnclass_stats5.txt")
+	fmt.Printf("%d classes written into file \"%s\".\n", len(nn), "nnclass_stats5.txt")
 	started := time.Now()
 	for _, truth := range nn {
 		p.tTableNPN[extra.Extra_TruthCanonNPN(truth, 5)] += p.tTableNN[truth]
@@ -120,5 +120,5 @@ func Rwt_Man5ExplorePrint() {
 	fmt.Printf("The numbe of NPN classes = %d.\nComputing NPN classes: %v\n", len(p.tTableNPN), time.Since(started))
 	canonical := rwrSortedTruths(p.tTableNPN)
 	rwrWriteTruthCounts("npnclass_stats5.txt", canonical, p.tTableNPN)
-	fmt.Printf("%d classes written into file %q.\n", len(canonical), "npnclass_stats5.txt")
+	fmt.Printf("%d classes written into file \"%s\".\n", len(canonical), "npnclass_stats5.txt")
 }

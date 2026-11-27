@@ -40,7 +40,7 @@ func Map_SuperLibCreate(genlib *mio.Mio_Library_t, text *vec.Vec_Str_t, path, ex
 		return nil
 	}
 	if verbose != 0 {
-		fmt.Printf("Loaded %d unique %d-input supergates from %q. %.2f sec\n", lib.nSupersReal, lib.nVarsMax, path, float64(Abc_Clock()-start)/1e9)
+		fmt.Printf("Loaded %d unique %d-input supergates from \"%s\". %.2f sec\n", lib.nSupersReal, lib.nVarsMax, path, float64(Abc_Clock()-start)/1e9)
 	}
 	lib.pGateInv = mio.Mio_LibraryReadInv(lib.pGenlib)
 	lib.tDelayInv.Rise = mio.Mio_LibraryReadDelayInvRise(lib.pGenlib)

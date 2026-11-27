@@ -97,7 +97,7 @@ func Gia_ManDumpVerilog(p *Gia_Man_t, filename string, objects *Vec_Int_t) {
 	}
 	file, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open output file %q.\n", filename)
+		fmt.Printf("Cannot open output file \"%s\".\n", filename)
 		return
 	}
 	defer file.Close()

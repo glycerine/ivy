@@ -87,5 +87,5 @@ func Gia_EnumPerms(nVars int32) {
 	count = 0
 	Gia_EnumPerms_rec(used, nVars, permutation, 0, &count, file, nLogVars)
 	fmt.Fprintln(file, ".e")
-	fmt.Printf("Finished dumping file %q.\n", "pairset.pla")
+	fmt.Printf("Finished dumping file \"%s\".\n", "pairset.pla")
 }

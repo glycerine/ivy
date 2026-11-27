@@ -18,7 +18,7 @@ func Map_LibraryRead(lib *Map_SuperLib_t, name string) int32 {
 	}
 	file, err := os.Open(name)
 	if err != nil {
-		fmt.Printf("Cannot open input file %q.\n", name)
+		fmt.Printf("Cannot open input file \"%s\".\n", name)
 		return 0
 	}
 	defer file.Close()
@@ -43,18 +43,18 @@ func Map_LibraryReadFile(lib *Map_SuperLib_t, file *os.File) int32 {
 		}
 	}
 	if name == "GATE" {
-		fmt.Printf("The input file %q looks like a genlib file and not a supergate library file.\n", lib.pName)
+		fmt.Printf("The input file \"%s\" looks like a genlib file and not a supergate library file.\n", lib.pName)
 		return 0
 	}
 	f, err := os.Open(name)
 	if err != nil {
-		fmt.Printf("Cannot open the genlib file %q.\n", name)
+		fmt.Printf("Cannot open the genlib file \"%s\".\n", name)
 		return 0
 	}
 	f.Close()
 	lib.pGenlib = mio.Mio_LibraryRead(name, "", "", 0)
 	if lib.pGenlib == nil {
-		fmt.Printf("Cannot read genlib file %q.\n", name)
+		fmt.Printf("Cannot read genlib file \"%s\".\n", name)
 		return 0
 	}
 	var total int32
@@ -138,7 +138,7 @@ func Map_LibraryReadGate(lib *Map_SuperLib_t, line string, nVars int32) *Map_Sup
 	gate.Area = floating(f[3+nVars])
 	gate.pFormula = f[4+nVars]
 	if len(f) > int(nVars)+5 {
-		fmt.Printf("The following trailing symbols found %q.\n", strings.Join(f[5+nVars:], " "))
+		fmt.Printf("The following trailing symbols found \"%s\".\n", strings.Join(f[5+nVars:], " "))
 	}
 	return gate
 }

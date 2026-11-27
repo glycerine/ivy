@@ -71,22 +71,22 @@ func Gia_AigerWriteLut(p *Gia_Man_t, path string) {
 	}
 	f, err := os.Create(path)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for writing: %v\n", path, err)
+		fmt.Printf("Cannot open file \"%s\" for writing: %v\n", path, err)
 		return
 	}
 	if err = binary.Write(f, binary.NativeEndian, records); err != nil {
-		fmt.Printf("Cannot write file %q: %v\n", path, err)
+		fmt.Printf("Cannot write file \"%s\": %v\n", path, err)
 	} else {
 		fmt.Printf("Successfully dumped %d bytes of binary data.\n", len(records)*binary.Size(Gia_MapLut_t{}))
 	}
 	if err = f.Close(); err != nil {
-		fmt.Printf("Cannot close file %q: %v\n", path, err)
+		fmt.Printf("Cannot close file \"%s\": %v\n", path, err)
 	}
 }
 func Gia_DumpLutSizeDistrib(p *Gia_Man_t, path string) {
 	f, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
-		fmt.Printf("Cannot open file %q: %v\n", path, err)
+		fmt.Printf("Cannot open file \"%s\": %v\n", path, err)
 		return
 	}
 	defer f.Close()

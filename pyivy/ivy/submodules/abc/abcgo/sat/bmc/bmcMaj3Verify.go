@@ -135,7 +135,7 @@ func Zyx_TestReadNode(line string, truths *vec.Vec_Wrd_t, nVars, nLutSize, iObj 
 func Zyx_TestExact(filename string) {
 	f, err := os.Open(filename)
 	if err != nil {
-		fmt.Printf("Cannot open input file %q.\n", filename)
+		fmt.Printf("Cannot open input file \"%s\".\n", filename)
 		return
 	}
 	defer f.Close()
@@ -167,6 +167,6 @@ func Zyx_TestExact(filename string) {
 		object = nVars
 	}
 	if err := scanner.Err(); err != nil {
-		fmt.Printf("Cannot read input file %q: %v\n", filename, err)
+		fmt.Printf("Cannot read input file \"%s\": %v\n", filename, err)
 	}
 }

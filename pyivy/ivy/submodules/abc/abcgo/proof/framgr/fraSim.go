@@ -244,7 +244,7 @@ func Fra_SmlSimulateComb(g *aig.Graph, words, check int32) *Fra_Sml_t {
 func Fra_SmlSimulateReadFile(name string) *vec.Vec_Str_t {
 	data, err := os.ReadFile(name)
 	if err != nil {
-		fmt.Printf("Cannot open file %q with simulation patterns.\n", name)
+		fmt.Printf("Cannot open file \"%s\" with simulation patterns.\n", name)
 		return nil
 	}
 	result := vec.Vec_StrAlloc(len(data))
@@ -254,7 +254,7 @@ func Fra_SmlSimulateReadFile(name string) *vec.Vec_Str_t {
 			vec.Vec_StrPush(result, c-'0')
 		case ' ', '\r', '\n', '\t':
 		default:
-			fmt.Printf("File %q contains symbol (%c) other than '0' or '1'.\n", name, c)
+			fmt.Printf("File \"%s\" contains symbol (%c) other than '0' or '1'.\n", name, c)
 			return nil
 		}
 	}
@@ -282,7 +282,7 @@ func Fra_SmlSimulateCombGiven(g *aig.Graph, name string, check, verbose int32) *
 	n := vec.Vec_StrSize(values)
 	inputs := g.InputCount()
 	if inputs == 0 || n%inputs != 0 {
-		fmt.Printf("File %q: invalid number of input digits (%d).\n", name, n)
+		fmt.Printf("File \"%s\": invalid number of input digits (%d).\n", name, n)
 		return nil
 	}
 	patterns := n / inputs

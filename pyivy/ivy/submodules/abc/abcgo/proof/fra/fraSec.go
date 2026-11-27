@@ -177,7 +177,7 @@ func fraFraigSec(original *aig.Graph, pars *Fra_Sec_t, result **aig.Graph, verif
 			pars.NSMnumber = number
 			name := fmt.Sprintf("sm%02d.aig", number)
 			if err := ioa.Ioa_WriteAiger(graph, name, 0, 0); err != nil {
-				fmt.Printf("Could not write unsolved reduced miter %q: %v\n", name, err)
+				fmt.Printf("Could not write unsolved reduced miter \"%s\": %v\n", name, err)
 			} else {
 				fmt.Printf("The unsolved reduced miter is written into file \"%s\".\n", name)
 			}

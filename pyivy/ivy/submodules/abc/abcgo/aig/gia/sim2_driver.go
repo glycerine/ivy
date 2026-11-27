@@ -48,7 +48,7 @@ func Gia_ManSimSimulateEquiv(g *Gia_Man_t, pars *Gia_ParSim_t) int32 {
 			Gia_ManResetRandom(pars)
 			pars.iOutFail = output
 			g.pCexSeq = Gia_Sim2GenerateCounter(g, frame, output, p.nWords, pattern)
-			fmt.Printf("Output %d of miter %q was asserted in frame %d.  ", output, g.pName, frame)
+			fmt.Printf("Output %d of miter \"%s\" was asserted in frame %d.  ", output, g.pName, frame)
 			if Gia_ManVerifyCex(g, g.pCexSeq, 0) == 0 {
 				fmt.Print("\nGenerated counter-example is INVALID.                    ")
 			}

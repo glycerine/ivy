@@ -280,7 +280,7 @@ func Amap_CreateRulesForGate(lib *Amap_Lib_t, gate *Amap_Gat_t) {
 		set := &Amap_Set_t{iGate: gate.Id, fInv: uint32(Abc_LitIsCompl(lit)), nIns: gate.nPins}
 		if Amap_LibDeriveGatePerm(lib, gate, ntk, node, set.Ins[:]) == 0 {
 			if lib.fVerbose != 0 {
-				fmt.Printf("Could not prepare gate %q\n", gate.pName)
+				fmt.Printf("Could not prepare gate \"%s\"\n", gate.pName)
 			}
 			continue
 		}

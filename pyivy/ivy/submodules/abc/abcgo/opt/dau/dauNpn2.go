@@ -418,7 +418,7 @@ func Dtt_DumpLibrary(p *Dtt_Man_t, name string) {
 	if err := f.Close(); err != nil {
 		panic(err)
 	}
-	fmt.Printf("Dumped file %q.\n", name)
+	fmt.Printf("Dumped file \"%s\".\n", name)
 }
 
 // EnumerateLF implements L(f)/D(f) enumeration. Multiplicity-enabled managers

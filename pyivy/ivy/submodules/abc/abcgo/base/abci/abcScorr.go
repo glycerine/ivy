@@ -149,7 +149,7 @@ func scorrOpenOutput(data *Tst_Dat_t) (*os.File, string) {
 	}
 	file, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
-		fmt.Printf("Cannot open equivalence output file %q: %v\n", filename, err)
+		fmt.Printf("Cannot open equivalence output file \"%s\": %v\n", filename, err)
 		return nil, filename
 	}
 	return file, filename
@@ -187,7 +187,7 @@ func Abc_NtkTestScorrWriteEquivGia(data *Tst_Dat_t) int32 {
 			count += Abc_NtkTestScorrWriteEquivPair(data.pNetlist, data.vId2Name, reprID, id, file, gia.Gia_ObjPhase(repr)^gia.Gia_ObjPhase(obj))
 		}
 	}
-	fmt.Printf("%d pairs of sequentially equivalent nodes are written into file %q.\n", count, filename)
+	fmt.Printf("%d pairs of sequentially equivalent nodes are written into file \"%s\".\n", count, filename)
 	return count
 }
 
@@ -227,7 +227,7 @@ func Abc_NtkTestScorrWriteEquivAig(data *Tst_Dat_t) int32 {
 			count += Abc_NtkTestScorrWriteEquivPair(data.pNetlist, data.vId2Name, int32(repr.NodeID()), id, file, polarity)
 		}
 	}
-	fmt.Printf("%d pairs of sequentially equivalent nodes are written into file %q.\n", count, filename)
+	fmt.Printf("%d pairs of sequentially equivalent nodes are written into file \"%s\".\n", count, filename)
 	return count
 }
 
@@ -242,13 +242,13 @@ func scorrPolarity(value bool) int32 {
 // correspondence engine and returns the sequentially swept network.
 func Abc_NtkTestScorr(inputFile, outputFile string, stepsMax, backtrackLimit, newAlgo, flopOnly, ffNodeOnly, verbose int32) *Abc_Ntk_t {
 	if file, err := os.Open(inputFile); err != nil {
-		fmt.Printf("Input file %q cannot be opened.\n", inputFile)
+		fmt.Printf("Input file \"%s\" cannot be opened.\n", inputFile)
 		return nil
 	} else {
 		file.Close()
 	}
 	if file, err := os.OpenFile(outputFile, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666); err != nil {
-		fmt.Printf("Output file %q cannot be opened.\n", outputFile)
+		fmt.Printf("Output file \"%s\" cannot be opened.\n", outputFile)
 		return nil
 	} else {
 		file.Close()
@@ -256,7 +256,7 @@ func Abc_NtkTestScorr(inputFile, outputFile string, stepsMax, backtrackLimit, ne
 
 	netlist := abcio.Io_ReadNetlist(inputFile, abcio.Io_ReadFileType(inputFile), 1)
 	if netlist == nil {
-		fmt.Printf("Reading input file %q has failed.\n", inputFile)
+		fmt.Printf("Reading input file \"%s\" has failed.\n", inputFile)
 		return nil
 	}
 	logic := baseabc.Abc_NtkToLogic(netlist)
@@ -274,14 +274,14 @@ func Abc_NtkTestScorr(inputFile, outputFile string, stepsMax, backtrackLimit, ne
 		file, err := os.Open(initFile)
 		if err != nil {
 			cleanup()
-			fmt.Printf("Init file %q cannot be opened.\n", initFile)
+			fmt.Printf("Init file \"%s\" cannot be opened.\n", initFile)
 			return nil
 		}
 		file.Close()
 		abcio.Io_ReadBenchInit(logic, initFile)
 		baseabc.Abc_NtkConvertDcLatches(logic)
 		if verbose != 0 {
-			fmt.Printf("Initial state was derived from file %q.\n", initFile)
+			fmt.Printf("Initial state was derived from file \"%s\".\n", initFile)
 		}
 	}
 	strash := Abc_NtkStrash(logic, 0, 1, 0)

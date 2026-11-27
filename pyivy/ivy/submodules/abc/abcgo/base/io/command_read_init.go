@@ -55,7 +55,7 @@ func ReadBenchInit(n *abc.Network, input io.Reader, diagnostics io.Writer) error
 func Io_ReadBenchInit(n *abc.Network, filename string) {
 	f, err := os.Open(filename)
 	if err != nil {
-		fmt.Printf("Io_ReadBenchInit(): Failed to open file %q.\n", filename)
+		fmt.Printf("Io_ReadBenchInit(): Failed to open file \"%s\".\n", filename)
 		return
 	}
 	defer f.Close()

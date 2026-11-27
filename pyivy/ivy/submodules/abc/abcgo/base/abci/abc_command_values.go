@@ -78,19 +78,19 @@ func abcAsGia(value any) *Gia_Man_t {
 func Abc_NtkConvertBb2Wb(input, output string, sequential, verbose int32) {
 	file, err := os.Open(input)
 	if err != nil {
-		fmt.Printf("Input file %q cannot be opened.\n", input)
+		fmt.Printf("Input file \"%s\" cannot be opened.\n", input)
 		return
 	}
 	file.Close()
 	file, err = os.Create(output)
 	if err != nil {
-		fmt.Printf("Output file %q cannot be opened.\n", output)
+		fmt.Printf("Output file \"%s\" cannot be opened.\n", output)
 		return
 	}
 	file.Close()
 	network := baseio.Io_ReadNetlist(input, baseio.Io_ReadFileType(input), 1)
 	if network == nil {
-		fmt.Printf("Reading input file %q has failed.\n", input)
+		fmt.Printf("Reading input file \"%s\" has failed.\n", input)
 		return
 	}
 	defer baseabc.Abc_NtkDelete(network)

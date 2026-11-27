@@ -1372,7 +1372,7 @@ func Ver_ParsePrintLog(pMan *Ver_Man_t) {
 	name := extra.Extra_FileNameGeneric(pMan.pFileName) + ".log"
 	file, err := os.Create(name)
 	if err != nil {
-		fmt.Printf("Cannot open hierarchy log file %q: %v\n", name, err)
+		fmt.Printf("Cannot open hierarchy log file \"%s\": %v\n", name, err)
 		return
 	}
 	defer file.Close()
@@ -1460,7 +1460,7 @@ func Ver_ParsePrintLog(pMan *Ver_Man_t) {
 			}
 		}
 	}
-	fmt.Printf("Hierarchy statistics can be found in log file %q.\n", name)
+	fmt.Printf("Hierarchy statistics can be found in log file \"%s\".\n", name)
 }
 
 func Ver_ParseAttachBoxes(pMan *Ver_Man_t) int32 {

@@ -15,7 +15,7 @@ import (
 func Abc_NtkWriteLogFile(name string, cex *util.Abc_Cex_t, status, frames int32, command any) {
 	f, err := os.Create(name)
 	if err != nil {
-		fmt.Printf("Cannot open log file for writing %q.\n", name)
+		fmt.Printf("Cannot open log file for writing \"%s\".\n", name)
 		return
 	}
 	defer f.Close()
@@ -97,7 +97,7 @@ func abcLogAtoi(s string) int32 {
 func Abc_NtkReadLogFile(name string, result **util.Abc_Cex_t, framesOut *int32) int32 {
 	f, err := os.Open(name)
 	if err != nil {
-		fmt.Printf("Cannot open log file for reading %q.\n", name)
+		fmt.Printf("Cannot open log file for reading \"%s\".\n", name)
 		return -1
 	}
 	defer f.Close()

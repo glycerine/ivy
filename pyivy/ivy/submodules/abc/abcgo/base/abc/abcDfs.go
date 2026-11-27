@@ -720,7 +720,7 @@ func dfsCycleVisit(o *Object, boxes bool) bool {
 		return true
 	}
 	if dfsVisited(o) {
-		fmt.Printf("Network %q contains combinational loop at %q.\n", n.Name, o.Name())
+		fmt.Printf("Network \"%s\" contains combinational loop at \"%s\".\n", n.Name, o.Name())
 		return false
 	}
 	dfsMark(o)

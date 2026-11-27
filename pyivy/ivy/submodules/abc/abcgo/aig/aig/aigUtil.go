@@ -377,7 +377,7 @@ func Aig_ManDump(p *Graph) error {
 	if err := Aig_ManDumpBlif(p, path, nil, nil); err != nil {
 		return err
 	}
-	fmt.Printf("Intermediate AIG with %d nodes was written into file %q.\n", Aig_ManNodeNum(p), path)
+	fmt.Printf("Intermediate AIG with %d nodes was written into file \"%s\".\n", Aig_ManNodeNum(p), path)
 	return nil
 }
 

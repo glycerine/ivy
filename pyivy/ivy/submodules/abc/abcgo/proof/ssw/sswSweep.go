@@ -202,7 +202,7 @@ func Ssw_ManDumpEquivMiter(g *aig.Graph, pairs *vec.Vec_Int_t, num, addOutputs i
 		fmt.Printf("Cannot write %s: %v\n", name, err)
 		return
 	}
-	fmt.Printf("AIG with %4d disproved equivs is dumped into file %q.\n", vec.Vec_IntSize(pairs)/2, name)
+	fmt.Printf("AIG with %4d disproved equivs is dumped into file \"%s\".\n", vec.Vec_IntSize(pairs)/2, name)
 }
 func Ssw_ManSweep(p *Ssw_Man_t) int32 {
 	start := time.Now()

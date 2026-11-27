@@ -55,7 +55,7 @@ const (
 func Extra_FileReaderAlloc(name, comments, stops, clean string) *Extra_FileReader_t_ {
 	file, err := os.Open(name)
 	if err != nil {
-		fmt.Printf("Extra_FileReaderAlloc(): Cannot open input file %q.\n", name)
+		fmt.Printf("Extra_FileReaderAlloc(): Cannot open input file \"%s\".\n", name)
 		return nil
 	}
 	info, err := file.Stat()

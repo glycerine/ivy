@@ -142,7 +142,7 @@ func Abc_NtkFraigEquiv(network *Abc_Ntk_t, useInv, verbose, veryVerbose int32) [
 		}
 	}
 	if verbose != 0 || veryVerbose != 0 {
-		fmt.Printf("Sweeping stats for network %q:\n", network.Name)
+		fmt.Printf("Sweeping stats for network \"%s\":\n", network.Name)
 		fmt.Printf("Internal nodes = %d. Different functions (up to compl) = %d.\n", abc.Abc_NtkNodeNum(network), functionCount)
 		fmt.Printf("Non-trivial classes = %d. Nodes in non-trivial classes = %d.\n", len(classes), members)
 	}

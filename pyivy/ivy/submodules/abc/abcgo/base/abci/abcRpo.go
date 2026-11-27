@@ -106,7 +106,7 @@ func Abc_RpoTtStoreWrite(fileName string, p *Rpo_TtStore_t, binaryOutput int32) 
 	}
 	f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for writing.\n", fileName)
+		fmt.Printf("Cannot open file \"%s\" for writing.\n", fileName)
 		return
 	}
 	defer f.Close()
@@ -245,7 +245,7 @@ func Abc_TruthRpoTest(fileName string, nVarNum, nThreshold, fVerbose int32) {
 
 func Abc_RpoTest(fileName string, nVarNum, nThreshold, fVerbose int32) int32 {
 	if fVerbose != 0 {
-		fmt.Printf("Using truth tables from file %q...\n", fileName)
+		fmt.Printf("Using truth tables from file \"%s\"...\n", fileName)
 	}
 	Abc_TruthRpoTest(fileName, nVarNum, nThreshold, fVerbose)
 	return 0

@@ -118,7 +118,7 @@ func Io_ReadFinTypeMapped(library *mio.Mio_Library_t, name string) int32 {
 func Abc_NtkGenFaultList(network *Abc_Ntk_t, fileName string, stuckOnly int32) {
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for writing.\n", fileName)
+		fmt.Printf("Cannot open file \"%s\" for writing.\n", fileName)
 		return
 	}
 	defer file.Close()
@@ -151,13 +151,13 @@ func Abc_NtkGenFaultList(network *Abc_Ntk_t, fileName string, stuckOnly int32) {
 			count++
 		}
 	}
-	fmt.Printf("Generated fault list %q for network %q with %d nodes and %d %sfaults.\n", fileName, baseabc.Abc_NtkName(network), baseabc.Abc_NtkNodeNum(network), count-1, abcSelect(stuckOnly, "stuck-at ", ""))
+	fmt.Printf("Generated fault list \"%s\" for network \"%s\" with %d nodes and %d %sfaults.\n", fileName, baseabc.Abc_NtkName(network), baseabc.Abc_NtkNodeNum(network), count-1, abcSelect(stuckOnly, "stuck-at ", ""))
 }
 
 func Io_ReadFins(network *Abc_Ntk_t, fileName string, verbose int32) *Vec_Int_t {
 	file, err := os.Open(fileName)
 	if err != nil {
-		fmt.Printf("Cannot open input file %q for reading.\n", fileName)
+		fmt.Printf("Cannot open input file \"%s\" for reading.\n", fileName)
 		return nil
 	}
 	defer file.Close()
@@ -169,7 +169,7 @@ func Io_ReadFins(network *Abc_Ntk_t, fileName string, verbose int32) *Vec_Int_t 
 		}
 		name := baseabc.Abc_ObjName(obj)
 		if _, exists := nameToID[name]; exists {
-			fmt.Printf("The same name %q appears twice among CIs and internal nodes.\n", name)
+			fmt.Printf("The same name \"%s\" appears twice among CIs and internal nodes.\n", name)
 			return nil
 		}
 		nameToID[name] = id
@@ -198,7 +198,7 @@ func Io_ReadFins(network *Abc_Ntk_t, fileName string, verbose int32) *Vec_Int_t 
 		}
 		id, found := nameToID[fields[1]]
 		if !found {
-			fmt.Printf("Cannot find object with name %q.\n", fields[1])
+			fmt.Printf("Cannot find object with name \"%s\".\n", fields[1])
 			continue
 		}
 		kind := Io_ReadFinType(fields[2])
@@ -206,7 +206,7 @@ func Io_ReadFins(network *Abc_Ntk_t, fileName string, verbose int32) *Vec_Int_t 
 			kind = Io_ReadFinTypeMapped(library, fields[2])
 		}
 		if kind == int32(ABC_FIN_NONE) {
-			fmt.Printf("Cannot read type %q of object %q.\n", fields[2], baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
+			fmt.Printf("Cannot read type \"%s\" of object \"%s\".\n", fields[2], baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
 			continue
 		}
 		Vec_IntPush(pairs, id)
@@ -222,7 +222,7 @@ func Io_ReadFins(network *Abc_Ntk_t, fileName string, verbose int32) *Vec_Int_t 
 			fmt.Printf("%-10d%-10s%-10s\n", i/2, baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)), Io_WriteFinType(kind))
 		}
 	}
-	fmt.Printf("Finished reading %d lines from the fault list file %q.\n", expectedLine-1, fileName)
+	fmt.Printf("Finished reading %d lines from the fault list file \"%s\".\n", expectedLine-1, fileName)
 	return pairs
 }
 
@@ -895,12 +895,12 @@ func Abc_NtkDetectFinClasses(network *Abc_Ntk_t, verbose int32) *Vec_Wec_t {
 	var types *Vec_Int_t
 	if baseabc.Abc_NtkIsSopLogic(network) != 0 {
 		if id := Abc_NtkFinCheckTypesOk(network); id != 0 {
-			fmt.Printf("Current network contains unsupported gate types (for example, see node %q).\n", baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
+			fmt.Printf("Current network contains unsupported gate types (for example, see node \"%s\").\n", baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
 			return nil
 		}
 		types = Abc_NtkFinComputeTypes(network)
 	} else if id := Abc_NtkFinCheckTypesOk2(network); id != 0 {
-		fmt.Printf("Current network has mismatch between mapped gate size and fault gate size (for example, see node %q).\n", baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
+		fmt.Printf("Current network has mismatch between mapped gate size and fault gate size (for example, see node \"%s\").\n", baseabc.Abc_ObjName(baseabc.Abc_NtkObj(network, id)))
 		return nil
 	}
 	if types != nil {

@@ -66,7 +66,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 					fmt.Printf("Cannot write speculative miter: %v\n", err)
 				}
 				aig.Aig_ManStop(speculative)
-				fmt.Printf("Iterative refinement is stopped before iteration %d.\nThe network is reduced using candidate equivalences.\nSpeculatively reduced miter is saved in file %q.\nIf the miter is SAT, the reduced result is incorrect.\n", iteration, "srm.blif")
+				fmt.Printf("Iterative refinement is stopped before iteration %d.\nThe network is reduced using candidate equivalences.\nSpeculatively reduced miter is saved in file \"%s\".\nIf the miter is SAT, the reduced result is incorrect.\n", iteration, "srm.blif")
 				break
 			}
 			start := time.Now()

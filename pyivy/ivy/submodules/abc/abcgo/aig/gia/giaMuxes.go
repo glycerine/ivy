@@ -261,7 +261,7 @@ func Gia_ManMuxProfiling(src *Gia_Man_t) {
 	for _, top := range manager.tops {
 		total += len(top)
 	}
-	fmt.Printf("MUX structure profile for AIG %q: Total MUXes=%d Total trees=%d Unique trees=%d Time=%s\n", src.pName, Gia_ManMuxNum(p), total, len(manager.tops)-1, time.Since(started))
+	fmt.Printf("MUX structure profile for AIG \"%s\": Total MUXes=%d Total trees=%d Unique trees=%d Time=%s\n", src.pName, Gia_ManMuxNum(p), total, len(manager.tops)-1, time.Since(started))
 	if Gia_ManMuxProfile(manager, 0) != 0 {
 		Gia_ManMuxProfile(manager, 1)
 		for i := 1; i < min(len(manager.tops), 10); i++ {

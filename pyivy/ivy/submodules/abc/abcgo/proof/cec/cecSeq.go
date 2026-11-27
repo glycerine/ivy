@@ -273,7 +273,7 @@ func cecSemiformalWrite(p *Gia_Man_t, name string) {
 	if err := gia.Gia_AigerWrite(p, name, 0, 0, 0); err != nil {
 		var pathErr *os.PathError
 		if errors.As(err, &pathErr) && pathErr.Op == "open" {
-			fmt.Printf("Gia_AigerWrite(): Cannot open the output file %q.\n", name)
+			fmt.Printf("Gia_AigerWrite(): Cannot open the output file \"%s\".\n", name)
 		}
 	}
 }

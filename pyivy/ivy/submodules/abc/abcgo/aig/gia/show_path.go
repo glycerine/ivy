@@ -56,7 +56,7 @@ func Gia_ShowPath(p *Gia_Man_t, filename string) {
 	}
 	f, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open the intermediate file %q.\n", filename)
+		fmt.Printf("Cannot open the intermediate file \"%s\".\n", filename)
 		return
 	}
 	defer f.Close()

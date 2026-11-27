@@ -59,7 +59,7 @@ func Abc_NtkQbf(pNtk *Abc_Ntk_t, nPars, nItersMax, fDumpCnf, fVerbose int32) {
 		}
 		filename := extra.Extra_FileNameGenericAppend(baseabc.Abc_NtkSpec(pNtk), ".qdimacs")
 		cnf.Cnf_DataWriteIntoFile(data, filename, 0, forall, exists)
-		fmt.Printf("The 2QBF formula was written into file %q.\n", filename)
+		fmt.Printf("The 2QBF formula was written into file \"%s\".\n", filename)
 		return
 	}
 

@@ -101,7 +101,7 @@ func Abc_NtkDarIPdr(network *abc.Network, pars *Pdr_Par_t) int32 {
 		if cex == nil {
 			fmt.Println("Counter-example is not available.")
 		} else {
-			fmt.Printf("Output %d of miter %q was asserted in frame %d.  ", cex.IPo, network.Name, cex.IFrame)
+			fmt.Printf("Output %d of miter \"%s\" was asserted in frame %d.  ", cex.IPo, network.Name, cex.IFrame)
 			if saig.Saig_ManVerifyCex(graph, cex) == 0 {
 				fmt.Println("Counter-example verification has FAILED.")
 			}

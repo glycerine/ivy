@@ -100,7 +100,7 @@ func If_DsdManSave(p *If_DsdMan_t, fileName string) {
 	}
 	file, err := os.Create(fileName)
 	if err != nil {
-		fmt.Printf("Writing DSD manager file %q has failed.\n", fileName)
+		fmt.Printf("Writing DSD manager file \"%s\" has failed.\n", fileName)
 		return
 	}
 	buffer := bufio.NewWriter(file)
@@ -112,7 +112,7 @@ func If_DsdManSave(p *If_DsdMan_t, fileName string) {
 		err = closed
 	}
 	if err != nil {
-		fmt.Printf("Writing DSD manager file %q has failed: %v.\n", fileName, err)
+		fmt.Printf("Writing DSD manager file \"%s\" has failed: %v.\n", fileName, err)
 	}
 }
 
@@ -307,16 +307,16 @@ func ifDsdRead(data []byte, fileName string) (*If_DsdMan_t, error) {
 func If_DsdManLoad(fileName string) *If_DsdMan_t {
 	data, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Printf("Reading DSD manager file %q has failed.\n", fileName)
+		fmt.Printf("Reading DSD manager file \"%s\" has failed.\n", fileName)
 		return nil
 	}
 	p, err := ifDsdRead(data, fileName)
 	if err == ifDsdBadFormat {
-		fmt.Printf("Unrecognized format of file %q.\n", fileName)
+		fmt.Printf("Unrecognized format of file \"%s\".\n", fileName)
 		return nil
 	}
 	if err != nil {
-		fmt.Printf("Reading DSD manager file %q has failed: %v.\n", fileName, err)
+		fmt.Printf("Reading DSD manager file \"%s\" has failed: %v.\n", fileName, err)
 		return nil
 	}
 	return p

@@ -553,7 +553,7 @@ func Abc_NtkRemovePo(n *Network, index, removeZero int32) {
 func Abc_NtkReadFlopPerm(name string, count int32) []int32 {
 	file, err := os.Open(name)
 	if err != nil {
-		fmt.Printf("Cannot open input file %q.\n", name)
+		fmt.Printf("Cannot open input file \"%s\".\n", name)
 		return nil
 	}
 	defer file.Close()

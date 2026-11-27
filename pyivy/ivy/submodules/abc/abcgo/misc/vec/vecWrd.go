@@ -414,7 +414,7 @@ func Vec_WrdPrintHex(p *Vec_Wrd_t, n int) {
 func Vec_WrdDumpHex(path string, p *Vec_Wrd_t, n, verbose int) {
 	f, err := os.Create(path)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for writing.\n", path)
+		fmt.Printf("Cannot open file \"%s\" for writing.\n", path)
 		return
 	}
 	defer f.Close()
@@ -429,7 +429,7 @@ func Vec_WrdDumpHex(path string, p *Vec_Wrd_t, n, verbose int) {
 		panic(err)
 	}
 	if verbose != 0 {
-		fmt.Printf("Written %d words of simulation data for %d objects into file %q.\n", n, len(p.data)/n, path)
+		fmt.Printf("Written %d words of simulation data for %d objects into file \"%s\".\n", n, len(p.data)/n, path)
 	}
 }
 func Vec_WrdReadHexOne(c byte) int {
@@ -446,7 +446,7 @@ func Vec_WrdReadHexOne(c byte) int {
 func Vec_WrdReadHex(path string, words *int, verbose int) *Vec_Wrd_t {
 	f, err := os.Open(path)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for reading.\n", path)
+		fmt.Printf("Cannot open file \"%s\" for reading.\n", path)
 		return nil
 	}
 	defer f.Close()

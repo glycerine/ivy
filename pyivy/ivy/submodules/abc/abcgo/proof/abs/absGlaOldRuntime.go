@@ -103,7 +103,7 @@ func Gia_GlaDumpAbsracted(p *Gla_Man_t, verbose int32) {
 		name = "glabs.aig"
 	}
 	if verbose != 0 {
-		fmt.Printf("Dumping abstracted model into file %q...\n", name)
+		fmt.Printf("Dumping abstracted model into file \"%s\"...\n", name)
 	}
 	abstract := Gia_ManDupAbsGates(p.pGia0, Gla_ManTranslate(p))
 	defer gia.Gia_ManStop(abstract)

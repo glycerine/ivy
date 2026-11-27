@@ -165,7 +165,7 @@ func Abc_TtStoreFree(p *Abc_TtStore_t, nVarNum int32) {
 func Abc_FileSize(name string) int32 {
 	info, err := os.Stat(name)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for reading.\n", name)
+		fmt.Printf("Cannot open file \"%s\" for reading.\n", name)
 		return -1
 	}
 	if info.Size() > int64(^uint32(0)>>1) {
@@ -189,7 +189,7 @@ func Extra_FileNameGenericAppend(name, suffix string) string {
 func Abc_FileRead(name string) string {
 	b, err := os.ReadFile(name)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for reading.\n", name)
+		fmt.Printf("Cannot open file \"%s\" for reading.\n", name)
 		return ""
 	}
 	return string(b) + "\n\n\x00"
@@ -240,7 +240,7 @@ func Abc_TruthStoreRead(name string, p *Abc_TtStore_t) {
 	}
 	data, err := os.ReadFile(name)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for reading.\n", name)
+		fmt.Printf("Cannot open file \"%s\" for reading.\n", name)
 		return
 	}
 	count := int32(0)
@@ -264,7 +264,7 @@ func Abc_TtStoreWrite(name string, p *Abc_TtStore_t, binaryOutput int32) {
 	}
 	f, err := os.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for writing.\n", name)
+		fmt.Printf("Cannot open file \"%s\" for writing.\n", name)
 		return
 	}
 	defer f.Close()
@@ -310,7 +310,7 @@ func Abc_TtStoreLoad(name string, nVarNum int32) *Abc_TtStore_t {
 	}
 	data, err := os.ReadFile(name)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for reading.\n", name)
+		fmt.Printf("Cannot open file \"%s\" for reading.\n", name)
 		return nil
 	}
 	nBytes := 1 << uint(nVarNum-3)
@@ -335,7 +335,7 @@ func Abc_TtStoreLoadSave(name string) {
 	out := Extra_FileNameGenericAppend(name, "_binary.data")
 	Abc_TtStoreWrite(out, p, 1)
 	Abc_TtStoreFree(p, -1)
-	fmt.Printf("Input file %q was copied into output file %q.\n", name, out)
+	fmt.Printf("Input file \"%s\" was copied into output file \"%s\".\n", name, out)
 }
 
 func Abc_TtStoreTest(name string) {
@@ -377,7 +377,7 @@ func Abc_TtStoreLoadSaveBin(name string) {
 	}
 	out := Extra_FileNameGenericAppend(name, "_binary.data")
 	if err := os.WriteFile(out, output, 0666); err == nil {
-		fmt.Printf("Input file %q was copied into output file %q.\n", name, out)
+		fmt.Printf("Input file \"%s\" was copied into output file \"%s\".\n", name, out)
 	}
 }
 
@@ -466,7 +466,7 @@ func Abc_TruthDecTest(name string, decType, nVarNum, verbose int32) {
 
 func Abc_DecTest(name string, decType, nVarNum, verbose int32) int32 {
 	if verbose != 0 {
-		fmt.Printf("Using truth tables from file %q...\n", name)
+		fmt.Printf("Using truth tables from file \"%s\"...\n", name)
 	}
 	if decType == 0 {
 		if nVarNum < 0 {

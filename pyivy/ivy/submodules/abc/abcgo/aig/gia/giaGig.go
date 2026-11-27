@@ -307,6 +307,6 @@ func Gia_ManReadGig(path string) *Gia_Man_t {
 			return result
 		}
 	}
-	fmt.Printf("Cannot read GIG file %q: %v.\n", path, err)
+	fmt.Printf("Cannot read GIG file \"%s\": %v.\n", path, err)
 	return nil
 }

@@ -30,7 +30,7 @@ func Amap_LibParseEquations(lib *Amap_Lib_t, verbose int32) int32 {
 				gate.pFunc = []uint32{^uint32(0)}
 			default:
 				if verbose != 0 {
-					fmt.Printf("Cannot parse formula %q of gate %q with no pins.\n", gate.pForm, gate.pName)
+					fmt.Printf("Cannot parse formula \"%s\" of gate \"%s\" with no pins.\n", gate.pForm, gate.pName)
 				}
 				return 0
 			}
@@ -41,7 +41,7 @@ func Amap_LibParseEquations(lib *Amap_Lib_t, verbose int32) int32 {
 		}
 		if len(gate.Pins) < pins {
 			if verbose != 0 {
-				fmt.Printf("Gate %q has %d declared pins but only %d pin names.\n", gate.pName, pins, len(gate.Pins))
+				fmt.Printf("Gate \"%s\" has %d declared pins but only %d pin names.\n", gate.pName, pins, len(gate.Pins))
 			}
 			return 0
 		}
@@ -59,7 +59,7 @@ func Amap_LibParseEquations(lib *Amap_Lib_t, verbose int32) int32 {
 		truth := hop.Hop_ManConvertAigToTruth(manager, root, int32(pins), nil, 0)
 		if !amapTruthUsesEveryPin(truth, pins) {
 			if verbose != 0 {
-				fmt.Printf("Skipping gate %q because its output does not depend on every input pin.\n", gate.pName)
+				fmt.Printf("Skipping gate \"%s\" because its output does not depend on every input pin.\n", gate.pName)
 			}
 			gate.pFunc = nil
 			continue

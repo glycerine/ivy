@@ -12,7 +12,7 @@ func Gia_SweeperRun(p *Gia_Man_t, probes *Vec_Int_t, command string, verbose int
 	graph := Gia_SweeperExtractUserLogic(p, probes, nil, nil)
 	if command != "" {
 		if verbose != 0 {
-			fmt.Printf("GIA manager before %q: %d AND nodes\n", command, Gia_ManAndNum(graph))
+			fmt.Printf("GIA manager before \"%s\": %d AND nodes\n", command, Gia_ManAndNum(graph))
 		}
 		frame := abcmain.Abc_FrameGetGlobalFrame()
 		abcmain.Abc_FrameUpdateGia(frame, graph)
@@ -23,7 +23,7 @@ func Gia_SweeperRun(p *Gia_Man_t, probes *Vec_Int_t, command string, verbose int
 		}
 		graph = result
 		if verbose != 0 {
-			fmt.Printf("GIA manager after %q: %d AND nodes\n", command, Gia_ManAndNum(graph))
+			fmt.Printf("GIA manager after \"%s\": %d AND nodes\n", command, Gia_ManAndNum(graph))
 		}
 	}
 	if Gia_ManPoNum(graph) != int32(Vec_IntSize(probes)) || Gia_ManPiNum(graph) != Gia_ManPiNum(p) {

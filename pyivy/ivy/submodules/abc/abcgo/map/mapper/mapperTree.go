@@ -188,7 +188,7 @@ func Map_LibraryReadFileTreeStr(lib *Map_SuperLib_t, genlib *mio.Mio_Library_t, 
 	}
 	libName := strings.Fields(strings.TrimSpace(lines[first]))
 	if len(libName) == 0 || Map_LibraryCompareLibNames(mio.Mio_LibraryReadName(genlib), libName[0]) != 0 {
-		fmt.Printf("Supergate library %q does not match the loaded genlib library.\n", fileName)
+		fmt.Printf("Supergate library \"%s\" does not match the loaded genlib library.\n", fileName)
 		return 0
 	}
 	readCount := func(index int) (int32, bool) {
@@ -270,7 +270,7 @@ func Map_LibraryReadTree(lib *Map_SuperLib_t, genlib *mio.Mio_Library_t, fileNam
 	}
 	data, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Printf("Cannot open input file %q.\\n", fileName)
+		fmt.Printf("Cannot open input file \"%s\".\\n", fileName)
 		return 0
 	}
 	text := vec.Vec_StrAllocArrayCopy(data, len(data))

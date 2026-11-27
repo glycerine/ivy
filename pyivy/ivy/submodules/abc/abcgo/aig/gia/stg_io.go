@@ -27,12 +27,12 @@ func Gia_ManStgPrint(out io.Writer, lines *Vec_Int_t, ins, outs, states int32) {
 }
 func Gia_ManStgReadLines(path string, ins, outs, states *int32) *Vec_Int_t {
 	if strings.HasSuffix(path, "aig") {
-		fmt.Printf("Input file %q has extension %q.\n", path, "aig")
+		fmt.Printf("Input file \"%s\" has extension \"%s\".\n", path, "aig")
 		return nil
 	}
 	f, err := os.Open(path)
 	if err != nil {
-		fmt.Printf("Cannot open file %q.\n", path)
+		fmt.Printf("Cannot open file \"%s\".\n", path)
 		return nil
 	}
 	defer f.Close()

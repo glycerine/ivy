@@ -2407,7 +2407,7 @@ func Prs_CreateVerilogNtk(p *Cba_Ntk_t, pNtk *Prs_Ntk_t) int32 {
 			if Type == CBA_OBJ_BOX {
 				pBox = Cba_ManNtkFind(p.pDesign, pNtkName)
 				if pBox == nil {
-					fmt.Printf("Fatal error: Cannot find module %q.\n", pNtkName)
+					fmt.Printf("Fatal error: Cannot find module \"%s\".\n", pNtkName)
 					continue
 				}
 				nInputs, nOutputs = Cba_NtkPiNum(pBox), Cba_NtkPoNum(pBox)
@@ -2639,7 +2639,7 @@ func Prs_ManBuildCbaVerilog(pFileName string, vDes *Vec_Ptr_t) *Cba_Man_t {
 
 	for i = 0; i < Vec_PtrSize(vDes); i++ {
 		pPrsNtk := Prs_ManNtk(vDes, i)
-		fmt.Printf("Building module %q...\n", Prs_NtkName(pPrsNtk))
+		fmt.Printf("Building module \"%s\"...\n", Prs_NtkName(pPrsNtk))
 		fError = Prs_CreateVerilogNtk(Cba_ManNtk(p, i+1), pPrsNtk)
 		if fError != 0 {
 			break

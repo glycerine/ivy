@@ -64,9 +64,9 @@ func Inter_ManInterDump(p *Inter_Man_t, proved int32) {
 		return
 	}
 	if proved != 0 {
-		fmt.Printf("Inductive invariant is dumped into file %q.\n", name)
+		fmt.Printf("Inductive invariant is dumped into file \"%s\".\n", name)
 	} else {
-		fmt.Printf("Interpolants are dumped into file %q.\n", name)
+		fmt.Printf("Interpolants are dumped into file \"%s\".\n", name)
 	}
 }
 

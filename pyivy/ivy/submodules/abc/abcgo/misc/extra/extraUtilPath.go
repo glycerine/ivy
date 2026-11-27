@@ -223,7 +223,7 @@ func Abc_GraphDeriveGiaDump(nodes *vec.Vec_Wec_t, edges *vec.Vec_Int_t, size int
 	if err = ioa.Ioa_WriteAiger(model, name, 0, 0); err != nil {
 		return err
 	}
-	fmt.Printf("Finished dumping AIG into file %q.\n", name)
+	fmt.Printf("Finished dumping AIG into file \"%s\".\n", name)
 	return nil
 }
 func Abc_GraphBuildState(state *vec.Vec_Int_t, e, x int32, edges, life *vec.Vec_Int_t, fronts *vec.Vec_Wec_t, front []int32, next *vec.Vec_Int_t, verbose int32) int32 {

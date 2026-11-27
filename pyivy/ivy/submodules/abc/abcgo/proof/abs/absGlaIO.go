@@ -59,7 +59,7 @@ func Ga2_GlaDumpAbsracted(p *Ga2_Man_t, verbose int32) {
 	if p.pPars.FDumpMabs != 0 {
 		name := Ga2_GlaGetFileName(p, 0)
 		if verbose != 0 {
-			fmt.Printf("Dumping miter with abstraction map into file %q...\n", name)
+			fmt.Printf("Dumping miter with abstraction map into file \"%s\"...\n", name)
 		}
 		gia.Gia_ManSetGateClasses(p.pGia, Ga2_ManAbsTranslate(p))
 		if err := gia.Gia_AigerWrite(p.pGia, name, 0, 0, 0); err != nil {
@@ -70,7 +70,7 @@ func Ga2_GlaDumpAbsracted(p *Ga2_Man_t, verbose int32) {
 	if p.pPars.FDumpVabs != 0 {
 		name := Ga2_GlaGetFileName(p, 1)
 		if verbose != 0 {
-			fmt.Printf("Dumping abstracted model into file %q...\n", name)
+			fmt.Printf("Dumping abstracted model into file \"%s\"...\n", name)
 		}
 		abstract := Gia_ManDupAbsGates(p.pGia, Ga2_ManAbsTranslate(p))
 		gia.Gia_ManCleanValue(p.pGia)
@@ -131,6 +131,6 @@ func Ga2_ManDumpInitialMap(p *Ga2_Man_t) {
 	}
 	gia.Gia_ManSetGateClasses(p.pGia, previous)
 	if p.pPars.FVerbose != 0 {
-		fmt.Printf("Dumping miter with abstraction map into file %q...\n", name)
+		fmt.Printf("Dumping miter with abstraction map into file \"%s\"...\n", name)
 	}
 }

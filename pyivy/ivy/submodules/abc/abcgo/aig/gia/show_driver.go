@@ -16,11 +16,11 @@ func giaManShow(p *Gia_Man_t, bold *Vec_Int_t, adders, fullOnly, path int32, com
 	filename := extra.Extra_FileNameGenericAppend(p.pName, ".dot")
 	f, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open the intermediate file %q.\n", filename)
+		fmt.Printf("Cannot open the intermediate file \"%s\".\n", filename)
 		return
 	}
 	if err = f.Close(); err != nil {
-		fmt.Printf("Cannot close the intermediate file %q: %v\n", filename, err)
+		fmt.Printf("Cannot close the intermediate file \"%s\": %v\n", filename, err)
 		return
 	}
 	if path != 0 {

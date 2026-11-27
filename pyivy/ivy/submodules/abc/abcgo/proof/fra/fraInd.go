@@ -198,7 +198,7 @@ func Fra_FraigInduction(g *aig.Graph, params *Fra_Ssw_t) *aig.Graph {
 	var result *aig.Graph
 	if pars.FWriteImps != 0 && p.VOneHots != nil && Fra_OneHotCount(p, p.VOneHots) != 0 {
 		name := ioa.Ioa_FileNameGenericAppend(g.Name, "_care.aig")
-		fmt.Printf("Care one-hotness clauses will be written into file %q.\n", name)
+		fmt.Printf("Care one-hotness clauses will be written into file \"%s\".\n", name)
 		result = aig.Aig_ManDupOrdered(g)
 		care := Fra_OneHotCreateExdc(p, p.VOneHots)
 		if err := ioa.Ioa_WriteAiger(care, name, 0, 1); err != nil {
@@ -265,7 +265,7 @@ func Fra_FraigInductionTest(filename string, pars *Fra_Ssw_t) int32 {
 		count++
 	}
 	if pars.FVerbose != 0 {
-		fmt.Printf("Result: %d pairs of seq equiv nodes are written into file %q.\n", count, path)
+		fmt.Printf("Result: %d pairs of seq equiv nodes are written into file \"%s\".\n", count, path)
 	}
 	return 1
 }

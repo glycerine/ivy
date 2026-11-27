@@ -29,7 +29,7 @@ func sfmLibPrepareCells(nVars, two, delay, verbose, libVerbose int32, cells []mi
 			if dau.Dau_DsdDecompose([]uint64{truth}, c.Fanins(), 0, 0, &text) <= 3 {
 				c.Type = 2
 			} else if libVerbose != 0 {
-				fmt.Printf("Skipping gate %q with non-DSD function %s\n", c.Name(), text)
+				fmt.Printf("Skipping gate \"%s\" with non-DSD function %s\n", c.Name(), text)
 			}
 		}
 	}

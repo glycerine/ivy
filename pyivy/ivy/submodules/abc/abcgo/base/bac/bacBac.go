@@ -98,7 +98,7 @@ func Bac_ManReadBacInt(vOut *vec.Vec_Str_t) *Bac_Man_t {
 func Bac_ManReadBac(filename string) *Bac_Man_t {
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		fmt.Printf("Cannot open file %q for reading.\n", filename)
+		fmt.Printf("Cannot open file \"%s\" for reading.\n", filename)
 		return nil
 	}
 	v := vec.Vec_StrAllocArrayCopy(data, len(data))
@@ -136,7 +136,7 @@ func Bac_ManWriteBac(filename string, man *Bac_Man_t) {
 	Bac_ManWriteBacInt(out, man)
 	if vec.Vec_StrSize(out) > 0 {
 		if err := os.WriteFile(filename, vec.Vec_StrArray(out), 0666); err != nil {
-			fmt.Printf("Cannot open file %q for writing.\n", filename)
+			fmt.Printf("Cannot open file \"%s\" for writing.\n", filename)
 		}
 	}
 }

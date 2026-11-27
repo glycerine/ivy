@@ -325,5 +325,5 @@ func Vec_MemDumpTruthTables(p *Vec_Mem_t, name string, lutSize int) {
 		w = f
 	}
 	Vec_MemDump(w, p)
-	fmt.Printf("Dumped %d %d-var truth tables into file %q (%.2f MB).\n", p.nEntries, lutSize, path, float64(8*p.nEntries*p.nEntrySize)/(1<<20))
+	fmt.Printf("Dumped %d %d-var truth tables into file \"%s\" (%.2f MB).\n", p.nEntries, lutSize, path, float64(8*p.nEntries*p.nEntrySize)/(1<<20))
 }

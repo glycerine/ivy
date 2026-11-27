@@ -37,7 +37,7 @@ func Amap_ParseStrsav(_ *Aig_MmFlex_t, value string) string { return strings.Clo
 func Amap_LoadFile(fileName string) string {
 	data, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Printf("Cannot open file %q: %v.\n", fileName, err)
+		fmt.Printf("Cannot open file \"%s\": %v.\n", fileName, err)
 		return ""
 	}
 	return string(data) + "\n.end\n"
@@ -191,7 +191,7 @@ func Amap_ParseTokens(tokens *Vec_Ptr_t, verbose int32) *Amap_Lib_t {
 		}
 		if token != AMAP_STRING_GATE {
 			Amap_LibFree(lib)
-			fmt.Printf("Expected GATE at token %d, got %q.\n", pos, token)
+			fmt.Printf("Expected GATE at token %d, got \"%s\".\n", pos, token)
 			return nil
 		}
 		pos++
@@ -206,7 +206,7 @@ func Amap_ParseTokens(tokens *Vec_Ptr_t, verbose int32) *Amap_Lib_t {
 		area, err := strconv.ParseFloat(areaText, 64)
 		if err != nil {
 			Amap_LibFree(lib)
-			fmt.Printf("Invalid area %q for gate %q.\n", areaText, name)
+			fmt.Printf("Invalid area \"%s\" for gate \"%s\".\n", areaText, name)
 			return nil
 		}
 		pos++
@@ -217,7 +217,7 @@ func Amap_ParseTokens(tokens *Vec_Ptr_t, verbose int32) *Amap_Lib_t {
 		form, next, err := Amap_CollectFormulaTokens(tokens, formulaStart, pos)
 		if err != nil {
 			Amap_LibFree(lib)
-			fmt.Printf("Cannot read formula of gate %q: %v.\n", name, err)
+			fmt.Printf("Cannot read formula of gate \"%s\": %v.\n", name, err)
 			return nil
 		}
 		pos = next
@@ -230,12 +230,12 @@ func Amap_ParseTokens(tokens *Vec_Ptr_t, verbose int32) *Amap_Lib_t {
 		for pin := int32(0); pin < nPins; pin++ {
 			if pos+8 >= Vec_PtrSize(tokens) {
 				Amap_LibFree(lib)
-				fmt.Printf("Incomplete pin %d of gate %q.\n", pin, name)
+				fmt.Printf("Incomplete pin %d of gate \"%s\".\n", pin, name)
 				return nil
 			}
 			if got, _ := Vec_PtrEntry(tokens, pos).(string); got != AMAP_STRING_PIN {
 				Amap_LibFree(lib)
-				fmt.Printf("Cannot parse gate %q: expected PIN, got %q.\n", name, got)
+				fmt.Printf("Cannot parse gate \"%s\": expected PIN, got \"%s\".\n", name, got)
 				return nil
 			}
 			pos++
@@ -253,7 +253,7 @@ func Amap_ParseTokens(tokens *Vec_Ptr_t, verbose int32) *Amap_Lib_t {
 				phase = AMAP_PHASE_NONINV
 			default:
 				Amap_LibFree(lib)
-				fmt.Printf("Cannot read phase %q for pin %q of gate %q.\n", phaseText, pinName, name)
+				fmt.Printf("Cannot read phase \"%s\" for pin \"%s\" of gate \"%s\".\n", phaseText, pinName, name)
 				return nil
 			}
 			values := make([]float64, 6)
@@ -263,7 +263,7 @@ func Amap_ParseTokens(tokens *Vec_Ptr_t, verbose int32) *Amap_Lib_t {
 				values[i], err = strconv.ParseFloat(text, 64)
 				if err != nil {
 					Amap_LibFree(lib)
-					fmt.Printf("Invalid pin timing/load value %q in gate %q.\n", text, name)
+					fmt.Printf("Invalid pin timing/load value \"%s\" in gate \"%s\".\n", text, name)
 					return nil
 				}
 			}
@@ -273,7 +273,7 @@ func Amap_ParseTokens(tokens *Vec_Ptr_t, verbose int32) *Amap_Lib_t {
 			clone := Amap_ParseGateWithSamePins(gate)
 			if clone == nil {
 				Amap_LibFree(lib)
-				fmt.Printf("Cannot expand wildcard pin of gate %q.\n", name)
+				fmt.Printf("Cannot expand wildcard pin of gate \"%s\".\n", name)
 				return nil
 			}
 			clone.Id = gate.Id
@@ -290,7 +290,7 @@ func Amap_ParseTokens(tokens *Vec_Ptr_t, verbose int32) *Amap_Lib_t {
 		previous = gate
 	}
 	if multiCount > 0 {
-		fmt.Printf("Warning: Detected %d multi-output gates (for example, %q).\n", multiCount, multiName)
+		fmt.Printf("Warning: Detected %d multi-output gates (for example, \"%s\").\n", multiCount, multiName)
 	}
 	return lib
 }

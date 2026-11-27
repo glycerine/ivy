@@ -286,7 +286,7 @@ func Gia_ManCollectReachable(g *Gia_Man_t, maxStates, miter, dump, verbose int32
 	if dump != 0 {
 		f, err := os.Create("test.stg")
 		if err != nil {
-			fmt.Printf("Cannot open file %q for writing.\n", "test.stg")
+			fmt.Printf("Cannot open file \"%s\" for writing.\n", "test.stg")
 		} else {
 			lines := vec.Vec_IntArray(p.vStgDump)
 			width := len(fmt.Sprint(p.iCurState - 1))

@@ -305,7 +305,7 @@ func Abc_TruthNpnTest(name string, npnType, nVarNum, dump, binaryOutput, verbose
 		out := Extra_FileNameGenericAppend(name, ext)
 		Abc_TtStoreWrite(out, p, binaryOutput)
 		if verbose != 0 {
-			fmt.Printf("The resulting functions are written into file %q.\n", out)
+			fmt.Printf("The resulting functions are written into file \"%s\".\n", out)
 		}
 	}
 	Abc_TtStoreFree(p, nVarNum)
@@ -313,7 +313,7 @@ func Abc_TruthNpnTest(name string, npnType, nVarNum, dump, binaryOutput, verbose
 
 func Abc_NpnTest(name string, npnType, nVarNum, dump, binaryOutput, verbose int32) int32 {
 	if verbose != 0 {
-		fmt.Printf("Using truth tables from file %q...\n", name)
+		fmt.Printf("Using truth tables from file \"%s\"...\n", name)
 	}
 	if npnType >= 0 && npnType <= 11 {
 		Abc_TruthNpnTest(name, npnType, nVarNum, dump, binaryOutput, verbose)

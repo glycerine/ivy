@@ -443,7 +443,7 @@ func (p *zyxSynthesis) writeSolution(net *zyxNetwork, first bool) error {
 		err = closeErr
 	}
 	if err == nil {
-		fmt.Printf("Dumped solution into file %q.\n", name)
+		fmt.Printf("Dumped solution into file \"%s\".\n", name)
 	}
 	return err
 }

@@ -31,12 +31,12 @@ func Gia_MiniAigVerifyToFiles(frame *abcmain.Frame, input, miterPath, reducedPat
 	if err = Gia_AigerWrite(miter, miterPath, 0, 0, 0); err != nil {
 		return err
 	}
-	fmt.Printf("Dumped miter AIG in file %q.\n", miterPath)
+	fmt.Printf("Dumped miter AIG in file \"%s\".\n", miterPath)
 	reduced := Gia_MiniAigReduce(p, equivs)
 	if err = Gia_AigerWrite(reduced, reducedPath, 0, 0, 0); err != nil {
 		return err
 	}
-	fmt.Printf("Dumped reduced AIG in file %q.\n", reducedPath)
+	fmt.Printf("Dumped reduced AIG in file \"%s\".\n", reducedPath)
 	return nil
 }
 func Gia_MiniAigVerify(frame *abcmain.Frame, input string) error {

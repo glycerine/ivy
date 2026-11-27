@@ -36,7 +36,7 @@ func Gia_ManVerifyWithBoxes(impl *Gia_Man_t, conflicts, seconds, sequential, dum
 			fmt.Printf("Cannot dump implementation: %v\n", err)
 			return -1
 		}
-		fmt.Printf("Dumped two parts of the miter into files %q and %q.\n", left, right)
+		fmt.Printf("Dumped two parts of the miter into files \"%s\" and \"%s\".\n", left, right)
 	}
 	if sequential == 0 {
 		return giaVerifyPreparedCombinational(spec, design, conflicts, seconds, verbose)

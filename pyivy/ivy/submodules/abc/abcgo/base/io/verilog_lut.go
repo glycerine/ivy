@@ -94,6 +94,6 @@ func Io_WriteVerilogLut(n *abc.Network, filename string, size int32) {
 		return
 	}
 	if err := os.WriteFile(filename, []byte(b.String()), 0666); err != nil {
-		fmt.Printf("Io_WriteVerilog(): Cannot write output file %q: %v\n", filename, err)
+		fmt.Printf("Io_WriteVerilog(): Cannot write output file \"%s\": %v\n", filename, err)
 	}
 }

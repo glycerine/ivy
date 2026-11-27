@@ -97,7 +97,7 @@ func Gia_ManDumpTestsDelay(tests *vec.Vec_Int_t, iterations int32, filename stri
 func Gia_ManGetTestPatterns(filename string) *vec.Vec_Int_t {
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		fmt.Printf("Cannot open input file %q.\n", filename)
+		fmt.Printf("Cannot open input file \"%s\".\n", filename)
 		return nil
 	}
 	result := vec.Vec_IntAlloc(len(data))

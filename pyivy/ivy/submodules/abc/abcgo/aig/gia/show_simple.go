@@ -18,7 +18,7 @@ func Gia_WriteDotAigSimple(p *Gia_Man_t, filename string, bold *Vec_Int_t) {
 	}
 	f, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open the intermediate file %q.\n", filename)
+		fmt.Printf("Cannot open the intermediate file \"%s\".\n", filename)
 		return
 	}
 	defer f.Close()

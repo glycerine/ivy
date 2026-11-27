@@ -216,7 +216,7 @@ func Npn_ManRead(p *Npn_Man_t, name string) {
 	}
 	f, e := os.Open(name)
 	if e != nil {
-		Abc_Print(-1, "Cannot open NPN function file %q.\n", name)
+		Abc_Print(-1, "Cannot open NPN function file \"%s\".\n", name)
 		return
 	}
 	defer f.Close()
@@ -258,7 +258,7 @@ func Npn_ManWrite(p *Npn_Man_t, name string) {
 	}
 	f, e := os.Create(name)
 	if e != nil {
-		Abc_Print(-1, "Cannot open NPN function file %q.\n", name)
+		Abc_Print(-1, "Cannot open NPN function file \"%s\".\n", name)
 		return
 	}
 	defer f.Close()
@@ -277,7 +277,7 @@ func Npn_ManStart(name string) *Npn_Man_t {
 	p.pBins = make([]int32, p.nBins)
 	if name != "" {
 		if _, e := os.Stat(name); e != nil {
-			Abc_Print(-1, "Cannot open NPN function file %q.\n", name)
+			Abc_Print(-1, "Cannot open NPN function file \"%s\".\n", name)
 			return nil
 		}
 		Npn_ManRead(p, name)
@@ -299,7 +299,7 @@ func Npn_ManLoad(name string) {
 	}
 	pNpnMan = Npn_ManStart(name)
 	if pNpnMan != nil {
-		Abc_Print(1, "Created new table with %d entries from file %q.\n", pNpnMan.nEntries, name)
+		Abc_Print(1, "Created new table with %d entries from file \"%s\".\n", pNpnMan.nEntries, name)
 	}
 }
 func Npn_ManSave(name string) {
@@ -308,7 +308,7 @@ func Npn_ManSave(name string) {
 		return
 	}
 	Npn_ManWrite(pNpnMan, name)
-	Abc_Print(1, "Dumped table with %d entries from file %q.\n", pNpnMan.nEntries, name)
+	Abc_Print(1, "Dumped table with %d entries from file \"%s\".\n", pNpnMan.nEntries, name)
 }
 func Npn_ManSaveOne(truth *uint32, nVars int32) {
 	if truth == nil || nVars < 0 || nVars > 6 {

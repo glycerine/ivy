@@ -114,6 +114,6 @@ func Gia_ManSimSimulatePattern(p *Gia_Man_t, input, output string) {
 	}
 	out := Gia_ManSimSimulateOne(p, patterns)
 	if Gia_ManSimWriteFile(output, out, Gia_ManPoNum(p)) != 0 {
-		fmt.Printf("Output patterns are written into file %q.\n", output)
+		fmt.Printf("Output patterns are written into file \"%s\".\n", output)
 	}
 }

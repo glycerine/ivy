@@ -90,7 +90,7 @@ func Rwr_ManLoadFromFile(p *Rwr_Man_t, path string) {
 	started := time.Now()
 	f, err := os.Open(path)
 	if err != nil {
-		fmt.Printf("Rwr_ManLoadFromFile: Cannot open file %q.\n", path)
+		fmt.Printf("Rwr_ManLoadFromFile: Cannot open file \"%s\".\n", path)
 		return
 	}
 	defer f.Close()

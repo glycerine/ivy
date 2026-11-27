@@ -102,7 +102,7 @@ func WriteNetworkBDDVisualization(w io.Writer, n *Network, complementedEdges boo
 func showBDDFile(filename string, write func(io.Writer) error) {
 	file, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open the intermediate file %q.\n", filename)
+		fmt.Printf("Cannot open the intermediate file \"%s\".\n", filename)
 		return
 	}
 	if err = write(file); err == nil {
@@ -111,7 +111,7 @@ func showBDDFile(filename string, write func(io.Writer) error) {
 		file.Close()
 	}
 	if err != nil {
-		fmt.Printf("Cannot write intermediate file %q: %v\n", filename, err)
+		fmt.Printf("Cannot write intermediate file \"%s\": %v\n", filename, err)
 		return
 	}
 	Abc_ShowFile(filename)

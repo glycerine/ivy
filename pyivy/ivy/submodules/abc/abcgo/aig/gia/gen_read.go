@@ -69,7 +69,7 @@ func giaReadPatterns(path string) ([][]byte, error) {
 func Gia_ManSimParamRead(path string, nIns, nWords *int32) int32 {
 	width, count, err := giaScanPatterns(path, nil)
 	if err != nil {
-		fmt.Printf("Cannot read simulation file %q: %v.\n", path, err)
+		fmt.Printf("Cannot read simulation file \"%s\": %v.\n", path, err)
 		return 0
 	}
 	*nIns, *nWords = int32(width-1), int32(count/64)
@@ -142,7 +142,7 @@ func Gia_ManCompareValues(p *Gia_Man_t, inputs *Vec_Wrd_t, values *Vec_Int_t, pa
 	fmt.Printf("Total = %6d.  Errors = %6d.  Correct = %6d.  (%6.2f %%)   Naive guess = %6d.  (%6.2f %%)\n", total, total-correct, correct, 100*float64(correct)/float64(total), guess, 100*float64(guess)/float64(total))
 	if path != "" {
 		Gia_ManSimLogStats(p, path, total, correct, guess)
-		fmt.Printf("Finished dumping statistics into file %q.\n", path)
+		fmt.Printf("Finished dumping statistics into file \"%s\".\n", path)
 	}
 }
 
@@ -152,7 +152,7 @@ func Gia_ManTestOneFile(p *Gia_Man_t, path, stats string) {
 		return
 	}
 	if inputs != Gia_ManCiNum(p) {
-		fmt.Printf("The number of inputs in the file %q (%d) does not match the AIG (%d).\n", path, inputs, Gia_ManCiNum(p))
+		fmt.Printf("The number of inputs in the file \"%s\" (%d) does not match the AIG (%d).\n", path, inputs, Gia_ManCiNum(p))
 		return
 	}
 	sims := Vec_WrdStart(int(inputs * words))

@@ -38,7 +38,7 @@ func WriteVerilog(w io.Writer, n *abc.Network, onlyAnds int32) error {
 func Io_WriteVerilog(n *abc.Network, filename string, onlyAnds int32) {
 	f, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Io_WriteVerilog(): Cannot open the output file %q.\n", filename)
+		fmt.Printf("Io_WriteVerilog(): Cannot open the output file \"%s\".\n", filename)
 		return
 	}
 	if err = WriteVerilog(f, n, onlyAnds); err != nil {

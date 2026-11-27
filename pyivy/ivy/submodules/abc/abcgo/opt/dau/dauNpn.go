@@ -142,7 +142,7 @@ func Dau_ReadFile(name string, sizeWords int32) []uint32 {
 	table := make([]uint32, int(sizeWords)*2)
 	f, err := os.Open(name)
 	if err != nil {
-		fmt.Printf("Cannot open input file %q.\n", name)
+		fmt.Printf("Cannot open input file \"%s\".\n", name)
 		return table
 	}
 	defer f.Close()
@@ -154,7 +154,7 @@ func Dau_ReadFile(name string, sizeWords int32) []uint32 {
 	for i := range table {
 		table[i] = binary.LittleEndian.Uint32(data[4*i:])
 	}
-	fmt.Printf("Finished reading file %q.\n", name)
+	fmt.Printf("Finished reading file \"%s\".\n", name)
 	return table
 }
 func Dau_AddFunction(t uint64, n int32, table []uint32, classes, partial *vec.Vec_Int_t) int32 {
@@ -235,7 +235,7 @@ func Dau_TablesSave(nInputs, n int32, memory *vec.Vec_Mem_t, support *vec.Vec_In
 	if closeErr != nil {
 		panic(closeErr)
 	}
-	fmt.Printf("Dumped file %q with %10d classes after exploring %10d frontiers. Time = %.2f sec\n", name, vec.Vec_IntSize(support), fronts, time.Since(start).Seconds())
+	fmt.Printf("Dumped file \"%s\" with %10d classes after exploring %10d frontiers. Time = %.2f sec\n", name, vec.Vec_IntSize(support), fronts, time.Since(start).Seconds())
 }
 func Dau_DumpFuncs(memory *vec.Vec_Mem_t, support *vec.Vec_Int_t, n, maxNodes int32) {
 	if n != 4 && n != 5 || maxNodes < 0 {

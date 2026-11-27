@@ -87,7 +87,7 @@ func Gia_ManDumpUntests(m *gia.Gia_Man_t, data *cnf.Cnf_Dat_t, solver *bsat.Solv
 	}
 	f, err := os.Create(filename)
 	if err != nil {
-		fmt.Printf("Cannot open output file %q: %v\n", filename, err)
+		fmt.Printf("Cannot open output file \"%s\": %v\n", filename, err)
 		return 0
 	}
 	defer f.Close()
@@ -168,6 +168,6 @@ func Gia_ManFaultDumpNewFaults(m *gia.Gia_Man_t, nFuncVars int32, tests, newTest
 	}
 	start := time.Now()
 	count := Gia_ManDumpUntests(baseGraph, base, s, nFuncVars, "newfaults.txt", params.FVerbose)
-	fmt.Printf("Dumped %d new multiple faults into file %q. Time = %s\n", count, "newfaults.txt", time.Since(start))
+	fmt.Printf("Dumped %d new multiple faults into file \"%s\". Time = %s\n", count, "newfaults.txt", time.Since(start))
 	return 1
 }
