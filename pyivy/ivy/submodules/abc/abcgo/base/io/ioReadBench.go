@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/extra"
 )
 
@@ -18,6 +19,7 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 	m := &blifModel{network: abc.NewNetwork(name), nets: map[string]*abc.Object{}, domains: map[string]*abc.MVVariable{}}
 	// Abc_NtkStartRead: the name drops the extension, the spec keeps the file
 	m.network.Name, m.network.Spec = extra.Extra_FileNameGeneric(name), name
+	lutsPresent := false
 	m.network.Type = uint8(abc.ABC_NTK_NETLIST)
 	m.network.Function = uint8(abc.ABC_FUNC_SOP)
 	for _, line := range lines {
@@ -124,10 +126,31 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 		}
 		var cover string
 		if fields := strings.Fields(gate); len(fields) == 2 && fields[0] == "LUT" {
+			lutsPresent = true
+			if len(inputs) > 8 {
+				fmt.Printf("%s: Currently cannot read truth tables with more than 8 inputs (%d).\n", name, len(inputs))
+				return nil, blifError(name, line, "LUT with more than 8 inputs")
+			}
 			if !strings.HasPrefix(fields[1], "0X") {
 				return nil, blifError(name, line, "LUT requires hexadecimal signature")
 			}
-			cover, err = benchHexCover(fields[1][2:], len(inputs))
+			hex := fields[1][2:]
+			cover, err = benchHexCover(hex, len(inputs))
+			if err == nil {
+				switch {
+				case !strings.Contains(cover, " 1\n"): // constant 0: no fanins
+					cover, inputs = " 0\n", nil
+				case len(inputs) > 0 && strings.Count(cover, "\n") == 1<<uint(len(inputs)):
+					cover, inputs = " 1\n", nil // constant 1
+				case len(inputs) == 1 && strings.HasPrefix(hex, "2"):
+					cover = "1 1\n"
+				case len(inputs) == 1 && strings.HasPrefix(hex, "1"):
+					cover = "0 1\n"
+				case len(inputs) == 1:
+					fmt.Printf("%s: Reading truth table (%s) of single-input node has failed.\n", name, hex)
+					return nil, blifError(name, line, "single-input LUT %s", hex)
+				}
+			}
 		} else {
 			cover, err = benchGateCover(gate, len(inputs))
 		}
@@ -153,6 +176,17 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 			if _, err = m.node([]string{c.signal}, c.value); err != nil {
 				return nil, err
 			}
+		}
+	}
+	// if LUTs are present, collapse the truth tables into cubes
+	if lutsPresent {
+		if abc.Abc_NtkToBdd(m.network) == 0 {
+			fmt.Printf("Io_ReadBenchNetwork(): Converting to BDD has failed.\n")
+			return nil, fmt.Errorf("%s: converting to BDD has failed", name)
+		}
+		if abc.Abc_NtkToSop(m.network, -1, util.ABC_INFINITY) == 0 {
+			fmt.Printf("Io_ReadBenchNetwork(): Converting to SOP has failed.\n")
+			return nil, fmt.Errorf("%s: converting to SOP has failed", name)
 		}
 	}
 	if check {

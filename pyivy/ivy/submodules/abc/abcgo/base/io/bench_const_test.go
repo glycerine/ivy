@@ -41,3 +41,20 @@ func TestReadersNameNetworkLikeAbcNtkStartRead(t *testing.T) {
 		}
 	}
 }
+
+// TestBenchLutsCollapseThroughBdds: Io_ReadBenchNetwork turns LUT truth
+// tables into covers through BDDs (Abc_NtkToBdd, Abc_NtkToSop), so a
+// majority LUT reads as its three-cube ISOP, not four minterms.
+func TestBenchLutsCollapseThroughBdds(t *testing.T) {
+	n, err := ParseBench("m.bench", "INPUT(a)\nINPUT(b)\nINPUT(c)\nOUTPUT(z)\nz = LUT 0xe8 ( a, b, c )\n", true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	nodes := n.ObjectsOfKind(abc.ObjectNode)
+	if len(nodes) != 1 {
+		t.Fatalf("%d nodes", len(nodes))
+	}
+	if cubes := abc.Abc_SopGetCubeNum(nodes[0].Data.(string)); cubes != 3 {
+		t.Fatalf("%d cubes in %q, want 3", cubes, nodes[0].Data)
+	}
+}

@@ -121,3 +121,11 @@ func TestReadEqnLikeNative(t *testing.T) {
 	runScript(t, "read ../../../i10.aig; strash; short_names; if -K 4; write_eqn "+eqn)
 	nativeWriterCase(t, "read "+eqn+"; strash; write_aiger %F", "aig", regexp.MustCompile(`This file was written by ABC on [^\n]*\n`), nil)
 }
+
+// TestReadBenchLutsLikeNative: a LUT BENCH file (6-LUT-mapped i10, written
+// by ABC) reads back and strashes to native's AIG.
+func TestReadBenchLutsLikeNative(t *testing.T) {
+	bench := filepath.Join(t.TempDir(), "i10.bench")
+	runScript(t, "read ../../../i10.aig; strash; short_names; if -K 6; write_bench "+bench)
+	nativeWriterCase(t, "read "+bench+"; strash; write_aiger %F", "aig", regexp.MustCompile(`This file was written by ABC on [^\n]*\n`), nil)
+}
