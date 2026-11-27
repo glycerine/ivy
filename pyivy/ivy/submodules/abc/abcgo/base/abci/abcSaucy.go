@@ -2069,7 +2069,7 @@ func assignRandomBitsToCells(pNtk *Abc_Ntk_t, c *coloring) *Vec_Int_t {
 	randVec := Vec_IntAlloc(1)
 	for i := int32(0); i < baseabc.Abc_NtkPiNum(pNtk); i += c.clen[i+baseabc.Abc_NtkPoNum(pNtk)] + 1 {
 		// SIM_RANDOM_UNSIGNED % 2, on ABC's process-wide rand() stream
-		bit := ((abcutil.C_Rand() << 24) ^ (abcutil.C_Rand() << 12) ^ abcutil.C_Rand()) % 2
+		bit := abcutil.Sim_RandomUnsigned() % 2
 		Vec_IntPush(randVec, int32(bit))
 	}
 	return randVec

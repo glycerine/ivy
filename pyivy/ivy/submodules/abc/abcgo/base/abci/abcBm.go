@@ -2,13 +2,14 @@ package abci
 
 import (
 	"fmt"
-	"math/rand"
+
 	"os"
 	"time"
 
 	aiggraph "github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia"
 	baseabc "github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/sim"
 )
@@ -1174,7 +1175,7 @@ func bmGateWay(pNtk1, pNtk2 *Abc_Ntk_t, pEquivalence int32) {
 	simulationStart := time.Now()
 	for tries := 0; tries <= 200; {
 		for i := int32(0); i < iLastItem1; i++ {
-			value := byte('0' + rand.Uint32()%2)
+			value := byte('0' + util.Sim_RandomUnsigned()%2) // SIM_RANDOM_UNSIGNED % 2
 			if Vec_IntSize(iMatch1[i]) != Vec_IntSize(iMatch2[i]) {
 				fmt.Printf("Input refinement by simulation finds two circuits different.\n")
 				return

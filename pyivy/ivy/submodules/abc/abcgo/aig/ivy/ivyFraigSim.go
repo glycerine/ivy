@@ -78,7 +78,7 @@ func Ivy_ObjSetFaninVec(n *Ivy_Obj_t, v []*Ivy_Obj_t) { ivyFraigState(n).fanins 
 // Ivy_ObjRandomSim is ivyFraig.c's (rand() << 24) ^ (rand() << 12) ^ rand(),
 // on ABC's process-wide rand() stream.
 func Ivy_ObjRandomSim() uint32 {
-	return (util.C_Rand() << 24) ^ (util.C_Rand() << 12) ^ util.C_Rand()
+	return util.Sim_RandomUnsigned()
 }
 func Ivy_FraigParamsDefault(params *Ivy_FraigParams_t) {
 	*params = Ivy_FraigParams_t{nSimWords: 32, dSimSatur: 0.005, MaxScore: 25, FDoSparse: 1, dActConeRatio: 0.3, dActConeBumpMax: 10, NBTLimitNode: 100, NBTLimitMiter: 500000}

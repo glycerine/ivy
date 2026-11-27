@@ -56,7 +56,7 @@ func Sim_UtilCountOnesArray(p Info, n int) []int {
 }
 func Sim_UtilSetRandom(p []uint32, n int) {
 	for i := range p[:n] {
-		p[i] = (util.C_Rand() << 24) ^ (util.C_Rand() << 12) ^ util.C_Rand() // SIM_RANDOM_UNSIGNED
+		p[i] = util.Sim_RandomUnsigned() // SIM_RANDOM_UNSIGNED
 	}
 }
 func Sim_UtilSetCompl(p []uint32, n int) {

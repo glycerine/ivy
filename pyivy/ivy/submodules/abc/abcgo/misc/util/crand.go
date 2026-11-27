@@ -67,3 +67,10 @@ func C_Rand() uint32 {
 	}
 	return cRandNextLocked()
 }
+
+// Sim_RandomUnsigned is ABC's SIM_RANDOM_UNSIGNED (sim.h, also
+// Ivy_ObjRandomSim): three draws of rand() spread over 32 bits, evaluated
+// left to right as gcc does.
+func Sim_RandomUnsigned() uint32 {
+	return (C_Rand() << 24) ^ (C_Rand() << 12) ^ C_Rand()
+}

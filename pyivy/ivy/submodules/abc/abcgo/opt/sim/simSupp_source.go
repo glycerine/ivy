@@ -259,7 +259,7 @@ func sourceAssignRandom(p *Sim_Man_t, rng *sourceRand) {
 			if rng != nil {
 				row[i] = (rng.Uint31() << 24) ^ (rng.Uint31() << 12) ^ rng.Uint31()
 			} else { // SIM_RANDOM_UNSIGNED on the process-wide stream
-				row[i] = (util.C_Rand() << 24) ^ (util.C_Rand() << 12) ^ util.C_Rand()
+				row[i] = util.Sim_RandomUnsigned()
 			}
 		}
 	}
