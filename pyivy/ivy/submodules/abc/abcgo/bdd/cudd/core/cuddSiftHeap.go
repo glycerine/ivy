@@ -22,6 +22,9 @@ type siftHeap struct {
 	roots    []siftEdge
 	next     []int // symmetry groups by level (symmetric sifting)
 	consts   int   // constants.keys: C's keys (and objective) include them
+	free     []int32
+	xnodes   []int32 // scratch: the x level's node list during a swap
+	xmap     siftTab
 }
 
 // siftEdge is a node id shifted left once, with the complement in bit 0.
@@ -34,9 +37,10 @@ type siftNode struct {
 	alive bool
 }
 
+// siftLevel lists the nodes of one level. Lookups by (then, else) are
+// needed only for the level being rebuilt in a swap (siftHeap.xmap).
 type siftLevel struct {
 	nodes []int32
-	uniq  map[[2]siftEdge]int32
 }
 
 func siftReg(e siftEdge) int32         { return e >> 1 }
@@ -63,6 +67,12 @@ func (h *siftHeap) cost() int { return h.keys + h.consts - h.isolated }
 
 // newSiftNode adds a node with one reference (cuddDynamicAllocNode).
 func (h *siftHeap) newSiftNode(index int32, t, e siftEdge) int32 {
+	if k := len(h.free); k > 0 {
+		id := h.free[k-1]
+		h.free = h.free[:k-1]
+		h.nodes[id] = siftNode{index: index, t: t, e: e, ref: 1, alive: true}
+		return id
+	}
 	h.nodes = append(h.nodes, siftNode{index: index, t: t, e: e, ref: 1, alive: true})
 	return int32(len(h.nodes) - 1)
 }
@@ -75,17 +85,22 @@ func (h *siftHeap) swap(x int) int {
 	xl, yl := &h.levels[x], &h.levels[y]
 	oldx, oldy := len(xl.nodes), len(yl.nodes)
 	newxkeys, newykeys := oldx, oldy
-	newX := siftLevel{uniq: make(map[[2]siftEdge]int32, oldx)}
 	if h.testInteract(xindex, yindex) {
+		// rebuild level x in its own storage: the old node list is copied
+		// aside and the map cleared
+		h.xnodes = append(h.xnodes[:0], xl.nodes...)
+		h.xmap.reset(2 * len(h.xnodes))
+		newX := siftLevel{nodes: xl.nodes[:0]}
+		xmap := &h.xmap
 		newxkeys = 0
 		isolated := -(boolToInt(h.varRefIsolated(xindex)) + boolToInt(h.varRefIsolated(yindex)))
 		var g []int32
-		for _, f := range xl.nodes {
+		for _, f := range h.xnodes {
 			nf := &h.nodes[f]
 			if int(h.indexOf(nf.t)) != yindex && int(h.indexOf(nf.e)) != yindex {
 				newxkeys++
 				newX.nodes = append(newX.nodes, f)
-				newX.uniq[[2]siftEdge{nf.t, nf.e}] = f
+				xmap.put(siftKey(nf.t, nf.e), f)
 			} else {
 				nf.index = int32(yindex)
 				g = append(g, f)
@@ -114,14 +129,14 @@ func (h *siftHeap) swap(x int) int {
 			if f11 == f01 {
 				newf1 = f11
 				h.inc(newf1)
-			} else if id, ok := newX.uniq[[2]siftEdge{f11, f01}]; ok {
+			} else if id, ok := xmap.get(siftKey(f11, f01)); ok {
 				h.nodes[id].ref++
 				newf1 = siftMk(id, false)
 			} else {
 				id := h.newSiftNode(int32(xindex), f11, f01)
 				newxkeys++
 				newX.nodes = append(newX.nodes, id)
-				newX.uniq[[2]siftEdge{f11, f01}] = id
+				xmap.put(siftKey(f11, f01), id)
 				h.inc(f11)
 				h.inc(f01)
 				newf1 = siftMk(id, false)
@@ -137,14 +152,14 @@ func (h *siftHeap) swap(x int) int {
 				if newcomplement {
 					f10, f00 = siftNot(f10), siftNot(f00)
 				}
-				if id, ok := newX.uniq[[2]siftEdge{f10, f00}]; ok {
+				if id, ok := xmap.get(siftKey(f10, f00)); ok {
 					h.nodes[id].ref++
 					newf0 = siftMk(id, false)
 				} else {
 					id := h.newSiftNode(int32(xindex), f10, f00)
 					newxkeys++
 					newX.nodes = append(newX.nodes, id)
-					newX.uniq[[2]siftEdge{f10, f00}] = id
+					xmap.put(siftKey(f10, f00), id)
 					h.inc(f10)
 					h.inc(f00)
 					newf0 = siftMk(id, false)
@@ -156,7 +171,6 @@ func (h *siftHeap) swap(x int) int {
 			h.nodes[f].e = newf0
 			newykeys++
 			yl.nodes = append(yl.nodes, f)
-			yl.uniq[[2]siftEdge{newf1, newf0}] = f
 		}
 		// free the dead nodes of the y list (their children stay)
 		kept := yl.nodes[:0]
@@ -166,7 +180,7 @@ func (h *siftHeap) swap(x int) int {
 				h.dec(nf.t)
 				h.dec(nf.e)
 				nf.alive = false
-				delete(yl.uniq, [2]siftEdge{nf.t, nf.e})
+				h.free = append(h.free, f)
 				newykeys--
 				continue
 			}
@@ -321,9 +335,6 @@ func newSiftHeap(h *reorderHeap) *siftHeap {
 	n := len(scratch.Vars)
 	s := &siftHeap{consts: h.liveConstants, n: n, perm: append([]int(nil), scratch.Perm[:n]...), invperm: append([]int(nil), scratch.InvPerm[:n]...)}
 	s.levels = make([]siftLevel, n)
-	for l := range s.levels {
-		s.levels[l].uniq = map[[2]siftEdge]int32{}
-	}
 	ids := map[*DdNode]int32{scratch.One: 0}
 	s.nodes = append(s.nodes, siftNode{index: -1, alive: true})
 	order := make([]*DdNode, 0, len(h.nodes))
@@ -363,7 +374,6 @@ func newSiftHeap(h *reorderHeap) *siftHeap {
 		}
 		l := &s.levels[s.perm[node.Index]]
 		l.nodes = append(l.nodes, id)
-		l.uniq[[2]siftEdge{nd.t, nd.e}] = id
 		s.keys++
 	}
 	for _, r := range h.active {
@@ -455,4 +465,76 @@ func (s *siftHeap) liveCount(roots []siftEdge) int {
 		visit(siftReg(r))
 	}
 	return len(seen)
+}
+
+// siftTab maps a (then, else) pair to a node id for the level being
+// rebuilt: open addressing, cleared in O(1) by bumping a generation.
+type siftTab struct {
+	keys []uint64
+	vals []int32
+	gens []uint32
+	gen  uint32
+	n    int
+}
+
+func siftKey(t, e siftEdge) uint64 { return uint64(uint32(t))<<32 | uint64(uint32(e)) }
+
+func siftHash(k uint64) uint64 {
+	k *= 0x9E3779B97F4A7C15
+	return k ^ k>>31
+}
+
+// reset empties the table and makes room for n entries.
+func (t *siftTab) reset(n int) {
+	size := 16
+	for size < 2*n {
+		size <<= 1
+	}
+	if size > len(t.keys) {
+		t.keys, t.vals, t.gens = make([]uint64, size), make([]int32, size), make([]uint32, size)
+		t.gen = 0
+	}
+	t.gen++
+	if t.gen == 0 { // wrapped: really clear
+		clear(t.gens)
+		t.gen = 1
+	}
+	t.n = 0
+}
+
+func (t *siftTab) get(k uint64) (int32, bool) {
+	mask := uint64(len(t.keys) - 1)
+	for i := siftHash(k) & mask; ; i = (i + 1) & mask {
+		if t.gens[i] != t.gen {
+			return 0, false
+		}
+		if t.keys[i] == k {
+			return t.vals[i], true
+		}
+	}
+}
+
+func (t *siftTab) put(k uint64, v int32) {
+	if 2*(t.n+1) > len(t.keys) {
+		keys, vals, gens, gen := t.keys, t.vals, t.gens, t.gen
+		t.keys, t.vals, t.gens = make([]uint64, 2*len(keys)), make([]int32, 2*len(keys)), make([]uint32, 2*len(keys))
+		t.gen, t.n = 1, 0
+		for i := range keys {
+			if gens[i] == gen {
+				t.put(keys[i], vals[i])
+			}
+		}
+	}
+	mask := uint64(len(t.keys) - 1)
+	for i := siftHash(k) & mask; ; i = (i + 1) & mask {
+		if t.gens[i] != t.gen {
+			t.keys[i], t.vals[i], t.gens[i] = k, v, t.gen
+			t.n++
+			return
+		}
+		if t.keys[i] == k {
+			t.vals[i] = v
+			return
+		}
+	}
 }
