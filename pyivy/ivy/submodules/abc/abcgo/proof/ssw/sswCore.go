@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/proof/cec"
 	"time"
 )
@@ -86,7 +87,7 @@ func Ssw_SignalCorrespondenceRefine(p *Ssw_Man_t) *aig.Graph {
 			}
 			if p.pPars.FVerbose != 0 {
 				fmt.Print(sswSweepStats(p, iteration, previousProof, previousSat, previousRecycles, previousFailures))
-				fmt.Printf("T = %.2f sec\n", time.Since(start).Seconds())
+				util.Abc_PrintTime(1, "T", time.Since(start).Nanoseconds()) // ABC_PRT( "T", ... )
 			}
 			if p.pPars.FLatchCorrOpt == 0 && p.pPars.FStopWhenGone != 0 && saig.Saig_ManPoNum(p.pAig) == 1 && Ssw_ObjIsConst1Cand(p.pAig, aig.Aig_ObjFanin0(p.pAig, aig.Aig_ManCo(p.pAig, 0))) == 0 {
 				fmt.Printf("Iterative refinement is stopped after iteration %d because the property output is no longer a candidate constant.\n", iteration)

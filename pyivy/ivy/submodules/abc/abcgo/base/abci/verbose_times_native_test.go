@@ -10,6 +10,7 @@ import (
 var (
 	mbTimes  = regexp.MustCompile(`[0-9]+\.[0-9]+ MB`)
 	secTimes = regexp.MustCompile(`[0-9]+\.[0-9]+ sec`)
+	percents = regexp.MustCompile(`\( *[0-9.]+ %\)`)
 )
 
 // Times are printed with Abc_PrintTime ("Time =%9.2f sec"); several ports
@@ -24,13 +25,18 @@ func TestVerboseReportsLikeNative(t *testing.T) {
 		"read test_vectors/seq/s713.blif; strash; &get; &sim -F 4",
 		"read ../../../i10.aig; drwsat -v; print_stats",
 		"read ../../../i10.aig; drwsat -v -b; print_stats",
+		"read test_vectors/seq/s713.blif; strash; scorr -v; print_stats",
+		"read test_vectors/seq/s713.blif; strash; lcorr -v; print_stats",
+		"read test_vectors/seq/s1494.blif; strash; lcorr -v; print_stats",
 	} {
 		port := bmc3Normalize(runScript(t, script))
 		if strings.Contains(port, "ms\n") || strings.Contains(port, "Time: ") {
 			t.Errorf("%s: Go duration in output:\n%s", script, port)
 		}
 		native := bmc3Normalize(runNativeABC(t, script))
-		clean := func(s string) string { return secTimes.ReplaceAllString(mbTimes.ReplaceAllString(s, "M MB"), "T sec") }
+		clean := func(s string) string {
+			return percents.ReplaceAllString(secTimes.ReplaceAllString(mbTimes.ReplaceAllString(s, "M MB"), "T sec"), "(P %)")
+		}
 		if clean(native) != clean(port) {
 			t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
 		}

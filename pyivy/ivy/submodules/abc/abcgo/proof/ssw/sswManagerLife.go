@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/saig"
+	"github.com/glycerine/abcgo/misc/util"
 	"strconv"
+	"time"
 )
 
 func sswReduction(before, after int32) float64 {
@@ -22,9 +24,22 @@ func Ssw_ManPrintStats(p *Ssw_Man_t) {
 	fmt.Printf("SAT solver: Vars max = %d. Calls max = %d. Recycles = %d. Sim rounds = %d.\n", p.nVarsMax, p.nCallsMax, p.nRecyclesTotal, p.nSimRounds)
 	fmt.Printf("NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\n", p.nNodesBeg, p.nNodesEnd, sswReduction(p.nNodesBeg, p.nNodesEnd), p.nRegsBeg, p.nRegsEnd, sswReduction(p.nRegsBeg, p.nRegsEnd))
 	p.timeOther = p.timeTotal - p.timeBmc - p.timeReduce - p.timeMarkCones - p.timeSimSat - p.timeSat
-	fmt.Printf("BMC: %s. Spec reduce: %s. Mark cones: %s. Sim SAT: %s. SAT: %s. Other: %s. Total: %s.\n", p.timeBmc, p.timeReduce, p.timeMarkCones, p.timeSimSat, p.timeSat, p.timeOther, p.timeTotal)
+	total := p.timeTotal.Nanoseconds()
+	for _, row := range []struct {
+		label string
+		t     time.Duration
+	}{
+		{"BMC        ", p.timeBmc}, {"Spec reduce", p.timeReduce}, {"Mark cones ", p.timeMarkCones},
+		{"Sim SAT    ", p.timeSimSat}, {"SAT solving", p.timeSat}, {"  unsat    ", p.timeSatUnsat},
+		{"  sat      ", p.timeSatSat}, {"  undecided", p.timeSatUndec}, {"Other      ", p.timeOther},
+		{"TOTAL      ", p.timeTotal},
+	} {
+		util.Abc_PrintTimeP(1, row.label, row.t.Nanoseconds(), total) // ABC_PRTP
+	}
 	if aig.Aig_ManConstrNum(p.pAig) != 0 {
-		fmt.Printf("Total cones = %d. Constraint cones = %d. Total equivs = %d. Removed equivs = %d.\n", p.nConesTotal, p.nConesConstr, p.nEquivsTotal, p.nEquivsConstr)
+		fmt.Printf("Statistics reflecting the use of constraints:\n")
+		fmt.Printf("Total cones  = %6d.  Constraint cones = %6d. (%6.2f %%)\n", p.nConesTotal, p.nConesConstr, 100.0*float64(p.nConesConstr)/float64(p.nConesTotal))
+		fmt.Printf("Total equivs = %6d.  Removed equivs   = %6d. (%6.2f %%)\n", p.nEquivsTotal, p.nEquivsConstr, 100.0*float64(p.nEquivsConstr)/float64(p.nEquivsTotal))
 		fmt.Printf("NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\n", p.nNodesBegC, p.nNodesEndC, sswReduction(p.nNodesBegC, p.nNodesEndC), p.nRegsBegC, p.nRegsEndC, sswReduction(p.nRegsBegC, p.nRegsEndC))
 	}
 }

@@ -2,7 +2,10 @@ package ssw
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -128,7 +131,14 @@ func Ssw_ClassesPrepare(g *aig.Graph, framesK, latchOnly, constOnly, outputOnly,
 	p := Ssw_ClassesStart(g)
 	p.fConstCorr = constOnly
 	nFrames := max(framesK, 4)
+	clk := time.Now()
 	sml := Ssw_SmlSimulateSeq(g, 0, nFrames, 2)
+	if verbose != 0 {
+		fmt.Printf("Allocated %.2f MB to store simulation information.\n", 1.0*float64(4*int64(aig.Aig_ManObjNumMax(g))*int64(nFrames)*2)/(1<<20))
+		fmt.Printf("Initial simulation of %d frames with %d words.     ", nFrames, 2)
+		util.Abc_PrintTime(1, "Time", time.Since(clk).Nanoseconds()) // ABC_PRT
+	}
+	clk = time.Now()
 	Ssw_ClassesSetData(p, sml,
 		func(data any, obj aig.Edge) uint32 { return Ssw_SmlObjHashWord(data.(*Ssw_Sml_t), obj) },
 		func(data any, obj aig.Edge) int32 { return Ssw_SmlObjIsConstWord(data.(*Ssw_Sml_t), obj) },
@@ -171,6 +181,11 @@ func Ssw_ClassesPrepare(g *aig.Graph, framesK, latchOnly, constOnly, outputOnly,
 		vec.Vec_PtrPush(candidates, obj)
 	}
 	Ssw_ClassesPrepareRehash(p, candidates, constOnly)
+	if verbose != 0 {
+		fmt.Printf("Collecting candidate equivalence classes.        ")
+		util.Abc_PrintTime(1, "Time", time.Since(clk).Nanoseconds())
+	}
+	clk = time.Now()
 	rounds := int32(1)
 	for ; rounds < 16; rounds++ {
 		vec.Vec_PtrClear(candidates)
@@ -188,7 +203,8 @@ func Ssw_ClassesPrepare(g *aig.Graph, framesK, latchOnly, constOnly, outputOnly,
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("Simulation of %d frames with 2 words (%d rounds).\n", nFrames, rounds-1)
+		fmt.Printf("Simulation of %d frames with %d words (%2d rounds). ", nFrames, 2, rounds-1)
+		util.Abc_PrintTime(1, "Time", time.Since(clk).Nanoseconds())
 	}
 	Ssw_SmlStop(sml)
 	Ssw_ClassesCheck(p)
