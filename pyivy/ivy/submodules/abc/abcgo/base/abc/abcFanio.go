@@ -130,3 +130,11 @@ func Abc_ObjReplaceByConstant(o *Object, one int32) {
 		deleteDangling(o, true)
 	}
 }
+
+// Abc_ObjReserveFanins makes room for n fanins of a node that has none yet,
+// so adding them does not regrow the slice (ABC sizes fanin arrays ahead).
+func Abc_ObjReserveFanins(o *Object, n int) {
+	if len(o.fanins) == 0 && cap(o.fanins) < n {
+		o.fanins = make([]Edge, 0, n)
+	}
+}

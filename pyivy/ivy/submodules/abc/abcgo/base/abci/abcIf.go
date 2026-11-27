@@ -441,6 +441,7 @@ func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, 
 	// CNF and multi-valued BDD encodings reverse the leaf order in the source.
 	reverseLeaves := pars.UsesCnfs() || pars.UsesMv()
 	node := abc.Abc_NtkCreateNode(pNtkNew)
+	abc.Abc_ObjReserveFanins(node, int(n))
 	for i := int32(0); i < n; i++ {
 		index := i
 		if reverseLeaves {

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math"
-	"sort"
 )
 
 func ifLeaves(c *If_Cut_t) []int32 {
@@ -356,7 +355,14 @@ func If_CutSort(p *If_Man_t, set *If_Set_t, c *If_Cut_t) {
 }
 func If_CutOrder(c *If_Cut_t) {
 	leaves := ifLeaves(c)
-	sort.Slice(leaves, func(i, j int) bool { return leaves[i] < leaves[j] })
+	// insertion sort: a cut has at most a few leaves (sort.Slice allocates)
+	for i := 1; i < len(leaves); i++ {
+		x, j := leaves[i], i
+		for ; j > 0 && leaves[j-1] > x; j-- {
+			leaves[j] = leaves[j-1]
+		}
+		leaves[j] = x
+	}
 	for i := 1; i < len(leaves); i++ {
 		if leaves[i] == leaves[i-1] {
 			panic("if: duplicate cut leaf")
