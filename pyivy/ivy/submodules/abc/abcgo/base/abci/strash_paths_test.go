@@ -41,7 +41,8 @@ func TestMiterStructureLikeNative(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if string(got) != string(want) {
+			// the header line carries the time of writing
+			if blifStamp.ReplaceAllString(string(got), "") != blifStamp.ReplaceAllString(string(want), "") {
 				t.Errorf("%s: miter differs from native", script)
 			}
 		}
