@@ -1810,7 +1810,10 @@ nTimeSat += clkSatRun;
                     // remember solved output
                     //Vec_PtrWriteEntry( p->vCexes, k, Abc_CexDup(pCexNew, Saig_ManRegNum(pAig)) );
                     pCexDup = Abc_CexDup(pCexNew, Saig_ManRegNum(pAig));
-                    pCexDup->iPo = k;
+                    // without stored CEXes pCexNew is the sentinel (Abc_Cex_t *)1,
+                    // which Abc_CexDup returns unchanged
+                    if ( pCexDup != (Abc_Cex_t *)(ABC_PTRINT_T)1 )
+                        pCexDup->iPo = k;
                     Vec_PtrWriteEntry( p->vCexes, k, pCexDup );
                 }
                 Abc_CexFreeP( &pCexNew0 );

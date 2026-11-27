@@ -158,10 +158,9 @@ func Saig_BmcPerform(graph *aig.Graph, start, framesMax, nodesMax, timeout, conf
 	}
 	status := Saig_ManBmcScalable(graph, &params)
 	if failedFrame != nil {
+		// C reports iFrameLast-1: the last frame explored without a failure,
+		// which is the engine's iFrame
 		*failedFrame = params.IFrame
-		if status == 0 {
-			*failedFrame--
-		}
 	}
 	_ = nodesMax
 	_ = conflictsAll

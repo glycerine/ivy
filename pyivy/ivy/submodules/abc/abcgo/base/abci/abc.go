@@ -3435,7 +3435,7 @@ func Abc_CommandPrintStatus(pAbc *Abc_Frame_t, argc int32, argv []string) int32 
 			//fmt.Printf( "\n" );
 			for c = 0; c < int32(Vec_PtrSize(abcFrameCexVector(pAbc))); c++ {
 				entry := Vec_PtrEntry(abcFrameCexVector(pAbc), c)
-				if sentinel, ok := entry.(uintptr); ok && sentinel == 1 {
+				if isCexSentinel(entry) {
 					Counter++
 					continue
 				}

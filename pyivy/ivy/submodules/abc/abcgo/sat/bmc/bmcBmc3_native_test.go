@@ -263,8 +263,11 @@ func TestScalableBMCSolveAllCallbackRespectsCEXStorageOption(t *testing.T) {
 	if result := Saig_ManBmcScalable(g, &params); result != 0 || !called {
 		t.Fatalf("result=%d callback=%v", result, called)
 	}
-	if g.SequentialCounterexamples() != nil {
-		t.Fatal("CEX vector stored while fStoreCex was disabled")
+	// C keeps p->vCexes when solving all outputs; without -x a failed
+	// output's entry is the sentinel (Abc_Cex_t *)1, not its CEX
+	v := g.SequentialCounterexamples()
+	if v == nil || vec.Vec_PtrSize(v) != 1 || vec.Vec_PtrEntry(v, 0) != util.AbcCexSentinel {
+		t.Fatalf("CEX vector = %v, want the sentinel for output 0", v)
 	}
 }
 

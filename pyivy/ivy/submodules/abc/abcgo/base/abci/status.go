@@ -23,15 +23,27 @@ func Abc_FrameDeriveStatusArray(cexes *vec.Vec_Ptr_t) *vec.Vec_Int_t {
 	return result
 }
 
+// isCexSentinel reports C's pointer value (Abc_Cex_t *)1 in a pointer
+// vector: util.AbcCexSentinel, or uintptr(1) where a vector holds it bare.
+func isCexSentinel(value any) bool {
+	switch v := value.(type) {
+	case uintptr:
+		return v == 1
+	case *util.Abc_Cex_t:
+		return v == util.AbcCexSentinel
+	}
+	return false
+}
+
 // Abc_FrameDeriveStatusArray2 also consumes the source's pointer-one UNSAT
-// sentinel, represented by uintptr(1) in Go pointer vectors.
+// sentinel (isCexSentinel).
 func Abc_FrameDeriveStatusArray2(cexes *vec.Vec_Ptr_t) *vec.Vec_Int_t {
 	result := Abc_FrameDeriveStatusArray(cexes)
 	if result == nil {
 		return nil
 	}
 	for i, value := range vec.Vec_PtrArray(cexes) {
-		if marker, ok := value.(uintptr); ok && marker == 1 {
+		if isCexSentinel(value) {
 			vec.Vec_IntWriteEntry(result, i, 1)
 			vec.Vec_PtrWriteEntry(cexes, i, nil)
 		}

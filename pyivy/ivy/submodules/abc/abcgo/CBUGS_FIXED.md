@@ -389,3 +389,27 @@ and states how the Go port was verified.
   "not decomposable") equal the port's.
 - **Go port:** `If_CluCheck3` already treated a nil manager as structure
   type 0.
+
+## 19. `bmc3 -a` crashes when one model fails several outputs
+
+- **File:** `src/sat/bmc/bmcBmc3.c`, `Saig_ManBmcScalable` (solve-all branch).
+- **Found:** 2026-11-27, comparing `read base/abci/test_vectors/seq/s713.blif;
+  strash; bmc3 -F 4 -a; print_status` with the port: native died with a
+  segmentation fault.
+- **Bug:** without `-x` (store CEXes) or the bridge, a failed output's entry
+  is the sentinel `(Abc_Cex_t *)1`. After a SAT call the engine checks
+  which other outputs the same model fails and records each one with
+  `pCexDup = Abc_CexDup(pCexNew, ...); pCexDup->iPo = k;`. `Abc_CexDup`
+  returns the sentinel unchanged, so the store writes through address 1 as
+  soon as a second output fails under one model.
+- **Fix:** set `iPo` only when `pCexDup` is not the sentinel.
+- **Test:** `abcgo/base/abci/bmc3_solveall_native_test.go`
+  (`TestNativeBmc3SolveAllDoesNotCrash`, needs `ABC_BINARY`). It failed with
+  "signal: segmentation fault"; native now reports 19 of 23 outputs SAT
+  after 4 frames.
+- **Go port:** did not crash, but solve-all kept no per-output record unless
+  `-x` was given, so it reported "None of the 23 outputs is found to be SAT";
+  it also printed no per-output lines and reported the failing frame as
+  `iFrame`. Fixed under `TestBmc3SolveAllLikeNative` and
+  `TestBmc3FramesLikeNative`; `print_status` now recognizes the sentinel in
+  both of its Go forms.

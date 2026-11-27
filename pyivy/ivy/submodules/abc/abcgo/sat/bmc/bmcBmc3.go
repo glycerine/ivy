@@ -112,10 +112,26 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 	var found bool
 	failed := make([]bool, pos)
 	spent := make([]time.Duration, pos)
+	var curFrame int32 // the frame being solved, for reports
+	// solving all outputs records each failed one (p->vCexes, handed to
+	// vSeqModelVec): its counterexample with -x, else the sentinel
 	var storedCEX *vec.Vec_Ptr_t
-	if params.FSolveAll != 0 && params.FStoreCex != 0 {
+	if params.FSolveAll != 0 {
 		storedCEX = vec.Vec_PtrStart(int(pos))
 		defer graph.SetSequentialCounterexamples(storedCEX)
+	}
+	storedEntry := func(model *util.Abc_Cex_t) *util.Abc_Cex_t {
+		if params.FStoreCex != 0 && params.FUseBridge == 0 && model != nil {
+			return model
+		}
+		return util.AbcCexSentinel
+	}
+	outDigits := int(util.Abc_Base10Log(uint32(pos)))
+	reportFail := func(output int32) {
+		if params.FNotVerbose == 0 {
+			fmt.Printf("Output %*d was asserted in frame %2d (solved %*d out of %*d outputs).\n",
+				outDigits, output, curFrame, outDigits, params.NFailOuts, outDigits, pos)
+		}
 	}
 	var jumpFrame int32
 	cutManager, err := newBmc3CutManager(graph, regs, pis, pos)
@@ -168,8 +184,11 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 			}
 			return 1
 		}
+		curFrame = frame
+		if (!found || params.FSolveAll != 0) && params.NStart == 0 && jumpFrame == 0 {
+			params.IFrame = frame - 1
+		}
 		if frame < params.NStart || frame < jumpFrame {
-			params.IFrame = frame
 			continue
 		}
 		targets := make([]int32, pos)
@@ -241,22 +260,23 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 				status = solver.Solve(bmcCToBSATAssumption(variable))
 			}
 			spent[output] += time.Since(solveStart)
-			params.IFrame = frame
 			jumped := false
 			switch status {
 			case bsat.Satisfiable:
 				found = true
 				failed[output] = true
 				params.NFailOuts++
+				if params.FSolveAll != 0 {
+					reportFail(output)
+				}
 				model := cutManager.counterexample(solver, frame, output)
 				if params.FSolveAll != 0 && params.FUseBridge != 0 && model != nil {
 					_ = writeBmcBridgeResult(bmcBridgeWriter(params.pBridgeWriter), 0, model, output)
 				}
 				callbackModel := model
 				if params.FSolveAll != 0 {
-					if storedCEX != nil && model != nil {
-						vec.Vec_PtrWriteEntry(storedCEX, int(output), model)
-					} else {
+					vec.Vec_PtrWriteEntry(storedCEX, int(output), storedEntry(model))
+					if params.FStoreCex == 0 {
 						callbackModel = nil
 					}
 				} else if model != nil {
@@ -286,6 +306,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 					}
 					failed[other] = true
 					params.NFailOuts++
+					reportFail(other)
 					otherModel := model
 					if otherModel != nil {
 						copy := *otherModel
@@ -296,9 +317,7 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 					if params.FUseBridge != 0 && otherModel != nil {
 						_ = writeBmcBridgeResult(bmcBridgeWriter(params.pBridgeWriter), 0, otherModel, other)
 					}
-					if storedCEX != nil && otherModel != nil {
-						vec.Vec_PtrWriteEntry(storedCEX, int(other), otherModel)
-					}
+					vec.Vec_PtrWriteEntry(storedCEX, int(other), storedEntry(otherModel))
 				}
 			case bsat.Unsatisfiable:
 				// C retains the failed target as a permanent unit so subsequent
@@ -342,6 +361,12 @@ func Saig_ManBmcScalable(graph *aig.Graph, params *Saig_ParBmc_t) int32 {
 		if params.NFramesJump > 0 && jumpFrame > frame {
 			continue
 		}
+	}
+	// all frames done: as after C's loop, f == nFramesMax
+	if jumpFrame != 0 && params.NStart == 0 {
+		params.IFrame = jumpFrame - params.NFramesJump
+	} else if !found && params.NStart == 0 {
+		params.IFrame = maxFrames - 1
 	}
 	if found {
 		return 0

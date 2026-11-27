@@ -23,8 +23,9 @@ func Saig_ManBmcSimple(graph *aig.Graph, frames, sizeMax, conflictLimit, rewrite
 	status := Saig_ManBmcScalable(graph, &params)
 	if failedFrame != nil {
 		*failedFrame = frames
-		if status == 0 {
-			*failedFrame = params.IFrame
+		// C reports the frame that failed (i / Saig_ManPoNum)
+		if cex := graph.SequentialCounterexample(); status == 0 && cex != nil {
+			*failedFrame = cex.IFrame
 		}
 	}
 	_ = sizeMax
