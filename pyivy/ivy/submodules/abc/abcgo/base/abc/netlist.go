@@ -179,8 +179,12 @@ func Abc_NtkAigToLogicSopNand(src *Network) *Network {
 	return aigToLogicBench(src, true)
 }
 
-// NAND mode reverses each internal node's polarity. Interpret edges with the
-// corresponding inversion rather than temporarily changing the source graph.
+// aigToLogicBench is Abc_NtkAigToLogicSopBench (and, with nand, Abc_NtkAig-
+// ToLogicSopNand). Inverters are created as ABC creates them: for the
+// constant, then the CIs, then each AND right after its copy, whenever the
+// object has a complemented edge into a DFS-visited fanout. NAND mode reads
+// every edge from an AND node with its complement flipped, as the C does by
+// toggling the source graph's edges.
 func aigToLogicBench(src *Network, nand bool) *Network {
 	if Abc_NtkIsStrash(src) == 0 {
 		panic("abc: bench conversion requires a strashed network")
@@ -190,8 +194,37 @@ func aigToLogicBench(src *Network, nand bool) *Network {
 	}
 	dst := Abc_NtkStartFrom(src, ABC_NTK_LOGIC, ABC_FUNC_SOP)
 	nodes := Abc_NtkDfs(src, 0)
+	compl := func(edge Edge) bool {
+		return edge.Complement != (nand && edge.Object.Kind == ObjectNode)
+	}
+	hasComplFanout := func(o *Object) bool {
+		for _, fanout := range o.fanouts {
+			if Abc_NodeIsTravIdCurrent(fanout) == 0 {
+				continue
+			}
+			for _, e := range fanout.fanins {
+				if e.Object == o {
+					if compl(e) {
+						return true
+					}
+					break
+				}
+			}
+		}
+		return false
+	}
+	inverses := make(map[*Object]*Object)
+	addInverter := func(o *Object) {
+		if hasComplFanout(o) {
+			inverses[o] = Abc_NtkCreateNodeInv(dst, getCopy(o).Object)
+		}
+	}
 	if len(src.constant.fanouts) != 0 {
 		setCopy(src.constant, Abc_NtkCreateNodeConst1(dst).Signal())
+		addInverter(src.constant)
+	}
+	for _, ci := range src.cis {
+		addInverter(ci)
 	}
 	for _, node := range nodes {
 		copy := Abc_NtkDupObj(dst, node, 0)
@@ -200,20 +233,17 @@ func aigToLogicBench(src *Network, nand bool) *Network {
 		} else {
 			copy.Data = Abc_SopCreateAnd(nil, 2, nil)
 		}
+		addInverter(node)
 	}
-	inverses := make(map[*Object]*Object)
 	resolve := func(edge Edge) *Object {
-		copy := getCopy(edge.Object).Object
-		if nand && edge.Object.Kind == ObjectNode {
-			edge.Complement = !edge.Complement
+		if !compl(edge) {
+			return getCopy(edge.Object).Object
 		}
-		if !edge.Complement {
-			return copy
+		inv := inverses[edge.Object]
+		if inv == nil {
+			panic("abc: complemented edge without an inverter")
 		}
-		if inverses[edge.Object] == nil {
-			inverses[edge.Object] = Abc_NtkCreateNodeInv(dst, copy)
-		}
-		return inverses[edge.Object]
+		return inv
 	}
 	for _, node := range nodes {
 		for _, edge := range node.fanins {

@@ -72,3 +72,43 @@ func TestWriteGmlLikeNative(t *testing.T) {
 		})
 	}
 }
+
+// TestWriteSmvLikeNative: write_smv follows Io_Write and Io_WriteSmv: AIGs
+// only, through Abc_NtkToNetlistBench; names with parentheses are refused
+// (nothing written); otherwise ABC's layout, gates and init values.
+func TestWriteSmvLikeNative(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "x.smv")
+	runScript(t, "read ../../../i10.aig; strash; write_smv "+file)
+	if _, err := os.Stat(file); err == nil {
+		t.Fatal("write_smv wrote a file for names with parentheses")
+	}
+	nativeWriterCase(t, "read ../../../i10.aig; strash; short_names; write_smv %F", "smv", abcDateLine, func(b []byte) string {
+		if !bytes.HasPrefix(b, []byte("-- benchmark \"")) || !bytes.Contains(b, []byte("MODULE main\n\nVAR  -- inputs\n")) {
+			return "missing ABC's SMV header"
+		}
+		return ""
+	})
+}
+
+// TestWriteBenchLikeNative: write_bench (LUT form by default, gates with -l)
+// refuses names with parentheses without creating the file, and otherwise
+// writes ABC's dated header and body.
+func TestWriteBenchLikeNative(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "x.bench")
+	runScript(t, "read ../../../i10.aig; strash; write_bench "+file)
+	if _, err := os.Stat(file); err == nil {
+		t.Fatal("write_bench created a file for names with parentheses")
+	}
+	for _, script := range []string{
+		"read ../../../i10.aig; strash; short_names; write_bench %F",
+		"read ../../../i10.aig; strash; short_names; write_bench -l %F",
+		"read ../../../i10.aig; strash; short_names; if -K 4; write_bench %F",
+	} {
+		nativeWriterCase(t, script, "bench", abcDateLine, func(b []byte) string {
+			if !bytes.HasPrefix(b, []byte("# Benchmark \"")) || !abcDateLine.Match(b) {
+				return "missing ABC's dated header"
+			}
+			return ""
+		})
+	}
+}

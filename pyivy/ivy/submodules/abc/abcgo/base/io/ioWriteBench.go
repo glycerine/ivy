@@ -1,180 +1,141 @@
 package io
 
 import (
+	"bytes"
 	"fmt"
 	stdio "io"
 	"os"
 	"strings"
 
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/misc/extra"
 )
 
+// WriteBench writes BENCH text as ABC would: an AIG goes through
+// Abc_NtkToNetlistBench and Io_WriteBench's gate form (Io_Write's BENCH
+// branch); any other network through the AIG netlist and the LUT form
+// (write_bench's default). Names with parentheses are refused.
 func WriteBench(w stdio.Writer, n *abc.Network) error {
 	if n == nil {
 		return fmt.Errorf("nil network")
 	}
-	used := map[string]bool{}
-	for _, o := range n.Objects() {
-		name := blifObjectName(o)
-		if strings.ContainsAny(name, "(),= \t\r\n") {
-			return fmt.Errorf("signal name %q cannot be represented in BENCH", name)
-		}
-		used[name] = true
+	net := n
+	switch {
+	case abc.Abc_NtkIsStrash(n) != 0:
+		net = abc.Abc_NtkToNetlistBench(n)
+	case abc.Abc_NtkIsNetlist(n) == 0:
+		net = abc.Abc_NtkToNetlist(n)
 	}
-	temporary := func() string {
-		for i := 0; ; i++ {
-			name := fmt.Sprintf("__bench_%d", i)
-			if !used[name] {
-				used[name] = true
-				return name
-			}
-		}
+	if net == nil {
+		return fmt.Errorf("Converting to netlist has failed.")
 	}
-	var out strings.Builder
-	constants := map[bool]string{}
-	constant := func(value bool) string {
-		if signal := constants[value]; signal != "" {
-			return signal
-		}
-		signal := temporary()
-		digit := 0
-		if value {
-			digit = 1
-		}
-		fmt.Fprintf(&out, "%s = LUT 0x%d()\n", signal, digit)
-		constants[value] = signal
-		return signal
+	if net != n {
+		defer abc.Abc_NtkDelete(net)
 	}
-	fmt.Fprintf(&out, "# %s\n", n.Name)
-	for _, port := range n.ObjectsOfKind(abc.ObjectPI) {
-		fmt.Fprintf(&out, "INPUT(%s)\n", blifPortName(port, true))
+	if abc.Abc_NtkIsStrash(n) == 0 && abc.Abc_NtkHasAig(net) == 0 && abc.Abc_NtkToAig(net) == 0 {
+		return fmt.Errorf("io: cannot convert network to AIG functions")
 	}
-	for _, port := range n.ObjectsOfKind(abc.ObjectPO) {
-		fmt.Fprintf(&out, "OUTPUT(%s)\n", blifPortName(port, false))
+	if Io_WriteBenchCheckNames(net) == 0 {
+		return fmt.Errorf("io: signal names in this benchmark contain parentheses")
 	}
-	for _, box := range n.Boxes() {
-		if box.Kind != abc.ObjectLatch {
-			return fmt.Errorf("BENCH output requires flattened hierarchy")
-		}
-		fans, outs := box.Fanins(), box.Fanouts()
-		if len(fans) != 1 || len(outs) != 1 {
-			return fmt.Errorf("malformed latch")
-		}
-		input, output := blifPortNet(fans[0].Object, false), blifPortNet(outs[0], true)
-		if input == nil || output == nil {
-			return fmt.Errorf("latch has no net terminals")
-		}
-		fmt.Fprintf(&out, "%s = DFF(%s)\n", blifObjectName(output), blifObjectName(input))
+	var out bytes.Buffer
+	fmt.Fprintf(&out, "# Benchmark \"%s\" written by ABC on %s\n", net.Name, extra.Extra_TimeStamp())
+	if abc.Abc_NtkIsStrash(n) != 0 {
+		Io_WriteBenchOne(&out, net)
+	} else if err := WriteBenchLut(&out, net); err != nil {
+		return err
 	}
-	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
-		sop, ok := node.Data.(string)
-		if !ok {
-			return fmt.Errorf("BENCH requires SOP functions")
-		}
-		outputs := node.Fanouts()
-		if len(outputs) != 1 {
-			return fmt.Errorf("SOP node must drive one net")
-		}
-		output := blifObjectName(outputs[0])
-		inputs := node.Fanins()
-		var cubes []string
-		polarity := ""
-		for _, line := range strings.Split(strings.TrimSpace(sop), "\n") {
-			if strings.TrimSpace(line) == "" {
-				continue
-			}
-			fields := strings.Fields(line)
-			pattern, value := "", ""
-			if len(fields) == 1 {
-				value = fields[0]
-			} else if len(fields) == 2 {
-				pattern, value = fields[0], fields[1]
-			} else {
-				return fmt.Errorf("invalid SOP row")
-			}
-			if value != "0" && value != "1" {
-				return fmt.Errorf("invalid SOP output phase")
-			}
-			if polarity != "" && polarity != value {
-				return fmt.Errorf("mixed SOP phases")
-			}
-			polarity = value
-			var literals []string
-			if pattern != "" && len(pattern) != len(inputs) {
-				return fmt.Errorf("SOP width mismatch")
-			}
-			for i, c := range pattern {
-				if c == '-' {
-					continue
-				}
-				if c != '0' && c != '1' {
-					return fmt.Errorf("invalid SOP literal")
-				}
-				signal := blifObjectName(inputs[i].Object)
-				inverted := inputs[i].Complement != (c == '0')
-				if inverted {
-					tmp := temporary()
-					fmt.Fprintf(&out, "%s = NOT(%s)\n", tmp, signal)
-					signal = tmp
-				}
-				literals = append(literals, signal)
-			}
-			if len(literals) == 0 {
-				cubes = append(cubes, constant(true))
-			} else if len(literals) == 1 {
-				cubes = append(cubes, literals[0])
-			} else {
-				tmp := temporary()
-				fmt.Fprintf(&out, "%s = AND(%s)\n", tmp, strings.Join(literals, ", "))
-				cubes = append(cubes, tmp)
-			}
-		}
-		if len(cubes) == 0 {
-			fmt.Fprintf(&out, "%s = BUFF(%s)\n", output, constant(false))
-		} else if len(cubes) == 1 {
-			gate := "BUFF"
-			if polarity == "0" {
-				gate = "NOT"
-			}
-			fmt.Fprintf(&out, "%s = %s(%s)\n", output, gate, cubes[0])
-		} else {
-			gate := "OR"
-			if polarity == "0" {
-				gate = "NOR"
-			}
-			fmt.Fprintf(&out, "%s = %s(%s)\n", output, gate, strings.Join(cubes, ", "))
-		}
-	}
-	return writeText(w, out.String())
+	_, err := w.Write(out.Bytes())
+	return err
 }
+
+// WriteBenchFile is Io_Write's BENCH branch (write_bench -l).
 func WriteBenchFile(n *abc.Network, filename string) error {
-	file, err := os.Create(filename)
-	if err != nil {
-		return err
+	if n == nil {
+		return fmt.Errorf("nil network")
 	}
-	err = WriteBench(file, n)
-	closeErr := file.Close()
-	if err != nil {
-		return err
+	if abc.Abc_NtkIsStrash(n) == 0 {
+		fmt.Printf("Writing traditional BENCH is available for AIGs only (use \"write_bench\").\n")
+		return nil
 	}
-	return closeErr
+	net := abc.Abc_NtkToNetlistBench(n)
+	if net == nil {
+		fmt.Printf("Converting to netlist has failed.\n")
+		return nil
+	}
+	defer abc.Abc_NtkDelete(net)
+	Io_WriteBench(net, filename)
+	return nil
 }
+
+// Io_WriteBench writes an SOP netlist of gates (Abc_NtkToNetlistBench's).
 func Io_WriteBench(n *abc.Network, filename string) int32 {
-	if err := WriteBenchFile(n, filename); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+	if Io_WriteBenchCheckNames(n) == 0 {
+		fmt.Printf("Io_WriteBench(): Signal names in this benchmark contain parentheses making them impossible to reproduce in the BENCH format. Use \"short_names\".\n")
 		return 0
+	}
+	var out bytes.Buffer
+	fmt.Fprintf(&out, "# Benchmark \"%s\" written by ABC on %s\n", n.Name, extra.Extra_TimeStamp())
+	Io_WriteBenchOne(&out, n)
+	if os.WriteFile(filename, out.Bytes(), 0644) != nil {
+		fmt.Printf("Io_WriteBench(): Cannot open the output file.\n")
+		return 0
+	}
+	if n.Exdc != nil {
+		fmt.Printf("Io_WriteBench: EXDC is not written (warning).\n")
 	}
 	return 1
 }
+
+// Io_WriteBenchOne writes the ports, the latches as DFFs and one gate per
+// node (constant, buffer, inverter or two-input AND).
 func Io_WriteBenchOne(w stdio.Writer, n *abc.Network) int32 {
-	if err := WriteBench(w, n); err != nil {
-		return 0
+	ioWriteBenchPorts(w, n, "%-11s = DFF(%s)\n")
+	for i := int32(0); i < abc.Abc_NtkObjNumMax(n); i++ {
+		if o := abc.Abc_NtkObj(n, i); o != nil && abc.Abc_ObjIsNode(o) != 0 {
+			Io_WriteBenchOneNode(w, o)
+		}
 	}
 	return 1
 }
+
+func ioWriteBenchPorts(w stdio.Writer, n *abc.Network, latchFormat string) {
+	for i := int32(0); i < abc.Abc_NtkPiNum(n); i++ {
+		fmt.Fprintf(w, "INPUT(%s)\n", abc.Abc_ObjName(abc.Abc_ObjFanout0(abc.Abc_NtkPi(n, i))))
+	}
+	for i := int32(0); i < abc.Abc_NtkPoNum(n); i++ {
+		fmt.Fprintf(w, "OUTPUT(%s)\n", abc.Abc_ObjName(abc.Abc_ObjFanin0(abc.Abc_NtkPo(n, i))))
+	}
+	for _, latch := range n.ObjectsOfKind(abc.ObjectLatch) {
+		fmt.Fprintf(w, latchFormat, abc.Abc_ObjName(abc.Abc_ObjFanout0(abc.Abc_ObjFanout0(latch))), abc.Abc_ObjName(abc.Abc_ObjFanin0(abc.Abc_ObjFanin0(latch))))
+	}
+}
+
+func Io_WriteBenchOneNode(w stdio.Writer, node *abc.Object) int32 {
+	out := abc.Abc_ObjName(abc.Abc_ObjFanout0(node))
+	switch abc.Abc_ObjFaninNum(node) {
+	case 0:
+		fmt.Fprintf(w, "%-11s", out)
+		fmt.Fprintf(w, " = vdd\n")
+	case 1:
+		if abc.Abc_NodeIsBuf(node) != 0 {
+			fmt.Fprintf(w, "%-11s = BUFF(", out)
+		} else {
+			fmt.Fprintf(w, "%-11s = NOT(", out)
+		}
+		fmt.Fprintf(w, "%s)\n", abc.Abc_ObjName(abc.Abc_ObjFanin0(node)))
+	default:
+		fmt.Fprintf(w, "%-11s", out)
+		fmt.Fprintf(w, " = AND(%s, ", abc.Abc_ObjName(abc.Abc_ObjFanin0(node)))
+		fmt.Fprintf(w, "%s)\n", abc.Abc_ObjName(abc.Abc_ObjFanin1(node)))
+	}
+	return 1
+}
+
+// Io_WriteBenchCheckNames rejects networks with parentheses in any name.
 func Io_WriteBenchCheckNames(n *abc.Network) int32 {
-	for _, o := range n.Objects() {
-		if strings.ContainsAny(blifObjectName(o), "(),= \t\r\n") {
+	for i := int32(0); i < abc.Abc_NtkObjNumMax(n); i++ {
+		if o := abc.Abc_NtkObj(n, i); o != nil && strings.ContainsAny(o.Name(), "()") {
 			return 0
 		}
 	}

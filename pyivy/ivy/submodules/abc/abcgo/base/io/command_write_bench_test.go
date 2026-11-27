@@ -24,6 +24,14 @@ func TestWriteBenchCommandModes(t *testing.T) {
 			t.Fatalf("%v: %s", options, errors.String())
 		}
 		data, err := os.ReadFile(filename)
+		if options != nil {
+			// -l is Io_Write's BENCH branch, which takes AIGs only: ABC
+			// prints a note and writes nothing for this logic network.
+			if err == nil {
+				t.Fatalf("write_bench -l wrote a file for a logic network:\n%s", data)
+			}
+			continue
+		}
 		if err != nil {
 			t.Fatal(err)
 		}

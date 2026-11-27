@@ -44,8 +44,16 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 		}
 		output := strings.TrimSpace(assignment[0])
 		rhs := strings.TrimSpace(assignment[1])
-		if rhs == "vdd" || rhs == "gnd" {
-			rhs = "BUFF(" + rhs + ")"
+		if strings.HasPrefix(rhs, "gnd") || strings.HasPrefix(rhs, "vdd") {
+			// gate type gnd/vdd with no fanins: a constant node
+			cover := " 0\n"
+			if strings.HasPrefix(rhs, "vdd") {
+				cover = " 1\n"
+			}
+			if _, err = m.node([]string{output}, cover); err != nil {
+				return nil, blifError(name, line, "%v", err)
+			}
+			continue
 		}
 		at := strings.IndexByte(rhs, '(')
 		if at < 0 || !strings.HasSuffix(rhs, ")") {
@@ -128,9 +136,18 @@ func ParseBench(name, text string, check bool) (*abc.Network, error) {
 			return nil, blifError(name, line, "%v", err)
 		}
 	}
-	for signal, value := range map[string]string{"gnd": " 0\n", "vdd": " 1\n", "1": " 0\n", "2": " 1\n"} {
-		if net := m.nets[signal]; net != nil && net.FaninNum() == 0 {
-			if _, err = m.node([]string{signal}, value); err != nil {
+	// undriven constant nets, in Io_ReadBenchNetwork's order
+	for _, c := range []struct{ signal, value, note string }{
+		{"gnd", " 0\n", ""},
+		{"1", " 0\n", "Io_ReadBenchNetwork(): Adding constant 0 fanin to non-driven net \"1\".\n"},
+		{"vdd", " 1\n", ""},
+		{"2", " 1\n", "Io_ReadBenchNetwork(): Adding constant 1 fanin to non-driven net \"2\".\n"},
+	} {
+		if net := m.nets[c.signal]; net != nil && net.FaninNum() == 0 {
+			if c.note != "" {
+				fmt.Print(c.note)
+			}
+			if _, err = m.node([]string{c.signal}, c.value); err != nil {
 				return nil, err
 			}
 		}
