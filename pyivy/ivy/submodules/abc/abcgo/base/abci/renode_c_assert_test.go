@@ -61,7 +61,7 @@ func TestRenodeKeepsBestCutWhenAllCutsViolateRequired(t *testing.T) {
 // cut's order and panicked. (The result still differs from native's
 // nd = 657: the reo package is not yet a port of reoCore/reoSwap.)
 func TestRenodeBddCompletes(t *testing.T) {
-	out := runScript(t, "read test_vectors/native_mul8_if6.blif; strash; renode -b; print_stats")
+	out := runScript(t, "read test_vectors/native_s27_drw.blif; strash; renode -b; print_stats")
 	if !strings.Contains(out, "nd =") {
 		t.Fatalf("renode -b failed:\n%s", out)
 	}
