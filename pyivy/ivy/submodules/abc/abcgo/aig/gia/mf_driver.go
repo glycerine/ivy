@@ -30,8 +30,10 @@ func Mf_ManGenerateCnf(p *Gia_Man_t, lutSize, objectIDs, addOr, withMapping, ver
 	return cnf
 }
 func giaWriteMappedCNF(writer io.Writer, cnf *mf.CNF) error {
+	// Cnf_DataWriteIntoFile: the comment line, the header, the clauses and
+	// a final empty line
 	buffer := bufio.NewWriter(writer)
-	if _, err := fmt.Fprintf(buffer, "p cnf %d %d\n", cnf.Variables, len(cnf.Clauses)); err != nil {
+	if _, err := fmt.Fprintf(buffer, "c Result of efficient AIG-to-CNF conversion using package CNF\np cnf %d %d\n", cnf.Variables, len(cnf.Clauses)); err != nil {
 		return err
 	}
 	for _, clause := range cnf.Clauses {
@@ -47,6 +49,9 @@ func giaWriteMappedCNF(writer io.Writer, cnf *mf.CNF) error {
 		if _, err := fmt.Fprintln(buffer, "0"); err != nil {
 			return err
 		}
+	}
+	if _, err := fmt.Fprintln(buffer); err != nil {
+		return err
 	}
 	return buffer.Flush()
 }

@@ -6,7 +6,6 @@ import (
 	stdio "io"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/extra"
@@ -155,7 +154,7 @@ func writeMOPLARegistered(network *abc.Network, filename string) error {
 		return err
 	}
 	defer file.Close()
-	if _, err = fmt.Fprintf(file, "# Benchmark %q written by ABC on %s\n", network.Name, time.Now().Format(time.RFC3339)); err != nil {
+	if _, err = fmt.Fprintf(file, "# Benchmark \"%s\" written by ABC on %s\n", network.Name, extra.Extra_TimeStamp()); err != nil {
 		return err
 	}
 	return writePLA(file, network, true, -1, 16)
@@ -216,7 +215,7 @@ func Io_WriteMoPlaM(network *Abc_Ntk_t, filename string, nMints int32) int32 {
 		return 0
 	}
 	defer file.Close()
-	if _, err = fmt.Fprintf(file, "# Benchmark %q written by ABC on %s\n", network.Name, time.Now().Format(time.RFC3339)); err != nil {
+	if _, err = fmt.Fprintf(file, "# Benchmark \"%s\" written by ABC on %s\n", network.Name, extra.Extra_TimeStamp()); err != nil {
 		return 0
 	}
 	if err = writePLA(file, network, true, int(nMints), 16); err != nil {

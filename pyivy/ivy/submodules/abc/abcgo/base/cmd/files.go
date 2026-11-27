@@ -4,6 +4,7 @@ import (
 	"compress/bzip2"
 	"errors"
 	"fmt"
+	"github.com/glycerine/abcgo/misc/extra"
 	"io"
 	"os"
 	"path/filepath"
@@ -11,7 +12,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 )
 
 // Directory helpers use explicit paths, never process-wide chdir.
@@ -284,7 +284,7 @@ func CmdCommandScrGen(f *Abc_Frame_t, argc int32, argv []string) int32 {
 		fmt.Fprintln(f.Err, err)
 		return 1
 	}
-	fmt.Fprintf(file, "# Script file produced by ABC on %s\n", time.Now().Format(time.RFC1123))
+	fmt.Fprintf(file, "# Script file produced by ABC on %s\n", extra.Extra_TimeStamp())
 	var writeErr error
 	for _, entry := range entries {
 		name := entry.Name()
