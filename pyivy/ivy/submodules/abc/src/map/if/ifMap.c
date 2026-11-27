@@ -457,6 +457,13 @@ void If_ObjPerformMappingAnd( If_Man_t * p, If_Obj_t * pObj, int Mode, int fPrep
         If_CutSort( p, pCutSet, pCut );
 //        If_CutTraverse( p, pObj, pCut );
     } 
+    // the filter may have dropped the best cut of the previous iteration in
+    // favor of cuts that then violated the required times: keep that cut
+    if ( pCutSet->nCuts == 0 && !fFirst )
+    {
+        If_CutCopy( p, pCutSet->ppCuts[0], If_ObjCutBest(pObj) );
+        pCutSet->nCuts = 1;
+    }
     assert( pCutSet->nCuts > 0 );
 //    If_CutVerifyCuts( pCutSet, !p->pPars->fUseTtPerm );
 

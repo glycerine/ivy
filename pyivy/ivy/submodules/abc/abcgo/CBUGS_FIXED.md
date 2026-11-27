@@ -285,3 +285,29 @@ and states how the Go port was verified.
   counted 225 corrupted rows before the fix and 0 after.
 - **Go port:** it panicked; it now skips the same flips
   (`TestFifoFlipStaysInRow`).
+
+## 15. `If_ObjPerformMappingAnd` can end a node with no cuts
+
+- **File:** `src/map/if/ifMap.c`, `If_ObjPerformMappingAnd`.
+- **Found:** 2026-11-26, when Go's `renode` panicked on i10 after
+  `strash; if -K 6; lutpack; strash` (the vector
+  `abcgo/base/abci/test_vectors/i10_lutpack_strash.aig` is native's AIG at that
+  point).
+- **Bug:** in the area rounds the previous best cut is saved as the first cut
+  of the set. `If_CutFilter` drops it when a new cut with fewer leaves
+  dominates it, and that new cut (like every other candidate of node 709 under
+  renode's pin delays) is then rejected because its delay exceeds the
+  required time. The set ends empty and `assert( pCutSet->nCuts > 0 )` fails.
+  Release builds compile the assertion out, copy whatever stale cut sits in
+  slot 0 (here the last rejected cut) into the node's best cut, and print
+  "Warning! Node ... has delay ... exceeding the required times" downstream.
+- **Fix:** when the set is empty after the first iteration, put the previous
+  best cut back as the only cut. Native renode on the vector now gives
+  2,350 nodes (2,372 with the stale cut).
+- **Test:** `abcgo/base/abci/renode_c_assert_test.go`
+  (`TestNativeRenodeIfAssertionsHold`) compiles `ifMap.c` with assertions
+  enabled and links it ahead of `ABC_LIBABC`. Before the fix it aborted on the
+  assertion.
+- **Go port:** it panicked on the same assertion. It has the same fix
+  (`TestRenodeKeepsBestCutWhenAllCutsViolateRequired`), and the full script
+  above now prints native's statistics.

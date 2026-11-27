@@ -524,6 +524,13 @@ func If_ObjPerformMappingAnd(p *If_Man_t, pObj *If_Obj_t, Mode int32, fPreproces
 		}
 	}
 cutsDone:
+	// the filter may have dropped the best cut of the previous iteration in
+	// favor of cuts that then violated the required times: keep that cut
+	// (CBUGS_FIXED.md #15; C's release build adopted a stale cut slot)
+	if pCutSet.nCuts == 0 && fFirst == 0 {
+		If_CutCopy(p, pCutSet.ppCuts[0], If_ObjCutBest(pObj))
+		pCutSet.nCuts = 1
+	}
 	assert(pCutSet.nCuts > 0, "pCutSet.nCuts > 0")
 	//    If_CutVerifyCuts( pCutSet, !p->pPars->fUseTtPerm );
 
