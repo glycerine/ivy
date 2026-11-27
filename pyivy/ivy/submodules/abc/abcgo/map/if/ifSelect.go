@@ -2,6 +2,7 @@ package if_
 
 import (
 	"fmt"
+	"math/bits"
 
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
@@ -94,13 +95,8 @@ func If_ManNodeShapeMap(man *If_Man_t, obj *If_Obj_t, shape *Vec_Int_t) int32 {
 	return 1
 }
 
-func If_WordCountOnes(x uint32) int32 {
-	x = (x & 0x55555555) + ((x >> 1) & 0x55555555)
-	x = (x & 0x33333333) + ((x >> 2) & 0x33333333)
-	x = (x & 0x0f0f0f0f) + ((x >> 4) & 0x0f0f0f0f)
-	x = (x & 0x00ff00ff) + ((x >> 8) & 0x00ff00ff)
-	return int32((x & 0xffff) + (x >> 16))
-}
+// If_WordCountOnes counts the ones (the population count instruction).
+func If_WordCountOnes(x uint32) int32 { return int32(bits.OnesCount32(x)) }
 
 func If_ManNodeShapeMap2_rec(man *If_Man_t, obj *If_Obj_t, visited *Vec_Ptr_t, shape *Vec_Int_t) int32 {
 	cut := If_ObjCutBest(obj)

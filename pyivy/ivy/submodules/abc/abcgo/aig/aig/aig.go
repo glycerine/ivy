@@ -1,5 +1,7 @@
 package aig
 
+import "math/bits"
+
 /**CFile****************************************************************
 
   FileName    [aig.h]
@@ -125,13 +127,9 @@ func Aig_CutNext(c *Aig_Cut_t) *Aig_Cut_t { return c.pNext }
 ////////////////////////////////////////////////////////////////////////
 
 func Aig_ObjCutSign(ObjId uint32) uint32 { return (1 << (ObjId & 31)) }
-func Aig_WordCountOnes(uWord uint32) int32 {
-	uWord = (uWord & 0x55555555) + ((uWord >> 1) & 0x55555555)
-	uWord = (uWord & 0x33333333) + ((uWord >> 2) & 0x33333333)
-	uWord = (uWord & 0x0F0F0F0F) + ((uWord >> 4) & 0x0F0F0F0F)
-	uWord = (uWord & 0x00FF00FF) + ((uWord >> 8) & 0x00FF00FF)
-	return int32((uWord & 0x0000FFFF) + (uWord >> 16))
-}
+
+// Aig_WordCountOnes counts the ones (the population count instruction).
+func Aig_WordCountOnes(uWord uint32) int32 { return int32(bits.OnesCount32(uWord)) }
 func Aig_WordFindFirstBit(word uint32) int32 {
 	for i := int32(0); i < 32; i++ {
 		if word&(1<<uint(i)) != 0 {
