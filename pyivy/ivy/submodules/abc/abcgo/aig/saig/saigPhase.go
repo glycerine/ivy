@@ -191,16 +191,34 @@ func Saig_TsiComputeTransient(p *Saig_Tsim_t, prefix int32) *vec.Vec_Int_t {
 	return counters
 }
 func Saig_TsiPrintTraces(p *Saig_Tsim_t, words, prefix, loop int32) {
-	fmt.Println("Ternary traces for each register:")
+	fmt.Printf("Ternary traces for each flop:\n")
+	fmt.Printf("      : ")
+	for i := 0; i < len(p.states)-int(loop)-1; i++ {
+		fmt.Printf("%d", i%10)
+	}
+	fmt.Printf("  ")
+	for i := 0; i < int(loop); i++ {
+		fmt.Printf("%d", i%10)
+	}
+	fmt.Printf("\n")
 	for reg := 0; reg < int(aig.Aig_ManRegNum(p.pAig)); reg++ {
 		fmt.Printf("%5d : ", reg)
-		for frame, state := range p.states[:len(p.states)-1] {
-			if frame == int(prefix) {
-				fmt.Print("  ")
+		for k, state := range p.states[:len(p.states)-1] {
+			switch phaseValue(state, reg) {
+			case SAIG_XVS0:
+				fmt.Printf("0")
+			case SAIG_XVS1:
+				fmt.Printf("1")
+			case SAIG_XVSX:
+				fmt.Printf("x")
+			default:
+				panic("saig: invalid ternary value")
 			}
-			Saig_XsimPrint(os.Stdout, phaseValue(state, reg))
+			if k == int(prefix)-1 {
+				fmt.Printf("  ")
+			}
 		}
-		fmt.Println()
+		fmt.Printf("\n")
 	}
 }
 func phaseLit(lit int32, values []int32) int32 {
@@ -240,7 +258,7 @@ func Saig_ManReachableTernary(graph *aig.Graph, initial *vec.Vec_Int_t, verbose 
 			p.nPrefix = Saig_TsiComputePrefix(p, state, int32(p.words()))
 			p.nCycle = int32(len(p.states)) - 1 - p.nPrefix
 			if verbose != 0 {
-				fmt.Printf("Ternary simulation converged after %d frames\n", frame)
+				fmt.Printf("Ternary simulation converged after %d iterations.\n", frame)
 			}
 			return p
 		}
@@ -479,41 +497,74 @@ func Saig_ManPhasePrefixLength(graph *aig.Graph, verbose, veryVerbose int32, tra
 		*transient = Saig_TsiComputeTransient(p, p.nPrefix)
 	}
 	if verbose != 0 {
-		fmt.Printf("Lead=%d Loop=%d Binary=%d\n", p.nPrefix, p.nCycle, vec.Vec_IntSize(p.vNonXRegs))
+		fmt.Printf("Lead = %5d. Loop = %5d.  Total flops = %5d. Binary flops = %5d.\n", p.nPrefix, p.nCycle, aig.Aig_ManRegNum(graph), vec.Vec_IntSize(p.vNonXRegs))
 	}
 	if veryVerbose != 0 {
 		Saig_TsiPrintTraces(p, int32(p.words()), p.nPrefix, p.nCycle)
 	}
 	return p.nPrefix
 }
-func phaseAbstractManager(p *Saig_Tsim_t, frames, prefix, ignore, printOnly, verbose int32) *aig.Graph {
-	Saig_TsiCountNonXValuedRegisters(p, min(p.nPrefix, prefix))
-	if printOnly != 0 {
+
+// saigPhaseStats prints saigPhase.c's statistics line, and the traces
+// when they are small.
+func saigPhaseStats(p *Saig_Tsim_t, graph *aig.Graph, nonX int32) {
+	fmt.Printf("Lead = %5d. Loop = %5d.  Total flops = %5d. Binary flops = %5d.\n",
+		p.nPrefix, p.nCycle, aig.Aig_ManRegNum(graph), nonX)
+	if nonX < 100 && len(p.states) < 80 {
 		Saig_TsiPrintTraces(p, int32(p.words()), p.nPrefix, p.nCycle)
-		return nil
 	}
-	if frames < 2 || frames > 256 || p.nCycle == 1 || p.nCycle%frames != 0 || vec.Vec_IntSize(p.vNonXRegs) == 0 {
-		return nil
-	}
-	if Saig_ManFindRegisters(p, frames, ignore, verbose) == 0 {
-		return nil
-	}
-	return Saig_ManPerformAbstraction(p, frames, verbose)
 }
+
+// Saig_ManPhaseAbstract is saigPhase.c's: ternary simulation, then phase
+// abstraction with nFrames when the cycle allows it, with ABC's messages.
 func Saig_ManPhaseAbstract(graph *aig.Graph, initial *vec.Vec_Int_t, frames, prefix, ignore, printOnly, verbose int32) *aig.Graph {
 	p := Saig_ManReachableTernary(graph, initial, verbose)
 	if p == nil {
 		return nil
 	}
 	defer Saig_TsiStop(p)
-	return phaseAbstractManager(p, frames, prefix, ignore, printOnly, verbose)
+	nonX := Saig_TsiCountNonXValuedRegisters(p, min(p.nPrefix, prefix))
+	if verbose != 0 {
+		saigPhaseStats(p, graph, nonX)
+	}
+	switch {
+	case printOnly != 0:
+		fmt.Printf("Print-out finished. Phase assignment is not performed.\n")
+	case frames < 2:
+		fmt.Printf("The number of frames is less than 2. Phase assignment is not performed.\n")
+	case frames > 256:
+		fmt.Printf("The number of frames is more than 256. Phase assignment is not performed.\n")
+	case p.nCycle == 1:
+		fmt.Printf("The cycle of ternary states is trivial. Phase abstraction cannot be done.\n")
+	case p.nCycle%frames != 0:
+		fmt.Printf("The cycle (%d) is not modulo the number of frames (%d). Phase abstraction cannot be done.\n", p.nCycle, frames)
+	case nonX == 0:
+		fmt.Printf("All registers have X-valued states. Phase abstraction cannot be done.\n")
+	case Saig_ManFindRegisters(p, frames, ignore, verbose) == 0:
+		fmt.Printf("There is no registers to abstract with %d frames.\n", frames)
+	default:
+		return Saig_ManPerformAbstraction(p, frames, verbose)
+	}
+	return nil
 }
+
+// Saig_ManPhaseAbstractAuto abstracts with the cycle length as the number of
+// frames, silently returning a copy when that is not possible.
 func Saig_ManPhaseAbstractAuto(graph *aig.Graph, verbose int32) *aig.Graph {
 	p := Saig_ManReachableTernary(graph, nil, verbose)
 	if p == nil {
 		return nil
 	}
-	result := phaseAbstractManager(p, p.nCycle, 0, 0, 0, verbose)
+	nonX := Saig_TsiCountNonXValuedRegisters(p, 0)
+	if verbose != 0 {
+		saigPhaseStats(p, graph, nonX)
+	}
+	frames := p.nCycle
+	var result *aig.Graph
+	if frames >= 2 && frames <= 256 && p.nCycle != 1 && p.nCycle%frames == 0 && nonX != 0 &&
+		Saig_ManFindRegisters(p, frames, 0, verbose) != 0 {
+		result = Saig_ManPerformAbstraction(p, frames, verbose)
+	}
 	Saig_TsiStop(p)
 	if result == nil || result.InputCount() == int(aig.Aig_ManRegNum(result)) {
 		return aig.Aig_ManDupSimple(graph)
