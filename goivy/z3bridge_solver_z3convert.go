@@ -552,8 +552,13 @@ func (s *Solver) Sorts(name string) any {
 	}
 	if strings.HasPrefix(name, "arr[") && strings.HasSuffix(name, "]") {
 		if dom, rng, ok := ParseArraySortName(name); ok {
-			domS := &UninterpretedSort{Name: dom}
-			rngS := &UninterpretedSort{Name: rng}
+			lookup := func(name string) Sort {
+				if sort := s.sig.Sorts.Get(name); sort != nil {
+					return sort
+				}
+				return &UninterpretedSort{Name: name}
+			}
+			domS, rngS := lookup(dom), lookup(rng)
 			xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", domS.Sexp())
 			domSort, err1 := s.tr.TranslateSort(domS)
 			xtracer.Trace("TranslateSort_call callsite=sort_name_to_z3 HASH canon=%s", rngS.Sexp())

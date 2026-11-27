@@ -97,7 +97,12 @@ func (decls *vmtDeclarations) sortName(zsort smt.Z3Sort, sort Sort) string {
 	case smt.SortSeq:
 		return zsort.String()
 	}
-	name := vmtName(zsort.String())
+	sortName := zsort.String()
+	if sort == nil {
+		// Array components are supplied by the solver without an Ivy sort.
+		sort = decls.solver.sig.Sorts.Get(sortName)
+	}
+	name := vmtName(sortName)
 	if e, ok := sort.(*LogicEnumeratedSort); ok && zsort.Kind() != smt.SortUninterpreted {
 		constructors := make([]string, len(e.Extension))
 		for i, constructor := range e.Extension {

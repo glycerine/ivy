@@ -291,7 +291,8 @@ func CheckTemporals(mod *Module) error {
 				fmt.Printf("     ... admitting %s as axiom because it is an externally assumed property and unchecked property file is supplied.\n", propLabel)
 			}
 			pc.AdmitAxiom(prop)
-		} else if mod.Cfg.checkNameSelected(lfLabelName(prop)) {
+		} else if mod.Cfg.checkNameSelected(lfLabelName(prop)) &&
+			(mod.Cfg.CheckLineno == "" || mod.Cfg.CheckLineno == prop.GetLineno().FileLineKey()) {
 			fmt.Print("\n    The following temporal property is being proved:\n\n")
 			// Python: print(pretty_lf(prop) + ' ...') -- pretty_lf's default indent is 8.
 			fmt.Print(PrettyLF(prop, 8) + " ...\n")
@@ -321,9 +322,12 @@ func CheckTemporals(mod *Module) error {
 			xtracer.Trace("check.temporal proof type=%s pfNode type=%s", TypeName(pf), TypeName(pfNode))
 			err := func() error {
 				// The filter selects the theorem. Its proof must check every obligation.
-				patterns := mod.Cfg.checkNamePatterns
+				patterns, line := mod.Cfg.checkNamePatterns, mod.Cfg.CheckLineno
 				mod.Cfg.checkNamePatterns = nil
-				defer func() { mod.Cfg.checkNamePatterns = patterns }()
+				mod.Cfg.CheckLineno = ""
+				defer func() {
+					mod.Cfg.checkNamePatterns, mod.Cfg.CheckLineno = patterns, line
+				}()
 				goals, err := pc.AdmitProposition(prop, pfNode, subgoals...)
 				if err != nil {
 					return err
@@ -333,6 +337,9 @@ func CheckTemporals(mod *Module) error {
 			if err != nil {
 				return err
 			}
+		} else if !prop.Unprovable {
+			// A filtered proof can still depend on earlier temporal properties.
+			pc.AdmitAxiom(prop)
 		}
 	}
 	return nil

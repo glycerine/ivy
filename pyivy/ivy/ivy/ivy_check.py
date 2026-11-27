@@ -131,8 +131,10 @@ def has_temporal_stuff(f):
 # prop if module |= prop holds.
 
 def check_temporals():
+    global check_lineno
     mod = im.module
     props = mod.labeled_props
+    selected_line = act.checked_assert.get()
     pmap = dict((prop.id,p) for prop,p in mod.proofs)
     _ct_axioms = mod.labeled_axioms+mod.assumed_invariants
     # Diagnostic: dump axioms fed to the temporal proof checker
@@ -148,7 +150,8 @@ def check_temporals():
                 if opt_unchecked_properties.get() and ivy_acl.is_assumed(prop.label):
                     print('     ... admitting ', prop.label, ' as axiom because it is an externally assumed property and unchecked property file is supplied.')
                 pc.admit_axiom(prop)
-            elif act.check_name_selected(prop.name if prop.label is not None else None):
+            elif (act.check_name_selected(prop.name if prop.label is not None else None)
+                  and (not selected_line or prop.lineno == selected_line)):
                 print('\n    The following temporal property is being proved:\n')
                 print(pretty_lf(prop) + ' ...', end='\n')
                 sys.stdout.flush()
@@ -161,10 +164,20 @@ def check_temporals():
                     if __debug__: xtracer.trace("check.temporal subgoal.Formula type=%s" % type(subgoal.formula).__name__)
                     subgoals = [subgoal]
                     if __debug__: xtracer.trace("check.temporal proof type=%s pfNode type=%s" % (type(proof).__name__ if proof is not None else "None", type(proof).__name__ if proof is not None else "None"))
-                    # The filter selects the theorem, whose proof checks every obligation.
+                    # The filters select the theorem, whose proof checks every obligation.
                     with iu.parameterize({'check':''}):
-                        subgoals = pc.admit_proposition(prop,proof,subgoals)
-                        check_subgoals(subgoals)
+                        saved_lineno = check_lineno
+                        act.checked_assert.value = ''
+                        check_lineno = None
+                        try:
+                            subgoals = pc.admit_proposition(prop,proof,subgoals)
+                            check_subgoals(subgoals)
+                        finally:
+                            act.checked_assert.value = selected_line
+                            check_lineno = saved_lineno
+            elif not prop.unprovable:
+                # A filtered proof can still depend on earlier temporal properties.
+                pc.admit_axiom(prop)
             
         # else:
         #     # Non-temporal properties have already been proved, so just

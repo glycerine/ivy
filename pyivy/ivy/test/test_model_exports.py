@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -81,6 +82,27 @@ invariant [known_color] chosen = red | chosen = green
         self.assertIn('immutable constant red: color', model)
         self.assertIn('immutable constant green: color', model)
         self.assertRegex(model, r'forall (\w+):color\. \1 = red \| \1 = green')
+
+    def test_mypyvy_encodes_scoped_names_without_collisions(self):
+        source = '''#lang ivy1.8
+object child = {
+    type item
+    individual chosen : item
+    relation flag
+}
+relation child_flag
+after init { child.flag := false; child_flag := true }
+export action step = { child.flag := child.chosen = child.chosen }
+invariant [separate] ~child.flag | child_flag
+'''
+        result, models = self.run_ivy(source, self.export_model.format(exporter='ivy_mypyvy'))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        model = models['.pyv']
+        flags = re.findall(r'(?m)^mutable (?:constant|relation) (child\w*flag)(?:: bool)?$', model)
+        self.assertEqual(len(set(flags)), 2, model)
+        sort = re.search(r'(?m)^sort (child\w+item)$', model)
+        self.assertIsNotNone(sort, model)
+        self.assertRegex(model, rf'(?m)^\w+ constant child\w+chosen: {sort[1]}$')
 
     def test_duoai_keeps_definitions_used_by_the_exported_model(self):
         source = '''#lang ivy1.8

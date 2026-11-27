@@ -54,14 +54,17 @@ def _find_tool(name, env, candidates):
 
 def tools():
     root = _repo_root()
+    package_bin = os.path.join(root, 'ivy', 'bin')
     yosys = _find_tool('yosys', 'IVY_YOSYS', [])
     abc = _find_tool('abc', 'IVY_ABC',
-                     [os.path.join(root, 'submodules', 'abc', 'abc')])
+                     [os.path.join(root, 'submodules', 'abc', 'abc'),
+                      os.path.join(package_bin, 'abc')])
     aiger_dir = os.environ.get('IVY_AIGER',
                                os.path.join(root, 'submodules', 'aiger'))
     aigtoaig = os.path.join(aiger_dir, 'aigtoaig')
     if not (os.path.isfile(aigtoaig) and os.access(aigtoaig, os.X_OK)):
-        aigtoaig = _find_tool('aigtoaig', 'IVY_AIGTOAIG', [])
+        aigtoaig = _find_tool('aigtoaig', 'IVY_AIGTOAIG',
+                              [os.path.join(package_bin, 'aigtoaig')])
     return yosys, abc, aigtoaig
 
 
@@ -121,7 +124,7 @@ def parse_config(path):
 # --------------------------------------------------------------------------
 
 YOSYS_SCRIPT = """
-read_rtlil {il}
+read_rtlil design.il
 hierarchy -check -top {top}
 proc
 flatten
@@ -129,14 +132,14 @@ memory_map
 async2sync
 dfflegalize -cell $_DFF_P_ 01 -cell $_DFF_N_ 01
 simplemap
-write_json {clockf}
+write_json clock_check.json
 dfflegalize -cell $_DFF_P_ 01
 simplemap
 setundef -zero
 aigmap
 insbuf o:*
-techmap -map {buffers}
-write_aiger -map {mapf} {aigf}
+techmap -map output_buffers.v
+write_aiger -map design.map design.aig
 """
 
 OUTPUT_BUFFERS = r"""module \$_BUF_ (input A, output Y);
@@ -145,27 +148,27 @@ endmodule
 """
 
 def run_yosys(yosys, cfg, workdir):
-    aigf = os.path.join(workdir, cfg.section + ".aig")
-    mapf = os.path.join(workdir, cfg.section + ".map")
-    clockf = os.path.join(workdir, cfg.section + ".json")
-    logf = os.path.join(workdir, cfg.section + ".yslog")
-    buffers = os.path.join(workdir, 'output_buffers.v')
-    with open(buffers, 'w') as f:
+    directory = os.path.join(workdir, cfg.section)
+    os.makedirs(directory, exist_ok=True)
+    # Some Yosys options treat quotes as literal filename characters.
+    shutil.copyfile(cfg.file, os.path.join(directory, 'design.il'))
+    with open(os.path.join(directory, 'output_buffers.v'), 'w') as f:
         f.write(OUTPUT_BUFFERS)
-    script = YOSYS_SCRIPT.format(il=cfg.file, top=cfg.top,
-                                 mapf=mapf, aigf=aigf, buffers=buffers,
-                                 clockf=clockf)
-    scriptf = os.path.join(workdir, cfg.section + ".ys")
-    with open(scriptf, 'w') as f:
-        f.write(script)
+    with open(os.path.join(directory, 'normalize.ys'), 'w') as f:
+        f.write(YOSYS_SCRIPT.format(top=cfg.top))
+    logf = os.path.join(directory, 'normalize.yslog')
     with open(logf, 'w') as log:
-        r = subprocess.call([yosys, '-q', '-s', scriptf],
+        r = subprocess.call([os.path.abspath(yosys), '-q', '-s', 'normalize.ys'],
+                            cwd=directory,
                             stdout=log, stderr=subprocess.STDOUT)
     if r != 0:
         with open(logf) as log:
             tail = log.read()
         sys.exit("error: yosys failed on [%s] design '%s':\n%s"
                  % (cfg.section, cfg.file, tail))
+    aigf = os.path.join(directory, 'design.aig')
+    mapf = os.path.join(directory, 'design.map')
+    clockf = os.path.join(directory, 'clock_check.json')
     return aigf, mapf, check_clock(clockf, cfg)
 
 
@@ -657,8 +660,8 @@ def run_abc(abc, aigtoaig, aig, pi_order, bad, workdir):
     if r != 0:
         sys.exit("error: aigtoaig failed to binarize the miter")
 
-    cmd = "read %s; sat; write_cex -a %s" % (aigf, cexf)
-    out = subprocess.check_output([abc, '-c', cmd],
+    cmd = "read miter.aig; sat; write_cex -a miter.cex"
+    out = subprocess.check_output([os.path.abspath(abc), '-c', cmd], cwd=workdir,
                                   stderr=subprocess.STDOUT).decode()
     if 'UNSATISFIABLE' in out:
         return None

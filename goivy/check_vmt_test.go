@@ -304,6 +304,44 @@ for condition, expected in conditions:
 	}
 }
 
+func TestVMTExportPreservesEnumDomainOfArrayValues(t *testing.T) {
+	const source = `#lang ivy1.8
+type index
+type color = {red, green}
+individual fixed : index
+var cells(I:index) : color
+export action copy_value(i:index) = { cells(i) := cells(fixed) }
+invariant [reflexive] cells(fixed) = cells(fixed)
+`
+	for _, engine := range []string{"GoIvy", "PyIvy"} {
+		t.Run(engine, func(t *testing.T) {
+			var path string
+			switch engine {
+			case "GoIvy":
+				path = exportGoIvyVMT(t, source)
+			case "PyIvy":
+				path = exportPyIvyVMT(t, source)
+			}
+			validate := pythonIvyCommandForTest(t, "-O", "-c", `
+from pathlib import Path
+import sys
+from ivy import z3
+
+model = Path(sys.argv[1]).read_text()
+declarations = '\n'.join('(declare-const color%d color)' % i for i in range(3))
+for terms, expected in [('color0 color1', z3.sat), ('color0 color1 color2', z3.unsat)]:
+    solver = z3.Solver()
+    solver.add(z3.parse_smt2_string(model + '\n' + declarations + '\n(assert (distinct ' + terms + '))'))
+    if solver.check() != expected:
+        raise AssertionError((terms, solver.check(), expected, model))
+`, path)
+			if out, err := validate.CombinedOutput(); err != nil {
+				t.Fatalf("check VMT enum array range: %v\n%s", err, out)
+			}
+		})
+	}
+}
+
 func TestPyIvyVMTExportDeclaresSortUsedOnlyByQuantifier(t *testing.T) {
 	const source = `#lang ivy1.8
 type token

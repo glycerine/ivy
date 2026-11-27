@@ -191,8 +191,33 @@ temporal property [must_fail] globally false
 	}
 }
 
-func TestCheckByNamePreservesTemporalProofObligations(t *testing.T) {
-	const source = `#lang ivy1.8
+func TestCheckByNameKeepsEarlierTemporalPropertiesInContext(t *testing.T) {
+	path, err := filepath.Abs(filepath.Join("..", "pyivy", "ivy", "test", "temporal4.ivy"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Run("GoIvy", func(t *testing.T) {
+		data, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		cfg := NewConfig()
+		if err := ApplyIvyCheckParams(cfg, map[string]string{"check": "p2"}); err != nil {
+			t.Fatal(err)
+		}
+		if err := StartSourceWithConfig(path, string(data), cfg); err != nil {
+			t.Fatalf("p2 uses the earlier temporal property p1: %v", err)
+		}
+	})
+	t.Run("PyIvy", func(t *testing.T) {
+		out, err := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy", "check", "check=p2", path).CombinedOutput()
+		if err != nil {
+			t.Fatalf("p2 uses the earlier temporal property p1: %v\n%s", err, out)
+		}
+	})
+}
+
+const temporalProofWithFalseLemma = `#lang ivy1.8
 relation p
 relation helper
 after init { p := true; helper := true }
@@ -200,6 +225,9 @@ export action advance = { p := helper; helper := false }
 temporal property [claim] globally p
 proof { tactic invariance with invariant [proof_lemma] helper }
 `
+
+func TestCheckByNamePreservesTemporalProofObligations(t *testing.T) {
+	const source = temporalProofWithFalseLemma
 	const filename = "temporal_lemma.ivy"
 	t.Run("GoIvy", func(t *testing.T) {
 		cfg := NewConfig()
@@ -221,6 +249,45 @@ proof { tactic invariance with invariant [proof_lemma] helper }
 			t.Fatalf("the selected property's induction lemma must fail, got %v\n%s", err, out)
 		}
 	})
+}
+
+func TestCheckByLinePreservesTemporalProofObligations(t *testing.T) {
+	const filename = "temporal_lemma.ivy"
+	const source = temporalProofWithFalseLemma
+	path := filepath.Join(t.TempDir(), filename)
+	if err := os.WriteFile(path, []byte(source), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	for _, tt := range []struct {
+		name, location string
+		wantFailure    bool
+	}{
+		{"property line", "temporal_lemma:6", true},
+		{"different line", "temporal_lemma.ivy:5", false},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run("GoIvy", func(t *testing.T) {
+				cfg := NewConfig()
+				if err := ApplyIvyCheckParams(cfg, map[string]string{"check": "claim", "assert": tt.location}); err != nil {
+					t.Fatal(err)
+				}
+				err := StartSourceWithConfig(filename, source, cfg)
+				if tt.wantFailure && (err == nil || !strings.Contains(err.Error(), "failed checks: 1")) ||
+					!tt.wantFailure && err != nil {
+					t.Fatalf("assert=%s should report proof failure=%t, got %v", tt.location, tt.wantFailure, err)
+				}
+			})
+			t.Run("PyIvy", func(t *testing.T) {
+				cmd := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy", "check", "check=claim", "assert="+tt.location, filename)
+				cmd.Dir = filepath.Dir(path)
+				out, err := cmd.CombinedOutput()
+				if tt.wantFailure && (err == nil || !strings.Contains(string(out), "failed checks: 1")) ||
+					!tt.wantFailure && err != nil {
+					t.Fatalf("assert=%s should report proof failure=%t, got %v\n%s", tt.location, tt.wantFailure, err, out)
+				}
+			})
+		})
+	}
 }
 
 func TestApplyIvyCheckParamsCheckedAssertParameterReturnsErrorLikePython(t *testing.T) {

@@ -24,12 +24,13 @@ verbose = False
 opt_unfold_macros = iu.BooleanParameter("unfold_macros",False)
 opt_simplify = iu.BooleanParameter("simplify",False)
 
-# Ivy symbols have dots in them (due to the module system)
-# but mypyvy doesn't allow dots in names, so we replace
-# them with this string
-DOT_REPLACEMENT = "_"
-BRACE_REPLACEMENT = '_B_'
-COLON_REPLACEMENT = "_c_"
+# Escape source underscores as well, so a qualified name and a flat Ivy name
+# cannot produce the same mypyvy identifier.
+NAME_ESCAPES = str.maketrans({
+    '_': '__', '.': '_d_', ':': '_c_', '@': '_at_', '#': '_h_', '$': '_s_',
+    '-': '_m_', '+': '_plus_', '*': '_mul_', '/': '_div_', '<': '_lt_',
+    '>': '_gt_', '=': '_eq_', '[': '_lb_', ']': '_rb_',
+})
 
 # This is how Ivy internally represents true and false
 _true = lg.And()
@@ -68,7 +69,7 @@ class Translation:
     def to_pyv_sort(ivy_sort):
         if il.is_first_order_sort(ivy_sort) \
             or il.is_enumerated_sort(ivy_sort):
-            return pyv.UninterpretedSort(ivy_sort.name)
+            return pyv.UninterpretedSort(Translation.to_pyv_name(ivy_sort.name))
         elif il.is_boolean_sort(ivy_sort):
             return pyv.BoolSort
         # Relation
@@ -82,11 +83,7 @@ class Translation:
 
     def to_pyv_name(ivy_name):
         if isinstance(ivy_name, str):
-            name = ivy_name.replace(".", DOT_REPLACEMENT)
-            name = name.replace('[', BRACE_REPLACEMENT)
-            name = name.replace(']', BRACE_REPLACEMENT)
-            name = name.replace(':', COLON_REPLACEMENT)
-            return name
+            return ivy_name.translate(NAME_ESCAPES)
         raise Exception("cannot translate non-string name {} to mypyvy ".format(repr(ivy_name)))
 
     def translate_binders(binders) -> tuple[pyv.SortedVar]:
@@ -757,28 +754,30 @@ class MypyvyProgram:
             self.constants.append(cst)
 
     def add_sort(self, sort):
+        name = Translation.to_pyv_name(sort.name)
         # i.e. UninterpretedSort
         if il.is_first_order_sort(sort):
-            decl = pyv.SortDecl(sort.name)
+            decl = pyv.SortDecl(name)
             self.sorts.append(decl)
         elif il.is_enumerated_sort(sort):
             # Declare the sort
-            decl = pyv.SortDecl(sort.name)
+            decl = pyv.SortDecl(name)
             pyv_sort = Translation.to_pyv_sort(sort)
             self.sorts.append(decl)
 
             # Add constants (individuals) for each enum value
             # For some reason, not all enum variants show up in sig.symbols,
             # so we cannot add them in `translate_ivy_sig`
-            for enum_value in sort.defines():
+            enum_names = [Translation.to_pyv_name(value) for value in sort.defines()]
+            for enum_value in enum_names:
                 const = pyv.ConstantDecl(enum_value, pyv_sort, False)
                 self.constants.append(const)
 
             # Add distinct axioms (if there are >=2 enum values)
-            individuals = [pyv.Id(name) for name in sort.defines()]
+            individuals = [pyv.Id(value) for value in enum_names]
             if len(individuals) >= 2:
                 op = pyv.NaryExpr("DISTINCT", tuple(individuals))
-                axiom = pyv.AxiomDecl("{}_distinct".format(sort.name), op)
+                axiom = pyv.AxiomDecl("{}_distinct".format(name), op)
                 self.axioms.append(axiom)
             if individuals:
                 var = pyv.SortedVar("IVYENUM", pyv_sort, None)
@@ -821,7 +820,6 @@ class MypyvyProgram:
         for (_sort_name, sort) in sig.sorts.items():
             self.add_sort(sort)
 
-        # # Add symbols, replacing "." with DOT_REPLACEMENT
         for _sym_name, sym in sig.symbols.items():
             assert _sym_name == sym.name, "symbol name mismatch: {} != {}".format(_sym_name, sym.name)
             kind = Translation.sort_type(sym.sort)
