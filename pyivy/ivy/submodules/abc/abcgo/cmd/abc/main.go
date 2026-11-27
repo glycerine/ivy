@@ -46,6 +46,7 @@ func main() {
 	if os.Getenv("GOMAXPROCS") == "" {
 		runtime.GOMAXPROCS(1)
 	}
+	setGCDefaults()
 	if path := os.Getenv("ABCGO_CPUPROFILE"); path != "" {
 		f, err := os.Create(path)
 		if err != nil {
