@@ -63,24 +63,45 @@ func Dch_ObjCheckSuppRed(g *aig.Graph, a, b aig.Edge) bool {
 	return false
 }
 func Dch_ObjCheckTfi(g *aig.Graph, node, representative aig.Edge) bool {
-	targets := map[int]bool{}
+	var scratch tfiScratch
+	return scratch.check(g, node, representative)
+}
+
+// tfiScratch holds Dch_ObjCheckTfi's marks: ABC's fMarkA on the choice
+// chain and the traversal ID, as generation stamps reused across calls.
+type tfiScratch struct {
+	target, seen []uint32
+	gen          uint32
+}
+
+func (s *tfiScratch) check(g *aig.Graph, node, representative aig.Edge) bool {
+	if n := g.NodeSlots(); len(s.seen) < n {
+		s.target = append(s.target, make([]uint32, n-len(s.target))...)
+		s.seen = append(s.seen, make([]uint32, n-len(s.seen))...)
+	}
+	s.gen++
+	if s.gen == 0 { // wrapped: restart the stamps
+		clear(s.target)
+		clear(s.seen)
+		s.gen = 1
+	}
+	gen, target, seen := s.gen, s.target, s.seen
 	for next := representative; next != aig.InvalidEdge; next = aig.Aig_ObjEquiv(g, next) {
-		if targets[next.NodeID()] {
+		if target[next.NodeID()] == gen {
 			panic("dch: cyclic choice chain")
 		}
-		targets[next.NodeID()] = true
+		target[next.NodeID()] = gen
 	}
-	seen := map[int]bool{}
 	var visit func(aig.Edge) bool
 	visit = func(edge aig.Edge) bool {
 		id := edge.NodeID()
-		if targets[id] {
+		if target[id] == gen {
 			return true
 		}
-		if seen[id] {
+		if seen[id] == gen {
 			return false
 		}
-		seen[id] = true
+		seen[id] = gen
 		regular := aig.Aig_Regular(edge)
 		n := g.Node(regular)
 		switch n.Kind {
@@ -112,6 +133,7 @@ func DeriveChoiceAig(source *aig.Graph, skipRedundantSupport bool) (*aig.Graph, 
 	if !aig.Aig_ManHasReprs(source) {
 		return nil, fmt.Errorf("dch: representative storage is required")
 	}
+	var tfi tfiScratch
 	result := aig.NewGraph()
 	aig.Aig_ManReprStart(result, int32(source.NodeCount()))
 	aig.Aig_ManStartEquivs(result) // Dch_DeriveChoiceAig always allocates pEquivs
@@ -181,7 +203,7 @@ func DeriveChoiceAig(source *aig.Graph, skipRedundantSupport bool) (*aig.Graph, 
 			memberKind, headKind := result.Node(member).Kind, result.Node(head).Kind
 			if head.NodeID() < member.NodeID() && (memberKind == aig.And || memberKind == aig.ExclusiveOr) && (headKind == aig.And || headKind == aig.ExclusiveOr) {
 				aig.Aig_ObjCreateRepr(result, head, member)
-				if result.Node(member).Refs == 0 && !Dch_ObjCheckTfi(result, member, head) && (!skipRedundantSupport || !Dch_ObjCheckSuppRed(result, member, head)) {
+				if result.Node(member).Refs == 0 && !tfi.check(result, member, head) && (!skipRedundantSupport || !Dch_ObjCheckSuppRed(result, member, head)) {
 					tail := head
 					for next := aig.Aig_ObjEquiv(result, tail); next != aig.InvalidEdge; next = aig.Aig_ObjEquiv(result, tail) {
 						tail = next
