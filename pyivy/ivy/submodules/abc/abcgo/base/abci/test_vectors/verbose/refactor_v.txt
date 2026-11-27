@@ -1,0 +1,13 @@
+Refactoring statistics:
+Nodes considered  =     2663.
+Nodes refactored  =      310.
+Gain              =      378. ( 14.13 %).
+Cuts        =      sec
+Resynthesis =      sec
+    BDD     =      sec
+    DCs     =      sec
+    SOP     =      sec
+    FF      =      sec
+    Eval    =      sec
+AIG update  =      sec
+TOTAL       =      sec

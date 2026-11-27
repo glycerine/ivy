@@ -645,13 +645,13 @@ func Abc_NtkManRstPrintStats(m *Abc_ManRst_t) {
 	fmt.Printf("Cuts explored      = %8d.\n", m.nCutsExplored)
 	fmt.Printf("Nodes restructured = %8d.\n", m.nNodesRestructured)
 	fmt.Printf("Calculated gain    = %8d.\n", m.nNodesGained)
-	fmt.Printf("Cuts       %s\n", m.timeCut)
-	fmt.Printf("Resynthesis%s\n", m.timeRes)
-	fmt.Printf("    BDD    %s\n", m.timeBdd)
-	fmt.Printf("    DSD    %s\n", m.timeDsd)
-	fmt.Printf("    Eval   %s\n", m.timeEval)
-	fmt.Printf("AIG update %s\n", m.timeNtk)
-	fmt.Printf("TOTAL      %s\n", m.timeTotal)
+	Abc_PrintTime(1, "Cuts       ", m.timeCut.Nanoseconds()) // ABC_PRT
+	Abc_PrintTime(1, "Resynthesis", m.timeRes.Nanoseconds())
+	Abc_PrintTime(1, "    BDD    ", m.timeBdd.Nanoseconds())
+	Abc_PrintTime(1, "    DSD    ", m.timeDsd.Nanoseconds())
+	Abc_PrintTime(1, "    Eval   ", m.timeEval.Nanoseconds())
+	Abc_PrintTime(1, "AIG update ", m.timeNtk.Nanoseconds())
+	Abc_PrintTime(1, "TOTAL      ", m.timeTotal.Nanoseconds())
 }
 
 // Abc_NtkRestructure performs one source-order pass over the AIG nodes and

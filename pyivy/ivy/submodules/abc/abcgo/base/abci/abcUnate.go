@@ -54,9 +54,9 @@ func Abc_NtkPrintUnateBdd(pNtk *Abc_Ntk_t, fUseNaive, fVerbose int32) {
 	}
 	clkUnate := time.Since(clk) - clkBdd
 	fmt.Printf("Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\n", abc.Abc_NtkCiNum(pNtk), abc.Abc_NtkCoNum(pNtk), totalSupps, totalUnate)
-	fmt.Printf("Glob BDDs = %9.2f sec\n", clkBdd.Seconds())
-	fmt.Printf("Unateness = %9.2f sec\n", clkUnate.Seconds())
-	fmt.Printf("Total     = %9.2f sec\n", time.Since(clk).Seconds())
+	Abc_PrintTime(1, "Glob BDDs", clkBdd.Nanoseconds()) // ABC_PRT
+	Abc_PrintTime(1, "Unateness", clkUnate.Nanoseconds())
+	Abc_PrintTime(1, "Total    ", time.Since(clk).Nanoseconds())
 	Abc_NtkFreeGlobalBdds(pNtk, 1)
 }
 

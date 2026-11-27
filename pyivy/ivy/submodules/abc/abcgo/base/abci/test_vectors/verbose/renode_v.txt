@@ -1,0 +1,10 @@
+K = 8. Memory (bytes): Truth =   32. Cut =   72. Obj =  152. Set =  424. CutMin = no
+Node =    2675.  Ch =     0.  Total mem =    0.51 MB. Peak cut mem =    0.05 MB.
+P:  Del =   39.00.  Ar =    3436.0.  Edge =     4770.  Cut =    40230.  T =      sec
+P:  Del =   39.00.  Ar =    3335.0.  Edge =     4323.  Cut =    36921.  T =      sec
+P:  Del =   39.00.  Ar =    2415.0.  Edge =     3344.  Cut =    40989.  T =      sec
+F:  Del =   39.00.  Ar =    2405.0.  Edge =     3327.  Cut =    41505.  T =      sec
+A:  Del =   39.00.  Ar =    2372.0.  Edge =     3979.  Cut =    43091.  T =      sec
+Total time =      sec
+Duplicated 11 gates to decouple the CO drivers.
+Unique truth tables = 18709   Memory = 0.47 MB   Time =      sec

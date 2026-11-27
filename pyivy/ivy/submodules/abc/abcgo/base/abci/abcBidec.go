@@ -110,6 +110,6 @@ func Abc_NtkBidecResyn(pNtk *Abc_Ntk_t, fVerbose int32) {
 	}
 	if fVerbose != 0 {
 		fmt.Printf("Total gain in AIG nodes = %d.  ", gain)
-		fmt.Printf("Total runtime = %9.2f sec\n", float64(util.Abc_Clock()-started)/1e9)
+		Abc_PrintTime(1, "Total runtime", util.Abc_Clock()-started) // ABC_PRT
 	}
 }

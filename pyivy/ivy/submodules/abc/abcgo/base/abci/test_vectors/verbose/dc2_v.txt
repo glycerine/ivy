@@ -1,0 +1,8 @@
+Starting:  ../../../i10    : pi =   257  po =   224  and =    2675  lev =  50
+Rewrite:   ../../../i10    : pi =   257  po =   224  and =    2123  lev =  48
+Refactor:  ../../../i10    : pi =   257  po =   224  and =    2068  lev =  49
+Balance:   ../../../i10    : pi =   257  po =   224  and =    2035  lev =  33
+Rewrite:   ../../../i10    : pi =   257  po =   224  and =    1943  lev =  35
+RewriteZ:  ../../../i10    : pi =   257  po =   224  and =    1890  lev =  34
+RefactorZ: ../../../i10    : pi =   257  po =   224  and =    1872  lev =  40
+RewriteZ:  ../../../i10    : pi =   257  po =   224  and =    1834  lev =  36

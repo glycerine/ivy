@@ -416,7 +416,7 @@ func Abc_NtkPartitionSmart(network *Abc_Ntk_t, sizeLimit, verbose int32) *Vec_Pt
 	started := time.Now()
 	supports := Abc_NtkComputeSupportsSmart(network)
 	if verbose != 0 {
-		fmt.Printf("Supps = %9.2f sec\n", time.Since(started).Seconds())
+		Abc_PrintTime(1, "Supps", time.Since(started).Nanoseconds()) // ABC_PRT
 	}
 	parts := vec.Vec_PtrAlloc(256)
 	partSupports := vec.Vec_PtrAlloc(256)
@@ -447,7 +447,7 @@ func Abc_NtkPartitionSmart(network *Abc_Ntk_t, sizeLimit, verbose int32) *Vec_Pt
 	extra.Extra_ProgressBarStop(progress)
 	vec.Vec_PtrFree(charSupports)
 	if verbose != 0 {
-		fmt.Printf("Parts = %9.2f sec\n", time.Since(started).Seconds())
+		Abc_PrintTime(1, "Parts", time.Since(started).Nanoseconds()) // ABC_PRT
 	}
 	// Attach each old index to its support. Sorting supports then sorts the
 	// corresponding output partitions without a second sort structure.
@@ -707,7 +707,7 @@ func Abc_NtkFraigPartitionedTime(network *Abc_Ntk_t, params any) {
 	}
 	vec.Vec_PtrFree(fraigs)
 	vec.Vec_PtrFree(roots)
-	fmt.Printf("Partitioned fraiging time = %9.2f sec\n", time.Since(started).Seconds())
+	Abc_PrintTime(1, "Partitioned fraiging time", time.Since(started).Nanoseconds()) // ABC_PRT
 }
 
 func objectSlice(objects *Vec_Ptr_t) []*Abc_Obj_t {

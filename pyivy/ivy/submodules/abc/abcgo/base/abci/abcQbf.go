@@ -132,7 +132,8 @@ func Abc_NtkQbf(pNtk *Abc_Ntk_t, nPars, nItersMax, fDumpCnf, fVerbose int32) {
 		if fVerbose != 0 {
 			fmt.Printf("Iter %2d : AIG = %6d  ", iteration+1, baseabc.Abc_NtkNodeNum(synthesis))
 			Abc_NtkVectorPrintVars(pNtk, piValues, nPars)
-			fmt.Printf("  Syn = %9.2f sec\n", synthesisTime.Seconds())
+			fmt.Printf("  ")
+			Abc_PrintTime(1, "Syn", synthesisTime.Nanoseconds()) // ABC_PRT
 		}
 	}
 	Abc_NtkDelete(synthesis)
@@ -147,7 +148,7 @@ func Abc_NtkQbf(pNtk *Abc_Ntk_t, nPars, nItersMax, fDumpCnf, fVerbose int32) {
 	} else {
 		fmt.Printf("Implementation does not exist.  ")
 	}
-	fmt.Printf("Total runtime = %9.2f sec\n", time.Since(start).Seconds())
+	Abc_PrintTime(1, "Total runtime", time.Since(start).Nanoseconds()) // ABC_PRT
 }
 
 func Abc_NtkModelToVector(pNtk *Abc_Ntk_t, vPiValues *Vec_Int_t) {

@@ -85,9 +85,7 @@ func Abc_ManResubStop(p *Abc_ManRes_t) {
 }
 func Abc_ManResubPrint(p *Abc_ManRes_t) {
 	total := p.nUsedNodeC + p.nUsedNode0 + p.nUsedNode1Or + p.nUsedNode1And + p.nUsedNode2Or + p.nUsedNode2And + p.nUsedNode2OrAnd + p.nUsedNode2AndOr + p.nUsedNode3OrAnd + p.nUsedNode3AndOr
-	print := func(name string, elapsed int64) {
-		fmt.Printf("%s = %9.2f sec\n", name, time.Duration(elapsed).Seconds())
-	}
+	print := func(name string, elapsed int64) { Abc_PrintTime(1, name, elapsed) } // ABC_PRT
 	fmt.Printf("Used constants    = %6d.             ", p.nUsedNodeC)
 	print("Cuts  ", p.timeCut)
 	fmt.Printf("Used replacements = %6d.             ", p.nUsedNode0)

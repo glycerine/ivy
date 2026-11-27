@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 	"slices"
-	"unsafe"
 )
 
 // Vec_Mem_t keeps fixed-sized word records in pages so record slices remain
@@ -14,13 +13,16 @@ type Vec_Mem_t struct {
 	nEntrySize, nEntries, LogPageSze int
 	ppPages                          [][]uint64
 	vTable, vNexts                   *Vec_Int_t
+	// iPage and nPageAlloc follow vecMem.h's page bookkeeping, which
+	// Vec_MemMemory reports (iPage starts at -1).
+	iPage, nPageAlloc int
 }
 
 func Vec_MemAlloc_(p *Vec_Mem_t, size, logPage int) {
 	if size <= 0 || logPage < 0 || logPage > 30 {
 		panic("invalid paged vector geometry")
 	}
-	*p = Vec_Mem_t{nEntrySize: size, LogPageSze: logPage}
+	*p = Vec_Mem_t{nEntrySize: size, LogPageSze: logPage, iPage: -1}
 }
 func Vec_MemAlloc(size, logPage int) *Vec_Mem_t {
 	p := new(Vec_Mem_t)
@@ -77,7 +79,8 @@ func Vec_MemMemory(p *Vec_Mem_t) float64 {
 	if p == nil {
 		return 0
 	}
-	return float64(8*p.nEntrySize*(1<<p.LogPageSze)*(len(p.ppPages)) + cap(p.ppPages)*int(unsafe.Sizeof(uintptr(0))) + int(unsafe.Sizeof(*p)))
+	// vecMem.h's formula, with x86-64 sizes (sizeof(Vec_Mem_t) = 48)
+	return 8*float64(p.nEntrySize)*float64(int(1)<<p.LogPageSze)*float64(p.iPage+1) + 8*float64(p.nPageAlloc) + 48
 }
 
 // Vec_MemReadEntry returns a borrowed record. If its words are edited directly
@@ -103,6 +106,16 @@ func Vec_MemGetEntry(p *Vec_Mem_t, i int) []uint64 {
 	}
 	if i >= p.nEntries {
 		page := i >> p.LogPageSze
+		if p.iPage < page {
+			if page >= p.nPageAlloc {
+				if p.nPageAlloc != 0 {
+					p.nPageAlloc *= 2
+				} else {
+					p.nPageAlloc = page + 32
+				}
+			}
+			p.iPage = page
+		}
 		for len(p.ppPages) <= page {
 			p.ppPages = append(p.ppPages, make([]uint64, p.nEntrySize*(1<<p.LogPageSze)))
 		}
@@ -123,6 +136,7 @@ func Vec_MemShrink(p *Vec_Mem_t, n int) {
 		panic("memory vector shrink")
 	}
 	pages := (n + (1 << p.LogPageSze) - 1) >> p.LogPageSze
+	p.iPage = min(p.iPage, n>>p.LogPageSze)
 	clear(p.ppPages[pages:])
 	p.ppPages = p.ppPages[:pages]
 	p.nEntries = n

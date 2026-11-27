@@ -2,6 +2,7 @@ package ssw
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"time"
 
 	"github.com/glycerine/abcgo/aig/aig"
@@ -65,7 +66,7 @@ func Ssw_SecWithSimilarityPairs(p0, p1 *aig.Graph, pairs *vec.Vec_Int_t, pars *S
 	default:
 		fmt.Printf("Verification UNDECIDED. The number of remaining regs = %d (total = %d).  ", aig.Aig_ManRegNum(result), aig.Aig_ManRegNum(p0)+aig.Aig_ManRegNum(p1))
 	}
-	fmt.Printf("Time = %9.2f sec\n", time.Since(start).Seconds())
+	util.Abc_PrintTime(1, "Time", time.Since(start).Nanoseconds()) // ABC_PRT
 	return status
 }
 

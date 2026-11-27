@@ -3,6 +3,7 @@ package rwr
 // Rewrite manager lifecycle and statistics from rwrMan.c.
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"os"
 	"sync"
 	"time"
@@ -64,8 +65,8 @@ func Rwr_ManPrintStats(p *Rwr_Man_t) {
 	for _, row := range []struct {
 		name  string
 		value int64
-	}{{"Start", p.timeStart}, {"Cuts", p.timeCut}, {"Resynthesis", p.timeRes}, {"    Mffc", p.timeMffc}, {"    Eval", p.timeEval}, {"Update", p.timeUpdate}, {"TOTAL", p.timeTotal}} {
-		fmt.Printf("%-12s: %v\n", row.name, time.Duration(row.value))
+	}{{"Start       ", p.timeStart}, {"Cuts        ", p.timeCut}, {"Resynthesis ", p.timeRes}, {"    Mffc    ", p.timeMffc}, {"    Eval    ", p.timeEval}, {"Update      ", p.timeUpdate}, {"TOTAL       ", p.timeTotal}} {
+		util.Abc_PrintTime(1, row.name, row.value) // ABC_PRT
 	}
 	fmt.Println()
 }

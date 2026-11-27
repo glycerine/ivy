@@ -181,6 +181,36 @@ func If_ManStop(p *If_Man_t) {
 	if p.pPars != nil && p.pPars.FVerbose != 0 && p.vCutData != nil {
 		If_ManCacheAnalize(p)
 	}
+	if p.pPars != nil && p.pPars.FVerbose != 0 && p.pPars.FTruth != 0 {
+		nUnique, nMemTotal := 0, 0
+		for i := 6; i <= int(Abc_MaxInt(6, p.pPars.NLutSize)); i++ {
+			nUnique += vec.Vec_MemEntryNum(p.vTtMem[i])
+		}
+		for i := 6; i <= int(Abc_MaxInt(6, p.pPars.NLutSize)); i++ {
+			nMemTotal += int(vec.Vec_MemMemory(p.vTtMem[i]))
+		}
+		fmt.Printf("Unique truth tables = %d   Memory = %.2f MB   ", nUnique, float64(nMemTotal)/(1<<20))
+		Abc_PrintTime(1, "Time", p.timeCache[4])
+		if p.nCacheMisses != 0 {
+			fmt.Printf("Cache hits = %d. Cache misses = %d  (%.2f %%)\n", p.nCacheHits, p.nCacheMisses, 100.0*float64(p.nCacheMisses)/float64(p.nCacheHits+p.nCacheMisses))
+			Abc_PrintTime(1, "Non-DSD   ", p.timeCache[0])
+			Abc_PrintTime(1, "DSD hits  ", p.timeCache[1])
+			Abc_PrintTime(1, "DSD misses", p.timeCache[2])
+			Abc_PrintTime(1, "TOTAL     ", p.timeCache[0]+p.timeCache[1]+p.timeCache[2])
+			Abc_PrintTime(1, "Canon     ", p.timeCache[3])
+		}
+	}
+	if p.pPars != nil && p.pPars.FVerbose != 0 && p.nCutsUselessAll != 0 {
+		for i := 0; i <= 16; i++ {
+			if p.nCutsUseless[i] != 0 {
+				Abc_Print(1, "Useless cuts %2d  = %9d  (out of %9d)  (%6.2f %%)\n", i, p.nCutsUseless[i], p.nCutsCount[i], 100.0*float64(p.nCutsUseless[i])/float64(Abc_MaxInt(p.nCutsCount[i], 1)))
+			}
+		}
+		Abc_Print(1, "Useless cuts all = %9d  (out of %9d)  (%6.2f %%)\n", p.nCutsUselessAll, p.nCutsCountAll, 100.0*float64(p.nCutsUselessAll)/float64(Abc_MaxInt(p.nCutsCountAll, 1)))
+	}
+	if p.pPars != nil && p.pPars.FUseDsd != 0 && (p.nCountNonDec[0] != 0 || p.nCountNonDec[1] != 0) {
+		fmt.Printf("NonDec0 = %d.  NonDec1 = %d.\n", p.nCountNonDec[0], p.nCountNonDec[1])
+	}
 	for v := 6; v <= int(Abc_MaxInt(6, p.pPars.NLutSize)); v++ {
 		vec.Vec_MemFree(p.vTtMem[v])
 		vec.Vec_WecFree(p.vTtIsops[v])

@@ -1,0 +1,2 @@
+Cubes =    2082  Lits  =    2350  Divs  =    2587  Divs+ =     157  Compl =      81  Extr  =      0  Time =      sec
+Cubes =    2142  Lits  =    2412  Divs  =    2862  Divs+ =     420  Compl =      98  Extr  =     90  Time =      sec

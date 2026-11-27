@@ -2,6 +2,7 @@ package rwt
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"os"
 	"time"
 
@@ -113,8 +114,8 @@ func Rwt_ManPrintStats(p *Rwt_Man_t) {
 	for _, row := range []struct {
 		name string
 		d    time.Duration
-	}{{"Start", p.timeStart}, {"Cuts", p.timeCut}, {"Truth", p.timeTruth}, {"Resynthesis", p.timeRes}, {"    Mffc", p.timeMffc}, {"    Eval", p.timeEval}, {"Update", p.timeUpdate}, {"TOTAL", p.timeTotal}} {
-		fmt.Printf("%-12s = %9.2f sec\n", row.name, row.d.Seconds())
+	}{{"Start       ", p.timeStart}, {"Cuts        ", p.timeCut}, {"Truth       ", p.timeTruth}, {"Resynthesis ", p.timeRes}, {"    Mffc    ", p.timeMffc}, {"    Eval    ", p.timeEval}, {"Update      ", p.timeUpdate}, {"TOTAL       ", p.timeTotal}} {
+		util.Abc_PrintTime(1, row.name, row.d.Nanoseconds()) // ABC_PRT
 	}
 }
 

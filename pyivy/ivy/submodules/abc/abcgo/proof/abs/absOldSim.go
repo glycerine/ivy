@@ -259,7 +259,8 @@ func Saig_ManExtendCounterExampleTest2(graph *aig.Graph, firstFlopPI int32, cex 
 	started := time.Now()
 	result := Saig_ManProcessCex(graph, firstFlopPI, cex, info, verbose)
 	if verbose != 0 {
-		fmt.Printf("Total new PIs = %3d. Non-removable PIs = %3d. Time = %9.2f sec\n", saig.Saig_ManPiNum(graph)-firstFlopPI, vec.Vec_IntSize(result), time.Since(started).Seconds())
+		fmt.Printf("Total new PIs = %3d. Non-removable PIs = %3d.  ", saig.Saig_ManPiNum(graph)-firstFlopPI, vec.Vec_IntSize(result))
+		util.Abc_PrintTime(1, "Time", time.Since(started).Nanoseconds()) // ABC_PRT
 	}
 	return result
 }

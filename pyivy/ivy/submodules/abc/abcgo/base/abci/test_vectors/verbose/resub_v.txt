@@ -1,0 +1,14 @@
+Used constants    =      8.             Cuts   =      sec
+Used replacements =     44.             Resub  =      sec
+Used single ORs   =     28.              Div   =      sec
+Used single ANDs  =    221.              Mffc  =      sec
+Used double ORs   =      0.              Sim   =      sec
+Used double ANDs  =      0.              1     =      sec
+Used OR-AND       =      0.              D     =      sec
+Used AND-OR       =      0.              2     =      sec
+Used OR-2ANDs     =      0.             Truth  =      sec
+Used AND-2ORs     =      0.             AIG    =      sec
+TOTAL             =    301.             TOTAL  =      sec
+Total leaves   =    18647.
+Total divisors =    68822.
+Gain           =      390. ( 14.58 %).

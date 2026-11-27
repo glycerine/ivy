@@ -230,7 +230,8 @@ func Saig_ManInduction(p *Aig_Man_t, timeout, framesMax, conflictsMax, unique, u
 			sat.SetLimits(int64(conflictsMax), 0)
 			status = sat.Solve()
 			if verbose != 0 {
-				fmt.Printf("Frame %4d : PI =%5d. PO =%5d. AIG =%5d. Var =%7d. Clau =%7d. Conf =%7d. Time = %9.2f sec\n", frame, part.InputCount(), part.OutputCount(), aig.Aig_ManNodeNum(part), nSatVarNum, nClauses, sat.Statistics().Conflicts-nConflictsBefore, time.Since(frameStart).Seconds())
+				fmt.Printf("Frame %4d : PI =%5d. PO =%5d. AIG =%5d. Var =%7d. Clau =%7d. Conf =%7d. ", frame, part.InputCount(), part.OutputCount(), aig.Aig_ManNodeNum(part), nSatVarNum, nClauses, sat.Statistics().Conflicts-nConflictsBefore)
+				util.Abc_PrintTime(1, "Time", time.Since(frameStart).Nanoseconds()) // ABC_PRT
 			}
 			if status == bsat.Unknown {
 				break

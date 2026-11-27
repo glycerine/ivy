@@ -2,6 +2,7 @@ package ivy
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"time"
 )
 
@@ -10,7 +11,7 @@ func ivyResynReport(p *Ivy_Man_t, verbose int32, name string, start time.Time) {
 		return
 	}
 	fmt.Println()
-	fmt.Printf("%s = %9.2f sec\n", name, time.Since(start).Seconds())
+	util.Abc_PrintTime(1, name, time.Since(start).Nanoseconds()) // ABC_PRT
 	Ivy_ManPrintStats(p)
 }
 

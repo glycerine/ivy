@@ -234,8 +234,8 @@ func Abc_NtkManRefPrintStats(p *Abc_ManRef_t) {
 	for _, stat := range []struct {
 		name    string
 		elapsed int64
-	}{{"Cuts", p.timeCut}, {"Resynthesis", p.timeRes}, {"BDD", p.timeTru}, {"DCs", p.timeDcs}, {"SOP", p.timeSop}, {"FF", p.timeFact}, {"Eval", p.timeEval}, {"AIG update", p.timeNtk}, {"TOTAL", p.timeTotal}} {
-		fmt.Printf("%-12s %9.2f sec\n", stat.name, time.Duration(stat.elapsed).Seconds())
+	}{{"Cuts       ", p.timeCut}, {"Resynthesis", p.timeRes}, {"    BDD    ", p.timeTru}, {"    DCs    ", p.timeDcs}, {"    SOP    ", p.timeSop}, {"    FF     ", p.timeFact}, {"    Eval   ", p.timeEval}, {"AIG update ", p.timeNtk}, {"TOTAL      ", p.timeTotal}} {
+		Abc_PrintTime(1, stat.name, stat.elapsed) // ABC_PRT
 	}
 }
 
