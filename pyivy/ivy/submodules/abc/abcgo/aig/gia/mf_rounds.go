@@ -49,7 +49,7 @@ func Mf_ManPrintQuit(p *Mf_Man_t, result *Gia_Man_t) {
 		fmt.Printf("%d = %d  ", i, p.nCutCounts[i])
 	}
 	if p.vTtMem != nil {
-		fmt.Printf("TT = %d (%.2f %%)  ", vec.Vec_MemEntryNum(p.vTtMem), 100*float64(vec.Vec_MemEntryNum(p.vTtMem))/p.CutCount[2])
+		fmt.Printf("TT = %d (%s %%)  ", vec.Vec_MemEntryNum(p.vTtMem), util.CFloat(100*float64(vec.Vec_MemEntryNum(p.vTtMem))/p.CutCount[2], 2))
 	}
 	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-p.clkStart)
 }

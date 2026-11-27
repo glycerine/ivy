@@ -1,0 +1,10 @@
+# o = a & !r, r = 0 in frame 0 and 1 afterwards: o fails only in frame 0
+.model bmc_and_early
+.inputs a
+.outputs o
+.latch one r 0
+.names one
+1
+.names a r o
+10 1
+.end

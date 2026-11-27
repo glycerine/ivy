@@ -1,0 +1,9 @@
+# r stays 0, so o = a & r is 0 in every frame: no output is ever x-valued
+.model bmc_and_zero
+.inputs a
+.outputs o
+.latch z r 0
+.names z
+.names a r o
+11 1
+.end

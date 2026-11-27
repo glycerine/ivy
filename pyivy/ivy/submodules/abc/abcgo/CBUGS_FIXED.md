@@ -848,3 +848,60 @@ and states how the Go port was verified.
 - **Test:** `abcgo/base/abci/bmc3_native_test.go`
   (`TestBmc3LogFileLikeNative`); red before: native segfault.
 - **Go port:** same guard.
+
+## 39. `&bmc` drops every frame before the last one that needs no earlier state
+
+- **File:** `src/sat/bmc/bmcBmcAnd.c` (`Gia_ManBmcUnroll`).
+- **Found:** 2026-11-27, porting `&bmc`: on s713, `&bmc` reported output 8
+  failing in frame 1, `&bmc -F 1` in frame 0.
+- **Bug:** the backward pass over the ternary-simulated frames collects each
+  frame's x-valued outputs plus the register leaves wanted by the later
+  frames, and stopped (`break`) at the first frame whose cones need no
+  register values from the frame before. The forward pass then turned every
+  output of all earlier frames into constant 0, though those frames have
+  x-valued outputs of their own. Failures in those frames were never
+  checked, while `pPars->iFrame` (print_status "Frames") counted them as
+  explored: `bmc_and_early.blif` (fails only in frame 0) gave
+  `Status = -1  Frames = 49`; bmc3 and `&bmc -F 1` find the frame-0 CEX.
+- **Fix:** do not stop the backward pass when the leaves run out (and drop
+  the `assert( f >= 0 )` that depended on it).
+- **Test:** `abcgo/base/abci/gia_bmc_native_test.go`
+  (`TestNativeAbc9BmcFindsEveryFailure`, `TestAbc9BmcBugCasesLikeNative`;
+  test vector `base/abci/test_vectors/seq/bmc_and_early.blif`); red before.
+  Every CEX checked with `testcex` ("The cex is correct").
+- **Go port:** `sat/bmc/bmcBmcAnd.go` (`Gia_ManBmcUnroll`), the same change.
+
+## 40. `&bmc` never reports an output that ternary simulation proves 1
+
+- **File:** `src/sat/bmc/bmcBmcAnd.c` (`Gia_ManBmcUnroll`,
+  `Gia_ManBmcPerformInt`).
+- **Found:** 2026-11-27, with #39: bmc3 reports s713 output 0 failing in
+  frame 0 (for any inputs), `&bmc` never did.
+- **Bug:** the unrolling keeps only x-valued outputs and sets the others to
+  constant 0, including outputs whose ternary value is 1. The engine's own
+  handling of a constant-1 output was to print "Output %d is trivially SAT."
+  and go on, without a CEX or a SAT status. `bmc_and_const1.blif` (output 0
+  is 1 in frame 0) gave `Status = -1` with `&bmc -F 1`.
+- **Fix:** an output with ternary value 1 is unrolled as constant 1; a
+  constant-1 output is SAT (`RetValue = 0`) and, as there is no SAT call
+  and no model, gets the all-zero-input CEX (as bmc3 does, #37).
+- **Test:** as for #39 (`bmc_and_const1.blif`, s713); red before.
+- **Go port:** same change.
+
+## 41. `&bmc` loops forever when no output is x-valued, or with `-A 0`
+
+- **File:** `src/sat/bmc/bmcBmcAnd.c` (`Bmc_MnaTernary`).
+- **Found:** 2026-11-27, `&bmc -A 0` on s27: native ran out of memory.
+- **Bug:** without `-F`, ternary simulation stops `nFramesAdd` frames after
+  the first frame with an x-valued output, testing `f == iFirst +
+  nFramesAdd` at the start of frame `f > iFirst`: never true for
+  `-A 0`. When no output ever becomes x-valued (`bmc_and_zero.blif`: an
+  output that is 0 in every frame) there is no stop at all. Each frame
+  allocates a state, so abc runs until it is killed or out of memory.
+- **Fix:** test `f >= iFirst + nFramesAdd`; while no output is x-valued,
+  stop when the new ternary state repeats an earlier one (then no output
+  ever will be), for which the states are now zero-allocated (`ABC_CALLOC`:
+  `memcmp` reads the unused bits of the last word).
+- **Test:** as for #39 (`bmc_and_zero.blif`, `s27.blif` with `-A 0`); red
+  before: native killed after the test's 10-second limit.
+- **Go port:** same change (`bmcMnaStateSeen`).

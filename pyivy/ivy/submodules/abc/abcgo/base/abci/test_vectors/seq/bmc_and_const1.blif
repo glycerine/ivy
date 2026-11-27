@@ -1,0 +1,12 @@
+# o = !r is 1 in frame 0 whatever the inputs; p = a & r can fail from frame 1
+.model bmc_and_const1
+.inputs a
+.outputs o p
+.latch one r 0
+.names one
+1
+.names r o
+0 1
+.names a r p
+11 1
+.end

@@ -92,7 +92,8 @@ Vec_Ptr_t * Bmc_MnaTernary( Gia_Man_t * p, int nFrames, int nFramesAdd, int fVer
         if ( nFrames && f == nFrames )
             break;
         // if frames are not given, break after nFramesAdd from the first x-valued
-        if ( !nFrames && *iFirst >= 0 && f == *iFirst + nFramesAdd )
+        // (">=": with nFramesAdd == 0, f is already past *iFirst)
+        if ( !nFrames && *iFirst >= 0 && f >= *iFirst + nFramesAdd )
             break;
         // aassign CI values
         Gia_ManForEachRiRo( p, pObj, pObjRo, i )
@@ -100,13 +101,27 @@ Vec_Ptr_t * Bmc_MnaTernary( Gia_Man_t * p, int nFrames, int nFramesAdd, int fVer
         Gia_ManForEachAnd( p, pObj, i )
             pObj->Value = Gia_XsimAndCond( Gia_ObjFanin0(pObj)->Value, Gia_ObjFaninC0(pObj), Gia_ObjFanin1(pObj)->Value, Gia_ObjFaninC1(pObj) );
         // compute and save CO values
-        pState = ABC_ALLOC( unsigned, nStateWords );
+        pState = ABC_CALLOC( unsigned, nStateWords ); // zeroed unused bits for memcmp
         Gia_ManForEachCo( p, pObj, i )
         {
             pObj->Value = Gia_XsimNotCond( Gia_ObjFanin0(pObj)->Value, Gia_ObjFaninC0(pObj) );
             Gia_ManTerSimInfoSet( pState, i, pObj->Value );
             if ( *iFirst == -1 && i < Gia_ManPoNum(p) && pObj->Value == GIA_UND )
                 *iFirst = f;
+        }
+        // if frames are not given and no PO is x-valued yet, a repeated state
+        // means that no PO ever will be: stop (the frames seen cover all states)
+        if ( !nFrames && *iFirst == -1 )
+        {
+            unsigned * pPrev; int k;
+            Vec_PtrForEachEntry( unsigned *, vStates, pPrev, k )
+                if ( !memcmp( pPrev, pState, sizeof(unsigned) * nStateWords ) )
+                    break;
+            if ( k < Vec_PtrSize(vStates) )
+            {
+                ABC_FREE( pState );
+                break;
+            }
         }
         Vec_PtrPush( vStates, pState );
         // print statistics
@@ -316,11 +331,9 @@ Gia_Man_t * Gia_ManBmcUnroll( Gia_Man_t * pGia, int nFramesMax, int nFramesAdd, 
         if ( fVerbose )
         printf( "Frame %4d :  Roots = %6d  Leaves = %6d  Cone = %6d\n", 
             f, Vec_IntSize(vRoots), Vec_IntSize(vLeaves), Vec_IntSize(vCone) );
-        if ( Vec_IntSize(vLeaves) == 0 )
-            break;
-        // it is possible that some of the POs are still ternary... 
+        // earlier frames may still have x-valued POs: do not stop when
+        // vLeaves is empty
     }
-    assert( f >= 0 );
     // go forward
     vMap = Vec_IntStartFull( Gia_ManObjNum(pGia) );
     pNew = Gia_ManStart( 10000 );
@@ -338,9 +351,9 @@ Gia_Man_t * Gia_ManBmcUnroll( Gia_Man_t * pGia, int nFramesMax, int nFramesAdd, 
         // get ternary states
         pStateF = (unsigned *)Vec_PtrEntry(vStates, f);
         pStateP = f ? (unsigned *)Vec_PtrEntry(vStates, f-1) : 0;
-        // clean POs
+        // clean POs (a PO that ternary simulation proves 1 is constant 1)
         Gia_ManForEachPo( pGia, pObj, i )
-            Vec_IntWriteEntry( vMap, Gia_ObjId(pGia, pObj), 0 );
+            Vec_IntWriteEntry( vMap, Gia_ObjId(pGia, pObj), Gia_ManTerSimInfoGet(pStateF, Gia_ObjCioId(pObj)) == GIA_ONE );
         // find the cone
         Vec_IntPush( *pvPiMap, -f-1 );
         Bmc_MnaCollect( pGia, vRoots, vCone, pStateP );   // computes vCone
@@ -1005,8 +1018,8 @@ int Gia_ManBmcPerformInt( Gia_Man_t * pGia, Bmc_AndPar_t * pPars )
                     continue;
                 if ( Gia_ObjChild0(pObj) == Gia_ManConst1(p->pFrames) )
                 {
-                    printf( "Output %d is trivially SAT.\n", i );
-                    continue;
+                    RetValue = 0; // trivially SAT: asserted for any inputs
+                    break;
                 }
                 Lit = Abc_Var2Lit( Vec_IntEntry(p->vId2Var, Gia_ObjId(p->pFrames, pObj)), 0 );
                 status = sat_solver_solve( p->pSat, &Lit, &Lit + 1, (ABC_INT64_T)pPars->nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
@@ -1035,7 +1048,14 @@ int Gia_ManBmcPerformInt( Gia_Man_t * pGia, Bmc_AndPar_t * pPars )
             else
             {
                 ABC_FREE( pGia->pCexSeq );
-                pGia->pCexSeq = Gia_ManBmcCexGen( p, pGia, i );
+                if ( Gia_ObjChild0(Gia_ManPo(p->pFrames, i)) == Gia_ManConst1(p->pFrames) )
+                { // no SAT call: the all-zero input sequence is a CEX
+                    pGia->pCexSeq = Abc_CexAlloc( Gia_ManRegNum(pGia), Gia_ManPiNum(pGia), f + 1 );
+                    pGia->pCexSeq->iFrame = f;
+                    pGia->pCexSeq->iPo    = i - f * Gia_ManPoNum(pGia);
+                }
+                else
+                    pGia->pCexSeq = Gia_ManBmcCexGen( p, pGia, i );
                 printf( "Output %d of miter \"%s\" was asserted in frame %d.  ", 
                     i - f * Gia_ManPoNum(pGia), Gia_ManName(pGia), f );
                 Abc_PrintTime( 1, "Time", Abc_Clock() - p->clkStart );
