@@ -253,7 +253,13 @@ func Abc_NtkPrintStats(pNtk *Abc_Ntk_t, fFactored, fSaveBest, fDumpResult, fUseL
 	if fSaveBest != 0 {
 		Abc_NtkCompareAndSaveBest(pNtk)
 	}
-	util.Abc_Print(1, "\033[1;37m%-30s:\033[0m", pNtk.Name)
+	// a network without a name (pName == NULL, e.g. from Abc_NtkFromAigPhase)
+	// prints as glibc prints a NULL %s
+	name := pNtk.Name
+	if name == "" {
+		name = "(null)"
+	}
+	util.Abc_Print(1, "\033[1;37m%-30s:\033[0m", name)
 	util.Abc_Print(1, " i/o =%5d/%5d", baseabc.Abc_NtkPiNum(pNtk), baseabc.Abc_NtkPoNum(pNtk))
 	if pNtk.Constraints != 0 {
 		util.Abc_Print(1, "(c=%d)", pNtk.Constraints)

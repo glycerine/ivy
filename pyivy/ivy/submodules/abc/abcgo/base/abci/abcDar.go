@@ -2773,6 +2773,13 @@ func Abc_NtkDarMatch(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, nDist int32, fVerbose i
 
 	// perform verification
 	vPairs = aig_saig.Saig_StrSimPerformMatching(pMan1, pMan2, nDist, 1, &pManRes)
+	if pManRes == nil { // demitering has failed (ABC crashed here, CBUGS_FIXED.md #44)
+		Aig_ManStop(pMan1)
+		if pMan2 != nil {
+			Aig_ManStop(pMan2)
+		}
+		return nil
+	}
 	pNtkAig = Abc_NtkFromAigPhase(pManRes)
 	if vPairs != nil {
 		Vec_IntFree(vPairs)

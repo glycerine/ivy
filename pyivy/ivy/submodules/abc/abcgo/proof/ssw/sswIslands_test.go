@@ -28,7 +28,10 @@ func TestIslandMatchingExtendAndComplete(t *testing.T) {
 		t.Fatal("incorrect unmatched count")
 	}
 	var frontier vec.Vec_Ptr_t
+	// Aig_ObjForEachFanout asserts p->pFanData: Ssw_MatchingExtend starts them
+	aig.Aig_ManFanoutStart(a)
 	Ssw_MatchingExtendOne(a, &frontier)
+	aig.Aig_ManFanoutStop(a)
 	if vec.Vec_PtrSize(&frontier) != 2 {
 		t.Fatalf("frontier %v", vec.Vec_PtrArray(&frontier))
 	}
@@ -79,7 +82,7 @@ func TestIslandMiterRetainsMatchingAndBehavior(t *testing.T) {
 	pairs := Saig_StrSimPerformMatching_hack(a, b)
 	Ssw_MatchingStart(a, b, pairs)
 	all := Ssw_MatchingPairs(a, b)
-	miter := sswIslandMiter(a, b)
+	miter := sswIslandCreateMiter(a, b)
 	mapped := Ssw_MatchingMiter(miter, a, b, all)
 	if vec.Vec_IntSize(mapped) != 4 {
 		t.Fatalf("miter pair IDs: %v", vec.Vec_IntArray(mapped))

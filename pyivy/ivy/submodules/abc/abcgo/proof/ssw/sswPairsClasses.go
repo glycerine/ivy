@@ -28,7 +28,11 @@ func Ssw_MiterStatus(g *aig.Graph, verbose int32) int32 {
 		}
 	}
 	if verbose != 0 {
-		fmt.Printf("Miter has %d outputs. Const0 = %d. NonConst0 = %d. Undecided = %d.\n", saig.Saig_ManPoNum(g), zero, nonzero, unknown)
+		fmt.Printf("Miter has %d outputs. ", saig.Saig_ManPoNum(g))
+		fmt.Printf("Const0 = %d.  ", zero)
+		fmt.Printf("NonConst0 = %d.  ", nonzero)
+		fmt.Printf("Undecided = %d.  ", unknown)
+		fmt.Printf("\n")
 	}
 	if nonzero != 0 {
 		return 0

@@ -3221,7 +3221,7 @@ Abc_Ntk_t * Abc_NtkDarMatch( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nDist, in
 {
     extern Vec_Int_t * Saig_StrSimPerformMatching( Aig_Man_t * p0, Aig_Man_t * p1, int nDist, int fVerbose, Aig_Man_t ** ppMiter );
     Abc_Ntk_t * pNtkAig;
-    Aig_Man_t * pMan1, * pMan2 = NULL, * pManRes;
+    Aig_Man_t * pMan1, * pMan2 = NULL, * pManRes = NULL;
     Vec_Int_t * vPairs;
     assert( Abc_NtkIsStrash(pNtk1) );
     // derive AIG manager
@@ -3246,6 +3246,13 @@ Abc_Ntk_t * Abc_NtkDarMatch( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nDist, in
 
     // perform verification
     vPairs = Saig_StrSimPerformMatching( pMan1, pMan2, nDist, 1, &pManRes );
+    if ( pManRes == NULL ) // demitering has failed
+    {
+        Aig_ManStop( pMan1 );
+        if ( pMan2 )
+            Aig_ManStop( pMan2 );
+        return NULL;
+    }
     pNtkAig = Abc_NtkFromAigPhase( pManRes );
     if ( vPairs )
         Vec_IntFree( vPairs );

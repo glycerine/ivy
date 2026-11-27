@@ -200,6 +200,13 @@ func Aig_ManDupSimpleDfs_rec(dst, src *Graph, e Edge) Edge { return dupEdge(dst,
 func Aig_ManDupSimpleDfs(src *Graph) *Graph {
 	dst := dupStart(src)
 	defer dst.updateTrueTerminalCounts()
+	// as aigDup.c: every non-CO object in ID order (dangling ones too),
+	// then the COs, so the COs follow all the nodes
+	for id, n := range src.nodes {
+		if !src.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr || n.Kind == Buffer) {
+			dupEdge(dst, src, Edge(id)<<1)
+		}
+	}
 	dupOutputs(dst, src, src.outputs, false, false)
 	return dst
 }
