@@ -250,20 +250,7 @@ invariant [colors_differ] red ~= green
 			var path, property string
 			switch engine {
 			case "GoIvy":
-				mod := New()
-				if err := SourceString("color.ivy", source, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
-					t.Fatal(err)
-				}
-				if err := CreateIsolate("this", mod); err != nil {
-					t.Fatal(err)
-				}
-				endTheory := mod.TheoryContext()
-				defer endTheory()
-				mod.Name = filepath.Join(t.TempDir(), "color")
-				if err := VMTCheckIsolate("vmt", mod); err != nil {
-					t.Fatal(err)
-				}
-				path, property = mod.Name+".vmt", "$property.0"
+				path, property = exportGoIvyVMT(t, source), "$property.0"
 			case "PyIvy":
 				path, property = exportPyIvyVMT(t, source), "property_0"
 			}
@@ -283,6 +270,78 @@ if solver.check() != z3.unsat:
 			}
 		})
 	}
+}
+
+func TestVMTExportHonorsWireAxiomInPreState(t *testing.T) {
+	const source = `#lang ivy1.8
+wire p : bool
+axiom [valid_state] p
+export action step = { }
+invariant [safe] p
+`
+	path := exportGoIvyVMT(t, source)
+	validate := pythonIvyCommandForTest(t, "-O", "-c", `
+from pathlib import Path
+import sys
+from ivy import z3
+
+model = Path(sys.argv[1]).read_text()
+conditions = [
+    ('$init', z3.sat),
+    ('(and $init (not p))', z3.unsat),
+    ('(and $trans p new_p)', z3.sat),
+    ('(and $trans (not p) new_p)', z3.unsat),
+]
+for condition, expected in conditions:
+    solver = z3.Solver()
+    solver.add(z3.parse_smt2_string(model + "\n(assert " + condition + ")"))
+    actual = solver.check()
+    if actual != expected:
+        raise AssertionError((condition, actual, expected, model))
+`, path)
+	if out, err := validate.CombinedOutput(); err != nil {
+		t.Fatalf("check VMT state axioms: %v\n%s", err, out)
+	}
+}
+
+func TestPyIvyVMTExportDeclaresSortUsedOnlyByQuantifier(t *testing.T) {
+	const source = `#lang ivy1.8
+type token
+invariant [reflexive] forall V:token. V = V
+`
+	path := exportPyIvyVMT(t, source)
+	validate := pythonIvyCommandForTest(t, "-O", "-c", `
+from pathlib import Path
+import sys
+from ivy import z3
+
+model = Path(sys.argv[1]).read_text()
+solver = z3.Solver()
+solver.add(z3.parse_smt2_string(model + "\n(assert (not property_0))"))
+if solver.check() != z3.unsat:
+    raise AssertionError("expected quantified reflexivity to hold:\n" + model)
+`, path)
+	if out, err := validate.CombinedOutput(); err != nil {
+		t.Fatalf("check VMT quantifier sort: %v\n%s", err, out)
+	}
+}
+
+func exportGoIvyVMT(t *testing.T, source string) string {
+	t.Helper()
+	mod := New()
+	if err := SourceString("model.ivy", source, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		t.Fatal(err)
+	}
+	if err := CreateIsolate("this", mod); err != nil {
+		t.Fatal(err)
+	}
+	endTheory := mod.TheoryContext()
+	defer endTheory()
+	mod.Name = filepath.Join(t.TempDir(), "model")
+	if err := VMTCheckIsolate("vmt", mod); err != nil {
+		t.Fatal(err)
+	}
+	return mod.Name + ".vmt"
 }
 
 func exportPyIvyVMT(t *testing.T, source string) string {

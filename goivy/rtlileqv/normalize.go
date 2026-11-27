@@ -3,12 +3,14 @@ package rtlileqv
 import (
 	"bufio"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 )
 
@@ -55,6 +57,9 @@ func Check(ctx context.Context, configPath string) (Result, error) {
 		if err != nil {
 			return Result{}, err
 		}
+	}
+	if gold, gate := circuits[0].clockEdge, circuits[1].clockEdge; gold != "" && gate != "" && gold != gate {
+		return Result{}, fmt.Errorf("designs use different clock edges: [gold] %s, [gate] %s", gold, gate)
 	}
 	return compare(circuits[0], circuits[1], configs[0], configs[1])
 }
@@ -127,7 +132,10 @@ proc
 flatten
 memory_map
 async2sync
-dfflegalize -cell $_DFF_P_ x
+dfflegalize -cell $_DFF_P_ 01 -cell $_DFF_N_ 01
+simplemap
+write_json clock_check.json
+dfflegalize -cell $_DFF_P_ 01
 simplemap
 setundef -zero
 aigmap
@@ -162,6 +170,10 @@ func normalize(ctx context.Context, yosys, work string, cfg designConfig) (*aige
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return nil, fmt.Errorf("Yosys failed on [%s] %q: %w\n%s", cfg.section, cfg.file, err, out)
 	}
+	edge, err := checkClock(filepath.Join(dir, "clock_check.json"), cfg)
+	if err != nil {
+		return nil, fmt.Errorf("[%s] %w", cfg.section, err)
+	}
 	graph, err := os.Open(filepath.Join(dir, "design.aag"))
 	if err != nil {
 		return nil, err
@@ -176,7 +188,58 @@ func normalize(ctx context.Context, yosys, work string, cfg designConfig) (*aige
 	if err != nil {
 		return nil, fmt.Errorf("[%s] parse Yosys output: %w", cfg.section, err)
 	}
+	result.clockEdge = edge
 	return result, nil
+}
+
+// AIGER latches have no clock, so check the legalized flip-flops before
+// converting either edge to the positive-edge form required by Yosys.
+func checkClock(path string, cfg designConfig) (string, error) {
+	var design struct {
+		Modules map[string]struct {
+			Ports map[string]struct {
+				Direction string
+				Bits      []any
+			}
+			Cells map[string]struct {
+				Type        string
+				Connections map[string][]any
+			}
+		}
+	}
+	f, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+	if err := json.NewDecoder(f).Decode(&design); err != nil {
+		return "", fmt.Errorf("read Yosys clock connections: %w", err)
+	}
+	top, ok := design.Modules[cfg.top]
+	if !ok {
+		return "", fmt.Errorf("Yosys output is missing top module %q", cfg.top)
+	}
+	clk := top.Ports[strings.TrimPrefix(cfg.clock, `\`)]
+	var edge string
+	for _, cell := range top.Cells {
+		var use string
+		switch cell.Type {
+		case "$_DFF_P_":
+			use = "rising"
+		case "$_DFF_N_":
+			use = "falling"
+		default:
+			continue
+		}
+		if clk.Direction != "input" || len(clk.Bits) != 1 || !slices.Equal(clk.Bits, cell.Connections["C"]) {
+			return "", fmt.Errorf("flip-flop is outside clock %q", cfg.clock)
+		}
+		if edge != "" && edge != use {
+			return "", fmt.Errorf("flip-flops use both edges of clock %q", cfg.clock)
+		}
+		edge = use
+	}
+	return edge, nil
 }
 
 func copyDesign(input, output string) error {

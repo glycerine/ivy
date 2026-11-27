@@ -22,6 +22,7 @@
 #   3. abc proves the miter UNSAT (equivalent) or returns a counterexample,
 #      which we simulate to report the offending cone(s) and input values.
 
+import json
 import sys
 import os
 import subprocess
@@ -126,7 +127,10 @@ proc
 flatten
 memory_map
 async2sync
-dfflegalize -cell $_DFF_P_ x
+dfflegalize -cell $_DFF_P_ 01 -cell $_DFF_N_ 01
+simplemap
+write_json {clockf}
+dfflegalize -cell $_DFF_P_ 01
 simplemap
 setundef -zero
 aigmap
@@ -143,12 +147,14 @@ endmodule
 def run_yosys(yosys, cfg, workdir):
     aigf = os.path.join(workdir, cfg.section + ".aig")
     mapf = os.path.join(workdir, cfg.section + ".map")
+    clockf = os.path.join(workdir, cfg.section + ".json")
     logf = os.path.join(workdir, cfg.section + ".yslog")
     buffers = os.path.join(workdir, 'output_buffers.v')
     with open(buffers, 'w') as f:
         f.write(OUTPUT_BUFFERS)
     script = YOSYS_SCRIPT.format(il=cfg.file, top=cfg.top,
-                                 mapf=mapf, aigf=aigf, buffers=buffers)
+                                 mapf=mapf, aigf=aigf, buffers=buffers,
+                                 clockf=clockf)
     scriptf = os.path.join(workdir, cfg.section + ".ys")
     with open(scriptf, 'w') as f:
         f.write(script)
@@ -160,7 +166,35 @@ def run_yosys(yosys, cfg, workdir):
             tail = log.read()
         sys.exit("error: yosys failed on [%s] design '%s':\n%s"
                  % (cfg.section, cfg.file, tail))
-    return aigf, mapf
+    return aigf, mapf, check_clock(clockf, cfg)
+
+
+def check_clock(path, cfg):
+    # AIGER latches have no clock. Read the flip-flops before conversion.
+    with open(path) as f:
+        top = json.load(f)['modules'][_strip_name(cfg.top)]
+    clk = top['ports'].get(_strip_name(cfg.clk), {})
+    clock_bits = clk.get('bits', [])
+    edge = None
+    for cell in top['cells'].values():
+        use = {'$_DFF_P_': 'rising', '$_DFF_N_': 'falling'}.get(cell['type'])
+        if use is None:
+            continue
+        if (clk.get('direction') != 'input' or len(clock_bits) != 1
+                or cell['connections']['C'] != clock_bits):
+            sys.exit('error: [%s] flip-flop is outside clock "%s"'
+                     % (cfg.section, cfg.clk))
+        if edge is not None and edge != use:
+            sys.exit('error: [%s] flip-flops use both edges of clock "%s"'
+                     % (cfg.section, cfg.clk))
+        edge = use
+    return edge
+
+
+def check_clock_edges(gold, gate):
+    if gold is not None and gate is not None and gold != gate:
+        sys.exit("error: designs use different clock edges: [gold] %s, [gate] %s"
+                 % (gold, gate))
 
 
 # --------------------------------------------------------------------------
@@ -659,8 +693,9 @@ def main():
     workdir = tempfile.mkdtemp(prefix="rtlil_eqv_")
     keep = os.environ.get('IVY_RTLIL_EQV_KEEP')
     try:
-        g_aig, g_map = run_yosys(yosys, gold_cfg, workdir)
-        t_aig, t_map = run_yosys(yosys, gate_cfg, workdir)
+        g_aig, g_map, g_edge = run_yosys(yosys, gold_cfg, workdir)
+        t_aig, t_map, t_edge = run_yosys(yosys, gate_cfg, workdir)
+        check_clock_edges(g_edge, t_edge)
         gold = parse_design(gold_cfg, g_aig, g_map, aigtoaig)
         gate = parse_design(gate_cfg, t_aig, t_map, aigtoaig)
 

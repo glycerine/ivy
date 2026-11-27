@@ -48,7 +48,6 @@ def check_isolate(method="duoai",tagged_dfns=[],use_array_encoding=True):
             laxs.append(ivy_ast.LabeledFormula(ivy_ast.Atom('ax_' + usort.name),ax))
     mod.labeled_axioms = mod.labeled_axioms + laxs
     mod.schemata = dict()
-    mod.definitions = [] # Should have been unfolded by now
     conjs = [x.formula for x in mod.labeled_conjs]
     conj = ivy_ast.LabeledFormula(ivy_ast.Atom('1000000'),il.And(*conjs))
     mod.labeled_conjs = [conj]

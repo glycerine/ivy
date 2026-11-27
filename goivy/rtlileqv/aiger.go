@@ -25,6 +25,7 @@ type aiger struct {
 	inputNames      [][]bitName
 	outputNames     [][]bitName
 	latchNames      [][]bitName
+	clockEdge       string
 }
 
 func readAiger(graph, names io.Reader) (*aiger, error) {

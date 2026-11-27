@@ -463,10 +463,19 @@ func exportVMTModel(method string, m *Module, encodeArrays bool, predicates []vm
 	if m.InitCond != nil {
 		initial = ForwardImage(m.InitCond, m.BackgroundTheory(nil), initUpdate).ToOpenFormula()
 	}
-	var axioms []Expr
+	var axioms, stateAxioms []Expr
 	for _, formula := range m.BackgroundTheory(nil).Fmlas {
-		if !vmtMentionsState(formula, state) {
+		if vmtMentionsState(formula, state) {
+			stateAxioms = append(stateAxioms, formula)
+		} else {
 			axioms = append(axioms, formula)
+		}
+	}
+	if len(stateAxioms) != 0 {
+		for i := range transitions {
+			// The symbolic update already imposes the post-state axioms.
+			terms := append([]Expr{transitions[i].formula}, stateAxioms...)
+			transitions[i].formula = &LogicAnd{Terms: terms}
 		}
 	}
 	if encodeArrays {

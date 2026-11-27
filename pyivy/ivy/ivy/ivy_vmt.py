@@ -267,12 +267,26 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
             else:
                 sorts.append(sort)
 
+    def add_variable_sorts(formula):
+        if il.is_variable(formula):
+            add_sort(formula.sort.to_z3())
+        if il.is_binder(formula):
+            for variable in il.binder_vars(formula):
+                add_sort(variable.sort.to_z3())
+            args = il.binder_args(formula)
+        else:
+            args = formula.args
+        for arg in args:
+            add_variable_sorts(arg)
 
     declared_symbols = set()
     enum_symbols = set()
     used_names = {str(definition.defines()) for _, definition in tagged_dfns}
     tagged_bodies = [definition.rhs() for _,definition in tagged_dfns]
-    refed_syms = list(ilu.used_symbols_asts([init,trans]+[lf.formula for lf in conjs]+axioms+tagged_bodies))
+    formulas = [init,trans]+[lf.formula for lf in conjs]+axioms+tagged_bodies
+    for formula in formulas:
+        add_variable_sorts(formula)
+    refed_syms = list(ilu.used_symbols_asts(formulas))
     extra_refed_syms = set()
     for x in refed_syms:
         if tr.is_new(x):
@@ -442,7 +456,6 @@ def check_isolate(method="mc",tagged_dfns=[],use_array_encoding=True):
         f.write("\n".join(vmt_str))
 
     print('output written to '+vmt_file_name)
-    exit(0)
 
 
 def get_trans_str(trans_fm_list, action_names, herbrand_trans, transition_name):

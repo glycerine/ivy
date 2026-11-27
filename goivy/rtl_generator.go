@@ -225,6 +225,15 @@ func (t *rtlTranslator) computeUpdates() error {
 	for _, export := range t.mod.Exports {
 		name := CanonAct(export.Exported())
 		if name != "init" {
+			// Parameterized exports can belong to a separate proof isolate.
+			if action, found := t.mod.FindAction(name); found &&
+				len(action.GetFormalParams()) == 0 && len(action.GetFormalReturns()) == 0 &&
+				!t.hasAttribute(name, "spec") {
+				body, sequence := action.(*LogicSequence)
+				if !sequence || len(body.Elems) != 0 {
+					return fmt.Errorf("exported clock %s must have an empty body", name)
+				}
+			}
 			clocks[name] = true
 		}
 	}

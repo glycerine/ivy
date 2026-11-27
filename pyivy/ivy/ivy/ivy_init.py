@@ -86,6 +86,15 @@ def source_file(fn,f,**kwargs):
         sys.exit(1)
     if __debug__: xtracer.trace("init.SourceFile EXIT file=%s" % xtracer.normalize_filename(fn))
 
+def _is_portable_trace(stream):
+    while chunk := stream.peek(1):
+        remaining = chunk.lstrip(b' \t\r\n')
+        stream.read(len(chunk) - len(remaining))
+        if remaining:
+            return remaining.startswith(b'{')
+    return False
+
+
 def ivy_init(**kwargs):
     verb = kwargs.pop('verb',None)
     read_params()
@@ -104,7 +113,7 @@ def ivy_init(**kwargs):
     if files[0][0].endswith('.a2g'):
         fn,f = files.pop(0)
         with f:
-            if verb == 'replay' and f.peek(1)[:1] == b'{':
+            if verb == 'replay' and _is_portable_trace(f):
                 try:
                     archive = json.load(f)
                 except (ValueError, UnicodeError) as error:

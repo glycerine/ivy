@@ -191,6 +191,38 @@ temporal property [must_fail] globally false
 	}
 }
 
+func TestCheckByNamePreservesTemporalProofObligations(t *testing.T) {
+	const source = `#lang ivy1.8
+relation p
+relation helper
+after init { p := true; helper := true }
+export action advance = { p := helper; helper := false }
+temporal property [claim] globally p
+proof { tactic invariance with invariant [proof_lemma] helper }
+`
+	const filename = "temporal_lemma.ivy"
+	t.Run("GoIvy", func(t *testing.T) {
+		cfg := NewConfig()
+		if err := ApplyIvyCheckParams(cfg, map[string]string{"check": "claim"}); err != nil {
+			t.Fatal(err)
+		}
+		err := StartSourceWithConfig(filename, source, cfg)
+		if err == nil || !strings.Contains(err.Error(), "failed checks: 1") {
+			t.Fatalf("the selected property's induction lemma must fail, got %v", err)
+		}
+	})
+	t.Run("PyIvy", func(t *testing.T) {
+		path := filepath.Join(t.TempDir(), filename)
+		if err := os.WriteFile(path, []byte(source), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		out, err := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy", "check", "check=claim", path).CombinedOutput()
+		if err == nil || !strings.Contains(string(out), "failed checks: 1") {
+			t.Fatalf("the selected property's induction lemma must fail, got %v\n%s", err, out)
+		}
+	})
+}
+
 func TestApplyIvyCheckParamsCheckedAssertParameterReturnsErrorLikePython(t *testing.T) {
 	err := ApplyIvyCheckParams(NewConfig(), map[string]string{"checked_assert": "foo:17"})
 	if err == nil {

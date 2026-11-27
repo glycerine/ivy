@@ -544,7 +544,7 @@ class Translation:
         else:
             assert False, e
 
-    def translate_initializer(init: ia.Action) -> tuple[pyv.InitDecl, set[il.Symbol]]:
+    def translate_initializer(init: ia.Action, precond) -> tuple[pyv.InitDecl, set[il.Symbol]]:
         '''Translate an Ivy (combined) initializer, i.e. one that calls in
         sequence all the initializer actions, to a mypyvy initializer.
         This might include intermediate versions of relations.
@@ -559,7 +559,7 @@ class Translation:
         # quantifiers around the one-state formula for init.
 
         # We want a one-state formula in this context
-        upd = it.make_vc(init).to_formula()
+        upd = it.make_vc(init, precond=precond).to_formula()
         # For some reason, make_vc() returns a conjuction
         # that has Not(And()) at the end. We remove that.
         # FIXME: are we supposed to negate the whole thing?
@@ -780,6 +780,10 @@ class MypyvyProgram:
                 op = pyv.NaryExpr("DISTINCT", tuple(individuals))
                 axiom = pyv.AxiomDecl("{}_distinct".format(sort.name), op)
                 self.axioms.append(axiom)
+            if individuals:
+                var = pyv.SortedVar("IVYENUM", pyv_sort, None)
+                covered = pyv.Or(*(pyv.Eq(pyv.Id(var.name), enum) for enum in individuals))
+                self.axioms.append(pyv.AxiomDecl(None, pyv.Forall((var,), covered)))
         elif il.is_boolean_sort(sort):
             # No need to declare the bool sort
             pass
@@ -873,7 +877,7 @@ class MypyvyProgram:
         that combines all initializers in sequence, and translate that.'''
         inits = list(map(lambda x: x[1], mod.initializers)) # get the actions
         init_action = ia.Sequence(*inits)
-        (decl, sec_ord_exs) = Translation.translate_initializer(init_action)
+        (decl, sec_ord_exs) = Translation.translate_initializer(init_action, mod.labeled_inits)
         self.second_order_existentials |= sec_ord_exs
         self.initializers.append(decl)
 
@@ -964,5 +968,3 @@ def check_isolate():
     with open(out_file, "w") as f:
         f.write(str(pyv_prog))
         print("output written to {}".format(out_file))
-
-    exit(0)

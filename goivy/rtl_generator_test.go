@@ -14,6 +14,93 @@ import (
 
 const rtlExampleDir = "../pyivy/ivy/doc/examples/hardware"
 
+func TestRTLILEquivalenceRejectsDifferentClock(t *testing.T) {
+	yosys := os.Getenv("IVY_YOSYS")
+	if yosys == "" {
+		yosys = "yosys"
+	}
+	if _, err := exec.LookPath(yosys); err != nil {
+		t.Skip("Yosys unavailable")
+	}
+	const design = `module \top
+  wire input 1 \clk
+  wire input 2 \rst
+  wire input 3 \other
+  wire input 4 \d
+  wire output 5 \q
+  cell $dff $reg
+    parameter \WIDTH 1
+    parameter \CLK_POLARITY %d
+    connect \CLK \%s
+    connect \D \d
+    connect \Q \q
+  end
+end
+`
+	const config = `[gold]
+file = gold.il
+top = top
+clk = clk
+rst = rst
+
+[gate]
+file = gate.il
+top = top
+clk = clk
+rst = rst
+`
+	for _, tt := range []struct {
+		name, clock, diagnostic string
+		goldEdge, gateEdge      int
+	}{
+		{"other input", "other", `[gate] flip-flop is outside clock "clk"`, 1, 1},
+		{"opposite edge", "clk", "designs use different clock edges", 1, 0},
+		{"both falling edge", "clk", "", 0, 0},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			dir := t.TempDir()
+			for name, data := range map[string]string{
+				"gold.il":    fmt.Sprintf(design, tt.goldEdge, "clk"),
+				"gate.il":    fmt.Sprintf(design, tt.gateEdge, tt.clock),
+				"check.ileq": config,
+			} {
+				if err := os.WriteFile(filepath.Join(dir, name), []byte(data), 0o600); err != nil {
+					t.Fatal(err)
+				}
+			}
+			conf := filepath.Join(dir, "check.ileq")
+			t.Run("GoIvy", func(t *testing.T) {
+				result, err := rtlileqv.Check(context.Background(), conf)
+				if tt.diagnostic == "" {
+					if err != nil || result.Registers != 1 || len(result.Failures) != 0 {
+						t.Fatalf("expected equivalent designs, got %+v, %v", result, err)
+					}
+				} else if err == nil || !strings.Contains(err.Error(), tt.diagnostic) {
+					t.Fatalf("expected %q, got %+v, %v", tt.diagnostic, result, err)
+				}
+			})
+			t.Run("PyIvy", func(t *testing.T) {
+				const script = `
+import sys
+from ivy import ivy_rtlil_eqv as eqv
+gold, gate = eqv.parse_config(sys.argv[1])
+_, _, gold_edge = eqv.run_yosys(sys.argv[2], gold, sys.argv[3])
+_, _, gate_edge = eqv.run_yosys(sys.argv[2], gate, sys.argv[3])
+eqv.check_clock_edges(gold_edge, gate_edge)
+`
+				cmd := pythonIvyCommandForTest(t, "-c", script, conf, yosys, dir)
+				out, err := cmd.CombinedOutput()
+				if tt.diagnostic == "" && err != nil {
+					t.Fatalf("expected successful normalization, got %v\n%s", err, out)
+				}
+				if tt.diagnostic != "" && (err == nil || !strings.Contains(string(out), tt.diagnostic)) {
+					t.Fatalf("expected %q, got %v\n%s", tt.diagnostic, err, out)
+				}
+			})
+		})
+	}
+}
+
 func TestGenerateRTLILHardwareExamples(t *testing.T) {
 	for _, tc := range []struct {
 		file, top, feature string
@@ -82,6 +169,44 @@ func TestGenerateRTLILRejectsUnsupportedArraysAndFunctions(t *testing.T) {
 			if err == nil || !strings.Contains(err.Error(), tc.diagnostic) || netlist != "" {
 				t.Fatalf("expected %q and no netlist, got %v", tc.diagnostic, err)
 			}
+		})
+	}
+}
+
+func TestRTLILRejectsClockUpdatesThatCannotBeRepresented(t *testing.T) {
+	const declarations = `#lang ivy1.8
+relation value
+export wire observed : bool
+definition observed = value
+after init { value := false }
+`
+	for _, tt := range []struct {
+		name, clocks, goError, pyError string
+	}{
+		{"body", "export action posedge = { value := ~value }", "clock posedge must have an empty body", "clock posedge must have an empty body"},
+		{"two clocks", `export action clock_a
+export action clock_b
+after clock_a { value := true }
+after clock_b { value := false }
+`, "updated by both", "written on more than one clock"},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			file := filepath.Join(t.TempDir(), "clock.ivy")
+			if err := os.WriteFile(file, []byte(declarations+tt.clocks+"\n"), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			t.Run("GoIvy", func(t *testing.T) {
+				if _, err := GenerateRTLIL(file); err == nil || !strings.Contains(err.Error(), tt.goError) {
+					t.Fatalf("expected a diagnostic containing %q, got %v", tt.goError, err)
+				}
+			})
+			t.Run("PyIvy", func(t *testing.T) {
+				cmd := pythonIvyCommandForTest(t, "-O", "-c", "from ivy import ivy_to_rtl; ivy_to_rtl.main()", filepath.Base(file))
+				cmd.Dir = filepath.Dir(file)
+				if out, err := cmd.CombinedOutput(); err == nil || !strings.Contains(string(out), tt.pyError) {
+					t.Fatalf("expected a diagnostic containing %q, got %v\n%s", tt.pyError, err, out)
+				}
+			})
 		})
 	}
 }

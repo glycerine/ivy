@@ -117,3 +117,16 @@ func TestTraceTrackingWorksAcrossCheckers(t *testing.T) {
 		}
 	}
 }
+
+func TestPyIvyReplaysPortableTraceWithLeadingWhitespace(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "formatted.a2g")
+	const archive = `{"format":"ivy-trace-1","detailed":"detected counterexample","brief":"brief trace"}`
+	contents := strings.Repeat(" \n\t", 8192) + archive
+	if err := os.WriteFile(path, []byte(contents), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	replay := pythonIvyCommandForTest(t, "-O", "-m", "ivy.ivy", "replay", "detailed=true", path)
+	if out, err := replay.CombinedOutput(); err != nil || string(out) != "detected counterexample" {
+		t.Fatalf("could not replay the formatted portable trace: %v\n%s", err, out)
+	}
+}

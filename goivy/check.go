@@ -319,14 +319,18 @@ func CheckTemporals(mod *Module) error {
 				pfNode, _ = pf.(Node)
 			}
 			xtracer.Trace("check.temporal proof type=%s pfNode type=%s", TypeName(pf), TypeName(pfNode))
-			var err error
-			subgoals, err = pc.AdmitProposition(prop, pfNode, subgoals...)
+			err := func() error {
+				// The filter selects the theorem. Its proof must check every obligation.
+				patterns := mod.Cfg.checkNamePatterns
+				mod.Cfg.checkNamePatterns = nil
+				defer func() { mod.Cfg.checkNamePatterns = patterns }()
+				goals, err := pc.AdmitProposition(prop, pfNode, subgoals...)
+				if err != nil {
+					return err
+				}
+				return CheckSubgoals(goals, nil, mod)
+			}()
 			if err != nil {
-				return err
-			}
-
-			// Python: check_subgoals(subgoals)
-			if err := CheckSubgoals(subgoals, nil, mod); err != nil {
 				return err
 			}
 		}

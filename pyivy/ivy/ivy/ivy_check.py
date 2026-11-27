@@ -161,8 +161,10 @@ def check_temporals():
                     if __debug__: xtracer.trace("check.temporal subgoal.Formula type=%s" % type(subgoal.formula).__name__)
                     subgoals = [subgoal]
                     if __debug__: xtracer.trace("check.temporal proof type=%s pfNode type=%s" % (type(proof).__name__ if proof is not None else "None", type(proof).__name__ if proof is not None else "None"))
-                    subgoals = pc.admit_proposition(prop,proof,subgoals)
-                    check_subgoals(subgoals)
+                    # The filter selects the theorem, whose proof checks every obligation.
+                    with iu.parameterize({'check':''}):
+                        subgoals = pc.admit_proposition(prop,proof,subgoals)
+                        check_subgoals(subgoals)
             
         # else:
         #     # Non-temporal properties have already been proved, so just

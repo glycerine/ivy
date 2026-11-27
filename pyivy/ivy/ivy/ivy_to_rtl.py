@@ -352,6 +352,13 @@ class Translator(object):
         # the clocked action, so the RTL would not be a safe substitution.
         self.clocks = sorted(set(e.exported() for e in self.mod.exports)
                              - {'init'})
+        for clock in self.clocks:
+            action = self.mod.actions.get(clock)
+            # Parameterized exports can belong to a separate proof isolate.
+            if (action is not None and not action.formal_params
+                    and not action.formal_returns and not self.is_spec(clock)):
+                if not (isinstance(action, ia.Sequence) and not action.args):
+                    raise iu.IvyError(action, 'exported clock {} must have an empty body'.format(clock))
         self.obj_mixers = defaultdict(lambda: defaultdict(list))
         for mixee in list(self.clocks) + ['init']:
             for mx in self.mod.mixins.get(mixee, []):
@@ -637,10 +644,11 @@ class Translator(object):
         for clk in self.clocks:
             upd = self.get_update(obj, clk)
             if upd and newsym.name in upd[2]:
+                if clk_used is not None:
+                    raise iu.IvyError(None, "register '{}' is written on more than one clock".format(v.name))
                 cctx = Ctx(self, m, obj, upd[2])
                 dval = self.emit_expr(cctx, upd[2][newsym.name].args[1])
                 clk_used = clk
-                break
         if dval is None:
             dval = qnet  # no clocked update: hold value
 

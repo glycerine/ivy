@@ -5006,7 +5006,7 @@ def main_int(is_ivyc):
                         if opt_outdir.get():
                             cmd = 'cd {} & '.format(opt_outdir.get()) + cmd
                     else:
-                        support_path = '-I {}'.format(get_support_include_dir())
+                        support_path = '-I {}'.format(shlex.quote(get_support_include_dir()))
                         if requires_z3:
                             paths = support_path + ' ' + ' '.join(
                                 '-I {} -L {} -Xlinker -rpath -Xlinker {}'.format(
