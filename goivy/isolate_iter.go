@@ -284,6 +284,8 @@ func GetIsolateExports(mod *Module, callGraph map[string][]string, iso IsolateDe
 	for _, exp := range mod.Exports {
 		modExports[exp.Exported()] = true
 	}
+	// Resolve writes through destructors against the module being queried.
+	actCfg := &ActionsConfig{Context: NewActionContext(mod)}
 	exports := NewInsMap[string, bool]()
 	for act := range isoActions.All() {
 		external := modExports[act]
@@ -293,14 +295,14 @@ func GetIsolateExports(mod *Module, callGraph map[string][]string, iso IsolateDe
 				break
 			}
 		}
-		if external && hasIsolateSideEffect(mod, act, isoActions, verified, make(map[string]bool)) {
+		if external && hasIsolateSideEffect(mod, actCfg, act, isoActions, verified, make(map[string]bool)) {
 			exports.Set(act, true)
 		}
 	}
 	return exports
 }
 
-func hasIsolateSideEffect(mod *Module, name string, present, verified *InsMap[string, bool], seen map[string]bool) bool {
+func hasIsolateSideEffect(mod *Module, actCfg *ActionsConfig, name string, present, verified *InsMap[string, bool], seen map[string]bool) bool {
 	name = CanonAct(name)
 	if seen[name] || !present.Get(name) {
 		return false
@@ -314,7 +316,7 @@ func hasIsolateSideEffect(mod *Module, name string, present, verified *InsMap[st
 		if native, ok := sub.(*LogicNativeAction); ok && native.Impure {
 			return true
 		}
-		for _, sym := range ModifiesSingle(sub, mod.Cfg.ActCfg) {
+		for _, sym := range ModifiesSingle(sub, actCfg) {
 			if _, inSignature := mod.Sig.Symbols.Get2(sym.Name); inSignature {
 				return true
 			}
@@ -326,19 +328,19 @@ func hasIsolateSideEffect(mod *Module, name string, present, verified *InsMap[st
 		}
 		if call, ok := sub.(*LogicCallAction); ok {
 			for _, target := range call.ActualReturns {
-				for _, sym := range ModifiesSingle(NewHavocAction(target), mod.Cfg.ActCfg) {
+				for _, sym := range ModifiesSingle(NewHavocAction(target), actCfg) {
 					if _, inSignature := mod.Sig.Symbols.Get2(sym.Name); inSignature {
 						return true
 					}
 				}
 			}
-			if hasIsolateSideEffect(mod, call.CalleeName(), present, verified, seen) {
+			if hasIsolateSideEffect(mod, actCfg, call.CalleeName(), present, verified, seen) {
 				return true
 			}
 		}
 	}
 	for _, mixin := range mod.Mixins.Get(name) {
-		if hasIsolateSideEffect(mod, mixin.Mixer(), present, verified, seen) {
+		if hasIsolateSideEffect(mod, actCfg, mixin.Mixer(), present, verified, seen) {
 			return true
 		}
 	}

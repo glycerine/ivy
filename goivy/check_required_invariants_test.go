@@ -2,6 +2,7 @@ package goivy
 
 import (
 	"os"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -105,6 +106,37 @@ isolate component = {
 	}
 	if !mod.PublicActions.Get("ext:component.pure") {
 		t.Fatal("the pure action is inaccessible to callers")
+	}
+}
+
+func TestInvariantExportsFollowDestructorWritesToTheirRoot(t *testing.T) {
+	const source = `#lang ivy1.7
+isolate api = {
+    type item
+    destructor flag(V:item) : bool
+    individual saved : item
+    action value returns (b:bool) = { b := true }
+    export action build returns (res:item) = { flag(res) := true }
+    export action build_with_call returns (res:item) = { flag(res) := value }
+    export action store = { flag(saved) := true }
+    export action store_with_call = { flag(saved) := value }
+}
+`
+	mod := New()
+	if err := SourceString("destructor_exports.ivy", source, mod, mod.Sig, map[string]interface{}{"create_isolate": false}); err != nil {
+		t.Fatal(err)
+	}
+	mod = mod.Copy()
+	iso := mod.Isolates.Get("api")
+	if iso == nil {
+		t.Fatal("api isolate is missing")
+	}
+	var got []string
+	for _, bracket := range ApplyPresentConjectures(iso, mod) {
+		got = append(got, bracket.ActName)
+	}
+	if want := []string{"api.store", "api.store_with_call"}; !slices.Equal(got, want) {
+		t.Errorf("invariant exports = %v, want %v", got, want)
 	}
 }
 
