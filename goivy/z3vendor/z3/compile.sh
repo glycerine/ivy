@@ -19,9 +19,16 @@ make test -j40
 
 # 5. Copy the artifact out so wasm can build too.
 cp -p libz3.a ../../native_lib/
-cp -p libz3.so ../../native_lib/ || true
-cp -p libz3.dylib ../../native_lib/ || true
 cp -p z3 ../../native_lib/
+
+# for linux
+if [[ -f "libz3.so" ]]; then
+  cp -p libz3.so ../../native_lib/
+fi
+# for macOS/darwin
+if [[ -f "libz3.dylib" ]]; then
+  cp -p libz3.dylib ../../native_lib/
+fi
 
 cd ..
 rm -rf native.build

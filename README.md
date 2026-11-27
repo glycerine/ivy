@@ -167,19 +167,23 @@ and is compiled below (building Z3 takes about 10-20 minutes, be patient).
 
 ~~~
 
-export GOPATH=/home/yourUserName/go # where "go install" will put the goivy_check and ivyweb binaries
+export GOPATH=$HOME/go # set to where you want "go install" to put the goivy_check and ivyweb binaries (under GOPATH/bin)
 
 git clone https://github.com/glycerine/ivy
 cd ivy/pyivy
 # setup a python venv that knows how to find Ivy python programs
+deactivate # to get out of any existing python venv
 ./redo.sh
-# install abc and aigtoaig binaries that are shelled out to.
+. ./goivy-venv/bin/activate # activate the python venv
+# install abc and aigtoaig binaries that ivy and goivy shell out to 
+# (note that currently our abcgo port of abc is not used by default).
 ./onetime.sh # same as "make setup" from ivy/goivy
 
 cd ../goivy # same as ivy/goivy
 make get_goyacc
 cd z3vendor/z3
-./compile.sh # build libz3.a
+./compile.sh # build libz3.a; takes 2-10 minutes.
+
 ./compile-wasm.sh # build wasm version of Z3
 cd ../.. # so you should be in ivy/goivy now, using the goivy/Makefile to:
 make z3-build
@@ -193,7 +197,9 @@ ivyweb      (starts the Ivy web app on 127.0.0.1:8080 )
 goivy_check (equivalent to python ivy_check, but 
              faster and with many bug fixes).
 
-# for compositional testing
+# for compositional testing, use ivy2cpp and/or ivy2golang
+# see https://youtu.be/6WVL-Vpm5RY for Ken McMillan's excellent 
+# 2017 ETAPS tutorial on Compositional Testing
 ivy2cpp
 ivy2golang
 ~~~
