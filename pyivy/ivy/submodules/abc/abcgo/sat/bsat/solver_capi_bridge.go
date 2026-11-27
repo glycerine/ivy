@@ -100,3 +100,28 @@ func (s *sat_solver_t) StatsC() (clauses, conflicts, learnts float64) {
 func (s *sat_solver_t) LearntLimitsC() (start, delta, ratio, reduces int32) {
 	return s.nLearntStart, s.nLearntDelta, s.nLearntRatio, s.nDBreduces
 }
+
+// SetSolvedC is pSat->fSolved = 1.
+func (s *sat_solver_t) SetSolvedC() { s.fSolved = 1 }
+
+// SetGlobalVarsC is pSat->pGlobalVars = pGlobalVars (nil clears it).
+func (s *sat_solver_t) SetGlobalVarsC(pGlobalVars []int32) { s.pGlobalVars = pGlobalVars }
+
+// SetRuntimeLimitC is sat_solver_set_runtime_limit with an Abc_Clock deadline.
+func (s *sat_solver_t) SetRuntimeLimitC(clock func() int64, nRuntimeLimit int64) int64 {
+	old := s.nRuntimeLimit
+	s.SetRuntimeDeadline(clock, nRuntimeLimit)
+	return old
+}
+
+// StoreAllocC is sat_solver_store_alloc.
+func (s *sat_solver_t) StoreAllocC() { sat_solver_store_alloc(s) }
+
+// StoreMarkClausesAC is sat_solver_store_mark_clauses_a.
+func (s *sat_solver_t) StoreMarkClausesAC() { sat_solver_store_mark_clauses_a(s) }
+
+// StoreMarkRootsC is sat_solver_store_mark_roots.
+func (s *sat_solver_t) StoreMarkRootsC() { sat_solver_store_mark_roots(s) }
+
+// StoreReleaseC is sat_solver_store_release.
+func (s *sat_solver_t) StoreReleaseC() *Sto_Man_t { return s.ReleaseClauseStore() }

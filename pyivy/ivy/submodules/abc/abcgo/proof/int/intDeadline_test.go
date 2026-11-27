@@ -9,7 +9,7 @@ func TestRewriteInterpolationHasNoDeadlineAsInC(t *testing.T) {
 	g := aig.NewGraph()
 	x := g.NewInput()
 	g.AddOutput(x)
-	if got := rewriteForInterpolation(g); got == nil {
+	if got := interRwsat(g); got == nil {
 		t.Fatal("source untimed rewrite failed")
 	}
 }

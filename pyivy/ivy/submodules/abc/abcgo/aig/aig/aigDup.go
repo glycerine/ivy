@@ -578,6 +578,10 @@ func Aig_ManCreateMiter(a, b *Graph, operation int32) *Graph {
 func dupSequentialOutputs(src *Graph, outputs []Edge, addRegs int32) *Graph {
 	dst := dupStart(src)
 	dst.Assertions = 0 // Source creates ordinary POs for the selected outputs.
+	// Aig_ManDupOneOutput and Aig_ManDupUnsolvedOutputs start a fresh manager
+	// with only pName/pSpec: vFlopNums/vFlopReprs are not carried over (so a
+	// following Aig_ManScl may assert vFlopNums == NULL).
+	dst.FlopNumbers, dst.FlopReprs = nil, nil
 	dst.nTruePis = src.nTruePis
 	dst.nTruePos = int32(len(outputs))
 	if addRegs == 0 {
@@ -655,6 +659,13 @@ func Aig_ManDupArray(graphs []*Graph) *Graph {
 		src.copies = map[int]Edge{0: 0}
 		for i, e := range src.inputs {
 			src.copies[e.NodeID()] = dst.inputs[i]
+		}
+		// Aig_ManForEachNode: create the nodes in object order, as C does,
+		// before the COs (the AIGER literal order follows it).
+		for id, n := range src.nodes {
+			if !src.isDeleted(id) && (n.Kind == And || n.Kind == ExclusiveOr) {
+				dupEdge(dst, src, Edge(id)<<1)
+			}
 		}
 		dupOutputs(dst, src, src.outputs, false, false)
 	}

@@ -1,5 +1,14 @@
 # `proof/int` port status
 
+**2026-11-27:** intCore.c, intMan.c, intDup.c, intFrames.c, intCheck.c,
+intContain.c, intCtrex.c, intUtil.c and intM114.c are now line-by-line ports
+(Aig_ManForEachNode object order, sat_solver C API via the bsat `...C`
+bridges, Inta_ManInterpolate from a line-by-line port of satInterA.c), so
+`int -v` matches native ABC line for line (base/abci/int_native_test.go).
+As in the C build (no ABC_USE_LIBRARIES), `-m` does not select MiniSat-1.14p.
+The Go-only constrained-witness extensions were removed. Older notes below
+describe the earlier reimplementation.
+
 The ordinary ABC interpolation path has been translated to Go and
 `go test -race ./proof/int` and `go vet ./proof/int` pass. The package includes
 graph transformations, frame unrolling, counterexample extraction, containment

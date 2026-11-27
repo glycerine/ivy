@@ -905,3 +905,27 @@ and states how the Go port was verified.
 - **Test:** as for #39 (`bmc_and_zero.blif`, `s27.blif` with `-A 0`); red
   before: native killed after the test's 10-second limit.
 - **Go port:** same change (`bmcMnaStateSeen`).
+
+## 42. `int -b` (without `-t`) reports safe properties as failing
+
+- **File:** `src/proof/int/intCore.c` (`Inter_ManPerformInterpolation`).
+- **Found:** 2026-11-27, porting the int command: `int -b` on the
+  s27 dc2-miter (and on `int_backward_safe.blif`, a register that stays 0)
+  printed "Error: The problem should be SAT but it is UNSAT." and "Output -1
+  of miter ... was asserted in frame 1" (`Status = 0`); on the s713
+  dc2-miter it ran bmc3 forever looking for the nonexistent CEX.
+- **Bug:** backward interpolation takes its initial interpolant from
+  `Inter_ManStartOneOutput( pAig, 1 )`, whose CIs include the extra control
+  input of the transition loop, but without `-t` the transition relation is
+  `Inter_ManStartDuplicated` (one CI fewer). `Inter_ManDeriveSatSolver`
+  then connects the interpolant's CIs to the wrong register variables (its
+  `assert( Aig_ManCiNum(pAig) == Aig_ManCiNum(pInter) )` fails, but the
+  release build has `-DNDEBUG`), so the first SAT run is SAT and taken as a
+  real counterexample. (The usage says "-b ... (works with -t)".)
+- **Fix:** like `-K` > 1, `-b` enables the transition loop
+  (`if ( pPars->fUseBackward ) pPars->fTransLoop = 1;`), so `int -b` runs
+  as `int -b -t`.
+- **Test:** `abcgo/base/abci/int_native_test.go`
+  (`TestNativeIntBackwardProves`; test vector
+  `base/abci/test_vectors/seq/int_backward_safe.blif`); red before.
+- **Go port:** `proof/int/intCore.go`, the same change.

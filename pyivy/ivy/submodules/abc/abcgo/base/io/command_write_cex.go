@@ -55,7 +55,11 @@ func Abc_NtkCheckSpecialPi(n *abc.Network) int32 {
 }
 
 func writeOneCex(w io.Writer, n *abc.Network, cex *util.Abc_Cex_t, flags map[rune]bool) error {
-	if cex == nil || cex.IFrame < 0 || cex.NPis != abc.Abc_NtkPiNum(n) || cex.NRegs != abc.Abc_NtkLatchNum(n) {
+	// Abc_NtkDumpOneCex reads PI bits at pCex->nRegs + pCex->nPis*f + i and
+	// does not compare pCex->nRegs with the network's latches ("int -k"
+	// returns the CEX of the output's register-swept copy, e.g. FF = 12 for
+	// the 19-latch s713), so only the PI dimension is checked.
+	if cex == nil || cex.IFrame < 0 || cex.NPis != abc.Abc_NtkPiNum(n) || cex.NRegs < 0 {
 		return fmt.Errorf("io: counterexample dimensions do not match network")
 	}
 	if int64(cex.NRegs)+int64(cex.NPis)*(int64(cex.IFrame)+1) > int64(len(cex.PData))*32 {

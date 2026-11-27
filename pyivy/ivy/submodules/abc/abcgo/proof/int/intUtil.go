@@ -1,72 +1,74 @@
 package int
 
-// Interpolation property checks ported from proof/int/intUtil.c.
+// Line-by-line port of src/proof/int/intUtil.c.
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
 
-// propertyCheckGraph asserts bad outputs and the negation of constraint
-// violations, without changing the caller's graph.
-func propertyCheckGraph(g *aig.Graph) *aig.Graph {
-	if aig.Aig_ManConstrNum(g) == 0 {
-		return g
+/*
+*Function*************************************************************
+
+	Synopsis    [Returns 1 if the property fails in the initial state.]
+
+**********************************************************************
+*/
+func Inter_ManCheckInitialState(p *Aig_Man_t) int32 {
+	var pCnf *Cnf_Dat_t
+	var pObj Aig_Obj_t
+	var pSat *sat_solver
+	var i, status int32
+	//abctime clk = Abc_Clock();
+	pCnf = cnf.Cnf_Derive(p, saig.Saig_ManRegNum(p))
+	pSat = cnf.Cnf_DataWriteIntoSolver(pCnf, 1, 1)
+	if pSat == nil {
+		cnf.Cnf_DataFree(pCnf)
+		return 0
 	}
-	copy := aig.Aig_ManDupSimple(g)
-	aig.Aig_ManInvertConstraints(copy)
-	return copy
+	status = pSat.SolveC(nil, 0, 0, 0, 0)
+	//ABC_PRT( "Time", Abc_Clock() - clk );
+	if status == int32(bsat.Satisfiable) {
+		seqModel := util.Abc_CexAlloc(aig.Aig_ManRegNum(p), saig.Saig_ManPiNum(p), 1)
+		for i = 0; i < saig.Saig_ManPiNum(p); i++ {
+			pObj = aig.Aig_ManCi(p, i)
+			if pSat.VarValueC(pCnf.VarNums[aig.Aig_ObjId(pObj)]) != 0 {
+				util.Abc_InfoSetBit(seqModel.PData, aig.Aig_ManRegNum(p)+i)
+			}
+		}
+		p.SetCecCounterexample(seqModel)
+	}
+	cnf.Cnf_DataFree(pCnf)
+	return b2i(status == int32(bsat.Satisfiable))
 }
 
-// Inter_ManCheckInitialState returns 1 when the output is satisfiable from the
-// all-zero register state and stores the corresponding one-frame witness.
-func Inter_ManCheckInitialState(g *aig.Graph) int32 {
-	if g == nil {
-		return 0
+/*
+*Function*************************************************************
+
+	Synopsis    [Returns 1 if the property holds in all states.]
+
+**********************************************************************
+*/
+func Inter_ManCheckAllStates(p *Aig_Man_t) int32 {
+	var pCnf *Cnf_Dat_t
+	var pSat *sat_solver
+	var status int32
+	clk := util.Abc_Clock()
+	pCnf = cnf.Cnf_Derive(p, saig.Saig_ManRegNum(p))
+	pSat = cnf.Cnf_DataWriteIntoSolver(pCnf, 1, 0)
+	cnf.Cnf_DataFree(pCnf)
+	if pSat == nil {
+		return 1
 	}
-	query := propertyCheckGraph(g)
-	data := cnf.Cnf_Derive(query, query.RegisterCount())
-	if data == nil {
-		return 0
-	}
-	solver := cnf.Cnf_DataWriteIntoSolver(data, 1, 1)
-	if solver == nil || solver.Solve() != bsat.Satisfiable {
-		return 0
-	}
-	pis := g.InputCount() - int(g.RegisterCount())
-	if pis < 0 {
-		return 0
-	}
-	cex := util.Abc_CexAlloc(g.RegisterCount(), int32(pis), 1)
-	for i, input := range query.Inputs()[:pis] {
-		value, ok := solver.Value(data.VarNums[input.NodeID()])
-		if !ok {
-			return 0
-		}
-		if value {
-			util.Abc_InfoSetBit(cex.PData, g.RegisterCount()+int32(i))
-		}
-	}
-	if err := g.SetSequentialCounterexample(cex); err != nil {
-		return 0
-	}
-	return 1
+	status = pSat.SolveC(nil, 0, 0, 0, 0)
+	util.Abc_PrintTime(1, "Time", util.Abc_Clock()-clk)
+	return b2i(status == int32(bsat.Unsatisfiable))
 }
 
-// Inter_ManCheckAllStates returns 1 when the property output cannot be true
-// for any assignment of inputs and registers.
-func Inter_ManCheckAllStates(g *aig.Graph) int32 {
-	if g == nil {
-		return 0
-	}
-	query := propertyCheckGraph(g)
-	data := cnf.Cnf_Derive(query, query.RegisterCount())
-	if data == nil {
-		return 0
-	}
-	solver := cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
-	if solver == nil || solver.Solve() == bsat.Unsatisfiable {
+func b2i(b bool) int32 {
+	if b {
 		return 1
 	}
 	return 0

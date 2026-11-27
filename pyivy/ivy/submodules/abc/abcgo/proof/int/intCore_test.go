@@ -160,40 +160,6 @@ func TestMiniSatInterpolationEndToEnd(t *testing.T) {
 	}
 }
 
-func TestMiniSatInterpolationCanProveBeforeExpiredDeadlineCheck(t *testing.T) {
-	g := aig.NewGraph()
-	g.NewInput()
-	state := g.NewInput()
-	g.AddOutput(state)
-	g.AddOutput(g.Const0())
-	aig.Aig_ManSetRegNum(g, 1)
-	var pars Inter_ManParams_t
-	Inter_ManSetDefaultParams(&pars)
-	pars.FUseMiniSat, pars.NSecLimit = 1, -1
-	var frame int32
-	// intCore.c does not pass its deadline to MiniSat and accepts a constant
-	// interpolant proof before reaching the later deadline check.
-	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != 1 {
-		t.Fatalf("source proof before deadline check returned %d", got)
-	}
-}
-
-func TestMiniSatBackwardInterpolationIsUnsupported(t *testing.T) {
-	g := aig.NewGraph()
-	g.NewInput()
-	state := g.NewInput()
-	g.AddOutput(state)
-	g.AddOutput(g.Const0())
-	aig.Aig_ManSetRegNum(g, 1)
-	var pars Inter_ManParams_t
-	Inter_ManSetDefaultParams(&pars)
-	pars.FUseMiniSat, pars.FUseBackward, pars.FTransLoop = 1, 1, 1
-	frame := int32(42)
-	if got := Inter_ManPerformInterpolation(g, &pars, &frame); got != -1 || frame != -1 {
-		t.Fatalf("unsupported combination returned %d, frame %d", got, frame)
-	}
-}
-
 // C's optional MiniSat entry point accepts fUseOther but never reads it.
 func TestMiniSatOtherFlagDoesNotChangeInterpolation(t *testing.T) {
 	for _, pudlak := range []int32{0, 1} {

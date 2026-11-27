@@ -1,116 +1,162 @@
 package int
 
-// Graph duplication helpers ported from ABC's proof/int/intDup.c.
-// Edge maps replace the original temporary pData pointers.
-import "github.com/glycerine/abcgo/aig/aig"
+// Line-by-line port of src/proof/int/intDup.c: duplication of the AIG for
+// interpolation. The C pData copy pointers are the graph's copy map
+// (Aig_ObjSetCopy / Aig_ObjChild0Copy).
+import (
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+)
 
-func Inter_ManStartInitState(nRegs int32) *aig.Graph {
-	if nRegs <= 0 {
-		panic("interpolation requires at least one register")
-	}
-	g := aig.NewGraph()
-	allZero := g.Const1()
-	for i := int32(0); i < nRegs; i++ {
-		allZero = g.AND(allZero, g.NewInput().Not())
-	}
-	g.AddOutput(allZero)
-	return g
-}
-
-// duplicateTransitionInputs maps the source's combinational inputs into a new
-// graph and optionally inserts a control input before the register outputs.
-func duplicateTransitionInputs(src *aig.Graph, control bool) (*aig.Graph, map[int]aig.Edge, aig.Edge) {
-	if src == nil || src.RegisterCount() <= 0 {
-		panic("interpolation requires a sequential graph")
-	}
-	dst := aig.NewGraph()
-	dst.Name, dst.Spec = src.Name, src.Spec
-	copies := map[int]aig.Edge{0: dst.Const1()}
-	ctrl := aig.InvalidEdge
-	inputs := src.Inputs()
-	firstReg := len(inputs) - int(src.RegisterCount())
-	for i, input := range inputs {
-		if control && i == firstReg {
-			ctrl = dst.NewInput()
+// interForEachNode is Aig_ManForEachNode: the internal (AND/EXOR) objects in
+// increasing ID order.
+func interForEachNode(p *Aig_Man_t, f func(pObj Aig_Obj_t)) {
+	for i := int32(0); i < aig.Aig_ManObjNumMax(p); i++ {
+		pObj := aig.Aig_ManObj(p, i)
+		if !p.ValidEdge(pObj) || !aig.Aig_ObjIsNode(p, pObj) {
+			continue
 		}
-		copies[input.NodeID()] = dst.NewInput()
+		f(pObj)
 	}
-	return dst, copies, ctrl
 }
 
-// duplicateTransitionEdge copies the source cone using an operation-local map.
-func duplicateTransitionEdge(src, dst *aig.Graph, copies map[int]aig.Edge, edge aig.Edge) aig.Edge {
-	id := edge.NodeID()
-	result, ok := copies[id]
-	if !ok {
-		node := src.Node(edge)
-		switch node.Kind {
-		case aig.And, aig.ExclusiveOr:
-			// ABC's interpolation cone-copy loops call Aig_And for every
-			// native node, including AIG_OBJ_EXOR.
-			result = dst.AND(duplicateTransitionEdge(src, dst, copies, node.Fanins[0]), duplicateTransitionEdge(src, dst, copies, node.Fanins[1]))
-		case aig.Buffer, aig.Output:
-			result = duplicateTransitionEdge(src, dst, copies, node.Fanins[0])
-		default:
-			panic("interpolation encountered an unmapped graph input")
+// interCopyNodes is the common loop
+// Aig_ManForEachNode( p, pObj, i ) pObj->pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );
+func interCopyNodes(p, pNew *Aig_Man_t) {
+	interForEachNode(p, func(pObj Aig_Obj_t) {
+		aig.Aig_ObjSetCopy(p, pObj, aig.Aig_And(pNew, aig.Aig_ObjChild0Copy(p, pObj), aig.Aig_ObjChild1Copy(p, pObj)))
+	})
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Create trivial AIG manager for the init state.]
+
+**********************************************************************
+*/
+func Inter_ManStartInitState(nRegs int32) *Aig_Man_t {
+	var p *Aig_Man_t
+	var pRes Aig_Obj_t
+	var ppInputs []Aig_Obj_t
+	var i int32
+	assert(nRegs > 0, "nRegs > 0")
+	ppInputs = make([]Aig_Obj_t, nRegs)
+	p = aig.Aig_ManStart(nRegs)
+	for i = 0; i < nRegs; i++ {
+		ppInputs[i] = aig.Aig_Not(aig.Aig_ObjCreateCi(p))
+	}
+	pRes = aig.Aig_Multi(p, ppInputs, nRegs, int32(aig.AIG_OBJ_AND))
+	aig.Aig_ObjCreateCo(p, pRes)
+	return p
+}
+
+/*
+*Function*************************************************************
+
+	Synopsis    [Duplicate the AIG w/o POs.]
+
+**********************************************************************
+*/
+func Inter_ManStartDuplicated(p *Aig_Man_t) *Aig_Man_t {
+	var pNew *Aig_Man_t
+	var pObj Aig_Obj_t
+	var i int32
+	assert(aig.Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0")
+	// create the new manager
+	pNew = aig.Aig_ManStart(aig.Aig_ManObjNumMax(p))
+	pNew.Name = p.Name
+	pNew.Spec = p.Spec
+	// create the PIs
+	aig.Aig_ManCleanData(p)
+	aig.Aig_ObjSetCopy(p, aig.Aig_ManConst1(p), aig.Aig_ManConst1(pNew))
+	for i = 0; i < aig.Aig_ManCiNum(p); i++ {
+		aig.Aig_ObjSetCopy(p, aig.Aig_ManCi(p, i), aig.Aig_ObjCreateCi(pNew))
+	}
+	// set registers
+	pNew.SetTruePiCount(p.TruePiCount())
+	pNew.SetTruePoCount(saig.Saig_ManConstrNum(p))
+	aig.Aig_ManSetRegNumForConstruction(pNew, aig.Aig_ManRegNum(p))
+	// duplicate internal nodes
+	interCopyNodes(p, pNew)
+	// create constraint outputs
+	for i = 0; i < saig.Saig_ManPoNum(p); i++ {
+		if i < saig.Saig_ManPoNum(p)-saig.Saig_ManConstrNum(p) {
+			continue
 		}
-		copies[id] = result
+		pObj = aig.Aig_ManCo(p, i)
+		aig.Aig_ObjCreateCo(pNew, aig.Aig_Not(aig.Aig_ObjChild0Copy(p, pObj)))
 	}
-	if edge.Complemented() {
-		return result.Not()
+	// create register inputs with MUXes
+	for i = 0; i < saig.Saig_ManRegNum(p); i++ {
+		pObj = saig.Saig_ManLi(p, i)
+		aig.Aig_ObjCreateCo(pNew, aig.Aig_ObjChild0Copy(p, pObj))
 	}
-	return result
+	aig.Aig_ManCleanup(pNew)
+	aig.Aig_ManSetCioIds(pNew)
+	return pNew
 }
 
-func appendConstraintOutputs(src, dst *aig.Graph, copies map[int]aig.Edge) {
-	outputs := src.Outputs()
-	trueOutputs := len(outputs) - int(src.RegisterCount())
-	constraints := int(aig.Aig_ManConstrNum(src))
-	for _, output := range outputs[trueOutputs-constraints : trueOutputs] {
-		driver := src.Node(output).Fanins[0]
-		dst.AddOutput(duplicateTransitionEdge(src, dst, copies, driver).Not())
-	}
-}
+/*
+*Function*************************************************************
 
-// Inter_ManStartDuplicated retains inverted constraints and register inputs.
-func Inter_ManStartDuplicated(src *aig.Graph) *aig.Graph {
-	dst, copies, _ := duplicateTransitionInputs(src, false)
-	appendConstraintOutputs(src, dst, copies)
-	outputs := src.Outputs()
-	for _, output := range outputs[len(outputs)-int(src.RegisterCount()):] {
-		dst.AddOutput(duplicateTransitionEdge(src, dst, copies, src.Node(output).Fanins[0]))
-	}
-	aig.Aig_ManSetRegNum(dst, src.RegisterCount())
-	dst.CopyTruePiCount(src)
-	dst.SetTruePoCount(aig.Aig_ManConstrNum(src))
-	return dst
-}
+	Synopsis    [Duplicate the AIG w/o POs and transforms to transit into init state.]
 
-// Inter_ManStartOneOutput inserts the control input used by ABC's transition
-// loop. With addFirstPO set, it exposes the first ordinary output instead.
-func Inter_ManStartOneOutput(src *aig.Graph, addFirstPO int32) *aig.Graph {
-	dst, copies, control := duplicateTransitionInputs(src, true)
-	appendConstraintOutputs(src, dst, copies)
-	outputs := src.Outputs()
-	if addFirstPO != 0 {
-		if len(outputs) <= int(src.RegisterCount()) {
-			panic("interpolation graph has no ordinary output")
+**********************************************************************
+*/
+func Inter_ManStartOneOutput(p *Aig_Man_t, fAddFirstPo int32) *Aig_Man_t {
+	var pNew *Aig_Man_t
+	var pObj, pObjLi, pObjLo Aig_Obj_t
+	pCtrl := aig.InvalidEdge // Suppress "might be used uninitialized"
+	var i int32
+	assert(aig.Aig_ManRegNum(p) > 0, "Aig_ManRegNum(p) > 0")
+	// create the new manager
+	pNew = aig.Aig_ManStart(aig.Aig_ManObjNumMax(p))
+	pNew.Name = p.Name
+	pNew.Spec = p.Spec
+	// create the PIs
+	aig.Aig_ManCleanData(p)
+	aig.Aig_ObjSetCopy(p, aig.Aig_ManConst1(p), aig.Aig_ManConst1(pNew))
+	for i = 0; i < aig.Aig_ManCiNum(p); i++ {
+		pObj = aig.Aig_ManCi(p, i)
+		if i == saig.Saig_ManPiNum(p) {
+			pCtrl = aig.Aig_ObjCreateCi(pNew)
 		}
-		dst.AddOutput(duplicateTransitionEdge(src, dst, copies, src.Node(outputs[0]).Fanins[0]))
-		dst.SetTruePiCount(int32(src.InputCount()) + 1)
-		dst.SetTruePoCount(addFirstPO + aig.Aig_ManConstrNum(src))
-		return dst
+		aig.Aig_ObjSetCopy(p, pObj, aig.Aig_ObjCreateCi(pNew))
 	}
-	inputs := src.Inputs()
-	firstReg := len(inputs) - int(src.RegisterCount())
-	firstLI := len(outputs) - int(src.RegisterCount())
-	for i := 0; i < int(src.RegisterCount()); i++ {
-		lo := copies[inputs[firstReg+i].NodeID()]
-		li := duplicateTransitionEdge(src, dst, copies, src.Node(outputs[firstLI+i]).Fanins[0])
-		dst.AddOutput(dst.Mux(control, lo, li))
+	// set registers
+	if fAddFirstPo != 0 {
+		aig.Aig_ManSetRegNumForConstruction(pNew, 0)
+		pNew.SetTruePiCount(aig.Aig_ManCiNum(p) + 1)
+	} else {
+		aig.Aig_ManSetRegNumForConstruction(pNew, aig.Aig_ManRegNum(p))
+		pNew.SetTruePiCount(p.TruePiCount() + 1)
 	}
-	aig.Aig_ManSetRegNum(dst, src.RegisterCount())
-	dst.SetTruePiCount(src.TruePiCount() + 1)
-	dst.SetTruePoCount(aig.Aig_ManConstrNum(src))
-	return dst
+	pNew.SetTruePoCount(fAddFirstPo + saig.Saig_ManConstrNum(p))
+	// duplicate internal nodes
+	interCopyNodes(p, pNew)
+	// create constraint outputs
+	for i = 0; i < saig.Saig_ManPoNum(p); i++ {
+		if i < saig.Saig_ManPoNum(p)-saig.Saig_ManConstrNum(p) {
+			continue
+		}
+		pObj = aig.Aig_ManCo(p, i)
+		aig.Aig_ObjCreateCo(pNew, aig.Aig_Not(aig.Aig_ObjChild0Copy(p, pObj)))
+	}
+	// add the PO
+	if fAddFirstPo != 0 {
+		pObj = aig.Aig_ManCo(p, 0)
+		aig.Aig_ObjCreateCo(pNew, aig.Aig_ObjChild0Copy(p, pObj))
+	} else {
+		// create register inputs with MUXes
+		for i = 0; i < saig.Saig_ManRegNum(p); i++ {
+			pObjLi, pObjLo = saig.Saig_ManLi(p, i), saig.Saig_ManLo(p, i)
+			pObj = aig.Aig_Mux(pNew, pCtrl, aig.Aig_ObjCopy(p, pObjLo), aig.Aig_ObjChild0Copy(p, pObjLi))
+			//        pObj = Aig_Mux( pNew, pCtrl, Aig_ManConst0(pNew), Aig_ObjChild0Copy(pObjLi) );
+			aig.Aig_ObjCreateCo(pNew, pObj)
+		}
+	}
+	aig.Aig_ManCleanup(pNew)
+	aig.Aig_ManSetCioIds(pNew)
+	return pNew
 }

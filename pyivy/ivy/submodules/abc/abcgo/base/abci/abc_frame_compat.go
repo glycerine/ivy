@@ -24,6 +24,10 @@ func Cnf_ManFree()  { cnfpkg.Cnf_ManFree() }
 func Aig_RManQuit() { _ = aigpkg.Aig_RManQuit() }
 func Sdm_ManQuit()  { extrapkg.Sdm_ManQuit() }
 func Abc_FrameReplaceCurrentNetwork(frame *Abc_Frame_t, network *Abc_Ntk_t) {
+	// mainFrame.c: Abc_FrameReplaceCurrentNetwork
+	if network != nil && Abc_NtkPoNum(network) == 0 {
+		Abc_Print(0, "The current network has no primary outputs. Some commands may not work correctly.\n")
+	}
 	abcmain.Abc_FrameReplaceCurrentNetwork(frame, network)
 }
 

@@ -3,134 +3,249 @@ package int
 // Incremental inductive containment checking from proof/int/intCheck.c.
 import (
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/misc/util"
+	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 )
 
 type Inter_Check_t struct {
-	nFramesK, nVars   int32
-	pFrames           *aig.Graph
-	pCnf              *cnf.Cnf_Dat_t
-	pSat              *bsat.Solver
-	vOrLits, vAndLits []int32
+	nFramesK int32          // the number of timeframes (K=1 for simple induction)
+	nVars    int32          // the current number of variables in the solver
+	pFrames  *Aig_Man_t     // unrolled timeframes
+	pCnf     *Cnf_Dat_t     // CNF of unrolled timeframes
+	pSat     *sat_solver    // SAT solver
+	vOrLits  *vec.Vec_Int_t // OR vars in each time frame (total number is the number nFrames)
+	vAndLits *vec.Vec_Int_t // AND vars in the last timeframe (total number is the number of interpolants)
+	vAssLits *vec.Vec_Int_t // assumptions (the union of the two)
 }
 
-// Inter_ManUnrollFrames creates register inputs followed by each frame's PIs,
-// and emits the register inputs at the end of each frame as outputs.
-func Inter_ManUnrollFrames(trans *aig.Graph, nFrames int32) *aig.Graph {
-	var mapping []aig.Edge
-	frames := Inter_ManFramesLatches(trans, nFrames, &mapping)
-	for _, edge := range mapping[int(trans.RegisterCount()):] {
-		frames.AddOutput(edge)
+/*
+*Function*************************************************************
+
+	Synopsis    [Create timeframes of the manager for interpolation.]
+
+	Description [The resulting manager is combinational. The primary inputs
+	corresponding to register outputs are ordered first.]
+
+**********************************************************************
+*/
+func Inter_ManUnrollFrames(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {
+	var pFrames *Aig_Man_t
+	var pObj, pObjLi, pObjLo Aig_Obj_t
+	var i, f int32
+	assert(saig.Saig_ManRegNum(pAig) > 0, "Saig_ManRegNum(pAig) > 0")
+	pFrames = aig.Aig_ManStart(aig.Aig_ManNodeNum(pAig) * nFrames)
+	// map the constant node
+	aig.Aig_ObjSetCopy(pAig, aig.Aig_ManConst1(pAig), aig.Aig_ManConst1(pFrames))
+	// create variables for register outputs
+	for i = 0; i < saig.Saig_ManRegNum(pAig); i++ {
+		aig.Aig_ObjSetCopy(pAig, saig.Saig_ManLo(pAig, i), aig.Aig_ObjCreateCi(pFrames))
 	}
-	return frames
+	// add timeframes
+	for f = 0; f < nFrames; f++ {
+		// create PI nodes for this frame
+		for i = 0; i < saig.Saig_ManPiNum(pAig); i++ {
+			aig.Aig_ObjSetCopy(pAig, aig.Aig_ManCi(pAig, i), aig.Aig_ObjCreateCi(pFrames))
+		}
+		// add internal nodes of this frame
+		interCopyNodes(pAig, pFrames)
+		// save register inputs
+		for i = 0; i < saig.Saig_ManRegNum(pAig); i++ {
+			pObj = saig.Saig_ManLi(pAig, i)
+			aig.Aig_ObjSetCopy(pAig, pObj, aig.Aig_ObjChild0Copy(pAig, pObj))
+		}
+		// transfer to register outputs
+		for i = 0; i < saig.Saig_ManRegNum(pAig); i++ {
+			pObjLi, pObjLo = saig.Saig_ManLi(pAig, i), saig.Saig_ManLo(pAig, i)
+			aig.Aig_ObjSetCopy(pAig, pObjLo, aig.Aig_ObjCopy(pAig, pObjLi))
+			aig.Aig_ObjCreateCo(pFrames, aig.Aig_ObjCopy(pAig, pObjLo))
+		}
+	}
+	aig.Aig_ManCleanup(pFrames)
+	return pFrames
 }
 
-func Inter_CheckStart(trans *aig.Graph, nFrames int32) *Inter_Check_t {
-	if trans == nil || trans.RegisterCount() <= 0 || nFrames <= 0 {
-		panic("invalid induction frame count")
-	}
-	frames := Inter_ManUnrollFrames(trans, nFrames)
-	data := cnf.Cnf_Derive(frames, int32(frames.OutputCount()))
-	if data == nil {
-		return nil
-	}
-	solver := cnf.Cnf_DataWriteIntoSolver(data, 1, 0)
-	if solver == nil {
-		return nil
-	}
-	return &Inter_Check_t{nFramesK: nFrames, nVars: int32(data.Variables), pFrames: frames, pCnf: data, pSat: solver}
+/*
+*Function*************************************************************
+
+	Synopsis    [This procedure sets default values of interpolation parameters.]
+
+**********************************************************************
+*/
+func Inter_CheckStart(pTrans *Aig_Man_t, nFramesK int32) *Inter_Check_t {
+	var p *Inter_Check_t
+	// create solver
+	p = &Inter_Check_t{}
+	p.vOrLits = vec.Vec_IntAlloc(100)
+	p.vAndLits = vec.Vec_IntAlloc(100)
+	p.vAssLits = vec.Vec_IntAlloc(100)
+	// generate the timeframes
+	p.pFrames = Inter_ManUnrollFrames(pTrans, nFramesK)
+	assert(aig.Aig_ManCiNum(p.pFrames) == nFramesK*saig.Saig_ManPiNum(pTrans)+saig.Saig_ManRegNum(pTrans), "Aig_ManCiNum(p->pFrames) == nFramesK * Saig_ManPiNum(pTrans) + Saig_ManRegNum(pTrans)")
+	assert(aig.Aig_ManCoNum(p.pFrames) == nFramesK*saig.Saig_ManRegNum(pTrans), "Aig_ManCoNum(p->pFrames) == nFramesK * Saig_ManRegNum(pTrans)")
+	// convert to CNF
+	p.pCnf = cnf.Cnf_Derive(p.pFrames, aig.Aig_ManCoNum(p.pFrames))
+	p.pSat = cnf.Cnf_DataWriteIntoSolver(p.pCnf, 1, 0)
+	// assign parameters
+	p.nFramesK = nFramesK
+	p.nVars = int32(p.pCnf.Variables)
+	return p
 }
 
+/*
+*Function*************************************************************
+
+	Synopsis    [This procedure sets default values of interpolation parameters.]
+
+**********************************************************************
+*/
 func Inter_CheckStop(p *Inter_Check_t) {
 	if p == nil {
 		return
 	}
-	if p.pCnf != nil {
-		cnf.Cnf_DataFree(p.pCnf)
+	cnf.Cnf_DataFree(p.pCnf)
+	aig.Aig_ManStop(p.pFrames)
+	if p.pSat != nil {
+		p.pSat.Close()
 	}
 	*p = Inter_Check_t{}
 }
 
-func Inter_CheckAddOrGate(p *Inter_Check_t, a, b, c int32) {
-	if !p.pSat.AddClause(bsat.Negative(a), bsat.Positive(c)) ||
-		!p.pSat.AddClause(bsat.Negative(b), bsat.Positive(c)) ||
-		!p.pSat.AddClause(bsat.Positive(a), bsat.Positive(b), bsat.Negative(c)) {
-		panic("could not add interpolation OR gate")
-	}
+/*
+*Function*************************************************************
+
+	Synopsis    [Creates one OR-gate: A + B = C.]
+
+**********************************************************************
+*/
+func Inter_CheckAddOrGate(p *Inter_Check_t, iVarA, iVarB, iVarC int32) {
+	var RetValue int32
+	var pLits [3]bsat.Literal
+	// add A => C   or   !A + C
+	pLits[0] = toLitCond(iVarA, 1)
+	pLits[1] = toLitCond(iVarC, 0)
+	RetValue = p.pSat.AddClauseC(pLits[:2])
+	assert(RetValue != 0, "RetValue")
+	// add B => C   or   !B + C
+	pLits[0] = toLitCond(iVarB, 1)
+	pLits[1] = toLitCond(iVarC, 0)
+	RetValue = p.pSat.AddClauseC(pLits[:2])
+	assert(RetValue != 0, "RetValue")
+	// add !A & !B => !C     or A + B + !C
+	pLits[0] = toLitCond(iVarA, 0)
+	pLits[1] = toLitCond(iVarB, 0)
+	pLits[2] = toLitCond(iVarC, 1)
+	RetValue = p.pSat.AddClauseC(pLits[:3])
+	assert(RetValue != 0, "RetValue")
 }
 
-func Inter_CheckAddEqual(p *Inter_Check_t, a, b int32) {
-	if !p.pSat.AddClause(bsat.Negative(a), bsat.Positive(b)) ||
-		!p.pSat.AddClause(bsat.Positive(a), bsat.Negative(b)) {
-		panic("could not add interpolation equality")
-	}
+/*
+*Function*************************************************************
+
+	Synopsis    [Creates equality: A = B.]
+
+**********************************************************************
+*/
+func Inter_CheckAddEqual(p *Inter_Check_t, iVarA, iVarB int32) {
+	var RetValue int32
+	var pLits [3]bsat.Literal
+	// add A => B   or   !A + B
+	pLits[0] = toLitCond(iVarA, 1)
+	pLits[1] = toLitCond(iVarB, 0)
+	RetValue = p.pSat.AddClauseC(pLits[:2])
+	assert(RetValue != 0, "RetValue")
+	// add B => A   or   !B + A
+	pLits[0] = toLitCond(iVarB, 1)
+	pLits[1] = toLitCond(iVarA, 0)
+	RetValue = p.pSat.AddClauseC(pLits[:2])
+	assert(RetValue != 0, "RetValue")
 }
 
-// Inter_CheckPerform adds one interpolant to the existing k-induction query.
-// It returns 1 only when the resulting assumptions are proven UNSAT.
-func Inter_CheckPerform(p *Inter_Check_t, data *cnf.Cnf_Dat_t, deadline abctime) int32 {
-	return interCheckPerformClock(p, data, deadline, util.Abc_Clock)
-}
+/*
+*Function*************************************************************
 
-func interCheckPerformClock(p *Inter_Check_t, data *cnf.Cnf_Dat_t, deadline abctime, clock func() int64) int32 {
-	if p == nil || p.pSat == nil || data == nil || data.SourceGraph() == nil {
-		panic("invalid interpolant CNF")
+	Synopsis    [Perform the checking.]
+
+	Description [Returns 1 if the check has passed.]
+
+**********************************************************************
+*/
+func Inter_CheckPerform(p *Inter_Check_t, pCnfInt *Cnf_Dat_t, nTimeNewOut abctime) int32 {
+	var pObj, pObj2 Aig_Obj_t
+	var i, f, VarA, VarB, RetValue, Entry, status int32
+	pMan := pCnfInt.SourceGraph()
+	nRegs := aig.Aig_ManCiNum(pMan)
+	assert(aig.Aig_ManCoNum(p.pCnf.SourceGraph()) == p.nFramesK*nRegs, "Aig_ManCoNum(p->pCnf->pMan) == p->nFramesK * nRegs")
+	assert(aig.Aig_ManCoNum(pMan) == 1, "Aig_ManCoNum(pCnfInt->pMan) == 1")
+
+	// set runtime limit
+	if nTimeNewOut != 0 {
+		p.pSat.SetRuntimeLimitC(util.Abc_Clock, nTimeNewOut)
 	}
-	graph := data.SourceGraph()
-	regs := graph.InputCount()
-	if graph.OutputCount() != 1 || p.pFrames.OutputCount() != int(p.nFramesK)*regs {
-		panic("interpolant dimensions do not match frames")
-	}
-	if deadline != 0 {
-		p.pSat.SetRuntimeDeadline(clock, int64(deadline))
-	}
-	base := p.nVars
-	cnf.Cnf_DataLift(data, base)
-	offset := base
-	defer func() { cnf.Cnf_DataLift(data, -offset) }()
-	for frame := int32(0); frame <= p.nFramesK; frame++ {
-		for _, clause := range data.Clauses {
-			if !p.pSat.AddClause(clause...) {
-				panic("inconsistent interpolation clauses")
-			}
+
+	// add clauses to the SAT solver
+	cnf.Cnf_DataLift(pCnfInt, p.nVars)
+	for f = 0; f <= p.nFramesK; f++ {
+		// add clauses to the solver
+		for i = 0; i < int32(len(pCnfInt.Clauses)); i++ {
+			RetValue = p.pSat.AddClauseC(pCnfInt.Clauses[i])
+			assert(RetValue != 0, "RetValue")
 		}
-		for i, input := range graph.Inputs() {
-			var frameNode aig.Edge
-			if frame == 0 {
-				frameNode = p.pFrames.InputAt(int(i))
+		// add equality clauses for the flop variables
+		for i = 0; i < aig.Aig_ManCiNum(pMan); i++ {
+			pObj = aig.Aig_ManCi(pMan, i)
+			if f != 0 {
+				pObj2 = aig.Aig_ManCo(p.pFrames, i+(f-1)*nRegs)
 			} else {
-				frameNode = p.pFrames.OutputAt(int(i + int(frame-1)*regs))
+				pObj2 = aig.Aig_ManCi(p.pFrames, i)
 			}
-			Inter_CheckAddEqual(p, data.VarNums[input.NodeID()], p.pCnf.VarNums[frameNode.NodeID()])
+			Inter_CheckAddEqual(p, pCnfInt.VarNums[aig.Aig_ObjId(pObj)], p.pCnf.VarNums[aig.Aig_ObjId(pObj2)])
 		}
-		output := data.VarNums[graph.OutputAt(int(0)).NodeID()]
-		if frame < p.nFramesK {
-			if int(frame) == len(p.vOrLits) {
-				p.vOrLits = append(p.vOrLits, output)
+		// add final clauses
+		if f < p.nFramesK {
+			if f == int32(vec.Vec_IntSize(p.vOrLits)) { // find time here
+				// add literal to this frame
+				VarB = pCnfInt.VarNums[aig.Aig_ObjId(aig.Aig_ManCo(pMan, 0))]
+				vec.Vec_IntPush(p.vOrLits, VarB)
 			} else {
-				combined := p.nVars + int32(data.Variables)
-				Inter_CheckAddOrGate(p, p.vOrLits[frame], output, combined)
-				p.vOrLits[frame] = combined
+				// add OR gate for this frame
+				VarA = vec.Vec_IntEntry(p.vOrLits, int(f))
+				VarB = pCnfInt.VarNums[aig.Aig_ObjId(aig.Aig_ManCo(pMan, 0))]
+				Inter_CheckAddOrGate(p, VarA, VarB, p.nVars+int32(pCnfInt.Variables))
+				vec.Vec_IntWriteEntry(p.vOrLits, int(f), p.nVars+int32(pCnfInt.Variables)) // using var ID!
 			}
 		} else {
-			p.vAndLits = append(p.vAndLits, output)
+			// add AND gate for this frame
+			VarB = pCnfInt.VarNums[aig.Aig_ObjId(aig.Aig_ManCo(pMan, 0))]
+			vec.Vec_IntPush(p.vAndLits, VarB)
 		}
-		step := int32(data.Variables) + 1
-		cnf.Cnf_DataLift(data, step)
-		offset += step
-		p.nVars += step
+		// update variable IDs
+		cnf.Cnf_DataLift(pCnfInt, int32(pCnfInt.Variables)+1)
+		p.nVars += int32(pCnfInt.Variables) + 1
 	}
-	assumptions := make([]bsat.Literal, 0, len(p.vOrLits)+len(p.vAndLits))
-	for _, v := range p.vOrLits {
-		assumptions = append(assumptions, bsat.Positive(v))
+	cnf.Cnf_DataLift(pCnfInt, -p.nVars)
+	assert(int32(vec.Vec_IntSize(p.vOrLits)) == p.nFramesK, "Vec_IntSize(p->vOrLits) == p->nFramesK")
+
+	// collect the assumption literals
+	vec.Vec_IntClear(p.vAssLits)
+	for i = 0; i < int32(vec.Vec_IntSize(p.vOrLits)); i++ {
+		Entry = vec.Vec_IntEntry(p.vOrLits, int(i))
+		vec.Vec_IntPush(p.vAssLits, int32(toLitCond(Entry, 0)))
 	}
-	for _, v := range p.vAndLits {
-		assumptions = append(assumptions, bsat.Negative(v))
+	for i = 0; i < int32(vec.Vec_IntSize(p.vAndLits)); i++ {
+		Entry = vec.Vec_IntEntry(p.vAndLits, int(i))
+		vec.Vec_IntPush(p.vAssLits, int32(toLitCond(Entry, 1)))
 	}
-	if p.pSat.Solve(assumptions...) == bsat.Unsatisfiable {
-		return 1
-	}
-	return 0
+	/*
+	   if ( pCnfInt->nLiterals == 3635 )
+	   {
+	       int s = 0;
+	   }
+	*/
+	// call the SAT solver
+	status = p.pSat.SolveC(vec.Vec_IntArray(p.vAssLits), 0, 0, 0, 0)
+
+	return b2i(status == int32(bsat.Unsatisfiable))
 }

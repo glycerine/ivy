@@ -89,6 +89,12 @@ int Inter_ManPerformInterpolation( Aig_Man_t * pAig, Inter_ManParams_t * pPars, 
     // enable ORing of the interpolants, if containment check is performed inductively with K > 1
     if ( pPars->nFramesK > 1 )
         pPars->fTransLoop = 1;
+    // backward interpolation works only with the transition loop: without it,
+    // the initial interpolant (Inter_ManStartOneOutput) has one more CI than
+    // the transition relation (Inter_ManStartDuplicated) and the connector
+    // clauses are wrong (safe properties were reported as failing)
+    if ( pPars->fUseBackward )
+        pPars->fTransLoop = 1;
 
     // sanity checks
     assert( Saig_ManRegNum(pAig) > 0 );
