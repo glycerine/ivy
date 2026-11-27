@@ -699,7 +699,7 @@ int Llb_ManReachability( Llb_Man_t * p, Vec_Int_t * vHints, DdManager ** pddGlo 
             if ( !p->pPars->fSilent )
             {
                 if ( !p->pPars->fBackward )
-                    Abc_Print( 1, "Output %d of miter \"%s\" was asserted in frame %d.  ", p->pAigGlo->pSeqModel->iPo, p->pAigGlo->pName, p->pAigGlo->pName, nIters );
+                    Abc_Print( 1, "Output %d of miter \"%s\" was asserted in frame %d.  ", p->pAigGlo->pSeqModel->iPo, p->pAigGlo->pName, nIters );
                 else
                     Abc_Print( 1, "Output ??? of miter \"%s\" was asserted in frame %d (counter-example is not produced).  ", p->pAigGlo->pName, nIters );
                 Abc_PrintTime( 1, "Time", Abc_Clock() - clk );

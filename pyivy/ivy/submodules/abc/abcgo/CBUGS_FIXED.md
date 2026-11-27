@@ -440,3 +440,22 @@ and states how the Go port was verified.
   other engines do, and the ASan build is clean.
 - **Go port:** unaffected: `mf.DeriveCNF` decodes each cover's output at the
   width the cover was derived for and sizes clauses from the cover.
+
+## 21. `&reachm` and `&reachn` print the wrong frame (and can crash)
+
+- **Files:** `src/bdd/llb/llb1Reach.c` (`Llb_ManReachability`) and
+  `src/bdd/llb/llb3Nonlin.c` (`Llb_NonlinReachability`).
+- **Found:** 2026-11-27: `read base/abci/test_vectors/native_s27_drw.blif;
+  strash; &get; &reachm` printed "was asserted in frame -1622481680" (the
+  value changed from run to run); `&reachn` printed `miter "(null)"` and a
+  garbage frame. `&reachy` reports frame 0.
+- **Bug:** argument lists that do not match their formats. llb1Reach.c
+  passes the miter name twice, so the frame's `%d` reads the second pointer;
+  llb3Nonlin.c passes no name, so `%s` reads `nIters` as a `char *`: frame 0
+  printed "(null)", and any later frame dereferences a small integer.
+- **Fix:** pass exactly the miter name and `nIters`.
+- **Test:** `abcgo/base/abci/reach_native_test.go`
+  (`TestNativeReachReportsFailingFrame`, needs `ABC_BINARY`): requires
+  `Output 0 of miter "s27.bench" was asserted in frame 0.` from &reachm,
+  &reachn and &reachy.
+- **Go port:** the &reach* commands are not registered yet (task #39).
