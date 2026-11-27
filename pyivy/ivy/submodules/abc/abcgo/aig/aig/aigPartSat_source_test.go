@@ -88,7 +88,7 @@ func TestSATDfsPartitionsVisitChoiceFirstAndStartTraversal(t *testing.T) {
 		alternative := g.AND(a, g.AND(b, c))
 		root := g.AND(g.AND(a, b), c)
 		g.AddOutput(root)
-		g.equivs = map[int]Edge{root.NodeID(): alternative}
+		g.equivs = edgeTableOf(root.NodeID(), alternative)
 		var order []Edge
 		if preorder != 0 {
 			order = Aig_ManDfsPreorder(g, 1)

@@ -88,7 +88,7 @@ func TestChoiceLevelUsesMaximumAlternativeDepth(t *testing.T) {
 	balanced := p.AND(ab, p.AND(c, d))
 	chain := p.AND(p.AND(ab, c), d)
 	out := p.AddOutput(balanced)
-	p.equivs = map[int]Edge{balanced.NodeID(): chain}
+	p.equivs = edgeTableOf(balanced.NodeID(), chain)
 	if Aig_ManChoiceLevel(p) != 3 || p.node(balanced).Level != 3 || p.node(out).Level != 3 {
 		t.Fatal("choice class underestimated maximum level")
 	}

@@ -67,57 +67,84 @@ func Dch_ObjCheckTfi(g *aig.Graph, node, representative aig.Edge) bool {
 	return scratch.check(g, node, representative)
 }
 
-// tfiScratch holds Dch_ObjCheckTfi's marks: ABC's fMarkA on the choice
-// chain and the traversal ID, as generation stamps reused across calls.
+// tfiScratch holds Dch_ObjCheckTfi's marks (ABC's fMarkA on the choice
+// chain and the traversal ID, as generation stamps reused across calls)
+// next to a compact mirror of the graph's fanins and choice links: the
+// check walks whole fanin cones once per candidate choice, and ABC keeps
+// all of this in the object, one cache line per visit. The mirror follows
+// nodes as they are added (sync) and choices as they are linked (link).
 type tfiScratch struct {
-	target, seen []uint32
-	gen          uint32
+	nodes []tfiNode
+	gen   uint32
+}
+
+type tfiNode struct {
+	fanin0, fanin1, equiv int32 // node IDs, -1 for none
+	target, seen          uint32
+}
+
+func tfiNodeID(e aig.Edge) int32 {
+	if e == aig.InvalidEdge {
+		return -1
+	}
+	return int32(e.NodeID())
+}
+
+// sync mirrors the nodes added to g since the last call.
+func (s *tfiScratch) sync(g *aig.Graph) {
+	for id := len(s.nodes); id < g.NodeSlots(); id++ {
+		e := aig.Aig_ManObj(g, int32(id))
+		n := tfiNode{fanin0: -1, fanin1: -1, equiv: tfiNodeID(aig.Aig_ObjEquiv(g, e))}
+		switch kind, f0, f1 := g.KindFanins(e); kind {
+		case aig.Buffer, aig.Output:
+			n.fanin0 = tfiNodeID(f0)
+		case aig.And, aig.ExclusiveOr:
+			n.fanin0, n.fanin1 = tfiNodeID(f0), tfiNodeID(f1)
+		}
+		s.nodes = append(s.nodes, n)
+	}
+}
+
+// link records that tail's next choice is member (Aig_ObjSetEquiv).
+func (s *tfiScratch) link(g *aig.Graph, tail, member aig.Edge) {
+	s.sync(g)
+	s.nodes[tail.NodeID()].equiv = int32(member.NodeID())
 }
 
 func (s *tfiScratch) check(g *aig.Graph, node, representative aig.Edge) bool {
-	if n := g.NodeSlots(); len(s.seen) < n {
-		s.target = append(s.target, make([]uint32, n-len(s.target))...)
-		s.seen = append(s.seen, make([]uint32, n-len(s.seen))...)
-	}
+	s.sync(g)
 	s.gen++
 	if s.gen == 0 { // wrapped: restart the stamps
-		clear(s.target)
-		clear(s.seen)
+		for i := range s.nodes {
+			s.nodes[i].target, s.nodes[i].seen = 0, 0
+		}
 		s.gen = 1
 	}
-	gen, target, seen := s.gen, s.target, s.seen
-	for next := representative; next != aig.InvalidEdge; next = aig.Aig_ObjEquiv(g, next) {
-		if target[next.NodeID()] == gen {
+	for id := int32(representative.NodeID()); id >= 0; id = s.nodes[id].equiv {
+		if s.nodes[id].target == s.gen {
 			panic("dch: cyclic choice chain")
 		}
-		target[next.NodeID()] = gen
+		s.nodes[id].target = s.gen
 	}
-	var visit func(aig.Edge) bool
-	visit = func(edge aig.Edge) bool {
-		id := edge.NodeID()
-		if target[id] == gen {
-			return true
-		}
-		if seen[id] == gen {
-			return false
-		}
-		seen[id] = gen
-		regular := aig.Aig_Regular(edge)
-		n := g.Node(regular)
-		switch n.Kind {
-		case aig.Buffer, aig.Output:
-			if visit(n.Fanins[0]) {
-				return true
-			}
-		case aig.And, aig.ExclusiveOr:
-			if visit(n.Fanins[0]) || visit(n.Fanins[1]) {
-				return true
-			}
-		}
-		equivalent := aig.Aig_ObjEquiv(g, regular)
-		return equivalent != aig.InvalidEdge && visit(equivalent)
+	return s.reaches(int32(node.NodeID()))
+}
+
+// reaches is Dch_ObjCheckTfi_rec: whether the fanin cone of node id,
+// through choice alternatives, reaches a marked representative.
+func (s *tfiScratch) reaches(id int32) bool {
+	n := &s.nodes[id]
+	if n.target == s.gen {
+		return true
 	}
-	return visit(node)
+	if n.seen == s.gen {
+		return false
+	}
+	n.seen = s.gen
+	if n.fanin0 >= 0 && s.reaches(n.fanin0) || n.fanin1 >= 0 && s.reaches(n.fanin1) {
+		return true
+	}
+	n = &s.nodes[id] // (the slice does not move during a check)
+	return n.equiv >= 0 && s.reaches(n.equiv)
 }
 
 // DeriveChoiceAig replaces proved constants/CI aliases and redirects fanins
@@ -209,6 +236,7 @@ func DeriveChoiceAig(source *aig.Graph, skipRedundantSupport bool) (*aig.Graph, 
 						tail = next
 					}
 					aig.Aig_ObjSetEquiv(result, tail, member)
+					tfi.link(result, tail, member)
 				}
 			}
 		}

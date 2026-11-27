@@ -25,12 +25,22 @@ func Aig_ObjClearReverseLevel(p *Graph, e Edge) { Aig_ObjSetReverseLevel(p, e, 0
 func Aig_ObjRequiredLevel(p *Graph, e Edge) int32 {
 	return p.maxRequiredLevel + 1 - Aig_ObjReverseLevel(p, e)
 }
+
+// Aig_ObjReverseLevelNew is one more than the largest reverse level of the
+// node's fanouts (Aig_ObjForEachFanout); fanouts not yet given a level
+// count as 0, as Aig_ObjReverseLevel reads them.
 func Aig_ObjReverseLevelNew(p *Graph, e Edge) int32 {
+	if p.reverseLevels == nil {
+		panic("aig: reverse levels not active")
+	}
+	levels, data := p.reverseLevels, p.fanouts.data
 	max := int32(0)
-	for i, fan := int32(0), Aig_ObjFanout0Int(p, int32(e.NodeID())); i < Aig_ObjRefs(p, e); i, fan = i+1, Aig_ObjFanoutNext(p, fan) {
-		if level := Aig_ObjReverseLevel(p, Aig_ManObj(p, fan>>1)); level > max {
-			max = level
+	refs := p.node(e).Refs
+	for i, fan := 0, Aig_ObjFanout0Int(p, int32(e.NodeID())); i < refs; i++ {
+		if id := int(fan >> 1); id < len(levels) && levels[id] > max {
+			max = levels[id]
 		}
+		fan = data[5*(fan>>1)+3+(fan&1)]
 	}
 	return max + 1
 }
@@ -68,7 +78,12 @@ func Aig_ManUpdateLevel(p *Graph, e Edge) {
 	if old == int(Aig_ObjLevelNew(p, e)) {
 		return
 	}
-	var queue timingQueue
+	// the queue keeps its buckets between calls (C's p->vLevels)
+	queue := p.levelQueue
+	for i := range queue {
+		queue[i] = queue[i][:0]
+	}
+	defer func() { p.levelQueue = queue }()
 	queue.add(p, e, old)
 	for level := old; level < len(queue); level++ {
 		for i := 0; i < len(queue[level]); i++ {
@@ -103,7 +118,12 @@ func Aig_ManUpdateReverseLevel(p *Graph, e Edge) {
 	if old == int(Aig_ObjReverseLevelNew(p, e)) {
 		return
 	}
-	var queue timingQueue
+	// the queue keeps its buckets between calls (C's p->vLevels)
+	queue := p.levelQueue
+	for i := range queue {
+		queue[i] = queue[i][:0]
+	}
+	defer func() { p.levelQueue = queue }()
 	queue.add(p, e, old)
 	for level := old; level < len(queue); level++ {
 		// Appending a newly allocated fanin to this same old-level bucket is

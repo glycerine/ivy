@@ -13,7 +13,7 @@ func TestDfsChoicesSourceTraversal(t *testing.T) {
 	bc := p.AND(b, c)
 	alternative := p.AND(a, bc)
 	out := p.AddOutput(root)
-	p.equivs = map[int]Edge{root.NodeID(): alternative}
+	p.equivs = edgeTableOf(root.NodeID(), alternative)
 	old := p.travID
 	want := []Edge{ab, bc, alternative, root}
 	if got := Aig_ManDfsChoices(p); !slices.Equal(got, want) {

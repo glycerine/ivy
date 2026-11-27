@@ -44,7 +44,7 @@ func TestDfsNodesVisitsChoiceBeforeFanins(t *testing.T) {
 	root := p.AND(ab, c)
 	bc := p.AND(b, c)
 	alternative := p.AND(a, bc)
-	p.equivs = map[int]Edge{root.NodeID(): alternative}
+	p.equivs = edgeTableOf(root.NodeID(), alternative)
 	want := []Edge{a, b, c, bc, alternative, ab, root}
 	if got := Aig_ManDfsNodes(p, []Edge{root}, 1); !slices.Equal(got, want) {
 		t.Fatalf("choice DFS = %v, want %v", got, want)

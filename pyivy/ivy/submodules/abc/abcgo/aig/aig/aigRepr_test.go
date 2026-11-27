@@ -93,7 +93,7 @@ func TestRepresentativeChoiceValidity(t *testing.T) {
 		t.Fatal("false dependency")
 	}
 	Aig_ManMarkValidChoices(g)
-	if got := g.equivs[root.NodeID()]; got != other {
+	if got := g.equivs.at(root.NodeID()); got != other {
 		t.Fatal("missing choice", got)
 	}
 	if Aig_ObjCheckTfi(g, root, other) != 1 {

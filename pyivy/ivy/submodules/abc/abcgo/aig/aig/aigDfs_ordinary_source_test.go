@@ -15,7 +15,7 @@ func TestOrdinaryDfsSourceOrderAndMarks(t *testing.T) {
 			bc := p.AND(b, c)
 			alternative := p.AND(a, bc)
 			out := p.AddOutput(root.Not())
-			p.equivs = map[int]Edge{root.NodeID(): alternative}
+			p.equivs = edgeTableOf(root.NodeID(), alternative)
 			want := []Edge{p.Const1(), a, b, c, bc, alternative, ab, root, out}
 			if nodesOnly != 0 {
 				want = []Edge{bc, alternative, ab, root}

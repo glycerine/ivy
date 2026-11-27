@@ -65,6 +65,7 @@ type Graph struct {
 	FlopReprs                                   []int32
 	cutManager                                  *Aig_ManCut_t
 	reverseLevels                               []int32
+	levelQueue                                  timingQueue
 	levelModes                                  []byte
 	maxRequiredLevel                            int32
 	order                                       []orderLinks
@@ -89,7 +90,8 @@ type Graph struct {
 	xorHash                                     strashTable
 	nRegs, nTruePis, nTruePos, nConstrs, travID int32
 	ghost                                       Node
-	copies, equivs, reprs, next                 map[int]Edge
+	copies, reprs, next                         map[int]Edge
+	equivs                                      *edgeTable
 	deleted                                     []bool
 	nDeleted                                    int
 }
@@ -387,7 +389,7 @@ func (g *Graph) Check() error {
 		if mode == levelReset {
 			level = 0
 		} else if mode == levelChoice {
-			if other, ok := g.equivs[id]; ok && g.valid(other) {
+			if other, ok := g.equivs.get(id); ok && g.valid(other) {
 				level = max(level, g.node(other).Level)
 			}
 		}
@@ -397,7 +399,7 @@ func (g *Graph) Check() error {
 			// Choice classes can use ordinary structural levels until the
 			// explicit choice-level pass annotates their maximum depth.
 			choiceLevel := level
-			if other, ok := g.equivs[id]; mode == levelStructural && ok && g.valid(other) && g.node(other).Level > choiceLevel {
+			if other, ok := g.equivs.get(id); mode == levelStructural && ok && g.valid(other) && g.node(other).Level > choiceLevel {
 				choiceLevel = g.node(other).Level
 			}
 			if n.Level != choiceLevel {
@@ -539,3 +541,10 @@ func (g *Graph) Kind(e Edge) NodeKind { return g.node(e).Kind }
 
 // Node returns a read-only snapshot of one live object's payload in O(1).
 func (g *Graph) Node(e Edge) Node { return *g.node(e) }
+
+// KindFanins reads a node's kind and fanins without copying the record,
+// for traversals that visit many nodes.
+func (g *Graph) KindFanins(e Edge) (NodeKind, Edge, Edge) {
+	n := g.node(e)
+	return n.Kind, n.Fanins[0], n.Fanins[1]
+}

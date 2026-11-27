@@ -39,7 +39,7 @@ func TestManagerStatsAgainstCompiledSource(t *testing.T) {
 		xor := g.NewXor(a, b)
 		Aig_ObjCreate(g, &Node{Kind: Buffer, Fanins: [2]Edge{xor, InvalidEdge}})
 		alternative := g.AND(a, root)
-		g.equivs = map[int]Edge{root.NodeID(): alternative}
+		g.equivs = edgeTableOf(root.NodeID(), alternative)
 		fmt.Printf("typed %d\n", Aig_ManHasNoGaps(g))
 		Aig_ManPrintStats(g)
 	})
@@ -58,7 +58,7 @@ func TestManagerStatsIncludeTypedObjectCounts(t *testing.T) {
 	g.AddOutput(root)
 	g.AddOutput(a)
 	Aig_ManSetRegNum(g, 1)
-	g.equivs = map[int]Edge{root.NodeID(): g.AND(c, root)}
+	g.equivs = edgeTableOf(root.NodeID(), g.AND(c, root))
 	got := captureAigOutput(t, func() { Aig_ManPrintStats(g) })
 	for _, field := range []string{"lat =     1", "xor =     1", "ch =     1", "buf =     1"} {
 		if !strings.Contains(got, field) {

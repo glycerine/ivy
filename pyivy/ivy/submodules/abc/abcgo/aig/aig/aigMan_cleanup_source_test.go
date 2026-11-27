@@ -56,7 +56,7 @@ func TestCleanupAgainstCompiledSource(t *testing.T) {
 				root := g.AND(g.AND(a, b), c)
 				alt := g.AND(a, g.AND(b, c))
 				g.AddOutput(root)
-				g.equivs = map[int]Edge{root.NodeID(): alt}
+				g.equivs = edgeTableOf(root.NodeID(), alt)
 				choice, alternative = root.NodeID(), alt.NodeID()
 				available = g.LiveEdges()
 			}
@@ -140,13 +140,13 @@ func TestCleanupDoesNotTreatChoiceLinksAsReferences(t *testing.T) {
 	root := g.AND(g.AND(a, b), c)
 	alternative := g.AND(a, g.AND(b, c))
 	g.AddOutput(root)
-	g.equivs = map[int]Edge{root.NodeID(): alternative}
+	g.equivs = edgeTableOf(root.NodeID(), alternative)
 	if removed := Aig_ManCleanup(g); removed != 2 || g.valid(alternative) || !g.valid(root) {
 		t.Fatalf("auxiliary choice links changed cleanup liveness: removed %d", removed)
 	}
 	// Like C, the primitive leaves caller-owned auxiliary tables alone. Such a
 	// weak entry needs rebuilding before a later choice traversal.
-	if g.equivs[root.NodeID()] != alternative {
+	if g.equivs.at(root.NodeID()) != alternative {
 		t.Fatal("cleanup rewrote the caller's auxiliary choice table")
 	}
 }

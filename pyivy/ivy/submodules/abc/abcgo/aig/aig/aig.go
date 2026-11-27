@@ -258,7 +258,7 @@ func Aig_ObjIsTerm(p *Graph, e Edge) bool {
 }
 func Aig_ObjIsHash(p *Graph, e Edge) bool { return Aig_ObjIsNode(p, e) }
 func Aig_ObjIsChoice(p *Graph, e Edge) bool {
-	_, ok := p.equivs[e.NodeID()]
+	_, ok := p.equivs.get(e.NodeID())
 	return ok && p.node(e).Refs > 0
 }
 func Aig_ObjIsCand(p *Graph, e Edge) bool { return p.node(e).Kind == Input || Aig_ObjIsNode(p, e) }
@@ -402,16 +402,16 @@ func Aig_ObjFanout0(p *Graph, e Edge) Edge {
 	return Aig_ManObj(p, first>>1)
 }
 func Aig_ObjEquiv(p *Graph, e Edge) Edge {
-	if x, ok := p.equivs[e.NodeID()]; ok {
+	if x, ok := p.equivs.get(e.NodeID()); ok {
 		return x
 	}
 	return InvalidEdge
 }
 func Aig_ObjSetEquiv(p *Graph, e, x Edge) {
 	if p.equivs == nil {
-		p.equivs = make(map[int]Edge)
+		p.equivs = newEdgeTable()
 	}
-	p.equivs[e.NodeID()] = x
+	p.equivs.set(e.NodeID(), x)
 }
 func Aig_ObjRepr(p *Graph, e Edge) Edge {
 	if x, ok := p.reprs[e.NodeID()]; ok {

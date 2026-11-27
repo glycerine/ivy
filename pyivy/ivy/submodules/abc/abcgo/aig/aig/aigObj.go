@@ -228,7 +228,7 @@ func Aig_ObjPrint(p *Graph, e Edge) {
 		fmt.Printf("%s( %4d%s, %4d%s )", kind, a.NodeID(), aigPrintComplement(a), b.NodeID(), aigPrintComplement(b))
 	}
 	fmt.Printf(" (refs = %3d)", n.Refs)
-	if next, ok := p.equivs[e.NodeID()]; ok && next != InvalidEdge {
+	if next, ok := p.equivs.get(e.NodeID()); ok && next != InvalidEdge {
 		fmt.Printf("  { %4d ", e.NodeID())
 		seen := map[int]bool{e.NodeID(): true}
 		for next != InvalidEdge {

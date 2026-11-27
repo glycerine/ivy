@@ -220,7 +220,7 @@ func TestPartitionExactFraigingAndChoices(t *testing.T) {
 		if err := result.Check(); err != nil {
 			t.Fatal(err)
 		}
-		if len(result.equivs) == 0 {
+		if result.equivs.len() == 0 {
 			t.Fatal("alternative implementations not retained")
 		}
 		for mask := 0; mask < 8; mask++ {

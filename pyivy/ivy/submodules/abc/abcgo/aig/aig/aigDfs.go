@@ -64,7 +64,7 @@ func (p *Graph) dfs(roots []Edge, nodesOnly, preorder, choices bool) []Edge {
 			}
 		}
 		if choices {
-			if other, ok := p.equivs[id]; ok {
+			if other, ok := p.equivs.get(id); ok {
 				visit(other)
 			}
 		}
@@ -103,7 +103,7 @@ func Aig_ManDfs_rec(p *Graph, e Edge, nodes *[]Edge) {
 		return
 	}
 	n.TravID = p.travID
-	if alternative, ok := p.equivs[e.NodeID()]; ok {
+	if alternative, ok := p.equivs.get(e.NodeID()); ok {
 		Aig_ManDfs_rec(p, alternative, nodes)
 	}
 	for _, fanin := range nodeFanins(*n) {
@@ -200,7 +200,7 @@ func Aig_ManDfsPreorder_rec(p *Graph, e Edge, nodes *[]Edge) {
 	}
 	n.TravID = p.travID
 	*nodes = append(*nodes, e)
-	if alternative, ok := p.equivs[e.NodeID()]; ok {
+	if alternative, ok := p.equivs.get(e.NodeID()); ok {
 		Aig_ManDfs_rec(p, alternative, nodes)
 	}
 	for _, fanin := range nodeFanins(*n) {
@@ -245,7 +245,7 @@ func (p *Graph) dfsChoices(e Edge, nodes *[]Edge, active map[int]bool) {
 	active[e.NodeID()] = true
 	p.dfsChoices(n.Fanins[0], nodes, active)
 	p.dfsChoices(n.Fanins[1], nodes, active)
-	if alternative, ok := p.equivs[e.NodeID()]; ok {
+	if alternative, ok := p.equivs.get(e.NodeID()); ok {
 		p.dfsChoices(alternative, nodes, active)
 	}
 	delete(active, e.NodeID())
@@ -366,7 +366,7 @@ func (p *Graph) choiceLevels(roots []Edge) {
 				level++
 			}
 		}
-		if other, ok := p.equivs[id]; ok {
+		if other, ok := p.equivs.get(id); ok {
 			visit(other)
 			if l := p.node(other).Level; l > level {
 				level = l

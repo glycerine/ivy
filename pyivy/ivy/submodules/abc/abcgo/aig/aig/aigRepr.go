@@ -323,7 +323,7 @@ func reprTfi(g *Graph, node, target Edge, visited map[int]bool) bool {
 			return true
 		}
 	}
-	if equivalent, ok := g.equivs[node.NodeID()]; ok {
+	if equivalent, ok := g.equivs.get(node.NodeID()); ok {
 		return reprTfi(g, equivalent, target, visited)
 	}
 	return false
@@ -357,7 +357,7 @@ func Aig_ManMarkValidChoices(g *Graph) {
 	if g.reprs == nil || g.equivs != nil {
 		panic("aig: invalid choice conversion state")
 	}
-	g.equivs = map[int]Edge{}
+	g.equivs = newEdgeTable()
 	for id, n := range g.nodes {
 		if g.isDeleted(id) || (n.Kind != And && n.Kind != ExclusiveOr) {
 			continue
@@ -372,10 +372,10 @@ func Aig_ManMarkValidChoices(g *Graph) {
 			Aig_ObjClearRepr(g, node)
 			continue
 		}
-		if next, ok := g.equivs[representative.NodeID()]; ok {
-			g.equivs[id] = next
+		if next, ok := g.equivs.get(representative.NodeID()); ok {
+			g.equivs.set(id, next)
 		}
-		g.equivs[representative.NodeID()] = node
+		g.equivs.set(representative.NodeID(), node)
 	}
 }
 func Aig_TransferMappedClasses(destination, part *Graph, mapping []int32) int32 {

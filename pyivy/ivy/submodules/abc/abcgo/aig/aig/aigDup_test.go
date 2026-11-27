@@ -214,7 +214,7 @@ func TestDuplicateGuidedInterleaving(t *testing.T) {
 	c := g.NewInput()
 	other := g.AND(a, c)
 	Aig_ObjCreateCo(g, other)
-	g.equivs = map[int]Edge{root.NodeID(): other}
+	g.equivs = edgeTableOf(root.NodeID(), other)
 	order := Aig_ManOrderPios(g, g)
 	if len(order) != 5 || order[2] != (PIO{false, 0}) || order[3] != (PIO{true, 2}) {
 		t.Fatal(order)
@@ -234,10 +234,10 @@ func TestDuplicateChoicesAndForwardRepresentatives(t *testing.T) {
 			equalDup(t, g, Aig_ManDupRepresDfs(g))
 			equalDup(t, g, Aig_ManDupRepres(g))
 		} else {
-			g.equivs = map[int]Edge{root.NodeID(): other}
+			g.equivs = edgeTableOf(root.NodeID(), other)
 			q := Aig_ManDupDfs(g)
 			equalDup(t, g, q)
-			if len(q.equivs) == 0 {
+			if q.equivs.len() == 0 {
 				t.Fatal("lost choices")
 			}
 		}

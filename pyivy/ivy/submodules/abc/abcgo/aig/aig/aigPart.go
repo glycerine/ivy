@@ -780,7 +780,7 @@ func Aig_ManChoiceEval(p *Graph) {
 		if p.isDeleted(id) || n.Refs == 0 {
 			continue
 		}
-		if _, ok := p.equivs[id]; !ok {
+		if _, ok := p.equivs.get(id); !ok {
 			continue
 		}
 		count := 0

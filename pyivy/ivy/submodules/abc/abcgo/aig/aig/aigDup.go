@@ -91,7 +91,7 @@ func dupVisit(dst, src *Graph, e Edge, choices, representatives bool, active map
 	n := src.node(e)
 	var equivalent Edge = InvalidEdge
 	if choices {
-		if other, ok := src.equivs[id]; ok && other != InvalidEdge && other.NodeID() != id {
+		if other, ok := src.equivs.get(id); ok && other != InvalidEdge && other.NodeID() != id {
 			equivalent = dupVisit(dst, src, other, choices, representatives, active)
 		}
 	}
@@ -135,12 +135,12 @@ func dupVisit(dst, src *Graph, e Edge, choices, representatives bool, active map
 	src.copies[id] = result
 	if equivalent != InvalidEdge && equivalent.NodeID() != result.NodeID() {
 		if dst.equivs == nil {
-			dst.equivs = map[int]Edge{}
+			dst.equivs = newEdgeTable()
 		}
 		if dst.reprs == nil {
 			dst.reprs = map[int]Edge{}
 		}
-		dst.equivs[result.NodeID()] = Aig_Regular(equivalent)
+		dst.equivs.set(result.NodeID(), Aig_Regular(equivalent))
 		dst.reprs[equivalent.NodeID()] = Aig_Regular(result)
 	}
 	return dupPhase(result, e.Complemented())
@@ -333,7 +333,7 @@ func Aig_ManDupDfs(src *Graph) *Graph {
 // source has them, as ABC's duplicators allocate pEquivs and pReprs.
 func dupChoiceTables(dst, src *Graph) {
 	if src.equivs != nil && dst.equivs == nil {
-		dst.equivs = map[int]Edge{}
+		dst.equivs = newEdgeTable()
 	}
 	if src.reprs != nil && dst.reprs == nil {
 		dst.reprs = map[int]Edge{}
