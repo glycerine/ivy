@@ -475,6 +475,9 @@ func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, 
 			}
 			if len(cubes) == 0 || len(cubes) == 1 && cubes[0] == 0 {
 				assert(compl == 0, "constant cover is not complemented")
+				// as C: the node built from the leaves keeps an AND
+				// cover; the constant node is the one returned
+				abc.Abc_ObjSetData(node, abc.Abc_SopCreateAnd(sopManager(pNtkNew), n, nil))
 				if len(cubes) == 0 {
 					function = abc.Abc_NtkCreateNodeConst0(pNtkNew)
 				} else {

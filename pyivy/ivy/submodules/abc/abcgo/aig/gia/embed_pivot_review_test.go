@@ -2,9 +2,9 @@ package gia
 
 import (
 	"context"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"testing"
@@ -47,7 +47,7 @@ func TestEmbeddingPivotStaysInOutputComponent(t *testing.T) {
 
 func TestEmbeddingConnectedDimensionsMatchOriginal(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "embedding_dimensions.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C dimensions: %v: %s", err, want)
 	}
@@ -156,7 +156,7 @@ func TestEmbeddingDegeneratePivotTerminates(t *testing.T) {
 		t.Run(kind, func(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
-			cmd := exec.CommandContext(ctx, exe, "-test.run=^TestEmbeddingDegeneratePivotTerminates$")
+			cmd := testoracle.CommandContext(t, ctx, exe, "-test.run=^TestEmbeddingDegeneratePivotTerminates$")
 			cmd.Env = append(os.Environ(), "ABCGO_EMBED_PIVOT_CHILD="+kind)
 			if out, err := cmd.CombinedOutput(); err != nil {
 				t.Fatalf("%s pivot pipeline: %v (context %v): %s", kind, err, ctx.Err(), out)

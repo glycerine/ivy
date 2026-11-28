@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -31,7 +31,7 @@ func cexReviewThreeInputGraph(table int) *Gia_Man_t {
 }
 func TestCounterexampleCareWorkflowMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cex_minimize.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native care minimization: %v\n%s", err, native)
 	}
@@ -76,7 +76,7 @@ func TestCounterexampleCareWorkflowMatchesOriginalABC(t *testing.T) {
 
 func TestCounterexampleSequentialCareMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cex_care_sequence.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native sequential care: %v\n%s", err, native)
 	}

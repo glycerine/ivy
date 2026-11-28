@@ -1,0 +1,242 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; scorr; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; scorr; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; lcorr; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; lcorr; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; ssweep; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; ssweep; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; scleanup; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; scleanup; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; dretime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; dretime; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; retime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; retime; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =    10  edge =     18  cube =    13  lev = 6\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; retime -M 4; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; retime -M 4; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =     9  edge =     17  cube =     9  lev = 5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; zero; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; zero; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; fraig -r; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; fraig -r; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; dc2; scorr; dretime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; dc2; scorr; dretime; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      7  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; \u0026get; \u0026scorr; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; \u0026get; \u0026scorr; \u0026put; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; \u0026get; \u0026scorr -c; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; \u0026get; \u0026scorr -c; \u0026put; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; \u0026get; \u0026dc2; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; \u0026get; \u0026dc2; \u0026put; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      7  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; if -K 4; mfs; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; if -K 4; mfs; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =     6  edge =     20  aig  =    14  lev = 2\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; \u0026get; \u0026sweep; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; \u0026get; \u0026sweep; \u0026put; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; \u0026get; \u0026lcorr; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; \u0026get; \u0026lcorr; \u0026put; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; \u0026get; \u0026fraig; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; \u0026get; \u0026fraig; \u0026put; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      8  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; irws; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; irws; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      7  lev =  5\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; irws -z; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; irws -z; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  and =      7  lev =  4\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  and =    160  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; scorr; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; scorr; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   14  and =    114  lev = 19\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; lcorr; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; lcorr; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   14  and =    123  lev = 19\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; ssweep; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; ssweep; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   14  and =    114  lev = 19\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; scleanup; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; scleanup; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   14  and =    123  lev = 19\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; dretime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; dretime; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   17  and =    160  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; retime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; retime; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  nd =   393  edge =    591  cube =   449  lev = 74\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; retime -M 4; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; retime -M 4; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  nd =   164  edge =    324  cube =   164  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; zero; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; zero; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  and =    160  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; fraig -r; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; fraig -r; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  and =    160  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; dc2; scorr; dretime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; dc2; scorr; dretime; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   14  and =     98  lev = 17\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026scorr; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026scorr; \u0026put; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   14  and =    114  lev = 19\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026scorr -c; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026scorr -c; \u0026put; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   14  and =    114  lev = 19\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026dc2; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026dc2; \u0026put; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  and =    122  lev = 18\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; if -K 4; mfs; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; if -K 4; mfs; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  nd =    79  edge =    237  aig  =   183  lev = 9\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026sweep; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026sweep; \u0026put; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  and =    149  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026lcorr; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026lcorr; \u0026put; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   14  and =    123  lev = 19\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026fraig; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026fraig; \u0026put; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  and =    149  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; irws; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; irws; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   17  and =    136  lev = 26\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; irws -z; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; irws -z; print_stats\".\n\n\u001b[1;37ms713.bench                    :\u001b[0m i/o =   35/   23  lat =   19  and =    143  lev = 27\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    673  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; scorr; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; scorr; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    663  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; lcorr; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; lcorr; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    673  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; ssweep; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; ssweep; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    663  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; scleanup; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; scleanup; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    673  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; dretime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; dretime; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    673  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; retime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; retime; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    7  nd =   647  edge =   1393  cube =   894  lev = 16\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; retime -M 4; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; retime -M 4; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    7  nd =   673  edge =   1346  cube =   673  lev = 14\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; zero; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; zero; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    673  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; fraig -r; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; fraig -r; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    673  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; dc2; scorr; dretime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; dc2; scorr; dretime; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    548  lev = 13\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026scorr; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026scorr; \u0026put; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    671  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026scorr -c; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026scorr -c; \u0026put; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    671  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026dc2; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026dc2; \u0026put; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    555  lev = 12\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; if -K 4; mfs; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; if -K 4; mfs; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  nd =   257  edge =    903  aig  =   790  lev = 6\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026sweep; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026sweep; \u0026put; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    671  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026lcorr; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026lcorr; \u0026put; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    673  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026fraig; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026fraig; \u0026put; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =    6  and =    671  lev = 15\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; irws; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; irws; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =  117  and =    599  lev = 22\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; irws -z; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; irws -z; print_stats\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms1494.bench                   :\u001b[0m i/o =    8/   19  lat =  126  and =    621  lev = 22\n"
+ }
+]

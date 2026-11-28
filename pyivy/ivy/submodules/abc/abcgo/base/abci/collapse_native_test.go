@@ -12,7 +12,7 @@ import (
 func TestCollapseBddSizesLikeNative(t *testing.T) {
 	for _, c := range []struct{ script, want string }{
 		{"read test_vectors/native_mul8_if6.blif; strash; collapse; print_stats", "bdd  = 11807"},
-		{"read ../../../i10.aig; strash; collapse; print_stats", "bdd  = 79647"},
+		{"read ../../test_vectors/i10.aig; strash; collapse; print_stats", "bdd  = 79647"},
 	} {
 		if out := runScript(t, c.script); !strings.Contains(out, c.want) {
 			t.Errorf("%s: want %q in\n%s", c.script, c.want, out)

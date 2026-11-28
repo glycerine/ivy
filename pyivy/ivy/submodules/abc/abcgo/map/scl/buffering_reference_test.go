@@ -3,8 +3,8 @@ package scl
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -60,11 +60,11 @@ func writeBufferBLIF(t *testing.T, net TimingNetwork, path string) {
 	}
 }
 func TestLoadGainBufferingAgainstOriginalABC(t *testing.T) {
-	binary, err := filepath.Abs("../../../abc")
+	binary, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = os.Stat(binary); err != nil {
+	if _, err = testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	before := bufferTestFixture(15)
@@ -95,18 +95,18 @@ func TestLoadGainBufferingAgainstOriginalABC(t *testing.T) {
 	writeBufferBLIF(t, before, input)
 	writeBufferBLIF(t, native, nativePath)
 	command := "read_lib " + lib + "; read_blif " + input + "; buffer -N 3 -G 300 -S 10; write_blif " + output + "; cec " + nativePath + " " + output
-	log, err := exec.Command(binary, "-q", command).CombinedOutput()
+	log, err := testoracle.Command(t, binary, "-q", command).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original ABC buffer: %v\n%s", err, log)
 	}
-	if _, err = os.Stat(output); err != nil {
+	if _, err = testoracle.Stat(output); err != nil {
 		t.Fatalf("original buffer produced no result: %v\n%s", err, log)
 	}
-	originalData, err := os.ReadFile(input)
+	originalData, err := testoracle.ReadFile(input)
 	if err != nil {
 		t.Fatal(err)
 	}
-	referenceData, err := os.ReadFile(output)
+	referenceData, err := testoracle.ReadFile(output)
 	if err != nil {
 		t.Fatal(err)
 	}

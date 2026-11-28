@@ -2,18 +2,16 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
 	"testing"
 )
 
 func TestBalanceOriginalABCOracle(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	binary := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(binary); err != nil {
+	binary := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	rng := rand.New(rand.NewSource(715))
@@ -59,12 +57,14 @@ func TestBalanceOriginalABCOracle(t *testing.T) {
 				if simple != 0 {
 					options += " -a"
 				}
-				command := fmt.Sprintf("&r -s %s; &b %s; &w %s", input, options, output)
-				text, err := exec.Command(binary, "-c", command).CombinedOutput()
+				// relative names: &w writes the model name, the path read
+				cmd := testoracle.Command(t, binary, "-c", fmt.Sprintf("&r -s input.aig; &b %s; &w output.aig", options))
+				cmd.Dir = dir
+				text, err := cmd.CombinedOutput()
 				if err != nil {
 					t.Fatalf("original balance oracle: %v\n%s", err, text)
 				}
-				data, err := os.ReadFile(output)
+				data, err := testoracle.ReadFile(output)
 				if err != nil {
 					t.Fatalf("missing ABC output: %v\n%s", err, text)
 				}

@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -19,7 +19,7 @@ func hashReviewStdout(t *testing.T, action func()) string {
 	os.Stdout = file
 	defer func() { os.Stdout = original; file.Close() }()
 	action()
-	data, err := os.ReadFile(file.Name())
+	data, err := testoracle.ReadFile(file.Name())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,7 +44,7 @@ type hashReviewTruth struct {
 
 func TestHashPrimitivesNativeOracle(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "hash_primitives.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v\n%s", err, native)
 	}

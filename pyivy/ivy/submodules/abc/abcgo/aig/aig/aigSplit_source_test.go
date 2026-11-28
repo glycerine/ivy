@@ -2,6 +2,7 @@ package aig
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -143,7 +144,7 @@ func TestSplitBddPipelineAgainstCompiledSource(t *testing.T) {
 		}
 	}
 	_, file, _, _ := runtime.Caller(0)
-	files, err := filepath.Glob(filepath.Join(filepath.Dir(file), "../../../src/bdd/cudd/*.c"))
+	files, err := testoracle.Glob(filepath.Join(filepath.Dir(file), "../../../src/bdd/cudd/*.c"))
 	if err != nil || len(files) == 0 {
 		t.Fatalf("CUDD sources: %v", err)
 	}

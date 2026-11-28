@@ -3,7 +3,7 @@ package fracomb_test
 import (
 	"context"
 	"fmt"
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -94,7 +94,7 @@ func TestDarRwsatLargerOrderedStagesAgainstSource(t *testing.T) {
 	g = aig.Aig_ManDupDfs(g)
 	dumpDarStage(&actual, g, "rewrite2")
 	_, file, _, _ := runtime.Caller(0)
-	golden, err := os.ReadFile(filepath.Join(filepath.Dir(file), "test_vectors/dar_rwsat_stages.golden"))
+	golden, err := testoracle.ReadFile(filepath.Join(filepath.Dir(file), "test_vectors/dar_rwsat_stages.golden"))
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -3,6 +3,7 @@ package super
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -200,7 +201,7 @@ func TestSuperCommands(t *testing.T) {
 	}
 	lib := testLibrary(t)
 	dir := t.TempDir()
-	contents, err := os.ReadFile(path)
+	contents, err := testoracle.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -216,7 +217,7 @@ func TestSuperCommands(t *testing.T) {
 	if frame.Execute("super -I 2 -L 1 tiny.genlib") != 0 {
 		t.Fatal(frame.Err)
 	}
-	data, err := os.ReadFile("tiny.super")
+	data, err := testoracle.ReadFile("tiny.super")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -226,7 +227,7 @@ func TestSuperCommands(t *testing.T) {
 	if frame.Execute("super2 -I2 -L2") != 0 {
 		t.Fatal(frame.Err)
 	}
-	if _, err = os.Stat("superI2L2"); err != nil {
+	if _, err = testoracle.Stat("superI2L2"); err != nil {
 		t.Fatal(err)
 	}
 	if frame.Execute("super -D 0 tiny.genlib") != 1 || frame.Execute("super -I 7 tiny.genlib") != 1 || frame.Execute("super2 -I6") != 1 {

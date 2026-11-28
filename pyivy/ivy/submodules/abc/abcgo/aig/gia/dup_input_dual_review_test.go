@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -142,7 +142,7 @@ func TestInputRemovalAndDualDfsLayouts(t *testing.T) {
 
 func TestInputRemovalAndDualMatchOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "input_dual.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C input/dual conversion: %v: %s", err, want)
 	}

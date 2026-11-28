@@ -2,15 +2,15 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
-	"os/exec"
 	"strings"
 	"testing"
 )
 
 func TestCutPrimitiveMergesAndDominanceMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cut_primitives_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native cut primitives: %v\n%s", err, native)
 	}

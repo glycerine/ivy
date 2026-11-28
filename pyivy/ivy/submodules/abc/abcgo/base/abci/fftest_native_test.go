@@ -1,6 +1,7 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"strings"
@@ -15,13 +16,13 @@ import (
 // is a line-by-line port, so the whole output must equal native ABC's
 // (times masked), as must every file the command writes.
 func TestFftestLikeNative(t *testing.T) {
-	if os.Getenv("ABC_BINARY") == "" {
+	if testoracle.NativeABCPath() == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
 	dir := t.TempDir()
 	designs := map[string]string{}
 	for _, name := range []string{"native_mul4_gen.aig", "native_mul8_canon.aig", "native_s27_drw.blif"} {
-		data, err := os.ReadFile(filepath.Join("test_vectors", name))
+		data, err := testoracle.ReadFile(filepath.Join("test_vectors", name))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -102,14 +103,14 @@ func fftestRun(t *testing.T, dir, script string, run func(*testing.T, string) st
 	t.Helper()
 	out := run(t, script)
 	files := map[string]string{}
-	entries, err := os.ReadDir(dir)
+	entries, err := testoracle.ReadDir(dir)
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, e := range entries {
 		if strings.HasSuffix(e.Name(), "_tests.txt") || strings.HasSuffix(e.Name(), "_untest.txt") {
 			name := filepath.Join(dir, e.Name())
-			data, err := os.ReadFile(name)
+			data, err := testoracle.ReadFile(name)
 			if err != nil {
 				t.Fatal(err)
 			}

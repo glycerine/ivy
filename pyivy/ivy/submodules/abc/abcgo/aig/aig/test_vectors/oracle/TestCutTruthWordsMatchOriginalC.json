@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/truth_words_compare.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "kind 0 signs 0 words 1: 80402006\nkind 0 signs 0 words 2: 80402006 21100824\nkind 0 signs 0 words 4: 80402006 21100824 80d11040 2002151a\nkind 0 signs 0 words 17: 80402006 21100824 80d11040 2002151a 04421142 06180188 00030990 00400412 9c840046 196458c4 9b30a120 184a2602 1984b01a 10102200 1012aa00 1020004a 92e88206\nkind 0 signs 1 words 1: 22080119\nkind 0 signs 1 words 2: 22080119 00829510\nkind 0 signs 1 words 4: 22080119 00829510 200c0909 00258044\nkind 0 signs 1 words 17: 22080119 00829510 200c0909 00258044 9b300031 18a48c00 9e04000d 1d1181a0 00180181 02822518 000058d1 02315004 80414201 09004c30 88484045 07856610 04076069\nkind 0 signs 2 words 1: 0d20c260\nkind 0 signs 2 words 2: 0d20c260 0e296089\nkind 0 signs 2 words 4: 0d20c260 0e296089 4920e6b4 4b886821\nkind 0 signs 2 words 17: 0d20c260 0e296089 4920e6b4 4b886821 0000ea00 a0034001 40d0c640 e2ac5205 0020dc18 24190221 4405000c 61840971 020205a0 a44f11c1 46051008 e0000005 00100c90\nkind 0 signs 3 words 1: 50971c80\nkind 0 signs 3 words 2: 50971c80 d0440242\nkind 0 signs 3 words 4: 50971c80 d0440242 16020002 94500280\nkind 0 signs 3 words 17: 50971c80 d0440242 16020002 94500280 608d048c 41403276 21283022 00022848 63432220 c0008002 20ca0602 84008088 64380844 42a0800e 21a005b2 085a99a0 69001100\nkind 1 signs 0 words 1: 2f28c379\nkind 1 signs 0 words 2: 2f28c379 0eabf599\nkind 1 signs 0 words 4: 2f28c379 0eabf599 692cefbd 4bade865\nkind 1 signs 0 words 17: 2f28c379 0eabf599 692cefbd 4bade865 9b30ea31 b8a7cc01 ded4c64d ffbdd3a5 0038dd99 269b2739 440558dd 63b55975 824347a1 ad4f5df1 ce4d504d e7856615 04176cf9\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

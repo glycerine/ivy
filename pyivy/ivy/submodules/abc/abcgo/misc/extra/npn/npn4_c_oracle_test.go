@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"testing"
 )
@@ -15,7 +15,7 @@ import (
 // its canonical representative's class: the original C left the complement of
 // each class representative in class 0 (see CBUGS_FIXED.md).
 func TestTruth4VarNPNMatchesC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for oracle")
 	}
@@ -26,10 +26,10 @@ func TestTruth4VarNPNMatchesC(t *testing.T) {
 	for _, f := range []string{"misc/extra/extraUtilMisc.c", "misc/extra/extraUtilFile.c", "misc/extra/extraUtilUtil.c", "misc/util/utilFile.c"} {
 		args = append(args, filepath.Join(src, f))
 	}
-	if out, err := exec.Command(cc, append(args, "-lm")...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, append(args, "-lm")...).CombinedOutput(); err != nil {
 		t.Fatalf("C oracle build: %v\n%s", err, out)
 	}
-	out, err := exec.Command(binary).Output()
+	out, err := testoracle.Command(t, binary).Output()
 	if err != nil {
 		t.Fatal(err)
 	}

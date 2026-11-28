@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: abc -c funenum -d -I 3 -M 3 [dir $TMP]",
+  "stdout": "ABC command line: \"funenum -d -I 3 -M 3\".\n\nD = 0  |  C =           0  |  New3 =         2   All3 =         2  |  Multi =         0  |  Time =     0.00 sec\nD = 1  |  C =          15  |  New3 =         2   All3 =         4  |  Multi =         1  |  Time =     0.00 sec\nD = 2  |  C =         180  |  New3 =         8   All3 =        12  |  Multi =         6  |  Time =     0.00 sec\nD = 3  |  C =        3180  |  New3 =         2   All3 =        14  |  Multi =        66  |  Time =     0.00 sec\nNPN classes for each node count (N):\nN =  0 : NPN =      2\nN =  1 : NPN =      2\nN =  2 : NPN =      5\nN =  3 : NPN =      3\nN =  4 : NPN =      2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

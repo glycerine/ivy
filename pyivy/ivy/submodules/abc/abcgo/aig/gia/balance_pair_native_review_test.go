@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"sort"
 	"strings"
 	"testing"
@@ -10,7 +10,7 @@ import (
 
 func TestAigBalancingHelpersNativeOracle(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "balance_pair_helpers.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v\n%s", err, native)
 	}

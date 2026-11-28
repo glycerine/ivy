@@ -1,8 +1,8 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -14,7 +14,7 @@ import (
 // The command checked the PI count but computed and printed truth tables
 // over all CIs, reading past s_Truths6 (CBUGS_FIXED.md #5).
 func TestNativePrintTruthStaysInBounds(t *testing.T) {
-	lib := os.Getenv("ABC_LIBABC")
+	lib := testoracle.NativeLibABCPath()
 	if lib == "" {
 		t.Skip("set ABC_LIBABC to a native libabc.a built from ../src")
 	}
@@ -35,12 +35,12 @@ int main(int argc, char **argv) { Abc_Start(); return Cmd_CommandExecute(Abc_Fra
 		append([]string{"gcc"}, append(asan, "-c", filepath.Join(src, "base/abci/abc.c"), "-o", filepath.Join(dir, "abc.o"))...),
 		{"g++", "-fsanitize=address", filepath.Join(dir, "main.o"), filepath.Join(dir, "giaTruth.o"), filepath.Join(dir, "abc.o"), lib, "-lreadline", "-lpthread", "-lm", "-ldl", "-o", bin},
 	} {
-		if out, err := exec.Command(c[0], c[1:]...).CombinedOutput(); err != nil {
+		if out, err := testoracle.Command(t, c[0], c[1:]...).CombinedOutput(); err != nil {
 			t.Fatalf("%v: %v\n%s", c[:3], err, out)
 		}
 	}
 	bench, _ := filepath.Abs("test_vectors/seq/s27.blif")
-	out, _ := exec.Command(bin, "read "+bench+"; strash; &get; &print_truth").CombinedOutput()
+	out, _ := testoracle.Command(t, bin, "read "+bench+"; strash; &get; &print_truth").CombinedOutput()
 	if strings.Contains(string(out), "AddressSanitizer") || !strings.Contains(string(out), "The number of inputs of the AIG exceeds 6.") {
 		t.Fatalf("&print_truth on s27:\n%s", out)
 	}

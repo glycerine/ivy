@@ -2,9 +2,9 @@ package aig
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"sort"
@@ -418,11 +418,11 @@ func TestDominatorRelatedCutRefRestoration(t *testing.T) {
 }
 
 func TestDominatorOriginalCOrderedMerge(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for oracle")
 	}
-	source, err := os.ReadFile("../../../src/aig/aig/aigDoms.c")
+	source, err := testoracle.ReadFile("../../../src/aig/aig/aigDoms.c")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -454,7 +454,7 @@ while(scanf("%d%d%d",&a.nNodes,&b.nNodes,&limit)==3){
 	if err := os.WriteFile(path, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, path, "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, path, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("C oracle: %v: %s", err, out)
 	}
 	var input, expected strings.Builder
@@ -487,7 +487,7 @@ while(scanf("%d%d%d",&a.nNodes,&b.nNodes,&limit)==3){
 			expected.WriteString("0\n")
 		}
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Stdin = strings.NewReader(input.String())
 	actual, err := cmd.CombinedOutput()
 	if err != nil {

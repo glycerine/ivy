@@ -1,6 +1,7 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"strings"
@@ -25,7 +26,7 @@ func TestMul4CrashesLikeNative(t *testing.T) {
 		t.Fatal(err)
 	}
 	copyPath := filepath.Join(long, "mul4.aig")
-	data, err := os.ReadFile(design)
+	data, err := testoracle.ReadFile(design)
 	if err != nil {
 		t.Fatal(err)
 	}

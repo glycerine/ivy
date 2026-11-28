@@ -134,7 +134,7 @@ func TestVerifyCleanModelClearsStaleZeroInputModel(t *testing.T) {
 func BenchmarkI10NativeResynthesisCEC(b *testing.B) {
 	extra.Extra_ProgressBarSetMode(false, true)
 	defer extra.Extra_ProgressBarSetMode(true, false)
-	left, err := abcio.ReadAiger("../../../i10.aig", true)
+	left, err := abcio.ReadAiger("../../test_vectors/i10.aig", true)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -165,7 +165,7 @@ func BenchmarkI10NativeResynthesisCEC(b *testing.B) {
 }
 
 func BenchmarkI10NetworkCheck(b *testing.B) {
-	n, err := abcio.ReadAiger("../../../i10.aig", true)
+	n, err := abcio.ReadAiger("../../test_vectors/i10.aig", true)
 	if err != nil {
 		b.Fatal(err)
 	}

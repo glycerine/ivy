@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c powerdown -h",
+  "stdout": "ABC command line: \"powerdown -h\".\n\nusage: powerdown [-PN \u003cnum\u003e] [-vwh]\n\t           transforms LUT-mapped network into an AIG with choices;\n\t           the choices are added to power down the next round of mapping\n\t-P \u003cnum\u003e : switching propability delta defining power critical edges [default = 10%]\n\t           (e.g. 5% means hot wires switch with probability: 0.45 \u003c= p \u003c= 0.50 (max)\n\t-N \u003cnum\u003e : the max critical path degree for resynthesis (0 \u003c num \u003c 6) [default = 2]\n\t-v       : toggle printing optimization summary [default = no]\n\t-w       : toggle printing detailed stats for each node [default = no]\n\t-h       : print the command usage\n"
+ }
+]

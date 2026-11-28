@@ -2,8 +2,8 @@ package fracomb_test
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -80,20 +80,20 @@ func runDarCOracle(t *testing.T, fixtureName string) (string, bool) {
 		t.Log("C oracle skipped: Linux required")
 		return "", false
 	}
-	cc, e1 := exec.LookPath("gcc")
-	cxx, e2 := exec.LookPath("g++")
+	cc, e1 := testoracle.LookPath("gcc")
+	cxx, e2 := testoracle.LookPath("g++")
 	if e1 != nil || e2 != nil {
 		t.Log("C oracle skipped: compiler unavailable")
 		return "", false
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, err := os.Stat(filepath.Join(src, "opt/dar/darScript.o")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "opt/dar/darScript.o")); err != nil {
 		t.Log("C oracle skipped: ABC object files unavailable")
 		return "", false
 	}
 	var objects []string
-	if err := filepath.WalkDir(src, func(path string, d os.DirEntry, err error) error {
+	if err := testoracle.WalkDir(src, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -110,16 +110,16 @@ func runDarCOracle(t *testing.T, fixtureName string) (string, bool) {
 	st := filepath.Join(dir, "st.o")
 	bin := filepath.Join(dir, "oracle")
 	for _, step := range [][]string{{"-DABC_USE_STDINT_H=1", "-I", src, "-c", fixture, "-o", obj}, {"-DABC_USE_STDINT_H=1", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st}} {
-		if result, err := exec.Command(cc, step...).CombinedOutput(); err != nil {
+		if result, err := testoracle.Command(t, cc, step...).CombinedOutput(); err != nil {
 			t.Fatalf("compile oracle: %v\n%s", err, result)
 		}
 	}
 	args := append([]string{"-o", bin, obj, st}, objects...)
 	args = append(args, "-lm", "-ldl", "-lpthread", "-lz", "-lreadline")
-	if result, err := exec.Command(cxx, args...).CombinedOutput(); err != nil {
+	if result, err := testoracle.Command(t, cxx, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link oracle: %v\n%s", err, result)
 	}
-	actual, err := exec.Command(bin).CombinedOutput()
+	actual, err := testoracle.Command(t, bin).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C oracle: %v\n%s", err, actual)
 	}

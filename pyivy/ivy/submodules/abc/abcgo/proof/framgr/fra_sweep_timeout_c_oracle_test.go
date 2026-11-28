@@ -1,8 +1,8 @@
 package framgr
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -12,14 +12,14 @@ import (
 // translation units under test are freshly compiled; the remaining linked ABC
 // objects come from a prebuilt source tree, matching other local C fixtures.
 func TestCompleteSweepTimeoutAgainstCompiledC(t *testing.T) {
-	if os.Getenv("ABC_FRA_C_ORACLE") != "1" {
+	if testoracle.Gate("ABC_FRA_C_ORACLE") != "1" {
 		t.Skip("set ABC_FRA_C_ORACLE=1 with prebuilt ABC objects")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
@@ -28,7 +28,7 @@ func TestCompleteSweepTimeoutAgainstCompiledC(t *testing.T) {
 		t.Fatal(err)
 	}
 	var objects []string
-	err = filepath.WalkDir(src, func(path string, d os.DirEntry, walkErr error) error {
+	err = testoracle.WalkDir(src, func(path string, d os.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
@@ -45,37 +45,37 @@ func TestCompleteSweepTimeoutAgainstCompiledC(t *testing.T) {
 	}
 	dir := t.TempDir()
 	archive := filepath.Join(dir, "abc.a")
-	if out, err := exec.Command(ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
 		t.Fatalf("archive: %v: %s", err, out)
 	}
 	var fresh []string
 	for _, name := range []string{"fraCore", "fraSat", "fraSim", "fraMan", "fraClass", "fraCnf"} {
 		target := filepath.Join(dir, name+".o")
-		if out, err := exec.Command(cc, "-std=gnu99", "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "proof/fra", name+".c"), "-o", target).CombinedOutput(); err != nil {
+		if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "proof/fra", name+".c"), "-o", target).CombinedOutput(); err != nil {
 			t.Fatalf("compile %s: %v: %s", name, err, out)
 		}
 		fresh = append(fresh, target)
 	}
 	st := filepath.Join(dir, "st.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
 		t.Fatalf("compile st: %v: %s", err, out)
 	}
 	binary := filepath.Join(dir, "oracle")
 	args := []string{"-DABC_USE_STDINT_H", "-I", src, "test_vectors/fra_sweep_timeout.c"}
 	args = append(args, fresh...)
 	args = append(args, st, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary)
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link oracle: %v: %s", err, out)
 	}
-	out, err := exec.Command(binary).CombinedOutput()
+	out, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil || !strings.Contains(string(out), "callback failures=2 logged=2\ndone nodes=39\ntimeout=35 repr=-1\ntimeout=47 repr=-1") {
 		t.Fatalf("source oracle: %v: %s", err, out)
 	}
 	args[3] = "test_vectors/fra_sweep_timeout_followup.c"
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link follow-up oracle: %v: %s", err, out)
 	}
-	out, err = exec.Command(binary).CombinedOutput()
+	out, err = testoracle.Command(t, binary).CombinedOutput()
 	if err != nil || !strings.Contains(string(out), "failures=2 sat=7 ids=47,59,63,68,69,72,73,76,77\nrare=77 nodes=57") {
 		t.Fatalf("follow-up source oracle: %v: %s", err, out)
 	}
@@ -89,10 +89,10 @@ func TestCompleteSweepTimeoutAgainstCompiledC(t *testing.T) {
 // This counterexample fixture compiles every linked ABC translation unit
 // from checked-in C sources; unused functions are discarded by the linker.
 func TestMultiwordCounterexampleAgainstFreshC(t *testing.T) {
-	if os.Getenv("ABC_FRA_C_ORACLE") != "1" {
+	if testoracle.Gate("ABC_FRA_C_ORACLE") != "1" {
 		t.Skip("set ABC_FRA_C_ORACLE=1 to compile ABC sources")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -105,7 +105,7 @@ func TestMultiwordCounterexampleAgainstFreshC(t *testing.T) {
 	var objects []string
 	for i, source := range sources {
 		target := filepath.Join(dir, strings.ReplaceAll(source, "/", "_")+".o")
-		if out, err := exec.Command(cc, "-std=gnu99", "-DABC_USE_STDINT_H", "-I", src, "-ffunction-sections", "-fdata-sections", "-O1", "-c", filepath.Join(src, source), "-o", target).CombinedOutput(); err != nil {
+		if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DABC_USE_STDINT_H", "-I", src, "-ffunction-sections", "-fdata-sections", "-O1", "-c", filepath.Join(src, source), "-o", target).CombinedOutput(); err != nil {
 			t.Fatalf("compile source %d: %v: %s", i, err, out)
 		}
 		objects = append(objects, target)
@@ -114,10 +114,10 @@ func TestMultiwordCounterexampleAgainstFreshC(t *testing.T) {
 	args := []string{"-std=gnu99", "-DABC_USE_STDINT_H", "-I", src, "-ffunction-sections", "-fdata-sections", "-O1", "-Wl,--gc-sections", "test_vectors/fra_multiword_cex.c", "test_vectors/oracle_link_helpers.c"}
 	args = append(args, objects...)
 	args = append(args, "-lm", "-lpthread", "-o", binary)
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link oracle: %v: %s", err, out)
 	}
-	out, err := exec.Command(binary).CombinedOutput()
+	out, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil || !strings.Contains(string(out), "frame=19 po=0 bits=41 words=00000000,00000060") {
 		t.Fatalf("source oracle: %v: %s", err, out)
 	}

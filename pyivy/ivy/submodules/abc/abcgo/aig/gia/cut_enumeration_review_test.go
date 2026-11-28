@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"slices"
 	"strings"
@@ -15,7 +15,7 @@ func TestCutReportsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cut_enumeration_review.c")
 	for _, mode := range []string{"reports", "driver"} {
 		t.Run(mode, func(t *testing.T) {
-			native, err := exec.Command(exe, mode).CombinedOutput()
+			native, err := testoracle.Command(t, exe, mode).CombinedOutput()
 			if err != nil {
 				t.Fatalf("native cut report: %v\n%s", err, native)
 			}

@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -q super2 -I 2 -L 2 [dir $TMP]",
+  "stdout": "Computing supergates for 2 inputs and 2 levels:\nLevel 1:  Tried =      15.  Computed =       7.  Runtime =     0.00 sec\nLevel 2:  Tried =      91.  Computed =       8.  Runtime =     0.00 sec\nWriting the output file...\nSorting =     0.00 sec\nThe supergates are written into file \"superI2L2\" (0.00 MB).\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/superI2L2": "# AND2/INV supergates derived on Sat Nov 28 05:29:26 2026.\n# Command line: \"super2 -i 2 -l 2\".\n# The number of inputs     =      2.\n# The number of levels     =      2.\n# The number of supergates =      8.\n# The total functions      =      8.\n\n     8\n0000   0$\n0001   (AB)\n0010   (Ba)\n0011   B\n0100   (Ab)\n0101   A\n0110   \u003c\u003cAb\u003e\u003cBa\u003e\u003e\n0111   \u003cab\u003e\n"
+  }
+ }
+]

@@ -3,9 +3,9 @@ package csw
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -15,17 +15,17 @@ import (
 // Link the actual ABC objects: this exercises the complete original cut manager,
 // allocation, enumeration, truth manipulation, hash lookup, and cleanup.
 func TestSweepOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	cxx, err := exec.LookPath("g++")
+	cxx, err := testoracle.LookPath("g++")
 	if err != nil {
 		t.Skip("C++ linker unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, err := os.Stat(filepath.Join(src, "opt/csw/cswCore.o")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "opt/csw/cswCore.o")); err != nil {
 		t.Skip("original ABC object files unavailable")
 	}
 	dir := t.TempDir()
@@ -35,11 +35,11 @@ int main(void){int n,c,k,i,a,b,j,q;while(scanf("%d%d%d",&n,&c,&k)==3){Aig_Man_t*
 	if err := os.WriteFile(source, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=gnu99", "-DLIN64", "-I"+src, "-c", source, "-o", object).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-I"+src, "-c", source, "-o", object).CombinedOutput(); err != nil {
 		t.Fatalf("compile: %v\n%s", err, out)
 	}
 	args := []string{object}
-	err = filepath.WalkDir(src, func(path string, e os.DirEntry, err error) error {
+	err = testoracle.WalkDir(src, func(path string, e os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -52,7 +52,7 @@ int main(void){int n,c,k,i,a,b,j,q;while(scanf("%d%d%d",&n,&c,&k)==3){Aig_Man_t*
 		t.Fatal(err)
 	}
 	args = append(args, "-lreadline", "-lpthread", "-lm", "-ldl", "-lz", "-o", exe)
-	if out, err := exec.Command(cxx, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cxx, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v\n%s", err, out)
 	}
 	r := rand.New(rand.NewSource(73))
@@ -85,7 +85,7 @@ int main(void){int n,c,k,i,a,b,j,q;while(scanf("%d%d%d",&n,&c,&k)==3){Aig_Man_t*
 		graphs = append(graphs, g)
 		configs = append(configs, [2]int32{c, k})
 	}
-	cmd := exec.Command(exe)
+	cmd := testoracle.Command(t, exe)
 	cmd.Stdin = strings.NewReader(input.String())
 	data, err := cmd.CombinedOutput()
 	if err != nil {

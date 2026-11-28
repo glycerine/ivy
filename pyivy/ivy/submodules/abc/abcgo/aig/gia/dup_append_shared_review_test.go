@@ -3,8 +3,8 @@ package gia
 import (
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"runtime/debug"
 	"strings"
 	"testing"
@@ -61,7 +61,7 @@ func TestAppendSharedSameGraphReturns(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, exe, "-test.run=^TestAppendSharedSameGraphReturns$", "-test.count=1")
+	cmd := testoracle.CommandContext(t, ctx, exe, "-test.run=^TestAppendSharedSameGraphReturns$", "-test.count=1")
 	cmd.Env = append(os.Environ(), childKey+"=1")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("shared self append: %v (context %v): %s", err, ctx.Err(), out)
@@ -207,7 +207,7 @@ func TestAppendSharedInterleavedInputsAndOutputs(t *testing.T) {
 
 func TestAppendSharedMatchesOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "append_shared.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C shared append: %v: %s", err, want)
 	}

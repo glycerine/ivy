@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -53,12 +53,12 @@ func genReviewGraph(typed bool, signs int32, reorder bool) *Gia_Man_t {
 
 func TestGenNativeWordSimulation(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "gen_words_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C word simulation: %v\n%s", err, native)
 	}
 	for _, mode := range []string{"random-zero", "explicit-zero"} {
-		output, err := exec.Command(exe, mode).CombinedOutput()
+		output, err := testoracle.Command(t, exe, mode).CombinedOutput()
 		if err == nil || !strings.Contains(string(output), "Vec_WrdEntryP") {
 			t.Fatalf("original C zero-width precondition changed: %v %s", err, output)
 		}

@@ -1,8 +1,8 @@
 package fra
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -47,14 +47,14 @@ func TestWriteClauseOutputUsesSourceFilenameAndPolarity(t *testing.T) {
 // Set FRA_BUILD_ORACLE=1 to compare with the checked-in C implementation
 // linked against the checkout's prebuilt ABC objects.
 func TestWriteClauseOutputCompiledC(t *testing.T) {
-	if os.Getenv("FRA_BUILD_ORACLE") != "1" {
+	if testoracle.Gate("FRA_BUILD_ORACLE") != "1" {
 		t.Skip("set FRA_BUILD_ORACLE=1 to run the compiled-C fixture")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
@@ -62,11 +62,11 @@ func TestWriteClauseOutputCompiledC(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := os.Stat(filepath.Join(src, "proof/fra/fraClaus.o")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "proof/fra/fraClaus.o")); err != nil {
 		t.Skip("prebuilt ABC objects unavailable")
 	}
 	var objects []string
-	err = filepath.WalkDir(src, func(path string, entry os.DirEntry, err error) error {
+	err = testoracle.WalkDir(src, func(path string, entry os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -80,12 +80,12 @@ func TestWriteClauseOutputCompiledC(t *testing.T) {
 	}
 	dir := t.TempDir()
 	st := filepath.Join(dir, "st.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
 		t.Fatalf("compile st: %v: %s", err, out)
 	}
 	objects = append(objects, st)
 	archive := filepath.Join(dir, "abc.a")
-	if out, err := exec.Command(ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
 		t.Fatalf("archive: %v: %s", err, out)
 	}
 	exe := filepath.Join(dir, "claus-output")
@@ -94,10 +94,10 @@ func TestWriteClauseOutputCompiledC(t *testing.T) {
 		t.Fatal(err)
 	}
 	args := []string{"-DABC_USE_STDINT_H", "-I", src, fixture, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe}
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v: %s", err, out)
 	}
-	cmd := exec.Command(exe)
+	cmd := testoracle.Command(t, exe)
 	cmd.Dir = dir
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("run: %v: %s", err, out)

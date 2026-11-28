@@ -5,10 +5,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
 	"math/rand"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -20,17 +19,17 @@ func TestPowerOriginalCOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("original-C oracle uses ELF section collection")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional original-C oracle requires cc")
 	}
-	source := os.Getenv("ABC_SOURCE_ROOT")
+	source := testoracle.SourceRoot()
 	if source == "" {
 		_, file, _, _ := runtime.Caller(0)
 		source = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../../src"))
 	}
 	binary := filepath.Join(t.TempDir(), "power-oracle")
-	command := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-Wno-unused-result", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, "../test_vectors/power_oracle.c", filepath.Join(source, "aig/gia/giaUtil.c"), "-o", binary)
+	command := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-Wno-unused-result", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, "../test_vectors/power_oracle.c", filepath.Join(source, "aig/gia/giaUtil.c"), "-o", binary)
 	if output, err := command.CombinedOutput(); err != nil {
 		t.Fatalf("build original-C power oracle: %v\n%s", err, output)
 	}
@@ -167,7 +166,7 @@ func TestPowerOriginalCOracle(t *testing.T) {
 		}
 		expected = append(expected, []uint32{uint32(size), math.Float32bits(mffcPower(g, root, probabilities))})
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Stdin = &input
 	output, err := cmd.CombinedOutput()
 	if err != nil {

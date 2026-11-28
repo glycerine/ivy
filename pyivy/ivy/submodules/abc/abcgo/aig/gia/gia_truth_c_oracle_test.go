@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -17,7 +17,7 @@ func TestGiaTruthSourceOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section collection required")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional C oracle requires cc")
 	}
@@ -57,7 +57,7 @@ int main(void) {
 	if err := os.WriteFile(main, []byte(code), 0644); err != nil {
 		t.Fatal(err)
 	}
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, main, "-o", bin)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, main, "-o", bin)
 	if b, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("C oracle build: %v\n%s", err, b)
 	}
@@ -104,7 +104,7 @@ int main(void) {
 			want = append(want, Gia_ObjComputeTruthTable(p, p.pObjs[p.nObjs-1])...)
 		}
 	}
-	cmd = exec.Command(bin)
+	cmd = testoracle.Command(t, bin)
 	cmd.Stdin = &input
 	b, err := cmd.CombinedOutput()
 	if err != nil {

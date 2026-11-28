@@ -3,8 +3,8 @@ package gia
 import (
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"runtime/debug"
 	"slices"
 	"strings"
@@ -51,7 +51,7 @@ func TestConstraintCollectorSharedConeTerminates(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, exe, "-test.run=^TestConstraintCollectorSharedConeTerminates$", "-test.count=1")
+	cmd := testoracle.CommandContext(t, ctx, exe, "-test.run=^TestConstraintCollectorSharedConeTerminates$", "-test.count=1")
 	cmd.Env = append(os.Environ(), key+"=1")
 	if data, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("shared constraint cone: %v (context %v): %s", err, ctx.Err(), data)
@@ -279,7 +279,7 @@ func TestConstraintExtractionReviewMatrix(t *testing.T) {
 
 func TestConstraintExtractionMatchesOriginalC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "constraint_extract.c")
-	output, err := exec.Command(exe).CombinedOutput()
+	output, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C constraint extraction: %v: %s", err, output)
 	}

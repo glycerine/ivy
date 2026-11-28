@@ -3,8 +3,8 @@ package sim
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"runtime"
 	"strings"
 	"testing"
@@ -14,7 +14,7 @@ func TestSourceRandMatchesLibc(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("source rand oracle currently targets glibc")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
@@ -24,10 +24,10 @@ func TestSourceRandMatchesLibc(t *testing.T) {
 	if err := os.WriteFile(source, []byte(program), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, source, "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, source, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile libc oracle: %v\n%s", err, out)
 	}
-	out, err := exec.Command(binary).Output()
+	out, err := testoracle.Command(t, binary).Output()
 	if err != nil {
 		t.Fatal(err)
 	}

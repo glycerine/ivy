@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"strings"
 	"testing"
@@ -106,7 +106,7 @@ func enableReviewCompose(p, frames *Gia_Man_t, nf int32) {
 
 func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "enable_review.c")
-	source, err := exec.Command(exe).CombinedOutput()
+	source, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original enable transforms: %v\n%s", err, source)
 	}
@@ -161,7 +161,7 @@ func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 		}
 	}
 	t.Run("high frequency", func(t *testing.T) {
-		source, err := exec.Command(exe, "high").CombinedOutput()
+		source, err := testoracle.Command(t, exe, "high").CombinedOutput()
 		if err != nil {
 			t.Fatalf("original high-frequency reports: %v\n%s", err, source)
 		}
@@ -197,7 +197,7 @@ func TestEnableOrdinaryTransformsMatchOriginalABC(t *testing.T) {
 		}
 	})
 	t.Run("cofactor verbose", func(t *testing.T) {
-		source, err := exec.Command(exe, "verbose").CombinedOutput()
+		source, err := testoracle.Command(t, exe, "verbose").CombinedOutput()
 		if err != nil {
 			t.Fatalf("original cofactor reporting: %v\n%s", err, source)
 		}

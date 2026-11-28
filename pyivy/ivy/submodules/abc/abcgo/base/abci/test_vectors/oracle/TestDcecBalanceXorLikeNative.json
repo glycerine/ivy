@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026put; dcec -v test_vectors/cec_mul8_syn2.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026put; dcec -v test_vectors/cec_mul8_syn2.aig\".\n\nOriginal miter:   Nodes =   1785.\nInitial SAT:      Nodes =   1785.  Time =     0.01 sec\nRewriting:        Nodes =   1188.  Time =     0.03 sec\nBalance-X:        Nodes =   1261.  Time =     0.00 sec\nFraiging (i=1):   Nodes =   1026.  Time =     0.01 sec\nRewriting:        Nodes =    877.  Time =     0.01 sec\nBalance-X:        Nodes =    943.  Time =     0.00 sec\nFraiging (i=2):   Nodes =      0.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.07 sec\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026put; dcec -v test_vectors/cec_i10_syn2.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026put; dcec -v test_vectors/cec_i10_syn2.aig\".\n\nOriginal miter:   Nodes =   4213.\nInitial SAT:      Nodes =   4213.  Time =     0.01 sec\nRewriting:        Nodes =   2183.  Time =     0.06 sec\nBalance-X:        Nodes =   2198.  Time =     0.00 sec\nFraiging (i=1):   Nodes =   1198.  Time =     0.01 sec\nRewriting:        Nodes =   1150.  Time =     0.01 sec\nBalance-X:        Nodes =   1158.  Time =     0.00 sec\nFraiging (i=2):   Nodes =      0.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.10 sec\n"
+ }
+]

@@ -2,9 +2,9 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/tim"
 	"github.com/glycerine/abcgo/misc/vec"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -66,7 +66,7 @@ func TestUnnormalizeRetainsBadOutputPartition(t *testing.T) {
 
 func TestBoxOrderNativeOracle(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "timing_box_order.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v\n%s", err, native)
 	}

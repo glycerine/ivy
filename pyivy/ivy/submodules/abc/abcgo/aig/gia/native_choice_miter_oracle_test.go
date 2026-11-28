@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -20,22 +20,22 @@ func compileGiaSourceOracle(t *testing.T, fixtureName string) string {
 	if runtime.GOOS != "linux" {
 		t.Skip("ABC oracle requires Linux")
 	}
-	cc, e := exec.LookPath("gcc")
+	cc, e := testoracle.LookPath("gcc")
 	if e != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, e := exec.LookPath("ar")
+	ar, e := testoracle.LookPath("ar")
 	if e != nil {
 		t.Skip("ar unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, e = os.Stat(filepath.Join(src, "aig/gia/giaDup.o")); e != nil {
+	if _, e = testoracle.Stat(filepath.Join(src, "aig/gia/giaDup.o")); e != nil {
 		t.Skip("ABC objects unavailable")
 	}
 	dir := t.TempDir()
 	var objs []string
-	if e = filepath.WalkDir(src, func(path string, d os.DirEntry, e error) error {
+	if e = testoracle.WalkDir(src, func(path string, d os.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
@@ -47,24 +47,24 @@ func compileGiaSourceOracle(t *testing.T, fixtureName string) string {
 		t.Fatal(e)
 	}
 	st := filepath.Join(dir, "st.o")
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); e != nil {
 		t.Fatalf("st: %v %s", e, out)
 	}
 	objs = append(objs, st)
 	// HCD is not included in the normal ABC object build. Compile its actual
 	// source here; discard unrelated HCD routines when linking the oracle.
 	hcd := filepath.Join(dir, "giaHcd.o")
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, "-c", filepath.Join(src, "aig/gia/giaHcd.c"), "-o", hcd).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, "-c", filepath.Join(src, "aig/gia/giaHcd.c"), "-o", hcd).CombinedOutput(); e != nil {
 		t.Fatalf("HCD source: %v %s", e, out)
 	}
 	objs = append(objs, hcd)
 	lib := filepath.Join(dir, "abc.a")
-	if out, e := exec.Command(ar, append([]string{"qcs", lib}, objs...)...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, ar, append([]string{"qcs", lib}, objs...)...).CombinedOutput(); e != nil {
 		t.Fatalf("archive: %v %s", e, out)
 	}
 	exe := filepath.Join(dir, "oracle")
 	fixture := filepath.Join(filepath.Dir(file), "test_vectors", fixtureName)
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, fixture, lib, "-Wl,--gc-sections", "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, fixture, lib, "-Wl,--gc-sections", "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
 		t.Fatalf("link: %v %s", e, out)
 	}
 	return exe
@@ -72,7 +72,7 @@ func compileGiaSourceOracle(t *testing.T, fixtureName string) string {
 
 func testNativeChoiceMiter(t *testing.T, exe string) {
 	t.Helper()
-	source, e := exec.Command(exe).CombinedOutput()
+	source, e := testoracle.Command(t, exe).CombinedOutput()
 	if e != nil {
 		t.Fatalf("run: %v %s", e, source)
 	}
@@ -90,7 +90,7 @@ func testNativeChoiceMiter(t *testing.T, exe string) {
 		snapshots[i] = g
 	}
 	compareChoiceMiterOracle(t, source, Gia_ManChoiceMiter(snapshots))
-	hcdSource, e := exec.Command(exe, "--hcd").CombinedOutput()
+	hcdSource, e := testoracle.Command(t, exe, "--hcd").CombinedOutput()
 	if e != nil {
 		t.Fatalf("run HCD: %v %s", e, hcdSource)
 	}

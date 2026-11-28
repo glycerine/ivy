@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; if -K 4; fretime; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; if -K 4; fretime; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =     6  edge =     20  aig  =    14  lev = 2\n",
+  "files": {
+   "$CWD/trace.cnf": "p 12 19 19 0\n -3 -10 0\n 3 10 0\n -5 -11 0\n 5 11 0\n -7 -12 0\n 7 12 0\n 3 -8 0\n 5 -8 0\n 7 -8 0\n -3 -5 -7 8 0\n 2 -10 0\n -2 10 0\n 4 -11 0\n -4 11 0\n 6 -12 0\n -6 12 0\n -8 9 0\n 8 -9 0\n 9 0\n"
+  }
+ }
+]

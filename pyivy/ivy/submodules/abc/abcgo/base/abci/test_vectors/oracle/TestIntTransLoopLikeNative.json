@@ -1,0 +1,97 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; int -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; int -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nWarning: All 23 outputs will be ORed together.\nProperty trivially fails in the initial state.\nOutput 0 of miter \"s713.bench\" was asserted in frame -1.  Time =     0.00 sec\nStatus = 0  Frames = -1   CEX: Po =   0  Frame =   0  FF = 19  PI = 35  Bit =      54  1s =       0 ( 0.00 %)\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/cex.out": "# FALSIFYING OUTPUTS: G103BF\n# COUNTEREXAMPLE LENGTH: 1\nG64@0=0\nG65@0=0\nG66@0=0\nG67@0=0\nG68@0=0\nG69@0=0\nG70@0=0\nG71@0=0\nG72@0=0\nG73@0=0\nG74@0=0\nG75@0=0\nG76@0=0\nG77@0=0\nG78@0=0\nG79@0=0\nG80@0=0\nG81@0=0\nG82@0=0\nG1@0=0\nG2@0=0\nG3@0=0\nG4@0=0\nG5@0=0\nG6@0=0\nG8@0=0\nG9@0=0\nG10@0=0\nG11@0=0\nG12@0=0\nG13@0=0\nG14@0=0\nG15@0=0\nG16@0=0\nG17@0=0\nG18@0=0\nG19@0=0\nG20@0=0\nG21@0=0\nG22@0=0\nG23@0=0\nG24@0=0\nG25@0=0\nG26@0=0\nG27@0=0\nG28@0=0\nG29@0=0\nG30@0=0\nG31@0=0\nG32@0=0\nG33@0=0\nG34@0=0\nG35@0=0\nG36@0=0\n# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; int -b -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; int -b -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nWarning: All 23 outputs will be ORed together.\nProperty trivially fails in the initial state.\nOutput 0 of miter \"s713.bench\" was asserted in frame -1.  Time =     0.00 sec\nStatus = 0  Frames = -1   CEX: Po =   0  Frame =   0  FF = 19  PI = 35  Bit =      54  1s =       0 ( 0.00 %)\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/cex.out": "# FALSIFYING OUTPUTS: G103BF\n# COUNTEREXAMPLE LENGTH: 1\nG64@0=0\nG65@0=0\nG66@0=0\nG67@0=0\nG68@0=0\nG69@0=0\nG70@0=0\nG71@0=0\nG72@0=0\nG73@0=0\nG74@0=0\nG75@0=0\nG76@0=0\nG77@0=0\nG78@0=0\nG79@0=0\nG80@0=0\nG81@0=0\nG82@0=0\nG1@0=0\nG2@0=0\nG3@0=0\nG4@0=0\nG5@0=0\nG6@0=0\nG8@0=0\nG9@0=0\nG10@0=0\nG11@0=0\nG12@0=0\nG13@0=0\nG14@0=0\nG15@0=0\nG16@0=0\nG17@0=0\nG18@0=0\nG19@0=0\nG20@0=0\nG21@0=0\nG22@0=0\nG23@0=0\nG24@0=0\nG25@0=0\nG26@0=0\nG27@0=0\nG28@0=0\nG29@0=0\nG30@0=0\nG31@0=0\nG32@0=0\nG33@0=0\nG34@0=0\nG35@0=0\nG36@0=0\n# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; dc2; miter test_vectors/seq/s713.blif; int -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; dc2; miter test_vectors/seq/s713.blif; int -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nAIG: PI/PO/Reg = 35/1/38. And = 361. Lev = 31.  CNF: Var/Cla = 242/599.\nStep =  1. Frames = 1 + 1. And =   256. Lev =    31.  Time =     0.00 sec\n   I =  1. Bmc =  2. IntAnd =    37. IntLev =    6. Conf =    72.  Time =     0.00 sec\n   I =  2. Bmc =  3. IntAnd =    94. IntLev =    8. Conf =   141.  Time =     0.00 sec\n   I =  3. Bmc =  4. IntAnd =   292. IntLev =   17. Conf =   437.  Time =     0.01 sec\n   I =  4. Bmc =  5. IntAnd =  1120. IntLev =   97. Conf =  1077.  Time =     0.03 sec\n   I =  5. Bmc =  6. IntAnd =  1852. IntLev =  105. Conf =  2832.  Time =     0.10 sec\nProved containment of interpolants.\nRuntime statistics:\nRewriting   =     0.23 sec ( 32.74 %)\nCNF mapping =     0.00 sec (  0.42 %)\nSAT solving =     0.06 sec (  8.33 %)\nInterpol    =     0.08 sec ( 11.55 %)\nContainment =     0.00 sec (  0.00 %)\nOther       =     0.32 sec ( 46.96 %)\nTOTAL       =     0.69 sec (100.00 %)\nProperty proved.  Time =     0.69 sec\nStatus = 1  Frames = 4   Cex is not defined.\nCounter-example is not available.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; dc2; miter test_vectors/seq/s713.blif; int -b -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; dc2; miter test_vectors/seq/s713.blif; int -b -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nAIG: PI/PO/Reg = 35/1/38. And = 361. Lev = 31.  CNF: Var/Cla = 242/599.\nStep =  1. Frames = 1 + 1. And =     0. Lev =     0.  Time =     0.00 sec\n   I =  1. Bmc =  2. IntAnd =   256. IntLev =   31. Conf =   106.  Time =     0.00 sec\n   I =  2. Bmc =  3. IntAnd =    60. IntLev =    7. Conf =     9.  Time =     0.00 sec\nStep =  2. Frames = 1 + 2. And =    27. Lev =     5.  Time =     0.00 sec\n   I =  1. Bmc =  3. IntAnd =   256. IntLev =   31. Conf =   269.  Time =     0.00 sec\n   I =  2. Bmc =  4. IntAnd =   278. IntLev =   13. Conf =     1.  Time =     0.00 sec\nStep =  3. Frames = 1 + 3. And =    84. Lev =     8.  Time =     0.00 sec\n   I =  1. Bmc =  4. IntAnd =   256. IntLev =   31. Conf =   895.  Time =     0.01 sec\n   I =  2. Bmc =  5. IntAnd =  1265. IntLev =   82. Conf =     2.  Time =     0.00 sec\nStep =  4. Frames = 1 + 4. And =   220. Lev =    14.  Time =     0.00 sec\n   I =  1. Bmc =  5. IntAnd =   256. IntLev =   31. Conf =  2167.  Time =     0.04 sec\n   I =  2. Bmc =  6. IntAnd =  4843. IntLev =  373. Conf =   459.  Time =     0.01 sec\nStep =  5. Frames = 1 + 5. And =   366. Lev =    24.  Time =     0.00 sec\n   I =  1. Bmc =  6. IntAnd =   256. IntLev =   31. Conf =  7043.  Time =     0.18 sec\n   I =  2. Bmc =  7. IntAnd = 21975. IntLev = 1748. Conf =  2260.  Time =     0.25 sec\nStep =  6. Frames = 1 + 6. And =   512. Lev =    33.  Time =     0.00 sec\n   I =  1. Bmc =  7. IntAnd =   256. IntLev =   31. Conf = 12337.  Time =     0.37 sec\n   I =  2. Bmc =  8. IntAnd = 32705. IntLev = 1679. Conf = 10258.  Time =     4.29 sec\nProved containment of interpolants.\nRuntime statistics:\nRewriting   =     2.51 sec ( 28.24 %)\nCNF mapping =     0.06 sec (  0.67 %)\nSAT solving =     2.21 sec ( 24.93 %)\nInterpol    =     2.94 sec ( 33.11 %)\nContainment =     0.00 sec (  0.00 %)\nOther       =     1.16 sec ( 13.04 %)\nTOTAL       =     8.88 sec (100.00 %)\nProperty proved.  Time =     8.88 sec\nStatus = 1  Frames = 6   Cex is not defined.\nCounter-example is not available.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; int -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; int -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nWarning: All 19 outputs will be ORed together.\nProperty trivially fails in the initial state.\nOutput 0 of miter \"s1494.bench\" was asserted in frame -1.  Time =     0.00 sec\nStatus = 0  Frames = -1   CEX: Po =   0  Frame =   0  FF = 6  PI = 8  Bit =      14  1s =       0 ( 0.00 %)\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/cex.out": "# FALSIFYING OUTPUTS: v13_D_24\n# COUNTEREXAMPLE LENGTH: 1\nv12@0=0\nv11@0=0\nv10@0=0\nv9@0=0\nv8@0=0\nv7@0=0\nCLR@0=0\nv6@0=0\nv5@0=0\nv4@0=0\nv3@0=0\nv2@0=0\nv1@0=0\nv0@0=0\n# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; int -b -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; int -b -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nWarning: All 19 outputs will be ORed together.\nProperty trivially fails in the initial state.\nOutput 0 of miter \"s1494.bench\" was asserted in frame -1.  Time =     0.00 sec\nStatus = 0  Frames = -1   CEX: Po =   0  Frame =   0  FF = 6  PI = 8  Bit =      14  1s =       0 ( 0.00 %)\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/cex.out": "# FALSIFYING OUTPUTS: v13_D_24\n# COUNTEREXAMPLE LENGTH: 1\nv12@0=0\nv11@0=0\nv10@0=0\nv9@0=0\nv8@0=0\nv7@0=0\nCLR@0=0\nv6@0=0\nv5@0=0\nv4@0=0\nv3@0=0\nv2@0=0\nv1@0=0\nv0@0=0\n# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; dc2; miter test_vectors/seq/s1494.blif; int -b -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; dc2; miter test_vectors/seq/s1494.blif; int -b -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nLine 6: Skipping line \".wire_load_slope 0.00\".\nAIG: PI/PO/Reg = 8/1/12. And = 1295. Lev = 18.  CNF: Var/Cla = 316/1301.\nStep =  1. Frames = 1 + 1. And =     2. Lev =     2.  Time =     0.00 sec\n   I =  1. Bmc =  2. IntAnd =   758. IntLev =   18. Conf =    62.  Time =     0.00 sec\n   I =  2. Bmc =  3. IntAnd =    67. IntLev =   11. Conf =    17.  Time =     0.00 sec\nStep =  2. Frames = 1 + 2. And =    77. Lev =    10.  Time =     0.00 sec\n   I =  1. Bmc =  3. IntAnd =   758. IntLev =   18. Conf =   107.  Time =     0.00 sec\n   I =  2. Bmc =  4. IntAnd =    99. IntLev =   10. Conf =    25.  Time =     0.00 sec\nStep =  3. Frames = 1 + 3. And =   736. Lev =    23.  Time =     0.00 sec\n   I =  1. Bmc =  4. IntAnd =   758. IntLev =   18. Conf =   238.  Time =     0.01 sec\n   I =  2. Bmc =  5. IntAnd =   280. IntLev =   33. Conf =    26.  Time =     0.00 sec\nStep =  4. Frames = 1 + 4. And =  1395. Lev =    37.  Time =     0.00 sec\n   I =  1. Bmc =  5. IntAnd =   758. IntLev =   18. Conf =   316.  Time =     0.01 sec\n   I =  2. Bmc =  6. IntAnd =   193. IntLev =   30. Conf =   130.  Time =     0.00 sec\nStep =  5. Frames = 1 + 5. And =  2054. Lev =    51.  Time =     0.00 sec\n   I =  1. Bmc =  6. IntAnd =   758. IntLev =   18. Conf =   521.  Time =     0.02 sec\n   I =  2. Bmc =  7. IntAnd =   134. IntLev =   13. Conf =   339.  Time =     0.01 sec\nStep =  6. Frames = 1 + 6. And =  2713. Lev =    65.  Time =     0.00 sec\n   I =  1. Bmc =  7. IntAnd =   758. IntLev =   18. Conf =   663.  Time =     0.02 sec\n   I =  2. Bmc =  8. IntAnd =   243. IntLev =   16. Conf =   375.  Time =     0.01 sec\nStep =  7. Frames = 1 + 7. And =  3372. Lev =    79.  Time =     0.00 sec\n   I =  1. Bmc =  8. IntAnd =   758. IntLev =   18. Conf =  1184.  Time =     0.05 sec\n   I =  2. Bmc =  9. IntAnd =   496. IntLev =   52. Conf =   758.  Time =     0.01 sec\nStep =  8. Frames = 1 + 8. And =  4031. Lev =    93.  Time =     0.01 sec\n   I =  1. Bmc =  9. IntAnd =   758. IntLev =   18. Conf =  1836.  Time =     0.07 sec\n   I =  2. Bmc = 10. IntAnd =   560. IntLev =   52. Conf =  1381.  Time =     0.03 sec\nStep =  9. Frames = 1 + 9. And =  4690. Lev =   107.  Time =     0.01 sec\n   I =  1. Bmc = 10. IntAnd =   758. IntLev =   18. Conf =  1892.  Time =     0.08 sec\n   I =  2. Bmc = 11. IntAnd =   557. IntLev =   22. Conf =  1234.  Time =     0.02 sec\nStep = 10. Frames = 1 + 10. And =  5349. Lev =   121.  Time =     0.01 sec\n   I =  1. Bmc = 11. IntAnd =   758. IntLev =   18. Conf =  2329.  Time =     0.10 sec\n   I =  2. Bmc = 12. IntAnd =   679. IntLev =   36. Conf =  1596.  Time =     0.03 sec\nStep = 11. Frames = 1 + 11. And =  6008. Lev =   135.  Time =     0.01 sec\n   I =  1. Bmc = 12. IntAnd =   758. IntLev =   18. Conf =  2795.  Time =     0.12 sec\n   I =  2. Bmc = 13. IntAnd =   597. IntLev =   26. Conf =  2393.  Time =     0.05 sec\nStep = 12. Frames = 1 + 12. And =  6667. Lev =   149.  Time =     0.01 sec\n   I =  1. Bmc = 13. IntAnd =   758. IntLev =   18. Conf =  3109.  Time =     0.12 sec\n   I =  2. Bmc = 14. IntAnd =   602. IntLev =   25. Conf =  2571.  Time =     0.05 sec\nStep = 13. Frames = 1 + 13. And =  7326. Lev =   163.  Time =     0.01 sec\n   I =  1. Bmc = 14. IntAnd =   758. IntLev =   18. Conf =  4937.  Time =     0.21 sec\n   I =  2. Bmc = 15. IntAnd =   859. IntLev =   34. Conf =  2040.  Time =     0.04 sec\nStep = 14. Frames = 1 + 14. And =  7985. Lev =   177.  Time =     0.01 sec\n   I =  1. Bmc = 15. IntAnd =   758. IntLev =   18. Conf =  5709.  Time =     0.24 sec\n   I =  2. Bmc = 16. IntAnd =   910. IntLev =   37. Conf =  4271.  Time =     0.10 sec\nStep = 15. Frames = 1 + 15. And =  8644. Lev =   191.  Time =     0.01 sec\n   I =  1. Bmc = 16. IntAnd =   758. IntLev =   18. Conf =  7117.  Time =     0.33 sec\n   I =  2. Bmc = 17. IntAnd =   797. IntLev =   38. Conf =  5645.  Time =     0.11 sec\nStep = 16. Frames = 1 + 16. And =  9303. Lev =   205.  Time =     0.01 sec\n   I =  1. Bmc = 17. IntAnd =   758. IntLev =   18. Conf =  6566.  Time =     0.27 sec\n   I =  2. Bmc = 18. IntAnd =   970. IntLev =   36. Conf =  5041.  Time =     0.10 sec\nStep = 17. Frames = 1 + 17. And =  9962. Lev =   219.  Time =     0.01 sec\n   I =  1. Bmc = 18. IntAnd =   758. IntLev =   18. Conf =  9632.  Time =     0.42 sec\n   I =  2. Bmc = 19. IntAnd =  1155. IntLev =   39. Conf =  3634.  Time =     0.06 sec\nStep = 18. Frames = 1 + 18. And = 10621. Lev =   233.  Time =     0.01 sec\n   I =  1. Bmc = 19. IntAnd =   758. IntLev =   18. Conf = 12076.  Time =     0.57 sec\n   I =  2. Bmc = 20. IntAnd =  1763. IntLev =   48. Conf =  8658.  Time =     0.19 sec\nStep = 19. Frames = 1 + 19. And = 11280. Lev =   247.  Time =     0.01 sec\n   I =  1. Bmc = 20. IntAnd =   758. IntLev =   18. Conf = 12105.  Time =     0.57 sec\n   I =  2. Bmc = 21. IntAnd =  1594. IntLev =   51. Conf =  9193.  Time =     0.20 sec\nStep = 20. Frames = 1 + 20. And = 11939. Lev =   261.  Time =     0.01 sec\n   I =  1. Bmc = 21. IntAnd =   758. IntLev =   18. Conf = 14476.  Time =     0.68 sec\n   I =  2. Bmc = 22. IntAnd =  1729. IntLev =   52. Conf = 15436.  Time =     0.35 sec\nStep = 21. Frames = 1 + 21. And = 12598. Lev =   275.  Time =     0.01 sec\n   I =  1. Bmc = 22. IntAnd =   758. IntLev =   18. Conf = 14920.  Time =     0.73 sec\n   I =  2. Bmc = 23. IntAnd =  1711. IntLev =   58. Conf = 23149.  Time =     1.22 sec\nProved containment of interpolants.\nRuntime statistics:\nRewriting   =     0.59 sec (  7.39 %)\nCNF mapping =     0.16 sec (  1.95 %)\nSAT solving =     4.01 sec ( 50.29 %)\nInterpol    =     3.14 sec ( 39.30 %)\nContainment =     0.00 sec (  0.00 %)\nOther       =     0.08 sec (  1.06 %)\nTOTAL       =     7.98 sec (100.00 %)\nProperty proved.  Time =     7.98 sec\nStatus = 1  Frames = 21   Cex is not defined.\nCounter-example is not available.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; int -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; int -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nProperty trivially fails in the initial state.\nOutput 0 of miter \"s27.bench\" was asserted in frame -1.  Time =     0.00 sec\nStatus = 0  Frames = -1   CEX: Po =   0  Frame =   0  FF = 3  PI = 4  Bit =       7  1s =       0 ( 0.00 %)\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/cex.out": "# FALSIFYING OUTPUTS: G17\n# COUNTEREXAMPLE LENGTH: 1\nG5@0=0\nG6@0=0\nG7@0=0\nG0@0=0\nG1@0=0\nG2@0=0\nG3@0=0\n# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; int -b -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; int -b -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nProperty trivially fails in the initial state.\nOutput 0 of miter \"s27.bench\" was asserted in frame -1.  Time =     0.00 sec\nStatus = 0  Frames = -1   CEX: Po =   0  Frame =   0  FF = 3  PI = 4  Bit =       7  1s =       0 ( 0.00 %)\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/cex.out": "# FALSIFYING OUTPUTS: G17\n# COUNTEREXAMPLE LENGTH: 1\nG5@0=0\nG6@0=0\nG7@0=0\nG0@0=0\nG1@0=0\nG2@0=0\nG3@0=0\n# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; dc2; miter test_vectors/native_s27_drw.blif; int -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; dc2; miter test_vectors/native_s27_drw.blif; int -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nAIG: PI/PO/Reg = 4/1/6. And = 17. Lev = 6.  CNF: Var/Cla = 29/61.\nStep =  1. Frames = 1 + 1. And =    13. Lev =     6.  Time =     0.00 sec\n   I =  1. Bmc =  2. IntAnd =     5. IntLev =    3. Conf =    11.  Time =     0.00 sec\n   I =  2. Bmc =  3. IntAnd =    15. IntLev =    5. Conf =    11.  Time =     0.00 sec\nStep =  2. Frames = 1 + 2. And =    27. Lev =     9.  Time =     0.00 sec\n   I =  1. Bmc =  3. IntAnd =     5. IntLev =    3. Conf =    35.  Time =     0.00 sec\n   I =  2. Bmc =  4. IntAnd =    14. IntLev =    5. Conf =    56.  Time =     0.00 sec\nProved containment of interpolants.\nRuntime statistics:\nRewriting   =     0.00 sec ( 45.24 %)\nCNF mapping =     0.00 sec (  0.86 %)\nSAT solving =     0.00 sec (  3.66 %)\nInterpol    =     0.00 sec (  6.59 %)\nContainment =     0.00 sec (  0.06 %)\nOther       =     0.00 sec ( 43.59 %)\nTOTAL       =     0.01 sec (100.00 %)\nProperty proved.  Time =     0.01 sec\nStatus = 1  Frames = 2   Cex is not defined.\nCounter-example is not available.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; dc2; miter test_vectors/native_s27_drw.blif; int -b -t -v; print_status; write_cex -n $TMP/cex.out",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; dc2; miter test_vectors/native_s27_drw.blif; int -b -t -v; print_status; write_cex -n $TMP/001/cex.out\".\n\nAIG: PI/PO/Reg = 4/1/6. And = 17. Lev = 6.  CNF: Var/Cla = 29/61.\nStep =  1. Frames = 1 + 1. And =     3. Lev =     2.  Time =     0.00 sec\n   I =  1. Bmc =  2. IntAnd =    13. IntLev =    6. Conf =    23.  Time =     0.00 sec\n   I =  2. Bmc =  3. IntAnd =    13. IntLev =    4. Conf =    15.  Time =     0.00 sec\nStep =  2. Frames = 1 + 2. And =    10. Lev =     6.  Time =     0.00 sec\n   I =  1. Bmc =  3. IntAnd =    13. IntLev =    6. Conf =    25.  Time =     0.00 sec\n   I =  2. Bmc =  4. IntAnd =    15. IntLev =    5. Conf =    20.  Time =     0.00 sec\nProved containment of interpolants.\nRuntime statistics:\nRewriting   =     0.00 sec ( 49.50 %)\nCNF mapping =     0.00 sec (  1.74 %)\nSAT solving =     0.00 sec (  2.81 %)\nInterpol    =     0.00 sec (  5.24 %)\nContainment =     0.00 sec (  0.02 %)\nOther       =     0.00 sec ( 40.69 %)\nTOTAL       =     0.01 sec (100.00 %)\nProperty proved.  Time =     0.01 sec\nStatus = 1  Frames = 2   Cex is not defined.\nCounter-example is not available.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

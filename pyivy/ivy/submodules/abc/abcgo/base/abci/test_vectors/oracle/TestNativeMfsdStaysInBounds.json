@@ -1,0 +1,89 @@
+[
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -DNDEBUG -I $SRC -c $TMP/main.c -o $TMP/main.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/main.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -DNDEBUG -I $SRC -c $SRC/opt/sbd/sbdWin.c -o $TMP/sbdWin.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/sbdWin.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -DNDEBUG -I $SRC -c $SRC/opt/sbd/sbdLut.c -o $TMP/sbdLut.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/sbdLut.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -DNDEBUG -I $SRC -c $SRC/opt/sbd/sbdCore.c -o $TMP/sbdCore.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/sbdCore.o"
+  ]
+ },
+ {
+  "key": "combined: g++ -fsanitize=address $TMP/main.o $TMP/sbdWin.o $TMP/sbdLut.o $TMP/sbdCore.o $LIBABC -lreadline -lpthread -lm -ldl -o $TMP/abc_asan",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/abc_asan"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026mfsd; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2496\u001b[0m  \u001b[1;35mlev =   34\u001b[0m \u001b[1;35m(10.88)\u001b[0m  mem = 0.04 MB\nMapping (K=4)  :  \u001b[1;33mlut =   1265\u001b[0m  \u001b[1;32medge =    4009\u001b[0m  \u001b[1;31mlev =   11\u001b[0m \u001b[1;31m(3.84)\u001b[0m  mem = 0.04 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 6; \u0026mfsd; \u0026ps",
+  "stdout": "The current AIG has mapping, which can be used to determine critical path if \"-p\" is selected.\n\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2671\u001b[0m  \u001b[1;35mlev =   34\u001b[0m \u001b[1;35m(10.79)\u001b[0m  mem = 0.04 MB\nMapping (K=4)  :  \u001b[1;33mlut =   1263\u001b[0m  \u001b[1;32medge =    4068\u001b[0m  \u001b[1;31mlev =   11\u001b[0m \u001b[1;31m(3.81)\u001b[0m  mem = 0.04 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026mfsd -K 2; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2114\u001b[0m  \u001b[1;35mlev =   30\u001b[0m \u001b[1;35m(9.10)\u001b[0m  mem = 0.03 MB\nMapping (K=2)  :  \u001b[1;33mlut =   1822\u001b[0m  \u001b[1;32medge =    3644\u001b[0m  \u001b[1;31mlev =   26\u001b[0m \u001b[1;31m(8.64)\u001b[0m  mem = 0.04 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026mfsd -K 3; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2526\u001b[0m  \u001b[1;35mlev =   30\u001b[0m \u001b[1;35m(9.79)\u001b[0m  mem = 0.04 MB\nMapping (K=3)  :  \u001b[1;33mlut =   1419\u001b[0m  \u001b[1;32medge =    3749\u001b[0m  \u001b[1;31mlev =   14\u001b[0m \u001b[1;31m(4.79)\u001b[0m  mem = 0.04 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026mfsd -K 5; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2726\u001b[0m  \u001b[1;35mlev =   36\u001b[0m \u001b[1;35m(11.40)\u001b[0m  mem = 0.04 MB\nMapping (K=5)  :  \u001b[1;33mlut =   1140\u001b[0m  \u001b[1;32medge =    4215\u001b[0m  \u001b[1;31mlev =    9\u001b[0m \u001b[1;31m(3.39)\u001b[0m  mem = 0.04 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026mfsd -K 6; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2860\u001b[0m  \u001b[1;35mlev =   43\u001b[0m \u001b[1;35m(11.83)\u001b[0m  mem = 0.04 MB\nMapping (K=6)  :  \u001b[1;33mlut =    958\u001b[0m  \u001b[1;32medge =    4051\u001b[0m  \u001b[1;31mlev =    8\u001b[0m \u001b[1;31m(3.06)\u001b[0m  mem = 0.04 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

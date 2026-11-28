@@ -3,8 +3,8 @@ package gia
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/tim"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -207,7 +207,7 @@ func TestUnshufflePartitionMatrix(t *testing.T) {
 
 func TestUnshuffleNativeOracle(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "timing_unshuffle.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v\\n%s", err, native)
 	}

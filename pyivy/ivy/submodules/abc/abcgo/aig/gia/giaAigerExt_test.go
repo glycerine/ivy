@@ -5,9 +5,9 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -149,11 +149,11 @@ func TestAigerMalformedMappingDoc(t *testing.T) {
 }
 
 func TestAigerOriginalCExtensionDecoders(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	source, err := os.ReadFile("../../../src/aig/gia/giaAigerExt.c")
+	source, err := testoracle.ReadFile("../../../src/aig/gia/giaAigerExt.c")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -199,7 +199,7 @@ printf("used=%d",(int)(p-data));return 0;}
 	if err := os.WriteFile(path, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, path, "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, path, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("C oracle: %v: %s", err, out)
 	}
 	p := aigerTestManager(20)
@@ -219,7 +219,7 @@ printf("used=%d",(int)(p-data));return 0;}
 		fmt.Fprintf(&expected, "%d:%d ", r.iRepr, r.fProved)
 	}
 	fmt.Fprintf(&expected, "used=%d", len(equivalences))
-	cmd := exec.Command(binary, "0", "20")
+	cmd := testoracle.Command(t, binary, "0", "20")
 	cmd.Stdin = strings.NewReader(hex.EncodeToString(equivalences))
 	out, err := cmd.CombinedOutput()
 	if err != nil || string(out) != expected.String() {
@@ -236,7 +236,7 @@ printf("used=%d",(int)(p-data));return 0;}
 		fmt.Fprintf(&expected, "%d ", value)
 	}
 	fmt.Fprintf(&expected, "used=%d", len(encoded))
-	cmd = exec.Command(binary, "1", "20")
+	cmd = testoracle.Command(t, binary, "1", "20")
 	cmd.Stdin = strings.NewReader(hex.EncodeToString(encoded))
 	out, err = cmd.CombinedOutput()
 	if err != nil || string(out) != expected.String() {

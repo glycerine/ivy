@@ -1,0 +1,37 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I ../../../src $TMP/repar.c ../../../src/sat/bsat/satSolver.c ../../../src/sat/bsat/satSolver2.c ../../../src/sat/bsat/satMem.c ../../../src/sat/bsat/satProof.c ../../../src/sat/bsat/satStore.c ../../../src/misc/util/utilSort.c -Wl,--gc-sections -lm -o $TMP/repar",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/repar"
+  ]
+ },
+ {
+  "key": "combined: $TMP/repar",
+  "stdout": "repar: ../../../src/sat/bsat/satSolver2.c:1294: sat_solver2_addclause: Assertion `Id != 0' failed.\n",
+  "exit": -1,
+  "wait": 6,
+  "temps": [
+   "$TMP/001"
+  ],
+  "err": "signal: aborted"
+ },
+ {
+  "key": "combined: gcc -DREPAIR_CLAUSE_IDS -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I ../../../src $TMP/repar.c ../../../src/sat/bsat/satSolver.c ../../../src/sat/bsat/satSolver2.c ../../../src/sat/bsat/satMem.c ../../../src/sat/bsat/satProof.c ../../../src/sat/bsat/satStore.c ../../../src/misc/util/utilSort.c -Wl,--gc-sections -lm -o $TMP/repar",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/repar"
+  ]
+ },
+ {
+  "key": "combined: $TMP/repar",
+  "stdout": "status=1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

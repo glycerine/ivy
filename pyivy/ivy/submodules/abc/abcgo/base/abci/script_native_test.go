@@ -88,13 +88,13 @@ func expectStats(t *testing.T, script, want string) {
 
 // Native: abc -c "read i10.aig; if -K 6; print_stats".
 func TestIfMappingMatchesNative(t *testing.T) {
-	expectStats(t, "read ../../../i10.aig; if -K 6; print_stats",
+	expectStats(t, "read ../../test_vectors/i10.aig; if -K 6; print_stats",
 		fmt.Sprintf("nd = %5d  edge = %6d  aig  = %5d  lev = %d", 611, 2674, 4096, 11))
 }
 
 // Native: abc -c "read i10.aig; if -K 4 -a; print_stats".
 func TestIfAreaMappingMatchesNative(t *testing.T) {
-	expectStats(t, "read ../../../i10.aig; if -K 4 -a; print_stats",
+	expectStats(t, "read ../../test_vectors/i10.aig; if -K 4 -a; print_stats",
 		fmt.Sprintf("nd = %5d  edge = %6d  aig  = %5d  lev = %d", 841, 2816, 3343, 25))
 }
 
@@ -107,17 +107,17 @@ func TestTotalSwitchingMatchesNative(t *testing.T) {
 
 // Native: abc -c "read i10.aig; drf; print_stats" (it used to panic in Go).
 func TestDarRefactorMatchesNative(t *testing.T) {
-	expectStats(t, "read ../../../i10.aig; drf; print_stats", "and =   2301  lev = 49")
+	expectStats(t, "read ../../test_vectors/i10.aig; drf; print_stats", "and =   2301  lev = 49")
 }
 
 // Native: abc -c "read i10.aig; drw; print_stats".
 func TestDarRewriteMatchesNative(t *testing.T) {
-	expectStats(t, "read ../../../i10.aig; drw; print_stats", "and =   2124  lev = 48")
+	expectStats(t, "read ../../test_vectors/i10.aig; drw; print_stats", "and =   2124  lev = 48")
 }
 
 // Native: abc -c "read i10.aig; dc2; print_stats".
 func TestDc2MatchesNative(t *testing.T) {
-	expectStats(t, "read ../../../i10.aig; dc2; print_stats", "and =   1834  lev = 36")
+	expectStats(t, "read ../../test_vectors/i10.aig; dc2; print_stats", "and =   1834  lev = 36")
 }
 
 // 'mfs' used to panic when a node simplified to a constant.
@@ -152,5 +152,5 @@ func TestDchWithoutChoicesMatchesNative(t *testing.T) {
 // Native: abc -c "read i10.aig; dch; print_stats". print_stats reports
 // Abc_AigLevel (stored levels) for strashed networks, not Abc_NtkLevel.
 func TestDchMatchesNative(t *testing.T) {
-	expectStats(t, "read ../../../i10.aig; dch; print_stats", "and =   4206 (choice = 602)  lev = 33")
+	expectStats(t, "read ../../test_vectors/i10.aig; dch; print_stats", "and =   4206 (choice = 602)  lev = 33")
 }

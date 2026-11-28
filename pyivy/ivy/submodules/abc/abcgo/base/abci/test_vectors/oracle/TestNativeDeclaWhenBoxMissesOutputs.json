@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/bench/mul8.aig; strash; \u0026get; \u0026decla; \u0026ps",
+  "stdout": "ABC command line: \"read test_vectors/bench/mul8.aig; strash; \u0026get; \u0026decla; \u0026ps\".\n\nProcessing tree 0:  Ranks = 14.  Adders = 56.  Leaves = 63.  Roots = 15.\nCannot match the outputs of the arithmetic box.\n\u001b[1;37mtest_vectors/bench/mul8\u001b[0m : i/o =     16/     16  \u001b[1;36mand =     424\u001b[0m  \u001b[1;35mlev =   53\u001b[0m \u001b[1;35m(32.38)\u001b[0m  mem = 0.01 MB\n"
+ }
+]

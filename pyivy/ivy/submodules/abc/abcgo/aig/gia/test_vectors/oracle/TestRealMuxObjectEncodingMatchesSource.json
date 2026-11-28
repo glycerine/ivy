@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/object_mux_encoding.c -Wl,--gc-sections -o $TMP/mux-encoding",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/mux-encoding"
+  ]
+ },
+ {
+  "key": "combined: $TMP/mux-encoding",
+  "stdout": "signs 0 and 1 xor 0 mux 1 pins 4 6 control 3\ntruth 0 0\ntruth 1 0\ntruth 2 0\ntruth 3 1\ntruth 4 1\ntruth 5 0\ntruth 6 1\ntruth 7 1\nsigns 1 and 1 xor 0 mux 1 pins 4 6 control 2\ntruth 0 0\ntruth 1 0\ntruth 2 1\ntruth 3 0\ntruth 4 0\ntruth 5 1\ntruth 6 1\ntruth 7 1\nsigns 2 and 1 xor 0 mux 1 pins 5 6 control 3\ntruth 0 0\ntruth 1 1\ntruth 2 0\ntruth 3 0\ntruth 4 1\ntruth 5 1\ntruth 6 1\ntruth 7 0\nsigns 3 and 1 xor 0 mux 1 pins 5 6 control 2\ntruth 0 1\ntruth 1 0\ntruth 2 0\ntruth 3 0\ntruth 4 1\ntruth 5 1\ntruth 6 0\ntruth 7 1\nsigns 4 and 1 xor 0 mux 1 pins 4 7 control 3\ntruth 0 1\ntruth 1 0\ntruth 2 1\ntruth 3 1\ntruth 4 0\ntruth 5 0\ntruth 6 0\ntruth 7 1\nsigns 5 and 1 xor 0 mux 1 pins 4 7 control 2\ntruth 0 0\ntruth 1 1\ntruth 2 1\ntruth 3 1\ntruth 4 0\ntruth 5 0\ntruth 6 1\ntruth 7 0\nsigns 6 and 1 xor 0 mux 1 pins 5 7 control 3\ntruth 0 1\ntruth 1 1\ntruth 2 1\ntruth 3 0\ntruth 4 0\ntruth 5 1\ntruth 6 0\ntruth 7 0\nsigns 7 and 1 xor 0 mux 1 pins 5 7 control 2\ntruth 0 1\ntruth 1 1\ntruth 2 0\ntruth 3 1\ntruth 4 1\ntruth 5 0\ntruth 6 0\ntruth 7 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

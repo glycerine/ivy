@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -212,7 +212,7 @@ func TestCiMapChainingConstantsAndOutputModes(t *testing.T) {
 
 func TestCiMapMatchesOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "ci_map.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C CI mapping: %v: %s", err, native)
 	}
@@ -225,7 +225,7 @@ func TestCiMapMatchesOriginalSource(t *testing.T) {
 			t.Fatalf("case %d:\nGo %s\nC %s", i, got[i], want[i])
 		}
 	}
-	witness, err := exec.Command(exe, "constraints").CombinedOutput()
+	witness, err := testoracle.Command(t, exe, "constraints").CombinedOutput()
 	if err != nil || string(witness) != "1 0\n" {
 		t.Fatalf("inherited constraint omission: %v: %s", err, witness)
 	}

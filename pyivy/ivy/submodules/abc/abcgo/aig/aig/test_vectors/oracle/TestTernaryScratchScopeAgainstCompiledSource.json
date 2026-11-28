@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/ternary_scope_compare.c $SRC/aig/aig/aigMem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "mode 0 mapping:\nvalues: 2 3 3 3 2\nmode 1 mapping: 2 1\nvalues: 2 3 1 1 2 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

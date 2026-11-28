@@ -2,8 +2,8 @@ package pdr
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -16,11 +16,11 @@ import (
 // the same sequential machine. The exhaustive state oracle tests do not
 // require the executable and remain authoritative in environments without it.
 func TestPdrAgainstLocalABC(t *testing.T) {
-	abc, err := filepath.Abs(filepath.Join("..", "..", "..", "abc"))
+	abc, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	info, err := os.Stat(abc)
+	info, err := testoracle.Stat(abc)
 	if err != nil || info.IsDir() || info.Mode()&0111 == 0 {
 		t.Skip("local ABC executable is unavailable")
 	}
@@ -76,7 +76,7 @@ func TestPdrAgainstLocalABC(t *testing.T) {
 			switches.WriteString(" -y -e")
 			pars.FFlopPrio, pars.FUseSupp = 1, 0
 		}
-		output, err := exec.Command(abc, "-c", "read_blif "+path+"; strash; pdr"+switches.String()).CombinedOutput()
+		output, err := testoracle.Command(t, abc, "-c", "read_blif "+path+"; strash; pdr"+switches.String()).CombinedOutput()
 		if err != nil {
 			t.Fatalf("trial %d: ABC failed: %v\n%s", trial, err, output)
 		}

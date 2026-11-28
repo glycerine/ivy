@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -247,7 +247,7 @@ func TestDuplicationRemapsMatchOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "duplication_remapping.c")
 	for _, mode := range []string{"literals", "terminals", "equiv"} {
 		t.Run(mode, func(t *testing.T) {
-			native, err := exec.Command(exe, mode).CombinedOutput()
+			native, err := testoracle.Command(t, exe, mode).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C remapping: %v: %s", err, native)
 			}

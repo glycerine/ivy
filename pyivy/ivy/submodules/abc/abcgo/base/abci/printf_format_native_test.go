@@ -1,8 +1,8 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -13,7 +13,7 @@ import (
 // missing, extra or misplaced arguments (CBUGS_FIXED.md #22). This compiles
 // the files that had them and requires no -Wformat mismatch.
 func TestNativeAbcPrintFormatsMatchArguments(t *testing.T) {
-	gcc, err := exec.LookPath("gcc")
+	gcc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc not found")
 	}
@@ -21,7 +21,7 @@ func TestNativeAbcPrintFormatsMatchArguments(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := os.Stat(filepath.Join(src, "base/abci/abc.c")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "base/abci/abc.c")); err != nil {
 		t.Skip("ABC C sources not found")
 	}
 	decl := filepath.Join(t.TempDir(), "fmtdecl.h")
@@ -32,7 +32,7 @@ func TestNativeAbcPrintFormatsMatchArguments(t *testing.T) {
 		"base/abci/abc.c", "proof/cec/cecCore.c", "base/abci/abcNpnSave.c",
 		"aig/gia/giaGiarf.c", "sat/proof/pr.c", "proof/pdr/pdrIncr.c",
 	} {
-		cmd := exec.Command(gcc, "-fsyntax-only", "-Wformat", "-Wno-format-zero-length", "-Wno-format-overflow",
+		cmd := testoracle.Command(t, gcc, "-fsyntax-only", "-Wformat", "-Wno-format-zero-length", "-Wno-format-overflow",
 			"-Wno-format-truncation", "-Wno-format-security",
 			"-DLIN64", "-DSIZEOF_VOID_P=8", "-DSIZEOF_LONG=8", "-DSIZEOF_INT=4", "-DABC_USE_CUDD=1", "-DABC_USE_PTHREADS",
 			"-I.", "-include", decl, file)
@@ -52,12 +52,12 @@ func TestNativeAbcPrintFormatsMatchArguments(t *testing.T) {
 // powerdown's usage printed "5% means" through printf: "% m" is a
 // directive and printed strerror(errno), "5No such file or directoryeans".
 func TestNativePowerdownUsageText(t *testing.T) {
-	bin := os.Getenv("ABC_BINARY")
+	bin := testoracle.NativeABCPath()
 	if bin == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
 	bin, _ = filepath.Abs(bin)
-	out, _ := exec.Command(bin, "-c", "powerdown -h").CombinedOutput()
+	out, _ := testoracle.Command(t, bin, "-c", "powerdown -h").CombinedOutput()
 	if !strings.Contains(string(out), "(e.g. 5% means hot wires") {
 		t.Fatalf("powerdown -h:\n%s", out)
 	}
@@ -71,7 +71,7 @@ func TestEquivSeqSimulationReport(t *testing.T) {
 	if out := runScript(t, script); !strings.Contains(out, want) {
 		t.Errorf("port:\n%s", out)
 	}
-	if os.Getenv("ABC_BINARY") != "" {
+	if testoracle.NativeABCPath() != "" {
 		if out := runNativeABC(t, script); !strings.Contains(out, want) {
 			t.Errorf("native:\n%s", out)
 		}

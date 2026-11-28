@@ -3,24 +3,24 @@ package satcost
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia/mf"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/sat/satoko"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
 )
 
 func TestOriginalCConflictCost(t *testing.T) {
-	if os.Getenv("SATCOST_C_DIFFERENTIAL") != "1" {
+	if testoracle.Gate("SATCOST_C_DIFFERENTIAL") != "1" {
 		t.Skip("set SATCOST_C_DIFFERENTIAL=1 for original C conflict-cost audit")
 	}
 	root, err := filepath.Abs("../../../..")
 	if err != nil {
 		t.Fatal(err)
 	}
-	compiler, err := exec.LookPath("cc")
+	compiler, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -28,7 +28,7 @@ func TestOriginalCConflictCost(t *testing.T) {
 	binary := filepath.Join(dir, "original-cost")
 	source := filepath.Join(root, "src/sat/satoko")
 	args := []string{"-O2", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), "test_vectors/original_cost.c", filepath.Join(source, "solver.c"), filepath.Join(source, "solver_api.c"), filepath.Join(source, "cnf_reader.c"), "-lm", "-o", binary}
-	if log, err := exec.Command(compiler, args...).CombinedOutput(); err != nil {
+	if log, err := testoracle.Command(t, compiler, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile original: %v %s", err, log)
 	}
 	rng := rand.New(rand.NewSource(99827))
@@ -55,7 +55,7 @@ func TestOriginalCConflictCost(t *testing.T) {
 		if err := os.WriteFile(path, []byte(input.String()), 0600); err != nil {
 			t.Fatal(err)
 		}
-		log, err := exec.Command(binary, path).CombinedOutput()
+		log, err := testoracle.Command(t, binary, path).CombinedOutput()
 		if err != nil {
 			t.Fatalf("original: %v %s", err, log)
 		}

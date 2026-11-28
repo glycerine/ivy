@@ -1,8 +1,8 @@
 package fracomb_test
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -21,21 +21,21 @@ func TestCecFallbackAgainstCompiledABC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ABC object oracle requires Linux")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, err := os.Stat(filepath.Join(src, "proof/fra/fraCec.o")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "proof/fra/fraCec.o")); err != nil {
 		t.Skip("prebuilt ABC objects unavailable")
 	}
 	var objects []string
-	if err := filepath.WalkDir(src, func(p string, d os.DirEntry, err error) error {
+	if err := testoracle.WalkDir(src, func(p string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -48,10 +48,10 @@ func TestCecFallbackAgainstCompiledABC(t *testing.T) {
 	}
 	dir := t.TempDir()
 	st, archive := filepath.Join(dir, "st.o"), filepath.Join(dir, "abc.a")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
 		t.Fatalf("compile st: %v\n%s", err, out)
 	}
-	if out, err := exec.Command(ar, append([]string{"qcs", archive}, append(objects, st)...)...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, ar, append([]string{"qcs", archive}, append(objects, st)...)...).CombinedOutput(); err != nil {
 		t.Fatalf("archive: %v\n%s", err, out)
 	}
 	const program = `#include "proof/fra/fra.h"
@@ -79,10 +79,10 @@ int main(int argc, char **argv) {
 	if err := os.WriteFile(cfile, []byte(program), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, cfile, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, cfile, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v\n%s", err, out)
 	}
-	out, err := exec.Command(binary).CombinedOutput()
+	out, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("ABC: %v\n%s", err, out)
 	}
@@ -92,10 +92,10 @@ int main(int argc, char **argv) {
 	if !strings.Contains(string(out), "direct:-1,0,1,1") {
 		t.Fatalf("unexpected ABC direct SAT result: %s", out)
 	}
-	cmd := exec.Command(binary, "expired")
+	cmd := testoracle.Command(t, binary, "expired")
 	cmd.Dir = dir
 	expiredOut, expiredErr := cmd.CombinedOutput()
-	exitErr, ok := expiredErr.(*exec.ExitError)
+	exitErr, ok := expiredErr.(*testoracle.ExitError)
 	if !ok || !exitErr.Sys().(syscall.WaitStatus).Signaled() || !strings.Contains(string(expiredOut), "initial:-1") {
 		t.Fatalf("ABC expired rewrite: error=%v output=%s", expiredErr, expiredOut)
 	}

@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -52,7 +52,7 @@ func fxReviewMappedGraph(mode, signs int32, reorder bool) *Gia_Man_t {
 
 func TestFxNativeMappedRetrievalAndDriver(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "fx_mapped_review.c")
-	raw, err := exec.Command(exe).CombinedOutput()
+	raw, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original C mapped extraction: %v\n%s", err, raw)
 	}
@@ -61,7 +61,7 @@ func TestFxNativeMappedRetrievalAndDriver(t *testing.T) {
 	if !strings.Contains(string(raw), "driver m0 s0 r0 o1 limit0 ci4 co3 and4 8000 8080 77ff") {
 		t.Fatal("original C port-order fault changed")
 	}
-	native, err := exec.Command(exe, "--correct-ports").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--correct-ports").CombinedOutput()
 	if err != nil {
 		t.Fatalf("corrected C mapped extraction: %v\n%s", err, native)
 	}

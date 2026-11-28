@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/bench/mul8.aig; strash; if -K 6; clockgate; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/bench/mul8.aig; strash; if -K 6; clockgate; print_stats\".\n\nError: This command works only for AIGs (run \"strash\").\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/bench/mul8.aig; strash; if -K 6; synch; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/bench/mul8.aig; strash; if -K 6; synch; print_stats\".\n\nError: This command works only for AIGs (run \"strash\").\n"
+ }
+]

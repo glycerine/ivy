@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -99,7 +99,7 @@ func TestSlicedSelectionAndMetadata(t *testing.T) {
 
 func TestSlicedMatchesOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "slicing.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C slicing: %v: %s", err, want)
 	}

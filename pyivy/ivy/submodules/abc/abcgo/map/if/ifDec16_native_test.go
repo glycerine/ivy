@@ -2,9 +2,9 @@ package if_
 
 import (
 	"encoding/json"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/rand"
-	"os"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -13,7 +13,7 @@ import (
 
 func TestClusteringNativeFixtures(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
-	data, err := os.ReadFile(filepath.Join(filepath.Dir(file), "../../../test_vectors/map_if/clustering.json"))
+	data, err := testoracle.ReadFile(filepath.Join(filepath.Dir(file), "../../test_vectors/map_if/clustering.json"))
 	if err != nil {
 		t.Fatal(err)
 	}

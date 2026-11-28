@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: $TMP/oracle param $TMP/patterns.pla",
+  "stdout": "Cannot open file \"$TMP/001/patterns.pla\" for reading.\nparam0 ins-77 words-88\n",
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ]
+ }
+]

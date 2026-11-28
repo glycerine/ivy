@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -88,19 +88,19 @@ func extractSimulationC(t *testing.T, source, name string) string {
 	return source[start:end] + "\n"
 }
 func TestFastSimulationAgainstOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	source, err := os.ReadFile("../../../src/aig/saig/saigSimFast.c")
+	source, err := testoracle.ReadFile("../../../src/aig/saig/saigSimFast.c")
 	if err != nil {
 		t.Skip("original C source unavailable")
 	}
-	random, err := os.ReadFile("../../../src/aig/aig/aigUtil.c")
+	random, err := testoracle.ReadFile("../../../src/aig/aig/aigUtil.c")
 	if err != nil {
 		t.Fatal(err)
 	}
-	harness, err := os.ReadFile("test_vectors/fast_reference.c")
+	harness, err := testoracle.ReadFile("test_vectors/fast_reference.c")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -127,7 +127,7 @@ typedef struct {int nPis,nPos,nCis,nCos,nFfs,nNos,nPis1,nCis1,nCisNos1,nCisNosPo
 	if err = os.WriteFile(cfile, []byte(program.String()), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if log, err := exec.Command(cc, "-std=c99", "-O2", cfile, "-o", binary).CombinedOutput(); err != nil {
+	if log, err := testoracle.Command(t, cc, "-std=c99", "-O2", cfile, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile original C: %v\n%s", err, log)
 	}
 	p := Faig_ManCreate(simulationFixture())
@@ -140,7 +140,7 @@ typedef struct {int nPis,nPos,nCis,nCos,nFfs,nNos,nPis1,nCis1,nCisNos1,nCisNosPo
 		for _, lit := range p.outputs {
 			fmt.Fprintf(&input, "%d ", lit)
 		}
-		command := exec.Command(binary)
+		command := testoracle.Command(t, binary)
 		command.Stdin = &input
 		output, err := command.CombinedOutput()
 		if err != nil {

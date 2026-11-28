@@ -1,0 +1,11 @@
+[
+ {
+  "key": "combined: abc -q \u0026read $TMP/input.aig; \u0026fraig -J 0; \u0026write $TMP/output.aig",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 5 3 0 2 2\n10\n10\n\u0004\u0002\u0002\u0002cn\u0000\u0000\u0000;/tmp/TestNativeSweepAgainstOriginalABC2185961956/001/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:51 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -I $SRC test_vectors/gla_true_root_oracle.c $LIBABC -lm -ldl -lpthread -lstdc++ -o $TMP/gla_true_root_oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/gla_true_root_oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/gla_true_root_oracle",
+  "stdout": "GLA finished 1 frames and produced a 0-stable abstraction.  Time =     0.01 sec\nSOURCE_STATUS=-1 CEX=0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

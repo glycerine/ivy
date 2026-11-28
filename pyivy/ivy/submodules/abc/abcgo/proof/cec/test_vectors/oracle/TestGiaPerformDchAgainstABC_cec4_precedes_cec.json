@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: abc -c read_blif $TMP/choice.blif; strash; \u0026get; \u0026dch -g -x; \u0026ps",
+  "stdout": "ABC command line: \"read_blif $TMP/001/choice.blif; strash; \u0026get; \u0026dch -g -x; \u0026ps\".\n\n\u001b[1;37mc       \u001b[0m : i/o =      4/      1  \u001b[1;36mand =       7\u001b[0m  \u001b[1;35mlev =    3\u001b[0m \u001b[1;35m(2.00)\u001b[0m  mem = 0.00 MB  ch =    1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -1,0 +1,14 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026verify",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026verify\".\n\nThe parameter line is in a wrong format.\nCannot read spec AIG \"test_vectors/native_s27_drw.blif\".\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026verify /nonexistent_spec.aig",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026verify /nonexistent_spec.aig\".\n\nTaking spec from file \"/nonexistent_spec.aig\".\nGia_FileSize(): The file is unavailable (absent or open).\nCannot read spec AIG \"/nonexistent_spec.aig\".\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_s27_drw.blif",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_s27_drw.blif\".\n\nThe parameter line is in a wrong format.\n"
+ }
+]

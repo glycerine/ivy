@@ -1,9 +1,9 @@
 package gia
 
 import (
+	"os/exec"
 	"context"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 	"time"

@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -49,7 +49,7 @@ func TestFramesInitSpecialEventPrefix(t *testing.T) {
 
 func TestFramesNativeDrivers(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--drivers-safe").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--drivers-safe").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C frame drivers: %v\n%s", err, native)
 	}
@@ -77,7 +77,7 @@ func TestFramesNativeDrivers(t *testing.T) {
 
 func TestFramesOriginalInitTraversalDefect(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--init-defect").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--init-defect").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C initialized traversal: %v\n%s", err, native)
 	}
@@ -140,7 +140,7 @@ func TestFramesInitSpecialIgnoresStaleScratch(t *testing.T) {
 
 func TestFramesOriginalSpecialStaleScratchFailure(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	cmd := exec.Command(exe, "--special-stale")
+	cmd := testoracle.Command(t, exe, "--special-stale")
 	cmd.Dir = t.TempDir()
 	out, err := cmd.CombinedOutput()
 	if err == nil || !strings.Contains(string(out), "Assertion") {

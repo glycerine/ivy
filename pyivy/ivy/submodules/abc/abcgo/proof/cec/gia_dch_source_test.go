@@ -1,8 +1,8 @@
 package cec
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -14,11 +14,11 @@ import (
 )
 
 func TestGiaPerformDchAgainstABC(t *testing.T) {
-	abc, err := filepath.Abs(filepath.Join("..", "..", "..", "abc"))
+	abc, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info, err := os.Stat(abc); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
+	if info, err := testoracle.Stat(abc); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
 		t.Skip("local ABC executable unavailable")
 	}
 	path := filepath.Join(t.TempDir(), "choice.blif")
@@ -33,7 +33,7 @@ func TestGiaPerformDchAgainstABC(t *testing.T) {
 		{"gia_default", "", false, false}, {"cec", " -g", true, false}, {"cec4", " -x", false, true}, {"cec4_precedes_cec", " -g -x", true, true},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			out, err := exec.Command(abc, "-c", "read_blif "+path+"; strash; &get; &dch"+test.flag+"; &ps").CombinedOutput()
+			out, err := testoracle.Command(t, abc, "-c", "read_blif "+path+"; strash; &get; &dch"+test.flag+"; &ps").CombinedOutput()
 			if err != nil {
 				t.Fatalf("C choice: %v\n%s", err, out)
 			}

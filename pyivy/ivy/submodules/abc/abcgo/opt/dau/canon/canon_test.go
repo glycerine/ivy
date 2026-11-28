@@ -4,10 +4,10 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -19,7 +19,7 @@ func TestCanonicalizeCOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("C oracle uses ELF function-section garbage collection")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional source differential oracle requires cc")
 	}
@@ -33,7 +33,7 @@ int main(void){int n;unsigned long long x;word t[1024];char p[16];while(scanf("%
 	if err := os.WriteFile(main, []byte(code), 0644); err != nil {
 		t.Fatal(err)
 	}
-	command := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, main, "-o", binary)
+	command := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, main, "-o", binary)
 	if data, err := command.CombinedOutput(); err != nil {
 		t.Fatalf("compile actual dauCanon.c oracle: %v\n%s", err, data)
 	}
@@ -101,7 +101,7 @@ int main(void){int n;unsigned long long x;word t[1024];char p[16];while(scanf("%
 		}
 		fmt.Fprintln(&input)
 	}
-	command = exec.Command(binary)
+	command = testoracle.Command(t, binary)
 	command.Stdin = &input
 	data, err := command.CombinedOutput()
 	if err != nil {

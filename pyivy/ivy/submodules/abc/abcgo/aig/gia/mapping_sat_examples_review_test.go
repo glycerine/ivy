@@ -2,15 +2,15 @@ package gia_test
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	if_ "github.com/glycerine/abcgo/map/if"
 	"os"
-	"os/exec"
 	"testing"
 )
 
 func TestMappingSATOriginalExamples(t *testing.T) {
 	executable := gia.CompileSourceOracleForTest(t, "if_sat_examples_review.c")
-	want, err := exec.Command(executable).CombinedOutput()
+	want, err := testoracle.Command(t, executable).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original examples: %v: %s", err, want)
 	}
@@ -25,7 +25,7 @@ func TestMappingSATOriginalExamples(t *testing.T) {
 	if_.If_ManSatTest2()
 	output.WriteString("example3\n")
 	if_.If_ManSatTest3()
-	got, err := os.ReadFile(output.Name())
+	got, err := testoracle.ReadFile(output.Name())
 	if err != nil {
 		t.Fatal(err)
 	}

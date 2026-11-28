@@ -1,0 +1,11 @@
+[
+ {
+  "key": "combined: abc -q read_aiger $TMP/input.aig; phase -F 2; write_aiger $TMP/output.aig",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 3 2 1 4 0\n4\n6\n0\n2\n4\nc\nThis file was written by ABC on Sat Nov 28 05:02:09 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

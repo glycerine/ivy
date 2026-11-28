@@ -3,7 +3,7 @@ package aig
 import (
 	"context"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -15,7 +15,7 @@ func TestDominatorDriversAgainstCompiledSource(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("fixture uses GNU linker section collection")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -30,10 +30,10 @@ func TestDominatorDriversAgainstCompiledSource(t *testing.T) {
 		args = append(args, filepath.Join(src, "aig/aig", name))
 	}
 	args = append(args, "-Wl,--gc-sections", "-o", binary)
-	if out, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.CommandContext(t, ctx, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile source: %v: %s", err, out)
 	}
-	out, err := exec.CommandContext(ctx, binary).CombinedOutput()
+	out, err := testoracle.CommandContext(t, ctx, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("source driver: %v: %s", err, out)
 	}

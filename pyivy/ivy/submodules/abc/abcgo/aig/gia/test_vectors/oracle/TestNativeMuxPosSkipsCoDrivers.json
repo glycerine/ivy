@@ -1,0 +1,36 @@
+[
+ {
+  "key": "combined: gcc -O1 -DABC_USE_STDINT_H -I $SRC -c test_vectors/muxpos_oracle.c -o $TMP/main.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/main.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -O1 -DABC_USE_STDINT_H -I $SRC -c $SRC/aig/gia/giaUtil.c -o $TMP/giaUtil.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/giaUtil.o"
+  ]
+ },
+ {
+  "key": "combined: g++ $TMP/main.o $TMP/giaUtil.o $LIBABC -lreadline -lpthread -lm -ldl -o $TMP/muxpos",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/muxpos"
+  ]
+ },
+ {
+  "key": "combined: $TMP/muxpos ../../base/abci/test_vectors/bench/mul8.aig",
+  "stdout": "old=16 added=174 dup=0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

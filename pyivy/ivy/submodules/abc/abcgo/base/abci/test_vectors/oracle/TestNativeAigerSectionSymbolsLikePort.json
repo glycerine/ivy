@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -c read ../io/test_vectors/aiger_binary_extended.aig; write_blif $TMP/ext.blif",
+  "stdout": "ABC command line: \"read ../io/test_vectors/aiger_binary_extended.aig; write_blif $TMP/002/ext.blif\".\n\nWarning: The last output is interpreted as a constraint.\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/ext.blif": "# Benchmark \"../io/test_vectors/aiger_binary_extended\" written by ABC on Sat Nov 28 05:29:29 2026\n.model ../io/test_vectors/aiger_binary_extended\n.inputs enable\n.outputs out bad constraint\n\n.latch   state_in      state  0\n\n.names enable state state_in\n10 1\n.names state_in out\n0 1\n.names state bad\n1 1\n.names enable constraint\n1 1\n.end\n"
+  }
+ }
+]

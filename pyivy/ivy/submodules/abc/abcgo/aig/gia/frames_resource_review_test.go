@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -104,7 +104,7 @@ func TestFramesOriginalBoundaryAssertions(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
 	for _, tc := range []struct{ mode, assertion string }{{"--abs-power", "nObjMask"}, {"--complete-save", "Gia_ManPoNum"}} {
 		t.Run(tc.mode, func(t *testing.T) {
-			cmd := exec.Command(exe, tc.mode)
+			cmd := testoracle.Command(t, exe, tc.mode)
 			cmd.Dir = t.TempDir()
 			out, err := cmd.CombinedOutput()
 			if err == nil || !strings.Contains(string(out), "Assertion") || !strings.Contains(string(out), tc.assertion) {

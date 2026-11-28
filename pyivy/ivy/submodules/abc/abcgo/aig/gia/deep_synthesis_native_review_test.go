@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 
@@ -84,7 +84,7 @@ func (d *deepReviewDispatcher) Execute(f *abcmain.Frame, command string) int32 {
 
 func TestDeepSynthesisControlMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "deep_synthesis_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native deep synthesis: %v\n%s", err, native)
 	}

@@ -1,0 +1,23 @@
+[
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case0.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case0.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case1.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case1.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case2.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case2.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

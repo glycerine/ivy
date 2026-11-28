@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestCubeReachabilityNativeDriverTrace(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "era_cube_review.c")
-	cmd := exec.Command(exe)
+	cmd := testoracle.Command(t, exe)
 	cmd.Dir = t.TempDir()
 	native, err := cmd.CombinedOutput()
 	if err != nil {
@@ -66,7 +66,7 @@ func TestCubeReachabilityNativeDriverTrace(t *testing.T) {
 
 func TestCubeReachabilityNativeRelations(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "era_cube_review.c")
-	native, err := exec.Command(exe, "--relations").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--relations").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C cube relations: %v\n%s", err, native)
 	}

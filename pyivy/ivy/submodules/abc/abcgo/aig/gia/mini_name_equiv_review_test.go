@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -94,7 +94,7 @@ func TestMiniNameAndEquivalenceMappingPhases(t *testing.T) {
 		}
 	}
 	exe := compileGiaSourceOracle(t, "mini_name_equiv.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C mapping: %v: %s", err, want)
 	}

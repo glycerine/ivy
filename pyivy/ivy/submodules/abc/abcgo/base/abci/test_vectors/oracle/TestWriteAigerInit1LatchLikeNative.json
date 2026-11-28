@@ -1,0 +1,22 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/latch_init1.blif; strash; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/seq/latch_init1.blif; strash; write_aiger $TMP/001/native.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.aig": "aig 6 1 2 0 3 1 0\n10 1\n12\n8\n\u0002\u0002\u0006\u0002\u0005\u0003c\ni1\u0000\nThis file was written by ABC on Sat Nov 28 05:29:29 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/latch_init1.blif; strash; dc2; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/seq/latch_init1.blif; strash; dc2; write_aiger $TMP/001/native.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.aig": "aig 6 1 2 0 3 1 0\n10 1\n12\n8\n\u0002\u0002\u0006\u0002\u0005\u0003c\ni1\u0000\nThis file was written by ABC on Sat Nov 28 05:29:29 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

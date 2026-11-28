@@ -1,0 +1,13 @@
+[
+ {
+  "key": "combined: $TMP/oracle --raw $TMP/network.gig",
+  "stdout": "PI=1  PO=1  Sel=1  Del=1  Time =     0.00 sec\noracle: $SRC/aig/gia/giaGig.c:273: Gls_ManParse: Assertion `0' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

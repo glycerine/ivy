@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -194,7 +194,7 @@ func TestStructuralSupportsReview(t *testing.T) {
 
 func TestSupportsMatchOriginalC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "supports.c")
-	output, err := exec.Command(exe).CombinedOutput()
+	output, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C supports: %v: %s", err, output)
 	}

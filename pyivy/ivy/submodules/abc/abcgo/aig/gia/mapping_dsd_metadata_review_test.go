@@ -3,9 +3,9 @@ package gia_test
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	if_ "github.com/glycerine/abcgo/map/if"
 	"github.com/glycerine/abcgo/opt/dau"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -18,7 +18,7 @@ func mappingDSDReviewBit(value bool) int {
 }
 func TestMappingDSDNativeManagerMetadata(t *testing.T) {
 	executable := gia.CompileSourceOracleForTest(t, "if_dsd_metadata_review.c")
-	source, err := exec.Command(executable).CombinedOutput()
+	source, err := testoracle.Command(t, executable).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original DSD metadata: %v %s", err, source)
 	}

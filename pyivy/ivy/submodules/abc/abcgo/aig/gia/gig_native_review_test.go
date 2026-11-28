@@ -2,9 +2,9 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -252,7 +252,7 @@ func TestGigNativeParserConstructionAndTruth(t *testing.T) {
 		if err := os.WriteFile(filepath.Join(nativeDir, "network.gig"), []byte(tc.text), 0600); err != nil {
 			t.Fatal(err)
 		}
-		cmd := exec.Command(exe, "--raw", "network.gig")
+		cmd := testoracle.Command(t, exe, "--raw", "network.gig")
 		cmd.Dir = nativeDir
 		output, err := cmd.CombinedOutput()
 		if err == nil || !strings.Contains(string(output), tc.assertion) {
@@ -285,7 +285,7 @@ func TestGigNativeParserConstructionAndTruth(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
-		cmd := exec.Command(exe, "--correct-lut6", "network.gig")
+		cmd := testoracle.Command(t, exe, "--correct-lut6", "network.gig")
 		cmd.Dir = nativeDir
 		native, err := cmd.CombinedOutput()
 		if err != nil {

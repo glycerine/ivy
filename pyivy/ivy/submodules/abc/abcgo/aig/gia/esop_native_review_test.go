@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"strings"
 	"testing"
@@ -24,7 +24,7 @@ func esopReviewCompare(t *testing.T, want []byte, got string) {
 }
 func TestEsopNativeExtractedCovers(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "esop_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C ESOP: %v\n%s", err, native)
 	}
@@ -64,7 +64,7 @@ func esopReviewCube(code, nvars int) []int32 {
 }
 func TestEsopNativeCubeOperations(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "esop_review.c")
-	native, err := exec.Command(exe, "--cubes").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--cubes").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C cube operations: %v\n%s", err, native)
 	}
@@ -124,7 +124,7 @@ func TestEsopNativeReports(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "esop_review.c")
 	for _, mode := range []string{"--verbose", "--print"} {
 		t.Run(mode, func(t *testing.T) {
-			native, err := exec.Command(exe, mode).CombinedOutput()
+			native, err := testoracle.Command(t, exe, mode).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C ESOP report: %v\n%s", err, native)
 			}

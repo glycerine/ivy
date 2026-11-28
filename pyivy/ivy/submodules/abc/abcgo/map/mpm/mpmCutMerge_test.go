@@ -3,8 +3,7 @@ package mpm
 import (
 	"bytes"
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -56,21 +55,21 @@ func TestCutMergeOriginalC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("oracle requires ELF section collection")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("oracle requires C compiler")
 	}
-	source := os.Getenv("ABC_SOURCE_ROOT")
+	source := testoracle.SourceRoot()
 	if source == "" {
 		_, file, _, _ := runtime.Caller(0)
 		source = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
 	}
 	bin := filepath.Join(t.TempDir(), "mpm-cut")
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, filepath.Join(source, "../abcgo/map/mpm/test_vectors/cut_merge_oracle.c"), "-o", bin)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, filepath.Join(source, "../abcgo/map/mpm/test_vectors/cut_merge_oracle.c"), "-o", bin)
 	if output, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("compile C oracle: %v\n%s", err, output)
 	}
-	output, err := exec.Command(bin).CombinedOutput()
+	output, err := testoracle.Command(t, bin).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C oracle: %v\n%s", err, output)
 	}

@@ -1,0 +1,14 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026acec",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026acec\".\n\nError: Abc_CommandAbc9Acec(): There is no AIG.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026verify",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026verify\".\n\nError: Abc_CommandAbc9Verify(): There is no AIG.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026test",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026test\".\n\nError: Abc_CommandAbc9Test(): There is no AIG.\n"
+ }
+]

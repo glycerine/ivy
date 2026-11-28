@@ -2,7 +2,7 @@ package aig
 
 import (
 	"fmt"
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -15,7 +15,7 @@ func TestMuxExperimentWritesSourceArtifact(t *testing.T) {
 	if strings.Count(out, "Number of nodes =") != 2 {
 		t.Errorf("missing source experiment statistics: %q", out)
 	}
-	data, err := os.ReadFile("test1.blif")
+	data, err := testoracle.ReadFile("test1.blif")
 	if err != nil {
 		t.Fatal("missing source MUX experiment circuit:", err)
 	}

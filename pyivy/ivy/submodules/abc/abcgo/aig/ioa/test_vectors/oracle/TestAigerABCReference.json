@@ -1,0 +1,22 @@
+[
+ {
+  "key": "combined: abc -c read_aiger $TMP/input.aig; write_aiger $TMP/output.aig",
+  "stdout": "ABC command line: \"read_aiger $TMP/001/input.aig; write_aiger $TMP/001/output.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 3 2 0 3 1\n6\n0\n1\n\u0002\u0002c\n/tmp/TestAigerABCReference1070998658/001/input\u0000\nThis file was written by ABC on Sat Nov 28 05:02:07 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read_aiger $TMP/input.aig; write_aiger $TMP/output.aig",
+  "stdout": "ABC command line: \"read_aiger $TMP/002/input.aig; write_aiger $TMP/002/output.aig\".\n\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": "aig 3 2 0 3 1\n6\n0\n1\n\u0002\u0002c\n/tmp/TestAigerABCReference1070998658/002/input\u0000\nThis file was written by ABC on Sat Nov 28 05:02:07 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

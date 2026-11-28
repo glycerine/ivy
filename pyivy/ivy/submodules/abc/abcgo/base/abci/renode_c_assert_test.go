@@ -1,8 +1,8 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -15,7 +15,7 @@ import (
 // the saved best cut, so If_ObjPerformMappingAnd asserted nCuts > 0; release
 // builds went on and adopted a stale cut slot (CBUGS_FIXED.md #15).
 func TestNativeRenodeIfAssertionsHold(t *testing.T) {
-	lib := os.Getenv("ABC_LIBABC")
+	lib := testoracle.NativeLibABCPath()
 	if lib == "" {
 		t.Skip("set ABC_LIBABC to a native libabc.a built from ../src")
 	}
@@ -34,12 +34,12 @@ int main(int argc, char **argv) { Abc_Start(); return Cmd_CommandExecute(Abc_Fra
 		{"gcc", "-O1", "-DABC_USE_STDINT_H", "-UNDEBUG", "-I", src, "-c", filepath.Join(src, "map/if/ifMap.c"), "-o", filepath.Join(dir, "ifMap.o")},
 		{"g++", filepath.Join(dir, "main.o"), filepath.Join(dir, "ifMap.o"), lib, "-lreadline", "-lpthread", "-lm", "-ldl", "-o", bin},
 	} {
-		if out, err := exec.Command(c[0], c[1:]...).CombinedOutput(); err != nil {
+		if out, err := testoracle.Command(t, c[0], c[1:]...).CombinedOutput(); err != nil {
 			t.Fatalf("%v: %v\n%s", c, err, out)
 		}
 	}
 	aig, _ := filepath.Abs("test_vectors/i10_lutpack_strash.aig")
-	out, err := exec.Command(bin, "read "+aig+"; renode; print_stats").CombinedOutput()
+	out, err := testoracle.Command(t, bin, "read "+aig+"; renode; print_stats").CombinedOutput()
 	if err != nil || !strings.Contains(string(out), "nd =") {
 		t.Fatalf("renode with assertions: %v\n%s", err, out)
 	}

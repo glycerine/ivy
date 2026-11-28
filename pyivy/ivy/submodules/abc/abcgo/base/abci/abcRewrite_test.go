@@ -25,7 +25,7 @@ func benchmarkI10Balance(b *testing.B, passes int, rewrite bool) {
 	b.ReportAllocs()
 	var nodes, depth int32
 	for b.Loop() {
-		n, err := abcio.ReadAiger("../../../i10.aig", true)
+		n, err := abcio.ReadAiger("../../test_vectors/i10.aig", true)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -45,7 +45,7 @@ func benchmarkI10Balance(b *testing.B, passes int, rewrite bool) {
 }
 
 func TestRewriteI10PreservesZeroInput(t *testing.T) {
-	n, err := abcio.ReadAiger("../../../i10.aig", true)
+	n, err := abcio.ReadAiger("../../test_vectors/i10.aig", true)
 	if err != nil {
 		t.Fatal(err)
 	}

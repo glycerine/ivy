@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -18,7 +18,7 @@ func TestCutNativeOriginalCOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section collection required")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional source oracle needs cc")
 	}
@@ -33,7 +33,7 @@ int main(void){char mode;while(scanf(" %c",&mode)==1){if(mode=='M'){int limit,na
 	if err = os.WriteFile(path, []byte(code), 0644); err != nil {
 		t.Fatal(err)
 	}
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, path, "-o", binary)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, path, "-o", binary)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("compile original C: %v\n%s", err, out)
 	}
@@ -108,7 +108,7 @@ int main(void){char mode;while(scanf(" %c",&mode)==1){if(mode=='M'){int limit,na
 		cb = &If_Cut_t{Delay: float32(fields[6]), Area: float32(fields[7]), Edge: float32(fields[8]), Power: float32(fields[9]), nLeaves: uint32(fields[10]), fUseless: uint32(fields[11])}
 		expected = append(expected, []int64{int64(If_ManSortCompare(p, ca, cb))})
 	}
-	cmd = exec.Command(binary)
+	cmd = testoracle.Command(t, binary)
 	cmd.Stdin = &input
 	output, err := cmd.CombinedOutput()
 	if err != nil {

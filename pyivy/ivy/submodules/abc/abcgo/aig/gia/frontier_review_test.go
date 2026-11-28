@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -105,7 +105,7 @@ func frontierReviewGraph(seed uint32) *Gia_Man_t {
 
 func TestFrontierNativeSlotsAndRoundTrip(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frontier_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C frontier: %v\n%s", err, native)
 	}
@@ -175,7 +175,7 @@ func TestFrontierSlotAllocator(t *testing.T) {
 
 func TestFrontierNativeBufferCounterexample(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frontier_review.c")
-	native, err := exec.Command(exe, "--buffer").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--buffer").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C buffer probe: %v\n%s", err, native)
 	}

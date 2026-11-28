@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
-	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -92,7 +92,7 @@ func cofReviewInspect(seed uint32) {
 }
 func TestCofactorNativeNetworkAnalysis(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cof_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original C cofactor analysis: %v\n%s", err, native)
 	}
@@ -115,7 +115,7 @@ func TestCofactorNativeNetworkAnalysis(t *testing.T) {
 
 func TestCofactorNativeRebuild(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cof_review.c")
-	native, err := exec.Command(exe, "--rebuild").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--rebuild").CombinedOutput()
 	if err != nil {
 		t.Fatalf("original C rebuild: %v\n%s", err, native)
 	}
@@ -186,7 +186,7 @@ func cofReviewReportGraph(count int, chain bool) *Gia_Man_t {
 }
 func TestCofactorNativeFanioReport(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cof_review.c")
-	native, err := exec.Command(exe, "--report").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--report").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C fanio report: %v\n%s", err, native)
 	}
@@ -214,7 +214,7 @@ func TestCofactorNativeFanioReport(t *testing.T) {
 
 func TestCofactorNativeFanioDriver(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cof_review.c")
-	native, err := exec.Command(exe, "--driver").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--driver").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C fanio driver: %v\n%s", err, native)
 	}

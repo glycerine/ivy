@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/bench/mul8.aig; %test; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/bench/mul8.aig; %test; print_stats\".\n\nAbc_CommandTest(): There is no current design.\n\u001b[1;37mtest_vectors/bench/mul8       :\u001b[0m i/o =   16/   16  lat =    0  and =    424  lev = 53\n"
+ }
+]

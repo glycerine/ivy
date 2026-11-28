@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -95,7 +95,7 @@ func TestBlockReductionEmptyAndInvalidInterfaces(t *testing.T) {
 
 func TestBlockReductionMatchesOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "block_reduction.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C block reduction: %v: %s", err, want)
 	}

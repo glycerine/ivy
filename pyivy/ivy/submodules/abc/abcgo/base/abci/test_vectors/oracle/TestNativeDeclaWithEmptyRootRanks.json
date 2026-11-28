@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read ../../test_vectors/i10.aig; strash; \u0026get; \u0026decla; \u0026ps",
+  "stdout": "ABC command line: \"read ../../test_vectors/i10.aig; strash; \u0026get; \u0026decla; \u0026ps\".\n\nPhase of input 0=457 is mismatched in box 14=(486,484).\nPhase of input 1=483 is mismatched in box 14=(486,484).\nPhase of input 1=540 is mismatched in box 20=(587,541).\nProcessing tree 0:  Ranks = 3.  Adders = 6.  Leaves = 7.  Roots = 5.\nCannot match the outputs of the arithmetic box.\n\u001b[1;37m../../test_vectors/i10\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2675\u001b[0m  \u001b[1;35mlev =   50\u001b[0m \u001b[1;35m(15.54)\u001b[0m  mem = 0.04 MB\n"
+ }
+]

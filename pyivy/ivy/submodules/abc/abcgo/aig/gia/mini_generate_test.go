@@ -2,8 +2,8 @@ package gia
 
 import (
 	"bytes"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -48,12 +48,12 @@ func TestMiniAigGenerateMatchesOriginalFiles(t *testing.T) {
 			if err := os.WriteFile(filepath.Join(dir, "test.txt"), []byte(text), 0600); err != nil {
 				t.Fatal(err)
 			}
-			cmd := exec.Command(exe)
+			cmd := testoracle.Command(t, exe)
 			cmd.Dir = dir
 			if out, err := cmd.CombinedOutput(); err != nil {
 				t.Fatalf("original C generation: %v: %s", err, out)
 			}
-			want, err := os.ReadFile(filepath.Join(dir, "test.miniaig"))
+			want, err := testoracle.ReadFile(filepath.Join(dir, "test.miniaig"))
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -67,7 +67,7 @@ func TestMiniAigGenerateMatchesOriginalFiles(t *testing.T) {
 			}
 			path := filepath.Join(dir, "go.miniaig")
 			miniaig.Mini_AigDump(p, path)
-			got, err := os.ReadFile(path)
+			got, err := testoracle.ReadFile(path)
 			if err != nil {
 				t.Fatal(err)
 			}

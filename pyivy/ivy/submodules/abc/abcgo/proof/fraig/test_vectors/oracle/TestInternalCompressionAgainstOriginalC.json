@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections test_vectors/compress_internal_oracle.c $SRC/proof/fraig/fraigFeed.c $SRC/proof/fraig/fraigTable.c $SRC/proof/fraig/fraigMem.c $SRC/proof/fraig/fraigVec.c $SRC/proof/fraig/fraigNode.c $SRC/proof/fraig/fraigApi.c $SRC/proof/fraig/fraigPrime.c $SRC/proof/fraig/fraigUtil.c $SRC/sat/msat/msatVec.c -Wl,--gc-sections -o $TMP/internal-compression-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/internal-compression-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/internal-compression-oracle",
+  "stdout": "1 1 32 10 80000000 80000000 12105258 00000000 2420a4b0 00000000 ffffffff\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

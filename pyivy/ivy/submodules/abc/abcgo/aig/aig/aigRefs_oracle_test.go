@@ -2,7 +2,7 @@ package aig
 
 import (
 	"context"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -10,7 +10,7 @@ import (
 )
 
 func TestReferenceAccessorsAgainstCompiledSource(t *testing.T) {
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -22,10 +22,10 @@ func TestReferenceAccessorsAgainstCompiledSource(t *testing.T) {
 	defer cancel()
 	args := []string{"-DABC_USE_STDINT_H", "-I", src,
 		filepath.Join(dir, "test_vectors/reference_accessors_compare.c"), "-o", binary}
-	if out, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.CommandContext(t, ctx, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile original inline accessors: %v: %s", err, out)
 	}
-	out, err := exec.CommandContext(ctx, binary).CombinedOutput()
+	out, err := testoracle.CommandContext(t, ctx, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run C accessors: %v: %s", err, out)
 	}

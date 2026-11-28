@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -std=gnu99 -DLIN64 -ffunction-sections -fdata-sections -I$SRC $TMP/oracle.c -Wl,--gc-sections -o $TMP/oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/oracle"
+  ]
+ },
+ {
+  "key": "output: $TMP/oracle [stdin 913c4322f315fd56]",
+  "stdout": "ffffffff00000000\n5666aa5aa95a5566\nffffffff00000000\n033fffff0fffffff\nffffffffff00ffff\n6169e969ada525a5\nf0f0f0f0f0f0f0f0\nff00ff00ff00ff00\nffffffff00000000\n0333333003f333fc\nffff0000ffff0000\n050055aa050055aa\nffffffff00000000\n2222441144448822\ncccccccccccccccc\nffffffff00000000\nf0f0f0f0f0f0f0f0\naaaaaaaaaaaaaaaa\n0050965000056905\naaaaaaaaaaaaaaaa\n55555555aaaaaaaa\nbffffe45fffbffff\n41c1000001090000\ne14b4646e64c4646\n30303030c0c0c0c0\n102c160c23132133\ncccccccccccccccc\nff0fff0fdff0eff0\n0000000000000000\n7fb34c800000ffff\n10d9f2c4b0d952c4\na0a0a0a0a0a0a0a0\nf0f0f0f0f0f0f0f0\n0c00ffcfff3ffcff\n00000000000020a0\n3cff3cff3cff3cff\na5fee4ffa5ffa5ff\nf2d00d2ff2d00d2f\nffffffff00000000\nffff0000ffff0000\nffffffff00000000\n22aa2aa288008008\n3fcf3f3f3fef3fbf\n5a5a2d2d00000000\n2222080022220800\nff00ff00ff00ff00\nf0f0f0f0f0f0f0f0\n7755775500000000\n0606cccc0606cccc\ncccccccccccccccc\n566512d2569a21d2\ncf8bffffcfcfffff\nf0f00f0ff0f00f0f\n8008077020020dd0\n7ff77ff7ff77ff77\n3ffff3ffc0fff3ff\n5ddd5dddd555d555\ncccccccccccccccc\n60c050f060c0a000\n3000182412223c00\ncccccccccccccccc\nc268ee4466cc63c9\nf0f0f0f0f0f0f0f0\n77f7ffff77f7ffff\nffff0000ffff0000\n0aaaaaaa0aaaaaaa\nff00ff00ff00ff00\nf0f0f0f0f0f0f0f0\ndddd5d5dffffffff\n6060c5c509acac09\na500f0f5fff0f0ff\n3f0f3300ff3fff33\n7c87fbff0778ffff\nc862369c22228888\nf0f0f0f0f0f0f0f0\nf0f0f0f0f0f0f0f0\nb043ffff30c3ffff\ndddddddddddddddd\n0051005100000000\nff00ff00ff00ff00\n50f0f0f0f0f00f0f\n1b39b139e4c64ec6\n5f5f5f5f5f5f5f5f\nf3fcfcfc03fcfcfc\nff00ff00ff00ff00\n4200660066004200\n7dff7dfffaffafff\nfecfeffeaffafaaf\n659acf30a6590cf3\n3f0f1d0f3f0f1d0f\nf0f0f0f0f0f0f0f0\n70b5b02fe025d04f\ncccccccccccccccc\nffff0000ffff0000\n333b959d939bd5dd\naaaaaaaaaaaaaaaa\nbdb5bdb547b547b5\n0466119922001199\nffffffff00000000\n30f0f0f0cf0f0f0f\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

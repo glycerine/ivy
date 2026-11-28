@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"testing"
 )
@@ -26,7 +26,7 @@ func fxReviewMappedPair() *Gia_Man_t {
 
 func TestFxNativeDriverReports(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "fx_report_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C driver reports: %v\n%s", err, native)
 	}

@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -65,7 +65,7 @@ func balanceDepthReviewArrivals(g *Gia_Man_t, mode int, delay int32) {
 
 func TestDepthBalanceNativeArrivalsOracle(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "balance_depth.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v\n%s", err, native)
 	}

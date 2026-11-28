@@ -3,7 +3,7 @@ package aig
 import (
 	"context"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -15,7 +15,7 @@ func TestConeMarksAgainstCompiledSource(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("C fixture uses GNU linker section garbage collection")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -25,10 +25,10 @@ func TestConeMarksAgainstCompiledSource(t *testing.T) {
 	binary := filepath.Join(t.TempDir(), "cone-marks")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	if out, err := exec.CommandContext(ctx, cc, "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, filepath.Join(dir, "test_vectors/cone_marks_compare.c"), "-Wl,--gc-sections", "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.CommandContext(t, ctx, cc, "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, filepath.Join(dir, "test_vectors/cone_marks_compare.c"), "-Wl,--gc-sections", "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile C oracle: %v: %s", err, out)
 	}
-	want, err := exec.CommandContext(ctx, binary).CombinedOutput()
+	want, err := testoracle.CommandContext(t, ctx, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run C oracle: %v: %s", err, want)
 	}

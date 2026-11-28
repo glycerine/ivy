@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -58,7 +58,7 @@ func bidecReviewRoot(g *Gia_Man_t, selector int) int32 {
 }
 func TestBidecTruthMatchesOriginalABCThrough15Inputs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "bidec_truth.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native bidec truth: %v\n%s", err, native)
 	}
@@ -107,7 +107,7 @@ func TestBidecTruthMatchesOriginalABCThrough15Inputs(t *testing.T) {
 
 func TestBidecMappedResultsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "bidec_truth.c")
-	native, err := exec.Command(exe, "resynthesis").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "resynthesis").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native resynthesis: %v\n%s", err, native)
 	}

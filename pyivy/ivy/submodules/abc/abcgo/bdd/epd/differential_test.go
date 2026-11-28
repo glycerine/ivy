@@ -2,9 +2,9 @@ package epd
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -13,16 +13,16 @@ import (
 
 // The C reference is only a test oracle; package epd has no C runtime dependency.
 func TestOriginalCDecimalDifferential(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for reference test")
 	}
 	root := "../../../src/bdd/epd"
-	header, err := os.ReadFile(filepath.Join(root, "epd.h"))
+	header, err := testoracle.ReadFile(filepath.Join(root, "epd.h"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	impl, err := os.ReadFile(filepath.Join(root, "epd.c"))
+	impl, err := testoracle.ReadFile(filepath.Join(root, "epd.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -58,12 +58,12 @@ func TestOriginalCDecimalDifferential(t *testing.T) {
 	if err := os.WriteFile(src, []byte(code.String()), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-DNDEBUG", src, "-lm", "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DNDEBUG", src, "-lm", "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile reference: %v: %s", err, out)
 	}
 	for _, n := range []int{-1022, -1000, -100, -1, 0, 1, 10, 100, 1023, 1024, 10000, 100000} {
 		t.Run(strconv.Itoa(n), func(t *testing.T) {
-			output, err := exec.Command(binary, strconv.Itoa(n)).CombinedOutput()
+			output, err := testoracle.Command(t, binary, strconv.Itoa(n)).CombinedOutput()
 			if err != nil {
 				t.Fatal(err, string(output))
 			}

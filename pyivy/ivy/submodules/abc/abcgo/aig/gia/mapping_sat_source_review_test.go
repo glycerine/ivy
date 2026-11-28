@@ -1,13 +1,13 @@
 package gia
 
 import (
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"testing"
 )
 
 func TestMappingNativeSATOriginalFlow(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "if_sat_review.c")
-	output, err := exec.Command(exe).CombinedOutput()
+	output, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original SAT flow: %v %s", err, output)
 	}

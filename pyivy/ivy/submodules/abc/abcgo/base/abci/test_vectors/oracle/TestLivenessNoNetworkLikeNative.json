@@ -1,0 +1,22 @@
+[
+ {
+  "key": "combined: abc -c l2s",
+  "stdout": "Empty network.\nABC command line: \"l2s\".\n\n"
+ },
+ {
+  "key": "combined: abc -c l2ssim",
+  "stdout": "Empty network.\nABC command line: \"l2ssim\".\n\n"
+ },
+ {
+  "key": "combined: abc -c l3s",
+  "stdout": "Empty network.\nABC command line: \"l3s\".\n\n"
+ },
+ {
+  "key": "combined: abc -c kcs",
+  "stdout": "ABC command line: \"kcs\".\n\nError: Empty network.\n"
+ },
+ {
+  "key": "combined: abc -c nck",
+  "stdout": "ABC command line: \"nck\".\n\nError: Empty network.\n"
+ }
+]

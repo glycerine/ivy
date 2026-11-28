@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -72,7 +72,7 @@ func cbs0ReviewGraph(seed int) (*Gia_Man_t, []int32) {
 }
 func TestChronologicalCircuitSATMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_sat_old_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native CBS0: %v\n%s", err, native)
 	}
@@ -178,7 +178,7 @@ func TestChronologicalCircuitSATMatchesOriginalABC(t *testing.T) {
 
 func TestChronologicalMiterMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_sat_old_review.c")
-	native, err := exec.Command(exe, "miter").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "miter").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native CBS0 miter: %v\n%s", err, native)
 	}
@@ -209,7 +209,7 @@ func TestChronologicalMiterMatchesOriginalABC(t *testing.T) {
 
 func TestChronologicalHardMitersMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_sat_old_review.c")
-	native, err := exec.Command(exe, "hard-miters").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "hard-miters").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native hard miters: %v\n%s", err, native)
 	}
@@ -337,7 +337,7 @@ func cbs0ReviewStore(t *testing.T, g *Gia_Man_t, statuses *Vec_Str_t, store *Vec
 
 func TestChronologicalStatisticsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_sat_old_review.c")
-	native, err := exec.Command(exe, "stats").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "stats").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native CBS0 statistics: %v\n%s", err, native)
 	}

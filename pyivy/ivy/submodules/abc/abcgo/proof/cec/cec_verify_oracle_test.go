@@ -2,10 +2,9 @@ package cec
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 
@@ -13,9 +12,8 @@ import (
 )
 
 func TestVerifyOriginalABC(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	binary := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(binary); err != nil {
+	binary := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	for _, unequal := range []bool{false, true} {
@@ -38,7 +36,7 @@ func TestVerifyOriginalABC(t *testing.T) {
 			t.Fatal(err)
 		}
 		cmd := fmt.Sprintf("&r -s %s; &cec -m -d", path)
-		log, err := exec.Command(binary, "-c", cmd).CombinedOutput()
+		log, err := testoracle.Command(t, binary, "-c", cmd).CombinedOutput()
 		if err != nil {
 			t.Fatalf("ABC: %v %s", err, log)
 		}

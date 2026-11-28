@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -w -O1 -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -Wl,--gc-sections -I $SRC test_vectors/choice_miter_oracle.c $SRC/aig/gia/giaMan.c $SRC/aig/gia/giaDup.c $SRC/aig/gia/giaAig.c $SRC/aig/gia/giaHash.c $SRC/aig/gia/giaFanout.c $SRC/aig/gia/giaExist.c $SRC/aig/gia/giaSim.c $SRC/aig/gia/giaUtil.c $SRC/aig/aig/aigMan.c $SRC/aig/aig/aigObj.c $SRC/aig/aig/aigTable.c $SRC/aig/aig/aigOper.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigUtil.c $SRC/aig/aig/aigFanout.c -o $TMP/choice-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/choice-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/choice-oracle",
+  "stdout": "12\n0 -1 -1\n1 -1 -1\n1 -1 -1\n1 -1 -1\n2 2 4\n5 8 -1\n2 3 6\n2 2 6\n2 6 8\n5 16 -1\n2 6 12\n2 4 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -3,10 +3,9 @@ package cec
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/rand/v2"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"slices"
 	"testing"
@@ -129,7 +128,7 @@ func TestCorrespondenceModesPreserveSequentialFunction(t *testing.T) {
 }
 
 func TestCorrespondenceOriginalABC(t *testing.T) {
-	binary := os.Getenv("ABC_SOURCE_BINARY")
+	binary := testoracle.NativeABCPath()
 	if binary == "" {
 		t.Skip("original ABC executable unavailable")
 	}
@@ -149,7 +148,7 @@ func TestCorrespondenceOriginalABC(t *testing.T) {
 			if signal {
 				command = "&read " + input + "; &scorr -c; &write " + output
 			}
-			if log, err := exec.Command(binary, "-q", command).CombinedOutput(); err != nil {
+			if log, err := testoracle.Command(t, binary, "-q", command).CombinedOutput(); err != nil {
 				t.Fatalf("C correspondence %v: %s", err, log)
 			}
 			reference, err := ioa.Ioa_ReadAiger(output, 1)

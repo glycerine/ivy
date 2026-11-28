@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestTasPatternsMatchOriginalABCAndScalarBits(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_tas_review.c")
-	native, err := exec.Command(exe, "patterns").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "patterns").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native TAS patterns: %v\n%s", err, native)
 	}

@@ -1,0 +1,38 @@
+[
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_syn2.aig; iprove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_syn2.aig; iprove -v\".\n\nRESOURCE LIMITS: Iterations = 6. Rewriting = no. Fraiging = yes.\nMiter = 5000 (2.0).  Rwr = 3 (1.0).  Fraig = 2 (8.0).  Last = 0.\nITERATION  1 : Confs =   5000. FraigBTL =   2. \nSimWords = 32. Rounds = 4. Mem = 0.14 MB.  Classes: Beg = 193. End = 193.\nProof = 16. Counter-example = 0. Fail = 235. FailReal = 5. Zero = 44.\nFinal = 1114. Miter = 1145. Total = 1148. Mux = 0. (Exor = 0.) SatVars = 840.\nstarts        :               38\nconflicts     :             5038\ndecisions     :             7390\npropagations  :           884956\nAIG simulation   =     0.00 sec\nAIG traversal    =     0.00 sec\nSAT solving      =     0.10 sec\n    Unsat        =     0.00 sec\n    Sat          =     0.00 sec\n    Fail         =     0.10 sec\nClass refining   =     0.00 sec\nTOTAL RUNTIME    =     0.10 sec\nNodes =    1114.  Levels =   70.  Fraiging    =     0.10 sec\nITERATION  2 : Confs =  10000. FraigBTL =  16. \nSimWords = 32. Rounds = 4. Mem = 0.14 MB.  Classes: Beg = 181. End = 181.\nProof = 62. Counter-example = 0. Fail = 98. FailReal = 82. Zero = 44.\nFinal = 0. Miter = 1013. Total = 1114. Mux = 0. (Exor = 0.) SatVars = 758.\nstarts        :              179\nconflicts     :             2134\ndecisions     :             4081\npropagations  :           155431\nAIG simulation   =     0.00 sec\nAIG traversal    =     0.00 sec\nSAT solving      =     0.01 sec\n    Unsat        =     0.01 sec\n    Sat          =     0.00 sec\n    Fail         =     0.00 sec\nClass refining   =     0.00 sec\nTOTAL RUNTIME    =     0.02 sec\nNodes =       0.  Levels =    0.  Fraiging    =     0.02 sec\nUNSATISFIABLE  Time =     0.28 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_syn2.aig; dprove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_syn2.aig; dprove -v\".\n\nThe network has no latches. Running CEC.\nRESOURCE LIMITS: Iterations = 6. Rewriting = no. Fraiging = yes.\nMiter = 5000 (2.0).  Rwr = 3 (1.0).  Fraig = 2 (8.0).  Last = 0.\nITERATION  1 : Confs =   5000. FraigBTL =   2. \nSimWords = 32. Rounds = 4. Mem = 0.14 MB.  Classes: Beg = 193. End = 193.\nProof = 16. Counter-example = 0. Fail = 235. FailReal = 5. Zero = 44.\nFinal = 1114. Miter = 1145. Total = 1148. Mux = 0. (Exor = 0.) SatVars = 840.\nstarts        :               38\nconflicts     :             5038\ndecisions     :             7390\npropagations  :           884956\nAIG simulation   =     0.00 sec\nAIG traversal    =     0.00 sec\nSAT solving      =     0.10 sec\n    Unsat        =     0.00 sec\n    Sat          =     0.00 sec\n    Fail         =     0.10 sec\nClass refining   =     0.00 sec\nTOTAL RUNTIME    =     0.10 sec\nNodes =    1114.  Levels =   70.  Fraiging    =     0.10 sec\nITERATION  2 : Confs =  10000. FraigBTL =  16. \nSimWords = 32. Rounds = 4. Mem = 0.14 MB.  Classes: Beg = 181. End = 181.\nProof = 62. Counter-example = 0. Fail = 98. FailReal = 82. Zero = 44.\nFinal = 0. Miter = 1013. Total = 1114. Mux = 0. (Exor = 0.) SatVars = 758.\nstarts        :              179\nconflicts     :             2134\ndecisions     :             4081\npropagations  :           155431\nAIG simulation   =     0.00 sec\nAIG traversal    =     0.00 sec\nSAT solving      =     0.01 sec\n    Unsat        =     0.01 sec\n    Sat          =     0.00 sec\n    Fail         =     0.00 sec\nClass refining   =     0.00 sec\nTOTAL RUNTIME    =     0.02 sec\nNodes =       0.  Levels =    0.  Fraiging    =     0.02 sec\nUNSATISFIABLE  Time =     0.28 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_syn2.aig; prove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_syn2.aig; prove -v\".\n\nRESOURCE LIMITS: Iterations = 6. Rewriting = yes. Fraiging = yes.\nMiter = 5000 (2.0).  Rwr = 3 (1.0).  Fraig = 2 (8.0).  Last = 0.\nITERATION  1 : Confs =   5000. FraigBTL =   2. \nNodes =    1785.  Levels =   76.  SAT solving =     0.12 sec\nNodes =    1143.  Levels =   67.  Rewriting   =     0.06 sec\nNodes =    1049.  Levels =   67.  FRAIGing    =     0.00 sec\nITERATION  2 : Confs =  10000. FraigBTL =  16. \nNodes =    1049.  Levels =   67.  SAT solving =     0.23 sec\nNodes =    1018.  Levels =   67.  Rewriting   =     0.03 sec\nNodes =     592.  Levels =   67.  FRAIGing    =     0.02 sec\nITERATION  3 : Confs =  20000. FraigBTL = 128. \nNodes =     592.  Levels =   67.  SAT solving =     0.00 sec\nUNSATISFIABLE  Time =     0.47 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_mut.aig; iprove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_mut.aig; iprove -v\".\n\nSATISFIABLE (output = 0) Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_mut.aig; dprove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_mut.aig; dprove -v\".\n\nThe network has no latches. Running CEC.\nSATISFIABLE    Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_mut.aig; prove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul8_canon.aig test_vectors/cec_mul8_mut.aig; prove -v\".\n\nRESOURCE LIMITS: Iterations = 6. Rewriting = yes. Fraiging = yes.\nMiter = 5000 (2.0).  Rwr = 3 (1.0).  Fraig = 2 (8.0).  Last = 0.\nITERATION  1 : Confs =   5000. FraigBTL =   2. \nNodes =     478.  Levels =   47.  SAT solving =     0.00 sec\nSATISFIABLE    Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul4_gen.aig test_vectors/cec_mul4_syn2.aig; iprove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul4_gen.aig test_vectors/cec_mul4_syn2.aig; iprove -v\".\n\nUNSATISFIABLE  Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul4_gen.aig test_vectors/cec_mul4_syn2.aig; dprove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul4_gen.aig test_vectors/cec_mul4_syn2.aig; dprove -v\".\n\nThe network has no latches. Running CEC.\nUNSATISFIABLE  Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_mul4_gen.aig test_vectors/cec_mul4_syn2.aig; prove -v",
+  "stdout": "ABC command line: \"miter test_vectors/native_mul4_gen.aig test_vectors/cec_mul4_syn2.aig; prove -v\".\n\nRESOURCE LIMITS: Iterations = 6. Rewriting = yes. Fraiging = yes.\nMiter = 5000 (2.0).  Rwr = 3 (1.0).  Fraig = 2 (8.0).  Last = 0.\nITERATION  1 : Confs =   5000. FraigBTL =   2. \nNodes =     240.  Levels =   31.  SAT solving =     0.00 sec\nUNSATISFIABLE  Time =     0.00 sec\n"
+ }
+]

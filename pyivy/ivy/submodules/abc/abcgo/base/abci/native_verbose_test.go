@@ -2,6 +2,7 @@ package abci
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -69,9 +70,9 @@ func TestVerboseOutputMatchesNative(t *testing.T) {
 	if testing.Short() {
 		t.Skip("verbose output sweep")
 	}
-	live := os.Getenv("ABC_BINARY") != ""
+	live := testoracle.NativeABCPath() != ""
 	for _, script := range nativeVerboseScripts {
-		full := fmt.Sprintf("read ../../../i10.aig; strash; %s", script)
+		full := fmt.Sprintf("read ../../test_vectors/i10.aig; strash; %s", script)
 		file := verboseGoldenName(script)
 		if live {
 			native := normalizeVerbose(runNativeABC(t, full))
@@ -82,7 +83,7 @@ func TestVerboseOutputMatchesNative(t *testing.T) {
 				}
 			}
 		}
-		want, err := os.ReadFile(file)
+		want, err := testoracle.ReadFile(file)
 		if err != nil {
 			t.Errorf("%s: %v", script, err)
 			continue

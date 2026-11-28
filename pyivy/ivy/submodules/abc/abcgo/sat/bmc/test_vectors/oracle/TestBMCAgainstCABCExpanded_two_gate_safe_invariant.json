@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: abc -c read_aiger $TMP/fixture.aig; bmc3 -F 4",
+  "stdout": "ABC command line: \"read_aiger $TMP/001/fixture.aig; bmc3 -F 4\".\n\nStopping BMC because all 2^1 reachable states are visited.\nExplored all reachable states after completing 2 frames.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

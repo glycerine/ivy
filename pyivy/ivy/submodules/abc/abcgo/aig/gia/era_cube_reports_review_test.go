@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"reflect"
 	"regexp"
 	"strings"
@@ -12,7 +12,7 @@ import (
 
 func TestCubeReachabilityNativePrivateReports(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "era_cube_review.c")
-	native, err := exec.Command(exe, "--reports").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--reports").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C reports: %v\n%s", err, native)
 	}
@@ -62,7 +62,7 @@ func TestCubeReachabilityNativePrivateReports(t *testing.T) {
 
 func TestCubeReachabilityNativeDriverReports(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "era_cube_review.c")
-	native, err := exec.Command(exe, "--driver-reports").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--driver-reports").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C driver reports: %v\n%s", err, native)
 	}

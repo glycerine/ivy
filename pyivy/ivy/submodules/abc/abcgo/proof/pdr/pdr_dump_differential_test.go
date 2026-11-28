@@ -1,8 +1,8 @@
 package pdr
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -11,11 +11,11 @@ import (
 )
 
 func TestInvariantDumpAgainstLocalABC(t *testing.T) {
-	abc, err := filepath.Abs(filepath.Join("..", "..", "..", "abc"))
+	abc, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info, err := os.Stat(abc); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
+	if info, err := testoracle.Stat(abc); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
 		t.Skip("local ABC executable is unavailable")
 	}
 	dir := t.TempDir()
@@ -26,7 +26,7 @@ func TestInvariantDumpAgainstLocalABC(t *testing.T) {
 	}
 	cfile := filepath.Join(dir, "c.pla")
 	cmd := "read_blif " + blif + "; strash; pdr -d -I " + cfile
-	output, err := exec.Command(abc, "-c", cmd).CombinedOutput()
+	output, err := testoracle.Command(t, abc, "-c", cmd).CombinedOutput()
 	if err != nil || !strings.Contains(string(output), "Property proved") {
 		t.Fatalf("ABC: %v\n%s", err, output)
 	}
@@ -47,7 +47,7 @@ func TestInvariantDumpAgainstLocalABC(t *testing.T) {
 	// Ignore date/name comments and optional input-name annotations, while
 	// comparing the dimensions and actual invariant cover.
 	cover := func(path string) string {
-		data, err := os.ReadFile(path)
+		data, err := testoracle.ReadFile(path)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -90,7 +90,7 @@ func TestIncrementalInvariantDumpPrintsSourceNoticeOnce(t *testing.T) {
 	if err := file.Close(); err != nil {
 		t.Fatal(err)
 	}
-	output, err := os.ReadFile(file.Name())
+	output, err := testoracle.ReadFile(file.Name())
 	if err != nil {
 		t.Fatal(err)
 	}

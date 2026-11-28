@@ -2,8 +2,7 @@ package fraig
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"testing"
 
@@ -13,10 +12,10 @@ import (
 // This runs the real C compression function with overlapping source patterns
 // and a partially full permanent word. It does not require the ABC executable.
 func TestCompressionAgainstOriginalC(t *testing.T) {
-	if os.Getenv("FRAIG_C_DIFFERENTIAL") != "1" {
+	if testoracle.Gate("FRAIG_C_DIFFERENTIAL") != "1" {
 		t.Skip("set FRAIG_C_DIFFERENTIAL=1 for the original C oracle")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -30,10 +29,10 @@ func TestCompressionAgainstOriginalC(t *testing.T) {
 		args = append(args, filepath.Join(root, "src", "proof", "fraig", f))
 	}
 	args = append(args, filepath.Join(root, "src", "sat", "msat", "msatVec.c"), "-Wl,--gc-sections", "-o", binary)
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile original C: %v\n%s", err, out)
 	}
-	original, err := exec.Command(binary).CombinedOutput()
+	original, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original C: %v\n%s", err, original)
 	}

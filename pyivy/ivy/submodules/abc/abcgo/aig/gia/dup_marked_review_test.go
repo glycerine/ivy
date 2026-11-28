@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -349,7 +349,7 @@ func TestMarkedDuplicationSelectionAndStateMatrix(t *testing.T) {
 
 func TestMarkedDuplicationMatchesWorkingCRegion(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "marked_duplicate.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C marked duplicate: %v: %s", err, native)
 	}

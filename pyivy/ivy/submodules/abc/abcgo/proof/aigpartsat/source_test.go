@@ -3,7 +3,7 @@ package aigpartsat
 import (
 	"context"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -19,7 +19,7 @@ func runMappedSource(t *testing.T, arguments ...string) string {
 	if runtime.GOOS != "linux" {
 		t.Skip("native oracle uses GNU section collection")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -29,7 +29,7 @@ func runMappedSource(t *testing.T, arguments ...string) string {
 	binary := filepath.Join(t.TempDir(), "mapped-source")
 	args := []string{"-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, filepath.Join(dir, "test_vectors/mapped_incremental.c")}
 	for _, folder := range []string{"aig/aig", "sat/cnf", "opt/dar", "bool/kit"} {
-		files, err := filepath.Glob(filepath.Join(src, folder, "*.c"))
+		files, err := testoracle.Glob(filepath.Join(src, folder, "*.c"))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -47,10 +47,10 @@ func runMappedSource(t *testing.T, arguments ...string) string {
 	args = append(args, "-Wl,--gc-sections", "-Wl,--wrap=Dar_ManRwsat", "-lm", "-o", binary)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	if out, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.CommandContext(t, ctx, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile mapped source: %v: %s", err, out)
 	}
-	out, err := exec.CommandContext(ctx, binary, arguments...).CombinedOutput()
+	out, err := testoracle.CommandContext(t, ctx, binary, arguments...).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run mapped source: %v: %s", err, out)
 	}

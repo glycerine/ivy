@@ -1,0 +1,22 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; pdr; write_cex -n $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; pdr; write_cex -n $TMP/001/native.cex\".\n\nOutput 0 of miter \"s713.bench\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "# FALSIFYING OUTPUTS: G103BF\n# COUNTEREXAMPLE LENGTH: 1\nG64@0=0\nG65@0=0\nG66@0=0\nG67@0=0\nG68@0=0\nG69@0=0\nG70@0=0\nG71@0=0\nG72@0=0\nG73@0=0\nG74@0=0\nG75@0=0\nG76@0=0\nG77@0=0\nG78@0=0\nG79@0=0\nG80@0=0\nG81@0=0\nG82@0=0\nG1@0=0\nG2@0=0\nG3@0=1\nG4@0=0\nG5@0=0\nG6@0=0\nG8@0=0\nG9@0=0\nG10@0=0\nG11@0=0\nG12@0=0\nG13@0=0\nG14@0=0\nG15@0=0\nG16@0=0\nG17@0=0\nG18@0=0\nG19@0=0\nG20@0=0\nG21@0=0\nG22@0=1\nG23@0=1\nG24@0=1\nG25@0=1\nG26@0=0\nG27@0=0\nG28@0=0\nG29@0=0\nG30@0=0\nG31@0=0\nG32@0=0\nG33@0=0\nG34@0=0\nG35@0=0\nG36@0=0\n# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; pdr; write_cex -n $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; pdr; write_cex -n $TMP/001/native.cex\".\n\nOutput 0 of miter \"s27.bench\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "# FALSIFYING OUTPUTS: G17\n# COUNTEREXAMPLE LENGTH: 1\nG5@0=0\nG6@0=0\nG7@0=0\nG0@0=0\nG1@0=0\nG2@0=0\nG3@0=0\n# DONE\n"
+  }
+ }
+]

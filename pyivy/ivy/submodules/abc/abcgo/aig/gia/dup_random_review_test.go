@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -117,7 +117,7 @@ func TestRandomMutationResetAndTruthTables(t *testing.T) {
 
 func TestRandomMutationMatchesOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "random_mutation.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C random mutation: %v: %s", err, want)
 	}

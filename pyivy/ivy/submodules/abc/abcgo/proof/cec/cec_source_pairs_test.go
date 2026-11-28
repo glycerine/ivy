@@ -3,10 +3,10 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/proof/cec/core"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"runtime"
@@ -73,22 +73,22 @@ func TestSourceSweepPairsAgainstABC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("optional ABC object oracle requires Linux")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	root := filepath.Clean(filepath.Join(filepath.Dir(file), "../../.."))
 	src := filepath.Join(root, "src")
-	if _, err = os.Stat(filepath.Join(src, "proof/cec/cecCore.o")); err != nil {
+	if _, err = testoracle.Stat(filepath.Join(src, "proof/cec/cecCore.o")); err != nil {
 		t.Skip("prebuilt ABC object files unavailable")
 	}
 	var objects []string
-	err = filepath.WalkDir(src, func(path string, d os.DirEntry, err error) error {
+	err = testoracle.WalkDir(src, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -104,18 +104,18 @@ func TestSourceSweepPairsAgainstABC(t *testing.T) {
 	// Some checkouts contain a stale st.o missing symbols in the current st.c.
 	// Compile this one source into the temporary oracle archive.
 	stObject := filepath.Join(dir, "abc_st.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", stObject).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", stObject).CombinedOutput(); err != nil {
 		t.Fatalf("compile ABC st: %v %s", err, out)
 	}
 	objects = append(objects, stObject)
 	simObject := filepath.Join(dir, "cecSimBack.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "proof/cec/cecSimBack.c"), "-o", simObject).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "proof/cec/cecSimBack.c"), "-o", simObject).CombinedOutput(); err != nil {
 		t.Fatalf("compile ABC backward simulation: %v %s", err, out)
 	}
 	objects = append(objects, simObject)
 	archive := filepath.Join(dir, "libabc.a")
 	args := append([]string{"qcs", archive}, objects...)
-	if out, err := exec.Command(ar, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, ar, args...).CombinedOutput(); err != nil {
 		t.Fatalf("archive ABC objects: %v %s", err, out)
 	}
 	cfile := filepath.Join(dir, "oracle.c")
@@ -168,10 +168,10 @@ int main(void) {
 		t.Fatal(err)
 	}
 	args = []string{"-DABC_USE_STDINT_H", "-I", src, cfile, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary}
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link ABC oracle: %v %s", err, out)
 	}
-	out, err := exec.Command(binary).CombinedOutput()
+	out, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run ABC oracle: %v %s", err, out)
 	}

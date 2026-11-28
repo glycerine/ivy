@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/bench/mul8.aig; strash; \u0026get; \u0026deepsyn -S 1; \u0026ps",
+  "stdout": "** cmd error: unknown command 'compress2rs'\n(this is likely caused by using an alias defined in \"abc.rc\"\nwithout having this file in the current or parent directory)\nABC command line: \"read test_vectors/bench/mul8.aig; strash; \u0026get; \u0026deepsyn -S 1; \u0026ps\".\n\nSomething did not work out with the command \"\u0026dch; \u0026if -a -K 3; \u0026mfs -e -W 20 -L 20; \u0026put; compress2rs; \u0026get\".\n\u001b[1;37mtest_vectors/bench/mul8\u001b[0m : i/o =     16/     16  \u001b[1;36mand =     424\u001b[0m  \u001b[1;35mlev =   53\u001b[0m \u001b[1;35m(32.38)\u001b[0m  mem = 0.01 MB\n"
+ }
+]

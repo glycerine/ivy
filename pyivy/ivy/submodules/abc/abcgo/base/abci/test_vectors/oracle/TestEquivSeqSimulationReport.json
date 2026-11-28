@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026equiv -s",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026equiv -s\".\n\nPerforming 20 rounds of random simulation of 100 frames with 31 words.\nRandom simulation saturated after 4 rounds.\n"
+ }
+]

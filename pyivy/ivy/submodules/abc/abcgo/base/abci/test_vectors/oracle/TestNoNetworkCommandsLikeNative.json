@@ -1,0 +1,22 @@
+[
+ {
+  "key": "combined: abc -c absec",
+  "stdout": "ABC command line: \"absec\".\n\nError: Empty network.\n"
+ },
+ {
+  "key": "combined: abc -c simsec",
+  "stdout": "ABC command line: \"simsec\".\n\nError: Empty network.\n"
+ },
+ {
+  "key": "combined: abc -c rec_add3",
+  "stdout": "ABC command line: \"rec_add3\".\n\nError: Empty network.\n"
+ },
+ {
+  "key": "combined: abc -c kcs",
+  "stdout": "ABC command line: \"kcs\".\n\nError: Empty network.\n"
+ },
+ {
+  "key": "combined: abc -c nck",
+  "stdout": "ABC command line: \"nck\".\n\nError: Empty network.\n"
+ }
+]

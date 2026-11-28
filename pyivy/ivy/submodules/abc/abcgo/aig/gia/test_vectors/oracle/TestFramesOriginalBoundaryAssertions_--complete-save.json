@@ -1,0 +1,13 @@
+[
+ {
+  "key": "combined: $TMP/oracle --complete-save [dir $TMP]",
+  "stdout": "oracle: $SRC/aig/gia/giaFrames.c:515: Gia_ManUnroll: Assertion `Gia_ManPoNum(p-\u003epNew) == p-\u003epPars-\u003enFrames * Gia_ManPoNum(p-\u003epAig)' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

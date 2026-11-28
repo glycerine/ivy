@@ -3,8 +3,8 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -15,22 +15,22 @@ func TestSourceSATMuxRecycleAgainstABC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ABC object oracle requires Linux")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, err = os.Stat(filepath.Join(src, "proof/cec/cecSolve.o")); err != nil {
+	if _, err = testoracle.Stat(filepath.Join(src, "proof/cec/cecSolve.o")); err != nil {
 		t.Skip("ABC object files unavailable")
 	}
 	dir := t.TempDir()
 	var objs []string
-	err = filepath.WalkDir(src, func(path string, d os.DirEntry, e error) error {
+	err = testoracle.WalkDir(src, func(path string, d os.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
@@ -43,12 +43,12 @@ func TestSourceSATMuxRecycleAgainstABC(t *testing.T) {
 		t.Fatal(err)
 	}
 	st := filepath.Join(dir, "st.o")
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); e != nil {
 		t.Fatalf("compile st: %v %s", e, out)
 	}
 	objs = append(objs, st)
 	lib := filepath.Join(dir, "abc.a")
-	if out, e := exec.Command(ar, append([]string{"qcs", lib}, objs...)...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, ar, append([]string{"qcs", lib}, objs...)...).CombinedOutput(); e != nil {
 		t.Fatalf("archive: %v %s", e, out)
 	}
 	const program = `#include "proof/cec/cecInt.h"
@@ -68,10 +68,10 @@ int main(void){Gia_Man_t *g=Gia_ManStart(20);Cec_ParSat_t opts;Cec_ManSat_t *p;i
 	if err = os.WriteFile(cf, []byte(program), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, cf, lib, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, cf, lib, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
 		t.Fatalf("link: %v %s", e, out)
 	}
-	out, err := exec.Command(exe).CombinedOutput()
+	out, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run: %v %s", err, out)
 	}
@@ -91,7 +91,7 @@ int main(void){Gia_Man_t *g=Gia_ManStart(20);Cec_ParSat_t opts;Cec_ManSat_t *p;i
 		obj := gia.Gia_NotCond(gia.Gia_ManObj(g, m>>1), (m&1)^i)
 		status := Cec_ManSatCheckNode(p, obj)
 		s := p.source
-		fmt.Fprintf(&goText, "q:%d,%d,%d,%d,%d,%d,%d,%d,%d\n", i, status, s.recycles, s.calls, s.since, s.cnf.Solver().NumVars(), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, a>>1)), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, b>>1)), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, c>>1)))
+		fmt.Fprintf(&goText, "q:%d,%d,%d,%d,%d,%d,%d,%d,%d\n", i, status, s.recycles, s.calls, s.since, s.cnf.NumSatVars(), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, a>>1)), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, b>>1)), Cec_ObjSatVarValue(p, gia.Gia_ManObj(g, c>>1)))
 	}
 
 	h := gia.Gia_ManStart(512)

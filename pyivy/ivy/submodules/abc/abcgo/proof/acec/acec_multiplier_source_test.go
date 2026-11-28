@@ -3,9 +3,8 @@ package acec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
-	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"testing"
@@ -110,8 +109,8 @@ func TestSourceMultiplier3Acec(t *testing.T) {
 			if got := Acec_Solve(a, b, &p); got != tc.status {
 				t.Fatalf("Go status=%d, source status=%d", got, tc.status)
 			}
-			if binary := os.Getenv("ACEC_MULTIPLIER_ORACLE"); binary != "" {
-				output, err := exec.Command(binary, strconv.Itoa(tc.flip)).CombinedOutput()
+			if binary := testoracle.BuildFixture(t, "test_vectors/acec_multiplier_oracle.c"); binary != "" {
+				output, err := testoracle.Command(t, binary, strconv.Itoa(tc.flip)).CombinedOutput()
 				if err != nil {
 					t.Fatalf("C oracle: %v: %s", err, output)
 				}
@@ -203,8 +202,8 @@ func testSourceMultiplierAcec(t *testing.T, width int) {
 					t.Fatal("discarded output should differ")
 				}
 			}
-			if binary := os.Getenv("ACEC_MULTIPLIER_ORACLE"); binary != "" {
-				output, err := exec.Command(binary, strconv.Itoa(tc.flip), strconv.Itoa(width)).CombinedOutput()
+			if binary := testoracle.BuildFixture(t, "test_vectors/acec_multiplier_oracle.c"); binary != "" {
+				output, err := testoracle.Command(t, binary, strconv.Itoa(tc.flip), strconv.Itoa(width)).CombinedOutput()
 				if err != nil {
 					t.Fatalf("C oracle: %v: %s", err, output)
 				}

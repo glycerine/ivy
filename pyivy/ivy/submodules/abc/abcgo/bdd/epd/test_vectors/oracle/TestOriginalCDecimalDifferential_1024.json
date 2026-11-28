@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: $TMP/reference 1024",
+  "stdout": "1.797693e+308\n1.7976931348623157 308\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

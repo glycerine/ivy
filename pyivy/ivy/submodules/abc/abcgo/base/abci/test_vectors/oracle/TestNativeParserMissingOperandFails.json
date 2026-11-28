@@ -1,0 +1,16 @@
+[
+ {
+  "key": "combined: abc -c read $TMP/syntax.eqn; print_stats",
+  "stdout": "ABC command line: \"read $TMP/001/syntax.eqn; print_stats\".\n\nParse_StackFnPush(): Trying to extract data from the empty stack!\nParse_FormulaParserEqn(): Unknown operation\nNodeCheck: An internal node \"y\" does not have a logic function.\nIo_ReadEqn: The network check has failed.\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_genlib $TMP/bad.genlib",
+  "stdout": "Reading genlib library has failed.\nABC command line: \"read_genlib $TMP/001/bad.genlib\".\n\nMio_ParseFormula(): Unknown operation\nMio_LibraryRead: Had problems parsing formulas.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -228,7 +228,7 @@ func TestObjectPointersAcrossAllocationBlocks(t *testing.T) {
 }
 
 func BenchmarkI10OutputCones(b *testing.B) {
-	p, err := Gia_AigerRead("../../../i10.aig", 0, 0, 0)
+	p, err := Gia_AigerRead("../../test_vectors/i10.aig", 0, 0, 0)
 	if err != nil {
 		b.Fatal(err)
 	}

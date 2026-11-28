@@ -3,9 +3,9 @@ package espresso
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"io"
 	"math/rand"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"runtime"
@@ -210,7 +210,7 @@ func TestSetOriginalCDifferentialFixture(t *testing.T) {
 	}
 	// The fixture was captured from the actual C set.c. Recheck it when a local
 	// C compiler is available; the Go implementation does not require one.
-	compiler, err := exec.LookPath("cc")
+	compiler, err := testoracle.LookPath("cc")
 	if err != nil {
 		return
 	}
@@ -218,11 +218,11 @@ func TestSetOriginalCDifferentialFixture(t *testing.T) {
 	pkg := filepath.Dir(file)
 	root := filepath.Clean(filepath.Join(pkg, "../../.."))
 	binary := filepath.Join(t.TempDir(), "set_oracle")
-	command := exec.Command(compiler, "-std=gnu89", "-O0", "-I"+filepath.Join(root, "src/misc/util"), "-I"+filepath.Join(root, "src"), filepath.Join(pkg, "test_vectors/set_oracle.c"), "-o", binary)
+	command := testoracle.Command(t, compiler, "-std=gnu89", "-O0", "-I"+filepath.Join(root, "src/misc/util"), "-I"+filepath.Join(root, "src"), filepath.Join(pkg, "test_vectors/set_oracle.c"), "-o", binary)
 	if result, err := command.CombinedOutput(); err != nil {
 		t.Fatalf("C oracle compile: %v\n%s", err, result)
 	}
-	result, err := exec.Command(binary).Output()
+	result, err := testoracle.Command(t, binary).Output()
 	if err != nil || string(result) != expected {
 		t.Fatalf("C oracle differs: %v\n%s", err, result)
 	}

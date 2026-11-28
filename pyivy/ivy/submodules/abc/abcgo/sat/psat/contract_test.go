@@ -1,6 +1,7 @@
 package psat
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"regexp"
 	"strings"
@@ -10,14 +11,14 @@ import (
 // This is a source-contract audit, not an original-C differential test: this
 // checkout supplies declarations and consumers, but no MiniSat-1.14p bodies.
 func TestOriginalHeaderAPICoverage(t *testing.T) {
-	header, err := os.ReadFile("../../../src/sat/psat/m114p.h")
+	header, err := testoracle.ReadFile("../../../src/sat/psat/m114p.h")
 	if os.IsNotExist(err) {
-		header, err = os.ReadFile("test_vectors/m114p.h")
+		header, err = testoracle.ReadFile("test_vectors/m114p.h")
 	}
 	if err != nil {
 		t.Fatal(err)
 	}
-	compat, err := os.ReadFile("compat.go")
+	compat, err := testoracle.ReadFile("compat.go")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,7 +32,7 @@ func TestOriginalHeaderAPICoverage(t *testing.T) {
 			t.Fatalf("missing original API %s", name[1])
 		}
 	}
-	module, err := os.ReadFile("../../../src/sat/psat/module.make")
+	module, err := testoracle.ReadFile("../../../src/sat/psat/module.make")
 	if os.IsNotExist(err) {
 		return
 	}

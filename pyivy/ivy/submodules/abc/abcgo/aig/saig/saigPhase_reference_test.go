@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
 )
 
 func TestPhaseAbstractionAgainstOriginalABC(t *testing.T) {
-	binary, err := filepath.Abs("../../../abc")
+	binary, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = os.Stat(binary); err != nil {
+	if _, err = testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	source := phaseFixture()
@@ -29,7 +29,7 @@ func TestPhaseAbstractionAgainstOriginalABC(t *testing.T) {
 	if err = ioa.Ioa_WriteAiger(source, input, 0, 0); err != nil {
 		t.Fatal(err)
 	}
-	if log, err := exec.Command(binary, "-q", "read_aiger "+input+"; phase -F 2; write_aiger "+output).CombinedOutput(); err != nil {
+	if log, err := testoracle.Command(t, binary, "-q", "read_aiger "+input+"; phase -F 2; write_aiger "+output).CombinedOutput(); err != nil {
 		t.Fatalf("original phase: %v\n%s", err, log)
 	}
 	reference, err := ioa.Ioa_ReadAiger(output, 1)
@@ -82,11 +82,11 @@ func simulateReferenceAiger(model *ioa.Model, inputs, state []bool) ([]bool, []b
 	return outputs, next
 }
 func TestPhaseLogicAndHashAgainstOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	source, err := os.ReadFile("../../../src/aig/saig/saigPhase.c")
+	source, err := testoracle.ReadFile("../../../src/aig/saig/saigPhase.c")
 	if err != nil {
 		t.Skip("original phase source unavailable")
 	}
@@ -101,10 +101,10 @@ func TestPhaseLogicAndHashAgainstOriginalC(t *testing.T) {
 	if err = os.WriteFile(file, []byte(program.String()), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if log, err := exec.Command(cc, "-std=c99", file, "-o", binary).CombinedOutput(); err != nil {
+	if log, err := testoracle.Command(t, cc, "-std=c99", file, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile phase source: %v %s", err, log)
 	}
-	output, err := exec.Command(binary).CombinedOutput()
+	output, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil {
 		t.Fatal(err)
 	}

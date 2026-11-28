@@ -3,7 +3,7 @@ package gia
 import (
 	"context"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"strings"
 	"testing"
@@ -56,7 +56,7 @@ func ccofReviewFrames(regs, pis, mode, phase int) (*Gia_Man_t, int32) {
 }
 func TestCircuitCofactoringImagesMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_cofactor.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native cofactoring: %v\n%s", err, native)
 	}
@@ -124,7 +124,7 @@ func TestCircuitCofactoringImagesMatchOriginalABC(t *testing.T) {
 
 func TestCircuitCofactoringVerboseMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_cofactor.c")
-	native, err := exec.Command(exe, "diagnostic").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "diagnostic").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native diagnostic: %v\n%s", err, native)
 	}
@@ -145,7 +145,7 @@ func TestCircuitCofactoringOriginalAcceptsLargeIncrementalBound(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_cofactor.c")
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	output, err := exec.CommandContext(ctx, exe, "large").CombinedOutput()
+	output, err := testoracle.CommandContext(t, ctx, exe, "large").CombinedOutput()
 	if err != nil {
 		t.Fatalf("source large-bound cofactoring: %v\n%s", err, output)
 	}

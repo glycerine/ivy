@@ -1,0 +1,36 @@
+[
+ {
+  "key": "combined: gcc -O1 -DABC_USE_STDINT_H -I $SRC -c $TMP/main.c -o $TMP/main.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/main.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -O1 -DABC_USE_STDINT_H -UNDEBUG -I $SRC -c $SRC/base/abci/abcLut.c -o $TMP/abcLut.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/abcLut.o"
+  ]
+ },
+ {
+  "key": "combined: g++ $TMP/main.o $TMP/abcLut.o $LIBABC -lreadline -lpthread -lm -ldl -o $TMP/abc_assert",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/abc_assert"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_assert read $CWD/test_vectors/bench/mul8.aig; strash; supercl; print_stats",
+  "stdout": "Try = 424. Dec = 339. Exist = 115. Use = 9. SUPER = 17 levels of 4-LUTs.\n\u001b[1;37m$CWD/test_vectors/bench/mul8:\u001b[0m i/o =   16/   16  lat =    0  nd =   483  edge =   1084  cube =   813  lev = 53\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

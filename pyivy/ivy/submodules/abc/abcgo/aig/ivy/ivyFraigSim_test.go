@@ -2,9 +2,9 @@ package ivy
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand/v2"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -308,11 +308,11 @@ func TestFraigClassSimulationSaturatesAndReleasesState(t *testing.T) {
 	ivyFraigStopSimulation(second)
 }
 func TestFraigSimulationSourceCDifferential(t *testing.T) {
-	compiler, err := exec.LookPath("cc")
+	compiler, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	data, err := os.ReadFile(filepath.Join("..", "..", "..", "src", "aig", "ivy", "ivyFraig.c"))
+	data, err := testoracle.ReadFile(filepath.Join("..", "..", "..", "src", "aig", "ivy", "ivyFraig.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -330,7 +330,7 @@ func TestFraigSimulationSourceCDifferential(t *testing.T) {
 		t.Fatal(err)
 	}
 	binary := filepath.Join(dir, "reference")
-	if out, err := exec.Command(compiler, "-std=c99", "-O2", "-I", dir, filepath.Join("test_vectors", "fraig_sim_reference.c"), "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, compiler, "-std=c99", "-O2", "-I", dir, filepath.Join("test_vectors", "fraig_sim_reference.c"), "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile source reference: %v\n%s", err, out)
 	}
 	rng := rand.New(rand.NewPCG(3, 101))
@@ -346,7 +346,7 @@ func TestFraigSimulationSourceCDifferential(t *testing.T) {
 			expected = append(expected, sim.pData[0])
 		}
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Stdin = strings.NewReader(input.String())
 	out, err := cmd.CombinedOutput()
 	if err != nil {

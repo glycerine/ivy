@@ -1,8 +1,7 @@
 package bsat
 
 import (
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"reflect"
 	"testing"
 )
@@ -76,8 +75,8 @@ func TestProofMappingTracksExternalGrowth(t *testing.T) {
 
 // satProof2.h reserves 1000 extra rows on growth and compacts in place.
 func TestProofGrowthAndCompactionCapacity(t *testing.T) {
-	if oracle := os.Getenv("ABC_PROOF_GROWTH_ORACLE"); oracle != "" {
-		out, err := exec.Command(oracle).CombinedOutput()
+	if oracle := testoracle.BuildFixture(t, "test_vectors/proof_growth_oracle.c"); oracle != "" {
+		out, err := testoracle.Command(t, oracle).CombinedOutput()
 		const want = "grow words=2 rows=1500 cap=5000\ncompact words=2 rows=750 cap=5000 first=1 last=1\n"
 		if err != nil || string(out) != want {
 			t.Fatalf("C oracle: %v, %q", err, out)

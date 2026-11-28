@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/seq_cleanup_boundaries.c $SRC/aig/aig/aigMan.c $SRC/aig/aig/aigObj.c $SRC/aig/aig/aigOper.c $SRC/aig/aig/aigTable.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigUtil.c $SRC/aig/aig/aigScl.c $SRC/misc/tim/timMan.c $SRC/misc/mem/mem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "full_buffer 0 1 1\nbasic_buffer 0 1 1\nbasic_fanouts 12 16 14\nbasic_patch 0 0 0\nfull_ids 1 1 1\nremoved_ci_buffers 2 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

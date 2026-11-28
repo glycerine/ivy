@@ -1,9 +1,9 @@
 package aig
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"go/scanner"
 	"go/token"
-	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -39,12 +39,12 @@ func liveCFreeCalls(name string, source []byte) []token.Position {
 func TestNoLiveCFreeCalls(t *testing.T) {
 	_, source, _, _ := runtime.Caller(0)
 	directory := filepath.Dir(source)
-	files, err := filepath.Glob(filepath.Join(directory, "*.go"))
+	files, err := testoracle.Glob(filepath.Join(directory, "*.go"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, name := range files {
-		data, err := os.ReadFile(name)
+		data, err := testoracle.ReadFile(name)
 		if err != nil {
 			t.Fatal(err)
 		}

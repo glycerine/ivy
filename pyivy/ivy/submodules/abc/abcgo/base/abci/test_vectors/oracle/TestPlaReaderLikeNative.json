@@ -1,0 +1,30 @@
+[
+ {
+  "key": "combined: abc -c read $TMP/incube.pla; print_stats",
+  "stdout": "ABC command line: \"read $TMP/001/incube.pla; print_stats\".\n\n$TMP/001/incube.pla (line 4): Input cube length (1) differs from the number of inputs (2).\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/outcube.pla; print_stats",
+  "stdout": "ABC command line: \"read $TMP/002/outcube.pla; print_stats\".\n\n$TMP/002/outcube.pla (line 4): Output cube length (2) differs from the number of outputs (1).\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/002"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/onetok.pla; print_stats",
+  "stdout": "ABC command line: \"read $TMP/003/onetok.pla; print_stats\".\n\n$TMP/003/onetok.pla (line 4): Wrong number of token.\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/003"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/threetk.pla; print_stats",
+  "stdout": "ABC command line: \"read $TMP/004/threetk.pla; print_stats\".\n\n$TMP/004/threetk.pla (line 4): Input and output cubes are not specified.\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/004"
+  ]
+ }
+]

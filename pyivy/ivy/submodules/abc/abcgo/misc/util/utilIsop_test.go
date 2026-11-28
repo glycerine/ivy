@@ -2,10 +2,10 @@ package util
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -167,11 +167,11 @@ func TestIsopCnfAndCubeCost(t *testing.T) {
 // The production package has no C dependency; this differential test is optional
 // on systems without a C compiler or the reference checkout.
 func TestIsopScalarCReference(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for reference comparison")
 	}
-	source, err := os.ReadFile("../../../src/misc/util/utilIsop.c")
+	source, err := testoracle.ReadFile("../../../src/misc/util/utilIsop.c")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -218,10 +218,10 @@ int Abc_Tt6HasVar(word t,int v){return Abc_Tt6Cofactor0(t,v)!=Abc_Tt6Cofactor1(t
 	if err := os.WriteFile(file, []byte(code), 0644); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=c99", "-O2", file, "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=c99", "-O2", file, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("reference compile: %v\n%s", err, out)
 	}
-	out, err := exec.Command(binary).Output()
+	out, err := testoracle.Command(t, binary).Output()
 	if err != nil {
 		t.Fatal(err)
 	}

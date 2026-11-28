@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: $TMP/oracle reports",
+  "stdout": "2  {  1 12        }  Cost =   7  CostL =   9  Tree = 1  \nNo cut.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -3,9 +3,9 @@ package minisatp
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -95,7 +95,7 @@ func TestIncrementalAgainstOriginalMiniSat(t *testing.T) {
 			fmt.Fprintln(&expected, status)
 			stopped = status == 0
 		}
-		cmd := exec.Command(oracle)
+		cmd := testoracle.Command(t, oracle)
 		cmd.Stdin = bytes.NewReader(input.Bytes())
 		out, err := cmd.CombinedOutput()
 		if err != nil {

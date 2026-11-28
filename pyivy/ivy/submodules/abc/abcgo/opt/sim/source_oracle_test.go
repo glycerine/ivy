@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
 	"math/rand"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -20,14 +20,14 @@ func TestOriginalCWordSquareAndStructuralOracles(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("source section collection uses ELF")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C oracle requires cc")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	root := filepath.Clean(filepath.Join(filepath.Dir(file), "../../.."))
 	binary := filepath.Join(t.TempDir(), "oracle")
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", filepath.Join(root, "src"), filepath.Join(root, "test_vectors/sim/oracle.c"), "-o", binary)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", filepath.Join(root, "src"), filepath.Join(root, "test_vectors/sim/oracle.c"), "-o", binary)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("compile source oracle: %v\n%s", err, out)
 	}
@@ -156,7 +156,7 @@ func TestOriginalCWordSquareAndStructuralOracles(t *testing.T) {
 		}
 		expected = append(expected, strings.TrimSpace(line.String()))
 	}
-	cmd = exec.Command(binary)
+	cmd = testoracle.Command(t, binary)
 	cmd.Stdin = &input
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -191,10 +191,8 @@ func TestOriginalCWordSquareAndStructuralOracles(t *testing.T) {
 // separately compiled source-stage fixtures above. The shipped ABC binary is
 // optional; compiling the C stage oracle does not depend on it.
 func TestOriginalABCSupportAndSymmetryCounts(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	root := filepath.Clean(filepath.Join(filepath.Dir(file), "../../.."))
-	binary := filepath.Join(root, "abc")
-	if _, err := exec.LookPath(binary); err != nil {
+	binary := testoracle.NativeABCPath()
+	if _, err := testoracle.LookPath(binary); err != nil {
 		t.Skip("original ABC binary unavailable")
 	}
 	dir := t.TempDir()
@@ -213,7 +211,7 @@ func TestOriginalABCSupportAndSymmetryCounts(t *testing.T) {
 		wantsuppSource = append(wantsuppSource, Sim_UtilCountOnes(sourceSupp[0], 1))
 		wantsym = append(wantsym, Sim_ComputeTwoVarSymms(g, false))
 	}
-	out, err := exec.Command(binary, "-c", command.String()).CombinedOutput()
+	out, err := testoracle.Command(t, binary, "-c", command.String()).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original ABC: %v\n%s", err, out)
 	}

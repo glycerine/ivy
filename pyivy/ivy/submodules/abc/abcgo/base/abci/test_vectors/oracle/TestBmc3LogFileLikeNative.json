@@ -1,0 +1,32 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; dc2; miter test_vectors/seq/s1494.blif; bmc3 -F 3 -W $TMP/native.log",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; dc2; miter test_vectors/seq/s1494.blif; bmc3 -F 3 -W $TMP/001/native.log\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nLine 6: Skipping line \".wire_load_slope 0.00\".\nNo output asserted in 3 frames. Resource limit reached (conf limit 0). Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.log": "Frame     0  Output     0  Time(ms)        0        0\nFrame     1  Output     0  Time(ms)        0        0\nFrame     2  Output     0  Time(ms)        0        0\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; dc2; miter test_vectors/seq/s1494.blif; bmc3 -a -F 3 -W $TMP/native.log",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; dc2; miter test_vectors/seq/s1494.blif; bmc3 -a -F 3 -W $TMP/001/native.log\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nLine 6: Skipping line \".wire_load_slope 0.00\".\nNo output asserted in 3 frames. Resource limit reached (conf limit 0). Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.log": "Frame     0  Output     0  Time(ms)        0        0\nFrame     1  Output     0  Time(ms)        0        0\nFrame     2  Output     0  Time(ms)        0        0\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; dc2; miter test_vectors/seq/s1494.blif; bmc3 -a -H 500 -F 3 -W $TMP/native.log",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; dc2; miter test_vectors/seq/s1494.blif; bmc3 -a -H 500 -F 3 -W $TMP/001/native.log\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nLine 6: Skipping line \".wire_load_slope 0.00\".\nNo output asserted in 3 frames. Resource limit reached (conf limit 0). Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.log": "Frame     0  Output     0  Time(ms)        0        1\nFrame     1  Output     0  Time(ms)        0        1\nFrame     2  Output     0  Time(ms)        0        2\n"
+  }
+ }
+]

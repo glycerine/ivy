@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: $TMP/oracle param $TMP/patterns.pla",
+  "stdout": "The number of lines (63) is not divisible by 64.\nparam0 ins-77 words-88\n",
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ]
+ }
+]

@@ -3,9 +3,9 @@ package gia
 import (
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
 	"os"
-	"os/exec"
 	"runtime/debug"
 	"slices"
 	"strings"
@@ -34,7 +34,7 @@ func TestPermutationInputGroupOverflowRejected(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, exe, "-test.run=^TestPermutationInputGroupOverflowRejected$", "-test.count=1")
+	cmd := testoracle.CommandContext(t, ctx, exe, "-test.run=^TestPermutationInputGroupOverflowRejected$", "-test.count=1")
 	cmd.Env = append(os.Environ(), key+"=1")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("input-group overflow: %v (context %v): %s", err, ctx.Err(), out)
@@ -290,7 +290,7 @@ func TestPermutationAndDirectWireOutputs(t *testing.T) {
 
 func TestPermutationAndGapsMatchOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "permutation_gaps.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C permutation/gaps: %v: %s", err, want)
 	}

@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -I $SRC test_vectors/gla_old_ratio_oracle.c $LIBABC -lm -ldl -lpthread -lstdc++ -o $TMP/gla_old_ratio_oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/gla_old_ratio_oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/gla_old_ratio_oracle 0 0",
+  "stdout": "GLA completed 3 frames with a 2-stable abstraction.  Time =     0.01 sec\nSOURCE status=-1 frame=3 stable=2 cex=0 classes=300000111110\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

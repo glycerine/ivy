@@ -2,8 +2,7 @@ package acec
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -14,7 +13,7 @@ import (
 // Set ABC_BINARY to an ABC executable built from this checkout to replay the
 // checked-in results. The same graph generators drive the ordinary Go tests.
 func TestABCDifferential(t *testing.T) {
-	abc := os.Getenv("ABC_BINARY")
+	abc := testoracle.NativeABCPath()
 	if abc != "" {
 		var err error
 		abc, err = filepath.Abs(abc)
@@ -22,7 +21,7 @@ func TestABCDifferential(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	data, err := os.ReadFile("test_vectors/abc_acec_results.txt")
+	data, err := testoracle.ReadFile("test_vectors/abc_acec_results.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -70,7 +69,7 @@ func TestABCDifferential(t *testing.T) {
 				if err := gia.Gia_AigerWrite(c.graph(i), path, 0, 0, 0); err != nil {
 					t.Fatal(err)
 				}
-				out, err := exec.Command(abc, "-c", fmt.Sprintf("&acec %s %s", base, path)).CombinedOutput()
+				out, err := testoracle.Command(t, abc, "-c", fmt.Sprintf("&acec %s %s", base, path)).CombinedOutput()
 				if err != nil {
 					t.Fatalf("case %d: %v\n%s", i, err, out)
 				}

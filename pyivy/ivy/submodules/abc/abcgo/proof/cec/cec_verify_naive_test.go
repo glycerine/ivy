@@ -3,12 +3,11 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"github.com/glycerine/abcgo/sat/cnf"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 )
@@ -40,9 +39,8 @@ func TestNaiveMappedCNFChecksBothDirectionsAndKeepsSourceState(t *testing.T) {
 	}
 }
 func TestNaiveVerificationAgainstOriginalABC(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	binary := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(binary); err != nil {
+	binary := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	for _, different := range []bool{false, true} {
@@ -55,7 +53,7 @@ func TestNaiveVerificationAgainstOriginalABC(t *testing.T) {
 		if err = os.WriteFile(path, data, 0600); err != nil {
 			t.Fatal(err)
 		}
-		log, err := exec.Command(binary, "-c", fmt.Sprintf("&r -s %s; &cec -n -m -d", path)).CombinedOutput()
+		log, err := testoracle.Command(t, binary, "-c", fmt.Sprintf("&r -s %s; &cec -n -m -d", path)).CombinedOutput()
 		if err != nil {
 			t.Fatalf("ABC: %v %s", err, log)
 		}

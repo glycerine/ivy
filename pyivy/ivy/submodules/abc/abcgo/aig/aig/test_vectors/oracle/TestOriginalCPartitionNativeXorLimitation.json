@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/partition_xor_upstream.c $SRC/aig/aig/aigMan.c $SRC/aig/aig/aigObj.c $SRC/aig/aig/aigOper.c $SRC/aig/aig/aigTable.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigUtil.c $SRC/aig/aig/aigPart.c $SRC/aig/aig/aigDfs.c $SRC/misc/tim/timMan.c $SRC/misc/mem/mem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "native-XOR 0 smart 0 mismatch truth 14\nnative-XOR 0 smart 1 mismatch truth 14\nnative-XOR 1 smart 0 mismatch truth 0\nnative-XOR 1 smart 1 mismatch truth 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

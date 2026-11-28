@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -190,7 +190,7 @@ func TestAbstractionAllOrderedRegisterSubsets(t *testing.T) {
 
 func TestAbstractionMatchesOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "register_abstraction.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C abstraction: %v: %s", err, native)
 	}

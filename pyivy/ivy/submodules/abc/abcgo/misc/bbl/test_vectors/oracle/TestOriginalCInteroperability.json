@@ -1,0 +1,30 @@
+[
+ {
+  "key": "combined: cc $TMP/reference.c -o $TMP/reference",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/reference"
+  ]
+ },
+ {
+  "key": "combined: $TMP/reference [dir $TMP]",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/hadder.bblif": {
+    "base64": "EAAAAGhhZGRlcgAAAAAAAAAAAAB0AAAAAQAAAP////8BAAAAAgAAAP////8BAAAAAwAAAP////8BAAAABAAAAP////8SAAAA4P///wUAAAD/////EgAAANj///8GAAAAAAAAADAAAABEAAAAOAAAACwAAAAHAAAAIAAAADAAAABcAAAAUAAAAEQAAAA4AAAABwAAADAwMSAxCjAxMCAxCjEwMCAxCjExMSAxCgAAAAAFAAAALTExIDEKMS0xIDEKMTEtIDEKAAA="
+   },
+   "$TMP/001/hadder.blif": "# Test file written by Bbl_ManDumpBlif() in ABC.\n.model hadder\n.inputs 1\n.inputs 2\n.inputs 3\n.outputs 4\n.outputs 5\n.names 1 2 3 6\n001 1\n010 1\n100 1\n111 1\n.names 1 2 3 7\n-11 1\n1-1 1\n11- 1\n.names 6 4\n1 1\n.names 7 5\n1 1\n.end\n"
+  }
+ },
+ {
+  "key": "combined: $TMP/reference $TMP/go.bblif",
+  "stdout": "hadder\n96969696\ne8e8e8e8\nobjects=7\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

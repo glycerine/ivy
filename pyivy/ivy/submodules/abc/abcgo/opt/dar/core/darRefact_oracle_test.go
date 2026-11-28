@@ -1,11 +1,11 @@
 package core
+
 import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -18,11 +18,11 @@ func TestRefactorKitMatchesOriginalC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("oracle requires ELF section collection")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("oracle requires C compiler")
 	}
-	source := os.Getenv("ABC_SOURCE_ROOT")
+	source := testoracle.SourceRoot()
 	if source == "" {
 		_, file, _, _ := runtime.Caller(0)
 		source = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../../src"))
@@ -33,7 +33,7 @@ func TestRefactorKitMatchesOriginalC(t *testing.T) {
 		args = append(args, filepath.Join(source, "bool/kit", name))
 	}
 	args = append(args, "-o", bin)
-	if output, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile C oracle: %v\n%s", err, output)
 	}
 	random := rand.New(rand.NewSource(8723))
@@ -45,7 +45,7 @@ func TestRefactorKitMatchesOriginalC(t *testing.T) {
 	for _, truth := range cases {
 		fmt.Fprintf(&in, "%08x\n", truth)
 	}
-	cmd := exec.Command(bin)
+	cmd := testoracle.Command(t, bin)
 	cmd.Stdin = &in
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -90,11 +90,11 @@ func TestRefactorCandidateLimitsMatchOriginalC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("oracle requires ELF section collection")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("oracle requires C compiler")
 	}
-	source := os.Getenv("ABC_SOURCE_ROOT")
+	source := testoracle.SourceRoot()
 	if source == "" {
 		_, file, _, _ := runtime.Caller(0)
 		source = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../../src"))
@@ -105,7 +105,7 @@ func TestRefactorCandidateLimitsMatchOriginalC(t *testing.T) {
 		args = append(args, filepath.Join(source, "bool/kit", name))
 	}
 	args = append(args, "-o", bin)
-	if output, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile cost oracle: %v\n%s", err, output)
 	}
 	g := aig.NewGraph()
@@ -132,7 +132,7 @@ func TestRefactorCandidateLimitsMatchOriginalC(t *testing.T) {
 		cases = append(cases, entry{truth, nodes, level})
 		fmt.Fprintf(&input, "%08x %d %d\n", truth, nodes, level)
 	}
-	cmd := exec.Command(bin)
+	cmd := testoracle.Command(t, bin)
 	cmd.Stdin = &input
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -167,21 +167,21 @@ func TestRefactorCutChoicesMatchOriginalC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("oracle requires ELF section collection")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("oracle requires C compiler")
 	}
-	source := os.Getenv("ABC_SOURCE_ROOT")
+	source := testoracle.SourceRoot()
 	if source == "" {
 		_, file, _, _ := runtime.Caller(0)
 		source = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../../src"))
 	}
 	bin := filepath.Join(t.TempDir(), "cut-oracle")
 	args := []string{"-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", source, "../test_vectors/refactor_cut_oracle.c", "-o", bin}
-	if output, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile C cut oracle: %v\n%s", err, output)
 	}
-	output, err := exec.Command(bin).CombinedOutput()
+	output, err := testoracle.Command(t, bin).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run cut oracle: %v\n%s", err, output)
 	}

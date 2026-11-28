@@ -1,0 +1,26 @@
+[
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026st -m; \u0026if -K 4; \u0026put; cec -n test_vectors/native_mul4_gen.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026st -m; \u0026if -K 4; \u0026put; cec -n test_vectors/native_mul4_gen.aig\".\n\nGenerated AND/XOR/MUX graph.\nError: This command does not work with XORs or MUXes. Run \"\u0026st\".\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026st -m; \u0026if -K 6; \u0026put; cec -n test_vectors/native_mul4_gen.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026st -m; \u0026if -K 6; \u0026put; cec -n test_vectors/native_mul4_gen.aig\".\n\nGenerated AND/XOR/MUX graph.\nError: This command does not work with XORs or MUXes. Run \"\u0026st\".\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026st -L 1 -m; \u0026if -K 4; \u0026put; cec -n test_vectors/native_mul4_gen.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026st -L 1 -m; \u0026if -K 4; \u0026put; cec -n test_vectors/native_mul4_gen.aig\".\n\nGenerated AND/XOR/MUX graph.\nError: This command does not work with XORs or MUXes. Run \"\u0026st\".\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026st -m; \u0026if -K 4; \u0026put; cec -n test_vectors/native_mul8_canon.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026st -m; \u0026if -K 4; \u0026put; cec -n test_vectors/native_mul8_canon.aig\".\n\nGenerated AND/XOR/MUX graph.\nError: This command does not work with XORs or MUXes. Run \"\u0026st\".\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026st -m; \u0026if -K 6; \u0026put; cec -n test_vectors/native_mul8_canon.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026st -m; \u0026if -K 6; \u0026put; cec -n test_vectors/native_mul8_canon.aig\".\n\nGenerated AND/XOR/MUX graph.\nError: This command does not work with XORs or MUXes. Run \"\u0026st\".\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026st -L 1 -m; \u0026if -K 4; \u0026put; cec -n test_vectors/native_mul8_canon.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026st -L 1 -m; \u0026if -K 4; \u0026put; cec -n test_vectors/native_mul8_canon.aig\".\n\nGenerated AND/XOR/MUX graph.\nError: This command does not work with XORs or MUXes. Run \"\u0026st\".\n"
+ }
+]

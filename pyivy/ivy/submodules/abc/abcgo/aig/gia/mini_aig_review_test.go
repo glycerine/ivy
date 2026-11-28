@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -48,7 +48,7 @@ func TestMiniAigExportPreservesRealGateLogic(t *testing.T) {
 
 func TestMiniAigExportMatchesOriginalAndGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "mini_aig_export.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C export: %v: %s", err, want)
 	}

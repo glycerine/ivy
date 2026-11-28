@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -12,7 +12,7 @@ import (
 
 func TestFxNativeExtractionSelection(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "fx_extract_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C extractor: %v\n%s", err, native)
 	}

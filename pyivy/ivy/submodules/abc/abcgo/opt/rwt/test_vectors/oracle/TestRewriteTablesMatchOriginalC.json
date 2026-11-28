@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -O2 -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -Wl,--gc-sections -I $SRC $TMP/main.c -o $TMP/oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/oracle",
+  "stdout": "1780 2775854031885150026 0 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

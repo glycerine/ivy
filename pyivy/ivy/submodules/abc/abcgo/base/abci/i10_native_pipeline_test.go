@@ -64,7 +64,7 @@ func readSignature(t *testing.T, path string) []int {
 func TestI10BalanceRewriteMatchesNativeABC(t *testing.T) {
 	extra.Extra_ProgressBarSetMode(false, true)
 	defer extra.Extra_ProgressBarSetMode(true, false)
-	n, err := abcio.ReadAiger("../../../i10.aig", true)
+	n, err := abcio.ReadAiger("../../test_vectors/i10.aig", true)
 	if err != nil {
 		t.Fatal(err)
 	}

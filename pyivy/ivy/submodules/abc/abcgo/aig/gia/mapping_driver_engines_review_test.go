@@ -2,7 +2,7 @@ package gia_test
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strconv"
 	"strings"
@@ -17,7 +17,7 @@ func TestMappingDriversWithFreshOriginalC(t *testing.T) {
 	for seed := 1; seed <= 64; seed++ {
 		for mode := 0; mode < 8; mode++ {
 			t.Run(fmt.Sprintf("seed%d/mode%d", seed, mode), func(t *testing.T) {
-				source, err := exec.Command(exe, strconv.Itoa(seed), strconv.Itoa(mode)).CombinedOutput()
+				source, err := testoracle.Command(t, exe, strconv.Itoa(seed), strconv.Itoa(mode)).CombinedOutput()
 				if mode == 6 && (seed == 25 || seed == 56) {
 					// These unfiltered fixtures admit an infeasible MUX cut.
 					// CheckXY returns zero, then C treats all inputs as free and
@@ -55,7 +55,7 @@ func TestMappingDriversWithFreshOriginalC(t *testing.T) {
 				// C's LUT iterator starts at object1; a hash-collapsed constant
 				// may still have an unused object0 record. Characterize it explicitly.
 				if seed == 16 && mode == 1 {
-					raw, err := exec.Command(exe, "16", "1", "reserved").CombinedOutput()
+					raw, err := testoracle.Command(t, exe, "16", "1", "reserved").CombinedOutput()
 					if err != nil {
 						t.Fatalf("source reserved record: %v %s", err, raw)
 					}
@@ -80,7 +80,7 @@ func TestMappingDriversWithFreshOriginalC(t *testing.T) {
 func TestMappingStructuredOriginalCutMinBoundary(t *testing.T) {
 	executable := gia.CompileSourceOracleForTest(t, "mapping_driver_review.c")
 	for _, mode := range []string{"8", "9"} {
-		output, err := exec.Command(executable, "1", mode).CombinedOutput()
+		output, err := testoracle.Command(t, executable, "1", mode).CombinedOutput()
 		if err == nil || !strings.Contains(string(output), "If_DsdManSuppSize(p->pIfDsdMan, If_CutDsdLit(p, pCut)) == (int)pCut->nLeaves") {
 			t.Fatalf("original unminimized DSD boundary mode%s: err%v output%s", mode, err, output)
 		}

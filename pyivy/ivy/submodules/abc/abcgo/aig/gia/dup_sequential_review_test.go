@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -202,7 +202,7 @@ func TestInductiveMiterConstantInvariants(t *testing.T) {
 
 func TestSequentialCompositionMatchesOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "sequential_composition.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C sequential composition: %v: %s", err, want)
 	}

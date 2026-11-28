@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026st -m; \u0026mfsd -m -M 1",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026st -m; \u0026mfsd -m -M 1\".\n\nGenerated AND/XOR/MUX graph.\nError: Abc_CommandAbc9Mfsd(): This command does not work with MUXes.\n"
+ }
+]

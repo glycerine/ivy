@@ -1,0 +1,16 @@
+{
+ "size": 0,
+ "mode": 0,
+ "entries": [
+  "$SRC/sat/cnf/cnfCore.c",
+  "$SRC/sat/cnf/cnfCut.c",
+  "$SRC/sat/cnf/cnfData.c",
+  "$SRC/sat/cnf/cnfFast.c",
+  "$SRC/sat/cnf/cnfMan.c",
+  "$SRC/sat/cnf/cnfMap.c",
+  "$SRC/sat/cnf/cnfPost.c",
+  "$SRC/sat/cnf/cnfUtil.c",
+  "$SRC/sat/cnf/cnfWrite.c",
+  "$SRC/sat/cnf/cnf_.c"
+ ]
+}

@@ -2,8 +2,7 @@ package abci
 
 import (
 	"context"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -35,14 +34,14 @@ func liveNormalize(out string) string {
 // reads its parameter with scanf).
 func runNativeABCInput(t *testing.T, script, input string) string {
 	t.Helper()
-	bin := os.Getenv("ABC_BINARY")
+	bin := testoracle.NativeABCPath()
 	if bin == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
 	// C hung on nck with K above the register count (CBUGS_FIXED.md #57)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, bin, "-c", script)
+	cmd := testoracle.CommandContext(t, ctx, bin, "-c", script)
 	cmd.Stdin = strings.NewReader(input)
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -54,7 +53,7 @@ func runNativeABCInput(t *testing.T, script, input string) string {
 // readLiveFile returns a written file with its time stamp masked ("" when
 // the command stopped the script before the write).
 func readLiveFile(t *testing.T, path string) string {
-	data, err := os.ReadFile(path)
+	data, err := testoracle.ReadFile(path)
 	if err != nil {
 		return ""
 	}

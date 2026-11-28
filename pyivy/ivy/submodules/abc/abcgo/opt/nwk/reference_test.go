@@ -2,8 +2,8 @@ package nwk
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -33,7 +33,7 @@ func referenceNetwork(seed int) *Nwk_Man_t {
 	return p
 }
 func TestAlgorithmsAgainstOriginalC(t *testing.T) {
-	compiler, e := exec.LookPath("cc")
+	compiler, e := testoracle.LookPath("cc")
 	if e != nil {
 		t.Skip("C compiler unavailable")
 	}
@@ -51,12 +51,12 @@ func TestAlgorithmsAgainstOriginalC(t *testing.T) {
 		args = append(args, filepath.Join(root, "src/misc/tim/tim"+name+".c"))
 	}
 	args = append(args, "-Wl,--gc-sections", "-lm", "-o", binary)
-	if log, e := exec.Command(compiler, args...).CombinedOutput(); e != nil {
+	if log, e := testoracle.Command(t, compiler, args...).CombinedOutput(); e != nil {
 		t.Fatalf("C compile: %v\n%s", e, log)
 	}
 	for kind := 0; kind < 4; kind++ {
 		for seed := 0; seed < 16; seed++ {
-			log, e := exec.Command(binary, strconv.Itoa(kind), strconv.Itoa(seed)).CombinedOutput()
+			log, e := testoracle.Command(t, binary, strconv.Itoa(kind), strconv.Itoa(seed)).CombinedOutput()
 			if e != nil {
 				t.Fatalf("C kind%d seed%d: %v\n%s", kind, seed, e, log)
 			}

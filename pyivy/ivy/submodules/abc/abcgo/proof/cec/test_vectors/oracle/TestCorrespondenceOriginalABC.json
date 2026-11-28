@@ -1,0 +1,38 @@
+[
+ {
+  "key": "combined: abc -q \u0026read $TMP/input.aig; \u0026lcorr -c; \u0026write $TMP/output.aig",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 2 1 1 3 0\n2\n4\n4\n0\ncn\u0000\u0000\u00007/tmp/TestCorrespondenceOriginalABC1538146227/001/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:40 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -q \u0026read $TMP/input.aig; \u0026lcorr -c; \u0026write $TMP/output.aig",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": "aig 3 1 2 3 0\n2\n3\n4\n4\n6\ncn\u0000\u0000\u00007/tmp/TestCorrespondenceOriginalABC1538146227/002/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:40 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -q \u0026read $TMP/input.aig; \u0026scorr -c; \u0026write $TMP/output.aig",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 2 1 1 3 0\n2\n4\n4\n0\ncn\u0000\u0000\u00007/tmp/TestCorrespondenceOriginalABC1538146227/003/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:40 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -q \u0026read $TMP/input.aig; \u0026scorr -c; \u0026write $TMP/output.aig",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 3 1 2 3 0\n2\n3\n4\n4\n6\ncn\u0000\u0000\u00007/tmp/TestCorrespondenceOriginalABC1538146227/004/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:40 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

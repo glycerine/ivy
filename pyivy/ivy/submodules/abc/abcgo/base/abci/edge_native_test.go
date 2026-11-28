@@ -1,8 +1,8 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -107,8 +107,8 @@ func TestEdgeWriteReadLikeNative(t *testing.T) {
 			script := "&r test_vectors/" + design + ".aig; &if -K " + k + "; &edge; &w "
 			runNativeABC(t, script+cFile)
 			runScriptStatus(t, script+goFile)
-			c, err1 := os.ReadFile(cFile)
-			g, err2 := os.ReadFile(goFile)
+			c, err1 := testoracle.ReadFile(cFile)
+			g, err2 := testoracle.ReadFile(goFile)
 			if err1 != nil || err2 != nil || aigerStamp.ReplaceAllString(string(c), "") != aigerStamp.ReplaceAllString(string(g), "") {
 				t.Errorf("%s: written files differ (%v, %v)", script, err1, err2)
 			}
@@ -142,9 +142,10 @@ func TestEdgeCrashesFixedLikeNative(t *testing.T) {
 }
 
 // Compiles giaEdge.c and giaSatEdge.c with AddressSanitizer against the
-// native libabc.a named by ABC_LIBABC.
+// native libabc.a named by ABC_LIBABC. Record it against a release library
+// (assertions off, like the native binary): ABC_LIBABC=.scratch/abc-release/libabc.a.
 func TestNativeEdgeStaysInBounds(t *testing.T) {
-	lib := os.Getenv("ABC_LIBABC")
+	lib := testoracle.NativeLibABCPath()
 	if lib == "" {
 		t.Skip("set ABC_LIBABC to a native libabc.a built from ../src")
 	}
@@ -168,14 +169,14 @@ int main(int argc, char **argv) { Abc_Start(); return Cmd_CommandExecute(Abc_Fra
 	}
 	cmds = append(cmds, append(append([]string{"g++", "-fsanitize=address"}, objs...), lib, "-lreadline", "-lpthread", "-lm", "-ldl", "-o", bin))
 	for _, c := range cmds {
-		if out, err := exec.Command(c[0], c[1:]...).CombinedOutput(); err != nil {
+		if out, err := testoracle.Command(t, c[0], c[1:]...).CombinedOutput(); err != nil {
 			t.Fatalf("%v: %v\n%s", c[:3], err, out)
 		}
 	}
 	design, _ := filepath.Abs("test_vectors/i10_native_demo.aig")
 	scripts := append([]string{"&if -K 5; &edge; &edge -o; &edge -o -r; &ps", "&if -K 6; &edge -E 2; &edge -o -E 2; &ps"}, edgeCrashScripts...)
 	for _, script := range scripts {
-		out, _ := exec.Command(bin, "&r "+design+"; "+script).CombinedOutput()
+		out, _ := testoracle.Command(t, bin, "&r "+design+"; "+script).CombinedOutput()
 		if strings.Contains(string(out), "AddressSanitizer") || !strings.Contains(string(out), "and =") {
 			t.Errorf("%s:\n%s", script, out)
 		}

@@ -1,7 +1,7 @@
 package abci
 
 import (
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"testing"
 )
@@ -11,9 +11,9 @@ import (
 func TestGiaWriteCnfLikeNative(t *testing.T) {
 	dir := t.TempDir()
 	port, native := filepath.Join(dir, "port.cnf"), filepath.Join(dir, "native.cnf")
-	const script = "read ../../../i10.aig; &get; &write_cnf "
+	const script = "read ../../test_vectors/i10.aig; &get; &write_cnf "
 	runScript(t, script+port)
-	data, err := os.ReadFile(port)
+	data, err := testoracle.ReadFile(port)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -21,11 +21,11 @@ func TestGiaWriteCnfLikeNative(t *testing.T) {
 	if len(data) < len(head) || string(data[:len(head)]) != head || string(data[len(data)-3:]) != "0\n\n" {
 		t.Fatalf("port file starts %q, ends %q", data[:min(len(data), 80)], data[max(0, len(data)-10):])
 	}
-	if os.Getenv("ABC_BINARY") == "" {
+	if testoracle.NativeABCPath() == "" {
 		return
 	}
 	runNativeABC(t, script+native)
-	want, err := os.ReadFile(native)
+	want, err := testoracle.ReadFile(native)
 	if err != nil {
 		t.Fatal(err)
 	}

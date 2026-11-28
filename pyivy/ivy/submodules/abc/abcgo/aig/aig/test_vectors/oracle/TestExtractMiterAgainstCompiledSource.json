@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/miter_compare.c $SRC/aig/aig/aigMan.c $SRC/aig/aig/aigObj.c $SRC/aig/aig/aigOper.c $SRC/aig/aig/aigTable.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigUtil.c $SRC/aig/aig/aigCheck.c $SRC/misc/tim/timMan.c $SRC/misc/mem/mem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "mode 0 truth 6 nodes 5 ci-levels 0/0 copy-live 1\nmode 1 truth 0 nodes 1 ci-levels 0/0 copy-live 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

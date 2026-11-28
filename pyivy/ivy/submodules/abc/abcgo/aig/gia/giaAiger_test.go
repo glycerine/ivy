@@ -4,10 +4,9 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -180,7 +179,7 @@ func TestAigerFilesAndPartExport(t *testing.T) {
 	if err := Gia_DumpAiger(p, filepath.Join(dir, "dump-"), 3, 4); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := os.Stat(filepath.Join(dir, "dump-0003.aig")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(dir, "dump-0003.aig")); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -335,11 +334,11 @@ func TestAigerCommentsAndMalformedExtensions(t *testing.T) {
 }
 
 func TestAigerOriginalABCBinaryInteroperability(t *testing.T) {
-	executable, err := filepath.Abs("../../../abc")
+	executable, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	info, err := os.Stat(executable)
+	info, err := testoracle.Stat(executable)
 	if err != nil || info.Mode()&0111 == 0 {
 		t.Skip("ABC reference executable unavailable")
 	}
@@ -351,7 +350,9 @@ func TestAigerOriginalABCBinaryInteroperability(t *testing.T) {
 			if err := Gia_AigerWrite(p, input, 0, int32(cutBoolForAigerTest(compact)), 0); err != nil {
 				t.Fatal(err)
 			}
-			cmd := exec.Command(executable, "-c", fmt.Sprintf("&r -s %s; &w %s", input, output))
+			// relative names: the written model name must not depend on the
+			// temporary directory
+			cmd := testoracle.Command(t, executable, "-c", "&r -s input.aig; &w output.aig")
 			cmd.Dir = dir
 			log, err := cmd.CombinedOutput()
 			if err != nil {

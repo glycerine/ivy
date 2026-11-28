@@ -5,9 +5,8 @@ import (
 	"crypto/sha256"
 	"errors"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"io"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -52,7 +51,7 @@ func TestDenseAigerValidationCoversPropertiesAndFallbacks(t *testing.T) {
 }
 
 func BenchmarkI10ModelCheck(b *testing.B) {
-	data, err := os.ReadFile("../../../i10.aig")
+	data, err := testoracle.ReadFile("../../test_vectors/i10.aig")
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -236,7 +235,7 @@ func TestAigerFileAndMemoryWrappers(t *testing.T) {
 	if Ioa_FileSize(path) == 0 {
 		t.Fatal("file size")
 	}
-	if _, err := os.Stat(path); err != nil {
+	if _, err := testoracle.Stat(path); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -288,11 +287,11 @@ func evaluateModelOutput(m *Model, assignment int) []bool {
 	return result
 }
 func TestAigerABCReference(t *testing.T) {
-	binary, err := filepath.Abs("../../../abc")
+	binary, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info, err := os.Stat(binary); err != nil || info.Mode()&0111 == 0 {
+	if info, err := testoracle.Stat(binary); err != nil || info.Mode()&0111 == 0 {
 		t.Skip("ABC reference binary unavailable")
 	}
 	m := &Model{MaxVar: 3, Inputs: []uint32{2, 4}, Outputs: []uint32{6, 0, 1}, ANDs: []And{{6, 2, 4}}}
@@ -303,7 +302,7 @@ func TestAigerABCReference(t *testing.T) {
 			t.Fatal(err)
 		}
 		command := fmt.Sprintf("read_aiger %s; write_aiger %s", input, output)
-		if out, err := exec.Command(binary, "-c", command).CombinedOutput(); err != nil {
+		if out, err := testoracle.Command(t, binary, "-c", command).CombinedOutput(); err != nil {
 			t.Fatalf("ABC reference: %v\n%s", err, out)
 		}
 		result, err := Ioa_ReadAiger(output, 1)
@@ -339,7 +338,7 @@ func TestAigerCommentPayloadRoundTrip(t *testing.T) {
 // The native fixture appends a single comment marker after this graph body.
 func i10WriterModel(t testing.TB) *Model {
 	t.Helper()
-	data, err := os.ReadFile("../../../i10.aig")
+	data, err := testoracle.ReadFile("../../test_vectors/i10.aig")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; if -K 4; logicpush; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; if -K 4; logicpush; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\nSaved 0 nodes after 0 pushes.\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =     6  edge =     20  cube =    10  lev = 2\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; if -K 4; mfse; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; if -K 4; mfse; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =     6  edge =     20  cube =    10  lev = 2\n"
+ }
+]

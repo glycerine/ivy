@@ -1,8 +1,7 @@
 package abci
 
 import (
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -12,7 +11,7 @@ import (
 // ABC_BINARY (built from this checkout's src/), skipping when it is unset.
 func runNativeABC(t *testing.T, script string) string {
 	t.Helper()
-	bin := os.Getenv("ABC_BINARY")
+	bin := testoracle.NativeABCPath()
 	if bin == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
@@ -20,7 +19,7 @@ func runNativeABC(t *testing.T, script string) string {
 	if err != nil {
 		t.Fatal(err)
 	}
-	out, err := exec.Command(bin, "-c", script).CombinedOutput()
+	out, err := testoracle.Command(t, bin, "-c", script).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native abc failed on %q: %v\n%s", script, err, out)
 	}
@@ -30,7 +29,7 @@ func runNativeABC(t *testing.T, script string) string {
 // &synch2 stores its choices as GIA siblings, which &put's choice
 // conversion (Gia_ManToAig with choices) cannot read; native ABC crashed
 // here (CBUGS_FIXED.md #2).
-const synch2PutScript = "read ../../../i10.aig; &get; &st; &synch2; &put; print_stats"
+const synch2PutScript = "read ../../test_vectors/i10.aig; &get; &st; &synch2; &put; print_stats"
 
 func TestNativeSynch2PutDoesNotCrash(t *testing.T) {
 	if out := runNativeABC(t, synch2PutScript); !strings.Contains(out, "and =") {

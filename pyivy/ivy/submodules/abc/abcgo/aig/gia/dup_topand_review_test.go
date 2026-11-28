@@ -3,8 +3,8 @@ package gia
 import (
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"runtime/debug"
 	"strings"
 	"testing"
@@ -102,7 +102,7 @@ func TestTopAndSharedConeTerminates(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, exe, "-test.run=^TestTopAndSharedConeTerminates$", "-test.count=1")
+	cmd := testoracle.CommandContext(t, ctx, exe, "-test.run=^TestTopAndSharedConeTerminates$", "-test.count=1")
 	cmd.Env = append(os.Environ(), key+"=1")
 	if data, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("shared cone: %v (context %v): %s", err, ctx.Err(), data)
@@ -132,7 +132,7 @@ func TestPrintRepresentativesFilteredNewTable(t *testing.T) {
 		t.Run(mode, func(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
-			cmd := exec.CommandContext(ctx, exe, "-test.run=^TestPrintRepresentativesFilteredNewTable$", "-test.count=1")
+			cmd := testoracle.CommandContext(t, ctx, exe, "-test.run=^TestPrintRepresentativesFilteredNewTable$", "-test.count=1")
 			cmd.Env = append(os.Environ(), key+"="+mode)
 			data, err := cmd.CombinedOutput()
 			if mode == "old-only" {
@@ -358,7 +358,7 @@ func TestTopAndMatchesWorkingCPaths(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "top_and.c")
 	for _, mode := range []string{"top", "classes"} {
 		t.Run(mode, func(t *testing.T) {
-			native, err := exec.Command(exe, mode).CombinedOutput()
+			native, err := testoracle.Command(t, exe, mode).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C top AND: %v: %s", err, native)
 			}
@@ -389,12 +389,12 @@ func TestTopAndMatchesWorkingCPaths(t *testing.T) {
 			}
 		})
 	}
-	printed, err := exec.Command(exe, "printer").CombinedOutput()
+	printed, err := testoracle.Command(t, exe, "printer").CombinedOutput()
 	if err != nil || string(printed) != "3->2 \n" {
 		t.Fatalf("C filtered new-table printer: %v: %s", err, printed)
 	}
 
-	witness, err := exec.Command(exe, "false").CombinedOutput()
+	witness, err := testoracle.Command(t, exe, "false").CombinedOutput()
 	if err != nil || string(witness) != "0 4\n" {
 		t.Fatalf("original C false-conjunct witness: %v: %s", err, witness)
 	}

@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestForcePlacementMatchesOriginalAndGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "force_placement.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C FORCE placement: %v: %s", err, want)
 	}

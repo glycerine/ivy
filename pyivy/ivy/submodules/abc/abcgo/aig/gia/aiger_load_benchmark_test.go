@@ -5,7 +5,7 @@ import "testing"
 func BenchmarkAigerLoadI10(b *testing.B) {
 	b.ReportAllocs()
 	for b.Loop() {
-		p, err := Gia_AigerRead("../../../i10.aig", 0, 0, 0)
+		p, err := Gia_AigerRead("../../test_vectors/i10.aig", 0, 0, 0)
 		if err != nil {
 			b.Fatal(err)
 		}

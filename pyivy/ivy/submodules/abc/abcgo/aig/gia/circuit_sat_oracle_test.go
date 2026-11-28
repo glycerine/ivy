@@ -2,20 +2,18 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
-	"runtime"
 	"strconv"
 	"testing"
 )
 
 func TestCircuitSATOriginalABCOracle(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	binary := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(binary); err != nil {
+	binary := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	rng := rand.New(rand.NewSource(992))
@@ -51,7 +49,7 @@ func TestCircuitSATOriginalABCOracle(t *testing.T) {
 		if err := os.WriteFile(input, data, 0600); err != nil {
 			t.Fatal(err)
 		}
-		text, err := exec.Command(binary, "-c", fmt.Sprintf("&r -s %s; &sat -c -C 1000 -v", input)).CombinedOutput()
+		text, err := testoracle.Command(t, binary, "-c", fmt.Sprintf("&r -s %s; &sat -c -C 1000 -v", input)).CombinedOutput()
 		if err != nil {
 			t.Fatalf("original circuit SAT: %v\n%s", err, text)
 		}

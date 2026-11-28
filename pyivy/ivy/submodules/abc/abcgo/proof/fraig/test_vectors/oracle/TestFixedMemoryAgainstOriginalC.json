@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections test_vectors/memory_oracle.c $SRC/proof/fraig/fraigMem.c -Wl,--gc-sections -o $TMP/memory-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/memory-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/memory-oracle",
+  "stdout": "8 16384 8192 1 1 1\n64 131072 65536 1 1 1\n1000 130000 65000 1 1 1\n9000 144000 72000 1 1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

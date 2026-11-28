@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -16,7 +16,7 @@ func TestClusteringNativeOriginalC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section collection required")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("original C oracle needs cc")
 	}
@@ -24,7 +24,7 @@ func TestClusteringNativeOriginalC(t *testing.T) {
 	root := filepath.Clean(filepath.Join(filepath.Dir(file), "../../.."))
 	src := filepath.Join(root, "src")
 	binary := filepath.Join(t.TempDir(), "oracle")
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, filepath.Join(root, "test_vectors/map_if/clu_oracle.c"), filepath.Join(src, "misc/mem/mem.c"), "-o", binary)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, filepath.Join(root, "test_vectors/map_if/clu_oracle.c"), filepath.Join(src, "misc/mem/mem.c"), "-o", binary)
 	if data, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("build clustering oracle: %v\n%s", err, data)
 	}
@@ -105,7 +105,7 @@ func TestClusteringNativeOriginalC(t *testing.T) {
 		}
 		expected = append(expected, want.String())
 	}
-	cmd = exec.Command(binary)
+	cmd = testoracle.Command(t, binary)
 	cmd.Stdin = &input
 	output, err := cmd.CombinedOutput()
 	if err != nil {

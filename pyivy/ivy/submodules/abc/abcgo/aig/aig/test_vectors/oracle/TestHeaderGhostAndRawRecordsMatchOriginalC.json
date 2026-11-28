@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/header_records_compare.c $SRC/aig/aig/aigMan.c $SRC/aig/aig/aigObj.c $SRC/aig/aig/aigOper.c $SRC/aig/aig/aigTable.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigUtil.c $SRC/misc/tim/timMan.c $SRC/misc/mem/mem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "initial ghost 0 children -1 -1\nghost 0 kind 2 children -1 -1\nghost 1 kind 3 children 0 -1\nghost 2 kind 4 children 3 -1\nghost 3 kind 5 children 3 4\nghost 4 kind 6 children 2 5\nterminals: 1 1 1 1\nreserved type 0 none 1 count 4 slots 4 children -1 -1\ncleared type 0 none 1 count 4 children -1 -1\nrecycled type 0 none 1 count 3 slots 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

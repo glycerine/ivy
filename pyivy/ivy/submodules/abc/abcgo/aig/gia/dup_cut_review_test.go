@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -276,7 +276,7 @@ func TestCutMarkerAndLiftedStateBehavior(t *testing.T) {
 
 func TestReplaceCutMatchesWorkingCRegion(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "replace_cut.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C cut: %v: %s", err, native)
 	}
@@ -289,7 +289,7 @@ func TestReplaceCutMatchesWorkingCRegion(t *testing.T) {
 			t.Fatalf("case %d:\nGo %s\nC %s", i, got[i], want[i])
 		}
 	}
-	witness, err := exec.Command(exe, "late").CombinedOutput()
+	witness, err := testoracle.Command(t, exe, "late").CombinedOutput()
 	if err != nil || string(witness) != "1 0 2 1\n" {
 		t.Fatalf("original C late PI/register witness: %v: %s", err, witness)
 	}

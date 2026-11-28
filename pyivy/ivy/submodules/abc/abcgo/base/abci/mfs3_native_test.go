@@ -1,6 +1,7 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -25,7 +26,7 @@ func mfs3MappedInputs(t *testing.T, dir string) map[string]string {
 	t.Helper()
 	designs := map[string]string{
 		"mul8": "test_vectors/bench/mul8.aig",
-		"i10":  "../../../i10.aig",
+		"i10":  "../../test_vectors/i10.aig",
 	}
 	inputs := map[string]string{}
 	for name, design := range designs {
@@ -41,7 +42,7 @@ func checkMfs3LikeNative(t *testing.T, cmds []string, designs ...string) {
 	dir := t.TempDir()
 	inputs := mfs3MappedInputs(t, dir)
 	read := func(path string) string {
-		data, err := os.ReadFile(path)
+		data, err := testoracle.ReadFile(path)
 		if err != nil {
 			t.Fatal(err)
 		}

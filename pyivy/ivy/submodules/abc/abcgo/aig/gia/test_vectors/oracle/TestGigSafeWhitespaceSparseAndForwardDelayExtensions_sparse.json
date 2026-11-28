@@ -1,0 +1,13 @@
+[
+ {
+  "key": "combined: $TMP/oracle --raw $TMP/network.gig",
+  "stdout": "PI=1  PO=1  Lut4=1  Time =     0.00 sec\noracle: $SRC/misc/vec/vecStr.h:390: Vec_StrWriteEntry: Assertion `i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

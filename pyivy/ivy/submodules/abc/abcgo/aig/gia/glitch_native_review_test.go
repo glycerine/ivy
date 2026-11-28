@@ -2,10 +2,10 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"io"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -190,7 +190,7 @@ func TestGlitchNativeStateAndRNG(t *testing.T) {
 			if mode == 3 {
 				steps = []int{0, 1, 31, 32, 33, 65}[index%6]
 			}
-			source, err := exec.Command(exe, file, strconv.Itoa(mode), strconv.Itoa(steps), strconv.Itoa(prefix), strconv.FormatFloat(float64(prob), 'g', 9, 32), "0").CombinedOutput()
+			source, err := testoracle.Command(t, exe, file, strconv.Itoa(mode), strconv.Itoa(steps), strconv.Itoa(prefix), strconv.FormatFloat(float64(prob), 'g', 9, 32), "0").CombinedOutput()
 			if err != nil {
 				t.Fatalf("native graph%d mode%d: %v %s", index, mode, err, source)
 			}
@@ -210,7 +210,7 @@ func TestGlitchNativeObjectReport(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "glitch_review.c")
 	g := glitchReviewGraphs()[1]
 	file := g.write(t, t.TempDir())
-	source, err := exec.Command(exe, file, "4", "0", "0", "0.5", "0").CombinedOutput()
+	source, err := testoracle.Command(t, exe, file, "4", "0", "0", "0.5", "0").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v %s", err, source)
 	}
@@ -255,7 +255,7 @@ func TestGlitchNativeRandomWordUpdates(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "glitch_review.c")
 	for _, prob := range []float32{0, 1.0 / 65536, 0.17, 0.49999997, 0.5, 0.50000006, 0.99998474, 1} {
 		for _, input := range []uint32{0, 1, 0x80000000, 0x55555555, 0xffffffff} {
-			source, err := exec.Command(exe, "unused", "5", fmt.Sprintf("0x%x", input), "33", strconv.FormatFloat(float64(prob), 'g', 9, 32), "0").CombinedOutput()
+			source, err := testoracle.Command(t, exe, "unused", "5", fmt.Sprintf("0x%x", input), "33", strconv.FormatFloat(float64(prob), 'g', 9, 32), "0").CombinedOutput()
 			if err != nil {
 				t.Fatalf("native %g/%08x: %v %s", prob, input, err, source)
 			}
@@ -278,7 +278,7 @@ func TestGlitchNativeRandomWordUpdates(t *testing.T) {
 func TestGlitchNativeVerboseReport(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "glitch_review.c")
 	g := glitchReviewGraph{cis: 1, nodes: []glitchReviewNode{{[]int32{0}, 0xaaaaaaaaaaaaaaaa}}, outputs: []int32{1}}
-	source, err := exec.Command(exe, g.write(t, t.TempDir()), "3", "3", "0", "0.5", "1").CombinedOutput()
+	source, err := testoracle.Command(t, exe, g.write(t, t.TempDir()), "3", "3", "0", "0.5", "1").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native report: %v %s", err, source)
 	}

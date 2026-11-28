@@ -3,9 +3,9 @@ package abc
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -13,17 +13,17 @@ import (
 )
 
 func TestSopOriginalCParity(t *testing.T) {
-	cc, e := exec.LookPath("cc")
+	cc, e := testoracle.LookPath("cc")
 	if e != nil {
 		t.Skip("C compiler unavailable")
 	}
-	cxx, e := exec.LookPath("g++")
+	cxx, e := testoracle.LookPath("g++")
 	if e != nil {
 		t.Skip("C++ linker unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	source := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, e = os.Stat(filepath.Join(source, "base/abc/abcSop.o")); e != nil {
+	if _, e = testoracle.Stat(filepath.Join(source, "base/abc/abcSop.o")); e != nil {
 		t.Skip("original ABC objects unavailable")
 	}
 	d := t.TempDir()
@@ -34,11 +34,11 @@ int main(void){int n,count,phase,i,j;char p[10000],row[100];while(scanf("%d%d%d"
 	if e = os.WriteFile(c, []byte(code), 0600); e != nil {
 		t.Fatal(e)
 	}
-	if out, e := exec.Command(cc, "-std=gnu99", "-DLIN64", "-I"+source, "-c", c, "-o", o).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-I"+source, "-c", c, "-o", o).CombinedOutput(); e != nil {
 		t.Fatalf("compile %v %s", e, out)
 	}
 	args := []string{o}
-	e = filepath.WalkDir(source, func(p string, d os.DirEntry, e error) error {
+	e = testoracle.WalkDir(source, func(p string, d os.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
@@ -51,7 +51,7 @@ int main(void){int n,count,phase,i,j;char p[10000],row[100];while(scanf("%d%d%d"
 		t.Fatal(e)
 	}
 	args = append(args, "-lreadline", "-lpthread", "-lm", "-ldl", "-lz", "-o", exe)
-	if out, e := exec.Command(cxx, args...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cxx, args...).CombinedOutput(); e != nil {
 		t.Fatalf("link %v %s", e, out)
 	}
 	r := rand.New(rand.NewSource(718))
@@ -71,7 +71,7 @@ int main(void){int n,count,phase,i,j;char p[10000],row[100];while(scanf("%d%d%d"
 		}
 		covers = append(covers, s.String())
 	}
-	cmd := exec.Command(exe)
+	cmd := testoracle.Command(t, exe)
 	cmd.Stdin = strings.NewReader(input.String())
 	out, e := cmd.CombinedOutput()
 	if e != nil {

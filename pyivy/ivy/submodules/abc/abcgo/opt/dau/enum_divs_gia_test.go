@@ -5,10 +5,10 @@ import (
 	"github.com/glycerine/abcgo/aig/aig"
 	"github.com/glycerine/abcgo/aig/gia/mf"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -137,14 +137,14 @@ func TestMappedDSDViaRealMF(t *testing.T) {
 }
 
 func TestEnumerationAndDivisorsOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
 	dir := t.TempDir()
-	enum, err := os.ReadFile(filepath.Join(src, "opt/dau/dauEnum.c"))
+	enum, err := testoracle.ReadFile(filepath.Join(src, "opt/dau/dauEnum.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -159,25 +159,25 @@ int main(void){word t=0x9ef7a8d9c7193a0fULL;Dau_EnumTest();printf("DIVISORS\n");
 	if err := os.WriteFile(source, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=gnu99", "-DLIN64", "-ffunction-sections", "-fdata-sections", "-I"+src, "-I"+filepath.Join(src, "opt/dau"), source, "-Wl,--gc-sections", "-o", exe).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-ffunction-sections", "-fdata-sections", "-I"+src, "-I"+filepath.Join(src, "opt/dau"), source, "-Wl,--gc-sections", "-o", exe).CombinedOutput(); err != nil {
 		t.Fatalf("C enum/divisor oracle%v\n%s", err, out)
 	}
 	if err := os.MkdirAll(filepath.Join(dir, "_npn/npn"), 0700); err != nil {
 		t.Fatal(err)
 	}
-	command := exec.Command(exe)
+	command := testoracle.Command(t, exe)
 	command.Dir = dir
 	out, err := command.Output()
 	if err != nil {
 		t.Fatal(err)
 	}
-	original, err := os.ReadFile(filepath.Join(dir, "_npn/npn/dsd10.txt"))
+	original, err := testoracle.ReadFile(filepath.Join(dir, "_npn/npn/dsd10.txt"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	native := filepath.Join(dir, "native.txt")
 	Dau_EnumTestDump(EnumerateDSD(5), native)
-	got, err := os.ReadFile(native)
+	got, err := testoracle.ReadFile(native)
 	if err != nil {
 		t.Fatal(err)
 	}

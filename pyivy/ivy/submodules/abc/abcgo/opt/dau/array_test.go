@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -78,7 +78,7 @@ func TestArrayOriginalC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section removal required")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional C oracle requires cc")
 	}
@@ -92,7 +92,7 @@ int main(void){char s[2000];while(scanf("%1999s",s)==1){Dau_Dsd_t p[1024]={0};Da
 	if err := os.WriteFile(main, []byte(code), 0644); err != nil {
 		t.Fatal(err)
 	}
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, main, "-o", bin)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, main, "-o", bin)
 	if b, err := cmd.CombinedOutput(); err != nil {
 		t.Fatal(err, string(b))
 	}
@@ -117,7 +117,7 @@ int main(void){char s[2000];while(scanf("%1999s",s)==1){Dau_Dsd_t p[1024]={0};Da
 			Dau_DsdRemoveUseless(p)
 		}
 	}
-	cmd = exec.Command(bin)
+	cmd = testoracle.Command(t, bin)
 	cmd.Stdin = &input
 	b, err := cmd.CombinedOutput()
 	if err != nil {

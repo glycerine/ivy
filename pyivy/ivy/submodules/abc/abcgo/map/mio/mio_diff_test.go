@@ -3,9 +3,9 @@ package mio
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -16,12 +16,12 @@ import (
 // Compile the actual original expression evaluator with a minimal vector API;
 // the oracle algorithm is extracted directly from exp.h, not reimplemented.
 func TestOriginalCExpressionTruth(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
 	original := filepath.Join("..", "..", "..", "src", "map", "mio", "exp.h")
-	data, err := os.ReadFile(original)
+	data, err := testoracle.ReadFile(original)
 	if err != nil {
 		t.Skip("original exp.h unavailable")
 	}
@@ -67,7 +67,7 @@ int main(void){int n,count;while(scanf("%d%d",&n,&count)==2){Vec_Int_t p={count,
 	if err = os.WriteFile(cfile, []byte(source), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if output, err := exec.Command(cc, "-std=c99", "-O2", cfile, "-o", binary).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, cc, "-std=c99", "-O2", cfile, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile original oracle: %v\n%s", err, output)
 	}
 	rng := rand.New(rand.NewSource(7823))
@@ -100,7 +100,7 @@ int main(void){int n,count;while(scanf("%d%d",&n,&count)==2){Vec_Int_t p={count,
 		input.WriteByte('\n')
 		expected = append(expected, Exp_Truth6(6, expression, nil))
 	}
-	command := exec.Command(binary)
+	command := testoracle.Command(t, binary)
 	command.Stdin = &input
 	output, err := command.Output()
 	if err != nil {

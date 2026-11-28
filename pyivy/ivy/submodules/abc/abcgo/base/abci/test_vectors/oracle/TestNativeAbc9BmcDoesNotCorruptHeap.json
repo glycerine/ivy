@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026bmc -F 4; print_status",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; \u0026get; \u0026bmc -F 4; print_status\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nOutput 0 of miter \"s1494.bench\" was asserted in frame 0.  Time =     0.01 sec\nStatus = 0  Frames = 0   CEX: Po =   0  Frame =   0  FF = 6  PI = 8  Bit =      14  1s =       0 ( 0.00 %)\n"
+ }
+]

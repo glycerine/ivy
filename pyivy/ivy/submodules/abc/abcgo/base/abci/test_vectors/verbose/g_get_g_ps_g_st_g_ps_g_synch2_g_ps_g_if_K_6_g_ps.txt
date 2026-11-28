@@ -1,5 +1,5 @@
-../../../i10 : i/o =    257/    224  and =    2675  lev =   50 (15.54)  mem = 0.04 MB
-../../../i10 : i/o =    257/    224  and =    2675  lev =   50 (15.54)  mem = 0.04 MB
-../../../i10 : i/o =    257/    224  and =    3665  lev =   33 (10.29)  mem = 0.05 MB  ch =  532
-../../../i10 : i/o =    257/    224  and =    2788  lev =   36 (11.37)  mem = 0.04 MB
+../../test_vectors/i10 : i/o =    257/    224  and =    2675  lev =   50 (15.54)  mem = 0.04 MB
+../../test_vectors/i10 : i/o =    257/    224  and =    2675  lev =   50 (15.54)  mem = 0.04 MB
+../../test_vectors/i10 : i/o =    257/    224  and =    3665  lev =   33 (10.29)  mem = 0.05 MB  ch =  532
+../../test_vectors/i10 : i/o =    257/    224  and =    2788  lev =   36 (11.37)  mem = 0.04 MB
 Mapping (K=6)  :  lut =    576  edge =    2508  lev =    7 (4.08)  mem = 0.03 MB

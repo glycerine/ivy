@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: $TMP/oracle 31 2",
+  "stdout": "result 17 4 6 1 5 1 6\nidentity driver-review driver-spec\ncell -\nconfigs\nci-arrivals\nco-required\nco-arrivals 100 101 102 103 104 105\nconst0\nci 0\nci 1\nci 2\nci 3\nand 3 7\nand 4 6\nand 3 6\nand 2 6\nand 3 6\nand 9 19\nco 11\nco 13\nco 15\nco 3\nco 17\nco 21\nmapping present\nlut 5 2 1 3 5\nlut 6 2 2 3 6\nlut 7 2 1 3 7\nlut 8 2 1 3 8\nlut 10 3 1 3 4 10\npacking\ntruth 30 23 30 23 59 7 57 5 62 55 62 55 59 39 57 37\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

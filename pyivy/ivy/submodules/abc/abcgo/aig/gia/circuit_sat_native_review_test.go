@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -11,7 +11,7 @@ import (
 
 func TestCircuitSATConflictAnalysisMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_sat_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native CBS: %v\n%s", err, native)
 	}
@@ -160,7 +160,7 @@ func TestCircuitSATConflictAnalysisMatchesOriginalABC(t *testing.T) {
 
 func TestCircuitSATMitersAndPhasesMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_sat_review.c")
-	native, err := exec.Command(exe, "miters").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "miters").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native CBS miter: %v\n%s", err, native)
 	}
@@ -243,7 +243,7 @@ func TestCircuitSATMitersAndPhasesMatchOriginalABC(t *testing.T) {
 
 func TestCircuitSATStatisticsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_sat_review.c")
-	native, err := exec.Command(exe, "stats").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "stats").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native CBS statistics: %v\n%s", err, native)
 	}
@@ -268,7 +268,7 @@ func TestCircuitSATStatisticsMatchOriginalABC(t *testing.T) {
 
 func TestCircuitSATReasonSnapshotMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_sat_review.c")
-	native, err := exec.Command(exe, "reason").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "reason").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native CBS reasons: %v\n%s", err, native)
 	}

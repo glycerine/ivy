@@ -1,8 +1,8 @@
 package cec
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -14,21 +14,21 @@ func TestRegisterPartitionTraversalAgainstABC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ABC object oracle requires Linux")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, err = os.Stat(filepath.Join(src, "aig/gia/giaDup.o")); err != nil {
+	if _, err = testoracle.Stat(filepath.Join(src, "aig/gia/giaDup.o")); err != nil {
 		t.Skip("prebuilt ABC objects unavailable")
 	}
 	var objects []string
-	if err = filepath.WalkDir(src, func(p string, d os.DirEntry, err error) error {
+	if err = testoracle.WalkDir(src, func(p string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -41,11 +41,11 @@ func TestRegisterPartitionTraversalAgainstABC(t *testing.T) {
 	}
 	dir := t.TempDir()
 	st := filepath.Join(dir, "st.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
 		t.Fatalf("compile st: %v\n%s", err, out)
 	}
 	archive := filepath.Join(dir, "abc.a")
-	if out, err := exec.Command(ar, append([]string{"qcs", archive}, append(objects, st)...)...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, ar, append([]string{"qcs", archive}, append(objects, st)...)...).CombinedOutput(); err != nil {
 		t.Fatalf("archive: %v\n%s", err, out)
 	}
 	const program = `#include "proof/cec/cecInt.h"
@@ -57,17 +57,17 @@ int main(int argc,char **argv){Gia_Man_t *g=Gia_ManStart(10),*q;Vec_Int_t *v=Vec
 	if err := os.WriteFile(cfile, []byte(program), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, cfile, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, cfile, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v\n%s", err, out)
 	}
-	out, err := exec.Command(binary).CombinedOutput()
+	out, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run: %v\n%s", err, out)
 	}
 	if got, want := strings.TrimSpace(string(out)), "previous:0"; got != want {
 		t.Fatalf("ABC SAT frontier: %q; want %q", got, want)
 	}
-	out, err = exec.Command(binary, "xor").CombinedOutput()
+	out, err = testoracle.Command(t, binary, "xor").CombinedOutput()
 	if err != nil || strings.TrimSpace(string(out)) != "input-xor:1 output-xor:0" {
 		t.Fatalf("ABC native XOR partition: %v %s", err, out)
 	}

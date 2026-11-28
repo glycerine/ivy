@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -66,7 +66,7 @@ func TestFramesNativeDependencyContract(t *testing.T) {
 			if mode != "order" {
 				args = []string{mode}
 			}
-			native, err := exec.Command(exe, args...).CombinedOutput()
+			native, err := testoracle.Command(t, exe, args...).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C unrolling probe: %v\n%s", err, native)
 			}
@@ -145,7 +145,7 @@ func TestFramesFixedModeHasNoSavedProperty(t *testing.T) {
 
 func TestFramesOriginalInitializedSaveIndexFailure(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	cmd := exec.Command(exe, "--initialized-save")
+	cmd := testoracle.Command(t, exe, "--initialized-save")
 	cmd.Dir = t.TempDir()
 	out, err := cmd.CombinedOutput()
 	if err == nil || !strings.Contains(string(out), "Assertion") {

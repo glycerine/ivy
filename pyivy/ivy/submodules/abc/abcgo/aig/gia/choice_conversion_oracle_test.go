@@ -3,8 +3,8 @@ package gia
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -104,22 +104,22 @@ func TestChoiceConversionAgainstCompiledABC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ABC object oracle requires Linux")
 	}
-	cc, e := exec.LookPath("gcc")
+	cc, e := testoracle.LookPath("gcc")
 	if e != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, e := exec.LookPath("ar")
+	ar, e := testoracle.LookPath("ar")
 	if e != nil {
 		t.Skip("ar unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, e = os.Stat(filepath.Join(src, "aig/gia/giaDup.o")); e != nil {
+	if _, e = testoracle.Stat(filepath.Join(src, "aig/gia/giaDup.o")); e != nil {
 		t.Skip("prebuilt ABC objects unavailable")
 	}
 	dir := t.TempDir()
 	var objs []string
-	e = filepath.WalkDir(src, func(path string, d os.DirEntry, e error) error {
+	e = testoracle.WalkDir(src, func(path string, d os.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
@@ -132,20 +132,20 @@ func TestChoiceConversionAgainstCompiledABC(t *testing.T) {
 		t.Fatal(e)
 	}
 	st := filepath.Join(dir, "st.o")
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); e != nil {
 		t.Fatalf("st: %v %s", e, out)
 	}
 	objs = append(objs, st)
 	lib := filepath.Join(dir, "abc.a")
-	if out, e := exec.Command(ar, append([]string{"qcs", lib}, objs...)...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, ar, append([]string{"qcs", lib}, objs...)...).CombinedOutput(); e != nil {
 		t.Fatalf("archive: %v %s", e, out)
 	}
 	exe := filepath.Join(dir, "oracle")
 	fixture := filepath.Join(filepath.Dir(file), "test_vectors/choice_conversion_oracle.c")
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, fixture, lib, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, fixture, lib, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe).CombinedOutput(); e != nil {
 		t.Fatalf("link: %v %s", e, out)
 	}
-	c, e := exec.Command(exe).CombinedOutput()
+	c, e := testoracle.Command(t, exe).CombinedOutput()
 	if e != nil {
 		t.Fatalf("oracle: %v %s", e, c)
 	}

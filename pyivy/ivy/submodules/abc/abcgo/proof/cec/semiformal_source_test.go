@@ -1,10 +1,11 @@
 package cec
 
 import (
+	"os/exec"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -70,7 +71,7 @@ func TestSemiformalSourceDiagnostics(t *testing.T) {
 			}
 		}
 	}
-	if _, err := os.Stat("/dev/full"); err == nil {
+	if _, err := testoracle.Stat("/dev/full"); err == nil {
 		dir := t.TempDir()
 		for _, name := range []string{"gore.aig", "gsrm.aig"} {
 			if err := os.Symlink("/dev/full", filepath.Join(dir, name)); err != nil {
@@ -96,7 +97,7 @@ func TestSemiformalSourceDiagnostics(t *testing.T) {
 		t.Fatalf("zero-round child: %v %s", err, out)
 	}
 	for _, name := range []string{"gore.aig", "gsrm.aig"} {
-		if _, err := os.Stat(filepath.Join(dir, name)); !os.IsNotExist(err) {
+		if _, err := testoracle.Stat(filepath.Join(dir, name)); !os.IsNotExist(err) {
 			t.Fatalf("zero-round output %s exists: %v", name, err)
 		}
 	}

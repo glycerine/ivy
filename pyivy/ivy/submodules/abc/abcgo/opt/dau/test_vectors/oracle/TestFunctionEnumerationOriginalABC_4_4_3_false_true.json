@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -c funenum -S 4 -I 4 -M 3 -r [dir $TMP]",
+  "stdout": "ABC command line: \"funenum -S 4 -I 4 -M 3 -r\".\n\nN = 0 | C =           0  New4 =         2  All4 =         2 | New4 =       2  All4 =       2  Two =     0      0.00 sec\nN = 1 | C =           3  New4 =         2  All4 =         4 | New4 =       2  All4 =       4  Two =     0      0.00 sec\nN = 2 | C =          19  New4 =         5  All4 =         9 | New4 =       5  All4 =       9  Two =     0      0.00 sec\nN = 3 | C =          99  New4 =         0  All4 =         9 | New4 =       0  All4 =       9  Two =     0      0.00 sec\nDumped file \"npn44.ttd\" with          9 classes after exploring          9 frontiers.  Time =     0.00 sec\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/npn44.ttd": "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000UUUUUUUU\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011ffffffff\u0007\u0007\u0007\u0007\u0007\u0007\u0007\u0007\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0006\u0006\u0006\u0006\u0006\u0006\u0006\u0006\u001e\u001e\u001e\u001e\u001e\u001e\u001e\u001eiiiiiiii\u0000\u0000\u0000\u0000\u0001\u0000\u0000\u0000\u0002\u0000\u0001\u0000\u0002\u0000\u0001\u0000\u0003\u0000\u0002\u0000\u0003\u0000\u0002\u0000\u0003\u0000\u0002\u0000\u0003\u0000\u0002\u0000\u0003\u0000\u0002\u0000"
+  }
+ }
+]

@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -73,7 +73,7 @@ func TestCascadeTypedTruth(t *testing.T) {
 
 func TestCascadeMatchesOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cascade.c")
-	wantC, err := exec.Command(exe).CombinedOutput()
+	wantC, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C cascade: %v: %s", err, wantC)
 	}

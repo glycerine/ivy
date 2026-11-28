@@ -2,9 +2,9 @@ package dau
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -39,7 +39,7 @@ func TestNPNFormulaGraphAndTruthParity(t *testing.T) {
 	}
 }
 func TestNPNFormulaOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
@@ -52,7 +52,7 @@ int main(void){char s[4096];while(scanf("%4095s",s)==1)printf("%016llx\n",(unsig
 	if err := os.WriteFile(source, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=gnu99", "-DLIN64", "-ffunction-sections", "-fdata-sections", "-I"+sourceRoot, source, "-Wl,--gc-sections", "-o", exe).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-ffunction-sections", "-fdata-sections", "-I"+sourceRoot, source, "-Wl,--gc-sections", "-o", exe).CombinedOutput(); err != nil {
 		t.Fatalf("C parser oracle%v\n%s", err, out)
 	}
 	rng := rand.New(rand.NewSource(234))
@@ -71,7 +71,7 @@ int main(void){char s[4096];while(scanf("%4095s",s)==1)printf("%016llx\n",(unsig
 	for i := range formulas {
 		formulas[i] = formula(5)
 	}
-	command := exec.Command(exe)
+	command := testoracle.Command(t, exe)
 	command.Stdin = strings.NewReader(strings.Join(formulas, "\n"))
 	out, err := command.Output()
 	if err != nil {

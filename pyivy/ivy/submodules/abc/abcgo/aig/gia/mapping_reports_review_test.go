@@ -2,8 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -50,7 +49,7 @@ func mappingReviewReportGraph(variant int) *Gia_Man_t {
 func TestMappingNativeMuxPackingAndProfiles(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "mapping_reports_review.c")
 	for variant := 0; variant < 8; variant++ {
-		source, err := exec.Command(exe, "0", strconv.Itoa(variant)).CombinedOutput()
+		source, err := testoracle.Command(t, exe, "0", strconv.Itoa(variant)).CombinedOutput()
 		if err != nil {
 			t.Fatalf("native mux%d: %v %s", variant, err, source)
 		}
@@ -81,7 +80,7 @@ func TestMappingNativeMuxPackingAndProfiles(t *testing.T) {
 		Gia_ManStop(p)
 	}
 	for variant := 0; variant < 66; variant++ {
-		source, err := exec.Command(exe, "1", strconv.Itoa(variant)).CombinedOutput()
+		source, err := testoracle.Command(t, exe, "1", strconv.Itoa(variant)).CombinedOutput()
 		if err != nil {
 			t.Fatalf("native profile%d: %v %s", variant, err, source)
 		}
@@ -100,7 +99,7 @@ func TestMappingNativePersistentDumpAndEmptyLuts(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "mapping_reports_review.c")
 	dir := t.TempDir()
 	sourceFile, goFile := filepath.Join(dir, "source.txt"), filepath.Join(dir, "go.txt")
-	source, err := exec.Command(exe, "2", "7", sourceFile).CombinedOutput()
+	source, err := testoracle.Command(t, exe, "2", "7", sourceFile).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native dump: %v %s", err, source)
 	}
@@ -126,11 +125,11 @@ func TestMappingNativePersistentDumpAndEmptyLuts(t *testing.T) {
 	if string(source) != got {
 		esopReviewCompare(t, source, got)
 	}
-	want, err := os.ReadFile(sourceFile)
+	want, err := testoracle.ReadFile(sourceFile)
 	if err != nil {
 		t.Fatal(err)
 	}
-	actual, err := os.ReadFile(goFile)
+	actual, err := testoracle.ReadFile(goFile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -138,7 +137,7 @@ func TestMappingNativePersistentDumpAndEmptyLuts(t *testing.T) {
 	if elapsed.ReplaceAllString(string(want), "<elapsed>") != elapsed.ReplaceAllString(string(actual), "<elapsed>") {
 		t.Fatalf("Go table%q; source%q", actual, want)
 	}
-	source, err = exec.Command(exe, "3", "0").CombinedOutput()
+	source, err = testoracle.Command(t, exe, "3", "0").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native empty LUTs: %v %s", err, source)
 	}

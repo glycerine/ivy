@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"strings"
 	"testing"
@@ -35,7 +35,7 @@ func dfsReviewGraph(seed uint32) *Gia_Man_t {
 
 func TestDfsSupportMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "dfs_support_review.c")
-	source, err := exec.Command(exe).CombinedOutput()
+	source, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original DFS: %v\n%s", err, source)
 	}
@@ -138,7 +138,7 @@ func TestDfsSupportMatchesOriginalABC(t *testing.T) {
 		}
 	}
 	t.Run("diagnostics", func(t *testing.T) {
-		source, err := exec.Command(exe, "reports").CombinedOutput()
+		source, err := testoracle.Command(t, exe, "reports").CombinedOutput()
 		if err != nil {
 			t.Fatalf("original reports: %v\n%s", err, source)
 		}

@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestFramesLongNativeHistory(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--long-history").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--long-history").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C long history: %v\n%s", err, native)
 	}

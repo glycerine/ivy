@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: abc -c read_genlib ../../map/amap/test_vectors/amap_mux.genlib; read test_vectors/bench/mul8.aig; strash; map; phase_map; print_stats",
+  "stdout": "ABC command line: \"read_genlib ../../map/amap/test_vectors/amap_mux.genlib; read test_vectors/bench/mul8.aig; strash; map; phase_map; print_stats\".\n\nWarnings: genlib library reader cannot detect the buffer gate.\nSome parts of the supergate-based technology mapper may not work correctly.\nEntered genlib library with 4 gates from file \"../../map/amap/test_vectors/amap_mux.genlib\".\nError: Cannot find constant 0 gate in the library.\n\u001b[1;37mtest_vectors/bench/mul8       :\u001b[0m i/o =   16/   16  lat =    0  nd =   470  edge =    790  area =470.00  delay =65.00  lev = 65\n"
+ },
+ {
+  "key": "combined: abc -c read_genlib ../../map/amap/test_vectors/amap_mux.genlib; read test_vectors/bench/mul8.aig; strash; map; mfs3; print_stats",
+  "stdout": "ABC command line: \"read_genlib ../../map/amap/test_vectors/amap_mux.genlib; read test_vectors/bench/mul8.aig; strash; map; mfs3; print_stats\".\n\nWarnings: genlib library reader cannot detect the buffer gate.\nSome parts of the supergate-based technology mapper may not work correctly.\nEntered genlib library with 4 gates from file \"../../map/amap/test_vectors/amap_mux.genlib\".\nError: Cannot find constant 0 gate in the library.\n\u001b[1;37mtest_vectors/bench/mul8       :\u001b[0m i/o =   16/   16  lat =    0  nd =   470  edge =    790  area =470.00  delay =65.00  lev = 65\n"
+ }
+]

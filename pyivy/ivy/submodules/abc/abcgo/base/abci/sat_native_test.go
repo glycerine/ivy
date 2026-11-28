@@ -2,8 +2,8 @@ package abci
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -49,7 +49,7 @@ func TestMiterSatLikeNative(t *testing.T) {
 		"read " + filepath.Join(vectors, "cec_mul4_syn2.aig") + "; strash; saucy3 -v",
 	}
 	times := regexp.MustCompile(`[0-9]+\.[0-9]+ ?(sec|MB|Mb|%)`)
-	bin := os.Getenv("ABC_BINARY")
+	bin := testoracle.NativeABCPath()
 	if bin == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
@@ -59,8 +59,8 @@ func TestMiterSatLikeNative(t *testing.T) {
 		var out string
 		var status int
 		if native {
-			data, err := exec.Command(bin, "-c", script).CombinedOutput()
-			if _, ok := err.(*exec.ExitError); err != nil && !ok {
+			data, err := testoracle.Command(t, bin, "-c", script).CombinedOutput()
+			if _, ok := err.(*testoracle.ExitError); err != nil && !ok {
 				t.Fatal(err)
 			}
 			out = ansiEscape.ReplaceAllString(string(data), "")
@@ -68,13 +68,13 @@ func TestMiterSatLikeNative(t *testing.T) {
 				out = out[i+2:]
 			}
 			if err != nil {
-				status = err.(*exec.ExitError).ExitCode()
+				status = err.(*testoracle.ExitError).ExitCode()
 			}
 		} else {
 			out, status = runScriptStatus(t, script)
 		}
 		out += fmt.Sprintf("--- status %d ---\n", status)
-		if data, err := os.ReadFile(cex); err == nil {
+		if data, err := testoracle.ReadFile(cex); err == nil {
 			out += "--- cex ---\n" + string(data)
 		}
 		return times.ReplaceAllString(out, "X")

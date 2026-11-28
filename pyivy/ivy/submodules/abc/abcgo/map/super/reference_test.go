@@ -1,8 +1,7 @@
 package super
 
 import (
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"reflect"
 	"sort"
@@ -13,11 +12,11 @@ import (
 
 func originalABC(t *testing.T) string {
 	t.Helper()
-	path, err := filepath.Abs("../../../abc")
+	path, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = os.Stat(path); err != nil {
+	if _, err = testoracle.Stat(path); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	return path
@@ -31,12 +30,12 @@ func TestANDEnumerationAgainstOriginalABC(t *testing.T) {
 				t.Fatal(err)
 			}
 			dir := t.TempDir()
-			command := exec.Command(binary, "-q", "super2 -I "+strconv.Itoa(item.inputs)+" -L "+strconv.Itoa(item.levels))
+			command := testoracle.Command(t, binary, "-q", "super2 -I "+strconv.Itoa(item.inputs)+" -L "+strconv.Itoa(item.levels))
 			command.Dir = dir
 			if log, err := command.CombinedOutput(); err != nil {
 				t.Fatalf("original super2: %v\n%s", err, log)
 			}
-			source, err := os.ReadFile(filepath.Join(dir, "superI"+strconv.Itoa(item.inputs)+"L"+strconv.Itoa(item.levels)))
+			source, err := testoracle.ReadFile(filepath.Join(dir, "superI"+strconv.Itoa(item.inputs)+"L"+strconv.Itoa(item.levels)))
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -1,0 +1,21 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -I $SRC test_vectors/gla_const_later_oracle.c $LIBABC -lm -ldl -lpthread -lstdc++ -o $TMP/gla_const_later_oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/gla_const_later_oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/gla_const_later_oracle",
+  "stdout": "gla_const_later_oracle: src/proof/abs/absGla.c:1628: Gia_ManPerformGla: Assertion `Lit \u003e 1' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

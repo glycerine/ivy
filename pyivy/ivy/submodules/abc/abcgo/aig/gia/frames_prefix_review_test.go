@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -70,7 +70,7 @@ func framesReviewCheckPrefix(t *testing.T, src, out *Gia_Man_t, bound int32) int
 
 func TestFramesGeneratedNativeSpecialPrefix(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--generated-special").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--generated-special").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C specialized prefix: %v\n%s", err, native)
 	}
@@ -116,7 +116,7 @@ func TestFramesMixedSpecialPrefix(t *testing.T) {
 
 func TestFramesDirectedNativeSpecialPrefixes(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--directed-special").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--directed-special").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C directed prefixes: %v\n%s", err, native)
 	}

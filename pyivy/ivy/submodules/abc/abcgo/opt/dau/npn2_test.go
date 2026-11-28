@@ -2,39 +2,36 @@ package dau
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"regexp"
-	"runtime"
 	"strconv"
 	"testing"
 )
 
 func TestDttFormulaLibraryOriginalABC(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	abc := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(abc); err != nil {
+	abc := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(abc); err != nil {
 		t.Skip("original ABC unavailable")
 	}
 	for _, test := range []struct{ vars, nodes int32 }{{3, 3}, {3, 5}, {4, 3}} {
 		t.Run(fmt.Sprintf("%d_%d", test.vars, test.nodes), func(t *testing.T) {
 			dir := t.TempDir()
-			command := exec.Command(abc, "-c", fmt.Sprintf("funenum -l -I %d -M %d -p", test.vars, test.nodes))
+			command := testoracle.Command(t, abc, "-c", fmt.Sprintf("funenum -l -I %d -M %d -p", test.vars, test.nodes))
 			command.Dir = dir
 			if out, err := command.CombinedOutput(); err != nil {
 				t.Fatalf("original Dtt library %v\n%s", err, out)
 			}
-			original, err := os.ReadFile(filepath.Join(dir, fmt.Sprintf("Lflib%d.txt", test.vars)))
+			original, err := testoracle.ReadFile(filepath.Join(dir, fmt.Sprintf("Lflib%d.txt", test.vars)))
 			if err != nil {
 				t.Fatal(err)
 			}
 			p := EnumerateLF(test.vars, test.nodes, false, false)
 			got := filepath.Join(dir, "ported.txt")
 			Dtt_DumpLibrary(p, got)
-			data, err := os.ReadFile(got)
+			data, err := testoracle.ReadFile(got)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -84,9 +81,8 @@ func TestDttOrbitAndTransformProperties(t *testing.T) {
 }
 
 func TestDttDelayAndMultiplicityOriginalABC(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	abc := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(abc); err != nil {
+	abc := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(abc); err != nil {
 		t.Skip("original ABC unavailable")
 	}
 	for _, test := range []struct {
@@ -101,7 +97,7 @@ func TestDttDelayAndMultiplicityOriginalABC(t *testing.T) {
 			if test.multi {
 				flag += " -m"
 			}
-			command := exec.Command(abc, "-c", fmt.Sprintf("funenum %s -I %d -M %d", flag, test.vars, test.nodes))
+			command := testoracle.Command(t, abc, "-c", fmt.Sprintf("funenum %s -I %d -M %d", flag, test.vars, test.nodes))
 			command.Dir = t.TempDir()
 			out, err := command.CombinedOutput()
 			if err != nil {

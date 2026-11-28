@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -O2 -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -Wl,--gc-sections -I $SRC ../test_vectors/refactor_cut_oracle.c -o $TMP/cut-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/cut-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/cut-oracle",
+  "stdout": "2 3 2 0 1 0 0\n1 2 2 3 1 3 2 0 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

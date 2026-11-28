@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -28,7 +28,7 @@ func embeddingPartialComponentReview(t *testing.T) (*Emb_Man_t, int32) {
 
 func TestEmbeddingDistancesMatchOriginalAndGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "embedding_distances.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C embedding BFS: %v: %s", err, want)
 	}

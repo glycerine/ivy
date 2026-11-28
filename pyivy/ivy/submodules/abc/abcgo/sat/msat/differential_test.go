@@ -2,9 +2,9 @@ package msat
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -12,10 +12,10 @@ import (
 )
 
 func TestOriginalCDifferential(t *testing.T) {
-	if os.Getenv("MSAT_C_DIFFERENTIAL") != "1" {
+	if testoracle.Gate("MSAT_C_DIFFERENTIAL") != "1" {
 		t.Skip("set MSAT_C_DIFFERENTIAL=1 to compile original C oracle")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -30,7 +30,7 @@ func TestOriginalCDifferential(t *testing.T) {
 		args = append(args, filepath.Join(root, "src/sat/msat/msat"+name+".c"))
 	}
 	args = append(args, "-lm", "-o", binary)
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("C oracle build: %v\n%s", err, out)
 	}
 	// The source itself documents a tautology-normalization bug. Use proper
@@ -71,7 +71,7 @@ func TestOriginalCDifferential(t *testing.T) {
 				as[i] = 2*v + rng.Intn(2)
 				args = append(args, strconv.Itoa(as[i]))
 			}
-			out, err := exec.Command(binary, args...).CombinedOutput()
+			out, err := testoracle.Command(t, binary, args...).CombinedOutput()
 			if err != nil {
 				t.Fatalf("original C: %v %s", err, out)
 			}

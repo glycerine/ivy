@@ -4,21 +4,19 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
-	"runtime"
 	"strings"
 	"testing"
 )
 
 func originalABCPath(t *testing.T) string {
 	t.Helper()
-	_, file, _, _ := runtime.Caller(0)
-	abc := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../../abc"))
-	if _, err := os.Stat(abc); err != nil {
+	abc := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(abc); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	return abc
@@ -42,10 +40,10 @@ func originalABCCNF(t *testing.T, model *ioa.Model) *CNF {
 		t.Fatal(closeErr)
 	}
 	command := fmt.Sprintf("&r -s %s; &write_cnf -K 8 %s", input, output)
-	if text, err := exec.Command(abc, "-c", command).CombinedOutput(); err != nil {
+	if text, err := testoracle.Command(t, abc, "-c", command).CombinedOutput(); err != nil {
 		t.Fatalf("ABC differential oracle: %v\n%s", err, text)
 	}
-	data, err := os.ReadFile(output)
+	data, err := testoracle.ReadFile(output)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -205,7 +203,7 @@ func TestGenerateCNFRandomStressOriginalABC(t *testing.T) {
 }
 
 func TestI10MappedCNFMatchesC(t *testing.T) {
-	checkFileMappedCNF(t, "../../../../i10.aig")
+	checkFileMappedCNF(t, "../../../test_vectors/i10.aig")
 }
 
 func TestArithmeticMappedCNFMatchesC(t *testing.T) {
@@ -230,7 +228,7 @@ func TestGeneratedMappedCNFMatchesC(t *testing.T) {
 			t.Run(fmt.Sprintf("%s%d", tc.name, width), func(t *testing.T) {
 				dir := t.TempDir()
 				command := fmt.Sprintf("gen %s -N %d network.blif; read_blif network.blif; strash; write_aiger network.aig", tc.flag, width)
-				cmd := exec.Command(abc, "-c", command)
+				cmd := testoracle.Command(t, abc, "-c", command)
 				cmd.Dir = dir
 				if text, err := cmd.CombinedOutput(); err != nil {
 					t.Fatalf("generate native circuit: %v\n%s", err, text)
@@ -243,7 +241,7 @@ func TestGeneratedMappedCNFMatchesC(t *testing.T) {
 
 func checkFileMappedCNF(t *testing.T, path string) {
 	t.Helper()
-	data, err := os.ReadFile(path)
+	data, err := testoracle.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -262,7 +260,7 @@ func checkFileMappedCNF(t *testing.T, path string) {
 }
 
 func BenchmarkI10DeriveMappedCNF(b *testing.B) {
-	data, err := os.ReadFile("../../../../i10.aig")
+	data, err := testoracle.ReadFile("../../../test_vectors/i10.aig")
 	if err != nil {
 		b.Fatal(err)
 	}

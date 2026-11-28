@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/in.aig; \u0026fraig -W 1 -R 1 -I 10 -D 1 -C 100; \u0026w $TMP/out.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/in.aig; \u0026fraig -W 1 -R 1 -I 10 -D 1 -C 100; \u0026w $TMP/001/out.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/out.aig": "aig 5 3 0 2 2\n10\n11\n\u0004\u0002\u0002\u0002cn\u0000\u0000\u0000+/tmp/TestOriginalSweepABC3649530483/001/in\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:24 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

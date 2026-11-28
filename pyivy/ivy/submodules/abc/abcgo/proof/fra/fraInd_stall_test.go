@@ -1,9 +1,10 @@
 package fra
 
 import (
-	"encoding/json"
-	"os"
 	"os/exec"
+	"encoding/json"
+	"github.com/glycerine/abcgo/internal/testoracle"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -37,7 +38,7 @@ func TestInductionStalledRefinementReturnsResult(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	source, err := os.ReadFile(sourcePath)
+	source, err := testoracle.ReadFile(sourcePath)
 	if err != nil {
 		t.Fatal(err)
 	}

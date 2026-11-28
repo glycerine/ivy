@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; \u0026get; \u0026resim; \u0026ps",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; \u0026get; \u0026resim; \u0026ps\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\nCec_ManSeqResimulateCounter(): Counter-example is not available.\n\u001b[1;37ms27.bench\u001b[0m : i/o =      4/      1  ff =      3  \u001b[1;36mand =       8\u001b[0m  \u001b[1;35mlev =    5\u001b[0m \u001b[1;35m(3.75)\u001b[0m  mem = 0.00 MB\n"
+ }
+]

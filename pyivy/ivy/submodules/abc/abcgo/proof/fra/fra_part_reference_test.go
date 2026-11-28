@@ -2,8 +2,8 @@ package fra
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -52,11 +52,11 @@ func TestTimeframeSimplifyUsesFRA(t *testing.T) {
 }
 
 func TestPartitionFraigAgainstCompiledABC(t *testing.T) {
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
@@ -64,11 +64,11 @@ func TestPartitionFraigAgainstCompiledABC(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := os.Stat(filepath.Join(src, "aig/aig/aigPart.o")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "aig/aig/aigPart.o")); err != nil {
 		t.Skip("prebuilt ABC objects unavailable")
 	}
 	var objects []string
-	err = filepath.WalkDir(src, func(path string, d os.DirEntry, err error) error {
+	err = testoracle.WalkDir(src, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -82,20 +82,20 @@ func TestPartitionFraigAgainstCompiledABC(t *testing.T) {
 	}
 	dir := t.TempDir()
 	st := filepath.Join(dir, "st.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
 		t.Fatalf("compile st: %v: %s", err, out)
 	}
 	objects = append(objects, st)
 	archive := filepath.Join(dir, "abc.a")
-	if out, err := exec.Command(ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
 		t.Fatalf("archive: %v: %s", err, out)
 	}
 	exe := filepath.Join(dir, "oracle")
 	args := []string{"-DABC_USE_STDINT_H", "-I", src, "test_vectors/partition_fraig_oracle.c", archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe}
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v: %s", err, out)
 	}
-	out, err := exec.Command(exe).CombinedOutput()
+	out, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C oracle: %v: %s", err, out)
 	}

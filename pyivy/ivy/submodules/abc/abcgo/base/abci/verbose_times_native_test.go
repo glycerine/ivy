@@ -18,13 +18,13 @@ var (
 // ABC prints (&jf's "Computing cuts..." and "Memory:", &lf/&nf's mux stats).
 func TestVerboseReportsLikeNative(t *testing.T) {
 	for _, script := range []string{
-		"read ../../../i10.aig; &get; &jf -v; &ps",
-		"read ../../../i10.aig; &get; &kf -v; &ps",
-		"read ../../../i10.aig; &get; &lf -v; &ps",
+		"read ../../test_vectors/i10.aig; &get; &jf -v; &ps",
+		"read ../../test_vectors/i10.aig; &get; &kf -v; &ps",
+		"read ../../test_vectors/i10.aig; &get; &lf -v; &ps",
 		"read test_vectors/native_s27_drw.blif; strash; &get; &sim",
 		"read test_vectors/seq/s713.blif; strash; &get; &sim -F 4",
-		"read ../../../i10.aig; drwsat -v; print_stats",
-		"read ../../../i10.aig; drwsat -v -b; print_stats",
+		"read ../../test_vectors/i10.aig; drwsat -v; print_stats",
+		"read ../../test_vectors/i10.aig; drwsat -v -b; print_stats",
 		"read test_vectors/seq/s713.blif; strash; scorr -v; print_stats",
 		"read test_vectors/seq/s713.blif; strash; lcorr -v; print_stats",
 		"read test_vectors/seq/s1494.blif; strash; lcorr -v; print_stats",
@@ -62,8 +62,8 @@ func compareTimesWithNative(t *testing.T, script string) {
 // drwsat -v labels its stages as Dar_ManRwsat does and prints the rewrite
 // and refactor statistics; the port printed "Starting: 3157 nodes".
 func TestDrwsatVerboseStages(t *testing.T) {
-	out := runScript(t, "read ../../../i10.aig; drwsat -v; print_stats")
-	for _, want := range []string{"Starting:  ../../../i10", "Rewrite:   ../../../i10", "Refactor:  ../../../i10", "NodesBeg =     2123."} {
+	out := runScript(t, "read ../../test_vectors/i10.aig; drwsat -v; print_stats")
+	for _, want := range []string{"Starting:  ../../test_vectors/i10", "Rewrite:   ../../test_vectors/i10", "Refactor:  ../../test_vectors/i10", "NodesBeg =     2123."} {
 		if !strings.Contains(out, want) {
 			t.Errorf("missing %q:\n%s", want, out)
 		}

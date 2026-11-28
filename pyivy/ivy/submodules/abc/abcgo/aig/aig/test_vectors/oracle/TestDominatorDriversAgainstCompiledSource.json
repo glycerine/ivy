@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/dominators_compare.c $SRC/aig/aig/aigDfs.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigUtil.c -Wl,--gc-sections -o $TMP/dominators",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/dominators"
+  ]
+ },
+ {
+  "key": "combined: $TMP/dominators",
+  "stdout": "Nodes =     3. Doms =       21. Ave =    7.00.   Time =     0.00 sec\nBEGIN 0\nstate 8 3 21 0 0\n0@5:\n1@5:[1][5,7][5,8][7,9][8,9]\n2@5:[2][6,7][6,8][7,10][8,10]\n3@5:\n4@5:[4][5,6][6,9][5,10][9,10]\n5@8:[5][9]\n6@8:[6][10]\n7@8:[7][8]\n8@8:[8]\n9@8:[9]\n10@8:[10]\nEND\nNodes =   1. Flops =   1. Doms =        8. Ave =    4.00.   Time =     0.00 sec\nBEGIN 1\nstate 9 1 8 0 0\n0@5:\n1@5:\n2@9:[2][6][10]\n3@5:\n4@9:[4][6][10]\n5@8:\n6@9:[6][10]\n7@8:\n8@8:\n9@8:\n10@9:[10]\nEND\nThe cut has 2 non-trivial 2-dominators.\nVol =  2.  Dom =  1.     0 : {    6      }\nVol =  2.  Dom =  1.     1 : {   10      }\nDIAG BEGIN\nvolume 1 lo-mark 1 generation 12\n0 refs 0 restored 0 mark 0 trav 5\n1 refs 0 restored 2 mark 0 trav 5\n2 refs 1 restored 2 mark 0 trav 12\n3 refs 0 restored 0 mark 0 trav 5\n4 refs 1 restored 2 mark 0 trav 12\n5 refs 0 restored 1 mark 0 trav 10\n6 refs 1 restored 1 mark 0 trav 12\n7 refs 0 restored 1 mark 0 trav 8\n8 refs 0 restored 0 mark 0 trav 8\n9 refs 0 restored 0 mark 0 trav 8\n10 refs 0 restored 0 mark 0 trav 12\nDIAG END\nNodes =   1. PIs =   3. Doms =        5. Ave =    1.25.   Time =     0.00 sec\nBEGIN 2\nstate 9 1 5 0 0\n0@5:\n1@5:\n2@9:[2][6][10]\n3@5:\n4@9:\n5@8:\n6@9:[6][10]\n7@8:\n8@8:[8]\n9@8:[9]\n10@9:[10]\nEND\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

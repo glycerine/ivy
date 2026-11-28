@@ -1,0 +1,8 @@
+{
+ "size": 0,
+ "mode": 0,
+ "entries": [
+  "$SRC/bdd/mtr/mtrBasic.c",
+  "$SRC/bdd/mtr/mtrGroup.c"
+ ]
+}

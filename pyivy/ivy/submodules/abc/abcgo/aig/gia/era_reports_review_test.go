@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"strings"
 	"testing"
@@ -10,7 +10,7 @@ import (
 
 func TestExplicitReachabilityNativeReports(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "era_review.c")
-	native, err := exec.Command(exe, "--verbose").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--verbose").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C progress: %v\n%s", err, native)
 	}

@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: abc -c read ../../test_vectors/i10.aig; strash; renode -s; print_stats",
+  "stdout": "ABC command line: \"read ../../test_vectors/i10.aig; strash; renode -s; print_stats\".\n\n\u001b[1;37m../../test_vectors/i10        :\u001b[0m i/o =  257/  224  lat =    0  nd =   692  edge =   2934  cube =  1845  lev = 8\n"
+ },
+ {
+  "key": "combined: abc -c read ../../test_vectors/i10.aig; strash; renode -s; sop; strash; print_stats",
+  "stdout": "ABC command line: \"read ../../test_vectors/i10.aig; strash; renode -s; sop; strash; print_stats\".\n\n\u001b[1;37m../../test_vectors/i10        :\u001b[0m i/o =  257/  224  lat =    0  and =   3198  lev = 45\n"
+ }
+]

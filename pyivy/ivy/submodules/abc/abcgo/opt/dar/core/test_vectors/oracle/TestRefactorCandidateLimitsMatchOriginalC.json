@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -O2 -DABC_USE_STDINT_H -Wno-implicit-function-declaration -Wno-int-to-pointer-cast -ffunction-sections -fdata-sections -Wl,--gc-sections -I $SRC ../test_vectors/refactor_cost_oracle.c $SRC/opt/dar/darRefact.c $SRC/bool/kit/kitIsop.c $SRC/bool/kit/kitFactor.c $SRC/bool/kit/kitSop.c $SRC/bool/kit/kitTruth.c $SRC/bool/kit/kitGraph.c -o $TMP/cost-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/cost-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/cost-oracle [stdin 9f5fb0528b0d81a2]",
+  "stdout": "-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n14\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n13\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n15\n-1\n-1\n-1\n-1\n-1\n-1\n-1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

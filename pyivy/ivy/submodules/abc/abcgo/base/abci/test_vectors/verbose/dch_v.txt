@@ -1,18 +1,18 @@
-Starting:  ../../../i10    : pi =   257  po =   224  and =    2675  lev =  50
-Rewrite:   ../../../i10    : pi =   257  po =   224  and =    2124  lev =  48
-Refactor:  ../../../i10    : pi =   257  po =   224  and =    2069  lev =  47
-Balance:   ../../../i10    : pi =   257  po =   224  and =    2039  lev =  33
-RewriteZ:  ../../../i10    : pi =   257  po =   224  and =    1924  lev =  33
-Starting:  ../../../i10    : pi =   257  po =   224  and =    1924  lev =  33
-Rewrite:   ../../../i10    : pi =   257  po =   224  and =    1891  lev =  33
-Refactor:  ../../../i10    : pi =   257  po =   224  and =    1884  lev =  33
-Balance:   ../../../i10    : pi =   257  po =   224  and =    1882  lev =  32
-Rewrite:   ../../../i10    : pi =   257  po =   224  and =    1861  lev =  32
-RewriteZ:  ../../../i10    : pi =   257  po =   224  and =    1842  lev =  32
-Balance:   ../../../i10    : pi =   257  po =   224  and =    1842  lev =  32
-RefactorZ: ../../../i10    : pi =   257  po =   224  and =    1834  lev =  32
-RewriteZ:  ../../../i10    : pi =   257  po =   224  and =    1818  lev =  32
-Balance:   ../../../i10    : pi =   257  po =   224  and =    1818  lev =  32
+Starting:  ../../test_vectors/i10 : pi =   257  po =   224  and =    2675  lev =  50
+Rewrite:   ../../test_vectors/i10 : pi =   257  po =   224  and =    2124  lev =  48
+Refactor:  ../../test_vectors/i10 : pi =   257  po =   224  and =    2069  lev =  47
+Balance:   ../../test_vectors/i10 : pi =   257  po =   224  and =    2039  lev =  33
+RewriteZ:  ../../test_vectors/i10 : pi =   257  po =   224  and =    1924  lev =  33
+Starting:  ../../test_vectors/i10 : pi =   257  po =   224  and =    1924  lev =  33
+Rewrite:   ../../test_vectors/i10 : pi =   257  po =   224  and =    1891  lev =  33
+Refactor:  ../../test_vectors/i10 : pi =   257  po =   224  and =    1884  lev =  33
+Balance:   ../../test_vectors/i10 : pi =   257  po =   224  and =    1882  lev =  32
+Rewrite:   ../../test_vectors/i10 : pi =   257  po =   224  and =    1861  lev =  32
+RewriteZ:  ../../test_vectors/i10 : pi =   257  po =   224  and =    1842  lev =  32
+Balance:   ../../test_vectors/i10 : pi =   257  po =   224  and =    1842  lev =  32
+RefactorZ: ../../test_vectors/i10 : pi =   257  po =   224  and =    1834  lev =  32
+RewriteZ:  ../../test_vectors/i10 : pi =   257  po =   224  and =    1818  lev =  32
+Balance:   ../../test_vectors/i10 : pi =   257  po =   224  and =    1818  lev =  32
 Parameters: Sim words = 8. Conf limit = 1000. SAT var max = 5000.
 AIG nodes : Total =   5991. Dangling =   3994. Main =   1997. ( 33.33 %)
 SAT solver: Vars = 3294. Max cone = 1101. Recycles = 1.

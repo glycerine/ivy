@@ -1,0 +1,86 @@
+[
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      112  AND =       81  Conf =   1000  JustMax =   100  \nUnsat calls      5  (  4.46 %)   Ave conf =      0.2   Time =     0.00 sec (  3.05 %)\nSat   calls    107  ( 95.54 %)   Ave conf =      0.1   Time =     0.00 sec ( 60.37 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      110  AND =       77  Conf =   1000  JustMax =   100  \nUnsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nSat   calls    110  (100.00 %)   Ave conf =      0.0   Time =     0.00 sec ( 59.60 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/002"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/003/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      100  AND =       69  Conf =   1000  JustMax =   100  \nUnsat calls      1  (  1.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nSat   calls     99  ( 99.00 %)   Ave conf =      0.0   Time =     0.00 sec ( 52.48 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/003"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/004/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =       94  AND =       54  Conf =   1000  JustMax =   100  \nUnsat calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nSat   calls     94  (100.00 %)   Ave conf =      0.0   Time =     0.00 sec ( 50.39 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/004"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/005/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      106  AND =       73  Conf =   1000  JustMax =   100  \nUnsat calls      9  (  8.49 %)   Ave conf =      0.1   Time =     0.00 sec (  3.29 %)\nSat   calls     97  ( 91.51 %)   Ave conf =      0.0   Time =     0.00 sec ( 50.66 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/005"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/006/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      108  AND =       74  Conf =   1000  JustMax =   100  \nUnsat calls      4  (  3.70 %)   Ave conf =      6.2   Time =     0.00 sec (  6.82 %)\nSat   calls    104  ( 96.30 %)   Ave conf =      0.1   Time =     0.00 sec ( 61.36 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/006"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/007/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      108  AND =       75  Conf =   1000  JustMax =   100  \nUnsat calls      2  (  1.85 %)   Ave conf =      0.0   Time =     0.00 sec (  0.65 %)\nSat   calls    106  ( 98.15 %)   Ave conf =      0.0   Time =     0.00 sec ( 54.55 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/007"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/008/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      108  AND =       74  Conf =   1000  JustMax =   100  \nUnsat calls      7  (  6.48 %)   Ave conf =      2.4   Time =     0.00 sec (  5.29 %)\nSat   calls    101  ( 93.52 %)   Ave conf =      0.2   Time =     0.00 sec ( 45.29 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/008"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/009/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      110  AND =       69  Conf =   1000  JustMax =   100  \nUnsat calls      6  (  5.45 %)   Ave conf =      0.3   Time =     0.00 sec (  4.00 %)\nSat   calls    104  ( 94.55 %)   Ave conf =      0.0   Time =     0.00 sec ( 51.33 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/009"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/010/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =       96  AND =       38  Conf =   1000  JustMax =   100  \nUnsat calls      2  (  2.08 %)   Ave conf =      0.0   Time =     0.00 sec (  1.60 %)\nSat   calls     94  ( 97.92 %)   Ave conf =      0.0   Time =     0.00 sec ( 52.00 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/010"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/011/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      106  AND =       69  Conf =   1000  JustMax =   100  \nUnsat calls      3  (  2.83 %)   Ave conf =      0.0   Time =     0.00 sec (  0.70 %)\nSat   calls    103  ( 97.17 %)   Ave conf =      0.0   Time =     0.00 sec ( 48.59 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/011"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026sat -c -C 1000 -v",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/012/input.aig; \u0026sat -c -C 1000 -v\".\n\nCO =      112  AND =       83  Conf =   1000  JustMax =   100  \nUnsat calls      5  (  4.46 %)   Ave conf =      0.2   Time =     0.00 sec (  2.38 %)\nSat   calls    107  ( 95.54 %)   Ave conf =      0.0   Time =     0.00 sec ( 52.98 %)\nUndef calls      0  (  0.00 %)   Ave conf =      0.0   Time =     0.00 sec (  0.00 %)\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/012"
+  ]
+ }
+]

@@ -1,7 +1,7 @@
 package gia
 
 import (
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strconv"
 	"strings"
 	"testing"
@@ -144,7 +144,7 @@ func TestRawMuxDfsWithConstantMappedControl(t *testing.T) {
 
 func TestRawMuxControlsOriginalSourceWitness(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "mux_constant_control.c")
-	data, err := exec.Command(exe).CombinedOutput()
+	data, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C raw MUX controls: %v: %s", err, data)
 	}

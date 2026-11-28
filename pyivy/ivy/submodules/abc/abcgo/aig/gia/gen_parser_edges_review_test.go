@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -33,7 +33,7 @@ func TestGenParserValidationAndGoExtensions(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			native, err := exec.Command(exe, "param", file).CombinedOutput()
+			native, err := testoracle.Command(t, exe, "param", file).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C parameter read: %v %s", err, native)
 			}
@@ -90,7 +90,7 @@ func TestGenNativeReaderPreservesOrAndAppend(t *testing.T) {
 	if err := os.WriteFile(file, []byte(data), 0600); err != nil {
 		t.Fatal(err)
 	}
-	native, err := exec.Command(exe, "read", file, "0", "3", "0", "0", "1").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "read", file, "0", "3", "0", "0", "1").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C append/OR: %v %s", err, native)
 	}
@@ -135,7 +135,7 @@ func TestGenNativeLabelsOnlyReader(t *testing.T) {
 	if err := os.WriteFile(file, []byte(".i 0\n.o 1\n"+strings.Repeat("0\n1\n", 32)), 0600); err != nil {
 		t.Fatal(err)
 	}
-	native, err := exec.Command(exe, "labels", file, "0", "0", "0", "0", "0").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "labels", file, "0", "0", "0", "0", "0").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C label-only read: %v %s", err, native)
 	}
@@ -169,7 +169,7 @@ func TestGenNativeInputCountRejection(t *testing.T) {
 	if err := os.WriteFile(file, []byte(strings.Repeat("0000 0\n", 64)), 0600); err != nil {
 		t.Fatal(err)
 	}
-	cmd := exec.Command(exe, "driver", file, "0", "0", "0", "0", "0")
+	cmd := testoracle.Command(t, exe, "driver", file, "0", "0", "0", "0", "0")
 	native, err := cmd.CombinedOutput()
 	if err != nil {
 		t.Fatalf("C dimension rejection: %v %s", err, native)

@@ -3,10 +3,10 @@ package ssc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"io"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -17,22 +17,22 @@ import (
 // The oracle links unchanged original SSC/GIA/SAT object files. Optimization
 // outside the care set and native scheduling are deliberately unconstrained.
 func TestOriginalCConstrainedSweeps(t *testing.T) {
-	if os.Getenv("SSC_BUILD_ORACLE") != "1" {
+	if testoracle.Gate("SSC_BUILD_ORACLE") != "1" {
 		t.Skip("set SSC_BUILD_ORACLE=1 to build the original C oracle from source")
 	}
-	cc, e := exec.LookPath("cc")
+	cc, e := testoracle.LookPath("cc")
 	if e != nil {
 		t.Skip("C compiler unavailable")
 	}
-	cxx, e := exec.LookPath("g++")
+	cxx, e := testoracle.LookPath("g++")
 	if e != nil {
 		t.Skip("C++ linker unavailable")
 	}
-	if _, e = exec.LookPath("make"); e != nil {
+	if _, e = testoracle.LookPath("make"); e != nil {
 		t.Skip("make unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
-	source := os.Getenv("SSC_SOURCE_ROOT")
+	source := testoracle.SourceRoot()
 	if source == "" {
 		source = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
 	}
@@ -45,6 +45,9 @@ func TestOriginalCConstrainedSweeps(t *testing.T) {
 		t.Fatal(e)
 	}
 	copyFile := func(from, to string) error {
+		if !testoracle.Recording() {
+			return nil // the build that reads the copy is replayed
+		}
 		in, err := os.Open(from)
 		if err != nil {
 			return err
@@ -66,10 +69,10 @@ func TestOriginalCConstrainedSweeps(t *testing.T) {
 			t.Fatal(e)
 		}
 	}
-	if e = os.Chmod(filepath.Join(build, "depends.sh"), 0755); e != nil {
+	if e = os.Chmod(filepath.Join(build, "depends.sh"), 0755); e != nil && testoracle.Recording() {
 		t.Fatal(e)
 	}
-	e = filepath.WalkDir(source, func(path string, entry os.DirEntry, walkErr error) error {
+	e = testoracle.WalkDir(source, func(path string, entry os.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
@@ -89,7 +92,7 @@ func TestOriginalCConstrainedSweeps(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	makeCmd := exec.Command("make", "-j4", "ABC_USE_STDINT_H=1", "ABC_USE_NO_READLINE=1", "ABC_USE_NO_PTHREADS=1")
+	makeCmd := testoracle.Command(t, "make", "-j4", "ABC_USE_STDINT_H=1", "ABC_USE_NO_READLINE=1", "ABC_USE_NO_PTHREADS=1")
 	makeCmd.Dir = build
 	if out, err := makeCmd.CombinedOutput(); err != nil {
 		t.Fatalf("build original ABC: %v\n%s", err, out)
@@ -102,11 +105,11 @@ int main(void){int n,a,b,j,i,q,k;Ssc_Pars_t pars;while(scanf("%d",&n)==1){Gia_Ma
 	if e = os.WriteFile(c, []byte(code), 0600); e != nil {
 		t.Fatal(e)
 	}
-	if out, e := exec.Command(cc, "-std=gnu99", "-DABC_USE_STDINT_H=1", "-DABC_USE_CUDD=1", "-I"+source, "-c", c, "-o", o).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-std=gnu99", "-DABC_USE_STDINT_H=1", "-DABC_USE_CUDD=1", "-I"+source, "-c", c, "-o", o).CombinedOutput(); e != nil {
 		t.Fatalf("compile %v %s", e, out)
 	}
 	args := []string{o}
-	e = filepath.WalkDir(source, func(p string, d os.DirEntry, e error) error {
+	e = testoracle.WalkDir(source, func(p string, d os.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
@@ -119,7 +122,7 @@ int main(void){int n,a,b,j,i,q,k;Ssc_Pars_t pars;while(scanf("%d",&n)==1){Gia_Ma
 		t.Fatal(e)
 	}
 	args = append(args, "-lreadline", "-lpthread", "-lm", "-ldl", "-lz", "-o", exe)
-	if out, e := exec.Command(cxx, args...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cxx, args...).CombinedOutput(); e != nil {
 		t.Fatalf("link %v %s", e, out)
 	}
 	rng := rand.New(rand.NewSource(917))
@@ -144,7 +147,7 @@ int main(void){int n,a,b,j,i,q,k;Ssc_Pars_t pars;while(scanf("%d",&n)==1){Gia_Ma
 		gia.Gia_ManAppendCo(care.graph, care.xor(ci[0], ci[1]))
 		results = append(results, Ssc_PerformSweeping(b.graph, care.graph, nil))
 	}
-	command := exec.Command(exe)
+	command := testoracle.Command(t, exe)
 	command.Stdin = strings.NewReader(input.String())
 	out, e := command.CombinedOutput()
 	if e != nil {

@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/factor_copies_compare.c $SRC/aig/aig/aigObj.c $SRC/aig/aig/aigOper.c $SRC/aig/aig/aigTable.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigUtil.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "recursive 10 2@1 4@1 6@1 8@1 10@1\nderive 1 generation 2\nreconstruct 12 0 4 6 4 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

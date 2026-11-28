@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestFramesGeneratedNativeAbstraction(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--generated-abs").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--generated-abs").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C generated abstraction: %v\n%s", err, native)
 	}

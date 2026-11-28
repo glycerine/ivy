@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 
@@ -138,7 +138,7 @@ func TestMiniLutExportWideCutsAndPolarity(t *testing.T) {
 		return
 	}
 	exe := compileGiaSourceOracle(t, "mini_lut_export.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C MiniLUT export: %v: %s", err, want)
 	}

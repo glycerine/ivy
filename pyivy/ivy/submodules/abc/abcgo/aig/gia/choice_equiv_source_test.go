@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -17,7 +17,7 @@ func compareNativeEquivChoiceOracles(t *testing.T, executable string) {
 			if name == "hcd" {
 				args = append(args, "--hcd")
 			}
-			want, err := exec.Command(executable, args...).CombinedOutput()
+			want, err := testoracle.Command(t, executable, args...).CombinedOutput()
 			if err != nil {
 				t.Fatalf("source choice conversion: %v: %s", err, want)
 			}

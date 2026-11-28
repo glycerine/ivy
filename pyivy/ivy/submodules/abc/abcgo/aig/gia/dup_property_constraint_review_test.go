@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -105,7 +105,7 @@ func TestPropertyAndConstraintTypedTransitionTables(t *testing.T) {
 
 func TestPropertyAndConstraintsMatchOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "property_constraints.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C property/constraints: %v: %s", err, want)
 	}

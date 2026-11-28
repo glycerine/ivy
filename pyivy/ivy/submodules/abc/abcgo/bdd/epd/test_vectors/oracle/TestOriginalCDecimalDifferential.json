@@ -1,0 +1,11 @@
+[
+ {
+  "key": "combined: cc -DNDEBUG $TMP/reference.c -lm -o $TMP/reference",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/reference"
+  ]
+ }
+]

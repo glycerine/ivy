@@ -1,0 +1,126 @@
+[
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/proof/fra/fraSim.c -o $TMP/proof_fra_fraSim.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/proof_fra_fraSim.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/aig/saig/saigDup.c -o $TMP/aig_saig_saigDup.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/aig_saig_saigDup.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/misc/util/utilCex.c -o $TMP/misc_util_utilCex.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/misc_util_utilCex.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/aig/aig/aigOper.c -o $TMP/aig_aig_aigOper.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/aig_aig_aigOper.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/aig/aig/aigMan.c -o $TMP/aig_aig_aigMan.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/aig_aig_aigMan.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/aig/aig/aigObj.c -o $TMP/aig_aig_aigObj.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/aig_aig_aigObj.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/aig/aig/aigMem.c -o $TMP/aig_aig_aigMem.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/aig_aig_aigMem.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/aig/aig/aigUtil.c -o $TMP/aig_aig_aigUtil.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/aig_aig_aigUtil.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/aig/aig/aigFanout.c -o $TMP/aig_aig_aigFanout.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/aig_aig_aigFanout.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/aig/aig/aigTable.c -o $TMP/aig_aig_aigTable.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/aig_aig_aigTable.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/misc/tim/timMan.c -o $TMP/misc_tim_timMan.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/misc_tim_timMan.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -c $SRC/misc/mem/mem.c -o $TMP/misc_mem_mem.c.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/misc_mem_mem.c.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -std=gnu99 -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections -O1 -Wl,--gc-sections test_vectors/fra_multiword_cex.c test_vectors/oracle_link_helpers.c $TMP/proof_fra_fraSim.c.o $TMP/aig_saig_saigDup.c.o $TMP/misc_util_utilCex.c.o $TMP/aig_aig_aigOper.c.o $TMP/aig_aig_aigMan.c.o $TMP/aig_aig_aigObj.c.o $TMP/aig_aig_aigMem.c.o $TMP/aig_aig_aigUtil.c.o $TMP/aig_aig_aigFanout.c.o $TMP/aig_aig_aigTable.c.o $TMP/misc_tim_timMan.c.o $TMP/misc_mem_mem.c.o -lm -lpthread -o $TMP/oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/oracle",
+  "stdout": "frame=19 po=0 bits=41 words=00000000,00000060\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

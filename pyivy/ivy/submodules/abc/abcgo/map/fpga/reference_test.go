@@ -2,7 +2,7 @@ package fpga
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -10,7 +10,7 @@ import (
 )
 
 func TestMappingAgainstOriginalC(t *testing.T) {
-	compiler, e := exec.LookPath("cc")
+	compiler, e := testoracle.LookPath("cc")
 	if e != nil {
 		t.Skip("C compiler unavailable")
 	}
@@ -24,7 +24,7 @@ func TestMappingAgainstOriginalC(t *testing.T) {
 		args = append(args, filepath.Join(root, "src/map/fpga/fpga"+name+".c"))
 	}
 	args = append(args, filepath.Join(root, "src/misc/extra/extraUtilMemory.c"), "-Wl,--gc-sections", "-lm", "-o", binary)
-	if log, e := exec.Command(compiler, args...).CombinedOutput(); e != nil {
+	if log, e := testoracle.Command(t, compiler, args...).CombinedOutput(); e != nil {
 		t.Fatalf("compile original C: %v\n%s", e, log)
 	}
 	for k := 2; k <= 6; k++ {
@@ -46,7 +46,7 @@ func TestMappingAgainstOriginalC(t *testing.T) {
 				t.Fatal(e)
 			}
 			assertEquivalent(t, p)
-			log, e := exec.Command(binary, strconv.Itoa(k), strconv.Itoa(kind)).CombinedOutput()
+			log, e := testoracle.Command(t, binary, strconv.Itoa(k), strconv.Itoa(kind)).CombinedOutput()
 			if e != nil {
 				t.Fatalf("C mapper: %v\n%s", e, log)
 			}

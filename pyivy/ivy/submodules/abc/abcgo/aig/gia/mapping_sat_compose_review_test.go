@@ -3,15 +3,15 @@ package gia_test
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	if_ "github.com/glycerine/abcgo/map/if"
-	"os/exec"
 	"strings"
 	"testing"
 )
 
 func TestMappingSATNativeCompositionHelpers(t *testing.T) {
 	executable := gia.CompileSourceOracleForTest(t, "if_sat_compose_review.c")
-	want, err := exec.Command(executable).CombinedOutput()
+	want, err := testoracle.Command(t, executable).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original composition: %v: %s", err, want)
 	}

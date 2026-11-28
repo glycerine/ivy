@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestCubeReachabilityNativeCombinationalDomain(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "era_cube_review.c")
-	native, err := exec.Command(exe, "--combinational").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--combinational").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C zero-register domain: %v\n%s", err, native)
 	}

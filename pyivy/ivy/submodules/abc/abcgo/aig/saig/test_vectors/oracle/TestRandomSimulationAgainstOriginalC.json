@@ -1,0 +1,25 @@
+[
+ {
+  "key": "combined: cc -std=c99 -O2 $TMP/seq.c -o $TMP/seq",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/seq"
+  ]
+ },
+ {
+  "key": "combined: $TMP/seq [stdin 32ec8aba609ebe81]",
+  "stdout": "0 -1 4294967295 4294967295 0 -1 0 0 0 -1 4294967295 4294967295 0 -1 0 0 0 -1 4294967295 4294967295 0 -1 0 0 0 -1 4294967295 4294967295 0 -1 0 0 ",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/seq [stdin 1d95fa2284825d4a]",
+  "stdout": "0 -1 4294967295 4294967295 5 0 ",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

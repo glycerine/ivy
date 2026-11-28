@@ -1,0 +1,17 @@
+{
+ "size": 0,
+ "mode": 0,
+ "entries": [
+  "$SRC/opt/dar/darBalance.c",
+  "$SRC/opt/dar/darCore.c",
+  "$SRC/opt/dar/darCut.c",
+  "$SRC/opt/dar/darData.c",
+  "$SRC/opt/dar/darLib.c",
+  "$SRC/opt/dar/darMan.c",
+  "$SRC/opt/dar/darPrec.c",
+  "$SRC/opt/dar/darRefact.c",
+  "$SRC/opt/dar/darResub.c",
+  "$SRC/opt/dar/darScript.c",
+  "$SRC/opt/dar/dar_.c"
+ ]
+}

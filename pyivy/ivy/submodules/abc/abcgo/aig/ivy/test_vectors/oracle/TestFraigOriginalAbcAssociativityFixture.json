@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -c read_blif $CWD/test_vectors/fraig_associativity.blif; strash; ifraig; write_aiger $TMP/reference.aig",
+  "stdout": "ABC command line: \"read_blif $CWD/test_vectors/fraig_associativity.blif; strash; ifraig; write_aiger $TMP/001/reference.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/reference.aig": "aig 5 3 0 2 2\n10\n10\n\u0004\u0002\u0002\u0002c\nfraig_associativity\u0000\nThis file was written by ABC on Sat Nov 28 05:02:08 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

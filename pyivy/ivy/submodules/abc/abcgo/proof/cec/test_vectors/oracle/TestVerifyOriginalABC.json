@@ -1,0 +1,16 @@
+[
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026cec -m -d",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026cec -m -d\".\n\nAssuming the current network is a double-output miter.\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026cec -m -d",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026cec -m -d\".\n\nAssuming the current network is a double-output miter.\nDisproved at least one output of the miter (zero-based number 0).\nNetworks are NOT EQUIVALENT.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/002"
+  ]
+ }
+]

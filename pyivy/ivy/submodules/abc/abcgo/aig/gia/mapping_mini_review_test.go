@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -33,7 +33,7 @@ func TestMappingNativeMiniReconstruction(t *testing.T) {
 	cases := mappingReviewMiniCases()
 	for index, c := range cases {
 		c.write(t, path)
-		source, err := exec.Command(exe, path).CombinedOutput()
+		source, err := testoracle.Command(t, exe, path).CombinedOutput()
 		if err != nil {
 			t.Fatalf("native case%d: %v %s", index, err, source)
 		}

@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: $TMP/oracle verbose",
+  "stdout": "Adding enable signal 1 related to 2 flops.\nCofactoring 2 signals.\ni/o =      4/      4  \u001b[1;36mand =       1\u001b[0m  \u001b[1;35mlev =    1\u001b[0m \u001b[1;35m(0.25)\u001b[0m  mem = 0.00 MB\nCofactored variable 6.\ni/o =      4/      4  \u001b[1;36mand =       1\u001b[0m  \u001b[1;35mlev =    1\u001b[0m \u001b[1;35m(0.25)\u001b[0m  mem = 0.00 MB\nCofactored variable 1.\ni/o =      4/      4  \u001b[1;36mand =       1\u001b[0m  \u001b[1;35mlev =    1\u001b[0m \u001b[1;35m(0.25)\u001b[0m  mem = 0.00 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

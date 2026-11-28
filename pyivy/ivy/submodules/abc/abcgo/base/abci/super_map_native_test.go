@@ -1,6 +1,7 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -23,7 +24,7 @@ var superStamp = regexp.MustCompile(`(?m)( on .*\.$|^# Generation time .*$)`)
 func superLikeNativeFile(t *testing.T, lib, flags string, native bool) string {
 	t.Helper()
 	dir := t.TempDir()
-	data, err := os.ReadFile(lib)
+	data, err := testoracle.ReadFile(lib)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,7 +41,7 @@ func superLikeNativeFile(t *testing.T, lib, flags string, native bool) string {
 			t.Fatalf("%s: status %d\n%s", script, status, out)
 		}
 	}
-	res, err := os.ReadFile(filepath.Join(dir, "lib.super"))
+	res, err := testoracle.ReadFile(filepath.Join(dir, "lib.super"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -72,11 +73,11 @@ func TestSuperLikeNative(t *testing.T) {
 func TestMapTinyGenlibLikeNative(t *testing.T) {
 	designs := map[string]string{
 		"mul8": "test_vectors/bench/mul8.aig",
-		"i10":  "../../../i10.aig",
+		"i10":  "../../test_vectors/i10.aig",
 	}
 	dir := t.TempDir()
 	read := func(path string) string {
-		data, err := os.ReadFile(path)
+		data, err := testoracle.ReadFile(path)
 		if err != nil {
 			t.Fatal(err)
 		}

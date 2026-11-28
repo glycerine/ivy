@@ -2,8 +2,7 @@ package abs
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 
@@ -43,8 +42,8 @@ func TestOldGlaRatioLimitSourceOracle(t *testing.T) {
 				if got != want {
 					t.Fatalf("got %s, want %s", got, want)
 				}
-				if oracle := os.Getenv("ABS_OLD_RATIO_ORACLE"); oracle != "" {
-					out, err := exec.Command(oracle, fmt.Sprint(full), fmt.Sprint(ratio)).CombinedOutput()
+				if oracle := testoracle.BuildFixture(t, "test_vectors/gla_old_ratio_oracle.c"); oracle != "" {
+					out, err := testoracle.Command(t, oracle, fmt.Sprint(full), fmt.Sprint(ratio)).CombinedOutput()
 					if err != nil || !strings.Contains(string(out), want+"\n") {
 						t.Fatalf("C oracle: %v: %s", err, out)
 					}

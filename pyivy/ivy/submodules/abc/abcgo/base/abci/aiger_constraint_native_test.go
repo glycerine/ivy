@@ -2,7 +2,7 @@ package abci
 
 import (
 	"bytes"
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -12,7 +12,7 @@ const constraintAig = "../io/test_vectors/constraint1.aig" // aig 4 2 1 1 1 0 1:
 
 func aigerPrefix(t *testing.T, path string, n int) []byte {
 	t.Helper()
-	data, err := os.ReadFile(path)
+	data, err := testoracle.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -25,7 +25,7 @@ func aigerPrefix(t *testing.T, path string, n int) []byte {
 func TestAigerConstraintsReadInvertedLikeNative(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "con.blif")
 	runScript(t, "read "+constraintAig+"; write_blif "+path)
-	data, err := os.ReadFile(path)
+	data, err := testoracle.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -55,7 +55,7 @@ func TestAigerConstraintsWriteLikeNative(t *testing.T) {
 func TestAigerLatchNamesLikeNative(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "ext.blif")
 	runScript(t, "read ../io/test_vectors/aiger_binary_extended.aig; write_blif "+path)
-	data, err := os.ReadFile(path)
+	data, err := testoracle.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -73,7 +73,7 @@ func TestNativeAigerSectionSymbolsLikePort(t *testing.T) {
 	for _, run := range []func(*testing.T, string) string{runScript, runNativeABC} {
 		path := filepath.Join(t.TempDir(), "ext.blif")
 		run(t, "read ../io/test_vectors/aiger_binary_extended.aig; write_blif "+path)
-		data, err := os.ReadFile(path)
+		data, err := testoracle.ReadFile(path)
 		if err != nil {
 			t.Fatal(err)
 		}

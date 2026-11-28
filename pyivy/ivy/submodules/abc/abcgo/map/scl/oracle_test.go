@@ -2,8 +2,8 @@ package scl
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -13,11 +13,11 @@ import (
 // Compile the unchanged original interpolation routine with a tiny vector ABI.
 // The production Go implementation has no C or compiler dependency.
 func TestLookupOriginalC(t *testing.T) {
-	cc, e := exec.LookPath("cc")
+	cc, e := testoracle.LookPath("cc")
 	if e != nil {
 		t.Skip("original-C oracle needs cc")
 	}
-	source, e := os.ReadFile("../../../src/map/scl/sclLib.h")
+	source, e := testoracle.ReadFile("../../../src/map/scl/sclLib.h")
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -45,10 +45,10 @@ int main(void) {float x[]={1,3,7},y[]={2,4,9};float a[]={3,9,4},b[]={5,7,11},c[]
 		t.Fatal(e)
 	}
 	binary := filepath.Join(dir, "oracle")
-	if output, e := exec.Command(cc, "-std=c99", "-o", binary, path).CombinedOutput(); e != nil {
+	if output, e := testoracle.Command(t, cc, "-std=c99", "-o", binary, path).CombinedOutput(); e != nil {
 		t.Fatal(e, string(output))
 	}
-	output, e := exec.Command(binary).Output()
+	output, e := testoracle.Command(t, binary).Output()
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -71,11 +71,11 @@ int main(void) {float x[]={1,3,7},y[]={2,4,9};float a[]={3,9,4},b[]={5,7,11},c[]
 }
 
 func TestLibertyReaderOriginalC(t *testing.T) {
-	abc, e := filepath.Abs("../../../abc")
+	abc, e := testoracle.NativeABCAbs()
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = os.Stat(abc); e != nil {
+	if _, e = testoracle.Stat(abc); e != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	// Three distinct functions satisfy the original read_lib command's minimum
@@ -91,11 +91,11 @@ func TestLibertyReaderOriginalC(t *testing.T) {
 	if e = os.WriteFile(path, []byte(text), 0600); e != nil {
 		t.Fatal(e)
 	}
-	output, e := exec.Command(abc, "-s", "-c", fmt.Sprintf("read_lib %s; write_scl %s", path, out)).CombinedOutput()
+	output, e := testoracle.Command(t, abc, "-s", "-c", fmt.Sprintf("read_lib %s; write_scl %s", path, out)).CombinedOutput()
 	if e != nil {
 		t.Fatal(e, string(output))
 	}
-	data, e := os.ReadFile(out)
+	data, e := testoracle.ReadFile(out)
 	if e != nil {
 		t.Fatal(e, string(output))
 	}
@@ -124,11 +124,11 @@ func TestLibertyReaderOriginalC(t *testing.T) {
 func TestDownsizeOriginalC(t *testing.T) { testSizingOriginalC(t, false) }
 func TestUpsizeOriginalC(t *testing.T)   { testSizingOriginalC(t, true) }
 func testSizingOriginalC(t *testing.T, up bool) {
-	abc, e := filepath.Abs("../../../abc")
+	abc, e := testoracle.NativeABCAbs()
 	if e != nil {
 		t.Fatal(e)
 	}
-	if _, e = os.Stat(abc); e != nil {
+	if _, e = testoracle.Stat(abc); e != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	lib, _ := downsizeFixture(t)
@@ -183,11 +183,11 @@ func testSizingOriginalC(t *testing.T, up bool) {
 		}
 	}
 	command := fmt.Sprintf("read_lib %s; read_genlib %s; read_blif %s; %s; write_blif %s", libpath, genpath, netpath, operation, outpath)
-	output, e := exec.Command(abc, "-s", "-c", command).CombinedOutput()
+	output, e := testoracle.Command(t, abc, "-s", "-c", command).CombinedOutput()
 	if e != nil {
 		t.Fatal(e, string(output))
 	}
-	result, e := os.ReadFile(outpath)
+	result, e := testoracle.ReadFile(outpath)
 	if e != nil {
 		t.Fatal(e, string(output))
 	}

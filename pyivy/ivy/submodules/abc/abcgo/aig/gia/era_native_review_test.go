@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -106,7 +106,7 @@ func eraReviewInspect(g *Gia_Man_t, limit, miter int32) {
 
 func TestExplicitReachabilityNativeStateTables(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "era_review.c")
-	cmd := exec.Command(exe)
+	cmd := testoracle.Command(t, exe)
 	cmd.Dir = t.TempDir()
 	native, err := cmd.CombinedOutput()
 	if err != nil {

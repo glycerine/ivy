@@ -2,9 +2,10 @@ package abci
 
 import (
 	"context"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 	"time"
@@ -37,13 +38,15 @@ func TestAbc9BmcLikeNative(t *testing.T) {
 		if port = bmc3Exact(port); native != port {
 			t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
 		}
-		n, err1 := os.ReadFile(nativeFile)
-		g, err2 := os.ReadFile(portFile)
+		n, err1 := testoracle.ReadFile(nativeFile)
+		g, err2 := testoracle.ReadFile(portFile)
 		if (err1 == nil) != (err2 == nil) || string(n) != string(g) {
 			t.Errorf("%s: write_cex differs (%v, %v)\nnative:\n%s\nport:\n%s", script, err1, err2, n, g)
 		}
 	}
 }
+
+var giaProducedOn = regexp.MustCompile(`produced by the GIA package in ABC on [^\n]*\n`)
 
 // &bmc -d dumps the unrolled frames into frames.aig in the current
 // directory; the Go file equals C's.
@@ -53,14 +56,15 @@ func TestAbc9BmcDumpFramesLikeNative(t *testing.T) {
 		script := "read test_vectors/" + file + "; strash; &get; &bmc -d -F 6; print_status"
 		os.Remove("frames.aig")
 		native := bmc3Exact(runNativeABC(t, script))
-		n, err1 := os.ReadFile("frames.aig")
+		n, err1 := testoracle.ReadFile("frames.aig")
 		os.Remove("frames.aig")
 		port, _ := runScriptStatus(t, script)
-		g, err2 := os.ReadFile("frames.aig")
+		g, err2 := testoracle.ReadFile("frames.aig")
 		if port = bmc3Exact(port); native != port {
 			t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
 		}
-		if err1 != nil || err2 != nil || string(n) != string(g) {
+		// the trailing comment carries the time of writing
+		if err1 != nil || err2 != nil || giaProducedOn.ReplaceAllString(string(n), "") != giaProducedOn.ReplaceAllString(string(g), "") {
 			t.Errorf("%s: frames.aig differs (%v, %v)", script, err1, err2)
 		}
 	}
@@ -70,14 +74,15 @@ func TestAbc9BmcDumpFramesLikeNative(t *testing.T) {
 // below made it loop forever while allocating memory.
 func runNativeABCTimeout(t *testing.T, script string, limit time.Duration) (string, bool) {
 	t.Helper()
-	bin := os.Getenv("ABC_BINARY")
+	bin := testoracle.NativeABCPath()
 	if bin == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), limit)
 	defer cancel()
-	out, _ := exec.CommandContext(ctx, bin, "-c", script).CombinedOutput()
-	return ansiEscape.ReplaceAllString(string(out), ""), ctx.Err() == nil
+	cmd := testoracle.CommandContext(t, ctx, bin, "-c", script)
+	out, _ := cmd.CombinedOutput()
+	return ansiEscape.ReplaceAllString(string(out), ""), !cmd.ContextExpired()
 }
 
 // Each script's &bmc result, as bmc3 and "&bmc -F 1" confirm.

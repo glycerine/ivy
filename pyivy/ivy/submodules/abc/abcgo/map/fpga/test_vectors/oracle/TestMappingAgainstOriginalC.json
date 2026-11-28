@@ -1,0 +1,81 @@
+[
+ {
+  "key": "combined: cc -O1 -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I$SRC test_vectors/reference.c $SRC/map/fpga/fpgaCore.c $SRC/map/fpga/fpgaCreate.c $SRC/map/fpga/fpgaCut.c $SRC/map/fpga/fpgaCutUtils.c $SRC/map/fpga/fpgaVec.c $SRC/map/fpga/fpgaUtils.c $SRC/map/fpga/fpgaTime.c $SRC/map/fpga/fpgaMatch.c $SRC/map/fpga/fpgaSwitch.c $SRC/map/fpga/fpgaLib.c $SRC/misc/extra/extraUtilMemory.c -Wl,--gc-sections -lm -o $TMP/fpga-reference",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/fpga-reference"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 2 0",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 5 5 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 2 1",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 6 4 6\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 3 0",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 3 3 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 3 1",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 3 2 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 4 0",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 2 2 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 4 1",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 3 2 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 5 0",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 2 2 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 5 1",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 2 2 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 6 0",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 1 1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fpga-reference 6 1",
+  "stdout": "Cannot meet the target required times (0.00). Mapping continues anyway.\nRESULT 1 1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

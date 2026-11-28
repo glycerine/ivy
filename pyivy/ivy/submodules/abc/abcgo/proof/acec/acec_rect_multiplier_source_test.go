@@ -2,8 +2,7 @@ package acec
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strconv"
 	"strings"
 	"testing"
@@ -145,8 +144,8 @@ func TestSourceRectMultiplierAcec(t *testing.T) {
 					t.Fatal("source false-equivalence case must differ")
 				}
 			}
-			if binary := os.Getenv("ACEC_RECT_MULTIPLIER_ORACLE"); binary != "" {
-				out, err := exec.Command(binary, strconv.Itoa(tc.flip)).CombinedOutput()
+			if binary := testoracle.BuildFixture(t, "test_vectors/acec_rect_multiplier_oracle.c"); binary != "" {
+				out, err := testoracle.Command(t, binary, strconv.Itoa(tc.flip)).CombinedOutput()
 				if err != nil {
 					t.Fatalf("C oracle %v: %s", err, out)
 				}

@@ -3,10 +3,9 @@ package ivy
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/sat/bsat"
 	"math/rand/v2"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"testing"
 )
@@ -258,11 +257,11 @@ func TestFraigProveSatOnlyDriver(t *testing.T) {
 }
 
 func TestFraigOriginalAbcAssociativityFixture(t *testing.T) {
-	binary, err := filepath.Abs(filepath.Join("..", "..", "..", "abc"))
+	binary, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := os.Stat(binary); err != nil {
+	if _, err := testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	fixture, err := filepath.Abs(filepath.Join("test_vectors", "fraig_associativity.blif"))
@@ -271,10 +270,10 @@ func TestFraigOriginalAbcAssociativityFixture(t *testing.T) {
 	}
 	output := filepath.Join(t.TempDir(), "reference.aig")
 	command := fmt.Sprintf("read_blif %s; strash; ifraig; write_aiger %s", fixture, output)
-	if out, err := exec.Command(binary, "-c", command).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, binary, "-c", command).CombinedOutput(); err != nil {
 		t.Fatalf("original ABC fixture: %v\n%s", err, out)
 	}
-	data, err := os.ReadFile(output)
+	data, err := testoracle.ReadFile(output)
 	if err != nil {
 		t.Fatal(err)
 	}

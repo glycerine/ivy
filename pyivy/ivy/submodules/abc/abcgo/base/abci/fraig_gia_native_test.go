@@ -11,7 +11,7 @@ import (
 // plain per-AND encoding, got other models, and refined differently from
 // the second iteration on.
 func TestGiaFraigIterationsLikeNative(t *testing.T) {
-	out := runScript(t, "read ../../../i10.aig; &get; &fraig -v")
+	out := runScript(t, "read ../../test_vectors/i10.aig; &get; &fraig -v")
 	for _, want := range []string{
 		"  2 : P =      0. D =      7. F =     0. M =       0. And =    2370.",
 		"  3 : P =    105. D =      4. F =     0. M =       0. And =    2251.",

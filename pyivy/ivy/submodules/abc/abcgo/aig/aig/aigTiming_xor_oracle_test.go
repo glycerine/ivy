@@ -2,7 +2,7 @@ package aig
 
 import (
 	"context"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -13,7 +13,7 @@ func TestXorLevelConventionsAgainstCompiledSource(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("fixture uses GNU linker section garbage collection")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -26,10 +26,10 @@ func TestXorLevelConventionsAgainstCompiledSource(t *testing.T) {
 	args := []string{"-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src,
 		filepath.Join(dir, "test_vectors/xor_levels_compare.c"), filepath.Join(src, "aig/aig/aigUtil.c"),
 		filepath.Join(src, "misc/tim/timBox.c"), "-Wl,--gc-sections", "-o", binary}
-	if out, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.CommandContext(t, ctx, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile C oracle: %v: %s", err, out)
 	}
-	out, err := exec.CommandContext(ctx, binary).CombinedOutput()
+	out, err := testoracle.CommandContext(t, ctx, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run C oracle: %v: %s", err, out)
 	}

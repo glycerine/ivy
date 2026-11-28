@@ -2,10 +2,10 @@ package mf
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"runtime"
@@ -204,7 +204,7 @@ func TestCNFWideRandomFunctionsExhaustive(t *testing.T) {
 }
 
 func TestCNFWideOriginalCClauseOrder(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for original-header oracle")
 	}
@@ -219,7 +219,7 @@ int main(void){int n,k,count,cover[512];unsigned long long t[4];while(scanf("%d%
 	if err := os.WriteFile(source, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=gnu99", "-DLIN64", "-I"+include, source, "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-I"+include, source, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("original C oracle compile: %v\n%s", err, out)
 	}
 	rng := rand.New(rand.NewSource(61061))
@@ -231,7 +231,7 @@ int main(void){int n,k,count,cover[512];unsigned long long t[4];while(scanf("%d%
 			}
 			table[0] &^= 1
 			request := fmt.Sprintf("%d %x %x %x %x\n", leaves, table[0], table[1], table[2], table[3])
-			command := exec.Command(binary)
+			command := testoracle.Command(t, binary)
 			command.Stdin = strings.NewReader(request)
 			out, err := command.Output()
 			if err != nil {

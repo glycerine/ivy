@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -160,15 +160,15 @@ func (f abcFixture) earliest(bound int) (int, int) {
 	return -1, -1
 }
 func TestBMCAgainstCABCExpanded(t *testing.T) {
-	binary := os.Getenv("ABC_BINARY")
+	binary := testoracle.NativeABCPath()
 	if binary == "" {
-		binary = filepath.Join("..", "..", "..", "abc")
+		binary = testoracle.NativeABCPath()
 	}
 	binary, err := filepath.Abs(binary)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if fi, err := os.Stat(binary); err != nil || fi.IsDir() || fi.Mode()&0111 == 0 {
+	if fi, err := testoracle.Stat(binary); err != nil || fi.IsDir() || fi.Mode()&0111 == 0 {
 		t.Skip("C ABC executable unavailable; set ABC_BINARY")
 	}
 	fixtures := []abcFixture{
@@ -188,7 +188,7 @@ func TestBMCAgainstCABCExpanded(t *testing.T) {
 			}
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
-			out, err := exec.CommandContext(ctx, binary, "-c", fmt.Sprintf("read_aiger %s; bmc3 -F 4", file)).CombinedOutput()
+			out, err := testoracle.CommandContext(t, ctx, binary, "-c", fmt.Sprintf("read_aiger %s; bmc3 -F 4", file)).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C ABC: %v\n%s", err, out)
 			}

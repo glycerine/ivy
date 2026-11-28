@@ -2,9 +2,9 @@ package fra
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"testing"
 
@@ -16,7 +16,7 @@ import (
 // ABC's network wrapper may clean registers, so compare output traces rather
 // than requiring the internal state counts to match.
 func TestABCInductionDifferential(t *testing.T) {
-	binary := os.Getenv("ABC_REFERENCE")
+	binary := testoracle.NativeABCPath()
 	if binary == "" {
 		t.Skip("set ABC_REFERENCE to an ABC executable")
 	}
@@ -60,7 +60,7 @@ func TestABCInductionDifferential(t *testing.T) {
 			output := filepath.Join(dir, "output.aig")
 			os.Remove(output)
 			command := fmt.Sprintf("read_aiger %s; strash; ssweep %s; write_aiger %s", input, config.args, output)
-			log, err := exec.Command(binary, "-c", command).CombinedOutput()
+			log, err := testoracle.Command(t, binary, "-c", command).CombinedOutput()
 			if err != nil {
 				t.Fatalf("trial %d %s: %v: %s", trial, config.args, err, log)
 			}

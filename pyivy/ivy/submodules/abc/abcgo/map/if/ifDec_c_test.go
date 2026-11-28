@@ -3,9 +3,9 @@ package if_
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -31,7 +31,7 @@ void Kit_DsdPrintFromTruth(unsigned*t,int n){Extra_PrintHex(stderr,t,n);}
 `
 
 func TestDecOriginalCComparison(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
@@ -39,7 +39,7 @@ func TestDecOriginalCComparison(t *testing.T) {
 	var objects []string
 	for _, family := range []string{"07", "08", "10"} {
 		sourcePath := filepath.Join("..", "..", "..", "src", "map", "if", "ifDec"+family+".c")
-		data, err := os.ReadFile(sourcePath)
+		data, err := testoracle.ReadFile(sourcePath)
 		if err != nil {
 			t.Skip("original decomposition source unavailable")
 		}
@@ -60,7 +60,7 @@ func TestDecOriginalCComparison(t *testing.T) {
 		if err = os.WriteFile(file, []byte(source.String()), 0600); err != nil {
 			t.Fatal(err)
 		}
-		if output, err := exec.Command(cc, "-std=c99", "-O2", "-DNDEBUG", "-c", file, "-o", object).CombinedOutput(); err != nil {
+		if output, err := testoracle.Command(t, cc, "-std=c99", "-O2", "-DNDEBUG", "-c", file, "-o", object).CombinedOutput(); err != nil {
 			t.Fatalf("compile original Dec%s: %v\n%s", family, err, output)
 		}
 		objects = append(objects, object)
@@ -76,7 +76,7 @@ int main(void){int mode,n;while(scanf("%d%d",&mode,&n)==2){word t[16];int words=
 	}
 	arguments := append([]string{"-std=c99", "-O2", mainPath}, objects...)
 	arguments = append(arguments, "-o", binary)
-	if output, err := exec.Command(cc, arguments...).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, cc, arguments...).CombinedOutput(); err != nil {
 		t.Fatalf("link original oracle: %v\n%s", err, output)
 	}
 	rng := rand.New(rand.NewSource(710810))
@@ -159,7 +159,7 @@ int main(void){int mode,n;while(scanf("%d%d",&mode,&n)==2){word t[16];int words=
 		}
 		input.WriteByte('\n')
 	}
-	command := exec.Command(binary)
+	command := testoracle.Command(t, binary)
 	command.Stdin = &input
 	output, err := command.Output()
 	if err != nil {

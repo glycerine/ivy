@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/sat_partition_boundary_compare.c $SRC/aig/aig/aigMan.c $SRC/aig/aig/aigObj.c $SRC/aig/aig/aigOper.c $SRC/aig/aig/aigTable.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigUtil.c $SRC/aig/aig/aigPartSat.c $SRC/misc/tim/timMan.c $SRC/misc/mem/mem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "mask 1 reverse false pio: 1 2 4\n0 0 false false\n1 1 false false\n2 1 true false\n3 1 false false and 2 4\n4 0 false false out 6\nmask 1 reverse true pio: 1 2 4\n0 0 false false\n1 1 false false\n2 1 true false\n3 1 false false and 2 4\n4 0 false false out 6\nmask 2 reverse false pio: 2 3 5\n0 0 false false\n1 1 true false\n2 1 false true\n3 1 false false and 3 4\n4 0 false false out 6\nmask 2 reverse true pio: 2 3 5\n0 0 false false\n1 1 true false\n2 1 false true\n3 1 false false and 3 4\n4 0 false false out 6\nmask 3 reverse false pio: 1 2 3 4 5\n0 0 false false\n1 1 false false\n2 2 true false\n3 1 false false and 2 4\n4 1 false true\n5 1 false false and 5 8\n6 0 false false out 6\n7 0 false false out 10\nmask 3 reverse true pio: 2 3 1 5 4\n0 0 false false\n1 2 true false\n2 1 false true\n3 1 false false and 3 4\n4 1 false false\n5 1 false false and 2 8\n6 0 false false out 6\n7 0 false false out 10\nmask 4 reverse false pio: 4 5 6\n0 0 false false\n1 1 false false\n2 1 false false\n3 1 false false and 2 4\n4 0 false false out 6\nmask 4 reverse true pio: 4 5 6\n0 0 false false\n1 1 false false\n2 1 false false\n3 1 false false and 2 4\n4 0 false false out 6\nmask 5 reverse false pio: 1 2 5 4 6\n0 0 false false\n1 1 false false\n2 1 true false\n3 2 false false and 2 4\n4 1 false false\n5 1 false false and 6 8\n6 0 false false out 6\n7 0 false false out 10\nmask 5 reverse true pio: 1 2 5 6 4\n0 0 false false\n1 1 false false\n2 1 true false\n3 2 false false and 2 4\n4 1 false false\n5 1 false false and 6 8\n6 0 false false out 10\n7 0 false false out 6\nmask 6 reverse false pio: 2 3 4 6\n0 0 false false\n1 1 true false\n2 1 false true\n3 1 false false and 3 4\n4 1 false false\n5 1 false false and 6 8\n6 0 false false out 10\nmask 6 reverse true pio: 4 2 3 6\n0 0 false false\n1 1 false false\n2 1 true false\n3 1 false true\n4 1 false false and 5 6\n5 1 false false and 2 8\n6 0 false false out 10\nmask 7 reverse false pio: 1 2 3 4 6\n0 0 false false\n1 1 false false\n2 2 true false\n3 2 false false and 2 4\n4 1 false true\n5 1 false false and 5 8\n6 1 false false and 6 10\n7 0 false false out 6\n8 0 false false out 12\nmask 7 reverse true pio: 1 2 3 6 4\n0 0 false false\n1 1 false false\n2 2 true false\n3 2 false false and 2 4\n4 1 false true\n5 1 false false and 5 8\n6 1 false false and 6 10\n7 0 false false out 12\n8 0 false false out 6\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

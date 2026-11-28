@@ -1,6 +1,7 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -60,7 +61,7 @@ func matchScripts(design string) []string {
 }
 
 func TestMatchLikeNative(t *testing.T) {
-	if os.Getenv("ABC_BINARY") == "" {
+	if testoracle.NativeABCPath() == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
 	dir := t.TempDir()
@@ -78,8 +79,8 @@ func TestMatchLikeNative(t *testing.T) {
 				continue
 			}
 			if strings.Contains(script, "%O") {
-				a, errA := os.ReadFile(cOut)
-				b, errB := os.ReadFile(goOut)
+				a, errA := testoracle.ReadFile(cOut)
+				b, errB := testoracle.ReadFile(goOut)
 				// the comment section's time stamp aside
 				if errA != nil || errB != nil || aigerStamp.ReplaceAllString(string(a), "") != aigerStamp.ReplaceAllString(string(b), "") {
 					t.Errorf("%s: result AIGER differs (%v, %v)", script, errA, errB)

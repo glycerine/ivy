@@ -3,16 +3,16 @@ package gia_test
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	if_ "github.com/glycerine/abcgo/map/if"
 	"os"
-	"os/exec"
 	"strings"
 	"testing"
 )
 
 func TestMappingDSDOriginalCanonicalContracts(t *testing.T) {
 	executable := gia.CompileSourceOracleForTest(t, "if_dsd_canonical_review.c")
-	want, err := exec.Command(executable).CombinedOutput()
+	want, err := testoracle.Command(t, executable).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original DSD: %v %s", err, want)
 	}
@@ -41,7 +41,7 @@ func TestMappingDSDOriginalCanonicalContracts(t *testing.T) {
 	defer func() { os.Stdout = original; output.Close() }()
 	if_.If_DsdManAllocIsops(p, 3)
 	os.Stdout = original
-	warning, err := os.ReadFile(output.Name())
+	warning, err := testoracle.ReadFile(output.Name())
 	if err != nil {
 		t.Fatal(err)
 	}

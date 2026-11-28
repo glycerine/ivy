@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -98,7 +98,7 @@ func TestDfsMuxPhasesWithReorderedLeaves(t *testing.T) {
 
 func TestAppendMuxPhasesMatchOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "append_mux_phases.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C append MUX phases: %v: %s", err, want)
 	}

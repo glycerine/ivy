@@ -1,0 +1,42 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; kcs",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; kcs\".\n\nThe network has no liveness target output (named \"csLiveTarget_...\").\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; kcs -c",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; kcs -c\".\n\nThe network has no liveness target output (named \"csLiveTarget_...\").\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; kcs -m",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; kcs -m\".\n\nThe network has no liveness target output (named \"csLiveTarget_...\").\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; kcs -C",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; kcs -C\".\n\nThe network has no liveness target output (named \"csLiveTarget_...\").\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; kcs -g",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; kcs -g\".\n\nThe network has no liveness target output (named \"csLiveTarget_...\").\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; logic; kcs",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; logic; kcs\".\n\nError: This command is only applicable to strashed networks.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; logic; kcs -c",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; logic; kcs -c\".\n\nError: This command is only applicable to strashed networks.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; logic; kcs -m",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; logic; kcs -m\".\n\nError: This command is only applicable to strashed networks.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; logic; kcs -C",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; logic; kcs -C\".\n\nError: This command is only applicable to strashed networks.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; logic; kcs -g",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; logic; kcs -g\".\n\nError: This command is only applicable to strashed networks.\n"
+ }
+]

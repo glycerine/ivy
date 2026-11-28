@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: $TMP/timeframe-boundary 2 1 1 1",
+  "stdout": "timeframe-boundary: src/aig/saig/saigTrans.c:261: Saig_ManFramesInitialMapped: Assertion `nFrames \u003c= nFramesMax' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

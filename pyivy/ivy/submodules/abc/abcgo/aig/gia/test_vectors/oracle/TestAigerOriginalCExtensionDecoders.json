@@ -1,0 +1,25 @@
+[
+ {
+  "key": "combined: cc $TMP/reference.c -o $TMP/reference",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/reference"
+  ]
+ },
+ {
+  "key": "combined: $TMP/reference 0 20 [stdin 664d4e9f1ee19dd3]",
+  "stdout": "268435455:0 268435455:0 0:0 1:0 0:1 1:0 0:0 1:1 0:0 1:0 0:1 1:0 0:0 1:1 0:0 1:0 0:1 1:0 0:0 1:1 used=24",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/reference 1 20 [stdin 9c63ac48fd7545f8]",
+  "stdout": "0 0 0 0 0 0 0 0 0 0 20 0 0 0 0 25 0 0 0 30 3 1 3 5 10 3 3 9 10 15 2 10 15 19 used=18",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

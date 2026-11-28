@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -206,7 +206,7 @@ func TestCutEnumerationMatchesOriginalABC(t *testing.T) {
 
 func cutEnumReviewCompare(t *testing.T, exe string, first, last int, args ...string) {
 	t.Helper()
-	native, err := exec.Command(exe, args...).CombinedOutput()
+	native, err := testoracle.Command(t, exe, args...).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native cuts: %v\n%s", err, native)
 	}

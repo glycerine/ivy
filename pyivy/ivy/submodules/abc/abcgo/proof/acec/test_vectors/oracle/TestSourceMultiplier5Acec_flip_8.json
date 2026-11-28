@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -I $SRC test_vectors/acec_multiplier_oracle.c $LIBABC -lm -ldl -lpthread -lstdc++ -o $TMP/acec_multiplier_oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/acec_multiplier_oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/acec_multiplier_oracle 8 5",
+  "stdout": "The adder tree has 38 internal cut points. There is no internal fanouts.\nThe adder tree has 38 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 24 entries out of 24.\nBox1: Matched 24 entries out of 24.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\nSOURCE_STATUS=1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

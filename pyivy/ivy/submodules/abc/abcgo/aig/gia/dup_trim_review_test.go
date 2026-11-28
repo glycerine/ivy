@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -293,7 +293,7 @@ func TestTrimmingSelectionAndStateMatrix(t *testing.T) {
 
 func TestTrimmingMatchesOriginalC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "trim.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C trimming: %v: %s", err, native)
 	}
@@ -306,14 +306,14 @@ func TestTrimmingMatchesOriginalC(t *testing.T) {
 			t.Fatalf("case%d\nGo %s\nC %s", i, got[i], want[i])
 		}
 	}
-	dual, err := exec.Command(exe, "dual").CombinedOutput()
+	dual, err := testoracle.Command(t, exe, "dual").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C working dual trim: %v: %s", err, dual)
 	}
 	if expected := trimReviewWorkingDualRecords(t); expected != string(dual) {
 		t.Fatalf("working dual trim:\nGo %s\nC %s", expected, dual)
 	}
-	witness, err := exec.Command(exe, "mismatch").CombinedOutput()
+	witness, err := testoracle.Command(t, exe, "mismatch").CombinedOutput()
 	if err != nil || string(witness) != "0 0 0\n" {
 		t.Fatalf("inherited C constant-mismatch witness: %v: %s", err, witness)
 	}

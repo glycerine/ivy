@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -42,7 +42,7 @@ int main(void) {
 func findQPReference(t *testing.T) string {
 	t.Helper()
 	if source := os.Getenv("ABC_QP_REFERENCE_SOURCE"); source != "" {
-		if _, err := os.Stat(source); err != nil {
+		if _, err := testoracle.Stat(source); err != nil {
 			t.Fatal(err)
 		}
 		return source
@@ -53,7 +53,7 @@ func findQPReference(t *testing.T) string {
 	}
 	for dir := cwd; ; dir = filepath.Dir(dir) {
 		candidate := filepath.Join(dir, "src/phys/place/place_qpsolver.c")
-		if _, err := os.Stat(candidate); err == nil {
+		if _, err := testoracle.Stat(candidate); err == nil {
 			return candidate
 		}
 		if filepath.Dir(dir) == dir {
@@ -64,7 +64,7 @@ func findQPReference(t *testing.T) string {
 	return ""
 }
 func TestQPOriginalCComparison(t *testing.T) {
-	compiler, err := exec.LookPath("cc")
+	compiler, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for optional differential check")
 	}
@@ -76,7 +76,7 @@ func TestQPOriginalCComparison(t *testing.T) {
 	}
 	binary := filepath.Join(root, "qp-reference")
 	args := []string{"-std=c99", "-O0", "-DABC_NAMESPACE_HEADER_START=", "-DABC_NAMESPACE_HEADER_END=", "-DABC_NAMESPACE_IMPL_START=", "-DABC_NAMESPACE_IMPL_END=", "-I", filepath.Dir(source), source, driver, "-lm", "-o", binary}
-	if out, err := exec.Command(compiler, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, compiler, args...).CombinedOutput(); err != nil {
 		t.Fatalf("reference build: %v: %s", err, out)
 	}
 	rng := rand.New(rand.NewSource(1107))
@@ -135,7 +135,7 @@ func TestQPOriginalCComparison(t *testing.T) {
 			input.WriteByte('\n')
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-		cmd := exec.CommandContext(ctx, binary)
+		cmd := testoracle.CommandContext(t, ctx, binary)
 		cmd.Stdin = strings.NewReader(input.String())
 		var stderr bytes.Buffer
 		cmd.Stderr = &stderr

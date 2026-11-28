@@ -3,8 +3,8 @@ package sfm
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -15,14 +15,14 @@ func TestOriginalWindowLevelsAndMffcOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section collection")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("source oracle requires cc")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	root := filepath.Clean(filepath.Join(filepath.Dir(file), "../../.."))
 	binary := filepath.Join(t.TempDir(), "oracle")
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", filepath.Join(root, "src"), filepath.Join(root, "test_vectors/sfm/window_oracle.c"), "-o", binary)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", filepath.Join(root, "src"), filepath.Join(root, "test_vectors/sfm/window_oracle.c"), "-o", binary)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("compile original C: %v\n%s", err, out)
 	}
@@ -86,7 +86,7 @@ func TestOriginalWindowLevelsAndMffcOracle(t *testing.T) {
 		}
 		expected = append(expected, line.String())
 	}
-	cmd = exec.Command(binary)
+	cmd = testoracle.Command(t, binary)
 	cmd.Stdin = &input
 	out, err := cmd.CombinedOutput()
 	if err != nil {

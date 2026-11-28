@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 	"testing"
@@ -137,7 +137,7 @@ func TestMappingNativeBoxedMetricsAndChoiceLevels(t *testing.T) {
 	cases := 0
 	for seed := 1; seed <= 64; seed++ {
 		for fault := 0; fault < 2; fault++ {
-			source, err := exec.Command(exe, strconv.Itoa(seed), strconv.Itoa(fault)).CombinedOutput()
+			source, err := testoracle.Command(t, exe, strconv.Itoa(seed), strconv.Itoa(fault)).CombinedOutput()
 			if err != nil {
 				t.Fatalf("native seed%d fault%d: %v %s", seed, fault, err, source)
 			}

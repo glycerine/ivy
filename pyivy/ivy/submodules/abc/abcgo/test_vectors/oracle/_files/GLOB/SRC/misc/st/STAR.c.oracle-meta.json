@@ -1,0 +1,8 @@
+{
+ "size": 0,
+ "mode": 0,
+ "entries": [
+  "$SRC/misc/st/st.c",
+  "$SRC/misc/st/stmm.c"
+ ]
+}

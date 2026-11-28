@@ -1,0 +1,13 @@
+[
+ {
+  "key": "combined: $TMP/oracle $TMP/graph.txt 0 1 0 NaN 0",
+  "stdout": "state initial 1 1 1 1 1 0\nobj0 1 0 0 0 0 1 00000000 0 0 in out 1\nobj1 0 0 0 0 1 1 00000000 0 0 in 0 out 2\nobj2 1 0 0 0 1 0 00000000 0 0 in 1 out\nchanged\naffected\nfrontier\nsaved\noracle: $SRC/aig/gia/giaGlitch.c:431: Gli_ManSetPiRandom: Assertion `0.0 \u003c PiTransProb \u0026\u0026 PiTransProb \u003c 1.0' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001",
+   "$TMP/002"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

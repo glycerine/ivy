@@ -1,0 +1,459 @@
+[
+ {
+  "key": "combined: cc -O1 -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I$SRC test_vectors/reference.c $SRC/opt/nwk/nwkObj.c $SRC/opt/nwk/nwkFanio.c $SRC/opt/nwk/nwkDfs.c $SRC/opt/nwk/nwkFlow.c $SRC/opt/nwk/nwkTiming.c $SRC/opt/nwk/nwkMerge.c $SRC/opt/nwk/nwkUtil.c $SRC/aig/aig/aigMem.c $SRC/misc/tim/timMan.c $SRC/misc/tim/timBox.c $SRC/misc/tim/timTrav.c $SRC/misc/tim/timTime.c -Wl,--gc-sections -lm -o $TMP/nwk-reference",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/nwk-reference"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 0",
+  "stdout": "RESULT 2 3 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 1",
+  "stdout": "RESULT 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 2",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 3",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 4",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 5",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 6",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 7",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 8",
+  "stdout": "RESULT 2 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 9",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 10",
+  "stdout": "RESULT 2 3 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 11",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 12",
+  "stdout": "RESULT 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 13",
+  "stdout": "RESULT 2 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 14",
+  "stdout": "RESULT 2 3 4 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 0 15",
+  "stdout": "RESULT 2 3 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 0",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 1",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 2",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 3",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 4",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 5",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 6",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 7",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 8",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 9",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 10",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 11",
+  "stdout": "RESULT 14 15 16\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 12",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 13",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 14",
+  "stdout": "RESULT 14 15 16\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 1 15",
+  "stdout": "RESULT 14 15 16 17\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 0",
+  "stdout": "RESULT 0 15 1 10 2 9 3 4 5 14 6 13 7 8 11 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 1",
+  "stdout": "RESULT 0 5 1 12 2 15 3 6 4 9 7 10 8 13 11 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 2",
+  "stdout": "RESULT 0 15 1 10 2 9 3 4 5 14 6 13 7 8 11 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 3",
+  "stdout": "RESULT 0 5 1 12 2 15 3 6 4 9 7 10 8 13 11 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 4",
+  "stdout": "RESULT 0 15 1 10 2 9 3 4 5 14 6 13 7 8 11 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 5",
+  "stdout": "RESULT 0 5 1 12 2 15 3 6 4 9 7 10 8 13 11 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 6",
+  "stdout": "RESULT 0 15 1 10 2 9 3 4 5 14 6 13 7 8 11 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 7",
+  "stdout": "RESULT 0 5 1 12 2 15 3 6 4 9 7 10 8 13 11 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 8",
+  "stdout": "RESULT 0 15 1 10 2 9 3 4 5 14 6 13 7 8 11 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 9",
+  "stdout": "RESULT 0 5 1 12 2 15 3 6 4 9 7 10 8 13 11 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 10",
+  "stdout": "RESULT 0 15 1 10 2 9 3 4 5 14 6 13 7 8 11 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 11",
+  "stdout": "RESULT 0 5 1 12 2 15 3 6 4 9 7 10 8 13 11 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 12",
+  "stdout": "RESULT 0 15 1 10 2 9 3 4 5 14 6 13 7 8 11 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 13",
+  "stdout": "RESULT 0 5 1 12 2 15 3 6 4 9 7 10 8 13 11 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 14",
+  "stdout": "RESULT 0 15 1 10 2 9 3 4 5 14 6 13 7 8 11 12\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 2 15",
+  "stdout": "RESULT 0 5 1 12 2 15 3 6 4 9 7 10 8 13 11 14\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 0",
+  "stdout": "RESULT 3 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 1",
+  "stdout": "RESULT 3 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 2",
+  "stdout": "RESULT 3 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 3",
+  "stdout": "RESULT 5 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 4",
+  "stdout": "RESULT 4 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 5",
+  "stdout": "RESULT 4 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 6",
+  "stdout": "RESULT 4 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 7",
+  "stdout": "RESULT 4 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 8",
+  "stdout": "RESULT 5 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 9",
+  "stdout": "RESULT 2 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 10",
+  "stdout": "RESULT 4 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 11",
+  "stdout": "RESULT 4 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 12",
+  "stdout": "RESULT 4 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 13",
+  "stdout": "RESULT 3 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 14",
+  "stdout": "RESULT 3 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/nwk-reference 3 15",
+  "stdout": "RESULT 4 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

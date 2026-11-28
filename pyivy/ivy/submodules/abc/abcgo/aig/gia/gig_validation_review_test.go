@@ -1,8 +1,8 @@
 package gia
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -68,7 +68,7 @@ func TestGigSafeWhitespaceSparseAndForwardDelayExtensions(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			path := gigReviewWrite(t, tc.text)
 			if tc.sourceFailure != "" {
-				out, err := exec.Command(exe, "--raw", path).CombinedOutput()
+				out, err := testoracle.Command(t, exe, "--raw", path).CombinedOutput()
 				if err == nil || !strings.Contains(string(out), tc.sourceFailure) {
 					t.Fatalf("source precondition changed: %v %s", err, out)
 				}

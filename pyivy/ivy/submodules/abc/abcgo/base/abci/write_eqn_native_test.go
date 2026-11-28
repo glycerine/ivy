@@ -2,7 +2,7 @@ package abci
 
 import (
 	"bytes"
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"regexp"
 	"testing"
@@ -17,26 +17,26 @@ var eqnStamp = regexp.MustCompile(`written by ABC on [^\n]*\n`)
 func TestWriteEqnLikeNative(t *testing.T) {
 	dir := t.TempDir()
 	file := filepath.Join(dir, "x.eqn")
-	runScript(t, "read ../../../i10.aig; strash; write_eqn "+file)
-	if _, err := os.Stat(file); err == nil {
+	runScript(t, "read ../../test_vectors/i10.aig; strash; write_eqn "+file)
+	if _, err := testoracle.Stat(file); err == nil {
 		t.Fatalf("write_eqn wrote a file for names EQN cannot carry")
 	}
 	for _, script := range []string{"strash; short_names", "strash; short_names; if -K 4", "strash; short_names; logic"} {
 		goFile := filepath.Join(dir, "go.eqn")
-		runScript(t, "read ../../../i10.aig; "+script+"; write_eqn "+goFile)
-		got, err := os.ReadFile(goFile)
+		runScript(t, "read ../../test_vectors/i10.aig; "+script+"; write_eqn "+goFile)
+		got, err := testoracle.ReadFile(goFile)
 		if err != nil {
 			t.Fatalf("%s: %v", script, err)
 		}
 		if !eqnStamp.Match(got) {
 			t.Fatalf("%s: no ABC header", script)
 		}
-		if os.Getenv("ABC_BINARY") == "" {
+		if testoracle.NativeABCPath() == "" {
 			continue
 		}
 		nativeFile := filepath.Join(dir, "native.eqn")
-		runNativeABC(t, "read ../../../i10.aig; "+script+"; write_eqn "+nativeFile)
-		want, err := os.ReadFile(nativeFile)
+		runNativeABC(t, "read ../../test_vectors/i10.aig; "+script+"; write_eqn "+nativeFile)
+		want, err := testoracle.ReadFile(nativeFile)
 		if err != nil {
 			t.Fatal(err)
 		}

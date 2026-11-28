@@ -1,0 +1,14 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; print_box",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; print_box\".\n\nBox library is not available.\n"
+ },
+ {
+  "key": "combined: abc -c print_box",
+  "stdout": "ABC command line: \"print_box\".\n\nBox library is not available.\n"
+ },
+ {
+  "key": "combined: abc -c read_box test_vectors/box/two.box; print_box",
+  "stdout": "ABC command line: \"read_box test_vectors/box/two.box; print_box\".\n\n# Box library written by ABC on Sat Nov 28 05:38:47 2026.\n# \u003cName\u003e \u003cID\u003e \u003cType\u003e \u003cI\u003e \u003cO\u003e\nadder2 1 1 3 2\n    1     2     - \n    -     3     4 \nreg1 2 0 1 1\n    5 \n"
+ }
+]

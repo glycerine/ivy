@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: $TMP/oracle high",
+  "stdout": "Flops with set/reset =      0. Flops with enable =     13.\nSet signals (total = 0  driven = 0)\nReset signals (total = 0  driven = 0)\nEnable signals (total = 1  driven = 13)\n  1 :   Obj =      1   Refs =     26   Freq =     13\nAdding enable signal 1 related to 13 flops.\nsignals 1\nDetected 1 classes.\nclasses 1 1 1 1 1 1 1 1 1 1 1 1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

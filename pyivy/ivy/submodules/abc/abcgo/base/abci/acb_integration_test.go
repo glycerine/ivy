@@ -23,7 +23,7 @@ func TestEcoRepairsSingleTarget(t *testing.T) {
 	base_main.Abc_FrameInit(frame)
 	Abc_Init(frame)
 	// The C synthesis scripts use aliases installed by the standard abc.rc.
-	if frame.Execute("source ../../../abc.rc") != 0 {
+	if frame.Execute("source ../../test_vectors/abc.rc") != 0 {
 		t.Fatal("loading standard ABC aliases failed")
 	}
 	// The source patch mapper requires a standard-cell library.

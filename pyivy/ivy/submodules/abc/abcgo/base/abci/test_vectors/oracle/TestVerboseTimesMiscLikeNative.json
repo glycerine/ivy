@@ -1,0 +1,22 @@
+[
+ {
+  "key": "combined: abc -c majgen -N 6",
+  "stdout": "ABC command line: \"majgen -N 6\".\n\nExpanding  var  1 (functions =          2)  Time =     0.00 sec\nConnecting var  1 (functions =          3)  Time =     0.00 sec\nExpanding  var  2 (functions =          3)  Time =     0.00 sec\nConnecting var  2 (functions =          3)  Time =     0.00 sec\nExpanding  var  3 (functions =          3)  Time =     0.00 sec\nConnecting var  3 (functions =          4)  Time =     0.00 sec\nExpanding  var  4 (functions =          5)  Time =     0.00 sec\nConnecting var  4 (functions =          7)  Time =     0.00 sec\nFinished          (functions =          9)  Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c varmin -M 3 -N 8",
+  "stdout": "ABC command line: \"varmin -M 3 -N 8\".\n\nM =  3  N =  8 : K =     56   Total =         1540  Distinct =      126  Reduction time =     0.00 sec\nSolution with 6 variables found.  Covering time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c varmin -M 3 -N 8 -v",
+  "stdout": "ABC command line: \"varmin -M 3 -N 8 -v\".\n\nM =  3  N =  8 : K =     56   Total =         1540  Distinct =      126  Reduction time =     0.00 sec\n 0 :     62  11000000\n 1 :     30  10100000\n 2 :     14  10010000\n 3 :      6  10001000\n 4 :      2  10000100\n 5 :      0  10000010\nSolution with 6 variables found.  Covering time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c varmin -M 3 -N 8 -o -v",
+  "stdout": "ABC command line: \"varmin -M 3 -N 8 -o -v\".\n\nM =  3  N =  8 : K =     56   Total =         1540  Distinct =      126  Reduction time =     0.00 sec\n 0 :     62  11000000\n 1 :     30  10100000\n 2 :     14  10010000\n 3 :      6  10001000\n 4 :      2  10000100\n 5 :      0  10000010\nSolution with 6 variables found.  Covering time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026mfsd -v",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026mfsd -v\".\n\nK = 4. S = 3. N = 10. P = 128.  Try = 3. Use = 0.  C = 0. 1 = 0. 2 = 0. 3a = 0. 3b = 0.  Lev = 2.  Time =     0.00 sec\nWin =     0.00 sec (  0.93 %)\nCut =     0.00 sec (  1.46 %)\nCov =     0.00 sec (  0.00 %)\nCnf =     0.00 sec ( 93.09 %)\nSat =     0.00 sec (  0.00 %)\nQbf =     0.00 sec (  0.00 %)\nOth =     0.00 sec (  4.52 %)\nALL =     0.00 sec (100.00 %)\n"
+ }
+]

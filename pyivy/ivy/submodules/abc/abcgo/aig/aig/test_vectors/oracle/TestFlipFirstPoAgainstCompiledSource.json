@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/flip_po_compare.c $SRC/aig/aig/aigMan.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "co 4: 1 0\nco 4: 0 1\nco 4: 3 2\nco 4: 2 3\nco 4: 5 4\nco 4: 4 5\nco 4: 7 6\nco 4: 6 7\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

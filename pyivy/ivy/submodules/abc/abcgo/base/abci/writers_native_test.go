@@ -2,7 +2,7 @@ package abci
 
 import (
 	"bytes"
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -16,7 +16,7 @@ func nativeWriterCase(t *testing.T, script, ext string, mask *regexp.Regexp, che
 	dir := t.TempDir()
 	goFile, nativeFile := filepath.Join(dir, "go."+ext), filepath.Join(dir, "native."+ext)
 	runScript(t, strings.ReplaceAll(script, "%F", goFile))
-	got, err := os.ReadFile(goFile)
+	got, err := testoracle.ReadFile(goFile)
 	if err != nil {
 		t.Fatalf("%s: %v", script, err)
 	}
@@ -25,11 +25,11 @@ func nativeWriterCase(t *testing.T, script, ext string, mask *regexp.Regexp, che
 			t.Fatalf("%s: %s", script, msg)
 		}
 	}
-	if os.Getenv("ABC_BINARY") == "" {
+	if testoracle.NativeABCPath() == "" {
 		return
 	}
 	runNativeABC(t, strings.ReplaceAll(script, "%F", nativeFile))
-	want, err := os.ReadFile(nativeFile)
+	want, err := testoracle.ReadFile(nativeFile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -44,7 +44,7 @@ func nativeWriterCase(t *testing.T, script, ext string, mask *regexp.Regexp, che
 // TestWriteCnfLikeNative: Cnf_DataWriteIntoFile starts with ABC's comment
 // line and ends with an empty line.
 func TestWriteCnfLikeNative(t *testing.T) {
-	nativeWriterCase(t, "read ../../../i10.aig; strash; write_cnf %F", "cnf", nil, func(b []byte) string {
+	nativeWriterCase(t, "read ../../test_vectors/i10.aig; strash; write_cnf %F", "cnf", nil, func(b []byte) string {
 		if !bytes.HasPrefix(b, []byte("c Result of efficient AIG-to-CNF conversion using package CNF\np cnf ")) {
 			return "missing ABC's CNF header"
 		}
@@ -60,7 +60,7 @@ var abcDateLine = regexp.MustCompile(`written by ABC on [^\n]*\n`)
 // TestWriteGmlLikeNative: Io_WriteGml dates its header and separates the
 // PO, PI, latch, node and edge sections with empty lines.
 func TestWriteGmlLikeNative(t *testing.T) {
-	for _, script := range []string{"read ../../../i10.aig; strash; write_gml %F", "read ../../../i10.aig; strash; if -K 4; write_gml %F"} {
+	for _, script := range []string{"read ../../test_vectors/i10.aig; strash; write_gml %F", "read ../../test_vectors/i10.aig; strash; if -K 4; write_gml %F"} {
 		nativeWriterCase(t, script, "gml", abcDateLine, func(b []byte) string {
 			if !abcDateLine.Match(b) || !bytes.HasPrefix(b, []byte("# GML for \"")) {
 				return "missing ABC's dated header"
@@ -78,11 +78,11 @@ func TestWriteGmlLikeNative(t *testing.T) {
 // (nothing written); otherwise ABC's layout, gates and init values.
 func TestWriteSmvLikeNative(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "x.smv")
-	runScript(t, "read ../../../i10.aig; strash; write_smv "+file)
-	if _, err := os.Stat(file); err == nil {
+	runScript(t, "read ../../test_vectors/i10.aig; strash; write_smv "+file)
+	if _, err := testoracle.Stat(file); err == nil {
 		t.Fatal("write_smv wrote a file for names with parentheses")
 	}
-	nativeWriterCase(t, "read ../../../i10.aig; strash; short_names; write_smv %F", "smv", abcDateLine, func(b []byte) string {
+	nativeWriterCase(t, "read ../../test_vectors/i10.aig; strash; short_names; write_smv %F", "smv", abcDateLine, func(b []byte) string {
 		if !bytes.HasPrefix(b, []byte("-- benchmark \"")) || !bytes.Contains(b, []byte("MODULE main\n\nVAR  -- inputs\n")) {
 			return "missing ABC's SMV header"
 		}
@@ -95,14 +95,14 @@ func TestWriteSmvLikeNative(t *testing.T) {
 // writes ABC's dated header and body.
 func TestWriteBenchLikeNative(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "x.bench")
-	runScript(t, "read ../../../i10.aig; strash; write_bench "+file)
-	if _, err := os.Stat(file); err == nil {
+	runScript(t, "read ../../test_vectors/i10.aig; strash; write_bench "+file)
+	if _, err := testoracle.Stat(file); err == nil {
 		t.Fatal("write_bench created a file for names with parentheses")
 	}
 	for _, script := range []string{
-		"read ../../../i10.aig; strash; short_names; write_bench %F",
-		"read ../../../i10.aig; strash; short_names; write_bench -l %F",
-		"read ../../../i10.aig; strash; short_names; if -K 4; write_bench %F",
+		"read ../../test_vectors/i10.aig; strash; short_names; write_bench %F",
+		"read ../../test_vectors/i10.aig; strash; short_names; write_bench -l %F",
+		"read ../../test_vectors/i10.aig; strash; short_names; if -K 4; write_bench %F",
 	} {
 		nativeWriterCase(t, script, "bench", abcDateLine, func(b []byte) string {
 			if !bytes.HasPrefix(b, []byte("# Benchmark \"")) || !abcDateLine.Match(b) {
@@ -117,24 +117,34 @@ func TestWriteBenchLikeNative(t *testing.T) {
 // back into the same AIG as native's (one AIG node per equation,
 // Parse_FormulaParserEqn's structure).
 func TestReadEqnLikeNative(t *testing.T) {
-	eqn := filepath.Join(t.TempDir(), "i10.eqn")
-	runScript(t, "read ../../../i10.aig; strash; short_names; if -K 4; write_eqn "+eqn)
-	nativeWriterCase(t, "read "+eqn+"; strash; write_aiger %F", "aig", regexp.MustCompile(`This file was written by ABC on [^\n]*\n`), nil)
+	// relative names: the AIGER model name is the path read
+	i10, err := filepath.Abs("../../test_vectors/i10.aig")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Chdir(t.TempDir())
+	runScript(t, "read "+i10+"; strash; short_names; if -K 4; write_eqn i10.eqn")
+	nativeWriterCase(t, "read i10.eqn; strash; write_aiger %F", "aig", regexp.MustCompile(`This file was written by ABC on [^\n]*\n`), nil)
 }
 
 // TestReadBenchLutsLikeNative: a LUT BENCH file (6-LUT-mapped i10, written
 // by ABC) reads back and strashes to native's AIG.
 func TestReadBenchLutsLikeNative(t *testing.T) {
-	bench := filepath.Join(t.TempDir(), "i10.bench")
-	runScript(t, "read ../../../i10.aig; strash; short_names; if -K 6; write_bench "+bench)
-	nativeWriterCase(t, "read "+bench+"; strash; write_aiger %F", "aig", regexp.MustCompile(`This file was written by ABC on [^\n]*\n`), nil)
+	// relative names: the AIGER model name is the path read
+	i10, err := filepath.Abs("../../test_vectors/i10.aig")
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Chdir(t.TempDir())
+	runScript(t, "read "+i10+"; strash; short_names; if -K 6; write_bench i10.bench")
+	nativeWriterCase(t, "read i10.bench; strash; write_aiger %F", "aig", regexp.MustCompile(`This file was written by ABC on [^\n]*\n`), nil)
 }
 
 // TestWriteBafLikeNative: Io_WriteBaf writes a dated comment, the counts
 // and names, then the ANDs (CIs numbered from 1, then ANDs in id order,
 // fanins in stored order) and the COs with latch init bits.
 func TestWriteBafLikeNative(t *testing.T) {
-	nativeWriterCase(t, "read ../../../i10.aig; strash; write_baf %F", "baf", regexp.MustCompile(`# BAF \(Binary Aig Format\) for [^\n]*\n`), func(b []byte) string {
+	nativeWriterCase(t, "read ../../test_vectors/i10.aig; strash; write_baf %F", "baf", regexp.MustCompile(`# BAF \(Binary Aig Format\) for [^\n]*\n`), func(b []byte) string {
 		if !bytes.HasPrefix(b, []byte("# BAF (Binary Aig Format) for \"")) {
 			return "missing ABC's BAF comment"
 		}
@@ -145,5 +155,5 @@ func TestWriteBafLikeNative(t *testing.T) {
 // TestSimGenLikeNative: &sim_gen draws Vec_WrdStartRandom's Abc_RandomW
 // stream, so the written patterns equal native's.
 func TestSimGenLikeNative(t *testing.T) {
-	nativeWriterCase(t, "&r ../../../i10.aig; &sim_gen -W 2; &sim_write %F", "sim", nil, nil)
+	nativeWriterCase(t, "&r ../../test_vectors/i10.aig; &sim_gen -W 2; &sim_write %F", "sim", nil, nil)
 }

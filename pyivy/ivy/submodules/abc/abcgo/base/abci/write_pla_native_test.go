@@ -1,7 +1,7 @@
 package abci
 
 import (
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -18,9 +18,9 @@ var writePlaScripts = []string{
 
 func writePlaRun(t *testing.T, run func(string) string, script string) (string, string) {
 	path := filepath.Join(t.TempDir(), "out.pla")
-	script = strings.ReplaceAll(strings.ReplaceAll(script, ".scratch_mul8", "../../.scratch/bench/mul8.blif"), "%s", path)
+	script = strings.ReplaceAll(strings.ReplaceAll(script, ".scratch_mul8", "test_vectors/mul8.blif"), "%s", path)
 	out := run(script)
-	data, _ := os.ReadFile(path)
+	data, _ := testoracle.ReadFile(path)
 	text := string(data)
 	if i := strings.Index(text, "\n"); strings.HasPrefix(text, "# Benchmark") && i >= 0 {
 		text = text[i+1:]
@@ -29,9 +29,6 @@ func writePlaRun(t *testing.T, run func(string) string, script string) (string, 
 }
 
 func TestWritePlaLikeNative(t *testing.T) {
-	if _, err := os.Stat("../../.scratch/bench/mul8.blif"); err != nil {
-		t.Skip("mul8 benchmark not present")
-	}
 	for _, script := range writePlaScripts {
 		port, portOut := writePlaRun(t, func(s string) string { out, _ := runScriptStatus(t, s); return out }, script)
 		if strings.Contains(script, "strash") {
@@ -41,7 +38,7 @@ func TestWritePlaLikeNative(t *testing.T) {
 		} else if !strings.Contains(port, ".p ") || strings.Count(port, "\n") > 50000 {
 			t.Errorf("%s: port file has %d lines", script, strings.Count(port, "\n"))
 		}
-		if os.Getenv("ABC_BINARY") == "" {
+		if testoracle.NativeABCPath() == "" {
 			continue
 		}
 		native, nativeOut := writePlaRun(t, func(s string) string { return runNativeABC(t, s) }, script)

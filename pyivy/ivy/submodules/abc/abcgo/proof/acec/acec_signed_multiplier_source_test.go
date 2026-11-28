@@ -2,8 +2,7 @@ package acec
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strconv"
 	"strings"
 	"testing"
@@ -139,8 +138,8 @@ func TestSourceSignedMultiplierAcec(t *testing.T) {
 				}
 				check(in)
 			}
-			if binary := os.Getenv("ACEC_SIGNED_MULTIPLIER_ORACLE"); binary != "" {
-				data, err := exec.Command(binary, strconv.Itoa(tc.flip)).CombinedOutput()
+			if binary := testoracle.BuildFixture(t, "test_vectors/acec_signed_multiplier_oracle.c"); binary != "" {
+				data, err := testoracle.Command(t, binary, strconv.Itoa(tc.flip)).CombinedOutput()
 				if err != nil {
 					t.Fatalf("C oracle %v: %s", err, data)
 				}

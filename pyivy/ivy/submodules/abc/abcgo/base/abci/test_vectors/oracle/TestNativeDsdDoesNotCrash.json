@@ -1,0 +1,26 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; dsd; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; dsd; print_stats\".\n\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =    10  edge =     20  bdd  =    19  lev = 4\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; dsd -r; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; dsd -r; print_stats\".\n\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =    10  edge =     20  bdd  =    19  lev = 4\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; collapse; dsd -g; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; collapse; dsd -g; print_stats\".\n\n\u001b[1;37ms27.bench                     :\u001b[0m i/o =    4/    1  lat =    3  nd =    16  edge =     32  bdd  =    28  lev = 4\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_mul4_gen.aig; strash; dsd; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/native_mul4_gen.aig; strash; dsd; print_stats\".\n\n\u001b[1;37mtest_vectors/native_mul4_gen  :\u001b[0m i/o =    8/    8  lat =    0  nd =    13  edge =     56  bdd  =   203  lev = 2\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_mul4_gen.aig; strash; dsd -r; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/native_mul4_gen.aig; strash; dsd -r; print_stats\".\n\n\u001b[1;37mtest_vectors/native_mul4_gen  :\u001b[0m i/o =    8/    8  lat =    0  nd =    13  edge =     56  bdd  =   203  lev = 2\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_mul4_gen.aig; strash; collapse; dsd -g; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/native_mul4_gen.aig; strash; collapse; dsd -g; print_stats\".\n\n\u001b[1;37mtest_vectors/native_mul4_gen  :\u001b[0m i/o =    8/    8  lat =    0  nd =    19  edge =     63  bdd  =   203  lev = 3\n"
+ }
+]

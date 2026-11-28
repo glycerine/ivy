@@ -2,18 +2,16 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
 	"testing"
 )
 
 func TestLutBalanceOriginalABCOracle(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	binary := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(binary); err != nil {
+	binary := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	rng := rand.New(rand.NewSource(715))
@@ -53,11 +51,11 @@ func TestLutBalanceOriginalABCOracle(t *testing.T) {
 		for _, size := range []int32{3, 4, 6} {
 			for _, cuts := range []int32{2, 8} {
 				command := fmt.Sprintf("&r -s %s; &blut -n -K %d -C %d; &w %s", input, size, cuts, output)
-				text, err := exec.Command(binary, "-c", command).CombinedOutput()
+				text, err := testoracle.Command(t, binary, "-c", command).CombinedOutput()
 				if err != nil {
 					t.Fatalf("original LUT balance %v: %s", err, text)
 				}
-				data, err := os.ReadFile(output)
+				data, err := testoracle.ReadFile(output)
 				if err != nil {
 					t.Fatalf("missing ABC output %v: %s", err, text)
 				}

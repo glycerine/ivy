@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -122,7 +122,7 @@ func TestSequentialAppendAliasedTypedTransitionTables(t *testing.T) {
 
 func TestSequentialAppendMatchesOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "append_sequential.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C sequential append: %v: %s", err, want)
 	}

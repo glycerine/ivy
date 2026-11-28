@@ -19,7 +19,7 @@ func TestDeepSynthesisRealCommandPipeline(t *testing.T) {
 	abcmain.Abc_FrameInit(frame)
 	abci.Abc_Init(frame)
 	gia.InstallFrameBridge(frame)
-	if frame.Execute("source ../../../abc.rc") != 0 {
+	if frame.Execute("source ../../test_vectors/abc.rc") != 0 {
 		t.Fatal("loading standard synthesis aliases failed")
 	}
 	makeGraph := func() *gia.Gia_Man_t {

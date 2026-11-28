@@ -18,7 +18,7 @@ func TestBalanceLutLikeNative(t *testing.T) {
 // TestFlowLikeNative: the &flow script (&dsdb, &dch, &if, &lf, &syn2,
 // &blut, &sopb rounds) on i10 maps as native ABC does.
 func TestFlowLikeNative(t *testing.T) {
-	out := runScript(t, "read ../../../i10.aig; &get; &flow; &ps")
+	out := runScript(t, "read ../../test_vectors/i10.aig; &get; &flow; &ps")
 	if !strings.Contains(out, "lut =    561  edge =    2219  lev =    7 (4.10)") {
 		t.Fatalf("unexpected &flow result:\n%s", out)
 	}

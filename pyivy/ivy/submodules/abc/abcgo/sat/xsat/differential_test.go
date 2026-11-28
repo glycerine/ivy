@@ -2,9 +2,9 @@ package xsat
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -13,10 +13,10 @@ import (
 
 // The compiler is an optional independent test oracle, not a production dependency.
 func TestOriginalCDifferential(t *testing.T) {
-	if os.Getenv("XSAT_C_DIFFERENTIAL") != "1" {
+	if testoracle.Gate("XSAT_C_DIFFERENTIAL") != "1" {
 		t.Skip("set XSAT_C_DIFFERENTIAL=1 to compare freshly compiled original C")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,7 +31,7 @@ func TestOriginalCDifferential(t *testing.T) {
 		args = append(args, filepath.Join(root, "src/sat/xsat", file))
 	}
 	args = append(args, "-lm", "-o", binary)
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("C oracle build: %v\n%s", err, out)
 	}
 	rng := rand.New(rand.NewSource(1467))
@@ -65,7 +65,7 @@ func TestOriginalCDifferential(t *testing.T) {
 		if err := os.WriteFile(path, []byte(input.String()), 0600); err != nil {
 			t.Fatal(err)
 		}
-		out, err := exec.Command(binary, path).CombinedOutput()
+		out, err := testoracle.Command(t, binary, path).CombinedOutput()
 		if err != nil {
 			t.Fatalf("C oracle %d: %v\n%s\n%s", run, err, out, input.String())
 		}

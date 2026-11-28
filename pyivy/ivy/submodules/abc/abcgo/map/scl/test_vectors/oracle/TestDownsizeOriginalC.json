@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -s -c read_lib $TMP/test.lib; read_genlib $TMP/test.genlib; read_blif $TMP/test.blif; dnsize -I 2 -N 4 -G 1; write_blif $TMP/out.blif",
+  "stdout": "ABC command line: \"read_lib $TMP/001/test.lib; read_genlib $TMP/001/test.genlib; read_blif $TMP/001/test.blif; dnsize -I 2 -N 4 -G 1; write_blif $TMP/001/out.blif\".\n\nWarning: Templates are not defined.\nLibrary \"downsize\" from \"$TMP/001/test.lib\" has 4 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.00 sec\nWarnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.\nSome parts of the supergate-based technology mapper may not work correctly.\nWarnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.\nSome parts of the supergate-based technology mapper may not work correctly.\nEntered genlib library with 5 gates from file \"$TMP/001/test.genlib\".\n    0 : Try =     2  Over =     1  Fail =     0  Win =     1  A: 3.00 (-25.0 %)  D: 2.00 ps ( +0.0 %)      0.00 sec    \r    1 : Try =     1  Over =     0  Fail =     0  Win =     1  A: 2.00 (-50.0 %)  D: 2.00 ps ( +0.0 %)      0.00 sec    \r    0 : Try =     2  Over =     0  Fail =     2  Win =     0  A: 2.00 (-50.0 %)  D: 2.00 ps ( +0.0 %)      0.00 sec    \r                                                                                                                                                  \r",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/out.blif": "# Benchmark \"chain\" written by ABC on Sat Nov 28 05:02:07 2026\n.model chain\n.inputs a\n.outputs y\n.gate small    A=a Y=new_n_\n.gate small    A=new_n_ Y=y\n.end\n"
+  }
+ }
+]

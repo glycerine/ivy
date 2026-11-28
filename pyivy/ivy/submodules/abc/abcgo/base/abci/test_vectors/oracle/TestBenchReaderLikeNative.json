@@ -1,0 +1,23 @@
+[
+ {
+  "key": "combined: abc -c read $TMP/gate.bench; print_stats",
+  "stdout": "ABC command line: \"read $TMP/001/gate.bench; print_stats\".\n\nIo_ReadBenchNetwork(): Cannot determine gate type \"FOO\" in line 3.\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/undef.bench; print_stats",
+  "stdout": "ABC command line: \"read $TMP/002/undef.bench; print_stats\".\n\nWarning: Constant-0 drivers added to 1 non-driven nets in network \"$TMP/002/undef\":\nc\n\u001b[1;37m$TMP/002/undef:\u001b[0m i/o =    2/    1  lat =    0  nd =     2  edge =      2  cube =     1  lev = 1\n",
+  "temps": [
+   "$TMP/002"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/dup.bench; print_stats",
+  "stdout": "ABC command line: \"read $TMP/003/dup.bench; print_stats\".\n\nNetworkCheck: Net \"y\" has more than one driver.\nIo_ReadBench: The network check has failed.\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/003"
+  ]
+ }
+]

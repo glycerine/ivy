@@ -1,0 +1,490 @@
+[
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 9 6 0 5 3\n7\n0\n1\n1\n18\n\u0003\u0004\u0003\u0004\u0002\u0001cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:16 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 9 6 0 5 3\n7\n0\n1\n1\n18\n\u0003\u0004\u0003\u0004\u0002\u0001cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:16 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 16 6 0 5 10\n28\n0\n1\n1\n32\n\u0003\u0004\u0002\u0007\u0003\t\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0014\u000f\u0002\u0002\u0015cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:16 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 16 6 0 5 10\n28\n0\n1\n1\n32\n\u0003\u0004\u0002\u0007\u0003\t\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0014\u000f\u0002\u0002\u0015cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDczIDYgMCA1IDY3CjU0CjkzCjk0CjEzNQoxNDYKAwYCBwMJAQIBDwQOAQIICQISAgkDCwECARsMGgIKAg8DEQECAgkDCwECIwsBHCEZAx0CAgEGKBYBJwQCAQI0CzUNAQINPQRHAQIBSQQMAQJKCFMCVAIBAkoEAjxcA10FAQICVQNXAQI5NgQ4AQICFQMTAQICeQN7AQKCAQRwFwECGWAEeAECY24AAAAGaW5wdXQAClRoaXMgZmlsZSB3YXMgcHJvZHVjZWQgYnkgdGhlIEdJQSBwYWNrYWdlIGluIEFCQyBvbiBTYXQgTm92IDI4IDA1OjAyOjE3IDIwMjYKRm9yIGluZm9ybWF0aW9uIGFib3V0IEFJR0VSIGZvcm1hdCwgcmVmZXIgdG8gaHR0cDovL2Ztdi5qa3UuYXQvYWlnZXIK"
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDczIDYgMCA1IDY3CjU0CjkxCjkyCjEzNQoxNDYKAwYCBwMJAQIBDwQOAQIICQISAgkDCwECARsKHAIMAg8DEQECAgkDCwECIwsBHAEgAhQBBCYWASUEAgECMgszDQECDTsERQECAUcEDAECSAhRAlICAQJIBAI6WgNbBQECAlMDVQECWRkBbgQCAQICFwMVAQICeQN7AQKCAQRwFwECG14EeAECY24AAAAGaW5wdXQAClRoaXMgZmlsZSB3YXMgcHJvZHVjZWQgYnkgdGhlIEdJQSBwYWNrYWdlIGluIEFCQyBvbiBTYXQgTm92IDI4IDA1OjAyOjE3IDIwMjYKRm9yIGluZm9ybWF0aW9uIGFib3V0IEFJR0VSIGZvcm1hdCwgcmVmZXIgdG8gaHR0cDovL2Ztdi5qa3UuYXQvYWlnZXIK"
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDczIDYgMCA1IDY3CjU0CjkzCjk0CjEzNQoxNDYKAwYCBwMJAQICCQIMAhYCBAkPDA4BAgsFDgMBAgEfAQkEBwECAhMDFQECFxUaEwECATQqEAI4AQQCNgcpNQsBNCshAzUCAgcNAgEBDgITARRKCFMCVAIBAhdIRxdKFQECAV8EXQECAiQBDgIRWgoCXgIFAQYCeQN7AQIVXoQBBGofAQICegEIY24AAAAGaW5wdXQAClRoaXMgZmlsZSB3YXMgcHJvZHVjZWQgYnkgdGhlIEdJQSBwYWNrYWdlIGluIEFCQyBvbiBTYXQgTm92IDI4IDA1OjAyOjE3IDIwMjYKRm9yIGluZm9ybWF0aW9uIGFib3V0IEFJR0VSIGZvcm1hdCwgcmVmZXIgdG8gaHR0cDovL2Ztdi5qa3UuYXQvYWlnZXIK"
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDczIDYgMCA1IDY3CjU0CjkzCjk0CjEzNQoxNDYKAwYCBwMJAQICCQIMBBQCAgkPDA4BAgsFDgMBAgEfAQkEBwECAhMDFQECFxUaEwECATQqEAI4AQQCNgcpNQsBNCshAzUCAgcNAgEBDgITARRKCFMCVAIBAhdIRxdKFQECAV8EXQECAiQBDgIRWgoCXgIFAQYCeQN7AQIVXoQBBGofAQICegEIY24AAAAGaW5wdXQAClRoaXMgZmlsZSB3YXMgcHJvZHVjZWQgYnkgdGhlIEdJQSBwYWNrYWdlIGluIEFCQyBvbiBTYXQgTm92IDI4IDA1OjAyOjE3IDIwMjYKRm9yIGluZm9ybWF0aW9uIGFib3V0IEFJR0VSIGZvcm1hdCwgcmVmZXIgdG8gaHR0cDovL2Ztdi5qa3UuYXQvYWlnZXIK"
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 24 6 0 5 18\n34\n38\n21\n40\n48\n\u0003\u0005\u0004\t\u0002\u0001\u0007\b\r\u0003\u0004\r\u0001\u0002\u0002\t\u0003\u000b\u0001\u0002\u0002\r\u001a\u0003\u0001\u0016\u0016\u0007\u0016\u000f\u0017\u0011\u0001\u0002\u0002\u0026cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 24 6 0 5 18\n34\n38\n21\n40\n48\n\u0003\u0005\u0004\t\u0002\u0001\u0007\b\r\u0003\u0004\r\u0001\u0002\u0002\t\u0003\u000b\u0001\u0002\u0002\r\u001a\u0003\u0001\u0016\u0016\u0007\u0016\u000f\u0017\u0011\u0001\u0002\u0002\u0026cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 38 6 0 5 32\n42\n48\n67\n68\n76\n\u0007\u0003\u0001\t\u0004\b\u0001\u0002\u0001\n\f\t\u0002\u0001\u0007\f\u0011\b\u0002\n\u0001\u0004\u0002\t\u0003\u000b\u0001\u0002\u0002\r!\u0005$\u0003\u0001\u0002\u0014\u0017\u0015\u0015\u0001\u0002\u0001\u0019\u0004\u0017\u0001\u0002\u0001\u0007\u0004\u0005\u0001\u0002*\u000f(\u0019)\u001b\u0001\u0002\u0002Bcn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 36 6 0 5 30\n38\n44\n63\n64\n72\n\u0007\u0003\u0001\t\u0002\u0005\b\t\u0002\u0001\b\u0007\r\b\u0002\t\u0001\u0004\u0002\t\u0003\u000b\u0001\u0002\u0002\r\u001d\u0005 \u0003\u0001\u0002\u0014\u0013\u0015\u0011\u0001\u0002\u0001\u0019\u0004\u0017\u0001\u0002\u0001\u0007\u0004\u0005\u0001\u0002*\u000b(\u0015)\u0017\u0001\u0002\u0002\u003ecn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 53 6 0 5 47\n14\n56\n79\n80\n106\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u001c\u0005\u001d\u0007\u0001\u0002\u0002#\u0003%\u0001\u0002\u0014\u0014\u0001\u0014\u0004\u0002\u0001\u0002\u0001\u0014\n\u001c\u000b\t\u0001\u00024\u0004\u00041\u0001\u0002\u0018\f\u0002\u0002\u0002A\u0003C\u0001\u0002\bB$'%)\u0001\u0002K\u0005F\u000b\u0001\u0002\b:\u0004?\u0001\u0002\u0001_\u0004\u001e\u0001\u0002\u0001Mcn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 53 6 0 5 47\n14\n56\n79\n80\n106\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u001c\u0005\u001d\u0007\u0001\u0002\u0002#\u0003%\u0001\u0002\u0014\u0014\u0001\u0014\u0004\u0002\u0001\u0002\u0001\u0014\n\u001c\u000b\t\u0001\u00024\u0004\u00041\u0001\u0002\u0018\f\u0002\u0002\u0002A\u0003C\u0001\u0002\bB$'%)\u0001\u0002K\u0005F\u000b\u0001\u0002\b:\u0004?\u0001\u0002\u0001_\u0004\u001e\u0001\u0002\u0001Mcn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 53 6 0 5 47\n14\n56\n79\n80\n106\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0001\t\u0004\u0007\u0001\u0002\b\u0014\u0001\b \u0005!\u0007\u0001\u0002\u0002'\u0003)\u0001\u0002\u0002\u000e\u0001\u000e\u0001\u0014.\u0004\u0018\u0010\u0012\u0007\u0001\u0002\u00023\u0001\b\u0014\u0010\u0002\u0002\u0001C\u0004A\u0001\u0002\bB +!-\u0001\u0002\u0002:M\u0005H\u000b\u0001\u0002\u0002A\u0001\b\u0001_\u0004\u001e\u0001\u0002\u0001Mcn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 53 6 0 5 47\n14\n56\n79\n80\n106\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0001\t\u0004\u0007\u0001\u0002\b\u0014\u0001\b \u0005!\u0007\u0001\u0002\u0002'\u0003)\u0001\u0002\u0002\u000e\u0001\u000e\u0001\u0014.\u0004\u0018\u0010\u0012\u0007\u0001\u0002\u00023\u0001\b\u0014\u0010\u0002\u0002\u0001C\u0004A\u0001\u0002\bB +!-\u0001\u0002\u0002:M\u0005H\u000b\u0001\u0002\u0002A\u0001\b\u0001_\u0004\u001e\u0001\u0002\u0001Mcn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": "aig 61 6 0 5 55\n80\n74\n82\n99\n122\n\u0001\t\u0004\u0006\u0001\u0002\t\u0007\u0002\u000e\u0003\u0003\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002\u0010\u0007\u0011\t\u0001\u0002\u000e\u0013\u0001\u0018\u0006\u001f\u0007!\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0026\r'\u000f\u0001\u00022\u0001\u0002:\u0003\u001e\u0004 \u0001\u0002\u0002\t\u0002\u0012\u0002)\u0003+\u0001\u0002\u000bAB\b\u0002M\u0003O\u0001\u0002\u0002S\u0002%\u0003'\u0001\u0002J\u0017K\u0019\u0001\u0002C\f\u0004N\u0001\u0002d\u0005e\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": "aig 61 6 0 5 55\n80\n74\n82\n99\n122\n\u0001\t\u0004\u0006\u0001\u0002\t\u0007\u0002\u000e\u0003\u0003\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002\b\u0013\u0001\u0012\u0014\u0007\u0015\t\u0001\u0002\u0002#\u0003%\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002\u0026\r'\u000f\u0001\u00022\u0001\u0002:\u0003\u001e\u0004 \u0001\u0002\u0002\t\u0002\u0012\u0002)\u0003+\u0001\u0002\u000bAB\b\u0002M\u0003O\u0001\u0002\u0002S\u0002%\u0003'\u0001\u0002J\u0017K\u0019\u0001\u0002?\u0010\u0004N\u0001\u0002d\u0005e\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": "aig 61 6 0 5 55\n80\n74\n82\n99\n122\n\u0003\u0007\u0002\b\u0005\t\b\u0006\u0001\u0002\u0002\u0007\u0001\b\u0001\u0013\u0004\u0011\u0001\u0002\b\u0013\u0001\u000e\u000f\r\u0012\u000b\u0001\u0002\u0002#\u0003%\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002\"\u0011#\u0013\u0001\u00022\u0001\u0001\u001e\u0004:\u0002\"\u0001\u0004\u0002\t\u0002\u0012\u0001+\u0004)\u0001\u0002\u000bA\u003e\f\u0002M\u0003O\u0001\u0002\u0002S\u0001'\u0004%\u0001\u0002W\u0007Z\u0005\u0001\u0002?\u0010Q\u0019T\u0017\u0001U\u0002\u0003\u0001\b\u0001\r\u0004\u000b\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": "aig 61 6 0 5 55\n80\n74\n82\n99\n122\n\u0003\u0007\u0002\b\u0005\t\b\u0006\u0001\u0002\u0002\u0007\u0001\b\u0001\u0013\u0004\u0011\u0001\u0002\b\u0013\u0001\u000e\u000f\r\u0012\u000b\u0001\u0002\u0002#\u0003%\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002\"\u0011#\u0013\u0001\u00022\u0001\u0001\u001e\u0004:\u0002\"\u0001\u0004\u0002\t\u0002\u0012\u0001+\u0004)\u0001\u0002\u000bA\u003e\f\u0002M\u0003O\u0001\u0002\u0002S\u0001'\u0004%\u0001\u0002W\u0007Z\u0005\u0001\u0002?\u0010Q\u0019T\u0017\u0001U\u0002\u0003\u0001\b\u0001\r\u0004\u000b\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 51 6 0 5 45\n70\n76\n85\n65\n102\n\u0002\u0001\u0003\u0003\u0001\u0002\u000b\u0004\n\u0004\u0001\u0002\u0016\u0001\u0004\u0016\u0001\u0002\u0002\u001a\u0003\r\u0001\u0002\u001e\u0001\u0016\f\u0001\u0002\u0001\u001f\u0004!\u0004!\u0005#\u0001\u0002\u0002\u0005\u0001\u000b\u000e\u0026\u00046\u00047\u0001\u0002\u0002\u001b\u0003\u001d\u0001\u0002\b\u0015\t\u0017\u0001\u00025\u000f!+\u0004 \u0001\u0002*\u0002)'\u0002!\u0003#\u0001\u0002\u0001\u0007\u0002]\u0003\u000b\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 51 6 0 5 45\n70\n76\n85\n65\n102\n\u0002\u0001\u0003\u0003\u0001\u0002\u000b\u0004\n\u0004\u0001\u0002\u0016\u0001\u0004\u0016\u0001\u0002\u0002\u001a\u0003\r\u0001\u0002\u001e\u0001\u0016\f\u0001\u0002\u0001\u001f\u0004!\u0004!\u0005#\u0001\u0002\u0002\u0005\u0001\u000b\u000e\u0026\u00046\u00047\u0001\u0002\u0002\u001b\u0003\u001d\u0001\u0002\b\u0015\t\u0017\u0001\u00025\u000f!+\u0004 \u0001\u0002*\u0002)'\u0002!\u0003#\u0001\u0002\u0001\u0007\u0002]\u0003\u000b\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 54 6 0 5 48\n76\n82\n91\n71\n108\n\u0005\u0007\b\u0006\u0001\u0002\u0002\u000e\r\u0004\f\u0004\u0001\u0002\u0002\u0007\u0001\b\u0002\u001a\u0015\u0003\u0018\u0001\u0001\u0002\u0002\u0007\u0001\b$\u0001\b \u0001\u0002\u0001%\u0004'\u0004'\u0005)\u0001\u0004\u0002\u0003\f\u001f\u0002\u0001\u0010,\u00020\u0001\u0004\u0002\u001b\u0003\u001d\u0001\u0002\u0007\u0017\n\u0015\u0001\u0002\u001f1;\u0011\u0002\"\u0001\u0004'-\u0002\u001f\u0003!\u0001\u0002\u0001\u0007\u0002R6\u0002\u0002\u0003\u0001\u0004cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 54 6 0 5 48\n76\n82\n91\n71\n108\n\u0005\u0007\b\u0006\u0001\u0002\u0002\u000e\r\u0004\f\u0004\u0001\u0002\u0002\u0007\u0001\b\u0002\u001a\u0015\u0003\u0018\u0001\u0001\u0002\u0002\u0007\u0001\b$\u0001\b \u0001\u0002\u0001%\u0004'\u0004'\u0005)\u0001\u0004\u0002\u0003\f\u001f\u0002\u0001\u0010,\u00020\u0001\u0004\u0002\u001b\u0003\u001d\u0001\u0002\u0007\u0017\n\u0015\u0001\u0002\u001f1;\u0011\u0002\"\u0001\u0004'-\u0002\u001f\u0003!\u0001\u0002\u0001\u0007\u0002R6\u0002\u0002\u0003\u0001\u0004cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0006\u0006\u0005\t\u0002\u0007\u0003\t\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0013\b\u0004\u001a\u0001\u0002\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\b!\t#\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002)\f\u0012\u001a\u0001\u0002\u0002\u00174\u0001cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0006\u0006\u0005\t\u0002\u0007\u0003\t\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0013\b\u0004\u001a\u0001\u0002\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\b!\t#\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002)\f\u0012\u001a\u0001\u0002\u0002\u00174\u0001cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0003\b\b\u0006\u0007\t\u0002\u0001\u0003\u0003\u0001\u0002\u0001\u0011\u0004\u000f\u0001\u0002\u0002\u001c\u0001\u0012\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\u0002'\u0003)\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002'\u000e\u0012\u0018\u0003\u0014\u0002\u00014\u0001cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0003\b\b\u0006\u0007\t\u0002\u0001\u0003\u0003\u0001\u0002\u0001\u0011\u0004\u000f\u0001\u0002\u0002\u001c\u0001\u0012\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\u0002'\u0003)\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002'\u000e\u0012\u0018\u0003\u0014\u0002\u00014\u0001cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n41\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\r\u0004\u0010\u0002\u0001\u0002\u0002\u0012\u000e\b\u0001\u0017\u0018\u0003\u0019\u0005\u0001\u0002\u0002\n\u0003\u0007\u0001\u0002\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0017\u0003\u0019\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n41\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\r\u0004\u0010\u0002\u0001\u0002\u0002\u0012\u000e\b\u0001\u0017\u0018\u0003\u0019\u0005\u0001\u0002\u0002\n\u0003\u0007\u0001\u0002\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0017\u0003\u0019\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n29\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\u000b\u0005\u000e\u0003\u0001\u0002\u0013\u0004\u0016\u0002\u0001\u0017\u0002\u0003\u0002\b\u0016\b\u0001\u001f\u0002\r\u0001\u0006\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n29\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\u000b\u0005\u000e\u0003\u0001\u0002\u0013\u0004\u0016\u0002\u0001\u0017\u0002\u0003\u0002\b\u0016\b\u0001\u001f\u0002\r\u0001\u0006\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/009"
+  ],
+  "files": {
+   "$TMP/009/output.aig": "aig 57 6 0 5 51\n56\n72\n101\n106\n114\n\u0001\u0006\u0004\u0004\u0001\u0002\u0010\u0002\u0002\u0011\u0003\u0013\u0001\u0002\u0015\u0002\u0001\u0013\u0004\u0002\u0001\u0002\n\u000f\u000b\u0011\u0001\u0002\u0001\r\n\u000f\u000b\u0011\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0001,.\n5\u0004,\u0010\u0001\u0002\u0001\u001f\u0004\u0006\u0001\u0002\u0002)=\u0004:\u0006\u0001\u0002\u003e\t@\u000f\u0004N\u0001\u0002\u0001S\u0002-\u0003/\u0001\u0002\u0001L\u0004\u0010\u0001\u0002\u0018E\u0012N\u0001\u00022/3/\u0001\u0002\u0001:cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/009"
+  ],
+  "files": {
+   "$TMP/009/output.aig": "aig 57 6 0 5 51\n56\n72\n101\n106\n114\n\u0001\u0006\u0004\u0004\u0001\u0002\u0010\u0002\u0002\u0011\u0003\u0013\u0001\u0002\u0015\u0002\u0001\u0013\u0004\u0002\u0001\u0002\n\u000f\u000b\u0011\u0001\u0002\u0001\r\n\u000f\u000b\u0011\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0001,.\n5\u0004,\u0010\u0001\u0002\u0001\u001f\u0004\u0006\u0001\u0002\u0002)=\u0004:\u0006\u0001\u0002\u003e\t@\u000f\u0004N\u0001\u0002\u0001S\u0002-\u0003/\u0001\u0002\u0001L\u0004\u0010\u0001\u0002\u0018E\u0012N\u0001\u00022/3/\u0001\u0002\u0001:cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:17 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/009"
+  ],
+  "files": {
+   "$TMP/009/output.aig": "aig 57 6 0 5 51\n56\n72\n101\n106\n114\n\u0001\u0006\u0004\u0004\u0001\u0002\r\u0002\u0001\u000b\u0014\u0002\u0002\u0015\u0003\u0017\u0001\u0002\u0002\n\u0001\n\u0002\u000f\u0003\u0011\u0001\u0002\u000b\u0015\u000e\u0013\u0001\u0002\u0001\u001b\u0001\t\u0004\u0007\u0001\u0002\u0001,.\n5\u0004,\u0010\u0001\u0002\u0002\u0006\u0003\u001f\u0001\u0002\u000218\u000f:\t\u0002J\u0001\u0004\u0001M\u0002!\u0003#\u0001\u0002\u0001FO\u0004L\u0006\u0001\u0002\u0002\b\u0001\b\u0016H\bW\u0001\u00022/3/\u0001\u0002\u0001:cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/009"
+  ],
+  "files": {
+   "$TMP/009/output.aig": "aig 54 6 0 5 48\n52\n68\n95\n100\n108\n\u0001\u0006\u0004\u0004\u0001\u0002\r\u0002\u0001\u000b\u0014\u0002\u0001\u0017\u0001\u0007\u0001\u0006\u0002\u000b\u0003\r\u0001\u0002\f\u0010\r\u0010\u0001\u0002\u0001\u0017\u0001\t\u0004\u0007\u0001\u0002\u0001(*\n1\u0004(\u0010\u0001\u0002\u0002\u0006\u0003\u001f\u0001\u0002\u0002-4\u000f\u000e1\u0001\u0002\u0001G\u0002\u001f\u0003!\u0001\u0002\u0001@I\u0004F\u0006\u0001\u0002\u0002\b\u0001\b\u0016B\bQ\u0001\u00020+1+\u0001\u0002\u00018cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/010"
+  ],
+  "files": {
+   "$TMP/010/output.aig": "aig 35 6 0 5 29\n59\n1\n64\n0\n70\n\u0004\u0007\u0005\t\u0001\u0002\u0002\u0007\u0001\n\u000b\u0005\u0002\u000f\u0003\u0011\u0001\u0002\u0001\u0016\u0004\b\u0001\u0002\u0014\t\u0004\u001c\u0001\u0002\u0001\u0026\u0010\u0015\u0002%\u0003'\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002$\r%\u000f\u0001\u0002\u001e\u000b\u001f\r\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/010"
+  ],
+  "files": {
+   "$TMP/010/output.aig": "aig 35 6 0 5 29\n59\n1\n64\n0\n70\n\u0004\u0007\u0005\t\u0001\u0002\u0002\u0007\u0001\n\u000b\u0005\u0002\u000f\u0003\u0011\u0001\u0002\u0001\u0016\u0004\b\u0001\u0002\u0014\t\u0004\u001c\u0001\u0002\u0001\u0026\u0010\u0015\u0002%\u0003'\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002$\r%\u000f\u0001\u0002\u001e\u000b\u001f\r\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/010"
+  ],
+  "files": {
+   "$TMP/010/output.aig": "aig 41 6 0 5 35\n59\n1\n64\n0\n82\n\u0004\u0007\u0005\t\u0001\u0002\u0002\t\t\u0005\u0002\r\u0003\u000f\u0001\u0002\u0001\u0014\u000e\u0007\u0001\u0016\u0002\u0006\u0001\u0006\u0002\u001e\u0001\u0014\u0001\u0026\u0012\u0013\u0001'\u0004%\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002%\r(\u000b\u0001\u0002\u001c\u0013\u001d\u0015\u0001\u00022\u00033\u0005\u0001\u0002\u0001\u0007\u0004\u0005\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/010"
+  ],
+  "files": {
+   "$TMP/010/output.aig": "aig 40 6 0 5 34\n57\n1\n62\n0\n80\n\u0004\u0007\u0005\t\u0001\u0002\u0002\t\t\u0005\u0002\r\u0003\u000f\u0001\u0002\u0001\u0014\u000e\u0007\u0001\u0016\u0002\u0006\u0001\u0006\u0002\u001e\u0001\u0014\u0001\u0026\u0012\u0013\u0001'\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002#\r\u0026\u000b\u0001\u0002\u001a\u0013\u001b\u0015\u0001\u00020\u00031\u0005\u0001\u0002\u0001\u0007\u0004\u0005\u0001\u0002cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/011"
+  ],
+  "files": {
+   "$TMP/011/output.aig": "aig 68 6 0 5 62\n88\n104\n117\n135\n136\n\u0006\u0003\u0007\u0005\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002\u0002\u0016\u0001\u0003\f\u0013\r\u0015\u0001\u0002\u0012\r\u0013\u000f\u0001\u0002*\u0003+\u0005\u0001\u0002*\u0001+\u0003\u0001\u00022\u0003\u00044\u0001\u0002\u000e+\u000f-\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0002:\u0003\u001f\u0001\u0002\u00010\u0004*\u0001\u0002M\u0002D\u000e@\u0005\u0001\u0002\u0002M\u0003O\u0001\u0002\u0001\r6\u001b7\u001d\u0001\u0002\u0002-\u0003/\u0001\u0002j\u0007k\t\u0001\u0002\u0002E\u0003G\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002_\u0026cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/011"
+  ],
+  "files": {
+   "$TMP/011/output.aig": "aig 59 6 0 5 53\n88\n104\n111\n117\n118\n\u0006\u0003\u0007\u0005\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002\u0002\u0016\u0001\u0003\f\u0013\r\u0015\u0001\u0002\u0012\r\u0013\u000f\u0001\u0002$\u0001%\u0003\u0001\u0002,\u0003\u0004.\u0001\u00026\u00037\u0005\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0002=\u0003?\u0001\u0002\u0002:\u0003\u001f\u0001\u0002\u00010\u0004*\u0001\u0002M\u0002D\u000e@\u0005\u0001\u0002\u0002M\u0003O\u0001\u0002\u0001\r$-%/\u0001\u0002H\u001bI\u001d\u0001\u0002M\u0026cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/011"
+  ],
+  "files": {
+   "$TMP/011/output.aig": "aig 74 6 0 5 68\n102\n116\n129\n147\n148\n\u0005\u0005\b\u0003\u0001\u0002\u0001\t\u0004\u0007\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002\u0002\u0016\u0001\u0003\u001a\u0003\u001a\u0001\u001b\u0003\u0001\u0002\u0002$\u0001\b)\u0005,\u0003\u0001\u0002\u0002+\u0003-\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002\u0002.+\u000f.\r\u0001\u0002\u0002\u0007\u0001\b\u0001*C\u0002\u0001M\u0004K\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0002C\u0003E\u0001\u0002\u0002\u0016\u0001\u0016P\u000eL\u0005\u0001\u0002\u0002Y\u0003[\u0001\u0002\u0001#B\u001bC\u001d\u0001\u0002\u0002K\u0003M\u0001\u0002u\tx\u0007\u0001\u0002\u0001S\u0004Q\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u00021`cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/011"
+  ],
+  "files": {
+   "$TMP/011/output.aig": "aig 74 6 0 5 68\n102\n116\n129\n147\n148\n\u0005\u0005\b\u0003\u0001\u0002\u0001\t\u0004\u0007\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u0002\u0002\u0016\u0001\u0003\u001a\u0003\u001a\u0001\u001b\u0003\u0001\u0002\u0002$\u0001\b)\u0005,\u0003\u0001\u0002\u0002+\u0003-\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002\u0002.+\u000f.\r\u0001\u0002\u0002\u0007\u0001\b\u0001*C\u0002\u0001M\u0004K\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0002C\u0003E\u0001\u0002\u0002\u0016\u0001\u0016P\u000eL\u0005\u0001\u0002\u0002Y\u0003[\u0001\u0002\u0001#B\u001bC\u001d\u0001\u0002\u0002K\u0003M\u0001\u0002u\tx\u0007\u0001\u0002\u0001S\u0004Q\u0001\u0002\u0002\u0011\u0003\u0013\u0001\u00021`cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/012"
+  ],
+  "files": {
+   "$TMP/012/output.aig": "aig 38 6 0 5 32\n59\n62\n53\n74\n76\n\u0002\u0005\u0003\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u000f\u0010\u0003\u0002\u0019\u0003\u001b\u0001\u0002\u0002\b\u0001#\u0016\u000f\u0017\b\u0004\u0016\u0001\u0002\u0002\u0013\u0003\u0015\u0001\u0002\u0002\r\u0003\u000f\u0001\u0002\u000e)\u0002\u00164\u00015\u0003\u0001\u0002\u0002!\u0003#\u0001\u0002\u000f3cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/012"
+  ],
+  "files": {
+   "$TMP/012/output.aig": "aig 38 6 0 5 32\n59\n62\n53\n74\n76\n\u0002\u0005\u0003\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u000f\u0010\u0003\u0002\u0019\u0003\u001b\u0001\u0002\u0002\b\u0001#\u0016\u000f\u0017\b\u0004\u0016\u0001\u0002\u0002\u0013\u0003\u0015\u0001\u0002\u0002\r\u0003\u000f\u0001\u0002\u000e)\u0002\u00164\u00015\u0003\u0001\u0002\u0002!\u0003#\u0001\u0002\u000f3cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -d -s -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/012"
+  ],
+  "files": {
+   "$TMP/012/output.aig": "aig 38 6 0 5 32\n59\n62\n53\n74\n76\n\u0001\u0007\u0004\u0005\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u000f\u0010\u0003\u0002\u0019\u0003\u001b\u0001\u0002\u0002\b\u0001#\u0015\b\u0018\u000f\u0002\u0018\u0001\u0004\u0001\u0015\u0004\u0013\u0001\u0002\u0002\r\u0003\u000f\u0001\u0002\u000e)\u0002\u00164\u00015\u0003\u0001\u0002\u0001#\u0004!\u0001\u0002\u000f3cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026b -N 20 -a; \u0026w output.aig\".\n\n",
+  "temps": [
+   "$TMP/012"
+  ],
+  "files": {
+   "$TMP/012/output.aig": "aig 38 6 0 5 32\n59\n62\n53\n74\n76\n\u0001\u0007\u0004\u0005\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u000f\u0010\u0003\u0002\u0019\u0003\u001b\u0001\u0002\u0002\b\u0001#\u0015\b\u0018\u000f\u0002\u0018\u0001\u0004\u0001\u0015\u0004\u0013\u0001\u0002\u0002\r\u0003\u000f\u0001\u0002\u000e)\u0002\u00164\u00015\u0003\u0001\u0002\u0001#\u0004!\u0001\u0002\u000f3cn\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:18 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

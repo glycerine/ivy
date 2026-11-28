@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -q read_lib $TMP/test.lib; read_blif $TMP/input.blif; buffer -N 3 -G 300 -S 10; write_blif $TMP/reference.blif; cec $TMP/native.blif $TMP/reference.blif",
+  "stdout": "Warning: Templates are not defined.\nLibrary \"buffer-test\" from \"$TMP/001/test.lib\" has 9 cells (0 skipped: 0 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.00 sec\nNetworks are equivalent after structural hashing.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/reference.blif": "# Benchmark \"buffering\" written by ABC on Sat Nov 28 05:02:07 2026\n.model buffering\n.inputs i0 i1\n.outputs o0 o1 o2 o3 o4 o5 o6 o7 o8 o9 o10 o11 o12 o13 o14\n.gate class2_0 A0=i0 A1=i1 Y=new_n18_\n.gate class0_0 A0=new_n18_ Y=new_n19_\n.gate class0_0 A0=new_n19_ Y=new_n20_\n.gate class0_0 A0=new_n20_ Y=o0\n.gate class0_0 A0=new_n20_ Y=o1\n.gate class0_0 A0=new_n20_ Y=o2\n.gate class0_0 A0=new_n19_ Y=new_n24_\n.gate class0_0 A0=new_n24_ Y=o3\n.gate class0_0 A0=new_n24_ Y=o4\n.gate class0_0 A0=new_n24_ Y=o5\n.gate class0_0 A0=new_n19_ Y=new_n28_\n.gate class0_0 A0=new_n28_ Y=o6\n.gate class0_0 A0=new_n28_ Y=o7\n.gate class0_0 A0=new_n28_ Y=o8\n.gate class0_0 A0=new_n18_ Y=new_n32_\n.gate class0_0 A0=new_n32_ Y=o9\n.gate class0_0 A0=new_n32_ Y=o10\n.gate class0_0 A0=new_n32_ Y=o11\n.gate class0_0 A0=new_n18_ Y=new_n36_\n.gate class0_0 A0=new_n36_ Y=o12\n.gate class0_0 A0=new_n36_ Y=o13\n.gate class0_0 A0=new_n36_ Y=o14\n.end\n"
+  }
+ }
+]

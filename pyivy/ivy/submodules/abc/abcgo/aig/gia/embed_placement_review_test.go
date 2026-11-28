@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -20,7 +20,7 @@ func TestEmbeddingPlacementPreservesZeroCoordinateOrder(t *testing.T) {
 
 func TestEmbeddingPlacementMatchesOriginalNonzeroAxes(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "embedding_placement.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C placement: %v: %s", err, want)
 	}

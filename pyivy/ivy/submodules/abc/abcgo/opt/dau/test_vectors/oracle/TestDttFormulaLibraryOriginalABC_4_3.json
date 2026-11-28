@@ -1,0 +1,13 @@
+[
+ {
+  "key": "combined: abc -c funenum -l -I 4 -M 3 -p [dir $TMP]",
+  "stdout": "ABC command line: \"funenum -l -I 4 -M 3 -p\".\n\nN = 0  |  C =           0  |  New4 =         2   All4 =         2  |  Multi =         0  |  Time =     0.00 sec\nN = 1  |  C =          20  |  New4 =         2   All4 =         4  |  Multi =         1  |  Time =     0.00 sec\nN = 2  |  C =          60  |  New4 =         5   All4 =         9  |  Multi =         3  |  Time =     0.00 sec\nN = 3  |  C =         430  |  New4 =        20   All4 =        29  |  Multi =        11  |  Time =     0.00 sec\nDumped file \"Lflib4.txt\". \nFinish constructing AIG for 27 structures.\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/Lflib4.aig": "aig 78 5 0 27 73\n16\n18\n28\n34\n36\n46\n48\n56\n60\n68\n72\n76\n80\n89\n91\n98\n108\n122\n126\n128\n132\n136\n140\n115\n144\n151\n157\n\u0005\u0002\u0002\t\u0002\u0005\u0006\u0003\u000f\u0003\u0012\u0001\u0001\u0002\u0001\u0012\u0002\u0011\u001a\u0002\u0001\u0018\u0002\u0017\u001b\u0002!\u0002\u0001!\u0004\u001f\u0001\u0002\u0002#\u0007 ,\u0001-\u0003\u0001\u0002\u0001.4\u0002\u00012\u00075\n3\u0001\u0002\u0001:.\u0012\u0001\u003e\u00108\u0001B?\u0007\u0001\u003eI\u0006\u0002E\u0003G\u0001\u0002\u0007FS\u0005V\u0003\u0001\u0002\u0001+\\\u0004\u0001_\u0001c\u0004a\u0001\u0002e\u0003h\u0001\u0001\u0002\u0001o\u0001o\u0004m\u0001\u0002o\u0005\u0001j\rZz\u0002\u0001jk\u0013\u0001ji\u0019\u0001ha%\u0001`[/^-\u0001\u0002U;X9\u0001\u0002cn\u0000\u0000\u0000\u000efunc_enum_aig\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:16 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n",
+   "$TMP/001/Lflib4.txt": "00010001 = (~d\u0026(~a\u0026(~b\u0026~c)))\n00030003 = (~d\u0026(~c\u0026~b))\n00060006 = (~d\u0026(~c\u0026~(a^~b)))\n00070007 = (~d\u0026(~c\u0026~(~~a\u0026b)))\n000f000f = (~d\u0026~c)\n001e001e = (~d\u0026~(c^(~a\u0026~b)))\n001f001f = (~d\u0026~(~~c\u0026~(~a\u0026~b)))\n003c003c = (~d\u0026~(c^~b))\n003f003f = (~d\u0026~(~~c\u0026b))\n00690069 = (~d\u0026~~(~a^(b^c)))\n006f006f = (~d\u0026~(~~c\u0026~(a^b)))\n007f007f = (~d\u0026~(~~a\u0026(~~b\u0026c)))\n01fe01fe = ~(d^(~a\u0026(~b\u0026~c)))\n03560356 = ((~a\u0026~d)^(~c\u0026~b))\n03570357 = ~(~(~a\u0026~d)\u0026~(~c\u0026~b))\n03c003c0 = ((b^d)\u0026~(c^b))\n03c303c3 = ~(b^(~~c\u0026~(~~b\u0026d)))\n03cf03cf = (~c^(~~b\u0026~(c^~d)))\n03fc03fc = ~(d^(~c\u0026~b))\n06600660 = ((d^c)\u0026~(b^~a))\n06660666 = (~(~~d\u0026c)\u0026~(~b^a))\n06f906f9 = ~(d^(~c\u0026~(a^~b)))\n07f807f8 = ~(d^(~c\u0026~(~~a\u0026b)))\n0ff00ff0 = (d^c)\n1ee11ee1 = ~(d^~(c^(~a\u0026~b)))\n3cc33cc3 = ~(d^(c^b))\n69966996 = ~(d^~(a^(b^c)))\n"
+  }
+ }
+]

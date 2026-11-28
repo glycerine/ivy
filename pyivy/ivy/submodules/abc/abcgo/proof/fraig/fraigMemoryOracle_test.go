@@ -2,8 +2,7 @@ package fraig
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -12,10 +11,10 @@ import (
 // The standalone pool has the same chunk policy, recycle order, and restart
 // behavior as fraigMem.c, even though Go does not use intrusive free links.
 func TestFixedMemoryAgainstOriginalC(t *testing.T) {
-	if os.Getenv("FRAIG_C_DIFFERENTIAL") != "1" {
+	if testoracle.Gate("FRAIG_C_DIFFERENTIAL") != "1" {
 		t.Skip("set FRAIG_C_DIFFERENTIAL=1 for the original C oracle")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -24,11 +23,11 @@ func TestFixedMemoryAgainstOriginalC(t *testing.T) {
 		t.Fatal(err)
 	}
 	binary := filepath.Join(t.TempDir(), "memory-oracle")
-	cmd := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", filepath.Join(root, "src"), "-ffunction-sections", "-fdata-sections", filepath.Join("test_vectors", "memory_oracle.c"), filepath.Join(root, "src", "proof", "fraig", "fraigMem.c"), "-Wl,--gc-sections", "-o", binary)
+	cmd := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", filepath.Join(root, "src"), "-ffunction-sections", "-fdata-sections", filepath.Join("test_vectors", "memory_oracle.c"), filepath.Join(root, "src", "proof", "fraig", "fraigMem.c"), "-Wl,--gc-sections", "-o", binary)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("compile C: %v\n%s", err, out)
 	}
-	original, err := exec.Command(binary).CombinedOutput()
+	original, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run C: %v\n%s", err, original)
 	}

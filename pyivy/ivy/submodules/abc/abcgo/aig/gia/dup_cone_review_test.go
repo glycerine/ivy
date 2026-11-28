@@ -2,9 +2,9 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
 	"math/bits"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -157,7 +157,7 @@ func TestDfsOutputConesPreservePropertiesAndState(t *testing.T) {
 
 func TestDfsOneOutputMatchesOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "dfs_one_output.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C one-output: %v: %s", err, native)
 	}

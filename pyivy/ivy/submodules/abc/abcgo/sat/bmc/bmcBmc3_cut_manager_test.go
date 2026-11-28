@@ -3,8 +3,8 @@ package bmc
 import (
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -38,15 +38,15 @@ func TestScalableBMCNormalizesNativeXORToAIG(t *testing.T) {
 }
 
 func TestScalableBMCMultiOutputMatchesCUnderConflictBudget(t *testing.T) {
-	binary := os.Getenv("ABC_BINARY")
+	binary := testoracle.NativeABCPath()
 	if binary == "" {
-		binary = filepath.Join("..", "..", "..", "abc")
+		binary = testoracle.NativeABCPath()
 	}
 	absolute, err := filepath.Abs(binary)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info, err := os.Stat(absolute); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
+	if info, err := testoracle.Stat(absolute); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
 		t.Skip("C ABC executable unavailable")
 	}
 	g := aig.NewGraph()
@@ -65,7 +65,7 @@ func TestScalableBMCMultiOutputMatchesCUnderConflictBudget(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	out, err := exec.CommandContext(ctx, absolute, "-c", fmt.Sprintf("read_aiger %s; bmc3 -v -a -x -C 1 -F 3", path)).CombinedOutput()
+	out, err := testoracle.CommandContext(t, ctx, absolute, "-c", fmt.Sprintf("read_aiger %s; bmc3 -v -a -x -C 1 -F 3", path)).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C ABC: %v\n%s", err, out)
 	}
@@ -136,15 +136,15 @@ func bmcAIGFixture(graph *aig.Graph) (abcFixture, error) {
 }
 
 func TestScalableBMCConflictUnknownMatchesC(t *testing.T) {
-	binary := os.Getenv("ABC_BINARY")
+	binary := testoracle.NativeABCPath()
 	if binary == "" {
-		binary = filepath.Join("..", "..", "..", "abc")
+		binary = testoracle.NativeABCPath()
 	}
 	absolute, err := filepath.Abs(binary)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info, err := os.Stat(absolute); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
+	if info, err := testoracle.Stat(absolute); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
 		t.Skip("C ABC executable unavailable")
 	}
 	g := bmcPigeonholeGraph(4, 3)
@@ -158,7 +158,7 @@ func TestScalableBMCConflictUnknownMatchesC(t *testing.T) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	out, err := exec.CommandContext(ctx, absolute, "-c", fmt.Sprintf("read_aiger %s; bmc3 -v -C 1", path)).CombinedOutput()
+	out, err := testoracle.CommandContext(t, ctx, absolute, "-c", fmt.Sprintf("read_aiger %s; bmc3 -v -C 1", path)).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C ABC: %v\n%s", err, out)
 	}

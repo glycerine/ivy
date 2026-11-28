@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -212,7 +212,7 @@ func TestDfsFullAndRepresentativeCopiesMatchSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "dfs_representatives.c")
 	for _, mode := range []string{"full", "representatives"} {
 		t.Run(mode, func(t *testing.T) {
-			native, err := exec.Command(exe, mode).CombinedOutput()
+			native, err := testoracle.Command(t, exe, mode).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C DFS: %v: %s", err, native)
 			}
@@ -233,7 +233,7 @@ func TestDfsFullAndRepresentativeCopiesMatchSource(t *testing.T) {
 			}
 		})
 	}
-	witness, err := exec.Command(exe, "constraints").CombinedOutput()
+	witness, err := testoracle.Command(t, exe, "constraints").CombinedOutput()
 	if err != nil || string(witness) != "1 1 0\n" {
 		t.Fatalf("inherited DFS2 constraint witness: %v: %s", err, witness)
 	}

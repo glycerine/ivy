@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -159,7 +159,7 @@ func TestOrderedCopyLayoutsAndSemantics(t *testing.T) {
 
 func TestOrderedCopiesMatchOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "ordered_copies.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C ordered copies: %v: %s", err, native)
 	}
@@ -173,7 +173,7 @@ func TestOrderedCopiesMatchOriginalSource(t *testing.T) {
 			t.Fatalf("case %d:\nGo %s\nC %s", i, got[i], want[i])
 		}
 	}
-	reprs, err := exec.Command(exe, "--representatives").CombinedOutput()
+	reprs, err := testoracle.Command(t, exe, "--representatives").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C representatives: %v: %s", err, reprs)
 	}
@@ -181,7 +181,7 @@ func TestOrderedCopiesMatchOriginalSource(t *testing.T) {
 		t.Fatalf("representatives differ:\nGo %s\nC %s", got, reprs)
 	}
 
-	witness, err := exec.Command(exe, "--constraints").CombinedOutput()
+	witness, err := testoracle.Command(t, exe, "--constraints").CombinedOutput()
 	if err != nil || string(witness) != "1 0 0 0 0\n" {
 		t.Fatalf("inherited metadata witness: %v: %s", err, witness)
 	}

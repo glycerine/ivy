@@ -1,0 +1,66 @@
+[
+ {
+  "key": "combined: abc -c read_truth 8; strash; \u0026get; \u0026mesh",
+  "stdout": "ABC command line: \"read_truth 8; strash; \u0026get; \u0026mesh\".\n\nThe graph has 2 inputs: a b   and 1 nodes: c=ab \nSAT variable count is 368 (48 time vars + 48 graph vars + 256 config vars + 16 aux vars)\nFinished adding 788 clauses. Started solving...\nSatisfying solution found. Time =     0.00 sec\nThe 4 x 4 mesh with latency 3 with 2 active cells (1 nodes and 1 buffers):\n Y\\X   0    1    2    3  \n 0     *    *   b0    *  \n 1     *   c2   c1   a0  \n 2     *              *  \n 3     *    *    *    *  \n"
+ },
+ {
+  "key": "combined: abc -c read_truth 8; strash; \u0026get; \u0026mesh -s",
+  "stdout": "ABC command line: \"read_truth 8; strash; \u0026get; \u0026mesh -s\".\n\nThe graph has 2 inputs: a b   and 1 nodes: c=ab \nSAT variable count is 368 (48 time vars + 48 graph vars + 256 config vars + 16 aux vars)\nFinished adding 788 clauses. Started solving...\nSatisfying solution found. Time =     0.00 sec\nThe 4 x 4 mesh with latency 3 with 1 active cells (1 nodes and 0 buffers):\n Y\\X   0    1    2    3  \n 0     *   b0    *    *  \n 1    a0   c1         *  \n 2     *              *  \n 3     *    *    *    *  \n"
+ },
+ {
+  "key": "combined: abc -c read_truth 6; strash; \u0026get; \u0026mesh -X 3 -Y 3 -T 2",
+  "stdout": "ABC command line: \"read_truth 6; strash; \u0026get; \u0026mesh -X 3 -Y 3 -T 2\".\n\nThe graph has 2 inputs: a b   and 3 nodes: c=ab d=ab e=cd \nSAT variable count is 216 (18 time vars + 45 graph vars + 144 config vars + 9 aux vars)\nProblem has no solution. Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c read_truth 6; strash; \u0026get; \u0026mesh -X 3 -Y 3 -T 2 -s",
+  "stdout": "ABC command line: \"read_truth 6; strash; \u0026get; \u0026mesh -X 3 -Y 3 -T 2 -s\".\n\nThe graph has 2 inputs: a b   and 3 nodes: c=ab d=ab e=cd \nSAT variable count is 216 (18 time vars + 45 graph vars + 144 config vars + 9 aux vars)\nFinished adding 215 clauses. Started solving...\nProblem has no solution. Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c miter test_vectors/native_s27_drw.blif test_vectors/native_s27_drw.blif; \u0026get; \u0026bcore -v -F 2 /dev/null",
+  "stdout": "ABC command line: \"miter test_vectors/native_s27_drw.blif test_vectors/native_s27_drw.blif; \u0026get; \u0026bcore -v -F 2 /dev/null\".\n\nSAT solver returned UNSAT after      33 conflicts.      Time =     0.00 sec\nVars = 81. Roots = 164. Learned = 33. Resol steps = 619.  Ave = 13.79.  Mem = 0.01 MB\nRoot clauses = 164. Learned clauses = 33. UNSAT core size = 33.\nUNSAT core contains 33 (out of 33) learned clauses.   Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 3",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 3\".\n\nFFTEST is computing test patterns for complement faults...\nOptions: Untestable faults = no. Verbose = no. \nUsing miter with:  AIG nodes =     42.  CNF variables =     34.  CNF clauses =       68.\nThe problem is UNSAT after 6 iterations.  Testing runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 2",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 2\".\n\nFFTEST is computing test patterns for stuck-at faults...\nOptions: Untestable faults = no. Verbose = no. \nUsing miter with:  AIG nodes =     35.  CNF variables =     42.  CNF clauses =       72.\nThe problem is UNSAT after 6 iterations.  Testing runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 3 -N 4",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 3 -N 4\".\n\nFFTEST is computing test patterns for complement faults...\nOptions: Untestable faults = no. Verbose = no. \nUsing miter with:  AIG nodes =     42.  CNF variables =     34.  CNF clauses =       68.\nIteration   4 has determined     4 (out of     7) parameters after      6 SAT calls.  Time =     0.00 sec\nReading 4 pre-computed test patterns from previous rounds.\nUsing miter with:  AIG nodes =     24.  CNF variables =     29.  CNF clauses =       48.\nThe problem is UNSAT after 6 iterations.  Testing runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c majexact -I 3 -N 1 -g",
+  "stdout": "ABC command line: \"majexact -I 3 -N 1 -g\".\n\nThe number of parameter variables = 4.\nRunning exact synthesis for 3-input majority with 1 MAJ3 gates...\nIter   0 : 000  Var =    8  Cla =     0  Conf =        0  Time =     0.00 sec\nRealization of 3-input majority using 1 MAJ3 gates:\n03 = MAJ( a b c )\nTotal runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c majexact -I 5 -N 3 -g",
+  "stdout": "ABC command line: \"majexact -I 5 -N 3 -g\".\n\nThe number of parameter variables = 37.\nRunning exact synthesis for 5-input majority with 3 MAJ3 gates...\nIter   0 : 00000  Var =   49  Cla =   184  Conf =        0  Time =     0.00 sec\nIter   1 : 00011  Var =   61  Cla =   221  Conf =        1  Time =     0.00 sec\nIter   2 : 00111  Var =   73  Cla =   257  Conf =        1  Time =     0.00 sec\nIter   3 : 00101  Var =   85  Cla =   293  Conf =        3  Time =     0.00 sec\nIter   4 : 00110  Var =   97  Cla =   328  Conf =       19  Time =     0.00 sec\nThe problem has no solution.\nTotal runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c lutexact -I 4 -N 2 -K 3 8778",
+  "stdout": "ABC command line: \"lutexact -I 4 -N 2 -K 3 8778\".\n\nThe number of parameter variables = 36.\nRunning exact synthesis for 4-input function with 2 3-input LUTs...\nIter   0 : 0001  Var =   44  Cla =   108  Conf =        2  Time =     0.00 sec\nIter   1 : 0011  Var =   52  Cla =   149  Conf =        2  Time =     0.00 sec\nIter   2 : 0100  Var =   60  Cla =   190  Conf =        2  Time =     0.00 sec\nIter   3 : 0110  Var =   68  Cla =   231  Conf =        2  Time =     0.00 sec\nIter   4 : 0010  Var =   76  Cla =   271  Conf =        2  Time =     0.00 sec\nIter   5 : 1000  Var =   84  Cla =   312  Conf =        2  Time =     0.00 sec\nIter   6 : 1001  Var =   92  Cla =   353  Conf =        2  Time =     0.00 sec\nIter   7 : 1011  Var =  100  Cla =   393  Conf =        2  Time =     0.00 sec\nRealization of given 4-input function using 2 3-input LUTs:\n05 = 8'b10010110( b c 04 )\n04 = 8'b10100110( a b d )\nTotal runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c lutexact -I 3 -N 1 -K 3 -g E8",
+  "stdout": "ABC command line: \"lutexact -I 3 -N 1 -K 3 -g E8\".\n\nThe number of parameter variables = 14.\nRunning exact synthesis for 3-input function with 1 3-input LUTs...\nIter     0 : 001  Var =   18  Cla =    10  Conf =        0  Time =     0.00 sec\nIter     1 : 011  Var =   22  Cla =    10  Conf =        0  Time =     0.00 sec\nIter     2 : 101  Var =   26  Cla =    10  Conf =        0  Time =     0.00 sec\nIter     3 : 110  Var =   30  Cla =    10  Conf =        0  Time =     0.00 sec\nIter     4 : 111  Var =   34  Cla =    10  Conf =        0  Time =     0.00 sec\nIter     5 : 111  Var =   34  Cla =    10  Conf =        0  Time =     0.00 sec\nRealization of given 3-input function using 1 3-input LUTs:\n03 = 8'b11101000( a b c )\nAdded = 0.  Tried = 0.  Total runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026sattest -v",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026sattest -v\".\n\nFrame   0 :  Vars =     13  Clas =     15  Conf =      0  SAT    Time =     0.00 sec\nCallbacks = 10.  Loadings = 10.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026inse -v",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026inse -v\".\n\nRunning with 10 frames, 1000 words, and given init state.\nFrame =     0 : Values =    19 (out of     19)\nFrame =     1 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =     2 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =     3 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =     4 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =     5 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =     6 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =     7 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =     8 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =     9 : Values =     0 (out of     19)   Time =     0.00 sec\nFrame =    10 : Values =     0 (out of     19)   Time =     0.00 sec\nAfter 10 frames, found a sequence to produce 0 x-values (out of 19).  Total runtime =     0.02 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; \u0026get; \u0026maxi -v",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; \u0026get; \u0026maxi -v\".\n\nRunning with 5 frames and given init state.\nIter     0 : Var =       541  Clause =      1277  Conflict =         0  Subset =    19  Time =     0.00 sec\nIter     1 : Var =       541  Clause =      1277  Conflict =       795  Subset =    11  Time =     0.00 sec\nIter     2 : Var =       541  Clause =      1277  Conflict =       795  Subset =    11  Time =     0.00 sec\nReached fixed point with 11 entries after 2 iterations.  Total runtime =     0.01 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026maxi -v",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026maxi -v\".\n\nRunning with 5 frames and given init state.\nIter     0 : Var =        67  Clause =       156  Conflict =         0  Subset =     3  Time =     0.00 sec\nIter     1 : Var =        67  Clause =       156  Conflict =        93  Subset =     3  Time =     0.00 sec\nReached fixed point with 3 entries after 1 iterations.  Total runtime =     0.00 sec\n"
+ }
+]

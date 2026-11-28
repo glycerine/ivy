@@ -2,9 +2,9 @@ package abc
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -14,17 +14,17 @@ import (
 // Link the actual ABC objects: this exercises the complete original cut manager,
 // allocation, enumeration, truth manipulation, hash lookup, and cleanup.
 func TestNetworkOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	cxx, err := exec.LookPath("g++")
+	cxx, err := testoracle.LookPath("g++")
 	if err != nil {
 		t.Skip("C++ linker unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, err := os.Stat(filepath.Join(src, "base/abc/abcNtk.o")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "base/abc/abcNtk.o")); err != nil {
 		t.Skip("original ABC object files unavailable")
 	}
 	dir := t.TempDir()
@@ -42,11 +42,11 @@ int main(void){Abc_Ntk_t*n,*p;Abc_Obj_t*node;Abc_Start();n=fixture();p=Abc_NtkDu
 	if err := os.WriteFile(source, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=gnu99", "-DLIN64", "-I"+src, "-c", source, "-o", object).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-I"+src, "-c", source, "-o", object).CombinedOutput(); err != nil {
 		t.Fatalf("compile: %v\n%s", err, out)
 	}
 	args := []string{object}
-	err = filepath.WalkDir(src, func(path string, e os.DirEntry, err error) error {
+	err = testoracle.WalkDir(src, func(path string, e os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -59,11 +59,11 @@ int main(void){Abc_Ntk_t*n,*p;Abc_Obj_t*node;Abc_Start();n=fixture();p=Abc_NtkDu
 		t.Fatal(err)
 	}
 	args = append(args, "-lreadline", "-lpthread", "-lm", "-ldl", "-lz", "-o", exe)
-	if out, err := exec.Command(cxx, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cxx, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v\n%s", err, out)
 	}
 
-	command := exec.Command(exe)
+	command := testoracle.Command(t, exe)
 	data, err := command.CombinedOutput()
 	if err != nil {
 		t.Fatalf("oracle %v\n%s", err, data)

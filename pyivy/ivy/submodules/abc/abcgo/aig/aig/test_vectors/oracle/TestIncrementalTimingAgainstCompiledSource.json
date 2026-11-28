@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/incremental_timing_compare.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigUtil.c -Wl,--gc-sections -o $TMP/incremental-timing",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/incremental-timing"
+  ]
+ },
+ {
+  "key": "combined: $TMP/incremental-timing",
+  "stdout": "forward0 5 2 17 1 2\nforward1 5 6 1 0 2\nforward2 1 2 1 0 6\nreverse 1 2 3 13 000\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

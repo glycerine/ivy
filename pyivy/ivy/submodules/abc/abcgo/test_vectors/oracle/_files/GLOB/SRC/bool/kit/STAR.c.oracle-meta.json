@@ -1,0 +1,21 @@
+{
+ "size": 0,
+ "mode": 0,
+ "entries": [
+  "$SRC/bool/kit/cloud.c",
+  "$SRC/bool/kit/kitAig.c",
+  "$SRC/bool/kit/kitBdd.c",
+  "$SRC/bool/kit/kitCloud.c",
+  "$SRC/bool/kit/kitDec.c",
+  "$SRC/bool/kit/kitDsd.c",
+  "$SRC/bool/kit/kitFactor.c",
+  "$SRC/bool/kit/kitGraph.c",
+  "$SRC/bool/kit/kitHop.c",
+  "$SRC/bool/kit/kitIsop.c",
+  "$SRC/bool/kit/kitPerm.c",
+  "$SRC/bool/kit/kitPla.c",
+  "$SRC/bool/kit/kitSop.c",
+  "$SRC/bool/kit/kitTruth.c",
+  "$SRC/bool/kit/kit_.c"
+ ]
+}

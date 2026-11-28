@@ -2,8 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -34,7 +33,7 @@ func TestExplicitReachabilitySTGZeroWidthColumns(t *testing.T) {
 							t.Fatalf("result%d", got)
 						}
 					})
-					data, err := os.ReadFile("test.stg")
+					data, err := testoracle.ReadFile("test.stg")
 					if err != nil {
 						t.Fatal(err)
 					}
@@ -71,7 +70,7 @@ func TestExplicitReachabilitySTGZeroWidthColumns(t *testing.T) {
 
 func TestExplicitReachabilityNativeSTG(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "era_review.c")
-	cmd := exec.Command(exe, "--dump")
+	cmd := testoracle.Command(t, exe, "--dump")
 	cmd.Dir = t.TempDir()
 	native, err := cmd.CombinedOutput()
 	if err != nil {
@@ -95,7 +94,7 @@ func TestExplicitReachabilityNativeSTG(t *testing.T) {
 					fmt.Printf("dump %d %d %d\n", ni, no, toggle)
 					Gia_ManCollectReachable(g, 100, 0, 1, 0)
 					fmt.Println("stg begin")
-					data, err := os.ReadFile("test.stg")
+					data, err := testoracle.ReadFile("test.stg")
 					if err != nil {
 						t.Fatal(err)
 					}

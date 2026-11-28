@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: abc -c read_aiger $TMP/php.aig; bmc3 -v -C 1",
+  "stdout": "ABC command line: \"read_aiger $TMP/001/php.aig; bmc3 -v -C 1\".\n\nError: Does not work for combinational networks.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

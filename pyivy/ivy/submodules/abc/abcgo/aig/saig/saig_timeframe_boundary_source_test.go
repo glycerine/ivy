@@ -1,8 +1,8 @@
 package saig
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -16,11 +16,11 @@ func TestTimeframeBoundaryAgainstCompiledC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("fixture checks Linux process signals")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
@@ -28,11 +28,11 @@ func TestTimeframeBoundaryAgainstCompiledC(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := os.Stat(filepath.Join(src, "aig/saig/saigTrans.o")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "aig/saig/saigTrans.o")); err != nil {
 		t.Skip("prebuilt ABC objects unavailable")
 	}
 	var objects []string
-	err = filepath.WalkDir(src, func(path string, d os.DirEntry, err error) error {
+	err = testoracle.WalkDir(src, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -46,17 +46,17 @@ func TestTimeframeBoundaryAgainstCompiledC(t *testing.T) {
 	}
 	dir := t.TempDir()
 	st := filepath.Join(dir, "st.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
 		t.Fatalf("compile st: %v: %s", err, out)
 	}
 	objects = append(objects, st)
 	archive := filepath.Join(dir, "abc.a")
-	if out, err := exec.Command(ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, ar, append([]string{"qcs", archive}, objects...)...).CombinedOutput(); err != nil {
 		t.Fatalf("archive: %v: %s", err, out)
 	}
 	exe := filepath.Join(dir, "timeframe-boundary")
 	args := []string{"-DABC_USE_STDINT_H", "-I", src, "test_vectors/timeframe_boundary.c", archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe}
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v: %s", err, out)
 	}
 	for _, tc := range []struct {
@@ -73,14 +73,14 @@ func TestTimeframeBoundaryAgainstCompiledC(t *testing.T) {
 		{"valid", []string{"2", "3", "1", "1"}, 0, ""},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			out, err := exec.Command(exe, tc.args...).CombinedOutput()
+			out, err := testoracle.Command(t, exe, tc.args...).CombinedOutput()
 			if tc.signal == 0 {
 				if err != nil {
 					t.Fatalf("C failed: %v: %s", err, out)
 				}
 				return
 			}
-			exit, ok := err.(*exec.ExitError)
+			exit, ok := err.(*testoracle.ExitError)
 			if !ok {
 				t.Fatalf("C returned %v, want signal %v: %s", err, tc.signal, out)
 			}

@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: $TMP/oracle param $TMP/patterns.pla",
+  "stdout": "The number of symbols (5) does not match other lines (4).\nparam0 ins-77 words-88\n",
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ]
+ }
+]

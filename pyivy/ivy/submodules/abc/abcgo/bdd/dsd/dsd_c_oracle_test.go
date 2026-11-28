@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	bdd "github.com/glycerine/abcgo/bdd/cudd/core"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -47,7 +47,7 @@ func serializeTree(dd *DdManager, p *Dsd_Node_t, n int) string {
 	return out.String()
 }
 func TestOriginalCDecompositionOracle(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for original-source differential")
 	}
@@ -57,7 +57,7 @@ func TestOriginalCDecompositionOracle(t *testing.T) {
 	}
 	args := []string{"-O1", "-ffunction-sections", "-fdata-sections", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), filepath.Join(root, "abcgo/bdd/dsd/test_vectors/oracle.c")}
 	for _, pattern := range []string{"src/bdd/dsd/*.c", "src/bdd/cudd/*.c", "src/bdd/mtr/*.c", "src/bdd/epd/*.c", "src/misc/st/*.c"} {
-		files, err := filepath.Glob(filepath.Join(root, pattern))
+		files, err := testoracle.Glob(filepath.Join(root, pattern))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -75,7 +75,7 @@ func TestOriginalCDecompositionOracle(t *testing.T) {
 	}
 	// Original Dsd_CheckCacheClear mistakenly clears entry 0 repeatedly.
 	// Correct only this undefined-memory initialization in the test oracle.
-	cacheSource, err := os.ReadFile(filepath.Join(root, "src/bdd/dsd/dsdCheck.c"))
+	cacheSource, err := testoracle.ReadFile(filepath.Join(root, "src/bdd/dsd/dsdCheck.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -87,7 +87,7 @@ func TestOriginalCDecompositionOracle(t *testing.T) {
 	args = append(args, "-I"+filepath.Join(root, "src/bdd/dsd"), cachePath)
 	binary := filepath.Join(t.TempDir(), "dsd-oracle")
 	args = append(args, "-Wl,--gc-sections", "-lm", "-o", binary)
-	if output, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile original C: %v\n%s", err, output)
 	}
 	var input bytes.Buffer
@@ -129,7 +129,7 @@ func TestOriginalCDecompositionOracle(t *testing.T) {
 			Dsd_ManagerStop(m)
 		}
 	}
-	command := exec.Command(binary)
+	command := testoracle.Command(t, binary)
 	command.Stdin = &input
 	output, err := command.CombinedOutput()
 	if err != nil {

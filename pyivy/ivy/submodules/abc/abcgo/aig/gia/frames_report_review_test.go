@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"testing"
 )
 
 func TestFramesNativeReports(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--reports").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--reports").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C frame reports: %v\n%s", err, native)
 	}

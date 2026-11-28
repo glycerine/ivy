@@ -3,9 +3,9 @@ package ivy
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand/v2"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -88,11 +88,11 @@ func TestDsdPrintingAndFiveVariableRandom(t *testing.T) {
 // Compile the actual C decomposition implementation with a tiny vector shim;
 // compare both success decisions and the exact original packed tree records.
 func TestDsdSourceCDifferential(t *testing.T) {
-	compiler, err := exec.LookPath("cc")
+	compiler, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	source, err := os.ReadFile(filepath.Join("..", "..", "..", "src", "aig", "ivy", "ivyDsd.c"))
+	source, err := testoracle.ReadFile(filepath.Join("..", "..", "..", "src", "aig", "ivy", "ivyDsd.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -120,7 +120,7 @@ unsigned Ivy_TruthDsdCompute(Vec_Int_t *);
 	if err := os.WriteFile(cfile, []byte(preamble+text[begin:end]+harness), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(compiler, "-std=c99", "-O2", cfile, "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, compiler, "-std=c99", "-O2", cfile, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile reference: %v\n%s", err, out)
 	}
 	truths := make([]uint32, 0, 70000)
@@ -135,7 +135,7 @@ unsigned Ivy_TruthDsdCompute(Vec_Int_t *);
 	for _, truth := range truths {
 		fmt.Fprintf(&input, "%08x\n", truth)
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Stdin = strings.NewReader(input.String())
 	output, err := cmd.CombinedOutput()
 	if err != nil {

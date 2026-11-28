@@ -1,6 +1,7 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"strings"
@@ -26,7 +27,7 @@ func TestPlaReaderLikeNative(t *testing.T) {
 		if !strings.Contains(port, path+" (line ") || !strings.Contains(port, "Reading network from file has failed.") {
 			t.Errorf("%s: port:\n%s", name, port)
 		}
-		if os.Getenv("ABC_BINARY") == "" {
+		if testoracle.NativeABCPath() == "" {
 			continue
 		}
 		if native, port := bmc3Normalize(runNativeABC(t, script)), bmc3Normalize(port); native != port {

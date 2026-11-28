@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -36,7 +36,7 @@ func TestEmbeddingEigenvectorsSeparateDistantVariances(t *testing.T) {
 
 func TestEmbeddingEigenvectorsOriginalDeflationWitness(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "embedding_eigen.c")
-	out, err := exec.Command(exe).CombinedOutput()
+	out, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C eigenvector witness: %v: %s", err, out)
 	}

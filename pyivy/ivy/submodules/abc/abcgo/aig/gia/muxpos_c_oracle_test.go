@@ -1,8 +1,7 @@
 package gia
 
 import (
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -13,7 +12,7 @@ import (
 // checks that Gia_ManDupWithMuxPos adds no output for a node that already
 // drives one (CBUGS_FIXED.md #6).
 func TestNativeMuxPosSkipsCoDrivers(t *testing.T) {
-	lib := os.Getenv("ABC_LIBABC")
+	lib := testoracle.NativeLibABCPath()
 	if lib == "" {
 		t.Skip("set ABC_LIBABC to a native libabc.a built from ../src")
 	}
@@ -26,11 +25,11 @@ func TestNativeMuxPosSkipsCoDrivers(t *testing.T) {
 		{"gcc", "-O1", "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "aig/gia/giaUtil.c"), "-o", filepath.Join(dir, "giaUtil.o")},
 		{"g++", filepath.Join(dir, "main.o"), filepath.Join(dir, "giaUtil.o"), lib, "-lreadline", "-lpthread", "-lm", "-ldl", "-o", bin},
 	} {
-		if out, err := exec.Command(c[0], c[1:]...).CombinedOutput(); err != nil {
+		if out, err := testoracle.Command(t, c[0], c[1:]...).CombinedOutput(); err != nil {
 			t.Fatalf("%v: %v\n%s", c[:3], err, out)
 		}
 	}
-	out, err := exec.Command(bin, "../../base/abci/test_vectors/bench/mul8.aig").CombinedOutput()
+	out, err := testoracle.Command(t, bin, "../../base/abci/test_vectors/bench/mul8.aig").CombinedOutput()
 	if err != nil || !strings.Contains(string(out), "dup=0") {
 		t.Fatalf("native Gia_ManDupWithMuxPos: %v %s", err, out)
 	}

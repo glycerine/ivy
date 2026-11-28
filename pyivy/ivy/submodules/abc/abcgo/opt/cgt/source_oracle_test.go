@@ -5,9 +5,9 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -19,7 +19,7 @@ func TestClockGatingOriginalCandidateOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section collection required")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional C oracle requires cc")
 	}
@@ -33,7 +33,7 @@ int main(void){int n,root,level;while(scanf("%d%d%d",&n,&root,&level)==3){Aig_Ob
 	if err = os.WriteFile(main, []byte(code), 0644); err != nil {
 		t.Fatal(err)
 	}
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, main, "-o", binary)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, main, "-o", binary)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("build source oracle %v\n%s", err, out)
 	}
@@ -86,7 +86,7 @@ int main(void){int n,root,level;while(scanf("%d%d%d",&n,&root,&level)==3){Aig_Ob
 		}
 		expected = append(expected, Cgt_ManDetectCandidates(g, useful, root, limit))
 	}
-	cmd = exec.Command(binary)
+	cmd = testoracle.Command(t, binary)
 	cmd.Stdin = &input
 	out, err := cmd.CombinedOutput()
 	if err != nil {

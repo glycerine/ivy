@@ -2,9 +2,9 @@ package ivy
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand/v2"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"slices"
 	"strconv"
@@ -232,11 +232,11 @@ func BenchmarkIvyMappingOrder(b *testing.B) {
 }
 
 func TestFastMapSourceCDelayMapping(t *testing.T) {
-	compiler, err := exec.LookPath("cc")
+	compiler, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	data, err := os.ReadFile(filepath.Join("..", "..", "..", "src", "aig", "ivy", "ivyFastMap.c"))
+	data, err := testoracle.ReadFile(filepath.Join("..", "..", "..", "src", "aig", "ivy", "ivyFastMap.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -279,7 +279,7 @@ int Ivy_FastMapMerge(Ivy_Supp_t*,Ivy_Supp_t*,Ivy_Supp_t*,int);
 	if err := os.WriteFile(cfile, []byte(preamble+extract("void Ivy_FastMapNode( Ivy_")+extract("int Ivy_FastMapMerge( Ivy_")+harness), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if output, err := exec.Command(compiler, "-std=c99", "-O2", cfile, "-o", binary).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, compiler, "-std=c99", "-O2", cfile, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("reference compile: %v\n%s", err, output)
 	}
 	rng := rand.New(rand.NewPCG(5, 109))
@@ -306,7 +306,7 @@ int Ivy_FastMapMerge(Ivy_Supp_t*,Ivy_Supp_t*,Ivy_Supp_t*,int);
 			expected = append(expected, append(row, s.pArray...))
 		}
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Stdin = strings.NewReader(input.String())
 	output, err := cmd.CombinedOutput()
 	if err != nil {

@@ -3,8 +3,8 @@ package dau
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -12,17 +12,17 @@ import (
 )
 
 func TestDSDGraphOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	cxx, err := exec.LookPath("g++")
+	cxx, err := testoracle.LookPath("g++")
 	if err != nil {
 		t.Skip("original ABC objects require C++ linker")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, err := os.Stat(filepath.Join(src, "opt/dau/dauGia.o")); err != nil {
+	if _, err := testoracle.Stat(filepath.Join(src, "opt/dau/dauGia.o")); err != nil {
 		t.Skip("original ABC object files unavailable")
 	}
 	dir := t.TempDir()
@@ -34,11 +34,11 @@ int main(void){char s[8192];while(scanf("%8191s",s)==1){Gia_Man_t*p=Gia_ManStart
 	if err := os.WriteFile(source, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=gnu99", "-DLIN64", "-I"+src, "-c", source, "-o", object).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-I"+src, "-c", source, "-o", object).CombinedOutput(); err != nil {
 		t.Fatalf("compile original graph oracle%v\n%s", err, out)
 	}
 	args := []string{object}
-	err = filepath.WalkDir(src, func(path string, entry os.DirEntry, err error) error {
+	err = testoracle.WalkDir(src, func(path string, entry os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -51,11 +51,11 @@ int main(void){char s[8192];while(scanf("%8191s",s)==1){Gia_Man_t*p=Gia_ManStart
 		t.Fatal(err)
 	}
 	args = append(args, "-lreadline", "-lpthread", "-lm", "-ldl", "-lz", "-o", exe)
-	if out, err := exec.Command(cxx, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cxx, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link original graph oracle%v\n%s", err, out)
 	}
 	expressions := []string{"0", "1", "!a", "(abcdef)", "[abcdef]", "![a(bc)<def>]", "<abc>{(ab)[cd](ef)}", "E8{abc}", "6996{abcd}", "!(a[bc]E8{def})"}
-	command := exec.Command(exe)
+	command := testoracle.Command(t, exe)
 	command.Stdin = strings.NewReader(strings.Join(expressions, "\n"))
 	out, err := command.Output()
 	if err != nil {

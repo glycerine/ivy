@@ -2,10 +2,9 @@ package abs
 
 import (
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"os"
-	"os/exec"
 	"reflect"
 	"strings"
 	"testing"
@@ -32,8 +31,8 @@ func TestGlaPositiveRootAssignmentMatchesSource(t *testing.T) {
 	if result != -1 || g.SequentialCounterexample() != nil {
 		t.Fatalf("source returned unknown without witness; Go result=%d witness=%v", result, g.SequentialCounterexample())
 	}
-	if binary := os.Getenv("ABS_GLA_ROOT_ORACLE"); binary != "" {
-		out, err := exec.Command(binary).CombinedOutput()
+	if binary := testoracle.BuildFixture(t, "test_vectors/gla_true_root_oracle.c"); binary != "" {
+		out, err := testoracle.Command(t, binary).CombinedOutput()
 		if err != nil || !strings.Contains(string(out), "SOURCE_STATUS=-1 CEX=0") {
 			t.Fatalf("C oracle err=%v output=%s", err, out)
 		}
@@ -85,11 +84,11 @@ func TestGlaPositiveRootAssignmentReachableAfterRefinement(t *testing.T) {
 }
 
 func TestGlaConstantOneSourceOracle(t *testing.T) {
-	binary := os.Getenv("ABS_GLA_CONST_ORACLE")
+	binary := testoracle.BuildFixture(t, "test_vectors/gla_const_later_oracle.c")
 	if binary == "" {
 		t.Skip("set ABS_GLA_CONST_ORACLE to run the compiled C fixture")
 	}
-	out, err := exec.Command(binary).CombinedOutput()
+	out, err := testoracle.Command(t, binary).CombinedOutput()
 	if err == nil || !strings.Contains(string(out), "Assertion `Lit > 1' failed") {
 		t.Fatalf("C expected literal assertion; err=%v output=%s", err, out)
 	}

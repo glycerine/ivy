@@ -3,8 +3,7 @@ package gia_test
 import (
 	"bytes"
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -41,7 +40,7 @@ func mappingDSDReviewReadReport(t *testing.T, executable, path, copyPath string)
 	if copyPath != "" {
 		args = append(args, copyPath)
 	}
-	output, err := exec.Command(executable, args...).CombinedOutput()
+	output, err := testoracle.Command(t, executable, args...).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C read: %v %s", err, output)
 	}
@@ -57,7 +56,7 @@ func TestMappingDSDNativePersistenceInteroperability(t *testing.T) {
 		t.Run(strconv.Itoa(scenario), func(t *testing.T) {
 			dir := t.TempDir()
 			sourcePath := filepath.Join(dir, "source.dsd")
-			output, err := exec.Command(executable, "write", sourcePath, strconv.Itoa(scenario)).CombinedOutput()
+			output, err := testoracle.Command(t, executable, "write", sourcePath, strconv.Itoa(scenario)).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C write: %v %s", err, output)
 			}
@@ -75,11 +74,11 @@ func TestMappingDSDNativePersistenceInteroperability(t *testing.T) {
 			if actual := mappingDSDReviewReadReport(t, executable, goPath, cPath); actual != expected {
 				t.Fatalf("Go->C state:\n%soriginal C:\n%s", actual, expected)
 			}
-			a, err := os.ReadFile(goPath)
+			a, err := testoracle.ReadFile(goPath)
 			if err != nil {
 				t.Fatal(err)
 			}
-			b, err := os.ReadFile(cPath)
+			b, err := testoracle.ReadFile(cPath)
 			if err != nil {
 				t.Fatal(err)
 			}

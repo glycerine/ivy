@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -18,7 +18,7 @@ func TestHierarchicalOriginalC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section removal required")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional C oracle requires cc")
 	}
@@ -32,7 +32,7 @@ int main(void){Abc_TtHieMan_t *m[17][6][2]={0};int n,l,e;word t[1024];char p[16]
 		t.Fatal(err)
 	}
 	args := []string{"-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", src, main, filepath.Join(src, "bool/lucky/luckySimple.c"), filepath.Join(src, "bool/lucky/luckySwap.c"), filepath.Join(src, "bool/lucky/lucky.c"), "-o", bin}
-	cmd := exec.Command(cc, args...)
+	cmd := testoracle.Command(t, cc, args...)
 	if b, err := cmd.CombinedOutput(); err != nil {
 		t.Fatal(err, string(b))
 	}
@@ -73,7 +73,7 @@ int main(void){Abc_TtHieMan_t *m[17][6][2]={0};int n,l,e;word t[1024];char p[16]
 		}
 		fmt.Fprintln(&input)
 	}
-	cmd = exec.Command(bin)
+	cmd = testoracle.Command(t, bin)
 	cmd.Stdin = &input
 	b, err := cmd.CombinedOutput()
 	if err != nil {

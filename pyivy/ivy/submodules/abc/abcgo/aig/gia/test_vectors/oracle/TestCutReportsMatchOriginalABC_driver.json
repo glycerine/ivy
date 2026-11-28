@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: $TMP/oracle driver",
+  "stdout": "Running cut computation with CutSize = 6  CutNum = 25  CutMin = yes  TruthMin = yes\nCutPair = 1986  Merge = 997 (50.20 %)  Eval = 483 (24.32 %)  Cut = 385 (19.39 %)  Cut/Node = 9.17  \nThe number of nodes with cut count over the limit (25 cuts) = 8 nodes (out of 42).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

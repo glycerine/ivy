@@ -1,0 +1,14 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026reachm",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026reachm\".\n\nOutput 0 of miter \"s27.bench\" was asserted in frame 0.  Time =     0.01 sec\nTime =     0.02 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026reachn",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026reachn\".\n\nOutput 0 of miter \"s27.bench\" was asserted in frame 0.  Time =     0.01 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026reachy",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026reachy\".\n\nOutput 0 of miter \"s27.bench\" was asserted in frame 0.  Time =     0.00 sec\n"
+ }
+]

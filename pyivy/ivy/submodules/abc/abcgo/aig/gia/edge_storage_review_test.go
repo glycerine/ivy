@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestEdgeStorageMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "edge_storage_review.c")
-	source, err := exec.Command(exe).CombinedOutput()
+	source, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original edge storage: %v\n%s", err, source)
 	}

@@ -2,7 +2,7 @@ package fracomb_test
 
 import (
 	"context"
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -69,7 +69,7 @@ func TestDarRwsatMuxStagesAgainstSource(t *testing.T) {
 	g = aig.Aig_ManDupDfs(g)
 	dumpDarStage(&actual, g, "rewrite2")
 	_, file, _, _ := runtime.Caller(0)
-	golden, err := os.ReadFile(filepath.Join(filepath.Dir(file), "test_vectors/dar_rwsat_mux_stages.golden"))
+	golden, err := testoracle.ReadFile(filepath.Join(filepath.Dir(file), "test_vectors/dar_rwsat_mux_stages.golden"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -79,7 +79,9 @@ func TestDarRwsatMuxStagesAgainstSource(t *testing.T) {
 	if actual.String() != string(golden) {
 		got, want := actual.String(), string(golden)
 		i := 0
-		for i < len(got) && i < len(want) && got[i] == want[i] { i++ }
+		for i < len(got) && i < len(want) && got[i] == want[i] {
+			i++
+		}
 		t.Fatalf("Go rewrite stages differ from source golden at byte %d (got %q, want %q)", i, got[max(0, i-80):min(len(got), i+120)], want[max(0, i-80):min(len(want), i+120)])
 	}
 	direct, err := dar.Dar_ManRwsat(original, true, false)

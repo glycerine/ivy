@@ -1,1 +1,1 @@
-../../../i10                  : i/o =  257/  224  lat =    0  nd =   861  edge =   2862  aig  =  3391  lev = 17  power = 929.91
+../../test_vectors/i10        : i/o =  257/  224  lat =    0  nd =   861  edge =   2862  aig  =  3391  lev = 17  power = 929.91

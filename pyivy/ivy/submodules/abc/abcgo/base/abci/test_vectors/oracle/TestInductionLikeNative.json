@@ -1,0 +1,14 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; ind -v -F 2; print_status",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; ind -v -F 2; print_status\".\n\nInduction parameters: FramesMax =     2. ConflictMax =      0.\nFrame    0 : PI =    6. PO =    1. AIG =    5. Var =     11. Clau =     13. Conf =      0. Time =     0.00 sec\nFrame    1 : PI =    7. PO =    4. AIG =    7. Var =     28. Clau =     45. Conf =      0. Time =     0.00 sec\nCompleted 2 iterations.\nNetworks are UNDECIDED.  Time =     0.00 sec\nStatus = -1  Frames = -1   Cex is not defined.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; ind -v -F 3; print_status",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; ind -v -F 3; print_status\".\n\nError: Currently this command works only for single-output miter.\nStatus = -1  Frames = -1   Cex is not defined.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; ind -v -u -F 3; print_status",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; ind -v -u -F 3; print_status\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nError: Currently this command works only for single-output miter.\nStatus = -1  Frames = -1   Cex is not defined.\n"
+ }
+]

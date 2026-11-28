@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: abc -c read_aiger $TMP/fixture.aig; bmc3 -F 4",
+  "stdout": "ABC command line: \"read_aiger $TMP/001/fixture.aig; bmc3 -F 4\".\n\nOutput 0 of miter \"$TMP/001/fixture\" was asserted in frame 0. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

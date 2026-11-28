@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 
@@ -54,7 +54,7 @@ func TestFxInternalGraphIgnoresUnusedLeafSignals(t *testing.T) {
 
 func TestFxNativeGraphConversion(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "fx_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C graph conversion: %v\n%s", err, native)
 	}
@@ -184,7 +184,7 @@ func TestFxNativeSopConversion(t *testing.T) {
 		"1--1 1\n-11- 1\n0-10 1\n", "---- 0\n",
 	}
 	exe := compileGiaSourceOracle(t, "fx_sop_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C SOP conversion: %v\n%s", err, native)
 	}

@@ -2,8 +2,8 @@ package gia_test
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -58,7 +58,7 @@ func TestMappingDSDNativeBalancingMatrix(t *testing.T) {
 	if err := os.WriteFile(path, []byte(input.String()), 0600); err != nil {
 		t.Fatal(err)
 	}
-	source, err := exec.Command(executable, path).CombinedOutput()
+	source, err := testoracle.Command(t, executable, path).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original balancing matrix: %v %s", err, source)
 	}

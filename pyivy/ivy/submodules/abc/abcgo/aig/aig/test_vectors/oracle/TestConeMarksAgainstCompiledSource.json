@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/cone_marks_compare.c -Wl,--gc-sections -o $TMP/cone-marks",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/cone-marks"
+  ]
+ },
+ {
+  "key": "combined: $TMP/cone-marks",
+  "stdout": "0 0 0000011 1111111\n1 0 0000011 1111110\n2 1 0000011 1111111\n3 0 1000100 1111111\n4 1 1000000 1111111\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

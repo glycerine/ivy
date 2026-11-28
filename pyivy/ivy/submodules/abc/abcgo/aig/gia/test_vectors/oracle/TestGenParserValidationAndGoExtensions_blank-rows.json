@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: $TMP/oracle param $TMP/patterns.pla",
+  "stdout": "param1 ins-1 words1\n",
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ]
+ }
+]

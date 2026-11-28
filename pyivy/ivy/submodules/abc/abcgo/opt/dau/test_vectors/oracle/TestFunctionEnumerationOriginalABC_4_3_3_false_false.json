@@ -1,0 +1,14 @@
+[
+ {
+  "key": "combined: abc -c funenum -S 4 -I 3 -M 3 [dir $TMP]",
+  "stdout": "ABC command line: \"funenum -S 4 -I 3 -M 3\".\n\nN = 0 | C =           0  New4 =         2  All4 =         2 | New3 =       2  All3 =       2  Two =     0      0.00 sec\nN = 1 | C =           3  New4 =         2  All4 =         4 | New3 =       2  All3 =       4  Two =     0      0.00 sec\nN = 2 | C =          19  New4 =         5  All4 =         9 | New3 =       5  All3 =       9  Two =     0      0.00 sec\nN = 3 | C =         178  New4 =        20  All4 =        29 | New3 =       3  All3 =      12  Two =     0      0.00 sec\nDumped file \"npn43.ttd\" with         29 classes after exploring         29 frontiers.  Time =     0.00 sec\nTotal time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/npn43.ttd": {
+    "base64": "AAAAAAAAAABVVVVVVVVVVRERERERERERZmZmZmZmZmYHBwcHBwcHBwEBAQEBAQEBBgYGBgYGBgYeHh4eHh4eHmlpaWlpaWlpfwB/AH8AfwAfAB8AHwAfAG8AbwBvAG8AHxEfER8RHxEHAAcABwAHAGYGZgZmBmYGGxsbGxsbGxsZGRkZGRkZGQEAAQABAAEABgAGAAYABgAeAB4AHgAeAGkAaQBpAGkAYAZgBmAGYAaBgYGBgYGBgfgH+Af4B/gH/gH+Af4B/gH5BvkG+Qb5Bh4RHhEeER4R4R7hHuEe4R6WaZZplmmWaQAAAAABAAAAAgABAAIAAQADAAIAAwACAAMAAgADAAIAAwACAAQAAwAEAAMABAADAAQAAwAEAAMABAADAAMAAwADAAMABAADAAQAAwAEAAMABAADAAQAAwADAAMABAADAAQAAwAEAAMABAADAAQAAwAEAAMA"
+   }
+  }
+ }
+]

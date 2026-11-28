@@ -1,0 +1,13 @@
+[
+ {
+  "key": "combined: $TMP/oracle --abs-power [dir $TMP]",
+  "stdout": "oracle: $SRC/aig/gia/giaFrames.c:167: Gia_ManUnrollAbs: Assertion `Gia_ManObjNum(p) \u003c= nObjMask' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

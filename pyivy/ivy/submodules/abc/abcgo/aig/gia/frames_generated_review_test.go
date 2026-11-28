@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -104,7 +104,7 @@ func framesReviewCheckSequence(t *testing.T, src, out *Gia_Man_t, p Gia_ParFra_t
 
 func TestFramesGeneratedNativeDrivers(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--generated-drivers").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--generated-drivers").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C generated drivers: %v\n%s", err, native)
 	}
@@ -135,7 +135,7 @@ func TestFramesGeneratedNativeDrivers(t *testing.T) {
 
 func TestFramesGeneratedNativeHistory(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "frames_review.c")
-	native, err := exec.Command(exe, "--histories").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--histories").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C generated history: %v\n%s", err, native)
 	}

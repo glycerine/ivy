@@ -2,8 +2,8 @@ package wlc
 
 import (
 	"bytes"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -12,12 +12,12 @@ import (
 )
 
 func TestWriteTableOneMatchesC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
-	source, err := os.ReadFile(filepath.Join(filepath.Dir(file), "../../../src/base/wlc/wlcWriteVer.c"))
+	source, err := testoracle.ReadFile(filepath.Join(filepath.Dir(file), "../../../src/base/wlc/wlcWriteVer.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,12 +47,12 @@ func TestWriteTableOneMatchesC(t *testing.T) {
 	if err = os.WriteFile(cfile, []byte(preamble+text[start:end]+main), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if output, err := exec.Command(cc, cfile, "-o", binary).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, cc, cfile, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile C: %v: %s", err, output)
 	}
 	words := []uint64{0x0123456789abcdef, 0xfedcba9876543210, 0xaaaaaaaa55555555, 0xf123456789abcdef}
 	for _, width := range []int32{1, 8, 16, 32, 64} {
-		want, err := exec.Command(binary, strconv.Itoa(int(width))).Output()
+		want, err := testoracle.Command(t, binary, strconv.Itoa(int(width))).Output()
 		if err != nil {
 			t.Fatal(err)
 		}

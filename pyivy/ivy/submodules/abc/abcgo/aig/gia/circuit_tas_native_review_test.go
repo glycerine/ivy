@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -11,7 +11,7 @@ import (
 
 func TestTasMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_tas_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native TAS: %v\n%s", err, native)
 	}
@@ -160,7 +160,7 @@ func TestTasMatchesOriginalABC(t *testing.T) {
 
 func TestTasStatisticsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_tas_review.c")
-	native, err := exec.Command(exe, "stats").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "stats").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native TAS statistics: %v\n%s", err, native)
 	}
@@ -185,7 +185,7 @@ func TestTasStatisticsMatchOriginalABC(t *testing.T) {
 
 func TestTasMitersAndPhasesMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_tas_review.c")
-	native, err := exec.Command(exe, "miters").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "miters").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native TAS miter: %v\n%s", err, native)
 	}
@@ -263,7 +263,7 @@ func TestTasMitersAndPhasesMatchOriginalABC(t *testing.T) {
 
 func TestTasWatchedClausesMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_tas_review.c")
-	native, err := exec.Command(exe, "watch").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "watch").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native TAS watches: %v\n%s", err, native)
 	}
@@ -342,7 +342,7 @@ func TestTasWatchedClausesMatchOriginalABC(t *testing.T) {
 
 func TestTasPackedMiterMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "circuit_tas_review.c")
-	native, err := exec.Command(exe, "Packed").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "Packed").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native TAS packed miter: %v\n%s", err, native)
 	}

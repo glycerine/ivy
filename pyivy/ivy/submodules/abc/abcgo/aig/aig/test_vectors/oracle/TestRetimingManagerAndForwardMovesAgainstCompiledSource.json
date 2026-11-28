@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/retiming_manager_compare.c $SRC/aig/aig/aigMem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "mapping: 0 1 2 4 5 8 3 6 7\n0 type 0 capacity 0/0 fanins: fanouts:\n1 type 0 capacity 0/1 fanins: fanouts: 6\n2 type 0 capacity 0/1 fanins: fanouts: 7\n3 type 1 capacity 1/0 fanins: 8/0 fanouts:\n4 type 0 capacity 1/1 fanins: 6/0 fanouts: 8\n5 type 0 capacity 1/1 fanins: 7/0 fanouts: 8\n6 type 0 capacity 1/1 fanins: 1/0 fanouts: 4\n7 type 0 capacity 1/1 fanins: 2/0 fanouts: 5\n8 type 0 capacity 2/1 fanins: 4/1 5/1 fanouts: 3\nautonomous 0 0\nmax 1\nedge 3/0 1: 2\nedge 4/0 0:\nedge 5/0 0:\nedge 6/0 0:\nedge 7/0 0:\nedge 8/0 0:\nedge 8/1 0:\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

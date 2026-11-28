@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/xor_levels_compare.c $SRC/aig/aig/aigUtil.c $SRC/misc/tim/timBox.c -Wl,--gc-sections -o $TMP/xor-levels",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/xor-levels"
+  ]
+ },
+ {
+  "key": "combined: $TMP/xor-levels",
+  "stdout": "structural 2 3 2\nchoice 2 1 2 0\narrival 6 7\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

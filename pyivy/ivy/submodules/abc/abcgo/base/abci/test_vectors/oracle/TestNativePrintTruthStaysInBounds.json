@@ -1,0 +1,49 @@
+[
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -I $SRC -c $TMP/main.c -o $TMP/main.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/main.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -I $SRC -c $SRC/aig/gia/giaTruth.c -o $TMP/giaTruth.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/giaTruth.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -I $SRC -c $SRC/base/abci/abc.c -o $TMP/abc.o",
+  "stdout": "$SRC/base/abci/abc.c: In function ‘Abc_CommandAbc9Put’:\n$SRC/base/abci/abc.c:30694:43: warning: ‘%0*d’ directive writing between 1 and 2147483647 bytes into a region of size 97 [-Wformat-overflow=]\n30694 |                     sprintf( pSuffix, \"_li%0*d\", nDigits, i-Abc_NtkPoNum(pNtk) );\n      |                                           ^~~~\n$SRC/base/abci/abc.c:30694:39: note: directive argument in the range [0, 2147483647]\n30694 |                     sprintf( pSuffix, \"_li%0*d\", nDigits, i-Abc_NtkPoNum(pNtk) );\n      |                                       ^~~~~~~~~\nIn file included from /usr/include/stdio.h:980,\n                 from $SRC/base/abc/abc.h:29,\n                 from $SRC/base/abci/abc.c:21:\nIn function ‘sprintf’,\n    inlined from ‘Abc_CommandAbc9Put’ at $SRC/base/abci/abc.c:30694:21:\n/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output between 5 and 2147483651 bytes into a destination of size 100\n   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n   31 |                                   __glibc_objsize (__s), __fmt,\n      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n   32 |                                   __va_arg_pack ());\n      |                                   ~~~~~~~~~~~~~~~~~\n$SRC/base/abci/abc.c: In function ‘Abc_CommandAbc9Cone’:\n$SRC/base/abci/abc.c:42831:34: warning: ‘%0*d’ directive writing between 1 and 2147483647 bytes into a region of size 999 [-Wformat-overflow=]\n42831 |             sprintf( Buffer, \"%s_%0*d.aig\", Extra_FileNameGeneric(pAbc-\u003epGia-\u003epSpec), nDigits, i );\n      |                                  ^~~~\n$SRC/base/abci/abc.c:42831:30: note: directive argument in the range [0, 2147483646]\n42831 |             sprintf( Buffer, \"%s_%0*d.aig\", Extra_FileNameGeneric(pAbc-\u003epGia-\u003epSpec), nDigits, i );\n      |                              ^~~~~~~~~~~~~\nIn function ‘sprintf’,\n    inlined from ‘Abc_CommandAbc9Cone’ at $SRC/base/abci/abc.c:42831:13:\n/usr/include/x86_64-linux-gnu/bits/stdio2.h:30:10: note: ‘__builtin___sprintf_chk’ output 7 or more bytes (assuming 2147483653) into a destination of size 1000\n   30 |   return __builtin___sprintf_chk (__s, __USE_FORTIFY_LEVEL - 1,\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n   31 |                                   __glibc_objsize (__s), __fmt,\n      |                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n   32 |                                   __va_arg_pack ());\n      |                                   ~~~~~~~~~~~~~~~~~\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/abc.o"
+  ]
+ },
+ {
+  "key": "combined: g++ -fsanitize=address $TMP/main.o $TMP/giaTruth.o $TMP/abc.o $LIBABC -lreadline -lpthread -lm -ldl -o $TMP/abc_asan",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/abc_asan"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan read $CWD/test_vectors/seq/s27.blif; strash; \u0026get; \u0026print_truth",
+  "stdout": "Line 4: Skipping line \".wire_load_slope 0.00\".\nError: The number of inputs of the AIG exceeds 6.\n",
+  "exit": 1,
+  "wait": 256,
+  "temps": [
+   "$TMP/001"
+  ],
+  "err": "exit status 1"
+ }
+]

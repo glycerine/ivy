@@ -1,0 +1,10 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/int_backward_safe.blif; strash; int -b; print_status",
+  "stdout": "ABC command line: \"read test_vectors/seq/int_backward_safe.blif; strash; int -b; print_status\".\n\nProperty proved.  Time =     0.01 sec\nStatus = 1  Frames = 1   Cex is not defined.\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; dc2; miter test_vectors/native_s27_drw.blif; int -b; print_status",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; dc2; miter test_vectors/native_s27_drw.blif; int -b; print_status\".\n\nProperty proved.  Time =     0.01 sec\nStatus = 1  Frames = 2   Cex is not defined.\n"
+ }
+]

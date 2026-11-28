@@ -9,7 +9,7 @@ import (
 // fanins. Sfm_TruthToCnf then constrained the first fanin instead of the node
 // output, the next window became inconsistent, and native ABC crashed
 // (CBUGS_FIXED.md #3).
-const mfsDcsScript = "read ../../../i10.aig; &get; &if -K 4; &mfs -a -l; &ps"
+const mfsDcsScript = "read ../../test_vectors/i10.aig; &get; &if -K 4; &mfs -a -l; &ps"
 
 // The native result after the fix.
 const mfsDcsMapping = "Mapping (K=4)  :  lut =    798  edge =    2681  lev =   17 (6.57)"

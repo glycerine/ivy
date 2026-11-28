@@ -3,7 +3,7 @@ package gia
 import (
 	"context"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -51,7 +51,7 @@ func TestRealMuxObjectEncodingMatchesSource(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("native fixture uses GNU section collection")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -62,10 +62,10 @@ func TestRealMuxObjectEncodingMatchesSource(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	args := []string{"-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, filepath.Join(dir, "test_vectors/object_mux_encoding.c"), "-Wl,--gc-sections", "-o", binary}
-	if out, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.CommandContext(t, ctx, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile source encoding: %v: %s", err, out)
 	}
-	source, err := exec.CommandContext(ctx, binary).CombinedOutput()
+	source, err := testoracle.CommandContext(t, ctx, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run source encoding: %v: %s", err, source)
 	}

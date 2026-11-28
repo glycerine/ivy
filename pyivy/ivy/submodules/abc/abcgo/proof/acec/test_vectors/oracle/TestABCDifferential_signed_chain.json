@@ -1,0 +1,450 @@
+[
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case0.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case0.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case1.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case1.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case2.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case2.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case3.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case3.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case4.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case4.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case5.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case5.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case6.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case6.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case7.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case7.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.01 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 2 entries out of 5.\nBox1: Matched 2 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.01 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case8.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case8.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case9.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case9.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case10.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case10.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case11.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case11.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case12.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case12.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case13.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case13.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case14.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case14.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case15.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case15.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 2 entries out of 5.\nBox1: Matched 2 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case16.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case16.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case17.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case17.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case18.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case18.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case19.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case19.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case20.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case20.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case21.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case21.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case22.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case22.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case23.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case23.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.01 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 2 entries out of 5.\nBox1: Matched 2 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.01 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case24.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case24.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case25.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case25.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case26.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case26.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case27.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case27.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case28.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case28.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case29.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case29.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case30.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case30.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case31.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case31.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 2 entries out of 5.\nBox1: Matched 2 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case32.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case32.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case33.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case33.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case34.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case34.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case35.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case35.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case36.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case36.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case37.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case37.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case38.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case38.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case39.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case39.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.01 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 2 entries out of 5.\nBox1: Matched 2 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.01 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case40.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case40.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case41.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case41.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case42.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case42.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case43.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case43.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case44.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case44.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case45.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case45.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case46.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case46.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case47.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case47.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 2 entries out of 5.\nBox1: Matched 2 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case48.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case48.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case49.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case49.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case50.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case50.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case51.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case51.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case52.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case52.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case53.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case53.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case54.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case54.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case55.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case55.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 2 entries out of 5.\nBox1: Matched 2 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case56.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case56.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 5 entries out of 5.\nBox1: Matched 5 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case57.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case57.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case58.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case58.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case59.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case59.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case60.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case60.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 4 entries out of 5.\nBox1: Matched 4 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case61.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case61.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case62.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case62.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 3 entries out of 5.\nBox1: Matched 3 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are NOT EQUIVALENT. Output 0 trivially differs (different phase).  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026acec $TMP/base.aig $TMP/case63.aig",
+  "stdout": "ABC command line: \"\u0026acec $TMP/001/base.aig $TMP/001/case63.aig\".\n\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nThe adder tree has 2 internal cut points. There is no internal fanouts.\nFinished computing equivalent nodes.  Time =     0.00 sec\nMoved 0 pairs of PPs to normalize the matrix.\nMoved 0 pairs of PPs to normalize the matrix.\nBox0: Matched 2 entries out of 5.\nBox1: Matched 2 entries out of 5.\nMatching of adder trees in LHS and RHS succeeded.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

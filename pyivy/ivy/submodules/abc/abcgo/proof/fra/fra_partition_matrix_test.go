@@ -3,9 +3,9 @@ package fra
 import (
 	"bufio"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -16,17 +16,17 @@ import (
 // TestPartitionMatrixAgainstCompiledABC builds the checked-in C sources in
 // an isolated directory when FRA_BUILD_ORACLE=1; no checkout objects are used.
 func TestPartitionMatrixAgainstCompiledABC(t *testing.T) {
-	if os.Getenv("FRA_BUILD_ORACLE") != "1" {
+	if testoracle.Gate("FRA_BUILD_ORACLE") != "1" {
 		t.Skip("set FRA_BUILD_ORACLE=1 to build the C oracle from source")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	if _, err = exec.LookPath("g++"); err != nil {
+	if _, err = testoracle.LookPath("g++"); err != nil {
 		t.Skip("C++ compiler unavailable")
 	}
-	if _, err = exec.LookPath("make"); err != nil {
+	if _, err = testoracle.LookPath("make"); err != nil {
 		t.Skip("make unavailable")
 	}
 	src, err := filepath.Abs("../../../src")
@@ -40,6 +40,9 @@ func TestPartitionMatrixAgainstCompiledABC(t *testing.T) {
 		t.Fatal(err)
 	}
 	copyFile := func(from, to string) error {
+		if !testoracle.Recording() {
+			return nil // the build that reads the copy is replayed
+		}
 		in, e := os.Open(from)
 		if e != nil {
 			return e
@@ -61,10 +64,10 @@ func TestPartitionMatrixAgainstCompiledABC(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = os.Chmod(filepath.Join(build, "depends.sh"), 0755); err != nil {
+	if err = os.Chmod(filepath.Join(build, "depends.sh"), 0755); err != nil && testoracle.Recording() {
 		t.Fatal(err)
 	}
-	err = filepath.WalkDir(src, func(path string, d os.DirEntry, walkErr error) error {
+	err = testoracle.WalkDir(src, func(path string, d os.DirEntry, walkErr error) error {
 		if walkErr != nil {
 			return walkErr
 		}
@@ -84,7 +87,7 @@ func TestPartitionMatrixAgainstCompiledABC(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	buildCmd := exec.Command("make", "-j4", "ABC_MAKE_NO_DEPS=1", "ABC_USE_STDINT_H=1", "ABC_USE_NO_READLINE=1", "ABC_USE_NO_PTHREADS=1", "OPTFLAGS=-O0", "libabc.a")
+	buildCmd := testoracle.Command(t, "make", "-j4", "ABC_MAKE_NO_DEPS=1", "ABC_USE_STDINT_H=1", "ABC_USE_NO_READLINE=1", "ABC_USE_NO_PTHREADS=1", "OPTFLAGS=-O0", "libabc.a")
 	buildCmd.Dir = build
 	if out, e := buildCmd.CombinedOutput(); e != nil {
 		t.Fatalf("build checked-in ABC sources: %v\n%s", e, out)
@@ -93,10 +96,10 @@ func TestPartitionMatrixAgainstCompiledABC(t *testing.T) {
 	archive := filepath.Join(build, "libabc.a")
 	exe := filepath.Join(dir, "oracle")
 	args := []string{"-DABC_USE_STDINT_H=1", "-DABC_USE_CUDD=1", "-I", src, "test_vectors/partition_matrix_oracle.c", archive, "-lstdc++", "-lm", "-ldl", "-lz", "-o", exe}
-	if out, e := exec.Command(cc, args...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, args...).CombinedOutput(); e != nil {
 		t.Fatalf("link C oracle: %v: %s", e, out)
 	}
-	data, err := exec.Command(exe).CombinedOutput()
+	data, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C oracle: %v: %s", err, data)
 	}

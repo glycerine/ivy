@@ -3,8 +3,7 @@ package cec
 import (
 	"github.com/glycerine/abcgo/aig/gia"
 	"github.com/glycerine/abcgo/aig/ioa"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"testing"
 )
@@ -13,15 +12,15 @@ import (
 // reimplementation of its logic. Gate IDs/scheduling may differ; the ordered
 // output functions and removal of redundant cones must agree exhaustively.
 func TestNativeSweepAgainstOriginalABC(t *testing.T) {
-	binary := os.Getenv("ABC_SOURCE_BINARY")
+	binary := testoracle.NativeABCPath()
 	if binary == "" {
-		binary = filepath.Join("..", "..", "..", "abc")
+		binary = testoracle.NativeABCPath()
 	}
 	binary, err := filepath.Abs(binary)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err = os.Stat(binary); err != nil {
+	if _, err = testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	original, _, _ := sweepFixture()
@@ -45,7 +44,7 @@ func TestNativeSweepAgainstOriginalABC(t *testing.T) {
 		t.Fatal(err)
 	}
 	command := "&read " + input + "; &fraig -J 0; &write " + output
-	if log, err := exec.Command(binary, "-q", command).CombinedOutput(); err != nil {
+	if log, err := testoracle.Command(t, binary, "-q", command).CombinedOutput(); err != nil {
 		t.Fatalf("original C sweep: %v\n%s", err, log)
 	}
 	reference, err := ioa.Ioa_ReadAiger(output, 1)

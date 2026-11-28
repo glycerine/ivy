@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: abc -c read_genlib $MOD/map/amap/test_vectors/amap_mux.genlib; read test_vectors/native_mul4_gen.aig; strash; map; print_stats",
+  "stdout": "ABC command line: \"read_genlib $MOD/map/amap/test_vectors/amap_mux.genlib; read test_vectors/native_mul4_gen.aig; strash; map; print_stats\".\n\nWarnings: genlib library reader cannot detect the buffer gate.\nSome parts of the supergate-based technology mapper may not work correctly.\nEntered genlib library with 4 gates from file \"$MOD/map/amap/test_vectors/amap_mux.genlib\".\n\u001b[1;37mtest_vectors/native_mul4_gen  :\u001b[0m i/o =    8/    8  lat =    0  nd =    90  edge =    154  area =90.00  delay =25.00  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read_genlib -v $MOD/map/amap/test_vectors/amap_mux.genlib; read test_vectors/native_mul4_gen.aig; strash; map; print_stats",
+  "stdout": "ABC command line: \"read_genlib -v $MOD/map/amap/test_vectors/amap_mux.genlib; read test_vectors/native_mul4_gen.aig; strash; map; print_stats\".\n\nWarnings: genlib library reader cannot detect the buffer gate.\nSome parts of the supergate-based technology mapper may not work correctly.\n\u001b[1;37mtest_vectors/native_mul4_gen  :\u001b[0m i/o =    8/    8  lat =    0  nd =    90  edge =    154  area =90.00  delay =25.00  lev = 25\n"
+ },
+ {
+  "key": "combined: abc -c read_genlib $MOD/map/super/test_vectors/tiny.genlib; read test_vectors/native_mul4_gen.aig; strash; map; print_stats",
+  "stdout": "ABC command line: \"read_genlib $MOD/map/super/test_vectors/tiny.genlib; read test_vectors/native_mul4_gen.aig; strash; map; print_stats\".\n\nEntered genlib library with 6 gates from file \"$MOD/map/super/test_vectors/tiny.genlib\".\n\u001b[1;37mtest_vectors/native_mul4_gen  :\u001b[0m i/o =    8/    8  lat =    0  nd =   124  edge =    222  area =222.00  delay =21.00  lev = 21\n"
+ },
+ {
+  "key": "combined: abc -c read_genlib -v $MOD/map/super/test_vectors/tiny.genlib; read test_vectors/native_mul4_gen.aig; strash; map; print_stats",
+  "stdout": "ABC command line: \"read_genlib -v $MOD/map/super/test_vectors/tiny.genlib; read test_vectors/native_mul4_gen.aig; strash; map; print_stats\".\n\n\u001b[1;37mtest_vectors/native_mul4_gen  :\u001b[0m i/o =    8/    8  lat =    0  nd =   124  edge =    222  area =222.00  delay =21.00  lev = 21\n"
+ }
+]

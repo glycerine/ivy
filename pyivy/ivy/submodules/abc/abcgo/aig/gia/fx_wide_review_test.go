@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestFxNativeMultiwordRetrieval(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "fx_wide_retrieve_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C multiword retrieve: %v\n%s", err, native)
 	}

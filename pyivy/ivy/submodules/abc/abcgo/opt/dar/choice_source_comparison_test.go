@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -77,11 +77,11 @@ func TestComposeActiveCChoicePipeline(t *testing.T) {
 			t.Fatalf("input=%v got=%v want=%v err=%v", values, got, want, err)
 		}
 	}
-	abc, err := filepath.Abs(filepath.Join("..", "..", "..", "abc"))
+	abc, err := testoracle.NativeABCAbs()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info, err := os.Stat(abc); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
+	if info, err := testoracle.Stat(abc); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
 		t.Skip("local ABC executable unavailable for full-pipeline comparison")
 	}
 	blif := ".model c\n.inputs a b c d\n.outputs y\n.names a b n\n11 1\n.names a c m\n11 1\n.names n m t\n1- 1\n-1 1\n.names t d y\n11 1\n.end\n"
@@ -89,7 +89,7 @@ func TestComposeActiveCChoicePipeline(t *testing.T) {
 	if err := os.WriteFile(path, []byte(blif), 0600); err != nil {
 		t.Fatal(err)
 	}
-	out, err := exec.Command(abc, "-c", "read_blif "+path+"; strash; &get; &dch; &ps").CombinedOutput()
+	out, err := testoracle.Command(t, abc, "-c", "read_blif "+path+"; strash; &get; &dch; &ps").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C choice pipeline: %v\n%s", err, out)
 	}
@@ -113,11 +113,11 @@ func TestChoiceMiterAndSkipAgainstCompiledC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("C oracle uses ELF section collection")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	source := os.Getenv("ABC_SOURCE_ROOT")
+	source := testoracle.SourceRoot()
 	if source == "" {
 		_, file, _, _ := runtime.Caller(0)
 		source = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
@@ -131,10 +131,10 @@ func TestChoiceMiterAndSkipAgainstCompiledC(t *testing.T) {
 		args = append(args, filepath.Join(source, file))
 	}
 	args = append(args, "-o", binary)
-	if output, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile C oracle: %v\n%s", err, output)
 	}
-	output, err := exec.Command(binary).CombinedOutput()
+	output, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run C oracle: %v\n%s", err, output)
 	}

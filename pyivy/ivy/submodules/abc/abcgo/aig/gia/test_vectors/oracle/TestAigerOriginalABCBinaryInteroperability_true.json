@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -c \u0026r -s input.aig; \u0026w output.aig [dir $TMP]",
+  "stdout": "ABC command line: \"\u0026r -s input.aig; \u0026w output.aig\".\n\nWarning: The last output is interpreted as a constraint.\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 6 1 1 0 4 2 1\n13\n6\n3\n2\n\u0002\u0002\u0004\u0001\u0005\u0003\u0001\u0002cc\u0000\u0000\u0000\u0004\u0000\u0000\u0000\u0001n\u0000\u0000\u0000\u0006input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

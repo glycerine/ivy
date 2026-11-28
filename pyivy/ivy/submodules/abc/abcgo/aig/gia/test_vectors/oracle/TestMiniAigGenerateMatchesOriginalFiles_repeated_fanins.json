@@ -1,0 +1,15 @@
+[
+ {
+  "key": "combined: $TMP/oracle [dir $TMP]",
+  "stdout": "Collected 3 (out of 3) lines.\nEntries = 9\n",
+  "temps": [
+   "$TMP/001",
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/test.miniaig": {
+    "base64": "EAAAAAAAAAD///9/////f////3////9/////f////38CAAAABAAAAAYAAAAGAAAAAgAAAAQAAAAIAAAA////fwoAAAD///9/"
+   }
+  }
+ }
+]

@@ -1,7 +1,7 @@
 package abci
 
 import (
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -51,7 +51,7 @@ func reoComparable(out string) string {
 // reoBlifBody is a BLIF file without its comment header.
 func reoBlifBody(t *testing.T, file string) string {
 	t.Helper()
-	data, err := os.ReadFile(file)
+	data, err := testoracle.ReadFile(file)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func reoBlifBody(t *testing.T, file string) string {
 }
 
 func TestReoCommandsMatchNative(t *testing.T) {
-	if os.Getenv("ABC_BINARY") == "" {
+	if testoracle.NativeABCPath() == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
 	dir := t.TempDir()

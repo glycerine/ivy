@@ -1,0 +1,27 @@
+[
+ {
+  "key": "combined: gcc -O1 -DABC_USE_STDINT_H -I $SRC -c test_vectors/fifo_oracle.c -o $TMP/main.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/main.o"
+  ]
+ },
+ {
+  "key": "combined: g++ $TMP/main.o $LIBABC -lreadline -lpthread -lm -ldl -o $TMP/fifo",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/fifo"
+  ]
+ },
+ {
+  "key": "combined: $TMP/fifo ../../test_vectors/i10.aig",
+  "stdout": "words=64 supp=9 corrupted=0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

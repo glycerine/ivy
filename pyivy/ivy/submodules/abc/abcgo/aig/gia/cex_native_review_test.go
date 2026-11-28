@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -117,7 +117,7 @@ func cexReviewPack(rows [][]bool) []uint32 {
 }
 func TestCounterexampleReplayAndValuesMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "cex_replay.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native CEX: %v\n%s", err, native)
 	}

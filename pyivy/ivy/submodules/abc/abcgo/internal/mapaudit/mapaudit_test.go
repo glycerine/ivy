@@ -10,6 +10,8 @@
 package mapaudit
 
 import (
+	"os"
+	"os/exec"
 	"bufio"
 	"bytes"
 	"fmt"
@@ -20,8 +22,6 @@ import (
 	"go/types"
 	"io"
 	"maps"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"slices"
 	"sort"

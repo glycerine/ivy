@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"regexp"
 	"strconv"
@@ -9,7 +10,7 @@ import (
 )
 
 func TestDefaultsMatchOriginalCECSource(t *testing.T) {
-	data, err := os.ReadFile("../../../../src/proof/cec/cecCore.c")
+	data, err := testoracle.ReadFile("../../../../src/proof/cec/cecCore.c")
 	if os.IsNotExist(err) {
 		t.Skip("original C source unavailable for reference comparison")
 	}

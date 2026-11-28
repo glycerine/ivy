@@ -1,0 +1,46 @@
+[
+ {
+  "key": "combined: cc -std=c99 -O2 -DNDEBUG -c $TMP/dec07.c -o $TMP/dec07.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/dec07.o"
+  ]
+ },
+ {
+  "key": "combined: cc -std=c99 -O2 -DNDEBUG -c $TMP/dec08.c -o $TMP/dec08.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/dec08.o"
+  ]
+ },
+ {
+  "key": "combined: cc -std=c99 -O2 -DNDEBUG -c $TMP/dec10.c -o $TMP/dec10.o",
+  "stdout": "$TMP/001/dec10.c: In function ‘If_Dec10PrintConfigOne’:\n$TMP/001/dec10.c:95:5: warning: implicit declaration of function ‘Extra_PrintBinary’ [-Wimplicit-function-declaration]\n   95 |     Extra_PrintBinary( stdout, \u0026t, 16 );\n      |     ^~~~~~~~~~~~~~~~~\n$TMP/001/dec10.c:97:5: warning: implicit declaration of function ‘Kit_DsdPrintFromTruth’ [-Wimplicit-function-declaration]\n   97 |     Kit_DsdPrintFromTruth( \u0026t, 4 );\n      |     ^~~~~~~~~~~~~~~~~~~~~\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/dec10.o"
+  ]
+ },
+ {
+  "key": "combined: cc -std=c99 -O2 $TMP/main.c $TMP/dec07.o $TMP/dec08.o $TMP/dec10.o -o $TMP/oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/oracle"
+  ]
+ },
+ {
+  "key": "output: $TMP/oracle [stdin cb54bd11070d84bc]",
+  "stdout": "0\n0\n0\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n0\n0\n0\n0\n0\n1\n1\n1\n0\n1\n0\n0\n0\n0\n0\n0\n0\n1\n0\n0\n1\n0\n1\n0\n0\n0\n1\n0\n0\n1\n0\n1\n1\n0\n0\n0\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n1\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n1\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n0\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n1\n0\n1\n0\n0\n1\n1\n1\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n1\n0\n1\n0\n0\n1\n0\n0\n1\n1\n1\n1\n1\n0\n1\n1\n0\n1\n1\n0\n1\n0\n1\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n1\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n1\n1\n0\n0\n1\n0\n0\n1\n0\n1\n1\n0\n0\n1\n0\n1\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n1\n0\n1\n1\n1\n1\n0\n1\n1\n0\n0\n1\n0\n0\n1\n1\n1\n1\n1\n1\n1\n0\n0\n1\n1\n0\n1\n1\n1\n1\n1\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n1\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n1\n1\n0\n0\n1\n0\n0\n1\n1\n1\n1\n0\n0\n1\n0\n1\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n1\n1\n1\n0\n0\n1\n0\n0\n1\n1\n1\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n1\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n0\n1\n0\n1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

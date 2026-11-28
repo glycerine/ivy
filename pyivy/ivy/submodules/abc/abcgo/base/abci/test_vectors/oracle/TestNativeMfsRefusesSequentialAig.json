@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; \u0026get; \u0026if -K 4; \u0026mfs; \u0026ps",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; \u0026get; \u0026if -K 4; \u0026mfs; \u0026ps\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\nError: Abc_CommandAbc9Mfs(): The current AIG is sequential; \"\u0026mfs\" works only for combinational networks.\n\u001b[1;37ms27.bench\u001b[0m : i/o =      4/      1  ff =      3  \u001b[1;36mand =      12\u001b[0m  \u001b[1;35mlev =    5\u001b[0m \u001b[1;35m(3.75)\u001b[0m  mem = 0.00 MB\nMapping (K=4)  :  \u001b[1;33mlut =      5\u001b[0m  \u001b[1;32medge =      17\u001b[0m  \u001b[1;31mlev =    2\u001b[0m \u001b[1;31m(1.75)\u001b[0m  mem = 0.00 MB\n"
+ }
+]

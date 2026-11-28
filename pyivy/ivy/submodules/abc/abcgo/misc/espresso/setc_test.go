@@ -3,8 +3,8 @@ package espresso
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -133,7 +133,7 @@ func TestCubeComparators(t *testing.T) {
 }
 
 func TestCubeGeometryOriginalCDifferentialFixture(t *testing.T) {
-	compiler, err := exec.LookPath("cc")
+	compiler, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional original-C compiler unavailable")
 	}
@@ -141,11 +141,11 @@ func TestCubeGeometryOriginalCDifferentialFixture(t *testing.T) {
 	pkg := filepath.Dir(file)
 	root := filepath.Clean(filepath.Join(pkg, "../../.."))
 	binary := filepath.Join(t.TempDir(), "setc_oracle")
-	command := exec.Command(compiler, "-std=gnu89", "-O0", "-include", filepath.Join(pkg, "test_vectors/setc_prelude.h"), "-I"+filepath.Join(root, "src/misc/util"), "-I"+filepath.Join(root, "src"), filepath.Join(pkg, "test_vectors/setc_oracle.c"), filepath.Join(root, "src/misc/espresso/set.c"), filepath.Join(root, "src/misc/espresso/setc.c"), filepath.Join(root, "src/misc/espresso/cubestr.c"), "-o", binary)
+	command := testoracle.Command(t, compiler, "-std=gnu89", "-O0", "-include", filepath.Join(pkg, "test_vectors/setc_prelude.h"), "-I"+filepath.Join(root, "src/misc/util"), "-I"+filepath.Join(root, "src"), filepath.Join(pkg, "test_vectors/setc_oracle.c"), filepath.Join(root, "src/misc/espresso/set.c"), filepath.Join(root, "src/misc/espresso/setc.c"), filepath.Join(root, "src/misc/espresso/cubestr.c"), "-o", binary)
 	if result, err := command.CombinedOutput(); err != nil {
 		t.Fatalf("C cube oracle compile: %v\n%s", err, result)
 	}
-	expected, err := exec.Command(binary).Output()
+	expected, err := testoracle.Command(t, binary).Output()
 	if err != nil {
 		t.Fatal(err)
 	}

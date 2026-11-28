@@ -1,0 +1,48 @@
+[
+ {
+  "key": "combined: cc $TMP/oracle.c -o $TMP/oracle",
+  "stdout": "$TMP/001/oracle.c: In function ‘Wlc_GenerateCodeMax4’:\n$TMP/001/oracle.c:53:25: warning: too many arguments for format [-Wformat-extra-args]\n   53 |         fprintf( pFile, \"  output yes, no;\\n\\n\", nWidth/3-1 );\n      |                         ^~~~~~~~~~~~~~~~~~~~~~~\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/oracle 1",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/max4.v": "module max4 ( a, b, c, d, res, addr );\n\n  input [0:0] a, b, c, d;\n  output [0:0] res;\n  output [1:0] addr;\n\n  wire [0:0] A = a;\n  wire [0:0] B = b;\n  wire [0:0] C = c;\n  wire [0:0] D = d;\n\n  wire AB, AC, AD, BC, BD, CD;\n\n  comp( A, B, AB );\n  comp( A, C, AC );\n  comp( A, D, AD );\n  comp( B, C, BC );\n  comp( B, D, BD );\n  comp( C, D, CD );\n\n  assign addr = AB ?  (CD ? (AC ? 2'b00 : 2'b10) : (AD ? 2'b00 : 2'b11))  :  (CD ? (BC ? 2'b01 : 2'b10) : (BD ? 2'b01 : 2'b11));\n\n  assign res = addr[1] ? (addr[1] ? d : c) : (addr[0] ? b : a);\n\nendmodule\n\n\nmodule comp ( a, b, res );\n\n  input [0:0] a, b;\n  output res;\n  wire res2;\n\n  wire [0:0] A =  a \u0026 ~b;\n  wire [0:0] B = ~a \u0026  b;\n\n  comp0( A, B, res, res2 );\n\nendmodule\n\n\n"
+  }
+ },
+ {
+  "key": "combined: $TMP/oracle 2",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/max4.v": "module max4 ( a, b, c, d, res, addr );\n\n  input [1:0] a, b, c, d;\n  output [1:0] res;\n  output [1:0] addr;\n\n  wire [2:0] A = a;\n  wire [2:0] B = b;\n  wire [2:0] C = c;\n  wire [2:0] D = d;\n\n  wire AB, AC, AD, BC, BD, CD;\n\n  comp( A, B, AB );\n  comp( A, C, AC );\n  comp( A, D, AD );\n  comp( B, C, BC );\n  comp( B, D, BD );\n  comp( C, D, CD );\n\n  assign addr = AB ?  (CD ? (AC ? 2'b00 : 2'b10) : (AD ? 2'b00 : 2'b11))  :  (CD ? (BC ? 2'b01 : 2'b10) : (BD ? 2'b01 : 2'b11));\n\n  assign res = addr[1] ? (addr[1] ? d : c) : (addr[0] ? b : a);\n\nendmodule\n\n\nmodule comp ( a, b, res );\n\n  input [2:0] a, b;\n  output res;\n  wire res2;\n\n  wire [2:0] A =  a \u0026 ~b;\n  wire [2:0] B = ~a \u0026  b;\n\n  comp0( A, B, res, res2 );\n\nendmodule\n\n\nmodule comp0 ( a, b, yes, no );\n\n  input [2:0] a, b;\n  output yes, no;\n\n  wire [2:0] y, n;\n\n  assign y = a;\n  assign n = b;\n\n  assign yes = y[0] | (~y[0] \u0026 ~n[0] \u0026 y[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 y[2]);\n  assign no  = n[0] | (~y[0] \u0026 ~n[0] \u0026 n[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 n[2]);\n\nendmodule\n\n\n"
+  }
+ },
+ {
+  "key": "combined: $TMP/oracle 4",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/max4.v": "module max4 ( a, b, c, d, res, addr );\n\n  input [3:0] a, b, c, d;\n  output [3:0] res;\n  output [1:0] addr;\n\n  wire [8:0] A = a;\n  wire [8:0] B = b;\n  wire [8:0] C = c;\n  wire [8:0] D = d;\n\n  wire AB, AC, AD, BC, BD, CD;\n\n  comp( A, B, AB );\n  comp( A, C, AC );\n  comp( A, D, AD );\n  comp( B, C, BC );\n  comp( B, D, BD );\n  comp( C, D, CD );\n\n  assign addr = AB ?  (CD ? (AC ? 2'b00 : 2'b10) : (AD ? 2'b00 : 2'b11))  :  (CD ? (BC ? 2'b01 : 2'b10) : (BD ? 2'b01 : 2'b11));\n\n  assign res = addr[1] ? (addr[1] ? d : c) : (addr[0] ? b : a);\n\nendmodule\n\n\nmodule comp ( a, b, res );\n\n  input [8:0] a, b;\n  output res;\n  wire res2;\n\n  wire [8:0] A =  a \u0026 ~b;\n  wire [8:0] B = ~a \u0026  b;\n\n  comp0( A, B, res, res2 );\n\nendmodule\n\n\nmodule comp0 ( a, b, yes, no );\n\n  input [8:0] a, b;\n  output yes, no;\n\n  wire [2:0] y, n;\n\n  wire [2:0] A0 = a[2:0];\n  wire [2:0] A1 = a[5:3];\n  wire [2:0] A2 = a[8:6];\n\n  wire [2:0] B0 = b[2:0];\n  wire [2:0] B1 = b[5:3];\n  wire [2:0] B2 = b[8:6];\n\n  comp1( A0, B0, y[0], n[0] );\n  comp1( A1, B1, y[1], n[1] );\n  comp1( A2, B2, y[2], n[2] );\n\n  assign yes = y[0] | (~y[0] \u0026 ~n[0] \u0026 y[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 y[2]);\n  assign no  = n[0] | (~y[0] \u0026 ~n[0] \u0026 n[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 n[2]);\n\nendmodule\n\n\nmodule comp1 ( a, b, yes, no );\n\n  input [2:0] a, b;\n  output yes, no;\n\n  wire [2:0] y, n;\n\n  assign y = a;\n  assign n = b;\n\n  assign yes = y[0] | (~y[0] \u0026 ~n[0] \u0026 y[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 y[2]);\n  assign no  = n[0] | (~y[0] \u0026 ~n[0] \u0026 n[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 n[2]);\n\nendmodule\n\n\n"
+  }
+ },
+ {
+  "key": "combined: $TMP/oracle 9",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/max4.v": "module max4 ( a, b, c, d, res, addr );\n\n  input [8:0] a, b, c, d;\n  output [8:0] res;\n  output [1:0] addr;\n\n  wire [8:0] A = a;\n  wire [8:0] B = b;\n  wire [8:0] C = c;\n  wire [8:0] D = d;\n\n  wire AB, AC, AD, BC, BD, CD;\n\n  comp( A, B, AB );\n  comp( A, C, AC );\n  comp( A, D, AD );\n  comp( B, C, BC );\n  comp( B, D, BD );\n  comp( C, D, CD );\n\n  assign addr = AB ?  (CD ? (AC ? 2'b00 : 2'b10) : (AD ? 2'b00 : 2'b11))  :  (CD ? (BC ? 2'b01 : 2'b10) : (BD ? 2'b01 : 2'b11));\n\n  assign res = addr[1] ? (addr[1] ? d : c) : (addr[0] ? b : a);\n\nendmodule\n\n\nmodule comp ( a, b, res );\n\n  input [8:0] a, b;\n  output res;\n  wire res2;\n\n  wire [8:0] A =  a \u0026 ~b;\n  wire [8:0] B = ~a \u0026  b;\n\n  comp0( A, B, res, res2 );\n\nendmodule\n\n\nmodule comp0 ( a, b, yes, no );\n\n  input [8:0] a, b;\n  output yes, no;\n\n  wire [2:0] y, n;\n\n  wire [2:0] A0 = a[2:0];\n  wire [2:0] A1 = a[5:3];\n  wire [2:0] A2 = a[8:6];\n\n  wire [2:0] B0 = b[2:0];\n  wire [2:0] B1 = b[5:3];\n  wire [2:0] B2 = b[8:6];\n\n  comp1( A0, B0, y[0], n[0] );\n  comp1( A1, B1, y[1], n[1] );\n  comp1( A2, B2, y[2], n[2] );\n\n  assign yes = y[0] | (~y[0] \u0026 ~n[0] \u0026 y[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 y[2]);\n  assign no  = n[0] | (~y[0] \u0026 ~n[0] \u0026 n[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 n[2]);\n\nendmodule\n\n\nmodule comp1 ( a, b, yes, no );\n\n  input [2:0] a, b;\n  output yes, no;\n\n  wire [2:0] y, n;\n\n  assign y = a;\n  assign n = b;\n\n  assign yes = y[0] | (~y[0] \u0026 ~n[0] \u0026 y[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 y[2]);\n  assign no  = n[0] | (~y[0] \u0026 ~n[0] \u0026 n[1]) | (~y[0] \u0026 ~n[0] \u0026 ~y[1] \u0026 ~n[1] \u0026 n[2]);\n\nendmodule\n\n\n"
+  }
+ }
+]

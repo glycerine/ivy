@@ -1,0 +1,51 @@
+[
+ {
+  "key": "combined: abc -c read $TMP/dup.blif; print_stats",
+  "stdout": "ABC command line: \"read $TMP/001/dup.blif; print_stats\".\n\nLine 6: Signal \"y\" is defined more than once.\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/undef.blif; print_stats",
+  "stdout": "ABC command line: \"read $TMP/002/undef.blif; print_stats\".\n\nWarning: Constant-0 drivers added to 1 non-driven nets in network \"t\":\nc\n\u001b[1;37mt                             :\u001b[0m i/o =    2/    1  lat =    0  nd =     2  edge =      2  cube =     1  lev = 1\n",
+  "temps": [
+   "$TMP/002"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/noend.blif; print_stats",
+  "stdout": "ABC command line: \"read $TMP/003/noend.blif; print_stats\".\n\n\u001b[1;37mt                             :\u001b[0m i/o =    2/    1  lat =    0  nd =     1  edge =      2  cube =     1  lev = 1\n",
+  "temps": [
+   "$TMP/003"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/nodrv.blif; print_stats",
+  "stdout": "ABC command line: \"read $TMP/004/nodrv.blif; print_stats\".\n\nWarning: Constant-0 drivers added to 1 non-driven nets in network \"t\":\nz\n\u001b[1;37mt                             :\u001b[0m i/o =    2/    2  lat =    0  nd =     2  edge =      2  cube =     1  lev = 1\n",
+  "temps": [
+   "$TMP/004"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/cube.blif; print_stats",
+  "stdout": "ABC command line: \"read $TMP/005/cube.blif; print_stats\".\n\nLine 5: Cube \"111\" has size different from the fanin count (2).\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/005"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/outval.blif; print_stats",
+  "stdout": "ABC command line: \"read $TMP/006/outval.blif; print_stats\".\n\nLine 5: Output value \"2\" is incorrect.\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/006"
+  ]
+ },
+ {
+  "key": "combined: abc -c read $TMP/polarity.blif; print_stats",
+  "stdout": "ABC command line: \"read $TMP/007/polarity.blif; print_stats\".\n\nLine 6: Output value \"0\" differs from the value in the first line of the table (1).\nReading network from file has failed.\nError: Empty network.\n",
+  "temps": [
+   "$TMP/007"
+  ]
+ }
+]

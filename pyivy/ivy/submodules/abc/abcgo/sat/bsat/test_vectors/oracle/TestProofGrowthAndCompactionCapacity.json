@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -I $SRC test_vectors/proof_growth_oracle.c $LIBABC -lm -ldl -lpthread -lstdc++ -o $TMP/proof_growth_oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/proof_growth_oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/proof_growth_oracle",
+  "stdout": "grow words=2 rows=1500 cap=5000\ncompact words=2 rows=750 cap=5000 first=1 last=1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

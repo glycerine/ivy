@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: $TMP/oracle 25 6",
+  "stdout": "oracle: src/map/if/ifSat.c:166: If_ManSatCheckXY: Assertion `nLutSize + nSSet + nFSet \u003c= 2*nLutSize - 1' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

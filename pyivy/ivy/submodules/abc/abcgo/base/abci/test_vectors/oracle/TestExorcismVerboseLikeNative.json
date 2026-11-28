@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026exorcism -V 1 $TMP/out.esop",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026exorcism -V 1 $TMP/001/out.esop\".\n\n\nEXORCISM, Ver.4.7: Exclusive Sum-of-Product Minimizer\nby Alan Mishchenko, Portland State University, July-September 2000\n\nIncoming ESOP has 7 inputs, 4 outputs, and 11 cubes.\nStarting cover generation time is 0.00 sec\nThe number of cubes in the starting cover is 11\nDynamically allocated memory is 4K\nGenerating the starting cover...\nPerforming minimization...\n.....\nMinimization time is 0.00 sec\n\nThe number of cubes after minimization is 7\nMinimized cover has been written into file \u003c$TMP/001/out.esop\u003e\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/out.esop": "# EXORCISM-4 output for command line arguments: \"-Q 2 -V 1\"\n# Minimization performed Sat Nov 28 05:40:22 2026\n# Initial statistics: Cubes = 11  Literals = 36  QCost = 224\n# Final   statistics: Cubes = 7  Literals = 19  QCost = 121\n# File reading and reordering time = 0.00 sec\n# Starting cover generation time   = 0.00 sec\n# Pure ESOP minimization time      = 0.00 sec\n.i 7\n.o 4\n.p 7\n.type esop\n0------ 0100\n--0---- 0001\n------- 1100\n-00---0 0001\n0---01- 1010\n00-1000 1010\n10-10-0 1110\n.e\n"
+  }
+ }
+]

@@ -1,0 +1,122 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; bmc3 -F 10; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; bmc3 -F 10; write_cex $TMP/001/native.cex\".\n\nOutput 0 of miter \"s713.bench\" was asserted in frame 0. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "000000000000000000000000000000000000000000000000000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; bmc3 -S 3; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; bmc3 -S 3; write_cex $TMP/001/native.cex\".\n\nOutput 0 of miter \"s713.bench\" was asserted in frame 3. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; bmc3 -a -x -F 10; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; bmc3 -a -x -F 10; write_cex $TMP/001/native.cex\".\n\nOutput  0 was asserted in frame  0 (solved  1 out of 23 outputs).\nOutput  1 was asserted in frame  0 (solved  2 out of 23 outputs).\nOutput  2 was asserted in frame  0 (solved  3 out of 23 outputs).\nOutput  3 was asserted in frame  0 (solved  4 out of 23 outputs).\nOutput  8 was asserted in frame  0 (solved  5 out of 23 outputs).\nOutput  9 was asserted in frame  0 (solved  6 out of 23 outputs).\nOutput 10 was asserted in frame  0 (solved  7 out of 23 outputs).\nOutput 11 was asserted in frame  0 (solved  8 out of 23 outputs).\nOutput 16 was asserted in frame  0 (solved  9 out of 23 outputs).\nOutput 17 was asserted in frame  0 (solved 10 out of 23 outputs).\nOutput 18 was asserted in frame  0 (solved 11 out of 23 outputs).\nOutput 19 was asserted in frame  0 (solved 12 out of 23 outputs).\nOutput 20 was asserted in frame  0 (solved 13 out of 23 outputs).\nOutput 21 was asserted in frame  0 (solved 14 out of 23 outputs).\nOutput 22 was asserted in frame  0 (solved 15 out of 23 outputs).\nOutput 12 was asserted in frame  0 (solved 16 out of 23 outputs).\nOutput 13 was asserted in frame  0 (solved 17 out of 23 outputs).\nOutput 14 was asserted in frame  0 (solved 18 out of 23 outputs).\nOutput 15 was asserted in frame  0 (solved 19 out of 23 outputs).\nOutput  4 was asserted in frame  4 (solved 20 out of 23 outputs).\nOutput  5 was asserted in frame  4 (solved 21 out of 23 outputs).\nOutput  6 was asserted in frame  4 (solved 22 out of 23 outputs).\nSome outputs are SAT (22 out of 23) after 10 frames.   Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "#\n#\n# CEX for output 0\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 1\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 2\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 3\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 4\n#\n00000000000000000000000000000000000000000000000000000000100000000000000000100000000000000000000111100000000001000000000000000010000000000000000000000000000000000000000000000001000000000000000000#\n#\n# CEX for output 5\n#\n00000000000000000000000000000000000000000000000000000000000000010000000000010000000000000000010011100000000000100000000000000010000000000000000000000000000000000000000000000000100000000000000000#\n#\n# CEX for output 6\n#\n00000000000000000000000000000000000000000000000000000000000000010000000000001000000000000000001011100000000000010000000000000010000000000000000000000000000000000000000000000000010000000000000000#\n#\n# CEX for output 8\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 9\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 10\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 11\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 12\n#\n000000000000000000000000000001000000000000010000000000#\n#\n# CEX for output 13\n#\n000000000000000000000000000000000000000000001000000000#\n#\n# CEX for output 14\n#\n000000000000000000000000000011100000000000000100000000#\n#\n# CEX for output 15\n#\n000000000000000000000000000000000000000000000010000000#\n#\n# CEX for output 16\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 17\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 18\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 19\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 20\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 21\n#\n000000000000000000000000000000000000000000000000000000#\n#\n# CEX for output 22\n#\n000000000000000000000000000000000000000000000000000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s713.blif; strash; bmc3 -a -F 6; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s713.blif; strash; bmc3 -a -F 6; write_cex $TMP/001/native.cex\".\n\nOutput  0 was asserted in frame  0 (solved  1 out of 23 outputs).\nOutput  1 was asserted in frame  0 (solved  2 out of 23 outputs).\nOutput  2 was asserted in frame  0 (solved  3 out of 23 outputs).\nOutput  3 was asserted in frame  0 (solved  4 out of 23 outputs).\nOutput  8 was asserted in frame  0 (solved  5 out of 23 outputs).\nOutput  9 was asserted in frame  0 (solved  6 out of 23 outputs).\nOutput 10 was asserted in frame  0 (solved  7 out of 23 outputs).\nOutput 11 was asserted in frame  0 (solved  8 out of 23 outputs).\nOutput 16 was asserted in frame  0 (solved  9 out of 23 outputs).\nOutput 17 was asserted in frame  0 (solved 10 out of 23 outputs).\nOutput 18 was asserted in frame  0 (solved 11 out of 23 outputs).\nOutput 19 was asserted in frame  0 (solved 12 out of 23 outputs).\nOutput 20 was asserted in frame  0 (solved 13 out of 23 outputs).\nOutput 21 was asserted in frame  0 (solved 14 out of 23 outputs).\nOutput 22 was asserted in frame  0 (solved 15 out of 23 outputs).\nOutput 12 was asserted in frame  0 (solved 16 out of 23 outputs).\nOutput 13 was asserted in frame  0 (solved 17 out of 23 outputs).\nOutput 14 was asserted in frame  0 (solved 18 out of 23 outputs).\nOutput 15 was asserted in frame  0 (solved 19 out of 23 outputs).\nOutput  4 was asserted in frame  4 (solved 20 out of 23 outputs).\nOutput  5 was asserted in frame  4 (solved 21 out of 23 outputs).\nOutput  6 was asserted in frame  4 (solved 22 out of 23 outputs).\nSome outputs are SAT (22 out of 23) after 6 frames.   Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; bmc3 -F 10; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; bmc3 -F 10; write_cex $TMP/001/native.cex\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nOutput 0 of miter \"s1494.bench\" was asserted in frame 0. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "00000000000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; bmc3 -S 3; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; bmc3 -S 3; write_cex $TMP/001/native.cex\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nOutput 0 of miter \"s1494.bench\" was asserted in frame 3. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "00000000000000000000000000000000000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; bmc3 -a -x -F 10; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; bmc3 -a -x -F 10; write_cex $TMP/001/native.cex\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nOutput  0 was asserted in frame  0 (solved  1 out of 19 outputs).\nOutput 10 was asserted in frame  0 (solved  2 out of 19 outputs).\nOutput 18 was asserted in frame  0 (solved  3 out of 19 outputs).\nOutput  3 was asserted in frame  0 (solved  4 out of 19 outputs).\nOutput  6 was asserted in frame  0 (solved  5 out of 19 outputs).\nOutput  7 was asserted in frame  0 (solved  6 out of 19 outputs).\nOutput 11 was asserted in frame  0 (solved  7 out of 19 outputs).\nOutput 12 was asserted in frame  0 (solved  8 out of 19 outputs).\nOutput 13 was asserted in frame  0 (solved  9 out of 19 outputs).\nOutput 14 was asserted in frame  0 (solved 10 out of 19 outputs).\nOutput  9 was asserted in frame  0 (solved 11 out of 19 outputs).\nOutput  5 was asserted in frame  1 (solved 12 out of 19 outputs).\nOutput  8 was asserted in frame  1 (solved 13 out of 19 outputs).\nOutput 16 was asserted in frame  1 (solved 14 out of 19 outputs).\nOutput  1 was asserted in frame  2 (solved 15 out of 19 outputs).\nOutput 15 was asserted in frame  2 (solved 16 out of 19 outputs).\nOutput 17 was asserted in frame  2 (solved 17 out of 19 outputs).\nOutput  2 was asserted in frame  6 (solved 18 out of 19 outputs).\nSome outputs are SAT (18 out of 19) after 10 frames.   Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "#\n#\n# CEX for output 0\n#\n00000000000000#\n#\n# CEX for output 1\n#\n000000101100001010100000000001#\n#\n# CEX for output 2\n#\n00000010110000101010001011000010000111110010101100010100000000#\n#\n# CEX for output 3\n#\n00000000110000#\n#\n# CEX for output 5\n#\n0000001011000001101000#\n#\n# CEX for output 6\n#\n00000000110000#\n#\n# CEX for output 7\n#\n00000000110000#\n#\n# CEX for output 8\n#\n0000001011000001101000#\n#\n# CEX for output 9\n#\n00000000010000#\n#\n# CEX for output 10\n#\n00000000000000#\n#\n# CEX for output 11\n#\n00000000110000#\n#\n# CEX for output 12\n#\n00000000110000#\n#\n# CEX for output 13\n#\n00000000110000#\n#\n# CEX for output 14\n#\n00000000110000#\n#\n# CEX for output 15\n#\n000000101100001010100000000001#\n#\n# CEX for output 16\n#\n0000001011000001101000#\n#\n# CEX for output 17\n#\n000000101100001010100000000000#\n#\n# CEX for output 18\n#\n00000000000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/seq/s1494.blif; strash; bmc3 -a -F 6; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/seq/s1494.blif; strash; bmc3 -a -F 6; write_cex $TMP/001/native.cex\".\n\nLine 6: Skipping line \".wire_load_slope 0.00\".\nOutput  0 was asserted in frame  0 (solved  1 out of 19 outputs).\nOutput 10 was asserted in frame  0 (solved  2 out of 19 outputs).\nOutput 18 was asserted in frame  0 (solved  3 out of 19 outputs).\nOutput  3 was asserted in frame  0 (solved  4 out of 19 outputs).\nOutput  6 was asserted in frame  0 (solved  5 out of 19 outputs).\nOutput  7 was asserted in frame  0 (solved  6 out of 19 outputs).\nOutput 11 was asserted in frame  0 (solved  7 out of 19 outputs).\nOutput 12 was asserted in frame  0 (solved  8 out of 19 outputs).\nOutput 13 was asserted in frame  0 (solved  9 out of 19 outputs).\nOutput 14 was asserted in frame  0 (solved 10 out of 19 outputs).\nOutput  9 was asserted in frame  0 (solved 11 out of 19 outputs).\nOutput  5 was asserted in frame  1 (solved 12 out of 19 outputs).\nOutput  8 was asserted in frame  1 (solved 13 out of 19 outputs).\nOutput 16 was asserted in frame  1 (solved 14 out of 19 outputs).\nOutput  1 was asserted in frame  2 (solved 15 out of 19 outputs).\nOutput 15 was asserted in frame  2 (solved 16 out of 19 outputs).\nOutput 17 was asserted in frame  2 (solved 17 out of 19 outputs).\nSome outputs are SAT (17 out of 19) after 6 frames.   Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; bmc3 -F 10; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; bmc3 -F 10; write_cex $TMP/001/native.cex\".\n\nOutput 0 of miter \"s27.bench\" was asserted in frame 0. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "0000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; bmc3 -S 3; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; bmc3 -S 3; write_cex $TMP/001/native.cex\".\n\nOutput 0 of miter \"s27.bench\" was asserted in frame 3. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "0000000000000000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; bmc3 -a -x -F 10; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; bmc3 -a -x -F 10; write_cex $TMP/001/native.cex\".\n\nOutput 0 was asserted in frame  0 (solved 1 out of 1 outputs).\nStopping BMC because all targets are disproved or timed out.\nAll 1 outputs are found to be SAT after 1 frames.   Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "#\n#\n# CEX for output 0\n#\n0000000# DONE\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; bmc3 -a -F 6; write_cex $TMP/native.cex",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; bmc3 -a -F 6; write_cex $TMP/001/native.cex\".\n\nOutput 0 was asserted in frame  0 (solved 1 out of 1 outputs).\nStopping BMC because all targets are disproved or timed out.\nAll 1 outputs are found to be SAT after 1 frames.   Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.cex": "# DONE\n"
+  }
+ }
+]

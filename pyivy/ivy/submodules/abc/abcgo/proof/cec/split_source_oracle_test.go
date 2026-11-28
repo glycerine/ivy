@@ -2,8 +2,8 @@ package cec
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"runtime"
@@ -21,23 +21,23 @@ func TestSplitCNFAgainstCompiledABC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ABC object oracle requires Linux")
 	}
-	cc, e := exec.LookPath("gcc")
+	cc, e := testoracle.LookPath("gcc")
 	if e != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, e := exec.LookPath("ar")
+	ar, e := testoracle.LookPath("ar")
 	if e != nil {
 		t.Skip("ar unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	root := filepath.Clean(filepath.Join(filepath.Dir(file), "../../.."))
 	src := filepath.Join(root, "src")
-	if _, e = os.Stat(filepath.Join(src, "proof/cec/cecCore.o")); e != nil {
+	if _, e = testoracle.Stat(filepath.Join(src, "proof/cec/cecCore.o")); e != nil {
 		t.Skip("prebuilt ABC object files unavailable")
 	}
 	dir := t.TempDir()
 	var objs []string
-	e = filepath.WalkDir(src, func(path string, d os.DirEntry, e error) error {
+	e = testoracle.WalkDir(src, func(path string, d os.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
@@ -50,13 +50,13 @@ func TestSplitCNFAgainstCompiledABC(t *testing.T) {
 		t.Fatal(e)
 	}
 	st := filepath.Join(dir, "st.o")
-	if out, e := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); e != nil {
 		t.Fatalf("st: %v %s", e, out)
 	}
 	objs = append(objs, st)
 	lib := filepath.Join(dir, "abc.a")
 	args := append([]string{"qcs", lib}, objs...)
-	if out, e := exec.Command(ar, args...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, ar, args...).CombinedOutput(); e != nil {
 		t.Fatalf("archive: %v %s", e, out)
 	}
 	const program = `#include "aig/gia/gia.h"
@@ -75,10 +75,10 @@ int main(void) { Gia_Man_t *g=Gia_ManStart(16);int x=Gia_ManAppendCi(g),y=Gia_Ma
 		t.Fatal(e)
 	}
 	args = []string{"-DABC_USE_STDINT_H", "-I", src, cfile, lib, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", exe}
-	if out, e := exec.Command(cc, args...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, args...).CombinedOutput(); e != nil {
 		t.Fatalf("link: %v %s", e, out)
 	}
-	out, e := exec.Command(exe).CombinedOutput()
+	out, e := testoracle.Command(t, exe).CombinedOutput()
 	if e != nil {
 		t.Fatalf("run: %v %s", e, out)
 	}
@@ -121,7 +121,7 @@ int main(void) { Gia_Man_t *g=Gia_ManStart(16);int x=Gia_ManAppendCi(g),y=Gia_Ma
 	}
 	// Force only the static SAT result in a temporary copy of cecSplit.c. Its
 	// serial and pthread scheduling/cofactor/model code remains source text.
-	sourceBytes, err := os.ReadFile(filepath.Join(src, "proof/cec/cecSplit.c"))
+	sourceBytes, err := testoracle.ReadFile(filepath.Join(src, "proof/cec/cecSplit.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -189,10 +189,10 @@ int main(void){Gia_Man_t *g=make();int s=Cec_GiaSplitTest2(g,1,0,0,1,0,0,1);prin
 	}
 	splitExe := filepath.Join(dir, "split_oracle")
 	args = []string{"-DABC_USE_STDINT_H", "-DABC_USE_PTHREADS", "-I", src, "-I", filepath.Join(src, "proof/cec"), splitMainFile, splitFile, lib, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", splitExe}
-	if out, err = exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err = testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("link split oracle: %v %s", err, out)
 	}
-	out, err = exec.Command(splitExe).CombinedOutput()
+	out, err = testoracle.Command(t, splitExe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("run split oracle: %v %s", err, out)
 	}

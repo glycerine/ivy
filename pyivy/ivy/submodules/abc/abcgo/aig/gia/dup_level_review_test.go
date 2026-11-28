@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -226,7 +226,7 @@ func TestLevelizedStableOrderingAndSemantics(t *testing.T) {
 
 func TestLevelizedMatchesOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "levelized.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C levelized: %v: %s", err, want)
 	}
@@ -235,7 +235,7 @@ func TestLevelizedMatchesOriginalSource(t *testing.T) {
 		t.Fatalf("levelized output differs from original C:\nGo %s\nC %s", got, want)
 	}
 	// These are inherited C omissions; the Go regressions above require repairs.
-	witness, err := exec.Command(exe, "--constraints").CombinedOutput()
+	witness, err := testoracle.Command(t, exe, "--constraints").CombinedOutput()
 	if err != nil || string(witness) != "1 0 0\n" {
 		t.Fatalf("constraint classification witness: %v: %s", err, witness)
 	}

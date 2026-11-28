@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read ../../test_vectors/i10.aig; \u0026get; \u0026if -K 4; \u0026mfs -a -l; \u0026ps",
+  "stdout": "ABC command line: \"read ../../test_vectors/i10.aig; \u0026get; \u0026if -K 4; \u0026mfs -a -l; \u0026ps\".\n\n\u001b[1;37m../../test_vectors/i10\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2301\u001b[0m  \u001b[1;35mlev =   39\u001b[0m \u001b[1;35m(12.67)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    798\u001b[0m  \u001b[1;32medge =    2681\u001b[0m  \u001b[1;31mlev =   17\u001b[0m \u001b[1;31m(6.57)\u001b[0m  mem = 0.03 MB\n"
+ }
+]

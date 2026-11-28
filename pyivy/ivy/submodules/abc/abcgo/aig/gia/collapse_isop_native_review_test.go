@@ -3,7 +3,7 @@ package gia
 import (
 	"encoding/hex"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 
@@ -27,7 +27,7 @@ func collapseReviewBDD(dd *cudd.DdManager, n, table int) *cudd.DdNode {
 }
 func TestCollapseIsopCoversAndAigsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "collapse_isop.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native ISOP factoring: %v\n%s", err, native)
 	}
@@ -117,7 +117,7 @@ func TestCollapseIsopCoversAndAigsMatchOriginalABC(t *testing.T) {
 
 func TestCollapseRebuildMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "collapse_rebuild.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native collapse/rebuild: %v\n%s", err, native)
 	}
@@ -173,7 +173,7 @@ func TestCollapseRebuildMatchesOriginalABC(t *testing.T) {
 
 func TestCollapseWideIsopMatchesOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "collapse_isop_wide.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native wide ISOP: %v\n%s", err, native)
 	}

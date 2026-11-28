@@ -1,0 +1,14 @@
+[
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026put; dcec -v test_vectors/cec_mul4_syn2.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026put; dcec -v test_vectors/cec_mul4_syn2.aig\".\n\nOriginal miter:   Nodes =    240.\nInitial SAT:      Nodes =    240.  Time =     0.00 sec\nNetworks are equivalent.  Time =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026put; dcec test_vectors/cec_mul8_syn2.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026put; dcec test_vectors/cec_mul8_syn2.aig\".\n\nNetworks are equivalent.  Time =     0.06 sec\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026put; dcec test_vectors/cec_i10_syn2.aig",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026put; dcec test_vectors/cec_i10_syn2.aig\".\n\nNetworks are equivalent.  Time =     0.10 sec\n"
+ }
+]

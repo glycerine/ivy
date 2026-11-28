@@ -3,11 +3,11 @@ package dau
 import (
 	"encoding/binary"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -89,7 +89,7 @@ func TestNPNSymmetryIndependent(t *testing.T) {
 	}
 }
 func TestNPNOriginalCClassesAndSymmetry(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("original C oracle requires compiler")
 	}
@@ -106,15 +106,15 @@ int main(int argc,char**argv){int n;unsigned long long t;if(argc>1){if(strcmp(ar
 	if err := os.WriteFile(source, []byte(code), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=gnu99", "-DLIN64", "-ffunction-sections", "-fdata-sections", "-I"+sourceRoot, source, filepath.Join(sourceRoot, "misc/extra/extraUtilMisc.c"), "-Wl,--gc-sections", "-o", exe).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-ffunction-sections", "-fdata-sections", "-I"+sourceRoot, source, filepath.Join(sourceRoot, "misc/extra/extraUtilMisc.c"), "-Wl,--gc-sections", "-o", exe).CombinedOutput(); err != nil {
 		t.Fatalf("C oracle compile %v\n%s", err, out)
 	}
-	command := exec.Command(exe, "table")
+	command := testoracle.Command(t, exe, "table")
 	command.Dir = dir
 	if out, err := command.CombinedOutput(); err != nil {
 		t.Fatalf("C table oracle %v\n%s", err, out)
 	}
-	data, err := os.ReadFile(filepath.Join(dir, "tableW14.data"))
+	data, err := testoracle.ReadFile(filepath.Join(dir, "tableW14.data"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -130,7 +130,7 @@ int main(int argc,char**argv){int n;unsigned long long t;if(argc>1){if(strcmp(ar
 			t.Fatalf("original C class table differs at%x", i)
 		}
 	}
-	command = exec.Command(exe, "network")
+	command = testoracle.Command(t, exe, "network")
 	command.Dir = dir
 	networkOut, err := command.CombinedOutput()
 	if err != nil {
@@ -152,7 +152,7 @@ int main(int argc,char**argv){int n;unsigned long long t;if(argc>1){if(strcmp(ar
 	for i := uint64(0); i < 256; i++ {
 		fmt.Fprintf(&request, "3 %x\n", i*0x0101010101010101)
 	}
-	command = exec.Command(exe)
+	command = testoracle.Command(t, exe)
 	command.Stdin = strings.NewReader(request.String())
 	out, err := command.Output()
 	if err != nil {

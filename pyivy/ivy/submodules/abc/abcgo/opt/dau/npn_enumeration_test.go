@@ -3,17 +3,14 @@ package dau
 import (
 	"encoding/binary"
 	"fmt"
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
-	"runtime"
 	"testing"
 )
 
 func TestFunctionEnumerationOriginalABC(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	abc := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(abc); err != nil {
+	abc := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(abc); err != nil {
 		t.Skip("original ABC unavailable")
 	}
 	for _, test := range []struct {
@@ -29,12 +26,12 @@ func TestFunctionEnumerationOriginalABC(t *testing.T) {
 			if test.reduce {
 				flags += " -r"
 			}
-			command := exec.Command(abc, "-c", fmt.Sprintf("funenum -S %d -I %d -M %d%s", test.inputs, test.vars, test.nodes, flags))
+			command := testoracle.Command(t, abc, "-c", fmt.Sprintf("funenum -S %d -I %d -M %d%s", test.inputs, test.vars, test.nodes, flags))
 			command.Dir = dir
 			if out, err := command.CombinedOutput(); err != nil {
 				t.Fatalf("original function enumeration%v\n%s", err, out)
 			}
-			data, err := os.ReadFile(filepath.Join(dir, fmt.Sprintf("npn%d%d.ttd", test.inputs, test.vars)))
+			data, err := testoracle.ReadFile(filepath.Join(dir, fmt.Sprintf("npn%d%d.ttd", test.inputs, test.vars)))
 			if err != nil {
 				t.Fatal(err)
 			}

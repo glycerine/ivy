@@ -1,0 +1,12 @@
+{
+ "size": 0,
+ "mode": 0,
+ "entries": [
+  "$SRC/bdd/dsd/dsdApi.c",
+  "$SRC/bdd/dsd/dsdCheck.c",
+  "$SRC/bdd/dsd/dsdLocal.c",
+  "$SRC/bdd/dsd/dsdMan.c",
+  "$SRC/bdd/dsd/dsdProc.c",
+  "$SRC/bdd/dsd/dsdTree.c"
+ ]
+}

@@ -2,7 +2,7 @@ package abci
 
 import (
 	"bytes"
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"regexp"
 	"testing"
@@ -18,20 +18,20 @@ func TestGiaWriteLikeNative(t *testing.T) {
 	dir := t.TempDir()
 	for i, script := range []string{"&get", "&get; &lf", "&get; &if -K 4"} {
 		goFile := filepath.Join(dir, "go.aig")
-		runScript(t, "read ../../../i10.aig; strash; "+script+"; &w "+goFile)
-		got, err := os.ReadFile(goFile)
+		runScript(t, "read ../../test_vectors/i10.aig; strash; "+script+"; &w "+goFile)
+		got, err := testoracle.ReadFile(goFile)
 		if err != nil {
 			t.Fatal(err)
 		}
 		if !giaStamp.Match(got) || !bytes.HasSuffix(got, []byte("For information about AIGER format, refer to http://fmv.jku.at/aiger\n")) {
 			t.Fatalf("%s: written AIG lacks ABC's trailer", script)
 		}
-		if os.Getenv("ABC_BINARY") == "" {
+		if testoracle.NativeABCPath() == "" {
 			continue
 		}
 		nativeFile := filepath.Join(dir, "native.aig")
-		runNativeABC(t, "read ../../../i10.aig; strash; "+script+"; &w "+nativeFile)
-		want, err := os.ReadFile(nativeFile)
+		runNativeABC(t, "read ../../test_vectors/i10.aig; strash; "+script+"; &w "+nativeFile)
+		want, err := testoracle.ReadFile(nativeFile)
 		if err != nil {
 			t.Fatal(err)
 		}

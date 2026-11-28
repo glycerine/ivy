@@ -3,7 +3,7 @@ package aig
 import (
 	"context"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -25,7 +25,7 @@ func runAigSourceFixtureOptions(t *testing.T, fixture, input string, timeout tim
 	if runtime.GOOS != "linux" {
 		t.Skip("fixture uses GNU linker section collection")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -41,10 +41,10 @@ func runAigSourceFixtureOptions(t *testing.T, fixture, input string, timeout tim
 	}
 	args = append(args, flags...)
 	args = append(args, "-Wl,--gc-sections", "-o", binary)
-	if out, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.CommandContext(t, ctx, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile source fixture: %v: %s", err, out)
 	}
-	command := exec.CommandContext(ctx, binary)
+	command := testoracle.CommandContext(t, ctx, binary)
 	command.Stdin = strings.NewReader(input)
 	out, err := command.CombinedOutput()
 	if err != nil {

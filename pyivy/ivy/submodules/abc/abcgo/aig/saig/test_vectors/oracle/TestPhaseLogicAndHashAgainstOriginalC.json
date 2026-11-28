@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -std=c99 $TMP/phase.c -o $TMP/phase",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/phase"
+  ]
+ },
+ {
+  "key": "combined: $TMP/phase",
+  "stdout": "1 1 1 1 2 3 1 3 3 2 1 3 376",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: abc -c read_aiger $TMP/multi.aig; bmc3 -v -a -x -C 1 -F 3",
+  "stdout": "ABC command line: \"read_aiger $TMP/001/multi.aig; bmc3 -v -a -x -C 1 -F 3\".\n\nRunning \"bmc3\". PI/PO/Reg = 1/2/1. And =      1. Lev =     1. ObjNums =     7.\nParams: FramesMax = 3. Start = 0. ConfLimit = 1. TimeOut = 0. SolveAll = 1.\nOutput 1 was asserted in frame  0 (solved 1 out of 2 outputs).\n   0 + : Var =       2. Cla =        0. Conf =      0. Learn =      0. CEX =    1.    0 MB   4 MB     0.00 sec \nOutput 0 was asserted in frame  1 (solved 2 out of 2 outputs).\n   1 + : Var =       4. Cla =        3. Conf =      0. Learn =      0. CEX =    2.    0 MB   4 MB     0.00 sec \nStopping BMC because all 2^1 reachable states are visited.\nRuntime:  CNF = 0.0 sec (0.2 %)  UNSAT = 0.0 sec (0.0 %)  SAT = 0.0 sec (2.2 %)  UNDEC = 0.0 sec (0.0 %)\nLStart(P) = 10000  LDelta(Q) = 2000  LRatio(R) = 80  ReduceDB = 0  Vars = 1000  Used = 1000 (100.00 %)\nBuffs = 0. Dups = 0.   Hash hits = 0.  Hash misses = 1.  UniProps = 0.\nAll 2 outputs are found to be SAT after 2 frames.   Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

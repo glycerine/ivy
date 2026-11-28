@@ -1,0 +1,26 @@
+[
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026fftest -A 0 -S ((a\u0026b)^p) -N 2",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026fftest -A 0 -S ((a\u0026b)^p) -N 2\".\n\nFFTEST is computing test patterns for fault model \"((a\u0026b)^p)\"...\nOptions: Untestable faults = no. Verbose = no. \nUsing formula: (((a)\u0026(b))^(p))\nUsing miter with:  AIG nodes =    428.  CNF variables =    304.  CNF clauses =      752.\nThe problem is UNSAT after 16 iterations.  Testing runtime =     1.39 sec\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026fftest -A 0 -S ((a\u0026b)^p)",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026fftest -A 0 -S ((a\u0026b)^p)\".\n\nFFTEST is computing test patterns for fault model \"((a\u0026b)^p)\"...\nOptions: Untestable faults = no. Verbose = no. \nUsing formula: (((a)\u0026(b))^(p))\nUsing miter with:  AIG nodes =    428.  CNF variables =    304.  CNF clauses =      752.\nThe problem is UNSAT after 16 iterations.  Testing runtime =     1.38 sec\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026fftest -A 0 -S (((a\u0026b)\u0026~p)|q) -N 1 -c",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026fftest -A 0 -S (((a\u0026b)\u0026~p)|q) -N 1 -c\".\n\nFFTEST is computing test patterns for fault model \"(((a\u0026b)\u0026~p)|q)\"...\nOptions: Untestable faults = yes. Verbose = no. \nUsing formula: ((((a)\u0026(b))\u0026(~p))|(q))\nUsing miter with:  AIG nodes =    344.  CNF variables =    341.  CNF clauses =      692.\nThe problem is UNSAT after 11 iterations.  Testing runtime =     0.02 sec\nThere is no untestable faults.  Fault computation runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026fftest -A 0 -S (((a\u0026b)\u0026~p)|q) -c",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026fftest -A 0 -S (((a\u0026b)\u0026~p)|q) -c\".\n\nFFTEST is computing test patterns for fault model \"(((a\u0026b)\u0026~p)|q)\"...\nOptions: Untestable faults = yes. Verbose = no. \nUsing formula: ((((a)\u0026(b))\u0026(~p))|(q))\nUsing miter with:  AIG nodes =    344.  CNF variables =    341.  CNF clauses =      692.\nThe problem is UNSAT after 11 iterations.  Testing runtime =     0.02 sec\nThere is no untestable faults.  Fault computation runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 1 -N 2",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 1 -N 2\".\n\nFFTEST is computing test patterns for delay faults...\nOptions: Untestable faults = no. Verbose = no. \nUsing miter with:  AIG nodes =     49.  CNF variables =     45.  CNF clauses =       93.\nThe problem is UNSAT after 3 iterations.  Testing runtime =     0.00 sec\n"
+ },
+ {
+  "key": "combined: abc -c read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 1",
+  "stdout": "ABC command line: \"read test_vectors/native_s27_drw.blif; strash; \u0026get; \u0026fftest -A 1\".\n\nFFTEST is computing test patterns for delay faults...\nOptions: Untestable faults = no. Verbose = no. \nUsing miter with:  AIG nodes =     49.  CNF variables =     45.  CNF clauses =       93.\nThe problem is UNSAT after 3 iterations.  Testing runtime =     0.00 sec\n"
+ }
+]

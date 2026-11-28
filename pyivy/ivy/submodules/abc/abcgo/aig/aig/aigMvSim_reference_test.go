@@ -2,8 +2,8 @@ package aig
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -12,11 +12,11 @@ import (
 // Compile the actual original AND/hash/create routines, rather than a second Go
 // implementation of the same rewrite. The Go port itself has no C dependency.
 func TestMultivalueAndMatchesOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for original-source reference test")
 	}
-	original, err := os.ReadFile("../../../src/aig/saig/saigSimMv.c")
+	original, err := testoracle.ReadFile("../../../src/aig/saig/saigSimMv.c")
 	if os.IsNotExist(err) {
 		t.Skip("original C source unavailable for reference comparison")
 	}
@@ -85,10 +85,10 @@ static int Saig_MvLev(Saig_MvMan_t*p,int a){return p->pLevels[a>>1];}
 	if err := os.WriteFile(input, []byte(source.String()), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-std=c99", "-O0", input, "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-std=c99", "-O0", input, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("reference compile: %v\n%s", err, out)
 	}
-	out, err := exec.Command(binary).CombinedOutput()
+	out, err := testoracle.Command(t, binary).CombinedOutput()
 	if err != nil {
 		t.Fatalf("reference execution: %v\n%s", err, out)
 	}

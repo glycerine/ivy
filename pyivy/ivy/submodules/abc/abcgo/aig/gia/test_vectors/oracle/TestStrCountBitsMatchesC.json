@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -O1 -o $TMP/countbits $TMP/countbits.c",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/countbits"
+  ]
+ },
+ {
+  "key": "output: $TMP/countbits [stdin cb14e31ed7785ca6]",
+  "stdout": "0\n1\n2\n3\n4\n2\n3\n8\n64\n32\n32\n1\n2\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n3\n1\n2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

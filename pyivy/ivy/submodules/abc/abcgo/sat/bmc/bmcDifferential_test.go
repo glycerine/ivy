@@ -3,8 +3,8 @@ package bmc
 import (
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -20,15 +20,15 @@ import (
 // binary AIGER fixtures consumed by ABC's original bmc3 implementation. Set
 // ABC_BINARY to an ABC executable; a local source-tree build is also detected.
 func TestBMCAgainstCABC(t *testing.T) {
-	binary := os.Getenv("ABC_BINARY")
+	binary := testoracle.NativeABCPath()
 	if binary == "" {
-		binary = filepath.Join("..", "..", "..", "abc")
+		binary = testoracle.NativeABCPath()
 	}
 	absolute, err := filepath.Abs(binary)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if info, err := os.Stat(absolute); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
+	if info, err := testoracle.Stat(absolute); err != nil || info.IsDir() || info.Mode()&0111 == 0 {
 		t.Skip("C ABC executable unavailable; set ABC_BINARY to enable differential test")
 	}
 	tests := []struct {
@@ -90,7 +90,7 @@ func TestBMCAgainstCABC(t *testing.T) {
 			}
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
-			output, err := exec.CommandContext(ctx, absolute, "-c", fmt.Sprintf("read_aiger %s; bmc3 -F 4", path)).CombinedOutput()
+			output, err := testoracle.CommandContext(t, ctx, absolute, "-c", fmt.Sprintf("read_aiger %s; bmc3 -F 4", path)).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C ABC failed: %v\n%s", err, output)
 			}

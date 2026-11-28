@@ -3,8 +3,8 @@ package gia
 import (
 	"encoding/binary"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -13,11 +13,11 @@ import (
 
 func genReviewCheckBinary(t *testing.T, p *Gia_Man_t, dir, base string, part string, units int32) {
 	t.Helper()
-	x, err := os.ReadFile(filepath.Join(dir, base+"_x."+part+".data"))
+	x, err := testoracle.ReadFile(filepath.Join(dir, base+"_x."+part+".data"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	y, err := os.ReadFile(filepath.Join(dir, base+"_y."+part+".data"))
+	y, err := testoracle.ReadFile(filepath.Join(dir, base+"_y."+part+".data"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func genReviewCheckBinary(t *testing.T, p *Gia_Man_t, dir, base string, part str
 
 func genReviewCheckPla(t *testing.T, p *Gia_Man_t, file string, units int32) {
 	t.Helper()
-	data, err := os.ReadFile(file)
+	data, err := testoracle.ReadFile(file)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -95,7 +95,7 @@ func TestGenNativeDatasetDumps(t *testing.T) {
 							for fallback := 0; fallback < 2; fallback++ {
 								const base = "sample"
 								args := []string{method, base, strconv.Itoa(int(sizes[0])), strconv.Itoa(int(sizes[1])), strconv.Itoa(int(seed)), strconv.Itoa(typed), strconv.Itoa(int(signs)), strconv.Itoa(reorder), strconv.Itoa(fallback)}
-								cmd := exec.Command(exe, args...)
+								cmd := testoracle.Command(t, exe, args...)
 								cmd.Dir = nativeDir
 								native, err := cmd.CombinedOutput()
 								if err != nil {
@@ -134,11 +134,11 @@ func TestGenNativeDatasetDumps(t *testing.T) {
 									}
 								}
 								for _, file := range files {
-									a, err := os.ReadFile(filepath.Join(nativeDir, file))
+									a, err := testoracle.ReadFile(filepath.Join(nativeDir, file))
 									if err != nil {
 										t.Fatal(err)
 									}
-									b, err := os.ReadFile(filepath.Join(goDir, file))
+									b, err := testoracle.ReadFile(filepath.Join(goDir, file))
 									if err != nil {
 										t.Fatal(err)
 									}
@@ -167,7 +167,7 @@ func TestGenNativeConstantDatasetDumps(t *testing.T) {
 	}
 	t.Chdir(goDir)
 	for _, method := range []string{"binary", "pla"} {
-		cmd := exec.Command(exe, method, "constant", "1", "1", "7", "2", "0", "0", "1")
+		cmd := testoracle.Command(t, exe, method, "constant", "1", "1", "7", "2", "0", "0", "1")
 		cmd.Dir = nativeDir
 		native, err := cmd.CombinedOutput()
 		if err != nil {
@@ -195,11 +195,11 @@ func TestGenNativeConstantDatasetDumps(t *testing.T) {
 			files = []string{"constant.train.pla", "constant.valid.pla", "constant.test.pla"}
 		}
 		for _, file := range files {
-			a, err := os.ReadFile(filepath.Join(nativeDir, file))
+			a, err := testoracle.ReadFile(filepath.Join(nativeDir, file))
 			if err != nil {
 				t.Fatal(err)
 			}
-			b, err := os.ReadFile(filepath.Join(goDir, file))
+			b, err := testoracle.ReadFile(filepath.Join(goDir, file))
 			if err != nil {
 				t.Fatal(err)
 			}

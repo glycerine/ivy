@@ -1,7 +1,7 @@
 package io
 
 import (
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -21,7 +21,7 @@ func TestWriteBlifMatchesNative(t *testing.T) {
 		t.Fatal(err)
 	}
 	strip := func(file string) string {
-		data, err := os.ReadFile(file)
+		data, err := testoracle.ReadFile(file)
 		if err != nil {
 			t.Fatal(err)
 		}

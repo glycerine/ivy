@@ -1,0 +1,36 @@
+[
+ {
+  "key": "combined: gcc -O1 -DABC_USE_STDINT_H -I $SRC -c $TMP/main.c -o $TMP/main.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/main.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -O1 -DABC_USE_STDINT_H -UNDEBUG -I $SRC -c $SRC/map/if/ifMap.c -o $TMP/ifMap.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/ifMap.o"
+  ]
+ },
+ {
+  "key": "combined: g++ $TMP/main.o $TMP/ifMap.o $LIBABC -lreadline -lpthread -lm -ldl -o $TMP/abc_assert",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/abc_assert"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_assert read $CWD/test_vectors/i10_lutpack_strash.aig; renode; print_stats",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_lutpack_strash:\u001b[0m i/o =  257/  224  lat =    0  nd =  2350  edge =   4856  aig  =  2651  lev = 31\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

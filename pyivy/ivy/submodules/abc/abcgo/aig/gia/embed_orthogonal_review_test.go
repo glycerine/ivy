@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -39,7 +39,7 @@ func TestEmbeddingOrthogonalizationAliases(t *testing.T) {
 
 func TestEmbeddingProjectionMatchesOriginalDisjointVectors(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "embedding_projection.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C projection: %v: %s", err, want)
 	}

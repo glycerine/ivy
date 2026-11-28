@@ -2,7 +2,7 @@ package ssw
 
 import (
 	"context"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -14,7 +14,7 @@ func TestPairClassesCompiledCOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("fixture uses GNU linker section garbage collection")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -22,7 +22,7 @@ func TestPairClassesCompiledCOracle(t *testing.T) {
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
 	binary := filepath.Join(t.TempDir(), "pairs")
 	fixture := filepath.Join(filepath.Dir(file), "test_vectors/ssw_pairs_compare.c")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, fixture, "-Wl,--gc-sections", "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src, fixture, "-Wl,--gc-sections", "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile C fixture: %v: %s", err, out)
 	}
 	cases := []struct {
@@ -39,7 +39,7 @@ func TestPairClassesCompiledCOracle(t *testing.T) {
 	for _, tc := range cases {
 		// Leave scheduling headroom when the entire repository runs in parallel.
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		out, err := exec.CommandContext(ctx, binary, tc.args...).CombinedOutput()
+		out, err := testoracle.CommandContext(t, ctx, binary, tc.args...).CombinedOutput()
 		cancel()
 		if err != nil || strings.TrimSpace(string(out)) != tc.want {
 			t.Fatalf("C %v: %v, %q, want %q", tc.args, err, out, tc.want)
@@ -48,7 +48,7 @@ func TestPairClassesCompiledCOracle(t *testing.T) {
 	args := strings.Fields("6 8 3 8 5 8 2 6 1 5 1 5 3 8 2 7 4 9 1 5 1 8 2 6")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	out, err := exec.CommandContext(ctx, binary, args...).CombinedOutput()
+	out, err := testoracle.CommandContext(t, ctx, binary, args...).CombinedOutput()
 	if err == nil || ctx.Err() != nil || !strings.Contains(string(out), "Vec_IntEntry") {
 		t.Fatalf("C invalid offset: %v (context: %v) %q", err, ctx.Err(), out)
 	}

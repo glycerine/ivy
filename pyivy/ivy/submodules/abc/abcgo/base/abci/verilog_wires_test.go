@@ -1,7 +1,7 @@
 package abci
 
 import (
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -13,8 +13,8 @@ import (
 // its net was assigned without being declared.
 func TestWriteVerilogDeclaresEveryInternalNet(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "x.v")
-	runScript(t, "read ../../../i10.aig; strash; write_verilog "+file)
-	data, err := os.ReadFile(file)
+	runScript(t, "read ../../test_vectors/i10.aig; strash; write_verilog "+file)
+	data, err := testoracle.ReadFile(file)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,17 +35,17 @@ func TestWriteVerilogDeclaresEveryInternalNet(t *testing.T) {
 // TestWriteVerilogLikeNative: with ABC_BINARY, write_verilog files equal
 // native's (Hop_ObjPrintVerilog formulas, wire lists), the date aside.
 func TestWriteVerilogLikeNative(t *testing.T) {
-	if os.Getenv("ABC_BINARY") == "" {
+	if testoracle.NativeABCPath() == "" {
 		t.Skip("ABC_BINARY not set")
 	}
 	stamp := regexp.MustCompile(`written by ABC on [^\n]*\n`)
 	dir := t.TempDir()
 	for _, script := range []string{"strash", "strash; if -K 4", "strash; logic"} {
 		goFile, nativeFile := filepath.Join(dir, "go.v"), filepath.Join(dir, "native.v")
-		runScript(t, "read ../../../i10.aig; "+script+"; write_verilog "+goFile)
-		runNativeABC(t, "read ../../../i10.aig; "+script+"; write_verilog "+nativeFile)
-		got, err1 := os.ReadFile(goFile)
-		want, err2 := os.ReadFile(nativeFile)
+		runScript(t, "read ../../test_vectors/i10.aig; "+script+"; write_verilog "+goFile)
+		runNativeABC(t, "read ../../test_vectors/i10.aig; "+script+"; write_verilog "+nativeFile)
+		got, err1 := testoracle.ReadFile(goFile)
+		want, err2 := testoracle.ReadFile(nativeFile)
 		if err1 != nil || err2 != nil {
 			t.Fatal(err1, err2)
 		}

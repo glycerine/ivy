@@ -1,0 +1,90 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_formula.blif; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_formula.blif; print_stats; write_aiger $TMP/001/native.aig\".\n\n\u001b[1;37mltl1                          :\u001b[0m i/o =    2/    1  lat =    1  nd =     2  edge =      4  cube =     2  lev = 1\nWriting this format is only possible for structurally hashed AIGs.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_formula.blif; strash; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_formula.blif; strash; print_stats; write_aiger $TMP/001/native.aig\".\n\n\u001b[1;37mltl1                          :\u001b[0m i/o =    2/    1  lat =    1  and =      2  lev =  1\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.aig": "aig 5 2 1 1 2\n10\n8\n\u0002\u0002\u0004\u0004c\nltl1\u0000\nThis file was written by ABC on Sat Nov 28 05:35:13 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_formula.blif; strash; l3s; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_formula.blif; strash; l3s; print_stats; write_aiger $TMP/001/native.aig\".\n\nNumber of liveness property found = 0\nNumber of fairness property found = 0\nNumber of safety property found = 0\nNumber of assume_safety property found = 0\n\nFormula 1: AST is created, Well-formedness check PASSED, \nVariable name \"G(F(a))\" not found in the PO name list\nSignal check FAILED!!AST will be ignored for formula 1, no extra logic will be added for this formula\n\n\nCurrently aborting, need to take care when Vec_PtrSize( vTopASTNodeArray ) == 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_formula.blif; strash; l3s -s; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_formula.blif; strash; l3s -s; print_stats; write_aiger $TMP/001/native.aig\".\n\nNumber of liveness property found = 0\nNumber of fairness property found = 0\nNumber of safety property found = 0\nNumber of assume_safety property found = 0\n\nFormula 1: AST is created, Well-formedness check PASSED, \nVariable name \"G(F(a))\" not found in the PO name list\nSignal check FAILED!!AST will be ignored for formula 1, no extra logic will be added for this formula\n\n\nCurrently aborting, need to take care when Vec_PtrSize( vTopASTNodeArray ) == 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_formula.blif; strash; l3s -1; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_formula.blif; strash; l3s -1; print_stats; write_aiger $TMP/001/native.aig\".\n\nNumber of liveness property found = 0\nNumber of fairness property found = 0\nNumber of safety property found = 0\nNumber of assume_safety property found = 0\nNo safety property is specified, hence no safety gate is created\nCircuit without any liveness property\nCircuit without any fairness property\nA new circuit is produced with\n\t2 POs - one for safety and one for liveness.\n\tone additional input is added (due to Biere's nondeterminism)\n\tshadow flops are not created\n\tnon-property POs are suppressed\n\u001b[1;37mlive2safe                     :\u001b[0m i/o =    3/    1  lat =    1  and =      1  lev =  1\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.aig": "aig 5 3 1 1 1\n10\n0\n\u0002\u0006c\nlive2safe\u0000\nThis file was written by ABC on Sat Nov 28 05:35:14 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_gf.blif; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_gf.blif; print_stats; write_aiger $TMP/001/native.aig\".\n\n\u001b[1;37mltl1                          :\u001b[0m i/o =    2/    1  lat =    1  nd =     2  edge =      4  cube =     2  lev = 1\nWriting this format is only possible for structurally hashed AIGs.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_gf.blif; strash; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_gf.blif; strash; print_stats; write_aiger $TMP/001/native.aig\".\n\n\u001b[1;37mltl1                          :\u001b[0m i/o =    2/    1  lat =    1  and =      2  lev =  1\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.aig": "aig 5 2 1 1 2\n10\n8\n\u0002\u0002\u0004\u0004c\nltl1\u0000\nThis file was written by ABC on Sat Nov 28 05:35:14 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_gf.blif; strash; l3s; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_gf.blif; strash; l3s; print_stats; write_aiger $TMP/001/native.aig\".\n\nNumber of liveness property found = 0\nNumber of fairness property found = 0\nNumber of safety property found = 0\nNumber of assume_safety property found = 0\n\nFormula 1: AST is created, Well-formedness check PASSED, Signal check PASSED\n\nWARNING!! No safety property is found, a new (negated) constant 1 output is created\nliveness output is conjoined with safety assertions\nA new circuit is produced with\n\t2 POs - one for safety and 1 for liveness.\n\tone additional input is added (due to Biere's nondeterminism)\n\tshadow flops are not created if the original circuit is combinational\n\tnon-property POs are suppressed\n\u001b[1;37mltl1_l3s                      :\u001b[0m i/o =    3/    2  lat =    4  and =     14  lev =  4\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.aig": "aig 21 3 4 2 14\n26\n29\n37\n43\n0\n24\n\u0004\u0003\u0005\u0005\u0001\u0002\u0002\n\u0002\u0007\u0012\u0006\u0011\u0004\u0013\u0005\u0001\u0013\u0004\u0016\u0001\u0002\u001e\u0004\u0002\t\u0001\u001ac\nltl1_l3s\u0000\nThis file was written by ABC on Sat Nov 28 05:35:14 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_gf.blif; strash; l3s -s; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_gf.blif; strash; l3s -s; print_stats; write_aiger $TMP/001/native.aig\".\n\nNumber of liveness property found = 0\nNumber of fairness property found = 0\nNumber of safety property found = 0\nNumber of assume_safety property found = 0\n\nFormula 1: AST is created, Well-formedness check PASSED, Signal check PASSED\n\nWARNING!! No safety property is found, a new (negated) constant 1 output is created\nliveness output is conjoined with safety assertions\nA new circuit is produced with\n\t1 PO - only for liveness property; safety properties are ignored, if any.\n\tone additional input is added (due to Biere's nondeterminism)\n\tshadow flops are not created if the original circuit is combinational\n\tnon-property POs are suppressed\n\u001b[1;37mltl1_l3s                      :\u001b[0m i/o =    3/    1  lat =    4  and =     14  lev =  4\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.aig": "aig 21 3 4 1 14\n26\n29\n37\n43\n24\n\u0004\u0003\u0005\u0005\u0001\u0002\u0002\n\u0002\u0007\u0012\u0006\u0011\u0004\u0013\u0005\u0001\u0013\u0004\u0016\u0001\u0002\u001e\u0004\u0002\t\u0001\u001ac\nltl1_l3s\u0000\nThis file was written by ABC on Sat Nov 28 05:35:14 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c read test_vectors/live/ltl_gf.blif; strash; l3s -1; print_stats; write_aiger $TMP/native.aig",
+  "stdout": "ABC command line: \"read test_vectors/live/ltl_gf.blif; strash; l3s -1; print_stats; write_aiger $TMP/001/native.aig\".\n\nNumber of liveness property found = 0\nNumber of fairness property found = 0\nNumber of safety property found = 0\nNumber of assume_safety property found = 0\nNo safety property is specified, hence no safety gate is created\nCircuit without any liveness property\nCircuit without any fairness property\nA new circuit is produced with\n\t2 POs - one for safety and one for liveness.\n\tone additional input is added (due to Biere's nondeterminism)\n\tshadow flops are not created\n\tnon-property POs are suppressed\n\u001b[1;37mlive2safe                     :\u001b[0m i/o =    3/    1  lat =    1  and =      1  lev =  1\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/native.aig": "aig 5 3 1 1 1\n10\n0\n\u0002\u0006c\nlive2safe\u0000\nThis file was written by ABC on Sat Nov 28 05:35:14 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

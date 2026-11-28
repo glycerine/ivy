@@ -1,0 +1,711 @@
+[
+ {
+  "key": "combined: cc -O2 -DABC_USE_STDINT_H -I$SRC test_vectors/original_cost.c $SRC/sat/satoko/solver.c $SRC/sat/satoko/solver_api.c $SRC/sat/satoko/cnf_reader.c -lm -o $TMP/original-cost",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/original-cost"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 6\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 11\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 9\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 9\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 9\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 6\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 6\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 9\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 9\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 10\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 10\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 6\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 6\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 8\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 6\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 9\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 11\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 1\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 5\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "-1 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/original-cost $TMP/input.txt",
+  "stdout": "1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
-	"os/exec"
 	"regexp"
 	"strings"
 	"testing"
@@ -146,7 +146,7 @@ func areaReviewResult(t *testing.T, got *strings.Builder, src, out *Gia_Man_t) {
 
 func TestAreaBalanceIntermediateNativeOracle(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "balance_area_states.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v\n%s", err, native)
 	}
@@ -203,7 +203,7 @@ func TestAreaBalanceIntermediateNativeOracle(t *testing.T) {
 
 func TestAreaDiagnosticsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "balance_area_states.c")
-	native, err := exec.Command(exe, "diagnostics").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "diagnostics").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native diagnostics: %v\n%s", err, native)
 	}

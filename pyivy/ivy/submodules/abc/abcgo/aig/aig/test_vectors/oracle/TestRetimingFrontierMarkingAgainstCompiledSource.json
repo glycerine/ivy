@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/retiming_mark_compare.c $SRC/aig/aig/aigUtil.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "mode 0 pass 0 generation 4: 0/0 1/0 1/0 0/0 0/0 1/3 0/0 1/3 1/2 0/4 0/4\nmode 0 pass 1 generation 7: 0/0 1/0 1/0 0/0 0/0 1/6 0/0 1/6 1/5 0/7 0/7\nmode 1 pass 0 generation 5: 0/0 1/0 1/0 1/0 1/0 1/4 0/0 1/4 1/4 1/3 1/2\nmode 1 pass 1 generation 9: 0/0 1/0 1/0 1/0 1/0 1/8 0/0 1/8 1/8 1/7 1/6\nmode 2 pass 0 generation 2: 0/0 0/0 0/0 0/0 0/0 0/2 0/0 0/2 0/2 0/2 0/2\nmode 2 pass 1 generation 3: 0/0 0/0 0/0 0/0 0/0 0/3 0/0 0/3 0/3 0/3 0/3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

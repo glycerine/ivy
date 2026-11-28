@@ -1,8 +1,7 @@
 package gia
 
 import (
-	"os"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -14,7 +13,7 @@ func gigReviewCompile(t *testing.T) string {
 	t.Helper()
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Join(filepath.Dir(file), "../../../src/aig/gia/giaGig.c")
-	data, err := os.ReadFile(src)
+	data, err := testoracle.ReadFile(src)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -28,7 +27,7 @@ func gigReviewCompile(t *testing.T) string {
 func TestGigNativeSuccessReport(t *testing.T) {
 	exe := gigReviewCompile(t)
 	file := gigReviewWrite(t, "w2 = PI\nw3 = PI\nw4 = Lut4(w2,w3,-,-) [8888]\nw5 = PO(w4)\n")
-	native, err := exec.Command(exe, "--raw", file).CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--raw", file).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C GIG report: %v %s", err, native)
 	}

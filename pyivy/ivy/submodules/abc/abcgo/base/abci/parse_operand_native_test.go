@@ -1,8 +1,8 @@
 package abci
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -13,7 +13,7 @@ import (
 // (parseEqn.c) or Cudd_bddAnd (parseCore.c) dereferenced it, so reading such
 // an EQN file or genlib crashed native (CBUGS_FIXED.md #23).
 func TestNativeParserMissingOperandFails(t *testing.T) {
-	bin := os.Getenv("ABC_BINARY")
+	bin := testoracle.NativeABCPath()
 	if bin == "" {
 		t.Skip("set ABC_BINARY to a native abc built from ../src")
 	}
@@ -31,7 +31,7 @@ func TestNativeParserMissingOperandFails(t *testing.T) {
 		{"read " + eqn + "; print_stats", "Reading network from file has failed."},
 		{"read_genlib " + genlib, "Unknown operation"},
 	} {
-		out, err := exec.Command(bin, "-c", c.script).CombinedOutput()
+		out, err := testoracle.Command(t, bin, "-c", c.script).CombinedOutput()
 		if err != nil {
 			t.Errorf("%s: %v\n%s", c.script, err, out)
 			continue

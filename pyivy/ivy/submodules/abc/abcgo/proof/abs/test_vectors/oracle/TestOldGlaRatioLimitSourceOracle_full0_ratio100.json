@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -I $SRC test_vectors/gla_old_ratio_oracle.c $LIBABC -lm -ldl -lpthread -lstdc++ -o $TMP/gla_old_ratio_oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/gla_old_ratio_oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/gla_old_ratio_oracle 0 100",
+  "stdout": "The ratio of abstracted objects is less than 100 % in frame 0.  Time =     0.01 sec\nSOURCE status=-1 frame=0 stable=0 cex=0 classes=100000111110\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -11,7 +11,7 @@ import (
 // output truth. The native fixture includes giaBalLut.c to expose static APIs.
 func TestLutBalanceInternalNativeOracle(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "lut_balance_internal.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v\n%s", err, native)
 	}

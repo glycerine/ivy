@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/bench/mul8.aig; strash; if -K 6; debug; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/bench/mul8.aig; strash; if -K 6; debug; print_stats\".\n\nNetworks are equivalent after structural hashing.\nThe original network does not cause the bug. Quitting.\n\u001b[1;37mtest_vectors/bench/mul8       :\u001b[0m i/o =   16/   16  lat =    0  nd =   129  edge =    542  aig  =   954  lev = 10\n"
+ }
+]

@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read ../../test_vectors/i10.aig; \u0026get; \u0026st; \u0026synch2; \u0026put; print_stats",
+  "stdout": "ABC command line: \"read ../../test_vectors/i10.aig; \u0026get; \u0026st; \u0026synch2; \u0026put; print_stats\".\n\n\u001b[1;37m../../test_vectors/i10        :\u001b[0m i/o =  257/  224  lat =    0  and =   1861  lev = 28\n"
+ }
+]

@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: $TMP/timeframe-boundary 1 2 0 0",
+  "stdout": "timeframe-boundary: src/aig/saig/saigTrans.c:200: Saig_ManFramesNonInitial: Assertion `Saig_ManRegNum(pAig) \u003e 0' failed.\n",
+  "exit": -1,
+  "wait": 134,
+  "temps": [
+   "$TMP/001"
+  ],
+  "err": "signal: aborted (core dumped)"
+ }
+]

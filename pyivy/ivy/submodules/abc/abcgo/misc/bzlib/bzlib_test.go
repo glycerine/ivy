@@ -3,9 +3,9 @@ package bzlib
 import (
 	"bytes"
 	"errors"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"testing"
 )
@@ -43,7 +43,7 @@ func TestABCFileAPIAndOwnership(t *testing.T) {
 		t.Fatal("borrowed writer closed file or wrong byte count", err, outLo)
 	}
 	underlying.Close()
-	underlying, err = os.Open(path)
+	underlying, err = testoracle.Open(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -222,7 +222,7 @@ func TestWriterFailuresAndAbandon(t *testing.T) {
 }
 
 func TestExternalBzip2Interoperability(t *testing.T) {
-	binary, err := exec.LookPath("bzip2")
+	binary, err := testoracle.LookPath("bzip2")
 	if err != nil {
 		t.Skip("optional independent bzip2 oracle unavailable")
 	}
@@ -232,14 +232,14 @@ func TestExternalBzip2Interoperability(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		command := exec.Command(binary, "-dc")
+		command := testoracle.Command(t, binary, "-dc")
 		command.Stdin = bytes.NewReader(compressed)
 		decoded, err := command.Output()
 		if err != nil || !bytes.Equal(decoded, source) {
 			t.Fatal("external decoder rejected Go stream", level, err)
 		}
 	}
-	command := exec.Command(binary, "-c")
+	command := testoracle.Command(t, binary, "-c")
 	command.Stdin = bytes.NewReader(source)
 	compressed, err := command.Output()
 	if err != nil {

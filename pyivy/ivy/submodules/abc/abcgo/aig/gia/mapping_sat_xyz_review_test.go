@@ -3,16 +3,16 @@ package gia_test
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	if_ "github.com/glycerine/abcgo/map/if"
 	"github.com/glycerine/abcgo/sat/bsat"
-	"os/exec"
 	"strings"
 	"testing"
 )
 
 func TestMappingSATNativeXYZClauseSemantics(t *testing.T) {
 	executable := gia.CompileSourceOracleForTest(t, "if_sat_xyz_review.c")
-	want, err := exec.Command(executable).CombinedOutput()
+	want, err := testoracle.Command(t, executable).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original XYZ: %v %s", err, want)
 	}

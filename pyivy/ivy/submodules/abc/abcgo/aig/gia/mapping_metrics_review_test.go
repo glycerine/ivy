@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"io"
-	"os/exec"
 	"strconv"
 	"strings"
 	"testing"
@@ -87,7 +87,7 @@ func TestMappingNativeMetricsAndChoiceLevels(t *testing.T) {
 	comparisons := 0
 	for seed := 1; seed <= 32; seed++ {
 		for mode := 0; mode < 3; mode++ {
-			source, err := exec.Command(exe, strconv.Itoa(seed), strconv.Itoa(mode)).CombinedOutput()
+			source, err := testoracle.Command(t, exe, strconv.Itoa(seed), strconv.Itoa(mode)).CombinedOutput()
 			if err != nil {
 				t.Fatalf("native seed%d mode%d: %v %s", seed, mode, err, source)
 			}
@@ -128,7 +128,7 @@ func mappingReviewAverageGraph() *Gia_Man_t {
 }
 func TestMappingNativeAveragePrecision(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "mapping_metrics_review.c")
-	source, err := exec.Command(exe, "1", "0", "1").CombinedOutput()
+	source, err := testoracle.Command(t, exe, "1", "0", "1").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v %s", err, source)
 	}
@@ -141,7 +141,7 @@ func TestMappingNativeAveragePrecision(t *testing.T) {
 }
 func TestMappingNativeEmptyPackingReport(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "mapping_metrics_review.c")
-	source, err := exec.Command(exe, "1", "0", "2").CombinedOutput()
+	source, err := testoracle.Command(t, exe, "1", "0", "2").CombinedOutput()
 	if err != nil {
 		t.Fatalf("native: %v %s", err, source)
 	}

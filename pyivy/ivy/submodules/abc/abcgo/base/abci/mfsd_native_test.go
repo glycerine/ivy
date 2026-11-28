@@ -2,8 +2,8 @@ package abci
 
 import (
 	"bytes"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -62,11 +62,11 @@ func compareMfsdWithNative(t *testing.T, design, pre, opts string) {
 		t.Errorf("%s %s&mfsd %s\nnative:\n%s\nport:\n%s", design, pre, opts, native, port)
 		return
 	}
-	nb, err := os.ReadFile(nativeFile)
+	nb, err := testoracle.ReadFile(nativeFile)
 	if err != nil {
 		t.Fatal(err)
 	}
-	pb, err := os.ReadFile(portFile)
+	pb, err := testoracle.ReadFile(portFile)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -127,7 +127,7 @@ func TestMfsdLutSizesLikeNative(t *testing.T) {
 // past s_Truths6 (CBUGS_FIXED.md #26) and Sbd_ProblemAddClauses overflowed
 // its literal buffer for K >= 5 (#25).
 func TestNativeMfsdStaysInBounds(t *testing.T) {
-	lib := os.Getenv("ABC_LIBABC")
+	lib := testoracle.NativeLibABCPath()
 	if lib == "" {
 		t.Skip("set ABC_LIBABC to a native libabc.a built from ../src")
 	}
@@ -151,13 +151,13 @@ int main(int argc, char **argv) { Abc_Start(); return Cmd_CommandExecute(Abc_Fra
 	}
 	cmds = append(cmds, append(append([]string{"g++", "-fsanitize=address"}, objs...), lib, "-lreadline", "-lpthread", "-lm", "-ldl", "-o", bin))
 	for _, c := range cmds {
-		if out, err := exec.Command(c[0], c[1:]...).CombinedOutput(); err != nil {
+		if out, err := testoracle.Command(t, c[0], c[1:]...).CombinedOutput(); err != nil {
 			t.Fatalf("%v: %v\n%s", c[:3], err, out)
 		}
 	}
 	design, _ := filepath.Abs("test_vectors/i10_native_demo.aig")
 	for _, script := range []string{"&mfsd", "&if -K 6; &mfsd", "&mfsd -K 2", "&mfsd -K 3", "&mfsd -K 5", "&mfsd -K 6"} {
-		out, _ := exec.Command(bin, "&r "+design+"; "+script+"; &ps").CombinedOutput()
+		out, _ := testoracle.Command(t, bin, "&r "+design+"; "+script+"; &ps").CombinedOutput()
 		if strings.Contains(string(out), "AddressSanitizer") || !strings.Contains(string(out), "and =") {
 			t.Errorf("%s:\n%s", script, out)
 		}
@@ -174,9 +174,9 @@ int main(int argc, char **argv) { Abc_Start(); return Cmd_CommandExecute(Abc_Fra
 func TestMfsdRejectsMuxes(t *testing.T) {
 	script := "&r test_vectors/native_mul8_canon.aig; &st -m; &mfsd -m -M 1"
 	want := "Abc_CommandAbc9Mfsd(): This command does not work with MUXes."
-	if bin := os.Getenv("ABC_BINARY"); bin != "" {
+	if bin := testoracle.NativeABCPath(); bin != "" {
 		bin, _ = filepath.Abs(bin)
-		got, _ := exec.Command(bin, "-c", script).CombinedOutput()
+		got, _ := testoracle.Command(t, bin, "-c", script).CombinedOutput()
 		if !strings.Contains(string(got), want) {
 			t.Errorf("native:\n%s", got)
 		}

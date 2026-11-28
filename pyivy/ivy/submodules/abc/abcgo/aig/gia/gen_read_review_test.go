@@ -3,8 +3,8 @@ package gia
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -111,7 +111,7 @@ func TestGenNativeFileReaderAndClassifier(t *testing.T) {
 									}
 								}
 								args := []string{mode, "patterns.pla", strconv.Itoa(kind), strconv.Itoa(int(signs)), strconv.Itoa(reorder), strconv.Itoa(stats), "0"}
-								cmd := exec.Command(exe, args...)
+								cmd := testoracle.Command(t, exe, args...)
 								cmd.Dir = nativeDir
 								native, err := cmd.CombinedOutput()
 								if err != nil {
@@ -166,7 +166,7 @@ func TestGenNativeFileReaderAndClassifier(t *testing.T) {
 										dir string
 										out *map[string]any
 									}{{nativeDir, &a}, {goDir, &b}} {
-										raw, err := os.ReadFile(filepath.Join(item.dir, "stats.json"))
+										raw, err := testoracle.ReadFile(filepath.Join(item.dir, "stats.json"))
 										if err != nil {
 											t.Fatal(err)
 										}
@@ -231,7 +231,7 @@ func TestGenTypedClassifierAndEscapedJsonName(t *testing.T) {
 		if !strings.Contains(report, "Total =     64.  Errors =      6.  Correct =     58.") {
 			t.Fatalf("kind%d report%s", kind, report)
 		}
-		raw, err := os.ReadFile(stats)
+		raw, err := testoracle.ReadFile(stats)
 		if err != nil {
 			t.Fatal(err)
 		}

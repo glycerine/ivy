@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -19,11 +19,11 @@ import (
 // three or more bits counted two short; &blut's pairing (Str_NtkBalanceMulti
 // affinity counts) then differed from the port (see CBUGS_FIXED.md).
 func TestStrCountBitsMatchesC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable for oracle")
 	}
-	source, err := os.ReadFile(filepath.Join("..", "..", "..", "src", "aig", "gia", "giaStr.c"))
+	source, err := testoracle.ReadFile(filepath.Join("..", "..", "..", "src", "aig", "gia", "giaStr.c"))
 	if err != nil {
 		t.Skip("ABC C sources unavailable:", err)
 	}
@@ -50,7 +50,7 @@ int main(void)
 		t.Fatal(err)
 	}
 	binary := filepath.Join(dir, "countbits")
-	if out, err := exec.Command(cc, "-O1", "-o", binary, filepath.Join(dir, "countbits.c")).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-O1", "-o", binary, filepath.Join(dir, "countbits.c")).CombinedOutput(); err != nil {
 		t.Fatalf("C oracle build: %v\n%s", err, out)
 	}
 	words := []uint64{0, 1, 3, 7, 0xf, 0x8000000000000001, 0x8000000000000003, 0xff, 0xffffffffffffffff, 0x5555555555555555, 0x0123456789abcdef}
@@ -61,7 +61,7 @@ int main(void)
 	for _, w := range words {
 		fmt.Fprintf(&input, "%x\n", w)
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Stdin = strings.NewReader(input.String())
 	out, err := cmd.Output()
 	if err != nil {

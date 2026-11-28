@@ -1,7 +1,7 @@
-../../../i10 : i/o =    257/    224  and =    2675  lev =   50 (15.54)  mem = 0.04 MB
-../../../i10 : i/o =    257/    224  nod =    2097  lev =   50 (15.54)  mem = 0.03 MB
+../../test_vectors/i10 : i/o =    257/    224  and =    2675  lev =   50 (15.54)  mem = 0.04 MB
+../../test_vectors/i10 : i/o =    257/    224  nod =    2097  lev =   50 (15.54)  mem = 0.03 MB
 Pairs:  Total =     3962 (100.00 %)  Tried =     2396 ( 60.47 %)  Used =     1345 ( 33.95 %)  Xor =        0 (  0.00 %)
 Div:    Total =     1505 (100.00 %)  Tried =     1505 (100.00 %)  Used =      454 ( 30.17 %)  Xor =        0 (  0.00 %)
 Div:    Total =      676 (100.00 %)   Used =      178 ( 26.33 %)  Gain =   432 ( 15.90 %)  GainX = 0  Time =      sec
-../../../i10 : i/o =    257/    224  nod =    1697  lev =   41 (13.54)  mem = 0.03 MB
-../../../i10 : i/o =    257/    224  and =    2270  lev =   41 (13.54)  mem = 0.03 MB
+../../test_vectors/i10 : i/o =    257/    224  nod =    1697  lev =   41 (13.54)  mem = 0.03 MB
+../../test_vectors/i10 : i/o =    257/    224  and =    2270  lev =   41 (13.54)  mem = 0.03 MB

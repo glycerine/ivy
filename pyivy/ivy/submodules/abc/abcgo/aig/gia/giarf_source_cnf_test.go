@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -32,7 +32,7 @@ func TestGiarfCECUsesSourceSupergateEncoding(t *testing.T) {
 
 func TestGiarfSourceQueriesMatchCompiledCEC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "giarf_source_sat.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("source CEC queries: %v: %s", err, want)
 	}
@@ -57,7 +57,7 @@ func TestGiarfSourceQueriesMatchCompiledCEC(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		fmt.Fprintf(&got, "query %d %d vars %d clauses %d since %d ids", i, status, s.cec.Solver().NumVars(), giarfEncodedClauseCount(s), s.cecSince)
+		fmt.Fprintf(&got, "query %d %d vars %d clauses %d since %d ids", i, status, s.cec.NumSatVars(), giarfEncodedClauseCount(s), s.cecSince)
 		for _, variable := range s.cec.IDs() {
 			fmt.Fprintf(&got, " %d", variable)
 		}

@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -std=gnu89 -O0 -I$SRC/misc/util -I$SRC $CWD/test_vectors/set_oracle.c -o $TMP/set_oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/set_oracle"
+  ]
+ },
+ {
+  "key": "output: $TMP/set_oracle",
+  "stdout": "and 8003 80000000 0 1 \nor 8003 80000003 3 1 \ndiff 8003 1 1 0 \nxor 8003 3 3 0 \ncounts 4 2 31\n2 65\n3 80000001 1 1 \n3 80000002 2 1 \ninserted [0,33,34,66]\ndeleted [0,31,32,64]\ntranspose 65 2 [0,1]\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

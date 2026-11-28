@@ -1,0 +1,20 @@
+[
+ {
+  "key": "combined: abc -c cec ../../test_vectors/i10.aig $TMP/i10dc2.aig",
+  "stdout": "ABC command line: \"cec ../../test_vectors/i10.aig $TMP/001/i10dc2.aig\".\n\nPrimary input #0 is different in network 1 ( \"V1(0)\") and in network 2 (\"pi000\").\nMiter computation has failed.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c cec ../../test_vectors/i10.aig test_vectors/seq/s713.blif",
+  "stdout": "ABC command line: \"cec ../../test_vectors/i10.aig test_vectors/seq/s713.blif\".\n\nNetworks have different number of primary inputs.\nMiter computation has failed.\n"
+ },
+ {
+  "key": "combined: abc -c dcec ../../test_vectors/i10.aig $TMP/i10dc2.aig",
+  "stdout": "ABC command line: \"dcec ../../test_vectors/i10.aig $TMP/001/i10dc2.aig\".\n\nPrimary input #0 is different in network 1 ( \"V1(0)\") and in network 2 (\"pi000\").\nMiter computation has failed.\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

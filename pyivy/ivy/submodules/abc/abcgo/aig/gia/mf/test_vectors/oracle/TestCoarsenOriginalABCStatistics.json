@@ -1,0 +1,86 @@
+[
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/001/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       7\u001b[0m  \u001b[1;35mlev =    5\u001b[0m \u001b[1;35m(5.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       0   0.00 %   and =       7 100.00 %   obj =       7  \n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/002/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       5\u001b[0m  \u001b[1;35mlev =    4\u001b[0m \u001b[1;35m(4.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       0   0.00 %   and =       5 100.00 %   obj =       5  \n",
+  "temps": [
+   "$TMP/002"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/003/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/003/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       9\u001b[0m  \u001b[1;35mlev =    8\u001b[0m \u001b[1;35m(8.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       1  27.27 %   and =       8  72.73 %   obj =       9  \n",
+  "temps": [
+   "$TMP/003"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/004/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/004/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       5\u001b[0m  \u001b[1;35mlev =    5\u001b[0m \u001b[1;35m(5.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       0   0.00 %   and =       5 100.00 %   obj =       5  \n",
+  "temps": [
+   "$TMP/004"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/005/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/005/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       2\u001b[0m  \u001b[1;35mlev =    2\u001b[0m \u001b[1;35m(2.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       0   0.00 %   and =       2 100.00 %   obj =       2  \n",
+  "temps": [
+   "$TMP/005"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/006/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/006/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       4\u001b[0m  \u001b[1;35mlev =    3\u001b[0m \u001b[1;35m(3.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       0   0.00 %   and =       4 100.00 %   obj =       4  \n",
+  "temps": [
+   "$TMP/006"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/007/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/007/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       6\u001b[0m  \u001b[1;35mlev =    5\u001b[0m \u001b[1;35m(5.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       0   0.00 %   and =       6 100.00 %   obj =       6  \n",
+  "temps": [
+   "$TMP/007"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/008/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/008/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       4\u001b[0m  \u001b[1;35mlev =    5\u001b[0m \u001b[1;35m(5.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       1  50.00 %   and =       3  50.00 %   obj =       4  \n",
+  "temps": [
+   "$TMP/008"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/009/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/009/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       4\u001b[0m  \u001b[1;35mlev =    3\u001b[0m \u001b[1;35m(3.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       0   0.00 %   and =       4 100.00 %   obj =       4  \n",
+  "temps": [
+   "$TMP/009"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/010/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/010/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       9\u001b[0m  \u001b[1;35mlev =    8\u001b[0m \u001b[1;35m(8.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       2  46.15 %   and =       7  53.85 %   obj =       9  \n",
+  "temps": [
+   "$TMP/010"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/011/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/011/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =      11\u001b[0m  \u001b[1;35mlev =    6\u001b[0m \u001b[1;35m(6.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       0   0.00 %   and =      11 100.00 %   obj =      11  \n",
+  "temps": [
+   "$TMP/011"
+  ]
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026st -m -L 3; \u0026ps -m",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/012/input.aig; \u0026st -m -L 3; \u0026ps -m\".\n\nGenerated AND/XOR/MUX graph.\n\u001b[1;37m$TMP/012/input\u001b[0m : i/o =      4/      2  \u001b[1;36mnod =       5\u001b[0m  \u001b[1;35mlev =    5\u001b[0m \u001b[1;35m(5.00)\u001b[0m  mem = 0.00 MB\nXOR/MUX stats:  xor =       0   0.00 %   mux =       1  42.86 %   and =       4  57.14 %   obj =       5  \n",
+  "temps": [
+   "$TMP/012"
+  ]
+ }
+]

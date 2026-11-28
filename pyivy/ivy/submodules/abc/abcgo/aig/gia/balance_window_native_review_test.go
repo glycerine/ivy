@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -154,7 +154,7 @@ func windowReviewMapping(g *Gia_Man_t, mode int) {
 }
 func TestWindowOperationsMatchOriginalABC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "balance_windows.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("native window: %v\n%s", err, native)
 	}

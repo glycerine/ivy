@@ -1,0 +1,94 @@
+[
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -DNDEBUG -I $SRC -c $TMP/main.c -o $TMP/main.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/main.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -DNDEBUG -I $SRC -c $SRC/aig/gia/giaEdge.c -o $TMP/giaEdge.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/giaEdge.o"
+  ]
+ },
+ {
+  "key": "combined: gcc -g -O1 -fsanitize=address -fno-omit-frame-pointer -DABC_USE_STDINT_H -DNDEBUG -I $SRC -c $SRC/aig/gia/giaSatEdge.c -o $TMP/giaSatEdge.o",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/giaSatEdge.o"
+  ]
+ },
+ {
+  "key": "combined: g++ -fsanitize=address $TMP/main.o $TMP/giaEdge.o $TMP/giaSatEdge.o $LIBABC -lreadline -lpthread -lm -ldl -o $TMP/abc_asan",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/abc_asan"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 5; \u0026edge; \u0026edge -o; \u0026edge -o -r; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2426\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.04 MB\nMapping (K=5)  :  \u001b[1;33mlut =    656\u001b[0m  \u001b[1;32medge =    2479\u001b[0m  \u001b[1;31mlev =   11\u001b[0m \u001b[1;31m(5.62)\u001b[0m  mem = 0.03 MB\nEdges (Q=2)    :                edge =     345  lev =  9.4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 6; \u0026edge -E 2; \u0026edge -o -E 2; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2638\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.04 MB\nMapping (K=6)  :  \u001b[1;33mlut =    543\u001b[0m  \u001b[1;32medge =    2310\u001b[0m  \u001b[1;31mlev =   10\u001b[0m \u001b[1;31m(5.05)\u001b[0m  mem = 0.02 MB\nEdges (Q=2)    :                edge =     262  lev =  8.4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -D 5; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -D 5 -v; \u0026ps",
+  "stdout": "Running SatEdge with starting delay 5 and edge 1 (edge vars 1580, total vars 5694)\nDelay constraints = 14496. Edge constraints = 9639. Time =     0.00 sec\nProved UNSAT for delay 5.  Time =     0.01 sec\n\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -o; \u0026edge -D 3; \u0026ps",
+  "stdout": "\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\nEdges (Q=2)    :                edge =     330  lev = 11.4\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026pack -N 5; \u0026edge -p; \u0026ps",
+  "stdout": "Global delay = 112.\n\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\nPacking (N=3)  :  1 x LUT = 239   2 x LUT = 55   3 x LUT = 25   Total = 387   Total LUT = 424\nEdges (Q=2)    :                edge =     105  lev = 13.0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026pack -N 8; \u0026edge -p; \u0026ps",
+  "stdout": "Global delay = 98.\n\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\nPacking (N=3)  :  1 x LUT = 217   2 x LUT = 50   3 x LUT = 22   Total = 349   Total LUT = 383\nEdges (Q=2)    :                edge =      94  lev = 13.0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: $TMP/abc_asan \u0026r $CWD/test_vectors/i10_native_demo.aig; \u0026if -K 6; \u0026pack -N 6; \u0026edge -p; \u0026ps",
+  "stdout": "Global delay = 84.\n\u001b[1;37m$CWD/test_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2638\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.04 MB\nMapping (K=6)  :  \u001b[1;33mlut =    543\u001b[0m  \u001b[1;32medge =    2310\u001b[0m  \u001b[1;31mlev =   10\u001b[0m \u001b[1;31m(5.05)\u001b[0m  mem = 0.02 MB\nPacking (N=3)  :  1 x LUT = 241   2 x LUT = 28   3 x LUT = 11   Total = 323   Total LUT = 330\nEdges (Q=2)    :                edge =      50  lev = 10.0\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

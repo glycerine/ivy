@@ -2,14 +2,14 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
 
 func TestQuantNativeMuxCases(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "exist_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C quantification: %v\n%s", err, native)
 	}
@@ -45,7 +45,7 @@ func TestQuantNativeMuxCases(t *testing.T) {
 
 func TestQuantNativeSupportTables(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "exist_review.c")
-	native, err := exec.Command(exe, "--support").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--support").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C support tables: %v\n%s", err, native)
 	}

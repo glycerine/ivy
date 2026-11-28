@@ -2,24 +2,24 @@ package bbl
 
 import (
 	"bytes"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
 )
 
 func TestOriginalCInteroperability(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
 	root := "../../../src/misc/bbl"
-	header, err := os.ReadFile(filepath.Join(root, "bblif.h"))
+	header, err := testoracle.ReadFile(filepath.Join(root, "bblif.h"))
 	if err != nil {
 		t.Fatal(err)
 	}
-	implementation, err := os.ReadFile(filepath.Join(root, "bblif.c"))
+	implementation, err := testoracle.ReadFile(filepath.Join(root, "bblif.c"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -45,10 +45,10 @@ func TestOriginalCInteroperability(t *testing.T) {
 	if err := os.WriteFile(source, []byte(code.String()), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, source, "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, source, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("reference compile: %v: %s", err, out)
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Dir = dir
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("C write: %v: %s", err, out)
@@ -74,7 +74,7 @@ func TestOriginalCInteroperability(t *testing.T) {
 	if err := os.WriteFile(path, wire.Bytes(), 0600); err != nil {
 		t.Fatal(err)
 	}
-	out, err := exec.Command(binary, path).CombinedOutput()
+	out, err := testoracle.Command(t, binary, path).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C read Go: %v: %s", err, out)
 	}

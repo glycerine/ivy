@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -210,7 +210,7 @@ func TestExplicitVectorsAndAllNodeOutputs(t *testing.T) {
 
 func TestExplicitVectorsAndAllNodeOutputsMatchSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "copy_vectors_outputs.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C copy: %v: %s", err, native)
 	}

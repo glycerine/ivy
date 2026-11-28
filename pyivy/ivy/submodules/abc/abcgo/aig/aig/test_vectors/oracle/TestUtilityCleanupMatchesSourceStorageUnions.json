@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/utility_cleanup_compare.c $SRC/aig/aig/aigMan.c $SRC/aig/aig/aigObj.c $SRC/aig/aig/aigOper.c $SRC/aig/aig/aigTable.c $SRC/aig/aig/aigMem.c $SRC/aig/aig/aigFanout.c $SRC/aig/aig/aigUtil.c $SRC/misc/tim/timMan.c $SRC/misc/mem/mem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "next 0 cio 0 data 42 xsim 2\nnext 1 cio 0 data 43 xsim 2\nnext 2 cio 0 data 44 xsim 2\nnext 3 cio 0 data 45 xsim 2\nnext 4 cio 0 data 46 xsim 2\nnext 5 cio 0 data 47 xsim 2\nnext 6 cio 0 data 48 xsim 2\ndata 0 cio 0 data 0 xsim 2\ndata 1 cio 0 data 0 xsim 2\ndata 2 cio 0 data 0 xsim 2\ndata 3 cio 0 data 0 xsim 2\ndata 4 cio 0 data 0 xsim 2\ndata 5 cio 0 data 0 xsim 2\ndata 6 cio 0 data 0 xsim 2\ncone 0 cio 0 data 42 xsim 2\ncone 1 cio 0 data 0 xsim 2\ncone 2 cio 0 data 0 xsim 2\ncone 3 cio 0 data 45 xsim 2\ncone 4 cio 0 data 0 xsim 2\ncone 5 cio 0 data 47 xsim 2\ncone 6 cio 0 data 48 xsim 2\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"regexp"
 	"strings"
 	"testing"
@@ -32,7 +32,7 @@ func falseReviewGraph(seed uint32) (*Gia_Man_t, int32) {
 
 func TestFalsePathNativeSingleRebuild(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "false_review.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C false paths: %v\n%s", err, native)
 	}
@@ -74,7 +74,7 @@ func TestFalsePathNativeSingleRebuild(t *testing.T) {
 
 func TestFalsePathNativeBatchHooksAndScratch(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "false_review.c")
-	native, err := exec.Command(exe, "--safe-batch").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--safe-batch").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C batch hooks: %v\n%s", err, native)
 	}
@@ -127,7 +127,7 @@ func falseReviewTiedOutputs() *Gia_Man_t {
 }
 func TestFalsePathNativePriorityTies(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "false_review.c")
-	native, err := exec.Command(exe, "--priority").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--priority").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C priority: %v\n%s", err, native)
 	}
@@ -148,7 +148,7 @@ func TestFalsePathNativePriorityTies(t *testing.T) {
 
 func TestFalsePathNativeVerboseReports(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "false_review.c")
-	native, err := exec.Command(exe, "--verbose").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--verbose").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C reports: %v\n%s", err, native)
 	}
@@ -204,7 +204,7 @@ func TestFalsePathNativeVerboseReports(t *testing.T) {
 
 func TestFalsePathNativeSourceBatchCounterexample(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "false_review.c")
-	native, err := exec.Command(exe, "--reconvergence").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--reconvergence").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C reconvergence: %v\n%s", err, native)
 	}
@@ -246,7 +246,7 @@ func TestFalsePathNativeSourceBatchCounterexample(t *testing.T) {
 
 func TestFalsePathNativeFullDrivers(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "false_review.c")
-	native, err := exec.Command(exe, "--drivers").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--drivers").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C drivers: %v\n%s", err, native)
 	}
@@ -293,7 +293,7 @@ func TestFalsePathNativeFullDrivers(t *testing.T) {
 
 func TestFalsePathNativeSafetyRecheckBudget(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "false_review.c")
-	native, err := exec.Command(exe, "--budget").CombinedOutput()
+	native, err := testoracle.Command(t, exe, "--budget").CombinedOutput()
 	if err != nil {
 		t.Fatalf("C budget: %v\n%s", err, native)
 	}

@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -118,7 +118,7 @@ func nativeDumpFiles(t *testing.T, graphs []*aig.Graph) string {
 	if runtime.GOOS != "linux" {
 		t.Skip("native fixture uses GNU linker section collection")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
@@ -132,7 +132,7 @@ func nativeDumpFiles(t *testing.T, graphs []*aig.Graph) string {
 	args := []string{"-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-I", src,
 		filepath.Join(dir, "test_vectors/dump_compare.c"), filepath.Join(src, "aig/aig/aigUtil.c"),
 		filepath.Join(src, "aig/aig/aigDfs.c"), "-Wl,--gc-sections", "-o", binary}
-	if text, err := exec.CommandContext(ctx, cc, args...).CombinedOutput(); err != nil {
+	if text, err := testoracle.CommandContext(t, ctx, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile native dump fixture: %v: %s", err, text)
 	}
 	var input strings.Builder
@@ -155,7 +155,7 @@ func nativeDumpFiles(t *testing.T, graphs []*aig.Graph) string {
 		}
 		input.WriteByte('\n')
 	}
-	cmd := exec.CommandContext(ctx, binary, output)
+	cmd := testoracle.CommandContext(t, ctx, binary, output)
 	cmd.Stdin = strings.NewReader(input.String())
 	text, err := cmd.CombinedOutput()
 	if err != nil || string(text) != fmt.Sprintf("dumped %d\n", len(graphs)) {
@@ -216,7 +216,7 @@ func readDumpNetwork(t *testing.T, path, format string, regs int32) *abc.Network
 		}
 		return n
 	}
-	text, err := os.ReadFile(path)
+	text, err := testoracle.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -248,7 +248,7 @@ func TestDumpWritersAgainstNativeCircuits(t *testing.T) {
 		os.Stdout = stdout
 		log.Close()
 		if t.Failed() {
-			text, _ := os.ReadFile(log.Name())
+			text, _ := testoracle.ReadFile(log.Name())
 			if len(text) > 2000 {
 				text = text[len(text)-2000:]
 			}

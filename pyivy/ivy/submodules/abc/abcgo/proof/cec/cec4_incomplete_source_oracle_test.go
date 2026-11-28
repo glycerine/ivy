@@ -1,8 +1,8 @@
 package cec
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -15,21 +15,21 @@ func TestCec4IncompleteChoiceBuilderAgainstABC(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ABC object oracle requires Linux")
 	}
-	cc, err := exec.LookPath("gcc")
+	cc, err := testoracle.LookPath("gcc")
 	if err != nil {
 		t.Skip("gcc unavailable")
 	}
-	ar, err := exec.LookPath("ar")
+	ar, err := testoracle.LookPath("ar")
 	if err != nil {
 		t.Skip("ar unavailable")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	src := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../src"))
-	if _, err = os.Stat(filepath.Join(src, "aig/gia/giaDup.o")); err != nil {
+	if _, err = testoracle.Stat(filepath.Join(src, "aig/gia/giaDup.o")); err != nil {
 		t.Skip("prebuilt ABC objects unavailable")
 	}
 	var objects []string
-	if err = filepath.WalkDir(src, func(p string, d os.DirEntry, err error) error {
+	if err = testoracle.WalkDir(src, func(p string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -42,11 +42,11 @@ func TestCec4IncompleteChoiceBuilderAgainstABC(t *testing.T) {
 	}
 	dir := t.TempDir()
 	st := filepath.Join(dir, "st.o")
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, "-c", filepath.Join(src, "misc/st/st.c"), "-o", st).CombinedOutput(); err != nil {
 		t.Fatalf("compile st: %v\n%s", err, out)
 	}
 	archive := filepath.Join(dir, "abc.a")
-	if out, err := exec.Command(ar, append([]string{"qcs", archive}, append(objects, st)...)...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, ar, append([]string{"qcs", archive}, append(objects, st)...)...).CombinedOutput(); err != nil {
 		t.Fatalf("archive: %v\n%s", err, out)
 	}
 	const program = `#include "aig/gia/gia.h"
@@ -62,16 +62,16 @@ int main(int argc,char **argv) { Gia_Man_t *p,*q,*dst;int a,b,c,x,y,i;
 	if err := os.WriteFile(cfile, []byte(program), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if out, err := exec.Command(cc, "-DABC_USE_STDINT_H", "-I", src, cfile, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, "-DABC_USE_STDINT_H", "-I", src, cfile, archive, "-lstdc++", "-lm", "-ldl", "-lpthread", "-lreadline", "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("link: %v\n%s", err, out)
 	}
-	if out, err := exec.Command(binary, "stub").CombinedOutput(); err != nil || strings.TrimSpace(string(out)) != "stub:0" {
+	if out, err := testoracle.Command(t, binary, "stub").CombinedOutput(); err != nil || strings.TrimSpace(string(out)) != "stub:0" {
 		t.Fatalf("C stub: %v %s", err, out)
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Dir = dir
 	out, err := cmd.CombinedOutput()
-	failure, ok := err.(*exec.ExitError)
+	failure, ok := err.(*testoracle.ExitError)
 	if !ok || !failure.Sys().(syscall.WaitStatus).Signaled() {
 		t.Fatalf("ABC independent builder did not fail: %v %s", err, out)
 	}

@@ -1,8 +1,8 @@
 package gia
 
 import (
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math"
-	"os/exec"
 	"strings"
 	"testing"
 )
@@ -16,7 +16,7 @@ func TestGlitchRejectsNaNTransitionProbability(t *testing.T) {
 		set        func(*Gli_Man_t, float32)
 	}{{"combinational", "0", Gli_ManSetPiRandom}, {"sequential", "1", Gli_ManSetPiRandomSeq}} {
 		t.Run(tc.name, func(t *testing.T) {
-			source, err := exec.Command(exe, file, tc.mode, "1", "0", "NaN", "0").CombinedOutput()
+			source, err := testoracle.Command(t, exe, file, tc.mode, "1", "0", "NaN", "0").CombinedOutput()
 			if err == nil || !strings.Contains(string(source), "PiTransProb < 1.0") {
 				t.Fatalf("original probability precondition changed: %v %s", err, source)
 			}
@@ -111,7 +111,7 @@ func TestGlitchBorrowedTruthAndIndependentManagers(t *testing.T) {
 func TestGlitchSourceRegisterAccessorOffsetDefect(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "glitch_review.c")
 	g := glitchReviewGraph{cis: 4, regs: 1, nodes: []glitchReviewNode{{[]int32{0}, 0xaaaaaaaaaaaaaaaa}}, outputs: []int32{0, 1, 4}}
-	source, err := exec.Command(exe, g.write(t, t.TempDir()), "6", "0", "0", "0.5", "0").CombinedOutput()
+	source, err := testoracle.Command(t, exe, g.write(t, t.TempDir()), "6", "0", "0", "0.5", "0").CombinedOutput()
 	if err != nil {
 		t.Fatalf("source accessor: %v %s", err, source)
 	}

@@ -3,7 +3,7 @@ package gia
 import (
 	"bytes"
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -333,7 +333,7 @@ func TestAttributeCopyPresenceAndOwnership(t *testing.T) {
 
 func TestAttributeCopyMatchesOriginalC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "duplicate_attributes.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C attribute duplicate: %v: %s", err, native)
 	}

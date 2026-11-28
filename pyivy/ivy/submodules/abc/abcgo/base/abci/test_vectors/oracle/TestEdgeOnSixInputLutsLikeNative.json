@@ -1,0 +1,14 @@
+[
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026if -K 6; \u0026edge; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026if -K 6; \u0026edge; \u0026ps\".\n\n\u001b[1;37mtest_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2638\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.04 MB\nMapping (K=6)  :  \u001b[1;33mlut =    543\u001b[0m  \u001b[1;32medge =    2310\u001b[0m  \u001b[1;31mlev =   10\u001b[0m \u001b[1;31m(5.05)\u001b[0m  mem = 0.02 MB\nEdges (Q=2)    :                edge =     107  lev = 10.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026if -K 5; \u0026edge -E 2; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026if -K 5; \u0026edge -E 2; \u0026ps\".\n\n\u001b[1;37mtest_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2426\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.04 MB\nMapping (K=5)  :  \u001b[1;33mlut =    656\u001b[0m  \u001b[1;32medge =    2479\u001b[0m  \u001b[1;31mlev =   11\u001b[0m \u001b[1;31m(5.62)\u001b[0m  mem = 0.03 MB\nEdges (Q=2)    :                edge =     271  lev =  9.4\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 6; \u0026edge; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 6; \u0026edge; \u0026ps\".\n\n\u001b[1;37mtest_vectors/native_mul8_canon\u001b[0m : i/o =     16/     16  \u001b[1;36mand =    1340\u001b[0m  \u001b[1;35mlev =   66\u001b[0m \u001b[1;35m(36.88)\u001b[0m  mem = 0.02 MB\nMapping (K=6)  :  \u001b[1;33mlut =    124\u001b[0m  \u001b[1;32medge =     562\u001b[0m  \u001b[1;31mlev =   12\u001b[0m \u001b[1;31m(6.88)\u001b[0m  mem = 0.01 MB\nEdges (Q=2)    :                edge =      21  lev = 11.2\n"
+ }
+]

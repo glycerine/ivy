@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: $TMP/oracle --verbose",
+  "stdout": "Output   0:  ESOP has     2 cubes\nOutput   1:  ESOP has     2 cubes\nOutput   2:  ESOP has     2 cubes\nOuts = 3.  Cubes = 31.  Used = 6.  Hashed = 23. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

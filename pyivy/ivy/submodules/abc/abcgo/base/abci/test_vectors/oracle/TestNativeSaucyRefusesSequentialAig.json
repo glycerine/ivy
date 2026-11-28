@@ -1,0 +1,6 @@
+[
+ {
+  "key": "combined: abc -c read test_vectors/seq/s27.blif; strash; saucy3; print_stats",
+  "stdout": "ABC command line: \"read test_vectors/seq/s27.blif; strash; saucy3; print_stats\".\n\nLine 4: Skipping line \".wire_load_slope 0.00\".\nError: This command works only for combinational AIGs.\n"
+ }
+]

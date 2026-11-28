@@ -3,10 +3,9 @@ package cec
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
 	"testing"
 )
 
@@ -118,9 +117,8 @@ func TestOriginalSweepReplaysRareMiterWitness(t *testing.T) {
 // TestOriginalSweepABC compares the same source workflow against the checked-out
 // ABC executable when available. Each result is independently truth-tabled.
 func TestOriginalSweepABC(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	binary := filepath.Clean(filepath.Join(filepath.Dir(file), "../../../abc"))
-	if _, err := os.Stat(binary); err != nil {
+	binary := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(binary); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	g := gia.Gia_ManStart(32)
@@ -139,10 +137,10 @@ func TestOriginalSweepABC(t *testing.T) {
 		t.Fatal(err)
 	}
 	cmd := fmt.Sprintf("&r -s %s; &fraig -W 1 -R 1 -I 10 -D 1 -C 100; &w %s", in, out)
-	if log, err := exec.Command(binary, "-c", cmd).CombinedOutput(); err != nil {
+	if log, err := testoracle.Command(t, binary, "-c", cmd).CombinedOutput(); err != nil {
 		t.Fatalf("ABC: %v %s", err, log)
 	}
-	data, err = os.ReadFile(out)
+	data, err = testoracle.ReadFile(out)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -90,7 +90,7 @@ func BenchmarkFileMappedSAT(b *testing.B) {
 }
 
 func BenchmarkI10MappedSAT(b *testing.B) {
-	benchmarkMappedSAT(b, "../../../i10.aig")
+	benchmarkMappedSAT(b, "../../test_vectors/i10.aig")
 }
 
 func BenchmarkArithmeticMappedSAT(b *testing.B) {
@@ -117,7 +117,7 @@ func benchmarkMappedSAT(b *testing.B, path string) {
 }
 
 func BenchmarkI10SatokoInit(b *testing.B) {
-	p, err := Gia_AigerRead("../../../i10.aig", 0, 0, 0)
+	p, err := Gia_AigerRead("../../test_vectors/i10.aig", 0, 0, 0)
 	if err != nil {
 		b.Fatal(err)
 	}

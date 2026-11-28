@@ -1,0 +1,12 @@
+[
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026write_cnf -K 8 $TMP/output.cnf",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026write_cnf -K 8 $TMP/001/output.cnf\".\n\nCNF stats: Vars =     18. Clauses =      20. Literals =       48. Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.cnf": "c Result of efficient AIG-to-CNF conversion using package CNF\np cnf 18 20\n2 3 4 0\n2 -5 0\n-2 5 0\n3 6 0\n-3 -6 0\n4 -7 0\n-4 7 0\n-5 -17 0\n-5 10 -11 0\n-5 -9 0\n5 9 11 17 0\n5 9 -10 17 0\n-6 -9 12 0\n6 -12 0\n6 9 0\n7 -9 11 12 0\n-7 -12 0\n-7 -11 0\n-7 9 0\n-8 0\n\n"
+  }
+ }
+]

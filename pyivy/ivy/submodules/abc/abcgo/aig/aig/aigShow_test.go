@@ -1,9 +1,10 @@
 package aig
 
 import (
-	"fmt"
-	"os"
 	"os/exec"
+	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
+	"os"
 	"path/filepath"
 	"reflect"
 	"regexp"
@@ -52,7 +53,7 @@ func TestShowReplacesSourceExtensionAndKeepsDirectory(t *testing.T) {
 	if err != nil || got != want {
 		t.Fatalf("Show = %q (%v), want %q", got, err, want)
 	}
-	if _, err := os.Stat(want); err != nil {
+	if _, err := testoracle.Stat(want); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -68,7 +69,7 @@ func TestDOTPreservesGraphAndMarks(t *testing.T) {
 	if err := Aig_WriteDotAig(p, path, 0, []Edge{root}); err != nil {
 		t.Fatal(err)
 	}
-	data, err := os.ReadFile(path)
+	data, err := testoracle.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -127,7 +128,7 @@ func TestDOTLimitAndWriteFailuresPreserveExistingFile(t *testing.T) {
 	if err := Aig_WriteDotAig(g, path, 0, nil); err == nil {
 		t.Fatal("201 logic nodes accepted")
 	}
-	data, err := os.ReadFile(path)
+	data, err := testoracle.ReadFile(path)
 	if err != nil || string(data) != "existing" {
 		t.Fatalf("failed preflight overwrote existing file: %q (%v)", data, err)
 	}
@@ -139,7 +140,7 @@ func TestDOTLimitAndWriteFailuresPreserveExistingFile(t *testing.T) {
 }
 
 func TestDOTExtensionsParseWithGraphviz(t *testing.T) {
-	dot, err := exec.LookPath("dot")
+	dot, err := testoracle.LookPath("dot")
 	if err != nil {
 		t.Skip("Graphviz unavailable")
 	}

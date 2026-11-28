@@ -2,7 +2,7 @@ package abci
 
 import (
 	"bytes"
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -13,7 +13,7 @@ import (
 // Saig_ManDupIsoCanonical, the AIGER bytes compared). The port's colour
 // refinement found no classes on i10.
 func TestIsoReduceLikeNative(t *testing.T) {
-	out := runScript(t, "read ../../../i10.aig; strash; iso; print_stats")
+	out := runScript(t, "read ../../test_vectors/i10.aig; strash; iso; print_stats")
 	for _, want := range []string{"Reduced 224 outputs to 149 outputs.", "i/o =  252/  149"} {
 		if !strings.Contains(out, want) {
 			t.Errorf("missing %q in\n%s", want, out)
@@ -27,11 +27,11 @@ func TestIsoReduceLikeNative(t *testing.T) {
 func TestWriteAigerCanonicalLikeNative(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "canon.aig")
 	runScript(t, "read test_vectors/native_mul8_if6.blif; strash; write_aiger -u "+path)
-	got, err := os.ReadFile(path)
+	got, err := testoracle.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
-	want, err := os.ReadFile("test_vectors/native_mul8_canon.aig")
+	want, err := testoracle.ReadFile("test_vectors/native_mul8_canon.aig")
 	if err != nil {
 		t.Fatal(err)
 	}

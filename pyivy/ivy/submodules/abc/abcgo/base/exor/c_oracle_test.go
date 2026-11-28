@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"sort"
@@ -19,7 +19,7 @@ func TestOriginalCExorLinkAndCostOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section collection required")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("optional original C oracle requires cc")
 	}
@@ -39,7 +39,7 @@ int main(void){int n;unsigned ai,bi,ao,bo;PrepareBitSetModule();while(scanf("%d%
 		args = append(args, filepath.Join(src, "base/exor", f))
 	}
 	args = append(args, "-o", binary)
-	if out, err := exec.Command(cc, args...).CombinedOutput(); err != nil {
+	if out, err := testoracle.Command(t, cc, args...).CombinedOutput(); err != nil {
 		t.Fatalf("build C oracle: %v\n%s", err, out)
 	}
 	rng := rand.New(rand.NewSource(389))
@@ -73,7 +73,7 @@ int main(void){int n;unsigned ai,bi,ao,bo;PrepareBitSetModule();while(scanf("%d%
 		}
 		expectedResults = append(expectedResults, e)
 	}
-	cmd := exec.Command(binary)
+	cmd := testoracle.Command(t, binary)
 	cmd.Stdin = &input
 	out, err := cmd.CombinedOutput()
 	if err != nil {

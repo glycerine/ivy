@@ -1,0 +1,19 @@
+[
+ {
+  "key": "combined: cc -std=c99 -O2 $TMP/oracle.c -o $TMP/oracle",
+  "stdout": "In function ‘Exp_Truth6’,\n    inlined from ‘main’ at $TMP/001/oracle.c:46:209:\n$TMP/001/oracle.c:9:30: warning: argument 1 range [18446744072635809792, 18446744073709551615] exceeds maximum object size 9223372036854775807 [-Walloc-size-larger-than=]\n    9 | #define ABC_CALLOC(t,n) ((t*)calloc((n),sizeof(t)))\n      |                              ^~~~~~~~~~~~~~~~~~~~~\n$TMP/001/oracle.c:38:15: note: in expansion of macro ‘ABC_CALLOC’\n   38 |     puNodes = ABC_CALLOC( word, Exp_NodeNum(p) );\n      |               ^~~~~~~~~~\nIn file included from $TMP/001/oracle.c:3:\n/usr/include/stdlib.h: In function ‘main’:\n/usr/include/stdlib.h:675:14: note: in a call to allocation function ‘calloc’ declared here\n  675 | extern void *calloc (size_t __nmemb, size_t __size)\n      |              ^~~~~~\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/oracle"
+  ]
+ },
+ {
+  "key": "output: $TMP/oracle [stdin 14a2e703f4af5868]",
+  "stdout": "00000000cc00cc00\n2244108000cc3000\na5a5111111110000\nffffffff0ff0fffa\nffffffffcccfcc30\nffffffffffffffff\n30253025f0e5f0e5\n3300000000cc00cc\nfff0f0ffff0000ff\naa99aa99aa99aa99\nffffffffffffffff\n050aaaa5050aaaa5\naaaaaa22ffffff77\ncc33cc11cccccccc\nf050f050f050f050\nf3f3c3f3f3f3c3f3\naffaaf0050f05005\n3c3cc3c3f50a5fa0\n7777777777770000\nfcffcffffcffcfff\n3636c9c90404fbfb\nfffff3f3efefffff\nee1133ccee4466cc\nffffffff555a555a\nffffffffffffffff\na011a01100110011\n21ff21a521a521a5\nffeeffeeffeeffee\nddffff77efffffbf\n00cc11ee00002211\nddddddddbbbbbbbb\n0033cc335566dd77\n000c303c000c303c\naa55aaffaf5fafff\n15152a2a15152a2a\n5f505f505f505f50\ncf33c0c3cf33c0c3\n0c0c0c0c3c3c3c3c\n0000554400005555\n0000000000000000\n77ff77ff77ff77ff\n446644660aa00aa0\n2222222288888888\nf3fffcf03fffcf0f\n33cc33cc33cc33cc\n2288228800500050\nff33ff32ccffccfa\nf3f3fff30f3c0ccc\nf0ffc3ff00ff33ff\n0303030303030303\neebbffbbcc33ff33\n2211aa5511220000\n99999988aaaaaa00\n4bf04bf04bf04bf0\nfff0ccc3fff000c3\n9999969699999696\n0505050505050505\n005500555a005a00\n333f222eccc08884\nfa39c9f5fa39c9f5\nfffff7f7ffffffff\nffffffffffffffff\n05fac5fafafafafa\n9966996699999999\ncffc6aa63003c00c\na4a4a4a458585858\n963c9600b43cb400\n4010401008020802\naf0a5ffa5ffa50f5\nf0c3f0c3f0c3f0c3\n0500050000500050\nf5f5f5f5fff5fff5\n5f6c635063505f6c\neff0eff0eff0eff0\n00000f0f00000c0c\n003300cc3300cc00\nffffaaffffffffff\nffffffffffffffff\n05ccaf6605ccaf66\n5f5f5e5e5f5f5e5e\nffffffffffffffff\nbf3fffffbf3fffff\n9999ffffbbbbeeee\nc30f33ffc30fcc00\nffffffffffffffff\nfffff0f0ffff0f0f\nf0f00af0f0f00aa0\nffff7f7f7f7f7f7f\nffffffffffffffff\nf00ff00f0ff00ff0\ncc33cc33cc33cc33\n0f0fffff0f0fffff\n33303030f3fcf0f0\n6a6a6a6a95109510\n0000aa000000aa00\nb3ffb3ffb3ffb3ff\nfcfc3f3ffefe3f3f\nffccffffffffffff\n0000000033ff33ff\nccdd00aaccdd00aa\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

@@ -1,0 +1,9 @@
+[
+ {
+  "key": "combined: $TMP/oracle --abs",
+  "stdout": "abs 0 8 6 5 3\nabs 1 40 38 37 35 11 10 7 4\nabs 2 72 70 69 67 43 42 39 36 9\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

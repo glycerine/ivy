@@ -1,0 +1,450 @@
+[
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -n -c -r -o -g -y -e",
+  "stdout": "ABC command line: \"read_blif $TMP/001/machine.blif; strash; pdr -n -c -r -o -g -y -e\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m",
+  "stdout": "ABC command line: \"read_blif $TMP/002/machine.blif; strash; pdr -m\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/002"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t",
+  "stdout": "ABC command line: \"read_blif $TMP/003/machine.blif; strash; pdr -t\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/003"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/004/machine.blif; strash; pdr -m -t -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/004"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -i",
+  "stdout": "ABC command line: \"read_blif $TMP/005/machine.blif; strash; pdr -i\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/005"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -i -r",
+  "stdout": "ABC command line: \"read_blif $TMP/006/machine.blif; strash; pdr -m -i -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/006"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -i -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/007/machine.blif; strash; pdr -t -i -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/007"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -i -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/008/machine.blif; strash; pdr -m -t -i -o -g\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/008"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -p",
+  "stdout": "ABC command line: \"read_blif $TMP/009/machine.blif; strash; pdr -p\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 2.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/009"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -p -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/010/machine.blif; strash; pdr -m -p -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/010"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -p -r",
+  "stdout": "ABC command line: \"read_blif $TMP/011/machine.blif; strash; pdr -t -p -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/011"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -p -y -e",
+  "stdout": "ABC command line: \"read_blif $TMP/012/machine.blif; strash; pdr -m -t -p -y -e\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/012"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -i -p -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/013/machine.blif; strash; pdr -i -p -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/013"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -i -p",
+  "stdout": "ABC command line: \"read_blif $TMP/014/machine.blif; strash; pdr -m -i -p\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/014"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -i -p -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/015/machine.blif; strash; pdr -t -i -p -o -g\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/015"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -i -p -n -c -r",
+  "stdout": "ABC command line: \"read_blif $TMP/016/machine.blif; strash; pdr -m -t -i -p -n -c -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/016"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -q",
+  "stdout": "ABC command line: \"read_blif $TMP/017/machine.blif; strash; pdr -q\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/017"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -q",
+  "stdout": "ABC command line: \"read_blif $TMP/018/machine.blif; strash; pdr -m -q\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/018"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -q -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/019/machine.blif; strash; pdr -t -q -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/019"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -q",
+  "stdout": "ABC command line: \"read_blif $TMP/020/machine.blif; strash; pdr -m -t -q\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/020"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -i -q -r",
+  "stdout": "ABC command line: \"read_blif $TMP/021/machine.blif; strash; pdr -i -q -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/021"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -i -q -n -c -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/022/machine.blif; strash; pdr -m -i -q -n -c -o -g\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/022"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -i -q -y -e",
+  "stdout": "ABC command line: \"read_blif $TMP/023/machine.blif; strash; pdr -t -i -q -y -e\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/023"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -i -q",
+  "stdout": "ABC command line: \"read_blif $TMP/024/machine.blif; strash; pdr -m -t -i -q\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/024"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -p -q -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/025/machine.blif; strash; pdr -p -q -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/025"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -p -q -r",
+  "stdout": "ABC command line: \"read_blif $TMP/026/machine.blif; strash; pdr -m -p -q -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/026"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -p -q",
+  "stdout": "ABC command line: \"read_blif $TMP/027/machine.blif; strash; pdr -t -p -q\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/027"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -p -q -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/028/machine.blif; strash; pdr -m -t -p -q -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/028"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -i -p -q -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/029/machine.blif; strash; pdr -i -p -q -o -g\".\n\nInvariant F[1] : 1 clauses with 1 flops (out of 2) (cex = 0, ave = 2.00)\nVerification of invariant with 1 clauses was successful.  Time =     0.00 sec\nProperty proved.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/029"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -i -p -q",
+  "stdout": "ABC command line: \"read_blif $TMP/030/machine.blif; strash; pdr -m -i -p -q\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/030"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -i -p -q -n -c -r",
+  "stdout": "ABC command line: \"read_blif $TMP/031/machine.blif; strash; pdr -t -i -p -q -n -c -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/031"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -i -p -q",
+  "stdout": "ABC command line: \"read_blif $TMP/032/machine.blif; strash; pdr -m -t -i -p -q\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/032"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -f",
+  "stdout": "ABC command line: \"read_blif $TMP/033/machine.blif; strash; pdr -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/033"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -f -n -c -y -e",
+  "stdout": "ABC command line: \"read_blif $TMP/034/machine.blif; strash; pdr -m -f -n -c -y -e\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/034"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -f",
+  "stdout": "ABC command line: \"read_blif $TMP/035/machine.blif; strash; pdr -t -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/035"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -f -r -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/036/machine.blif; strash; pdr -m -t -f -r -o -g\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/036"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -i -f -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/037/machine.blif; strash; pdr -i -f -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/037"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -i -f",
+  "stdout": "ABC command line: \"read_blif $TMP/038/machine.blif; strash; pdr -m -i -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/038"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -i -f",
+  "stdout": "ABC command line: \"read_blif $TMP/039/machine.blif; strash; pdr -t -i -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/039"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -i -f -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/040/machine.blif; strash; pdr -m -t -i -f -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/040"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -p -f -r",
+  "stdout": "ABC command line: \"read_blif $TMP/041/machine.blif; strash; pdr -p -f -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/041"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -p -f",
+  "stdout": "ABC command line: \"read_blif $TMP/042/machine.blif; strash; pdr -m -p -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/042"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -p -f -n -c -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/043/machine.blif; strash; pdr -t -p -f -n -c -o -g\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/043"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -p -f",
+  "stdout": "ABC command line: \"read_blif $TMP/044/machine.blif; strash; pdr -m -t -p -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/044"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -i -p -f -y -e",
+  "stdout": "ABC command line: \"read_blif $TMP/045/machine.blif; strash; pdr -i -p -f -y -e\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/045"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -i -p -f -n -c -r",
+  "stdout": "ABC command line: \"read_blif $TMP/046/machine.blif; strash; pdr -m -i -p -f -n -c -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/046"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -i -p -f",
+  "stdout": "ABC command line: \"read_blif $TMP/047/machine.blif; strash; pdr -t -i -p -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/047"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -i -p -f",
+  "stdout": "ABC command line: \"read_blif $TMP/048/machine.blif; strash; pdr -m -t -i -p -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/048"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -q -f -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/049/machine.blif; strash; pdr -q -f -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/049"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -q -f -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/050/machine.blif; strash; pdr -m -q -f -o -g\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 2.  Time =     0.01 sec\n",
+  "temps": [
+   "$TMP/050"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -q -f -r",
+  "stdout": "ABC command line: \"read_blif $TMP/051/machine.blif; strash; pdr -t -q -f -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/051"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -q -f -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/052/machine.blif; strash; pdr -m -t -q -f -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/052"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -i -q -f",
+  "stdout": "ABC command line: \"read_blif $TMP/053/machine.blif; strash; pdr -i -q -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/053"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -i -q -f",
+  "stdout": "ABC command line: \"read_blif $TMP/054/machine.blif; strash; pdr -m -i -q -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/054"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -i -q -f -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/055/machine.blif; strash; pdr -t -i -q -f -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/055"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -i -q -f -r -y -e",
+  "stdout": "ABC command line: \"read_blif $TMP/056/machine.blif; strash; pdr -m -t -i -q -f -r -y -e\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/056"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -p -q -f -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/057/machine.blif; strash; pdr -p -q -f -o -g\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 1.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/057"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -p -q -f -n -c",
+  "stdout": "ABC command line: \"read_blif $TMP/058/machine.blif; strash; pdr -m -p -q -f -n -c\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/058"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -p -q -f",
+  "stdout": "ABC command line: \"read_blif $TMP/059/machine.blif; strash; pdr -t -p -q -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/059"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -p -q -f",
+  "stdout": "ABC command line: \"read_blif $TMP/060/machine.blif; strash; pdr -m -t -p -q -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/060"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -i -p -q -f -n -c -r",
+  "stdout": "ABC command line: \"read_blif $TMP/061/machine.blif; strash; pdr -i -p -q -f -n -c -r\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/061"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -i -p -q -f",
+  "stdout": "ABC command line: \"read_blif $TMP/062/machine.blif; strash; pdr -m -i -p -q -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/062"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -t -i -p -q -f",
+  "stdout": "ABC command line: \"read_blif $TMP/063/machine.blif; strash; pdr -t -i -p -q -f\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/063"
+  ]
+ },
+ {
+  "key": "combined: abc -c read_blif $TMP/machine.blif; strash; pdr -m -t -i -p -q -f -n -c -o -g",
+  "stdout": "ABC command line: \"read_blif $TMP/064/machine.blif; strash; pdr -m -t -i -p -q -f -n -c -o -g\".\n\nOutput 0 of miter \"pdr_compare\" was asserted in frame 0.  Time =     0.00 sec\n",
+  "temps": [
+   "$TMP/064"
+  ]
+ }
+]

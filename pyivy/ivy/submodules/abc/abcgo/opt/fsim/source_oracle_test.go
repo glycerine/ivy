@@ -5,8 +5,8 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -17,14 +17,14 @@ func TestOriginalWordAndTernaryStorageOracle(t *testing.T) {
 	if runtime.GOOS != "linux" {
 		t.Skip("ELF section collection required")
 	}
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("original C fixture needs cc")
 	}
 	_, file, _, _ := runtime.Caller(0)
 	root := filepath.Clean(filepath.Join(filepath.Dir(file), "../../.."))
 	binary := filepath.Join(t.TempDir(), "oracle")
-	cmd := exec.Command(cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", filepath.Join(root, "src"), "-I", filepath.Join(root, "test_vectors/fsim/include"), filepath.Join(root, "test_vectors/fsim/oracle.c"), "-o", binary)
+	cmd := testoracle.Command(t, cc, "-O2", "-DABC_USE_STDINT_H", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-I", filepath.Join(root, "src"), "-I", filepath.Join(root, "test_vectors/fsim/include"), filepath.Join(root, "test_vectors/fsim/oracle.c"), "-o", binary)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("build source oracle: %v\n%s", err, out)
 	}
@@ -81,7 +81,7 @@ func TestOriginalWordAndTernaryStorageOracle(t *testing.T) {
 		Fsim_ManTerSimInfoSet(storage, index, value)
 		expected = append(expected, fmt.Sprintf("%x %d", storage[index>>4], Fsim_ManTerSimInfoGet(storage, index)))
 	}
-	cmd = exec.Command(binary)
+	cmd = testoracle.Command(t, binary)
 	cmd.Stdin = &input
 	out, err := cmd.CombinedOutput()
 	if err != nil {

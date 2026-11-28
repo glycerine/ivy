@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: gcc -DABC_USE_STDINT_H -ffunction-sections -fdata-sections -I $SRC $CWD/test_vectors/multivalue_trace_compare.c $SRC/aig/aig/aigMem.c -Wl,--gc-sections -o $TMP/source-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/source-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/source-oracle",
+  "stdout": "initial -1\nframe 0 state -1 objects 5: 0 2 4 6 8 1 0 8 8 6 6 1 0 8 8 6\nframe 1 state -1 objects 9: 0 10 12 14 16 1 1 16 16 14 14 1 1 16 16 14\nframe 2 state -1 objects 9: 0 536870910 536870910 536870910 536870910 1 0 536870910 536870910 536870910 536870910 1 0 536870910 536870910 536870910\nframe 3 state -1 objects 9: 0 536870910 536870910 536870910 536870910 1 1 536870910 536870910 536870910 536870910 1 1 536870910 536870910 536870910\nframe 4 state 4 objects 9: 0 536870910 536870910 536870910 536870910 1 0 536870910 536870910 536870910 536870910 1 0 536870910 536870910 536870910\nundefined: 0 0 1 1 1\nconstants: 0\nbinary: 1\noscillators: 1\nskip: 0 0 1 1 1\nmapping: 2 4 8 1 12 14 16 18\ndriver: 2 4 8 1 12 14 16 18\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

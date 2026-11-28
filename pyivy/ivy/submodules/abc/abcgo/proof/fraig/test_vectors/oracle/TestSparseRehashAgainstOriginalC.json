@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections test_vectors/rehash_oracle.c $SRC/proof/fraig/fraigTable.c -Wl,--gc-sections -o $TMP/rehash-oracle",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/rehash-oracle"
+  ]
+ },
+ {
+  "key": "combined: $TMP/rehash-oracle",
+  "stdout": "1 1 1 3\n1 1 1 3\n1 1 1 3\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

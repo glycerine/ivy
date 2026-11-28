@@ -3,9 +3,9 @@ package mf
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/ioa"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -183,8 +183,8 @@ func TestCoarsenMalformed(t *testing.T) {
 	}
 }
 func TestCoarsenOriginalABCStatistics(t *testing.T) {
-	abc := filepath.Clean("../../../../abc")
-	if _, err := os.Stat(abc); err != nil {
+	abc := testoracle.NativeABCPath()
+	if _, err := testoracle.Stat(abc); err != nil {
 		t.Skip("original ABC executable unavailable")
 	}
 	r := rand.New(rand.NewSource(991))
@@ -226,7 +226,7 @@ func TestCoarsenOriginalABCStatistics(t *testing.T) {
 			t.Fatal(err)
 		}
 		coarseTestEquivalent(t, n, out)
-		cmd := exec.Command(abc, "-c", fmt.Sprintf("&r -s %s; &st -m -L 3; &ps -m", path))
+		cmd := testoracle.Command(t, abc, "-c", fmt.Sprintf("&r -s %s; &st -m -L 3; &ps -m", path))
 		raw, err := cmd.CombinedOutput()
 		if err != nil {
 			t.Fatalf("ABC oracle failed %v\n%s", err, raw)

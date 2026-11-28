@@ -2,6 +2,7 @@ package abci
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
 	"path/filepath"
 	"slices"
@@ -18,7 +19,7 @@ import (
 // golden file from the native results.
 
 var nativeScriptBenches = []string{
-	"../../../i10.aig",
+	"../../test_vectors/i10.aig",
 	"test_vectors/bench/add32.aig",
 	"test_vectors/bench/mul8.aig",
 	"test_vectors/bench/mul12.aig",
@@ -85,7 +86,7 @@ func nativeScriptKey(bench, script string) string {
 
 func readNativeStats(t *testing.T, file string) map[string]string {
 	t.Helper()
-	data, err := os.ReadFile(file)
+	data, err := testoracle.ReadFile(file)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -143,7 +144,7 @@ func checkScriptsMatchNative(t *testing.T, benches, scripts []string, statsFile 
 		t.Skip("differential script sweep")
 	}
 	golden := readNativeStats(t, statsFile)
-	live := os.Getenv("ABC_BINARY") != ""
+	live := testoracle.NativeABCPath() != ""
 	updated := map[string]string{}
 	for _, bench := range benches {
 		for _, script := range scripts {

@@ -3,8 +3,8 @@ package io
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -12,19 +12,19 @@ import (
 )
 
 func TestOriginalCGraphExports(t *testing.T) {
-	source := os.Getenv("GRAPH_SOURCE_ROOT")
+	source := testoracle.SourceRoot()
 	if source == "" {
 		t.Skip("set GRAPH_SOURCE_ROOT to original src directory")
 	}
-	cc, e := exec.LookPath("cc")
+	cc, e := testoracle.LookPath("cc")
 	if e != nil {
 		t.Skip("C compiler unavailable")
 	}
-	cxx, e := exec.LookPath("g++")
+	cxx, e := testoracle.LookPath("g++")
 	if e != nil {
 		t.Skip("C++ linker unavailable")
 	}
-	if _, e = os.Stat(filepath.Join(source, "base/io/ioWriteGml.o")); e != nil {
+	if _, e = testoracle.Stat(filepath.Join(source, "base/io/ioWriteGml.o")); e != nil {
 		t.Skip("original ABC object files unavailable")
 	}
 	dir := t.TempDir()
@@ -36,11 +36,11 @@ book=Abc_NtkStartRead("book");Io_ReadCreatePi(book,"a");Io_ReadCreatePi(book,"b"
 	if e = os.WriteFile(c, []byte(code), 0600); e != nil {
 		t.Fatal(e)
 	}
-	if out, e := exec.Command(cc, "-std=gnu99", "-DLIN64", "-I"+source, "-c", c, "-o", o).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cc, "-std=gnu99", "-DLIN64", "-I"+source, "-c", c, "-o", o).CombinedOutput(); e != nil {
 		t.Fatalf("compile %v %s", e, out)
 	}
 	args := []string{o}
-	e = filepath.WalkDir(source, func(p string, d os.DirEntry, e error) error {
+	e = testoracle.WalkDir(source, func(p string, d os.DirEntry, e error) error {
 		if e != nil {
 			return e
 		}
@@ -53,17 +53,17 @@ book=Abc_NtkStartRead("book");Io_ReadCreatePi(book,"a");Io_ReadCreatePi(book,"b"
 		t.Fatal(e)
 	}
 	args = append(args, "-lreadline", "-lpthread", "-lm", "-ldl", "-lz", "-o", exe)
-	if out, e := exec.Command(cxx, args...).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, cxx, args...).CombinedOutput(); e != nil {
 		t.Fatalf("link %v %s", e, out)
 	}
-	if out, e := exec.Command(exe, dir).CombinedOutput(); e != nil {
+	if out, e := testoracle.Command(t, exe, dir).CombinedOutput(); e != nil {
 		t.Fatalf("oracle %v %s", e, out)
 	}
 	n := exportFixture()
 	var gml, list bytes.Buffer
 	WriteGML(&gml, n)
 	WriteList(&list, n, true)
-	data, e := os.ReadFile(filepath.Join(dir, "gml"))
+	data, e := testoracle.ReadFile(filepath.Join(dir, "gml"))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -72,7 +72,7 @@ book=Abc_NtkStartRead("book");Io_ReadCreatePi(book,"a");Io_ReadCreatePi(book,"b"
 	if fmt.Sprint(nodes.FindAllStringSubmatch(gml.String(), -1)) != fmt.Sprint(nodes.FindAllStringSubmatch(string(data), -1)) || fmt.Sprint(edges.FindAllStringSubmatch(gml.String(), -1)) != fmt.Sprint(edges.FindAllStringSubmatch(string(data), -1)) {
 		t.Fatalf("GML graph differs\nGo%s\nC%s", gml.String(), data)
 	}
-	data, e = os.ReadFile(filepath.Join(dir, "list"))
+	data, e = testoracle.ReadFile(filepath.Join(dir, "list"))
 	if e != nil {
 		t.Fatal(e)
 	}
@@ -89,7 +89,7 @@ book=Abc_NtkStartRead("book");Io_ReadCreatePi(book,"a");Io_ReadCreatePi(book,"b"
 		t.Fatalf("list differs\nGo%s\nC%s", list.String(), data)
 	}
 	for _, name := range []string{"nodes", "nets"} {
-		data, e = os.ReadFile(filepath.Join(dir, name))
+		data, e = testoracle.ReadFile(filepath.Join(dir, name))
 		if e != nil {
 			t.Fatal(e)
 		}

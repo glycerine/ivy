@@ -1,0 +1,18 @@
+[
+ {
+  "key": "combined: cc -DABC_USE_STDINT_H -I $SRC -ffunction-sections -fdata-sections test_vectors/compress_large_oracle.c $SRC/proof/fraig/fraigFeed.c $SRC/proof/fraig/fraigTable.c $SRC/proof/fraig/fraigMem.c $SRC/proof/fraig/fraigVec.c $SRC/proof/fraig/fraigNode.c $SRC/proof/fraig/fraigApi.c $SRC/proof/fraig/fraigPrime.c $SRC/proof/fraig/fraigUtil.c $SRC/sat/msat/msatVec.c -Wl,--gc-sections -o $TMP/compression-large",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/compression-large"
+  ]
+ },
+ {
+  "key": "combined: $TMP/compression-large",
+  "stdout": "round 0 36 2 2 16\nnode 1 0000002a 80000000 0000000e\nnode 2 0000000f 80000000 00000005\nnode 3 00000024 80000000 0000000c\nnode 4 00000015 80000000 00000007\nnode 5 0000001e 00000000 0000000a\nnode 6 0000000f 80000000 00000005\nnode 7 0000001e 00000000 0000000a\nnode 8 00000018 00000000 00000008\nmask ffffffff 0000000f\nround 1 39 2 2 16\nnode 1 0000011a 80000000 0000005e\nnode 2 0000006f 80000000 00000025\nnode 3 00000144 80000000 0000006c\nnode 4 00000045 80000000 00000017\nnode 5 0000007e 00000000 0000002a\nnode 6 0000012f 80000000 00000065\nnode 7 0000010e 00000000 0000005a\nnode 8 000000d8 00000000 00000048\nmask ffffffff 0000007f\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]

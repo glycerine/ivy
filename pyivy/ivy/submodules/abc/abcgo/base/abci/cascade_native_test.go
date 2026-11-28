@@ -1,7 +1,7 @@
 package abci
 
 import (
-	"os"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"path/filepath"
 	"testing"
 )
@@ -27,8 +27,8 @@ func TestCascadeLikeNative(t *testing.T) {
 			if native != port {
 				t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)
 			}
-			g, _ := os.ReadFile(goFile)
-			n, _ := os.ReadFile(nativeFile)
+			g, _ := testoracle.ReadFile(goFile)
+			n, _ := testoracle.ReadFile(nativeFile)
 			if blifStamp.ReplaceAllString(string(g), "") != blifStamp.ReplaceAllString(string(n), "") {
 				t.Errorf("%s: written network differs from native", script)
 			}

@@ -3,9 +3,9 @@ package minisatp
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"testing"
 )
 
@@ -37,10 +37,10 @@ func TestAgainstOriginalMiniSat(t *testing.T) {
 			fmt.Fprintln(&input, "0")
 			s.addClause(clause)
 		}
-		command := exec.Command(oracle)
+		command := testoracle.Command(t, oracle)
 		command.Stdin = bytes.NewReader(input.Bytes())
 		out, err := command.CombinedOutput()
-		exit, ok := err.(*exec.ExitError)
+		exit, ok := err.(*testoracle.ExitError)
 		if !ok || (exit.ExitCode() != 10 && exit.ExitCode() != 20) {
 			t.Fatalf("oracle failed: %v\n%s", err, out)
 		}

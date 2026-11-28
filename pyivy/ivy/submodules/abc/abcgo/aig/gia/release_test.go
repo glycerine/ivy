@@ -2,10 +2,10 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
@@ -13,12 +13,12 @@ import (
 
 func TestNoLiveCFreeCallsInGia(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
-	files, err := filepath.Glob(filepath.Join(filepath.Dir(file), "*.go"))
+	files, err := testoracle.Glob(filepath.Join(filepath.Dir(file), "*.go"))
 	if err != nil {
 		t.Fatal(err)
 	}
 	for _, path := range files {
-		source, err := os.ReadFile(path)
+		source, err := testoracle.ReadFile(path)
 		if err != nil {
 			t.Fatal(err)
 		}

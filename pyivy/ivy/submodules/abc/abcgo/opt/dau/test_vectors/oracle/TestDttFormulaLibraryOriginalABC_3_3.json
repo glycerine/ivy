@@ -1,0 +1,13 @@
+[
+ {
+  "key": "combined: abc -c funenum -l -I 3 -M 3 -p [dir $TMP]",
+  "stdout": "ABC command line: \"funenum -l -I 3 -M 3 -p\".\n\nN = 0  |  C =           0  |  New3 =         2   All3 =         2  |  Multi =         0  |  Time =     0.00 sec\nN = 1  |  C =          15  |  New3 =         2   All3 =         4  |  Multi =         1  |  Time =     0.00 sec\nN = 2  |  C =          45  |  New3 =         5   All3 =         9  |  Multi =         3  |  Time =     0.00 sec\nN = 3  |  C =         255  |  New3 =         3   All3 =        12  |  Multi =        11  |  Time =     0.00 sec\nDumped file \"Lflib3.txt\". \nFinish constructing AIG for 10 structures.\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/Lflib3.aig": "aig 32 5 0 10 27\n14\n16\n24\n28\n36\n46\n54\n58\n35\n65\n\u0007\u0002\u0002\u0005\t\u0002\r\u0003\u0010\u0001\u0001\u0002\u0001\u0010\u0016\u0002\u0001\u0014\u0018\u0001\u0019\u0003\u0001\u0002\u0001\r \u0004\u0001#\u0001'\u0004%\u0001\u0002\r!\u0001-\u0004+\u0001\u0002+\u0007\u0001*%\u0011(\u000f\u0001\u0002cn\u0000\u0000\u0000\u000efunc_enum_aig\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:02:15 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n",
+   "$TMP/001/Lflib3.txt": "01010101 = (~c\u0026(~a\u0026~b))\n03030303 = (~c\u0026~b)\n06060606 = (~c\u0026~(~a^b))\n07070707 = (~c\u0026~(~~a\u0026b))\n18181818 = ((c^b)\u0026~(a^b))\n19191919 = ~(a^(~~b\u0026~(~~a\u0026c)))\n1b1b1b1b = (~b^(~~a\u0026~(~b^c)))\n1e1e1e1e = ~(c^(~a\u0026~b))\n3c3c3c3c = (c^b)\n69696969 = ~(c^(a^b))\n"
+  }
+ }
+]

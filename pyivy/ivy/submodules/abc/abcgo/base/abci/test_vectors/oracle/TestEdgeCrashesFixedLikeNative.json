@@ -1,0 +1,74 @@
+[
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -D 5; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -D 5; \u0026ps\".\n\n\u001b[1;37mtest_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -D 5 -v; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -D 5 -v; \u0026ps\".\n\nRunning SatEdge with starting delay 5 and edge 1 (edge vars 1580, total vars 5694)\nDelay constraints = 14496. Edge constraints = 9639. Time =     0.00 sec\nProved UNSAT for delay 5.  Time =     0.00 sec\n\u001b[1;37mtest_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -o; \u0026edge -D 3; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026edge -o; \u0026edge -D 3; \u0026ps\".\n\n\u001b[1;37mtest_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\nEdges (Q=2)    :                edge =     330  lev = 11.4\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026pack -N 5; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026pack -N 5; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 112.\n\u001b[1;37mtest_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\nPacking (N=3)  :  1 x LUT = 239   2 x LUT = 55   3 x LUT = 25   Total = 387   Total LUT = 424\nEdges (Q=2)    :                edge =     105  lev = 13.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026pack -N 8; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026if -K 4; \u0026pack -N 8; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 98.\n\u001b[1;37mtest_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2206\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.03 MB\nMapping (K=4)  :  \u001b[1;33mlut =    746\u001b[0m  \u001b[1;32medge =    2454\u001b[0m  \u001b[1;31mlev =   13\u001b[0m \u001b[1;31m(6.28)\u001b[0m  mem = 0.03 MB\nPacking (N=3)  :  1 x LUT = 217   2 x LUT = 50   3 x LUT = 22   Total = 349   Total LUT = 383\nEdges (Q=2)    :                edge =      94  lev = 13.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/i10_native_demo.aig; \u0026if -K 6; \u0026pack -N 6; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/i10_native_demo.aig; \u0026if -K 6; \u0026pack -N 6; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 84.\n\u001b[1;37mtest_vectors/i10_native_demo\u001b[0m : i/o =    257/    224  \u001b[1;36mand =    2638\u001b[0m  \u001b[1;35mlev =   35\u001b[0m \u001b[1;35m(11.93)\u001b[0m  mem = 0.04 MB\nMapping (K=6)  :  \u001b[1;33mlut =    543\u001b[0m  \u001b[1;32medge =    2310\u001b[0m  \u001b[1;31mlev =   10\u001b[0m \u001b[1;31m(5.05)\u001b[0m  mem = 0.02 MB\nPacking (N=3)  :  1 x LUT = 241   2 x LUT = 28   3 x LUT = 11   Total = 323   Total LUT = 330\nEdges (Q=2)    :                edge =      50  lev = 10.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026edge -D 5; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026edge -D 5; \u0026ps\".\n\n\u001b[1;37mtest_vectors/native_mul8_canon\u001b[0m : i/o =     16/     16  \u001b[1;36mand =    1340\u001b[0m  \u001b[1;35mlev =   66\u001b[0m \u001b[1;35m(36.88)\u001b[0m  mem = 0.02 MB\nMapping (K=4)  :  \u001b[1;33mlut =    301\u001b[0m  \u001b[1;32medge =     993\u001b[0m  \u001b[1;31mlev =   23\u001b[0m \u001b[1;31m(13.12)\u001b[0m  mem = 0.01 MB\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026edge -D 5 -v; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026edge -D 5 -v; \u0026ps\".\n\nRunning SatEdge with starting delay 5 and edge 1 (edge vars 674, total vars 3473)\nDelay constraints = 11676. Edge constraints = 3277. Time =     0.00 sec\nProved UNSAT for delay 5.  Time =     0.00 sec\n\u001b[1;37mtest_vectors/native_mul8_canon\u001b[0m : i/o =     16/     16  \u001b[1;36mand =    1340\u001b[0m  \u001b[1;35mlev =   66\u001b[0m \u001b[1;35m(36.88)\u001b[0m  mem = 0.02 MB\nMapping (K=4)  :  \u001b[1;33mlut =    301\u001b[0m  \u001b[1;32medge =     993\u001b[0m  \u001b[1;31mlev =   23\u001b[0m \u001b[1;31m(13.12)\u001b[0m  mem = 0.01 MB\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026edge -o; \u0026edge -D 3; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026edge -o; \u0026edge -D 3; \u0026ps\".\n\n\u001b[1;37mtest_vectors/native_mul8_canon\u001b[0m : i/o =     16/     16  \u001b[1;36mand =    1340\u001b[0m  \u001b[1;35mlev =   66\u001b[0m \u001b[1;35m(36.88)\u001b[0m  mem = 0.02 MB\nMapping (K=4)  :  \u001b[1;33mlut =    301\u001b[0m  \u001b[1;32medge =     993\u001b[0m  \u001b[1;31mlev =   23\u001b[0m \u001b[1;31m(13.12)\u001b[0m  mem = 0.01 MB\nEdges (Q=2)    :                edge =     120  lev = 17.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026pack -N 5; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026pack -N 5; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 178.\n\u001b[1;37mtest_vectors/native_mul8_canon\u001b[0m : i/o =     16/     16  \u001b[1;36mand =    1340\u001b[0m  \u001b[1;35mlev =   66\u001b[0m \u001b[1;35m(36.88)\u001b[0m  mem = 0.02 MB\nMapping (K=4)  :  \u001b[1;33mlut =    301\u001b[0m  \u001b[1;32medge =     993\u001b[0m  \u001b[1;31mlev =   23\u001b[0m \u001b[1;31m(13.12)\u001b[0m  mem = 0.01 MB\nPacking (N=3)  :  1 x LUT = 120   2 x LUT = 18   3 x LUT = 8   Total = 171   Total LUT = 180\nEdges (Q=2)    :                edge =      34  lev = 23.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026pack -N 8; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 4; \u0026pack -N 8; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 168.\n\u001b[1;37mtest_vectors/native_mul8_canon\u001b[0m : i/o =     16/     16  \u001b[1;36mand =    1340\u001b[0m  \u001b[1;35mlev =   66\u001b[0m \u001b[1;35m(36.88)\u001b[0m  mem = 0.02 MB\nMapping (K=4)  :  \u001b[1;33mlut =    301\u001b[0m  \u001b[1;32medge =     993\u001b[0m  \u001b[1;31mlev =   23\u001b[0m \u001b[1;31m(13.12)\u001b[0m  mem = 0.01 MB\nPacking (N=3)  :  1 x LUT = 105   2 x LUT = 13   3 x LUT = 3   Total = 146   Total LUT = 140\nEdges (Q=2)    :                edge =      19  lev = 23.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 6; \u0026pack -N 6; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul8_canon.aig; \u0026if -K 6; \u0026pack -N 6; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 102.\n\u001b[1;37mtest_vectors/native_mul8_canon\u001b[0m : i/o =     16/     16  \u001b[1;36mand =    1340\u001b[0m  \u001b[1;35mlev =   66\u001b[0m \u001b[1;35m(36.88)\u001b[0m  mem = 0.02 MB\nMapping (K=6)  :  \u001b[1;33mlut =    124\u001b[0m  \u001b[1;32medge =     562\u001b[0m  \u001b[1;31mlev =   12\u001b[0m \u001b[1;31m(6.88)\u001b[0m  mem = 0.01 MB\nPacking (N=3)  :  1 x LUT = 78   2 x LUT = 4   3 x LUT = 2   Total = 90   Total LUT = 92\nEdges (Q=2)    :                edge =       8  lev = 12.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026edge -D 5; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026edge -D 5; \u0026ps\".\n\n\u001b[1;37mtest_vectors/native_mul4_gen\u001b[0m : i/o =      8/      8  \u001b[1;36mand =     158\u001b[0m  \u001b[1;35mlev =   21\u001b[0m \u001b[1;35m(12.75)\u001b[0m  mem = 0.00 MB\nMapping (K=4)  :  \u001b[1;33mlut =     34\u001b[0m  \u001b[1;32medge =     115\u001b[0m  \u001b[1;31mlev =    6\u001b[0m \u001b[1;31m(3.50)\u001b[0m  mem = 0.00 MB\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026edge -D 5 -v; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026edge -D 5 -v; \u0026ps\".\n\nRunning SatEdge with starting delay 5 and edge 1 (edge vars 61, total vars 133)\nDelay constraints = 252. Edge constraints = 225. Time =     0.00 sec\nProved UNSAT for delay 5.  Time =     0.00 sec\n\u001b[1;37mtest_vectors/native_mul4_gen\u001b[0m : i/o =      8/      8  \u001b[1;36mand =     158\u001b[0m  \u001b[1;35mlev =   21\u001b[0m \u001b[1;35m(12.75)\u001b[0m  mem = 0.00 MB\nMapping (K=4)  :  \u001b[1;33mlut =     34\u001b[0m  \u001b[1;32medge =     115\u001b[0m  \u001b[1;31mlev =    6\u001b[0m \u001b[1;31m(3.50)\u001b[0m  mem = 0.00 MB\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026edge -o; \u0026edge -D 3; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026edge -o; \u0026edge -D 3; \u0026ps\".\n\n\u001b[1;37mtest_vectors/native_mul4_gen\u001b[0m : i/o =      8/      8  \u001b[1;36mand =     158\u001b[0m  \u001b[1;35mlev =   21\u001b[0m \u001b[1;35m(12.75)\u001b[0m  mem = 0.00 MB\nMapping (K=4)  :  \u001b[1;33mlut =     34\u001b[0m  \u001b[1;32medge =     115\u001b[0m  \u001b[1;31mlev =    6\u001b[0m \u001b[1;31m(3.50)\u001b[0m  mem = 0.00 MB\nEdges (Q=2)    :                edge =       6  lev =  5.2\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026pack -N 5; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026pack -N 5; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 44.\n\u001b[1;37mtest_vectors/native_mul4_gen\u001b[0m : i/o =      8/      8  \u001b[1;36mand =     158\u001b[0m  \u001b[1;35mlev =   21\u001b[0m \u001b[1;35m(12.75)\u001b[0m  mem = 0.00 MB\nMapping (K=4)  :  \u001b[1;33mlut =     34\u001b[0m  \u001b[1;32medge =     115\u001b[0m  \u001b[1;31mlev =    6\u001b[0m \u001b[1;31m(3.50)\u001b[0m  mem = 0.00 MB\nPacking (N=1)  :  1 x LUT = 20   Total = 23   Total LUT = 20\nEdges (Q=2)    :                edge =       0  lev =  6.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026pack -N 8; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 4; \u0026pack -N 8; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 44.\n\u001b[1;37mtest_vectors/native_mul4_gen\u001b[0m : i/o =      8/      8  \u001b[1;36mand =     158\u001b[0m  \u001b[1;35mlev =   21\u001b[0m \u001b[1;35m(12.75)\u001b[0m  mem = 0.00 MB\nMapping (K=4)  :  \u001b[1;33mlut =     34\u001b[0m  \u001b[1;32medge =     115\u001b[0m  \u001b[1;31mlev =    6\u001b[0m \u001b[1;31m(3.50)\u001b[0m  mem = 0.00 MB\nPacking (N=1)  :  1 x LUT = 20   Total = 23   Total LUT = 20\nEdges (Q=2)    :                edge =       0  lev =  6.0\n"
+ },
+ {
+  "key": "combined: abc -c \u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 6; \u0026pack -N 6; \u0026edge -p; \u0026ps",
+  "stdout": "ABC command line: \"\u0026r test_vectors/native_mul4_gen.aig; \u0026if -K 6; \u0026pack -N 6; \u0026edge -p; \u0026ps\".\n\nGlobal delay = 32.\n\u001b[1;37mtest_vectors/native_mul4_gen\u001b[0m : i/o =      8/      8  \u001b[1;36mand =     201\u001b[0m  \u001b[1;35mlev =   21\u001b[0m \u001b[1;35m(12.75)\u001b[0m  mem = 0.00 MB\nMapping (K=6)  :  \u001b[1;33mlut =     19\u001b[0m  \u001b[1;32medge =      94\u001b[0m  \u001b[1;31mlev =    4\u001b[0m \u001b[1;31m(2.38)\u001b[0m  mem = 0.00 MB\nPacking (N=3)  :  1 x LUT = 14   2 x LUT = 1   3 x LUT = 1   Total = 16   Total LUT = 19\nEdges (Q=2)    :                edge =       3  lev =  3.2\n"
+ }
+]

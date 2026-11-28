@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -203,7 +203,7 @@ func TestRepeatedDuplicationAndClassInvalidArguments(t *testing.T) {
 
 func TestRepeatedDuplicationAndClassesMatchOriginalExpandedGraphs(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "dup_times_classes.c")
-	want, err := exec.Command(exe).CombinedOutput()
+	want, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C repetition/classes: %v: %s", err, want)
 	}
@@ -219,7 +219,7 @@ func TestRepeatedDuplicationAndClassesMatchOriginalExpandedGraphs(t *testing.T) 
 	}
 	// The original routine also confuses physical and public PI order after
 	// DFS. The unused first PI becomes a spurious true output in this case.
-	witness, err := exec.Command(exe, "--dfs-order-witness").CombinedOutput()
+	witness, err := testoracle.Command(t, exe, "--dfs-order-witness").CombinedOutput()
 	if err != nil || strings.TrimSpace(string(witness)) != "1" {
 		t.Fatalf("original DFS-order defect witness: %v: %s", err, witness)
 	}

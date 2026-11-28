@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"slices"
 	"strings"
 	"testing"
@@ -255,7 +255,7 @@ func TestRehashTypedLayoutAndStrashMatrix(t *testing.T) {
 
 func TestRehashMatchesOriginalOrdinaryC(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "rehash.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C rehash: %v: %s", err, native)
 	}

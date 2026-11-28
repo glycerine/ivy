@@ -3,17 +3,17 @@ package gia_test
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/gia"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	if_ "github.com/glycerine/abcgo/map/if"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/dau"
-	"os/exec"
 	"strings"
 	"testing"
 )
 
 func TestMappingDSDOriginalBalancingContracts(t *testing.T) {
 	executable := gia.CompileSourceOracleForTest(t, "if_dsd_balance_review.c")
-	output, err := exec.Command(executable).CombinedOutput()
+	output, err := testoracle.Command(t, executable).CombinedOutput()
 	if err != nil {
 		t.Fatalf("original balancing: %v %s", err, output)
 	}

@@ -2,7 +2,7 @@ package gia
 
 import (
 	"fmt"
-	"os/exec"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"strings"
 	"testing"
 )
@@ -76,7 +76,7 @@ func TestEdgeAssignmentMatchesOriginalABC(t *testing.T) {
 			if mode != "ordinary" {
 				args = []string{mode}
 			}
-			source, err := exec.Command(exe, args...).CombinedOutput()
+			source, err := testoracle.Command(t, exe, args...).CombinedOutput()
 			if err != nil {
 				t.Fatalf("original edge routines: %v\n%s", err, source)
 			}

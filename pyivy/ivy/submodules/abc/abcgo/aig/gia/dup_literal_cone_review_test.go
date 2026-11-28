@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -247,7 +247,7 @@ func TestDfsNodeAndLiteralConesMatchOriginalSource(t *testing.T) {
 		if old {
 			args = []string{"old"}
 		}
-		native, err := exec.Command(exe, args...).CombinedOutput()
+		native, err := testoracle.Command(t, exe, args...).CombinedOutput()
 		if err != nil {
 			t.Fatalf("C literal cones: %v: %s", err, native)
 		}

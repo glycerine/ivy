@@ -2,9 +2,9 @@ package satoko
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/rand"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -14,10 +14,10 @@ import (
 // The production package is pure Go. This opt-in audit compiles the original
 // repository C sources solely as an independent reference implementation.
 func TestOriginalCDifferential(t *testing.T) {
-	if os.Getenv("SATOKO_C_DIFFERENTIAL") != "1" {
+	if testoracle.Gate("SATOKO_C_DIFFERENTIAL") != "1" {
 		t.Skip("set SATOKO_C_DIFFERENTIAL=1 to compare with original C")
 	}
-	compiler, err := exec.LookPath("cc")
+	compiler, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,10 +29,10 @@ func TestOriginalCDifferential(t *testing.T) {
 	binary := filepath.Join(tmp, "original")
 	source := filepath.Join(root, "src/sat/satoko")
 	args := []string{"-O2", "-DABC_USE_STDINT_H", "-I" + filepath.Join(root, "src"), "test_vectors/original_driver.c", filepath.Join(source, "solver.c"), filepath.Join(source, "solver_api.c"), filepath.Join(source, "cnf_reader.c"), "-lm", "-o", binary}
-	if output, err := exec.Command(compiler, args...).CombinedOutput(); err != nil {
+	if output, err := testoracle.Command(t, compiler, args...).CombinedOutput(); err != nil {
 		t.Fatalf("compile C reference: %v\n%s", err, output)
 	}
-	life, err := exec.Command(binary, "--lifecycle").CombinedOutput()
+	life, err := testoracle.Command(t, binary, "--lifecycle").CombinedOutput()
 	if err != nil || !strings.Contains(string(life), "LIFE=1,-1,1") {
 		t.Fatalf("C lifecycle reference: %v %s", err, life)
 	}
@@ -71,7 +71,7 @@ func TestOriginalCDifferential(t *testing.T) {
 				assumptions = append(assumptions, lit)
 				args = append(args, strconv.Itoa(lit))
 			}
-			output, err := exec.Command(binary, args...).CombinedOutput()
+			output, err := testoracle.Command(t, binary, args...).CombinedOutput()
 			if err != nil {
 				t.Fatalf("C reference: %v\n%s", err, output)
 			}

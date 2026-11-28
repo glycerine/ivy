@@ -11,14 +11,14 @@ import (
 // said "Miter computation has failed."
 func TestCompareSignalsReportsMismatch(t *testing.T) {
 	unnamed := filepath.Join(t.TempDir(), "i10dc2.aig")
-	runScript(t, "read ../../../i10.aig; dc2; write_aiger "+unnamed)
-	script := "cec ../../../i10.aig " + unnamed
+	runScript(t, "read ../../test_vectors/i10.aig; dc2; write_aiger "+unnamed)
+	script := "cec ../../test_vectors/i10.aig " + unnamed
 	want := `Primary input #0 is different in network 1 ( "V1(0)") and in network 2 ("pi000").` + "\nMiter computation has failed."
 	if out := runScript(t, script); !strings.Contains(out, want) {
 		t.Errorf("port:\n%s", out)
 	}
 	cases := map[string]string{
-		"cec ../../../i10.aig test_vectors/seq/s713.blif": "Networks have different number of primary inputs.",
+		"cec ../../test_vectors/i10.aig test_vectors/seq/s713.blif": "Networks have different number of primary inputs.",
 	}
 	for script, want := range cases {
 		if out := runScript(t, script); !strings.Contains(out, want) {
@@ -29,11 +29,11 @@ func TestCompareSignalsReportsMismatch(t *testing.T) {
 
 func TestCompareSignalsLikeNative(t *testing.T) {
 	unnamed := filepath.Join(t.TempDir(), "i10dc2.aig")
-	runScript(t, "read ../../../i10.aig; dc2; write_aiger "+unnamed)
+	runScript(t, "read ../../test_vectors/i10.aig; dc2; write_aiger "+unnamed)
 	for _, script := range []string{
-		"cec ../../../i10.aig " + unnamed,
-		"cec ../../../i10.aig test_vectors/seq/s713.blif",
-		"dcec ../../../i10.aig " + unnamed,
+		"cec ../../test_vectors/i10.aig " + unnamed,
+		"cec ../../test_vectors/i10.aig test_vectors/seq/s713.blif",
+		"dcec ../../test_vectors/i10.aig " + unnamed,
 	} {
 		if native, port := bmc3Normalize(runNativeABC(t, script)), bmc3Normalize(runScript(t, script)); native != port {
 			t.Errorf("%s\nnative:\n%s\nport:\n%s", script, native, port)

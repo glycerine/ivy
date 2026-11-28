@@ -2,8 +2,8 @@ package gia
 
 import (
 	"fmt"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"math/bits"
-	"os/exec"
 	"slices"
 	"strings"
 	"testing"
@@ -194,7 +194,7 @@ func TestOutputSelectionConesAndMappings(t *testing.T) {
 
 func TestOutputSelectionsMatchOriginalSource(t *testing.T) {
 	exe := compileGiaSourceOracle(t, "output_selection.c")
-	native, err := exec.Command(exe).CombinedOutput()
+	native, err := testoracle.Command(t, exe).CombinedOutput()
 	if err != nil {
 		t.Fatalf("C selections: %v: %s", err, native)
 	}

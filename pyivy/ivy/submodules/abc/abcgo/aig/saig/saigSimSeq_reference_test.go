@@ -4,28 +4,28 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/internal/testoracle"
 	"github.com/glycerine/abcgo/misc/vec"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
 )
 
 func TestRandomSimulationAgainstOriginalC(t *testing.T) {
-	cc, err := exec.LookPath("cc")
+	cc, err := testoracle.LookPath("cc")
 	if err != nil {
 		t.Skip("C compiler unavailable")
 	}
-	source, err := os.ReadFile("../../../src/aig/saig/saigSimSeq.c")
+	source, err := testoracle.ReadFile("../../../src/aig/saig/saigSimSeq.c")
 	if err != nil {
 		t.Skip("original sequential source unavailable")
 	}
-	random, err := os.ReadFile("../../../src/aig/aig/aigUtil.c")
+	random, err := testoracle.ReadFile("../../../src/aig/aig/aigUtil.c")
 	if err != nil {
 		t.Fatal(err)
 	}
-	harness, err := os.ReadFile("test_vectors/seq_reference.c")
+	harness, err := testoracle.ReadFile("test_vectors/seq_reference.c")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -54,7 +54,7 @@ typedef struct {void *pAig;int nWords,nPis,nPos,nCis,nCos,nNodes,nObjs;int *pFan
 	if err = os.WriteFile(file, []byte(program.String()), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if log, err := exec.Command(cc, "-std=c99", "-O2", file, "-o", binary).CombinedOutput(); err != nil {
+	if log, err := testoracle.Command(t, cc, "-std=c99", "-O2", file, "-o", binary).CombinedOutput(); err != nil {
 		t.Fatalf("compile original simulator: %v\n%s", err, log)
 	}
 	for _, miter := range []bool{false, true} {
@@ -81,7 +81,7 @@ typedef struct {void *pAig;int nWords,nPis,nPos,nCis,nCos,nNodes,nObjs;int *pFan
 		for i, id := range p.los {
 			fmt.Fprintf(&input, "%d %d ", id, p.lis[i])
 		}
-		command := exec.Command(binary)
+		command := testoracle.Command(t, binary)
 		command.Stdin = &input
 		outputC, err := command.CombinedOutput()
 		if err != nil {

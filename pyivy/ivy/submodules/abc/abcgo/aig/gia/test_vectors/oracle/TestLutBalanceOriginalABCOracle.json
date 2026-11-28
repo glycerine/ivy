@@ -1,0 +1,502 @@
+[
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/001/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 9 6 0 5 3\n7\n0\n1\n1\n18\n\u0003\u0004\u0001\u0006\u0002\u0003cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/001/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/001/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 9 6 0 5 3\n7\n0\n1\n1\n18\n\u0003\u0004\u0001\u0006\u0002\u0003cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/001/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/001/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 9 6 0 5 3\n7\n0\n1\n1\n18\n\u0003\u0004\u0001\u0006\u0002\u0003cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/001/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/001/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 9 6 0 5 3\n7\n0\n1\n1\n18\n\u0003\u0004\u0001\u0006\u0002\u0003cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/001/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/001/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 9 6 0 5 3\n7\n0\n1\n1\n18\n\u0003\u0004\u0001\u0006\u0002\u0003cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/001/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/001/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/001/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/001"
+  ],
+  "files": {
+   "$TMP/001/output.aig": "aig 9 6 0 5 3\n7\n0\n1\n1\n18\n\u0003\u0004\u0001\u0006\u0002\u0003cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/001/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/002/output.aig\".\n\nBest delay = 5\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDc1IDYgMCA1IDY5CjU0CjkzCjk0CjEzOQoxNTAKAwYCBwMJAQIBDwQOAQIICQISAgkDCwECARsKHAIMBgsHDQECAgUDBwECIwsBHAE5AiECIAEGKBYBJwQCAQI0CzUNAQINPQRHAQIBSQQMAQJKCFMCVAIBAk4WAkgCTF4DXwUBAgJXA1kBAl0ZAXIEAgECAhkDFQECAn0DfwEChgEEdBcBAhtiBHwBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDAyL2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OCAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/002/output.aig\".\n\nBest delay = 5\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDc1IDYgMCA1IDY5CjU0CjkzCjk0CjEzOQoxNTAKAwYCBwMJAQIBDwQOAQIICQISAgkDCwECARsKHAIMBgsHDQECAgUDBwECIwsBHAE5AiECIAEGKBYBJwQCAQI0CzUNAQINPQRHAQIBSQQMAQJKCFMCVAIBAk4WAkgCTF4DXwUBAgJXA1kBAl0ZAXIEAgECAhkDFQECAn0DfwEChgEEdBcBAhtiBHwBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDAyL2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OCAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/002/output.aig\".\n\nBest delay = 3\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDc1IDYgMCA1IDY5CjU0CjkzCjk0CjEzOQoxNTAKAwYCBwMJAQIBDwQOAQIICQISAgkDCwECARsKHAIMAgMDBQECAhUDFwECIwsBHAE5Ah4CIwEGKBYBJwQCAQI0CzUNAQINPQRHAQIBSQQMAQJKCFMCVAIBAk4WAkoCSl4DXwUBAgJXA1kBAl0ZAXIEAgECAhkDFQECAn0DfwEChgEEdBcBAhtiBHwBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDAyL2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OCAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/002/output.aig\".\n\nBest delay = 3\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDc1IDYgMCA1IDY5CjU0CjkzCjk0CjEzOQoxNTAKAwYCBwMJAQIBDwQOAQIICQISAgkDCwECARsKHAIMAgMDBQECAhUDFwECIwsBHAE5Ah4CIwEGKBYBJwQCAQI0CzUNAQINPQRHAQIBSQQMAQJKCFMCVAIBAk4WAkoCSl4DXwUBAgJXA1kBAl0ZAXIEAgECAhkDFQECAn0DfwEChgEEdBcBAhtiBHwBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDAyL2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OCAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/002/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDc1IDYgMCA1IDY5CjU0CjkzCjk0CjEzOQoxNTAKAwYCBwMJAQIBDwQOAQIICQISAgkDCwECARsKHAIMAgMDBQECAhUDFwECIwsBHAE5Ah4CIwEGKBYBJwQCAQI0CzUNAQINPQRHAQIBSQQMAQJKCFMCVAIBAk4WAkoCSl4DXwUBAgJXA1kBAl0ZAXIEAgECAhkDFQECAn0DfwEChgEEdBcBAhtiBHwBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDAyL2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OCAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/002/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/002/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/002"
+  ],
+  "files": {
+   "$TMP/002/output.aig": {
+    "base64": "YWlnIDc1IDYgMCA1IDY5CjU0CjkzCjk0CjEzOQoxNTAKAwYCBwMJAQIBDwQOAQIICQISAgkDCwECARsKHAIMAgMDBQECAhUDFwECIwsBHAE5Ah4CIwEGKBYBJwQCAQI0CzUNAQINPQRHAQIBSQQMAQJKCFMCVAIBAk4WAkoCSl4DXwUBAgJXA1kBAl0ZAXIEAgECAhkDFQECAn0DfwEChgEEdBcBAhtiBHwBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDAyL2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OCAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/003/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/003/output.aig\".\n\nBest delay = 3\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 27 6 0 5 21\n36\n40\n23\n46\n54\n\u0003\u0005\u0001\f\u0002\u0004\b\t\t\b\u000f\u0003\u0004\u000f\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0002\u000f\u001c\u0003\u0001\u0018\u001b\u0004\u0002'\u0002 \u001a\u0011\u001b\u0013\u0001\u0002\u0002,cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/003/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/003/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/003/output.aig\".\n\nBest delay = 3\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 27 6 0 5 21\n36\n40\n23\n46\n54\n\u0003\u0005\u0001\f\u0002\u0004\b\t\t\b\u000f\u0003\u0004\u000f\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0002\u000f\u001c\u0003\u0001\u0018\u001b\u0004\u0002'\u0002 \u001a\u0011\u001b\u0013\u0001\u0002\u0002,cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/003/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/003/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/003/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 27 6 0 5 21\n36\n40\n23\n46\n54\n\u0003\u0005\u0001\f\u0002\u0004\b\t\t\b\u000f\u0003\u0004\u000f\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0002\u000f\u001c\u0003\u0001\u0018\u001b\u0004\u0002'\u0002 \u001a\u0011\u001b\u0013\u0001\u0002\u0002,cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/003/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/003/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/003/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 27 6 0 5 21\n36\n40\n23\n46\n54\n\u0003\u0005\u0001\f\u0002\u0004\b\t\t\b\u000f\u0003\u0004\u000f\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0002\u000f\u001c\u0003\u0001\u0018\u001b\u0004\u0002'\u0002 \u001a\u0011\u001b\u0013\u0001\u0002\u0002,cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/003/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/003/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/003/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 27 6 0 5 21\n36\n40\n23\n46\n54\n\u0003\u0005\u0001\f\u0002\u0004\b\t\t\b\u000f\u0003\u0004\u000f\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0002\u000f\u001c\u0003\u0001\u0018\u001b\u0004\u0002'\u0002 \u001a\u0011\u001b\u0013\u0001\u0002\u0002,cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/003/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/003/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/003/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/003"
+  ],
+  "files": {
+   "$TMP/003/output.aig": "aig 27 6 0 5 21\n36\n40\n23\n46\n54\n\u0003\u0005\u0001\f\u0002\u0004\b\t\t\b\u000f\u0003\u0004\u000f\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u0002\u000f\u001c\u0003\u0001\u0018\u001b\u0004\u0002'\u0002 \u001a\u0011\u001b\u0013\u0001\u0002\u0002,cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/003/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/004/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/004/output.aig\".\n\nBest delay = 6\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 64 6 0 5 58\n14\n56\n85\n90\n128\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u001c\u0003\u001d\u0005\u0001\u0002\u0002%\u0003'\u0001\u0002\u0014\u0014\u0001\u0014\u0004\u0002\u0001\u0002\u0001\u00142\u00053\u0007\u0001\u0002\u0010\u001c\u0004\r\u0001\u0002:\u0004\u00047\u0001\u0002\u001e\f\u0002\u0002\u0002G\u0003I\u0001\u00024\u001c\u0002(\u0002\u000eT\u0001U\u0003\u0001\u0002\u0002[\u0003]\u0001\u0002\u0002c\u0003e\u0001\u0002a\u0005\\\u000b\u0001\u0002\bP\u0004U\u0001\u0002\u0001u\u0004.\u0001\u0002\u0001ccn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/004/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/004/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/004/output.aig\".\n\nBest delay = 6\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 64 6 0 5 58\n14\n56\n85\n90\n128\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u001c\u0003\u001d\u0005\u0001\u0002\u0002%\u0003'\u0001\u0002\u0014\u0014\u0001\u0014\u0004\u0002\u0001\u0002\u0001\u00142\u00053\u0007\u0001\u0002\u0010\u001c\u0004\r\u0001\u0002:\u0004\u00047\u0001\u0002\u001e\f\u0002\u0002\u0002G\u0003I\u0001\u00024\u001c\u0002(\u0002\u000eT\u0001U\u0003\u0001\u0002\u0002[\u0003]\u0001\u0002\u0002c\u0003e\u0001\u0002a\u0005\\\u000b\u0001\u0002\bP\u0004U\u0001\u0002\u0001u\u0004.\u0001\u0002\u0001ccn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/004/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/004/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/004/output.aig\".\n\nBest delay = 4\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 63 6 0 5 57\n14\n56\n85\n88\n126\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u001c\u0003\u001d\u0005\u0001\u0002\u0002%\u0003'\u0001\u0002\u0014\u0014\u0001\u0014\u0004\u0002\u0001\u0002\u0001\u00142\u00053\u0007\u0001\u0002\u0010\u001c\u0004\r\u0001\u0002:\u0004\u00047\u0001\u0002\u0002\u001c\u0002*\u0002G\u0003I\u0001\u00024\u001c\u0002\nR\u0001S\u0003\u0001\u0002\u0002Y\u0003[\u0001\u0002\u0002a\u0003c\u0001\u0002_\u0005Z\u000b\u0001\u0002\bN\u0004S\u0001\u0002\u0001s\u0004,\u0001\u0002\u0001acn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/004/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/004/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/004/output.aig\".\n\nBest delay = 4\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 63 6 0 5 57\n14\n56\n85\n88\n126\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u001c\u0003\u001d\u0005\u0001\u0002\u0002%\u0003'\u0001\u0002\u0014\u0014\u0001\u0014\u0004\u0002\u0001\u0002\u0001\u00142\u00053\u0007\u0001\u0002\u0010\u001c\u0004\r\u0001\u0002:\u0004\u00047\u0001\u0002\u0002\u001c\u0002*\u0002G\u0003I\u0001\u00024\u001c\u0002\nR\u0001S\u0003\u0001\u0002\u0002Y\u0003[\u0001\u0002\u0002a\u0003c\u0001\u0002_\u0005Z\u000b\u0001\u0002\bN\u0004S\u0001\u0002\u0001s\u0004,\u0001\u0002\u0001acn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/004/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/004/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/004/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 64 6 0 5 58\n14\n56\n85\n90\n128\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u001c\u0003\u001d\u0005\u0001\u0002\u0002%\u0003'\u0001\u0002\u0014\u0014\u0001\u0014\u0004\u0002\u0001\u0002\u0001\u00142\u00053\u0007\u0001\u0002\u0010\u001c\u0004\r\u0001\u0002:\u0004\u00047\u0001\u0002\u0002(\u0002\u001e\u0002G\u0003I\u0001\u00024\u001c\u0002\f\u0002*T\u0001U\u0003\u0001\u0002\u0002[\u0003]\u0001\u0002\u0002c\u0003e\u0001\u0002a\u0005\\\u000b\u0001\u0002\bP\u0004U\u0001\u0002\u0001u\u0004.\u0001\u0002\u0001ccn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/004/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/004/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/004/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/004"
+  ],
+  "files": {
+   "$TMP/004/output.aig": "aig 64 6 0 5 58\n14\n56\n85\n90\n128\n\u0001\t\t\u0004\b\u0004\u0001\u0002\u0001\f\u0001\u0011\u0004\u000e\u0001\u0002\u0002\u0007\u0003\t\u0001\u0002\u001c\u0003\u001d\u0005\u0001\u0002\u0002%\u0003'\u0001\u0002\u0014\u0014\u0001\u0014\u0004\u0002\u0001\u0002\u0001\u00142\u00053\u0007\u0001\u0002\u0010\u001c\u0004\r\u0001\u0002:\u0004\u00047\u0001\u0002\u0002(\u0002\u001e\u0002G\u0003I\u0001\u00024\u001c\u0002\f\u0002*T\u0001U\u0003\u0001\u0002\u0002[\u0003]\u0001\u0002\u0002c\u0003e\u0001\u0002a\u0005\\\u000b\u0001\u0002\bP\u0004U\u0001\u0002\u0001u\u0004.\u0001\u0002\u0001ccn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/004/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:48 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/005/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/005/output.aig\".\n\nBest delay = 6\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": "aig 73 6 0 5 67\n86\n74\n88\n117\n146\n\u0001\t\u0004\u0006\u0001\u0002\t\u0007\u0002\u000e\u0003\u0003\u0001\u0002\u0002\u0013\u0001\f\u000e\u000b\u000f\r\u0001\u0002\b\u0013\t\u0015\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002 \r!\u000f\u0001\u0002,\u0001\u00024\"\u0011#\u0013\u0001\u0002\u0001\b\u0004\u0006\u0001\u0002\u0011\u0007\u0002\u0002\u0002A\u0003C\u0001\u0002\u00025\u00037\u0001\u0002\u0011AH\b\u0002S\u0003U\u0001\u0002\u0002Y\u0002W\u0003Y\u0001\u0002F\u0005G\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002d\u0007e\t\u0001\u0002b\u0017c\u0019\u0001\u0002\u0007`\u0004f\u0001\u0002|\u0005}\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/005/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/005/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/005/output.aig\".\n\nBest delay = 6\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": "aig 73 6 0 5 67\n86\n74\n88\n117\n146\n\u0001\t\u0004\u0006\u0001\u0002\t\u0007\u0002\u000e\u0003\u0003\u0001\u0002\u0002\u0013\u0001\f\u000e\u000b\u000f\r\u0001\u0002\b\u0013\t\u0015\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002 \r!\u000f\u0001\u0002,\u0001\u00024\"\u0011#\u0013\u0001\u0002\u0001\b\u0004\u0006\u0001\u0002\u0011\u0007\u0002\u0002\u0002A\u0003C\u0001\u0002\u00025\u00037\u0001\u0002\u0011AH\b\u0002S\u0003U\u0001\u0002\u0002Y\u0002W\u0003Y\u0001\u0002F\u0005G\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002d\u0007e\t\u0001\u0002b\u0017c\u0019\u0001\u0002\u0007`\u0004f\u0001\u0002|\u0005}\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/005/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/005/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/005/output.aig\".\n\nBest delay = 3\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": {
+    "base64": "YWlnIDczIDYgMCA1IDY3Cjg2Cjc0Cjg4CjExNwoxNDYKAQkEBgECCQcCDgMDAQICEwEMDgsPDQECCBMJFQECAgUDBwECIA0hDwECLAECNCIRIxMBAgEIBAYBAhEHAgICQQNDAQICNQM3AQIRQUgIAlMDVQECAlkCVwNZAQICSQNLAQICSQNLAQJkB2UJAQJiF2MZAQIHYARmAQICfwOBAQECAn8DgQEBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDA1L2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OSAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/005/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/005/output.aig\".\n\nBest delay = 3\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": {
+    "base64": "YWlnIDczIDYgMCA1IDY3Cjg2Cjc0Cjg4CjExNwoxNDYKAQkEBgECCQcCDgMDAQICEwEMDgsPDQECCBMJFQECAgUDBwECIA0hDwECLAECNCIRIxMBAgEIBAYBAhEHAgICQQNDAQICNQM3AQIRQUgIAlMDVQECAlkCVwNZAQICSQNLAQICSQNLAQJkB2UJAQJiF2MZAQIHYARmAQICfwOBAQECAn8DgQEBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDA1L2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OSAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/005/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/005/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": {
+    "base64": "YWlnIDczIDYgMCA1IDY3Cjg2Cjc0Cjg4CjExNwoxNDYKAQkEBgECCQcCDgMDAQICEwEMDgsPDQECCBMJFQECAgUDBwECIA0hDwECLAECNCIRIxMBAgEIBAYBAgIWAhECQQNDAQICNQM3AQIRQUgIAlMDVQECAlkCVwNZAQICSQNLAQICSQNLAQJkB2UJAQJiF2MZAQIHYARmAQICfwOBAQECAn8DgQEBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDA1L2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OSAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/005/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/005/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/005"
+  ],
+  "files": {
+   "$TMP/005/output.aig": {
+    "base64": "YWlnIDczIDYgMCA1IDY3Cjg2Cjc0Cjg4CjExNwoxNDYKAQkEBgECCQcCDgMDAQICEwEMDgsPDQECCBMJFQECAgUDBwECIA0hDwECLAECNCIRIxMBAgEIBAYBAgIWAhECQQNDAQICNQM3AQIRQUgIAlMDVQECAlkCVwNZAQICSQNLAQICSQNLAQJkB2UJAQJiF2MZAQIHYARmAQICfwOBAQECAn8DgQEBAmNuAAAAOS90bXAvVGVzdEx1dEJhbGFuY2VPcmlnaW5hbEFCQ09yYWNsZTQwOTIzNDAzMTQvMDA1L2lucHV0AApUaGlzIGZpbGUgd2FzIHByb2R1Y2VkIGJ5IHRoZSBHSUEgcGFja2FnZSBpbiBBQkMgb24gU2F0IE5vdiAyOCAwNTowNzo0OSAyMDI2CkZvciBpbmZvcm1hdGlvbiBhYm91dCBBSUdFUiBmb3JtYXQsIHJlZmVyIHRvIGh0dHA6Ly9mbXYuamt1LmF0L2FpZ2VyCg=="
+   }
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/006/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/006/output.aig\".\n\nBest delay = 6\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 51 6 0 5 45\n70\n76\n85\n65\n102\n\u0002\u0001\u0003\u0003\u0001\u0002\u000b\u0004\n\u0004\u0001\u0002\u0016\u0001\u0004\u0016\u0001\u0002\u0002\u001a\u0003\r\u0001\u0002\u001e\u0001\u0016\f\u0001\u0002\u0001\u001f\u0004!\u0004!\u0005#\u0001\u0002\u0002\u0005\u0001\u000b\u000e\u0026\u00046\u00047\u0001\u0002\u0002\u001b\u0003\u001d\u0001\u0002\b\u0015\t\u0017\u0001\u00025\u000f!+\u0004 \u0001\u0002*\u0002)'\u0002!\u0003#\u0001\u0002\u0001\u0007\u0002]\u0003\u000b\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/006/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/006/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/006/output.aig\".\n\nBest delay = 6\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 51 6 0 5 45\n70\n76\n85\n65\n102\n\u0002\u0001\u0003\u0003\u0001\u0002\u000b\u0004\n\u0004\u0001\u0002\u0016\u0001\u0004\u0016\u0001\u0002\u0002\u001a\u0003\r\u0001\u0002\u001e\u0001\u0016\f\u0001\u0002\u0001\u001f\u0004!\u0004!\u0005#\u0001\u0002\u0002\u0005\u0001\u000b\u000e\u0026\u00046\u00047\u0001\u0002\u0002\u001b\u0003\u001d\u0001\u0002\b\u0015\t\u0017\u0001\u00025\u000f!+\u0004 \u0001\u0002*\u0002)'\u0002!\u0003#\u0001\u0002\u0001\u0007\u0002]\u0003\u000b\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/006/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/006/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/006/output.aig\".\n\nBest delay = 3\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 52 6 0 5 46\n70\n76\n85\n65\n104\n\u0002\u0001\u0003\u0003\u0001\u0002\u000b\u0004\n\u0004\u0001\u0002\u0016\u0001\u0004\u0016\u0001\u0002\u0002\u001a\u0003\r\u0001\u0002\u001e\u0001\u0016\f\u0001\u0002\u0001\u001f\u0004!\u0004!\u0005#\u0001\u0002\u0002\u0005\u0001\u000b\u000e\u0026\u00046\u00047\u0001\u0002\u0002\u001b\u0003\u001d\u0001\u0002\b\u0015\t\u0017\u0001\u00025\u000f!+\u0004 \u0001\u0002*\u0002)'\u0002!\u0003#\u0001\u0002\u0001W\u00021\u0002_\u0003\r\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/006/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/006/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/006/output.aig\".\n\nBest delay = 3\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 52 6 0 5 46\n70\n76\n85\n65\n104\n\u0002\u0001\u0003\u0003\u0001\u0002\u000b\u0004\n\u0004\u0001\u0002\u0016\u0001\u0004\u0016\u0001\u0002\u0002\u001a\u0003\r\u0001\u0002\u001e\u0001\u0016\f\u0001\u0002\u0001\u001f\u0004!\u0004!\u0005#\u0001\u0002\u0002\u0005\u0001\u000b\u000e\u0026\u00046\u00047\u0001\u0002\u0002\u001b\u0003\u001d\u0001\u0002\b\u0015\t\u0017\u0001\u00025\u000f!+\u0004 \u0001\u0002*\u0002)'\u0002!\u0003#\u0001\u0002\u0001W\u00021\u0002_\u0003\r\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/006/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/006/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/006/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 52 6 0 5 46\n70\n76\n85\n65\n104\n\u0002\u0001\u0003\u0003\u0001\u0002\u000b\u0004\n\u0004\u0001\u0002\u0016\u0001\u0004\u0016\u0001\u0002\u0002\u001a\u0003\r\u0001\u0002\u001e\u0001\u0016\f\u0001\u0002\u0001\u001f\u0004!\u0004!\u0005#\u0001\u0002\u0002\u0005\u0001\u000b\u000e\u0026\u00046\u00047\u0001\u0002\u0002\u001b\u0003\u001d\u0001\u0002\b\u0015\t\u0017\u0001\u00025\u000f!+\u0004 \u0001\u0002*\u0002)'\u0002!\u0003#\u0001\u0002\u0001W\u00021\u0002_\u0003\r\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/006/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/006/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/006/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/006"
+  ],
+  "files": {
+   "$TMP/006/output.aig": "aig 52 6 0 5 46\n70\n76\n85\n65\n104\n\u0002\u0001\u0003\u0003\u0001\u0002\u000b\u0004\n\u0004\u0001\u0002\u0016\u0001\u0004\u0016\u0001\u0002\u0002\u001a\u0003\r\u0001\u0002\u001e\u0001\u0016\f\u0001\u0002\u0001\u001f\u0004!\u0004!\u0005#\u0001\u0002\u0002\u0005\u0001\u000b\u000e\u0026\u00046\u00047\u0001\u0002\u0002\u001b\u0003\u001d\u0001\u0002\b\u0015\t\u0017\u0001\u00025\u000f!+\u0004 \u0001\u0002*\u0002)'\u0002!\u0003#\u0001\u0002\u0001W\u00021\u0002_\u0003\r\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/006/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/007/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/007/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0006\u0006\u0005\t\u0004\u0005\u0005\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0013\b\u0004\u001a\u0001\u0002\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\u0002'\u0003)\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002)\f\u0012\u001a\u0001\u0002\u0002\u00174\u0001cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/007/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/007/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/007/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0006\u0006\u0005\t\u0004\u0005\u0005\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0013\b\u0004\u001a\u0001\u0002\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\u0002'\u0003)\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002)\f\u0012\u001a\u0001\u0002\u0002\u00174\u0001cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/007/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/007/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/007/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0006\u0006\u0005\t\u0004\u0005\u0005\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0013\b\u0004\u001a\u0001\u0002\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\u0002'\u0003)\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002)\f\u0012\u001a\u0001\u0002\u0002\u00174\u0001cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/007/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/007/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/007/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0006\u0006\u0005\t\u0004\u0005\u0005\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0013\b\u0004\u001a\u0001\u0002\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\u0002'\u0003)\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002)\f\u0012\u001a\u0001\u0002\u0002\u00174\u0001cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/007/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/007/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/007/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0006\u0006\u0005\t\u0004\u0005\u0005\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0013\b\u0004\u001a\u0001\u0002\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\u0002'\u0003)\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002)\f\u0012\u001a\u0001\u0002\u0002\u00174\u0001cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/007/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/007/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/007/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/007"
+  ],
+  "files": {
+   "$TMP/007/output.aig": "aig 32 6 0 5 26\n34\n54\n62\n0\n64\n\u0006\u0006\u0005\t\u0004\u0005\u0005\u0007\u0001\u0002\u0002\u0005\u0003\u0007\u0001\u0002\u0013\b\u0004\u001a\u0001\u0002\u0018\u0002\u0019\n\u0001\u001a\u0001\u0026\u0002'\u0003)\u0001\u0002\u0002\u000b\u0003\r\u0001\u0002)\f\u0012\u001a\u0001\u0002\u0002\u00174\u0001cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/007/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/008/input.aig; \u0026blut -n -K 3 -C 2; \u0026w $TMP/008/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n41\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\r\u0004\u0010\u0002\u0001\u0002\u0002\u0012\u000e\b\u0001\u0017\u0018\u0003\u0019\u0005\u0001\u0002\u0002\n\u0003\u0007\u0001\u0002\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0017\u0003\u0019\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/008/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/008/input.aig; \u0026blut -n -K 3 -C 8; \u0026w $TMP/008/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n41\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\r\u0004\u0010\u0002\u0001\u0002\u0002\u0012\u000e\b\u0001\u0017\u0018\u0003\u0019\u0005\u0001\u0002\u0002\n\u0003\u0007\u0001\u0002\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0017\u0003\u0019\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/008/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/008/input.aig; \u0026blut -n -K 4 -C 2; \u0026w $TMP/008/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n41\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\r\u0004\u0010\u0002\u0001\u0002\u0002\u0012\u000e\b\u0001\u0017\u0018\u0003\u0019\u0005\u0001\u0002\u0002\n\u0003\u0007\u0001\u0002\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0017\u0003\u0019\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/008/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/008/input.aig; \u0026blut -n -K 4 -C 8; \u0026w $TMP/008/output.aig\".\n\nBest delay = 2\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n41\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\r\u0004\u0010\u0002\u0001\u0002\u0002\u0012\u000e\b\u0001\u0017\u0018\u0003\u0019\u0005\u0001\u0002\u0002\n\u0003\u0007\u0001\u0002\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0017\u0003\u0019\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/008/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/008/input.aig; \u0026blut -n -K 6 -C 2; \u0026w $TMP/008/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n41\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\r\u0004\u0010\u0002\u0001\u0002\u0002\u0012\u000e\b\u0001\u0017\u0018\u0003\u0019\u0005\u0001\u0002\u0002\n\u0003\u0007\u0001\u0002\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0017\u0003\u0019\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/008/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ },
+ {
+  "key": "combined: abc -c \u0026r -s $TMP/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/output.aig",
+  "stdout": "ABC command line: \"\u0026r -s $TMP/008/input.aig; \u0026blut -n -K 6 -C 8; \u0026w $TMP/008/output.aig\".\n\nBest delay = 1\n",
+  "temps": [
+   "$TMP/008"
+  ],
+  "files": {
+   "$TMP/008/output.aig": "aig 30 6 0 5 24\n23\n47\n41\n0\n60\n\u0002\u0005\u0003\u0007\u0001\u0002\u0001\u0006\u0001\b\r\u0004\u0010\u0002\u0001\u0002\u0002\u0012\u000e\b\u0001\u0017\u0018\u0003\u0019\u0005\u0001\u0002\u0002\n\u0003\u0007\u0001\u0002\u001e\u0005\u0001-\u0001'\u0001\u0002\u0002\u0017\u0003\u0019\u0001\u0002cn\u0000\u0000\u00009/tmp/TestLutBalanceOriginalABCOracle4092340314/008/input\u0000\nThis file was produced by the GIA package in ABC on Sat Nov 28 05:07:49 2026\nFor information about AIGER format, refer to http://fmv.jku.at/aiger\n"
+  }
+ }
+]

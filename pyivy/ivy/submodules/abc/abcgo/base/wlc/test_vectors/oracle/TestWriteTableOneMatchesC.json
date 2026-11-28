@@ -1,0 +1,46 @@
+[
+ {
+  "key": "combined: cc $TMP/table.c -o $TMP/table",
+  "temps": [
+   "$TMP/001"
+  ],
+  "empty": [
+   "$TMP/001/table"
+  ]
+ },
+ {
+  "key": "output: $TMP/table 1",
+  "stdout": "module table7(ind, val);\n  input  [1:0] ind;\n  output [0:0] val;\n  reg    [0:0] val;\n  always @(ind)\n  begin\n    case (ind)\n      2'h0: val = 1'h1;\n      2'h1: val = 1'h1;\n      2'h2: val = 1'h1;\n      2'h3: val = 1'h1;\n    endcase\n  end\nendmodule\n\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "output: $TMP/table 8",
+  "stdout": "module table7(ind, val);\n  input  [1:0] ind;\n  output [7:0] val;\n  reg    [7:0] val;\n  always @(ind)\n  begin\n    case (ind)\n      2'h0: val = 8'hef;\n      2'h1: val = 8'hcd;\n      2'h2: val = 8'hab;\n      2'h3: val = 8'h89;\n    endcase\n  end\nendmodule\n\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "output: $TMP/table 16",
+  "stdout": "module table7(ind, val);\n  input  [1:0] ind;\n  output [15:0] val;\n  reg    [15:0] val;\n  always @(ind)\n  begin\n    case (ind)\n      2'h0: val = 16'hcdef;\n      2'h1: val = 16'h89ab;\n      2'h2: val = 16'h4567;\n      2'h3: val = 16'h123;\n    endcase\n  end\nendmodule\n\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "output: $TMP/table 32",
+  "stdout": "module table7(ind, val);\n  input  [1:0] ind;\n  output [31:0] val;\n  reg    [31:0] val;\n  always @(ind)\n  begin\n    case (ind)\n      2'h0: val = 32'h89abcdef;\n      2'h1: val = 32'h1234567;\n      2'h2: val = 32'h76543210;\n      2'h3: val = 32'hfedcba98;\n    endcase\n  end\nendmodule\n\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ },
+ {
+  "key": "output: $TMP/table 64",
+  "stdout": "module table7(ind, val);\n  input  [1:0] ind;\n  output [63:0] val;\n  reg    [63:0] val;\n  always @(ind)\n  begin\n    case (ind)\n      2'h0: val = 64'h89abcdef;\n      2'h1: val = 64'h76543210;\n      2'h2: val = 64'h55555555;\n      2'h3: val = 64'h89abcdef;\n    endcase\n  end\nendmodule\n\n",
+  "temps": [
+   "$TMP/001"
+  ]
+ }
+]
