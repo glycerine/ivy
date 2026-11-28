@@ -2,6 +2,7 @@ package abc
 
 import (
 	"fmt"
+	"os"
 	"slices"
 )
 
@@ -53,8 +54,20 @@ func (n *Network) lookupAndAllowed(a, b Edge, excluded map[*Object]bool) (Edge, 
 	}
 	pair := edgePair(a, b)
 	key := andHashKey(pair)
-	if o := n.cachedAnd(pair, key); o != nil && !excluded[o] {
-		return o.Signal(), true
+	cached := n.cachedAnd(pair, key)
+	if cached != nil && !excluded[cached] {
+		return cached.Signal(), true
+	}
+	// with no entry for the key (an excluded entry may hide a duplicate)
+	if cached == nil && n.andHashComplete() {
+		// every live AND is in the table, so the fanout scan cannot find one
+		if !andHashCheck {
+			return Edge{}, false
+		}
+		if found := findAndFanout(pair, excluded); found != nil {
+			panic(fmt.Sprintf("abc: AND hash reported complete but misses node %d", found.ID))
+		}
+		return Edge{}, false
 	}
 	if found := findAndFanout(pair, excluded); found != nil {
 		n.hashed.set(key, found)
@@ -62,6 +75,19 @@ func (n *Network) lookupAndAllowed(a, b Edge, excluded map[*Object]bool) (Edge, 
 	}
 	return Edge{}, false
 }
+
+// andHashComplete reports that the structural hash holds every node of a
+// strashed network: its entries (one per key, plus the recorded duplicates)
+// count the live nodes. Nodes made without registration (duplicated
+// networks, edited fanins, cleared tables) leave the count short, and then
+// lookups fall back to scanning fanouts.
+func (n *Network) andHashComplete() bool {
+	return n.Type == uint8(ABC_NTK_STRASH) && n.hashed.len()+n.extraAnds == len(n.kindOrder[ObjectNode])-n.nodeHoles
+}
+
+// andHashCheck (ABCGO_HASHCHECK=1) verifies andHashComplete: lookups then
+// still scan fanouts and panic if a node was missing from a complete table.
+var andHashCheck = os.Getenv("ABCGO_HASHCHECK") == "1"
 
 func (n *Network) cachedAnd(pair [2]Edge, key [2]int) *Object {
 	for o := n.hashed.get(key); o != nil; o = n.hashed.get(key) {

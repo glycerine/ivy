@@ -1,46 +1,55 @@
 package abc
 
 import (
-	"math/rand/v2"
+	"math/rand"
 	"testing"
 )
 
-// TestAndTableMatchesMap drives andTable and a Go map with the same random
-// sets and deletes on a small key space and checks they always agree.
+// The interleaved table must behave as a map under insert, overwrite and
+// backward-shift deletion, including complemented (negative) key halves.
 func TestAndTableMatchesMap(t *testing.T) {
-	var tab andTable
-	ref := map[[2]int]*Object{}
-	objs := make([]*Object, 8)
-	for i := range objs {
-		objs[i] = &Object{ID: i}
+	r := rand.New(rand.NewSource(1))
+	var table andTable
+	want := map[[2]int]*Object{}
+	objects := make([]*Object, 64)
+	for i := range objects {
+		objects[i] = &Object{ID: i}
 	}
-	r := rand.New(rand.NewPCG(1, 2))
+	key := func() [2]int {
+		a, b := r.Intn(300), r.Intn(300)
+		if r.Intn(2) == 0 {
+			a = ^a
+		}
+		if r.Intn(2) == 0 {
+			b = ^b
+		}
+		return [2]int{a, b}
+	}
 	for step := 0; step < 200000; step++ {
-		k := [2]int{r.IntN(40) - 20, r.IntN(40) - 20}
-		switch r.IntN(3) {
+		k := key()
+		switch r.Intn(3) {
 		case 0, 1:
-			o := objs[r.IntN(len(objs))]
-			tab.set(k, o)
-			ref[k] = o
-		case 2:
-			tab.del(k)
-			delete(ref, k)
+			o := objects[r.Intn(len(objects))]
+			table.set(k, o)
+			want[k] = o
+		default:
+			table.del(k)
+			delete(want, k)
 		}
-		if step%997 == 0 {
-			if tab.len() != len(ref) {
-				t.Fatalf("step %d: len %d vs %d", step, tab.len(), len(ref))
-			}
-			for a := -20; a < 20; a++ {
-				for b := -20; b < 20; b++ {
-					if tab.get([2]int{a, b}) != ref[[2]int{a, b}] {
-						t.Fatalf("step %d: key %d,%d differs", step, a, b)
-					}
-				}
-			}
+		if step%1000 == 0 {
+			table.reserve(r.Intn(4000))
 		}
-		if step == 100000 {
-			tab.clear()
-			clear(ref)
+		probe := key()
+		if got := table.get(probe); got != want[probe] {
+			t.Fatalf("step %d: get(%v) = %v, want %v", step, probe, got, want[probe])
+		}
+		if table.len() != len(want) {
+			t.Fatalf("step %d: len %d, want %d", step, table.len(), len(want))
+		}
+	}
+	for k, o := range want {
+		if table.get(k) != o {
+			t.Fatalf("final get(%v) wrong", k)
 		}
 	}
 }
