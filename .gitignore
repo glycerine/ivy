@@ -4,3 +4,6 @@
 /.cache/
 goivy_check_xtrace*
 *.dsc
+hadi.txt
+pyivy/ivy/submodules/abc/abcgo/base/abci/hadi.txt
+pyivy/ivy/submodules/abc/abcgo/hadi.txt
