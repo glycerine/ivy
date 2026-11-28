@@ -70,6 +70,9 @@ func IoCommandRead(frame *abcmain.Frame, args []string) int32 {
 		fmt.Fprintln(frame.Out, "The new network has no primary inputs. It is recommended\nto add a dummy PI to make sure all commands work correctly.")
 	}
 	abcmain.Abc_FrameReplaceCurrentNetwork(frame, n)
+	// Abc_FrameCopyLTLDataBase (ltl_parser.c): the frame's LTL database,
+	// which l3s reads, is the new network's formulas
+	frame.SetResource("vLTLProperties_global", append([]string{}, n.LTLProperties...))
 	abcmain.Abc_FrameClearVerifStatus(frame)
 	return 0
 }

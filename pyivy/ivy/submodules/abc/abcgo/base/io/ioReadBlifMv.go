@@ -360,6 +360,9 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 	var models []*blifModel
 	byName := map[string]*blifModel{}
 	var current *blifModel
+	// Io_MvParseLineLtlProperty: every .ltlformula, in any model, is kept
+	// (the text between the line's first and last '"') for the top network
+	var ltlFormulas []string
 	for _, line := range lines {
 		f := strings.Fields(strings.ReplaceAll(line.text, "->", " -> "))
 		switch f[0] {
@@ -393,6 +396,13 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 				return nil, blifError(name, line, "content outside .model")
 			}
 			if blifIgnoredDirective(f[0]) {
+				continue
+			}
+			if f[0] == ".ltlformula" {
+				first, last := strings.IndexByte(line.text, '"'), strings.LastIndexByte(line.text, '"')
+				if first >= 0 && last > first {
+					ltlFormulas = append(ltlFormulas, line.text[first+1:last])
+				}
 				continue
 			}
 			if !blifKnownDirective(f[0], multiValued) {
@@ -580,6 +590,7 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 	if len(design.Tops) == 0 {
 		return nil, fmt.Errorf("%s: recursive hierarchy has no top", name)
 	}
+	design.Tops[0].LTLProperties = append(design.Tops[0].LTLProperties, ltlFormulas...)
 	return design.Tops[0], nil
 }
 

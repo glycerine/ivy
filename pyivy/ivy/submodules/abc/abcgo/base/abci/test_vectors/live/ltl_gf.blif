@@ -1,0 +1,10 @@
+.model ltl1
+.inputs a b
+.outputs o
+.ltlformula ":G :F o"
+.latch n l 0
+.names a l n
+11 1
+.names l b o
+11 1
+.end

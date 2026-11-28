@@ -1216,3 +1216,25 @@ and states how the Go port was verified.
 - **Test:** `abcgo/base/abci/live_native_test.go` (`TestNChooseKLikeNative`);
   red before (timeout, segmentation fault).
 - **Go port:** same message (Go's recursion would overflow the stack).
+
+## 58. Reading a BLIF file with `.ltlformula` crashes (LTL formulas never reach the network)
+
+- **File:** `src/base/io/ioReadBlifMv.c` (`Io_ReadBlifMv`).
+- **Found:** 2026-11-27, porting proof/live: `read x.blif` with a
+  `.ltlformula "..."` line dumped core, so `l3s`'s LTL path was unreachable.
+- **Bug:** `Io_MvParseLineLtlProperty` pushes each formula into the global
+  `vGlobalLtlArray` while parsing, but `Io_ReadBlifMv` allocated that array
+  only after parsing (pushing into NULL crashed), then copied the still empty
+  array into `pNtk->vLtlProperties` and freed it.
+- **Fix:** allocate `vGlobalLtlArray` before parsing (free it on the early
+  returns), and after parsing move its entries into the top network.
+- **Test:** `abcgo/base/abci/ltl_formula_native_test.go`
+  (`TestBlifLtlFormulaLikeNative`; test vectors
+  `test_vectors/live/ltl_formula.blif`, `ltl_gf.blif`; read, strash and
+  `l3s`, `l3s -s`, `l3s -1` with output and written AIG equal native); red
+  before (native segmentation fault).
+- **Go port:** rejected the directive ("unsupported BLIF directive
+  .ltlformula"). The BLIF reader now keeps the formulas (text between the
+  first and last `"`) for the top network, and `read` copies them into the
+  frame's LTL database (`Abc_FrameCopyLTLDataBase`), so `l3s` translates them
+  as C does.

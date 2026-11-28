@@ -176,6 +176,8 @@ Abc_Ntk_t * Io_ReadBlifMv( char * pFileName, int fBlifMv, int fCheck )
     // free the HOP manager
     Hop_ManStop( (Hop_Man_t *)p->pDesign->pManFunc );
     p->pDesign->pManFunc = NULL;
+    // the .ltlformula lines are collected here while parsing
+    vGlobalLtlArray = Vec_PtrAlloc( 100 );
     // prepare the file for parsing
     Io_MvReadPreparse( p );
     // parse interfaces of each network and construct the network
@@ -185,7 +187,11 @@ Abc_Ntk_t * Io_ReadBlifMv( char * pFileName, int fBlifMv, int fCheck )
         fprintf( stdout, "%s\n", p->sError );
     Io_MvFree( p );
     if ( pDesign == NULL )
+    {
+        Vec_PtrFreeFree( vGlobalLtlArray );
+        vGlobalLtlArray = NULL;
         return NULL;
+    }
 // pDesign should be linked to all models of the design
 
     // make sure that everything is okay with the network structure
@@ -197,6 +203,8 @@ Abc_Ntk_t * Io_ReadBlifMv( char * pFileName, int fBlifMv, int fCheck )
             {
                 printf( "Io_ReadBlifMv: The network check has failed for model %s.\n", pNtk->pName );
                 Abc_DesFree( pDesign, NULL );
+                Vec_PtrFreeFree( vGlobalLtlArray );
+                vGlobalLtlArray = NULL;
                 return NULL;
             }
         }
@@ -248,7 +256,6 @@ Abc_Ntk_t * Io_ReadBlifMv( char * pFileName, int fBlifMv, int fCheck )
     if ( pNtk->pSpec == NULL )
         pNtk->pSpec = Extra_UtilStrsav( pFileName );
 
-    vGlobalLtlArray = Vec_PtrAlloc( 100 );
     Vec_PtrForEachEntry( char *, vGlobalLtlArray, pLtlProp, i )
         Vec_PtrPush( pNtk->vLtlProperties, pLtlProp );
     Vec_PtrFreeP( &vGlobalLtlArray );
