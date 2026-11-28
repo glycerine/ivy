@@ -51,7 +51,7 @@ func Abc_NtkFromMiniAig(p *miniaig.Mini_Aig_t) *abc.Network {
 			abc.Abc_ObjAddFanin(o, miniCopiedFanin(copies, miniaig.Mini_AigNodeFanin0(p, i)))
 			out = o.Signal()
 		case miniaig.Mini_AigNodeIsAnd(p, i):
-			out = abc.Abc_AigAnd(n.FunctionManager.(*abc.Abc_Aig_t), miniCopiedFanin(copies, miniaig.Mini_AigNodeFanin0(p, i)), miniCopiedFanin(copies, miniaig.Mini_AigNodeFanin1(p, i)))
+			out = abc.Abc_AigAndE(n.FunctionManager.(*abc.Abc_Aig_t), miniCopiedFanin(copies, miniaig.Mini_AigNodeFanin0(p, i)), miniCopiedFanin(copies, miniaig.Mini_AigNodeFanin1(p, i)))
 		default:
 			panic("abci: unknown MiniAIG object")
 		}

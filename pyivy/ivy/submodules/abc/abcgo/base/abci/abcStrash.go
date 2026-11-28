@@ -28,7 +28,7 @@ func strashCopyChild(o *abc.Object, index int32) abc.Edge {
 }
 
 func strashNodeCopy(n *abc.Network, o *abc.Object) {
-	strashSetCopy(o, abc.Abc_AigAnd(strashAig(n), strashCopyChild(o, 0), strashCopyChild(o, 1)))
+	strashSetCopy(o, abc.Abc_AigAndE(strashAig(n), strashCopyChild(o, 0), strashCopyChild(o, 1)))
 }
 
 // abcStrashRandBit is rand() & 1 on ABC's process-wide rand() stream.
@@ -258,7 +258,7 @@ func Abc_NtkAppend(pNtk1, pNtk2 *Abc_Ntk_t, fAddPos int32) int32 {
 			assert(old != nil, "matching PO/BI name exists")
 			oldDriver := abc.Abc_ObjChild0(old)
 			newDriver := strashCopyChild(co, 0)
-			orDriver := abc.Abc_AigOr(strashAig(pNtk1), oldDriver, newDriver)
+			orDriver := abc.Abc_AigOrE(strashAig(pNtk1), oldDriver, newDriver)
 			if abc.Abc_ObjRegular(oldDriver) == abc.Abc_ObjRegular(orDriver) {
 				continue
 			}
@@ -322,7 +322,7 @@ func abcNodeStrash(pNtkNew *Abc_Ntk_t, pNodeOld *Abc_Obj_t, copies *[]abc.Edge) 
 		rec(hop.Hop_ObjFanin1(o))
 		a := abc.Abc_ObjNotCond((*copies)[hop.Hop_ObjFanin0(o).Id], hop.Hop_ObjFaninC0(o))
 		b := abc.Abc_ObjNotCond((*copies)[hop.Hop_ObjFanin1(o).Id], hop.Hop_ObjFaninC1(o))
-		set(o, abc.Abc_AigAnd(aig, a, b))
+		set(o, abc.Abc_AigAndE(aig, a, b))
 		hop.Hop_ObjSetMarkA(o)
 	}
 	rec(root)
@@ -339,7 +339,7 @@ func Abc_NodeStrash_rec(pMan *abc.Abc_Aig_t, pObj *Hop_Obj_t) {
 	Abc_NodeStrash_rec(pMan, hop.Hop_ObjFanin1(pObj))
 	a := abcHopChildCopy(pObj, 0)
 	b := abcHopChildCopy(pObj, 1)
-	hop.Hop_ObjSetData(pObj, abc.Abc_AigAnd(pMan, a, b))
+	hop.Hop_ObjSetData(pObj, abc.Abc_AigAndE(pMan, a, b))
 	assert(hop.Hop_ObjIsMarkA(pObj) == 0, "!Hop_ObjIsMarkA(pObj)")
 	hop.Hop_ObjSetMarkA(pObj)
 }
@@ -377,7 +377,7 @@ func Abc_NtkTopmost_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t, levelCut int32) ab
 	}
 	Abc_NtkTopmost_rec(pNtkNew, abc.Abc_ObjFanin0(pNode), levelCut)
 	Abc_NtkTopmost_rec(pNtkNew, abc.Abc_ObjFanin1(pNode), levelCut)
-	copy := abc.Abc_AigAnd(strashAig(pNtkNew), strashCopyChild(pNode, 0), strashCopyChild(pNode, 1))
+	copy := abc.Abc_AigAndE(strashAig(pNtkNew), strashCopyChild(pNode, 0), strashCopyChild(pNode, 1))
 	strashSetCopy(pNode, copy)
 	return copy
 }
@@ -425,7 +425,7 @@ func Abc_NtkBottommost_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t, levelCut int32)
 	if pNode.Level > int(levelCut) {
 		return abc.Edge{}
 	}
-	copy := abc.Abc_AigAnd(strashAig(pNtkNew), strashCopyChild(pNode, 0), strashCopyChild(pNode, 1))
+	copy := abc.Abc_AigAndE(strashAig(pNtkNew), strashCopyChild(pNode, 0), strashCopyChild(pNode, 1))
 	strashSetCopy(pNode, copy)
 	return copy
 }

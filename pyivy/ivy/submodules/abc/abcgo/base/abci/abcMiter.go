@@ -284,7 +284,7 @@ func Abc_NtkMiterAddOne(pNtk *Abc_Ntk_t, pNtkMiter *Abc_Ntk_t) {
 		if pNode == nil || (base_abc.Abc_AigNodeIsAnd(pNode) == 0) {
 			continue
 		}
-		Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
+		Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAndE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
 	}
 }
 
@@ -313,7 +313,7 @@ func Abc_NtkMiterAddCone(pNtk *Abc_Ntk_t, pNtkMiter *Abc_Ntk_t, pRoot *Abc_Obj_t
 	for i = 0; i < int32(len(vNodes)); i++ {
 		pNode = vNodes[i]
 		if base_abc.Abc_AigNodeIsAnd(pNode) != 0 {
-			Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
+			Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAndE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
 		}
 	}
 }
@@ -345,7 +345,7 @@ func Abc_NtkMiterFinalize(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk
 		for i = 0; i < Abc_NtkCoNum(pNtk1); i++ {
 			pNode = base_abc.Abc_NtkCo(pNtk1, i)
 			if fMulti != 0 {
-				pMiter = base_abc.Abc_AigXor(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild0Copy(base_abc.Abc_NtkCo(pNtk2, i)))
+				pMiter = base_abc.Abc_AigXorE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild0Copy(base_abc.Abc_NtkCo(pNtk2, i)))
 				Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, i), pMiter)
 
 			} else {
@@ -361,7 +361,7 @@ func Abc_NtkMiterFinalize(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, pNtkMiter *Abc_Ntk
 		for i = 0; i < Abc_NtkPoNum(pNtk1); i++ {
 			pNode = Abc_NtkPo(pNtk1, i)
 			if fMulti != 0 {
-				pMiter = base_abc.Abc_AigXor(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild0Copy(base_abc.Abc_NtkCo(pNtk2, i)))
+				pMiter = base_abc.Abc_AigXorE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild0Copy(base_abc.Abc_NtkCo(pNtk2, i)))
 				Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, i), pMiter)
 
 			} else {
@@ -478,9 +478,9 @@ func Abc_NtkMiterAnd(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t, fOr int32, fCompl2 int3
 
 	// create the miter of the two outputs
 	if fOr != 0 {
-		pMiter = base_abc.Abc_AigOr(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
+		pMiter = base_abc.Abc_AigOrE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	} else {
-		pMiter = base_abc.Abc_AigAnd(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
+		pMiter = base_abc.Abc_AigAndE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	}
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, 0), pMiter)
 
@@ -623,7 +623,7 @@ func Abc_NtkMiterForCofactors(pNtk *Abc_Ntk_t, Out int32, In1 int32, In2 int32) 
 	pOutput2 = Abc_ObjReadCopyEdge(Abc_ObjFanin0(pRoot))
 
 	// create the miter of the two outputs
-	pMiter = base_abc.Abc_AigXor(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
+	pMiter = base_abc.Abc_AigXorE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, 0), pMiter)
 
 	// make sure that everything is okay
@@ -685,9 +685,9 @@ func Abc_NtkMiterQuantify(pNtk *Abc_Ntk_t, In int32, fExist int32) *Abc_Ntk_t {
 
 	// create the miter of the two outputs
 	if fExist != 0 {
-		pMiter = base_abc.Abc_AigOr(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
+		pMiter = base_abc.Abc_AigOrE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	} else {
-		pMiter = base_abc.Abc_AigAnd(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
+		pMiter = base_abc.Abc_AigAndE(pNtkMiter.FunctionManager.(*base_abc.Abc_Aig_t), pOutput1, pOutput2)
 	}
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkMiter, 0), pMiter)
 
@@ -964,7 +964,7 @@ func Abc_NtkAddFrame(pNtkFrames *Abc_Ntk_t, pNtk *Abc_Ntk_t, iFrame int32) {
 		if pNode == nil || (base_abc.Abc_AigNodeIsAnd(pNode) == 0) {
 			continue
 		}
-		Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAnd(pNtkFrames.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
+		Abc_ObjSetCopyEdge(pNode, abcCompatCopyEdge(base_abc.Abc_AigAndE(pNtkFrames.FunctionManager.(*base_abc.Abc_Aig_t), Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode))))
 	}
 	// add the new POs
 	// inlining of macro Abc_NtkForEachPo
@@ -1295,11 +1295,11 @@ func Abc_NtkCombinePos(pNtk *Abc_Ntk_t, fAnd int32, fXor int32) int32 {
 	for i = 0; i < Abc_NtkPoNum(pNtk); i++ {
 		pNode = Abc_NtkPo(pNtk, i)
 		if fAnd != 0 {
-			pMiter = base_abc.Abc_AigAnd(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
+			pMiter = base_abc.Abc_AigAndE(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
 		} else if fXor != 0 {
-			pMiter = base_abc.Abc_AigXor(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
+			pMiter = base_abc.Abc_AigXorE(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
 		} else {
-			pMiter = base_abc.Abc_AigOr(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
+			pMiter = base_abc.Abc_AigOrE(pNtk.FunctionManager.(*base_abc.Abc_Aig_t), pMiter, Abc_ObjChild0(pNode))
 		}
 	}
 	// remove the POs and their names

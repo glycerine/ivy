@@ -177,23 +177,36 @@ func (m *Abc_Aig_t) AndEdges(a, b Edge) Edge {
 	return m.createAndEdges(a, b)
 }
 func Abc_AigOr(m *Abc_Aig_t, a, b any) Edge {
-	return Abc_AigAnd(m, objectEdge(a).Not(), objectEdge(b).Not()).Not()
+	return Abc_AigOrE(m, objectEdge(a), objectEdge(b))
 }
 func Abc_AigXor(m *Abc_Aig_t, a, b any) Edge {
-	x, y := objectEdge(a), objectEdge(b)
+	return Abc_AigXorE(m, objectEdge(a), objectEdge(b))
+}
+func Abc_AigMux(m *Abc_Aig_t, c, t, e any) Edge {
+	return Abc_AigMuxE(m, objectEdge(c), objectEdge(t), objectEdge(e))
+}
+
+// Abc_AigAndE, Abc_AigOrE, Abc_AigXorE and Abc_AigMuxE are Abc_AigAnd/Or/
+// Xor/Mux for operands that are already edges. Passing an Edge as an `any`
+// operand boxes it on the heap (objectEdge's *Object case makes the operand
+// escape), one allocation per gate; callers holding edges use these.
+func Abc_AigAndE(m *Abc_Aig_t, a, b Edge) Edge { return m.AndEdges(a, b) }
+func Abc_AigOrE(m *Abc_Aig_t, a, b Edge) Edge {
+	return m.AndEdges(a.Not(), b.Not()).Not()
+}
+func Abc_AigXorE(m *Abc_Aig_t, x, y Edge) Edge {
 	// abcAig.c passes both Abc_AigAnd calls as arguments of Abc_AigOr; the
 	// GCC build of ABC evaluates them right to left, so the second product
 	// is created first (the node order and IDs of every miter follow it)
-	right := Abc_AigAnd(m, x.Not(), y)
-	left := Abc_AigAnd(m, x, y.Not())
-	return Abc_AigOr(m, left, right)
+	right := m.AndEdges(x.Not(), y)
+	left := m.AndEdges(x, y.Not())
+	return Abc_AigOrE(m, left, right)
 }
-func Abc_AigMux(m *Abc_Aig_t, c, t, e any) Edge {
-	control := objectEdge(c)
+func Abc_AigMuxE(m *Abc_Aig_t, control, t, e Edge) Edge {
 	// right to left, as Abc_AigXor
-	elseTerm := Abc_AigAnd(m, control.Not(), e)
-	thenTerm := Abc_AigAnd(m, control, t)
-	return Abc_AigOr(m, thenTerm, elseTerm)
+	elseTerm := m.AndEdges(control.Not(), e)
+	thenTerm := m.AndEdges(control, t)
+	return Abc_AigOrE(m, thenTerm, elseTerm)
 }
 func Abc_AigConst1(n *Network) Edge { return n.One() }
 func Abc_AigXorLookup(m *Abc_Aig_t, a, b any, typ *int32) Edge {

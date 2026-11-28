@@ -55,9 +55,9 @@ func Abc_NtkFromIvy(old *abc.Network, manager *ivy.Ivy_Man_t) *abc.Network {
 		fanin1 := Abc_ObjFanin1Ivy(network, node)
 		var result abc.Edge
 		if ivy.Ivy_ObjIsExor(node) != 0 {
-			result = abc.Abc_AigXor(aigManager, fanin0, fanin1)
+			result = abc.Abc_AigXorE(aigManager, fanin0, fanin1)
 		} else {
-			result = abc.Abc_AigAnd(aigManager, fanin0, fanin1)
+			result = abc.Abc_AigAndE(aigManager, fanin0, fanin1)
 		}
 		node.TravId = ivyABCEdge(result)
 	}
@@ -110,9 +110,9 @@ func Abc_NtkFromIvySeq(old *abc.Network, manager *ivy.Ivy_Man_t, haig int32) *ab
 		fanin1 := Abc_ObjFanin1Ivy(network, node)
 		var result abc.Edge
 		if ivy.Ivy_ObjIsExor(node) != 0 {
-			result = abc.Abc_AigXor(aigManager, fanin0, fanin1)
+			result = abc.Abc_AigXorE(aigManager, fanin0, fanin1)
 		} else {
-			result = abc.Abc_AigAnd(aigManager, fanin0, fanin1)
+			result = abc.Abc_AigAndE(aigManager, fanin0, fanin1)
 		}
 		node.TravId = ivyABCEdge(result)
 		choice := ivy.Ivy_ObjEquiv(node)

@@ -226,7 +226,7 @@ func Abc_NtkHaigRecreateAig(network *Abc_Ntk_t, manager *Hop_Man_t) *Abc_Ntk_t {
 		if hop.Hop_ObjIsNode(object) == 0 {
 			continue
 		}
-		edge := abc.Abc_AigAnd(aig, Hop_ObjChild0NextHaig(object), Hop_ObjChild1NextHaig(object))
+		edge := abc.Abc_AigAndE(aig, Hop_ObjChild0NextHaig(object), Hop_ObjChild1NextHaig(object))
 		if edge.Complement {
 			panic("HAIG HOP node reconstructed to a complemented ABC edge")
 		}

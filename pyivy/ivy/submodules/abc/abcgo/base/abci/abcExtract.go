@@ -446,9 +446,9 @@ func Abc_NtkShareOptimize(manager *Abc_ShaMan_t, andMode int32) {
 		right := abcShareEdgeFromLit(manager.pNtk, vec.Vec_IntEntry(input2, 0))
 		var created abc.Edge
 		if andMode != 0 {
-			created = abc.Abc_AigAnd(aigManager, left, right)
+			created = abc.Abc_AigAndE(aigManager, left, right)
 		} else {
-			created = abc.Abc_AigXor(aigManager, left, right)
+			created = abc.Abc_AigXorE(aigManager, left, right)
 		}
 		manager.nCountGates++
 		old1 := vec.Vec_IntAlloc(16)
@@ -518,9 +518,9 @@ func Abc_NtkUpdateNetwork(manager *Abc_ShaMan_t, andMode int32) *Abc_Ntk_t {
 				leaf := abcShareEdgeFromLit(network, vec.Vec_IntEntry(input, 0))
 				var combined abc.Edge
 				if andMode != 0 {
-					combined = abc.Abc_AigAnd(aigManager, replacements[column], leaf)
+					combined = abc.Abc_AigAndE(aigManager, replacements[column], leaf)
 				} else {
-					combined = abc.Abc_AigXor(aigManager, replacements[column], leaf)
+					combined = abc.Abc_AigXorE(aigManager, replacements[column], leaf)
 				}
 				replacements[column] = combined
 				manager.nCountGates++

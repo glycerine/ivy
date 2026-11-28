@@ -66,7 +66,7 @@ func abcNtkFromDarChoices(old *abc.Network, g *aig.Graph) *abc.Network {
 			continue
 		}
 		left, right := abcGraphMappedEdge(g, node.Fanins[0]), abcGraphMappedEdge(g, node.Fanins[1])
-		mapped := abc.Abc_AigAnd(manager, left, right)
+		mapped := abc.Abc_AigAndE(manager, left, right)
 		abcGraphSetMapped(g, e, mapped)
 	}
 	for _, e := range darAllNodes(g) {
@@ -129,9 +129,9 @@ func abcNtkFromDarSeq(old *abc.Network, g *aig.Graph) *abc.Network {
 		right := abcGraphMappedEdge(g, node.Fanins[1])
 		var mapped abc.Edge
 		if node.Kind == aig.ExclusiveOr {
-			mapped = abc.Abc_AigXor(manager, left, right)
+			mapped = abc.Abc_AigXorE(manager, left, right)
 		} else {
-			mapped = abc.Abc_AigAnd(manager, left, right)
+			mapped = abc.Abc_AigAndE(manager, left, right)
 		}
 		abcGraphSetMapped(g, e, mapped)
 	}
@@ -201,7 +201,7 @@ func abcNtkAfterTrim(g *aig.Graph, old *abc.Network) *abc.Network {
 		if node.Kind == aig.Buffer {
 			abcGraphSetMapped(g, e, abcGraphMappedEdge(g, node.Fanins[0]))
 		} else {
-			abcGraphSetMapped(g, e, abc.Abc_AigAnd(manager,
+			abcGraphSetMapped(g, e, abc.Abc_AigAndE(manager,
 				abcGraphMappedEdge(g, node.Fanins[0]), abcGraphMappedEdge(g, node.Fanins[1])))
 		}
 	}

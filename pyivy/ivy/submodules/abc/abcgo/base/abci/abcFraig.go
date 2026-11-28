@@ -186,7 +186,7 @@ func abcFraigBuildAIG(manager *Fraig_Man_t, node *Fraig_Node_t, aig *abc.Abc_Aig
 	}
 	a := abcFraigBuildAIG(manager, fraig.Fraig_NodeReadOne(regular), aig, memo)
 	b := abcFraigBuildAIG(manager, fraig.Fraig_NodeReadTwo(regular), aig, memo)
-	edge := abc.Abc_AigAnd(aig, a, b)
+	edge := abc.Abc_AigAndE(aig, a, b)
 	edge.Object.Phase = fraig.Fraig_NodeReadSimInv(regular) != 0
 	memo[regular] = edge
 	fraig.Fraig_NodeSetData1Copy(regular, edge)
@@ -295,7 +295,7 @@ func abcFraigNodeFromFraig(network *Abc_Ntk_t, node *Fraig_Node_t) abc.Edge {
 	}
 	a := abcFraigNodeFromFraig(network, fraig.Fraig_NodeReadOne(r))
 	b := abcFraigNodeFromFraig(network, fraig.Fraig_NodeReadTwo(r))
-	edge := abc.Abc_AigAnd(aig, a, b)
+	edge := abc.Abc_AigAndE(aig, a, b)
 	edge.Object.Phase = fraig.Fraig_NodeReadSimInv(r) != 0
 	fraig.Fraig_NodeSetData1Copy(r, edge)
 	return abc.Abc_ObjNotCond(edge, boolInt32(fraig.Fraig_IsComplement(node)))
@@ -315,7 +315,7 @@ func abcFraigFrom2Rec(_ *Abc_Ntk_t, node *Abc_Obj_t, reprs *Vec_Ptr_t, aig *abc.
 	for _, e := range f {
 		abcFraigFrom2Rec(nil, e.Object, reprs, aig, visited)
 	}
-	node.CopyEdge = abc.Abc_AigAnd(aig, abc.Abc_ObjNotCond(f[0].Object.CopyEdge, boolInt32(f[0].Complement)), abc.Abc_ObjNotCond(f[1].Object.CopyEdge, boolInt32(f[1].Complement)))
+	node.CopyEdge = abc.Abc_AigAndE(aig, abc.Abc_ObjNotCond(f[0].Object.CopyEdge, boolInt32(f[0].Complement)), abc.Abc_ObjNotCond(f[1].Object.CopyEdge, boolInt32(f[1].Complement)))
 }
 
 func Abc_NtkFraigTrust(network *Abc_Ntk_t) *Abc_Ntk_t {
@@ -382,7 +382,7 @@ func Abc_NodeFraigTrust(network *Abc_Ntk_t, node *Abc_Obj_t) abc.Edge {
 		return abc.Abc_ObjNotCond(copyFanin(0), abc.Abc_SopIsInv(sop))
 	case 2:
 		if abc.Abc_SopIsAndType(sop) != 0 {
-			return abc.Abc_AigAnd(aig, abc.Abc_ObjNotCond(copyFanin(0), 1-abc.Abc_SopGetIthCareLit(sop, 0)), abc.Abc_ObjNotCond(copyFanin(1), 1-abc.Abc_SopGetIthCareLit(sop, 1)))
+			return abc.Abc_AigAndE(aig, abc.Abc_ObjNotCond(copyFanin(0), 1-abc.Abc_SopGetIthCareLit(sop, 0)), abc.Abc_ObjNotCond(copyFanin(1), 1-abc.Abc_SopGetIthCareLit(sop, 1)))
 		}
 	}
 	if abc.Abc_SopIsOrType(sop) == 0 {

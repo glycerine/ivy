@@ -729,7 +729,7 @@ func Abc_NtkMiterBm(pNtk1, pNtk2 *Abc_Ntk_t, iCurrMatch, oCurrMatch *Vec_Ptr_t) 
 			if pNode == nil || baseabc.Abc_AigNodeIsAnd(pNode) == 0 {
 				continue
 			}
-			Abc_ObjSetCopyEdge(pNode, baseabc.Abc_AigAnd(pMan, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode)))
+			Abc_ObjSetCopyEdge(pNode, baseabc.Abc_AigAndE(pMan, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode)))
 		}
 	}
 
@@ -1071,7 +1071,7 @@ func computeCofactor(pNtk *Abc_Ntk_t, nodesInLevel []*Vec_Ptr_t, bitVector []int
 			case c0.kind == bmCofNode && c1.kind == bmCofOne:
 				copies[pObj.ID] = c0
 			case c0.kind == bmCofNode && c1.kind == bmCofNode:
-				copies[pObj.ID] = bmCofPtr{kind: bmCofNode, e: baseabc.Abc_AigAnd(pMan, c0.e, c1.e)}
+				copies[pObj.ID] = bmCofPtr{kind: bmCofNode, e: baseabc.Abc_AigAndE(pMan, c0.e, c1.e)}
 			}
 		}
 	}

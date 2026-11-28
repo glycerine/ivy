@@ -830,7 +830,7 @@ func Abc_FlowRetime_NtkSilentRestrash(ntk *abc.Abc_Ntk_t, cleanup int32) *abc.Ab
 		first, second := fanins[0].Object.ReadCopyEdge(), fanins[1].Object.ReadCopyEdge()
 		first.Complement = first.Complement != fanins[0].Complement
 		second.Complement = second.Complement != fanins[1].Complement
-		copy := abc.Abc_AigAnd(manager, first, second)
+		copy := abc.Abc_AigAndE(manager, first, second)
 		obj.Copy, obj.CopyEdge = copy.Object, copy
 	}
 	abc.Abc_NtkFinalize(ntk, result)

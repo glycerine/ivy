@@ -590,7 +590,7 @@ func Abc_NtkPartStitchChoices(network *Abc_Ntk_t, parts *Vec_Ptr_t) *Abc_Ntk_t {
 			fanins := node.Fanins()
 			a := abc.Abc_ObjNotCond(fanins[0].Object.CopyEdge, boolInt32(fanins[0].Complement))
 			b := abc.Abc_ObjNotCond(fanins[1].Object.CopyEdge, boolInt32(fanins[1].Complement))
-			node.CopyEdge = abc.Abc_AigAnd(aig, a, b)
+			node.CopyEdge = abc.Abc_AigAndE(aig, a, b)
 			if node.Choice != nil {
 				for choice := node.Choice; choice != nil; choice = choice.Choice {
 					choice.CopyEdge = node.CopyEdge

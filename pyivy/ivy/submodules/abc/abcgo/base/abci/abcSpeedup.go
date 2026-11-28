@@ -305,7 +305,7 @@ func Abc_NtkSpeedupNode(ntk, aigNtk *Abc_Ntk_t, node *Abc_Obj_t, leaves, times *
 			if b.Complement {
 				y = y.Not()
 			}
-			current.SetCopyEdge(baseabc.Abc_AigAnd(manager, x, y))
+			current.SetCopyEdge(baseabc.Abc_AigAndE(manager, x, y))
 		}
 		cofs[assignment] = root.Object.ReadCopyEdge()
 		if root.Complement {
@@ -316,7 +316,7 @@ func Abc_NtkSpeedupNode(ntk, aigNtk *Abc_Ntk_t, node *Abc_Obj_t, leaves, times *
 		skip := 1 << k
 		for i := 0; i < nCofs; i += 2 * skip {
 			selector := speedupMap(timed)
-			cofs[i] = baseabc.Abc_AigMux(manager, selector.Object.Signal(), cofs[i+skip], cofs[i])
+			cofs[i] = baseabc.Abc_AigMuxE(manager, selector.Object.Signal(), cofs[i+skip], cofs[i])
 		}
 	}
 	repr, alt := speedupMap(node).Object, cofs[0].Object

@@ -27,9 +27,9 @@ func abcStrashLocal(dst *Network, node *Object) Edge {
 		switch entry.Kind {
 		case aig.Constant, aig.Input:
 		case aig.And:
-			copies[id] = Abc_AigAnd(manager, edge(entry.Fanins[0]), edge(entry.Fanins[1]))
+			copies[id] = Abc_AigAndE(manager, edge(entry.Fanins[0]), edge(entry.Fanins[1]))
 		case aig.ExclusiveOr:
-			copies[id] = Abc_AigXor(manager, edge(entry.Fanins[0]), edge(entry.Fanins[1]))
+			copies[id] = Abc_AigXorE(manager, edge(entry.Fanins[0]), edge(entry.Fanins[1]))
 		case aig.Buffer:
 			copies[id] = edge(entry.Fanins[0])
 		default:

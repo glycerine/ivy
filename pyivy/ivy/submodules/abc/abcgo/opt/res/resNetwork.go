@@ -183,9 +183,9 @@ func ResNetworkFromGraph(graph *aig.Graph) (*abc.Network, error) {
 				return abc.Edge{}, err
 			}
 			if node.Kind == aig.ExclusiveOr {
-				copies[id] = abc.Abc_AigXor(manager, a, b)
+				copies[id] = abc.Abc_AigXorE(manager, a, b)
 			} else {
-				copies[id] = abc.Abc_AigAnd(manager, a, b)
+				copies[id] = abc.Abc_AigAndE(manager, a, b)
 			}
 		case aig.Buffer:
 			value, err := convert(node.Fanins[0])

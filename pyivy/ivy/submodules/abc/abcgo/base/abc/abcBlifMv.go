@@ -87,12 +87,12 @@ func mvTermSignal(m *Abc_Aig_t, term MVTerm, index int, values [][]Edge, domain 
 	}
 	if term.EqualInput >= 0 {
 		for value := 0; value < domain; value++ {
-			result = Abc_AigOr(m, result, Abc_AigAnd(m, values[index][value], values[term.EqualInput][value]))
+			result = Abc_AigOrE(m, result, Abc_AigAndE(m, values[index][value], values[term.EqualInput][value]))
 		}
 		return result
 	}
 	for _, value := range term.Values {
-		result = Abc_AigOr(m, result, values[index][value])
+		result = Abc_AigOrE(m, result, values[index][value])
 	}
 	return result
 }
@@ -130,7 +130,7 @@ func Abc_NodeStrashBlifMv(n *Network, o *Object) int32 {
 	for _, cube := range table.Cubes {
 		condition := n.One()
 		for i, input := range cube.Inputs {
-			condition = Abc_AigAnd(m, condition, mvTermSignal(m, input, i, values, table.DomainSizes[i]))
+			condition = Abc_AigAndE(m, condition, mvTermSignal(m, input, i, values, table.DomainSizes[i]))
 		}
 		for value := 0; value < size; value++ {
 			factor := n.One()
@@ -139,7 +139,7 @@ func Abc_NodeStrashBlifMv(n *Network, o *Object) int32 {
 			} else if !termMatches(cube.Output, value, make([]int, len(values))) {
 				continue
 			}
-			result[value] = Abc_AigOr(m, result[value], Abc_AigAnd(m, condition, factor))
+			result[value] = Abc_AigOrE(m, result[value], Abc_AigAndE(m, condition, factor))
 		}
 	}
 	if table.Default != nil {
@@ -149,11 +149,11 @@ func Abc_NodeStrashBlifMv(n *Network, o *Object) int32 {
 			if def.EqualInput < 0 && !def.Any && len(def.Values) == 1 && def.Values[0] == value {
 				continue
 			}
-			missing = Abc_AigAnd(m, missing, signal.Not())
+			missing = Abc_AigAndE(m, missing, signal.Not())
 		}
 		if def.EqualInput >= 0 {
 			for value := range result {
-				result[value] = Abc_AigOr(m, result[value], Abc_AigAnd(m, missing, values[def.EqualInput][value]))
+				result[value] = Abc_AigOrE(m, result[value], Abc_AigAndE(m, missing, values[def.EqualInput][value]))
 			}
 		} else {
 			for value := range result {
@@ -232,7 +232,7 @@ func Abc_NtkStrashBlifMv(old *Network) *Network {
 					if value&(1<<bit) == 0 {
 						input = input.Not()
 					}
-					signal = Abc_AigAnd(m, signal, input)
+					signal = Abc_AigAndE(m, signal, input)
 				}
 				net.MVEncoding()[value] = signal
 			}
@@ -254,7 +254,7 @@ func Abc_NtkStrashBlifMv(old *Network) *Network {
 				signal := n.One().Not()
 				for value, input := range net.MVEncoding() {
 					if value&(1<<bit) != 0 {
-						signal = Abc_AigOr(m, signal, input)
+						signal = Abc_AigOrE(m, signal, input)
 					}
 				}
 				o := n.NewObject(kind)

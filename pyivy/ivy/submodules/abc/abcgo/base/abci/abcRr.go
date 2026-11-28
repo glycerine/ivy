@@ -217,9 +217,9 @@ func Abc_NtkRRUpdate(ntk *Abc_Ntk_t, node, fanin, fanout *Abc_Obj_t) int32 {
 	}
 	var fanoutNew any
 	if node == baseabc.Abc_ObjFanin0(fanout) {
-		fanoutNew = baseabc.Abc_AigAnd(manager, baseabc.Abc_ObjNotCond(nodeNew, baseabc.Abc_ObjFaninC0(fanout)), baseabc.Abc_ObjChild1(fanout))
+		fanoutNew = baseabc.Abc_AigAndE(manager, baseabc.Abc_ObjNotCond(nodeNew, baseabc.Abc_ObjFaninC0(fanout)), baseabc.Abc_ObjChild1(fanout))
 	} else if node == baseabc.Abc_ObjFanin1(fanout) {
-		fanoutNew = baseabc.Abc_AigAnd(manager, baseabc.Abc_ObjNotCond(nodeNew, baseabc.Abc_ObjFaninC1(fanout)), baseabc.Abc_ObjChild0(fanout))
+		fanoutNew = baseabc.Abc_AigAndE(manager, baseabc.Abc_ObjNotCond(nodeNew, baseabc.Abc_ObjFaninC1(fanout)), baseabc.Abc_ObjChild0(fanout))
 	} else {
 		assert(false, "node is a fanin of fanout")
 	}
@@ -402,7 +402,7 @@ func Abc_NtkWindow(ntk *Abc_Ntk_t, leaves, cone, roots *Vec_Ptr_t) *Abc_Ntk_t {
 		if baseabc.Abc_ObjFaninC1(obj) != 0 {
 			b = b.Not()
 		}
-		copy := baseabc.Abc_AigAnd(window.FunctionManager.(*baseabc.Abc_Aig_t), a, b)
+		copy := baseabc.Abc_AigAndE(window.FunctionManager.(*baseabc.Abc_Aig_t), a, b)
 		obj.SetCopyEdge(copy)
 	}
 	if vec.Vec_PtrSize(cone) != int(baseabc.Abc_NtkNodeNum(window)) {

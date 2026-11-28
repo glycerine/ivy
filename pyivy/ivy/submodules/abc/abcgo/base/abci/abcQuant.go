@@ -114,8 +114,8 @@ func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) i
 	for _, head := range levels {
 		for node := head; node != nil; node = node.Copy {
 			fanins := node.Fanins()
-			zero[node] = baseabc.Abc_AigAnd(manager, cofactor(zero, fanins[0]), cofactor(zero, fanins[1]))
-			one[node] = baseabc.Abc_AigAnd(manager, cofactor(one, fanins[0]), cofactor(one, fanins[1]))
+			zero[node] = baseabc.Abc_AigAndE(manager, cofactor(zero, fanins[0]), cofactor(zero, fanins[1]))
+			one[node] = baseabc.Abc_AigAndE(manager, cofactor(one, fanins[0]), cofactor(one, fanins[1]))
 		}
 	}
 	for _, output := range pNtk.Outputs() {
@@ -125,9 +125,9 @@ func Abc_NtkQuantify(pNtk *Abc_Ntk_t, fUniv int32, iVar int32, fVerbose int32) i
 		fanin := Abc_ObjFanin0(output)
 		var result baseabc.Edge
 		if fUniv != 0 {
-			result = baseabc.Abc_AigAnd(manager, cofactor(zero, output.FaninAt(int32(0))), cofactor(one, output.FaninAt(int32(0))))
+			result = baseabc.Abc_AigAndE(manager, cofactor(zero, output.FaninAt(int32(0))), cofactor(one, output.FaninAt(int32(0))))
 		} else {
-			result = baseabc.Abc_AigOr(manager, cofactor(zero, output.FaninAt(int32(0))), cofactor(one, output.FaninAt(int32(0))))
+			result = baseabc.Abc_AigOrE(manager, cofactor(zero, output.FaninAt(int32(0))), cofactor(one, output.FaninAt(int32(0))))
 		}
 		result = baseabc.Abc_ObjNotCond(result, baseabc.Abc_ObjFaninC0(output))
 		if result.Object != fanin {
@@ -201,7 +201,7 @@ func Abc_NtkTransRel(pNtk *Abc_Ntk_t, fInputs int32, fVerbose int32) *Abc_Ntk_t 
 	for i = int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 		pObj = Abc_NtkObj(pNtk, i)
 		if pObj != nil && (Abc_ObjIsNode(pObj) != 0) {
-			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAnd(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
+			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAndE(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
 		}
 	}
 	// create the function of the primary output
@@ -280,7 +280,7 @@ func Abc_NtkInitialState(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	// compute the all-zero state in terms of the CS variables
 	pMiter = baseabc.Abc_AigConst1(pNtkNew)
 	for i = 0; i < nVars; i++ {
-		pMiter = baseabc.Abc_AigAnd(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), pMiter, baseabc.Abc_ObjNot(Abc_NtkPi(pNtkNew, i)))
+		pMiter = baseabc.Abc_AigAndE(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), pMiter, baseabc.Abc_ObjNot(Abc_NtkPi(pNtkNew, i)))
 	}
 	// add the PO
 	Abc_ObjAddFanin(Abc_NtkPo(pNtkNew, 0), pMiter)
@@ -322,7 +322,7 @@ func Abc_NtkSwapVariables(pNtk *Abc_Ntk_t) *Abc_Ntk_t {
 	for i = int32(0); i < Abc_NtkObjNumMax(pNtk); i++ {
 		pObj = Abc_NtkObj(pNtk, i)
 		if pObj != nil && (Abc_ObjIsNode(pObj) != 0) {
-			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAnd(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
+			Abc_ObjSetCopyEdge(pObj, abcCompatCopyEdge(baseabc.Abc_AigAndE(pNtkNew.FunctionManager.(*baseabc.Abc_Aig_t), Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj))))
 		}
 	}
 	// add the PO

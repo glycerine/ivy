@@ -55,7 +55,7 @@ func Abc_NtkSensitivityMiter_rec(miter *Abc_Ntk_t, node *Abc_Obj_t) abc.Edge {
 	if !ok || man == nil {
 		panic("abci: sensitivity miter has no AIG manager")
 	}
-	copy := abc.Abc_AigAnd(man, sensitivityCopyEdge(first), sensitivityCopyEdge(second))
+	copy := abc.Abc_AigAndE(man, sensitivityCopyEdge(first), sensitivityCopyEdge(second))
 	node.SetCopyEdge(copy)
 	return copy
 }
@@ -100,8 +100,8 @@ func Abc_NtkSensitivityMiter(n *Abc_Ntk_t, input int32) *Abc_Ntk_t {
 					child.Object.CopyData = Abc_NtkSensitivityMiter_rec(miter, child.Object)
 				}
 			}
-			copy := abc.Abc_AigAnd(manager, sensitivityCopyEdge(abc.Abc_ObjChild0(node)), sensitivityCopyEdge(abc.Abc_ObjChild1(node)))
-			data := abc.Abc_AigAnd(manager, sensitivityDataEdge(abc.Abc_ObjChild0(node)), sensitivityDataEdge(abc.Abc_ObjChild1(node)))
+			copy := abc.Abc_AigAndE(manager, sensitivityCopyEdge(abc.Abc_ObjChild0(node)), sensitivityCopyEdge(abc.Abc_ObjChild1(node)))
+			data := abc.Abc_AigAndE(manager, sensitivityDataEdge(abc.Abc_ObjChild0(node)), sensitivityDataEdge(abc.Abc_ObjChild1(node)))
 			node.SetCopyEdge(copy)
 			node.CopyData = data
 			node = next
@@ -116,11 +116,11 @@ func Abc_NtkSensitivityMiter(n *Abc_Ntk_t, input int32) *Abc_Ntk_t {
 		}
 		child := abc.Abc_ObjChild0(co)
 		if i == abc.Abc_NtkCoNum(n)-1 {
-			output = abc.Abc_AigAnd(manager, output, sensitivityDataEdge(child))
-			output = abc.Abc_AigAnd(manager, output, sensitivityCopyEdge(child))
+			output = abc.Abc_AigAndE(manager, output, sensitivityDataEdge(child))
+			output = abc.Abc_AigAndE(manager, output, sensitivityCopyEdge(child))
 		} else {
-			difference := abc.Abc_AigXor(manager, sensitivityCopyEdge(child), sensitivityDataEdge(child))
-			output = abc.Abc_AigOr(manager, output, difference)
+			difference := abc.Abc_AigXorE(manager, sensitivityCopyEdge(child), sensitivityDataEdge(child))
+			output = abc.Abc_AigOrE(manager, output, difference)
 		}
 	}
 	po := abc.Abc_NtkCreatePo(miter)

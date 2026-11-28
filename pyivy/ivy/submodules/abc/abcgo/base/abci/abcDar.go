@@ -482,9 +482,9 @@ func Abc_NtkFromAigPhase(pMan *Aig_Man_t) *Abc_Ntk_t {
 			node := pMan.Node(aiggraph.Edge(id << 1))
 			switch node.Kind {
 			case aiggraph.And:
-				copies[id] = abc.Abc_AigAnd(manager, build(node.Fanins[0]), build(node.Fanins[1]))
+				copies[id] = abc.Abc_AigAndE(manager, build(node.Fanins[0]), build(node.Fanins[1]))
 			case aiggraph.ExclusiveOr:
-				copies[id] = abc.Abc_AigXor(manager, build(node.Fanins[0]), build(node.Fanins[1]))
+				copies[id] = abc.Abc_AigXorE(manager, build(node.Fanins[0]), build(node.Fanins[1]))
 			case aiggraph.Buffer:
 				copies[id] = build(node.Fanins[0])
 			default:

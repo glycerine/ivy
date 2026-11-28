@@ -128,9 +128,9 @@ func Abc_NtkFromDar(old *Network, g *aig.Graph) *Network {
 		case aig.Buffer:
 			copies[e.NodeID()] = child(node.Fanins[0])
 		case aig.And:
-			copies[e.NodeID()] = Abc_AigAnd(manager, child(node.Fanins[0]), child(node.Fanins[1]))
+			copies[e.NodeID()] = Abc_AigAndE(manager, child(node.Fanins[0]), child(node.Fanins[1]))
 		case aig.ExclusiveOr:
-			copies[e.NodeID()] = Abc_AigXor(manager, child(node.Fanins[0]), child(node.Fanins[1]))
+			copies[e.NodeID()] = Abc_AigXorE(manager, child(node.Fanins[0]), child(node.Fanins[1]))
 		}
 	}
 	for i := 0; i < g.OutputCount(); i++ {
@@ -184,9 +184,9 @@ func Abc_NtkFromDarSeqSweep(old *Network, g *aig.Graph) *Network {
 			node := g.Node(aig.Edge(id << 1))
 			switch node.Kind {
 			case aig.And:
-				copies[id] = Abc_AigAnd(manager, build(node.Fanins[0]), build(node.Fanins[1]))
+				copies[id] = Abc_AigAndE(manager, build(node.Fanins[0]), build(node.Fanins[1]))
 			case aig.ExclusiveOr:
-				copies[id] = Abc_AigXor(manager, build(node.Fanins[0]), build(node.Fanins[1]))
+				copies[id] = Abc_AigXorE(manager, build(node.Fanins[0]), build(node.Fanins[1]))
 			case aig.Buffer:
 				copies[id] = build(node.Fanins[0])
 			default:
