@@ -2,6 +2,8 @@ package abc
 
 import (
 	"fmt"
+
+	abcmain "github.com/glycerine/abcgo/base/main"
 	"slices"
 	"sort"
 	"strings"
@@ -16,8 +18,21 @@ func Abc_ObjNameNet(o *Object) string {
 
 // Go's library check entry points always validate. They do not depend on a
 // process-global CLI flag or overwrite user Copy fields as scratch memory.
-func Abc_NtkCheck(n *Network) int32     { return Abc_NtkDoCheck(n) }
-func Abc_NtkCheckRead(n *Network) int32 { return Abc_NtkDoCheck(n) }
+// Abc_NtkCheck checks the network only when the "check" flag is enabled
+// (off by default), and Abc_NtkCheckRead only with "checkread" (set by
+// default), as in abcCheck.c.
+func Abc_NtkCheck(n *Network) int32 {
+	if abcmain.Abc_FrameIsFlagEnabled("check") == 0 {
+		return 1
+	}
+	return Abc_NtkDoCheck(n)
+}
+func Abc_NtkCheckRead(n *Network) int32 {
+	if abcmain.Abc_FrameIsFlagEnabled("checkread") == 0 {
+		return 1
+	}
+	return Abc_NtkDoCheck(n)
+}
 func Abc_NtkDoCheck(n *Network) int32 {
 	if n == nil || n.Type < uint8(ABC_NTK_NETLIST) || n.Type > uint8(ABC_NTK_STRASH) || n.Function < uint8(ABC_FUNC_SOP) || n.Function > uint8(ABC_FUNC_BLACKBOX) {
 		return 0
@@ -144,35 +159,39 @@ func Abc_NtkCheckNames(n *Network) int32 {
 	if n.Type == uint8(ABC_NTK_NETLIST) {
 		return 1
 	}
-	names := make(map[string]*Object, len(n.cis)+len(n.cos))
 	for _, ci := range n.cis {
 		if !n.contains(ci) {
 			return 0
 		}
-		name, ok := n.names.Lookup(int32(ci.ID))
-		if !ok || names[name] != nil {
+		if _, ok := n.names.Lookup(int32(ci.ID)); !ok {
+			fmt.Printf("NetworkCheck: CI with ID %d is in the network but not in the name table.\n", ci.ID)
 			return 0
 		}
-		names[name] = ci
 	}
 	for _, co := range n.cos {
 		if !n.contains(co) {
 			return 0
 		}
-		name, ok := n.names.Lookup(int32(co.ID))
-		if !ok {
+		if _, ok := n.names.Lookup(int32(co.ID)); !ok {
+			fmt.Printf("NetworkCheck: CO with ID %d is in the network but not in the name table.\n", co.ID)
 			return 0
 		}
-		if ci, used := names[name]; used && (ci == nil || len(co.fanins) != 1 || co.fanins[0].Object != ci) {
-			return 0
-		}
-		// A nil entry marks an output name that cannot appear again.
-		names[name] = nil
 	}
 	for id := range n.names.IDs() {
 		if n.Object(int(id)) == nil {
+			name, _ := n.names.Lookup(id)
+			fmt.Printf("NetworkCheck: Object with ID %d is deleted but its name \"%s\" remains in the name table.\n", id, name)
 			return 0
 		}
+	}
+	if Abc_NtkCheckUniqueCiNames(n) == 0 {
+		return 0
+	}
+	if Abc_NtkCheckUniqueCoNames(n) == 0 {
+		return 0
+	}
+	if Abc_NtkCheckUniqueCioNames(n) == 0 {
+		return 0
 	}
 	return 1
 }
