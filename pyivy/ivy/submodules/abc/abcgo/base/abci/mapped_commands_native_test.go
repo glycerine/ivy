@@ -114,3 +114,21 @@ func TestLibraryWithoutConstantsLikeNative(t *testing.T) {
 		}
 	}
 }
+
+// fretime on a mapped (SOP) network: fretInit.c converts the init-state
+// network to BDDs (ABC_USE_CUDD) before Abc_NtkMiterSat; the port skipped
+// the conversion and Abc_NtkMiterSatCreate panicked. The retimed network's
+// statistics equal native's. (Native also prints a NetworkCheck message
+// from fretMain.c's DEBUG_CHECK; that and fretime's verbose trace differ.)
+func TestFretimeOnMappedNetworkLikeNative(t *testing.T) {
+	script := mappedSeqPrep + "fretime; print_stats"
+	native := runNativeABC(t, script)
+	out, _ := runScriptStatus(t, script)
+	last := func(s string) string {
+		lines := strings.Split(strings.TrimSpace(s), "\n")
+		return strings.TrimSpace(lines[len(lines)-1])
+	}
+	if last(native) != last(out) {
+		t.Errorf("statistics differ\nnative: %s\nport:   %s", last(native), last(out))
+	}
+}

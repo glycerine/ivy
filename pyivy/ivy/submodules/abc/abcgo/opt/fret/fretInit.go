@@ -560,6 +560,13 @@ func Abc_FlowRetime_SolveBackwardInit(ntk *abc.Abc_Ntk_t) int32 {
 		return 0
 	}
 	fmt.Fprintf(os.Stdout, "\tsolving for init state (%d nodes)... ", abc.Abc_NtkObjNum(pManMR.pInitNtk))
+	// fretInit.c (ABC_USE_CUDD): convert SOPs and AIGs to BDDs before solving
+	if abc.Abc_NtkHasSop(pManMR.pInitNtk) != 0 {
+		abc.Abc_NtkSopToBdd(pManMR.pInitNtk)
+	}
+	if abc.Abc_NtkHasAig(pManMR.pInitNtk) != 0 {
+		abc.Abc_NtkAigToBdd(pManMR.pInitNtk)
+	}
 	result := abc.Abc_NtkMiterSat(pManMR.pInitNtk, int64(500000), int64(50000000), 0, nil, nil)
 	if result != 0 {
 		fmt.Fprintln(os.Stdout, "FAILURE")
