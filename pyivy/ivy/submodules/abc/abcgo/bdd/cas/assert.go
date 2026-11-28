@@ -2,8 +2,8 @@ package cas
 
 import (
 	"fmt"
-	"runtime"
 	"path"
+	"runtime"
 )
 
 // assert is small enough to inline into hot code; the failure path is not.
