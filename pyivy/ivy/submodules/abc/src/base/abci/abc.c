@@ -2795,6 +2795,11 @@ int Abc_CommandPrintCone( Abc_Frame_t * pAbc, int argc, char ** argv )
         Abc_Print( -1, "The network is combinational.\n" );
         return 1;
     }
+    if ( !Abc_NtkIsStrash(pNtk) )
+    {
+        Abc_Print( -1, "This command works only for AIGs (run \"strash\").\n" );
+        return 1;
+    }
     Abc_NtkDarPrintCone( pNtk );
     return 0;
 

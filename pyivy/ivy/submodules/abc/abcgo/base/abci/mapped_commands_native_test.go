@@ -56,3 +56,37 @@ func TestDressOnMappedNetworkLikeNative(t *testing.T) {
 func TestDebugOnMappedNetworkLikeNative(t *testing.T) {
 	checkMappedLikeNative(t, "debug", "does not cause the bug")
 }
+
+const mappedSeqPrep = "read test_vectors/seq/s27.blif; strash; if -K 4; "
+
+func checkMappedSeqLikeNative(t *testing.T, cmd, want string) {
+	t.Helper()
+	script := mappedSeqPrep + cmd + "; print_stats"
+	native := runNativeABC(t, script)
+	out, _ := runScriptStatus(t, script)
+	if want != "" && !strings.Contains(native, want) {
+		t.Errorf("%s: native does not print %q:\n%s", cmd, want, native)
+	}
+	if printSymmNormalize(native) != printSymmNormalize(out) {
+		t.Errorf("%s: output differs\nnative:\n%s\nport:\n%s", cmd, native, out)
+	}
+}
+
+// C bug 61: print_cone (Abc_NtkDarPrintCone) ran Abc_NtkToDar on any
+// network, reading a mapped network's LUTs as two-input ANDs, and printed
+// cone statistics of that wrong AIG; the port panicked. As clockgate and
+// synch (C bug 60), it now asks for an AIG.
+func TestPrintConeNeedsAigLikeNative(t *testing.T) {
+	checkMappedSeqLikeNative(t, "print_cone", "This command works only for AIGs")
+}
+
+// logicpush and mfse convert the network with Acb_NtkFromAbc, which asserts
+// that every object is a CI, CO or node. Latch boxes are neither; release
+// ABC compiles the assertion out and gives them no Acb object (Acb_NtkToAbc
+// maps the result back by CI and CO order, so nothing reads them). The port
+// kept the assertion and panicked on sequential networks.
+func TestAcbCommandsOnSequentialNetworkLikeNative(t *testing.T) {
+	for _, cmd := range []string{"logicpush", "mfse"} {
+		checkMappedSeqLikeNative(t, cmd, "")
+	}
+}

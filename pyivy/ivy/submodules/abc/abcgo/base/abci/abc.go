@@ -3306,6 +3306,10 @@ func Abc_CommandPrintCone(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "The network is combinational.\n")
 		return 1
 	}
+	if Abc_NtkIsStrash(pNtk) == 0 { // C bug 61
+		Abc_Print(-1, "This command works only for AIGs (run \"strash\").\n")
+		return 1
+	}
 	Abc_NtkDarPrintCone(pNtk)
 	return 0
 

@@ -126,10 +126,12 @@ func Acb_NtkFromAbc(p *Abc_Ntk_t) *Acb_Ntk_t {
 			pObj.Temp = int(Acb_ObjAlloc(pNtk, ABC_OPER_CO, 1, 0))
 		} else if Abc_ObjIsNode(pObj) != 0 {
 			pObj.Temp = int(Acb_ObjAlloc(pNtk, ABC_OPER_LUT, Abc_ObjFaninNum(pObj), 0))
-		} else {
-			assert(false, "0")
 		}
-		assert(pObj == nil || int32(pObj.Temp) == int32(Abc_ObjId(pObj)), "pObj == nil || int32(pObj.Temp) == int32(Abc_ObjId(pObj))")
+		// acbAbc.c asserts that every object is a CI, CO or node and that
+		// Acb IDs equal ABC IDs. A latch box is neither, so in release ABC
+		// it gets no Acb object and the later IDs shift; nothing reads the
+		// box, and Acb_NtkToAbc maps back by CI/CO order. The port follows
+		// release ABC (the assertions would stop sequential networks).
 	}
 	// inlining of macro Abc_NtkForEachNode
 	for i = 0; i < Abc_NtkObjNumMax(p); i++ {

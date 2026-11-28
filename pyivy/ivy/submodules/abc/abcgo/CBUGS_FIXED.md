@@ -1273,3 +1273,17 @@ and states how the Go port was verified.
   dangling-node warning and the wrong network).
 - **Go port:** panicked ("abc: expected strashed network"); it now prints
   the same message.
+
+## 61. `print_cone` prints statistics of the wrong logic on non-AIG networks
+
+- **File:** `src/base/abci/abc.c` (`Abc_CommandPrintCone`).
+- **Found:** 2026-11-27, crash sweep on a mapped sequential network
+  (`read s27.blif; strash; if -K 4; print_cone`).
+- **Bug:** as in #60, `Abc_NtkDarPrintCone` converts with `Abc_NtkToDar`,
+  which reads every node as a two-input AND; on a mapped network the cone
+  table describes different logic.
+- **Fix:** "This command works only for AIGs (run \"strash\")." after the
+  combinational-network check.
+- **Test:** `abcgo/base/abci/mapped_commands_native_test.go`
+  (`TestPrintConeNeedsAigLikeNative`); red before.
+- **Go port:** panicked ("abc: expected strashed network"); same message now.
