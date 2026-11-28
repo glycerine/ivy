@@ -1238,3 +1238,38 @@ and states how the Go port was verified.
   first and last `"`) for the top network, and `read` copies them into the
   frame's LTL database (`Abc_FrameCopyLTLDataBase`), so `l3s` translates them
   as C does.
+
+## 59. `faultclasses` without a fault list crashes
+
+- **File:** `src/base/abci/abcDetect.c` (`Abc_NtkDetectClassesTest`).
+- **Found:** 2026-11-27, crash sweep of every command on a mapped network
+  (`read mul8.aig; strash; if -K 6; faultclasses`): segmentation fault.
+- **Bug:** `Abc_NtkDetectFinClasses` prints "Current network does not have
+  the required info." (no `read_fins`) or reports unsupported gate types and
+  returns NULL; `Abc_NtkDetectClassesTest` passed the NULL result to
+  `Abc_NtkFinCountPairs`/`Vec_WecSize`.
+- **Fix:** return after the message when there is no result.
+- **Test:** `abcgo/base/abci/mapped_commands_native_test.go`
+  (`TestFaultClassesWithoutFinsLikeNative`); red before (native segfault).
+- **Go port:** already stopped after the message.
+
+## 60. `clockgate` and `synch` compute a wrong result on non-AIG networks
+
+- **File:** `src/base/abci/abc.c` (`Abc_CommandClockGate`,
+  `Abc_CommandSynch`).
+- **Found:** 2026-11-27, same sweep: on a mapped network both printed
+  "Abc_NtkToDar(): Unexpected 43 dangling nodes when converting to AIG!" and
+  returned a 25-node network.
+- **Bug:** neither command checks that the network is an AIG, as the other
+  Dar-based commands do. `Abc_NtkToDar` reads every node as a two-input AND
+  (`Abc_ObjChild0Copy`/`Abc_ObjChild1Copy`), so on a LUT network it builds
+  different logic and the command silently replaces the design with it.
+- **Fix:** "This command works only for AIGs (run \"strash\")." for a
+  non-strashed current network (synch's two-network form strashes its
+  inputs in `Abc_NtkPrepareTwoNtks`). clockgate's optional care network is
+  still read without a check.
+- **Test:** `abcgo/base/abci/mapped_commands_native_test.go`
+  (`TestClockGateSynchNeedAigLikeNative`); red before (native printed the
+  dangling-node warning and the wrong network).
+- **Go port:** panicked ("abc: expected strashed network"); it now prints
+  the same message.

@@ -239,8 +239,10 @@ func Dch_ComputeEquivalences2(miter *aig.Graph, pars *Dch_Pars_t) {
 }
 
 func Abc_NtkDressComputeEquivs(n1, n2 *abc.Network, conflictLimit, verbose int32) *vec.Vec_Ptr_t {
-	assert(abc.Abc_NtkIsStrash(n1) == 0, "first network is not strashed")
-	assert(abc.Abc_NtkIsStrash(n2) == 0, "second network is not strashed")
+	// abcDress2.c asserts that neither network is strashed, but dress reads
+	// the specification back with Io_Read, which returns an AIGER file
+	// strashed; release ABC compiles the assertions out and strashes the AIG
+	// again, harmlessly, so the port does the same.
 	strash1 := abc.Abc_NtkStrash(n1, 1, 1, 0)
 	strash2 := abc.Abc_NtkStrash(n2, 1, 1, 0)
 	man1 := abc.Abc_NtkToDar(strash1, 0, 0)

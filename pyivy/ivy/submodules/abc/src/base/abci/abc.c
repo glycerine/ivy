@@ -23158,6 +23158,11 @@ int Abc_CommandSynch( Abc_Frame_t * pAbc, int argc, char ** argv )
             Abc_Print( -1, "Empty network.\n" );
             return 1;
         }
+        if ( !Abc_NtkIsStrash(pNtk) )
+        {
+            Abc_Print( -1, "This command works only for AIGs (run \"strash\").\n" );
+            return 1;
+        }
         pNtkRes = Abc_NtkDarSynchOne( pNtk, nWords, fVerbose );
     }
     else
@@ -23318,6 +23323,11 @@ int Abc_CommandClockGate( Abc_Frame_t * pAbc, int argc, char ** argv )
     if ( pNtk == NULL )
     {
         Abc_Print( -1, "Empty network.\n" );
+        return 1;
+    }
+    if ( !Abc_NtkIsStrash(pNtk) )
+    {
+        Abc_Print( -1, "This command works only for AIGs (run \"strash\").\n" );
         return 1;
     }
 

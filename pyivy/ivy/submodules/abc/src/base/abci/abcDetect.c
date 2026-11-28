@@ -1245,6 +1245,8 @@ void Abc_NtkDetectClassesTest( Abc_Ntk_t * pNtk, int fSeq, int fVerbose, int fVe
     if ( fSeq ) 
         Abc_NtkFrameExtend( pNtk );
     vResult = Abc_NtkDetectFinClasses( pNtk, fVerbose );
+    if ( vResult == NULL ) // no fault list or unsupported gates (reported)
+        return;
     printf( "Computed %d equivalence classes with %d item pairs.  ", Vec_WecSize(vResult), Abc_NtkFinCountPairs(vResult) );
     Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
     if ( fVeryVerbose )

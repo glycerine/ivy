@@ -22442,6 +22442,10 @@ func Abc_CommandSynch(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 			Abc_Print(-1, "Empty network.\n")
 			return 1
 		}
+		if Abc_NtkIsStrash(pNtk) == 0 { // C bug 60
+			Abc_Print(-1, "This command works only for AIGs (run \"strash\").\n")
+			return 1
+		}
 		pNtkRes = Abc_NtkDarSynchOne(pNtk, nWords, fVerbose)
 
 	} else {
@@ -22605,6 +22609,10 @@ func Abc_CommandClockGate(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 	}
 	if pNtk == nil {
 		Abc_Print(-1, "Empty network.\n")
+		return 1
+	}
+	if Abc_NtkIsStrash(pNtk) == 0 { // C bug 60
+		Abc_Print(-1, "This command works only for AIGs (run \"strash\").\n")
 		return 1
 	}
 
@@ -25537,7 +25545,7 @@ func Abc_CommandDebug(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		return 1
 	}
 
-	Abc_NtkAutoDebug(pNtk, opt_ret.Abc_NtkRetimeDebug)
+	Abc_NtkAutoDebug(pNtk, Abc_NtkRetimeDebug)
 	return 0
 
 usage:

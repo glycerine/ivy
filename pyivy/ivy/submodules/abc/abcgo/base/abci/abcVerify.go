@@ -8,6 +8,7 @@ import (
 	"github.com/glycerine/abcgo/aig/saig"
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/vec"
+	opt_ret "github.com/glycerine/abcgo/opt/ret"
 	"github.com/glycerine/abcgo/opt/sim"
 	"github.com/glycerine/abcgo/proof/fraig"
 	"os"
@@ -1077,3 +1078,18 @@ func Abc_NtkIsValidCex(pNtk *Abc_Ntk_t, pCex *Abc_Cex_t) int32 {
 ////////////////////////////////////////////////////////////////////////
 
 //ABC_NAMESPACE_IMPL_END
+
+// Abc_NtkRetimeDebug is retCore.c's check for the debug command: convert the
+// network to SOPs, retime a copy for minimum area (backward only) and report
+// a bug when sequential equivalence (Abc_NtkSecFraig) fails. It lives here
+// because Abc_NtkSecFraig does.
+func Abc_NtkRetimeDebug(pNtk *Abc_Ntk_t) int32 {
+	assert(Abc_NtkIsLogic(pNtk) != 0, "Abc_NtkIsLogic(pNtk)")
+	abc.Abc_NtkToSop(pNtk, -1, ABC_INFINITY)
+	pNtkRet := abc.Abc_NtkDup(pNtk)
+	opt_ret.Abc_NtkRetime(pNtkRet, 3, 0, 0, 1, 0, 1, 0) // debugging backward flow
+	if Abc_NtkSecFraig(pNtk, pNtkRet, 10000, 3, 0) != 0 {
+		return 0
+	}
+	return 1
+}
