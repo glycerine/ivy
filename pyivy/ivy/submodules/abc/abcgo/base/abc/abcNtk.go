@@ -1,9 +1,9 @@
 package abc
 
 import (
-	"github.com/glycerine/abcgo/misc/util"
 	"bufio"
 	"fmt"
+	"github.com/glycerine/abcgo/misc/util"
 	"os"
 	"sort"
 	"strconv"
@@ -20,73 +20,89 @@ func ntkCopyNode(dst *Network, o *Object) Edge {
 	}
 	return copy.Signal()
 }
-func ntkCopyPart(src *Network, roots, boundary []*Object, allInputs bool) *Network {
-	dst := ntkFreshLike(src, Abc_NtkType_t(src.Type), Abc_NtkFunc_t(src.Function))
-	ntkClearCopies(src)
-	setCopy(src.constant, dst.One())
-	stop := make(map[*Object]bool)
-	for _, o := range boundary {
-		stop[o] = true
+
+// ntkConeCopyNode copies pObj into pNtkNew as abcNtk.c's cone builders do:
+// an AIG node is hashed from its fanins' copies, a logic node duplicated and
+// connected to them.
+func ntkConeCopyNode(pNtk, pNtkNew *Network, pObj *Object) {
+	if Abc_NtkIsStrash(pNtk) != 0 {
+		m := pNtkNew.FunctionManager.(*Abc_Aig_t)
+		setCopy(pObj, m.AndEdges(ntkCopiedEdge(pObj.fanins[0]), ntkCopiedEdge(pObj.fanins[1])))
+		return
 	}
-	seen := make(map[*Object]bool)
-	var order []*Object
-	var visit func(*Object)
-	visit = func(o *Object) {
-		if seen[o] {
-			return
-		}
-		seen[o] = true
-		if stop[o] || o.IsCI() || o == src.constant {
-			return
-		}
-		for _, e := range o.fanins {
-			visit(e.Object)
-		}
-		if o.Kind == ObjectNode || o.Kind == ObjectNet {
-			order = append(order, o)
-		}
+	Abc_NtkDupObj(pNtkNew, pObj, 0)
+	for _, e := range pObj.fanins {
+		Abc_ObjAddFanin(getCopy(pObj).Object, getCopy(e.Object).Object)
 	}
-	for _, o := range roots {
-		visit(o)
+}
+
+// Abc_NtkCreateCone is abcNtk.c's: the TFI cone of pNode with the CIs it
+// reaches (all CIs with fUseAllCis) as PIs, in CI order.
+func Abc_NtkCreateCone(pNtk *Network, pNode *Object, pNodeName string, fUseAllCis int32) *Network {
+	if Abc_NtkIsLogic(pNtk) == 0 && Abc_NtkIsStrash(pNtk) == 0 {
+		panic("abc: Abc_NtkCreateCone needs a logic or strashed network")
 	}
-	if boundary == nil {
-		boundary = src.cis
+	pNtkNew := Abc_NtkAlloc(Abc_NtkType_t(pNtk.Type), Abc_NtkFunc_t(pNtk.Function), 1)
+	pNtkNew.Name = pNtk.Name + "_" + pNodeName
+	if Abc_NtkIsStrash(pNtk) != 0 {
+		setCopy(pNtk.constant, pNtkNew.One())
 	}
-	for _, o := range boundary {
-		if allInputs || seen[o] {
-			pi := dst.NewObject(ObjectPI)
-			pi.SetName(o.Name())
-			setCopy(o, pi.Signal())
+	// collect the nodes in the TFI of the output (mark the TFI)
+	vNodes := Abc_NtkDfsNodes(pNtk, []*Object{pNode}, 1)
+	for _, pObj := range pNtk.cis {
+		if fUseAllCis != 0 || Abc_NodeIsTravIdCurrent(pObj) != 0 { // TravId is set by DFS
+			pi := Abc_NtkCreatePi(pNtkNew)
+			setCopy(pObj, pi.Signal())
+			Abc_ObjAssignName(pi, Abc_ObjName(pObj), "")
 		}
 	}
-	for _, o := range order {
-		if o.Kind == ObjectNet {
-			setCopy(o, ntkCopiedEdge(o.fanins[0]))
+	pNodeCoNew := Abc_NtkCreatePo(pNtkNew)
+	Abc_ObjAssignName(pNodeCoNew, pNodeName, "")
+	for _, pObj := range vNodes {
+		ntkConeCopyNode(pNtk, pNtkNew, pObj)
+	}
+	Abc_ObjAddFanin(pNodeCoNew, getCopy(pNode))
+	if Abc_NtkCheck(pNtkNew) == 0 {
+		fmt.Println("Abc_NtkCreateCone(): Network check has failed.")
+	}
+	return pNtkNew
+}
+
+// Abc_NtkCreateConeArray is abcNtk.c's: the TFI cones of vRoots, one PO per
+// root (named after it).
+func Abc_NtkCreateConeArray(pNtk *Network, vRoots []*Object, fUseAllCis int32) *Network {
+	if Abc_NtkIsLogic(pNtk) == 0 && Abc_NtkIsStrash(pNtk) == 0 {
+		panic("abc: Abc_NtkCreateConeArray needs a logic or strashed network")
+	}
+	pNtkNew := Abc_NtkAlloc(Abc_NtkType_t(pNtk.Type), Abc_NtkFunc_t(pNtk.Function), 1)
+	pNtkNew.Name = pNtk.Name + "_part"
+	if Abc_NtkIsStrash(pNtk) != 0 {
+		setCopy(pNtk.constant, pNtkNew.One())
+	}
+	vNodes := Abc_NtkDfsNodes(pNtk, vRoots, int32(len(vRoots)))
+	for _, pObj := range pNtk.cis {
+		if fUseAllCis != 0 || Abc_NodeIsTravIdCurrent(pObj) != 0 {
+			pi := Abc_NtkCreatePi(pNtkNew)
+			setCopy(pObj, pi.Signal())
+			Abc_ObjAssignName(pi, Abc_ObjName(pObj), "")
+		}
+	}
+	for _, pObj := range vNodes {
+		ntkConeCopyNode(pNtk, pNtkNew, pObj)
+	}
+	for _, pObj := range vRoots {
+		pNodeCoNew := Abc_NtkCreatePo(pNtkNew)
+		if pObj.IsCO() {
+			Abc_ObjAddFanin(pNodeCoNew, ntkCopiedEdge(pObj.fanins[0]))
 		} else {
-			setCopy(o, ntkCopyNode(dst, o))
+			Abc_ObjAddFanin(pNodeCoNew, getCopy(pObj))
 		}
+		Abc_ObjAssignName(pNodeCoNew, Abc_ObjName(pObj), "")
 	}
-	for _, o := range roots {
-		edge := getCopy(o)
-		if o.IsCO() {
-			edge = ntkCopiedEdge(o.fanins[0])
-		}
-		po := dst.NewObject(ObjectPO)
-		po.SetName(o.Name())
-		Abc_ObjAddFanin(po, edge)
+	if Abc_NtkCheck(pNtkNew) == 0 {
+		fmt.Println("Abc_NtkCreateConeArray(): Network check has failed.")
 	}
-	return dst
-}
-func Abc_NtkCreateCone(src *Network, node *Object, name string, all int32) *Network {
-	dst := ntkCopyPart(src, []*Object{node}, nil, all != 0)
-	dst.Name = src.Name + "_" + name
-	dst.kindOrder[ObjectPO][0].SetName(name)
-	return dst
-}
-func Abc_NtkCreateConeArray(src *Network, roots []*Object, all int32) *Network {
-	dst := ntkCopyPart(src, roots, nil, all != 0)
-	dst.Name = src.Name + "_part"
-	return dst
+	return pNtkNew
 }
 func Abc_NtkAppendToCone(dst, src *Network, roots []*Object) {
 	if Abc_NtkIsStrash(dst) == 0 || Abc_NtkIsStrash(src) == 0 {
@@ -131,15 +147,55 @@ func Abc_NtkAppendToCone(dst, src *Network, roots []*Object) {
 		setCopy(o, ntkCopyNode(dst, o))
 	}
 }
-func Abc_NtkCreateMffc(src *Network, node *Object, name string) *Network {
-	var cone, support []*Object
-	Abc_NodeDeref_rec(node)
-	Abc_NodeMffcConeSupp(node, &cone, &support)
-	Abc_NodeRef_rec(node)
-	dst := ntkCopyPart(src, []*Object{node}, support, true)
-	dst.Name = src.Name + "_" + name
-	dst.kindOrder[ObjectPO][0].SetName(name)
-	return dst
+
+// Abc_NtkCreateMffc is abcNtk.c's: the MFFC of node as a network whose PIs
+// are its support, named after the leaves in the original network.
+func Abc_NtkCreateMffc(pNtk *Network, pNode *Object, pNodeName string) *Network {
+	if Abc_NtkIsLogic(pNtk) == 0 && Abc_NtkIsStrash(pNtk) == 0 {
+		panic("abc: Abc_NtkCreateMffc needs a logic or strashed network")
+	}
+	if Abc_ObjIsNode(pNode) == 0 {
+		panic("abc: Abc_NtkCreateMffc needs a node")
+	}
+	// start the network
+	pNtkNew := Abc_NtkAlloc(Abc_NtkType_t(pNtk.Type), Abc_NtkFunc_t(pNtk.Function), 1)
+	pNtkNew.Name = pNtk.Name + "_" + pNodeName
+	// establish connection between the constant nodes
+	if Abc_NtkIsStrash(pNtk) != 0 {
+		setCopy(pNtk.constant, pNtkNew.One())
+	}
+	// collect the nodes in MFFC
+	var vCone, vSupp []*Object
+	Abc_NodeDeref_rec(pNode)
+	Abc_NodeMffcConeSupp(pNode, &vCone, &vSupp)
+	Abc_NodeRef_rec(pNode)
+	// create the PIs
+	for _, pObj := range vSupp {
+		pi := Abc_NtkCreatePi(pNtkNew)
+		setCopy(pObj, pi.Signal())
+		Abc_ObjAssignName(pi, Abc_ObjName(pObj), "")
+	}
+	// create the PO
+	pNodeCoNew := Abc_NtkCreatePo(pNtkNew)
+	Abc_ObjAssignName(pNodeCoNew, pNodeName, "")
+	// copy the nodes
+	for _, pObj := range vCone {
+		if Abc_NtkIsStrash(pNtk) != 0 {
+			m := pNtkNew.FunctionManager.(*Abc_Aig_t)
+			setCopy(pObj, m.AndEdges(ntkCopiedEdge(pObj.fanins[0]), ntkCopiedEdge(pObj.fanins[1])))
+		} else {
+			Abc_NtkDupObj(pNtkNew, pObj, 0)
+			for _, e := range pObj.fanins {
+				Abc_ObjAddFanin(getCopy(pObj).Object, getCopy(e.Object).Object)
+			}
+		}
+	}
+	// connect the topmost node
+	Abc_ObjAddFanin(pNodeCoNew, getCopy(pNode))
+	if Abc_NtkCheck(pNtkNew) == 0 {
+		fmt.Println("Abc_NtkCreateMffc(): Network check has failed.")
+	}
+	return pNtkNew
 }
 func ntkStrashNode(dst *Network, o *Object) Edge {
 	if Abc_NtkHasAig(o.network) != 0 {
@@ -214,14 +270,27 @@ func Abc_NtkCreateTarget(src *Network, roots []*Object, values []int32) *Network
 	Abc_ObjAddFanin(po, result)
 	return dst
 }
-func Abc_NtkCreateFromNode(src *Network, node *Object) *Network {
-	support := make([]*Object, len(node.fanins))
-	for i, e := range node.fanins {
-		support[i] = e.Object
+
+// Abc_NtkCreateFromNode is abcNtk.c's: one node with a PI per fanin.
+func Abc_NtkCreateFromNode(pNtk *Network, pNode *Object) *Network {
+	pNtkNew := Abc_NtkAlloc(Abc_NtkType_t(pNtk.Type), Abc_NtkFunc_t(pNtk.Function), 1)
+	pNtkNew.Name = Abc_ObjName(pNode)
+	for _, e := range pNode.fanins {
+		pi := Abc_NtkCreatePi(pNtkNew)
+		setCopy(e.Object, pi.Signal())
+		Abc_ObjAssignName(pi, Abc_ObjName(e.Object), "")
 	}
-	dst := ntkCopyPart(src, []*Object{node}, support, true)
-	dst.Name = node.Name()
-	return dst
+	Abc_NtkDupObj(pNtkNew, pNode, 0)
+	for _, e := range pNode.fanins {
+		Abc_ObjAddFanin(getCopy(pNode).Object, getCopy(e.Object).Object)
+	}
+	pNodePo := Abc_NtkCreatePo(pNtkNew)
+	Abc_ObjAddFanin(pNodePo, getCopy(pNode))
+	Abc_ObjAssignName(pNodePo, Abc_ObjName(pNode), "")
+	if Abc_NtkCheck(pNtkNew) == 0 {
+		fmt.Println("Abc_NtkCreateFromNode(): Network check has failed.")
+	}
+	return pNtkNew
 }
 func Abc_NtkCreateWithNode(sop string) *Network {
 	n := Abc_NtkCreateFromSops("ex", []string{sop})
@@ -468,6 +537,9 @@ func Abc_NtkMakeOnePo(src *Network, output, count int32) *Network {
 		return nil
 	}
 	dst := Abc_NtkDup(src)
+	if Abc_NtkPoNum(dst) == 1 {
+		return dst
+	}
 	if count < 1 {
 		count = 1
 	}
@@ -477,8 +549,15 @@ func Abc_NtkMakeOnePo(src *Network, output, count int32) *Network {
 		}
 	}
 	Abc_NtkOrderCisCos(dst)
+	// clean the network
 	if Abc_NtkIsStrash(dst) != 0 {
 		Abc_AigCleanup(dst.FunctionManager.(*Abc_Aig_t))
+		fmt.Println("Run sequential cleanup (\"scl\") to get rid of dangling logic.")
+	} else {
+		fmt.Println("Run sequential cleanup (\"st; scl\") to get rid of dangling logic.")
+	}
+	if Abc_NtkCheck(dst) == 0 {
+		fmt.Println("Abc_NtkMakeComb(): Network check has failed.")
 	}
 	return dst
 }
