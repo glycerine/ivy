@@ -55,7 +55,17 @@ func TestBmCofactorSubstitutesFixedAndRetainsMatchedInputs(t *testing.T) {
 	inputs := Vec_IntAlloc(1)
 	Vec_IntPush(inputs, 1)
 	defer Vec_IntFree(inputs)
-	cofactor := computeCofactor(n, nil, []int32{1, 0}, inputs)
+	// refineBySAT's level buckets of the AND nodes
+	nodesInLevel := make([]*Vec_Ptr_t, Abc_AigLevel(n)+1)
+	for i := range nodesInLevel {
+		nodesInLevel[i] = Vec_PtrAlloc(20)
+	}
+	for i := int32(0); i < Abc_NtkObjNumMax(n); i++ {
+		if obj := Abc_NtkObj(n, i); obj != nil && baseabc.Abc_AigNodeIsAnd(obj) != 0 {
+			Vec_PtrPush(nodesInLevel[baseabc.Abc_ObjLevel(obj)], obj)
+		}
+	}
+	cofactor := computeCofactor(n, nodesInLevel, []int32{1, 0}, inputs)
 	defer baseabc.Abc_NtkDelete(cofactor)
 	result, err := baseabc.Abc_NtkStrashToGia(cofactor).Evaluate([]bool{false})
 	if err != nil {
