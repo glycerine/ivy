@@ -1287,3 +1287,25 @@ and states how the Go port was verified.
 - **Test:** `abcgo/base/abci/mapped_commands_native_test.go`
   (`TestPrintConeNeedsAigLikeNative`); red before.
 - **Go port:** panicked ("abc: expected strashed network"); same message now.
+
+## 62. `phase_map` and `mfs3` crash with a library lacking constants or a buffer
+
+- **Files:** `src/opt/sfm/sfmArea.c` (`Abc_NtkChangePerform`),
+  `src/opt/sfm/sfmDec.c` (`Abc_NtkPerformMfs3`).
+- **Found:** 2026-11-27, crash sweep on a network mapped with
+  `map/amap/test_vectors/amap_mux.genlib` (AND2, INV, XOR2, MUX2).
+- **Bug:** `Mio_CollectRootsNew2` reports "Error: Cannot find constant 0
+  gate in the library." and returns NULL, but `Abc_NtkChangePerform` used the
+  result (`pCells[3]`); `Sfm_DecStart` read `Mio_GateReadValue` of the
+  missing constant and buffer gates. Both segfaulted.
+- **Fix:** `phase_map` returns after the message; `mfs3` checks the four
+  gates first and prints the same messages.
+- **Test:** `abcgo/base/abci/mapped_commands_native_test.go`
+  (`TestLibraryWithoutConstantsLikeNative`); red before (native segfault).
+- **Go port:** `Abc_NtkAlloc` left a mapped network's library unset and the
+  copy helpers took the source network's manager, so a network mapped from
+  an AIG held an AIG manager: `phase_map` reported its own error and `mfs3`
+  silently did nothing after every `map`. Mapped networks now take the
+  current genlib library (`Abc_FrameReadLibGen`), as in C, and
+  `Mio_CollectRootsNew`/`Mio_CollectRootsNew2` print C's messages. (mfs3 now
+  runs; its SFM engine is not yet a line-by-line port.)

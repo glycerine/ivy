@@ -335,13 +335,18 @@ void Abc_NtkChangePerform( Abc_Ntk_t * pNtk, int fVerbose )
     abctime clk = Abc_Clock();
     int i, fNeedInv, nCells, Gain, GainAll = 0, Count = 0, CountInv = 0;
     Mio_Cell2_t * pCells = Mio_CollectRootsNewDefault2( 6, &nCells, 0 );
-    Vec_Int_t * vInfo = Abc_NtkPrecomputeCellPairs( pCells, nCells );
-    Vec_Int_t * vFirst = Abc_NtkPrecomputeFirsts( pCells, nCells );
-
-    Vec_Ptr_t * vFanout = Vec_PtrAlloc( 100 );
-    Vec_Ptr_t * vFanout2 = Vec_PtrAlloc( 100 );
-    Vec_Int_t * vTemp = Vec_IntAlloc( 100 );
+    Vec_Int_t * vInfo, * vFirst;
+    Vec_Ptr_t * vFanout, * vFanout2;
+    Vec_Int_t * vTemp;
     Abc_Obj_t * pObj;
+    if ( pCells == NULL ) // a constant, buffer or inverter is missing (reported)
+        return;
+    vInfo = Abc_NtkPrecomputeCellPairs( pCells, nCells );
+    vFirst = Abc_NtkPrecomputeFirsts( pCells, nCells );
+
+    vFanout = Vec_PtrAlloc( 100 );
+    vFanout2 = Vec_PtrAlloc( 100 );
+    vTemp = Vec_IntAlloc( 100 );
     Abc_NtkForEachNode( pNtk, pObj, i )
     {
         if ( Abc_ObjFaninNum(pObj) < 2 && !Abc_NodeIsInv(pObj) )

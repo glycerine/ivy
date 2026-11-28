@@ -3,6 +3,10 @@ package abci
 import (
 	"strings"
 	"testing"
+
+	base_main "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/map/mapper"
+	"github.com/glycerine/abcgo/map/mio"
 )
 
 // A crash sweep of every command on a mapped network ("read mul8; strash;
@@ -88,5 +92,25 @@ func TestPrintConeNeedsAigLikeNative(t *testing.T) {
 func TestAcbCommandsOnSequentialNetworkLikeNative(t *testing.T) {
 	for _, cmd := range []string{"logicpush", "mfse"} {
 		checkMappedSeqLikeNative(t, cmd, "")
+	}
+}
+
+// C bug 62: with a library that has no constant or buffer gates
+// (amap_mux.genlib: AND2 INV XOR2 MUX2), phase_map ignored the NULL from
+// Mio_CollectRootsNew2 (which reports "Error: Cannot find constant 0 gate in
+// the library.") and read pCells[3]; mfs3 read the missing gates in
+// Sfm_DecStart. Both segfaulted. They now stop after the message. The port
+// ran mfs3 silently and printed its own phase_map error.
+func TestLibraryWithoutConstantsLikeNative(t *testing.T) {
+	for _, cmd := range []string{"phase_map", "mfs3"} {
+		script := "read_genlib ../../map/amap/test_vectors/amap_mux.genlib; read test_vectors/bench/mul8.aig; strash; map; " + cmd + "; print_stats"
+		native := runNativeABC(t, script)
+		out, _ := runScriptStatusWith(t, script, func(f *base_main.Frame) { mapper.Map_Init(f); mio.Mio_Init(f) })
+		if !strings.Contains(native, "Cannot find constant 0 gate in the library") {
+			t.Errorf("%s: native does not report the missing gate:\n%s", cmd, native)
+		}
+		if printSymmNormalize(native) != printSymmNormalize(out) {
+			t.Errorf("%s: output differs\nnative:\n%s\nport:\n%s", cmd, native, out)
+		}
 	}
 }

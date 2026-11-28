@@ -2094,7 +2094,18 @@ p->timeTime += Abc_Clock() - clk;
 }
 void Abc_NtkPerformMfs3( Abc_Ntk_t * pNtk, Sfm_Par_t * pPars )
 {
-    Sfm_Dec_t * p = Sfm_DecStart( pPars, (Mio_Library_t *)pNtk->pManFunc, pNtk );
+    Mio_Library_t * pLib = (Mio_Library_t *)pNtk->pManFunc;
+    Sfm_Dec_t * p;
+    // Sfm_DecStart reads these gates (same messages as Mio_CollectRootsNew2)
+    if ( Mio_LibraryReadConst0(pLib) == NULL )
+        { printf( "Error: Cannot find constant 0 gate in the library.\n" ); return; }
+    if ( Mio_LibraryReadConst1(pLib) == NULL )
+        { printf( "Error: Cannot find constant 1 gate in the library.\n" ); return; }
+    if ( Mio_LibraryReadBuf(pLib) == NULL )
+        { printf( "Error: Cannot find buffer gate in the library.\n" );     return; }
+    if ( Mio_LibraryReadInv(pLib) == NULL )
+        { printf( "Error: Cannot find inverter gate in the library.\n" );   return; }
+    p = Sfm_DecStart( pPars, pLib, pNtk );
     if ( pPars->fVerbose )
     {
         printf( "Remapping parameters: " );

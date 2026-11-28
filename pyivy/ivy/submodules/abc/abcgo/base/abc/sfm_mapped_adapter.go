@@ -168,6 +168,17 @@ func Abc_NtkPerformMfs3(n *Network, pars *sfm.Sfm_Par_t) (int, error) {
 	if !ok || library == nil {
 		return 0, fmt.Errorf("sfm: mapped network has no gate library")
 	}
+	// Sfm_DecStart reads these gates (C bug 62: it crashed without them)
+	for _, g := range []struct {
+		gate *mio.Mio_Gate_t
+		what string
+	}{{mio.Mio_LibraryReadConst0(library), "constant 0 gate"}, {mio.Mio_LibraryReadConst1(library), "constant 1 gate"},
+		{mio.Mio_LibraryReadBuf(library), "buffer gate"}, {mio.Mio_LibraryReadInv(library), "inverter gate"}} {
+		if g.gate == nil {
+			fmt.Printf("Error: Cannot find %s in the library.\n", g.what)
+			return 0, nil
+		}
+	}
 	p, objects, err := Abc_NtkExtractSfm(n)
 	if err != nil {
 		return 0, err

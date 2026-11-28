@@ -13,8 +13,8 @@ func abcPhaseMap(n *Abc_Ntk_t, verbose int32) error {
 		return fmt.Errorf("phase_map: missing cell library")
 	}
 	cells := mio.Mio_CollectRootsNew2(library, 6, nil, 0)
-	if len(cells) < 4 {
-		return fmt.Errorf("phase_map: library lacks constants, buffer or inverter")
+	if cells == nil { // a constant, buffer or inverter is missing (reported); C bug 62
+		return nil
 	}
 	gates := make([]*sfm.Gate, len(cells))
 	byCell := make(map[*mio.Mio_Gate_t]*sfm.Gate, len(cells))

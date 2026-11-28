@@ -437,8 +437,10 @@ func Mio_CollectRootsNew(lib *Mio_Library_t, n int32, count *int32, verbose int3
 			Mio_CollectCopy(&cells[index], g)
 		}
 	}
-	for _, c := range cells[:4] {
-		if c.pName == "" {
+	// mioUtils.c reports the first missing basic gate
+	for i, what := range []string{"constant 0 gate", "constant 1 gate", "buffer gate", "inverter gate"} {
+		if cells[i].pName == "" {
+			fmt.Printf("Error: Cannot find %s in the library.\n", what)
 			return nil
 		}
 	}
@@ -479,8 +481,10 @@ func Mio_CollectRootsNew2(lib *Mio_Library_t, n int32, count *int32, verbose int
 			cells[index] = candidate
 		}
 	}
-	for _, c := range cells[:4] {
-		if c.pName == "" {
+	// mioUtils.c reports the first missing basic gate
+	for i, what := range []string{"constant 0 gate", "constant 1 gate", "buffer gate", "inverter gate"} {
+		if cells[i].pName == "" {
+			fmt.Printf("Error: Cannot find %s in the library.\n", what)
 			return nil
 		}
 	}

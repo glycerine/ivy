@@ -3,6 +3,7 @@ package abc
 import (
 	"fmt"
 	"github.com/glycerine/abcgo/aig/hop"
+	abcmain "github.com/glycerine/abcgo/base/main"
 	"github.com/glycerine/abcgo/bdd/cudd/core"
 	"github.com/glycerine/abcgo/map/mio"
 	"github.com/glycerine/abcgo/map/scl"
@@ -24,7 +25,10 @@ func Abc_NtkAlloc(kind Abc_NtkType_t, function Abc_NtkFunc_t, useMemory int32) *
 		n.FunctionManager = core.NewBDDManager(20)
 	case function == ABC_FUNC_AIG:
 		n.FunctionManager = hop.Hop_ManStart()
-	case function == ABC_FUNC_MAP || function == ABC_FUNC_BLACKBOX || function == ABC_FUNC_NONE: // libraries are supplied by the caller
+	case function == ABC_FUNC_MAP:
+		// abcNtk.c: a mapped network uses the current genlib library
+		n.FunctionManager = abcmain.Abc_FrameReadLibGen()
+	case function == ABC_FUNC_BLACKBOX || function == ABC_FUNC_NONE:
 	default:
 		panic("abc: unsupported network function")
 	}
@@ -52,7 +56,9 @@ func ntkCopyMetadata(dst, src *Network) {
 func ntkNewLike(src *Network, kind Abc_NtkType_t, function Abc_NtkFunc_t) *Network {
 	n := Abc_NtkAlloc(kind, function, 1)
 	ntkCopyMetadata(n, src)
-	if function == ABC_FUNC_MAP {
+	// a copy of a mapped network keeps its library; a network newly mapped
+	// from another kind takes the current one (Abc_NtkAlloc), as in ABC
+	if function == ABC_FUNC_MAP && src.Function == uint8(ABC_FUNC_MAP) {
 		n.FunctionManager = src.FunctionManager
 	}
 	return n
@@ -62,7 +68,7 @@ func ntkNewLike(src *Network, kind Abc_NtkType_t, function Abc_NtkFunc_t) *Netwo
 // immutable mapping library is the only function-manager state borrowed here.
 func ntkFreshLike(src *Network, kind Abc_NtkType_t, function Abc_NtkFunc_t) *Network {
 	dst := Abc_NtkAlloc(kind, function, 1)
-	if function == ABC_FUNC_MAP {
+	if function == ABC_FUNC_MAP && src.Function == uint8(ABC_FUNC_MAP) {
 		dst.FunctionManager = src.FunctionManager
 	}
 	return dst
