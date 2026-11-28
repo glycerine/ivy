@@ -26,6 +26,15 @@ func blifPortNet(port *abc.Object, input bool) *abc.Object {
 	}
 	return nil
 }
+
+// blifCName prints a network without a name (pName == NULL, e.g. from
+// Abc_NtkFromAigPhase) as glibc prints a NULL %s.
+func blifCName(name string) string {
+	if name == "" {
+		return "(null)"
+	}
+	return name
+}
 func blifObjectName(o *abc.Object) string {
 	if name := o.Name(); name != "" {
 		return name
@@ -52,7 +61,7 @@ func writeBLIFModel(w stdio.Writer, n *abc.Network, mv bool, writeLatches bool) 
 // writeBLIFHead writes the model, I/O and latch lines; done reports a
 // black box, which has nothing more.
 func writeBLIFHead(out *strings.Builder, n *abc.Network, mv bool, writeLatches bool) (done bool, err error) {
-	fmt.Fprintln(out, ".model", n.Name)
+	fmt.Fprintln(out, ".model", blifCName(n.Name))
 	for _, kind := range []abc.ObjectKind{abc.ObjectPI, abc.ObjectPO} {
 		directive := ".inputs"
 		if kind == abc.ObjectPO {
@@ -236,7 +245,7 @@ func WriteBLIFFile(n *abc.Network, filename string, multiValued, writeLatches bo
 		return err
 	}
 	// Io_WriteBlif starts every file with this comment.
-	err = writeText(f, fmt.Sprintf("# Benchmark \"%s\" written by ABC on %s\n", n.Name, extra.Extra_TimeStamp()))
+	err = writeText(f, fmt.Sprintf("# Benchmark \"%s\" written by ABC on %s\n", blifCName(n.Name), extra.Extra_TimeStamp()))
 	if err == nil {
 		err = WriteBLIF(f, n, multiValued, writeLatches)
 	}

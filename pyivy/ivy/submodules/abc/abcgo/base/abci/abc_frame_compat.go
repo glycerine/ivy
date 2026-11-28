@@ -1,12 +1,8 @@
 package abci
 
 import (
-	"fmt"
-	"strings"
-
 	aigpkg "github.com/glycerine/abcgo/aig/aig"
 	giapkg "github.com/glycerine/abcgo/aig/gia"
-	baseabc "github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/base/cmd"
 	abcmain "github.com/glycerine/abcgo/base/main"
 	extrapkg "github.com/glycerine/abcgo/misc/extra"
@@ -34,104 +30,27 @@ func Abc_FrameReplaceCurrentNetwork(frame *Abc_Frame_t, network *Abc_Ntk_t) {
 	abcmain.Abc_FrameReplaceCurrentNetwork(frame, network)
 }
 
-func abcRunLiveCommand(frame *Abc_Frame_t, argc int32, argv []string, run func(*livepkg.Frame, int32, []string) int32) int32 {
-	liveFrame := &livepkg.Frame{}
-	if frame != nil {
-		liveFrame.In, liveFrame.Out, liveFrame.Err = frame.In, frame.Out, frame.Err
-	}
-	if ntk := abcFrameNtk(frame); ntk != nil {
-		graph := Abc_NtkToDar(ntk, 0, 1)
-		if graph != nil {
-			liveFrame.Network = &livepkg.Network{
-				Graph:       graph,
-				InputNames:  baseabc.Abc_NtkCollectCioNames(ntk, 0),
-				OutputNames: baseabc.Abc_NtkCollectCioNames(ntk, 1),
-			}
-		}
-	}
-	oldGraph := (*aigpkg.Graph)(nil)
-	if liveFrame.Network != nil {
-		oldGraph = liveFrame.Network.Graph
-	}
-	status := run(liveFrame, argc, argv)
-	if liveFrame.Network != nil && liveFrame.Network.Graph != nil && liveFrame.Network.Graph != oldGraph {
-		newNtk := Abc_NtkFromAigPhase(liveFrame.Network.Graph)
-		if newNtk != nil {
-			for i, name := range liveFrame.Network.InputNames {
-				if int32(i) >= baseabc.Abc_NtkCiNum(newNtk) {
-					break
-				}
-				baseabc.Abc_ObjAssignName(baseabc.Abc_NtkCi(newNtk, int32(i)), name, "")
-			}
-			for i, name := range liveFrame.Network.OutputNames {
-				if int32(i) >= baseabc.Abc_NtkCoNum(newNtk) {
-					break
-				}
-				baseabc.Abc_ObjAssignName(baseabc.Abc_NtkCo(newNtk, int32(i)), name, "")
-			}
-			Abc_FrameReplaceCurrentNetwork(frame, newNtk)
-		}
-	}
-	if oldGraph != nil {
-		aigpkg.Aig_ManStop(oldGraph)
-	}
-	if liveFrame.Network != nil && liveFrame.Network.Graph != nil && liveFrame.Network.Graph != oldGraph {
-		aigpkg.Aig_ManStop(liveFrame.Network.Graph)
-	}
-	return status
+// The liveness commands are the ports of src/proof/live (proof/live),
+// which needs these two abci conversions.
+func init() {
+	livepkg.Abc_NtkFromAigPhase = Abc_NtkFromAigPhase
+	livepkg.Abc_NtkStrash = Abc_NtkStrash
 }
 
 func Abc_CommandAbcLivenessToSafety(frame *Abc_Frame_t, argc int32, argv []string) int32 {
-	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandAbcLivenessToSafety)
+	return livepkg.Abc_CommandAbcLivenessToSafety(frame, argc, argv)
 }
 func Abc_CommandAbcLivenessToSafetySim(frame *Abc_Frame_t, argc int32, argv []string) int32 {
-	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandAbcLivenessToSafetySim)
+	return livepkg.Abc_CommandAbcLivenessToSafetySim(frame, argc, argv)
 }
 func Abc_CommandAbcLivenessToSafetyWithLTL(frame *Abc_Frame_t, argc int32, argv []string) int32 {
-	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandAbcLivenessToSafetyWithLTL)
+	return livepkg.Abc_CommandAbcLivenessToSafetyWithLTL(frame, argc, argv)
 }
 func Abc_CommandCS_kLiveness(frame *Abc_Frame_t, argc int32, argv []string) int32 {
-	// as kliveness.c: after the options, note a non-strashed network, then
-	// require a csLiveTarget_ output (C bug 47: collectCSSignals asserted
-	// one and the release build crashed without it)
-	if Abc_FrameReadNtk(frame) == nil && kcsOptionsValid(argv) { // C bug 52
-		Abc_Print(-1, "Empty network.\n")
-		return 1
-	}
-	if ntk := Abc_FrameReadNtk(frame); ntk != nil && kcsOptionsValid(argv) {
-		if Abc_NtkIsStrash(ntk) == 0 {
-			fmt.Printf("The input network was not strashed, strashing....\n")
-		}
-		target := false
-		for i := int32(0); i < Abc_NtkPoNum(ntk); i++ {
-			if strings.Contains(Abc_ObjName(Abc_NtkPo(ntk, i)), "csLiveTarget_") {
-				target = true
-			}
-		}
-		if !target {
-			fmt.Printf("The network has no liveness target output (named \"csLiveTarget_...\").\n")
-			return 1
-		}
-	}
-	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandCS_kLiveness)
-}
-
-// kcsOptionsValid reports whether argv holds only kcs's -c -m -C -g flags
-// (anything else, -h included, goes to the usage path).
-func kcsOptionsValid(argv []string) bool {
-	for _, arg := range argv[1:] {
-		if len(arg) < 2 || arg[0] != '-' || strings.Trim(arg[1:], "cmCg") != "" {
-			return false
-		}
-	}
-	return true
+	return livepkg.Abc_CommandCS_kLiveness(frame, argc, argv)
 }
 func Abc_CommandNChooseK(frame *Abc_Frame_t, argc int32, argv []string) int32 {
-	if Abc_FrameReadNtk(frame) == nil && len(argv) <= 1 { // C bug 52
-		Abc_Print(-1, "Empty network.\n")
-		return 1
-	}
-	return abcRunLiveCommand(frame, argc, argv, livepkg.Abc_CommandNChooseK)
+	return livepkg.Abc_CommandNChooseK(frame, argc, argv)
 }
 
 func Cmd_CommandAdd(frame *Abc_Frame_t, group, name string, handler cmd.Cmd_CommandFuncType, changes int32) {

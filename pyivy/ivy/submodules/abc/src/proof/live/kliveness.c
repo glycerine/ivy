@@ -45,6 +45,9 @@ extern Aig_Man_t *generateWorkingAig( Aig_Man_t *pAig, Abc_Ntk_t *pNtk, int *pIn
 
 //function defined in arenaViolation.c
 extern Aig_Man_t *generateWorkingAigWithDSC( Aig_Man_t *pAig, Abc_Ntk_t *pNtk, int *pIndex0Live, Vec_Ptr_t *vMasterBarriers );
+extern int collectWindowBeginSignalWithDSC( Abc_Ntk_t *pNtk, Aig_Man_t *pAig );
+extern int collectWithinWindowSignalWithDSC( Abc_Ntk_t *pNtk, Aig_Man_t *pAig );
+extern int collectPendingSignalWithDSC( Abc_Ntk_t *pNtk, Aig_Man_t *pAig );
 
 //function defined in disjunctiveMonotone.c
 extern Vec_Ptr_t *findDisjunctiveMonotoneSignals( Abc_Ntk_t *pNtk );
@@ -624,6 +627,26 @@ int Abc_CommandCS_kLiveness( Abc_Frame_t * pAbc, int argc, char ** argv )
         }
     }
 
+    // -c, -C and -g need a "csSafetyInvar_" output (flipConePdr reads it)
+    if ( (directive == kCS_WITH_SAFETY_INVARIANTS || directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS) && collectSafetyInvariantPOIndex(pNtkTemp) == -1 )
+    {
+        printf( "The network has no safety invariant output (named \"csSafetyInvar_...\").\n" );
+        Aig_ManStop( pAig );
+        if ( pNtkTemp != pNtk )
+            Abc_NtkDelete( pNtkTemp );
+        return 1;
+    }
+    // -C and -g need the window and pending outputs (arenaViolation.c reads them)
+    if ( (directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS) && 
+         (collectWindowBeginSignalWithDSC( pNtk, pAig ) == -1 || collectWithinWindowSignalWithDSC( pNtk, pAig ) == -1 || collectPendingSignalWithDSC( pNtk, pAig ) == -1) )
+    {
+        printf( "The network has no window or pending outputs (named \"windowBegins_...\", \"withinWindow_...\" and \"pendingSignal...\").\n" );
+        Aig_ManStop( pAig );
+        if ( pNtkTemp != pNtk )
+            Abc_NtkDelete( pNtkTemp );
+        return 1;
+    }
+
     if( directive == kCS_WITH_SAFETY_INVARIANTS )
     {
         safetyInvariantPO = collectSafetyInvariantPOIndex(pNtkTemp);            
@@ -668,6 +691,17 @@ int Abc_CommandCS_kLiveness( Abc_Frame_t * pAbc, int argc, char ** argv )
 
         assert( vMasterBarrierDisjuncts != NULL );
         assert( Vec_PtrSize(vMasterBarrierDisjuncts) > 0 );
+    }
+
+    // -C and -g need at least one barrier (createArenaLO returns NULL without one)
+    if ( (directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS) && 
+         (vMasterBarrierDisjuncts == NULL || Vec_PtrSize(vMasterBarrierDisjuncts) == 0) )
+    {
+        printf( "No barriers (monotone disjunctions of the hint_ or csLevel1Stabil_ outputs) were found.\n" );
+        Aig_ManStop( pAig );
+        if ( pNtkTemp != pNtk )
+            Abc_NtkDelete( pNtkTemp );
+        return 1;
     }
 
     if(directive == kCS_WITH_SAFETY_AND_DCS_INVARIANTS || directive == kCS_WITH_SAFETY_AND_USER_GIVEN_DCS_INVARIANTS)
@@ -823,6 +857,15 @@ int Abc_CommandNChooseK( Abc_Frame_t * pAbc, int argc, char ** argv )
         return 0;
     }
     printf("\n");
+
+    // at most all registers can be chosen (countCombination did not return
+    // and Aig_ManLo read past the registers)
+    if ( parameterizedCombK > Aig_ManRegNum(pAig) )
+    {
+        printf( "Cannot choose %d out of %d registers.\n", parameterizedCombK, Aig_ManRegNum(pAig) );
+        Aig_ManStop( pAig );
+        return 1;
+    }
 
     pAigCombStabil = generateGeneralDisjunctiveTester( pNtk, pAig, parameterizedCombK );
     Aig_ManPrintStats(pAigCombStabil);

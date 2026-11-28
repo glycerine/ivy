@@ -1025,8 +1025,9 @@ and states how the Go port was verified.
 - **Test:** `abcgo/base/abci/kcs_native_test.go`
   (`TestKcsWithoutTargetLikeNative`; red before: segmentation fault).
 - **Go port:** printed its own error ("live: csLiveTarget_ output missing")
-  and skipped the check for `-m`; `Abc_CommandCS_kLiveness` (base/abci) now
-  prints C's note for non-strashed input and C's message, for every flag.
+  and skipped the check for `-m`; `Abc_CommandCS_kLiveness` (proof/live, a
+  port of kliveness.c since #56) prints C's note for non-strashed input and
+  C's message, for every flag.
 
 ## 48. `&acec`, `&verify` and `&test` crash when no AIG is loaded
 
@@ -1138,9 +1139,9 @@ and states how the Go port was verified.
 - **Test:** `abcgo/base/abci/mul4_crash_native_test.go`
   (`TestMul4CrashesLikeNative`: &splitprove and &mlgen equal native, l2ssim
   native no longer crashes); red before (native aborts/segfault).
-- **Go port:** no use after free or fixed buffers; &splitprove and &mlgen
-  print the same as C. Go's `l2ssim` (proof/live) is not yet a faithful port
-  (prints nothing here).
+- **Go port:** no use after free or fixed buffers; &splitprove, &mlgen and
+  (since proof/live became a line-by-line port, #55) l2ssim print the same
+  as C.
 
 ## 54. `show` aborts on a design path longer than 200 bytes
 
@@ -1160,3 +1161,58 @@ and states how the Go port was verified.
 - **Test:** `abcgo/base/abci/show_native_test.go`
   (`TestShowLongPathLikeNative`); red before (native abort).
 - **Go port:** no fixed buffers; output equal to the fixed C.
+
+## 55. `l2ssim -1` without registers, `l3s` on a network not read by `read`
+
+- **Files:** `src/proof/live/liveness_sim.c`
+  (`LivenessToSafetyTransformationOneStepLoopSim`), `src/proof/live/liveness.c`
+  (`LivenessToSafetyTransformationWithLTL`).
+- **Found:** 2026-11-27, porting src/proof/live: `read mul4.aig; strash;
+  l2ssim -1` and `read_aiger mul4.aig; l3s` (also `l3s -s`) segfaulted.
+- **Bugs:** the one-step `l2ssim` ANDs the register-equality accumulator, which
+  stays NULL without registers (the other `l2ssim` mode, #53); `l3s` takes
+  `Vec_PtrSize` of the AST array, which is NULL when the frame has no LTL
+  database (only `read` creates one).
+- **Fix:** start from constant 1 when no register was folded in; a missing
+  database is handled as an empty one (C then prints "Currently aborting,
+  ..." and exits, as for a network without formulas).
+- **Test:** `abcgo/base/abci/live_native_test.go`
+  (`TestLivenessToSafetyLikeNative`, `TestLivenessToSafetyLTLLikeNative`);
+  red before (segmentation faults).
+- **Go port:** proof/live is now a line-by-line port; C's `exit(0)` becomes
+  the command status -1 (the script and session end, as with `quit`).
+
+## 56. `kcs -c/-m/-C/-g` crash when outputs they read are missing
+
+- **Files:** `src/proof/live/kliveness.c` (`Abc_CommandCS_kLiveness`),
+  `src/proof/live/disjunctiveMonotone.c` (`findDisjunctiveMonotoneSignals`).
+- **Found:** 2026-11-27, porting src/proof/live, on designs with a
+  `csLiveTarget_` output: `kcs -c`, `-C`, `-g` without `csSafetyInvar_`
+  (or without `windowBegins_`/`withinWindow_`/`pendingSignal` outputs, or
+  without barriers), and `kcs -m`/`-C` when no `hint_` output is monotone,
+  segfaulted.
+- **Bugs:** the indices of the missing outputs (-1) and the missing barrier
+  vector were only `assert`ed and then used (`Aig_ManCo(p, -1)`,
+  `Vec_PtrSize(NULL)`); `findDisjunctiveMonotoneSignals` iterated over and
+  freed the NULL result of `findNewDisjunctiveMonotone`.
+- **Fix:** the command reports "The network has no safety invariant output
+  (named "csSafetyInvar_...").", "The network has no window or pending
+  outputs (...)." or "No barriers (...) were found." and returns 1; a NULL
+  level-one result is an empty one.
+- **Test:** `abcgo/base/abci/live_native_test.go`
+  (`TestKLivenessLikeNative`: kcs_plain, kcs_nomono, kcs_count); red before
+  (segmentation faults).
+- **Go port:** same messages.
+
+## 57. `nck` hangs or crashes when K exceeds the number of registers
+
+- **File:** `src/proof/live/kliveness.c` (`Abc_CommandNChooseK`).
+- **Found:** 2026-11-27, porting src/proof/live: `nck` with input 3 on a
+  2-register design never returned; with input 1 on combinational mul4 it
+  segfaulted.
+- **Bug:** `countCombination(n, k)` only asserts `n >= k` (and does not
+  terminate otherwise); the Knuth loop reads `Aig_ManLo` past the registers.
+- **Fix:** "Cannot choose K out of N registers." and return 1.
+- **Test:** `abcgo/base/abci/live_native_test.go` (`TestNChooseKLikeNative`);
+  red before (timeout, segmentation fault).
+- **Go port:** same message (Go's recursion would overflow the stack).

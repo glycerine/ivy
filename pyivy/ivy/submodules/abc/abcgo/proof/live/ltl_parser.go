@@ -1,10 +1,30 @@
+/**CFile****************************************************************
+
+  FileName    [ltl_parser.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [Liveness property checking.]
+
+  Synopsis    [LTL checker.]
+
+  Author      [Sayak Ray]
+
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - January 1, 2009.]
+
+  Revision    [$Id: ltl_parser.c,v 1.00 2009/01/01 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
 package live
 
 import (
 	"fmt"
+
 	"github.com/glycerine/abcgo/aig/aig"
-	"strings"
-	"sync"
+	abc "github.com/glycerine/abcgo/base/abc"
 )
 
 type tokenType int32
@@ -21,348 +41,492 @@ const (
 	BOOL
 )
 
-type LTLToken = tokenType
+type ltlGrammerTokenType int32
+
+const (
+	OPERAND ltlGrammerTokenType = iota
+	LTL
+	BINOP
+	UOP
+)
+
 type ltlNode struct {
-	Type        tokenType
-	Name        string
-	Object      aig.Edge
-	HasObject   bool
-	Left, Right *ltlNode
+	type_ tokenType
+	name  string
+	pObj  Aig_Obj_t // aigNull for NULL
+	left  *ltlNode
+	right *ltlNode
 }
-type LTLNode = ltlNode
 
-func generateTypedNode(kind tokenType) *ltlNode { return &ltlNode{Type: kind, Object: aig.InvalidEdge} }
-
-// ParseFormula reads the source prefix notation: &,+,! and :G,:F,:X,:U.
-// Unlike the C global cursor, every invocation owns its parsing position.
-func ParseFormula(text string) (*LTLNode, error) { return parseFormula(text, true, true) }
-
-// Source tokenization does not recognize '>' as an operator, and C returns
-// after the first expression rather than rejecting trailing input.
-func parseFormula(text string, implication, strict bool) (*LTLNode, error) {
-	node, _, err := parseFormulaAt(text, 0, implication, strict)
-	return node, err
+func generateTypedNode(new_type tokenType) *ltlNode {
+	return &ltlNode{type_: new_type, pObj: aigNull}
 }
-func parseFormulaAt(text string, start int, implication, strict bool) (*LTLNode, int, error) {
-	position := start
-	var parse func() (*ltlNode, error)
-	skip := func() {
-		for position < len(text) && strings.ContainsRune(" \t\n\r\v\f", rune(text[position])) {
-			position++
-		}
+
+func isNotVarNameSymbol(c byte) bool {
+	return c == ' ' || c == '\t' || c == '\n' || c == ':' || c == 0
+}
+
+// The frame's LTL database (pAbc->vLTLProperties_global; nil is NULL).
+const ltlPropertiesKey = "vLTLProperties_global"
+
+func Abc_FrameReadLTLProperties(pAbc *Abc_Frame_t) []string {
+	v, _ := pAbc.Resource(ltlPropertiesKey).([]string)
+	return v
+}
+
+func Abc_FrameCopyLTLDataBase(pAbc *Abc_Frame_t, pNtk *Abc_Ntk_t) {
+	v := make([]string, 0, len(pNtk.LTLProperties))
+	v = append(v, pNtk.LTLProperties...)
+	pAbc.SetResource(ltlPropertiesKey, v)
+}
+
+// formula[i] with C's terminating NUL (and the byte before the string).
+func charAt(formula string, i int) byte {
+	if i < 0 || i >= len(formula) {
+		return 0
 	}
-	parse = func() (*ltlNode, error) {
-		skip()
-		if position == len(text) {
-			return nil, fmt.Errorf("live: missing operand at byte %d", position)
-		}
-		kind := BOOL
-		c := text[position]
-		position++
-		switch c {
-		case '&':
-			kind = AND
-		case '+':
-			kind = OR
-		case '!':
-			kind = NOT
-		case '>':
-			if implication {
-				kind = IMPLY
-			}
+	return formula[i]
+}
+
+func getVarName(suffixFormula string, startLoc int, endLocation *int) (string, bool) {
+	i := startLoc
+	if isNotVarNameSymbol(charAt(suffixFormula, startLoc)) {
+		return "", false
+	}
+	for !isNotVarNameSymbol(charAt(suffixFormula, i)) {
+		i++
+	}
+	*endLocation = i
+	return suffixFormula[startLoc:i], true
+}
+
+var startOfSuffixString = 0
+
+func isUnexpectedEOS(formula string, index int) bool {
+	if index >= len(formula) {
+		fmt.Printf("\nInvalid LTL formula: unexpected end of string...")
+		return true
+	}
+	return false
+}
+
+func isTemporalOperator(formula string, index int) bool {
+	if !(isUnexpectedEOS(formula, index) || formula[index] == 'G' || formula[index] == 'F' || formula[index] == 'U' || formula[index] == 'X') {
+		fmt.Printf("\nInvalid LTL formula: expecting temporal operator at the position %d....\n", index)
+		return false
+	}
+	return true
+}
+
+// readVar ends readLtlFormula with a variable name starting at i.
+func readVar(formula string, i int) *ltlNode {
+	var rememberEnd int
+	varName, ok := getVarName(formula, i, &rememberEnd)
+	if !ok {
+		fmt.Printf("\nInvalid LTL formula: expecting valid variable name token...aborting")
+		return nil
+	}
+	curr_node := generateTypedNode(BOOL)
+	curr_node.name = varName
+	startOfSuffixString = rememberEnd
+	return curr_node
+}
+
+// readUnary reads the operand of a unary operator at i.
+func readUnary(formula string, i int, kind tokenType) *ltlNode {
+	startOfSuffixString = i + 1
+	temp_node_left := readLtlFormula(formula)
+	if temp_node_left == nil {
+		return nil
+	}
+	curr_node := generateTypedNode(kind)
+	curr_node.left = temp_node_left
+	return curr_node
+}
+
+// readBinary reads the two operands of a binary operator at i.
+func readBinary(formula string, i int, kind tokenType) *ltlNode {
+	startOfSuffixString = i + 1
+	temp_node_left := readLtlFormula(formula)
+	if temp_node_left == nil {
+		return nil
+	}
+	temp_node_right := readLtlFormula(formula)
+	if temp_node_right == nil {
+		return nil
+	}
+	curr_node := generateTypedNode(kind)
+	curr_node.left = temp_node_left
+	curr_node.right = temp_node_right
+	return curr_node
+}
+
+func readLtlFormula(formula string) *ltlNode {
+	i := startOfSuffixString
+
+	formulaLength := len(formula)
+	if isUnexpectedEOS(formula, startOfSuffixString) {
+		fmt.Printf("\nFAULTING POINT: formula = %s\nstartOfSuffixString = %d, formula[%d] = %c\n\n", formula, startOfSuffixString, startOfSuffixString-1, charAt(formula, startOfSuffixString-1))
+		return nil
+	}
+
+	for i < formulaLength {
+		ch := formula[i]
+
+		switch ch {
+		case ' ', '\n', '\r', '\t', '\v', '\f':
+			i++
+			startOfSuffixString = i
 		case ':':
-			if position == len(text) {
-				return nil, fmt.Errorf("live: missing temporal operator")
+			i++
+			if !isTemporalOperator(formula, i) {
+				return nil
 			}
-			switch text[position] {
-			case 'G':
-				kind = GLOBALLY
-			case 'F':
-				kind = EVENTUALLY
-			case 'X':
-				kind = NEXT
-			case 'U':
-				kind = UNTIL
-			default:
-				return nil, fmt.Errorf("live: unknown temporal operator at byte %d", position)
+			startOfSuffixString = i
+		case 'G', 'F', 'X':
+			if charAt(formula, i-1) == ':' { // the letter is a temporal operator
+				kind := GLOBALLY
+				if ch == 'F' {
+					kind = EVENTUALLY
+				} else if ch == 'X' {
+					kind = NEXT
+				}
+				return readUnary(formula, i, kind)
 			}
-			position++
-		}
-		node := generateTypedNode(kind)
-		if kind == BOOL {
-			start := position - 1
-			// getVarName in ltl_parser.c stops at exactly these four
-			// delimiters; CR, vertical tab and form feed inside a name are
-			// retained even though the parser skips them between tokens.
-			for position < len(text) && !strings.ContainsRune(" \t\n:", rune(text[position])) {
-				position++
+			// the letter must be starting a variable name
+			return readVar(formula, i)
+		case 'U':
+			if charAt(formula, i-1) == ':' { // 'U' is a temporal operator
+				return readBinary(formula, i, UNTIL)
 			}
-			node.Name = text[start:position]
-			return node, nil
+			return readVar(formula, i)
+		case '+':
+			return readBinary(formula, i, OR)
+		case '&':
+			return readBinary(formula, i, AND)
+		case '!':
+			return readUnary(formula, i, NOT)
+		default:
+			return readVar(formula, i)
 		}
-		var err error
-		node.Left, err = parse()
-		if err != nil {
-			return nil, err
-		}
-		if kind == AND || kind == OR || kind == IMPLY || kind == UNTIL {
-			node.Right, err = parse()
-			if err != nil {
-				return nil, err
-			}
-		}
-		return node, nil
 	}
-	root, err := parse()
-	if err != nil {
-		return nil, position, err
-	}
-	if strict {
-		skip()
-	}
-	if strict && position != len(text) {
-		return nil, position, fmt.Errorf("live: trailing formula input at byte %d", position)
-	}
-	return root, position, nil
+	return nil
 }
 
-// Source readLtlFormula uses this process-wide cursor; the exported native
-// parser remains reentrant. A lock protects the Go representation from races.
-var sourceParserMu sync.Mutex
-var startOfSuffixString int
+func resetGlobalVar() {
+	startOfSuffixString = 0
+}
 
-func resetGlobalVar() { sourceParserMu.Lock(); startOfSuffixString = 0; sourceParserMu.Unlock() }
-func readLtlFormula(text string) *ltlNode {
-	sourceParserMu.Lock()
-	defer sourceParserMu.Unlock()
-	if startOfSuffixString >= len(text) {
-		return nil
-	}
-	node, end, err := parseFormulaAt(text, startOfSuffixString, false, false)
-	startOfSuffixString = end
-	if err != nil {
-		return nil
-	}
-	return node
+func parseFormulaCreateAST(inputFormula string) *ltlNode {
+	temp := readLtlFormula(inputFormula)
+	resetGlobalVar()
+	return temp
 }
-func parseFormulaCreateAST(text string) *ltlNode {
-	sourceParserMu.Lock()
-	defer sourceParserMu.Unlock()
-	defer func() { startOfSuffixString = 0 }()
-	if startOfSuffixString >= len(text) {
-		return nil
+
+func traverseAbstractSyntaxTree(node *ltlNode) {
+	switch node.type_ {
+	case AND:
+		fmt.Printf("& ")
+		traverseAbstractSyntaxTree(node.left)
+		traverseAbstractSyntaxTree(node.right)
+	case OR:
+		fmt.Printf("+ ")
+		traverseAbstractSyntaxTree(node.left)
+		traverseAbstractSyntaxTree(node.right)
+	case NOT:
+		fmt.Printf("~ ")
+		traverseAbstractSyntaxTree(node.left)
+	case GLOBALLY:
+		fmt.Printf("G ")
+		traverseAbstractSyntaxTree(node.left)
+	case EVENTUALLY:
+		fmt.Printf("F ")
+		traverseAbstractSyntaxTree(node.left)
+	case NEXT:
+		fmt.Printf("X ")
+		traverseAbstractSyntaxTree(node.left)
+	case UNTIL:
+		fmt.Printf("U ")
+		traverseAbstractSyntaxTree(node.left)
+		traverseAbstractSyntaxTree(node.right)
+	case BOOL:
+		fmt.Printf("%s ", node.name)
+	default:
+		fmt.Printf("\nUnsupported token type: Exiting execution\n")
+		exit0()
 	}
-	node, _, err := parseFormulaAt(text, startOfSuffixString, false, false)
-	if err != nil {
-		return nil
-	}
-	return node
 }
-func checkBooleanConstant(name string) int32 {
-	if name == "true" {
+
+func traverseAbstractSyntaxTree_postFix(node *ltlNode) {
+	switch node.type_ {
+	case AND:
+		fmt.Printf("( ")
+		traverseAbstractSyntaxTree_postFix(node.left)
+		fmt.Printf("& ")
+		traverseAbstractSyntaxTree_postFix(node.right)
+		fmt.Printf(") ")
+	case OR:
+		fmt.Printf("( ")
+		traverseAbstractSyntaxTree_postFix(node.left)
+		fmt.Printf("+ ")
+		traverseAbstractSyntaxTree_postFix(node.right)
+		fmt.Printf(") ")
+	case NOT:
+		fmt.Printf("~ ")
+		traverseAbstractSyntaxTree_postFix(node.left)
+	case GLOBALLY:
+		fmt.Printf("G ")
+		traverseAbstractSyntaxTree_postFix(node.left)
+	case EVENTUALLY:
+		fmt.Printf("F ")
+		traverseAbstractSyntaxTree_postFix(node.left)
+	case NEXT:
+		fmt.Printf("X ")
+		traverseAbstractSyntaxTree_postFix(node.left)
+	case UNTIL:
+		fmt.Printf("( ")
+		traverseAbstractSyntaxTree_postFix(node.left)
+		fmt.Printf("U ")
+		traverseAbstractSyntaxTree_postFix(node.right)
+		fmt.Printf(") ")
+	case BOOL:
+		fmt.Printf("%s ", node.name)
+	default:
+		fmt.Printf("\nUnsupported token type: Exiting execution\n")
+		exit0()
+	}
+}
+
+// signalIndex is Vec_PtrFind on vSignal, pushing the signal when absent.
+func signalIndex(vSignal *[]Aig_Obj_t, pObj Aig_Obj_t) int {
+	serialNumSignal := aigObjFind(*vSignal, pObj)
+	if serialNumSignal == -1 {
+		*vSignal = append(*vSignal, pObj)
+		serialNumSignal = aigObjFind(*vSignal, pObj)
+	}
+	return serialNumSignal
+}
+
+// Vec_VecPush
+func vecVecPush(vAigGFMap *[][]*ltlNode, level int, node *ltlNode) {
+	for len(*vAigGFMap) <= level {
+		*vAigGFMap = append(*vAigGFMap, nil)
+	}
+	(*vAigGFMap)[level] = append((*vAigGFMap)[level], node)
+}
+
+func populateAigPointerUnitGF(pAigNew *Aig_Man_t, topASTNode *ltlNode, vSignal *[]Aig_Obj_t, vAigGFMap *[][]*ltlNode) {
+	switch topASTNode.type_ {
+	case AND, OR, IMPLY:
+		populateAigPointerUnitGF(pAigNew, topASTNode.left, vSignal, vAigGFMap)
+		populateAigPointerUnitGF(pAigNew, topASTNode.right, vSignal, vAigGFMap)
+	case NOT:
+		populateAigPointerUnitGF(pAigNew, topASTNode.left, vSignal, vAigGFMap)
+	case GLOBALLY:
+		nextNode := topASTNode.left
+		nextToNextNode := nextNode.left
+		if nextToNextNode.type_ != BOOL {
+			buildLogicFromLTLNode_combinationalOnly(pAigNew, nextToNextNode)
+		}
+		serialNumSignal := signalIndex(vSignal, nextToNextNode.pObj)
+		vecVecPush(vAigGFMap, serialNumSignal, topASTNode)
+	case BOOL:
+	default:
+		fmt.Printf("\nINVALID situation: aborting...\n")
+		exit0()
+	}
+}
+
+func buildLogicFromLTLNode_combinationalOnly(pAigNew *Aig_Man_t, pLtlNode *ltlNode) Aig_Obj_t {
+	if pLtlNode.pObj != aigNull {
+		return pLtlNode.pObj
+	}
+	switch pLtlNode.type_ {
+	case AND:
+		leftAigObj := buildLogicFromLTLNode_combinationalOnly(pAigNew, pLtlNode.left)
+		rightAigObj := buildLogicFromLTLNode_combinationalOnly(pAigNew, pLtlNode.right)
+		pLtlNode.pObj = aig.Aig_And(pAigNew, leftAigObj, rightAigObj)
+		return pLtlNode.pObj
+	case OR:
+		leftAigObj := buildLogicFromLTLNode_combinationalOnly(pAigNew, pLtlNode.left)
+		rightAigObj := buildLogicFromLTLNode_combinationalOnly(pAigNew, pLtlNode.right)
+		pLtlNode.pObj = aig.Aig_Or(pAigNew, leftAigObj, rightAigObj)
+		return pLtlNode.pObj
+	case NOT:
+		leftAigObj := buildLogicFromLTLNode_combinationalOnly(pAigNew, pLtlNode.left)
+		pLtlNode.pObj = aig.Aig_Not(leftAigObj)
+		return pLtlNode.pObj
+	case GLOBALLY, EVENTUALLY, NEXT, UNTIL:
+		fmt.Printf("FORBIDDEN node: ABORTING!!\n")
+		exit0()
+	default:
+		fmt.Printf("\nSerious ERROR: attempting to create AIG node from a temporal node\n")
+		exit0()
+	}
+	return aigNull
+}
+
+func buildLogicFromLTLNode(pAig *Aig_Man_t, pLtlNode *ltlNode) Aig_Obj_t {
+	if pLtlNode.pObj != aigNull {
+		return pLtlNode.pObj
+	}
+	switch pLtlNode.type_ {
+	case AND:
+		leftAigObj := buildLogicFromLTLNode(pAig, pLtlNode.left)
+		rightAigObj := buildLogicFromLTLNode(pAig, pLtlNode.right)
+		pLtlNode.pObj = aig.Aig_And(pAig, leftAigObj, rightAigObj)
+		return pLtlNode.pObj
+	case OR:
+		leftAigObj := buildLogicFromLTLNode(pAig, pLtlNode.left)
+		rightAigObj := buildLogicFromLTLNode(pAig, pLtlNode.right)
+		pLtlNode.pObj = aig.Aig_Or(pAig, leftAigObj, rightAigObj)
+		return pLtlNode.pObj
+	case NOT:
+		leftAigObj := buildLogicFromLTLNode(pAig, pLtlNode.left)
+		pLtlNode.pObj = aig.Aig_Not(leftAigObj)
+		return pLtlNode.pObj
+	case GLOBALLY, EVENTUALLY, NEXT, UNTIL:
+		fmt.Printf("\nAttempting to create circuit with missing AIG pointer in a TEMPORAL node: ABORTING!!\n")
+		exit0()
+	default:
+		fmt.Printf("\nSerious ERROR: attempting to create AIG node from a temporal node\n")
+		exit0()
+	}
+	return aigNull
+}
+
+func isNonTemporalSubformula(topNode *ltlNode) int32 {
+	switch topNode.type_ {
+	case AND, OR, IMPLY:
+		if isNonTemporalSubformula(topNode.left) != 0 && isNonTemporalSubformula(topNode.right) != 0 {
+			return 1
+		}
+		return 0
+	case NOT:
+		return isNonTemporalSubformula(topNode.left)
+	case BOOL:
+		return 1
+	default:
+		return 0
+	}
+}
+
+func isWellFormed(topNode *ltlNode) int32 {
+	switch topNode.type_ {
+	case AND, OR, IMPLY:
+		if isWellFormed(topNode.left) != 0 && isWellFormed(topNode.right) != 0 {
+			return 1
+		}
+		return 0
+	case NOT:
+		return isWellFormed(topNode.left)
+	case BOOL:
+		return 1
+	case GLOBALLY:
+		nextNode := topNode.left
+		if nextNode.type_ != EVENTUALLY {
+			return 0
+		}
+		return isNonTemporalSubformula(nextNode.left)
+	default:
+		return 0
+	}
+}
+
+func checkBooleanConstant(targetName string) int32 {
+	if targetName == "true" {
 		return 1
 	}
-	if name == "false" {
+	if targetName == "false" {
 		return 0
 	}
 	return -1
 }
-func isNonTemporalSubformula(node *ltlNode) int32 {
-	if node == nil {
-		return 0
-	}
-	switch node.Type {
+
+func checkSignalNameExistence(pNtk *Abc_Ntk_t, topASTNode *ltlNode) int32 {
+	switch topASTNode.type_ {
 	case BOOL:
-		return 1
-	case NOT:
-		return isNonTemporalSubformula(node.Left)
-	case AND, OR, IMPLY:
-		if isNonTemporalSubformula(node.Left) != 0 && isNonTemporalSubformula(node.Right) != 0 {
+		targetName := topASTNode.name
+		if checkBooleanConstant(targetName) != -1 {
 			return 1
 		}
-	}
-	return 0
-}
-func isWellFormed(node *ltlNode) int32 {
-	if node == nil {
-		return 0
-	}
-	switch node.Type {
-	case BOOL:
-		return 1
-	case NOT:
-		return isWellFormed(node.Left)
-	case AND, OR, IMPLY:
-		if isWellFormed(node.Left) != 0 && isWellFormed(node.Right) != 0 {
-			return 1
-		}
-	case GLOBALLY:
-		if node.Left != nil && node.Left.Type == EVENTUALLY {
-			return isNonTemporalSubformula(node.Left.Left)
-		}
-	}
-	return 0
-}
-func walkLTL(node *ltlNode, visit func(*ltlNode)) {
-	if node == nil {
-		return
-	}
-	visit(node)
-	walkLTL(node.Left, visit)
-	walkLTL(node.Right, visit)
-}
-func checkSignalNameExistence(network *Network, node *ltlNode) int32 {
-	valid := true
-	walkLTL(node, func(n *ltlNode) {
-		if n.Type == BOOL && checkBooleanConstant(n.Name) < 0 {
-			found := false
-			for i := 0; i < trueOutputs(network.Graph); i++ {
-				found = found || outputName(network, i) == n.Name
+		for i := int32(0); i < abc.Abc_NtkPoNum(pNtk); i++ {
+			if abc.Abc_ObjName(abc.Abc_NtkPo(pNtk, i)) == targetName {
+				return 1
 			}
-			valid = valid && found
 		}
-	})
-	if valid {
-		return 1
+		fmt.Printf("\nVariable name \"%s\" not found in the PO name list\n", targetName)
+		return 0
+	case AND, OR, IMPLY, UNTIL:
+		if checkSignalNameExistence(pNtk, topASTNode.left) != 0 && checkSignalNameExistence(pNtk, topASTNode.right) != 0 {
+			return 1
+		}
+		return 0
+	case NOT, NEXT, GLOBALLY, EVENTUALLY:
+		return checkSignalNameExistence(pNtk, topASTNode.left)
+	default:
+		fmt.Printf("\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\n")
+		exit0()
 	}
 	return 0
 }
-func populateBoolWithAigNodePtr(network *Network, old, new *aig.Graph, node *ltlNode) {
-	walkLTL(node, func(n *ltlNode) {
-		if n.Type != BOOL {
+
+func populateBoolWithAigNodePtr(pNtk *Abc_Ntk_t, pAigOld, pAigNew *Aig_Man_t, topASTNode *ltlNode) {
+	switch topASTNode.type_ {
+	case BOOL:
+		targetName := topASTNode.name
+		if checkBooleanConstant(targetName) == 1 {
+			topASTNode.pObj = aig.Aig_ManConst1(pAigNew)
 			return
 		}
-		constant := checkBooleanConstant(n.Name)
-		if constant >= 0 {
-			n.Object = aig.Edge(1 - constant)
-			n.HasObject = true
+		if checkBooleanConstant(targetName) == 0 {
+			topASTNode.pObj = aig.Aig_Not(aig.Aig_ManConst1(pAigNew))
 			return
 		}
-		for i := 0; i < trueOutputs(old); i++ {
-			if outputName(network, i) == n.Name {
-				driver := outputDriver(old, i)
-				if old == new {
-					n.Object = driver
-				} else {
-					copy := aig.Aig_ObjCopy(old, aig.Aig_Regular(driver))
-					if copy == aig.InvalidEdge {
-						panic("live: signal has no copied image")
-					}
-					n.Object = copy ^ aig.Edge(driver&1)
-				}
-				n.HasObject = true
+		for i := int32(0); i < abc.Abc_NtkPoNum(pNtk); i++ {
+			if abc.Abc_ObjName(abc.Abc_NtkPo(pNtk, i)) == targetName {
+				pObj := aig.Aig_ManCo(pAigOld, i)
+				topASTNode.pObj = driverNew(pAigOld, pObj)
 				return
 			}
 		}
-		panic("live: unknown formula signal " + n.Name)
-	})
+	case AND, OR, IMPLY, UNTIL:
+		populateBoolWithAigNodePtr(pNtk, pAigOld, pAigNew, topASTNode.left)
+		populateBoolWithAigNodePtr(pNtk, pAigOld, pAigNew, topASTNode.right)
+	case NOT, NEXT, GLOBALLY, EVENTUALLY:
+		populateBoolWithAigNodePtr(pNtk, pAigOld, pAigNew, topASTNode.left)
+	default:
+		fmt.Printf("\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\n")
+		exit0()
+	}
 }
-func checkAllBoolHaveAIGPointer(node *ltlNode) int32 {
-	valid := true
-	walkLTL(node, func(n *ltlNode) {
-		if n.Type == BOOL && !n.HasObject {
-			valid = false
+
+func checkAllBoolHaveAIGPointer(topASTNode *ltlNode) int32 {
+	switch topASTNode.type_ {
+	case BOOL:
+		if topASTNode.pObj != aigNull {
+			return 1
 		}
-	})
-	if valid {
-		return 1
+		fmt.Printf("\nfaulting PODMANDYO topASTNode->name = %s\n", topASTNode.name)
+		return 0
+	case AND, OR, IMPLY, UNTIL:
+		if checkAllBoolHaveAIGPointer(topASTNode.left) != 0 && checkAllBoolHaveAIGPointer(topASTNode.right) != 0 {
+			return 1
+		}
+		return 0
+	case NOT, NEXT, GLOBALLY, EVENTUALLY:
+		return checkAllBoolHaveAIGPointer(topASTNode.left)
+	default:
+		fmt.Printf("\nUNSUPPORTED LTL NODE TYPE:: Aborting execution\n")
+		exit0()
 	}
 	return 0
 }
-func buildLogicFromLTLNode(p *aig.Graph, node *ltlNode) aig.Edge {
-	if node == nil {
-		panic("live: nil formula node")
-	}
-	if node.HasObject {
-		return node.Object
-	}
-	a := buildLogicFromLTLNode(p, node.Left)
-	var result aig.Edge
-	switch node.Type {
-	case NOT:
-		result = a.Not()
-	case AND:
-		result = aig.Aig_And(p, a, buildLogicFromLTLNode(p, node.Right))
-	case OR:
-		result = aig.Aig_Or(p, a, buildLogicFromLTLNode(p, node.Right))
-	case IMPLY:
-		result = aig.Aig_Or(p, a.Not(), buildLogicFromLTLNode(p, node.Right))
-	default:
-		panic("live: temporal or Boolean formula node has no assigned signal")
-	}
-	node.Object, node.HasObject = result, true
-	return result
+
+func setAIGNodePtrOfGloballyNode(astNode *ltlNode, pObjLo Aig_Obj_t) {
+	astNode.pObj = pObjLo
 }
-func buildLogicFromLTLNode_combinationalOnly(p *aig.Graph, node *ltlNode) aig.Edge {
-	if isNonTemporalSubformula(node) == 0 {
-		panic("live: noncombinational GF operand")
-	}
-	return buildLogicFromLTLNode(p, node)
-}
-func populateAigPointerUnitGF(p *aig.Graph, node *ltlNode, signals *[]aig.Edge, groups *[][]*ltlNode) {
-	if node == nil {
-		return
-	}
-	if node.Type == GLOBALLY {
-		if node.Left == nil || node.Left.Type != EVENTUALLY {
-			panic("live: expected GF property")
-		}
-		signal := buildLogicFromLTLNode_combinationalOnly(p, node.Left.Left)
-		index := -1
-		for i, e := range *signals {
-			if e == signal {
-				index = i
-				break
-			}
-		}
-		if index < 0 {
-			index = len(*signals)
-			*signals = append(*signals, signal)
-			*groups = append(*groups, nil)
-		}
-		(*groups)[index] = append((*groups)[index], node)
-		return
-	}
-	populateAigPointerUnitGF(p, node.Left, signals, groups)
-	populateAigPointerUnitGF(p, node.Right, signals, groups)
-}
-func setAIGNodePtrOfGloballyNode(node *ltlNode, edge aig.Edge) {
-	node.Object, node.HasObject = edge, true
-}
-func retriveAIGPointerFromLTLNode(node *ltlNode) aig.Edge {
-	if !node.HasObject {
-		panic("live: formula has no circuit")
-	}
-	return node.Object
-}
-func (node *ltlNode) String() string {
-	if node == nil {
-		return ""
-	}
-	if node.Type == BOOL {
-		return node.Name
-	}
-	operator := map[tokenType]string{AND: "&", OR: "+", NOT: "!", IMPLY: ">", GLOBALLY: ":G", EVENTUALLY: ":F", NEXT: ":X", UNTIL: ":U"}[node.Type]
-	parts := []string{operator, node.Left.String()}
-	if node.Right != nil {
-		parts = append(parts, node.Right.String())
-	}
-	return strings.Join(parts, " ")
-}
-func traverseAbstractSyntaxTree(node *ltlNode) { fmt.Print(node.String(), " ") }
-func traverseAbstractSyntaxTree_postFix(node *ltlNode) {
-	if node == nil {
-		return
-	}
-	traverseAbstractSyntaxTree_postFix(node.Left)
-	traverseAbstractSyntaxTree_postFix(node.Right)
-	if node.Type == BOOL {
-		fmt.Print(node.Name, " ")
-	} else {
-		fmt.Print(map[tokenType]string{AND: "&", OR: "+", NOT: "!", IMPLY: ">", GLOBALLY: "G", EVENTUALLY: "F", NEXT: "X", UNTIL: "U"}[node.Type], " ")
-	}
-}
-func Abc_FrameCopyLTLDataBase(frame *Frame, network *Network) {
-	frame.LTLProperties = make([]string, len(network.LTLProperties))
-	copy(frame.LTLProperties, network.LTLProperties)
+
+func retriveAIGPointerFromLTLNode(astNode *ltlNode) Aig_Obj_t {
+	return astNode.pObj
 }

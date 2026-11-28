@@ -1,0 +1,13 @@
+.model l2s_comb
+.inputs a b
+.outputs assert_fair_x assume_fair_y Assert_z w
+.names a b assert_fair_x
+11 1
+.names a assume_fair_y
+1 1
+.names a b Assert_z
+1- 1
+-1 1
+.names a b w
+10 1
+.end

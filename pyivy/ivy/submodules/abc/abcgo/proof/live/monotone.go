@@ -1,186 +1,387 @@
+/**CFile****************************************************************
+
+  FileName    [monotone.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [Liveness property checking.]
+
+  Synopsis    [Main implementation module of the algorithm k-Liveness ]
+              [invented by Koen Claessen, Niklas Sorensson. Implements]
+              [the code for 'kcs'. 'kcs' pre-processes based on switch]
+              [and then runs the (absorber circuit >> pdr) loop ]
+
+  Author      [Sayak Ray]
+
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - October 31, 2012.]
+
+***********************************************************************/
+
 package live
 
 import (
 	"fmt"
-	"github.com/glycerine/abcgo/aig/aig"
-	"github.com/glycerine/abcgo/proof/pdr"
-	"slices"
 	"strings"
+
+	"github.com/glycerine/abcgo/aig/aig"
+	"github.com/glycerine/abcgo/aig/saig"
+	abc "github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/proof/pdr"
 )
 
-type aigPoIndices struct{ attrPendingSignalIndex, attrHintSingalBeginningMarker, attrHintSingalEndMarker, attrSafetyInvarIndex int32 }
-
-func allocAigPoIndices() *aigPoIndices { return &aigPoIndices{-1, -1, -1, -1} }
-
-type monotoneVectorsStruct struct{ attrKnownMonotone, attrCandMonotone, attrHintMonotone []int32 }
-
-func allocPointersToMonotoneVectors() *monotoneVectorsStruct { return new(monotoneVectorsStruct) }
-func findHintOutputs(n *Network) []int32                     { return findHintOutputsMode(n, true) }
-func findHintOutputsMode(n *Network, source bool) []int32 {
-	var result []int32
-	for i := 0; i < outputCount(n.Graph, source); i++ {
-		if strings.Contains(outputName(n, i), "hint_") {
-			result = append(result, int32(i))
-		}
-	}
-	return result
+type aigPoIndices struct {
+	attrPendingSignalIndex        int32
+	attrHintSingalBeginningMarker int32
+	attrHintSingalEndMarker       int32
+	attrSafetyInvarIndex          int32
 }
-func findPendingSignal(n *Network) int32 { return findOutput(n, "pendingSignal") }
 
-// The C helper only prints its inputs and always returns success.
-func checkSanityOfKnownMonotone(known, candidates, hints []int32) int32 {
-	for _, values := range [][]int32{known, candidates, hints} {
-		for _, value := range values {
-			fmt.Printf("%d ", value)
-		}
-		fmt.Println()
+func allocAigPoIndices() *aigPoIndices {
+	return &aigPoIndices{
+		attrPendingSignalIndex:        -1,
+		attrHintSingalBeginningMarker: -1,
+		attrHintSingalEndMarker:       -1,
+		attrSafetyInvarIndex:          -1,
 	}
+}
+
+func deallocAigPoIndices(toBeDeletedAigPoIndices *aigPoIndices) {}
+
+type monotoneVectorsStruct struct {
+	attrKnownMonotone []int32
+	attrCandMonotone  []int32
+	attrHintMonotone  []int32
+}
+
+func allocPointersToMonotoneVectors() *monotoneVectorsStruct {
+	return &monotoneVectorsStruct{}
+}
+
+func deallocPointersToMonotoneVectors(toBeDeleted *monotoneVectorsStruct) {}
+
+// Vec_IntFind
+func intFind(v []int32, x int32) int {
+	for i, e := range v {
+		if e == x {
+			return i
+		}
+	}
+	return -1
+}
+
+func findHintOutputs(pNtk *Abc_Ntk_t) []int32 {
+	vHintPoIntdex := make([]int32, 0)
+	for i := int32(0); i < abc.Abc_NtkPoNum(pNtk); i++ {
+		if strings.Contains(abc.Abc_ObjName(abc.Abc_NtkPo(pNtk, i)), "hint_") {
+			vHintPoIntdex = append(vHintPoIntdex, i)
+		}
+	}
+	if len(vHintPoIntdex) == 0 {
+		return nil
+	}
+	return vHintPoIntdex
+}
+
+func findPendingSignal(pNtk *Abc_Ntk_t) int32 {
+	pendingSignalIndex := int32(-1)
+	for i := int32(0); i < abc.Abc_NtkPoNum(pNtk); i++ {
+		if strings.Contains(abc.Abc_ObjName(abc.Abc_NtkPo(pNtk, i)), "pendingSignal") {
+			pendingSignalIndex = i
+			break
+		}
+	}
+	return pendingSignalIndex
+}
+
+func checkSanityOfKnownMonotone(vKnownMonotone, vCandMonotone, vHintMonotone []int32) int32 {
+	for _, iElem := range vKnownMonotone {
+		fmt.Printf("%d ", iElem)
+	}
+	fmt.Printf("\n")
+	for _, iElem := range vCandMonotone {
+		fmt.Printf("%d ", iElem)
+	}
+	fmt.Printf("\n")
+	for _, iElem := range vHintMonotone {
+		fmt.Printf("%d ", iElem)
+	}
+	fmt.Printf("\n")
 	return 1
 }
 
-func createMonotoneTester(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct, start *int32) *aig.Graph {
-	return createMonotoneTesterMode(p, indexes, vectors, start, true)
-}
-func createMonotoneTesterMode(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct, start *int32, source bool) *aig.Graph {
-	if indexes.attrPendingSignalIndex < 0 {
-		panic("live: pending signal missing")
+func createMonotoneTester(pAig *Aig_Man_t, aigPoIndicesArg *aigPoIndices, monotoneVectorArg *monotoneVectorsStruct, startMonotonePropPo *int32) *Aig_Man_t {
+	var liCopied, liCreated, loCopied, loCreated int32
+	var poCopied, poCreated int32
+
+	pendingSignalIndexLocal := aigPoIndicesArg.attrPendingSignalIndex
+	hintSingalBeginningMarkerLocal := aigPoIndicesArg.attrHintSingalBeginningMarker
+
+	vKnownMonotoneLocal := monotoneVectorArg.attrKnownMonotone
+	vHintMonotoneLocal := monotoneVectorArg.attrHintMonotone
+
+	//****************************************************************
+	// Step1: create the new manager
+	//****************************************************************
+	pNewAig := aig.Aig_ManStart(aig.Aig_ManObjNumMax(pAig))
+	pNewAig.Name = fmt.Sprintf("%s_%s", pAig.Name, "_monotone")
+	pNewAig.Spec = ""
+
+	//****************************************************************
+	// Step 2: map constant nodes
+	//****************************************************************
+	aigSetData(pAig, aig.Aig_ManConst1(pAig), aig.Aig_ManConst1(pNewAig))
+
+	//****************************************************************
+	// Step 3: create true PIs
+	//****************************************************************
+	for i := int32(0); i < saigPiNum(pAig); i++ {
+		aigSetData(pAig, aig.Aig_ManCi(pAig, i), aig.Aig_ObjCreateCi(pNewAig))
 	}
-	if source && vectors.attrKnownMonotone != nil {
-		checkSanityOfKnownMonotone(vectors.attrKnownMonotone, vectors.attrCandMonotone, vectors.attrHintMonotone)
+
+	//****************************************************************
+	// Step 5: create register outputs
+	//****************************************************************
+	for i := int32(0); i < saigRegNum(pAig); i++ {
+		loCopied++
+		aigSetData(pAig, saig.Saig_ManLo(pAig, i), aig.Aig_ObjCreateCi(pNewAig))
 	}
-	c := newGraphCopy(p, "_monotone")
-	if source {
-		c = newSourceGraphCopy(p, "_monotone")
+
+	//****************************************************************
+	// Step 6: create "D" register output for PENDING flop
+	//****************************************************************
+	loCreated++
+	pPendingFlop := aig.Aig_ObjCreateCi(pNewAig)
+
+	//****************************************************************
+	// Step 6.a: create "D" register output for HINT_MONOTONE flop
+	//****************************************************************
+	vHintMonotoneLocalFlopOutput := make([]Aig_Obj_t, 0, len(vHintMonotoneLocal))
+	for range vHintMonotoneLocal {
+		loCreated++
+		vHintMonotoneLocalFlopOutput = append(vHintMonotoneLocalFlopOutput, aig.Aig_ObjCreateCi(pNewAig))
 	}
-	c.copyInputs()
-	pendingOld := aig.Aig_ObjCreateCi(c.destination)
-	delayed := make(map[int32]aig.Edge)
-	delayedInOrder := make([]aig.Edge, 0, len(vectors.attrHintMonotone))
-	for _, id := range vectors.attrHintMonotone {
-		d := aig.Aig_ObjCreateCi(c.destination)
-		delayed[id] = d
-		delayedInOrder = append(delayedInOrder, d)
+
+	nRegCount := loCreated + loCopied
+	fmt.Printf("\nnRegCount = %d\n", nRegCount)
+
+	//********************************************************************
+	// Step 7: create internal nodes
+	//********************************************************************
+	nodes, _ := aigManNodes(pAig)
+	for _, pObj := range nodes {
+		aigSetData(pAig, pObj, aig.Aig_And(pNewAig, aig.Aig_ObjChild0Copy(pAig, pObj), aig.Aig_ObjChild1Copy(pAig, pObj)))
 	}
-	c.copySourceNodes()
-	pending := c.signal(p.OutputAt(int(indexes.attrPendingSignalIndex)))
-	guard := aig.Aig_And(c.destination, pending, pendingOld)
-	for _, id := range vectors.attrKnownMonotone {
-		driverID, previous := id, delayed[id]
-		if source {
-			driverID = id - indexes.attrHintSingalBeginningMarker + 1 + indexes.attrPendingSignalIndex
-			previous = delayedInOrder[int(driverID)-c.outputCount()]
+
+	//********************************************************************
+	// Step 8: mapping appropriate new flop drivers
+	//********************************************************************
+
+	pObjPo := aig.Aig_ManCo(pAig, pendingSignalIndexLocal)
+	pObjDriver := driverOld(pAig, pObjPo)
+	pObjPendingDriverNew := copyOf(pAig, pObjDriver)
+
+	pObjPendingAndNextPending := aig.Aig_And(pNewAig, pObjPendingDriverNew, pPendingFlop)
+
+	oldPoNum := aig.Aig_ManCoNum(pAig) - aig.Aig_ManRegNum(pAig)
+	pObjKnownMonotoneAnd := aig.Aig_ManConst1(pNewAig)
+	if vKnownMonotoneLocal != nil {
+		// assert( checkSanityOfKnownMonotone( ... ) ) is not executed in
+		// the release build
+
+		for _, iElemHint := range vKnownMonotoneLocal {
+			iElem := (iElemHint - hintSingalBeginningMarkerLocal) + 1 + pendingSignalIndexLocal
+			fmt.Printf("\nProcessing knownMonotone = %d\n", iElem)
+			pObjPo = aig.Aig_ManCo(pAig, iElem)
+			pObjDriver = driverOld(pAig, pObjPo)
+			pObjDriverNew := copyOf(pAig, pObjDriver)
+			pHintSignalLo := vHintMonotoneLocalFlopOutput[iElem-oldPoNum]
+			// GCC evaluates the arguments of Aig_Or right to left
+			pRight := aig.Aig_And(pNewAig, aig.Aig_Not(pObjDriverNew), aig.Aig_Not(pHintSignalLo))
+			pLeft := aig.Aig_And(pNewAig, pObjDriverNew, pHintSignalLo)
+			pObjTemp1 := aig.Aig_Or(pNewAig, pLeft, pRight)
+
+			pObjKnownMonotoneAnd = aig.Aig_And(pNewAig, pObjKnownMonotoneAnd, pObjTemp1)
 		}
-		guard = aig.Aig_And(c.destination, guard, aig.Aig_Exor(c.destination, c.signal(p.OutputAt(int(driverID))), previous).Not())
+		pObjPendingAndNextPending = aig.Aig_And(pNewAig, pObjPendingAndNextPending, pObjKnownMonotoneAnd)
 	}
-	properties := []aig.Edge{}
-	for _, id := range vectors.attrHintMonotone {
-		if slices.Contains(vectors.attrKnownMonotone, id) {
-			continue
-		}
-		property := aig.Aig_Or(c.destination, aig.Aig_And(c.destination, guard, delayed[id]).Not(), c.signal(p.OutputAt(int(id))))
-		properties = append(properties, property)
-	}
-	for i := 0; i < c.outputCount(); i++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(i))))
-	}
-	if start != nil {
-		*start = int32(c.outputCount())
-	}
-	for _, e := range properties {
-		aig.Aig_ObjCreateCo(c.destination, e)
-	}
-	c.appendConstraints()
-	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
-	}
-	aig.Aig_ObjCreateCo(c.destination, pending)
-	for _, id := range vectors.attrHintMonotone {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(id))))
-	}
-	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)+1+len(vectors.attrHintMonotone)))
-	c.setConstraints()
-	return c.destination
-}
-func negateOutputs(p *aig.Graph, first int) *aig.Graph {
-	c := newGraphCopy(p, "_check")
-	c.copyInputs()
-	for i := 0; i < propertyOutputs(p); i++ {
-		driver := c.signal(p.OutputAt(int(i)))
-		if i >= first {
-			driver = driver.Not()
-		}
-		aig.Aig_ObjCreateCo(c.destination, driver)
-	}
-	c.appendConstraints()
-	for r := 0; r < registers(p); r++ {
-		aig.Aig_ObjCreateCo(c.destination, c.signal(p.OutputAt(int(trueOutputs(p)+r))))
-	}
-	aig.Aig_ManSetRegNum(c.destination, int32(registers(p)))
-	c.setConstraints()
-	return c.destination
-}
-func findNewMonotoneWith(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct, options SafetyOptions, checker SafetyChecker) []int32 {
-	var start int32
-	tester := negateOutputs(createMonotoneTesterMode(p, indexes, vectors, &start, false), propertyOutputs(p))
-	result := []int32{}
-	serial := int(start)
-	for _, id := range vectors.attrHintMonotone {
-		if slices.Contains(vectors.attrKnownMonotone, id) {
-			continue
-		}
-		if checker(tester, serial, options).Status == 1 {
-			result = append(result, id)
-		}
-		serial++
-	}
-	return result
-}
-func findNewMonotone(p *aig.Graph, indexes *aigPoIndices, vectors *monotoneVectorsStruct) []int32 {
-	var start int32
-	tester := createMonotoneTester(p, indexes, vectors, &start)
-	var proved []int32
-	for i := int(start); i < trueOutputs(tester); i++ {
-		output := tester.OutputAt(int(i))
-		driver := outputDriver(tester, i)
-		aig.Aig_ObjPatchFanin0(tester, output, driver.Not())
-		result, err := pdr.Solve(tester, nil)
-		aig.Aig_ObjPatchFanin0(tester, output, driver)
-		if err != nil {
-			panic(err)
-		}
-		if result.Status == pdr.Proved {
-			proved = append(proved, int32(i)-(indexes.attrPendingSignalIndex+1)+indexes.attrHintSingalBeginningMarker)
+
+	vHintMonotoneLocalDriverNew := make([]Aig_Obj_t, 0, len(vHintMonotoneLocal))
+	vHintMonotoneLocalProp := make([]Aig_Obj_t, 0, len(vHintMonotoneLocal))
+	for _, iElem := range vHintMonotoneLocal {
+		pObjPo = aig.Aig_ManCo(pAig, iElem)
+		pObjDriver = driverOld(pAig, pObjPo)
+		pObjDriverNew := copyOf(pAig, pObjDriver)
+
+		if vKnownMonotoneLocal != nil && intFind(vKnownMonotoneLocal, iElem) != -1 {
+			vHintMonotoneLocalDriverNew = append(vHintMonotoneLocalDriverNew, pObjDriverNew)
+		} else {
+			poSerialNum := intFind(vHintMonotoneLocal, iElem)
+			pHintSignalLo := vHintMonotoneLocalFlopOutput[poSerialNum]
+			pObjTemp1 := aig.Aig_And(pNewAig, pObjPendingAndNextPending, pHintSignalLo)
+			pObjTemp2 := aig.Aig_Or(pNewAig, aig.Aig_Not(pObjTemp1), pObjDriverNew)
+			vHintMonotoneLocalDriverNew = append(vHintMonotoneLocalDriverNew, pObjDriverNew)
+			vHintMonotoneLocalProp = append(vHintMonotoneLocalProp, pObjTemp2)
 		}
 	}
-	return proved
-}
-func findRemainingMonotoneCandidates(known, hints []int32) []int32 {
-	if len(known) == 0 {
-		return hints
+
+	//********************************************************************
+	// Step 9: create primary outputs
+	//********************************************************************
+	var i int32
+	for i = 0; i < saigPoNum(pAig); i++ {
+		poCopied++
+		pObj := aig.Aig_ManCo(pAig, i)
+		aigSetData(pAig, pObj, aig.Aig_ObjCreateCo(pNewAig, aig.Aig_ObjChild0Copy(pAig, pObj)))
 	}
-	return vectorDifference(hints, known)
-}
-func FindMonotone(n *Network, options SafetyOptions, checker SafetyChecker) []int32 {
-	if checker == nil {
-		checker = CheckSafety
+
+	*startMonotonePropPo = i
+	for _, pObj := range vHintMonotoneLocalProp {
+		poCreated++
+		aig.Aig_ObjCreateCo(pNewAig, pObj)
 	}
-	pending, hints := findOutputMode(n, "pendingSignal", false), findHintOutputsMode(n, false)
-	if pending < 0 || len(hints) == 0 {
-		return nil
+
+	//********************************************************************
+	// Step 9: create latch inputs
+	//********************************************************************
+
+	for i := int32(0); i < saigRegNum(pAig); i++ {
+		liCopied++
+		aig.Aig_ObjCreateCo(pNewAig, aig.Aig_ObjChild0Copy(pAig, saig.Saig_ManLi(pAig, i)))
 	}
-	indexes := &aigPoIndices{pending, hints[0], hints[len(hints)-1], -1}
-	vectors := &monotoneVectorsStruct{attrCandMonotone: hints, attrHintMonotone: hints}
-	return findNewMonotoneWith(n.Graph, indexes, vectors, options, checker)
+
+	//********************************************************************
+	// Step 9.a: create latch input for PENDING_FLOP
+	//********************************************************************
+
+	liCreated++
+	aig.Aig_ObjCreateCo(pNewAig, pObjPendingDriverNew)
+
+	//********************************************************************
+	// Step 9.b: create latch input for MONOTONE_FLOP
+	//********************************************************************
+
+	for _, pObj := range vHintMonotoneLocalDriverNew {
+		liCreated++
+		aig.Aig_ObjCreateCo(pNewAig, pObj)
+	}
+
+	fmt.Printf("\npoCopied = %d, poCreated = %d\n", poCopied, poCreated)
+	fmt.Printf("\nliCreated++ = %d\n", liCreated)
+	aig.Aig_ManSetRegNum(pNewAig, nRegCount)
+	aig.Aig_ManCleanup(pNewAig)
+
+	fmt.Printf("\nSaig_ManPoNum = %d\n", saigPoNum(pNewAig))
+	_ = liCopied
+	return pNewAig
 }
 
-// findMonotoneSignals follows the C entry point, which discards its results.
-func findMonotoneSignals(n *Network) []int32 {
-	pending, hints := findPendingSignal(n), findHintOutputs(n)
-	if pending < 0 || len(hints) == 0 {
+func findNewMonotone(pAig *Aig_Man_t, aigPoIndicesArg *aigPoIndices, monotoneVectorArg *monotoneVectorsStruct) []int32 {
+	var poMarker int32
+	var Pars pdr.Pdr_Par_t
+	pPars := &Pars
+
+	pendingSignalIndexLocal := aigPoIndicesArg.attrPendingSignalIndex
+	hintSingalBeginningMarkerLocal := aigPoIndicesArg.attrHintSingalBeginningMarker
+
+	pAigNew := createMonotoneTester(pAig, aigPoIndicesArg, monotoneVectorArg, &poMarker)
+	oldPoNum := aig.Aig_ManCoNum(pAig) - aig.Aig_ManRegNum(pAig)
+
+	vMonotoneIndex := make([]int32, 0)
+	fmt.Printf("\nSaig_ManPoNum(pAigNew) = %d, poMarker = %d\n", saigPoNum(pAigNew), poMarker)
+	for i := poMarker; i < saigPoNum(pAigNew); i++ {
+		pObjTargetPo := aig.Aig_ManCo(pAigNew, i)
+		aig.Aig_ObjChild0Flip(pAigNew, pObjTargetPo)
+
+		pdr.Pdr_ManSetDefaultParams(pPars)
+		pPars.FVerbose = 0
+		RetValue := pdr.Pdr_ManSolve(pAigNew, pPars)
+		if RetValue == 1 {
+			fmt.Printf("\ni = %d, RetValue = %d : %s (Frame %d)\n", i-oldPoNum+hintSingalBeginningMarkerLocal, RetValue, "Property Proved", -1)
+			vMonotoneIndex = append(vMonotoneIndex, i-(pendingSignalIndexLocal+1)+hintSingalBeginningMarkerLocal)
+		}
+		aig.Aig_ObjChild0Flip(pAigNew, pObjTargetPo)
+	}
+
+	if len(vMonotoneIndex) > 0 {
+		return vMonotoneIndex
+	}
+	return nil
+}
+
+func findRemainingMonotoneCandidates(vKnownMonotone, vHintMonotone []int32) []int32 {
+	if vKnownMonotone == nil || len(vKnownMonotone) <= 0 {
+		return vHintMonotone
+	}
+	vCandMonotone := make([]int32, 0)
+	for _, iElem := range vHintMonotone {
+		if intFind(vKnownMonotone, iElem) == -1 {
+			vCandMonotone = append(vCandMonotone, iElem)
+		}
+	}
+	return vCandMonotone
+}
+
+// findMonotoneSignals is not called by any command.
+func findMonotoneSignals(pNtk *Abc_Ntk_t) []int32 {
+	var pAig *Aig_Man_t
+
+	/*******************************************/
+	//Finding the PO index of the pending signal
+	/*******************************************/
+	pendingSignalIndex := findPendingSignal(pNtk)
+	if pendingSignalIndex == -1 {
+		fmt.Printf("\nNo Pending Signal Found\n")
 		return nil
 	}
-	indexes := &aigPoIndices{pending, hints[0], hints[len(hints)-1], -1}
-	vectors := &monotoneVectorsStruct{attrCandMonotone: hints, attrHintMonotone: hints}
-	findNewMonotone(n.Graph, indexes, vectors)
+	fmt.Printf("Po[%d] = %s\n", pendingSignalIndex, abc.Abc_ObjName(abc.Abc_NtkPo(pNtk, pendingSignalIndex)))
+
+	/*******************************************/
+	//Finding the PO indices of all hint signals
+	/*******************************************/
+	vCandidateMonotoneSignals := findHintOutputs(pNtk)
+	if vCandidateMonotoneSignals == nil {
+		return nil
+	}
+	for _, iElem := range vCandidateMonotoneSignals {
+		fmt.Printf("Po[%d] = %s\n", iElem, abc.Abc_ObjName(abc.Abc_NtkPo(pNtk, iElem)))
+	}
+	hintSingalBeginningMarker := vCandidateMonotoneSignals[0]
+	hintSingalEndMarker := vCandidateMonotoneSignals[len(vCandidateMonotoneSignals)-1]
+
+	/**********************************************/
+	//Allocating "struct" with necessary parameters
+	/**********************************************/
+	aigPoIndicesInstance := allocAigPoIndices()
+	aigPoIndicesInstance.attrPendingSignalIndex = pendingSignalIndex
+	aigPoIndicesInstance.attrHintSingalBeginningMarker = hintSingalBeginningMarker
+	aigPoIndicesInstance.attrHintSingalEndMarker = hintSingalEndMarker
+
+	/****************************************************/
+	//Allocating "struct" with necessary monotone vectors
+	/****************************************************/
+	monotoneVectorsInstance := allocPointersToMonotoneVectors()
+	monotoneVectorsInstance.attrCandMonotone = vCandidateMonotoneSignals
+	monotoneVectorsInstance.attrHintMonotone = vCandidateMonotoneSignals
+
+	/*******************************************/
+	//Generate AIG from Ntk
+	/*******************************************/
+	if !(abc.Abc_NtkIsStrash(pNtk) != 0) {
+		pNtkTemp := Abc_NtkStrash(pNtk, 0, 0, 0)
+		pAig = Abc_NtkToDar(pNtkTemp, 0, 1)
+	} else {
+		pAig = Abc_NtkToDar(pNtk, 0, 1)
+	}
+
+	/*******************************************/
+	//finding LEVEL 1 monotone signals
+	/*******************************************/
+	vKnownMonotoneSignals := findNewMonotone(pAig, aigPoIndicesInstance, monotoneVectorsInstance)
+	monotoneVectorsInstance.attrKnownMonotone = vKnownMonotoneSignals
+
+	deallocAigPoIndices(aigPoIndicesInstance)
+	deallocPointersToMonotoneVectors(monotoneVectorsInstance)
 	return nil
 }

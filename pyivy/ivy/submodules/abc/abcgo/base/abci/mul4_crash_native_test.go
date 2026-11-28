@@ -12,7 +12,7 @@ import (
 // (cecSplit.c), l2ssim ANDed a NULL register-equality accumulator when there
 // are no registers (liveness_sim.c), and &mlgen built its output file names
 // in 100-byte buffers (giaGen.c). Go and native now print the same for
-// &splitprove and &mlgen.
+// &splitprove, &mlgen and l2ssim.
 func TestMul4CrashesLikeNative(t *testing.T) {
 	design, err := filepath.Abs("test_vectors/native_mul4_gen.aig")
 	if err != nil {
@@ -32,12 +32,7 @@ func TestMul4CrashesLikeNative(t *testing.T) {
 	if err := os.WriteFile(copyPath, data, 0o644); err != nil {
 		t.Fatal(err)
 	}
-	// l2ssim's Go port (proof/live) is not yet a port of liveness_sim.c; only
-	// the native crash is checked for it
-	if out := runNativeABC(t, "read "+copyPath+"; strash; &get; l2ssim"); !strings.Contains(out, "liveness property") {
-		t.Errorf("l2ssim: unexpected native output:\n%s", out)
-	}
-	for _, cmd := range []string{"&splitprove", "&mlgen"} {
+	for _, cmd := range []string{"&splitprove", "&mlgen", "l2ssim"} {
 		script := "read " + copyPath + "; strash; &get; " + cmd
 		native := printSymmNormalize(runNativeABC(t, script))
 		out, _ := runScriptStatus(t, script)

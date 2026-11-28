@@ -1,0 +1,16 @@
+.model kcs_plain
+.inputs a
+.outputs csLiveTarget_t z
+.latch n0 c0 0
+.latch n1 c1 0
+.names c0 c1 n0
+0- 1
+-1 1
+.names c0 c1 n1
+1- 1
+-1 1
+.names c0 c1 csLiveTarget_t
+11 1
+.names a c1 z
+10 1
+.end

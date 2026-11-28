@@ -1,0 +1,38 @@
+.model kcs_mono
+.inputs a
+.outputs csLiveConst_a csLiveTarget_t csSafetyInvar_inv hint_h0 hint_h1 windowBegins_w withinWindow_w csLevel1Stabil_s z pendingSignal
+.latch n0 c0 0
+.latch n1 c1 0
+.latch nd d 0
+.names c0 c1 n0
+0- 1
+-1 1
+.names c0 c1 n1
+1- 1
+-1 1
+.names c1 nd
+1 1
+.names a csLiveConst_a
+1 1
+.names c0 c1 csLiveTarget_t
+11 1
+.names d c1 csSafetyInvar_inv
+0- 1
+-1 1
+.names c1 hint_h0
+1 1
+.names c0 hint_h1
+1 1
+.names c0 c1 windowBegins_w
+00 1
+.names c0 c1 withinWindow_w
+1- 1
+-1 1
+.names c1 csLevel1Stabil_s
+1 1
+.names a c0 z
+11 1
+.names c0 c1 pendingSignal
+0- 1
+-0 1
+.end

@@ -1,0 +1,26 @@
+.model kcs_nomono
+.inputs a
+.outputs csLiveTarget_t csSafetyInvar_inv hint_h0 windowBegins_w withinWindow_w pendingSignal
+.latch n0 c0 0
+.latch n1 c1 0
+.names c0 c1 n0
+0- 1
+-1 1
+.names c0 c1 n1
+1- 1
+-1 1
+.names c0 c1 csLiveTarget_t
+11 1
+.names c0 c1 csSafetyInvar_inv
+-- 1
+.names c0 hint_h0
+0 1
+.names c0 c1 windowBegins_w
+00 1
+.names c0 c1 withinWindow_w
+1- 1
+-1 1
+.names c0 c1 pendingSignal
+0- 1
+-0 1
+.end

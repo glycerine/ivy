@@ -685,6 +685,7 @@ Vec_Ptr_t *findDisjunctiveMonotoneSignals( Abc_Ntk_t *pNtk )
     //printf("Calling target function outside loop\n");
     vKnownMonotoneSignals = findNewDisjunctiveMonotone( pAig, aigPoIndicesInstance, anteConsecInstance );
     levelOneMonotne = Vec_PtrAlloc(0);
+    if ( vKnownMonotoneSignals ) // NULL when no hint is monotone
     Vec_IntForEachEntry( vKnownMonotoneSignals, iElem, i )
     {
         newIntVec = createSingletonIntVector( iElem );
@@ -749,7 +750,8 @@ Vec_Ptr_t *findDisjunctiveMonotoneSignals( Abc_Ntk_t *pNtk )
     deallocateVecOfIntVec( levelTwoMonotne );
 
     Aig_ManStop(pAig);
-    Vec_IntFree(vKnownMonotoneSignals);
+    if ( vKnownMonotoneSignals )
+        Vec_IntFree(vKnownMonotoneSignals);
 
     return vMasterDisjunctions;
 }

@@ -1,0 +1,23 @@
+.model l2s_basic
+.inputs a b
+.outputs assert_fair_p assume_fair_q assert_safety_s Assume_x z
+.latch na l0 0
+.latch nb l1 0
+.names a na
+1 1
+.names l0 b nb
+10 1
+01 1
+.names l1 assert_fair_p
+1 1
+.names a assume_fair_q
+1 1
+.names l0 l1 assert_safety_s
+0- 1
+-0 1
+.names b l0 Assume_x
+1- 1
+-1 1
+.names a l1 z
+11 1
+.end

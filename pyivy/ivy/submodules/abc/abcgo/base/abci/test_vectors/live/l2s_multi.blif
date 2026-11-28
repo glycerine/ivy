@@ -1,0 +1,32 @@
+.model l2s_multi
+.inputs a b c
+.outputs Assert_one assert_safety_two assume_safety_x assert_fair_p1 assert_fair_p2 assume_fair_f1 assume_fair_f2 other
+.latch n0 l0 1
+.latch n1 l1 0
+.latch n2 l2 0
+.names a l2 n0
+1- 1
+-1 1
+.names l0 b n1
+11 1
+.names l1 c n2
+10 1
+01 1
+.names l0 l1 Assert_one
+0- 1
+-0 1
+.names l2 assert_safety_two
+0 1
+.names a b assume_safety_x
+11 0
+.names l1 assert_fair_p1
+1 1
+.names l0 l2 assert_fair_p2
+11 1
+.names c assume_fair_f1
+1 1
+.names assume_fair_f2
+1
+.names a b c other
+111 1
+.end

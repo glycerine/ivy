@@ -1889,7 +1889,8 @@ Aig_Man_t * LivenessToSafetyTransformationWithLTL( int mode, Abc_Ntk_t * pNtk, A
             }
         }
         printf("\n");
-        if( Vec_PtrSize( vTopASTNodeArray ) == 0 )
+        // no LTL database (the network was not read by "read"): as without formulas
+        if( vTopASTNodeArray == NULL || Vec_PtrSize( vTopASTNodeArray ) == 0 )
         {
             //printf("\nNo AST has been created for any formula; hence the circuit is left untouched\n");
             printf("\nCurrently aborting, need to take care when Vec_PtrSize( vTopASTNodeArray ) == 0\n");
