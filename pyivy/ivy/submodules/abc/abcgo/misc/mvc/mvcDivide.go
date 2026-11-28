@@ -1,77 +1,119 @@
 package mvc
 
-// Algebraic division groups dividend cubes by their literals outside the
-// divisor's support, then matches every divisor cube inside each group.
+// Mvc_CoverDivideInternal is mvcDivide.c's: after sorting, the dividend's
+// cubes that agree outside the divisor's support are consecutive (a group);
+// each group is walked against the sorted divisor once.
 func Mvc_CoverDivideInternal(c, d *Mvc_Cover_t) (q, r *Mvc_Cover_t) {
 	if c.NBits != d.NBits {
 		panic("mvc: incompatible covers")
 	}
-	if d.Cubes.Items == 0 {
+	// get cover sizes
+	nCubesD := d.Cubes.Items
+	nCubesC := c.Cubes.Items
+	if nCubesD == 0 {
 		panic("mvc: empty divisor")
 	}
-	if d.Cubes.Items == 1 {
+	// check trivial cases
+	if nCubesD == 1 {
+		if Mvc_CoverIsOneLiteral(d) {
+			return Mvc_CoverDivideByLiteral(c, d)
+		}
 		return Mvc_CoverDivideByCube(c, d)
 	}
-	q, r = Mvc_CoverClone(c), Mvc_CoverClone(c)
+	// create the divisor and the remainder
+	pQuo, pRem := Mvc_CoverClone(c), Mvc_CoverClone(c)
+	// get the support of the divisor
 	mask := Mvc_CubeAlloc(c)
 	Mvc_CoverSupport(d, mask)
-	// Source division sorts the operands in place. Callers reuse their order
-	// when constructing factoring graphs after this division.
+	// sort the cubes of the divisor and of the cover
 	Mvc_CoverSort(d, nil, Mvc_CubeCompareInt)
 	Mvc_CoverSort(c, mask, Mvc_CubeCompareIntOutsideAndUnderMask)
+	// split the cubes into groups using the mask
 	Mvc_CoverList2Array(c)
-	// small covers keep the scratch on the stack
-	var seenBuf, usedBuf [64]bool
-	var groupBuf [64]*Mvc_Cube_t
-	seen := seenBuf[:0]
-	if len(c.Array) > len(seenBuf) {
-		seen = make([]bool, 0, len(c.Array))
+	Mvc_CoverList2Array(d)
+	cubes, divs := c.Array, d.Array
+	var groupBuf [65]int
+	pGroups := groupBuf[:0]
+	if nCubesC+1 > len(groupBuf) {
+		pGroups = make([]int, 0, nCubesC+1)
 	}
-	seen = seen[:len(c.Array)]
-	for i, first := range c.Array {
-		if seen[i] {
+	pGroups = append(pGroups, 0)
+	for k := 1; k < nCubesC; k++ {
+		if !Mvc_CubeBitEqualOutsideMask(cubes[k-1], cubes[k], mask) {
+			pGroups = append(pGroups, k)
+		}
+	}
+	nGroups := len(pGroups)
+	pGroups = append(pGroups, nCubesC) // finish off the last group
+	addRem := func(x *Mvc_Cube_t) {
+		Mvc_CoverAddCubeTail(pRem, Mvc_CubeDup(pRem, x))
+	}
+	for g := 0; g < nGroups; g++ {
+		// a group of fewer than nCubesD cubes cannot produce a quotient cube
+		groupSize := pGroups[g+1] - pGroups[g]
+		if groupSize < nCubesD {
+			for k := pGroups[g]; k < pGroups[g+1]; k++ {
+				addRem(cubes[k])
+			}
 			continue
 		}
-		group := groupBuf[:0]
-		for j, x := range c.Array {
-			if !seen[j] && Mvc_CubeBitEqualOutsideMask(first, x, mask) {
-				seen[j] = true
-				group = append(group, x)
-			}
+		// mark the cubes as those that should be added to the remainder
+		for k := pGroups[g]; k < pGroups[g+1]; k++ {
+			Mvc_CubeSetSize(cubes[k], 1)
 		}
-		used := usedBuf[:0]
-		if len(group) > len(usedBuf) {
-			used = make([]bool, 0, len(group))
-		}
-		used = used[:len(group)]
-		clear(used)
-		success := true
-		for div := d.Cubes.Head; div != nil; div = div.Next {
-			match := -1
-			for j, x := range group {
-				if !used[j] && Mvc_CubeBitEqualUnderMask(x, div, mask) {
-					match = j
+		// walk the group and the divisor together
+		iCubeD, iCubeC := 0, 0
+		pCubeD := divs[iCubeD]
+		iCubeD++
+		pCubeC := cubes[pGroups[g]+iCubeC]
+		iCubeC++
+		fSkipG, nMerges, iMerge := false, 0, -1
+		for {
+			ret := Mvc_CubeCompareIntUnderMask(pCubeC, pCubeD, mask)
+			if ret == -1 { // the cube in C goes to the remainder
+				if groupSize-iCubeC < nCubesD-nMerges {
+					fSkipG = true
 					break
 				}
+				pCubeC = cubes[pGroups[g]+iCubeC]
+				iCubeC++
+				continue
 			}
-			if match < 0 {
-				success = false
+			if ret == 1 { // the cube in D has no counterpart in the group
+				fSkipG = true
 				break
 			}
-			used[match] = true
+			// this cube is not added to the remainder
+			Mvc_CubeSetSize(pCubeC, 0)
+			iMerge = iCubeC - 1
+			nMerges++
+			if iCubeD == nCubesD {
+				break
+			}
+			pCubeD = divs[iCubeD]
+			iCubeD++
+			pCubeC = cubes[pGroups[g]+iCubeC]
+			iCubeC++
 		}
-		if success {
-			x := Mvc_CubeDup(q, first)
-			Mvc_CubeBitSharp(x, x, mask)
-			Mvc_CoverAddCubeTail(q, x)
+		if fSkipG {
+			// the group has failed, add all its cubes to the remainder
+			for k := pGroups[g]; k < pGroups[g+1]; k++ {
+				addRem(cubes[k])
+			}
+			continue
 		}
-		for j, x := range group {
-			if !success || !used[j] {
-				Mvc_CoverAddDupCubeTail(r, x)
+		// the group has worked, add left-over cubes to the remainder
+		for k := pGroups[g]; k < pGroups[g+1]; k++ {
+			if Mvc_CubeReadSize(cubes[k]) != 0 {
+				addRem(cubes[k])
 			}
 		}
+		// create the quotient cube
+		x := Mvc_CubeAlloc(pQuo)
+		Mvc_CubeBitSharp(x, cubes[pGroups[g]+iMerge], mask)
+		Mvc_CoverAddCubeTail(pQuo, x)
 	}
-	return
+	return pQuo, pRem
 }
 func Mvc_CoverDivide(c, d *Mvc_Cover_t) (*Mvc_Cover_t, *Mvc_Cover_t) {
 	if c.Cubes.Items < d.Cubes.Items || !Mvc_CoverCheckSuppContainment(c, d) {

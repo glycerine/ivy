@@ -5,7 +5,6 @@ import (
 	"io"
 	"math"
 	"os"
-	"sort"
 	"time"
 
 	"github.com/glycerine/abcgo/bdd/epd"
@@ -39,6 +38,9 @@ type bddITEKey struct{ f, g, h *DdNode }
 // DdManager owns canonical ROBDD nodes and the ITE computed table. Like CUDD,
 // a manager must not be modified concurrently without external synchronization.
 type DdManager struct {
+	// Support's reusable scratch
+	supportSeen                       map[*DdNode]struct{}
+	supportVar                        []bool
 	One, LogicZero                    *DdNode
 	Zero, PlusInfinity, MinusInfinity *DdNode
 	Background                        *DdNode
@@ -816,25 +818,44 @@ func (dd *DdManager) Support(n *DdNode) []int {
 	if !(dd.valid(n) || dd.validAdd(n)) {
 		return nil
 	}
-	seen := map[*DdNode]bool{}
-	indices := map[int]bool{}
+	// reusable scratch (ddSupportStep marks nodes in place; the port keeps
+	// one visited set and one flag per variable on the manager)
+	if dd.supportSeen == nil {
+		dd.supportSeen = make(map[*DdNode]struct{})
+	}
+	seen := dd.supportSeen
+	if len(dd.supportVar) < len(dd.Perm) {
+		dd.supportVar = make([]bool, len(dd.Perm))
+	}
+	inSupport := dd.supportVar[:len(dd.Perm)]
+	count := 0
 	var visit func(*DdNode)
 	visit = func(n *DdNode) {
 		n = Cudd_Regular(n)
-		if seen[n] || Cudd_IsConstant(n) {
+		if Cudd_IsConstant(n) {
 			return
 		}
-		seen[n] = true
-		indices[int(n.Index)] = true
+		if _, ok := seen[n]; ok {
+			return
+		}
+		seen[n] = struct{}{}
+		if int(n.Index) < len(inSupport) && !inSupport[n.Index] {
+			inSupport[n.Index] = true
+			count++
+		}
 		visit(n.T)
 		visit(n.E)
 	}
 	visit(n)
-	result := make([]int, 0, len(indices))
-	for i := range indices {
-		result = append(result, i)
+	clear(seen)
+	// variables in manager level order
+	result := make([]int, 0, count)
+	for _, index := range dd.InvPerm {
+		if index < len(inSupport) && inSupport[index] {
+			result = append(result, index)
+			inSupport[index] = false
+		}
 	}
-	sort.Slice(result, func(i, j int) bool { return dd.Perm[result[i]] < dd.Perm[result[j]] })
 	return result
 }
 func Cudd_Support(dd *DdManager, f *DdNode) *DdNode {

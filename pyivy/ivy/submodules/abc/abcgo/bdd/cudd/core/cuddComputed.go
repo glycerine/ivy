@@ -17,6 +17,8 @@ const (
 	cacheZddIsopBDD // cuddZddIsop's BDD result
 	cacheZddIsopZDD // Cudd_zddIsop's ZDD cover
 	cacheBddIsop    // cuddBddIsop
+	cacheZddSubset0 // zdd_subset0_aux (op: the variable)
+	cacheZddSubset1 // zdd_subset1_aux (op: the variable)
 )
 
 type computedKey struct {

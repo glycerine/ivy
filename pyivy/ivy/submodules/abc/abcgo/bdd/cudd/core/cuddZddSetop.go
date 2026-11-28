@@ -292,34 +292,42 @@ func (dd *DdManager) zddSubset(f *DdNode, index int, positive bool) *DdNode {
 	if !dd.validZdd(f) || !dd.ensureZddVar(index) {
 		return nil
 	}
-	target := dd.PermZ[index]
-	memo := map[*DdNode]*DdNode{}
-	var visit func(*DdNode) *DdNode
-	visit = func(f *DdNode) *DdNode {
-		if f == dd.Zero {
-			return f
-		}
-		level := dd.zddLevel(f)
-		if level > target {
-			if positive {
-				return dd.Zero
-			}
-			return f
-		}
-		if level == target {
-			if positive {
-				return f.T
-			}
-			return f.E
-		}
-		if n := memo[f]; n != nil {
-			return n
-		}
-		n := dd.zddNode(f.Index, visit(f.T), visit(f.E))
-		memo[f] = n
-		return n
+	return dd.zddSubsetAux(f, index, dd.PermZ[index], positive)
+}
+
+// zddSubsetAux is cuddZddSetop.c's zdd_subset0_aux / zdd_subset1_aux: the
+// results go through the computed table (cuddCacheLookup2Zdd), keyed by the
+// node and the variable, as in CUDD; a per-call memo map allocated and
+// hashed for every cofactor of every cube.
+func (dd *DdManager) zddSubsetAux(P *DdNode, index, level int, positive bool) *DdNode {
+	kind := cacheZddSubset0
+	if positive {
+		kind = cacheZddSubset1
 	}
-	return visit(f)
+	key := computedKey{f: P, op: uintptr(index), kind: kind}
+	hash := key.hash()
+	if res := dd.cacheLookup(key, hash, true); res != nil {
+		return res
+	}
+	var res *DdNode
+	switch top := dd.zddLevel(P); {
+	case Cudd_IsConstant(P) || top > level:
+		res = P
+		if positive {
+			res = dd.Zero
+		}
+	case top == level:
+		res = P.E
+		if positive {
+			res = P.T
+		}
+	default:
+		t := dd.zddSubsetAux(P.T, index, level, positive)
+		e := dd.zddSubsetAux(P.E, index, level, positive)
+		res = dd.zddNode(P.Index, t, e)
+	}
+	dd.cacheInsert(key, res, hash)
+	return res
 }
 func Cudd_zddSubset1(dd *DdManager, f *DdNode, index int) *DdNode {
 	return dd.zddSubset(f, index, true)

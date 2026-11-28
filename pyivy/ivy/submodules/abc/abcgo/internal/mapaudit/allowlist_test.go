@@ -92,7 +92,6 @@ var allowlist = map[string]allowed{
 	"base/pla/plaMan.go:genRandomLocked":                                  {1, sortedAfter},
 	"bdd/cudd/core/bddCore.go:Cudd_CheckZeroRef":                          {1, count},
 	"bdd/cudd/core/bddCore.go:DdManager.constant":                         {1, "the matching constant of least ID wins"},
-	"bdd/cudd/core/bddCore.go:DdManager.Support":                          {1, sortedAfter},
 	"bdd/cudd/core/cuddAverageDistance.go:Cudd_AverageDistanceLinks":      {4, "chains are sorted by ID; the links only feed an average of pointer distances, which vary from run to run as in C"},
 	"bdd/cudd/core/cuddCheck.go:Cudd_CheckConsistency":                    {1, check},
 	"bdd/cudd/core/cuddGC.go:Cudd_GarbageCollect":                         {1, "deletes dead constants and counts them"},
