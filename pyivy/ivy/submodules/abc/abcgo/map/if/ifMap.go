@@ -818,7 +818,7 @@ func ifObjMergeCutsPlain(p *If_Man_t, pObj *If_Obj_t, pCutSet *If_Set_t, Mode, f
 			}
 			p.nCutsMerged++
 			p.nCutsTotal++
-			if If_CutFilter(pCutSet, pCut, fSave0) != 0 {
+			if ifCutFilterOrdered(pCutSet, pCut, fSave0) != 0 {
 				continue
 			}
 			pCut.fAndCut = 0

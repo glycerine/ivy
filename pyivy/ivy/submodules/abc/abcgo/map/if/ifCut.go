@@ -848,3 +848,49 @@ func ifCutMergeOrderedInline(a, b, c *If_Cut_t) int32 {
 	c.uSign = a.uSign | b.uSign
 	return 1
 }
+
+// ifSortedSubset reports whether every leaf of dom is a leaf of c, for
+// leaves in increasing order (the plain mapping path merges ordered cuts).
+// It answers If_CutCheckDominance(dom, c) with one walk over both lists.
+func ifSortedSubset(dom, c []int32) bool {
+	if len(dom) > len(c) {
+		return false
+	}
+	j := 0
+	for _, leaf := range dom {
+		for j < len(c) && c[j] < leaf {
+			j++
+		}
+		if j == len(c) || c[j] != leaf {
+			return false
+		}
+		j++
+	}
+	return true
+}
+
+// ifCutFilterOrdered is If_CutFilter for cuts whose leaves are in
+// increasing order; the result and the cut set are the same.
+func ifCutFilterOrdered(set *If_Set_t, c *If_Cut_t, saveFirst int32) int32 {
+	cuts := set.ppCuts
+	leaves := c.pLeaves[:c.nLeaves]
+	sign := c.uSign
+	for i := 0; i < int(set.nCuts); i++ {
+		other := cuts[i]
+		if other.nLeaves > c.nLeaves {
+			if i == 0 && (set.nCuts > 1 && cuts[1].fUseless != 0 || saveFirst != 0 && set.nCuts == 1) {
+				continue
+			}
+			if other.uSign&sign == sign && ifSortedSubset(leaves, other.pLeaves[:other.nLeaves]) {
+				old := set.nCuts
+				copy(cuts[i:old], cuts[i+1:old+1])
+				cuts[old] = other
+				set.nCuts--
+				i--
+			}
+		} else if other.uSign&sign == other.uSign && ifSortedSubset(other.pLeaves[:other.nLeaves], leaves) {
+			return 1
+		}
+	}
+	return 0
+}
