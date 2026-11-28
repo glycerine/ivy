@@ -135,8 +135,6 @@ var allowlist = map[string]allowed{
 	"map/scl/sclDnsize.go:Abc_SclFindWindow":                              {1, sortedAfter},
 	"map/scl/sclUpsize.go:Abc_SclFindCriticalNodeWindow":                  {1, buildSet},
 	"map/scl/sclUpsize.go:Abc_SclFindNodesToUpdate":                       {1, sortedAfter},
-	"map/super/superGate.go:Super_TranferGatesToArray":                    {1, "stable sort by unique serial"},
-	"map/super/superWrite.go:Super_Man_t.selected":                        {1, "sorted with a total key ending in the unique serial"},
 	"misc/bbl/bblif.c.go:ParseBinary":                                     {1, "each object gets its own fanins in recorded order; one error text"},
 	"misc/extra/extraUtilPrime.go:Tab_ManCollectDist1":                    {1, sortedAfter},
 	"misc/nm/nmApi.go:Manager.IDs":                                        {1, "unordered iterator; callers sort (Nm_ManReturnNameIds) or only test membership (Abc_NtkCheck)"},

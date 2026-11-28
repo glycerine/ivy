@@ -2,12 +2,13 @@ package super
 
 import (
 	"fmt"
-	abcmain "github.com/glycerine/abcgo/base/main"
-	"github.com/glycerine/abcgo/map/mio"
-	"os"
 	"strconv"
 	"strings"
-	"time"
+
+	abcio "github.com/glycerine/abcgo/base/io"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/map/mio"
+	"github.com/glycerine/abcgo/misc/extra"
 )
 
 func Super_Init(frame *abcmain.Frame) {
@@ -110,74 +111,205 @@ func Super_CommandSupergatesAnd(frame *abcmain.Frame, argc int32, args []string)
 	}
 	return 0
 }
-func Super_CommandSupergates(frame *abcmain.Frame, argc int32, args []string) int32 {
-	const usage = "usage: super [-ILNT num] [-DA float] [-E file] [-sov] genlib_file"
-	o, err := parseCommand(args, "ILNTDAE", "sov")
-	if err != nil {
-		return commandError(frame, err, usage)
-	}
-	if len(o.arguments) != 1 {
-		return commandError(frame, fmt.Errorf("exactly one genlib file is required"), usage)
-	}
-	options := DefaultOptions()
-	for _, entry := range []struct {
-		key    byte
-		target *int
-	}{{'I', &options.Inputs}, {'L', &options.Levels}, {'N', &options.MaxGates}} {
-		*entry.target, err = commandInt(o, entry.key, *entry.target)
-		if err != nil {
-			return commandError(frame, err, usage)
+
+// Super_CommandSupergates is the "super" command of super.c.
+func Super_CommandSupergates(pAbc *abcmain.Frame, argc int32, argv []string) int32 {
+	var pLib *mio.Mio_Library_t
+	var FileName, ExcludeFile string
+	var DelayLimit, AreaLimit float32
+	var fSkipInvs, fWriteOldFormat int32
+	var nVarsMax, nLevels, nGatesMax, TimeLimit int32
+	var fVerbose int32
+	var c int32
+
+	pErr := pAbc.Err
+
+	// set the defaults
+	nVarsMax = 5
+	nLevels = 2
+	DelayLimit = 0
+	AreaLimit = 0
+	nGatesMax = 0
+	TimeLimit = 0
+	fSkipInvs = 1
+	fVerbose = 0
+	fWriteOldFormat = 0
+	ExcludeFile = ""
+
+	extra.Extra_UtilGetoptReset()
+	for {
+		if c = extra.Extra_UtilGetopt(argc, argv, "ILNTDAEsovh"); c == -1 {
+			break
 		}
-	}
-	seconds, err := commandInt(o, 'T', 0)
-	if err != nil {
-		return commandError(frame, err, usage)
-	}
-	options.TimeLimit = time.Duration(seconds) * time.Second
-	for _, entry := range []struct {
-		key    byte
-		target *float32
-	}{{'D', &options.DelayLimit}, {'A', &options.AreaLimit}} {
-		if value, ok := o.numbers[entry.key]; ok {
-			parsed, e := strconv.ParseFloat(value, 32)
-			if e != nil || !finite(float32(parsed)) || parsed <= 0 {
-				return commandError(frame, fmt.Errorf("invalid positive -%c value", entry.key), usage)
+		globalUtilOptind := extra.Extra_UtilGetoptIndex()
+		next := func() string {
+			if int(globalUtilOptind) >= len(argv) {
+				return ""
 			}
-			*entry.target = float32(parsed)
+			return argv[globalUtilOptind]
+		}
+		switch c {
+		case 'I':
+			nVarsMax = superAtoi(next())
+			extra.Extra_UtilGetoptSetIndex(globalUtilOptind + 1)
+			if nVarsMax < 0 {
+				goto usage
+			}
+		case 'L':
+			nLevels = superAtoi(next())
+			extra.Extra_UtilGetoptSetIndex(globalUtilOptind + 1)
+			if nLevels < 0 {
+				goto usage
+			}
+		case 'N':
+			nGatesMax = superAtoi(next())
+			extra.Extra_UtilGetoptSetIndex(globalUtilOptind + 1)
+			if nGatesMax < 0 {
+				goto usage
+			}
+		case 'T':
+			TimeLimit = superAtoi(next())
+			extra.Extra_UtilGetoptSetIndex(globalUtilOptind + 1)
+			if TimeLimit < 0 {
+				goto usage
+			}
+		case 'D':
+			DelayLimit = float32(superAtof(next()))
+			extra.Extra_UtilGetoptSetIndex(globalUtilOptind + 1)
+			if DelayLimit <= 0.0 {
+				goto usage
+			}
+		case 'A':
+			AreaLimit = float32(superAtof(next()))
+			extra.Extra_UtilGetoptSetIndex(globalUtilOptind + 1)
+			if AreaLimit <= 0.0 {
+				goto usage
+			}
+		case 'E':
+			if int(globalUtilOptind) >= len(argv) {
+				goto usage
+			}
+			ExcludeFile = argv[globalUtilOptind]
+			extra.Extra_UtilGetoptSetIndex(globalUtilOptind + 1)
+		case 's':
+			fSkipInvs ^= 1
+		case 'o':
+			fWriteOldFormat ^= 1
+		case 'v':
+			fVerbose ^= 1
+		default:
+			goto usage
 		}
 	}
-	if options.Inputs < 2 || options.Inputs > 6 {
-		return commandError(frame, fmt.Errorf("super input count must be 2..6"), usage)
+
+	if argc != extra.Extra_UtilGetoptIndex()+1 {
+		fmt.Fprintf(pErr, "The genlib library file should be given on the command line.\n")
+		goto usage
 	}
-	options.SkipInputInverters = !o.flags['s']
-	if o.flags['v'] {
-		options.Progress = frame.Out
+
+	if nVarsMax < 2 || nVarsMax > 6 {
+		fmt.Fprintf(pErr, "The max number of variables (%d) should be more than 1 and less than 7.\n", nVarsMax)
+		goto usage
 	}
-	exclude := o.numbers['E']
-	if exclude != "" {
-		if _, err = os.ReadFile(exclude); err != nil {
-			return commandError(frame, err, usage)
+
+	// get the input file name
+	FileName = argv[extra.Extra_UtilGetoptIndex()]
+	if pFile := abcio.Io_FileOpen(FileName, "open_path", "r", 0); pFile == nil {
+		fmt.Fprintf(pErr, "Cannot open input file \"%s\". ", FileName)
+		if FileName = extra.Extra_FileGetSimilarName(FileName, ".genlib", ".lib", ".gen", ".g", ""); FileName != "" {
+			fmt.Fprintf(pErr, "Did you mean \"%s\"?", FileName)
 		}
+		fmt.Fprintf(pErr, "\n")
+		return 1
+	} else {
+		pFile.Close()
 	}
-	lib := mio.Mio_LibraryRead(o.arguments[0], "", exclude, 0)
-	if lib == nil {
-		return commandError(frame, fmt.Errorf("cannot read genlib %s", o.arguments[0]), usage)
+
+	// set the new network
+	pLib = mio.Mio_LibraryRead(FileName, "", ExcludeFile, fVerbose)
+	if pLib == nil {
+		fmt.Fprintf(pErr, "Reading library has failed.\n")
+		goto usage
 	}
-	defer mio.Mio_LibraryDelete(lib)
-	manager, err := Generate(lib, options)
-	if err != nil {
-		return commandError(frame, err, usage)
+
+	// compute the gates
+	FileName = extra.Extra_FileNameGenericAppend(mio.Mio_LibraryReadName(pLib), ".super")
+	Super_Precompute(pLib, nVarsMax, nLevels, nGatesMax, DelayLimit, AreaLimit, TimeLimit, fSkipInvs, fVerbose, FileName)
+
+	// delete the library
+	mio.Mio_LibraryDelete(pLib)
+	return 0
+
+usage:
+	_ = fWriteOldFormat // parsed, but (as in C) not passed to Super_Precompute
+	fmt.Fprintf(pErr, "usage: super [-ILNT num] [-DA float] [-E file] [-sovh] <genlib_file>\n")
+	fmt.Fprintf(pErr, "\t         precomputes the supergates for the given genlib library\n")
+	fmt.Fprintf(pErr, "\t-I num   : the max number of supergate inputs [default = %d]\n", nVarsMax)
+	fmt.Fprintf(pErr, "\t-L num   : the max number of levels of gates [default = %d]\n", nLevels)
+	fmt.Fprintf(pErr, "\t-N num   : the limit on the number of considered supergates [default = %d]\n", nGatesMax)
+	fmt.Fprintf(pErr, "\t-T num   : the approximate runtime limit in seconds [default = %d]\n", TimeLimit)
+	fmt.Fprintf(pErr, "\t-D float : the max delay of the supergates [default = %.2f]\n", DelayLimit)
+	fmt.Fprintf(pErr, "\t-A float : the max area of the supergates [default = %.2f]\n", AreaLimit)
+	fmt.Fprintf(pErr, "\t-E file  : file contains list of genlib gates to exclude\n")
+	fmt.Fprintf(pErr, "\t-s       : toggle the use of inverters at the inputs [default = %s]\n", superYesNo(fSkipInvs == 0))
+	fmt.Fprintf(pErr, "\t-o       : toggle dumping the supergate library in old format [default = %s]\n", superYesNo(fWriteOldFormat != 0))
+	fmt.Fprintf(pErr, "\t-v       : enable verbose output [default = %s]\n", superYesNo(fVerbose != 0))
+	fmt.Fprintf(pErr, "\t-h       : print the help message\n")
+	fmt.Fprintf(pErr, "\n")
+	fmt.Fprintf(pErr, "\tHere is a piece of advice on precomputing supergate libraries:\n")
+	fmt.Fprintf(pErr, "\t\n")
+	fmt.Fprintf(pErr, "\tStart with the number of inputs equal to 5 (-I 5), the number of \n")
+	fmt.Fprintf(pErr, "\tlevels equal to 2 (-L 2), the delay equal to 2-3 delays of inverter, \n")
+	fmt.Fprintf(pErr, "\tthe area equal to 2-3 areas of two input NAND, and runtime limit equal \n")
+	fmt.Fprintf(pErr, "\tto 10 seconds (-T 10). Run precomputation and learn from the result.\n")
+	fmt.Fprintf(pErr, "\tDetermine what parameter is most constraining and try to increase \n")
+	fmt.Fprintf(pErr, "\tthe value of that parameter. The goal is to have a well-balanced\n")
+	fmt.Fprintf(pErr, "\tset of constraints and the resulting supergate library containing\n")
+	fmt.Fprintf(pErr, "\tapproximately 5K-20K supergates. Typically, it is better to increase\n")
+	fmt.Fprintf(pErr, "\tdelay limit rather than area limit, because having large-area supergates\n")
+	fmt.Fprintf(pErr, "\tmay result in a considerable increase in area.\n")
+	fmt.Fprintf(pErr, "\t\n")
+	fmt.Fprintf(pErr, "\tNote that a good supergate library for experiments typically can be \n")
+	fmt.Fprintf(pErr, "\tprecomputed in 30 sec or less. Increasing runtime limit makes sense when\n")
+	fmt.Fprintf(pErr, "\tother parameters are well-balanced and it is needed to enumerate more\n")
+	fmt.Fprintf(pErr, "\tchoices to have a good result. In the end, to compute the final library\n")
+	fmt.Fprintf(pErr, "\tthe runtime can be set to 300 sec to ensure the ultimate quality.\n")
+	fmt.Fprintf(pErr, "\tIn some cases, the runtime has to be reduced if the supergate library\n")
+	fmt.Fprintf(pErr, "\tcontains too many supergates (> 500K).\n")
+	fmt.Fprintf(pErr, "\t\n")
+	fmt.Fprintf(pErr, "\tWhen precomputing libraries of 6 inputs (-i 6), start with even more \n")
+	fmt.Fprintf(pErr, "\trestricted parameters and gradually increase them until the goal is met.\n")
+	fmt.Fprintf(pErr, "\t\n")
+	return 1 /* error exit */
+}
+
+func superYesNo(b bool) string {
+	if b {
+		return "yes"
 	}
-	data, err := manager.MarshalTree()
-	if err != nil {
-		return commandError(frame, err, usage)
+	return "no"
+}
+
+// superAtoi is C atoi: optional blanks and sign, then the decimal prefix.
+func superAtoi(s string) int32 {
+	s = strings.TrimLeft(s, " \t\n\r\f\v")
+	end := 0
+	if end < len(s) && (s[end] == '+' || s[end] == '-') {
+		end++
 	}
-	if err = os.WriteFile(outputBase(manager.Name)+".super", data, 0644); err != nil {
-		return commandError(frame, err, usage)
+	for end < len(s) && s[end] >= '0' && s[end] <= '9' {
+		end++
 	}
-	if o.flags['o'] {
-		if err = Super_WriteLibrary(manager); err != nil {
-			return commandError(frame, err, usage)
+	n, _ := strconv.ParseInt(s[:end], 10, 64)
+	return int32(n)
+}
+
+// superAtof is C atof on the longest decimal prefix.
+func superAtof(s string) float64 {
+	s = strings.TrimLeft(s, " \t\n\r\f\v")
+	for end := len(s); end > 0; end-- {
+		if v, err := strconv.ParseFloat(s[:end], 64); err == nil {
+			return v
 		}
 	}
 	return 0

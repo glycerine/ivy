@@ -103,9 +103,8 @@ func Map_SuperLibDeriveFromGenlib2(genlib *mio.Mio_Library_t, verbose int32) int
 		return 0
 	}
 	path := mio.Mio_LibraryReadName(genlib) + ".super"
-	if err := superpkg.Super_Precompute(genlib, 5, 1, 100000000, 10000000, 10000000, 100, 1, verbose, path); err != nil {
-		return 0
-	}
+	superpkg.Super_Precompute(genlib, 5, 1, 100000000, 10000000, 10000000, 100, 1, 0, path)
+	// assuming that it terminated successfully
 	lib := Map_SuperLibCreate(genlib, nil, path, "", 1, verbose)
 	if lib == nil {
 		return 0

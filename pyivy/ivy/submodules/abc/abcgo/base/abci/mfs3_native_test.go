@@ -19,8 +19,8 @@ const mfs3Genlib = "../../map/super/test_vectors/tiny.genlib"
 
 // mfs3MappedInputs has native ABC map each design with tiny.genlib and
 // write the mapped network, so both sides start mfs3 from the same network
-// (the port's supergate generation for "map" still orders gate fanins
-// differently from native ABC).
+// (the port's "map" now writes the same network too; see
+// TestMapTinyGenlibLikeNative).
 func mfs3MappedInputs(t *testing.T, dir string) map[string]string {
 	t.Helper()
 	designs := map[string]string{
