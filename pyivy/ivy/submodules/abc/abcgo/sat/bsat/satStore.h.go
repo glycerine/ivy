@@ -35,4 +35,8 @@ type Sto_Man_t struct {
 	nChunkSize, nChunkUsed             int32
 	pChunkLast                         []byte
 	chunks                             [][]byte
+	// clauses and literals are carved from slabs, as Sto_ManMemoryFetch
+	// carves them from chunks: one allocation per slab, not two per clause
+	clsSlab []Sto_Cls_t
+	litSlab []lit
 }

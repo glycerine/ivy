@@ -21,7 +21,7 @@ func sat_solver_addclause(s *sat_solver, input []lit) int32 {
 	data := append(scratch.ptr[:0], input...)
 	scratch.ptr = data[:cap(data)]
 	scratch.size, scratch.cap = int32(len(data)), int32(cap(data))
-	slices.Sort(data)
+	litInsertionSort(data)
 	if len(data) > 0 {
 		if data[0] < 0 {
 			panic("negative encoded literal")

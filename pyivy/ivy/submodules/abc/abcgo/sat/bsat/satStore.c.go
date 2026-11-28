@@ -7,7 +7,6 @@ import (
 	"io"
 	"os"
 	"reflect"
-	"slices"
 	"strconv"
 	"strings"
 )
@@ -84,14 +83,16 @@ func Sto_ManAddClause(p *Sto_Man_t, data []lit) int32 {
 	if len(data) > 0xffffff || len(data) == 0 && p.pEmpty != nil {
 		return 0
 	}
-	literals := append([]lit(nil), data...)
-	slices.Sort(literals)
+	literals := p.fetchLits(len(data))
+	copy(literals, data)
+	litInsertionSort(literals)
 	for i, l := range literals {
 		if l < 0 || i > 0 && lit_var(literals[i-1]) == lit_var(l) {
 			return 0
 		}
 	}
-	c := &Sto_Cls_t{Id: p.nClauses, nLits: int32(len(literals)), pLits: literals}
+	c := p.fetchClause()
+	*c = Sto_Cls_t{Id: p.nClauses, nLits: int32(len(literals)), pLits: literals}
 	p.nClauses++
 	if len(literals) > 0 {
 		p.nVars = max(p.nVars, lit_var(literals[len(literals)-1])+1)
@@ -294,4 +295,43 @@ func Sto_ManLoadClauses(name string) *Sto_Man_t {
 		return nil
 	}
 	return p
+}
+
+const stoSlabClauses, stoSlabLits = 1024, 4096
+
+// fetchClause returns a zeroed clause record from the manager's slab.
+func (p *Sto_Man_t) fetchClause() *Sto_Cls_t {
+	if len(p.clsSlab) == 0 {
+		p.clsSlab = make([]Sto_Cls_t, stoSlabClauses)
+	}
+	c := &p.clsSlab[0]
+	p.clsSlab = p.clsSlab[1:]
+	return c
+}
+
+// fetchLits returns n literals from the manager's slab, capped at n so an
+// append to a clause's literals cannot reach the next clause's.
+func (p *Sto_Man_t) fetchLits(n int) []lit {
+	if n > len(p.litSlab) {
+		if n > stoSlabLits/4 {
+			return make([]lit, n)
+		}
+		p.litSlab = make([]lit, stoSlabLits)
+	}
+	l := p.litSlab[:n:n]
+	p.litSlab = p.litSlab[n:]
+	return l
+}
+
+// litInsertionSort sorts a clause's literals as ABC's insertion sorts do;
+// clauses are short and often already sorted.
+func litInsertionSort(a []lit) {
+	for i := 1; i < len(a); i++ {
+		l := a[i]
+		j := i
+		for ; j > 0 && a[j-1] > l; j-- {
+			a[j] = a[j-1]
+		}
+		a[j] = l
+	}
 }
