@@ -12,6 +12,8 @@ import (
 	"strings"
 
 	"github.com/glycerine/abcgo/base/abc"
+	abcmain "github.com/glycerine/abcgo/base/main"
+	"github.com/glycerine/abcgo/map/mio"
 )
 
 type blifLine struct {
@@ -495,6 +497,8 @@ func ParseBLIF(name, text string, multiValued, check bool) (*abc.Network, error)
 					err = blifTables(m, names, rows, multiValued)
 				}
 
+			case ".gate":
+				err = blifGate(m, models, line.number, f)
 			case ".subckt":
 				err = blifInstance(m, f[1:], byName, multiValued)
 			case ".latch":
@@ -912,4 +916,95 @@ func (m *blifModel) uniqueNetName(prefix string) string {
 			return name
 		}
 	}
+}
+
+// blifGate is Io_MvParseLineGateBlif for gates without a twin: a node of
+// the current genlib gate, its formal inputs put in the gate's pin order.
+func blifGate(m *blifModel, models []*blifModel, lineNumber int, vTokens []string) error {
+	pGenlib, _ := abcmain.Abc_FrameReadLibGen().(*mio.Mio_Library_t)
+	if pGenlib == nil {
+		return blifReadErrorf("Line %d: The current library is not available.", lineNumber)
+	}
+	if len(vTokens) < 2 {
+		return blifReadErrorf("Line %d: The .gate line has less than two tokens.", lineNumber)
+	}
+	pGate := mio.Mio_LibraryReadGateByName(pGenlib, vTokens[1], "")
+	if pGate == nil {
+		return blifReadErrorf("Line %d: Cannot find gate \"%s\" in the library.", lineNumber, vTokens[1])
+	}
+	if mio.Mio_GateReadTwin(pGate) != nil {
+		return blifReadErrorf("Line %d: Gate \"%s\" has two outputs (not supported).", lineNumber, vTokens[1])
+	}
+	// if this is the first line with gate, update the network type
+	if abc.Abc_NtkNodeNum(m.network) == 0 && m.network.Function == uint8(abc.ABC_FUNC_SOP) {
+		m.network.Function = uint8(abc.ABC_FUNC_MAP)
+		m.network.FunctionManager = pGenlib
+		for _, other := range models {
+			if other == m {
+				continue
+			}
+			other.network.Function = uint8(abc.ABC_FUNC_MAP)
+			other.network.FunctionManager = pGenlib
+		}
+	}
+	// reorder the formal inputs to be in the same order as in the gate
+	vTokens, ok := blifReorderFormalNames(vTokens, pGate)
+	if !ok {
+		return blifReadErrorf("Line %d: Mismatch in the fanins of gate \"%s\".", lineNumber, vTokens[1])
+	}
+	// remove the formal parameter names
+	names := make([]string, 0, len(vTokens)-2)
+	for _, token := range vTokens[2:] {
+		eq := strings.IndexByte(token, '=')
+		if eq < 0 || eq+1 == len(token) {
+			return blifReadErrorf("Line %d: Invalid gate input assignment.", lineNumber)
+		}
+		names = append(names, token[eq+1:])
+	}
+	// create the node (Io_ReadCreateNode)
+	_, err := m.node(names, pGate)
+	return err
+}
+
+// blifReorderFormalNames is Io_ReadBlifReorderFormalNames for a gate
+// without a twin.
+func blifReorderFormalNames(vTokens []string, pGate *mio.Mio_Gate_t) ([]string, bool) {
+	nSize := len(vTokens)
+	if int32(nSize-3) != mio.Mio_GateReadPinNum(pGate) {
+		return vTokens, false
+	}
+	matches := func(pNamePin, pName string) bool {
+		return strings.HasPrefix(pName, pNamePin) && len(pName) > len(pNamePin) && pName[len(pNamePin)] == '='
+	}
+	// check if the names are in order
+	i := 0
+	for pGatePin := mio.Mio_GateReadPins(pGate); pGatePin != nil; pGatePin = mio.Mio_PinReadNext(pGatePin) {
+		if !matches(mio.Mio_PinReadName(pGatePin), vTokens[i+2]) {
+			break
+		}
+		i++
+	}
+	if int32(i) == mio.Mio_GateReadPinNum(pGate) {
+		return vTokens, true
+	}
+	// reorder the pins
+	var reordered []string
+	for pGatePin := mio.Mio_GateReadPins(pGate); pGatePin != nil; pGatePin = mio.Mio_PinReadNext(pGatePin) {
+		for k := 2; k < nSize; k++ {
+			if matches(mio.Mio_PinReadName(pGatePin), vTokens[k]) {
+				reordered = append(reordered, vTokens[k])
+				break
+			}
+		}
+	}
+	for k := 2; k < nSize; k++ {
+		if matches(mio.Mio_GateReadOutName(pGate), vTokens[k]) {
+			reordered = append(reordered, vTokens[k])
+			break
+		}
+	}
+	if len(reordered) != nSize-2 {
+		return vTokens, false
+	}
+	return append(vTokens[:2:2], reordered...), true
 }

@@ -171,7 +171,6 @@ var allowlist = map[string]allowed{
 	"opt/rwr/rwrExp.go:rwrSortedTruths":                                   {1, sortedAfter},
 	"opt/rwr/rwrExp.go:Rwt_Man5ExplorePrint":                              {1, "total and maximum"},
 	"opt/rwt/rwtMan.go:Rwt_ManStop":                                       {1, release},
-	"opt/sfm/sfm_dec_insert.go:sfmInsertAreaMatch":                        {2, "an all-test, then per-node deletion marks"},
 	"opt/sim/simSymStr.go:Sim_SymmsStructCompute":                         {3, "builds sets and sets matrix bits"},
 	"phys/place/place_legalize.go:Legalize":                               {1, perKey},
 	"proof/acec/acecPo.go:Gia_PolynPrintStats":                            {1, sortedAfter},

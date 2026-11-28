@@ -17816,10 +17816,7 @@ func Abc_CommandPhaseMap(pAbc *Abc_Frame_t, argc int32, argv []string) int32 {
 		Abc_Print(-1, "Cannot unmap the network that is not mapped.\n")
 		return 1
 	}
-	if err := abcPhaseMap(pNtk, fVerbose); err != nil {
-		Abc_Print(-1, "%s\n", err)
-		return 1
-	}
+	baseabc.Abc_NtkChangePerform(pNtk, fVerbose)
 	return 0
 
 usage:

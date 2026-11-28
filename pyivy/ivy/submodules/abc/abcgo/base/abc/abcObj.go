@@ -428,6 +428,11 @@ func Abc_NtkCreateNodeBuf(n *Network, fanin *Object) *Object {
 	if manager, ok := n.FunctionManager.(*hop.Hop_Man_t); ok {
 		node.Data = hop.Hop_IthVar(manager, 0)
 	}
+	if Abc_NtkHasMapping(n) != 0 { // the genlib buffer, as Abc_NtkCreateNodeInv
+		if manager, ok := n.FunctionManager.(*mio.Mio_Library_t); ok {
+			node.Data = mio.Mio_LibraryReadBuf(manager)
+		}
+	}
 	return sopConstructor(n, node, Abc_SopCreateBuf(nil))
 }
 func Abc_NtkCreateNodeAnd(n *Network, fanins []*Object) *Object {

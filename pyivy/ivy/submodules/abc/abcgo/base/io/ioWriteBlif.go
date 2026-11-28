@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/glycerine/abcgo/base/abc"
+	"github.com/glycerine/abcgo/map/mio"
 	"github.com/glycerine/abcgo/misc/extra"
 )
 
@@ -124,8 +125,59 @@ func writeBLIFHead(out *strings.Builder, n *abc.Network, mv bool, writeLatches b
 	return false, nil
 }
 
+// blifWriteNodeGate is Io_NtkWriteNodeGate: the rest of a mapped node's
+// .gate line. It reports whether the next node (the second output of a
+// two-output gate) was written too.
+var blifTwinReported bool
+
+func blifWriteNodeGate(out *strings.Builder, node *abc.Object, length int) bool {
+	gate := node.Data.(*mio.Mio_Gate_t)
+	fmt.Fprintf(out, " %-*s ", length, mio.Mio_GateReadName(gate))
+	i := 0
+	for pin := mio.Mio_GateReadPins(gate); pin != nil; pin = mio.Mio_PinReadNext(pin) {
+		fmt.Fprintf(out, "%s=%s ", mio.Mio_PinReadName(pin), blifObjectName(node.FaninAt(int32(i)).Object))
+		i++
+	}
+	fmt.Fprintf(out, "%s=%s", mio.Mio_GateReadOutName(gate), blifObjectName(node.FanoutAt(0)))
+	if mio.Mio_GateReadTwin(gate) == nil {
+		return false
+	}
+	node2 := abc.Abc_NtkFetchTwinNode(node)
+	if node2 == nil {
+		if !blifTwinReported {
+			blifTwinReported = true
+			fmt.Printf("Warning: Missing second output of gate(s) \"%s\".\n", mio.Mio_GateReadName(gate))
+		}
+		return false
+	}
+	fmt.Fprintf(out, " %s=%s", mio.Mio_GateReadOutName(node2.Data.(*mio.Mio_Gate_t)), blifObjectName(node2.FanoutAt(0)))
+	return true
+}
+
 func writeBLIFBody(w stdio.Writer, out *strings.Builder, n *abc.Network, mv bool) error {
-	for _, node := range n.ObjectsOfKind(abc.ObjectNode) {
+	if abc.Abc_NtkHasMapping(n) != 0 {
+		// Io_NtkWriteNode on a mapped netlist: .gate (or .barbuf) lines
+		length := int(mio.Mio_LibraryReadGateNameMax(n.FunctionManager.(*mio.Mio_Library_t)))
+		nodes := n.ObjectsOfKind(abc.ObjectNode)
+		for i := 0; i < len(nodes); i++ {
+			node := nodes[i]
+			if abc.Abc_ObjIsBarBuf(node) != 0 {
+				fmt.Fprintf(out, ".barbuf %s %s\n", blifObjectName(node.FaninAt(0).Object), blifObjectName(node.FanoutAt(0)))
+				continue
+			}
+			out.WriteString(".gate")
+			skip := blifWriteNodeGate(out, node, length)
+			out.WriteString("\n")
+			if skip { // skip the next node
+				i++
+			}
+		}
+	}
+	namesNodes := n.ObjectsOfKind(abc.ObjectNode)
+	if abc.Abc_NtkHasMapping(n) != 0 {
+		namesNodes = nil
+	}
+	for _, node := range namesNodes {
 		outputs := node.Fanouts()
 		if len(outputs) != 1 {
 			return fmt.Errorf("node %d must drive one net", node.ID)

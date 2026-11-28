@@ -1,6 +1,10 @@
 package abc
 
-import "fmt"
+import (
+	"fmt"
+
+	abcmain "github.com/glycerine/abcgo/base/main"
+)
 
 // Abc_NtkToLogic converts a flat netlist or a strashed AIG to logic.
 func Abc_NtkToLogic(src *Network) *Network {
@@ -61,6 +65,9 @@ func Abc_NtkLogicToNetlist(src *Network) *Network {
 		return nil
 	}
 	if Abc_NtkLogicHasSimpleCos(src) == 0 {
+		if _, silent := abcmain.Abc_FrameGetGlobalFrame().LookupFlag("silentmode"); !silent {
+			fmt.Printf("Abc_NtkLogicToNetlist() warning: The network is converted to have simple COs.\n")
+		}
 		Abc_NtkLogicMakeSimpleCos(src, 0)
 	}
 	dst := Abc_NtkStartFrom(src, ABC_NTK_NETLIST, Abc_NtkFunc_t(src.Function))

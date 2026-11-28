@@ -128,3 +128,11 @@ func (s *sat_solver_t) StoreReleaseC() *Sto_Man_t { return s.ReleaseClauseStore(
 
 // SetVerbosityC is pSat->verbosity = verbosity.
 func (s *sat_solver_t) SetVerbosityC(verbosity int32) { s.verbosity = verbosity }
+
+// FinalC is sat_solver_final: the final conflict clause of the last UNSAT
+// call under assumptions (the slice aliases the solver's storage).
+func (s *sat_solver_t) FinalC() []Literal {
+	var out []lit
+	n := sat_solver_final(s, &out)
+	return out[:n]
+}

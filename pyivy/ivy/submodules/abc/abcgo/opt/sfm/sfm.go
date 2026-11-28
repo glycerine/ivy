@@ -123,3 +123,27 @@ type Sfm_Ntk_t struct {
 	// SourceIDs holds caller object IDs for the original mapped objects.
 	SourceIDs []int
 }
+
+// Sfm_ParSetDefault3 is sfmDec.c's parameter setup for mfs3.
+func Sfm_ParSetDefault3(pPars *Sfm_Par_t) {
+	*pPars = Sfm_Par_t{}
+	pPars.TfoLevMax = 100  // the maximum fanout levels
+	pPars.TfiLevMax = 100  // the maximum fanin levels
+	pPars.FanoutMax = 10   // the maximum number of fanouts
+	pPars.MffcMin = 1      // the maximum MFFC size
+	pPars.MffcMax = 3      // the maximum MFFC size
+	pPars.VarMax = 6       // the maximum variable count
+	pPars.DecMax = 1       // the maximum number of decompositions
+	pPars.WinSizeMax = 0   // the maximum window size
+	pPars.GrowthLevel = 0  // the maximum allowed growth in level
+	pPars.BTLimit = 0      // the maximum number of conflicts in one SAT run
+	pPars.TimeWin = 1      // the size of timing window in percents
+	pPars.DeltaCrit = 0    // delta delay in picoseconds
+	pPars.UseAndOr = false // enable internal detection of AND/OR gates
+	pPars.ZeroCost = false // enable zero-cost replacement
+	pPars.MoreEffort = false
+	pPars.UseSim = false
+	pPars.Area = false
+	pPars.Verbose = false
+	pPars.VeryVerbose = false
+}
