@@ -1,0 +1,12 @@
+.model i1
+.inputs a
+.outputs o
+.latch n l 1
+.latch m k 0
+.names a l n
+11 1
+.names l k m
+10 1
+.names l k o
+11 1
+.end

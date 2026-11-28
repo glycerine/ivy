@@ -235,7 +235,11 @@ func Marshal(provider AigerProvider, options WriteOptions) ([]byte, error) {
 	}
 	counts := []uint32{m.MaxVar, uint32(len(m.Inputs)), uint32(len(m.Latches)), uint32(len(m.Outputs)), uint32(len(m.ANDs)), uint32(len(m.Bad)), uint32(len(m.Constraints)), uint32(len(m.Justice)), uint32(len(m.Fairness))}
 	last := len(counts) - 1
-	for last >= 5 && counts[last] == 0 {
+	minLast := 4
+	if m.ExtendedHeader {
+		minLast = 6 // B and C are written
+	}
+	for last > minLast && counts[last] == 0 {
 		last--
 	}
 	data = append(data, format...)

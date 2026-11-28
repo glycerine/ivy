@@ -29,6 +29,9 @@ type Model struct {
 	Symbols                    map[Symbol]string
 	Name                       string
 	Comment                    []byte // Payload after the marker line, excluding its newline.
+	// ExtendedHeader writes the B and C counts even when they are zero, as
+	// ABC's Io_WriteAiger does for its extended header ("aig M I L 0 A B C").
+	ExtendedHeader bool
 }
 
 // symbolKindOrder ranks symbol kinds in the order AIGER lists their sections.

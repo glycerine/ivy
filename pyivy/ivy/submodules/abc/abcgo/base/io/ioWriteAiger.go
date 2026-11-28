@@ -548,6 +548,7 @@ func ioAigerOutputsLikeABC(network *abc.Network, model *ioa.Model, compact bool)
 		}
 	}
 	model.Outputs, model.Bad, model.Constraints = nil, nil, nil
+	model.ExtendedHeader = extended
 	nBad := len(pos) - int(network.Constraints)
 	for i, po := range pos {
 		name := po.Name()
