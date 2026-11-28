@@ -2643,7 +2643,7 @@ func Abc_ExactBuildNode(pTruth *word, nVars int32, pArrTimeProfile *int32, fanin
 		}
 		sop := baseabc.Abc_SopFromTruthBin(string(truthBin))
 		obj := baseabc.Abc_NtkCreateNode(ntk)
-		obj.Data = baseabc.Abc_SopRegister(ntk.FunctionManager.(*mem.Mem_Flex_t), sop)
+		obj.Data = baseabc.Abc_SopRegister(sopManager(ntk), sop)
 		gates = append(gates, obj)
 		left := int(sol[pos])
 		pos++

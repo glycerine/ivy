@@ -8,7 +8,6 @@ import (
 
 	"github.com/glycerine/abcgo/base/abc"
 	"github.com/glycerine/abcgo/misc/extra"
-	"github.com/glycerine/abcgo/misc/mem"
 	"github.com/glycerine/abcgo/misc/util"
 	"github.com/glycerine/abcgo/misc/vec"
 	"github.com/glycerine/abcgo/opt/cut"
@@ -680,7 +679,7 @@ func Abc_NodeSuperChoiceLut(p *Abc_ManScl_t, pObj *Abc_Obj_t) *Abc_Obj_t {
 		abc.Abc_ObjAddFanin(pObjNew, pFanin)
 	}
 	// create the function
-	pObjNew.Data = abc.Abc_SopCreateFromTruth(pObj.Network().FunctionManager.(*mem.Mem_Flex_t), Vec_PtrSize(p.vLeaves), p.uTruth)
+	pObjNew.Data = abc.Abc_SopCreateFromTruth(sopManager(pObj.Network()), Vec_PtrSize(p.vLeaves), p.uTruth)
 	pObjNew.Level = int(Abc_NodeGetLevel(pObjNew))
 	return pObjNew
 }
@@ -870,7 +869,7 @@ func Abc_NodeDecomposeStep(p *Abc_ManScl_t) int32 {
 			abc.Abc_ObjAddFanin(pObjNew, pFanin)
 		}
 		// create the function
-		pObjNew.Data = abc.Abc_SopCreateFromTruth(pNtk.FunctionManager.(*mem.Mem_Flex_t), p.nLutSize, pTruth) // need ISOP
+		pObjNew.Data = abc.Abc_SopCreateFromTruth(sopManager(pNtk), p.nLutSize, pTruth) // need ISOP
 		pObjNew.Level = int(Abc_NodeGetLevel(pObjNew))
 		pNodesNew[v] = pObjNew
 	}

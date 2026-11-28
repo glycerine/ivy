@@ -14,7 +14,6 @@ import (
 	ifpkg "github.com/glycerine/abcgo/map/if"
 	"github.com/glycerine/abcgo/map/mio"
 	"github.com/glycerine/abcgo/misc/extra"
-	"github.com/glycerine/abcgo/misc/mem"
 	"github.com/glycerine/abcgo/misc/vec"
 )
 
@@ -482,7 +481,7 @@ func Abc_NodeFromIf_rec(pNtkNew *Abc_Ntk_t, pIfMan *If_Man_t, pIfObj *If_Obj_t, 
 					function = abc.Abc_NtkCreateNodeConst1(pNtkNew)
 				}
 			} else {
-				sop := abc.Abc_SopCreateFromIsop(pNtkNew.FunctionManager.(*mem.Mem_Flex_t), n, cover)
+				sop := abc.Abc_SopCreateFromIsop(sopManager(pNtkNew), n, cover)
 				if compl != 0 {
 					sop = abc.Abc_SopComplement(sop)
 				}

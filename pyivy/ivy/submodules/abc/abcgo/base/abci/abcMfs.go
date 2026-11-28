@@ -312,7 +312,7 @@ func Abc_NtkInsertMfs(pNtk *Abc_Ntk_t, p *Sfm_Ntk_t) {
 		}
 		truth := sfm.Sfm_NodeReadTruth(p, id)
 		faninCount := int32(len(faninIDs))
-		pNode.Data = baseabc.Abc_SopCreateFromTruthIsop(pNtk.FunctionManager.(*mem.Mem_Flex_t), faninCount, truth, cover)
+		pNode.Data = baseabc.Abc_SopCreateFromTruthIsop(sopManager(pNtk), faninCount, truth, cover)
 		assert(baseabc.Abc_SopGetVarNum(pNode.Data.(string)) == faninCount, "Abc_SopGetVarNum(pNode.Data) == faninCount")
 	}
 }
@@ -421,7 +421,7 @@ func Abc_NtkReinsertNodes(p, pNtk *Abc_Ntk_t, iPivot int32) {
 	baseabc.Abc_NtkCleanCopy(p)
 	for _, node := range p.ObjectsOfKind(baseabc.ObjectNode) {
 		baseabc.Abc_ObjRemoveFanins(node)
-		node.Data = baseabc.Abc_SopRegister(p.FunctionManager.(*mem.Mem_Flex_t), " 0\n")
+		node.Data = baseabc.Abc_SopRegister(sopManager(p), " 0\n")
 	}
 	for i := int32(0); i < baseabc.Abc_NtkCiNum(p); i++ {
 		baseabc.Abc_NtkCi(pNtk, i).Copy = baseabc.Abc_NtkCi(p, i)
@@ -442,7 +442,7 @@ func Abc_NtkReinsertNodes(p, pNtk *Abc_Ntk_t, iPivot int32) {
 		for _, fanin := range newNode.Fanins() {
 			baseabc.Abc_ObjAddFanin(newNode.Copy, fanin.Object.Copy)
 		}
-		node.Data = baseabc.Abc_SopRegister(p.FunctionManager.(*mem.Mem_Flex_t), newNode.Data.(string))
+		node.Data = baseabc.Abc_SopRegister(sopManager(p), newNode.Data.(string))
 	}
 }
 
@@ -483,3 +483,11 @@ func Abc_NtkMfsAfterICheck(p *Abc_Ntk_t, nFrames, nFramesAdd int32, vFlops *Vec_
 ////////////////////////////////////////////////////////////////////////
 
 //ABC_NAMESPACE_IMPL_END
+
+// sopManager is pNtk->pManFunc of an SOP network. The port's SOPs are Go
+// strings and the Abc_Sop* functions ignore the manager, so networks
+// converted by Abc_NtkToSop may have none: nil then.
+func sopManager(n *Abc_Ntk_t) *mem.Mem_Flex_t {
+	m, _ := n.FunctionManager.(*mem.Mem_Flex_t)
+	return m
+}
