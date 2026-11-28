@@ -1309,3 +1309,21 @@ and states how the Go port was verified.
   current genlib library (`Abc_FrameReadLibGen`), as in C, and
   `Mio_CollectRootsNew`/`Mio_CollectRootsNew2` print C's messages. (mfs3 now
   runs; its SFM engine is not yet a line-by-line port.)
+
+## 63. `fretime` leaves unnamed latch inputs/outputs on logic networks
+
+- **File:** `src/opt/fret/fretMain.c` (`Abc_FlowRetime_FixLatchBoxes`).
+- **Found:** 2026-11-28, crash sweep on a mapped sequential network
+  (`read s27.blif; strash; if -K 4; fretime`): "NetworkCheck: CI with ID 8 is
+  in the network but not in the name table." from fretMain.c's own check.
+- **Bug:** `Abc_FlowRetime_ImplementCut` and `Abc_FlowRetime_FixLatchBoxes`
+  delete the names of the latches and BI/BO objects they detach and reuse the
+  objects for the retimed latches without naming them. Strashed networks get
+  names again in the final restrash; logic networks keep unnamed CIs/COs.
+- **Fix:** after the boxes are rebuilt, BIs and BOs without a name get the
+  name `Abc_ObjName` derives for them (the written network is unchanged).
+- **Test:** `abcgo/base/abci/mapped_commands_native_test.go`
+  (`TestFretimeNamesLatchBoxesLikeNative`); red before.
+- **Go port:** its check passes (verified by the same test). Its fretime is
+  not a line-by-line port (it keeps the original register names, which ABC
+  replaces by derived ones), tracked separately.

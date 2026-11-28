@@ -132,3 +132,21 @@ func TestFretimeOnMappedNetworkLikeNative(t *testing.T) {
 		t.Errorf("statistics differ\nnative: %s\nport:   %s", last(native), last(out))
 	}
 }
+
+// C bug 63: fretime on a logic network left latch boxes without names.
+// Abc_FlowRetime_ImplementCut and Abc_FlowRetime_FixLatchBoxes (fretMain.c)
+// delete the names of the latches and BI/BO objects they detach and reuse
+// the objects without naming them again; strashed networks are renamed by
+// the final restrash, logic networks are not, so fretMain.c's own check
+// reported "NetworkCheck: CI with ID 8 is in the network but not in the
+// name table." The boxes now get the names Abc_ObjName derives for them.
+func TestFretimeNamesLatchBoxesLikeNative(t *testing.T) {
+	script := mappedSeqPrep + "fretime; print_stats"
+	native := runNativeABC(t, script)
+	out, _ := runScriptStatus(t, script)
+	for i, text := range []string{native, out} {
+		if strings.Contains(text, "NetworkCheck") {
+			t.Errorf("%s: retimed network fails the name check:\n%s", []string{"native", "port"}[i], text)
+		}
+	}
+}

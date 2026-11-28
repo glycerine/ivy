@@ -624,6 +624,16 @@ Abc_FlowRetime_FixLatchBoxes( Abc_Ntk_t *pNtk, Vec_Ptr_t *vBoxIns ) {
     Abc_NtkDeleteObj( pObj );
   }
 
+  // name the boxes whose names were freed above or in
+  // Abc_FlowRetime_ImplementCut (the restrash of strashed networks does it
+  // for them; logic networks were left with unnamed CIs and COs)
+  Abc_NtkForEachLatch( pNtk, pObj, i ) {
+    if (Nm_ManFindNameById(pNtk->pManName, Abc_ObjId(Abc_ObjFanout0(pObj))) == NULL)
+      Abc_ObjAssignName( Abc_ObjFanout0(pObj), Abc_ObjName(Abc_ObjFanout0(pObj)), NULL );
+    if (Nm_ManFindNameById(pNtk->pManName, Abc_ObjId(Abc_ObjFanin0(pObj))) == NULL)
+      Abc_ObjAssignName( Abc_ObjFanin0(pObj), Abc_ObjName(Abc_ObjFanin0(pObj)), NULL );
+  }
+
 #if defined(DEBUG_CHECK)
   Abc_NtkForEachObj( pNtk, pObj, i ) {
     if (Abc_ObjIsBo(pObj)) {
