@@ -51,9 +51,15 @@ func Abc_NtkLogicToNetlist(src *Network) *Network {
 		panic("abc: netlist conversion requires a logic network")
 	}
 	Abc_NtkCleanup(src, 0)
-	Abc_NtkCheckUniqueCiNames(src)
+	ciNamesUnique := Abc_NtkCheckUniqueCiNames(src)
 	Abc_NtkCheckUniqueCoNames(src)
 	Abc_NtkCheckUniqueCioNames(src)
+	// C goes on and merges CIs of the same name into one net (two drivers),
+	// writing a circuit that differs from the network; the port reports the
+	// conversion as failed instead (callers print "Writing BLIF has failed.")
+	if ciNamesUnique == 0 {
+		return nil
+	}
 	if Abc_NtkLogicHasSimpleCos(src) == 0 {
 		Abc_NtkLogicMakeSimpleCos(src, 0)
 	}

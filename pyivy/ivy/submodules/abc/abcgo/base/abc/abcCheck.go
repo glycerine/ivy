@@ -2,6 +2,7 @@ package abc
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -440,32 +441,48 @@ func Abc_NtkIsAcyclicHierarchy_rec(n *Network) int32 {
 }
 func Abc_NtkIsAcyclicHierarchy(n *Network) int32 { return Abc_NtkIsAcyclicHierarchy_rec(n) }
 func Abc_NtkNamesCompare(a, b *string) int32     { return int32(strings.Compare(*a, *b)) }
-func uniqueNames(objects []*Object) int32 {
-	seen := make(map[string]bool, len(objects))
-	for _, o := range objects {
-		name := o.Name()
-		if seen[name] {
-			return 0
-		}
-		seen[name] = true
+
+// uniqueNames is the shared body of Abc_NtkCheckUniqueCiNames/CoNames
+// (abcCheck.c): the names are sorted and every equal neighbouring pair is
+// reported.
+func uniqueNames(objects []*Object, kind string) int32 {
+	names := make([]string, len(objects))
+	for i, o := range objects {
+		names[i] = o.Name()
 	}
-	return 1
+	slices.Sort(names)
+	result := int32(1)
+	for i := 1; i < len(names); i++ {
+		if names[i-1] == names[i] {
+			fmt.Printf("Abc_NtkCheck: Repeated %s names: %s and %s.\n", kind, names[i-1], names[i])
+			result = 0
+		}
+	}
+	return result
 }
-func Abc_NtkCheckUniqueCiNames(n *Network) int32 { return uniqueNames(n.cis) }
-func Abc_NtkCheckUniqueCoNames(n *Network) int32 { return uniqueNames(n.cos) }
+func Abc_NtkCheckUniqueCiNames(n *Network) int32 { return uniqueNames(n.cis, "CI") }
+func Abc_NtkCheckUniqueCoNames(n *Network) int32 { return uniqueNames(n.cos, "CO") }
 func Abc_NtkCheckUniqueCioNames(n *Network) int32 {
 	names := make(map[string]*Object, len(n.cis))
 	for _, o := range n.cis {
-		names[o.Name()] = o
+		if _, ok := names[o.Name()]; !ok { // the first CI with the name, as Nm_ManFindIdByNameTwoTypes
+			names[o.Name()] = o
+		}
 	}
+	result := int32(1)
 	for _, o := range n.cos {
 		if input := names[o.Name()]; input != nil {
 			if len(o.fanins) != 1 || o.fanins[0].Object != input {
-				return 0
+				fanin := ""
+				if len(o.fanins) > 0 {
+					fanin = o.fanins[0].Object.Name()
+				}
+				fmt.Printf("Abc_NtkCheck: A CI/CO pair share the name (%s) but do not link directly. The name of the CO fanin is %s.\n", o.Name(), fanin)
+				result = 0
 			}
 		}
 	}
-	return 1
+	return result
 }
 
 func checkSOPSyntax(text string, nVars int) bool {

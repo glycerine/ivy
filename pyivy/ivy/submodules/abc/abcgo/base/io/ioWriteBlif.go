@@ -263,7 +263,7 @@ func writeNetworkBLIF(n *abc.Network, filename string) error {
 	if abc.Abc_NtkIsNetlist(n) == 0 {
 		n = abc.Abc_NtkToNetlist(n)
 		if n == nil {
-			return fmt.Errorf("io: cannot convert network to BLIF netlist")
+			return fmt.Errorf("Writing BLIF has failed.") // Io_WriteBlifLogic
 		}
 		defer abc.Abc_NtkDelete(n)
 		if abc.Abc_NtkHasSop(n) == 0 && abc.Abc_NtkHasMapping(n) == 0 && abc.Abc_NtkToSop(n, -1, 1_000_000_000) == 0 {
