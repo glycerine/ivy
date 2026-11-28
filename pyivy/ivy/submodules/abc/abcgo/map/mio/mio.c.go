@@ -130,6 +130,9 @@ func Mio_CommandReadGenlib(f *Abc_Frame_t, argc int32, args []string) int32 {
 	if err != nil {
 		return mioCommandError(f, err)
 	}
+	if !flags['v'] { // C's fVerbose starts at 1 and -v toggles it off
+		fmt.Printf("Entered genlib library with %d gates from file \"%s\".\n", Mio_LibraryReadGateNum(lib), files[0])
+	}
 	if flags['n'] {
 		Mio_LibraryShortNames(lib)
 	}

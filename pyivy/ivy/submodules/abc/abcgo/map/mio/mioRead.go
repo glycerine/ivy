@@ -346,4 +346,17 @@ func Mio_LibraryDetectSpecialGates(lib *Mio_Library_t) {
 			*target.slot = Mio_GateCompare(*target.slot, g, target.truth)
 		}
 	}
+	// the warnings of mioRead.c's Mio_LibraryDetectSpecialGates
+	if lib.pGateBuf == nil {
+		fmt.Printf("Warnings: genlib library reader cannot detect the buffer gate.\n")
+		fmt.Printf("Some parts of the supergate-based technology mapper may not work correctly.\n")
+	}
+	if lib.pGateInv == nil {
+		fmt.Printf("Warnings: genlib library reader cannot detect the invertor gate.\n")
+		fmt.Printf("Some parts of the supergate-based technology mapper may not work correctly.\n")
+	}
+	if lib.pGateAnd2 == nil && lib.pGateNand2 == nil && lib.pGateNor2 == nil && lib.pGateOr2 == nil {
+		fmt.Printf("Warnings: genlib library reader cannot detect the AND2, NAND2, OR2, and NOR2 gate.\n")
+		fmt.Printf("Some parts of the supergate-based technology mapper may not work correctly.\n")
+	}
 }
