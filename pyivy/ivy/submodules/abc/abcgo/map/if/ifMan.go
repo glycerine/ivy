@@ -293,31 +293,37 @@ func If_ManCreateCo(p *If_Man_t, driver *If_Obj_t) *If_Obj_t {
 
 // If_ManCreateAnd constructs an AND node with constant and duplicate folding.
 func If_ManCreateAnd(p *If_Man_t, fan0, fan1 *If_Obj_t) *If_Obj_t {
+	return If_ManCreateAndCompl(p, If_Regular(fan0), If_IsComplement(fan0), If_Regular(fan1), If_IsComplement(fan1))
+}
+
+// If_ManCreateAndCompl is If_ManCreateAnd(p, If_NotCond(fan0, c0),
+// If_NotCond(fan1, c1)) for regular fanins: the complements stay bits, as
+// in C's tagged pointers, instead of materializing complement proxies
+// (If_Not copies the object once per complemented use).
+func If_ManCreateAndCompl(p *If_Man_t, fan0 *If_Obj_t, c0 int32, fan1 *If_Obj_t, c1 int32) *If_Obj_t {
+	fan0, fan1 = If_Regular(fan0), If_Regular(fan1)
 	if fan0 == fan1 {
-		return fan0
-	}
-	// fan0 == If_Not(fan1), compared without materializing the complement
-	// proxy (C compares tagged pointers)
-	if If_Regular(fan0) == If_Regular(fan1) && If_IsComplement(fan0) != If_IsComplement(fan1) {
-		return If_Not(p.pConst1)
-	}
-	if If_Regular(fan0) == p.pConst1 {
-		if fan0 == p.pConst1 {
-			return fan1
+		if c0 == c1 {
+			return If_NotCond(fan0, c0)
 		}
 		return If_Not(p.pConst1)
 	}
-	if If_Regular(fan1) == p.pConst1 {
-		if fan1 == p.pConst1 {
-			return fan0
+	if fan0 == p.pConst1 {
+		if c0 == 0 {
+			return If_NotCond(fan1, c1)
+		}
+		return If_Not(p.pConst1)
+	}
+	if fan1 == p.pConst1 {
+		if c1 == 0 {
+			return If_NotCond(fan0, c0)
 		}
 		return If_Not(p.pConst1)
 	}
 	obj := If_ManSetupObj(p)
 	obj.Type = IF_AND
-	obj.fCompl0 = uint8(If_IsComplement(fan0))
-	obj.fCompl1 = uint8(If_IsComplement(fan1))
-	fan0, fan1 = If_Regular(fan0), If_Regular(fan1)
+	obj.fCompl0 = uint8(c0)
+	obj.fCompl1 = uint8(c1)
 	obj.pFanin0, obj.pFanin1 = fan0, fan1
 	for _, fanin := range []*If_Obj_t{fan0, fan1} {
 		fanin.nRefs++

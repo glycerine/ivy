@@ -221,9 +221,9 @@ func Abc_NtkToIf(pNtk *Abc_Ntk_t, pPars *If_Par_t) *If_Man_t {
 		extra.Extra_ProgressBarUpdate(progress, int32(i), "Initial")
 		fanin0 := abc.Abc_ObjCopyData(abc.Abc_ObjFanin0(node)).(*ifpkg.If_Obj_t)
 		fanin1 := abc.Abc_ObjCopyData(abc.Abc_ObjFanin1(node)).(*ifpkg.If_Obj_t)
-		mapped := ifpkg.If_ManCreateAnd(man,
-			ifpkg.If_NotCond(fanin0, abc.Abc_ObjFaninC0(node)),
-			ifpkg.If_NotCond(fanin1, abc.Abc_ObjFaninC1(node)))
+		mapped := ifpkg.If_ManCreateAndCompl(man,
+			ifpkg.If_Regular(fanin0), ifpkg.If_IsComplement(fanin0)^abc.Abc_ObjFaninC0(node),
+			ifpkg.If_Regular(fanin1), ifpkg.If_IsComplement(fanin1)^abc.Abc_ObjFaninC1(node))
 		abc.Abc_ObjSetCopyData(node, mapped)
 		if abc.Abc_AigNodeIsChoice(node) != 0 {
 			for prev, equiv := node, abc.Abc_ObjChoice(node); equiv != nil; prev, equiv = equiv, abc.Abc_ObjChoice(equiv) {
