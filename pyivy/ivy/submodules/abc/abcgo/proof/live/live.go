@@ -85,14 +85,9 @@ func aigManNodes(p *Aig_Man_t) (nodes []Aig_Obj_t, last Aig_Obj_t) {
 	return nodes, last
 }
 
-// Aig_Mux (aigOper.c, through Aig_Mux2) as the native build evaluates it:
-// GCC evaluates the two Aig_And arguments of Aig_Or right to left, so the
-// AND of the else branch is created first (node IDs depend on it).
-func aigMux(p *Aig_Man_t, pC, p1, p0 Aig_Obj_t) Aig_Obj_t {
-	n0 := aig.Aig_And(p, aig.Aig_Not(pC), p0)
-	n1 := aig.Aig_And(p, pC, p1)
-	return aig.Aig_Or(p, n1, n0)
-}
+// aigMux is Aig_Mux (aigOper.c); aig.Aig_Mux builds its ANDs in the GCC
+// build's order (else branch first).
+func aigMux(p *Aig_Man_t, pC, p1, p0 Aig_Obj_t) Aig_Obj_t { return aig.Aig_Mux(p, pC, p1, p0) }
 
 func saigPiNum(p *Aig_Man_t) int32  { return saig.Saig_ManPiNum(p) }
 func saigPoNum(p *Aig_Man_t) int32  { return saig.Saig_ManPoNum(p) }

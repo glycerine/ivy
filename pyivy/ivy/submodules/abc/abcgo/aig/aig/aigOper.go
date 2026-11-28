@@ -81,9 +81,27 @@ func Aig_ExorCatch(p *Graph, p0, p1 Edge) Edge {
 	// Aig_ObjCreate checks the table before creating the object.
 	return Aig_ObjCreate(p, &Node{Kind: ExclusiveOr, Fanins: [2]Edge{p0, p1}}) ^ fCompl
 }
-func Aig_Mux2(p *Graph, c, yes, no Edge) Edge { return p.Mux(c, yes, no) }
-func Aig_Mux(p *Graph, c, yes, no Edge) Edge  { return p.Mux(c, yes, no) }
-func Aig_Maj(p *Graph, a, b, c Edge) Edge     { return p.OR(p.OR(p.AND(a, b), p.AND(a, c)), p.AND(b, c)) }
+
+// Aig_Mux2 is aigOper.c's Aig_Or( p, Aig_And(p, pC, p1), Aig_And(p, Aig_Not(pC), p0) )
+// as the GCC build evaluates it: arguments right to left, so the 0-branch
+// AND is created first (node IDs follow).
+func Aig_Mux2(p *Graph, c, yes, no Edge) Edge {
+	n0 := p.AND(c.Not(), no)
+	n1 := p.AND(c, yes)
+	return p.OR(n1, n0)
+}
+
+// Aig_Mux is Aig_Mux2 (aigOper.c: fUseMuxCanon is 0).
+func Aig_Mux(p *Graph, c, yes, no Edge) Edge { return Aig_Mux2(p, c, yes, no) }
+
+// Aig_Maj is aigOper.c's Aig_Or( p, Aig_Or(p, Aig_And(p, pA, pB),
+// Aig_And(p, pA, pC)), Aig_And(p, pB, pC) ) evaluated right to left (GCC).
+func Aig_Maj(p *Graph, a, b, c Edge) Edge {
+	bc := p.AND(b, c)
+	ac := p.AND(a, c)
+	ab := p.AND(a, b)
+	return p.OR(p.OR(ab, ac), bc)
+}
 
 // Aig_Oper preserves ABC's numeric AND/EXOR operation codes (5 and 6).
 func Aig_Oper(p *Graph, a, b Edge, kind int32) Edge {
